@@ -2,63 +2,63 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui" 
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:lw="http://l3s.de/learnweb">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.user_submissions}"/>
+<ui:param name="pageTitle" value="#{msg.user_submissions}"/>
 
-    <ui:define name="breadcrumb">
-        <ui:fragment rendered="#{userBean.moderator}">
-            <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-            </lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+    <ui:fragment rendered="#{userBean.moderator}">
+        <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+        </lw:breadcrumb-item>
 
-            <lw:breadcrumb-item link="admin/users_submissions.jsf?course_id=${param['course_id']}" title="#{msg.user_submissions}">
-                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-            </lw:breadcrumb-item>
-        </ui:fragment>
-    </ui:define>
+        <lw:breadcrumb-item link="admin/users_submissions.jsf?course_id=${param['course_id']}" title="#{msg.user_submissions}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+        </lw:breadcrumb-item>
+    </ui:fragment>
+</ui:define>
 
-	<ui:define name="center_layout">
-        <p:panel rendered="#{not userBean.moderator}">
-            <h:outputText value="#{msg.missing_authentication}"/>
-        </p:panel>
+<ui:define name="center_layout">
+    <p:panel rendered="#{not userBean.moderator}">
+        <h:outputText value="#{msg.missing_authentication}"/>
+    </p:panel>
 
-        <p:dataTable rendered="#{userBean.moderator}" value="#{submissionBean.users}" var="user"
-                     rows="50" paginatorPosition="bottom" paginator="true" rowsPerPageTemplate="50,100,500"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-            <f:facet name="header">#{msg.submissions}</f:facet>
+    <p:dataTable rendered="#{userBean.moderator}" value="#{submissionBean.users}" var="user"
+                 rows="50" paginatorPosition="bottom" paginator="true" rowsPerPageTemplate="50,100,500"
+                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+        <f:facet name="header">#{msg.submissions}</f:facet>
 
-            <p:column sortBy="#{user.username}" filterBy="#{user.username}" headerText="#{msg.username}">
-                <h:outputLink value="myhome/profile.jsf">
-                    <f:param name="user_id" value="#{user.id}"/>
-                    <h:outputText value="#{user.username}"/>
-                </h:outputLink>
-            </p:column>
+        <p:column sortBy="#{user.username}" filterBy="#{user.username}" headerText="#{msg.username}">
+            <h:outputLink value="myhome/profile.jsf">
+                <f:param name="user_id" value="#{user.id}"/>
+                <h:outputText value="#{user.username}"/>
+            </h:outputLink>
+        </p:column>
 
-            <p:column sortBy="#{user.studentId}" filterBy="#{user.studentId}" headerText="#{msg.student_id}">
-                <h:outputText value="#{user.studentId}"/>
-            </p:column>
+        <p:column sortBy="#{user.studentId}" filterBy="#{user.studentId}" headerText="#{msg.student_id}">
+            <h:outputText value="#{user.studentId}"/>
+        </p:column>
 
-            <p:column sortBy="#{user.email}" filterBy="#{user.email}" headerText="#{msg.email_address}">
-                <h:outputText value="#{user.email}"/>
-            </p:column>
+        <p:column sortBy="#{user.email}" filterBy="#{user.email}" headerText="#{msg.email_address}">
+            <h:outputText value="#{user.email}"/>
+        </p:column>
 
-            <p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" headerText="#{msg.organization}">
-                <h:outputText value="#{user.organisation.title}"/>
-            </p:column>
+        <p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" headerText="#{msg.organization}">
+            <h:outputText value="#{user.organisation.title}"/>
+        </p:column>
 
-            <p:column sortBy="${submissionBean.getNumberOfSubmissions(user.id)}" headerText="#{msg['Submission.no_of_submissions']}">
-                <h:outputText value="${submissionBean.getNumberOfSubmissions(user.id)}"/>
-            </p:column>
+        <p:column sortBy="${submissionBean.getNumberOfSubmissions(user.id)}" headerText="#{msg['Submission.no_of_submissions']}">
+            <h:outputText value="${submissionBean.getNumberOfSubmissions(user.id)}"/>
+        </p:column>
 
-            <p:column headerText="#{msg.links}">
-                <h:outputLink value="myhome/submission_overview.jsf">
-                    <f:param name="user_id" value="#{user.id}"/>
-                    <h:outputText value="#{msg['Submission.view_submissions']}"/>
-                </h:outputLink>
-            </p:column>
-        </p:dataTable>
-	</ui:define>
+        <p:column headerText="#{msg.links}">
+            <h:outputLink value="myhome/submission_overview.jsf">
+                <f:param name="user_id" value="#{user.id}"/>
+                <h:outputText value="#{msg['Submission.view_submissions']}"/>
+            </h:outputLink>
+        </p:column>
+    </p:dataTable>
+</ui:define>
+
 </ui:composition>

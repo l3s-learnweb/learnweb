@@ -19,10 +19,13 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     this.menuButton = this.header.find('#menu-button');
 
     this._bindEvents();
+    this._autoComplete();
+  },
 
+  _autoComplete() {
     let currentRequest;
     const myMarket = PrimeFaces.settings.locale;
-    this.header.find('#searchfield').autoComplete({
+    this.header.find('#header_left\\:searchfield').autoComplete({
       source(term, response) {
         currentRequest = $.ajax({
           url: 'https://api.bing.com/osjson.aspx?JsonType=callback&JsonCallback=?',
@@ -281,16 +284,29 @@ PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
 
 /**
  * Update p:linkButton focus styles
+ * TODO: remove after PF 9.0 is released
+ * https://github.com/primefaces/primefaces/issues/5698
  */
 PrimeFaces.widget.LinkButton = PrimeFaces.widget.BaseWidget.extend({
   init(cfg) {
     this._super(cfg);
-    PrimeFaces.skinButton(this.jq);
+    this.button = this.jq;
+    this.link = this.jq.children('a');
 
-    const button = this.jq;
-    this.jq.children('a')
-      .on('focus', () => button.addClass('ui-state-focus'))
-      .on('blur', () => button.removeClass('ui-state-focus ui-state-active'));
+    PrimeFaces.skinButton(this.button);
+    this.bindEvents();
+  },
+
+  bindEvents() {
+    const $this = this;
+
+    if (this.link) {
+      this.link.off().on('focus.linkbutton keydown.linkbutton', () => {
+        $this.button.addClass('ui-state-focus ui-state-active');
+      }).on('blur.linkbutton', () => {
+        $this.button.removeClass('ui-state-focus ui-state-active');
+      });
+    }
   },
 });
 

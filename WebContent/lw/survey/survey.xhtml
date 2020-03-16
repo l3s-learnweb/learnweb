@@ -4,99 +4,99 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="pageTitle" value="#{msg.survey}"/>
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="hideGrowl" value="true"/>
+<ui:param name="pageTitle" value="#{msg.survey}"/>
+<ui:param name="hideGrowl" value="true"/>
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter"/>
-			<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}"/>
-			<f:viewParam name="go_back" value="#{surveyBean.goBackPage}"/>
-			<f:viewAction action="#{surveyBean.onLoad}"/>
-			<f:viewAction action="#{surveyBean.onLoadEdit}"/>
-		</f:metadata>
-	</ui:define>
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter"/>
+		<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}"/>
+		<f:viewParam name="go_back" value="#{surveyBean.goBackPage}"/>
+		<f:viewAction action="#{surveyBean.onLoad}"/>
+		<f:viewAction action="#{surveyBean.onLoadEdit}"/>
+	</f:metadata>
+</ui:define>
 
-    <ui:define name="breadcrumb">
-		<ui:fragment rendered="#{surveyBean.resource.groupId > 0}">
-			<lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-			</lw:breadcrumb-item>
-
-			<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{surveyBean.resource.group.title}" >
-				<p:repeat var="groups" value="#{userBean.user.groups}">
-					<li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
-				</p:repeat>
-			</lw:breadcrumb-item>
-
-			<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{msg.resources}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
-			</lw:breadcrumb-item>
-		</ui:fragment>
-
-		<lw:breadcrumb-item rendered="#{surveyBean.resource.groupId == -1}" link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+<ui:define name="breadcrumb">
+	<ui:fragment rendered="#{surveyBean.resource.groupId > 0}">
+		<lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
 			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 		</lw:breadcrumb-item>
 
-        <lw:breadcrumb-item title="#{surveyBean.resource.title}"/>
-    </ui:define>
+		<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{surveyBean.resource.group.title}" >
+			<p:repeat var="groups" value="#{userBean.user.groups}">
+				<li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
+			</p:repeat>
+		</lw:breadcrumb-item>
 
-	<ui:define name="center_layout">
+		<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{msg.resources}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
+		</lw:breadcrumb-item>
+	</ui:fragment>
 
-		<h:form id="form" rendered="#{surveyBean.resource != null}">
-			<p:growl id="growl" showDetail="true" sticky="true"/>
-			<p:panel>
-				<h:panelGroup  rendered="#{surveyBean.formEnabled}">
-					<h:panelGroup id="questions">
-                        <h2>#{surveyBean.resource.title}</h2>
-						<c:forEach var="question" items="#{surveyBean.resource.questions}">
-							<div class="form-group">
-								<div class="d-flex flex-nowrap">
-                                    <ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
-                                        <ui:param name="question" value="#{question}"/>
-                                        <ui:param name="update" value="#{false}"/>
-                                    </ui:decorate>
-								</div>
+	<lw:breadcrumb-item rendered="#{surveyBean.resource.groupId == -1}" link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
+
+	<lw:breadcrumb-item title="#{surveyBean.resource.title}"/>
+</ui:define>
+
+<ui:define name="center_layout">
+
+	<h:form id="form" rendered="#{surveyBean.resource != null}">
+		<p:growl id="growl" showDetail="true" sticky="true"/>
+		<p:panel>
+			<h:panelGroup  rendered="#{surveyBean.formEnabled}">
+				<h:panelGroup id="questions">
+					<h2>#{surveyBean.resource.title}</h2>
+					<c:forEach var="question" items="#{surveyBean.resource.questions}">
+						<div class="form-group">
+							<div class="d-flex flex-nowrap">
+								<ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
+									<ui:param name="question" value="#{question}"/>
+									<ui:param name="update" value="#{false}"/>
+								</ui:decorate>
 							</div>
-						</c:forEach>
-					</h:panelGroup>
-
-                    <div class="d-flex mt-3">
-                        <div class="mr-auto">
-                            <p:commandButton value="#{msg.submit}" action="#{surveyBean.onSubmit()}" ajax="true" update=":message @form">
-                                <p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}"/>
-                            </p:commandButton>
-
-                            <p:commandButton id="save" binding="#{save}" value="#{msg.save}" ajax="true" update="@form :message" process="@form"
-                                             actionListener="#{surveyBean.onSave()}" 
-                                             rendered="#{surveyBean.resource.saveable}">
-                            </p:commandButton>
-                        </div>
-                        <div>
-                            <p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
-                                <p:printer target="questions"/>
-                            </p:commandButton>
-                        </div>
-                    </div>
+						</div>
+					</c:forEach>
 				</h:panelGroup>
 
-				<ui:fragment rendered="#{not surveyBean.formEnabled}">
-					<h:outputText value="#{msg['survey.cant_edit']}"/>
+				<div class="d-flex mt-3">
+					<div class="mr-auto">
+						<p:commandButton value="#{msg.submit}" action="#{surveyBean.onSubmit()}" ajax="true" update=":message @form">
+							<p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}"/>
+						</p:commandButton>
 
-					<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}">
-						<f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
-						<f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
-						<h:outputText value="#{msg['survey.View_answers']}"/>
-					</h:outputLink>
+						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" ajax="true" update="@form :message" process="@form"
+										 actionListener="#{surveyBean.onSave()}"
+										 rendered="#{surveyBean.resource.saveable}">
+						</p:commandButton>
+					</div>
+					<div>
+						<p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
+							<p:printer target="questions"/>
+						</p:commandButton>
+					</div>
+				</div>
+			</h:panelGroup>
 
-					<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}">
-						<h:outputText value="#{surveyBean.goBackPageTitle}"/>
-					</h:outputLink>
-				</ui:fragment>
-			</p:panel>
-		</h:form>
-    </ui:define>
+			<ui:fragment rendered="#{not surveyBean.formEnabled}">
+				<h:outputText value="#{msg['survey.cant_edit']}"/>
+
+				<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}">
+					<f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
+					<f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
+					<h:outputText value="#{msg['survey.View_answers']}"/>
+				</h:outputLink>
+
+				<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}">
+					<h:outputText value="#{surveyBean.goBackPageTitle}"/>
+				</h:outputLink>
+			</ui:fragment>
+		</p:panel>
+	</h:form>
+</ui:define>
+
 </ui:composition>

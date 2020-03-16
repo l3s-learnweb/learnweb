@@ -4,33 +4,34 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="pageTitle" value="#{msg['imprint.title']}"/>
-	<ui:param name="smallPage" value="true"/>
-	<ui:param name="hideBreadcrumbs" value="true"/>
+<ui:param name="pageTitle" value="#{msg['imprint.title']}"/>
+<ui:param name="extraPageClass" value="container"/>
+<ui:param name="hideBreadcrumbs" value="true"/>
 
-	<ui:define name="center_layout">
-		<p:panel header="#{msg['imprint.title']}">		
-			<dl class="row no-glutters" style="max-width: 40rem;">					
-				<dt class="col-sm-4">Forschungszentrum L3S</dt>
-				<dd class="col-sm-8">Appelstraße 9a<br/>
-					30167 Hannover<br/>
-					Tel. +49 511 762 17715<br/>
-					Fax +49 511 762 17779</dd>
-		
-				<dt class="col-sm-4"><h:outputText value="#{msg['imprint.represented_by']}" /></dt>
-				<dd class="col-sm-8">Prof. Dr. Wolfgang Nejdl (Geschäftsführender Direktor)<br/> Dr. Claudia Niederée (Geschäftsführerin)</dd>
-		
-				<dt class="col-sm-4">Gottfried Wilhelm Leibniz<br/> Universität  Hannover</dt>
-				<dd class="col-sm-8">Welfengarten 1<br/>
-					30167 Hannover<br/>
-					Tel. +49 511 762 0<br/>
-					Fax +49 511 762 3456</dd>
-			
-				<dt class="col-sm-4"><h:outputText value="#{msg['imprint.represented_by']}" /></dt>
-				<dd class="col-sm-8"><a href="https://www.uni-hannover.de/universitaet/praesidium/praesident/">Präsident der Leibniz Universität Hannover</a></dd>				
-			</dl>
-			
-			<p><h:outputText value="#{msg['imprint.description']}" escape="false" /></p>	
-		</p:panel>
-	</ui:define>		
+<ui:define name="center_layout">
+	<p:panel header="#{msg['imprint.title']}">
+		<dl class="row no-glutters" style="max-width: 40rem;">
+			<dt class="col-sm-4">Forschungszentrum L3S</dt>
+			<dd class="col-sm-8">Appelstraße 9a<br/>
+				30167 Hannover<br/>
+				Tel. +49 511 762 17715<br/>
+				Fax +49 511 762 17779</dd>
+
+			<dt class="col-sm-4"><h:outputText value="#{msg['imprint.represented_by']}" /></dt>
+			<dd class="col-sm-8">Prof. Dr. Wolfgang Nejdl (Geschäftsführender Direktor)<br/> Dr. Claudia Niederée (Geschäftsführerin)</dd>
+
+			<dt class="col-sm-4">Gottfried Wilhelm Leibniz<br/> Universität  Hannover</dt>
+			<dd class="col-sm-8">Welfengarten 1<br/>
+				30167 Hannover<br/>
+				Tel. +49 511 762 0<br/>
+				Fax +49 511 762 3456</dd>
+
+			<dt class="col-sm-4"><h:outputText value="#{msg['imprint.represented_by']}" /></dt>
+			<dd class="col-sm-8"><a href="https://www.uni-hannover.de/universitaet/praesidium/praesident/">Präsident der Leibniz Universität Hannover</a></dd>
+		</dl>
+
+		<p><h:outputText value="#{msg['imprint.description']}" escape="false" /></p>
+	</p:panel>
+</ui:define>
+
 </ui:composition>

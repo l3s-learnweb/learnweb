@@ -55,8 +55,8 @@ public class UserBean implements Serializable
     private boolean cacheShowMessageJoinGroup = true;
     private boolean cacheShowMessageAddResource = true;
 
-    private BaseMenuModel sidebarMenuModel;
-    private Instant sidebarMenuModelUpdate;
+    private transient BaseMenuModel sidebarMenuModel;
+    private transient Instant sidebarMenuModelUpdate;
     private HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private int activeOrganisationId = 0;
@@ -700,6 +700,11 @@ public class UserBean implements Serializable
     public boolean isLanguageSwitchEnabled()
     {
         return !getActiveOrganisation().getOption(Option.Users_Hide_language_switch);
+    }
+
+    public boolean isHideSidebarMenu()
+    {
+        return "true".equals(getPreference("HIDE_SIDEBAR"));
     }
 
     private Organisation getActiveOrganisation()

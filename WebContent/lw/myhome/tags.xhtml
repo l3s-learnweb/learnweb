@@ -2,39 +2,40 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:lw="http://l3s.de/learnweb">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.myTagsTitle}"/>
-	<ui:param name="helpText" value="#{msg.myhomeTagsHelp}"/>
+<ui:param name="pageTitle" value="#{msg.myTagsTitle}"/>
+<ui:param name="helpText" value="#{msg.myhomeTagsHelp}"/>
 
-	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+	<lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="myhome/tags.jsf" title="#{msg.myTagsTitle}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
-		</lw:breadcrumb-item>
-	</ui:define>
+	<lw:breadcrumb-item link="myhome/tags.jsf" title="#{msg.myTagsTitle}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
+	</lw:breadcrumb-item>
+</ui:define>
 
-	<ui:define name="center_layout">
-		<p:dataTable var="tag" value="#{userBean.user.tags}">
-			<f:facet name="header">#{msg.myTags}</f:facet>
+<ui:define name="center_layout">
+	<p:dataTable var="tag" value="#{userBean.user.tags}">
+		<f:facet name="header">#{msg.myTags}</f:facet>
 
-			<p:column headerText="#{msg.tags}">
-				<h:outputText value="#{tag.name}"/>
-			</p:column>
+		<p:column headerText="#{msg.tags}">
+			<h:outputText value="#{tag.name}"/>
+		</p:column>
 
-			<p:column headerText="#{msg.resource}">
-				<p:repeat var="res" value="#{tag.resources}">
-					<h:outputLink value="myhome/resources.jsf" styleClass="mr-1">
-						<f:param name="resource_id" value="#{res.id}"/>
-						<f:param name="group_id" value="#{res.groupId}"/>
-						<h:outputText value="#{res.title}" escape="false"/>
-					</h:outputLink>
-				</p:repeat>
-			</p:column>
-		</p:dataTable>
-	</ui:define>
+		<p:column headerText="#{msg.resource}">
+			<p:repeat var="res" value="#{tag.resources}">
+				<h:outputLink value="myhome/resources.jsf" styleClass="mr-1">
+					<f:param name="resource_id" value="#{res.id}"/>
+					<f:param name="group_id" value="#{res.groupId}"/>
+					<h:outputText value="#{res.title}" escape="false"/>
+				</h:outputLink>
+			</p:repeat>
+		</p:column>
+	</p:dataTable>
+</ui:define>
+
 </ui:composition>

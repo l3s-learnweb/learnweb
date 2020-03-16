@@ -4,26 +4,27 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-    <ui:define name="metadata">
-        <f:metadata>
-            <f:viewParam name="email" value="#{confirmEmailBean.email}"/>
-            <f:viewParam name="token" value="#{confirmEmailBean.token}"/>
-            <f:viewAction action="#{confirmEmailBean.onLoad}"/>
-        </f:metadata>
-    </ui:define>
+<ui:param name="pageTitle" value="#{msg.email_validation}"/>
+<ui:param name="hasAcessPermission" value="true"/>
+<ui:param name="extraPageClass" value="container"/>
+<ui:param name="hideGrowl" value="true"/>
+<ui:param name="hideBreadcrumbs" value="true"/>
 
-    <ui:param name="pageTitle" value="#{msg.email_validation}"/>
-    <ui:param name="loginRequired" value="false"/>
-    <ui:param name="smallPage" value="true"/>
-    <ui:param name="hideGrowl" value="true"/>
-    <ui:param name="hideBreadcrumbs" value="true"/>
- 
-    <ui:define name="center_layout">
-        <p:panel header="#{msg.email_validation}" rendered="#{confirmEmailBean.isConfirmed()}">
-            <p>#{msg.email_confirmed}</p>
-            <a href="#{userBean.bannerLink}">
-                <h:outputText value="#{msg.return_to_welcome_page}"/>
-            </a>
-        </p:panel>
-    </ui:define>
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="email" value="#{confirmEmailBean.email}"/>
+        <f:viewParam name="token" value="#{confirmEmailBean.token}"/>
+        <f:viewAction action="#{confirmEmailBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
+
+<ui:define name="center_layout">
+    <p:panel header="#{msg.email_validation}" rendered="#{confirmEmailBean.isConfirmed()}">
+        <p>#{msg.email_confirmed}</p>
+        <a href="#{userBean.bannerLink}">
+            <h:outputText value="#{msg.return_to_welcome_page}"/>
+        </a>
+    </p:panel>
+</ui:define>
+
 </ui:composition>

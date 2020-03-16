@@ -4,27 +4,26 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="hideBreadcrumbs" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.discussion_help}"/>
+<ui:param name="hideBreadcrumbs" value="true"/>
+<ui:param name="pageTitle" value="#{msg.discussion_help}"/>
 
-	<ui:define name="center_layout">
-			<p:panel header="#{msg.discussion_help}" styleClass="mt-3">
+<ui:define name="center_layout">
+		<p:panel header="#{msg.discussion_help}" styleClass="mt-3">
 
-			<h:outputText escape="false" value="#{msg.discussion_help_intro}"/><br/>
-			<h:outputText escape="false" value="1. #{msg.discussion_help_user_step_1}"/>
+		<h:outputText escape="false" value="#{msg.discussion_help_intro}"/><br/>
+		<h:outputText escape="false" value="1. #{msg.discussion_help_user_step_1}"/>
 
-			<ui:fragment rendered="#{empty param['type'] or param['type'] eq 'user'}">
-				<br/><h:outputText escape="false" value="2. #{msg.discussion_help_user_step_2}"/>
-				<br/><h:outputText escape="false" value="3. #{msg.discussion_help_user_step_3}"/>
-			</ui:fragment>
+		<ui:fragment rendered="#{empty param['type'] or param['type'] eq 'user'}">
+			<br/><h:outputText escape="false" value="2. #{msg.discussion_help_user_step_2}"/>
+			<br/><h:outputText escape="false" value="3. #{msg.discussion_help_user_step_3}"/>
+		</ui:fragment>
 
-			<ui:fragment rendered="#{not empty param['type'] and param['type'] eq 'admin'}">
-				<br/><h:outputText escape="false" value="2. #{msg.discussion_help_admin_step_2}"/>
-				<br/><h:outputText escape="false" value="3. #{msg.discussion_help_admin_step_3}"/>
-				<br/><h:outputText escape="false" value="4. #{msg.discussion_help_admin_step_4}"/>
-			</ui:fragment>
-		</p:panel>
+		<ui:fragment rendered="#{not empty param['type'] and param['type'] eq 'admin'}">
+			<br/><h:outputText escape="false" value="2. #{msg.discussion_help_admin_step_2}"/>
+			<br/><h:outputText escape="false" value="3. #{msg.discussion_help_admin_step_3}"/>
+			<br/><h:outputText escape="false" value="4. #{msg.discussion_help_admin_step_4}"/>
+		</ui:fragment>
+	</p:panel>
+</ui:define>
 
-	</ui:define>
 </ui:composition>

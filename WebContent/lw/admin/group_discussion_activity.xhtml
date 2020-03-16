@@ -2,40 +2,41 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:lw="http://l3s.de/learnweb">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.discussion_activity}"/>
+<ui:param name="pageTitle" value="#{msg.discussion_activity}"/>
 
-	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="myhome/group_discussion_activity.jsf" title="#{msg.discussion_activity}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
-	</ui:define>
+<ui:define name="breadcrumb">
+	<lw:breadcrumb-item link="myhome/group_discussion_activity.jsf" title="#{msg.discussion_activity}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
+</ui:define>
 
-	<ui:define name="center_layout">
-		<p:dataTable var="entry" value="#{adminGroupDiscussionActivityBean.groupAnnotations}" rows="50" paginator="true"
-					 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-			<f:facet name="header">#{msg.discussion_activity}</f:facet>
-			<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
-				<h:outputText value="#{entry.name}"/>
-			</p:column>
+<ui:define name="center_layout">
+	<p:dataTable var="entry" value="#{adminGroupDiscussionActivityBean.groupAnnotations}" rows="50" paginator="true"
+				 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+		<f:facet name="header">#{msg.discussion_activity}</f:facet>
+		<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
+			<h:outputText value="#{entry.name}"/>
+		</p:column>
 
-			<p:column headerText="#{msg.annotation}" sortBy="#{entry.annotation}">
-				<h:outputText value="#{entry.annotation}"/>
-			</p:column>
+		<p:column headerText="#{msg.annotation}" sortBy="#{entry.annotation}">
+			<h:outputText value="#{entry.annotation}"/>
+		</p:column>
 
-			<p:column headerText="#{msg.snippet}" sortBy="#{entry.snippet}">
-				<h:outputText value="#{entry.snippet}"/>
-			</p:column>
+		<p:column headerText="#{msg.snippet}" sortBy="#{entry.snippet}">
+			<h:outputText value="#{entry.snippet}"/>
+		</p:column>
 
-			<p:column headerText="#{msg.url}" sortBy="#{entry.url}">
-				<h:outputText value="#{entry.url}"/>
-			</p:column>
+		<p:column headerText="#{msg.url}" sortBy="#{entry.url}">
+			<h:outputText value="#{entry.url}"/>
+		</p:column>
 
-			<p:column headerText="#{msg.time}" sortBy="#{entry.time}">
-				<h:outputText value="#{entry.time}"/>
-			</p:column>
-		</p:dataTable>
-	</ui:define>
+		<p:column headerText="#{msg.time}" sortBy="#{entry.time}">
+			<h:outputText value="#{entry.time}"/>
+		</p:column>
+	</p:dataTable>
+</ui:define>
+
 </ui:composition>

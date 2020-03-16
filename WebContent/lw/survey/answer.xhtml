@@ -4,136 +4,137 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-				xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+				xmlns:lw="http://l3s.de/learnweb">
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter"/>
-			<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}"/>
-			<f:viewAction action="#{surveyBean.onLoad}"/>
-		</f:metadata>
-	</ui:define>
+<ui:param name="pageTitle" value="Survey"/>
 
-	<ui:param name="pageTitle" value="Survey"/>
-	<ui:param name="loginRequired" value="true"/>
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter"/>
+		<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}"/>
+		<f:viewAction action="#{surveyBean.onLoad}"/>
+	</f:metadata>
+</ui:define>
 
-	<ui:define name="breadcrumb">
-		<ui:fragment rendered="#{surveyBean.resource.groupId > 0}">
-			<lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-			</lw:breadcrumb-item>
-
-			<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{surveyBean.resource.group.title}" >
-				<p:repeat var="groups" value="#{userBean.user.groups}">
-					<li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
-				</p:repeat>
-			</lw:breadcrumb-item>
-
-			<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{msg.resources}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
-			</lw:breadcrumb-item>
-		</ui:fragment>
-
-		<lw:breadcrumb-item rendered="#{surveyBean.resource.groupId == -1}" link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+<ui:define name="breadcrumb">
+	<ui:fragment rendered="#{surveyBean.resource.groupId > 0}">
+		<lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
 			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 		</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item title="#{surveyBean.resource.title}"/>
-	</ui:define>
+		<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{surveyBean.resource.group.title}" >
+			<p:repeat var="groups" value="#{userBean.user.groups}">
+				<li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
+			</p:repeat>
+		</lw:breadcrumb-item>
 
-	<ui:define name="center_layout">
-		<p:panel header="Survey answer" rendered="#{surveyBean.resource != null}">
-			<h:form id="survey_data">
-				<div class="form-group font-weight-bold">
-					<h:outputText value="Student ID: #{surveyBean.userAnswers.user.studentId}"
-								  rendered="#{userBean.moderator or userBean.user.id eq surveyBean.surveyUserId}"/>
-				</div>
+		<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{msg.resources}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
+		</lw:breadcrumb-item>
+	</ui:fragment>
 
-				<c:forEach var="field" items="#{surveyBean.resource.questions}">
-					<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
-						<c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
-							<h3 class="mb-3">
-								<h:outputText value="${field.label}"/>
-							</h3>
-						</c:if>
+	<lw:breadcrumb-item rendered="#{surveyBean.resource.groupId == -1}" link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
 
-						<c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
-							<h:outputText value="${field.label}" styleClass="d-block"/>
-						</c:if>
+	<lw:breadcrumb-item title="#{surveyBean.resource.title}"/>
+</ui:define>
+
+<ui:define name="center_layout">
+	<p:panel header="Survey answer" rendered="#{surveyBean.resource != null}">
+		<h:form id="survey_data">
+			<div class="form-group font-weight-bold">
+				<h:outputText value="Student ID: #{surveyBean.userAnswers.user.studentId}"
+							  rendered="#{userBean.moderator or userBean.user.id eq surveyBean.surveyUserId}"/>
+			</div>
+
+			<c:forEach var="field" items="#{surveyBean.resource.questions}">
+				<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
+					<c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
+						<h3 class="mb-3">
+							<h:outputText value="${field.label}"/>
+						</h3>
 					</c:if>
 
-					<div class="form-group">
-						<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA' or field.type eq 'AUTOCOMPLETE'}">
-							<p:outputLabel value="#{field.label}"/>
-							<p:outputLabel value="#{surveyBean.userAnswers.answers[field.id]}"/>
-						</c:if>
+					<c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
+						<h:outputText value="${field.label}" styleClass="d-block"/>
+					</c:if>
+				</c:if>
 
-						<c:if test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
+				<div class="form-group">
+					<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA' or field.type eq 'AUTOCOMPLETE'}">
+						<p:outputLabel value="#{field.label}"/>
+						<p:outputLabel value="#{surveyBean.userAnswers.answers[field.id]}"/>
+					</c:if>
+
+					<c:if test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
+						<p:outputLabel value="#{field.label}"/>
+						<p:selectOneMenu id="input_selectone_#{field.id}" value="#{surveyBean.userAnswers.answers[field.id]}"
+										 editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}" class="border-box-100" title="#{field.info}">
+							<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+						</p:selectOneMenu>
+					</c:if>
+
+					<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
+						<p:outputLabel value="#{field.label}"/>
+						<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}" value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
+											  label="" multiple="true" title="#{field.info}" required="#{field.required}"
+											  filter="#{field.optionsList.size() gt 8}" filterMatchMode="startsWith">
+							<f:selectItems value="#{field.optionsList}" var="selectItemOption" itemLabel="#{selectItemOption.label}" itemValue="#{selectItemOption.value}"/>
+						</p:selectCheckboxMenu>
+					</c:if>
+
+					<c:if test="#{field.type eq 'ONE_RADIO'}">
+					<!--
+						<c:if test="#{not field.label.startsWith('OVERALL MARK') or not empty surveyBean.userAnswers.answers[field.id] and surveyBean.userAnswers.answers[field.id] ne 'Don\'t show'}">
+							 eumade4all special rule remove later  -->
 							<p:outputLabel value="#{field.label}"/>
-							<p:selectOneMenu id="input_selectone_#{field.id}" value="#{surveyBean.userAnswers.answers[field.id]}"
-											 editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}" class="border-box-100" title="#{field.info}">
+							<p:selectOneRadio id="input_oneradio_#{field.id}" value="#{surveyBean.userAnswers.answers[field.id]}" label=""
+											  multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.optionsList.size() gt 8}"
+											  layout="responsive" columns="10" filterMatchMode="startsWith" panelStyle="">
 								<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
-							</p:selectOneMenu>
+							</p:selectOneRadio>
+						<!--
 						</c:if>
+						 -->
+					</c:if>
 
-						<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
-							<p:outputLabel value="#{field.label}"/>
-							<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}" value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
-												  label="" multiple="true" title="#{field.info}" required="#{field.required}"
-												  filter="#{field.optionsList.size() gt 8}" filterMatchMode="startsWith">
-								<f:selectItems value="#{field.optionsList}" var="selectItemOption" itemLabel="#{selectItemOption.label}" itemValue="#{selectItemOption.value}"/>
-							</p:selectCheckboxMenu>
-						</c:if>
+					<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
+						<p:outputLabel value="#{field.label}"/>
+						<p:selectManyCheckbox id="input_manycheckbox_#{field.id}" value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
+							label="" multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.optionsList.size() gt 8}"
+											  filterMatchMode="startsWith" panelStyle="width:250px" layout="pageDirection" columns="1">
+							<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+						</p:selectManyCheckbox>
+					</c:if>
+				</div>
+			</c:forEach>
+		</h:form>
 
-						<c:if test="#{field.type eq 'ONE_RADIO'}">
-                        <!--
-							<c:if test="#{not field.label.startsWith('OVERALL MARK') or not empty surveyBean.userAnswers.answers[field.id] and surveyBean.userAnswers.answers[field.id] ne 'Don\'t show'}">
-								 eumade4all special rule remove later  -->
-								<p:outputLabel value="#{field.label}"/>
-								<p:selectOneRadio id="input_oneradio_#{field.id}" value="#{surveyBean.userAnswers.answers[field.id]}" label=""
-												  multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.optionsList.size() gt 8}"
-												  layout="responsive" columns="10" filterMatchMode="startsWith" panelStyle="">									
-									<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>>
-								</p:selectOneRadio>
-							<!-- 
-                            </c:if>
-                             -->
-						</c:if>
+		<div class="d-flex mt-3">
+			<div class="mr-auto">
+				<h:outputLink value="survey/survey.jsf" rendered="#{!not surveyBean.submitted}">
+					<f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
+					<f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
 
-						<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
-							<p:outputLabel value="#{field.label}"/>
-							<p:selectManyCheckbox id="input_manycheckbox_#{field.id}" value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
-								label="" multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.optionsList.size() gt 8}"
-                                                  filterMatchMode="startsWith" panelStyle="width:250px" layout="pageDirection" columns="1">
-								<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
-							</p:selectManyCheckbox>
-						</c:if>
-					</div>
-				</c:forEach>
-			</h:form>
-
-            <div class="d-flex mt-3">
-                <div class="mr-auto">
-                    <h:outputLink value="survey/survey.jsf" rendered="#{!not surveyBean.submitted}">
-                        <f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
-                        <f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
-
-                        <i class="fa fa-fw fa-pencil" aria-hidden="true"></i>
-                        <h:outputText value="#{msg.edit}"/>
-                    </h:outputLink>
-                </div>
-                <div>
-                    <p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
-                        <p:printer target="survey_data"/>
-                    </p:commandButton>
-                </div>
-            </div>
-		</p:panel>
-
-		<ui:fragment rendered="#{surveyBean.resource == null}">
-			<div class="h4 text-center">
-				<h:outputText value="Please select valid survey resource."></h:outputText>
+					<i class="fa fa-fw fa-pencil" aria-hidden="true"></i>
+					<h:outputText value="#{msg.edit}"/>
+				</h:outputLink>
 			</div>
-		</ui:fragment>
-	</ui:define>
+			<div>
+				<p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
+					<p:printer target="survey_data"/>
+				</p:commandButton>
+			</div>
+		</div>
+	</p:panel>
+
+	<ui:fragment rendered="#{surveyBean.resource == null}">
+		<div class="h4 text-center">
+			<h:outputText value="Please select valid survey resource."></h:outputText>
+		</div>
+	</ui:fragment>
+</ui:define>
+
 </ui:composition>

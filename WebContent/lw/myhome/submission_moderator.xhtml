@@ -6,119 +6,119 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
-    <ui:param name="helpText" value=""/>
+<ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
+<ui:param name="helpText" value=""/>
 
-    <ui:define name="metadata">
-        <f:metadata>
-            <f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}"/>
-            <f:viewAction action="#{submissionModeratorBean.onLoad}"/>
-        </f:metadata>
-    </ui:define>
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}"/>
+        <f:viewAction action="#{submissionModeratorBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
 
-    <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
 
-        <lw:breadcrumb-item link="myhome/submission_overview.jsf" title="#{msg['Submission.overview_title']}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
-        </lw:breadcrumb-item>
+    <lw:breadcrumb-item link="myhome/submission_overview.jsf" title="#{msg['Submission.overview_title']}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
+    </lw:breadcrumb-item>
 
-        <lw:breadcrumb-item title="#{submissionModeratorBean.submission.title}" />
-    </ui:define>
+    <lw:breadcrumb-item title="#{submissionModeratorBean.submission.title}" />
+</ui:define>
 
-    <ui:define name="center_layout">
-        <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
-        <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
+<ui:define name="center_layout">
+    <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
+    <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
 
-        <h:panelGroup layout="block" id="resourcesWrapper">
-            <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
-                <h:outputText value="#{msg.please_wait}"/>
-            </p:blockUI>
+    <h:panelGroup layout="block" id="resourcesWrapper">
+        <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
+            <h:outputText value="#{msg.please_wait}"/>
+        </p:blockUI>
 
-            <p:panel header="#{submissionModeratorBean.submission.title}">
-                <div class="form-group d-flex flex-column">
-                    <span class="font-weight-lighter">#{msg['Submission.open_date']}:
-                        <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.openDatetime}">
-                            <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
-                        </h:outputText>
-                    </span>
+        <p:panel header="#{submissionModeratorBean.submission.title}">
+            <div class="form-group d-flex flex-column">
+                <span class="font-weight-lighter">#{msg['Submission.open_date']}:
+                    <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.openDatetime}">
+                        <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
+                    </h:outputText>
+                </span>
 
-                    <span class="font-weight-lighter">#{msg['Submission.close_date']}:
-                        <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.closeDatetime}">
-                            <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
-                        </h:outputText>
-                    </span>
+                <span class="font-weight-lighter">#{msg['Submission.close_date']}:
+                    <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.closeDatetime}">
+                        <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
+                    </h:outputText>
+                </span>
 
-                    <span class="font-weight-lighter">#{msg.course}:
-                        <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.course.title}"/>
-                    </span>
-                </div>
+                <span class="font-weight-lighter">#{msg.course}:
+                    <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.course.title}"/>
+                </span>
+            </div>
 
-                <p class="font-weight-lighter">#{submissionModeratorBean.submission.description}</p>
+            <p class="font-weight-lighter">#{submissionModeratorBean.submission.description}</p>
 
-                <h:panelGroup layout="block" id="user_submissions" pt:data-canSelectResources="true">
-                    <p:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
-                        <div class="#{status.last ? '' : 'mb-4 border-bottom'}">
-                            <div class="d-flex align-items-center p-2 bg-light">
-                                <img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
-                                <div class="d-flex align-items-center justify-content-between w-100">
-                                    <h4 class="mr-1 mb-0">#{userSubmission.user.username}</h4>
-                                    <h:form prependId="false">
-                                        <p:commandButton  value="locked" styleClass="moderator-btn" rendered="#{userSubmission.submitStatus}"
-                                                        process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
-                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
-                                        </p:commandButton>
+            <h:panelGroup layout="block" id="user_submissions" pt:data-canSelectResources="true">
+                <p:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
+                    <div class="#{status.last ? '' : 'mb-4 border-bottom'}">
+                        <div class="d-flex align-items-center p-2 bg-light">
+                            <img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
+                            <div class="d-flex align-items-center justify-content-between w-100">
+                                <h4 class="mr-1 mb-0">#{userSubmission.user.username}</h4>
+                                <h:form prependId="false">
+                                    <p:commandButton  value="locked" styleClass="moderator-btn" rendered="#{userSubmission.submitStatus}"
+                                                    process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
+                                        <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
+                                    </p:commandButton>
 
-                                        <p:commandButton  value="unlocked" styleClass="moderator-btn" rendered="#{not userSubmission.submitStatus}"
-                                                        process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
-                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
-                                        </p:commandButton>
-                                    </h:form>
+                                    <p:commandButton  value="unlocked" styleClass="moderator-btn" rendered="#{not userSubmission.submitStatus}"
+                                                    process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
+                                        <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
+                                    </p:commandButton>
+                                </h:form>
+                            </div>
+                        </div>
+
+                        <h:panelGroup rendered="#{logEntry.resource != null}">
+                            <div class="row">
+                                <h:outputLink styleClass="col-5 col-md-3" value="resource.jsf" pt:data-fancybox="resource" rendered="#{not empty logEntry.resource.thumbnail3}">
+                                    <f:param name="resource_id" value="#{logEntry.resource.id}"/>
+
+                                    <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
+                                </h:outputLink>
+
+                                <div class="col-auto d-flex flex-column mt-2">
+                                    <span>
+                                        <h:outputText value="#{logEntry.resource.shortDescription}" escape="false"/>
+                                    </span>
+
+                                    <h:outputText value="#{msg.author}: #{logEntry.resource.author}" rendered="#{not empty logEntry.resource.author}" escape="false"/>
                                 </div>
                             </div>
+                        </h:panelGroup>
 
-                            <h:panelGroup rendered="#{logEntry.resource != null}">
-                                <div class="row">
-                                    <h:outputLink styleClass="col-5 col-md-3" value="resource.jsf" pt:data-fancybox="resource" rendered="#{not empty logEntry.resource.thumbnail3}">
-                                        <f:param name="resource_id" value="#{logEntry.resource.id}"/>
+                        <!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
 
-                                        <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
-                                    </h:outputLink>
+                        <h:panelGroup id="resourceGrid" styleClass="res-grid mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
+                            <ui:repeat value="#{userSubmission.resources}" var="res">
+                                <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
+                                              pt:data-fancybox="resource"
+                                              pt:data-itemType="resource"
+                                              pt:data-itemId="#{res.id}">
+                                    <f:param name="resource_id" value="#{res.id}"/>
 
-                                    <div class="col-auto d-flex flex-column mt-2">
-                                        <span>
-                                            <h:outputText value="#{logEntry.resource.shortDescription}" escape="false"/>
-                                        </span>
+                                    <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+                                        <ui:param name="res" value="#{res}"/>
+                                        <ui:param name="showSelectIcon" value="true"/>
+                                    </ui:decorate>
+                                </h:outputLink>
+                            </ui:repeat>
+                        </h:panelGroup>
+                    </div>
+                </p:repeat>
+            </h:panelGroup>
+        </p:panel>
+    </h:panelGroup>
+</ui:define>
 
-                                        <h:outputText value="#{msg.author}: #{logEntry.resource.author}" rendered="#{not empty logEntry.resource.author}" escape="false"/>
-                                    </div>
-                                </div>
-                            </h:panelGroup>
-
-                            <!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
-
-                            <h:panelGroup id="resourceGrid" styleClass="res-grid mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
-                                <ui:repeat value="#{userSubmission.resources}" var="res">
-                                    <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
-                                                  pt:data-fancybox="resource"
-                                                  pt:data-itemType="resource"
-                                                  pt:data-itemId="#{res.id}">
-                                        <f:param name="resource_id" value="#{res.id}"/>
-
-                                        <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                            <ui:param name="res" value="#{res}"/>
-                                            <ui:param name="showSelectIcon" value="true"/>
-                                        </ui:decorate>
-                                    </h:outputLink>
-                                </ui:repeat>
-                            </h:panelGroup>
-                        </div>
-                    </p:repeat>
-                </h:panelGroup>
-            </p:panel>
-        </h:panelGroup>
-    </ui:define>
 </ui:composition>

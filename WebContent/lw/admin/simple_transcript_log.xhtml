@@ -2,78 +2,79 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="pageTitle" value="#{msg.simple_transcript_log}"/>
-    <ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.simple_transcript_log}"/>
 
-    <ui:define name="breadcrumb">
-        <ui:fragment rendered="#{userBean.moderator}">
-            <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-            </lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+    <ui:fragment rendered="#{userBean.moderator}">
+        <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+        </lw:breadcrumb-item>
 
-            <lw:breadcrumb-item link="admin/simple_transcript_log.jsf" title="#{msg.simple_transcript_log}">
-                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-            </lw:breadcrumb-item>
-        </ui:fragment>
-    </ui:define>
+        <lw:breadcrumb-item link="admin/simple_transcript_log.jsf" title="#{msg.simple_transcript_log}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+        </lw:breadcrumb-item>
+    </ui:fragment>
+</ui:define>
 
-    <ui:define name="center_layout">
-        <p:panel rendered="#{not userBean.moderator}">
-            <h:outputText value="#{msg.missing_authentication}"/>
-        </p:panel>
+<ui:define name="center_layout">
+    <p:panel rendered="#{not userBean.moderator}">
+        <h:outputText value="#{msg.missing_authentication}"/>
+    </p:panel>
 
-        <ui:fragment rendered="#{userBean.moderator}">
-            <h:form id="us_form" prependId="false">
-                <p:panel header="#{msg.select_users}">
-                    <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
-                    <p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
-                                     process="@form" update=":transcript_table"/>
-                </p:panel>
-            </h:form>
+    <ui:fragment rendered="#{userBean.moderator}">
+        <h:form id="us_form" prependId="false">
+            <p:panel header="#{msg.select_users}">
+                <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
+                <p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
+                                 process="@form" update=":transcript_table"/>
+            </p:panel>
+        </h:form>
 
-            <h:form prependId="false" styleClass="mt-3">
-                <p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30"
-                             paginator="true" rowsPerPageTemplate="20,25,30"
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
-                    <f:facet name="{Exporters}">
-                        <h:commandLink>
-                            <i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
-                            <p:dataExporter type="xls" target="transcript_table" fileName="simple_transcript_log"/>
-                        </h:commandLink>
-                    </f:facet>
+        <h:form prependId="false" styleClass="mt-3">
+            <p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30"
+                         paginator="true" rowsPerPageTemplate="20,25,30"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
+                <f:facet name="{Exporters}">
+                    <h:commandLink>
+                        <i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
+                        <p:dataExporter type="xls" target="transcript_table" fileName="simple_transcript_log"/>
+                    </h:commandLink>
+                </f:facet>
 
-                    <f:facet name="header">#{msg.transcript_logs}</f:facet>
+                <f:facet name="header">#{msg.transcript_logs}</f:facet>
 
-                    <p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
-                        <h:outputText value="#{log.user.username}"/>
-                    </p:column>
+                <p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
+                    <h:outputText value="#{log.user.username}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
-                        <h:outputText value="#{log.resource.title}"/>
-                    </p:column>
+                <p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
+                    <h:outputText value="#{log.resource.title}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.selection_count}" sortBy="#{log.selectionCount}">
-                        <h:outputText value="#{log.selectionCount}"/>
-                    </p:column>
+                <p:column headerText="#{msg.selection_count}" sortBy="#{log.selectionCount}">
+                    <h:outputText value="#{log.selectionCount}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.deselection_count}" sortBy="#{log.deselectionCount}">
-                        <h:outputText value="#{log.deselectionCount}"/>
-                    </p:column>
+                <p:column headerText="#{msg.deselection_count}" sortBy="#{log.deselectionCount}">
+                    <h:outputText value="#{log.deselectionCount}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.user_annotation_count}" sortBy="#{log.userAnnotationCount}">
-                        <h:outputText value="#{log.userAnnotationCount}"/>
-                    </p:column>
+                <p:column headerText="#{msg.user_annotation_count}" sortBy="#{log.userAnnotationCount}">
+                    <h:outputText value="#{log.userAnnotationCount}"/>
+                </p:column>
 
-                    <p:column headerText="Link">
-                        <h:outputLink value="#{request.contextPath}/lw/ted_transcript.jsf" target="_blank">
-                            <h:outputText value="link"/>
-                            <f:param name="resource_id" value="#{log.resource.id}"/>
-                        </h:outputLink>
-                    </p:column>
-                </p:dataTable>
-            </h:form>
-        </ui:fragment>
-    </ui:define>
+                <p:column headerText="Link">
+                    <h:outputLink value="#{request.contextPath}/lw/ted_transcript.jsf" target="_blank">
+                        <h:outputText value="link"/>
+                        <f:param name="resource_id" value="#{log.resource.id}"/>
+                    </h:outputLink>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:fragment>
+</ui:define>
+
 </ui:composition>

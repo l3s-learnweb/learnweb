@@ -4,21 +4,22 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="pageTitle" value="#{msg.loginTitle}"/>
-	<ui:param name="smallPage" value="true"/>
-	<ui:param name="hideGrowl" value="true"/>
-    <ui:param name="hideBreadcrumbs" value="true"/>
+<ui:param name="pageTitle" value="#{msg.loginTitle}"/>
+<ui:param name="extraPageClass" value="container"/>
+<ui:param name="hideGrowl" value="true"/>
+<ui:param name="hideBreadcrumbs" value="true"/>
 
-	<ui:define name="center_layout">
-		<p:panel header="#{msg.loginTitle}">
-			<ui:fragment rendered="#{!userBean.loggedIn}">
-				<div class="mw-md">
-					<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
-				</div>
-				<h:outputLink value="#{request.contextPath}/lw/user/register.jsf" styleClass="d-block">#{msg.registerLabel}</h:outputLink>
-			</ui:fragment>
+<ui:define name="center_layout">
+	<p:panel header="#{msg.loginTitle}">
+		<ui:fragment rendered="#{!userBean.loggedIn}">
+			<div class="mw-md">
+				<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
+			</div>
+			<h:outputLink value="#{request.contextPath}/lw/user/register.jsf" styleClass="d-block">#{msg.registerLabel}</h:outputLink>
+		</ui:fragment>
 
-			<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}" styleClass="font-weight-bold"/>
-		</p:panel>
-	</ui:define>
+		<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}" styleClass="font-weight-bold"/>
+	</p:panel>
+</ui:define>
+
 </ui:composition>

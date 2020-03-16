@@ -2,133 +2,134 @@
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:p="http://primefaces.org/ui"
-				xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:lw="http://l3s.de/learnweb">
 	
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.your_information}"/>
+<ui:param name="pageTitle" value="#{msg.your_information}"/>
 
-	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
-	</ui:define>
+<ui:define name="breadcrumb">
+	<lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
+</ui:define>
 
-	<ui:define name="center_layout">
-	    <h:form id="yourinformationform">
-	        <div class="w-100" style="padding: 0px 0px">
-	            <div class="ui-panel ui-widget ui-widget-content ui-corner-all">
-	                <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
-	                    <span class="ui-panel-title">
-	                        <h:outputText value="#{msg.greeting}, #{yourGeneralInfoBean.username}"/>
-	                    </span>
-	                </div>
-	                <div class="ui-panel-content ui-widget-content">
-                        <h:outputFormat value="#{msg['your_info.intro_msg']}"/>
-	                </div>
-	                <div class="ui-fluid">
-	                    <div class="card">
-	                        <div class="ui-menu ui-widget ui-widget-content ui-corner-all ui-helper-clearfix" role="menu">
-	                            <ul class="ui-menu-list ui-helper-reset">
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_personal_info.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-android"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['personal_info']}"/>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_courses.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-address-book"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.courses_msg']}">
-                                                    <f:param value="#{yourGeneralInfoBean.userCoursesCount}"/>
-                                                </h:outputFormat>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_groups.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-cart-plus"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.groups_msg']}">
-                                                    <f:param value="#{yourGeneralInfoBean.userGroupsCount}"/>
-                                                </h:outputFormat>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_posts.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-twitter"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.posts_msg']}">
-                                                    <f:param value="#{yourGeneralInfoBean.userPostsCount}"/>
-                                                </h:outputFormat>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_resources.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-feed"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.resources_msg']}">
-                                                    <f:param value="#{yourGeneralInfoBean.userResourcesCount}"/>
-                                                </h:outputFormat>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_messages.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-mail-reply"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.sent_messages_msg']}">
-                                                    <f:param value="#{yourGeneralInfoBean.sentMessagesCount}"/>
-                                                </h:outputFormat>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_messages.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-mail-forward"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.received_messages_msg']}">
-                                                    <f:param value="#{yourGeneralInfoBean.receivedMessagesCount}"/>
-                                                </h:outputFormat>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_submissions.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-download"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.submissions_msg']}">
-                                                    <f:param value="#{yourGeneralInfoBean.submissionsCount}"/>
-                                                </h:outputFormat>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_search_history.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-history"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.history_msg']}"/>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_activity.jsf">
-	                                        <span class="ui-menuitem-icon fa fa-print"></span>
-	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.activity_msg']}"/>
-                                            </span>
-	                                    </a>
-	                                </li>
-	                            </ul>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	    </h:form>
-	</ui:define>
+<ui:define name="center_layout">
+	<h:form id="yourinformationform">
+		<div class="w-100" style="padding: 0px 0px">
+			<div class="ui-panel ui-widget ui-widget-content ui-corner-all">
+				<div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
+					<span class="ui-panel-title">
+						<h:outputText value="#{msg.greeting}, #{yourGeneralInfoBean.username}"/>
+					</span>
+				</div>
+				<div class="ui-panel-content ui-widget-content">
+					<h:outputFormat value="#{msg['your_info.intro_msg']}"/>
+				</div>
+				<div class="ui-fluid">
+					<div class="card">
+						<div class="ui-menu ui-widget ui-widget-content ui-corner-all ui-helper-clearfix" role="menu">
+							<ul class="ui-menu-list ui-helper-reset">
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_personal_info.jsf">
+										<span class="ui-menuitem-icon fa fa-android"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['personal_info']}"/>
+										</span>
+									</a>
+								</li>
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_courses.jsf">
+										<span class="ui-menuitem-icon fa fa-address-book"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['your_info.courses_msg']}">
+												<f:param value="#{yourGeneralInfoBean.userCoursesCount}"/>
+											</h:outputFormat>
+										</span>
+									</a>
+								</li>
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_groups.jsf">
+										<span class="ui-menuitem-icon fa fa-cart-plus"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['your_info.groups_msg']}">
+												<f:param value="#{yourGeneralInfoBean.userGroupsCount}"/>
+											</h:outputFormat>
+										</span>
+									</a>
+								</li>
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_posts.jsf">
+										<span class="ui-menuitem-icon fa fa-twitter"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['your_info.posts_msg']}">
+												<f:param value="#{yourGeneralInfoBean.userPostsCount}"/>
+											</h:outputFormat>
+										</span>
+									</a>
+								</li>
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_resources.jsf">
+										<span class="ui-menuitem-icon fa fa-feed"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['your_info.resources_msg']}">
+												<f:param value="#{yourGeneralInfoBean.userResourcesCount}"/>
+											</h:outputFormat>
+										</span>
+									</a>
+								</li>
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_messages.jsf">
+										<span class="ui-menuitem-icon fa fa-mail-reply"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['your_info.sent_messages_msg']}">
+												<f:param value="#{yourGeneralInfoBean.sentMessagesCount}"/>
+											</h:outputFormat>
+										</span>
+									</a>
+								</li>
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_messages.jsf">
+										<span class="ui-menuitem-icon fa fa-mail-forward"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['your_info.received_messages_msg']}">
+												<f:param value="#{yourGeneralInfoBean.receivedMessagesCount}"/>
+											</h:outputFormat>
+										</span>
+									</a>
+								</li>
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_submissions.jsf">
+										<span class="ui-menuitem-icon fa fa-download"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['your_info.submissions_msg']}">
+												<f:param value="#{yourGeneralInfoBean.submissionsCount}"/>
+											</h:outputFormat>
+										</span>
+									</a>
+								</li>
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_search_history.jsf">
+										<span class="ui-menuitem-icon fa fa-history"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['your_info.history_msg']}"/>
+										</span>
+									</a>
+								</li>
+								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+									<a class="ui-menuitem-link ui-corner-all" href="your_information/your_activity.jsf">
+										<span class="ui-menuitem-icon fa fa-print"></span>
+										<span class="ui-menuitem-text">
+											<h:outputFormat value="#{msg['your_info.activity_msg']}"/>
+										</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</h:form>
+</ui:define>
+
 </ui:composition>

@@ -3,128 +3,129 @@
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="#{adminCourseBean.course.title}"/>
+<ui:param name="pageTitle" value="#{adminCourseBean.course.title}"/>
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="course_id" value="#{adminCourseBean.courseId}" required="true" requiredMessage="#{msg.missing_parameter}"/>            
-            <f:viewAction action="#{adminCourseBean.onLoad()}"/>
-		</f:metadata>
-	</ui:define>
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="course_id" value="#{adminCourseBean.courseId}" required="true" requiredMessage="#{msg.missing_parameter}"/>
+		<f:viewAction action="#{adminCourseBean.onLoad()}"/>
+	</f:metadata>
+</ui:define>
 
-	<ui:define name="breadcrumb">
-		<ui:fragment rendered="#{userBean.moderator}">
-			<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-			</lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+	<ui:fragment rendered="#{userBean.moderator}">
+		<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+		</lw:breadcrumb-item>
 
-			<lw:breadcrumb-item link="admin/courses.jsf" title="#{msg.courses}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-			</lw:breadcrumb-item>
+		<lw:breadcrumb-item link="admin/courses.jsf" title="#{msg.courses}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+		</lw:breadcrumb-item>
 
-			<lw:breadcrumb-item title="#{adminCourseBean.course.title}"/>
-		</ui:fragment>
-	</ui:define>
+		<lw:breadcrumb-item title="#{adminCourseBean.course.title}"/>
+	</ui:fragment>
+</ui:define>
 
-	<ui:define name="center_layout">
-		<p:panel rendered="#{not userBean.moderator}">
-			<h:outputText value="#{msg.missing_authentication}"/>
-		</p:panel>
+<ui:define name="center_layout">
+	<p:panel rendered="#{not userBean.moderator}">
+		<h:outputText value="#{msg.missing_authentication}"/>
+	</p:panel>
 
-		<h:form rendered="#{userBean.moderator}" id="editwelcomeform" prependId="false" styleClass="form">
-			<div class="row">
-				<div class="col-12">
-					<p:panel header="#{msg.welcome_message}">
-						<!-- a dirty fix. we should check old message and remove tables -->
-						<p:textEditor height="200" value="#{adminCourseBean.course.welcomeMessage}" rendered="${!adminCourseBean.course.welcomeMessage.contains('table')}">
-							<f:facet name="toolbar">
+	<h:form rendered="#{userBean.moderator}" id="editwelcomeform" prependId="false" styleClass="form">
+		<div class="row">
+			<div class="col-12">
+				<p:panel header="#{msg.welcome_message}">
+					<!-- a dirty fix. we should check old message and remove tables -->
+					<p:textEditor height="200" value="#{adminCourseBean.course.welcomeMessage}" rendered="${!adminCourseBean.course.welcomeMessage.contains('table')}">
+						<f:facet name="toolbar">
+							<span class="ql-formats">
+								<select class="ql-font"></select>
+								<select class="ql-size"></select>
+							</span>
 								<span class="ql-formats">
-									<select class="ql-font"></select>
-									<select class="ql-size"></select>
-								</span>
-									<span class="ql-formats">
-									<button class="ql-bold"></button>
-									<button class="ql-italic"></button>
-									<button class="ql-underline"></button>
-									<button class="ql-strike"></button>
-									<button class="ql-link"></button>
-								</span>
-							</f:facet>
-						</p:textEditor>
-					</p:panel>
-				</div>
+								<button class="ql-bold"></button>
+								<button class="ql-italic"></button>
+								<button class="ql-underline"></button>
+								<button class="ql-strike"></button>
+								<button class="ql-link"></button>
+							</span>
+						</f:facet>
+					</p:textEditor>
+				</p:panel>
+			</div>
 
-				<div class="col-12">
-					<div class="row">
-						<div class="col">
-							<p:panel header="#{msg.common_settings}:">
-								<div class="form-group">
-									<p:outputLabel for="@next" value="#{msg.title}:"/>
-									<p:inputText id="c_title" value="#{adminCourseBean.course.title}">
+			<div class="col-12">
+				<div class="row">
+					<div class="col">
+						<p:panel header="#{msg.common_settings}:">
+							<div class="form-group">
+								<p:outputLabel for="@next" value="#{msg.title}:"/>
+								<p:inputText id="c_title" value="#{adminCourseBean.course.title}">
 <!--										<p:ajax update="message_c_title"/>-->
-									</p:inputText>
-									<p:message for="@previous"/>
-								</div>
+								</p:inputText>
+								<p:message for="@previous"/>
+							</div>
 
-								<div class="form-group">
-									<p:outputLabel for="@next" value="#{msg.wizard_parameter}:"/>
-									<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}">
+							<div class="form-group">
+								<p:outputLabel for="@next" value="#{msg.wizard_parameter}:"/>
+								<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}">
 <!--										<p:ajax update="message_c_param"/>-->
-									</p:inputText>
-									<p:message for="@previous"/>
-								</div>
+								</p:inputText>
+								<p:message for="@previous"/>
+							</div>
 
-								<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">
-									<p:outputLabel for="@next" value="#{msg.organization}:"/>
-									<p:selectOneMenu id="c_organisation" value="#{adminCourseBean.course.organisationId}">
-										<f:selectItem itemLabel="#{msg.no_organization}" itemValue="0"/>
-										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true"/>
-										<f:selectItems var="org" value="#{adminCourseBean.organisations}" itemLabel="#{org.title}" itemValue="#{org.id}"/>
-									</p:selectOneMenu>
-									<p:message for="@previous"/>
-								</h:panelGroup>
+							<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">
+								<p:outputLabel for="@next" value="#{msg.organization}:"/>
+								<p:selectOneMenu id="c_organisation" value="#{adminCourseBean.course.organisationId}">
+									<f:selectItem itemLabel="#{msg.no_organization}" itemValue="0"/>
+									<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true"/>
+									<f:selectItems var="org" value="#{adminCourseBean.organisations}" itemLabel="#{org.title}" itemValue="#{org.id}"/>
+								</p:selectOneMenu>
+								<p:message for="@previous"/>
+							</h:panelGroup>
 
-								<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">
-									<p:outputLabel for="@next" value="#{msg.default_group}:"/>
-									<p:selectOneMenu id="c_group" value="#{adminCourseBean.course.defaultGroupId}">
-										<f:selectItem itemLabel="#{msg.no_default_group}" itemValue="0"/>
-										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true"/>
-										<f:selectItems var="group" value="#{adminCourseBean.course.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
-									</p:selectOneMenu>
-									<p:message for="@previous"/>
-								</h:panelGroup>
-							</p:panel>
-						</div>
+							<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">
+								<p:outputLabel for="@next" value="#{msg.default_group}:"/>
+								<p:selectOneMenu id="c_group" value="#{adminCourseBean.course.defaultGroupId}">
+									<f:selectItem itemLabel="#{msg.no_default_group}" itemValue="0"/>
+									<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true"/>
+									<f:selectItems var="group" value="#{adminCourseBean.course.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
+								</p:selectOneMenu>
+								<p:message for="@previous"/>
+							</h:panelGroup>
+						</p:panel>
+					</div>
 
-						<div class="col">
-							<p:panel header="#{msg.additional_settings}">
-                                <p:accordionPanel autoHeight="false" id="courseoptions">
-                                    <c:forEach items="#{adminCourseBean.optionGroups}" var="group" varStatus="status">
-                                        <p:tab title="#{adminCourseBean.optionGroups[status.index].title}">
-                                            <p:repeat value="#{adminCourseBean.optionGroups[status.index].options}" var="option">
-												<div class="form-group">
-                                                    <p:selectBooleanCheckbox value="#{option.value}" itemLabel="#{option.name}" id="checkbox"/>
-												</div>
-                                            </p:repeat>
-                                        </p:tab>
-                                    </c:forEach>
-                                </p:accordionPanel>
+					<div class="col">
+						<p:panel header="#{msg.additional_settings}">
+							<p:accordionPanel autoHeight="false" id="courseoptions">
+								<c:forEach items="#{adminCourseBean.optionGroups}" var="group" varStatus="status">
+									<p:tab title="#{adminCourseBean.optionGroups[status.index].title}">
+										<p:repeat value="#{adminCourseBean.optionGroups[status.index].options}" var="option">
+											<div class="form-group">
+												<p:selectBooleanCheckbox value="#{option.value}" itemLabel="#{option.name}" id="checkbox"/>
+											</div>
+										</p:repeat>
+									</p:tab>
+								</c:forEach>
+							</p:accordionPanel>
 
-                                <p>#{msg.changes_login_again}</p>
-                            </p:panel>
-						</div>
+							<p>#{msg.changes_login_again}</p>
+						</p:panel>
 					</div>
 				</div>
-
-				<div class="d-flex justify-content-center w-100">
-					<p:commandButton actionListener="#{adminCourseBean.save}" styleClass="p-1" value="#{msg.save}" update=":growl :courseoptions">
-						<f:param name="course_id" value="#{adminCourseBean.courseId}"/>
-					</p:commandButton>
-				</div>
 			</div>
-		</h:form>
-	</ui:define>
+
+			<div class="d-flex justify-content-center w-100">
+				<p:commandButton actionListener="#{adminCourseBean.save}" styleClass="p-1" value="#{msg.save}" update=":growl :courseoptions">
+					<f:param name="course_id" value="#{adminCourseBean.courseId}"/>
+				</p:commandButton>
+			</div>
+		</div>
+	</h:form>
+</ui:define>
+
 </ui:composition>

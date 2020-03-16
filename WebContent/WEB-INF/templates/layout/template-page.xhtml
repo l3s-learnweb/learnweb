@@ -3,11 +3,9 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
       lang="#{userBean.localeCode}">
 
     <!--@elvariable id="pageTitle" type="java.lang.String"-->
-    <!--@elvariable id="hideGrowl" type="java.lang.Boolean"-->
 
     <f:view locale="#{userBean.locale}" contentType="text/html">
         <ui:insert name="metadata"/>
@@ -24,12 +22,12 @@
                 <header class="layout-header bg-primary">
                     <div class="layout-container d-flex flex-row align-items-center">
                         <div class="d-flex ml-sm-0 mr-auto">
-                            <a href="#{request.contextPath}/" class="header-element header-logo no-hover-bg">
-                                <h:graphicImage library="images" name="logos/logo_learnweb.png" alt="#{msg['application.name']} logo" styleClass="w-inherit"/>
+                            <a href="#{userBean.loggedIn ? userBean.bannerLink : request.contextPath}" class="header-element header-logo no-hover-bg">
+                                <h:graphicImage library="images" name="logos/logo_learnweb.png" alt="#{msg['application.name']}" styleClass="w-inherit"/>
                             </a>
                         </div>
 
-                        <h:form styleClass="d-flex mw-100 ml-auto mx-sm-0">
+                        <h:form id="header_right" styleClass="d-flex mw-100 ml-auto mx-sm-0">
                             <div class="header-element no-hover-bg row justify-content-end px-2">
                                 <ui:insert name="header_right"/>
                             </div>
@@ -51,8 +49,6 @@
                     <ui:include src="parts/footer.xhtml"/>
                 </div>
             </div>
-
-            <p:growl id="growl" rendered="#{not hideGrowl}" escape="false"/>
         </h:body>
     </f:view>
 </html>

@@ -1,20 +1,19 @@
 <ui:composition template="/WEB-INF/templates/layout/template-page.xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">>
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="pageTitle" value="#{msg.error}"/>
-	<ui:param name="smallPage" value="true"/>
-	<ui:param name="hideGrowl" value="true"/>
+<ui:param name="pageTitle" value="#{msg.error}"/>
 
-	<ui:define name="container_layout">
-		<p:panel header="Database connection error" styleClass="ui-widget-danger">
-			<h5 class="text-danger" onclick="$('.collapse').fadeIn();">Learnweb is currently not able to connect to its database. Please check again in a few minutes.</h5>
+<ui:define name="container_layout">
+	<p:panel header="Database connection error" styleClass="ui-widget-danger">
+		<h5 class="text-danger" onclick="$('.collapse').fadeIn();">Learnweb is currently not able to connect to its database. Please check again in a few minutes.</h5>
 
-			<pre class="pre-scrollable collapse">
-				<h:outputText value="Message:#{pfExceptionHandler.message}"/>
-			</pre>
-		</p:panel>
-	</ui:define>
+		<pre class="pre-scrollable collapse">
+			<h:outputText value="Message:#{pfExceptionHandler.message}"/>
+		</pre>
+	</p:panel>
+</ui:define>
+
 </ui:composition>

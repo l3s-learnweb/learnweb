@@ -1,97 +1,95 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="resource_id" value="#{tedTranscriptBean.resourceId}"/>
-			<f:viewAction action="#{tedTranscriptBean.preRenderView}"/>
-		</f:metadata>
-	</ui:define>
+<ui:param name="pageTitle" value="#{tedTranscriptBean.tedResource.title}"/>
+<ui:param name="helpText" value="#{msg.tedTranscriptHelp}"/>
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{tedTranscriptBean.tedResource.title}"/>
-	<ui:param name="helpText" value="#{msg.tedTranscriptHelp}"/>
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="resource_id" value="#{tedTranscriptBean.resourceId}"/>
+		<f:viewAction action="#{tedTranscriptBean.preRenderView}"/>
+	</f:metadata>
+</ui:define>
 
-	<ui:define name="center_layout">
-		<h:form styleClass="d-none">
-			<p:remoteCommand name="saveTedResource" actionListener="${tedTranscriptBean.processActionSaveResource()}" partialSubmit="true" immediate="true" process="@this" update=":growl"/>
-			<p:remoteCommand name="submitTedResource" actionListener="${tedTranscriptBean.processActionSubmitResource()}" partialSubmit="true" immediate="true" process="@this" update=":growl :transcript :transcript_options"/>
-			<p:remoteCommand name="saveTranscriptLog" actionListener="${tedTranscriptBean.processActionSaveLog()}" partialSubmit="true" immediate="true" process="@this" update="@none"/>
-		</h:form>
+<ui:define name="center_layout">
+	<h:form styleClass="d-none">
+		<p:remoteCommand name="saveTedResource" actionListener="${tedTranscriptBean.processActionSaveResource()}" partialSubmit="true" immediate="true" process="@this" update=":growl"/>
+		<p:remoteCommand name="submitTedResource" actionListener="${tedTranscriptBean.processActionSubmitResource()}" partialSubmit="true" immediate="true" process="@this" update=":growl :transcript :transcript_options"/>
+		<p:remoteCommand name="saveTranscriptLog" actionListener="${tedTranscriptBean.processActionSaveLog()}" partialSubmit="true" immediate="true" process="@this" update="@none"/>
+	</h:form>
 
-		<h:outputStylesheet library="vendor" name="spectrum-v1.8.0/spectrum.css"/>
-		<h:outputScript library="vendor" name="spectrum-v1.8.0/spectrum.js" target="body"/>
-		<h:outputScript library="vendor" name="contextMenu-v2.9.0/jquery.contextMenu.min.js" target="body"/>
-		<h:outputScript library="learnweb-layout" name="js/ted-transcript.js" target="body"/>
+	<h:outputStylesheet library="vendor" name="spectrum-v1.8.0/spectrum.css"/>
+	<h:outputScript library="vendor" name="spectrum-v1.8.0/spectrum.js" target="body"/>
+	<h:outputScript library="vendor" name="contextMenu-v2.9.0/jquery.contextMenu.min.js" target="body"/>
+	<h:outputScript library="learnweb-layout" name="js/ted-transcript.js" target="body"/>
 
-		<script type="text/javascript">
-  			var noteId = #{tedTranscriptBean.noteId};
-  			var readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
-  		</script>
+	<script type="text/javascript">
+		var noteId = #{tedTranscriptBean.noteId};
+		var readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
+	</script>
 
-		<div id="ted_content" class="section-ted-transcript section-resource-transcript">
-			<div id="preview"></div>
+	<div id="ted_content" class="section-ted-transcript section-resource-transcript">
+		<div id="preview"></div>
 
-			<h:panelGroup layout="block" id="transcript_column" styleClass="right_bar">
-				<p:outputPanel id="transcript_options">
-					<div class="text-right noselect">
-						<h:form>
-							<p:commandButton id="save" styleClass="button_position" value="#{msg.save}" onclick="saveEditing();"
-								rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
-							<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
-							<p:commandButton id="submit" styleClass="button_position" value="#{msg.submit}" onclick="submitTranscript();"
-								disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
-							<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
-						</h:form>
-					</div>
-					<div class="my-3 p-3 border border-dark noselect">
-						<b>Owner of transcript: </b>
-						<h:outputText value="#{tedTranscriptBean.tedResource.user.username}"/>
-						<br/> <b>#{msg.note}:</b>
-						<h:outputText value=" #{msg.transcript_warning}" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
-						<h:outputText value=" #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" style="color:red"/>
-						<h:outputText value=" #{msg.transcript_note}"
-							rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}"/>
-					</div>
-				</p:outputPanel>
-				<h:panelGroup layout="block" id="transcript">
-					<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" styleClass="my-3 p-3 border border-dark transcript-container"
-						rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
-						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
-					</h:panelGroup>
-					<h:panelGroup layout="block" styleClass="my-3 p-3 border border-dark transcript-container"
-						rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
-						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
-					</h:panelGroup>
+		<h:panelGroup layout="block" id="transcript_column" styleClass="right_bar">
+			<p:outputPanel id="transcript_options">
+				<div class="text-right noselect">
+					<h:form>
+						<p:commandButton id="save" styleClass="button_position" value="#{msg.save}" onclick="saveEditing();"
+							rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
+						<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
+						<p:commandButton id="submit" styleClass="button_position" value="#{msg.submit}" onclick="submitTranscript();"
+							disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
+						<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
+					</h:form>
+				</div>
+				<div class="my-3 p-3 border border-dark noselect">
+					<b>Owner of transcript: </b>
+					<h:outputText value="#{tedTranscriptBean.tedResource.user.username}"/>
+					<br/> <b>#{msg.note}:</b>
+					<h:outputText value=" #{msg.transcript_warning}" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
+					<h:outputText value=" #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" style="color:red"/>
+					<h:outputText value=" #{msg.transcript_note}"
+						rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}"/>
+				</div>
+			</p:outputPanel>
+			<h:panelGroup layout="block" id="transcript">
+				<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" styleClass="my-3 p-3 border border-dark transcript-container"
+					rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
+					<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
+				</h:panelGroup>
+				<h:panelGroup layout="block" styleClass="my-3 p-3 border border-dark transcript-container"
+					rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
+					<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
 			</h:panelGroup>
+		</h:panelGroup>
 
-			<div id="myNav" class="overlay">
-				<a href="javascript:void(0)" class="closebtn" onclick="closeTagsDiv()" aria-label="Close">
-					<i class="fa fa-fw fa-times fa-inverse" aria-hidden="true"></i>
-				</a>
-				<ul class="tab">
-					<li>
-						<a href="javascript:void(0)" id="tags_button" class="tablinks" onclick="openTab(event, 'tags')">
-							<h:outputText value="#{msg.tags}"/>
-						</a>
-					</li>
-					<li>
-						<a href="javascript:void(0)" id="summary_button" class="tablinks" onclick="openTab(event, 'summary')">
-							<h:outputText value="#{msg.summary}"/>
-						</a>
-					</li>
-				</ul>
-				<div id="tags" class="overlay-content">
-					<ol id="selectable">
-					</ol>
-				</div>
+		<div id="myNav" class="overlay">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeTagsDiv()" aria-label="Close">
+				<i class="fa fa-fw fa-times fa-inverse" aria-hidden="true"></i>
+			</a>
+			<ul class="tab">
+				<li>
+					<a href="javascript:void(0)" id="tags_button" class="tablinks" onclick="openTab(event, 'tags')">
+						<h:outputText value="#{msg.tags}"/>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)" id="summary_button" class="tablinks" onclick="openTab(event, 'summary')">
+						<h:outputText value="#{msg.summary}"/>
+					</a>
+				</li>
+			</ul>
+			<div id="tags" class="overlay-content">
+				<ol id="selectable">
+				</ol>
 			</div>
 		</div>
-
-	</ui:define>
+	</div>
+</ui:define>
 
 </ui:composition>

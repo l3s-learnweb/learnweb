@@ -4,48 +4,49 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-    <ui:param name="pageTitle" value="#{msg.email_validation}"/>
-    <ui:param name="smallPage" value="true"/>
-    <ui:param name="hideGrowl" value="true"/>
-    <ui:param name="hideBreadcrumbs" value="true"/>
+<ui:param name="pageTitle" value="#{msg.email_validation}"/>
+<ui:param name="extraPageClass" value="container"/>
+<ui:param name="hideGrowl" value="true"/>
+<ui:param name="hideBreadcrumbs" value="true"/>
 
-    <ui:define name="center_layout">
-        <h:panelGroup id="confirmRequiredContent" layout="block">
-            <p:panel header="#{msg.email_validation}" rendered="#{confirmRequiredBean.confirmed}">
-                <a href="#{userBean.bannerLink}">
-                    <h:outputText value="#{msg.return_to_welcome_page}"/>
-                </a>
-            </p:panel>
+<ui:define name="center_layout">
+    <h:panelGroup id="confirmRequiredContent" layout="block">
+        <p:panel header="#{msg.email_validation}" rendered="#{confirmRequiredBean.confirmed}">
+            <a href="#{userBean.bannerLink}">
+                <h:outputText value="#{msg.return_to_welcome_page}"/>
+            </a>
+        </p:panel>
 
-            <p:panel header="#{msg.email_validation}" rendered="#{!confirmRequiredBean.confirmed and confirmRequiredBean.user != null}">
+        <p:panel header="#{msg.email_validation}" rendered="#{!confirmRequiredBean.confirmed and confirmRequiredBean.user != null}">
 
-				<script>
-				function openEmailChangeForm()
-				{
-					$('#emailChangeForm').show();
-					return false;
-				}
-				</script>
+            <script>
+            function openEmailChangeForm()
+            {
+                $('#emailChangeForm').show();
+                return false;
+            }
+            </script>
 
-				<h:outputFormat value="#{msg['email_confirm_required_text']}" escape="false">
-					<f:param value="#{confirmRequiredBean.user.realUsername}"/>
-					<f:param value="#{confirmRequiredBean.user.email}"/>
-				</h:outputFormat>
-            </p:panel>
+            <h:outputFormat value="#{msg['email_confirm_required_text']}" escape="false">
+                <f:param value="#{confirmRequiredBean.user.realUsername}"/>
+                <f:param value="#{confirmRequiredBean.user.email}"/>
+            </h:outputFormat>
+        </p:panel>
 
-            <p:panel header="#{msg.email_validation}" style="display: none;" id="emailChangeForm">
-                <h:form id="emailform">
-                    <h:panelGrid columns="3">
-                        <h:outputLabel for="email">#{msg.email_address}: *</h:outputLabel>
-                        <p:inputText id="email" type="email" value="#{confirmRequiredBean.email}" label="#{msg.email_address}" required="true" style="width:20rem"/>
-                        <p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email"/>
+        <p:panel header="#{msg.email_validation}" style="display: none;" id="emailChangeForm">
+            <h:form id="emailform">
+                <h:panelGrid columns="3">
+                    <h:outputLabel for="email">#{msg.email_address}: *</h:outputLabel>
+                    <p:inputText id="email" type="email" value="#{confirmRequiredBean.email}" label="#{msg.email_address}" required="true" style="width:20rem"/>
+                    <p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email"/>
 
-                        <h:outputText value=""/>
-                        <p:commandButton actionListener="#{confirmRequiredBean.onSubmitNewEmail()}" value="#{msg.send_email}" update=":confirmRequiredContent" ajax="false"/>
-                        <h:outputText value=""/>
-                    </h:panelGrid>
-                </h:form>
-            </p:panel>
-        </h:panelGroup>
-    </ui:define>
+                    <h:outputText value=""/>
+                    <p:commandButton actionListener="#{confirmRequiredBean.onSubmitNewEmail()}" value="#{msg.send_email}" update=":confirmRequiredContent" ajax="false"/>
+                    <h:outputText value=""/>
+                </h:panelGrid>
+            </h:form>
+        </p:panel>
+    </h:panelGroup>
+</ui:define>
+
 </ui:composition>

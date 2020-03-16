@@ -2,61 +2,63 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
-	<ui:param name="pageTitle" value="#{msg.statistics}"/>
+<ui:param name="pageTitle" value="#{msg.statistics}"/>
 
-    <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="statistics.jsf" title="#{msg.statistics}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
-    </ui:define>
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="statistics.jsf" title="#{msg.statistics}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+</ui:define>
 
-	<ui:define name="container_layout">
-        <p:dataTable styleClass="mt-3" var="stat" value="#{statisticsBean.generalStatistics}">
-            <f:facet name="header">#{msg.general_statistics}</f:facet>
+<ui:define name="container_layout">
+    <p:dataTable styleClass="mt-3" var="stat" value="#{statisticsBean.generalStatistics}">
+        <f:facet name="header">#{msg.general_statistics}</f:facet>
 
-            <p:column headerText="#{msg.description}" styleClass="text-left">
-                <h:outputText value="#{msg[stat.key]}"/>
-            </p:column>
+        <p:column headerText="#{msg.description}" styleClass="text-left">
+            <h:outputText value="#{msg[stat.key]}"/>
+        </p:column>
 
-            <p:column headerText="#{msg.value}" styleClass="text-right">
-                <h:outputText value="#{stat.value}">
-                	<f:convertNumber groupingUsed="true" maxFractionDigits="1"/>
-                </h:outputText>
-            </p:column>
-        </p:dataTable>
+        <p:column headerText="#{msg.value}" styleClass="text-right">
+            <h:outputText value="#{stat.value}">
+                <f:convertNumber groupingUsed="true" maxFractionDigits="1"/>
+            </h:outputText>
+        </p:column>
+    </p:dataTable>
 
-        <p:dataTable styleClass="mt-3" var="month" value="#{statisticsBean.activeUsersPerMonth}">
-            <f:facet name="header">#{msg.active_users_per_month}</f:facet>
+    <p:dataTable styleClass="mt-3" var="month" value="#{statisticsBean.activeUsersPerMonth}">
+        <f:facet name="header">#{msg.active_users_per_month}</f:facet>
 
-            <p:column headerText="#{msg.month}" styleClass="text-left">
-                <h:outputText value="#{month.key}">
-                	<f:convertDateTime type="localDate" pattern="MMMM y"/>
-                </h:outputText>
-            </p:column>
+        <p:column headerText="#{msg.month}" styleClass="text-left">
+            <h:outputText value="#{month.key}">
+                <f:convertDateTime type="localDate" pattern="MMMM y"/>
+            </h:outputText>
+        </p:column>
 
-            <p:column headerText="#{msg.active_users}" styleClass="text-right">
-                <h:outputText value="#{month.value}">
-                	<f:convertNumber groupingUsed="true"/>
-                </h:outputText>
-            </p:column>
-        </p:dataTable>
+        <p:column headerText="#{msg.active_users}" styleClass="text-right">
+            <h:outputText value="#{month.value}">
+                <f:convertNumber groupingUsed="true"/>
+            </h:outputText>
+        </p:column>
+    </p:dataTable>
 
-        <p:dataTable styleClass="mt-3" var="row" value="#{statisticsBean.resourcesPerSource}">
-            <f:facet name="header">#{msg.resource_count_per_source}</f:facet>
+    <p:dataTable styleClass="mt-3" var="row" value="#{statisticsBean.resourcesPerSource}">
+        <f:facet name="header">#{msg.resource_count_per_source}</f:facet>
 
-            <p:column headerText="#{msg.source}" styleClass="text-left">
-                <h:outputText value="#{row.key}"/>
-            </p:column>
+        <p:column headerText="#{msg.source}" styleClass="text-left">
+            <h:outputText value="#{row.key}"/>
+        </p:column>
 
-            <p:column headerText="#{msg.resources}" styleClass="text-right">
-                <h:outputText value="#{row.value}">
-                	<f:convertNumber groupingUsed="true"/>
-                </h:outputText>
-            </p:column>
+        <p:column headerText="#{msg.resources}" styleClass="text-right">
+            <h:outputText value="#{row.value}">
+                <f:convertNumber groupingUsed="true"/>
+            </h:outputText>
+        </p:column>
 
-            <f:facet name="footer"><small>#{msg.resources_created_by_crawlers}</small></f:facet>
-        </p:dataTable>
-	</ui:define>
+        <f:facet name="footer"><small>#{msg.resources_created_by_crawlers}</small></f:facet>
+    </p:dataTable>
+</ui:define>
+
 </ui:composition>

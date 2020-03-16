@@ -2,96 +2,97 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:lw="http://l3s.de/learnweb">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.statistics_group}"/>
+<ui:param name="pageTitle" value="#{msg.statistics_group}"/>
 
-	<ui:define name="breadcrumb">
-		<ui:fragment rendered="#{userBean.moderator}">
-			<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-			</lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+	<ui:fragment rendered="#{userBean.moderator}">
+		<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+		</lw:breadcrumb-item>
 
-			<lw:breadcrumb-item link="admin/statistics.jsf" title="#{msg.statistics}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-			</lw:breadcrumb-item>
-		</ui:fragment>
-	</ui:define>
+		<lw:breadcrumb-item link="admin/statistics.jsf" title="#{msg.statistics}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+		</lw:breadcrumb-item>
+	</ui:fragment>
+</ui:define>
 
-	<ui:define name="center_layout">
-		<p:panel rendered="#{not userBean.moderator}">
-			<h:outputText value="#{msg.missing_authentication}"/>
+<ui:define name="center_layout">
+	<p:panel rendered="#{not userBean.moderator}">
+		<h:outputText value="#{msg.missing_authentication}"/>
+	</p:panel>
+
+	<h:form rendered="#{userBean.moderator}" id="anlyse_form">
+		<p:blockUI block="output" widgetVar="anlyseFormOverlay">
+			<h:outputText value="#{msg.please_wait}"/>
+		</p:blockUI>
+		<p:panel header="#{msg.select_groups}" styleClass="mb-3">
+			<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
+			<div class="form-group">
+				<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" itemLabel="#{msg.statistics_show_detailed}"/>
+			</div>
+			<p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminStatisticsBean.onGroupStatistics}" update=":growl output" value="#{msg.statistics_show}" process="@form"/>
 		</p:panel>
 
-		<h:form rendered="#{userBean.moderator}" id="anlyse_form">
-			<p:blockUI block="output" widgetVar="anlyseFormOverlay">
-				<h:outputText value="#{msg.please_wait}"/>
-			</p:blockUI>
-			<p:panel header="#{msg.select_groups}" styleClass="mb-3">
-				<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
-				<div class="form-group">
-					<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" itemLabel="#{msg.statistics_show_detailed}"/>
-				</div>
-				<p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminStatisticsBean.onGroupStatistics}" update=":growl output" value="#{msg.statistics_show}" process="@form"/>
+		<p:dataTable id="output" var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">
+			<f:facet name="header">
+				#{msg.statistics}
+			</f:facet>
+
+			<p:column headerText="#{msg.group}" sortBy="#{entry.title}">
+				<h:outputText value="#{entry.title}"/>
+			</p:column>
+
+			<p:column headerText="#{msg.resources}">
+				<h:outputText value="#{entry.resources}"/>
+			</p:column>
+
+			<p:column headerText="#{msg.thumb_ratings}">
+				<h:outputText value="#{entry.thumb_ratings}"/>
+			</p:column>
+
+			<p:column headerText="#{msg.star_ratings}">
+				<h:outputText value="#{entry.star_ratings}"/>
+			</p:column>
+
+			<p:column headerText="#{msg.comments}">
+				<h:outputText value="#{entry.comments}"/>
+			</p:column>
+
+			<p:column headerText="#{msg.tags}">
+				<h:outputText value="#{entry.tags}"/>
+			</p:column>
+
+			<p:column headerText="#{msg.no_of_archived_versions}">
+				<h:outputText value="#{entry.no_of_archived_versions}"/>
+			</p:column>
+
+			<p:column headerText="#{msg.no_of_archived_resources}">
+				<h:outputText value="#{entry.no_of_archived_resources}"/>
+			</p:column>
+
+			<p:column headerText="#{msg.forum_topics}">
+				<h:outputText value="#{entry.forum_topics}"/>
+			</p:column>
+
+			<p:column headerText="#{msg.forum_posts}">
+				<h:outputText value="#{entry.forum_posts}"/>
+			</p:column>
+		</p:dataTable>
+
+		<ui:fragment rendered="#{adminStatisticsBean.showDetails}">
+			<p:panel styleClass="mt-3" header="#{msg.statistics_detailed}">
+				<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}"
+									   onchange="$('.description').toggle();" value="off"/>
+				<p:selectBooleanButton offLabel="#{msg.toggle_comments}" onLabel="#{msg.toggle_comments}"
+									   onchange="$('.admin_comments').toggle();" value="on"/>
+				<hr/>
+				<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false"/>
 			</p:panel>
+		</ui:fragment>
+	</h:form>
+</ui:define>
 
-			<p:dataTable id="output" var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">
-				<f:facet name="header">
-					#{msg.statistics}
-				</f:facet>
-
-				<p:column headerText="#{msg.group}" sortBy="#{entry.title}">
-					<h:outputText value="#{entry.title}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.resources}">
-					<h:outputText value="#{entry.resources}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.thumb_ratings}">
-					<h:outputText value="#{entry.thumb_ratings}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.star_ratings}">
-					<h:outputText value="#{entry.star_ratings}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.comments}">
-					<h:outputText value="#{entry.comments}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.tags}">
-					<h:outputText value="#{entry.tags}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.no_of_archived_versions}">
-					<h:outputText value="#{entry.no_of_archived_versions}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.no_of_archived_resources}">
-					<h:outputText value="#{entry.no_of_archived_resources}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.forum_topics}">
-					<h:outputText value="#{entry.forum_topics}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.forum_posts}">
-					<h:outputText value="#{entry.forum_posts}"/>
-				</p:column>
-			</p:dataTable>
-
-			<ui:fragment rendered="#{adminStatisticsBean.showDetails}">
-				<p:panel styleClass="mt-3" header="#{msg.statistics_detailed}">
-					<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}"
-										   onchange="$('.description').toggle();" value="off"/>
-					<p:selectBooleanButton offLabel="#{msg.toggle_comments}" onLabel="#{msg.toggle_comments}"
-										   onchange="$('.admin_comments').toggle();" value="on"/>
-					<hr/>
-					<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false"/>
-				</p:panel>
-			</ui:fragment>
-		</h:form>
-	</ui:define>
 </ui:composition>

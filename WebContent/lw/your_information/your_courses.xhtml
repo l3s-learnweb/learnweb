@@ -2,69 +2,70 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:lw="http://l3s.de/learnweb">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.courses} - #{msg.your_information}"/>
+<ui:param name="pageTitle" value="#{msg.courses} - #{msg.your_information}"/>
 
-	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+	<lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="your_information/your_courses.jsf" title="#{msg.courses}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_your_info.xhtml"/>
-		</lw:breadcrumb-item>
-	</ui:define>
+	<lw:breadcrumb-item link="your_information/your_courses.jsf" title="#{msg.courses}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_your_info.xhtml"/>
+	</lw:breadcrumb-item>
+</ui:define>
 
-	<ui:define name="center_layout">
-	    <h:form>
-	        <p:dataTable id="courses_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
-	                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
-	            <f:facet name="header">
-					<h:outputText value="#{msg['courses']}"/>
-	            </f:facet>
+<ui:define name="center_layout">
+	<h:form>
+		<p:dataTable id="courses_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
+					 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+			<f:facet name="header">
+				<h:outputText value="#{msg['courses']}"/>
+			</f:facet>
 
-	            <f:facet name="{Exporters}">
-					<h:panelGroup>
-						<h:commandLink styleClass="text-danger float-right p-1">
-							<i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
-							<p:dataExporter type="pdf" target="courses_tbl" fileName="courses"/>
-						</h:commandLink>
+			<f:facet name="{Exporters}">
+				<h:panelGroup>
+					<h:commandLink styleClass="text-danger float-right p-1">
+						<i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
+						<p:dataExporter type="pdf" target="courses_tbl" fileName="courses"/>
+					</h:commandLink>
 
-						<h:commandLink styleClass="text-success float-right p-1">
-							<i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
-							<p:dataExporter type="xml" target="courses_tbl" fileName="courses"/>
-						</h:commandLink>
+					<h:commandLink styleClass="text-success float-right p-1">
+						<i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
+						<p:dataExporter type="xml" target="courses_tbl" fileName="courses"/>
+					</h:commandLink>
 
-						<h:commandLink styleClass="text-gray float-right p-1">
-							<i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
-							<p:dataExporter type="csv" target="courses_tbl" fileName="courses"/>
-						</h:commandLink>
+					<h:commandLink styleClass="text-gray float-right p-1">
+						<i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+						<p:dataExporter type="csv" target="courses_tbl" fileName="courses"/>
+					</h:commandLink>
 
-                        <h:commandLink styleClass="text-gray float-right p-1">
-                            <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
-                            <p:dataExporter type="xls" target="courses_tbl" fileName="courses"/>
-                        </h:commandLink>
-					</h:panelGroup>
-	            </f:facet>
+					<h:commandLink styleClass="text-gray float-right p-1">
+						<i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+						<p:dataExporter type="xls" target="courses_tbl" fileName="courses"/>
+					</h:commandLink>
+				</h:panelGroup>
+			</f:facet>
 
-	            <p:column headerText="#{msg.name}">
-	                <h:outputText value="#{course.title}"/>
-	            </p:column>
+			<p:column headerText="#{msg.name}">
+				<h:outputText value="#{course.title}"/>
+			</p:column>
 
-	            <p:column headerText="#{msg.members_count}">
-	                <h:outputText value="#{course.memberCount}"/>
-	            </p:column>
+			<p:column headerText="#{msg.members_count}">
+				<h:outputText value="#{course.memberCount}"/>
+			</p:column>
 
-	            <p:column headerText="#{msg.organization}">
-	                <h:outputText value="#{course.organisation.title}"/>
-	            </p:column>
+			<p:column headerText="#{msg.organization}">
+				<h:outputText value="#{course.organisation.title}"/>
+			</p:column>
 
-	            <p:column headerText="#{msg.welcome_message}">
-	                <h:outputText value="#{course.welcomeMessage}"/>
-	            </p:column>
-	        </p:dataTable>
-	    </h:form>
-	</ui:define>
+			<p:column headerText="#{msg.welcome_message}">
+				<h:outputText value="#{course.welcomeMessage}"/>
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</ui:define>
+
 </ui:composition>

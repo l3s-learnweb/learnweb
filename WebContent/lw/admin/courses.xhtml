@@ -2,9 +2,9 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg.courses}"/>
 
 <ui:define name="breadcrumb">
@@ -49,7 +49,7 @@
             <p:column headerText="#{msg.title}" sortBy="#{course.title}">
                 <h:outputText value="#{course.title}"/>
             </p:column>
-            
+
             <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center d-none d-md-table-cell">
                 <h:outputText value="#{course.creationTimestamp}">
                     <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>

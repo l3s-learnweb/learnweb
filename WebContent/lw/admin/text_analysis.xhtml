@@ -2,58 +2,59 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="#{msg.text_analysis}"/>
+<ui:param name="pageTitle" value="#{msg.text_analysis}"/>
 
-    <ui:define name="breadcrumb">
-        <ui:fragment rendered="#{userBean.moderator}">
-            <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-            </lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+    <ui:fragment rendered="#{userBean.moderator}">
+        <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+        </lw:breadcrumb-item>
 
-            <lw:breadcrumb-item link="admin/text_analysis.jsf" title="#{msg.text_analysis}">
-                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-            </lw:breadcrumb-item>
-        </ui:fragment>
-    </ui:define>
+        <lw:breadcrumb-item link="admin/text_analysis.jsf" title="#{msg.text_analysis}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+        </lw:breadcrumb-item>
+    </ui:fragment>
+</ui:define>
 
-    <ui:define name="center_layout">
-        <p:panel rendered="#{not userBean.moderator}">
-            <h:outputText value="#{msg.missing_authentication}"/>
-        </p:panel>
+<ui:define name="center_layout">
+    <p:panel rendered="#{not userBean.moderator}">
+        <h:outputText value="#{msg.missing_authentication}"/>
+    </p:panel>
 
-        <p:panel rendered="#{userBean.moderator}" header="#{msg.select_users}">
-            <h:form id="anlyse_form">
-                <p:blockUI block="output" widgetVar="anlyseFormOverlay">
-                    <h:outputText value="#{msg.please_wait}"/>
-                </p:blockUI>
-                <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
+    <p:panel rendered="#{userBean.moderator}" header="#{msg.select_users}">
+        <h:form id="anlyse_form">
+            <p:blockUI block="output" widgetVar="anlyseFormOverlay">
+                <h:outputText value="#{msg.please_wait}"/>
+            </p:blockUI>
+            <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 
-                <p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
-                                 update=":growl anlyse_form"/>
+            <p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
+                             update=":growl anlyse_form"/>
 
-                <p class="my-3">
-                    <h:outputFormat value="#{msg.text_analysis_comments_count}">
-                        <f:param value="#{adminTextAnalysisBean.commentCount}"/>
-                        <f:param value="#{adminTextAnalysisBean.selectedUsers.size()}"/>
-                    </h:outputFormat>
-                </p>
+            <p class="my-3">
+                <h:outputFormat value="#{msg.text_analysis_comments_count}">
+                    <f:param value="#{adminTextAnalysisBean.commentCount}"/>
+                    <f:param value="#{adminTextAnalysisBean.selectedUsers.size()}"/>
+                </h:outputFormat>
+            </p>
 
-                <p:dataTable id="output" var="comment" value="#{adminTextAnalysisBean.comments}">
-                    <p:column>
-                        <f:facet name="header">
-                            <div class="d-flex align-items-center">
-                                <div class="mr-auto">#{msg.comments}</div>
-                                <div><p:button outcome="/lw/admin/wanderer.jsf" target="_blank" value="#{msg.comments_analyse}"/></div>
-                            </div>
-                        </f:facet>
+            <p:dataTable id="output" var="comment" value="#{adminTextAnalysisBean.comments}">
+                <p:column>
+                    <f:facet name="header">
+                        <div class="d-flex align-items-center">
+                            <div class="mr-auto">#{msg.comments}</div>
+                            <div><p:button outcome="/lw/admin/wanderer.jsf" target="_blank" value="#{msg.comments_analyse}"/></div>
+                        </div>
+                    </f:facet>
 
-                        <h:outputText value="#{comment.text}"/>
-                    </p:column>
-                </p:dataTable>
-            </h:form>
-        </p:panel>
-    </ui:define>
+                    <h:outputText value="#{comment.text}"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </p:panel>
+</ui:define>
+
 </ui:composition>

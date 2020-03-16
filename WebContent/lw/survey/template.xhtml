@@ -4,101 +4,101 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-				xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="pageTitle" value="#{msg.survey}"/>
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="disableGrowl" value="true"/>
+<ui:param name="pageTitle" value="#{msg.survey}"/>
+<ui:param name="disableGrowl" value="true"/>
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="survey_id" value="#{surveyTemplateBean.surveyId}" required="true" requiredMessage="#{msg.missing_parameter}"/>
-			<f:viewAction action="#{surveyTemplateBean.onLoad}"/>
-		</f:metadata>
-	</ui:define>
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="survey_id" value="#{surveyTemplateBean.surveyId}" required="true" requiredMessage="#{msg.missing_parameter}"/>
+		<f:viewAction action="#{surveyTemplateBean.onLoad}"/>
+	</f:metadata>
+</ui:define>
 
-	<ui:define name="breadcrumb">
-		<ui:fragment rendered="#{userBean.admin}">
-			<lw:breadcrumb-item link="admin.jsf" title="#{msg.admin}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-			</lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+	<ui:fragment rendered="#{userBean.admin}">
+		<lw:breadcrumb-item link="admin.jsf" title="#{msg.admin}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+		</lw:breadcrumb-item>
 
-			<lw:breadcrumb-item link="survey/templates.jsf" title="#{msg['survey.survey_overview']}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
-			</lw:breadcrumb-item>
+		<lw:breadcrumb-item link="survey/templates.jsf" title="#{msg['survey.survey_overview']}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
+		</lw:breadcrumb-item>
 
-			<lw:breadcrumb-item title="#{surveyTemplateBean.survey.title}"/>
-		</ui:fragment>
-	</ui:define>
+		<lw:breadcrumb-item title="#{surveyTemplateBean.survey.title}"/>
+	</ui:fragment>
+</ui:define>
 
-	<ui:define name="center_layout">
-		<p:panel rendered="#{not userBean.admin}">
-			<h:outputText value="#{msg.missing_authentication}"/>
-		</p:panel>
+<ui:define name="center_layout">
+	<p:panel rendered="#{not userBean.admin}">
+		<h:outputText value="#{msg.missing_authentication}"/>
+	</p:panel>
 
-		<ui:fragment rendered="#{userBean.admin}">
-			<h:form id="form" rendered="#{surveyTemplateBean.creator or userBean.moderator}">
-				<p:growl id="growl" showDetail="true" sticky="true"/>
-				<p:panel>
-					<h:panelGroup id="questions">
-						<div class="d-flex flex-nowrap mb-2">
-							<p:commandLink  styleClass="bg-transparent border-0 text-dark fa fa-pencil align-self-center mr-2" title="#{msg['edit']}" onclick="PF('updateSurveyTitle').show();" process="@this" global="false"/>
-							<h1><h:outputText value="#{surveyTemplateBean.survey.title}" escape="false"/></h1>
-						</div>
-						<div class="mb-4">
-							<h:outputText value="#{surveyTemplateBean.survey.description}" escape="false"/>
-						</div>
-						<c:forEach var="question" varStatus="questionStatus" items="#{surveyTemplateBean.questions}">
-							<p:outputPanel class="form-group" rendered="#{!question.deleted}">
-								<div class="d-flex flex-nowrap">
-									<p:outputPanel class="d-flex flex-column justify-content-center mr-2" rendered="#{userBean.user.admin}">
-										<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-dark fa fa-angle-up align-self-center"
-													   title="#{msg['survey.up']}" update="form" process="@this"/>
-										<p:commandLink action="#{surveyTemplateBean.setCurrentQuestion(question)}" styleClass="text-dark fa fa-pencil align-self-center"
-													   title="#{msg['edit']}" onsuccess="PF('updateSurvey').show();" update="updateForm" process="@this"/>
-										<p:commandLink action="#{surveyTemplateBean.onMoveQuestionDown(question)}" rendered="#{!questionStatus.last}" styleClass="text-dark fa fa-angle-down align-self-center"
-													   title="#{msg['survey.down']}" update="form" process="@this"/>
-									</p:outputPanel>
-									<ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
-										<ui:param name="question" value="#{question}"/>
-										<ui:param name="update" value="#{true}"/>
-									</ui:decorate>
-								</div>
-							</p:outputPanel>
-						</c:forEach>
-					</h:panelGroup>
-					<div class="d-flex flex-column mb-3">
-						<p:outputLabel for="@next" value="#{msg['public']}:" styleClass="font-weight-bold"/>
-						<p:tooltip for="@next" value="#{msg['survey.public_explanation']}." position="right"/>
-						<p:toggleSwitch id="copy" value="#{surveyTemplateBean.survey.publicTemplate}"/>
+	<ui:fragment rendered="#{userBean.admin}">
+		<h:form id="form" rendered="#{surveyTemplateBean.creator or userBean.moderator}">
+			<p:growl id="growl" showDetail="true" sticky="true"/>
+			<p:panel>
+				<h:panelGroup id="questions">
+					<div class="d-flex flex-nowrap mb-2">
+						<p:commandLink  styleClass="bg-transparent border-0 text-dark fa fa-pencil align-self-center mr-2" title="#{msg['edit']}" onclick="PF('updateSurveyTitle').show();" process="@this" global="false"/>
+						<h1><h:outputText value="#{surveyTemplateBean.survey.title}" escape="false"/></h1>
 					</div>
-					<div class="d-flex flex-nowrap justify-content-between">
-						<p:defaultCommand target="saveBtn"/>
-						<p:commandButton action="#{surveyTemplateBean.onAddEmptyQuestion}" value="#{msg['survey.add_question']}" onclick="PF('updateSurvey').show();" update="updateForm" process="@this"/>
-						<p:commandButton id="saveBtn" action="#{surveyTemplateBean.onSave}" value="#{msg['save']}" update="form" process="@this copy"/>
+					<div class="mb-4">
+						<h:outputText value="#{surveyTemplateBean.survey.description}" escape="false"/>
 					</div>
-				</p:panel>
+					<c:forEach var="question" varStatus="questionStatus" items="#{surveyTemplateBean.questions}">
+						<p:outputPanel class="form-group" rendered="#{!question.deleted}">
+							<div class="d-flex flex-nowrap">
+								<p:outputPanel class="d-flex flex-column justify-content-center mr-2" rendered="#{userBean.user.admin}">
+									<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-dark fa fa-angle-up align-self-center"
+												   title="#{msg['survey.up']}" update="form" process="@this"/>
+									<p:commandLink action="#{surveyTemplateBean.setCurrentQuestion(question)}" styleClass="text-dark fa fa-pencil align-self-center"
+												   title="#{msg['edit']}" onsuccess="PF('updateSurvey').show();" update="updateForm" process="@this"/>
+									<p:commandLink action="#{surveyTemplateBean.onMoveQuestionDown(question)}" rendered="#{!questionStatus.last}" styleClass="text-dark fa fa-angle-down align-self-center"
+												   title="#{msg['survey.down']}" update="form" process="@this"/>
+								</p:outputPanel>
+								<ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
+									<ui:param name="question" value="#{question}"/>
+									<ui:param name="update" value="#{true}"/>
+								</ui:decorate>
+							</div>
+						</p:outputPanel>
+					</c:forEach>
+				</h:panelGroup>
+				<div class="d-flex flex-column mb-3">
+					<p:outputLabel for="@next" value="#{msg['public']}:" styleClass="font-weight-bold"/>
+					<p:tooltip for="@next" value="#{msg['survey.public_explanation']}." position="right"/>
+					<p:toggleSwitch id="copy" value="#{surveyTemplateBean.survey.publicTemplate}"/>
+				</div>
+				<div class="d-flex flex-nowrap justify-content-between">
+					<p:defaultCommand target="saveBtn"/>
+					<p:commandButton action="#{surveyTemplateBean.onAddEmptyQuestion}" value="#{msg['survey.add_question']}" onclick="PF('updateSurvey').show();" update="updateForm" process="@this"/>
+					<p:commandButton id="saveBtn" action="#{surveyTemplateBean.onSave}" value="#{msg['save']}" update="form" process="@this copy"/>
+				</div>
+			</p:panel>
+		</h:form>
+
+		<p:dialog header="#{msg['survey.update_survey']}" styleClass="overflow-hidden" widgetVar="updateSurvey" modal="true">
+			<ui:decorate template="/WEB-INF/templates/blocks/survey/updateQuestion.xhtml">
+				<ui:param name="question" value="#{surveyTemplateBean.currentQuestion}"/>
+				<ui:param name="associated" value="#{surveyTemplateBean.survey.surveyAssociatedWithResource}"></ui:param>
+			</ui:decorate>
+		</p:dialog>
+
+		<p:dialog header="#{msg['survey.update_survey']}" styleClass="overflow-hidden" widgetVar="updateSurveyTitle" modal="true">
+			<h:form i="updateSurveyTitle">
+				<div class="d-flex flex-column mb-3">
+					<div class="form-group">
+						<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="font-weight-bold"/>
+						<p:inputText value="#{surveyTemplateBean.survey.title}" />
+						<p:message for="@previous"/>
+					</div>
+				</div>
+				<p:commandButton value="#{msg['save']}" styleClass="float-right" onclick="PF('updateSurveyTitle').hide();" update="form" process="@form"/>
 			</h:form>
+		</p:dialog>
+	</ui:fragment>
+</ui:define>
 
-			<p:dialog header="#{msg['survey.update_survey']}" styleClass="overflow-hidden" widgetVar="updateSurvey" modal="true">
-				<ui:decorate template="/WEB-INF/templates/blocks/survey/updateQuestion.xhtml">
-					<ui:param name="question" value="#{surveyTemplateBean.currentQuestion}"/>
-					<ui:param name="associated" value="#{surveyTemplateBean.survey.surveyAssociatedWithResource}"></ui:param>
-				</ui:decorate>
-			</p:dialog>
-
-			<p:dialog header="#{msg['survey.update_survey']}" styleClass="overflow-hidden" widgetVar="updateSurveyTitle" modal="true">
-				<h:form i="updateSurveyTitle">
-					<div class="d-flex flex-column mb-3">
-						<div class="form-group">
-							<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="font-weight-bold"/>
-							<p:inputText value="#{surveyTemplateBean.survey.title}" />
-							<p:message for="@previous"/>
-						</div>
-					</div>
-					<p:commandButton value="#{msg['save']}" styleClass="float-right" onclick="PF('updateSurveyTitle').hide();" update="form" process="@form"/>
-				</h:form>
-			</p:dialog>
-		</ui:fragment>
-    </ui:define>
 </ui:composition>

@@ -64,8 +64,7 @@
 		<from>/lw/showGlossary.jsf(.*)</from>
 		<to type="redirect">%{context-path}/lw/glossary/glossary.jsf$1</to>
 	</rule>
-<!--         
-    
+<!--
     <rule>
         <note>
             The rule means that requests to /test/status/ will be redirected to /rewrite-status
@@ -88,8 +87,6 @@
         <from>/rewrite-status</from>
         <to>/test/status/</to>
     </outbound-rule>
-
-   
 
     INSTALLATION
 
@@ -145,8 +142,6 @@
         </rule>
     eg, all requests will be checked against the condition and if matched
     request.setAttribute("browser", "moz") will be called.
-
-    -->
-
+-->
 </urlrewrite>
 

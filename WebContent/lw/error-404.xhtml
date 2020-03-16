@@ -2,16 +2,16 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">>
+                xmlns:p="http://primefaces.org/ui">
 
-    <ui:param name="pageTitle" value="#{msg.error}"/>
-    <ui:param name="hideGrowl" value="true"/>
+<ui:param name="pageTitle" value="#{msg.error}"/>
 
-    <ui:define name="container_layout">
-        <p:panel header="Not Found" styleClass="ui-widget-danger">
-            <h5 class="text-danger">Sorry this page does not exist.</h5>
+<ui:define name="container_layout">
+    <p:panel header="Not Found" styleClass="ui-widget-danger">
+        <h5 class="text-danger">Sorry this page does not exist.</h5>
 
-            <a href="user/login.jsf">#{msg.reload}</a>
-        </p:panel>
-    </ui:define>
+        <a href="user/login.jsf">#{msg.reload}</a>
+    </p:panel>
+</ui:define>
+
 </ui:composition>

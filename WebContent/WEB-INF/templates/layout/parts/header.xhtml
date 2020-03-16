@@ -18,7 +18,9 @@
                 </a>
             </div>
 
-            <h:form styleClass="d-flex order-1 order-md-0 search-wrapper flex-grow-1" rendered="#{userBean.loggedIn}">
+            <h:form id="header_left" styleClass="d-flex order-1 order-md-0 search-wrapper flex-grow-1" rendered="#{userBean.loggedIn}">
+                <h:outputScript library="vendor" name="jquery.auto-complete-v1.0.7/jquery.auto-complete.min.js" target="body"/>
+
                 <div class="header-element no-hover-bg search-form w-100">
                     <p:outputLabel for="@next" styleClass="d-none" value="#{msg.searchLabel}"/>
                     <p:inputText id="searchfield" value="#{userBean.searchQuery}" pt:placeholder="#{msg.searchLabel}" pt:type="search"/>
@@ -26,7 +28,7 @@
                 </div>
             </h:form>
 
-            <h:form styleClass="d-flex ml-auto">
+            <h:form id="header_right" styleClass="d-flex ml-auto">
                 <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="header-element" rendered="#{userBean.loggedIn}">
                     <i class="fa fa-envelope-o #{messageBean.howManyNewMessages gt 0 ? ' has-badge' : null}" data-count="#{messageBean.howManyNewMessages}" aria-hidden="true"></i>
                 </h:outputLink>

@@ -2,43 +2,44 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:lw="http://l3s.de/learnweb">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.myCommentsTitle}"/>
-	<ui:param name="helpText" value="#{msg.myhomeCommentsHelp}"/>
+<ui:param name="pageTitle" value="#{msg.myCommentsTitle}"/>
+<ui:param name="helpText" value="#{msg.myhomeCommentsHelp}"/>
 
-	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+	<lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="myhome/comments.jsf" title="#{msg.myCommentsTitle}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
-		</lw:breadcrumb-item>
-	</ui:define>
+	<lw:breadcrumb-item link="myhome/comments.jsf" title="#{msg.myCommentsTitle}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
+	</lw:breadcrumb-item>
+</ui:define>
 
-	<ui:define name="center_layout">
-		<p:dataTable var="comment" value="#{userBean.user.comments}">
-			<f:facet name="header">#{msg.myCommentsTitle}</f:facet>
+<ui:define name="center_layout">
+	<p:dataTable var="comment" value="#{userBean.user.comments}">
+		<f:facet name="header">#{msg.myCommentsTitle}</f:facet>
 
-			<p:column headerText="#{msg.comment}">
-				<h:outputText value="#{comment.text}"/>
-			</p:column>
+		<p:column headerText="#{msg.comment}">
+			<h:outputText value="#{comment.text}"/>
+		</p:column>
 
-			<p:column headerText="#{msg.resource}">
-				<h:outputLink value="myhome/resources.jsf">
-					<f:param name="resource_id" value="#{comment.resource.id}"/>
-					<f:param name="group_id" value="#{comment.resource.groupId}"/>
-					<h:outputText value="#{comment.resource.title}" escape="false"/>
-				</h:outputLink>
-			</p:column>
+		<p:column headerText="#{msg.resource}">
+			<h:outputLink value="myhome/resources.jsf">
+				<f:param name="resource_id" value="#{comment.resource.id}"/>
+				<f:param name="group_id" value="#{comment.resource.groupId}"/>
+				<h:outputText value="#{comment.resource.title}" escape="false"/>
+			</h:outputLink>
+		</p:column>
 
-			<p:column headerText="#{msg.date}">
-				<h:outputText value="#{comment.date}">
-					<f:convertDateTime dateStyle="default" type="both"/>
-				</h:outputText>
-			</p:column>
-		</p:dataTable>
-	</ui:define>
+		<p:column headerText="#{msg.date}">
+			<h:outputText value="#{comment.date}">
+				<f:convertDateTime dateStyle="default" type="both"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+</ui:define>
+
 </ui:composition>

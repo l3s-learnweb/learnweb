@@ -4,64 +4,64 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-				xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="pageTitle" value="#{msg.survey}"/>
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="hideGrowl" value="true"/>
+<ui:param name="pageTitle" value="#{msg.survey}"/>
+<ui:param name="hideGrowl" value="true"/>
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="survey_id" value="#{surveyTemplateBean.surveyId}" required="true" requiredMessage="Missing survey parameter"/>
-			<f:viewAction action="#{surveyTemplateBean.onLoad}"/>
-		</f:metadata>
-	</ui:define>
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="survey_id" value="#{surveyTemplateBean.surveyId}" required="true" requiredMessage="Missing survey parameter"/>
+		<f:viewAction action="#{surveyTemplateBean.onLoad}"/>
+	</f:metadata>
+</ui:define>
 
-	<ui:define name="breadcrumb">
-		<ui:fragment rendered="#{userBean.admin}">
-			<lw:breadcrumb-item link="admin.jsf" title="#{msg.admin}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-			</lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+	<ui:fragment rendered="#{userBean.admin}">
+		<lw:breadcrumb-item link="admin.jsf" title="#{msg.admin}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+		</lw:breadcrumb-item>
 
-			<lw:breadcrumb-item link="survey/templates.jsf" title="#{msg['survey.survey_overview']}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
-			</lw:breadcrumb-item>
+		<lw:breadcrumb-item link="survey/templates.jsf" title="#{msg['survey.survey_overview']}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
+		</lw:breadcrumb-item>
 
-			<lw:breadcrumb-item title="#{surveyTemplateBean.survey.title}"/>
-		</ui:fragment>
-	</ui:define>
+		<lw:breadcrumb-item title="#{surveyTemplateBean.survey.title}"/>
+	</ui:fragment>
+</ui:define>
 
 
-	<ui:define name="center_layout">
-		<p:panel rendered="#{not userBean.admin}">
-			<h:outputText value="#{msg.missing_authentication}"/>
-		</p:panel>
+<ui:define name="center_layout">
+	<p:panel rendered="#{not userBean.admin}">
+		<h:outputText value="#{msg.missing_authentication}"/>
+	</p:panel>
 
-		<h:form id="form" rendered="#{surveyTemplateBean.survey != null and userBean.admin}">
-			<p:growl id="growl" showDetail="true" sticky="true"/>
-			<p:panel>
-				<h:panelGroup>
-					<h:panelGroup id="questions">
-                        <h2>#{surveyTemplateBean.survey.title}</h2>
-						<c:forEach var="question" items="#{surveyTemplateBean.survey.questions}">
-							<div class="form-group">
-								<div class="d-flex flex-nowrap">
-                                    <ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
-                                        <ui:param name="question" value="#{question}"/>
-                                        <ui:param name="update" value="#{false}"/>
-                                    </ui:decorate>
-								</div>
+	<h:form id="form" rendered="#{surveyTemplateBean.survey != null and userBean.admin}">
+		<p:growl id="growl" showDetail="true" sticky="true"/>
+		<p:panel>
+			<h:panelGroup>
+				<h:panelGroup id="questions">
+					<h2>#{surveyTemplateBean.survey.title}</h2>
+					<c:forEach var="question" items="#{surveyTemplateBean.survey.questions}">
+						<div class="form-group">
+							<div class="d-flex flex-nowrap">
+								<ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
+									<ui:param name="question" value="#{question}"/>
+									<ui:param name="update" value="#{false}"/>
+								</ui:decorate>
 							</div>
-						</c:forEach>
-					</h:panelGroup>
-
-                    <div class="d-flex mt-3">
-                            <p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
-                                <p:printer target="questions"/>
-                            </p:commandButton>
-                    </div>
+						</div>
+					</c:forEach>
 				</h:panelGroup>
-			</p:panel>
-		</h:form>
-    </ui:define>
+
+				<div class="d-flex mt-3">
+						<p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
+							<p:printer target="questions"/>
+						</p:commandButton>
+				</div>
+			</h:panelGroup>
+		</p:panel>
+	</h:form>
+</ui:define>
+
 </ui:composition>

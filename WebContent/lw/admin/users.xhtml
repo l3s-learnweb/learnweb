@@ -2,77 +2,79 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="#{msg.users}"/>
-    <ui:define name="metadata">
-        <f:metadata>
-            <f:viewParam name="course_id" value="#{adminUsersBean.courseId}"/>                    
-            <f:viewAction action="#{adminUsersBean.onLoad}"/>
-        </f:metadata>
-    </ui:define>
-    
-    <ui:define name="breadcrumb">
-        <ui:fragment rendered="#{userBean.moderator}">
-            <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-            </lw:breadcrumb-item>
+<ui:param name="pageTitle" value="#{msg.users}"/>
 
-            <lw:breadcrumb-item link="admin/users.jsf" title="#{msg.users}">
-                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-            </lw:breadcrumb-item>
-        </ui:fragment>
-    </ui:define>
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="course_id" value="#{adminUsersBean.courseId}"/>
+        <f:viewAction action="#{adminUsersBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
 
-    <ui:define name="center_layout">
-        <p:panel rendered="#{not userBean.moderator}">
-            <h:outputText value="#{msg.missing_authentication}"/>
-        </p:panel>
+<ui:define name="breadcrumb">
+    <ui:fragment rendered="#{userBean.moderator}">
+        <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+        </lw:breadcrumb-item>
 
-        <h:form rendered="#{userBean.moderator}">
-            <p:dataTable var="user" value="#{adminUsersBean.users}" rows="50" paginator="true" paginatorPosition="bottom"
-                         rowsPerPageTemplate="50,100,250,500,1000,1500,2500" rendered="#{adminUsersBean.users ne null}"
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-                <f:facet name="header">#{msg.users_info}</f:facet>
+        <lw:breadcrumb-item link="admin/users.jsf" title="#{msg.users}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+        </lw:breadcrumb-item>
+    </ui:fragment>
+</ui:define>
 
-                <p:column filterBy="#{user.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{user.realUsername}">
-                    <p:link outcome="/lw/myhome/profile" value="#{user.realUsername}">
-                        <f:param name="user_id" value="#{user.id}"/>
-                    </p:link>
-                </p:column>
+<ui:define name="center_layout">
+    <p:panel rendered="#{not userBean.moderator}">
+        <h:outputText value="#{msg.missing_authentication}"/>
+    </p:panel>
 
-                <p:column headerText="#{msg.email_address}" sortBy="#{user.email}" filterBy="#{user.email}" filterMatchMode="contains">
-                    <h:outputText value="#{user.email}"/>
-                </p:column>
-            
-            <p:column headerText="Last login" sortBy="#{user.lastLoginDate}" styleClass="td-text-center d-none d-md-table-cell">
-                <h:outputText value="#{user.lastLoginDate.atZone(userBean.timeZone.toZoneId())}">
-                    <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" />
-                </h:outputText>
+    <h:form rendered="#{userBean.moderator}">
+        <p:dataTable var="user" value="#{adminUsersBean.users}" rows="50" paginator="true" paginatorPosition="bottom"
+                     rowsPerPageTemplate="50,100,250,500,1000,1500,2500" rendered="#{adminUsersBean.users ne null}"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">#{msg.users_info}</f:facet>
+
+            <p:column filterBy="#{user.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{user.realUsername}">
+                <p:link outcome="/lw/myhome/profile" value="#{user.realUsername}">
+                    <f:param name="user_id" value="#{user.id}"/>
+                </p:link>
             </p:column>
 
-                <p:column headerText="#{msg.organization}" sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" filterMatchMode="contains" rendered="#{adminUsersBean.courseId == 0}">
-                    <h:outputText value="#{user.organisation.title}"/>
-                </p:column>
+            <p:column headerText="#{msg.email_address}" sortBy="#{user.email}" filterBy="#{user.email}" filterMatchMode="contains">
+                <h:outputText value="#{user.email}"/>
+            </p:column>
 
-                <p:column headerText="#{msg.moderator}" sortBy="#{user.moderator}">
-                    <p:selectBooleanCheckbox value="#{user.moderator}">
-                        <p:ajax listener="#{adminUsersBean.updateUser(user)}" update=":growl" global="false"/>
-                    </p:selectBooleanCheckbox>
-                </p:column>
+        <p:column headerText="Last login" sortBy="#{user.lastLoginDate}" styleClass="td-text-center d-none d-md-table-cell">
+            <h:outputText value="#{user.lastLoginDate.atZone(userBean.timeZone.toZoneId())}">
+                <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" />
+            </h:outputText>
+        </p:column>
 
-                <p:column headerText="#{msg.options}">
-                    <h:commandLink action="#{adminUsersBean.login(user)}" rendered="#{adminUsersBean.canLoginToAccount(user)}">
-                        #{msg.loginLabel}
-                    </h:commandLink>
-                </p:column>
+            <p:column headerText="#{msg.organization}" sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" filterMatchMode="contains" rendered="#{adminUsersBean.courseId == 0}">
+                <h:outputText value="#{user.organisation.title}"/>
+            </p:column>
 
-                <p:column headerText="#{msg.logs}">
-                    <h:outputLink value="http://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{user.id}"
-                                  target="_blank">#{msg.mouse_tracker}</h:outputLink>
-                </p:column>
-            </p:dataTable>
-        </h:form>
-    </ui:define>
+            <p:column headerText="#{msg.moderator}" sortBy="#{user.moderator}">
+                <p:selectBooleanCheckbox value="#{user.moderator}">
+                    <p:ajax listener="#{adminUsersBean.updateUser(user)}" update=":growl" global="false"/>
+                </p:selectBooleanCheckbox>
+            </p:column>
+
+            <p:column headerText="#{msg.options}">
+                <h:commandLink action="#{adminUsersBean.login(user)}" rendered="#{adminUsersBean.canLoginToAccount(user)}">
+                    #{msg.loginLabel}
+                </h:commandLink>
+            </p:column>
+
+            <p:column headerText="#{msg.logs}">
+                <h:outputLink value="http://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{user.id}"
+                              target="_blank">#{msg.mouse_tracker}</h:outputLink>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</ui:define>
+
 </ui:composition>

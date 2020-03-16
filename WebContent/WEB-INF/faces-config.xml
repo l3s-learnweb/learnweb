@@ -27,7 +27,7 @@
         </resource-bundle>
 
         <el-resolver>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver</el-resolver>
-        
+
 		<system-event-listener>
 			<system-event-listener-class>
 				de.l3s.learnweb.beans.ApplicationRemoveResourcesListener

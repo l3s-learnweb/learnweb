@@ -2,75 +2,76 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="#{msg.groupsTitle}"/>
-    <ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
+<ui:param name="pageTitle" value="#{msg.groupsTitle}"/>
+<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 
-    <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
 
-        <lw:breadcrumb-item title="#{msg.otherGroups}" />
-    </ui:define>
+    <lw:breadcrumb-item title="#{msg.otherGroups}" />
+</ui:define>
 
-    <ui:define name="center_layout">
-        <h:form id="other_groups" styleClass="mb-3">
-            <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-                <p:dataTable lazy="false" var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
-                    <f:facet name="header">
-                        #{msg.otherGroups}
-                    </f:facet>
+<ui:define name="center_layout">
+    <h:form id="other_groups" styleClass="mb-3">
+        <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
+            <p:dataTable lazy="false" var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
+                <f:facet name="header">
+                    #{msg.otherGroups}
+                </f:facet>
 
-                    <p:ajax event="filter"/>
-                    <p:ajax event="sort"/>
+                <p:ajax event="filter"/>
+                <p:ajax event="sort"/>
 
-                    <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.longTitle}"
-                              filterMatchMode="contains">
-                        <h:outputLink value="group/resources.jsf">
-                            <f:param name="group_id" value="#{group.id}"/>
-                            <h:outputText value="#{group.longTitle}"/>
-                        </h:outputLink>
+                <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.longTitle}"
+                          filterMatchMode="contains">
+                    <h:outputLink value="group/resources.jsf">
+                        <f:param name="group_id" value="#{group.id}"/>
+                        <h:outputText value="#{group.longTitle}"/>
+                    </h:outputLink>
 
-                        <h:outputText value=" (#{msg.new_word})" rendered="${userBean.newGroups.contains(group)}"/>
-                    </p:column>
+                    <h:outputText value=" (#{msg.new_word})" rendered="${userBean.newGroups.contains(group)}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
-                        <h:outputText value="#{group.description}" escape="false"/>
-                    </p:column>
+                <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
+                    <h:outputText value="#{group.description}" escape="false"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.language}" rendered="false">
-                        <h:outputText value="#{group.language}"/>
-                    </p:column>
+                <p:column headerText="#{msg.language}" rendered="false">
+                    <h:outputText value="#{group.language}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.course}" filterBy="#{group.course.title}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
-                        <h:outputText value="#{group.course.title}"/>
-                    </p:column>
+                <p:column headerText="#{msg.course}" filterBy="#{group.course.title}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
+                    <h:outputText value="#{group.course.title}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="d-none d-md-table-cell">
-                        <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
-                        <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
-                    </p:column>
+                <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="d-none d-md-table-cell">
+                    <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
+                    <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                        <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{userBean.moderator}">
-                            <f:param name="group_id" value="#{group.id}"/>
-                            <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
-                            <h:outputText value="#{msg.edit}"/>
-                        </h:outputLink>
+                <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                    <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{userBean.moderator}">
+                        <f:param name="group_id" value="#{group.id}"/>
+                        <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                        <h:outputText value="#{msg.edit}"/>
+                    </h:outputLink>
 
-                        <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl" process="@this" styleClass="icon-link" title="#{msg.join}" >
-                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                            <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
+                    <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl" process="@this" styleClass="icon-link" title="#{msg.join}" >
+                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
+                        <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
 
-                            <i class="fa fa-fw fa-sign-in text-success" aria-hidden="true"></i>
-                            <h:outputText value="#{msg.join_group}"/>
-                        </p:commandLink>
-                    </p:column>
-                </p:dataTable>
-            </ui:fragment>
-        </h:form>
-    </ui:define>
+                        <i class="fa fa-fw fa-sign-in text-success" aria-hidden="true"></i>
+                        <h:outputText value="#{msg.join_group}"/>
+                    </p:commandLink>
+                </p:column>
+            </p:dataTable>
+        </ui:fragment>
+    </h:form>
+</ui:define>
+
 </ui:composition>

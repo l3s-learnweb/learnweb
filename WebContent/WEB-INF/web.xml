@@ -152,8 +152,8 @@
         <param-value>.xhtml</param-value>
     </context-param>
 
-	<!-- 
-	Because the ImageIO plugin registry (the IIORegistry) is "VM global", it doesn't by default work well with servlet contexts. 
+	<!--
+	Because the ImageIO plugin registry (the IIORegistry) is "VM global", it doesn't by default work well with servlet contexts.
 	https://github.com/haraldk/TwelveMonkeys#deploying-the-plugins-in-a-web-app
 	 -->
 	<listener>

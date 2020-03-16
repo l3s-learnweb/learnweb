@@ -2,130 +2,131 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="#{msg.groupsTitle}"/>
-    <ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
+<ui:param name="pageTitle" value="#{msg.groupsTitle}"/>
+<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 
-    <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
-    </ui:define>
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+</ui:define>
 
-    <ui:define name="center_layout">
-        <h:form id="my_groups">
-            <p:dataTable var="group" styleClass="mb-3" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
-                <f:facet name="header">
-                    <div class="d-flex">
-                        <div class="mr-auto">#{msg.myGroups}</div>
-                        <div class="d-md-block d-flex flex-column">
-                            <p:linkButton outcome="search_groups" value="#{msg.search_group}" styleClass="alt-btn mr-md-2 mr-0" />
-                            <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="alt-btn mt-2 mt-md-0" global="false"/>
-                        </div>
+<ui:define name="center_layout">
+    <h:form id="my_groups">
+        <p:dataTable var="group" styleClass="mb-3" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
+            <f:facet name="header">
+                <div class="d-flex">
+                    <div class="mr-auto">#{msg.myGroups}</div>
+                    <div class="d-md-block d-flex flex-column">
+                        <p:linkButton outcome="search_groups" value="#{msg.search_group}" styleClass="alt-btn mr-md-2 mr-0" />
+                        <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="alt-btn mt-2 mt-md-0" global="false"/>
                     </div>
-                </f:facet>
+                </div>
+            </f:facet>
 
-                <p:column headerText="#{msg.title}" sortBy="#{group.title}">
-                    <h:outputLink value="group/resources.jsf">
-                        <f:param name="group_id" value="#{group.id}"/>
-                        <h:outputText value="#{group.longTitle}"/>
-                    </h:outputLink>
+            <p:column headerText="#{msg.title}" sortBy="#{group.title}">
+                <h:outputLink value="group/resources.jsf">
+                    <f:param name="group_id" value="#{group.id}"/>
+                    <h:outputText value="#{group.longTitle}"/>
+                </h:outputLink>
 
-                    <h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
-                </p:column>
+                <h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
+            </p:column>
 
-                <p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="d-none d-sm-table-cell">
-                    <h:outputText value="#{group.description}" escape="false"/>
-                </p:column>
+            <p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="d-none d-sm-table-cell">
+                <h:outputText value="#{group.description}" escape="false"/>
+            </p:column>
 
-                <p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}" styleClass="d-none d-md-table-cell">
-                    <h:outputText value="#{group.leader.username}"/>
-                </p:column>
+            <p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}" styleClass="d-none d-md-table-cell">
+                <h:outputText value="#{group.leader.username}"/>
+            </p:column>
 
-                <p:column headerText="#{msg.course}" sortBy="#{group.course.title}" styleClass="d-none d-sm-table-cell">
-                    <h:outputText value="#{group.course.title}"/>
-                </p:column>
+            <p:column headerText="#{msg.course}" sortBy="#{group.course.title}" styleClass="d-none d-sm-table-cell">
+                <h:outputText value="#{group.course.title}"/>
+            </p:column>
 
-                <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="d-none d-md-table-cell">
-                    <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
-                    <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
-                </p:column>
+            <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="d-none d-md-table-cell">
+                <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
+                <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
+            </p:column>
 
-                <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                    <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{groupsBean.canDeleteGroup(group)}">
-                        <f:param name="group_id" value="#{group.id}"/>
-                        <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
-                        <h:outputText value="#{msg.edit}"/>
-                    </h:outputLink>
+            <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{groupsBean.canDeleteGroup(group)}">
+                    <f:param name="group_id" value="#{group.id}"/>
+                    <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                    <h:outputText value="#{msg.edit}"/>
+                </h:outputLink>
 
-                    <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this" update=":growl :my_groups">
-                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                        <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
-                        <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
+                <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this" update=":growl :my_groups">
+                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
+                    <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
+                    <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
 
-                        <i class="fa fa-fw fa-sign-out text-danger" aria-hidden="true"></i>
-                        <h:outputText value="#{msg.leave_group}"/>
-                    </p:commandLink>
-                </p:column>
-            </p:dataTable>
+                    <i class="fa fa-fw fa-sign-out text-danger" aria-hidden="true"></i>
+                    <h:outputText value="#{msg.leave_group}"/>
+                </p:commandLink>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+
+    <p:dialog header="#{msg.createGroup}" widgetVar="createGroupDialog"
+              modal="true" resizable="false" styleClass="modal-dialog-select" draggable="false" responsive="true" closeOnEscape="true">
+        <h:form id="create_group_form">
+            <div class="form-group">
+                <p:outputLabel for="@next" value="#{msg.title}:"/>
+                <p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" required="true"/>
+                <p:message for="@previous"/>
+            </div>
+
+            <ui:fragment rendered="#{userBean.user.courses.size() gt 1}">
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="#{msg.course}:"/>
+                    <p:selectOneMenu id="course_id" value="#{groupsBean.newGroup.courseId}" required="true">
+                        <f:selectItems var="c" value="#{userBean.user.courses}" itemLabel="#{c.title}" itemValue="#{c.id}"/>
+                    </p:selectOneMenu>
+                    <p:message for="@previous"/>
+                </div>
+            </ui:fragment>
+
+            <div class="form-group">
+                <p:outputLabel for="@next" value="#{msg.description}:"/>
+                <p:textEditor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" height="200">
+                    <f:facet name="toolbar">
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                    </f:facet>
+                </p:textEditor>
+                <p:message for="@previous"/>
+            </div>
+
+            <ui:fragment rendered="false">
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="#{msg.language}:"/>
+                    <p:inputText id="new_language" value="#{groupsBean.newGroup.language}"/>
+                    <p:message for="@previous"/>
+                </div>
+            </ui:fragment>
+
+            <div class="row">
+                <div class="col">
+                    <h:outputText value="* #{msg.mandatory_field}"/>
+                </div>
+                <div class="col text-right">
+                    <p:commandButton ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}"
+                                     oncomplete="if (!args.validationFailed) PF('createGroupDialog').hide();"
+                                     process="@form" update="@form :my_groups :growl"/>
+                </div>
+            </div>
         </h:form>
+    </p:dialog>
+</ui:define>
 
-
-        <p:dialog header="#{msg.createGroup}" widgetVar="createGroupDialog"
-                  modal="true" resizable="false" styleClass="modal-dialog-select" draggable="false" responsive="true" closeOnEscape="true">
-            <h:form id="create_group_form">
-                <div class="form-group">
-                    <p:outputLabel for="@next" value="#{msg.title}:"/>
-                    <p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" required="true"/>
-                    <p:message for="@previous"/>
-                </div>
-
-				<ui:fragment rendered="#{userBean.user.courses.size() gt 1}">
-	                <div class="form-group">
-	                    <p:outputLabel for="@next" value="#{msg.course}:"/>
-	                    <p:selectOneMenu id="course_id" value="#{groupsBean.newGroup.courseId}" required="true">
-	                        <f:selectItems var="c" value="#{userBean.user.courses}" itemLabel="#{c.title}" itemValue="#{c.id}"/>
-	                    </p:selectOneMenu>
-	                    <p:message for="@previous"/>
-	                </div>
-                </ui:fragment>
-
-                <div class="form-group">
-                    <p:outputLabel for="@next" value="#{msg.description}:"/>
-                    <p:textEditor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" height="200">
-                        <f:facet name="toolbar">
-                            <span class="ql-formats">
-                                <button class="ql-bold"></button>
-                                <button class="ql-italic"></button>
-                                <button class="ql-underline"></button>
-                                <button class="ql-strike"></button>
-                            </span>
-                        </f:facet>
-                    </p:textEditor>
-                    <p:message for="@previous"/>
-                </div>
-
-				<ui:fragment rendered="false">
-	                <div class="form-group">
-	                    <p:outputLabel for="@next" value="#{msg.language}:"/>
-	                    <p:inputText id="new_language" value="#{groupsBean.newGroup.language}"/>
-	                    <p:message for="@previous"/>
-	                </div>
-                </ui:fragment>
-
-                <div class="row">
-                    <div class="col">
-                        <h:outputText value="* #{msg.mandatory_field}"/>
-                    </div>
-                    <div class="col text-right">
-                        <p:commandButton ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}"
-                                         oncomplete="if (!args.validationFailed) PF('createGroupDialog').hide();"
-                                         process="@form" update="@form :my_groups :growl"/>
-                    </div>
-                </div>
-            </h:form>
-        </p:dialog>
-    </ui:define>
 </ui:composition>
