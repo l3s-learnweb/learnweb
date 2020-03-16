@@ -6,26 +6,20 @@
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.courses}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="breadcrumb">
-    <ui:fragment rendered="#{userBean.moderator}">
-        <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
+    <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
 
-        <lw:breadcrumb-item link="admin/courses.jsf" title="#{msg.courses}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-        </lw:breadcrumb-item>
-    </ui:fragment>
+    <lw:breadcrumb-item link="admin/courses.jsf" title="#{msg.courses}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+    </lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-    <p:panel rendered="#{not userBean.moderator}">
-        <h:outputText value="#{msg.missing_authentication}"/>
-    </p:panel>
-
-    <ui:fragment rendered="#{userBean.moderator}">
-        <h:form id="courses_form">
+    <h:form id="courses_form">
         <p:blockUI block="courses" widgetVar="coursesOverlay">
             <h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
         </p:blockUI>
@@ -94,19 +88,18 @@
         </p:dataTable>
     </h:form>
 
-        <p:dialog widgetVar="createCourseWidget" header="#{msg.add_new_course}" styleClass="overflow-hidden">
-            <h:form id="addcourse">
-                <div class="form-group">
-                    <p:outputLabel for="@next" value="#{msg.course_title}:"/>
-                    <p:inputText value="#{adminCoursesBean.newCourseTitle}" required="true"/>
-                    <p:message for="@previous"/>
-                </div>
-                <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}"
-                                 update=":growl :courses_form" process="@form" global="false"
-                                 onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide(); PF('createCourseWidget').hide();"/>
-            </h:form>
-        </p:dialog>
-    </ui:fragment>
-
+    <p:dialog widgetVar="createCourseWidget" header="#{msg.add_new_course}" styleClass="overflow-hidden">
+        <h:form id="addcourse">
+            <div class="form-group">
+                <p:outputLabel for="@next" value="#{msg.course_title}:"/>
+                <p:inputText value="#{adminCoursesBean.newCourseTitle}" required="true"/>
+                <p:message for="@previous"/>
+            </div>
+            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}"
+                             update=":growl :courses_form" process="@form" global="false"
+                             onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide(); PF('createCourseWidget').hide();"/>
+        </h:form>
+    </p:dialog>
 </ui:define>
+
 </ui:composition>

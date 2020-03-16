@@ -12,7 +12,7 @@
 
     <!--@elvariable id="hideGrowl" type="java.lang.Boolean"-->
     <!--@elvariable id="hideBreadcrumbs" type="java.lang.Boolean"-->
-    <!--@elvariable id="hasAcessPermission" type="java.lang.Boolean"-->
+    <!--@elvariable id="hasAccessPermission" type="java.lang.Boolean"-->
 
     <f:view locale="#{userBean.locale}" contentType="text/html">
         <ui:insert name="metadata"/>
@@ -59,11 +59,11 @@
                             <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
                                 <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
 
-                                <p:panel rendered="#{not (hasAcessPermission == null ? userBean.loggedIn : hasAcessPermission)}">
+                                <p:panel rendered="#{not (hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission)}">
                                     <h:outputText value="#{msg.access_denied}"/>
                                 </p:panel>
 
-                                <ui:fragment rendered="#{not (hasAcessPermission == null ? userBean.loggedIn : hasAcessPermission) and !userBean.loggedIn}">
+                                <ui:fragment rendered="#{not (hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission) and !userBean.loggedIn}">
                                     <p:panel header="#{msg.loginTitle}">
                                         <div class="mw-md">
                                             <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
@@ -71,7 +71,7 @@
                                     </p:panel>
                                 </ui:fragment>
 
-                                <ui:fragment rendered="#{hasAcessPermission == null ? userBean.loggedIn : hasAcessPermission}">
+                                <ui:fragment rendered="#{hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission}">
                                     <ui:fragment rendered="#{not hideBreadcrumbs}">
                                         <h:outputScript library="learnweb-layout" name="js/breadcrumb.js" target="body"/>
 

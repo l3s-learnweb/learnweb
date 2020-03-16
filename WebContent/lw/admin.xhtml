@@ -6,19 +6,16 @@
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.admin}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.admin}"/>
 
 <ui:define name="breadcrumb">
-    <lw:breadcrumb-item rendered="#{userBean.admin}" title="#{msg.admin}" link="admin.jsf">
+    <lw:breadcrumb-item title="#{msg.admin}" link="admin.jsf">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
     </lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-    <p:panel rendered="#{not userBean.admin}">
-        <h:outputText value="#{msg.missing_authentication}"/>
-    </p:panel>
-
-    <p:panel rendered="#{userBean.user.admin}" header="#{msg.admin}" styleClass="mb-3 ui-widget-content-p-0">
+    <p:panel header="#{msg.admin}" styleClass="mb-3 ui-widget-content-p-0">
         <div class="links-list">
             <a href="admin/organisations.jsf"><i class="ui-menuitem-icon fa fa-fw fa-sitemap text-dark"></i>#{msg.organisations}</a>
             <a href="admin/banlist.jsf"><i class="ui-menuitem-icon fa fa-fw fa-ban text-danger"></i>#{msg.banlist}</a>
@@ -29,4 +26,5 @@
         </div>
     </p:panel>
 </ui:define>
+
 </ui:composition>

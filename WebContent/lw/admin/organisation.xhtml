@@ -7,6 +7,7 @@
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{adminOrganisationBean.selectedOrganisation.title} - #{msg.organization}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="metadata">
     <f:metadata>
@@ -24,23 +25,19 @@
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item rendered="#{!userBean.admin and userBean.moderator}" link="moderator.jsf" title="#{msg.moderator}">
+    <lw:breadcrumb-item rendered="#{!userBean.admin}" link="moderator.jsf" title="#{msg.moderator}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item rendered="#{!userBean.admin and userBean.moderator}" link="admin/organisation.jsf" title="#{msg.organization}">
+    <lw:breadcrumb-item rendered="#{!userBean.admin}" link="admin/organisation.jsf" title="#{msg.organization}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item rendered="#{userBean.moderator}" title="#{adminOrganisationBean.selectedOrganisation.title}"/>
+    <lw:breadcrumb-item title="#{adminOrganisationBean.selectedOrganisation.title}"/>
 </ui:define>
 
 <ui:define name="center_layout">
-    <p:panel rendered="#{not userBean.moderator}">
-        <h:outputText value="#{msg.missing_authentication}"/>
-    </p:panel>
-
-    <ui:fragment rendered="#{null ne adminOrganisationBean.selectedOrganisation and userBean.moderator}">
+    <ui:fragment rendered="#{null ne adminOrganisationBean.selectedOrganisation}">
         <h:form id="editorganizationform">
             <p:panel styleClass="mb-3" header="#{msg.welcome_message}">
                 <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}">

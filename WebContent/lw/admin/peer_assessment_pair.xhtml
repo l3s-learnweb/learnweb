@@ -7,6 +7,7 @@
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.peer_assessment_pairing}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="metadata">
 	<f:metadata>
@@ -18,20 +19,15 @@
 </ui:define>
 
 <ui:define name="breadcrumb">
-	<ui:fragment rendered="#{userBean.moderator}">
-		<lw:breadcrumb-item link="myhome/peer_assessment_pair.jsf" title="#{msg.peer_assessment_pairing}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
-	</ui:fragment>
-
+	<lw:breadcrumb-item link="myhome/peer_assessment_pair.jsf" title="#{msg.peer_assessment_pairing}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
 	<c:set var="showEmail" value="false" scope="request"/>
 
-	<h:outputText value="#{msg.missing_authentication}" rendered="#{not userBean.moderator}"/>
-
-	<ui:fragment rendered="#{userBean.moderator and adminPeerAssessmentPairBeen.peerAssessmentId != 0}">
+	<ui:fragment rendered="#{adminPeerAssessmentPairBeen.peerAssessmentId != 0}">
 		<h:form>
 			<p:panel header="#{msg.visualization}" styleClass="mb-3">
 				<h4>#{msg.peer_assessment_pairing_meaning}</h4>

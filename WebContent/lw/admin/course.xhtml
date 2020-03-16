@@ -7,6 +7,7 @@
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{adminCourseBean.course.title}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="metadata">
 	<f:metadata>
@@ -16,25 +17,19 @@
 </ui:define>
 
 <ui:define name="breadcrumb">
-	<ui:fragment rendered="#{userBean.moderator}">
-		<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+	<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="admin/courses.jsf" title="#{msg.courses}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-		</lw:breadcrumb-item>
+	<lw:breadcrumb-item link="admin/courses.jsf" title="#{msg.courses}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+	</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item title="#{adminCourseBean.course.title}"/>
-	</ui:fragment>
+	<lw:breadcrumb-item title="#{adminCourseBean.course.title}"/>
 </ui:define>
 
 <ui:define name="center_layout">
-	<p:panel rendered="#{not userBean.moderator}">
-		<h:outputText value="#{msg.missing_authentication}"/>
-	</p:panel>
-
-	<h:form rendered="#{userBean.moderator}" id="editwelcomeform" prependId="false" styleClass="form">
+	<h:form id="editwelcomeform" prependId="false" styleClass="form">
 		<div class="row">
 			<div class="col-12">
 				<p:panel header="#{msg.welcome_message}">

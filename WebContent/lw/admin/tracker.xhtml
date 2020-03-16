@@ -6,25 +6,20 @@
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.tracker}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="breadcrumb">
-	<ui:fragment rendered="#{userBean.moderator}">
-		<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+	<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="admin/tracker.jsf" title="#{msg.tracker}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-		</lw:breadcrumb-item>
-	</ui:fragment>
+	<lw:breadcrumb-item link="admin/tracker.jsf" title="#{msg.tracker}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+	</lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-	<p:panel rendered="#{not userBean.moderator}">
-		<h:outputText value="#{msg.missing_authentication}"/>
-	</p:panel>
-
-	<h:form rendered="#{userBean.moderator}">
+	<h:form>
 		<p:dataTable value="#{dashboard.trackerStatistics}" var="entry">
 			<f:facet name="header">#{msg.tracker_statistic}</f:facet>
 

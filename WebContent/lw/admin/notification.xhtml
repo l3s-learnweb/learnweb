@@ -6,26 +6,21 @@
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.notification}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="breadcrumb">
-	<ui:fragment rendered="#{userBean.moderator}">
-		<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+	<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="admin/notification.jsf" title="#{msg.send_notification}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-		</lw:breadcrumb-item>
-	</ui:fragment>
+	<lw:breadcrumb-item link="admin/notification.jsf" title="#{msg.send_notification}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+	</lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-	<p:panel rendered="#{not userBean.moderator}">
-		<h:outputText value="#{msg.missing_authentication}"/>
-	</p:panel>
-
 	<h:form>
-		<p:panel header="#{msg.notification}" rendered="#{userBean.moderator}">
+		<p:panel header="#{msg.notification}">
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg.title}:"/>
 				<p:inputText value="#{adminNotificationBean.title}" id="msg_title"/>
