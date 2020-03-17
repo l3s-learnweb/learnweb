@@ -42,8 +42,6 @@
 
         <h:body styleClass="layout-body ui-loading">
             <ui:insert name="body_content">
-                <div class="layout-overlay ui-widget-overlay"></div>
-
                 <div class="layout-wrapper #{userBean.loggedIn and not userBean.hideSidebarMenu ? null : 'layout-wrapper-sidebar-inactive'}">
                     <ui:include src="parts/header.xhtml"/>
 
