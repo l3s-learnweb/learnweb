@@ -260,7 +260,7 @@
 			</h:panelGroup>
 
 			<h:form id="tag_input_form" rendered="#{res.canAnnotateResource(userBean.user)}">
-				<div class="form-group mb-0">
+				<div class="form-group mb-1">
 					<p:inputText value="#{resourceDetailBean.tagName}" id="tag_name" styleClass="flex-grow-1" placeholder="Enter new tag..."/>
 					<p:message for="@previous"/>
 				</div>
@@ -279,7 +279,7 @@
 		<dd class="col-sm-9">
 			<h:form styleClass="mb-2" id="new_comment_form">
 				<ui:fragment rendered="#{res.canAnnotateResource(userBean.user)}">
-					<div class="form-group mb-0">
+					<div class="form-group mb-1">
 						<p:inputTextarea rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true" styleClass="d-block"/>
 						<p:message for="@previous"/>
 					</div>
@@ -308,7 +308,8 @@
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 								</p:commandLink>
 								<p:commandLink value="#{msg.delete}" styleClass="text-danger" action="#{resourceDetailBean.onDeleteComment}"
-											   ajax="true" update=":comments_list :growl" process="@this" onstart="return confirm('#{msg.delete_message_comments}');"
+											   ajax="true" global="false" update=":comments_list :growl" process="@this"
+											   onstart="PF('detailsOverlay').show();return confirm('#{msg.delete_message_comments}');" oncomplete="PF('detailsOverlay').hide();"
 											   rendered="#{resourceDetailBean.canEditComment(comment)}">
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 								</p:commandLink>

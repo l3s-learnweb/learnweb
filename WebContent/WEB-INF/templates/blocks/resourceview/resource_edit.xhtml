@@ -20,7 +20,7 @@
     <div class="mr-auto">
         <p:commandButton styleClass="alt-btn" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
                          update=":resourceViewForm" global="false" immediate="true" rendered="#{userBean.admin}"
-                         onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
+                         onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').show();"/>
     </div>
     <div>
         <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" action="#{resourceDetailBean.cancelEdit}"

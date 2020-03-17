@@ -7,9 +7,16 @@
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
 <dl class="row mb-n2">
-	<ui:fragment rendered="#{res.canEditResource(userBean.user)}">
-		<p:button onclick="loadArchiveUrlsModal();return false;" icon="fa fa fa-camera-retro" styleClass="secondary-btn" title="#{msg['Archive.change_thumbnail']}"/>
+	<ui:fragment rendered="${res.storageType == 2 and res.canEditResource(userBean.user)}">
+		<div>
+			<p:button onclick="loadArchiveUrlsModal();return false;" styleClass="secondary-btn" value="#{msg['Archive.change_thumbnail']}"/>
 
+			<p:commandButton id="archive_now_btn" form="archive_view_options" process="@this" action="#{resourceDetailBean.archiveCurrentVersion}"
+							 icon="fa fa fa-camera-retro" value="#{msg['Archive.now']}" update=":growl archive_view_options"/>
+		</div>
+
+		<h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
+		<h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
 		<div id="modal_archive_urls" class="content-root collapse">
 			<div class="content-header text-center mb-3">
 				<h:outputText value="#{res.title}" escape="false" styleClass="h5"/>
@@ -78,16 +85,7 @@
 					</div>
 				</div>
 			</div>
-
 		</div>
-	</ui:fragment>
-
-	<ui:fragment rendered="${res.storageType == 2 and res.canEditResource(userBean.user)}">
-		<dt class="col-sm-4">#{msg.current_version}:</dt>
-		<dd class="col-sm-8">
-			<p:commandButton id="archive_now_btn" form="archive_view_options" process="@this" action="#{resourceDetailBean.archiveCurrentVersion}"
-							 value="#{msg['Archive.now']}" update=":growl archive_view_options"/>
-		</dd>
 	</ui:fragment>
 
 	<h:form id="archive_view_options" styleClass="col-sm-12" prependId="false">
