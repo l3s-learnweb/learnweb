@@ -81,7 +81,7 @@
 
                         <h:panelGroup rendered="#{logEntry.resource != null}">
                             <div class="row">
-                                <h:outputLink styleClass="col-5 col-md-3" value="resource.jsf" pt:data-fancybox="resource" rendered="#{not empty logEntry.resource.thumbnail3}">
+                                <h:outputLink styleClass="col-5 col-md-3" value="resource.jsf" pt:data-resview="default" rendered="#{not empty logEntry.resource.thumbnail3}">
                                     <f:param name="resource_id" value="#{logEntry.resource.id}"/>
 
                                     <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
@@ -102,7 +102,7 @@
                         <h:panelGroup id="resourceGrid" styleClass="res-grid mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
                             <ui:repeat value="#{userSubmission.resources}" var="res">
                                 <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
-                                              pt:data-fancybox="resource"
+                                              pt:data-resview="default"
                                               pt:data-itemType="resource"
                                               pt:data-itemId="#{res.id}">
                                     <f:param name="resource_id" value="#{res.id}"/>

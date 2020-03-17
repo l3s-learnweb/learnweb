@@ -382,34 +382,6 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
   }
 }
 
-function openResource(resourceId, edit = false) {
-  $.fancybox.open($('[data-resview="true"]'), {
-    defaultType: 'iframe',
-    closeExisting: true,
-    arrows: false,
-    infobar: false,
-    toolbar: false,
-    slideClass: 'p-0',
-    hash: false,
-    iframe: {
-      css: {
-        height: '100%',
-        width: '100%',
-      },
-    },
-    onInit: (instance) => {
-      for (let i = 0, l = instance.group.length; i < l; ++i) {
-        const itemId = instance.group[i].opts.$orig.data('itemid');
-        if (String(itemId) === String(resourceId)) {
-          instance.currIndex = instance.group[i].index;
-          if (edit) instance.group[i].src += '&edit=true';
-          break;
-        }
-      }
-    },
-  });
-}
-
 function openFolder(folderId) {
   selected.unselectAll();
   PF('learnweb').updateSearchParams({ folder_id: folderId });
@@ -504,7 +476,7 @@ function doAction(action, extraAttr1, extraAttr2) {
             { name: 'itemId', value: item.id },
           ]);
         } else {
-          openResource(item.id, true);
+          openResourceView($('[data-resview="grid"]'), $(item.element));
         }
       } else {
         console.error('No resources selected.');
@@ -533,7 +505,7 @@ function openItems() {
   const itemType = this.dataset.itemtype;
 
   if (itemId && itemType === 'resource') {
-    openResource(itemId);
+    openResourceView($('[data-resview="grid"]'), $(this));
   } else if (itemId && itemType === 'folder') {
     openFolder(itemId);
   } else if (itemId && itemType === 'group') {

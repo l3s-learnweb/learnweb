@@ -26,7 +26,7 @@
     <h:panelGroup id="resourceGrid" styleClass="res-grid" layout="block">
         <ui:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
             <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
-                          pt:data-resview="true"
+                          pt:data-resview="grid"
                           pt:data-itemType="resource"
                           pt:data-itemId="#{res.resource.id}"
                           pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"

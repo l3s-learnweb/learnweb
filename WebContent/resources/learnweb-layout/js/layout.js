@@ -246,6 +246,34 @@ function setPreference(prefKey, prefValue) {
   ]);
 }
 
+function openResourceView(items, target, isEdit = false) {
+  $.fancybox.open(items, {
+    defaultType: 'iframe',
+    closeExisting: true,
+    arrows: false,
+    infobar: false,
+    toolbar: false,
+    slideClass: 'p-0',
+    hash: false,
+    iframe: {
+      css: {
+        height: '100%',
+        width: '100%',
+      },
+    },
+    onInit: (instance) => {
+      for (let i = 0, l = instance.group.length; i < l; ++i) {
+        const el = instance.group[i].opts.$orig;
+        if (target.is(el)) {
+          instance.currIndex = instance.group[i].index;
+          if (isEdit) instance.group[i].src += '&edit=true';
+          break;
+        }
+      }
+    },
+  });
+}
+
 /**
  * On document ready events
  */
@@ -254,23 +282,14 @@ $(() => {
   // After that, we can access any method of it by using `PF('learnweb')`
   PrimeFaces.cw('LearnwebTheme', 'learnweb', { id: 'learnweb' });
 
-  if ($.fancybox && $('[data-fancybox="resource"]').length) {
-    $().fancybox({
-      selector: '[data-fancybox="resource"]',
-      defaultType: 'iframe',
-      closeExisting: true,
-      arrows: false,
-      infobar: false,
-      toolbar: false,
-      slideClass: 'p-0',
-      hash: false,
-      iframe: {
-        css: {
-          height: '100%',
-          width: '100%',
-        },
-      },
-    });
+  const $fbResources = $('[data-resview="default"]');
+  if ($.fancybox && $fbResources.length) {
+    $fbResources
+      .on('click', (e) => e.preventDefault())
+      .on('dblclick', (e) => {
+        const $target = $(e.currentTarget);
+        openResourceView($fbResources, $target);
+      });
   }
 
   // This code is executed after all "on-page-ready" listeners
