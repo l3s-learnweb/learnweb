@@ -115,7 +115,6 @@
                           pt:data-canSelectResources="true">
                 <p:repeat var="res" value="#{submissionBean.resources}">
                     <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
-                                  pt:data-fancybox="resource"
                                   pt:data-itemType="resource"
                                   pt:data-itemId="#{res.id}">
                         <f:param name="resource_id" value="#{res.id}"/>
