@@ -13,6 +13,8 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
@@ -26,6 +28,7 @@ import de.l3s.learnweb.user.UserManager;
 public class DeleteOldUsers
 {
     private static Logger log = Logger.getLogger(DeleteOldUsers.class);
+    private static Learnweb learnweb;
 
     /**
      * @param args
@@ -38,7 +41,7 @@ public class DeleteOldUsers
     {
         log.debug("start");
 
-        Learnweb learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de");
+        learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de");
 
         try
         {
@@ -47,8 +50,10 @@ public class DeleteOldUsers
             rm.setReindexMode(true);
             learnweb.getSolrClient().reIndexResource(rm.getResource(2054));
 
-            int configYears = 5; // delete users that didn't login for more than defined number of years
-            deleteUsersThatHaventLoggedInForYears(learnweb, configYears, 478);
+            //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
+            //deleteUsersWhoHaveBeenSoftDeleted(1);
+            //deleteAbandonedGroups();
+            deleteAbandonedResources();
 
         }
         catch(Throwable e)
@@ -62,6 +67,43 @@ public class DeleteOldUsers
     }
 
     /**
+     * Hard deletes users who have already been soft deleted. The method deletes only users who haven't logged in within the defined number of years.
+     *
+     * @param configYears
+     * @throws Throwable
+     */
+    private static void deleteUsersWhoHaveBeenSoftDeleted(int configYears) throws Throwable
+    {
+        log.info("deleteUsersWhoHaveBeenSoftDeleted() - Start");
+        UserManager um = learnweb.getUserManager();
+
+        Instant now = Instant.now();
+        Instant deadline = now.minus(configYears * 365, ChronoUnit.DAYS);
+
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_user` WHERE deleted = 1");
+        ResultSet rs = select.executeQuery();
+
+        while(rs.next())
+        {
+            int userId = rs.getInt(1);
+            Optional<Instant> lastLogin = um.getLastLoginDate(userId);
+
+            if(lastLogin.isPresent() && deadline.isBefore(lastLogin.get()))
+            {
+                log.debug("Ignore active user: " + userId);
+                continue;
+            }
+            User user = um.getUser(userId);
+
+            log.debug("Delete: " + user.getUsername() + "; registration=" + user.getRegistrationDate() + "; login=" + lastLogin + "; mail=" + user.getEmail() + "; " + user.isModerator());
+
+            um.deleteUserHard(user);
+        }
+
+        log.info("deleteUsersWhoHaveBeenSoftDeleted() - End");
+    }
+
+    /**
      * Deletes users that didn't login for more than defined number of years.
      * Use this method only if you know what you are doing.
      * It will also delete resources a user has created in public groups. Thus this call might affect other users.
@@ -71,7 +113,7 @@ public class DeleteOldUsers
      * @param organisationId the organization from which inactive users are deleted
      * @throws Throwable
      */
-    private static void deleteUsersThatHaventLoggedInForYears(Learnweb learnweb, int configYears, int organisationId) throws Throwable
+    private static void deleteUsersWhoHaventLoggedInForYears(int configYears, int organisationId) throws Throwable
     {
         log.info("deleteUsersThatHaventLoggedInForYears() - Start");
         UserManager um = learnweb.getUserManager();
@@ -79,7 +121,7 @@ public class DeleteOldUsers
         Instant now = Instant.now();
         Instant deadline = now.minus(configYears * 365, ChronoUnit.DAYS);
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_user` WHERE organisation_id = ? AND is_moderator = 0 AND is_admin = 0 AND `registration_date` < ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_user` WHERE (organisation_id = ? AND is_moderator = 0 AND is_admin = 0 AND `registration_date` < ?) OR deleted = 1");
         select.setInt(1, organisationId);
         select.setTimestamp(2, Timestamp.from(deadline));
         ResultSet rs = select.executeQuery();
@@ -88,22 +130,21 @@ public class DeleteOldUsers
         {
             int userId = rs.getInt(1);
             Optional<Instant> lastLogin = um.getLastLoginDate(userId);
-            log.debug(userId + " - " + lastLogin);
 
             if(lastLogin.isPresent() && deadline.isBefore(lastLogin.get()))
             {
-                log.debug("ignore");
+                log.debug("Ignore active user: " + userId);
                 continue;
             }
             User user = um.getUser(userId);
 
             if(user.getUsername().startsWith("Anonym"))
             {
-                log.debug("ignore2");
+                log.debug("Ignore anonymous user: " + userId);
                 continue;
             }
 
-            log.debug("Delete: " + user.getUsername() + "; " + user.getRegistrationDate() + "; " + user.getEmail() + "; " + user.isModerator());
+            log.debug("Delete: " + user.getUsername() + "; registration=" + user.getRegistrationDate() + "; login=" + lastLogin + "; mail=" + user.getEmail() + "; " + user.isModerator());
 
             um.deleteUserHard(user);
         }
@@ -111,15 +152,58 @@ public class DeleteOldUsers
         log.info("deleteUsersThatHaventLoggedInForYears() - End");
     }
 
-    private static void deleteAbandonedResources(Learnweb learnweb)
+    private static void deleteAbandonedResources() throws SQLException
     {
 
-        //SELECT * FROM `lw_resource` r LEFT JOIN lw_group g USING(`group_id`) WHERE r.group_id != 0 AND r.deleted = 0 AND g.group_id IS NULL
+        ResourceManager rm = learnweb.getResourceManager();
+
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id FROM `lw_resource` r LEFT JOIN lw_group g USING(`group_id`) WHERE (r.group_id != 0 AND g.group_id IS NULL) OR r.deleted = 1"))
+        {
+
+            ResultSet rs = select.executeQuery();
+
+            while(rs.next())
+            {
+                rm.deleteResourceHard(rs.getInt(1));
+            }
+        }
+
+        // remove references to deleted resources
+        String[] tables = { "lw_resource_history", "lw_resource_langlevel", "lw_resource_purpose", "lw_resource_rating", "lw_resource_tag", "lw_thumb", "lw_transcript_actions", "lw_glossary_resource",
+                "lw_transcript_selections", "lw_transcript_summary", "ted_transcripts_paragraphs" };
+
+        for(String table : tables)
+        {
+            try(PreparedStatement delete = learnweb.getConnection().prepareStatement("delete d FROM `" + table + "` d LEFT JOIN lw_resource r USING(resource_id) WHERE r.resource_id is null"))
+            {
+                int numRowsAffected = delete.executeUpdate();
+                log.debug("Deleted " + numRowsAffected + " rows from " + table);
+            }
+        }
     }
 
-    private static void deleteAbandonedGroups(Learnweb learnweb)
+    private static void deleteAbandonedGroups() throws Exception
     {
+        GroupManager gm = learnweb.getGroupManager();
 
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_id FROM `lw_group` LEFT JOIN lw_group_user u USING(group_id) WHERE (YEAR(creation_time) < year(now())-1 AND u.group_id IS NULL and course_id != 891) OR deleted = 1"))
+        {
+
+            ResultSet rs = select.executeQuery();
+
+            while(rs.next())
+            {
+                Group group = gm.getGroupById(rs.getInt(1));
+
+                log.debug("Delete: " + group + "; resources: " + group.getResourcesCount());
+                if(group.getResourcesCount() > 2)
+                {
+                    log.debug("confirm");
+
+                }
+                group.deleteHard();
+            }
+        }
     }
 
     // find problems

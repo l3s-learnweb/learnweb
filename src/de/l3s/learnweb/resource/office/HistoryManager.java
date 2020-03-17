@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.office.history.model.Change;
@@ -86,29 +88,30 @@ public class HistoryManager
 
     public History saveHistory(History history) throws SQLException
     {
-        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_resource_history` (" + HISTORY_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
+        if(history.getId() == null) // the file is not yet stored at the database
         {
-            if(history.getId() == null) // the file is not yet stored at the database
-                replace.setNull(1, java.sql.Types.INTEGER);
-            else
-                replace.setInt(1, history.getId());
-            replace.setInt(2, history.getResourceId());
-            replace.setInt(3, history.getPreviousVersionFileId());
-            replace.setInt(4, history.getChangesFileId());
-            replace.setString(5, history.getCreated());
-            replace.setString(6, history.getKey());
-            replace.setString(7, history.getServerVersion());
-            replace.setInt(8, history.getUser().getId());
-            replace.executeUpdate();
-            if(history.getId() == null) // it's a new file -> get the assigned id
+            try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_history` (" + HISTORY_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
             {
-                ResultSet rs = replace.getGeneratedKeys();
+                insert.setNull(1, java.sql.Types.INTEGER);
+                insert.setInt(2, history.getResourceId());
+                insert.setInt(3, history.getPreviousVersionFileId());
+                insert.setInt(4, history.getChangesFileId());
+                insert.setString(5, history.getCreated());
+                insert.setString(6, history.getKey());
+                insert.setString(7, history.getServerVersion());
+                insert.setInt(8, history.getUser().getId());
+                insert.executeUpdate();
+
+                // get the assigned id
+                ResultSet rs = insert.getGeneratedKeys();
                 if(!rs.next())
                     throw new SQLException("database error: no id generated");
                 history.setId(rs.getInt(1));
             }
+            return history;
         }
-        return history;
+        else
+            throw new NotImplementedException("need to implement UPDATE");
     }
 
     public Change saveChange(Change change) throws SQLException

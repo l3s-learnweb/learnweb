@@ -297,8 +297,7 @@ public class ResourceManager
             }
         }
 
-        // TODO delete files (lw_file); but it's not possible yet because files are shared  when a resource is copied
-
+        // TODO delete files (lw_file); but it's not possible yet because files are shared when a resource is copied
     }
 
     protected Resource saveResource(Resource resource) throws SQLException
