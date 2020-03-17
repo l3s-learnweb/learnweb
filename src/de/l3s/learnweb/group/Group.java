@@ -39,6 +39,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     @NotBlank
     @Length(min = 3, max = 60)
     private String title;
+    @Length(max = 500)
     private String description;
     private String metadata1;
     private String hypothesisLink;

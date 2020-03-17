@@ -18,8 +18,12 @@
 
 <ui:define name="center_layout">
     <h:form id="other_groups" styleClass="mb-3">
+        <p:panel rendered="#{empty groupsBean.otherGroups}">
+            <h:outputText value="#{msg.no_groups_to_join}"/>
+        </p:panel>
+
         <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-            <p:dataTable lazy="false" var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
+            <p:dataTable lazy="false" var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.nothingFound}">
                 <f:facet name="header">
                     #{msg.otherGroups}
                 </f:facet>
@@ -37,7 +41,7 @@
                     <h:outputText value=" (#{msg.new_word})" rendered="${userBean.newGroups.contains(group)}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
+                <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell text-break">
                     <h:outputText value="#{group.description}" escape="false"/>
                 </p:column>
 
@@ -61,7 +65,7 @@
                         <h:outputText value="#{msg.edit}"/>
                     </h:outputLink>
 
-                    <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl" process="@this" styleClass="icon-link" title="#{msg.join}" >
+                    <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :sidebar_menu" process="@this" styleClass="icon-link" title="#{msg.join}" >
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                         <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
 

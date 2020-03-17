@@ -36,7 +36,7 @@
                 <h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
             </p:column>
 
-            <p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="d-none d-sm-table-cell">
+            <p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="d-none d-sm-table-cell text-break">
                 <h:outputText value="#{group.description}" escape="false"/>
             </p:column>
 
@@ -60,7 +60,7 @@
                     <h:outputText value="#{msg.edit}"/>
                 </h:outputLink>
 
-                <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this" update=":growl :my_groups">
+                <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this" update=":growl :my_groups :sidebar_menu">
                     <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                     <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                     <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>

@@ -35,6 +35,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
     @NotBlank
     @Length(min = 3, max = 60)
     private String editedGroupTitle;
+    @Length(max = 500)
     private String editedGroupDescription; // Group edit fields (Required for editing group)
     private String editedHypothesisLink;
     private String editedHypothesisToken;
