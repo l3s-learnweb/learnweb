@@ -1,72 +1,47 @@
-<ui:composition
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-    <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
+<!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
 
-    <h:panelGroup id="paging_buttons" layout="block" rendered="#{paginator.totalPages > 1}">
-        <h:form>
-            <ui:fragment rendered="#{paginator.lessThanNPages}">
-                <span class="previous_button"></span>
+<h:form id="pagingButtons" rendered="#{paginator.totalPages > 1}" styleClass="mb-3 mx-3 paginator">
+    <p:commandButton value="#{msg.previous_page}" icon="fa fa-angle-left" disabled="#{paginator.pageIndex == 0}" update=":resourcesView :pagingButtons">
+        <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex - 1}"/>
+    </p:commandButton>
 
-                <p:commandButton value="#{msg.previous} #{msg.page}" style="margin:0 5px;" styleClass="pagebutton"
-                                 disabled="#{paginator.pageIndex == 0}" update=":resourcesView :paging_buttons">
-                    <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex - 1}"/>
-                </p:commandButton>
+    <!-- Show all pages in paginator -->
+    <ui:repeat value="#{paginator.pageList}" var="page" rendered="#{paginator.lessThanNPages}">
+        <p:commandButton value="#{page}" styleClass="#{page == paginator.pageIndex + 1 ? 'ui-state-active' : ''}" update=":resourcesView :pagingButtons">
+            <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{page - 1}"/>
+        </p:commandButton>
+    </ui:repeat>
 
-                <ui:repeat value="#{paginator.pageList}" var="page">
-                    <p:commandButton value="#{page}" styleClass="pagebutton #{page == paginator.pageIndex + 1? 'active_page_button':''}"
-                                     update=":resourcesView :paging_buttons">
-                        <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{page - 1}"/>
-                    </p:commandButton>
-                </ui:repeat>
+    <!-- Show first, current and last pages in paginator -->
+    <ui:fragment rendered="#{!paginator.lessThanNPages}">
+        <p:commandButton value="#{1}" styleClass="#{paginator.pageIndex + 1 == 1 ? 'ui-state-active' : ''}" update=":resourcesView :pagingButtons">
+            <f:setPropertyActionListener target="#{paginator.pageIndex}" value="0"/>
+        </p:commandButton>
 
-                <p:commandButton value="#{msg.next} #{msg.page}" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages - 1}"
-                                 update=":resourcesView :paging_buttons">
-                    <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex + 1}"/>
-                </p:commandButton>
+        <p:commandButton value="…" disabled="true" rendered="#{paginator.pageIndex >= 4}"/>
 
-                <span class="next_button"></span>
-            </ui:fragment>
+        <ui:repeat value="#{paginator.pageList}" var="page">
+            <p:commandButton value="#{page}" styleClass="#{page == paginator.pageIndex + 1 ? 'ui-state-active' : ''}" update=":resourcesView :pagingButtons">
+                <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{page - 1}"/>
+            </p:commandButton>
+        </ui:repeat>
 
-            <ui:fragment rendered="#{!paginator.lessThanNPages}">
-                <span class="previous_button"></span>
+        <p:commandButton value="…" disabled="true" rendered="#{paginator.lessThanNPagesFromLast}"/>
 
-                <p:commandButton value="#{msg.previous} #{msg.page}" style="margin:0 5px;"
-                                 styleClass="pagebutton" disabled="#{paginator.pageIndex == 0}" update=":resourcesView :paging_buttons">
-                    <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex - 1}"/>
-                </p:commandButton>
+        <p:commandButton value="#{paginator.totalPages}" styleClass="#{paginator.pageIndex == paginator.totalPages - 1 ? 'ui-state-active' : ''}" update=":resourcesView :pagingButtons">
+            <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.totalPages - 1}"/>
+        </p:commandButton>
+    </ui:fragment>
 
-                <p:commandButton value="#{1}" styleClass="pagebutton #{paginator.pageIndex + 1 == 1? 'active_page_button':''}"
-                                 update=":resourcesView :paging_buttons">
-                    <f:setPropertyActionListener target="#{paginator.pageIndex}" value="0"/>
-                </p:commandButton>
-                <p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{paginator.pageIndex >= 4}"/>
+    <p:commandButton value="#{msg.next_page}" icon="fa fa-angle-right" iconPos="right" disabled="#{paginator.pageIndex == paginator.totalPages - 1}" update=":resourcesView :pagingButtons">
+        <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex + 1}"/>
+    </p:commandButton>
+</h:form>
 
-                <ui:repeat value="#{paginator.pageList}" var="page">
-                    <p:commandButton value="#{page}" style="margin-right:5px;"
-                                     styleClass="pagebutton #{page == paginator.pageIndex + 1? 'active_page_button':''}"
-                                     update=":resourcesView :paging_buttons">
-                        <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{page - 1}"/>
-                    </p:commandButton>
-                </ui:repeat>
-
-                <p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{paginator.lessThanNPagesFromLast}"/>
-
-                <p:commandButton value="#{paginator.totalPages}" styleClass="pagebutton #{paginator.pageIndex == paginator.totalPages - 1? 'active_page_button':''}"
-                                 update=":resourcesView :paging_buttons">
-                    <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.totalPages -1}"/>
-                </p:commandButton>
-
-                <p:commandButton value="#{msg.next} #{msg.page}" styleClass="pagebutton"
-                                 disabled="#{paginator.pageIndex == paginator.totalPages - 1}" update=":resourcesView :paging_buttons">
-                    <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex + 1}"/>
-                </p:commandButton>
-
-                <span class="next_button"></span>
-            </ui:fragment>
-        </h:form>
-    </h:panelGroup>
 </ui:composition>	

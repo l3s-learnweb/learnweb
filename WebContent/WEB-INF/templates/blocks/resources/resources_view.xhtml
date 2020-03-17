@@ -38,11 +38,9 @@
                   rendered="#{paginator.isEmpty() and (paginator.getClass().getSimpleName() eq 'SearchPaginator' or paginator.getClass().getSimpleName() eq 'FilterPaginator')}"/>
 </h:panelGroup>
 
-<h:panelGroup id="paginator" layout="block">
-    <ui:decorate template="/WEB-INF/templates/blocks/resources/paging.xhtml">
-        <ui:param name="paginator" value="${paginator}"/>
-    </ui:decorate>
-</h:panelGroup>
+<ui:decorate template="/WEB-INF/templates/blocks/resources/paging.xhtml">
+    <ui:param name="paginator" value="${paginator}"/>
+</ui:decorate>
 
 <ul class="d-none" id="contextmenu_items">
     <li data-type="container" data-action="create-folder" data-per="canaddresources" data-icon="fa-icon fa-folder">#{msg.create_folder}</li>

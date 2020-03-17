@@ -818,3 +818,18 @@ ul.res-filters {
     }
   }
 }
+
+.paginator {
+  .ui-button {
+    margin-left: $grid-gutter-width / 8;
+    margin-right: $grid-gutter-width / 8;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
