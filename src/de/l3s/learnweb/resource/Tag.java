@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 import de.l3s.learnweb.Learnweb;
 
@@ -28,6 +29,11 @@ public class Tag implements Comparable<Tag>, Serializable
         return id;
     }
 
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
     public List<Resource> getResources() throws SQLException
     {
         return Learnweb.getInstance().getResourceManager().getResourcesByTagId(id);
@@ -39,8 +45,18 @@ public class Tag implements Comparable<Tag>, Serializable
         return this.getName().compareTo(tag.getName());
     }
 
-    public void setId(int id)
+    @Override
+    public boolean equals(final Object o)
     {
-        this.id = id;
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        final Tag tag = (Tag) o;
+        return id == tag.id && Objects.equals(name, tag.name);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id);
     }
 }

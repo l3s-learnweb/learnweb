@@ -542,13 +542,13 @@ function openItems() {
 }
 
 function createConfirmDialog(dialogId, successCallback) {
-  PF(dialogId).show();
+  const dialog = PF(dialogId);
+  dialog.show();
 
-  const $dialog = $(`#${dialogId}Dialog`);
-  $dialog.find('.collapse').hide();
-  $dialog.find(`.type-${selected.getSelectedType()}`).show();
+  dialog.jq.find('.collapse').hide();
+  dialog.jq.find(`.type-${selected.getSelectedType()}`).show();
 
-  $dialog.off('click', '.confirm').one('click', '.confirm', (e) => {
+  dialog.jq.off('click', '.confirm').one('click', '.confirm', (e) => {
     PF(dialogId).hide();
     if (successCallback) successCallback();
     $(e.currentTarget).off();

@@ -196,15 +196,18 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         if(tag == null)
             tag = rsm.addTag(tagName);
 
-        rsm.tagResource(this, tag, user);
-
-        if(null != tags)
+        if (tags != null && !tags.contains(tag))
         {
-            tags.add(tag, user, new Date());
-            Collections.sort(tags);
-        }
+            rsm.tagResource(this, tag, user);
 
-        Learnweb.getInstance().getSolrClient().indexTag(tag, this);
+            if(null != tags)
+            {
+                tags.add(tag, user, new Date());
+                Collections.sort(tags);
+            }
+
+            Learnweb.getInstance().getSolrClient().indexTag(tag, this);
+        }
     }
 
     public void deleteTag(Tag tag) throws SQLException

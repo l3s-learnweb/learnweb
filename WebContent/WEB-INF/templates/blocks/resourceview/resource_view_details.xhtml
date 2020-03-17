@@ -265,7 +265,7 @@
 					<p:message for="@previous"/>
 				</div>
 
-				<p:commandButton actionListener="#{resourceDetailBean.addTag}" value="#{msg.addTag}"
+				<p:commandButton actionListener="#{resourceDetailBean.addTag}" value="#{msg.add_tag}"
 								 update=":tags_list :growl tag_name" partialSubmit="true" process="@form"
 								 global="false" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>

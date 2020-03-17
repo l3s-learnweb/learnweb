@@ -62,7 +62,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
      * Listener to trigger modal close, when clicked on dialog overlay.
      */
     $(document).on('click', '.ui-dialog-mask', (e) => {
-      this.getWidgetVarById(e.currentTarget.id.replace('_modal', '')).hide();
+      getWidgetVarById(e.currentTarget.id.replace('_modal', '')).hide();
     });
 
     this.menuButton.off('click').on('click', (e) => {
@@ -117,15 +117,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         window.cqApi.reevaluate(false);
       }, 200);
     }
-  },
-
-  /**
-   * Returns the PrimefacesWidget from element ID
-   * @param elementId
-   * @returns {*}
-   */
-  getWidgetVarById(elementId) {
-    return Object.values(PrimeFaces.widgets).find((widget) => widget && widget.id === elementId);
   },
 });
 
@@ -236,6 +227,15 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     }
   },
 });
+
+/*
+ * Returns the PrimefacesWidget from element ID
+ * @param elementId
+ * @returns {*}
+ */
+function getWidgetVarById(elementId) {
+  return Object.values(PrimeFaces.widgets).find((widget) => widget && widget.id === elementId);
+}
 
 /*
  * Store preferences in user account settings
