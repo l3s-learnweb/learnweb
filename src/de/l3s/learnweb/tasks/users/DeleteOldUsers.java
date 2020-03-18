@@ -25,6 +25,7 @@ import de.l3s.learnweb.user.UserManager;
  * @author Kemkes
  *
  */
+@SuppressWarnings("unused")
 public class DeleteOldUsers
 {
     private static Logger log = Logger.getLogger(DeleteOldUsers.class);

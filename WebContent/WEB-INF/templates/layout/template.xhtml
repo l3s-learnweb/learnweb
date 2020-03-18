@@ -57,7 +57,7 @@
                             <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
                                 <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
 
-                                <p:panel rendered="#{not (hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission)}">
+                                <p:panel rendered="#{(userBean.loggedIn and hasAccessPermission != null) ? !hasAccessPermission : false}">
                                     <h:outputText value="#{msg.access_denied}"/>
                                 </p:panel>
 

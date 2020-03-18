@@ -6,7 +6,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -24,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.BaseMenuModel;
 import org.primefaces.model.menu.DefaultMenuItem;
-import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import de.l3s.learnweb.Learnweb;
@@ -73,6 +71,8 @@ public class UserBean implements Serializable
 
         refreshLocale();
         storeMetadataInSession();
+
+        log.debug("created UserBean");
     }
 
     public String getSearchQuery()
@@ -453,7 +453,8 @@ public class UserBean implements Serializable
                     .url(su + "/lw/myhome/resources.jsf")
                     .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myPrivateResources")).icon("fa fa-fw fa-folder").url(su + "/lw/myhome/resources.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myCommentsTitle")).icon("fa fa-fw fa-comments").url(su + "/lw/myhome/comments.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myTagsTitle")).icon("fa fa-fw fa-tags").url(su + "/lw/myhome/tags.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myTags")).icon("fa fa-fw fa-tags").url(su + "/lw/myhome/tags.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myRatedResourcesTitle")).icon("fa fa-fw fa-tags").url(su + "/lw/myhome/rated_resources.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("Submission.my_submissions")).icon("fa fa-fw fa-credit-card-alt").url(su + "/lw/myhome/submission_overview.jsf").build())
                     .build();
             model.getElements().add(myResources);

@@ -5,7 +5,7 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="pageTitle" value="#{msg.myTagsTitle}"/>
+<ui:param name="pageTitle" value="#{msg.myTags}"/>
 <ui:param name="helpText" value="#{msg.myhomeTagsHelp}"/>
 
 <ui:define name="breadcrumb">
@@ -13,13 +13,13 @@
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 	</lw:breadcrumb-item>
 
-	<lw:breadcrumb-item link="myhome/tags.jsf" title="#{msg.myTagsTitle}">
+	<lw:breadcrumb-item link="myhome/tags.jsf" title="#{msg.myTags}">
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
 	</lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-	<p:dataTable var="tag" value="#{userBean.user.tags}">
+	<p:dataTable var="tag" value="#{userBean.user.tags}" emptyMessage="You haven't tagged any resource yet">
 		<f:facet name="header">#{msg.myTags}</f:facet>
 
 		<p:column headerText="#{msg.tags}">
