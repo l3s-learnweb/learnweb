@@ -79,26 +79,6 @@
                             </div>
                         </div>
 
-                        <h:panelGroup rendered="#{logEntry.resource != null}">
-                            <div class="row">
-                                <h:outputLink styleClass="col-5 col-md-3" value="resource.jsf" pt:data-resview="default" rendered="#{not empty logEntry.resource.thumbnail3}">
-                                    <f:param name="resource_id" value="#{logEntry.resource.id}"/>
-
-                                    <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
-                                </h:outputLink>
-
-                                <div class="col-auto d-flex flex-column mt-2">
-                                    <span>
-                                        <h:outputText value="#{logEntry.resource.shortDescription}" escape="false"/>
-                                    </span>
-
-                                    <h:outputText value="#{msg.author}: #{logEntry.resource.author}" rendered="#{not empty logEntry.resource.author}" escape="false"/>
-                                </div>
-                            </div>
-                        </h:panelGroup>
-
-                        <!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
-
                         <h:panelGroup id="resourceGrid" styleClass="res-grid mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
                             <ui:repeat value="#{userSubmission.resources}" var="res">
                                 <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"

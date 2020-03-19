@@ -41,7 +41,7 @@
                     <h:outputText value=" (#{msg.new_word})" rendered="${userBean.newGroups.contains(group)}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell text-break">
+                <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell text-break mw-r30">
                     <h:outputText value="#{group.description}" escape="false"/>
                 </p:column>
 
