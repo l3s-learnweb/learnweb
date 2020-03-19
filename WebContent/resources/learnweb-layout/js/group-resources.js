@@ -1,4 +1,4 @@
-/* global commandEditFolder, commandBatchUpdateResources, commandOpenFolder */
+/* global commandEditFolder, commandBatchUpdateResources, commandOpenFolder, openResourceView */
 
 
 class SelectResource {
