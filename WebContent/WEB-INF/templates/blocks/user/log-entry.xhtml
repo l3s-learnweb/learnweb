@@ -9,11 +9,11 @@
 <!--@elvariable id="status" type="javax.servlet.jsp.jstl.core.LoopTagStatus"-->
 <!--@elvariable id="logEntry" type="de.l3s.learnweb.logging.LogEntry"-->
 
-<div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
+<div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') }">
 	<img class="profile-picture align-self-start mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
 
-	<div class="log-details">
-		<p class="mb-0 log-description">
+	<div class="overflow-hidden">
+		<p class="mb-0">
 			<h:outputText value="#{logEntry.description}" escape="false"/>
 			<h:panelGroup rendered="#{logEntry.queryNeeded}">
 				<h:outputText value=" #{msg.with_query}" escape="false"/>

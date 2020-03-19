@@ -63,7 +63,7 @@
 
                                 <ui:fragment rendered="#{not (hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission) and !userBean.loggedIn}">
                                     <p:panel header="#{msg.loginTitle}">
-                                        <div class="mw-md">
+                                        <div class="mw-r25">
                                             <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
                                         </div>
                                     </p:panel>

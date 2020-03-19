@@ -32,11 +32,9 @@
                     <f:param name="group_id" value="#{group.id}"/>
                     <h:outputText value="#{group.longTitle}"/>
                 </h:outputLink>
-
-                <h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
             </p:column>
 
-            <p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="d-none d-sm-table-cell text-break">
+            <p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="d-none d-sm-table-cell text-break mw-r25">
                 <h:outputText value="#{group.description}" escape="false"/>
             </p:column>
 

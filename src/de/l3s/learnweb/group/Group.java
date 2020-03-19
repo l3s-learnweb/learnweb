@@ -20,7 +20,6 @@ import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceContainer;
-import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
@@ -214,8 +213,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     public List<Resource> getResources() throws SQLException
     {
-        ResourceManager rm = Learnweb.getInstance().getResourceManager();
-        return rm.getResourcesByGroupId(id);
+        return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(id);
 
     }
 

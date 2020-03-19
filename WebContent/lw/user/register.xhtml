@@ -27,13 +27,13 @@
 			</h:form>
 
 			<h:form id="registerform" rendered="#{not userBean.loggedIn}">
-				<div class="form-group mw-md">
+				<div class="form-group mw-r25">
 					<p:outputLabel for="@next" value="#{msg.username}:"/>
 					<p:inputText value="#{registrationBean.username}" validator="#{registrationBean.validateUsername}" label="#{msg.username}"/>
 					<p:message for="@previous"/>
 				</div>
 
-				<div class="form-group mw-md">
+				<div class="form-group mw-r25">
 					<p:outputLabel for="@next" value="#{msg.password}:"/>
 					<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}"
 								match="repeated_password" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
@@ -41,31 +41,31 @@
 					<p:message for="@previous"/>
 				</div>
 
-				<div class="form-group mw-md">
+				<div class="form-group mw-r25">
 					<p:outputLabel for="@next" value="#{msg.confirm_password}:"/>
 					<p:password id="repeated_password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.confirm_password}"/>
 					<p:message for="@previous"/>
 				</div>
 
-				<h:panelGroup class="form-group mw-md" rendered="#{registrationBean.affiliationRequired}">
+				<h:panelGroup class="form-group mw-r25" rendered="#{registrationBean.affiliationRequired}">
 					<p:outputLabel for="@next" value="#{msg.university}"/>
 					<p:inputText value="#{registrationBean.affiliation}" label="#{msg.university}" required="true"/>
 					<p:message for="@previous"/>
 				</h:panelGroup>
 
-				<div class="form-group mw-md">
+				<div class="form-group mw-r25">
 					<p:outputLabel for="@next" value="#{msg.email_address}:"/>
 					<p:inputText value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}"/>
 					<p:message for="@previous"/>
 				</div>
 
-				<h:panelGroup class="form-group mw-md" rendered="#{registrationBean.studentIdRequired}">
+				<h:panelGroup class="form-group mw-r25" rendered="#{registrationBean.studentIdRequired}">
 					<p:outputLabel for="@next" value="#{msg.student_id}"/>
 					<p:inputText value="#{registrationBean.studentId}" label="#{msg.student_id}:"/>
 					<p:message for="@previous"/>
 				</h:panelGroup>
 
-				<div class="form-group mw-md" style="min-height:78px;">
+				<div class="form-group mw-r25" style="min-height:78px;">
 					<p:captcha label="Captcha" language="#{userBean.locale}"/>
 					<p:message for="@previous"/>
 				</div>

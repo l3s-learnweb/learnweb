@@ -12,7 +12,7 @@
 <ui:define name="center_layout">
 	<p:panel header="#{msg.loginTitle}">
 		<ui:fragment rendered="#{!userBean.loggedIn}">
-			<div class="mw-md">
+			<div class="mw-r25">
 				<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
 			</div>
 			<h:outputLink value="#{request.contextPath}/lw/user/register.jsf" styleClass="d-block">#{msg.registerLabel}</h:outputLink>

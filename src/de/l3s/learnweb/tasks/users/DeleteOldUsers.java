@@ -49,12 +49,12 @@ public class DeleteOldUsers
             // just to make sure that SOLR is connected reindex a random resource
             ResourceManager rm = learnweb.getResourceManager();
             rm.setReindexMode(true);
-            learnweb.getSolrClient().reIndexResource(rm.getResource(2054));
+            learnweb.getSolrClient().reIndexResource(rm.getResource(227579));// 2054
 
             //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
             //deleteUsersWhoHaveBeenSoftDeleted(1);
-            //deleteAbandonedGroups();
-            deleteAbandonedResources();
+            deleteAbandonedGroups();
+            //deleteAbandonedResources();
 
         }
         catch(Throwable e)
@@ -183,6 +183,31 @@ public class DeleteOldUsers
         }
     }
 
+    private static void deleteAlmostAbandonedGroups() throws Exception
+    {
+        GroupManager gm = learnweb.getGroupManager();
+
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
+                "SELECT g.group_id FROM `lw_group` g LEFT JOIN lw_group_user u USING(group_id) LEFT JOIN lw_resource r USING(group_id) where course_id in (485,891) and YEAR(creation_time) < year(now())-1 GROUP BY g.group_id HAVING count(u.user_id) <= 2 AND count(r.resource_id) <=2 ORDER BY `g`.`creation_time` DESC "))
+        {
+
+            ResultSet rs = select.executeQuery();
+
+            while(rs.next())
+            {
+                Group group = gm.getGroupById(rs.getInt(1));
+
+                log.debug("Delete: " + group + "; resources: " + group.getResourcesCount());
+                if(group.getResourcesCount() > 2)
+                {
+                    log.debug("confirm");
+
+                }
+                group.deleteHard();
+            }
+        }
+    }
+
     private static void deleteAbandonedGroups() throws Exception
     {
         GroupManager gm = learnweb.getGroupManager();
@@ -203,6 +228,18 @@ public class DeleteOldUsers
 
                 }
                 group.deleteHard();
+            }
+        }
+
+        // remove references to deleted resources
+        String[] tables = { "lw_link", "lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_user_log" };
+
+        for(String table : tables)
+        {
+            try(PreparedStatement delete = learnweb.getConnection().prepareStatement("delete d FROM `" + table + "` d LEFT JOIN lw_group g USING(group_id) WHERE g.group_id is null"))
+            {
+                int numRowsAffected = delete.executeUpdate();
+                log.debug("Deleted " + numRowsAffected + " rows from " + table);
             }
         }
     }

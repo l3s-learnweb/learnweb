@@ -33,7 +33,7 @@
 
                 <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.longTitle}"
                           filterMatchMode="contains">
-                    <h:outputLink value="group/resources.jsf">
+                    <h:outputLink value="group/overview.jsf">
                         <f:param name="group_id" value="#{group.id}"/>
                         <h:outputText value="#{group.longTitle}"/>
                     </h:outputLink>

@@ -454,7 +454,7 @@ public class UserBean implements Serializable
                     .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myPrivateResources")).icon("fa fa-fw fa-folder").url(su + "/lw/myhome/resources.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myCommentsTitle")).icon("fa fa-fw fa-comments").url(su + "/lw/myhome/comments.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myTags")).icon("fa fa-fw fa-tags").url(su + "/lw/myhome/tags.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myRatedResourcesTitle")).icon("fa fa-fw fa-tags").url(su + "/lw/myhome/rated_resources.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myRatedResourcesTitle")).icon("fa fa-fw fa-star").url(su + "/lw/myhome/rated_resources.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("Submission.my_submissions")).icon("fa fa-fw fa-credit-card-alt").url(su + "/lw/myhome/submission_overview.jsf").build())
                     .build();
             model.getElements().add(myResources);
