@@ -9,7 +9,6 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import de.l3s.learnweb.user.NewsManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.shared.ConfigException;
 import org.apache.log4j.Logger;
@@ -39,6 +38,7 @@ import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataManager;
 import de.l3s.learnweb.resource.yellMetadata.LangLevelManager;
 import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
 import de.l3s.learnweb.user.CourseManager;
+import de.l3s.learnweb.user.NewsManager;
 import de.l3s.learnweb.user.OrganisationManager;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
@@ -193,6 +193,7 @@ public class Learnweb
         if(workingDirectory.startsWith("/home/learnweb_user"))
         {
             propertiesFileName = "learnweb";
+            //propertiesFileName = "learnweb_v2";
             developmentMode = false;
         }
         else if(workingDirectory.startsWith("/home/ama_user"))
