@@ -74,7 +74,7 @@ public class GlossaryResource extends Resource
     @Override
     public Resource save() throws SQLException
     {
-        Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(200233);
+        Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(200233); // TODO find a better image, load it from resource folder
         this.setThumbnail0(iconResource.getThumbnail0());
         this.setThumbnail1(iconResource.getThumbnail1());
         this.setThumbnail2(iconResource.getThumbnail2());

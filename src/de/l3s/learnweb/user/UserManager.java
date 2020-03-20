@@ -535,7 +535,7 @@ public class UserManager
     {
         log.info("Delete user " + user);
 
-        if(user.getResources().size() > 40)
+        if(user.getResources().size() > 10)
         {
             log.warn("delete user: " + user + " and his " + user.getResources().size() + " resorces?");
             log.info("Delete user ");

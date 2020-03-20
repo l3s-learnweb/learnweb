@@ -146,9 +146,11 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         if(null == thumbnail0 || null == thumbnail1 || null == thumbnail2)
         {
+            // TODO find better images.
+            // the glossary icon is loaded in GlossaryResource.save()
             if(type == ResourceType.survey)
             {
-                Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(204095);
+                Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(204095); // TODO avoid this load from reource folder
                 setThumbnail0(iconResource.getThumbnail0());
                 setThumbnail1(iconResource.getThumbnail1());
                 setThumbnail2(iconResource.getThumbnail2());
@@ -196,7 +198,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         if(tag == null)
             tag = rsm.addTag(tagName);
 
-        if (tags != null && !tags.contains(tag))
+        if(tags != null && !tags.contains(tag))
         {
             rsm.tagResource(this, tag, user);
 
@@ -1934,17 +1936,20 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         return Learnweb.getInstance().getLogManager().getLogsByResource(getId(), -1);
     }
 
+    /**
+     * Is called when a Resource object is deserialized.
+     * To make sure that there exists only one instance of each resource we interfere the deserialization process
+     * if there exists a cached version of the resource we will return this instance
+     *
+     * @return
+     */
     protected Object readResolve()
     {
-        // to make sure that there exists only one instance of each resource we interfere the deserialization process
-        // if there exists a cached version of the resource we will return this instance
-        // this process will fail during the start up of the server
-
         log.debug("Deserialize resource: " + id);
         try
         {
-            if(Learnweb.getInstance() != null)
-                return Learnweb.getInstance().getResourceManager().getResource(id);
+            if(Learnweb.getInstanceOptional().isPresent())
+                return Learnweb.getInstanceOptional().get().getResourceManager().getResource(id);
         }
         catch(RuntimeException e)
         {

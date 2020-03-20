@@ -49,12 +49,12 @@ public class DeleteOldUsers
             // just to make sure that SOLR is connected reindex a random resource
             ResourceManager rm = learnweb.getResourceManager();
             rm.setReindexMode(true);
-            learnweb.getSolrClient().reIndexResource(rm.getResource(227579));// 2054
+            learnweb.getSolrClient().reIndexResource(rm.getResource(2054));
 
             //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
-            //deleteUsersWhoHaveBeenSoftDeleted(1);
+            deleteUsersWhoHaveBeenSoftDeleted(1);
             deleteAbandonedGroups();
-            //deleteAbandonedResources();
+            deleteAbandonedResources();
 
         }
         catch(Throwable e)
@@ -89,14 +89,14 @@ public class DeleteOldUsers
             int userId = rs.getInt(1);
             Optional<Instant> lastLogin = um.getLastLoginDate(userId);
 
-            if(lastLogin.isPresent() && deadline.isBefore(lastLogin.get()))
-            {
-                log.debug("Ignore active user: " + userId);
-                continue;
-            }
             User user = um.getUser(userId);
 
-            log.debug("Delete: " + user.getUsername() + "; registration=" + user.getRegistrationDate() + "; login=" + lastLogin + "; mail=" + user.getEmail() + "; " + user.isModerator());
+            if(lastLogin.isPresent() && deadline.isBefore(lastLogin.get()))
+            {
+                log.debug("Ignore active user: " + user + "; login=" + lastLogin);
+                continue;
+            }
+            log.debug("Delete: " + user.getRealUsername() + "- " + user.getId() + "; registration=" + user.getRegistrationDate() + "; login=" + lastLogin + "; mail=" + user.getEmail() + "; " + user.isModerator());
 
             um.deleteUserHard(user);
         }
@@ -132,12 +132,13 @@ public class DeleteOldUsers
             int userId = rs.getInt(1);
             Optional<Instant> lastLogin = um.getLastLoginDate(userId);
 
+            User user = um.getUser(userId);
+
             if(lastLogin.isPresent() && deadline.isBefore(lastLogin.get()))
             {
-                log.debug("Ignore active user: " + userId);
+                log.debug("Ignore active user: " + user + "; login=" + lastLogin);
                 continue;
             }
-            User user = um.getUser(userId);
 
             if(user.getUsername().startsWith("Anonym"))
             {

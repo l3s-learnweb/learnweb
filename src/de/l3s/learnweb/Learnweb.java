@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -105,6 +106,11 @@ public class Learnweb
             // throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)");
         }
         return learnweb;
+    }
+
+    public static Optional<Learnweb> getInstanceOptional()
+    {
+        return Optional.ofNullable(learnweb);
     }
 
     public static Learnweb createInstance() throws ClassNotFoundException, SQLException
