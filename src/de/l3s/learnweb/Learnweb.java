@@ -337,10 +337,13 @@ public class Learnweb
     {
         log.debug("Init LearnwebServer");
 
+        /*
         if(!isInDevelopmentMode() || getService() != SERVICE.LEARNWEB)
             jobScheduler.startAllJobs();
         else
             log.debug("JobScheduler not started for service=" + SERVICE.LEARNWEB + "; development mode=" + isInDevelopmentMode());
+
+            */
     }
 
     public FileManager getFileManager()

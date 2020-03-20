@@ -25,7 +25,7 @@
         <param name="From" value="no-reply@l3s.de"/>
 
         <param name="To" value="kemkes@l3s.de,astappiev@l3s.de"/>
-        <param name="Subject" value="[log4J] Error detected on LearnWeb"/>
+        <param name="Subject" value="[log4J] Error detected on LearnWeb V2"/>
         <!--
         <param name="To" value="kemkes@l3s.de,rokicki@l3s.de" />
         <param name="Subject" value="[log4J] Error detected on AMA network" />
