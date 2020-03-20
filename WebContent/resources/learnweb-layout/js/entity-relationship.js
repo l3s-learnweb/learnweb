@@ -2,65 +2,56 @@
 /* global updateKG, setSelectedSearchId, setSelectedSearchIds, setSelectedGroupId */
 /* global d3, jsnx */
 
-// function to execute on page load
 $(document).on('click', '.session_block', (e) => {
-  if ($(window).width() < 1200) {
-    PF('warningSmallScreen').show();
-    e.preventDefault();
-    return;
-  }
-
-  hideSnippet();
+  hideKGSnippet();
 
   const element = e.currentTarget;
   const sessionId = element.getAttribute('data-sessionid');
   const userId = element.getAttribute('data-userid');
 
-  $('.box ul li').css('background', '');
-
-  $(element).parent().css('background', '#8da73d');
   updateKG([
     { name: 'session-id', value: sessionId },
     { name: 'user-id', value: userId },
   ]);
 });
 
-$(document).on('click', '#filterByCategories', () => {
-  window.categories = [];
-  const selectedCategories = document.querySelectorAll('[name="categoriesList"]:checked');
-  selectedCategories.forEach((c) => {
-    window.categories.push(c.value);
-  });
-  recoverNodes();
+function selectGroupId() {
+  setSelectedGroupId([
+    // the group id is temporary hard coded.
+    { name: 'group-id', value: 419 },
+  ]);
+}
+
+$(document).on('click', '.sessions-list a', (e) => {
+  $('.sessions-list li.active').removeClass('active');
+  $(e.currentTarget).parent().addClass('active');
+});
+
+$(document).on('click', '.queries-list a', (e) => {
+  $('.queries-list li.active').removeClass('active');
+  $(e.currentTarget).parent().addClass('active');
 });
 
 $(window).on('resize', () => {
   resizeGraph();
 });
 
-function showSnippet() {
-  const $graph = $('#knowledge-graph');
-  const $snippet = $('#knowledge-snippet');
+function showKGSnippet() {
+  const $queries = $('#queries');
+  const $snippet = $('#snippetsList');
 
-  $graph.removeClass('ui-g-12 ui-md-12 ui-lg-12').addClass('ui-g-9 ui-md-9 ui-lg-9');
+  $queries.removeClass('col-12 col-md-12 col-lg-12').addClass('col-6 col-md-6 col-lg-6');
   $snippet.show();
   resizeGraph();
 }
 
-function hideSnippet() {
-  const $graph = $('#knowledge-graph');
-  const $snippet = $('#knowledge-snippet');
+function hideKGSnippet() {
+  const $queries = $('#queries');
+  const $snippet = $('#snippetsList');
 
   $snippet.hide();
-  $graph.removeClass('ui-g-9 ui-md-9 ui-lg-9').addClass('ui-g-12 ui-md-12 ui-lg-12');
+  $queries.removeClass('col-6 col-md-6 col-lg-6').addClass('col-12 col-md-12 col-lg-12');
   resizeGraph();
-}
-
-function selectGroupId() {
-  setSelectedGroupId([
-    // the group id is temporary hard coded.
-    { name: 'group-id', value: 419 },
-  ]);
 }
 
 // draw query path
@@ -100,11 +91,13 @@ function filterSnippets() {
       }
   }); */
 
-  showSnippet();
+  showKGSnippet();
 }
 
 // var linked = new Map();
 function draw() {
+  if (typeof queriesJsonArr === 'undefined' || !$('#knowledge-graph').length) return;
+
   const $canvas = $('#canvas');
   const width = $canvas.width();
   const height = $canvas.height();
@@ -117,10 +110,9 @@ function draw() {
   const entityRanksMap = new Map();
   for (i = 0; i < queriesJsonArr.length; i++) {
     const queryObj = queriesJsonArr[i];
-    // eslint-disable-next-line camelcase
-    const { related_entities } = queryObj;
-    for (j = 0; j < related_entities.length; j++) {
-      const entity = related_entities[j];
+    const { relatedEntities } = queryObj;
+    for (j = 0; j < relatedEntities.length; j++) {
+      const entity = relatedEntities[j];
       entities.add(queriesJsonArr[i].query);
       entities.add(entity.entity_name);
       if (entityRanksMap.has(entity.entity_name)) entityRanksMap.get(entity.entity_name).set(queryObj.search_id, entity.ranks);// .push({search_id: queryObj.search_id, ranks: entity.ranks});
@@ -148,7 +140,7 @@ function draw() {
     });
   }
 
-  // add edge relationshipss
+  // add edge relationships
   for (i = 0; i < edgesJsonArr.length; i++) {
     const edge = edgesJsonArr[i];
     G.addEdge(edge.source, edge.target, { color: '#d2dde0', score: edge.score });
@@ -156,11 +148,10 @@ function draw() {
 
   // edges between queries and entities
   for (i = 0; i < queriesJsonArr.length; i++) {
-    // eslint-disable-next-line camelcase
-    const { related_entities } = queriesJsonArr[i];
+    const { relatedEntities } = queriesJsonArr[i];
     const { query } = queriesJsonArr[i];
-    for (j = 0; j < related_entities.length; j++) {
-      G.addEdge(query, related_entities[j].entity_name, { color: '#99c2ff' });
+    for (j = 0; j < relatedEntities.length; j++) {
+      G.addEdge(query, relatedEntities[j].entity_name, { color: '#99c2ff' });
     }
   }
 
@@ -238,8 +229,6 @@ function draw() {
   })
     .on('mouseover', connectedNodes)
     .on('mouseout', recoverNodes);
-
-  $('#tagging-panel').show();
 }
 
 function resizeGraph() {
@@ -322,7 +311,7 @@ function drawQueryPath() {
 
   // add query nodes
   for (i = 0; i < queriesJsonArr.length; i++) {
-    G.addNode(queriesJsonArr[i].query, { count: 20, color: '#4aa382', entities: queriesJsonArr[i].related_entities });
+    G.addNode(queriesJsonArr[i].query, { count: 20, color: '#4aa382', entities: queriesJsonArr[i].relatedEntities });
   }
 
   // add query edges

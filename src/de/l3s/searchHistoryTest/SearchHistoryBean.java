@@ -11,7 +11,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionListener;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -23,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.resource.tagtheweb.TagthewebClient;
 import de.l3s.learnweb.user.User;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Edge;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Query;
@@ -37,8 +38,9 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(SearchHistoryBean.class);
     private static final long serialVersionUID = -7682314831788865416L;
 
-    private int userId;
+    private boolean toggleSwitch;
 
+    private int userId;
     private String searchQuery = "";
 
     private List<Session> sessions;
@@ -46,16 +48,20 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
 
     private int selectedUserId;
     private int selectedGroupId;
+
+    private Session selectedSession;
+    private Query selectedQuery;
+
     private String selectedSessionId;
     private String selectedEntity;
-    private String[] selectedCategories;
+
+    private transient List<Query> queries;
+    private transient List<SearchResult> searchResults;
 
     // for graph
-    private transient List<Query> queries;
     private transient Set<String> entities;
     private transient String queriesGraphData = "[]";
     private transient String edgesGraphData = "[]";
-    private transient HashSet<String> entitiesCategories;
 
     private Map<Integer, List<SearchResult>> searchIdSnippets;
     private List<Integer> selectedSearchIds;
@@ -84,16 +90,10 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         // graph data
         queries = new ArrayList<>();
         entities = new HashSet<>();
-        entitiesCategories = new HashSet<>();
 
         searchIdSnippets = new HashMap<>();
         selectedSearchIds = new ArrayList<>();
         searchIdQueryMap = new HashMap<>();
-    }
-
-    public List<Query> getQueries()
-    {
-        return queries;
     }
 
     public synchronized void collectQueriesAndEntities()
@@ -113,13 +113,9 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
             {
                 entities.add(q.getQuery());
 
-                Map<String, Double> categories = TagthewebClient.getTopCategories(q.getQuery(), "en");
-                entitiesCategories.addAll(categories.keySet());
-
                 JSONObject queryObj = new JSONObject();
                 queryObj.put("search_id", q.getSearchId());
                 queryObj.put("query", q.getQuery());
-                queryObj.put("categories", categories);
                 searchIdQueryMap.put(q.getSearchId(), q.getQuery());
 
                 List<Entity> relatedEntities = getLearnweb().getSearchHistoryManager().getRelatedEntitiesForSearchId(q.getSearchId());
@@ -134,10 +130,10 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
                     relatedEntitiesArr.put(entityObj);
                 }
 
-                queryObj.put("related_entities", relatedEntitiesArr);
+                queryObj.put("relatedEntities", relatedEntitiesArr);
                 queriesArr.put(queryObj);
             }
-            catch(JSONException | IOException e)
+            catch(JSONException e)/*| IOException e*/
             {
                 log.error("Error while creating json object for query: " + q.getSearchId(), e);
             }
@@ -164,6 +160,31 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         edgesGraphData = edgesArr.toString();
     }
 
+    public Session getSelectedSession()
+    {
+        return selectedSession;
+    }
+
+    public void setSelectedSession(final Session selectedSession)
+    {
+        this.selectedSession = selectedSession;
+
+        queries = null;
+        searchResults = null;
+    }
+
+    public Query getSelectedQuery()
+    {
+        return selectedQuery;
+    }
+
+    public void setSelectedQuery(final Query selectedQuery)
+    {
+        this.selectedQuery = selectedQuery;
+
+        searchResults = null;
+    }
+
     public String getQueriesAsJson()
     {
         collectQueriesAndEntities();
@@ -174,12 +195,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     {
         collectQueriesAndEntities();
         return edgesGraphData;
-    }
-
-    public List<String> getCategories()
-    {
-        collectQueriesAndEntities();
-        return new ArrayList<>(entitiesCategories);
     }
 
     /**
@@ -195,16 +210,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     public String getSelectedEntity()
     {
         return selectedEntity;
-    }
-
-    public String[] getSelectedCategories()
-    {
-        return selectedCategories;
-    }
-
-    public void setSelectedCategories(final String[] selectedCategories)
-    {
-        this.selectedCategories = selectedCategories;
     }
 
     public String getQuery(int searchId)
@@ -224,18 +229,24 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
                 }
                 sessions = SessionCache.Instance().getByGroupId(selectedGroupId);
             }
-
-            return sessions;
         }
-        else
+        else if(sessions == null)
         {
-            if(sessions == null)
-            {
-                sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(userId);
-            }
-
-            return sessions;
+            sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(userId);
         }
+
+        return sessions;
+    }
+
+    public List<Query> getQueries()
+    {
+        if (queries == null && selectedSession != null) {
+            if(!showGroupHistory)
+                queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(selectedSession.getUserId(), selectedSession.getSessionId());
+            else
+                queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromGroupCache(selectedSession.getUserId(), selectedSession.getSessionId());
+        }
+        return queries;
     }
 
     public List<Session> getGroupSessions()
@@ -251,12 +262,12 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     public List<SearchResult> getSearchResults()
     {
         List<SearchResult> searchResults = new ArrayList<>();
-        for(int searchId : selectedSearchIds)
+        if (selectedQuery != null)
         {
-            if(!searchIdSnippets.containsKey(searchId))
-                searchIdSnippets.put(searchId, getLearnweb().getSearchHistoryManager().getSearchResultsForSearchId(searchId, 10));
+            if(!searchIdSnippets.containsKey(selectedQuery.getSearchId()))
+                searchIdSnippets.put(selectedQuery.getSearchId(), getLearnweb().getSearchHistoryManager().getSearchResultsForSearchId(selectedQuery.getSearchId(), 100));
 
-            searchResults.addAll(searchIdSnippets.get(searchId));
+            searchResults.addAll(searchIdSnippets.get(selectedQuery.getSearchId()));
         }
         return searchResults;
     }
@@ -272,9 +283,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         selectedSessionId = sessionId;
         selectedUserId = userId;
 
-        queries.clear();
-        entities.clear();
-        entitiesCategories.clear();
+        if (queries != null) queries.clear();
+        if (entities != null) entities.clear();
         //log.info("session id: " + sessionId + "user id: " + userId);
     }
 
@@ -401,15 +411,21 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
 
         final boolean finalIsSearchUser = isSearchUser;
         final String finalQuery = filterQuery;
-        sessions = getSessions().stream().filter(session -> {
-            if(finalIsSearchUser)
-            {
-                return StringUtils.containsIgnoreCase(session.getUserName(), finalQuery);
-            }
 
-            return session.getQueries().stream().anyMatch(query -> StringUtils.containsIgnoreCase(query.getQuery(), finalQuery));
+        List<Session> allSessions = getSessions();
+        if (allSessions == null || allSessions.size() == 0) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "dsada");
+        } else {
+            sessions = allSessions.stream().filter(session -> {
+                if(finalIsSearchUser)
+                {
+                    return StringUtils.containsIgnoreCase(session.getUserName(), finalQuery);
+                }
 
-        }).collect(Collectors.toList());
+                return session.getQueries().stream().anyMatch(query -> StringUtils.containsIgnoreCase(query.getQuery(), finalQuery));
+
+            }).collect(Collectors.toList());
+        }
     }
 
     public String getSearchQuery()
@@ -420,5 +436,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     public void setSearchQuery(final String searchQuery)
     {
         this.searchQuery = searchQuery;
+    }
+
+    public boolean isToggleSwitch() {
+        return toggleSwitch;
+    }
+
+    public void setToggleSwitch(boolean toggleSwitch) {
+        this.toggleSwitch = toggleSwitch;
     }
 }

@@ -61,14 +61,13 @@ public class SearchLogManager
             if(felJarFile.exists())
             {
                 this.searchIdQueue = new LinkedBlockingQueue<>();
-                /*
+
                 this.felAnnotationConsumerThread = new Thread(new FELAnnotationConsumer());
                 this.felAnnotationConsumerThread.start();
                 
                 felAnnotate = true;
-                */
 
-                log.debug("FEL Annotator disabled"); // temporarily or for ever?
+                //log.debug("FEL Annotator disabled"); // temporarily or for ever?
             }
             else
                 log.error("Couldn't load FEL Annotator jar");
