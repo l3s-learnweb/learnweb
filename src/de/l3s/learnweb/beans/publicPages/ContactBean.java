@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans;
+package de.l3s.learnweb.beans.publicPages;
 
 import java.io.Serializable;
 
@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.bean.BeanHelper;
 import de.l3s.util.email.Mail;

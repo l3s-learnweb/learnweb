@@ -36,7 +36,6 @@ import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
-import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
@@ -146,9 +145,10 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public boolean isEmailRequired() throws SQLException
     {
-        for (Course course : getCourses())
+        for(Course course : getCourses())
         {
-            if (course.getOption(Course.Option.Users_Require_mail_address)) return true;
+            if(course.getOption(Course.Option.Users_Require_mail_address))
+                return true;
         }
 
         return false;
@@ -875,28 +875,6 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setAcceptTermsAndConditions(boolean acceptTermsAndConditions)
     {
         this.acceptTermsAndConditions = acceptTermsAndConditions;
-    }
-
-    /**
-     *
-     * @return peer assessment pairs where the user functions as assessor
-     *
-     * @throws SQLException
-     */
-    public List<PeerAssessmentPair> getAssessorPeerAssessment() throws SQLException
-    {
-        return Learnweb.getInstance().getPeerAssessmentManager().getPairsByAssessorUserId(getId());
-    }
-
-    /**
-     *
-     * @return peer assessment pairs that assess this user
-     *
-     * @throws SQLException
-     */
-    public List<PeerAssessmentPair> getAssessedPeerAssessments() throws SQLException
-    {
-        return Learnweb.getInstance().getPeerAssessmentManager().getPairsByAssessedUserId(getId());
     }
 
     public boolean isDeleted()

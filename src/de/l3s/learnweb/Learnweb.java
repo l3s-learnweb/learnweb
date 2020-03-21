@@ -27,7 +27,6 @@ import de.l3s.learnweb.resource.archive.WaybackUrlManager;
 import de.l3s.learnweb.resource.glossary.GlossaryManager;
 import de.l3s.learnweb.resource.office.ConverterService;
 import de.l3s.learnweb.resource.office.HistoryManager;
-import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentManager;
 import de.l3s.learnweb.resource.search.SearchLogManager;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.resource.submission.SubmissionManager;
@@ -86,7 +85,6 @@ public class Learnweb
     private final BounceManager bounceManager;
     private final ConverterService serviceConverter;
     private final LogManager logManager;
-    private final PeerAssessmentManager peerAssessmentManager;
     private final AnnouncementsManager announcementsManager;
 
     private static Learnweb learnweb = null;
@@ -264,7 +262,6 @@ public class Learnweb
         surveyManager = new SurveyManager(this);
         submissionManager = new SubmissionManager(this);
         waybackUrlManager = WaybackUrlManager.getInstance(this);
-        peerAssessmentManager = new PeerAssessmentManager(this);
         glossaryManager = new de.l3s.learnweb.resource.glossary.GlossaryManager(this);
         logManager = LogManager.getInstance(this);
         announcementsManager = new AnnouncementsManager(this);
@@ -558,12 +555,7 @@ public class Learnweb
         return bounceManager;
     }
 
-    public PeerAssessmentManager getPeerAssessmentManager()
-    {
-        return peerAssessmentManager;
-    }
-
-    public de.l3s.learnweb.resource.glossary.GlossaryManager getGlossaryManager()
+    public GlossaryManager getGlossaryManager()
     {
         return glossaryManager;
     }

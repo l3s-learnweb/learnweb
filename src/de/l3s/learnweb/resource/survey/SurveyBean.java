@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.bean.BeanHelper;
 
@@ -68,7 +67,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
             surveyUserId = getUser().getId();
         }
         // if a user wants to see the answers of another user, make sure he is a moderator or the survey is part of a peer assessment
-        else if(!resource.canModerateResource(getUser()) && !canViewAssessmentResult())
+        else if(!resource.canModerateResource(getUser()))
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
             log.error("Illegal access: " + BeanHelper.getRequestSummary());
@@ -79,24 +78,6 @@ public class SurveyBean extends ApplicationBean implements Serializable
         userAnswers = resource.getAnswersOfUser(surveyUserId);
 
         formEnabled = !userAnswers.isSubmitted() && surveyUserId == getUser().getId() && isValidSubmissionDate(resource);
-    }
-
-    private boolean canViewAssessmentResult() throws SQLException
-    {
-        for(PeerAssessmentPair pair : getUser().getAssessedPeerAssessments())
-        {
-            // a teacher has assessed the current user
-            if(pair.getAssessmentSurveyResourceId() == surveyResourceId)
-                return true;
-
-            // the given user  (surveyUserId) has peer assessed the current user
-            if(pair.getPeerAssessmentSurveyResourceId() == surveyResourceId && pair.getAssessorUserId() == surveyUserId)
-                return true;
-        }
-
-        log.debug("canViewPeerAssessmentResult is false");
-
-        return false;
     }
 
     /**
@@ -248,6 +229,5 @@ public class SurveyBean extends ApplicationBean implements Serializable
     {
         return goBackPageLink;
     }
-
 
 }

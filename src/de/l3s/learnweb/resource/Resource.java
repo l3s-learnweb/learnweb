@@ -588,7 +588,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }
@@ -1477,13 +1477,11 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         case LEARNWEB_READABLE:
             return user != null;
 
-        case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) and assessors can view the resource
+        case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) can view the resource
             Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
             if(originalResource != null && originalResource.getUserId() == user.getId())
                 return true; // the submitter can view his resource
-
-            // check if the current user can assess this resource
-            return Learnweb.getInstance().getPeerAssessmentManager().canAssessResource(user, this);
+            return false;
 
         case DEFAULT_RIGHTS: // if the resource is part of the group the group permissions are used
             Group group = getGroup();

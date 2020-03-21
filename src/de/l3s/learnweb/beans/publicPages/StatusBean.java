@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans;
+package de.l3s.learnweb.beans.publicPages;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @RequestScoped

@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans;
+package de.l3s.learnweb.beans.publicPages;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -8,6 +8,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.Announcement;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @RequestScoped

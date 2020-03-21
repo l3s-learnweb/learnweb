@@ -55,7 +55,6 @@ public class ArchiveUrlManager
     {
         this.learnweb = learnweb;
         archiveSaveURL = learnweb.getProperties().getProperty("INTERNET_ARCHIVE_SAVE_URL");
-        //collectionId = Integer.parseInt(learnweb.getProperties().getProperty("COLLECTION_ID"));
         /*try
         {
             serviceUrlObj = new URL(archiveSaveURL);

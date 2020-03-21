@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans;
+package de.l3s.learnweb.beans.publicPages;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.util.Sql;
 
 @Named

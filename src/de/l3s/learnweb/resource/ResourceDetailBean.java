@@ -12,8 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.context.PartialViewContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -62,7 +60,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private ViewAction viewAction = ViewAction.viewResource;
 
     @Inject
-    private FileEditorBean fileEditorBean;
+    private FileEditorBean fileEditorBean; // TODO is this really necessary? I don't see a need for this (Philipp 21.03.2020)
 
     public void onLoad()
     {
@@ -83,7 +81,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 setResource(openResource);
                 log(Action.opening_resource, resource.getGroupId(), resource.getId());
 
-                if (editResource) editResource();
+                if(editResource)
+                    editResource();
             }
             catch(Exception e)
             {
@@ -138,7 +137,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public void editResource()
     {
         releaseResourceIfLocked();
-        if (!resource.lockResource(getUser()))
+        if(!resource.lockResource(getUser()))
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", resource.getLockUsername());
             log(Action.lock_rejected_edit_resource, resource.getGroupId(), resource.getId());
@@ -151,7 +150,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public void saveEdit() throws SQLException
     {
-        if (resource == null || !resource.canEditResource(getUser()))
+        if(resource == null || !resource.canEditResource(getUser()))
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "resourceNotSelectedOrUserCanNotEditIt");
             return;
@@ -181,7 +180,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public void releaseResourceIfLocked()
     {
-        if (resource != null && resource.isEditLocked())
+        if(resource != null && resource.isEditLocked())
         {
             resource.unlockResource(getUser());
         }
@@ -189,7 +188,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public void editActivityListener()
     {
-        if (resource != null && !resource.lockerUpdate(getUser()))
+        if(resource != null && !resource.lockerUpdate(getUser()))
         {
             releaseResourceIfLocked();
             log(Action.lock_interrupted_returned_resource, resource.getGroupId(), resource.getId());
@@ -283,7 +282,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
         JSONArray monthNames = new JSONArray();
-        for(String month : symbols.getMonths()) if(!month.isBlank()) monthNames.put(month);
+        for(String month : symbols.getMonths())
+            if(!month.isBlank())
+                monthNames.put(month);
         return monthNames.toString();
     }
 
@@ -295,7 +296,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
         JSONArray monthNames = new JSONArray();
-        for(String month : symbols.getShortMonths()) if(!month.isBlank()) monthNames.put(month);
+        for(String month : symbols.getShortMonths())
+            if(!month.isBlank())
+                monthNames.put(month);
         return monthNames.toString();
     }
 
@@ -627,7 +630,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         return resource.isThumbRatedByUser(getUser().getId());
     }
 
-    public void handleRate(RateEvent rateEvent)
+    public void handleRate(RateEvent<Integer> rateEvent)
     {
         if(null == getUser())
         {
@@ -643,7 +646,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            resource.rate((Integer) rateEvent.getRating(), getUser());
+            resource.rate(rateEvent.getRating(), getUser());
         }
         catch(Exception e)
         {

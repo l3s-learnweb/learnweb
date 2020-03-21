@@ -392,13 +392,11 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     public String getBannerImage() throws SQLException
     {
-        if (id == 1249)
-            return "logos/logo_eumade4all.png";
-        else if (id == 1210)
+        if(id == 1210)
             return "logos/logo_lumsa.png";
-        else if (id == 848 || id == 924)
+        else if(id == 848 || id == 924)
             return "logos/logo_archiveweb.png";
-        else if (id == 480)
+        else if(id == 480)
             return "logos/logo_yell.png";
 
         if(null == bannerImage)

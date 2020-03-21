@@ -13,7 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,7 +28,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceViewRights;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.ResourceType;
-import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
@@ -81,7 +79,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
             submissionOverviewReadOnly = true;
 
             // check if moderator or submission assessor
-            if(!getUser().isModerator() && !getLearnweb().getPeerAssessmentManager().canAssessSubmission(getUser().getId(), userId, submissionId))
+            if(!getUser().isModerator())
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view this submission");
                 log.error("Unprivileged access: " + BeanHelper.getRequestSummary());
@@ -111,20 +109,6 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
         response.setDateHeader("Expires", 0); // Proxies.
-    }
-
-    public List<PeerAssessmentPair> getPeerAssessmentPairs()
-    {
-        try
-        {
-            return getLearnweb().getPeerAssessmentManager().getPairsByAssessorUserId(getUserId());
-
-        }
-        catch(SQLException e)
-        {
-            addErrorMessage(e);
-        }
-        return null;
     }
 
     /**
@@ -599,7 +583,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     }
 
     /* -------- Methods below are used for the admin users submissions page ---------*/
-    // TODO needs to be refatored. Has to be discussed first. Either move to other bean or integrate into Moderator user list or ....
+    // TODO needs to be refactored. Has to be discussed first. Either move to other bean or integrate into Moderator user list or ....
 
     /**
      * To display the users for a particular course and the corresponding number of submissions

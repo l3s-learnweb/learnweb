@@ -28,17 +28,14 @@ public class ApplicationDebuggingBean implements Serializable
 {
     private static final long serialVersionUID = 6714523666863887982L;
     protected User user;
-    //private long startTime;
 
     public ApplicationDebuggingBean()
     {
 
-        //startTime = System.currentTimeMillis();
     }
 
     public String getSessionId()
     {
-
         return "---";
     }
 
@@ -61,15 +58,13 @@ public class ApplicationDebuggingBean implements Serializable
 
     protected Learnweb getLearnweb()
     {
-
         return Learnweb.getInstance();
-
     }
 
     /**
      * get a message from the message property files depending on the currently used local
      * // TODO Dupe: the same code exists in UtilBean.getLocaleMessage method
-     * 
+     *
      * @param msgKey
      * @param args
      * @return

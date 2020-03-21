@@ -65,7 +65,7 @@ public class UtilBean implements Serializable
         catch(Exception e)
         {
             log.warn("Can't get server url. This is only expected in console mode");
-            return "http://learnweb.l3s.uni-hannover.de";
+            return "https://learnweb.l3s.uni-hannover.de";
         }
     }
 
