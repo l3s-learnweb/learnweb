@@ -69,7 +69,7 @@
                                     </p:panel>
                                 </ui:fragment>
 
-                                <ui:fragment rendered="#{hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission}">
+                                <ui:fragment rendered="#{(hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission) and hideContent != true}">
                                     <ui:fragment rendered="#{not hideBreadcrumbs}">
                                         <h:outputScript library="learnweb-layout" name="js/breadcrumb.js" target="body"/>
 

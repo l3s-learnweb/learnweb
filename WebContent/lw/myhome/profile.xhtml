@@ -5,8 +5,17 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:lw="http://l3s.de/learnweb">
 
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="user_id" value="#{profileBean.userId}" required="true"/>
+        <f:viewAction action="#{profileBean.loadUser}"/>
+    </f:metadata>
+</ui:define>
+
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
 <ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
+
+<ui:param name="hideContent" value="#{null eq profileBean.selectedUser}"/>
 
 <ui:define name="breadcrumb">
     <lw:breadcrumb-item link="myhome/profile.jsf" title="#{msg.settings}">
@@ -30,13 +39,15 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <p:outputLabel for="@next" value="#{msg.username}:"/>
-                                    <p:inputText id="username" value="#{profileBean.username}" validator="#{profileBean.validateUsername}" label="#{msg.username}"/>
+                                    <p:inputText id="username" value="#{profileBean.selectedUser.realUsername}" validator="#{profileBean.validateUsername}" label="#{msg.username}">
+                                        <f:validateLength minimum="2" maximum="50"></f:validateLength>
+                                    </p:inputText>
                                     <p:message for="@previous"/>
                                 </div>
 
                                 <div class="form-group">
                                     <p:outputLabel for="@next" value="#{msg.full_name}:"/>
-                                    <p:inputText id="userfullname" value="#{profileBean.fullName}" label="#{msg.full_name}:"/>
+                                    <p:inputText id="userfullname" value="#{profileBean.selectedUser.fullName}" label="#{msg.full_name}:"/>
                                     <p:message for="@previous"/>
                                 </div>
 
@@ -62,68 +73,66 @@
                         </div>
                         <div>
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="#{msg.gender}:"/>
-                                <p:selectOneMenu id="usergender" value="#{profileBean.gender}">
-                                    <f:selectItem id="g0" itemLabel="--" itemValue="0"/>
-                                    <f:selectItem id="g1" itemLabel="#{msg.gender_male}" itemValue="1"/>
-                                    <f:selectItem id="g2" itemLabel="#{msg.gender_female}" itemValue="2"/>
+                                <p:outputLabel for="@next" value="#{msg.gender}:"/> 
+                                <p:selectOneMenu id="usergender" value="#{profileBean.selectedUser.gender}">
+                                    <f:selectItems value="#{profileBean.genders}" var="gender"  itemLabel="#{msg['user.gender.'+=gender]}" itemValue="#{gender}"/>
                                 </p:selectOneMenu>
                                 <p:message for="@previous"/>
                             </div>
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.student_id}:"/>
-                                <p:inputText id="studentId" value="#{profileBean.studentId}" label="#{msg.student_id}:" required="#{profileBean.studentIdRequired}"/>
+                                <p:inputText id="studentId" value="#{profileBean.selectedUser.studentId}" label="#{msg.student_id}:" required="#{profileBean.studentIdRequired}"/>
                                 <p:message for="@previous"/>
                             </div>
 
                             <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.studentIdRequired}">
                                 <p:outputLabel value="#{msg.consent}:"/>
-                                <p:selectBooleanCheckbox id="accept_terms" value="#{profileBean.acceptTermsAndConditions}" label="#{msg.consent}"
+                                <p:selectBooleanCheckbox id="accept_terms" value="#{profileBean.selectedUser.acceptTermsAndConditions}" label="#{msg.consent}"
                                                          itemLabel="I've given consent to use my data for the project" validator="#{profileBean.validateConsent}"/>
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.affiliation}:"/>
-                                <p:inputText id="useraffiliation" value="#{profileBean.affiliation}" required="#{profileBean.affiliationRequired}"/>
+                                <p:inputText id="useraffiliation" value="#{profileBean.selectedUser.affiliation}" required="#{profileBean.affiliationRequired}"/>
                                 <p:message for="@previous"/>
                             </div>
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.address}:"/>
-                                <p:inputTextarea id="useraddress" value="#{profileBean.address}"/>
+                                <p:inputTextarea id="useraddress" value="#{profileBean.selectedUser.address}"/>
                                 <p:message for="@previous"/>
                             </div>
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.profession}:"/>
-                                <p:inputText id="userprofession" value="#{profileBean.profession}"/>
+                                <p:inputText id="userprofession" value="#{profileBean.selectedUser.profession}"/>
                                 <p:message for="@previous"/>
                             </div>
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.interest}:"/>
-                                <p:inputTextarea id="userinterest" value="#{profileBean.interest}"/>
+                                <p:inputTextarea id="userinterest" value="#{profileBean.selectedUser.interest}"/>
                                 <p:message for="@previous"/>
                             </div>
 
                             <h:panelGroup layout="block" styleClass="form-group" rendered="false">
                                 <p:outputLabel for="@next" value="#{msg.dateofbirth}:"/>
-                                <p:calendar id="userdateofbirth" value="#{profileBean.dateOfBirth}" navigator="true" locale="de"
+                                <p:calendar id="userdateofbirth" value="#{profileBean.selectedUser.dateOfBirth}" navigator="true" locale="de"
                                             maxdate="#{profileBean.maxBirthday}" inputStyleClass="w-100"/>
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 
                             <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.moderatorAccess}">
                                 <p:outputLabel for="@next" value="#{msg.additionalinformation}:"/>
-                                <p:inputTextarea id="useradditionalinformation" value="#{profileBean.additionalInformation}"/>
+                                <p:inputTextarea id="useradditionalinformation" value="#{profileBean.selectedUser.additionalInformation}"/>
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 
                             <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.moderatorAccess}">
                                 <p:outputLabel for="@next" value="#{msg.awards}:"/>
-                                <p:textEditor id="usercredits" widgetVar="editorWidget" value="#{profileBean.credits}" height="80">
+                                <p:textEditor id="usercredits" widgetVar="editorWidget" value="#{profileBean.selectedUser.credits}" height="80">
                                     <f:facet name="toolbar">
                                         <span class="ql-formats">
                                             <button class="ql-bold"></button>

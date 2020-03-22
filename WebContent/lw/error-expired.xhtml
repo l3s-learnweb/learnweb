@@ -4,14 +4,16 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
-<ui:param name="pageTitle" value="#{msg.error}"/>
-
-<ui:define name="container_layout">
-	<p:panel header="Session expired" styleClass="ui-widget-danger">
-		<h5 class="text-danger">#{msg.reload_page}</h5>
-
-		<a href="user/login.jsf">#{msg.reload}</a>
-	</p:panel>
-</ui:define>
+    <ui:param name="pageTitle" value="#{msg.error}"/>
+    
+    <ui:define name="container_layout">
+    	<p:panel header="Session expired" styleClass="ui-widget-danger">
+    		<h5 class="text-danger">#{msg.reload_page}</h5>
+    
+            <a href="#{userBean.bannerLink}">
+                <h:outputText value="#{msg.return_to_welcome_page}"/>
+            </a>
+    	</p:panel>
+    </ui:define>
 
 </ui:composition>

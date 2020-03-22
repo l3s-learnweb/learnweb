@@ -19,6 +19,8 @@ import java.util.TimeZone;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -56,31 +58,46 @@ public class User implements Comparable<User>, Serializable, HasId
         PBKDF2
     }
 
-    public static final int GENDER_MALE = 1;
-    public static final int GENDER_FEMALE = 2;
+    public enum Gender
+    {
+        UNASSIGNED,
+        MALE,
+        FEMALE,
+        OTHER
+    }
 
     private int id = -1;
     private boolean deleted;
     private int imageFileId; // profile image
     private int organisationId;
-    private String fullName; //Full Name
+    @Length(max = 100)
+    private String fullName;
+    @Length(max = 100)
     private String affiliation; //affiliated with which institute
+    @NotBlank
+    @Length(min = 2, max = 50)
     private String username;
+    @Email
     private String email = null; // it is important to set null instead of empty string
     private String emailConfirmationToken;
     private boolean emailConfirmed = true;
     private String password;
     private PasswordHashing hashing;
 
-    private int gender;
+    private Gender gender;
     private Date dateOfBirth;
+    @Length(max = 250)
     private String address;
+    @Length(max = 100)
     private String profession;
+    @Length(max = 250)
     private String additionalInformation;
+    @Length(max = 250)
     private String interest;
+    @Length(max = 50)
     private String studentId;
     private Date registrationDate;
-    @Length(max = 255)
+    @Length(max = 250)
     private String credits;
     private boolean acceptTermsAndConditions = false;
 
@@ -206,16 +223,6 @@ public class User implements Comparable<User>, Serializable, HasId
         return id;
     }
 
-    /**
-     * Returns User.GENDER_MALE, User.GENDER_FEMALE or 0 if not set
-     *
-     * @return
-     */
-    public int getGender()
-    {
-        return gender;
-    }
-
     public String getInterest()
     {
         return interest;
@@ -320,11 +327,6 @@ public class User implements Comparable<User>, Serializable, HasId
         this.emailConfirmed = isEmailConfirmed;
     }
 
-    public void setGender(int gender)
-    {
-        this.gender = gender;
-    }
-
     public void setInterest(String interest)
     {
         this.interest = interest;
@@ -343,6 +345,11 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setUsername(String username)
     {
         this.username = StringUtils.trim(username);
+    }
+
+    public void setRealUsername(String username)
+    {
+        setUsername(username);
     }
 
     public void setOrganisationId(int organisationId)
@@ -885,6 +892,16 @@ public class User implements Comparable<User>, Serializable, HasId
     void setDeleted(boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    public Gender getGender()
+    {
+        return gender;
+    }
+
+    public void setGender(Gender gender)
+    {
+        this.gender = gender;
     }
 
     /**

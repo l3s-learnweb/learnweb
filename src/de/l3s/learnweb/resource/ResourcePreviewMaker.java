@@ -41,7 +41,6 @@ public class ResourcePreviewMaker
 {
     private static final Logger log = Logger.getLogger(ResourcePreviewMaker.class);
 
-    private static final int BUFSIZE = 1024;
     private static final int SIZE0_MAX_WIDTH = 150;
     private static final int SIZE0_MAX_HEIGHT = 120;
     private static final int SIZE1_WIDTH = 150;
@@ -406,7 +405,7 @@ public class ResourcePreviewMaker
         PDFRenderer pdfRenderer = new PDFRenderer(pdfDocument);
 
         // try page by page to get an image
-        for (int p = 0, t = pdfDocument.getNumberOfPages(); p <= t; p++)
+        for(int p = 0, t = pdfDocument.getNumberOfPages(); p <= t; p++)
         {
             try
             {

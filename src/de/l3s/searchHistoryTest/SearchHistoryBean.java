@@ -1,6 +1,5 @@
 package de.l3s.searchHistoryTest;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionListener;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -56,7 +54,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     private String selectedEntity;
 
     private transient List<Query> queries;
-    private transient List<SearchResult> searchResults;
 
     // for graph
     private transient Set<String> entities;
@@ -98,7 +95,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
 
     public synchronized void collectQueriesAndEntities()
     {
-        if ((selectedUserId == 0 && selectedGroupId == 0) || !queries.isEmpty()) {
+        if((selectedUserId == 0 && selectedGroupId == 0) || !queries.isEmpty())
+        {
             return;
         }
 
@@ -170,7 +168,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         this.selectedSession = selectedSession;
 
         queries = null;
-        searchResults = null;
     }
 
     public Query getSelectedQuery()
@@ -181,8 +178,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     public void setSelectedQuery(final Query selectedQuery)
     {
         this.selectedQuery = selectedQuery;
-
-        searchResults = null;
     }
 
     public String getQueriesAsJson()
@@ -240,7 +235,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
 
     public List<Query> getQueries()
     {
-        if (queries == null && selectedSession != null) {
+        if(queries == null && selectedSession != null)
+        {
             if(!showGroupHistory)
                 queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(selectedSession.getUserId(), selectedSession.getSessionId());
             else
@@ -262,7 +258,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     public List<SearchResult> getSearchResults()
     {
         List<SearchResult> searchResults = new ArrayList<>();
-        if (selectedQuery != null)
+        if(selectedQuery != null)
         {
             if(!searchIdSnippets.containsKey(selectedQuery.getSearchId()))
                 searchIdSnippets.put(selectedQuery.getSearchId(), getLearnweb().getSearchHistoryManager().getSearchResultsForSearchId(selectedQuery.getSearchId(), 100));
@@ -283,8 +279,10 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         selectedSessionId = sessionId;
         selectedUserId = userId;
 
-        if (queries != null) queries.clear();
-        if (entities != null) entities.clear();
+        if(queries != null)
+            queries.clear();
+        if(entities != null)
+            entities.clear();
         //log.info("session id: " + sessionId + "user id: " + userId);
     }
 
@@ -413,9 +411,12 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         final String finalQuery = filterQuery;
 
         List<Session> allSessions = getSessions();
-        if (allSessions == null || allSessions.size() == 0) {
+        if(allSessions == null || allSessions.size() == 0)
+        {
             addMessage(FacesMessage.SEVERITY_ERROR, "dsada");
-        } else {
+        }
+        else
+        {
             sessions = allSessions.stream().filter(session -> {
                 if(finalIsSearchUser)
                 {
@@ -438,11 +439,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         this.searchQuery = searchQuery;
     }
 
-    public boolean isToggleSwitch() {
+    public boolean isToggleSwitch()
+    {
         return toggleSwitch;
     }
 
-    public void setToggleSwitch(boolean toggleSwitch) {
+    public void setToggleSwitch(boolean toggleSwitch)
+    {
         this.toggleSwitch = toggleSwitch;
     }
 }

@@ -70,47 +70,49 @@ public class ExportManager
         response.setHeader("Content-Disposition", "attachment; filename=\"" + EXPORT_FILE_NAME + "\"");
 
         OutputStream responseOutputStream = response.getOutputStream();
-        ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(responseOutputStream));
-        zipOutputStream.setLevel(Deflater.NO_COMPRESSION);
-
-        Map<String, InputStream> resourcesToPack = new HashMap<>();
-        switch(resourcesType)
+        try(ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(responseOutputStream)))
         {
-        case "group":
-            // TODO needs refactoring. group id should not be passed this way. Why isn't the platform put into account for user downloads
-            String userAgent = facesContext.getExternalContext().getRequestHeaderMap().get("User-Agent");
-            String platform = UserAgent.parseUserAgentString(userAgent).getOperatingSystem().getName();
-            int groupId = Integer.parseInt(facesContext.getExternalContext().getRequestParameterMap().get("request_group_form:group_id"));
-            resourcesToPack = packGroupResources(this.learnweb.getGroupManager().getGroupById(groupId), platform);
-            break;
-        case "user":
-            resourcesToPack = packUserResources(user.getResources());
-            break;
-        default:
-            break;
-        }
+            zipOutputStream.setLevel(Deflater.NO_COMPRESSION);
 
-        for(Map.Entry<String, InputStream> resourceFile : resourcesToPack.entrySet())
-        {
-            ZipEntry fileEntry = new ZipEntry(resourceFile.getKey());
-            zipOutputStream.putNextEntry(fileEntry);
-            try
+            Map<String, InputStream> resourcesToPack = new HashMap<>();
+            switch(resourcesType)
             {
-                byte[] b = new byte[2048];
+            case "group":
+                // TODO needs refactoring. group id should not be passed this way. Why isn't the platform put into account for user downloads
+                String userAgent = facesContext.getExternalContext().getRequestHeaderMap().get("User-Agent");
+                String platform = UserAgent.parseUserAgentString(userAgent).getOperatingSystem().getName();
+                int groupId = Integer.parseInt(facesContext.getExternalContext().getRequestParameterMap().get("request_group_form:group_id"));
+                resourcesToPack = packGroupResources(this.learnweb.getGroupManager().getGroupById(groupId), platform);
+                break;
+            case "user":
+                resourcesToPack = packUserResources(user.getResources());
+                break;
+            default:
+                break;
+            }
 
-                while((resourceFile.getValue().read(b)) != -1)
+            for(Map.Entry<String, InputStream> resourceFile : resourcesToPack.entrySet())
+            {
+                ZipEntry fileEntry = new ZipEntry(resourceFile.getKey());
+                zipOutputStream.putNextEntry(fileEntry);
+                try
                 {
-                    zipOutputStream.write(b);
-                }
-            }
-            catch(Throwable t)
-            {
-                throw new ResourcesFileNotFoundException(resourceFile.toString());
-            }
-            zipOutputStream.closeEntry();
-        }
+                    byte[] b = new byte[2048];
 
-        zipOutputStream.close();
+                    while((resourceFile.getValue().read(b)) != -1)
+                    {
+                        zipOutputStream.write(b);
+                    }
+                }
+                catch(Throwable t)
+                {
+                    throw new ResourcesFileNotFoundException(resourceFile.toString());
+                }
+                zipOutputStream.closeEntry();
+            }
+
+            zipOutputStream.close();
+        }
         responseOutputStream.flush();
         responseOutputStream.close();
         facesContext.responseComplete();

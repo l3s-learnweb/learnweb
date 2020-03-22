@@ -85,19 +85,6 @@ public class GroupLinksBean extends ApplicationBean implements Serializable
         return group.isMember(user);
     }
 
-    public void saveGmailId()
-    {
-        String gmailId = getParameter("gmail_id");
-        try
-        {
-            getLearnweb().getUserManager().saveGmailId(gmailId, getUser().getId());
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while inserting gmail id" + e);
-        }
-    }
-
     public List<Link> getLinks() throws SQLException
     {
         if(null == links)

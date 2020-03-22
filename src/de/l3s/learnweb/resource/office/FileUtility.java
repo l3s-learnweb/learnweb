@@ -21,7 +21,7 @@ public class FileUtility
     private static final String PRESENTATION = "presentation";
     private static final String SPREADSHEET = "spreadsheet";
 
-    private static final List<String> EXT_DOCUMENT = Arrays.asList("docx", "doc", "odt", "rtf", "txt", "html", "htm", "mht", "pdf", "djvu", "fb2", "epub", "xps");
+    //private static final List<String> EXT_DOCUMENT = Arrays.asList("docx", "doc", "odt", "rtf", "txt", "html", "htm", "mht", "pdf", "djvu", "fb2", "epub", "xps");
     private static final List<String> EXT_SPREADSHEET = Arrays.asList("xls", "xlsx", "ods", "csv");
     private static final List<String> EXT_PRESENTATION = Arrays.asList("pps", "ppsx", "ppt", "pptx", "odp");
     private static final List<String> EXT_DOCUMENT_CONVERT = Arrays.asList("mht", "docm", "dot", "dotm", "dotx", "fodt");
@@ -120,12 +120,12 @@ public class FileUtility
     {
         switch(fileType)
         {
-            case spreadsheet:
-                return ".xlsx";
-            case presentation:
-                return ".pptx";
-            default:
-                return ".docx";
+        case spreadsheet:
+            return ".xlsx";
+        case presentation:
+            return ".pptx";
+        default:
+            return ".docx";
         }
     }
 
@@ -133,14 +133,14 @@ public class FileUtility
     {
         switch(fileType)
         {
-            case document:
-                return SAMPLE_DOCX;
-            case spreadsheet:
-                return SAMPLE_XLSX;
-            case presentation:
-                return SAMPLE_PPTX;
-            default:
-                return null;
+        case document:
+            return SAMPLE_DOCX;
+        case spreadsheet:
+            return SAMPLE_XLSX;
+        case presentation:
+            return SAMPLE_PPTX;
+        default:
+            return null;
         }
     }
 }

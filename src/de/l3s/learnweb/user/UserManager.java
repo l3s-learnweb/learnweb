@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.User.Gender;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -393,7 +394,7 @@ public class UserManager
             replace.setInt(6, user.getOrganisationId());
             replace.setInt(7, user.getActiveGroupId());
             replace.setInt(8, user.getImageFileId());
-            replace.setInt(9, user.getGender());
+            replace.setInt(9, user.getGender().ordinal());
             replace.setDate(10, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
             replace.setString(11, user.getAddress());
             replace.setString(12, user.getProfession());
@@ -454,7 +455,7 @@ public class UserManager
         user.setActiveGroup(rs.getInt("active_group_id"));
         user.setImageFileId(rs.getInt("image_file_id"));
 
-        user.setGender(rs.getInt("gender"));
+        user.setGender(Gender.values()[rs.getInt("gender")]);
         user.setDateOfBirth(rs.getDate("dateofbirth"));
         user.setFullName(rs.getString("fullname"));
         user.setAffiliation(rs.getString("affiliation"));
@@ -502,16 +503,6 @@ public class UserManager
         return user;
     }
 
-    public void saveGmailId(String gmailId, int userId) throws SQLException
-    {
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT IGNORE INTO `lw_user_gmail` (`user_id` , `gmail_id`) VALUES (?, ?)"))
-        {
-            insert.setInt(1, userId);
-            insert.setString(2, gmailId);
-            insert.executeUpdate();
-        }
-    }
-
     public void anonymize(User user) throws SQLException
     {
         log.debug("Anonymize user: " + user);
@@ -541,7 +532,7 @@ public class UserManager
             log.info("Delete user ");
         }
 
-        String[] tables = { "lw_group_user", "lw_user_log", "lw_user_gmail", "lw_user_course", "lw_comment", "lw_resource_rating", "lw_resource_tag", "lw_thumb", "lw_survey_answer", "lw_survey_resource_user", "lw_glossary_entry", "lw_glossary_term", "lw_history_change",
+        String[] tables = { "lw_group_user", "lw_user_log", "lw_user_course", "lw_comment", "lw_resource_rating", "lw_resource_tag", "lw_thumb", "lw_survey_answer", "lw_survey_resource_user", "lw_glossary_entry", "lw_glossary_term", "lw_history_change",
                 "lw_news", "lw_resource_history", "lw_submit_resource", "lw_submit_status", "lw_transcript_actions", "lw_transcript_summary" };
 
         for(String table : tables)

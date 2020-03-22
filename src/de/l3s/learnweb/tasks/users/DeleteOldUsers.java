@@ -49,7 +49,7 @@ public class DeleteOldUsers
             // just to make sure that SOLR is connected reindex a random resource
             ResourceManager rm = learnweb.getResourceManager();
             rm.setReindexMode(true);
-            learnweb.getSolrClient().reIndexResource(rm.getResource(2054));
+            learnweb.getSolrClient().reIndexResource(rm.getResource(200233));
 
             //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
             deleteUsersWhoHaveBeenSoftDeleted(1);
@@ -96,7 +96,7 @@ public class DeleteOldUsers
                 log.debug("Ignore active user: " + user + "; login=" + lastLogin);
                 continue;
             }
-            log.debug("Delete: " + user.getRealUsername() + "- " + user.getId() + "; registration=" + user.getRegistrationDate() + "; login=" + lastLogin + "; mail=" + user.getEmail() + "; " + user.isModerator());
+            log.debug("Delete: " + user.getRealUsername() + "; userId=" + user.getId() + "; registration=" + user.getRegistrationDate() + "; login=" + lastLogin + "; mail=" + user.getEmail() + "; " + user.isModerator());
 
             um.deleteUserHard(user);
         }
@@ -166,6 +166,7 @@ public class DeleteOldUsers
 
             while(rs.next())
             {
+                log.debug("Delete abonded resource: " + rs.getInt(1));
                 rm.deleteResourceHard(rs.getInt(1));
             }
         }
@@ -223,7 +224,7 @@ public class DeleteOldUsers
                 Group group = gm.getGroupById(rs.getInt(1));
 
                 log.debug("Delete: " + group + "; resources: " + group.getResourcesCount());
-                if(group.getResourcesCount() > 2)
+                if(group.getResourcesCount() > 1)
                 {
                     log.debug("confirm");
 

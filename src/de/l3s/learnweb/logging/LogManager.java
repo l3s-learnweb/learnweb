@@ -69,7 +69,7 @@ public class LogManager
         }
 
         if(groupId == -1)
-            groupId = (null == user) ? 0 : user.getActiveGroupId();
+            groupId = (null == user) ? 0 : user.getActiveGroupId(); // TODO remove that. the group must be provided explicitly
 
         log(userId, action, groupId, targetId, params, sessionId);
     }

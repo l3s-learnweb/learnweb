@@ -141,7 +141,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         {
             user.sendEmailConfirmation();
 
-            if (mailRequired)
+            if(mailRequired)
             {
                 confirmRequiredBean.setLoggedInUser(user);
                 return "/lw/user/confirm_required.xhtml?faces-redirect=true";
@@ -151,10 +151,15 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         return LoginBean.loginUser(this, user);
     }
 
-    @SuppressWarnings("unused")
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws SQLException
     {
-        if(getLearnweb().getUserManager().isUsernameAlreadyTaken((String) value))
+        String newName = ((String) value).trim();
+
+        if(newName.length() < 2)
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "The username is to short."));
+        }
+        if(getLearnweb().getUserManager().isUsernameAlreadyTaken(newName))
         {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
         }

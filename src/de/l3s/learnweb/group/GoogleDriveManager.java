@@ -19,6 +19,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
 
+@SuppressWarnings("deprecation")
 public class GoogleDriveManager
 {
     private static final Logger log = Logger.getLogger(GoogleDriveManager.class);
