@@ -67,7 +67,7 @@
 
         <h:form id="search_source_carousel" styleClass="bg-gray400 p-2">
             <p:outputPanel styleClass="text-center mb-2" layout="block" rendered="#{searchBean.searchService != null}">
-                <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
+                <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1 ? msg.search_groups_header_empty : msg.search_groups_header}" escape="false">
                     <f:param value="#{searchBean.totalFromCurrentService}"/>
                     <f:param value="#{searchBean.searchService}"/>
                 </h:outputFormat>
