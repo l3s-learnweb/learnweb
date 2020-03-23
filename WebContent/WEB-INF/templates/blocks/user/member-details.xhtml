@@ -43,7 +43,7 @@
 		</ui:fragment>
 
         <ui:fragment rendered="#{user.gender ne 'UNASSIGNED'}">
-    		<p class="text-muted small mb-0"><b>#{msg.gender}:</b> <h:outputText value="#{msg['user.gender.' += user.gender]}"  /></p>
+    		<p class="text-muted small mb-0"><b>#{msg.gender}:</b><h:outputText value=" #{msg['user.gender.' += user.gender]}" /></p>
         </ui:fragment>
         
 		<ui:fragment rendered="#{not empty user.address}">
