@@ -40,16 +40,17 @@
 	<ui:fragment rendered="#{userBean.starRatingEnabled}">
 		<dt class="col-sm-3">#{msg.relevance}:</dt>
 		<dd class="col-sm-9">
-			<h:form>
-				<p:rating value="#{res.starRatingRounded}" cancel="false" disabled="${res.isRatedByUser(userBean.user.id) or not res.canAnnotateResource(userBean.user)}">
-					<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="@form :growl"/>
+			<h:panelGroup id="relevance" layout="block">
+				<p:rating value="#{res.starRatingRounded}" cancel="false" global="false" immediate="true"
+						  disabled="${res.isRatedByUser(userBean.user.id) or not res.canAnnotateResource(userBean.user)}">
+					<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update=":relevance :growl"/>
 				</p:rating>
 
 				<h:outputText value="#{res.starRating}">
 					<f:convertNumber maxFractionDigits="1" minFractionDigits="1"/>
 				</h:outputText>
 				(<h:outputFormat value="#{msg.votes}"><f:param value="#{res.rateNumber}"/></h:outputFormat>)
-			</h:form>
+			</h:panelGroup>
 		</dd>
 	</ui:fragment>
 
@@ -68,21 +69,17 @@
 	<ui:fragment rendered="#{userBean.thumbRatingEnabled}">
 		<dt class="col-sm-3">#{msg.reliability}:</dt>
 		<dd class="col-sm-9">
-			<h:form>
-				<h:panelGrid columns="4">
-					<h:outputText value="+#{res.thumbUp}"/>
-					<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}" update="@form :growl" ariaLabel="Rate thump up">
-						<f:param name="resource_id" value="#{res.id}"/>
-						<i class="fa fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
-					</p:commandLink>
+			<h:panelGrid id="reliability" columns="4">
+				<h:outputText value="+#{res.thumbUp}"/>
+				<p:commandLink action="#{resourceDetailBean.onThumbUp}" global="false" update=":reliability :growl" ariaLabel="Rate thump up" process="@this">
+					<i class="fa fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
+				</p:commandLink>
 
-					<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}" update="@form :growl" ariaLabel="Rate thump down">
-						<f:param name="resource_id" value="#{res.id}"/>
-						<i class="fa fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
-					</p:commandLink>
-					<h:outputText value="-#{res.thumbDown}"/>
-				</h:panelGrid>
-			</h:form>
+				<p:commandLink action="#{resourceDetailBean.onThumbDown}" global="false" update=":reliability :growl" ariaLabel="Rate thump down" process="@this">
+					<i class="fa fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
+				</p:commandLink>
+				<h:outputText value="-#{res.thumbDown}"/>
+			</h:panelGrid>
 		</dd>
 	</ui:fragment>
 
@@ -240,7 +237,7 @@
 	<ui:fragment rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">
 		<dt class="col-sm-3">#{msg.tags}:</dt>
 		<dd class="col-sm-9">
-			<h:panelGroup layout="block" id="tags_list">
+			<h:panelGroup id="tags_list" layout="block">
 				<ul class="list-inline list-unstyled mb-1">
 					<ui:repeat var="tag" value="#{res.tags}">
 						<li class="list-inline-item mr-0 mb-1">
@@ -259,37 +256,35 @@
 				</ul>
 			</h:panelGroup>
 
-			<h:form id="tag_input_form" rendered="#{res.canAnnotateResource(userBean.user)}">
+			<h:panelGroup id="new_tag_block" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
 				<div class="form-group mb-1">
-					<p:inputText value="#{resourceDetailBean.tagName}" id="tag_name" styleClass="flex-grow-1" placeholder="Enter new tag..."/>
+					<p:inputText value="#{resourceDetailBean.tagName}" styleClass="flex-grow-1" placeholder="#{msg.new_tag_placeholder}" required="true"/>
 					<p:message for="@previous"/>
 				</div>
 
-				<p:commandButton actionListener="#{resourceDetailBean.addTag}" value="#{msg.add_tag}"
-								 update=":tags_list :growl tag_name" partialSubmit="true" process="@form"
-								 global="false" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
+				<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" global="false" process=":new_tag_block"
+								 update=":new_tag_block :tags_list :growl" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
-			</h:form>
+			</h:panelGroup>
 		</dd>
 	</ui:fragment>
 
 	<ui:fragment rendered="#{not empty res.comments or res.canAnnotateResource(userBean.user)}">
 		<dt class="col-sm-3">#{msg.comments}:</dt>
 		<dd class="col-sm-9">
-			<h:form styleClass="mb-2" id="new_comment_form">
-				<ui:fragment rendered="#{res.canAnnotateResource(userBean.user)}">
-					<div class="form-group mb-1">
-						<p:inputTextarea rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true" styleClass="d-block"/>
-						<p:message for="@previous"/>
-					</div>
+			<h:panelGroup id="new_comment_block" styleClass="mb-2" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
+				<div class="form-group mb-1">
+					<p:inputTextarea rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.new_comment_placeholder}" required="true" styleClass="d-block"/>
+					<p:message for="@previous"/>
+				</div>
 
-					<p:commandButton value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment}" update=":comments_list @form :growl" process="@form"
-									 global="false" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
-						<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
-					</p:commandButton>
-				</ui:fragment>
-			</h:form>
+				<p:commandButton value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" global="false"
+								 update=":comments_list :new_comment_block :growl" process=":new_comment_block"
+								 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
+					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
+				</p:commandButton>
+			</h:panelGroup>
 			<h:panelGroup layout="block" id="comments_list">
 				<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
 					<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
@@ -303,15 +298,16 @@
 							<div class="mb-1">#{comment.text}</div>
 							<div class="small">
 								<p:commandLink value="#{msg.edit}" styleClass="text-success mr-2" ajax="true" update=":comment_edit_form"
-											   process="@this" onsuccess="PF('commentEditDialog').show();"
+											   process="@this" onsuccess="PF('editCommentDialog').show();"
 											   rendered="#{resourceDetailBean.canEditComment(comment)}">
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 								</p:commandLink>
-								<p:commandLink value="#{msg.delete}" styleClass="text-danger" action="#{resourceDetailBean.onDeleteComment}"
-											   ajax="true" global="false" update=":comments_list :growl" process="@this"
-											   onstart="PF('detailsOverlay').show();return confirm('#{msg.delete_message_comments}');" oncomplete="PF('detailsOverlay').hide();"
+								<p:commandLink value="#{msg.delete}" styleClass="text-danger" ajax="true" global="false"
+											   action="#{resourceDetailBean.onDeleteComment}" update=":comments_list :growl" process="@this"
+											   onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
 											   rendered="#{resourceDetailBean.canEditComment(comment)}">
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
+									<p:confirm message="#{msg.delete_message_comments}"/>
 								</p:commandLink>
 							</div>
 						</div>
@@ -322,15 +318,5 @@
 	</ui:fragment>
 </dl>
 
-<p:dialog header="#{msg.edit}" appendTo="@(body)" widgetVar="commentEditDialog"
-		  modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
-	<h:form id="comment_edit_form">
-		<div class="form-group">
-			<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}"/>
-		</div>
-
-		<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":comments_list :growl" title="#{msg.save}" process="@form"
-			value="#{msg.save}" onsuccess="PF('commentEditDialog').hide();"/>
-	</h:form>
-</p:dialog>
+<ui:decorate template="/WEB-INF/templates/blocks/modal/edit_comment_dialog.xhtml"/>
 </ui:composition>

@@ -11,12 +11,13 @@
 		<div>
 			<p:button onclick="loadArchiveUrlsModal();return false;" styleClass="secondary-btn" value="#{msg['Archive.change_thumbnail']}"/>
 
-			<p:commandButton id="archive_now_btn" form="archive_view_options" process="@this" action="#{resourceDetailBean.archiveCurrentVersion}"
+			<p:commandButton id="archive_now_btn" process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
 							 icon="fa fa fa-camera-retro" value="#{msg['Archive.now']}" update=":growl archive_view_options"/>
 		</div>
 
 		<h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
 		<h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
+
 		<div id="modal_archive_urls" class="content-root collapse">
 			<div class="content-header text-center mb-3">
 				<h:outputText value="#{res.title}" escape="false" styleClass="h5"/>
@@ -62,16 +63,14 @@
 						<iframe id="archive_iframe" data-src="#{res.lastArchivedObject.archiveUrl}" class="ui-blockui bg-center"></iframe>
 					</div>
 					<div class="row align-items-center mt-2">
-						<h:panelGroup rendered="${not empty res.thumbnailUpdateInfo}">
-							<div class="col-md">
-                                <span class="text-muted">
-                                    <h:outputText value="#{msg['Archive.thumbnail_update_info']}: "/>
-                                    <h:outputText value="#{res.thumbnailUpdateInfo.date}">
-                                        <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
-                                    </h:outputText>
-                                    <h:outputText value=" (#{msg.by} #{res.thumbnailUpdateInfo.username})"/>
-                                </span>
-							</div>
+						<h:panelGroup styleClass="col-md" layout="block" rendered="${not empty res.thumbnailUpdateInfo}">
+							<span class="text-muted">
+								<h:outputText value="#{msg['Archive.thumbnail_update_info']}: "/>
+								<h:outputText value="#{res.thumbnailUpdateInfo.date}">
+									<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+								</h:outputText>
+								<h:outputText value=" (#{msg.by} #{res.thumbnailUpdateInfo.username})"/>
+							</span>
 						</h:panelGroup>
 						<div class="col-md text-right">
                             <span>
@@ -88,7 +87,7 @@
 		</div>
 	</ui:fragment>
 
-	<h:form id="archive_view_options" styleClass="col-sm-12" prependId="false">
+	<h:panelGroup id="archive_view_options" styleClass="col-sm-12" layout="block">
 		<div id="archive_timeline_view" class="my-2">
 			<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_archive_timeline.xhtml"/>
 		</div>
@@ -119,6 +118,6 @@
 				</li>
 			</ui:repeat>
 		</ul>
-	</h:form>
+	</h:panelGroup>
 </dl>
 </ui:composition>
