@@ -84,7 +84,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private String password;
     private PasswordHashing hashing;
 
-    private Gender gender;
+    private Gender gender = Gender.UNASSIGNED;
     private Date dateOfBirth;
     @Length(max = 250)
     private String address;
