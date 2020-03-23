@@ -1,0 +1,31 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="pageTitle" value="#{msg.transcript}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
+
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item title="#{msg.moderator}" link="moderator.jsf">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="admin/transcript.jsf" title="#{msg.transcript}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+    </lw:breadcrumb-item>
+</ui:define>
+
+<ui:define name="center_layout">
+    <p:panel header="#{msg.transcript}" styleClass="mb-3 ui-widget-content-p-0">
+        <div class="links-list">
+            <a href="admin/detailed_transcript_log.jsf"><i class="ui-menuitem-icon fa fa-fw fa-language text-dark"></i>#{msg.detailed_transcript_log}</a>
+            <a href="admin/simple_transcript_log.jsf"><i class="ui-menuitem-icon fa fa-fw fa-language text-warning"></i>#{msg.simple_transcript_log}</a>
+            <a href="admin/transcript_summary.jsf"><i class="ui-menuitem-icon fa fa-fw fa-language text-info"></i>#{msg.transcript_summaries}</a>
+        </div>
+    </p:panel>
+</ui:define>
+
+</ui:composition>

@@ -13,8 +13,12 @@
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 	</lw:breadcrumb-item>
 
-	<lw:breadcrumb-item link="admin/detailed_transcript_log.jsf" title="#{msg.detailed_transcript_log}">
+	<lw:breadcrumb-item link="admin/transcript.jsf" title="#{msg.transcript}">
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+	</lw:breadcrumb-item>
+
+	<lw:breadcrumb-item link="admin/detailed_transcript_log.jsf" title="#{msg.detailed_transcript_log}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_transcript.xhtml"/>
 	</lw:breadcrumb-item>
 </ui:define>
 

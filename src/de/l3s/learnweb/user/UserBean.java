@@ -491,10 +491,7 @@ public class UserBean implements Serializable
                         .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("organisation")).icon("fa fa-fw fa-sitemap").url(su + "/lw/admin/organisation.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("text_analysis")).icon("fa fa-fw fa-area-chart").url(su + "/lw/admin/text_analysis.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("statistics")).icon("fa fa-fw fa-line-chart").url(su + "/lw/admin/statistics.jsf").build())
-                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("detailed_transcript_log")).icon("fa fa-fw fa-language").url(su + "/lw/admin/detailed_transcript_log.jsf").build())
-                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("simple_transcript_log")).icon("fa fa-fw fa-language").url(su + "/lw/admin/simple_transcript_log.jsf").build())
-                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("transcript_summaries")).icon("fa fa-fw fa-language").url(su + "/lw//admin/transcript_summary.jsf").build())
-                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("glossary_dashboard")).icon("fa fa-fw fa-bar-chart").url(su + "/lw/dashboard/glossary.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("transcript")).icon("fa fa-fw fa-language").url(su + "/lw/admin/transcript.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("Activity.dashboard")).icon("fa fa-fw fa-line-chart").url(su + "/lw/dashboard/activity.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("Tracker.dashboard")).icon("fa fa-fw fa-database").url(su + "/lw/dashboard/tracker.jsf").build())
                         .build();
