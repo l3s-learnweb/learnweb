@@ -1,15 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
 	  lang="#{userBean.localeCode}">
-
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true"/>
-			<f:viewAction action="#{resourceDetailBean.onLoad}"/>
-		</f:metadata>
-	</ui:define>
 
 	<h:head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -24,6 +18,11 @@
 			html, body { height: 100%; margin: 0; padding: 0; }
 		</style>
 	</h:head>
+
+	<f:metadata>
+		<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true"/>
+		<f:viewAction action="#{resourceDetailBean.onLoad}"/>
+	</f:metadata>
 
 	<h:body>
 		<audio class="video-js vjs-fill vjs-default-skin vjs-big-play-centered" controls="controls" preload="none" data-setup="{}"
