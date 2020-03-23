@@ -13,6 +13,8 @@
     <description>Learnweb is a collaborative search and sharing system which brings together different online services under one umbrella.</description>
 
     <properties>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>11</maven.compiler.release>
     </properties>
@@ -428,6 +430,7 @@
         <resources>
             <resource>
                 <directory>Resources</directory>
+                <filtering>true</filtering>
             </resource>
         </resources>
         <plugins>
@@ -486,5 +489,4 @@
             </properties>
         </profile>
     </profiles>
-
 </project>

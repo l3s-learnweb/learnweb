@@ -1,10 +1,12 @@
 package de.l3s.learnweb.beans.publicPages;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
@@ -18,9 +20,19 @@ public class StatusBean extends ApplicationBean
 {
 
     private List<Service> services = new LinkedList<>();
+    private Properties properties = new Properties();
 
     public StatusBean()
     {
+        try
+        {
+            properties.load(this.getClass().getClassLoader().getResourceAsStream("version.properties"));
+        }
+        catch(Exception e)
+        {
+            // ignore
+        }
+
         services.add(new Service("Learnweb Tomcat", "ok", "", "Obviously OK, otherwise this page would not be reachable"));
 
         Learnweb learnweb = getLearnweb();
@@ -70,6 +82,16 @@ public class StatusBean extends ApplicationBean
     public List<Service> getServices()
     {
         return services;
+    }
+
+    public String getVersion()
+    {
+        return properties.getProperty("version");
+    }
+
+    public String getBuildDate()
+    {
+        return properties.getProperty("build.date");
     }
 
     public class Service
