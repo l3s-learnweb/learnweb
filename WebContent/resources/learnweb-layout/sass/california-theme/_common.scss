@@ -8,7 +8,7 @@ body {
         text-decoration: none;
     }
     */
-    
+
     .ui-widget-content {
         background-color: $contentBgColor;
         border: 1px solid $contentBorderColor;
@@ -47,10 +47,9 @@ body {
         @include border-right-radius($border-radius);
     }
     .ui-widget-overlay {
-        background-color: rgba($gray-700, 0.75);
+        background-color: rgba($gray-700, 0.8);
     }
     .ui-blockui {
-        background-color: $white;
         background-image: url("\#{resource['images:blockui-spinner.svg']}");
         background-size: 6rem;
         background-repeat: no-repeat;
@@ -62,6 +61,7 @@ body {
         }
     }
     .ui-blockui-content {
+        color: $white;
         top: 7rem !important;
     }
     .ui-icon {
