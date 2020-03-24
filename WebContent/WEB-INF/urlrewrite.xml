@@ -9,16 +9,23 @@
 
 -->
 <urlrewrite use-query-string="true">
+
+	<rule>
+        <condition name="host" operator="equal">archiveweb.l3s.uni-hannover.de</condition>
+        <from>^/(.*)</from>
+        <to type="redirect" last="true">http://learnweb.l3s.uni-hannover.de/v2/aw/</to>        
+    </rule>
+    
     <rule>
         <from>/v2/(.*)</from>
         <to type="redirect">/v3/$1</to>
     </rule>
-    <!--
+    <!-- The Yell documentation still contains links to /new -->
     <rule>
         <from>/new/(.*)</from>
         <to type="redirect">/$1</to>
     </rule>
-    -->
+   
 
 	<!-- rules for scss source map -->
 	<rule>
