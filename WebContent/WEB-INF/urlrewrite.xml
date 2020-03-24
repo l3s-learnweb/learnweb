@@ -9,6 +9,13 @@
 
 -->
 <urlrewrite use-query-string="true">
+
+    <rule>
+        <condition name="host" operator="equal">archiveweb.l3s.uni-hannover.de</condition>
+        <from>^/(.*)</from>
+        <to type="redirect" last="true">http://learnweb.l3s.uni-hannover.de/v2/aw/</to>        
+    </rule>
+    
 	<rule>
 		<from>/lw/wizard=(.*)</from>
 		<to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>

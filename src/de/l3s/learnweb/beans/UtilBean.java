@@ -15,6 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -172,5 +173,19 @@ public class UtilBean implements Serializable
         if(total == 0 || value == 0)
             return "0";
         return String.format("%d (%.2f%%)", value, (double) value / total * 100);
+    }
+
+    /**
+     * Used to redirect users to the V" backup instance
+     *
+     * @return
+     */
+    public String getV2Link()
+    {
+        HttpServletRequest request = (HttpServletRequest) getExternalContext().getRequest();
+        String url = request.getRequestURL().toString();
+        if(request.getQueryString() != null)
+            url += '?' + request.getQueryString();
+        return url.replace(".de/", ".de/v2/");
     }
 }
