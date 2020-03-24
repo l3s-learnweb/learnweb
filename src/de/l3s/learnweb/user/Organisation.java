@@ -50,7 +50,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     private int id;
     @NotBlank
-    @Length(min = 2, max = 30)
+    @Length(min = 2, max = 60)
     private String title;
     private String welcomeMessage;
     private String welcomePage = "/lw/myhome/welcome.jsf"; // page to show after login
