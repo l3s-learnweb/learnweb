@@ -6,7 +6,7 @@
 
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
-    <version>3.0.0-beta1</version>
+    <version>3.0.0-beta2</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -430,7 +430,17 @@
         <resources>
             <resource>
                 <directory>Resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/version.properties</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>Resources</directory>
                 <filtering>true</filtering>
+                <includes>
+                    <include>**/version.properties</include>
+                </includes>
             </resource>
         </resources>
         <plugins>
@@ -450,23 +460,22 @@
                 <version>3.2.3</version>
                 <configuration>
                     <warSourceDirectory>WebContent</warSourceDirectory>
-                    <!--<packagingExcludes>resources/learnweb-layout/sass/</packagingExcludes>-->
-                    <!--<nonFilteredFileExtensions>-->
-                    <!--    <nonFilteredFileExtension>xhtml</nonFilteredFileExtension>-->
-                    <!--    <nonFilteredFileExtension>svg</nonFilteredFileExtension>-->
-                    <!--    <nonFilteredFileExtension>png</nonFilteredFileExtension>-->
-                    <!--    <nonFilteredFileExtension>jpg</nonFilteredFileExtension>-->
-                    <!--    <nonFilteredFileExtension>css</nonFilteredFileExtension>-->
-                    <!--    <nonFilteredFileExtension>js</nonFilteredFileExtension>-->
-                    <!--    <nonFilteredFileExtension>ico</nonFilteredFileExtension>-->
-                    <!--    <nonFilteredFileExtension>ico</nonFilteredFileExtension>-->
-                    <!--</nonFilteredFileExtensions>-->
-                    <!--<webResources>-->
-                    <!--    <resource>-->
-                    <!--        <directory>WebContent</directory>-->
-                    <!--        <filtering>true</filtering>-->
-                    <!--    </resource>-->
-                    <!--</webResources>-->
+                    <webResources>
+                        <resource>
+                            <directory>WebContent</directory>
+                            <filtering>false</filtering>
+                            <excludes>
+                                <include>**/web.xml</include>
+                            </excludes>
+                        </resource>
+                        <resource>
+                            <directory>WebContent</directory>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>**/web.xml</include>
+                            </includes>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
         </plugins>

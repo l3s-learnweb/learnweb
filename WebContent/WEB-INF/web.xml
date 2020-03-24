@@ -8,9 +8,9 @@
 
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>Development</param-value>
+        <!--<param-value>Development</param-value>-->
         <!--<param-value>Production</param-value>-->
-        <!--<param-value>${jsfProjectStage}</param-value>-->
+        <param-value>${jsfProjectStage}</param-value>
     </context-param>
 
     <!-- PrimeFaces-->
@@ -93,7 +93,7 @@
 	<context-param>
 		<description>
             Removes HTML comments from the output like <!--@elvariable id="pageTitle" type="java.lang.String"-->
-        </description>	
+        </description>
 	    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
 	    <param-value>true</param-value>
 	</context-param>
@@ -119,8 +119,8 @@
     </context-param>
     <context-param>
 		<description>
-            Scanning for context init parameters not defined. It is not necessary to define 
-            them all into your web.xml, they are just provided here for informative purposes. 
+            Scanning for context init parameters not defined. It is not necessary to define
+            them all into your web.xml, they are just provided here for informative purposes.
             To disable this messages set org.apache.myfaces.LOG_WEB_CONTEXT_PARAMS config param to 'false'
         </description>
         <param-name>org.apache.myfaces.LOG_WEB_CONTEXT_PARAMS</param-name>
@@ -160,7 +160,7 @@
 		<display-name>ImageIO service provider loader/unloader</display-name>
 		<listener-class>com.twelvemonkeys.servlet.image.IIOProviderContextListener</listener-class>
 	</listener>
-	
+
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
