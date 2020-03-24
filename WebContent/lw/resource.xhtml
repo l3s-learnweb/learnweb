@@ -41,7 +41,7 @@
 					<div class="res-view-controls">
 						<div class="mr-auto">
 							<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn ui-button-lg" title="#{msg.edit_resource}"
-											 action="#{resourceDetailBean.editResource}" update=":resourceViewForm" global="false" form="resourceViewForm"
+											 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceViewForm" global="false" form="resourceViewForm"
 											 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').hide();"/>
 
 							<ui:decorate template="/WEB-INF/templates/blocks/resourceview/controls.xhtml">
