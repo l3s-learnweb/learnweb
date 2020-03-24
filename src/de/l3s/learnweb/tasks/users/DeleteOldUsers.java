@@ -238,7 +238,7 @@ public class DeleteOldUsers
 
         for(String table : tables)
         {
-            try(PreparedStatement delete = learnweb.getConnection().prepareStatement("delete d FROM `" + table + "` d LEFT JOIN lw_group g USING(group_id) WHERE g.group_id is null"))
+            try(PreparedStatement delete = learnweb.getConnection().prepareStatement("delete d FROM `" + table + "` d LEFT JOIN lw_group g USING(group_id) WHERE d.group_id != 0 AND g.group_id is null"))
             {
                 int numRowsAffected = delete.executeUpdate();
                 log.debug("Deleted " + numRowsAffected + " rows from " + table);
