@@ -114,7 +114,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public int getGroupId()
     {
-        return HasId.getIdOrDefault(group, 0);
+        return groupId;
     }
 
     public void setFolderId(int folderId)
@@ -124,7 +124,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public int getFolderId()
     {
-        return HasId.getIdOrDefault(currentFolder, 0);
+        return folderId;
     }
 
     public String getSaveUrl()

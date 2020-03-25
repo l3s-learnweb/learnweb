@@ -23,7 +23,7 @@
         <p:message for="@previous"/>
     </h:panelGroup>
 
-	<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"/>
+	<p:commandButton action="#{loginBean.login}" value="#{msg.loginLabel}" ajax="false"/>
 
 	<h:outputLink value="#{request.contextPath}/lw/user/password.jsf" styleClass="d-block mt-2">#{msg.forgotten_password}</h:outputLink>
 </h:form>

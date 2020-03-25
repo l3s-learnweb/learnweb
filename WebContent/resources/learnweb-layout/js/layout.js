@@ -97,7 +97,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     });
 
     const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${sp.toString()}`;
-    window.history.pushState({ url: newUrl }, '', newUrl);
+    window.history.replaceState(searchParams, document.title, newUrl);
   },
 
   isDesktop() {

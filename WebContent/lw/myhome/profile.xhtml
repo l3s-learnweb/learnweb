@@ -14,7 +14,6 @@
 
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
 <ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
-
 <ui:param name="hideContent" value="#{null eq profileBean.selectedUser}"/>
 
 <ui:define name="breadcrumb">
@@ -73,7 +72,7 @@
                         </div>
                         <div>
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="#{msg.gender}:"/> 
+                                <p:outputLabel for="@next" value="#{msg.gender}:"/>
                                 <p:selectOneMenu id="usergender" value="#{profileBean.selectedUser.gender}">
                                     <f:selectItems value="#{profileBean.genders}" var="gender"  itemLabel="#{msg['user.gender.'+=gender]}" itemValue="#{gender}"/>
                                 </p:selectOneMenu>
