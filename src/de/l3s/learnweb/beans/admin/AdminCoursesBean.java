@@ -120,8 +120,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
             addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
             return;
         }
-        Organisation org = new Organisation(-1);
-        org.setTitle(newOrganisationTitle);
+        Organisation org = new Organisation(newOrganisationTitle);
         om.save(org);
         addMessage(FacesMessage.SEVERITY_INFO, "A new organisation has been created. Now you can assign courses to it.");
         load(); // update course list

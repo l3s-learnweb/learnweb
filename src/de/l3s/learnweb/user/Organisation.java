@@ -74,6 +74,19 @@ public class Organisation implements Serializable, Comparable<Organisation>
         createMetadataFields();
     }
 
+    /**
+     * Create a new organisation with default values to avoid NPEs
+     */
+    public Organisation(String title)
+    {
+        this(-1);
+
+        setTitle(title);
+        setLanguageVariant(null);
+        setLogoutPage(null);
+        setGlossaryLanguages(null);
+    }
+
     public List<User> getMembers() throws SQLException
     {
         return Learnweb.getInstance().getUserManager().getUsersByOrganisationId(id);
@@ -450,14 +463,11 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     public String getLanguageVariant()
     {
-        // required because `new Locale()` throws a NPE for newly created organizations (they don't use setLanguageVariant)
-        if (languageVariant == null) return "";
         return languageVariant;
     }
 
     public void setLanguageVariant(String languageVariant)
     {
-        // TODO: as we have if condition in getLanguageVariant, this is probably not needed
         this.languageVariant = StringUtils.defaultString(languageVariant);
     }
 
