@@ -1,36 +1,26 @@
-let activeUl;
+$(() => {
+  function hideBreadcrumbMenu(e) {
+    if (e && $(e.target).parents('.breadcrumb-toggle').length) return; // prevent auto-closing when clicked on toggle
+    $('.breadcrumb .ul-active').slideUp('fast', 'easeInOutCirc').removeClass('ul-active');
+  }
 
-function clearActiveUl() {
-  activeUl = $('.ul-active');
-  activeUl.slideUp('fast', 'easeInOutCirc');
-  activeUl.removeClass('ul-active');
-}
+  function showBreadcrumbMenu($bcPageMenu) {
+    $bcPageMenu.addClass('ul-active').slideDown('fast', 'easeInOutCirc');
+    $(document).one('mousedown', hideBreadcrumbMenu); // add event to hide menu when clicked outside
+  }
 
-$(document).ready(() => {
-  let submenu;
-
-  $('.page-menu ul').each(function () {
+  $('.breadcrumb .page-menu ul').each(function () {
     $(this).css({
-      'min-width': $(this).parent().children('.breadcrumb-item').width(),
-      display: 'none',
+      'min-width': $(this).prev('.breadcrumb-item').width(),
+      display: 'none', // this better to do in css
     });
-
-    console.log($(this).parent().children('.breadcrumb-item').width());
   });
 
-  $('a.breadcrumb-toggle').click(function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    submenu = $(this).parent().parent().children('ul');
-    if (!submenu.hasClass('ul-active')) {
-      clearActiveUl();
-      console.log(submenu.html());
-      submenu.addClass('ul-active');
-      submenu.slideDown('fast', 'easeInOutCirc');
-    } else clearActiveUl();
-  });
-
-  $(window).click(() => {
-    clearActiveUl();
+  $('.breadcrumb .breadcrumb-toggle').on('click', function (e) {
+    const submenu = $(this).closest('.page-menu').children('ul');
+    const isActive = submenu.hasClass('ul-active');
+    hideBreadcrumbMenu(); // close all existing menu
+    if (!isActive) showBreadcrumbMenu(submenu); // open new menu if it was not open before
+    return false;
   });
 });
