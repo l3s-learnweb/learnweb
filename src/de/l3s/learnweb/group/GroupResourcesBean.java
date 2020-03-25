@@ -29,7 +29,6 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
-import de.l3s.learnweb.resource.AddFolderBean;
 import de.l3s.learnweb.resource.AddResourceBean;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
@@ -83,9 +82,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private transient TreeNode selectedTreeNode; // Selected node in the left Folder's panel
 
     @Inject
-    private AddFolderBean addFolderBean;
-
-    @Inject
     private AddResourceBean addResourceBean;
 
     @Inject
@@ -99,11 +95,20 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         searchFilters.setMode(SearchMode.group);
     }
 
-    public void resetResources()
+    public void clearCaches()
     {
         paginator = null;
-        folders = null;
         breadcrumbs = null;
+
+        clearFoldersCaches();
+    }
+
+    public void clearFoldersCaches()
+    {
+        if (group != null) group.clearCaches();
+        if (currentFolder != null) currentFolder.clearCaches();
+
+        folders = null;
         foldersTree = null;
     }
 
@@ -220,7 +225,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     public String changeFilters(String queryFilters)
     {
         searchFilters.setFiltersFromString(queryFilters);
-        resetResources();
+        clearCaches();
         return queryFilters;
     }
 
@@ -232,7 +237,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public void onQueryChange()
     {
-        resetResources();
+        clearCaches();
     }
 
     public List<Filter> getAvailableFilters()
@@ -342,7 +347,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                 this.currentFolder = targetFolder;
             }
 
-            resetResources();
+            clearCaches();
         }
         catch(IllegalArgumentException | SQLException e)
         {
@@ -486,7 +491,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         if(items.size() - skipped > 0)
         {
             addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.moved_successfully", items.size() - skipped);
-            resetResources();
+            clearCaches();
         }
     }
 
@@ -523,7 +528,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         if(items.size() - skipped > 0)
         {
             addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.deleted_successfully", items.size() - skipped);
-            resetResources();
+            clearCaches();
         }
 
         if(skipped > 0)
@@ -646,16 +651,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     public void setAddResourceBean(AddResourceBean addResourceBean)
     {
         this.addResourceBean = addResourceBean;
-    }
-
-    public AddFolderBean getAddFolderBean()
-    {
-        return addFolderBean;
-    }
-
-    public void setAddFolderBean(AddFolderBean addFolderBean)
-    {
-        this.addFolderBean = addFolderBean;
     }
 
     public SelectLocationBean getSelectLocationBean()
