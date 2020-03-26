@@ -56,7 +56,7 @@
 
 				<div class="form-group mw-r25">
 					<p:outputLabel for="@next" value="#{msg.email_address}:"/>
-					<p:inputText value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}"/>
+					<p:inputText value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" validator="#{registrationBean.validateEmailAddress}"/>
 					<p:message for="@previous"/>
 				</div>
 
