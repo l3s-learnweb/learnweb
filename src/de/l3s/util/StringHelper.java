@@ -361,4 +361,27 @@ public class StringHelper
         String s = document.html().replaceAll("\\\\n", "\n");
         return Jsoup.clean(s, "", whitelist, new Document.OutputSettings().prettyPrint(false));
     }
+
+    /**
+     * Add HTML bold tags around the query if it is present in the given str
+     * 
+     * @param str
+     * @param query
+     * @return
+     */
+    public static String highlightQuery(String str, String query)
+    {
+        String strLowered = str.toLowerCase();
+
+        int index = strLowered.indexOf(query.toLowerCase());
+
+        StringBuilder result = new StringBuilder();
+        result.append(str);
+        if(index != -1)
+        {
+            result.insert(index + query.length(), "</b>");
+            result.insert(index, "<b>");
+        }
+        return result.toString();
+    }
 }

@@ -40,17 +40,35 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <!-- responsive voice API-->
-    <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB"></script>
-    <h:outputScript library="learnweb-layout" name="js/glossary.js" target="body"/>
 
     <ui:fragment rendered="#{glossaryBean.glossaryResource ne null and not glossaryBean.glossaryResource.deleted}">
+    	<!-- responsive voice API-->
+    	<script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB"></script>
+    	<h:outputScript library="learnweb-layout" name="js/glossary.js" target="body"/>
+    
+        <script>
+        /* see LazyGlossaryTableView comments for more details */
+        function correctPaginatorCount(index) {
+        	var option = $(this);
+        	option.text(option.val()/20);
+        }
+        
+        $(function() {
+            $('#glossary_table_paginator_bottom select option').each(correctPaginatorCount);
+            $('#glossary_table_paginator_top select option').each(correctPaginatorCount);
+        });
+        </script>
 
         <h:panelGroup id="main_component" styleClass="section-glossary" layout="block">
 
             <h:form id="glossary_table_form" prependId="false" styleClass="mb-3">
-                <p:dataTable id="glossary_table" var="item" value="#{glossaryBean.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"
-                             sortBy="#{item.getTimestamp()}" sortOrder="descending">
+					<p:dataTable id="glossary_table" var="item" value="#{glossaryBean.lazyTableItems}" widgetVar="glossTable"                                 
+                                 sortBy="#{item.timestamp}" sortOrder="descending" tableStyle="table-layout: auto;"
+                                  lazy="true" 
+                                 paginator="true" rows="200"
+                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                 rowsPerPageTemplate="100,200,400,1000" 
+                 >
 
                     <p:ajax event="filter" oncomplete="groupRow()"/>
                     <p:ajax event="page" oncomplete="groupRow()"/>
@@ -105,28 +123,28 @@
                         </div>
                     </p:column>
 
-                    <p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topicOne}" filterMatchMode="contains"
+                    <p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topicOne}"
                         filterStyle="width: 90%;" sortBy="#{item.topicOne}">
-                        <h:outputText value="#{item.topicOne}" pt:data-itemId="#{item.entryId}" id="cell1"/>
+                        <h:outputText value="#{item.topicOne}" pt:data-itemId="#{item.entryId}" id="cell1" escape="false"/>
                     </p:column>
-                    <p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topicTwo}" filterMatchMode="contains"
+                    <p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topicTwo}"
                         filterStyle="width: 90%;" sortBy="#{item.topicTwo}">
                         <h:outputText value="#{item.topicTwo}" pt:data-itemId="#{item.entryId}" id="cell2"/>
                     </p:column>
-                    <p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topicThree}" filterMatchMode="contains"
+                    <p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topicThree}"
                         filterStyle="width: 90%;" sortBy="#{item.topicThree}">
                         <h:outputText value="#{item.topicThree}" pt:data-itemId="#{item.entryId}" id="cell3"/>
                     </p:column>
                     <p:column headerText="#{msg['Glossary.Definition']}" sortBy="#{item.description}" filterBy="#{item.description}" filterable="true"
-                        filterMatchMode="contains" filterStyle="width: 90%;">
+                        filterStyle="width: 90%;">
                         <h:outputText value="#{item.description}" pt:data-itemId="#{item.entryId}" id="cell4"/>
                     </p:column>
 
-                    <p:column headerText="#{msg['Glossary.term']}" filterable="true" filterMatchMode="contains" filterBy="#{item.term}"
-                        filterStyle="width: 90%;" sortBy="#{item.topicOne}#{item.topicTwo}#{item.entryId}#{item.term}">
+                    <p:column headerText="#{msg['Glossary.term']}" filterable="true" filterBy="#{item.term}"
+                        filterStyle="width: 90%;">
                         <h:outputText value="#{item.term}"/>
                     </p:column>
-                    <p:column headerText="#{msg.language}" filterBy="#{item.getLanguage()}" filterMatchMode ="in">
+                    <p:column headerText="#{msg.language}" filterBy="#{item.language}">
                         <f:facet name="filter">
                             <p:selectCheckboxMenu value="#{glossaryBean.tableLanguageFilter}" onchange="PF('glossTable').filter()" styleClass="custom-filter" converter="#{localeConverter}" label="#{msg.filter}">
                                 <f:selectItems value="#{glossaryBean.allowedTermLanguages}"/>
@@ -139,7 +157,7 @@
                     <p:column headerText="#{msg['Glossary.use']}">
                         <h:outputText value="#{item.uses}"/>
                     </p:column>
-                    <p:column headerText="#{msg['Glossary.pronounciation']}">
+                    <p:column headerText="#{msg['Glossary.pronounciation']}" style=" width:5%;">
                         <p:commandLink type="button" rendered="#{item.term ne null and glossaryBean.getPronounciationVoice(item.language) ne null}"
                                        onclick="responsiveVoice.speak('#{item.term}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
                             <i class="fa fa-fw fa-volume-up"></i>
@@ -147,18 +165,14 @@
 
                         <h:outputText value="#{item.pronounciation}"/>
                     </p:column>
-                    <p:column headerText="#{msg['Glossary.acronym']}">
+                    <p:column headerText="#{msg['Glossary.acronym']}" filterable="true" filterBy="#{item.acronym}">
                         <h:outputText value="#{item.acronym}"/>
                     </p:column>
-                    <p:column headerText="#{msg.source}">
+                    <p:column headerText="#{msg.source}" filterable="true" filterBy="#{item.source}">
                         <h:outputText value="#{item.source}"/>
                     </p:column>
-                    <p:column headerText="#{msg['Glossary.phraseology']}">
+                    <p:column headerText="#{msg['Glossary.phraseology']}" filterable="true" filterBy="#{item.phraseology}">
                         <h:outputText value="#{item.phraseology}"/>
-                    </p:column>
-
-                    <p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false" style="display:none">
-                        <h:outputText value="#{item.fulltext}"/>
                     </p:column>
                 </p:dataTable>
             </h:form>
@@ -166,7 +180,7 @@
             <p:dialog header="#{msg['Glossary.import_glossary']}" widgetVar="excel_import_dialog" closable="true" responsive="true">
                 <div class="p-grid">
                     <h:form id="import_form" prependId="false">
-                        <h:panelGroup rendered="#{userBean.moderator}" styleClass="p-col-12">
+                        <h:panelGroup rendered="#{userBean.admin}" styleClass="p-col-12">
                             <!-- disabled until completed -->
                             <h:outputFormat value="#{msg['Glossary.overwrite_question']}"/>
                              <br/>
