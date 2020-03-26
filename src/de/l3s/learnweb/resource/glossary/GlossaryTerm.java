@@ -32,12 +32,37 @@ public class GlossaryTerm implements Serializable
     private String source;
     @Size(max = 1500)
     private String phraseology;
-    private Locale language; //TODO:: change to locale when PF bug resolved
+    private Locale language;
     private Timestamp timestamp;
     private boolean termPasted = false;
     private boolean pronounciationPasted = false;
     private boolean acronymPasted = false;
     private boolean phraseologyPasted = false;
+
+    /**
+     * Convenience function that calls the getter of a given field
+     *
+     * @param fieldName
+     * @return
+     */
+    public String get(String fieldName)
+    {
+        switch(fieldName)
+        {
+        case "term":
+            return getTerm();
+        case "pronounciation":
+            return getPronounciation();
+        case "acronym":
+            return getAcronym();
+        case "source":
+            return getSource();
+        case "phraseology":
+            return getPhraseology();
+        default:
+            throw new IllegalArgumentException(fieldName + " is not implemented");
+        }
+    }
 
     /**
      * do nothing constructor

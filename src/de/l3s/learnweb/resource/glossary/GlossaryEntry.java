@@ -80,12 +80,31 @@ public class GlossaryEntry implements Serializable
     {
         StringBuilder text = new StringBuilder();
         //entry details
-        text.append(topicOne + " " + topicTwo + " " + topicThree + " " + description);
+        text.append(topicOne);
+        text.append(' ');
+        text.append(topicTwo);
+        text.append(' ');
+        text.append(topicThree);
+        text.append(' ');
+        text.append(description);
         //term details
         for(GlossaryTerm term : terms)
         {
-            if(!term.isDeleted())
-                text.append(" " + term.getTerm() + " " + term.getAcronym() + " " + term.getPronounciation() + " " + term.getSource() + " " + term.getPhraseology() + " " + term.getUses());
+            if(term.isDeleted())
+                continue;
+
+            text.append(' ');
+            text.append(term.getTerm());
+            text.append(' ');
+            text.append(term.getAcronym());
+            text.append(' ');
+            text.append(term.getPronounciation());
+            text.append(' ');
+            text.append(term.getSource());
+            text.append(' ');
+            text.append(term.getPhraseology());
+            text.append(' ');
+            text.append(term.getUses());
         }
         fulltext = text.toString();
 
@@ -252,4 +271,28 @@ public class GlossaryEntry implements Serializable
         this.timestamp = timestamp;
     }
 
+    /**
+     * Convenience function that calls the getter of a given field
+     *
+     * @param fieldName
+     * @return
+     */
+    public String get(String fieldName)
+    {
+        switch(fieldName)
+        {
+        case "description":
+            return getDescription();
+        case "topicOne":
+            return getTopicOne();
+        case "topicTwo":
+            return getTopicTwo();
+        case "topicThree":
+            return getTopicThree();
+        case "fulltext":
+            return getFulltext();
+        default:
+            throw new IllegalArgumentException(fieldName + " is not implemented");
+        }
+    }
 }

@@ -3,14 +3,18 @@ package de.l3s.learnweb.resource.glossary;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+
+import de.l3s.util.StringHelper;
 
 public class GlossaryTableView implements Serializable
 {
     private static final long serialVersionUID = -757320545292668593L;
     private GlossaryEntry entry;
     private GlossaryTerm term;
+    private String topic1;
 
     public GlossaryTableView()
     {
@@ -24,6 +28,19 @@ public class GlossaryTableView implements Serializable
         this.term = term;
     }
 
+    public GlossaryTableView(GlossaryEntry entry, GlossaryTerm term, Map<String, String> filter)
+    {
+        super();
+        this.entry = entry;
+        this.term = term;
+
+        // TODO this is only an example. Has to be generalized for all fields
+        if(!filter.containsKey("topicOne"))
+            topic1 = entry.getTopicOne();
+        else
+            topic1 = StringHelper.highlightQuery(entry.getTopicOne(), filter.get("topicOne"));
+    }
+
     public int getEntryId()
     {
         return entry.getId();
@@ -31,7 +48,8 @@ public class GlossaryTableView implements Serializable
 
     public String getTopicOne()
     {
-        return entry.getTopicOne();
+        return topic1;
+        //return entry.getTopicOne();
     }
 
     public String getTopicTwo()
@@ -52,6 +70,11 @@ public class GlossaryTableView implements Serializable
     public String getTerm()
     {
         return term.getTerm();
+    }
+
+    public int getTermId()
+    {
+        return term.getId();
     }
 
     public Locale getLanguage()

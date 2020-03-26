@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -74,8 +77,67 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private boolean overwriteGlossary;
 
     private GlossaryParserResponse importResponse;
+    private LazyGlossaryTableView lazyTableItems;
 
-    private Map<Locale, String> pronounciationVoices = new HashMap<>();
+    private static final Map<Locale, String> pronounciationVoices;
+    static // Add pronounciation voices
+    {
+        Map<Locale, String> voices = new HashMap<>();
+
+        voices.put(new Locale.Builder().setLanguage("sq").build(), "Albanian Male");
+        voices.put(new Locale.Builder().setLanguage("ar").build(), "Arabic Male");
+        voices.put(new Locale.Builder().setLanguage("ca").build(), "Catalan Male");
+        voices.put(Locale.CHINESE, "Chinese Male");
+        voices.put(new Locale.Builder().setLanguage("ch").setRegion("HK").build(), "Chinese (Hong Kong) Female");
+        voices.put(Locale.TAIWAN, "Chinese Taiwan Male");
+        voices.put(new Locale.Builder().setLanguage("hr").build(), "Croatian Male");
+        voices.put(new Locale.Builder().setLanguage("cs").build(), "Czech Female");
+        voices.put(new Locale.Builder().setLanguage("da").build(), "Danish Male");
+        voices.put(Locale.GERMAN, "Deutsch Male");
+        voices.put(new Locale.Builder().setLanguage("nl").build(), "Dutch Male");
+        voices.put(Locale.ENGLISH, "UK English Male");
+        voices.put(Locale.UK, "UK English Male");
+        voices.put(Locale.US, "US English Male");
+        voices.put(new Locale.Builder().setLanguage("en").setRegion("AU").build(), "Australian Female");
+        voices.put(new Locale.Builder().setLanguage("et").build(), "Estonian Female");
+        voices.put(new Locale.Builder().setLanguage("fi").build(), "Finnish Female");
+        voices.put(Locale.FRENCH, "French Female");
+        voices.put(Locale.FRANCE, "French Female");
+        voices.put(Locale.CANADA_FRENCH, "French Canadian Female");
+        voices.put(new Locale.Builder().setLanguage("el").build(), "Greek Male");
+        voices.put(new Locale.Builder().setLanguage("hi").setRegion("IN").build(), "Hindi Male");
+        voices.put(new Locale.Builder().setLanguage("hu").build(), "Hungarian Female");
+        voices.put(new Locale.Builder().setLanguage("is").build(), "Icelandic Male");
+        voices.put(new Locale.Builder().setLanguage("in").build(), "Indonesian Male");
+        voices.put(Locale.ITALIAN, "Italian Female");
+        voices.put(Locale.JAPAN, "Japanese Male");
+        voices.put(Locale.KOREA, "Korean Female");
+        voices.put(new Locale.Builder().setLanguage("lv").build(), "Latvian Male");
+        voices.put(new Locale.Builder().setLanguage("mk").build(), "Macedonian Male");
+        voices.put(new Locale.Builder().setLanguage("no").build(), "Norwegian Female");
+        voices.put(new Locale.Builder().setLanguage("pl").build(), "Polish Female");
+        voices.put(new Locale.Builder().setLanguage("pt").build(), "Portuguese Female");
+        voices.put(new Locale.Builder().setLanguage("pt").setRegion("PT").build(), "Portuguese Female");
+        voices.put(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "Brazilian Portuguese Female");
+        voices.put(new Locale.Builder().setLanguage("ro").build(), "Romanian Female");
+        voices.put(new Locale.Builder().setLanguage("ru").build(), "Russian Male");
+        voices.put(new Locale.Builder().setLanguage("sr").build(), "Serbian Male");
+        voices.put(new Locale.Builder().setLanguage("sk").build(), "Slovak Female");
+        voices.put(new Locale.Builder().setLanguage("es").build(), "Spanish Female");
+        voices.put(new Locale.Builder().setLanguage("es").setRegion("ES").build(), "Spanish Female");
+        voices.put(new Locale.Builder().setLanguage("es").setRegion("MX").build(), "Spanish Latin American Female");
+        voices.put(new Locale.Builder().setLanguage("sv").build(), "Swedish Male");
+        voices.put(new Locale.Builder().setLanguage("th").build(), "Thai Female");
+        voices.put(new Locale.Builder().setLanguage("tr").build(), "Turkish Male");
+        voices.put(new Locale.Builder().setLanguage("uk").build(), "Ukrainian Female");
+        voices.put(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male");
+        pronounciationVoices = Collections.unmodifiableMap(voices);
+    }
+
+    public GlossaryBean()
+    {
+
+    }
 
     public void onLoad()
     {
@@ -84,7 +146,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             User user = getUser();
             if(user == null)
                 return;
+
+            Instant start = Instant.now();
             glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
+            log.debug("Glossary loading time: " + Duration.between(start, Instant.now()).toMillis());
+
             if(glossaryResource == null)
             {
                 log.error("Error in loading glossary resource for resource ID: " + resourceId + "\n" + BeanHelper.getRequestSummary());
@@ -106,55 +172,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             availableTopicOne.add(new SelectItem("International relations"));
             availableTopicOne.add(new SelectItem("Globalization"));
             availableTopicOne.add(new SelectItem("Ecology"));
-
-            // Add pronounciation voices
-            pronounciationVoices.put(new Locale.Builder().setLanguage("sq").build(), "Albanian Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("ar").build(), "Arabic Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("ca").build(), "Catalan Male");
-            pronounciationVoices.put(Locale.CHINESE, "Chinese Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("ch").setRegion("HK").build(), "Chinese (Hong Kong) Female");
-            pronounciationVoices.put(Locale.TAIWAN, "Chinese Taiwan Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("hr").build(), "Croatian Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("cs").build(), "Czech Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("da").build(), "Danish Male");
-            pronounciationVoices.put(Locale.GERMAN, "Deutsch Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("nl").build(), "Dutch Male");
-            pronounciationVoices.put(Locale.ENGLISH, "UK English Male");
-            pronounciationVoices.put(Locale.UK, "UK English Male");
-            pronounciationVoices.put(Locale.US, "US English Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("en").setRegion("AU").build(), "Australian Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("et").build(), "Estonian Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("fi").build(), "Finnish Female");
-            pronounciationVoices.put(Locale.FRENCH, "French Female");
-            pronounciationVoices.put(Locale.FRANCE, "French Female");
-            pronounciationVoices.put(Locale.CANADA_FRENCH, "French Canadian Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("el").build(), "Greek Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("hi").setRegion("IN").build(), "Hindi Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("hu").build(), "Hungarian Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("is").build(), "Icelandic Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("in").build(), "Indonesian Male");
-            pronounciationVoices.put(Locale.ITALIAN, "Italian Female");
-            pronounciationVoices.put(Locale.JAPAN, "Japanese Male");
-            pronounciationVoices.put(Locale.KOREA, "Korean Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("lv").build(), "Latvian Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("mk").build(), "Macedonian Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("no").build(), "Norwegian Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("pl").build(), "Polish Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("pt").build(), "Portuguese Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("pt").setRegion("PT").build(), "Portuguese Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "Brazilian Portuguese Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("ro").build(), "Romanian Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("ru").build(), "Russian Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("sr").build(), "Serbian Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("sk").build(), "Slovak Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("es").build(), "Spanish Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("es").setRegion("ES").build(), "Spanish Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("es").setRegion("MX").build(), "Spanish Latin American Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("sv").build(), "Swedish Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("th").build(), "Thai Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("tr").build(), "Turkish Male");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("uk").build(), "Ukrainian Female");
-            pronounciationVoices.put(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male");
 
             // convert tree like glossary structure to flat table
             repaintTable();
@@ -594,7 +611,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -653,6 +670,17 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return tableItems;
     }
 
+    public LazyGlossaryTableView getLazyTableItems()
+    {
+        if(null == lazyTableItems && glossaryResource != null)
+        {
+            lazyTableItems = new LazyGlossaryTableView(glossaryResource);
+
+        }
+
+        return lazyTableItems;
+    }
+
     public int getEntryCount()
     {
         return glossaryResource.getEntries().size();
@@ -698,56 +726,56 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public List<ColumnModel> getColumns()
     {
         List<ColumnModel> columns = new ArrayList<>();
-
+    
         columns.add(new ColumnModel("uses", "uses"));
         columns.add(new ColumnModel("Pronunciation", "pronounciation"));
         columns.add(new ColumnModel("uses", "source"));
         columns.add(new ColumnModel("uses", "phraseology"));
-
+    
         return columns;
     }
-
-
+    
+    
     private void createDynamicColumns() {
         String[] columnKeys = columnTemplate.split(" ");
         columns = new ArrayList<ColumnModel>();
-
+    
         for(String columnKey : columnKeys) {
             String key = columnKey.trim();
-
+    
             if(VALID_COLUMN_KEYS.contains(key)) {
                 columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
             }
         }
     }
-
+    
     public void updateColumns()
     {
         //reset table state
         UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":form:cars");
         table.setValueExpression("sortBy", null);
-
+    
         //update columns
         createDynamicColumns();
     }
-
+    
     static public class ColumnModel implements Serializable
     {
-
+    
         private String header;
         private String property;
-
+    
         public ColumnModel(String header, String property)
         {
             this.header = header;
             this.property = property;
         }
-
+    
         public String getHeader()
         {
             return header;
         }
-
+    
         public String getProperty()
         {
             return property;
