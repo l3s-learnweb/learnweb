@@ -63,8 +63,11 @@ public class SearchLogManager
         super();
         this.learnweb = learnweb;
         this.queue = new LinkedBlockingQueue<>();
+
         this.consumerThread = new Thread(new Consumer());
+        /*
         this.consumerThread.start();
+        */
         this.felAnnotatorPath = learnweb.getProperties().getProperty("FEL_ANNOTATOR_PATH", "");
 
         if(StringUtils.isEmpty(felAnnotatorPath))
