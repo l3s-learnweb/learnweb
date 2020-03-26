@@ -67,7 +67,7 @@
 						<p:message id="universityMessage" showSummary="true" showDetail="false" styleClass="error" for="university" rendered="#{registrationBean.affiliationRequired}" />
 
 						<h:outputLabel for="email">#{msg.email_address}:<h:outputText value=" *" rendered="#{registrationBean.mailRequired}"/></h:outputLabel>
-						<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" />
+						<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" validator="#{registrationBean.validateEmailAddress}" />
 						<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />
 
 
