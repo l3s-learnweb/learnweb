@@ -1,0 +1,264 @@
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="pageTitle" value="#{msg.statistics}"/>
+	<ui:param name="smallPage" value="true"/>
+	<ui:param name="loginRequired" value="true"/>
+	
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="type" value="#{eUMade4AllStatisticsBean.assessmentType}"  />
+			<f:viewAction action="#{eUMade4AllStatisticsBean.onLoad}" />
+		</f:metadata>
+	</ui:define>
+		
+	<ui:define name="center_layout">				
+	
+		<h:outputText value="Missing authentication" rendered="#{not userBean.moderator}" />
+		
+		<ui:fragment rendered="#{userBean.moderator}">	
+			<style type="text/css">
+			 .ui-datatable {margin-bottom:4rem;}
+			 #statistics_table .ui-dt-c { text-align:center; }
+			 #survey_result .ui-datatable-tablewrapper,
+			 #survey_result .ui-paginator { display:none;}
+			</style>
+			<h1><h:outputText value="#{msg.statistics}" escape="false" /></h1>
+			
+			<div class="ui-datatable ui-widget">
+				<table role="grid" id="statistics_table" >
+					<thead>
+						<tr role="row">
+							<th class="ui-state-default" role="columnheader" style="width:20%">
+								<div class="ui-dt-c">
+									<span></span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Aarhus</span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Florence</span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Leeds</span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Messina</span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Rome</span>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					        
+					<tbody class="ui-datatable-data ui-widget-content">
+						<tr class="ui-widget-content ui-datatable-even">
+							<td><div class="">Baseline survey</div></td>
+							<td><div class="ui-dt-c"><a href="survey/results.jsf?resource_id=205861">107</a></div></td>
+							<td><div class="ui-dt-c"><a href="survey/results.jsf?resource_id=213674">30</a></div></td>
+							<td><div class="ui-dt-c"><a href="survey/results.jsf?resource_id=204489">31</a></div></td>
+							<td><div class="ui-dt-c"><a href="survey/results.jsf?resource_id=213673">24</a></div></td>
+							<td><div class="ui-dt-c"><a href="survey/results.jsf?resource_id=204678">82</a></div></td>
+						</tr>
+						<tr class="ui-widget-content ui-datatable-even">
+							<td><div class="">Evaluation form</div></td>
+							<td colspan="5"><div class="ui-dt-c"><a href="survey/results.jsf?resource_id=216012">#{eUMade4AllStatisticsBean.evaluationFormAnswer}</a></div></td>
+						</tr>
+						<tr class="ui-widget-content ui-datatable-even">
+							<td><div class="">Students' satisfaction survey</div></td>
+							<td colspan="5"><div class="ui-dt-c"><a href="survey/results.jsf?resource_id=219453">#{eUMade4AllStatisticsBean.aarhusSurveyAnswer}</a></div></td>
+						</tr>
+						
+						
+					</tbody>
+				</table>
+			</div>	
+			
+			<div class="page_header">
+				<span>
+					Peer assessments
+				</span>
+			</div>			
+	
+			<p:panel>
+				<ul>
+					<li><a href="admin/peer_assessment_pair.jsf?peer_assessment_id=1">Leeds - Rome</a></li>
+					<li><a href="admin/peer_assessment_pair.jsf?peer_assessment_id=2">Aarhus - Florence</a></li>
+					<li><a href="admin/peer_assessment_pair.jsf?peer_assessment_id=3">Aarhus late submissions</a></li>
+				</ul>
+			</p:panel>
+		
+			<div class="page_header">
+				<span>
+					Combined User Statistics
+				</span>
+			</div>			
+			
+			<h:form>	
+				<p:panel>
+					<p>Combines the submitted baseline and evaluation surveys, and the received peer and teacher's assessements per user.</p>
+					<p>Select the type you want to export:</p>
+					<p:selectOneMenu value="#{eUMade4AllStatisticsBean.assessmentType}">
+						<f:selectItem itemValue="0" itemLabel="Select a type" itemDisabled="true"></f:selectItem>
+						<f:selectItem itemValue="25" itemLabel="CORPORATE VIDEO"></f:selectItem>
+						<f:selectItem itemValue="26" itemLabel="ABOUT US PAGE"></f:selectItem>
+						<f:selectItem itemValue="27" itemLabel="FAN VIDEO"></f:selectItem>
+						<f:selectItem itemValue="24" itemLabel="VIDEO MEDIATED INTERACTIONS"></f:selectItem>
+						<f:selectItem itemValue="23" itemLabel="WEBLOGS"></f:selectItem>
+						<p:ajax listener="#{eUMade4AllStatisticsBean.onLoad()}" update="data"></p:ajax>
+					</p:selectOneMenu>
+				</p:panel>
+            </h:form> 
+            
+            <h:form id="data" prependId="false">
+				<p:dataTable id="survey_result" var="result" value="#{eUMade4AllStatisticsBean.userStatistics}" paginator="true" rows="1"
+					rendered="#{eUMade4AllStatisticsBean.assessmentType gt 1}" style="margin-bottom: 1rem;">
+					
+					<f:facet name="footer">
+						<h:commandLink styleClass="excel_export_todo_use">
+							Download data
+							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;" />
+							<p:dataExporter type="xls" target="survey_result" fileName="#{eUMade4AllStatisticsBean.assessmentTypeName}" />
+						</h:commandLink>
+					</f:facet>
+	
+					<p:column headerText="Student id">
+						<h:outputText value="#{result.user.studentId}" />
+					</p:column>
+					<p:column headerText="#{msg.courses}" >					
+						<h:outputText value="#{result.user.courses}" />
+					</p:column>
+					<p:columns var="column" value="#{eUMade4AllStatisticsBean.questionColumns}" headerText="#{column.label}">
+						<h:outputText value="#{result.getAnswer(column.id)}" />
+					</p:columns>
+				</p:dataTable>						
+
+				<div class="page_header">
+					<span>
+						User Overview
+					</span>
+				</div>						
+			
+				<p:panel > 	
+					<p>Each row lists one <b>User</b>, his <b>Submission</b> and the Peer and Teachers <b>Assessement</b> he has received. It shows also the <b>Surveys</b> the user has submitted.</p>
+					
+				</p:panel>
+		
+			
+				<p:dataTable id="processTable" var="stat"
+					value="#{eUMade4AllStatisticsBean.userStatistics}"
+					tableStyle="width: 100%; table-layout:auto"
+					emptyMessage="No pairs found">
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column colspan="${showEmail? 3:2}" headerText="User" style="font-size:1.2em"  />
+							<p:column colspan="3" headerText="Assessment" style="font-size:1.2em"  />
+							<p:column colspan="2" headerText="Surveys" style="font-size:1.2em"  />
+						</p:row>
+
+						<p:row>
+							
+							<p:column headerText="Course"
+								sortBy="#{stat.pair.assessedUser.courses[0].title}">
+							</p:column>
+							<p:column headerText="Student Id"
+								sortBy="#{stat.pair.assessedUser.studentId}">
+							</p:column>
+							<p:column headerText="#{msg.email_address}" rendered="${showEmail}"
+								sortBy="#{stat.pair.assessedUser.email}">
+							</p:column>
+							
+							<p:column headerText="Submission">
+							</p:column>
+
+							<p:column headerText="Peer Assessment" sortBy="#{stat.pair.peerAssessmentSurveyResourceId}">
+							</p:column>
+							
+							<p:column headerText="Teacher's Assessments">
+							</p:column>							
+							
+							<p:column headerText="Baseline">
+							</p:column>
+							
+							<p:column headerText="Evaluation">
+							</p:column>
+						</p:row>
+					</p:columnGroup>
+					
+					<p:column>
+						<h:outputText value="#{stat.pair.assessedUser.courses[0].title}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{stat.pair.assessedUser.studentId}" />
+					</p:column>
+					<p:column rendered="#{showEmail}">
+						<h:outputText value="#{stat.pair.assessedUser.email}" />
+						<h:outputText value="#{stat.pair.assessedUser.id}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLink value="myhome/submission_resources.jsf">
+							<f:param name="user_id" value="#{stat.pair.assessedUserId}"/>
+							<f:param name="submission_id" value="#{stat.pair.submissionId}"/>
+							Submission
+						</h:outputLink>
+					</p:column>
+					
+					<p:column>
+						<h:outputText value="Not submitted" rendered="#{not stat.pair.peerAssessmentUserAnswers.submitted}" styleClass="red" />
+						<h:outputLink value="survey/answer.jsf" rendered="#{stat.pair.peerAssessmentUserAnswers.submitted}">
+							<f:param name="resource_id" value="#{stat.pair.peerAssessmentSurveyResourceId}" />							
+							<f:param name="user_id" value="#{stat.pair.assessorUserId}" />
+							<h:outputText value="#{stat.pair.peerAssessment.title}" />
+						</h:outputLink>
+					</p:column>
+					
+					<p:column>	
+						<p:repeat var="user" value="#{stat.pair.assessment.usersWhoSubmitted}">	
+							<h:outputLink value="survey/answer.jsf">
+								<f:param name="resource_id" value="#{stat.pair.assessmentSurveyResourceId}" />							
+								<f:param name="user_id" value="#{user.id}" />							
+								<h:outputText value="#{user.realUsername}" />	 
+							</h:outputLink>
+						</p:repeat>						
+					</p:column>
+					
+					<p:column>
+						<h:outputText value="Not submitted" rendered="#{stat.baselineSurveyResourceId lt 0}" styleClass="red" />
+						<h:outputLink value="survey/answer.jsf" rendered="#{stat.baselineSurveyResourceId gt 0}">
+							<f:param name="resource_id" value="#{stat.baselineSurveyResourceId}" />							
+							<f:param name="user_id" value="#{stat.userId}" />
+							<h:outputText value="Baseline" />
+						</h:outputLink>
+					</p:column>
+					
+						<p:column>
+						<h:outputText value="Not submitted" rendered="#{stat.evaluationSurveyResourceId lt 0}" styleClass="red" />
+						<h:outputLink value="survey/answer.jsf" rendered="#{stat.evaluationSurveyResourceId gt 0}">
+							<f:param name="resource_id" value="#{stat.evaluationSurveyResourceId}" />							
+							<f:param name="user_id" value="#{stat.userId}" />
+							<h:outputText value="Evaluation" />
+						</h:outputLink>
+					</p:column>
+					
+				</p:dataTable>
+			</h:form>
+		</ui:fragment>
+		
+	</ui:define>		
+</ui:composition>

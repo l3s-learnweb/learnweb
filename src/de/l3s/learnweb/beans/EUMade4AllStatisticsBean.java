@@ -39,22 +39,23 @@ public class EUMade4AllStatisticsBean extends ApplicationBean implements Seriali
     }
 
     public void onLoad() throws SQLException
-    {/*
-     if(getUser() == null)
-      return;
-     if(!getUser().isModerator())
-     {
-      addAccessDeniedMessage();
-      return;
-     }
-     
-     205861  107     EU-Aarhus,Public
-     213674  30      EU-Florence
-     204489  31      EU-Leeds
-     213673  24      EU-Messina
-     204678  82      EU-Rome
-     204700  6       EU-Rome
-     */
+    {
+        if(getUser() == null)
+            return;
+        /*
+        if(!getUser().isModerator())
+        {
+         addAccessDeniedMessage();
+         return;
+        }
+        
+        205861  107     EU-Aarhus,Public
+        213674  30      EU-Florence
+        204489  31      EU-Leeds
+        213673  24      EU-Messina
+        204678  82      EU-Rome
+        204700  6       EU-Rome
+        */
 
         /*
          SELECT resource_id , count(user_id), group_concat(distinct title) FROM `lw_survey_resource`
