@@ -25,8 +25,8 @@
     <h:outputText value="#{msg.please_wait}"/>
 </p:blockUI>
 
-<h:panelGroup styleClass="row no-gutters resources-panel mb-n3" layout="block">
-    <div class="col-12 col-folders ui-panel ui-widget flex-column d-none d-md-flex">
+<h:panelGroup id="resourcesPanel" styleClass="row no-gutters resources-panel mb-n3" layout="block">
+    <h:panelGroup styleClass="col-12 col-folders ui-panel ui-widget flex-column d-none d-md-flex" layout="block" rendered="#{groupResourcesBean.showFoldersTree}">
         <div class="ui-panel-titlebar ui-widget-header">
             <span class="ui-panel-title">#{msg.folders}</span>
         </div>
@@ -47,21 +47,29 @@
                               rendered="#{empty groupResourcesBean.group.subFolders}"/>
             </h:form>
         </div>
-    </div>
+    </h:panelGroup>
     <div class="col-12 col-resources ui-panel ui-widget d-flex flex-column">
         <h:form id="res_toolbar">
             <p:toolbar styleClass="d-flex align-items-center justify-content-between">
                 <f:facet name="left">
-                    <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'grid'}">
+                    <p:commandButton icon="fa fa-folder-open" title="#{msg.show_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();" rendered="#{!groupResourcesBean.showFoldersTree}">
+                        <f:setPropertyActionListener target="#{groupResourcesBean.showFoldersTree}" value="true"/>
+                    </p:commandButton>
+
+                    <p:commandButton icon="fa fa-folder" title="#{msg.hide_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.showFoldersTree}">
+                        <f:setPropertyActionListener target="#{groupResourcesBean.showFoldersTree}" value="false"/>
+                    </p:commandButton>
+
+                    <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view == 'table'}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="grid"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-table" title="#{msg.table_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'table'}">
-                        <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="table"/>
+                    <p:commandButton icon="fa fa-th-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view == 'grid'}">
+                        <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="list"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'list'}">
-                        <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="list"/>
+                    <p:commandButton icon="fa fa-list" title="#{msg.table_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view == 'list'}">
+                        <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="table"/>
                     </p:commandButton>
 
                     <!-- TODO: The download dialog and its bean must be improved before it can be shown -->

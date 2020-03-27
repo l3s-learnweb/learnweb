@@ -68,6 +68,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     // Grid or List view of group resources
     private ResourceView view = ResourceView.grid;
+    private boolean showFoldersTree = false;
     private final int pageSize;
 
     // In group search/filters
@@ -611,6 +612,16 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     public void setView(final ResourceView view)
     {
         this.view = view;
+    }
+
+    public boolean isShowFoldersTree()
+    {
+        return showFoldersTree;
+    }
+
+    public void setShowFoldersTree(final boolean showFoldersTree)
+    {
+        this.showFoldersTree = showFoldersTree;
     }
 
     public String getQuery()
