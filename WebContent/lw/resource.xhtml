@@ -37,10 +37,10 @@
 						<ui:param name="res" value="#{resourceDetailBean.resource}"/>
 					</ui:decorate>
 				</div>
-				<div class="col col-lg-4 res-view-details">
+				<div class="col-12 col-lg-4 res-view-details">
 					<div class="res-view-controls">
 						<div class="mr-auto">
-							<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn ui-button-lg" title="#{msg.edit_resource}"
+							<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn" title="#{msg.edit_resource}"
 											 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceViewForm" global="false" form="resourceViewForm"
 											 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').hide();"/>
 
@@ -49,21 +49,21 @@
 							</ui:decorate>
 						</div>
 						<div class="ml-auto">
-							<p:button icon="fa fa-eye-slash" styleClass="secondary-btn ui-button-lg" title="#{msg.toggle_details}"
+							<p:button icon="fa fa-eye-slash" styleClass="secondary-btn" title="#{msg.toggle_details}"
 									  onclick="$('.res-view-details').toggleClass('collapse-details');$('.ui-icon', this).toggleClass('fa-eye-slash fa-eye');return false;"/>
 
-							<p:commandButton icon="fa fa-times" styleClass="secondary-btn ui-button-lg show-in-iframe" title="#{msg.close}"
+							<p:commandButton icon="fa fa-times" styleClass="secondary-btn show-in-iframe" title="#{msg.close}"
 											 action="#{resourceDetailBean.cancelEdit}" immediate="true" form="resourceViewForm"
 											 onstart="parent.$.fancybox.close();"/>
 						</div>
 					</div>
 
 					<div class="res-view-panel">
-						<h1>
+						<h2>
 							<a href="#{resourceDetailBean.resource.learnwebUrl}">
 								<h:outputText value="#{resourceDetailBean.resource.title}" escape="false"/>
 							</a>
-						</h1>
+						</h2>
 
 						<h:form id="resourceViewForm" prependId="false" styleClass="resource-details">
 							<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">

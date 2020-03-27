@@ -16,27 +16,6 @@ body {
     }
   }
 
-  .ui-button-lg {
-    font-size: $font-size-base * 1.5;
-
-    .ui-icon {
-      font-size: $font-size-base * 1.5;
-      height: $font-size-base * 1.5;
-      min-width: $font-size-base * 1.5;
-    }
-
-    &.ui-button-icon-only {
-      .ui-button-text {
-        padding: $input-btn-padding-y * 1.5;
-      }
-
-      .ui-icon {
-        margin-top: -1.6*$input-btn-padding-y * 1.5;
-        margin-left: -7px * 1.5;
-      }
-    }
-  }
-
   .fileupload-minimal {
     .ui-fileupload-buttonbar {
       padding: 0;

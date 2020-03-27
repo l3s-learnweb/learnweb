@@ -256,14 +256,14 @@
 				</ul>
 			</h:panelGroup>
 
-			<h:panelGroup id="new_tag_block" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
+			<h:panelGroup layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
 				<div class="form-group mb-1">
-					<p:inputText value="#{resourceDetailBean.tagName}" styleClass="flex-grow-1" placeholder="#{msg.new_tag_placeholder}" required="true"/>
+					<p:inputText id="tag_text_input" value="#{resourceDetailBean.tagName}" styleClass="flex-grow-1" placeholder="#{msg.new_tag_placeholder}" required="true"/>
 					<p:message for="@previous"/>
 				</div>
 
-				<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" global="false" process=":new_tag_block"
-								 update=":new_tag_block :tags_list :growl" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
+				<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" global="false" process=":tag_text_input" partialSubmit="true"
+								 update=":tag_text_input :tags_list :growl" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
 			</h:panelGroup>
@@ -273,14 +273,14 @@
 	<ui:fragment rendered="#{not empty res.comments or res.canAnnotateResource(userBean.user)}">
 		<dt class="col-sm-3">#{msg.comments}:</dt>
 		<dd class="col-sm-9">
-			<h:panelGroup id="new_comment_block" styleClass="mb-2" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
+			<h:panelGroup styleClass="mb-2" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
 				<div class="form-group mb-1">
-					<p:inputTextarea rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.new_comment_placeholder}" required="true" styleClass="d-block"/>
+					<p:inputTextarea id="comment_text_input" rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.new_comment_placeholder}" required="true" styleClass="d-block"/>
 					<p:message for="@previous"/>
 				</div>
 
 				<p:commandButton value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" global="false"
-								 update=":comments_list :new_comment_block :growl" process=":new_comment_block"
+								 update=":comments_list :comment_text_input :growl" process=":comment_text_input" partialSubmit="true"
 								 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
