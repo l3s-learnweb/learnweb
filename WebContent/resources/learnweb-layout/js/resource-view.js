@@ -46,24 +46,9 @@ const editorFrames = [];
 function loadPreviewEditor() {
   if (document.getElementById('iframe_editor')) {
     loadEditorScript(editorConfigValues.clientUrl);
-    editorFrames.push(['iframe_editor', 'embedded', editorConfigValues]);
+    editorFrames.push(['iframe_editor', 'desktop', editorConfigValues]);
   }
 }
-
-function loadModalEditor() {
-  loadEditorScript(editorConfigValues.clientUrl);
-  attachEditor('modal_editor', 'desktop', editorConfigValues);
-
-  $.fancybox.open({
-    src: '#modal_editor_wrapper',
-    type: 'inline',
-  }, {
-    baseClass: 'fancybox-iframe-inline',
-    closeExisting: true,
-    smallBtn: false,
-  });
-}
-
 
 function loadScript(scriptUrl, callback) {
   const s = document.createElement('script');

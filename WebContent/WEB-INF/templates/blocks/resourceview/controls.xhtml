@@ -19,12 +19,4 @@
     </p:linkButton>
 
     <p:linkButton href="#{res.urlProxied}" target="_blank" icon="fa fa-external-link" styleClass="secondary-btn ui-button-lg" title="#{res.url}" rendered="#{res.type eq 'text' or res.type eq 'website' or res.type eq 'pdf'}"/>
-
-    <ui:fragment rendered="#{res.isOfficeResource() and not res.isOffline()}">
-        <p:button onclick="loadModalEditor();return false;" value="Open editor" icon="fa fa-arrows-alt"/>
-
-        <div class="collapse" id="modal_editor_wrapper">
-            <div id="modal_editor"></div>
-        </div>
-    </ui:fragment>
 </ui:composition>
