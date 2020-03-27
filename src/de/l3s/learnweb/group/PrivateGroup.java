@@ -11,12 +11,10 @@ public class PrivateGroup extends Group
 {
     private static final long serialVersionUID = -4541934616443225307L;
 
-    private User user;
-
     public PrivateGroup(final String title, final User user)
     {
         super(0, title);
-        this.user = user;
+        setLeader(user);
     }
 
     /**
@@ -27,7 +25,7 @@ public class PrivateGroup extends Group
     {
         if(folders == null)
         {
-            folders = Learnweb.getInstance().getGroupManager().getFolders(getId(), 0, user.getId());
+            folders = Learnweb.getInstance().getGroupManager().getFolders(getId(), 0, getLeaderUserId());
         }
 
         return folders;

@@ -351,13 +351,13 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return leaderUserId;
     }
 
-    public void setLeader(User user) throws SQLException
+    public void setLeader(User user)
     {
         this.leaderUserId = user.getId();
         this.leader = user;
     }
 
-    public void setLeaderUserId(int userId) throws SQLException
+    public void setLeaderUserId(int userId)
     {
         this.leaderUserId = userId;
         this.leader = null; // force reload
