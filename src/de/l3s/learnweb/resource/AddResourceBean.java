@@ -220,7 +220,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             createThumbnailThread.join(1000);
 
             log.debug("Next step");
-            addResource();
         }
         catch(Exception e)
         {
@@ -233,7 +232,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         if (this.resource.isOfficeResource())
         {
             this.createDocument();
-            return;
         }
 
         try
