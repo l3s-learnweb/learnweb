@@ -116,12 +116,14 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     public boolean isChildOf(int folderId) throws SQLException
     {
-        if (folderId == 0) return true;
+        if(folderId == 0)
+            return true;
 
         Folder parentFolder = this.getParentFolder();
         while(parentFolder != null)
         {
-            if (parentFolder.getId() == folderId) return true;
+            if(parentFolder.getId() == folderId)
+                return true;
             parentFolder = parentFolder.getParentFolder();
         }
 
@@ -130,7 +132,8 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     public boolean isParentOf(int folderId) throws SQLException
     {
-        if (folderId == 0) return false;
+        if(folderId == 0)
+            return false;
 
         Folder parentFolder = Learnweb.getInstance().getGroupManager().getFolder(folderId);
         return parentFolder.isChildOf(getId());
@@ -247,13 +250,15 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
                 folder = folder.getParentFolder();
             }
 
-            if(id != 0) sb.append(" > ").append(title);
+            if(id != 0)
+                sb.append(" > ").append(title);
             sb.insert(0, getGroup() != null ? getGroup().getTitle() : "Private resources");
             prettyPath = sb.toString();
         }
         return prettyPath;
     }
 
+    @Override
     public List<Folder> getSubFolders() throws SQLException
     {
         if(subFolders == null)
@@ -298,16 +303,6 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         {
             parentFolder.clearCaches();
         }
-    }
-
-    public int getCountResources() throws SQLException
-    {
-        return Learnweb.getInstance().getGroupManager().getCountResources(groupId, id);
-    }
-
-    public int getCountSubFolders() throws SQLException
-    {
-        return Learnweb.getInstance().getGroupManager().getCountFolders(groupId, id);
     }
 
     public void clearCaches()

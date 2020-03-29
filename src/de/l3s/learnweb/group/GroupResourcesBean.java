@@ -60,7 +60,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     // bean params
     private int groupId;
     private int folderId;
-    private String saveUrl;
 
     // Group base attributes
     private Group group; // current group
@@ -106,8 +105,10 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public void clearFoldersCaches()
     {
-        if (group != null) group.clearCaches();
-        if (currentFolder != null) currentFolder.clearCaches();
+        if(group != null)
+            group.clearCaches();
+        if(currentFolder != null)
+            currentFolder.clearCaches();
 
         folders = null;
         foldersTree = null;
@@ -133,20 +134,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         return folderId;
     }
 
-    public String getSaveUrl()
-    {
-        return saveUrl;
-    }
-
-    public void setSaveUrl(final String saveUrl)
-    {
-        this.saveUrl = saveUrl;
-    }
-
     public void onLoad() throws SQLException
     {
         User user = getUser();
-        if(null == user) return;
+        if(null == user)
+            return;
 
         if(user.getOrganisation().getId() == 480)
         {
@@ -155,17 +147,14 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
         if(groupId > 0)
         {
-            try
-            {
-                group = getLearnweb().getGroupManager().getGroupById(groupId);
+            group = getLearnweb().getGroupManager().getGroupById(groupId);
 
-                user.setActiveGroup(group);
-                group.setLastVisit(user);
-            }
-            catch(SQLException e)
+            if(null == group)
             {
                 addInvalidParameterMessage("group_id");
+                return;
             }
+            group.setLastVisit(user);
         }
         else
         {
@@ -174,22 +163,13 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
         if(folderId > 0)
         {
-            try
-            {
-                currentFolder = getLearnweb().getGroupManager().getFolder(folderId);
-            }
-            catch(SQLException e)
+            currentFolder = getLearnweb().getGroupManager().getFolder(folderId);
+
+            if(null == currentFolder)
             {
                 addInvalidParameterMessage("folder_id");
+                return;
             }
-        }
-
-        if(saveUrl != null && !saveUrl.isEmpty())
-        {
-            if(addResourceBean.getFormStep() != 1) return; // necessary to avoid a conflict with uploaded resources
-
-            addResourceBean.create("website", group, currentFolder);
-            addResourceBean.getResource().setUrl(saveUrl);
         }
     }
 
@@ -269,16 +249,19 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
         if(searchFilters.getDateToFilterAsString() != null)
             solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
-        if(searchFilters.getCollectorFilter() != null)
-            solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
         if(searchFilters.getAuthorFilter() != null)
             solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
+
+        if(searchFilters.getTagsFilter() != null)
+            solrSearch.setFilterTags(searchFilters.getTagsFilter());
+
+        // TODO @Oleh these filters are specific for archiveweb which doesn't exist any more. Couldn't itbe generalized for the fields defined per organisation?
         if(searchFilters.getCoverageFilter() != null)
             solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
         if(searchFilters.getPublisherFilter() != null)
             solrSearch.setFilterPublisher(searchFilters.getPublisherFilter());
-        if(searchFilters.getTagsFilter() != null)
-            solrSearch.setFilterTags(searchFilters.getTagsFilter());
+        if(searchFilters.getCollectorFilter() != null)
+            solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
 
         SolrPaginator sp = new SolrPaginator(solrSearch);
         // searchFilters.cleanAll();
@@ -289,7 +272,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public List<Folder> getSubFolders() throws SQLException
     {
-        if (folders == null)
+        if(folders == null)
         {
             folders = currentFolder == null ? group.getSubFolders() : currentFolder.getSubFolders();
         }
@@ -298,7 +281,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public TreeNode getFoldersTree() throws SQLException
     {
-        if (foldersTree == null)
+        if(foldersTree == null)
         {
             foldersTree = getLearnweb().getGroupManager().getFoldersTree(group, HasId.getIdOrDefault(currentFolder, 0));
         }
@@ -307,13 +290,13 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public List<Folder> getBreadcrumbs()
     {
-        if (breadcrumbs == null && currentFolder != null)
+        if(breadcrumbs == null && currentFolder != null)
         {
             breadcrumbs = new ArrayList<>();
             try
             {
                 Folder folder = currentFolder;
-                while (folder != null && folder.getId() > 0)
+                while(folder != null && folder.getId() > 0)
                 {
                     breadcrumbs.add(0, folder);
                     folder = folder.getParentFolder();
@@ -335,14 +318,15 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         try
         {
             int folderId = Integer.parseInt(params.get("folderId"));
-            if (folderId == 0)
+            if(folderId == 0)
             {
                 this.currentFolder = null;
             }
             else
             {
                 Folder targetFolder = getLearnweb().getGroupManager().getFolder(folderId);
-                if(targetFolder == null) throw new IllegalArgumentException("Target folder does not exists.");
+                if(targetFolder == null)
+                    throw new IllegalArgumentException("Target folder does not exists.");
 
                 log(Action.opening_folder, targetFolder.getGroupId(), targetFolder.getId());
                 this.currentFolder = targetFolder;
@@ -370,34 +354,35 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
             switch(action)
             {
-                case "copy":
-                    this.copyResources(items, targetGroup, targetFolder, false);
+            case "copy":
+                this.copyResources(items, targetGroup, targetFolder, false);
+                break;
+            case "move":
+                if(params.containsKey("destination"))
+                {
+                    JSONObject dest = new JSONObject(params.get("destination"));
+                    int targetGroupId = dest.isNull("groupId") ? group.getId() : dest.getInt("groupId");
+                    int targetFolderId = dest.isNull("folderId") ? 0 : dest.getInt("folderId");
+                    this.moveResources(items, targetGroupId, targetFolderId);
                     break;
-                case "move":
-                    if(params.containsKey("destination"))
-                    {
-                        JSONObject dest = new JSONObject(params.get("destination"));
-                        int targetGroupId = dest.isNull("groupId") ? group.getId() : dest.getInt("groupId");
-                        int targetFolderId = dest.isNull("folderId") ? 0 : dest.getInt("folderId");
-                        this.moveResources(items, targetGroupId, targetFolderId);
-                        break;
-                    }
+                }
 
-                    this.moveResources(items, null, null);
-                    break;
-                case "delete":
-                    this.deleteResources(items);
-                    break;
-                case "add-tag":
-                    String tag = params.get("tag");
-                    this.tagResources(items, tag);
-                    break;
-                default:
-                    log.error("Unsupported action: " + action);
-                    break;
+                this.moveResources(items, null, null);
+                break;
+            case "delete":
+                this.deleteResources(items);
+                break;
+            case "add-tag":
+                String tag = params.get("tag");
+                this.tagResources(items, tag);
+                break;
+            default:
+                log.error("Unsupported action: " + action);
+                break;
             }
 
-            if(items.failed() > 0) addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.cant_be_processed", items.failed());
+            if(items.failed() > 0)
+                addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.cant_be_processed", items.failed());
         }
         catch(IllegalArgumentException | IllegalAccessError e)
         {
@@ -411,9 +396,12 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     private void copyResources(final ResourceUpdateBatch items, final Group targetGroup, final Folder targetFolder, boolean isRecursion) throws SQLException
     {
-        if(targetGroup == null) throw new IllegalArgumentException("group_resources.target_not_exists");
-        if(!group.canViewResources(getUser())) throw new IllegalAccessError("group_resources.cant_be_copied");
-        if(!targetGroup.canAddResources(getUser())) throw new IllegalAccessError("group_resources.target_permissions");
+        if(targetGroup == null)
+            throw new IllegalArgumentException("group_resources.target_not_exists");
+        if(!group.canViewResources(getUser()))
+            throw new IllegalAccessError("group_resources.cant_be_copied");
+        if(!targetGroup.canAddResources(getUser()))
+            throw new IllegalAccessError("group_resources.target_permissions");
 
         for(Resource resource : items.getResources())
         {
@@ -440,7 +428,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             items.addTotalFailed(copyChild.failed());
         }
 
-        if(!isRecursion && items.getTotalSize() > 0) addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.copied_successfully", items.getTotalSize());
+        if(!isRecursion && items.getTotalSize() > 0)
+            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.copied_successfully", items.getTotalSize());
     }
 
     private void moveResources(ResourceUpdateBatch items, Integer targetGroupId, Integer targetFolderId) throws SQLException
@@ -448,18 +437,20 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         int skipped = 0;
         if(targetGroupId == null)
         {
-            if (selectLocationBean.getTargetGroup() != null)
+            if(selectLocationBean.getTargetGroup() != null)
             {
                 targetGroupId = selectLocationBean.getTargetGroup().getId();
                 targetFolderId = HasId.getIdOrDefault(selectLocationBean.getTargetFolder(), 0);
             }
-            else throw new IllegalArgumentException("group_resources.target_not_exists");
+            else
+                throw new IllegalArgumentException("group_resources.target_not_exists");
         }
 
         if(targetGroupId != 0)
         {
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-            if(!targetGroup.canAddResources(getUser())) throw new IllegalAccessError("group_resources.target_permissions");
+            if(!targetGroup.canAddResources(getUser()))
+                throw new IllegalAccessError("group_resources.target_permissions");
         }
 
         for(Folder folder : items.getFolders())
@@ -488,7 +479,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             log(Action.move_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
         }
 
-        if(skipped > 0) addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
+        if(skipped > 0)
+            addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
         if(items.size() - skipped > 0)
         {
             addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.moved_successfully", items.size() - skipped);
@@ -511,7 +503,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             folder.delete();
             log(Action.deleting_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
 
-            if(folder.equals(currentFolder)) currentFolder = null;
+            if(folder.equals(currentFolder))
+                currentFolder = null;
         }
 
         for(Resource resource : items.getResources())

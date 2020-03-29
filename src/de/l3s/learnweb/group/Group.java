@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
@@ -40,12 +40,8 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private String title;
     @Length(max = 500)
     private String description;
-    private String metadata1;
     private String hypothesisLink;
     private String hypothesisToken;
-    @Length(max = 50)
-    private String language;
-    private int categoryId;
 
     // restrictions / access policy
 
@@ -55,6 +51,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     public enum POLICY_JOIN // be careful when adding options. The new option must be added to the lw_group table too
     {
         ALL_LEARNWEB_USERS,
+        ORGANISATION_MEMBERS,
         COURSE_MEMBERS,
         NOBODY
     }
@@ -74,8 +71,8 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     public enum POLICY_EDIT // be careful when adding options. The new option must be added to the lw_group table too
     {
         GROUP_MEMBERS,
-        GROUP_LEADER,
-        GROUP_LEADER_AND_FILE_OWNER
+        GROUP_LEADER_AND_FILE_OWNER,
+        GROUP_LEADER
     }
 
     /**
@@ -103,16 +100,13 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private POLICY_JOIN policyJoin = POLICY_JOIN.COURSE_MEMBERS;
     private POLICY_ADD policyAdd = POLICY_ADD.GROUP_MEMBERS;
     private POLICY_EDIT policyEdit = POLICY_EDIT.GROUP_MEMBERS;
-    private POLICY_VIEW policyView = POLICY_VIEW.ALL_LEARNWEB_USERS;
-    private POLICY_ANNOTATE policyAnnotate = POLICY_ANNOTATE.ALL_LEARNWEB_USERS;
+    private POLICY_VIEW policyView = POLICY_VIEW.COURSE_MEMBERS;
+    private POLICY_ANNOTATE policyAnnotate = POLICY_ANNOTATE.COURSE_MEMBERS;
 
     private boolean restrictionForumCategoryRequired = false;
-    private boolean restrictionAnonymousResources = false; // the owner of resources is not shown
     private int maxMemberCount = -1; // defines how many users can join this group
 
     // caches
-    private String categoryTitle;
-    private String categoryAbbreviation;
     protected transient List<Link> documentLinks;
     protected transient List<User> members;
     protected transient List<Link> links;
@@ -266,19 +260,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return title;
     }
 
-    /**
-     * Title + category abbreviation (if group is categorized)
-     *
-     * @return
-     */
-    public String getLongTitle()
-    {
-        if(StringUtils.isNotEmpty(categoryAbbreviation))
-            return "[" + categoryAbbreviation + "] " + title;
-
-        return title;
-    }
-
     public void setTitle(String title) throws SQLException
     {
         this.title = title;
@@ -294,27 +275,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.description = description == null ? null : description.trim();
     }
 
-    public String getLanguage()
-    {
-        return language;
-    }
-
-    public void setLanguage(String language)
-    {
-        this.language = language;
-    }
-
-    public String getMetadata1()
-    {
-        return metadata1;
-    }
-
-    public void setMetadata1(String metadata)
-    {
-        this.metadata1 = metadata;
-    }
-
-    public void setId(int id)
+    void setId(int id)
     {
         this.id = id;
     }
@@ -468,36 +429,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return getLogs(null, 5);
     }
 
-    public int getCategoryId()
-    {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId)
-    {
-        this.categoryId = categoryId;
-    }
-
-    public String getCategoryTitle()
-    {
-        return categoryTitle;
-    }
-
-    public void setCategoryTitle(String categoryTitle)
-    {
-        this.categoryTitle = categoryTitle;
-    }
-
-    public String getCategoryAbbreviation()
-    {
-        return categoryAbbreviation;
-    }
-
-    public void setCategoryAbbreviation(String categoryAbbreviation)
-    {
-        this.categoryAbbreviation = categoryAbbreviation;
-    }
-
     public boolean isRestrictionForumCategoryEnabled()
     {
         try
@@ -631,19 +562,23 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     public boolean canEditResource(User user, AbstractResource resource) throws SQLException
     {
-        if(user == null) // not logged in
+        if(user == null || resource == null)
             return false;
 
-        if(user.isAdmin() || isLeader(user) || getCourse().isModerator(user))
+        if(getCourse().isModerator(user))
             return true;
 
-        if(policyEdit == POLICY_EDIT.GROUP_MEMBERS && isMember(user))
-            return true;
+        switch(policyEdit)
+        {
+        case GROUP_MEMBERS:
+            return isMember(user);
+        case GROUP_LEADER:
+            return isLeader(user);
+        case GROUP_LEADER_AND_FILE_OWNER:
+            return isLeader(user) || resource.getUserId() == user.getId();
+        }
 
-        if(policyEdit == POLICY_EDIT.GROUP_LEADER_AND_FILE_OWNER && resource != null && user != null && resource.getUserId() == user.getId())
-            return true;
-
-        return false;
+        throw new NotImplementedException("this should never happen");
     }
 
     public boolean canDeleteGroup(User user) throws SQLException
@@ -669,13 +604,15 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         {
         case ALL_LEARNWEB_USERS:
             return true;
+        case ORGANISATION_MEMBERS:
+            return getCourse().getOrganisationId() == user.getOrganisationId();
         case COURSE_MEMBERS:
             return getCourse().isMember(user);
         case NOBODY:
             return false;
         }
 
-        return false;
+        throw new NotImplementedException("this should never happen");
     }
 
     public boolean canViewResources(User user) throws SQLException
@@ -724,21 +661,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         }
 
         return false;
-    }
-
-    /**
-     * the owner of resources is not shown if true
-     *
-     * @return
-     */
-    public boolean isRestrictionAnonymousResources()
-    {
-        return restrictionAnonymousResources;
-    }
-
-    public void setRestrictionAnonymousResources(boolean restrictionAnonymousResources)
-    {
-        this.restrictionAnonymousResources = restrictionAnonymousResources;
     }
 
     public int getMaxMemberCount()

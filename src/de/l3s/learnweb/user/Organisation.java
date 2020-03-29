@@ -251,14 +251,6 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("Pre-school");
             metadataFields.add(metadata);
         }
-        else if(id == 848) // Demo (archive course)
-        {
-            metadataFields.add(new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT, true));
-            metadataFields.add(new ResourceMetadataField("collector", MetadataType.INPUT_TEXT, true));
-            metadataFields.add(new ResourceMetadataField("coverage", MetadataType.INPUT_TEXT, true));
-            metadataFields.add(new ResourceMetadataField("publisher", MetadataType.INPUT_TEXT, true));
-            metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
-        }
         else
         {
             metadataFields.add(new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT, true));
@@ -409,8 +401,6 @@ public class Organisation implements Serializable, Comparable<Organisation>
             return "logos/logo_eumade4all.png";
         else if(id == 1210)
             return "logos/logo_lumsa.png";
-        else if(id == 848 || id == 924)
-            return "logos/logo_archiveweb.png";
         else if(id == 480)
             return "logos/logo_yell.png";
 

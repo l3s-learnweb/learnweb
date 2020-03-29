@@ -30,7 +30,7 @@
             <p:column headerText="#{msg.title}" sortBy="#{group.title}">
                 <h:outputLink value="group/resources.jsf">
                     <f:param name="group_id" value="#{group.id}"/>
-                    <h:outputText value="#{group.longTitle}"/>
+                    <h:outputText value="#{group.title}"/>
                 </h:outputLink>
             </p:column>
 

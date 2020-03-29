@@ -3,6 +3,7 @@
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="hideGrowl" value="false"/>
@@ -112,7 +113,15 @@
 						<div class="form-group">
 							<p:outputLabel for="@next" value="#{msg['policy.title.join']}" styleClass="h5"/>
 							<p:selectOneRadio value="#{groupOptionsBean.group.policyJoin}" layout="grid" columns="1">
-								<f:selectItems value="#{groupOptionsBean.group.policyJoinOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
+                                <c:if test="#{userBean.admin}">
+								    <f:selectItem itemValue="ALL_LEARNWEB_USERS" itemLabel="#{msg['policy.option.ALL_LEARNWEB_USERS']}" />
+                                </c:if>
+                                <c:if test="#{groupOptionsBean.group.course.organisation.courses.size() gt 1}">
+                                    <f:selectItem itemValue="ORGANISATION_MEMBERS" itemLabel="#{msg['policy.option.ORGANISATION_MEMBERS']} (#{groupOptionsBean.group.course.organisation.title})" />
+                                </c:if>
+                                <f:selectItem itemValue="COURSE_MEMBERS" itemLabel="#{msg['policy.option.COURSE_MEMBERS']}"/>
+                                <f:selectItem itemValue="NOBODY" itemLabel="#{msg['policy.option.NOBODY']}"/>                               
+           
 							</p:selectOneRadio>
 							<p:message for="@previous"/>
 						</div>

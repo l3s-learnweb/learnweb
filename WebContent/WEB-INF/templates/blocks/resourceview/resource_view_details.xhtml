@@ -119,7 +119,8 @@
 		<dt class="col-sm-3">#{msg.language}:</dt>
 		<dd class="col-sm-9">
 			<p:repeat value="#{res.metadataMultiValue['language']}" var="language" varStatus="status">
-				<h:outputText value="#{msg['language_' += language]}"/>
+				<h:outputText value="#{msg['language_' += language]}" rendered="#{language.length() eq 2}" />
+                <h:outputText value="#{language}" rendered="#{language.length() ne 2}" />
 				<h:outputText value=", " rendered="#{!status.last}" escape="false"/>
 			</p:repeat>
 		</dd>

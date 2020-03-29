@@ -133,20 +133,8 @@ public class CourseManager
      */
     public List<Course> getCoursesByOrganisationId(int organisationId)
     {
+        // it's ok to iterate over the courses because we have only a few
         return cache.values().stream().filter(c -> c.getOrganisationId() == organisationId).collect(Collectors.toList());
-
-        /*
-        List<Course> courses = new CoursesList();
-        
-        
-        for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
-        {
-            if(course.getOrganisationId() == organisationId)
-                courses.add(course);
-        }
-        
-        return courses;
-        */
     }
 
     /**
@@ -282,11 +270,6 @@ public class CourseManager
         }
 
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE course_id = ?"))
-        {
-            delete.setInt(1, course.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_category` WHERE category_course_id = ?"))
         {
             delete.setInt(1, course.getId());
             delete.executeUpdate();

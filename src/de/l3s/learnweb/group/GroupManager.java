@@ -1,6 +1,5 @@
 package de.l3s.learnweb.group;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,12 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group.POLICY_ADD;
 import de.l3s.learnweb.group.Group.POLICY_ANNOTATE;
 import de.l3s.learnweb.group.Group.POLICY_EDIT;
@@ -28,7 +25,6 @@ import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceContainer;
-import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
@@ -45,9 +41,8 @@ import de.l3s.util.Sql;
  */
 public class GroupManager
 {
-
-    // if you change this, you have to change the constructor of Group too
-    private static final String GROUP_COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.metadata1, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count, g.hypothesis_link, g.hypothesis_token";
+    // if you change this, you have to change the createGroup and save method too
+    private static final String GROUP_COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count, g.hypothesis_link, g.hypothesis_token";
     private static final String FOLDER_COLUMNS = "f.folder_id, f.deleted, f.group_id, f.parent_folder_id, f.name, f.description, f.user_id";
     private static Logger log = Logger.getLogger(GroupManager.class);
 
@@ -74,44 +69,23 @@ public class GroupManager
         folderCache.clear();
     }
 
-    private List<Group> getGroups(String query, int... params) throws SQLException
+    private List<Group> getGroups(String query, Object... params) throws SQLException
     {
         List<Group> groups = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement(query);
-
-        int i = 1;
-        for(int param : params)
-            select.setInt(i++, param);
-
-        ResultSet rs = select.executeQuery();
-
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(query))
         {
-            groups.add(createGroup(rs));
+            int i = 1;
+            for(Object param : params)
+                select.setObject(i++, param);
+
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                groups.add(createGroup(rs));
+            }
+
+            return groups;
         }
-        select.close();
-
-        return groups;
-    }
-
-    private List<Group> getGroups2(String query, Object... params) throws SQLException
-    {
-        List<Group> groups = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement(query);
-
-        int i = 1;
-        for(Object param : params)
-            select.setObject(i++, param);
-
-        ResultSet rs = select.executeQuery();
-
-        while(rs.next())
-        {
-            groups.add(createGroup(rs));
-        }
-        select.close();
-
-        return groups;
     }
 
     /**
@@ -121,7 +95,7 @@ public class GroupManager
      */
     public List<Group> getGroupsByUserId(int userId) throws SQLException
     {
-        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title";
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title";
         return getGroups(query, userId);
     }
 
@@ -138,7 +112,7 @@ public class GroupManager
      */
     public List<Group> getGroupsByCourseId(int courseId) throws SQLException
     {
-        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title";
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g  WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title";
         return getGroups(query, courseId);
     }
 
@@ -149,8 +123,8 @@ public class GroupManager
     {
         if(list.isEmpty())
             return Collections.emptyList();
-        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + HasId.implodeIds(list) + ") AND g.deleted = 0 AND `creation_time` > ? ORDER BY title";
-        return getGroups2(query, Timestamp.from(newerThan));//(int) (newerThan.getTime() / 1000));
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g WHERE g.course_id IN(" + HasId.implodeIds(list) + ") AND g.deleted = 0 AND `creation_time` > ? ORDER BY title";
+        return getGroups(query, Timestamp.from(newerThan));//(int) (newerThan.getTime() / 1000));
     }
 
     /**
@@ -160,26 +134,24 @@ public class GroupManager
      */
     public List<Group> getGroupsByUserIdFilteredByCourseId(int userId, int courseId) throws SQLException
     {
-        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title";
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title";
         return getGroups(query, userId, courseId);
     }
 
     public Group getGroupByTitleFilteredByOrganisation(String title, int organisationId) throws SQLException
     {
-        PreparedStatement pstmtGetGroup = learnweb.getConnection()
-                .prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0");
-        pstmtGetGroup.setString(1, title);
-        pstmtGetGroup.setInt(2, organisationId);
-        ResultSet rs = pstmtGetGroup.executeQuery();
+        try(PreparedStatement pstmtGetGroup = learnweb.getConnection()
+                .prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0"))
+        {
+            pstmtGetGroup.setString(1, title);
+            pstmtGetGroup.setInt(2, organisationId);
+            ResultSet rs = pstmtGetGroup.executeQuery();
 
-        if(!rs.next())
-            return null;
+            if(!rs.next())
+                return null;
 
-        Group group = createGroup(rs);
-
-        pstmtGetGroup.close();
-
-        return group;
+            return createGroup(rs);
+        }
     }
 
     private Group createGroup(ResultSet rs) throws SQLException
@@ -192,14 +164,8 @@ public class GroupManager
             group.setTitle(rs.getString("title"));
             group.setDescription(rs.getString("description"));
             group.setLeaderUserId(rs.getInt("leader_id"));
-            group.setMetadata1(rs.getString("metadata1"));
-            group.setLanguage(rs.getString("language"));
             group.setCourseId(rs.getInt("course_id"));
-            group.setCategoryId(rs.getInt("group_category_id"));
-            group.setCategoryTitle(rs.getString("category_title"));
-            group.setCategoryAbbreviation(rs.getString("category_abbreviation"));
             group.setRestrictionForumCategoryRequired(rs.getInt("restriction_forum_category_required") == 1);
-            group.setRestrictionAnonymousResources(rs.getInt("restriction_anonymous_resources") == 1);
             group.setMaxMemberCount(rs.getInt("max_member_count"));
             group.setHypothesisLink(rs.getString("hypothesis_link"));
             group.setHypothesisToken(rs.getString("hypothesis_token"));
@@ -243,9 +209,9 @@ public class GroupManager
             sb.append(",").append(group.getId());
         String groupsIn = sb.substring(1);
 
-        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(" + coursesIn + ") "
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g JOIN lw_course USING(course_id) WHERE g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(" + coursesIn + ") "
                 + publicCourseClause
-                + ") ORDER BY title";
+                + " OR g.policy_join = 'ORGANISATION_MEMBERS' AND organisation_id = " + user.getOrganisationId() + ") ORDER BY title";
 
         return getGroups(query);
     }
@@ -269,20 +235,16 @@ public class GroupManager
         if(null != group)
             return group;
 
-        PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE group_id = ?");
-        pstmtGetGroup.setInt(1, id);
-        ResultSet rs = pstmtGetGroup.executeQuery();
+        try(PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g WHERE group_id = ?"))
+        {
+            pstmtGetGroup.setInt(1, id);
+            ResultSet rs = pstmtGetGroup.executeQuery();
 
-        if(!rs.next())
-            return null;
+            if(!rs.next())
+                return null;
 
-        group = createGroup(rs);
-        pstmtGetGroup.close();
-
-        if(useCache)
-            group = groupCache.put(group);
-
-        return group;
+            return createGroup(rs);
+        }
     }
 
     /**
@@ -295,87 +257,69 @@ public class GroupManager
      */
     public synchronized Group save(Group group) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement(
-                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, metadata1, language, course_id, group_category_id, restriction_anonymous_resources, restriction_forum_category_required, policy_add, policy_annotate, policy_edit, policy_join, policy_view, max_member_count, hypothesis_link, hypothesis_token) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                Statement.RETURN_GENERATED_KEYS);
-
-        if(group.getId() < 0) // the Group is not yet stored at the database
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement(
+                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, course_id, restriction_forum_category_required, policy_add, policy_annotate, policy_edit, policy_join, policy_view, max_member_count, hypothesis_link, hypothesis_token) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS))
         {
-            replace.setNull(1, java.sql.Types.INTEGER);
-
-            if(group.getCategoryId() != 0)
+            if(group.getId() < 0) // the Group is not yet stored at the database
             {
-                GroupCategory category = getGroupCategoryById(group.getCategoryId());
-                group.setCategoryAbbreviation(category.getAbbreviation());
-                group.setCategoryTitle(category.getTitle());
+                replace.setNull(1, java.sql.Types.INTEGER);
             }
-        }
-        else
-            replace.setInt(1, group.getId());
+            else
+                replace.setInt(1, group.getId());
 
-        replace.setString(2, group.getTitle());
-        replace.setString(3, group.getDescription());
-        replace.setInt(4, group.getLeaderUserId());
-        replace.setString(5, group.getMetadata1());
-        replace.setString(6, group.getLanguage());
-        replace.setInt(7, group.getCourseId());
-        replace.setInt(8, group.getCategoryId());
-        replace.setInt(9, group.isRestrictionAnonymousResources() ? 1 : 0);
-        replace.setInt(10, group.isRestrictionForumCategoryRequired() ? 1 : 0);
-        replace.setString(11, group.getPolicyAdd().name());
-        replace.setString(12, group.getPolicyAnnotate().name());
-        replace.setString(13, group.getPolicyEdit().name());
-        replace.setString(14, group.getPolicyJoin().name());
-        replace.setString(15, group.getPolicyView().name());
-        replace.setInt(16, group.getMaxMemberCount());
-        replace.setString(17, group.getHypothesisLink());
-        replace.setString(18, group.getHypothesisToken());
-        replace.executeUpdate();
+            replace.setString(2, group.getTitle());
+            replace.setString(3, group.getDescription());
+            replace.setInt(4, group.getLeaderUserId());
+            replace.setInt(5, group.getCourseId());
+            replace.setInt(6, group.isRestrictionForumCategoryRequired() ? 1 : 0);
+            replace.setString(7, group.getPolicyAdd().name());
+            replace.setString(8, group.getPolicyAnnotate().name());
+            replace.setString(9, group.getPolicyEdit().name());
+            replace.setString(10, group.getPolicyJoin().name());
+            replace.setString(11, group.getPolicyView().name());
+            replace.setInt(12, group.getMaxMemberCount());
+            replace.setString(13, group.getHypothesisLink());
+            replace.setString(14, group.getHypothesisToken());
+            replace.executeUpdate();
 
-        if(group.getId() < 0) // get the assigned id
-        {
-            ResultSet rs = replace.getGeneratedKeys();
-            if(!rs.next())
-                throw new SQLException("database error: no id generated");
-            group.setId(rs.getInt(1));
-            group = groupCache.put(group); // add the new Group to the cache
-        }
-        else if(groupCache.get(group.getId()) != null) //remove old group and add the new one
-        {
-            groupCache.remove(group.getId());
-            group = groupCache.put(group);
-        }
-        replace.close();
+            if(group.getId() < 0) // get the assigned id
+            {
+                ResultSet rs = replace.getGeneratedKeys();
+                if(!rs.next())
+                    throw new SQLException("database error: no id generated");
+                group.setId(rs.getInt(1));
+                group = groupCache.put(group); // add the new Group to the cache
+            }
+            else if(groupCache.get(group.getId()) != null) //remove old group and add the new one
+            {
+                groupCache.remove(group.getId());
+                group = groupCache.put(group);
+            }
 
-        return group;
+            return group;
+        }
+
     }
 
     public void addUserToGroup(User user, Group group) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM `lw_group_user` WHERE `group_id` = ? AND `user_id` = ?");
-        select.setInt(1, group.getId());
-        select.setInt(2, user.getId());
-        ResultSet rs = select.executeQuery();
-        boolean userIsAlreadyMember = rs.next();
-        select.close();
-
-        if(userIsAlreadyMember)
-            return;
-
-        PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_group_user` (`group_id`,`user_id`) VALUES (?,?)");
-        insert.setInt(1, group.getId());
-        insert.setInt(2, user.getId());
-        insert.execute();
-        insert.close();
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT IGNORE INTO `lw_group_user` (`group_id`,`user_id`) VALUES (?,?)"))
+        {
+            insert.setInt(1, group.getId());
+            insert.setInt(2, user.getId());
+            insert.execute();
+        }
     }
 
     public void removeUserFromGroup(User user, Group group) throws SQLException
     {
-        PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE `group_id` = ? AND `user_id` = ?");
-        delete.setInt(1, group.getId());
-        delete.setInt(2, user.getId());
-        delete.execute();
-        delete.close();
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE `group_id` = ? AND `user_id` = ?"))
+        {
+            delete.setInt(1, group.getId());
+            delete.setInt(2, user.getId());
+            delete.execute();
+        }
     }
 
     void deleteGroupSoft(Group group) throws SQLException
@@ -387,15 +331,17 @@ public class GroupManager
 
         List<User> members = group.getMembers(); // load members before connection is deleted
 
-        PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE `group_id` = ?");
-        delete.setInt(1, group.getId());
-        delete.execute();
-        delete.close();
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE `group_id` = ?"))
+        {
+            delete.setInt(1, group.getId());
+            delete.execute();
+        }
 
-        delete = learnweb.getConnection().prepareStatement("UPDATE `lw_group` SET deleted = 1 WHERE `group_id` = ?");
-        delete.setInt(1, group.getId());
-        delete.execute();
-        delete.close();
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("UPDATE `lw_group` SET deleted = 1 WHERE `group_id` = ?"))
+        {
+            delete.setInt(1, group.getId());
+            delete.execute();
+        }
 
         members.forEach(m -> m.clearCaches());
 
@@ -471,39 +417,19 @@ public class GroupManager
     {
         Folder folder = folderCache.get(folderId);
 
-        if(folder == null)
+        if(folder != null)
+            return folder;
+
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `folder_id` = ?"))
         {
-            PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `folder_id` = ?");
             select.setInt(1, folderId);
             ResultSet rs = select.executeQuery();
 
             if(!rs.next())
                 return null;
 
-            folder = createFolder(rs);
-            select.close();
+            return createFolder(rs);
         }
-        return folder;
-    }
-
-    /**
-     * @param groupId
-     * @throws SQLException
-     */
-    public List<Folder> getFolders(int groupId) throws SQLException
-    {
-        List<Folder> folders = new ArrayList<>();
-
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `group_id` = ?");
-        select.setInt(1, groupId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            folders.add(createFolder(rs));
-        }
-        select.close();
-
-        return folders;
     }
 
     /**
@@ -519,17 +445,18 @@ public class GroupManager
             parentFolderId = 0;
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `group_id` = ? AND `parent_folder_id` = ?");
-        select.setInt(1, groupId);
-        select.setInt(2, parentFolderId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `group_id` = ? AND `parent_folder_id` = ?"))
         {
-            folders.add(createFolder(rs));
-        }
-        select.close();
+            select.setInt(1, groupId);
+            select.setInt(2, parentFolderId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                folders.add(createFolder(rs));
+            }
 
-        return folders;
+            return folders;
+        }
     }
 
     /**
@@ -545,94 +472,19 @@ public class GroupManager
             parentFolderId = 0;
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `group_id` = ? AND `parent_folder_id` = ? AND `user_id` = ?");
-        select.setInt(1, groupId);
-        select.setInt(2, parentFolderId);
-        select.setInt(3, userId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `group_id` = ? AND `parent_folder_id` = ? AND `user_id` = ?"))
         {
-            folders.add(createFolder(rs));
+            select.setInt(1, groupId);
+            select.setInt(2, parentFolderId);
+            select.setInt(3, userId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                folders.add(createFolder(rs));
+            }
+
+            return folders;
         }
-        select.close();
-
-        return folders;
-    }
-
-    /**
-     * @param userId
-     * @return
-     * @throws SQLException
-     */
-    public List<Folder> getGroupsForMyResources(int userId) throws SQLException
-    {
-        LinkedList<Folder> folders = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT DISTINCT(group_id), lw_group.title FROM `lw_resource` JOIN lw_group USING(group_id) WHERE `owner_user_id` = ? AND lw_resource.deleted = 0");
-        select.setInt(1, userId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            Folder folder = new Folder();
-            folder.setId(0);
-            folder.setGroupId(rs.getInt("group_id"));
-            folder.setParentFolderId(0);
-            folder.setTitle(rs.getString("title"));
-            folder.setUserId(userId);
-            folders.add(folder);
-        }
-        select.close();
-        return folders;
-    }
-
-    /**
-     * @param groupId
-     * @param parentFolderId
-     * @throws SQLException
-     */
-    public int getCountFolders(int groupId, int parentFolderId) throws SQLException
-    {
-        if(parentFolderId < 0)
-        {
-            parentFolderId = 0;
-        }
-
-        int numberOfRows = 0;
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_group_folder` WHERE `deleted` = 0 AND `group_id` = ? AND `parent_folder_id` = ?");
-        select.setInt(1, groupId);
-        select.setInt(2, parentFolderId);
-        ResultSet rs = select.executeQuery();
-        if(rs.next())
-        {
-            numberOfRows = rs.getInt(1);
-        }
-        select.close();
-
-        return numberOfRows;
-    }
-
-    /**
-     * @param groupId
-     * @param parentFolderId
-     * @throws SQLException
-     */
-    public int getCountResources(int groupId, int parentFolderId) throws SQLException
-    {
-        int numberOfRows = 0;
-        SolrSearch solrSearch = new SolrSearch("*", UtilBean.getUserBean().getUser());
-        solrSearch.setFilterGroups(groupId);
-        solrSearch.setFilterFolder(parentFolderId, true);
-
-        try
-        {
-            solrSearch.getResourcesByPage(1);
-            numberOfRows = (int) solrSearch.getQueryResponse().getResults().getNumFound();
-        }
-        catch(IOException | SolrServerException e)
-        {
-            log.fatal("Couldn't get resource counter in group", e);
-        }
-
-        return numberOfRows;
     }
 
     public void moveFolder(Folder folder, int newParentFolderId, int newGroupId) throws SQLException
@@ -685,37 +537,37 @@ public class GroupManager
 
     public Folder saveFolder(Folder folder) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name, description, user_id, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-
-        if(folder.getId() < 0) // the folder is not yet stored at the database
-            replace.setNull(1, java.sql.Types.INTEGER);
-        else
-            replace.setInt(1, folder.getId());
-        replace.setInt(2, folder.getGroupId());
-        replace.setInt(3, folder.getParentFolderId());
-        replace.setString(4, folder.getTitle());
-        replace.setString(5, folder.getDescription());
-        replace.setInt(6, folder.getUserId());
-        replace.setInt(7, folder.isDeleted() ? 1 : 0);
-        replace.executeUpdate();
-
-        if(folder.getId() < 0) // get the assigned id
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name, description, user_id, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
         {
-            ResultSet rs = replace.getGeneratedKeys();
-            if(!rs.next())
-                throw new SQLException("database error: no id generated");
-            folder.setId(rs.getInt(1));
-            folder = folderCache.put(folder);
-        }
-        else
-        {
-            folder.clearCaches();
-            folderCache.remove(folder.getId());
-            folder = folderCache.put(folder);
-        }
 
-        replace.close();
-        return folder;
+            if(folder.getId() < 0) // the folder is not yet stored at the database
+                replace.setNull(1, java.sql.Types.INTEGER);
+            else
+                replace.setInt(1, folder.getId());
+            replace.setInt(2, folder.getGroupId());
+            replace.setInt(3, folder.getParentFolderId());
+            replace.setString(4, folder.getTitle());
+            replace.setString(5, folder.getDescription());
+            replace.setInt(6, folder.getUserId());
+            replace.setInt(7, folder.isDeleted() ? 1 : 0);
+            replace.executeUpdate();
+
+            if(folder.getId() < 0) // get the assigned id
+            {
+                ResultSet rs = replace.getGeneratedKeys();
+                if(!rs.next())
+                    throw new SQLException("database error: no id generated");
+                folder.setId(rs.getInt(1));
+                folder = folderCache.put(folder);
+            }
+            else
+            {
+                folder.clearCaches();
+                folderCache.remove(folder.getId());
+                folder = folderCache.put(folder);
+            }
+            return folder;
+        }
     }
 
     public AbstractResource getAbstractResource(String resourceType, int resourceId) throws SQLException
@@ -764,12 +616,13 @@ public class GroupManager
      */
     public void setLastVisit(User user, Group group, int time) throws SQLException
     {
-        PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_group_user` SET `last_visit` = ? WHERE `group_id` = ? AND `user_id` = ?");
-        update.setInt(1, time);
-        update.setInt(2, group.getId());
-        update.setInt(3, user.getId());
-        update.executeUpdate();
-        update.close();
+        try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_group_user` SET `last_visit` = ? WHERE `group_id` = ? AND `user_id` = ?"))
+        {
+            update.setInt(1, time);
+            update.setInt(2, group.getId());
+            update.setInt(3, user.getId());
+            update.executeUpdate();
+        }
     }
 
     /**
@@ -780,74 +633,17 @@ public class GroupManager
      */
     public int getLastVisit(User user, Group group) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT `last_visit` FROM `lw_group_user` WHERE `group_id` = ? AND `user_id` = ?");
-        select.setInt(1, group.getId());
-        select.setInt(2, user.getId());
-        ResultSet rs = select.executeQuery();
-        if(!rs.next())
-            return -1;
-
-        int time = rs.getInt(1);
-        select.close();
-        return time;
-    }
-
-    public List<GroupCategory> getGroupCategoriesByCourse(int courseId) throws SQLException
-    {
-        LinkedList<GroupCategory> categories = new LinkedList<>();
-
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_category_id, category_title, category_abbreviation FROM `lw_group_category` WHERE category_course_id = ? ORDER BY category_title");
-        select.setInt(1, courseId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT `last_visit` FROM `lw_group_user` WHERE `group_id` = ? AND `user_id` = ?"))
         {
-            categories.add(new GroupCategory(rs.getInt(1), courseId, rs.getString(2), rs.getString(3)));
-        }
-
-        select.close();
-        return categories;
-    }
-
-    public GroupCategory getGroupCategoryById(int categoryId) throws SQLException
-    {
-        GroupCategory groupCategory = null;
-
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_category_id, category_course_id, category_title, category_abbreviation FROM `lw_group_category` WHERE group_category_id = ?");
-        select.setInt(1, categoryId);
-        ResultSet rs = select.executeQuery();
-        if(rs.next())
-            groupCategory = new GroupCategory(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4));
-
-        select.close();
-        return groupCategory;
-    }
-
-    public GroupCategory save(GroupCategory category) throws SQLException
-    {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_category` (group_category_id, category_course_id, category_title, category_abbreviation) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-
-        if(category.getId() < 0) // the Group is not yet stored at the database
-            replace.setNull(1, java.sql.Types.INTEGER);
-        else
-            replace.setInt(1, category.getId());
-        replace.setInt(1, category.getCourseId());
-        replace.setString(2, category.getTitle());
-        replace.setString(3, category.getAbbreviation());
-        replace.executeUpdate();
-
-        if(category.getId() < 0) // get the assigned id
-        {
-            ResultSet rs = replace.getGeneratedKeys();
+            select.setInt(1, group.getId());
+            select.setInt(2, user.getId());
+            ResultSet rs = select.executeQuery();
             if(!rs.next())
-                throw new SQLException("database error: no id generated");
-            category.setId(rs.getInt(1));
+                return -1;
 
-            resetCache();
+            int time = rs.getInt(1);
+            return time;
         }
-
-        replace.close();
-
-        return category;
     }
 
     public TreeNode getFoldersTree(Group group, int activeFolder) throws SQLException
@@ -893,17 +689,14 @@ public class GroupManager
 
     public int getMemberCount(int groupId) throws SQLException
     {
-        int count = 0;
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM lw_group_user WHERE group_id = ?");
-        select.setInt(1, groupId);
-        ResultSet rs = select.executeQuery();
-        if(rs.next())
-            count = rs.getInt(1);
-        else
-            throw new IllegalStateException("SQL query returned no result");
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM lw_group_user WHERE group_id = ?"))
+        {
+            select.setInt(1, groupId);
+            ResultSet rs = select.executeQuery();
+            if(rs.next())
+                return rs.getInt(1);
 
-        select.close();
-
-        return count;
+            return 0;
+        }
     }
 }

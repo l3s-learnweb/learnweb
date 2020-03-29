@@ -191,17 +191,11 @@ public class DeleteOldUsers
     private static void deleteAlmostAbandonedGroups() throws Exception
     {
         GroupManager gm = learnweb.getGroupManager();
-        /*
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT g.group_id FROM `lw_group` g LEFT JOIN lw_group_user u USING(group_id) LEFT JOIN lw_resource r USING(group_id) where course_id in (485,891) and YEAR(creation_time) < year(now())-1 GROUP BY g.group_id HAVING count(u.user_id) <= 2 AND count(r.resource_id) <=2 ORDER BY `g`.`creation_time` DESC "))
-          */
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT * FROM `lw_group` WHERE `course_id` = 891"))
 
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
+                "SELECT g.group_id FROM `lw_group` g LEFT JOIN lw_group_user u USING(group_id) LEFT JOIN lw_resource r USING(group_id) where course_id in (485) and YEAR(creation_time) < year(now())-1 GROUP BY g.group_id HAVING count(u.user_id) <= 2 AND count(r.resource_id) <=2 ORDER BY `g`.`creation_time` DESC "))
         {
-
             ResultSet rs = select.executeQuery();
-
             while(rs.next())
             {
                 Group group = gm.getGroupById(rs.getInt(1));
@@ -221,7 +215,7 @@ public class DeleteOldUsers
     {
         GroupManager gm = learnweb.getGroupManager();
 
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_id FROM `lw_group` LEFT JOIN lw_group_user u USING(group_id) WHERE (YEAR(creation_time) < year(now())-1 AND u.group_id IS NULL and course_id != 891) OR deleted = 1"))
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_id FROM `lw_group` LEFT JOIN lw_group_user u USING(group_id) WHERE (YEAR(creation_time) < year(now())-1 AND u.group_id IS NULL) OR deleted = 1"))
         {
 
             ResultSet rs = select.executeQuery();

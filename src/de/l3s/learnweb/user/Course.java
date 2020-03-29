@@ -13,7 +13,6 @@ import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.group.GroupCategory;
 import de.l3s.util.HasId;
 
 public class Course implements Serializable, Comparable<Course>, HasId
@@ -54,7 +53,6 @@ public class Course implements Serializable, Comparable<Course>, HasId
 
     // derived/cached values:
     private int memberCount = -1;
-    private List<GroupCategory> groupCategories;
 
     public Course()
     {
@@ -273,23 +271,6 @@ public class Course implements Serializable, Comparable<Course>, HasId
 
         Course otherCourse = (Course) obj;
         return otherCourse.getId() == getId();
-    }
-
-    public List<GroupCategory> getGroupCategories() throws SQLException
-    {
-        if(null == groupCategories)
-            groupCategories = Learnweb.getInstance().getGroupManager().getGroupCategoriesByCourse(id);
-
-        return groupCategories;
-    }
-
-    public void addGroupCategory(GroupCategory category) throws SQLException
-    {
-        category.setCourseId(id);
-        Learnweb.getInstance().getGroupManager().save(category);
-
-        if(groupCategories != null)
-            groupCategories = null; // clear cache
     }
 
     @Override
