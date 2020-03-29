@@ -52,9 +52,12 @@ public class DeleteOldUsers
             learnweb.getSolrClient().reIndexResource(rm.getResource(200233));
 
             //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
+            /*
             deleteUsersWhoHaveBeenSoftDeleted(1);
             deleteAbandonedGroups();
             deleteAbandonedResources();
+            */
+            deleteAlmostAbandonedGroups();
 
         }
         catch(Throwable e)
@@ -188,9 +191,13 @@ public class DeleteOldUsers
     private static void deleteAlmostAbandonedGroups() throws Exception
     {
         GroupManager gm = learnweb.getGroupManager();
-
+        /*
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT g.group_id FROM `lw_group` g LEFT JOIN lw_group_user u USING(group_id) LEFT JOIN lw_resource r USING(group_id) where course_id in (485,891) and YEAR(creation_time) < year(now())-1 GROUP BY g.group_id HAVING count(u.user_id) <= 2 AND count(r.resource_id) <=2 ORDER BY `g`.`creation_time` DESC "))
+          */
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
+                "SELECT * FROM `lw_group` WHERE `course_id` = 891"))
+
         {
 
             ResultSet rs = select.executeQuery();
