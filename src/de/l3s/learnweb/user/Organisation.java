@@ -223,7 +223,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadataFields.add(new ResourceMetadataField("noname", "Context", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us for what purpose you are using this resource.", MetadataType.FULLWIDTH_DESCRIPTION));
 
-            metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.AUTOCOMPLETE_MULTIPLE);
+            metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.AUTOCOMPLETE_MULTIPLE); // TODO @oleh why is autocomplete used without an autocomplete method
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("Speaking"); // TODO: retrieve from a database
             metadata.getOptions().add("Listening");

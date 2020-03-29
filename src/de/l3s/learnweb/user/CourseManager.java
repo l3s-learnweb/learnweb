@@ -264,7 +264,7 @@ public class CourseManager
         List<User> undeletedUsers = new LinkedList<>(); // users that can't be deleted because they are member of other courses
         for(User user : course.getMembers())
         {
-            if(user.getCourses().size() > 1)
+            if(user.getCourses().size() > 1 || user.isAdmin())
             {
                 log.debug("Can't delete user: " + user);
                 undeletedUsers.add(user);
@@ -274,6 +274,10 @@ public class CourseManager
         }
         for(Group group : course.getGroups())
         {
+            if(group.getCourseId() != course.getId()) // skip public groups
+            {
+                continue;
+            }
             group.deleteHard();
         }
 

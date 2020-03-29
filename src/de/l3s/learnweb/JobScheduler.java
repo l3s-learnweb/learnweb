@@ -43,10 +43,10 @@ public class JobScheduler
         //Cleans up requests once an hour
         scheduler.schedule("0 * * * *", new RequestsTaskHandler());
 
-        //Runs the TED crawler at 23:00 once a week to check for new/update TED videos
-        scheduler.schedule("0 23 * 1 *", new TedCrawlerSimple());
-        //Runs the speech repository crawler at 22:00 once a week to check for new/update of videos
-        scheduler.schedule("0 22 * * 1", new SpeechRepositoryCrawlerSimple());
+        //Runs the TED crawler at 23:00 once a month to check for new/update TED videos
+        scheduler.schedule("0 23 1 * *", new TedCrawlerSimple());
+        //Runs the speech repository crawler at 22:00 once a month to check for new/update of videos
+        scheduler.schedule("0 22 2 * *", new SpeechRepositoryCrawlerSimple());
 
         //Checks bounced mail every day at 3:00AM
         scheduler.schedule("0 3 * * *", new BounceFetcher());

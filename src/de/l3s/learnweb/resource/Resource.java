@@ -150,7 +150,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             // the glossary icon is loaded in GlossaryResource.save()
             if(type == ResourceType.survey)
             {
-                Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(204095); // TODO avoid this load from reource folder
+                Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(204095); // TODO avoid this, load from resource folder
                 setThumbnail0(iconResource.getThumbnail0());
                 setThumbnail1(iconResource.getThumbnail1());
                 setThumbnail2(iconResource.getThumbnail2());
@@ -588,7 +588,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }
@@ -1497,15 +1497,21 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         if(user == null) // not logged in
             return false;
 
+        if(user.isAdmin())
+            return true;
+
         if(user.isModerator())
         {
-            if(getGroupId() == 0)
-                return true; // TODO check whether the user belongs to a course that this moderator is allowed to control
-
-            // check group access permissions
             try
             {
-                return getGroup().getCourse().isModerator(user);
+                if(getGroupId() == 0) // check permission for a private resource
+                {
+                    return UtilBean.getUserBean().canModerateCourses(getUser().getCourses());
+                }
+                else // check group access permissions
+                {
+                    return getGroup().getCourse().isModerator(user);
+                }
             }
             catch(SQLException e)
             {
@@ -1546,7 +1552,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
      */
     public String setMetadataValue(String key, String value)
     {
-        return metadata.put(key, value);
+        if(key == null || value == null)
+        {
+            log.warn("Invalid arguments: key=" + key + "; value=" + value + "; Metadata not added");
+            return null;
+        }
+        return metadata.put(key, value.replace(METADATA_SEPARATOR, ','));
     }
 
     public Set<String> getMetadataKeys()
@@ -1583,7 +1594,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         return metadataMultiValue;
     }
 
-    public Map<String, List<String>> getMetadataMultiValueList()
+    public Map<String, List<String>> getMetadataMultiValueList() // TODO @oleh this method and the class are only used for field.type eq 'AUTOCOMPLETE_MULTIPLE' why can't getMetadataMultiValue used? or can we use the list for all other fields?
     {
         if(null == metadataMultiValueList)
             metadataMultiValueList = new MetadataMultiValueMapListWrapper(getMetadataWrapper());

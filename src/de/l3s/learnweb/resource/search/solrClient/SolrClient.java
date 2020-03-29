@@ -65,11 +65,9 @@ public class SolrClient
      */
     public void indexResource(Resource resource) throws SQLException, IOException, SolrServerException
     {
-        ResourceDocument resourceDocument = new ResourceDocument(resource);
-
         log.debug("index resource: " + resource.getId());
 
-        server.addBean(resourceDocument);
+        server.addBean(new ResourceDocument(resource));
         server.commit();
     }
 

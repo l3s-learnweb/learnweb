@@ -64,7 +64,7 @@ public class SearchLogManager
 
                 this.felAnnotationConsumerThread = new Thread(new FELAnnotationConsumer());
                 this.felAnnotationConsumerThread.start();
-                
+
                 felAnnotate = true;
 
                 //log.debug("FEL Annotator disabled"); // temporarily or for ever?
@@ -250,8 +250,6 @@ public class SearchLogManager
     {
         try
         {
-            log.debug("SearchLogManager url html fetcher thread was stopped");
-
             if(felAnnotate)
             {
                 searchIdQueue.put(LAST_ENTRY);

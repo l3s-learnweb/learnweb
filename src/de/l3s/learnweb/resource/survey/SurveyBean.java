@@ -66,7 +66,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         {
             surveyUserId = getUser().getId();
         }
-        // if a user wants to see the answers of another user, make sure he is a moderator or the survey is part of a peer assessment
+        // if a user wants to see the answers of another user, make sure he is a moderator
         else if(!resource.canModerateResource(getUser()))
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");

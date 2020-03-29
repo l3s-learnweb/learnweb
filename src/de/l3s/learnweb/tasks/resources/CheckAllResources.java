@@ -1,6 +1,10 @@
 package de.l3s.learnweb.tasks.resources;
 
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -41,11 +45,72 @@ public class CheckAllResources
 
             for(Resource resource : resources)
             {
-                log.debug(resource.getLocation());
+                //log.debug(resource);
+                checkMetadata(resource);
             }
 
         }
         learnweb.onDestroy();
+
+        log.info("counts");
+        for(Entry<String, MutableInt> entry : freq.entrySet())
+        {
+            log.info(entry);
+        }
     }
 
+    private static void checkMetadata(Resource resource) throws SQLException
+    {
+        for(Entry<String, String> entry : resource.getMetadata().entrySet())
+        {
+            if(entry.getValue() == null)
+            {
+                log.warn("entry has no value: " + entry); // TODO remove entry
+                resource.getMetadata().remove(entry.getKey());
+                resource.save();
+                continue;
+            }
+
+            if(entry.getValue().indexOf(Resource.METADATA_SEPARATOR) != -1)
+            {
+                count(entry.getKey());
+            }
+        }
+    }
+
+    private static Map<String, MutableInt> freq = new HashMap<String, MutableInt>();
+
+    private static void count(String word)
+    {
+        MutableInt count = freq.get(word);
+        if(count == null)
+        {
+            freq.put(word, new MutableInt());
+        }
+        else
+        {
+            count.increment();
+        }
+    }
+
+    private static class MutableInt
+    {
+        int value = 1; // note that we start at 1 since we're counting
+
+        public void increment()
+        {
+            ++value;
+        }
+
+        public int get()
+        {
+            return value;
+        }
+
+        @Override
+        public String toString()
+        {
+            return Integer.toString(get());
+        }
+    }
 }

@@ -409,6 +409,7 @@ public class GroupManager
      */
     void deleteGroupHard(Group group) throws SQLException
     {
+        log.debug("Delete group: " + group);
         for(Resource resource : group.getResources())
         {
             resource.deleteHard();
@@ -851,7 +852,8 @@ public class GroupManager
 
     public TreeNode getFoldersTree(Group group, int activeFolder) throws SQLException
     {
-        if(group == null) return null;
+        if(group == null)
+            return null;
 
         TreeNode treeNode = new DefaultTreeNode("GroupFolders");
         TreeNode rootNode = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), treeNode);

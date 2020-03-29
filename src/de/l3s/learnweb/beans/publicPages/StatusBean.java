@@ -1,6 +1,5 @@
 package de.l3s.learnweb.beans.publicPages;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.beans.Field;
 
 import de.l3s.learnweb.resource.Comment;
@@ -17,6 +18,8 @@ import de.l3s.learnweb.resource.Tag;
 
 public class ResourceDocument
 {
+    private static final Logger log = Logger.getLogger(ResourceDocument.class);
+
     @Field
     private String id;
 
@@ -132,8 +135,18 @@ public class ResourceDocument
         dynamicFieldsStrings = new HashMap<>(resource.getMetadata().size());
         for(Entry<String, String> entry : resource.getMetadata().entrySet())
         {
-            String[] value = new String[] {entry.getValue()};
-            if (entry.getValue().indexOf(Resource.METADATA_SEPARATOR) != -1) value = StringUtils.split(entry.getValue(), Resource.METADATA_SEPARATOR);
+            if(entry.getValue() == null)
+            {
+                log.warn("entry has no value: " + entry);
+                continue;
+            }
+            String[] value;
+
+            if(entry.getValue().indexOf(Resource.METADATA_SEPARATOR) != -1) // Warning: the presence of the separator char isn't a good indicator for a multi valued field. in the past singe calue fields were allowed to contain this separator
+                value = StringUtils.split(entry.getValue(), Resource.METADATA_SEPARATOR);
+            else
+                value = new String[] { entry.getValue() };
+
             dynamicFieldsStrings.put(entry.getKey() + "_ss", value);
         }
     }

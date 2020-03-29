@@ -18,14 +18,19 @@ public class ReindexAllResources
         Learnweb learnweb = Learnweb.createInstance();
         SolrClient solr = learnweb.getSolrClient();
 
-        /* Reindex resources of single user */
-        // final List<Resource> resources = learnweb.getResourceManager().getResourcesByUserId(9289);
-        // log.debug("Found " + resources.size() + " resources.");
-        // resources.forEach(solr::reIndexResource);
+        learnweb.getResourceManager().setReindexMode(true);
+        // Reindex resources of single user
+        //final List<Resource> resources = learnweb.getResourceManager().getResourcesByUserId(9289);
+
+        // Reindex a single resource
+        //solr.reIndexResource(learnweb.getResourceManager().getResource(219673));
+
+        // Reindex resources of a group
+        learnweb.getGroupManager().getGroupById(1401).getResources().forEach(solr::reIndexResource);
 
         /* Reindex all resources */
         // solr.deleteAllResource();
-        solr.indexAllResources();
+        //solr.indexAllResources();
 
         learnweb.onDestroy();
 
