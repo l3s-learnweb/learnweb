@@ -1,8 +1,8 @@
 package de.l3s.util;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class StringHelperTest
 {
@@ -24,9 +24,8 @@ class StringHelperTest
     void testShortnString()
     {
         assertEquals(
-            "If the string is longer than maxLength it is...",
-            StringHelper.shortnString("If the string is longer than maxLength it is split at the nearest blank space", 50)
-        );
+                "If the string is longer than maxLength it is...",
+                StringHelper.shortnString("If the string is longer than maxLength it is split at the nearest blank space", 50));
     }
 
     @Test
@@ -43,16 +42,13 @@ class StringHelperTest
     void testGetDomainName()
     {
         assertEquals(
-            "learnweb.l3s.uni-hannover.de",
-            StringHelper.getDomainName("https://learnweb.l3s.uni-hannover.de/v3/lw/your_information/index.jsf")
-        );
+                "learnweb.l3s.uni-hannover.de",
+                StringHelper.getDomainName("https://learnweb.l3s.uni-hannover.de/v3/lw/your_information/index.jsf"));
     }
 
     @Test
-    void testEmpty()
+    void testGetDurationInMinutes()
     {
-        assertFalse(StringHelper.empty("test"));
-        assertTrue(StringHelper.empty(""));
-        assertTrue(StringHelper.empty(null));
+        assertEquals("1:31", StringHelper.getDurationInMinutes(91));
     }
 }

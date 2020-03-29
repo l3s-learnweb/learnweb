@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
@@ -25,7 +26,6 @@ import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.StringHelper;
 
 public class Search implements Serializable
 {
@@ -234,7 +234,7 @@ public class Search implements Serializable
 
             // check if an other resource with the same url exists
             // Yovisto urls are not unique in this case we use the file url
-            if(!urlHashMap.add(!StringHelper.empty(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrl()))
+            if(!urlHashMap.add(StringUtils.isNotBlank(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrl()))
             {
                 duplicatedUrlCount++;
                 continue;
@@ -437,7 +437,8 @@ public class Search implements Serializable
 
             //log.debug("getResourcesGroupedBySource: resource " + res.getId() + " location " + res.getLocation());
 
-            if (res.getLocation().equalsIgnoreCase(searchService.name())) continue;
+            if(res.getLocation().equalsIgnoreCase(searchService.name()))
+                continue;
 
             if(resourcesByGroups.contains(resGroup))
             {

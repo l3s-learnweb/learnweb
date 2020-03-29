@@ -52,8 +52,10 @@ public class StringHelper
      */
     public static String shortnString(String str, int maxLength)
     {
-        if(maxLength < 3) throw new IllegalArgumentException("maxLength must be greater than 3");
-        if(null == str) return "";
+        if(maxLength < 3)
+            throw new IllegalArgumentException("maxLength must be greater than 3");
+        if(null == str)
+            return "";
 
         if(str.length() > maxLength)
         {
@@ -66,9 +68,16 @@ public class StringHelper
         return str;
     }
 
+    /**
+     * The same as StringUtils.remove but is removes a char from an array of strings
+     * 
+     * @param values
+     * @param remove
+     * @return
+     */
     public static String[] remove(final String[] values, final char remove)
     {
-        for (int i = 0; i < values.length; ++i)
+        for(int i = 0; i < values.length; ++i)
         {
             values[i] = StringUtils.remove(values[i], remove);
         }
@@ -77,7 +86,7 @@ public class StringHelper
 
     public static List<String> remove(final List<String> values, final char remove)
     {
-        for (int i = 0, l = values.size(); i < l; ++i)
+        for(int i = 0, l = values.size(); i < l; ++i)
         {
             values.set(i, StringUtils.remove(values.get(i), remove));
         }
@@ -127,15 +136,6 @@ public class StringHelper
         }
     }
 
-    public static boolean empty(String str)
-    {
-        if(null == str)
-            return true;
-        if(str.length() == 0)
-            return true;
-        return false;
-    }
-
     public static String implode(Iterable<String> list, String delimiter)
     {
         StringBuilder out = new StringBuilder();
@@ -150,6 +150,7 @@ public class StringHelper
 
     /**
      * TODO: should be replaced by StringUtils.join
+     *
      * @param list
      * @param delimiter
      * @return
@@ -205,27 +206,21 @@ public class StringHelper
     }
 
     /**
-     * Make first character upper case
-     */
-    public static String ucFirst(String input)
-    {
-        return input.substring(0, 1).toUpperCase() + input.substring(1);
-    }
-
-    /**
      * Translates a string into application/x-www-form-urlencoded format using a specific encoding scheme. <br/>
      * This method uses UTF-8. <br/>
      * It's just a convenience method to get rid of the UnsupportedEncodingException.
      */
     public static String urlEncode(String str)
     {
-        if(null == str) return "";
+        if(null == str)
+            return "";
         return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 
     public static String urlDecode(String str)
     {
-        if(null == str) return "";
+        if(null == str)
+            return "";
         return URLDecoder.decode(str, StandardCharsets.UTF_8);
     }
 
@@ -311,6 +306,12 @@ public class StringHelper
             return hex;
     }
 
+    /**
+     * Converts a duration given in seconds to human readable minutes e.g. 90 to 1:30
+     *
+     * @param duration a duration in seconds
+     * @return
+     */
     public static String getDurationInMinutes(int duration)
     {
         int rest = duration % 60;
@@ -364,7 +365,7 @@ public class StringHelper
 
     /**
      * Add HTML bold tags around the query if it is present in the given str
-     * 
+     *
      * @param str
      * @param query
      * @return
