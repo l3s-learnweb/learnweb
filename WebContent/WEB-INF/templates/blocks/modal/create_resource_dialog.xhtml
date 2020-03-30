@@ -32,8 +32,8 @@
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'file'}">
                 <p:outputLabel for="@next" value="#{msg.file}:"/>
-                <p:fileUpload listener="#{addResourceBean.handleFileUpload}" styleClass="fileupload-minimal" mode="advanced" auto="true"
-                              sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update=":growl :create_resource_form" required="true"/>
+                <p:fileUpload id="fileUploadInput" listener="#{addResourceBean.handleFileUpload}" styleClass="fileupload-minimal" mode="advanced" auto="true"
+                              sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update=":growl @form" required="true"/>
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.thumbnail3 != null}">
@@ -65,6 +65,7 @@
                 <p:outputLabel for="@next" value="Survey Close Date:"/>
                 <p:calendar value="#{addResourceBean.surveyCloseDate}" showOn="button"/>-->
             </ui:fragment>
+            <h:outputScript>if (typeof formLoadedCallback === 'function') formLoadedCallback();</h:outputScript>
         </h:panelGroup>
 
         <h:panelGroup layout="block" styleClass="fg-grid mb-3" rendered="#{addResourceBean.formStep != 1}">
@@ -121,7 +122,7 @@
                 <h:outputText value="* #{msg.mandatory_field}"/>
             </div>
             <div class="d-flex flex-row-reverse">
-                <p:commandButton value="#{msg.next}" action="#{addResourceBean.handleUrlInput}" update=":growl :create_resource_form" global="false"
+                <p:commandButton value="#{msg.next}" action="#{addResourceBean.handleUrlInput}" update=":growl @form" global="false"
                                  rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}">
                 </p:commandButton>
 
