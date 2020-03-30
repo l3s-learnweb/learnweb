@@ -71,6 +71,10 @@ public class Organisation implements Serializable, Comparable<Organisation>
     {
         this.id = id;
 
+        // set default options. This is only relevant for new organisation. for existing organisations the options will be set from DB
+        setOption(Option.Resource_Hide_Thumb_rating, true);
+        setOption(Option.Glossary_Enable_Import, true);
+
         createMetadataFields();
     }
 

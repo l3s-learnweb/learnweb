@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
-import de.l3s.learnweb.user.Organisation;
 
 public class ChangeSettingsOfAllCourses
 {
@@ -18,18 +17,18 @@ public class ChangeSettingsOfAllCourses
         for(Course course : learnweb.getCourseManager().getCoursesAll())
         {
             log.debug("Update " + course);
-            course.setOption(Option.Users_Require_mail_address, true);
-            course.setOption(Option.Users_Disable_wizard, false);
+            course.setOption(Option.Groups_Forum_categories_enabled, false);
             course.save();
         }
 
+        /*
         for(Organisation organisation : learnweb.getOrganisationManager().getOrganisationsAll())
         {
             log.debug("Update " + organisation);
             organisation.setOption(Organisation.Option.Privacy_Proxy_enabled, false);
             organisation.setOption(Organisation.Option.Privacy_Tracker_disabled, true);
             learnweb.getOrganisationManager().save(organisation);
-        }
+        }*/
 
         learnweb.onDestroy();
     }

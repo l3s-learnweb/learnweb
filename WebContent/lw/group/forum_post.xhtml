@@ -41,7 +41,7 @@
     <h:form prependId="false">
         <p:panel styleClass="ui-widget-content-p-0 ui-widget-content-border-0">
             <f:facet name="header">
-                <span class="text-light">#{msg['ForumIndex.messages']} #{msg.of}</span> "#{forumPostBean.topic.title}"
+                #{msg['ForumIndex.topic']}: #{forumPostBean.topic.title}
             </f:facet>
             <f:facet name="actions">
                 <p:commandButton value="#{msg['ForumIndex.post_reply']}" process="@this" update=":reply_post_dialog"

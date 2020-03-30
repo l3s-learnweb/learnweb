@@ -56,6 +56,8 @@ public class Course implements Serializable, Comparable<Course>, HasId
 
     public Course()
     {
+        // set default values; They are false by default
+        setOption(Option.Users_Require_mail_address, true);
     }
 
     protected void setOptions(long[] optionValues)

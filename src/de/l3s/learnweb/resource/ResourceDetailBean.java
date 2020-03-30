@@ -161,7 +161,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             resource.save();
 
             log(Action.edit_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
-            addMessage(FacesMessage.SEVERITY_INFO, "resourceUpdated", resource.getTitle());
+            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
 
             resource.unlockResource(getUser());
             viewAction = ViewAction.viewResource;

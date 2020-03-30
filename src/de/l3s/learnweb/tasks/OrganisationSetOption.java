@@ -31,7 +31,8 @@ public class OrganisationSetOption
             OrganisationManager organisationManager = learnweb.getOrganisationManager();
             for(Organisation org : organisationManager.getOrganisationsAll())
             {
-                org.setOption(Option.Resource_Show_Content_Annotation_Field, false);
+                org.setOption(Option.Privacy_Proxy_enabled, false);
+
                 organisationManager.save(org);
             }
         }
