@@ -7,7 +7,10 @@
 <!--@elvariable id="cbean" type="de.l3s.learnweb.dashboard.CommonDashboardUserBean"-->
 <h:form>
     <div class="row">
-        <p:outputPanel styleClass="col-md-4 align-items-end" rendered="#{!cbean.singleUser}">
+        <p:outputPanel styleClass="col-md-4 align-items-end border-right" rendered="#{!cbean.singleUser}">
+            <h5 class="my-2">
+                Step 1. Select user(s) or group(s)
+            </h5>
             <p:selectOneButton value="#{cbean.selectedType}">
                 <p:ajax event="change" update="usersSelectorPanel usersCountPanel"/>
                 <f:selectItem itemLabel="#{msg.users}" itemValue="1"/>
@@ -36,7 +39,11 @@
                 <p><h:outputText value="#{msg.users_selected} #{cbean.selectedUsersIds.size()}" rendered="#{not empty cbean.selectedUsersIds}"/></p>
             </p:outputPanel>
         </p:outputPanel>
-        <p:outputPanel styleClass="col-md-4 align-items-end my-2">
+
+        <p:outputPanel styleClass="col-md-4 align-items-center my-2 border-right">
+            <h5>
+                Step 2. Choose a daterange for data to be shown
+            </h5>
             <div class="row my-2">
                 <div class="col-md-4">
                     <p:outputLabel for="dateStart" value="#{msg.start_date}" styleClass="mr-2"/>
@@ -54,10 +61,15 @@
                 </div>
             </div>
         </p:outputPanel>
-        <p:outputPanel id="submitBtnPanel" styleClass="col-md-4 d-flex align-items-center">
-            <p:commandButton value="#{msg.update}" icon="ui-icon-check" update=":content" action="#{cbean.cleanAndUpdateStoredData}"
-                             disabled="#{empty cbean.selectedUsersIds or cbean.usersLimitReached}">
+        <p:outputPanel id="submitBtnPanel" styleClass="col-md-4 d-flex">
+            <h5 class="my-2">
+                Step 3. Select the data
+            </h5>
+            <div class="row align-items-center">
+            <p:commandButton value="#{msg.select}" icon="ui-icon-check" update=":content" action="#{cbean.cleanAndUpdateStoredData}"
+                                     disabled="#{empty cbean.selectedUsersIds or cbean.usersLimitReached}">
             </p:commandButton>
+            </div>
         </p:outputPanel>
     </div>
 </h:form>
