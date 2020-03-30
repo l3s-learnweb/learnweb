@@ -16,9 +16,9 @@
 
 <ui:define name="center_layout">
 	<h:form styleClass="d-none">
-		<p:remoteCommand name="saveTedResource" actionListener="${tedTranscriptBean.processActionSaveResource()}" partialSubmit="true" immediate="true" process="@this" update=":growl"/>
-		<p:remoteCommand name="submitTedResource" actionListener="${tedTranscriptBean.processActionSubmitResource()}" partialSubmit="true" immediate="true" process="@this" update=":growl :transcript :transcript_options"/>
-		<p:remoteCommand name="saveTranscriptLog" actionListener="${tedTranscriptBean.processActionSaveLog()}" partialSubmit="true" immediate="true" process="@this" update="@none"/>
+		<p:remoteCommand name="saveTedResource" actionListener="${tedTranscriptBean.processActionSaveResource()}" immediate="true" process="@this" update=":growl"/>
+		<p:remoteCommand name="submitTedResource" actionListener="${tedTranscriptBean.processActionSubmitResource()}" immediate="true" process="@this" update=":growl :transcript :transcript_options"/>
+		<p:remoteCommand name="saveTranscriptLog" actionListener="${tedTranscriptBean.processActionSaveLog()}" immediate="true" process="@this" update="@none"/>
 	</h:form>
 
 	<h:outputStylesheet library="vendor" name="spectrum-v1.8.0/spectrum.css"/>

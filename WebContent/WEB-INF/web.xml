@@ -5,6 +5,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
     <display-name>Learnweb Web App</display-name>
+    <description>Learnweb is a collaborative search and sharing system.</description>
 
     <session-config>
         <session-timeout>100</session-timeout>
@@ -17,7 +18,7 @@
         <param-value>${jsfProjectStage}</param-value>
     </context-param>
 
-    <!-- PrimeFaces-->
+    <!-- PrimeFaces https://primefaces.github.io/primefaces/8_0/#/gettingstarted/configuration -->
     <context-param>
 	    <param-name>primefaces.UPLOADER</param-name>
 	    <param-value>native</param-value>
@@ -27,8 +28,8 @@
         <param-value>none</param-value>
     </context-param>
     <context-param>
-        <param-name>primefaces.MOVE_SCRIPTS_TO_BOTTOM</param-name>
-        <param-value>false</param-value> <!-- To use it, we need to remove defining JS variables in <script> blocks of xhtml  -->
+        <param-name>primefaces.SUBMIT</param-name>
+        <param-value>partial</param-value> <!-- Enable partial submit in PrimeFaces - this reduces the network traffic -->
     </context-param>
     <context-param>
         <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
@@ -39,6 +40,8 @@
         <param-value>***REMOVED***</param-value>
     </context-param>
 
+    <!-- Check this recommendations https://primefaces.github.io/primefaces/8_0/#/core/performance?id=recommended-configuration -->
+    <!-- Also this page provides description for everything https://myfaces.apache.org/core23/myfaces-impl/webconfig.html -->
 	<context-param>
 		<description>
             Removes HTML comments from the output like <!--@elvariable id="pageTitle" type="java.lang.String"-->
@@ -56,11 +59,35 @@
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION</param-name>
-        <param-value>300</param-value>
+        <param-value>30</param-value> <!-- TODO: Why do we have so high numbers? PrimeFaces recommends 15 -->
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.NUMBER_OF_SEQUENTIAL_VIEWS_IN_SESSION</param-name>
-        <param-value>300</param-value>
+        <param-value>30</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.EARLY_FLUSH_ENABLED</param-name>
+        <param-value>true</param-value> <!-- Flush the response directly after the head to allow start loading resources on the browser side -->
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.COMPRESS_STATE_IN_SESSION</param-name>
+        <param-value>false</param-value> <!-- Disable ViewState compression (better performance but more memory usage) -->
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.CHECK_ID_PRODUCTION_MODE</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.SUPPORT_JSP_AND_FACES_EL</param-name>
+        <param-value>false</param-value> <!-- Increase startup performance and EL resolution by disable deprecated features -->
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.VIEW_UNIQUE_IDS_CACHE_ENABLED</param-name>
+        <param-value>true</param-value> <!-- Increase cache -->
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.COMPONENT_UNIQUE_IDS_CACHE_SIZE</param-name>
+        <param-value>500</param-value> <!-- Increase cache -->
     </context-param>
     <context-param>
         <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
@@ -86,7 +113,7 @@
     </context-param>
     <context-param>
         <param-name>javax.faces.validator.ENABLE_VALIDATE_WHOLE_BEAN</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value> <!-- Enable if you want to use f:validateWholeBean -->
     </context-param>
     <context-param>
         <param-name>javax.faces.ENABLE_CDI_RESOLVER_CHAIN</param-name>

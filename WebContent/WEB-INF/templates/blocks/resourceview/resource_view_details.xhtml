@@ -263,7 +263,7 @@
 					<p:message for="@previous"/>
 				</div>
 
-				<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" global="false" process=":tag_text_input" partialSubmit="true"
+				<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" global="false" process=":tag_text_input"
 								 update=":tag_text_input :tags_list :growl" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
@@ -281,7 +281,7 @@
 				</div>
 
 				<p:commandButton value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" global="false"
-								 update=":comments_list :comment_text_input :growl" process=":comment_text_input" partialSubmit="true"
+								 update=":comments_list :comment_text_input :growl" process=":comment_text_input"
 								 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
