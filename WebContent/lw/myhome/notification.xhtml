@@ -5,20 +5,20 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="pageTitle" value="#{msg.notification}"/>
+<ui:param name="pageTitle" value="#{msg.notifications}"/>
 
 <f:metadata>
 	<f:viewAction action="#{messageBean.setAllMessagesSeen}" />
 </f:metadata>
 
 <ui:define name="breadcrumb">
-	<lw:breadcrumb-item link="myhome/notification.jsf" title="#{msg.notification}">
+	<lw:breadcrumb-item link="myhome/notification.jsf" title="#{msg.notifications}">
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 	</lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-	<p:panel header="#{msg.notification}">
+	<p:panel header="#{msg.notifications}">
 		<h:panelGroup layout="block" styleClass="w-100 mb-3" rendered="#{userBean.moderator}">
 			<h:outputText value="#{msg.moderator}: "/>
 			<a href="#{request.contextPath}/lw/admin/notification.jsf">

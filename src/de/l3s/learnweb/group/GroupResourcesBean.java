@@ -255,7 +255,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         if(searchFilters.getTagsFilter() != null)
             solrSearch.setFilterTags(searchFilters.getTagsFilter());
 
-        // TODO @Oleh these filters are specific for archiveweb which doesn't exist any more. Couldn't itbe generalized for the fields defined per organisation?
+        // TODO @Oleh these filters are specific for archiveweb which doesn't exist any more. Couldn't it be generalized for the fields defined per organisation?
         if(searchFilters.getCoverageFilter() != null)
             solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
         if(searchFilters.getPublisherFilter() != null)
@@ -354,31 +354,31 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
             switch(action)
             {
-            case "copy":
-                this.copyResources(items, targetGroup, targetFolder, false);
-                break;
-            case "move":
-                if(params.containsKey("destination"))
-                {
-                    JSONObject dest = new JSONObject(params.get("destination"));
-                    int targetGroupId = dest.isNull("groupId") ? group.getId() : dest.getInt("groupId");
-                    int targetFolderId = dest.isNull("folderId") ? 0 : dest.getInt("folderId");
-                    this.moveResources(items, targetGroupId, targetFolderId);
+                case "copy":
+                    this.copyResources(items, targetGroup, targetFolder, false);
                     break;
-                }
+                case "move":
+                    if(params.containsKey("destination"))
+                    {
+                        JSONObject dest = new JSONObject(params.get("destination"));
+                        int targetGroupId = dest.isNull("groupId") ? group.getId() : dest.getInt("groupId");
+                        int targetFolderId = dest.isNull("folderId") ? 0 : dest.getInt("folderId");
+                        this.moveResources(items, targetGroupId, targetFolderId);
+                        break;
+                    }
 
-                this.moveResources(items, null, null);
-                break;
-            case "delete":
-                this.deleteResources(items);
-                break;
-            case "add-tag":
-                String tag = params.get("tag");
-                this.tagResources(items, tag);
-                break;
-            default:
-                log.error("Unsupported action: " + action);
-                break;
+                    this.moveResources(items, null, null);
+                    break;
+                case "delete":
+                    this.deleteResources(items);
+                    break;
+                case "add-tag":
+                    String tag = params.get("tag");
+                    this.tagResources(items, tag);
+                    break;
+                default:
+                    log.error("Unsupported action: " + action);
+                    break;
             }
 
             if(items.failed() > 0)

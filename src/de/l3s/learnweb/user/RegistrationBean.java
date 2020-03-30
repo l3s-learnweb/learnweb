@@ -168,9 +168,20 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     public void validateEmailAddress(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
         String email = (String) value;
-        if(email != null && email.trim().endsWith("aulecsit.uniud.it"))
+        if(email == null)
+            return;
+        email = email.trim().toLowerCase();
+
+        if(StringUtils.endsWithAny(email, "aulecsit.uniud.it", "uni.au.dk", "studeniti.unisalento.it"))
         {
-            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "This mail address is invalid! Usually it is surname.name@spes.uniud.it"));
+            if(email.endsWith("aulecsit.uniud.it"))
+            {
+                throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "This mail address is invalid! Usually it is surname.name@spes.uniud.it"));
+            }
+            else
+            {
+                throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "This mail address is invalid! Check the domain."));
+            }
         }
     }
 

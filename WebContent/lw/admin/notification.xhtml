@@ -5,7 +5,7 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="pageTitle" value="#{msg.notification}"/>
+<ui:param name="pageTitle" value="#{msg.notifications}"/>
 <ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="breadcrumb">
@@ -20,7 +20,7 @@
 
 <ui:define name="center_layout">
 	<h:form>
-		<p:panel header="#{msg.notification}">
+		<p:panel header="#{msg.notifications}">
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg.title}:"/>
 				<p:inputText value="#{adminNotificationBean.title}" id="msg_title"/>
