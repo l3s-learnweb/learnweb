@@ -6,6 +6,10 @@
 
     <display-name>Learnweb Web App</display-name>
 
+    <session-config>
+        <session-timeout>100</session-timeout>
+    </session-config>
+
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <!--<param-value>Development</param-value>-->
@@ -34,53 +38,6 @@
         <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
         <param-value>***REMOVED***</param-value>
     </context-param>
-
-    <error-page>
-        <exception-type>java.sql.SQLNonTransientConnectionException</exception-type>
-        <location>/lw/error-db.jsf</location>
-    </error-page>
-    <error-page>
-        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-        <location>/lw/error-expired.jsf</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/lw/error-404.jsf</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/lw/error.jsf</location>
-    </error-page>
-    <error-page>
-        <error-code>503</error-code>
-        <location>/lw/error-server.jsf</location>
-    </error-page>
-
-    <filter>
-        <filter-name>UrlRewriteFilter</filter-name>
-        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-        <init-param>
-            <param-name>logLevel</param-name>
-            <param-value>ERROR</param-value>
-        </init-param>
-    </filter>
-    <filter>
-        <filter-name>RequestFilter</filter-name>
-        <filter-class>de.l3s.learnweb.web.RequestFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>UrlRewriteFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>RequestFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <session-config>
-        <session-timeout>100</session-timeout>
-    </session-config>
 
 	<context-param>
 		<description>
@@ -143,15 +100,10 @@
         <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
         <param-value>.xhtml</param-value>
     </context-param>
-
-	<!--
-	Because the ImageIO plugin registry (the IIORegistry) is "VM global", it doesn't by default work well with servlet contexts.
-	https://github.com/haraldk/TwelveMonkeys#deploying-the-plugins-in-a-web-app
-	 -->
-	<listener>
-		<display-name>ImageIO service provider loader/unloader</display-name>
-		<listener-class>com.twelvemonkeys.servlet.image.IIOProviderContextListener</listener-class>
-	</listener>
+    <context-param>
+        <param-name>facelets.LIBRARIES</param-name>
+        <param-value>/WEB-INF/learnweb.taglib.xml</param-value>
+    </context-param>
 
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
@@ -202,16 +154,40 @@
         <servlet-class>de.l3s.learnweb.resource.office.HistoryServlet</servlet-class>
         <load-on-startup>5</load-on-startup>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>historyServlet</servlet-name>
         <url-pattern>/history</url-pattern>
     </servlet-mapping>
 
-    <welcome-file-list>
-        <welcome-file>index.jsf</welcome-file>
-        <welcome-file>index.html</welcome-file>
-    </welcome-file-list>
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>ERROR</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>RequestFilter</filter-name>
+        <filter-class>de.l3s.learnweb.web.RequestFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RequestFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--
+	Because the ImageIO plugin registry (the IIORegistry) is "VM global", it doesn't by default work well with servlet contexts.
+	https://github.com/haraldk/TwelveMonkeys#deploying-the-plugins-in-a-web-app
+	 -->
+    <listener>
+        <display-name>ImageIO service provider loader/unloader</display-name>
+        <listener-class>com.twelvemonkeys.servlet.image.IIOProviderContextListener</listener-class>
+    </listener>
 
     <security-constraint>
         <display-name>Restrict access to raw XHTML Documents</display-name>
@@ -222,22 +198,29 @@
         <auth-constraint/>
     </security-constraint>
 
-    <!-- replace remote address with real ip from x-forwarded-for header
-    <filter>
-        <filter-name>RemoteIpFilter</filter-name>
-        <filter-class>org.apache.catalina.filters.RemoteIpFilter</filter-class>
-    </filter>
+    <error-page>
+        <exception-type>java.sql.SQLNonTransientConnectionException</exception-type>
+        <location>/lw/error-db.jsf</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/lw/error-expired.jsf</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/lw/error-404.jsf</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/lw/error.jsf</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/lw/error-server.jsf</location>
+    </error-page>    
 
-    <filter-mapping>
-        <filter-name>RemoteIpFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-    </filter-mapping>
-    -->
-
-    <context-param>
-        <param-name>facelets.LIBRARIES</param-name>
-        <param-value>/WEB-INF/learnweb.taglib.xml</param-value>
-    </context-param>
-
+    <welcome-file-list>
+        <welcome-file>index.jsf</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
 </web-app>
