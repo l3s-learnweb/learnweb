@@ -34,6 +34,25 @@ public class LanguageBundle extends ResourceBundle
 {
     protected static final Logger log = Logger.getLogger(LanguageBundle.class);
     protected static final String BASE_NAME = "de.l3s.learnweb.lang.messages";
+
+    /**
+     * Control that loads only property files and set the empty Locale and hence "messages.properties" as fallback
+     */
+    protected static final Control control = new ResourceBundle.Control()
+    {
+        @Override
+        public Locale getFallbackLocale(String baseName, Locale locale)
+        {
+            return new Locale("");
+        }
+
+        @Override
+        public List<String> getFormats(String baseName)
+        {
+            return ResourceBundle.Control.FORMAT_PROPERTIES;
+        }
+    };
+
     protected static final ConcurrentHashMap<Locale, ResourceBundle> cache = new ConcurrentHashMap<>(7);
     static
     {
@@ -59,11 +78,13 @@ public class LanguageBundle extends ResourceBundle
 
     public static ResourceBundle getLanguageBundle(String baseName, Locale locale)
     {
-        return cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(baseName, loc)));
+
+        return cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(baseName, loc, control)));
     }
 
-    public LanguageBundle(ResourceBundle sourceBundle)
+    private LanguageBundle(ResourceBundle sourceBundle)
     {
+
         ArrayList<String> keys = Collections.list(sourceBundle.getKeys());
 
         values = new HashMap<>(keys.size());
@@ -90,6 +111,8 @@ public class LanguageBundle extends ResourceBundle
             }
         }
         while(replacedAtLeastOneConstant);
+
+        setParent(null); // the entries have been copied -> release memory
     }
 
     private static final String START_CONST = "#[";
@@ -174,21 +197,35 @@ public class LanguageBundle extends ResourceBundle
     public static void main(String[] args)
     {
 
-        Locale locale = new Locale("de", "DE", "");
+        Locale locale = new Locale("en", "US", "");
 
         log.debug(locale + "; " + locale.toLanguageTag());
 
-        ResourceBundle bundle = new LanguageBundle(locale);
+        ResourceBundle bundle = ResourceBundle.getBundle(BASE_NAME, locale);
+        bundle = new LanguageBundle(locale);
         log.debug(bundle.getString("homepageTitle"));
         //bundle = new LanguageBundle(locale);
         log.debug(bundle.getString("register_account_already_wizard"));
         log.debug(bundle.getString("register_lw_account_wizard"));
 
+        log.debug("locale = yy -----------------");
+        locale = new Locale("yy");
+        bundle = new LanguageBundle(locale);
+        log.debug(bundle.getString("homepageTitle"));
+        log.debug(bundle.getString("validation.please_confirm"));
+
+        log.debug("locale = de -----------------");
         locale = new Locale("de");
         bundle = new LanguageBundle(locale);
         log.debug(bundle.getString("homepageTitle"));
+        log.debug(bundle.getString("validation.please_confirm"));
+
+        log.debug("locale = pt -----------------");
+        locale = new Locale("pt");
         bundle = new LanguageBundle(locale);
-        log.debug(bundle.getString("username"));
+        log.debug(bundle.getString("homepageTitle"));
+        log.debug(bundle.getString("validation.please_confirm"));
+        //log.debug(bundle.getString("does not exist"));
 
         log.debug(UtilBean.getLocaleMessage(locale, "Glossary.description"));
 

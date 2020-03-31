@@ -5,9 +5,13 @@ import org.apache.log4j.spi.TriggeringEventEvaluator;
 
 import de.l3s.learnweb.Learnweb;
 
+/**
+ *
+ * Used by Log4j to send mails in batches.
+ *
+ */
 public class CustomEvaluator implements TriggeringEventEvaluator
 {
-
     private long cycleSeconds = 3600000L; // Sending a group of errors if the last check was more than an hour ago
     private long lastCheck = 0L;
     //private Boolean isRunningOnLocalhost = null;
@@ -29,29 +33,4 @@ public class CustomEvaluator implements TriggeringEventEvaluator
             return true;
         }
     }
-
-    /*
-    private boolean isRunningOnLocalhost()
-    {
-        if(isRunningOnLocalhost == null) // called the first time
-        {
-            lastCheck = System.currentTimeMillis();
-            try
-            {
-                isRunningOnLocalhost = (Learnweb.getPropertiesFileName() != "learnweb");
-    
-                if(isRunningOnLocalhost)
-                    Logger.getLogger(CustomEvaluator.class).info("Learnweb is running on Localhost, email logger disabled");
-    
-                return true; // true, to skip first error message
-            }
-            catch(Exception e)
-            {
-                isRunningOnLocalhost = true;
-            }
-        }
-    
-        return isRunningOnLocalhost;
-    }*/
-
 }

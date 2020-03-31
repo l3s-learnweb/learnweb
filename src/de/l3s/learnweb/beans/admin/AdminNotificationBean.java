@@ -21,7 +21,6 @@ import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.StringHelper;
-import de.l3s.util.email.EmailValidator;
 import de.l3s.util.email.Mail;
 
 @Named
@@ -37,7 +36,6 @@ public class AdminNotificationBean extends ApplicationBean
     private boolean moderatorCanSendMail = false;
 
     private User user;
-    private EmailValidator validator = new EmailValidator();
 
     public AdminNotificationBean()
     {
@@ -46,7 +44,7 @@ public class AdminNotificationBean extends ApplicationBean
             return;
 
         if(StringUtils.isNotBlank(user.getEmail()))
-            moderatorCanSendMail = validator.isValid(user.getEmail());
+            moderatorCanSendMail = user.isEmailConfirmed();
     }
 
     public void send() throws SQLException
@@ -90,7 +88,7 @@ public class AdminNotificationBean extends ApplicationBean
             {
                 log.debug("try send mail to: " + user.getEmail());
 
-                if(StringUtils.isEmpty(user.getEmail()) || !validator.isValid(user.getEmail()))
+                if(StringUtils.isEmpty(user.getEmail()) || !user.isEmailConfirmed())
                     usersWithoutMail.add(user.getUsername());
                 else
                     recipients.add(user.getEmail());

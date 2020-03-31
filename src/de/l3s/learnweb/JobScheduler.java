@@ -29,7 +29,9 @@ public class JobScheduler
             return;
 
         // checks if url ends with .de, .com or .de/, if it ends with something like .de/1 than it is not the root instance
-        boolean isRootInstance = this.learnweb.getServerUrl().length() < this.learnweb.getServerUrl().lastIndexOf(".") + 3;
+        //boolean isRootInstance = this.learnweb.getServerUrl().length() < this.learnweb.getServerUrl().lastIndexOf(".") + 3;
+
+        boolean isRootInstance = this.learnweb.getServerUrl().endsWith("learnweb.l3s.uni-hannover.de/v3/"); // TODO need to revert when V3 becomes ROOT
 
         if(!isRootInstance)
         {
@@ -48,8 +50,8 @@ public class JobScheduler
         //Runs the speech repository crawler at 22:00 once a month to check for new/update of videos
         scheduler.schedule("0 22 2 * *", new SpeechRepositoryCrawlerSimple());
 
-        //Checks bounced mail every day at 3:00AM
-        scheduler.schedule("0 3 * * *", new BounceFetcher());
+        //Checks bounced mail every 5 minutes
+        scheduler.schedule("0/5 * * * *", new BounceFetcher());
     }
 
     public void startAllJobs()

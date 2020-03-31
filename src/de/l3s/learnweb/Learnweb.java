@@ -107,6 +107,11 @@ public class Learnweb
         return learnweb;
     }
 
+    /**
+     * The same as getInstance() but as Optional and without logging warnings.
+     * 
+     * @return
+     */
     public static Optional<Learnweb> getInstanceOptional()
     {
         return Optional.ofNullable(learnweb);
@@ -171,13 +176,15 @@ public class Learnweb
             properties = new PropertiesBundle(fallbackProperties);
 
             InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties");
-            if (localProperties != null) {
+            if(localProperties != null)
+            {
                 properties.load(localProperties);
                 log.debug("Local properties loaded.");
             }
 
             InputStream testProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_test.properties");
-            if (testProperties != null) {
+            if(testProperties != null)
+            {
                 properties.load(testProperties);
                 log.debug("Test properties loaded.");
             }

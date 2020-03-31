@@ -25,7 +25,7 @@
             <var>msg</var>
         </resource-bundle>
 
-		<!-- Overwrite default faces validator messages-->
+		<!-- Overwrite default faces validator messages -->
 		<message-bundle>
 			de.l3s.learnweb.facesMessages.Messages
 		</message-bundle>
