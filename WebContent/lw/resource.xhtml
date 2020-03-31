@@ -59,11 +59,7 @@
 					</div>
 
 					<div class="res-view-panel">
-						<h2>
-							<a href="#{resourceDetailBean.resource.learnwebUrl}">
-								<h:outputText value="#{resourceDetailBean.resource.title}" escape="false"/>
-							</a>
-						</h2>
+						<h2><h:outputText value="#{resourceDetailBean.resource.title}" escape="false"/></h2>
 
 						<h:form id="resourceViewForm" prependId="false" styleClass="resource-details">
 							<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
