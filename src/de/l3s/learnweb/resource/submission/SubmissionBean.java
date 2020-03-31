@@ -139,9 +139,14 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String action = params.get("action");
+        JSONArray items = new JSONArray(params.get("items"));
+        if(items.length() > selectedSubmission.getNoOfResources())
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, getLocaleMessage("submission.resource_limit_exceeded", selectedSubmission.getNoOfResources()));
+            return;
+        }
         try
         {
-            JSONArray items = new JSONArray(params.get("items"));
 
             switch(action)
             {
@@ -166,8 +171,20 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void actionSubmitItems()
+    public void actionSubmitItems() throws SQLException
     {
+        selectedSubmission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
+        submitted = getLearnweb().getSubmissionManager().getSubmitStatusForUser(submissionId, userId);
+        if(submitted)
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, getLocaleMessage("submission.already_submitted"));
+            return;
+        }
+        if(selectedResources.size() > selectedSubmission.getNoOfResources())
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, getLocaleMessage("submission.resource_limit_exceeded",selectedSubmission.getNoOfResources()));
+            return;
+        }
         try
         {
             log.info("No. of selected items: " + selectedResources.size());

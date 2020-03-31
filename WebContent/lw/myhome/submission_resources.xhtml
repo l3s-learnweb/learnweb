@@ -35,84 +35,15 @@
 
     <h:form styleClass="d-none">
         <p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}"
-                         update=":submittedResourcesGrid" global="false" oncomplete="onResourcesUpdated()"/>
+                         update=":submissionsWrapper :growl" global="false" oncomplete="PF('selectDlg').hide();"/>
     </h:form>
 
-    <p:panel styleClass="mt-3" id="resourcesWrapper">
-        <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
-            <h:outputText value="#{msg.please_wait}"/>
-        </p:blockUI>
+    <p:dialog widgetVar="selectDlg" header="#{msg['Submission.select_resources_header']}" styleClass="ui-dialog-sticky-footer"
+              modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
 
-        <ui:fragment rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
-            <h3>#{msg['Submission.select_resources_header']}</h3>
-        </ui:fragment>
-
-        <ui:fragment rendered="#{submissionBean.submitted}">
-            <h3>The submitted resources</h3>
-        </ui:fragment>
-
-        <h:panelGroup layout="block" id="submissions" styleClass="mt-3">
-            <h:panelGroup id="submittedResourcesGrid" layout="block" styleClass="res-grid border-top res-container pt-3"
-                          pt:data-canSelectResources="true">
-                <p:repeat var="res" value="#{submissionBean.selectedResources}">
-                    <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
-                                  pt:data-resview="default"
-                                  pt:data-itemType="resource"
-                                  pt:data-itemId="#{res.id}">
-                        <f:param name="resource_id" value="#{res.id}"/>
-
-                        <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                            <ui:param name="res" value="#{res}"/>
-                            <ui:param name="showSelectIcon" value="true"/>
-                        </ui:decorate>
-                    </h:outputLink>
-                </p:repeat>
-
-                <h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}"
-                              class="res-empty-text"/>
-
-                <h:panelGroup id="add_resource_sign" styleClass="my-auto mx-3" layout="block"
-                              rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
-                    <a href="#" class="cancel" onclick="return false;">
-                        <i class="fa fa-fw fa-3x fa-plus" aria-hidden="true"></i>
-                        <span class="sr-only">Select a resource</span>
-                    </a>
-                </h:panelGroup>
-
-                <div class="clear"></div>
-            </h:panelGroup>
-
-            <h:form id="submit_resources_form" prependId="false">
-                <p:commandButton id="submit_resources_button" value="#{msg.submit}" style="display:none;" action="#{submissionBean.actionSubmitItems}"
-                                 update=":submittedResourcesGrid :growl" onclick="return confirmSubmitMessage();"
-                                 rendered="#{not submissionBean.submitted}"/>
-            </h:form>
-        </h:panelGroup>
-    </p:panel>
-
-    <h:panelGroup styleClass="collapse p-0" layout="block" id="select_resources_modal">
-        <p:panel styleClass="ui-panel-scroll-content mb-0">
-            <f:facet name="header">
-                <h:outputFormat value="#{msg['Submission.lightbox_header']}">
-                    <f:param value="#{submissionBean.selectedSubmission.noOfResources}"/>
-                </h:outputFormat>
-            </f:facet>
-            <f:facet name="actions">
-                <a href="#" data-fancybox-close="true" class="text-white"><i class="fa fa-fw fa-times" aria-hidden="true"></i></a>
-            </f:facet>
-            <f:facet name="footer">
-                <h:form>
-                    <p:commandButton value="#{msg.add}" onclick="confirmResourcesSelect();"/>
-                </h:form>
-            </f:facet>
-
-            <h:panelGroup layout="block" rendered="#{empty submissionBean.resources}">
-                <h:outputText value="#{msg.no_resources_found}" class="res-empty-text"/>
-                First, add resources to <h:outputLink value="myhome/resources.jsf">#{msg.myResourcesTitle}.</h:outputLink>
-            </h:panelGroup>
-
-            <h:panelGroup id="submitResourcesGrid" styleClass="res-container res-grid" layout="block" rendered="#{!empty submissionBean.resources}"
-                          pt:data-canSelectResources="true">
+        <h:panelGroup id="submitResourcesGrid" styleClass="res-container dynamic-content" layout="block" rendered="#{!empty submissionBean.resources}"
+                      pt:data-canSelectResources="true">
+            <div class="res-grid">
                 <p:repeat var="res" value="#{submissionBean.resources}">
                     <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
                                   pt:data-itemType="resource"
@@ -125,70 +56,59 @@
                         </ui:decorate>
                     </h:outputLink>
                 </p:repeat>
-            </h:panelGroup>
-        </p:panel>
-    </h:panelGroup>
+            </div>
+        </h:panelGroup>
+
+        <div class="d-flex justify-content-end sticky-footer">
+            <p:button value="#{msg.select}" onclick="confirmResourcesSelect();return false;"/>
+        </div>
+    </p:dialog>
+
+    <p:panel id="submissionsWrapper" header="#{submissionBean.submitted ? msg['submission.submitted_resources'] : msg['submission.your_selected_resources_displayed_here']}">
+        <div class="res-grid res-container mx-n3 mt-n3">
+            <p:repeat var="res" value="#{submissionBean.selectedResources}">
+                <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
+                              pt:data-resview="grid"
+                              pt:data-itemType="resource"
+                              pt:data-itemId="#{res.id}">
+                    <f:param name="resource_id" value="#{res.id}"/>
+
+                    <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+                        <ui:param name="res" value="#{res}"/>
+                    </ui:decorate>
+                </h:outputLink>
+            </p:repeat>
+        </div>
+
+        <p:outputPanel layout="block" styleClass="d-flex justify-content-center" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}">
+            <h3>#{msg['submission.no_resources_were_submitted']}</h3>
+        </p:outputPanel>
+
+        <h:form prependId="false" styleClass="d-flex #{submissionBean.selectedResources.size() > 0 ? 'justify-content-between' : 'justify-content-center'}">
+            <p:commandButton value="#{msg.select}" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}" update="@form" onclick="PF('selectDlg').show();" />
+
+            <p:commandButton value="#{msg.submit}" action="#{submissionBean.actionSubmitItems}"
+                             update="@form :growl" rendered="#{not submissionBean.submitted and submissionBean.selectedResources.size() > 0}">
+                    <p:confirm message="#{msg['submission.are_you_sure_you_want_to_submit']}" icon="pi pi-exclamation-triangle"/>
+            </p:commandButton>
+        </h:form>
+    </p:panel>
 
     <script type="application/javascript">
       /* global updateSelectedItemsCommand */
 
-      const maxResourcesToSubmit = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
-
-      function confirmSubmitMessage() {
-        const neededMoreResources = maxResourcesToSubmit - selected.size();
-        let confirmMessage = 'Are you sure you want to submit? You will no longer be able to submit any more resources.';
-        if (neededMoreResources > 0) {
-          confirmMessage = `You should select ${neededMoreResources} more resource${neededMoreResources > 1 ? 's' : ''} for your submission. ${confirmMessage}`;
-        }
-        return confirm(confirmMessage);
-      }
-
       function confirmResourcesSelect() {
-        if (selected.size() > maxResourcesToSubmit) {
-          alert(`Maximum allowed items limit exceeded. You can't choose more than ${maxResourcesToSubmit} items.`);
-        } else {
-          updateSelectedItemsCommand([
-            { name: 'action', value: 'update' },
-            { name: 'items', value: JSON.stringify(selected) }
-          ]);
-          $.fancybox.close();
-        }
-      }
-
-      function updateMaxResources() {
-        // When user delete an item the button has to be returned back
-        if (maxResourcesToSubmit > selected.size()) {
-          $('#add_resource_sign').show();
-        } else {
-          $('#add_resource_sign').hide();
-        }
-
-        if (selected.size() > 0) {
-          $('#submit_resources_button').show();
-        }
-      }
-
-      function onResourcesUpdated() {
-        updateMaxResources();
-        // createSelectableArea('submittedResourcesGrid'); Why do we need the ability to select these resources?
+        updateSelectedItemsCommand([
+          { name: 'action', value: 'update' },
+          { name: 'items', value: JSON.stringify(selected) }
+        ]);
       }
 
       $(function () {
-        $(document).on('click', '#add_resource_sign', function () {
-          $.fancybox.open({
-            src: '#select_resources_modal',
-            type: 'inline',
-          }, {
-            // modal: true,
-            touch: false,
-            smallBtn: false,
-            buttons: false,
-          });
-        });
-
+        $(document).on('click', '.res-item', (e) => e.preventDefault());
         $(document).on('dblclick', '.res-item', openItems);
-        onResourcesUpdated();
         createSelectable('submitResourcesGrid');
+        createSelectableArea('submitResourcesGrid');
       });
     </script>
 </ui:define>
