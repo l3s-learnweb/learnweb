@@ -2,6 +2,7 @@ package de.l3s.learnweb;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -152,42 +153,39 @@ public class Learnweb
         }
     }
 
-    /**
-     * Returns the properties file to use depending on the machine Learnweb is running on.
-     *
-     * @return
-     */
-    private static String getPropertiesFileName()
+    private void loadProperties()
     {
-        String propertiesFileName;
-
+        // TODO: retrieve mode from web.xml configuration
         String workingDirectory = new File(".").getAbsolutePath();
         log.debug("workingDirectory: " + workingDirectory);
-
-        // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
         if(workingDirectory.startsWith("/home/learnweb_user"))
         {
-            propertiesFileName = "learnweb";
             developmentMode = false;
         }
-        else if((new File("C:\\programmieren\\philipp.lw")).exists())
-            propertiesFileName = "lw_local_philipp";
-        else if((new File("C:\\programmieren\\philipp_uni.lw")).exists())
-            propertiesFileName = "lw_local_philipp_uni";
-        else if((new File("C:\\Users\\Tetiana").exists()))
-            propertiesFileName = "lw_local_tetiana";
-        else if((new File("C:\\Users\\astappiev").exists()))
-            propertiesFileName = "lw_local_oleh";
-        else if((new File("/home/astappiev").exists()))
-            propertiesFileName = "lw_local_oleh_uni";
-        else if((new File("/home/matviei").exists()))
-            propertiesFileName = "lw_local_matviei";
-        else if((new File("C:\\Users\\PC").exists()))
-            propertiesFileName = "lw_local_aleks";
-        else
-            throw new RuntimeException("Create a configuration file for your environment: " + Misc.getSystemDescription());
 
-        return propertiesFileName;
+        try
+        {
+            Properties fallbackProperties = new Properties();
+            InputStream defaultProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb.properties");
+            fallbackProperties.load(defaultProperties);
+            properties = new PropertiesBundle(fallbackProperties);
+
+            InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties");
+            if (localProperties != null) {
+                properties.load(localProperties);
+                log.debug("Local properties loaded.");
+            }
+
+            InputStream testProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_test.properties");
+            if (testProperties != null) {
+                properties.load(testProperties);
+                log.debug("Test properties loaded.");
+            }
+        }
+        catch(IOException e)
+        {
+            log.error("Property error", e);
+        }
     }
 
     /**
@@ -201,23 +199,7 @@ public class Learnweb
     {
         learnwebIsLoading = true;
 
-        try
-        {
-            Properties fallbackProperties = new Properties();
-            fallbackProperties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb.properties"));
-
-            this.properties = new PropertiesBundle(fallbackProperties);
-
-            String propertiesFileName = getPropertiesFileName();
-
-            log.debug("Load config file: " + propertiesFileName);
-
-            properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propertiesFileName + ".properties"));
-        }
-        catch(IOException e)
-        {
-            log.error("Property error", e);
-        }
+        loadProperties();
 
         // load server URL from config file or guess it
         String propertiesServerUrl = properties.getProperty("SERVER_URL");
