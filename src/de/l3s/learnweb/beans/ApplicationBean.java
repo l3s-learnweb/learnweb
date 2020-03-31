@@ -316,7 +316,7 @@ public class ApplicationBean
     {
         addMessage(FacesMessage.SEVERITY_FATAL, "access_denied");
 
-        Logger.getLogger(ApplicationBean.class).warn("access denied " + BeanHelper.getRequestSummary(), new IllegalArgumentException());
+        Logger.getLogger(ApplicationBean.class).error("access denied " + BeanHelper.getRequestSummary(), new IllegalArgumentException());
     }
 
     /**

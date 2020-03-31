@@ -7,8 +7,8 @@
 
 <ui:define name="metadata">
     <f:metadata>
-        <f:viewParam name="user_id" value="#{profileBean.userId}" required="true"/>
-        <f:viewAction action="#{profileBean.loadUser}"/>
+        <f:viewParam name="user_id" value="#{profileBean.userId}" />
+        <f:viewAction action="#{profileBean.onLoad}"/>
     </f:metadata>
 </ui:define>
 
@@ -38,7 +38,7 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <p:outputLabel for="@next" value="#{msg.username}:"/>
-                                    <p:inputText id="username" value="#{profileBean.selectedUser.realUsername}" validator="#{profileBean.validateUsername}" label="#{msg.username}">
+                                    <p:inputText id="username" value="#{profileBean.selectedUser.realUsername}" validator="#{profileBean.validateUsername}" label="#{msg.username}" required="true">
                                         <f:validateLength minimum="2" maximum="50"></f:validateLength>
                                     </p:inputText>
                                     <p:message for="@previous"/>
@@ -184,7 +184,7 @@
 
             <p:panel header="#{msg.miscellaneous}" styleClass="mb-3">
                 <h:form id="deleteform">
-                    <p:commandButton action="#{profileBean.onDeleteAccountSoft}" value="#{msg['user.account.deleteSoft.button']}">
+                    <p:commandButton action="#{profileBean.onDeleteAccount}" value="#{msg['user.account.deleteSoft.button']}">
                         <p:confirm message="#{msg['user.account.deleteSoft.confirmDescription']}" escape="false"/>
                     </p:commandButton>
                 </h:form>

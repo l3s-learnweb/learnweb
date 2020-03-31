@@ -170,6 +170,12 @@ public class LoginBean extends ApplicationBean implements Serializable
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 
+    /**
+     * Performs different logout actions depending on whether a simple user is currently logged in or if a moderator had logged into another user's
+     * account
+     *
+     * @return
+     */
     public String logout()
     {
         UserBean userBean = UtilBean.getUserBean();
@@ -187,9 +193,8 @@ public class LoginBean extends ApplicationBean implements Serializable
             log(Action.logout, 0, 0);
             user.onDestroy();
             getFacesContext().getExternalContext().invalidateSession(); // end session
+            return logoutPage + "?faces-redirect=true";
         }
-
-        return logoutPage + "?faces-redirect=true";
     }
 
     public ConfirmRequiredBean getConfirmRequiredBean()

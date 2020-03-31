@@ -51,7 +51,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
     private boolean mailRequired = false;
     private boolean anonymizeUsername;
 
-    public void loadUser() throws SQLException
+    public void onLoad() throws SQLException
     {
         User loggedinUser = getUser();
         if(loggedinUser == null)
@@ -74,7 +74,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         if(moderatorAccess && !UtilBean.getUserBean().canModerateCourses(selectedUser.getCourses()))
         {
             selectedUser = null;
-            addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to edit this user");
+            addAccessDeniedMessage();
             return;
         }
 
@@ -158,63 +158,55 @@ public class ProfileBean extends ApplicationBean implements Serializable
         }
     }
 
-    public String onDeleteAccountSoft()
-    {
-        return onDelete(false);
-    }
-
-    public String onDeleteAccountHard()
-    {
-        return onDelete(true);
-    }
-
-    /**
-     * @see de.l3s.learnweb.user.UserManager#deleteUserSoft
-     * @see de.l3s.learnweb.user.UserManager#deleteUserHard
-     * @param hardDelete
-     * @return
-     */
-    private String onDelete(boolean hardDelete)
+    public String onDeleteAccount()
     {
         try
         {
-            if(hardDelete)
-            {
-                getLearnweb().getUserManager().deleteUserHard(getSelectedUser());
+            UserBean userBean = UtilBean.getUserBean();
+            User user = userBean.getUser();
 
-                log(Action.deleted_user_hard, 0, getSelectedUser().getId());
-            }
-            else
+            if(!user.equals(getSelectedUser()) && !userBean.canModerateCourses(getSelectedUser().getCourses()))
             {
-                getLearnweb().getUserManager().deleteUserSoft(getSelectedUser());
-
-                log(Action.deleted_user_soft, 0, getSelectedUser().getId());
+                addAccessDeniedMessage();
+                return null;
             }
 
-            getFacesContext().getExternalContext().invalidateSession(); // end session
+            getLearnweb().getUserManager().deleteUserSoft(getSelectedUser());
+            log(Action.deleted_user_soft, 0, getSelectedUser().getId());
+
             addMessage(FacesMessage.SEVERITY_INFO, "user.account.deleted");
             setKeepMessages();
-            return "/lw/user/login.jsf&faces-redirect=true";
+
+            // perform logout if necessary
+
+            if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) // a moderator was logged into another user's account
+            {
+                userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
+                userBean.setModeratorUser(null);
+                return "/lw/admin/users.xhtml?faces-redirect=true";
+            }
+            else if(user.isModerator() && !user.equals(getSelectedUser())) // a moderator deletes another user through his profile page
+            {
+                return "/lw/admin/users.xhtml?faces-redirect=true";
+            }
+
+            // a user deletes himself
+            getFacesContext().getExternalContext().invalidateSession(); // end session
+            return "/lw/user/login.xhtml?faces-redirect=true";
         }
         catch(Exception e)
         {
             addErrorMessage(e);
         }
         return null;
-
     }
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
         String newName = ((String) value).trim();
-        if(getSelectedUser().getRealUsername().equals(newName))
-        { // username not changed
-            return;
-        }
-
-        if(newName.length() < 2)
+        if(getSelectedUser().getRealUsername().equals(newName)) // username not changed
         {
-            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "The username is to short."));
+            return;
         }
 
         if(getLearnweb().getUserManager().isUsernameAlreadyTaken(newName))
