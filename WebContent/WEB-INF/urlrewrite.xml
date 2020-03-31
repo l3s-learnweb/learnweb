@@ -15,7 +15,7 @@
         <from>^/(.*)</from>
         <to type="redirect" last="true">http://learnweb.l3s.uni-hannover.de/v2/aw/</to>        
     </rule>
-    
+
     <rule>
         <from>/v2/(.*)</from>
         <to type="redirect">/v3/$1</to>
@@ -25,22 +25,15 @@
         <from>/new/(.*)</from>
         <to type="redirect">/$1</to>
     </rule>
-   
 
 	<!-- rules for scss source map -->
 	<rule>
-		<from>/javax.faces.resource/learnweb-layout/css/styles.css.map</from>
-		<to>/javax.faces.resource/learnweb-layout/css/styles.css.map.jsf</to>
+		<from>/javax.faces.resource/(.*).map</from>
+		<to>/javax.faces.resource/$1.map.jsf</to>
 	</rule>
-
 	<rule>
-		<from>/javax.faces.resource/learnweb-layout/sass/(.*)</from>
-		<to>/javax.faces.resource/learnweb-layout/sass/$1.jsf</to>
-	</rule>
-
-	<rule>
-		<from>/javax.faces.resource/california-layout/sass/(.*)</from>
-		<to>/javax.faces.resource/california-layout/sass/$1.jsf</to>
+		<from>/javax.faces.resource/(.*).scss</from>
+		<to>/javax.faces.resource/$1.scss.jsf</to>
 	</rule>
 
 	<!-- short links to the wizard -->

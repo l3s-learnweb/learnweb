@@ -1,9 +1,4 @@
 .breadcrumb {
-
-  @include media-breakpoint-up(md) {
-    display: flex;
-  }
-
   display: none;
   background-color: $white;
   border: 1px solid $themePrimaryColor;
@@ -12,49 +7,73 @@
   align-items: center;
   flex-wrap: wrap;
 
-  ul {
-    position: absolute;
-    color: $white;
-    z-index: 1;
-    background: $themePrimaryColor;
-    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
-    list-style: none;
-    padding: 0;
-    display: none;
-    overflow-y: auto;
-    max-height: 100vh;
-
-    li {
-      a {
-        display: block;
-        border: 0;
-        padding: 0.5rem 0.8rem;
-        color: #fff;
-        text-decoration: none;
-
-        &:hover {
-          background: $themePrimaryColorDarker;
-        }
-      }
-    }
+  @include media-breakpoint-up(md) {
+    display: flex;
   }
 
-  .page-menu {
+  .breadcrumb-menu {
     margin: 0;
 
-    &:first-child .breadcrumb-item-title {
+    &:first-child .breadcrumb-title {
       padding-left: 1rem;
     }
 
-    .breadcrumb-item {
+    &.ui-state-active {
+      .breadcrumb-title {
+        color: $white;
+      }
+    }
+
+    &.breadcrumb-menu-no-link {
+      div {
+        cursor: default;
+
+        &:hover {
+          background: none;
+
+          a {
+            color: $gray-700 !important;
+          }
+        }
+
+        a {
+          pointer-events: none;
+
+          &:hover {
+            color: $gray-700 !important;
+          }
+        }
+
+        .breadcrumb-toggle {
+          display: none;
+        }
+      }
+    }
+
+    div {
+      display: flex;
       color: $gray-700;
       text-decoration: none;
       height: 2.4rem;
-      display: flex;
-      align-items: center;
       position: relative;
       cursor: pointer;
-      margin: 0;
+
+      &:hover {
+        background: $themePrimaryColor;
+
+        a {
+          color: $white !important;
+          text-decoration: none;
+
+          i {
+            color: $white;
+          }
+        }
+
+        .breadcrumb-toggle {
+          background: $themePrimaryColor;
+        }
+      }
 
       a {
         color: $gray-700;
@@ -63,14 +82,6 @@
         display: flex;
         align-items: center;
         outline: none;
-
-        &:hover {
-          text-decoration: none;
-
-          i {
-            color: $white;
-          }
-        }
       }
 
       .breadcrumb-toggle {
@@ -85,10 +96,7 @@
         box-shadow: 1px -1px 0 0 $themePrimaryColor;
         padding-right: 0;
 
-        &:hover {
-          background: $themePrimaryColorDarker !important;
-        }
-
+        &:hover,
         &:focus {
           color: $white;
           background: $themePrimaryColorDarker !important;
@@ -100,50 +108,37 @@
         }
       }
 
-      &:hover {
-        color: $white !important;
-
-        a {
-          color: $white !important;
-        }
-
-        background: $themePrimaryColor;
-
-        .breadcrumb-toggle {
-          background: $themePrimaryColor;
-        }
-      }
-
       span {
         font-weight: $font-weight-bold;
         padding-right: 1rem;
       }
     }
-  }
 
-  .page-menu-no-link.breadcrumb-item {
-    cursor: default;
-
-    a {
-      pointer-events: none;
-
-      &:hover {
-        color: $gray-700 !important;
-      }
-    }
-
-    .breadcrumb-toggle {
+    ul {
+      position: absolute;
+      color: $white;
+      z-index: 10;
+      background: $themePrimaryColor;
+      box-shadow: $box-shadow;
+      list-style: none;
+      padding: 0;
       display: none;
-    }
+      overflow-y: auto;
+      max-height: 100vh;
 
-    &:hover {
-      background: none;
+      li {
+        a {
+          display: block;
+          border: 0;
+          padding: 0.5rem 0.8rem;
+          color: #fff;
+          text-decoration: none;
 
-      a {
-        color: $gray-700 !important;
+          &:hover {
+            background: $themePrimaryColorDarker;
+          }
+        }
       }
     }
   }
-
 }
-
