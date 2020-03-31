@@ -50,7 +50,7 @@
 
             <div class="form-group">
                 <p:outputLabel for="@next" value="#{msg.email_address}:"/>
-                <p:inputText id="register_email" value="#{contactBean.email}" label="#{msg.email_address}" required="true" type="email"/>
+                <p:inputText id="register_email" value="#{contactBean.email}" label="#{msg.email_address}" required="true" type="email" validator="emailValidator"/>
                 <p:message for="@previous"/>
             </div>
 

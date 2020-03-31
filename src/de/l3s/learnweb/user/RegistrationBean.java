@@ -13,9 +13,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
@@ -27,8 +27,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 4567220515408089722L;
 
-    @NotBlank
-    @Length(min = 2, max = 50)
+    @Size(min = 2, max = 50)
     private String username;
 
     @NotBlank
@@ -159,29 +158,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "The username is to short."));
         }
-        if(getLearnweb().getUserManager().isUsernameAlreadyTaken(newName))
+        else if(getLearnweb().getUserManager().isUsernameAlreadyTaken(newName))
         {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
-        }
-    }
-
-    public void validateEmailAddress(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
-    {
-        String email = (String) value;
-        if(email == null)
-            return;
-        email = email.trim().toLowerCase();
-
-        if(StringUtils.endsWithAny(email, "aulecsit.uniud.it", "uni.au.dk", "studeniti.unisalento.it"))
-        {
-            if(email.endsWith("aulecsit.uniud.it"))
-            {
-                throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "This mail address is invalid! Usually it is surname.name@spes.uniud.it"));
-            }
-            else
-            {
-                throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "This mail address is invalid! Check the domain."));
-            }
         }
     }
 

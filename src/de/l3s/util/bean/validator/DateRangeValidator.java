@@ -14,7 +14,6 @@ import javax.faces.validator.ValidatorException;
 @FacesValidator("dateRangeValidator")
 public class DateRangeValidator implements Validator<Object>
 {
-
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException
     {

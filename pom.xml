@@ -54,6 +54,12 @@
             <artifactId>myfaces-impl</artifactId>
             <version>2.3.6</version>
         </dependency>
+        <!-- JSF Tools e.g. we use the Trimconverter -->
+		<dependency>
+			<groupId>org.omnifaces</groupId>
+			<artifactId>omnifaces</artifactId>
+			<version>3.4.1</version>
+		</dependency>
         <!-- Required for mails -->
         <dependency>
             <groupId>com.sun.mail</groupId>

@@ -13,9 +13,7 @@
         <locale-config>
             <default-locale>en</default-locale>
             <supported-locale>de</supported-locale>
-            <supported-locale>de_DE_Archive</supported-locale>
             <supported-locale>en</supported-locale>
-            <supported-locale>en_UK_Archive</supported-locale>
             <supported-locale>it</supported-locale>
             <supported-locale>pt</supported-locale>
             <supported-locale>es</supported-locale>
@@ -27,6 +25,11 @@
             <var>msg</var>
         </resource-bundle>
 
+		<!-- Overwrite default faces validator messages-->
+		<message-bundle>
+			de.l3s.learnweb.facesMessages.Messages
+		</message-bundle>
+      
         <el-resolver>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver</el-resolver>
 
 		<system-event-listener>
@@ -38,8 +41,6 @@
 			</system-event-class>
 	    </system-event-listener>
     </application>
-
-    <!--de.l3s.learnweb.lang.messages-->
 
     <lifecycle>
         <phase-listener>org.primefaces.component.lifecycle.LifecyclePhaseListener</phase-listener>
@@ -67,4 +68,13 @@
 	 org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
 	 de.l3s.learnweb.beans.CustomExceptionHandlerFactory
 	 -->
+
+    <!--
+    	Trim all Text input fields
+    	http://showcase.omnifaces.org/converters/TrimConverter
+    -->
+	<converter>
+		<converter-for-class>java.lang.String</converter-for-class>
+		<converter-class>org.omnifaces.converter.TrimConverter</converter-class>
+	</converter>
 </faces-config>

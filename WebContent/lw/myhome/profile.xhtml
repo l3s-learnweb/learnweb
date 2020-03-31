@@ -52,7 +52,7 @@
 
                                 <div class="form-group">
                                     <p:outputLabel for="@next" value="#{msg.email_address}:"/>
-                                    <p:inputText id="useremail" value="#{profileBean.email}" label="#{msg.email_address}:" required="#{profileBean.mailRequired}"/>
+                                    <p:inputText id="useremail" value="#{profileBean.email}" label="#{msg.email_address}:" required="#{profileBean.mailRequired}" validator="emailValidator"/>
                                     <p:message for="@previous"/>
                                 </div>
                             </div>
