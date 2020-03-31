@@ -1,0 +1,14 @@
+# This properties are only applied for Dev profile which is active by default, but disabled on production
+# If you need to update properties for local development, do that in your local file
+
+FILE_MANAGER_FOLDER=/mnt/learnweb/uploaded_files
+
+INTERWEBJ_API_URL=http://***REMOVED***/interweb/api/
+SOLR_SERVER_URL=http://***REMOVED***/solr/learnweb
+mysql_url=jdbc:mysql://***REMOVED***/learnweb_main
+
+FFMPEG_PATH=/usr/bin/ffmpeg
+FFPROBE_PATH=/usr/bin/ffprobe
+
+# auto = guess infer the SERVER_URL on the first request to the system
+SERVER_URL=auto

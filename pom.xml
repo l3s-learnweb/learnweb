@@ -408,6 +408,8 @@
                 <filtering>false</filtering>
                 <excludes>
                     <exclude>**/version.properties</exclude>
+                    <exclude>**/*test*.*</exclude>
+                    <exclude>**/*local*.*</exclude>
                 </excludes>
             </resource>
             <resource>
@@ -418,6 +420,12 @@
                 </includes>
             </resource>
         </resources>
+        <testResources>
+            <testResource>
+                <directory>Resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -478,6 +486,16 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>Resources</directory>
+                        <includes>
+                            <include>**/*local*.*</include>
+                        </includes>
+                    </resource>
+                </resources>
+            </build>
         </profile>
         <profile>
             <id>prod</id>
