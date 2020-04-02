@@ -368,7 +368,7 @@ public class ProtectionManager
 
         accData.setBan(banDays, banHours, banMinutes);
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO lw_bans (name, bandate, bannedon, attempts, type) VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)"))
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bans (name, bandate, bannedon, attempts, type) VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)"))
         {
             insert.setString(1, accData.getName());
             insert.setTimestamp(2, new java.sql.Timestamp(accData.getBanDate().getTime()));
@@ -412,7 +412,7 @@ public class ProtectionManager
 
         accData.permaban();
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO lw_bans (name, bandate, bannedon, attempts, type) VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)"))
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bans (name, bandate, bannedon, attempts, type) VALUES(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)"))
         {
             insert.setString(1, accData.getName());
             insert.setTimestamp(2, new java.sql.Timestamp(accData.getBanDate().getTime()));

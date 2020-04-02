@@ -57,7 +57,6 @@ public class DeleteOldUsers
             deleteAbandonedGroups();
             deleteAbandonedResources();
             */
-            deleteAlmostAbandonedGroups();
 
         }
         catch(Throwable e)
@@ -93,6 +92,11 @@ public class DeleteOldUsers
             Optional<Instant> lastLogin = um.getLastLoginDate(userId);
 
             User user = um.getUser(userId);
+            if(user.isModerator() || user.isAdmin())
+            {
+                log.debug("Ignore moderator user: " + user);
+                continue;
+            }
 
             if(lastLogin.isPresent() && deadline.isBefore(lastLogin.get()))
             {
@@ -137,6 +141,11 @@ public class DeleteOldUsers
             Optional<Instant> lastLogin = um.getLastLoginDate(userId);
 
             User user = um.getUser(userId);
+            if(user.isModerator() || user.isAdmin())
+            {
+                log.debug("Ignore moderator user: " + user);
+                continue;
+            }
 
             if(lastLogin.isPresent() && deadline.isBefore(lastLogin.get()))
             {
@@ -148,20 +157,6 @@ public class DeleteOldUsers
 
             um.deleteUserHard(user);
         }
-
-        /*
-        // remove references to deleted resources
-        String[] tables = { "lw_user_log" };
-        
-        for(String table : tables)
-        {
-            try(PreparedStatement delete = learnweb.getConnection().prepareStatement("delete d FROM `" + table + "` d LEFT JOIN lw_user u USING(user_id) WHERE d.user_id != 0 AND u.user_id is null"))
-            {
-                int numRowsAffected = delete.executeUpdate();
-                log.debug("Deleted " + numRowsAffected + " rows from " + table);
-            }
-        }
-        */
         log.info("deleteUsersThatHaventLoggedInForYears() - End");
     }
 

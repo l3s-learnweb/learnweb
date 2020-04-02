@@ -293,7 +293,8 @@ public class ResourceManager
             {
                 delete.setInt(1, resourceId);
                 int numRowsAffected = delete.executeUpdate();
-                log.debug("Deleted " + numRowsAffected + " rows from " + table);
+                if(numRowsAffected > 0)
+                    log.debug("Deleted " + numRowsAffected + " rows from " + table);
             }
         }
 
@@ -827,15 +828,15 @@ public class ResourceManager
 
         switch(source)
         {
-        case teded:
-        case ted:
-        case tedx:
-        case yovisto:
-        case archiveit:
-        case factcheck:
-            return source.toString();
-        default:
-            return "Learnweb";
+            case teded:
+            case ted:
+            case tedx:
+            case yovisto:
+            case archiveit:
+            case factcheck:
+                return source.toString();
+            default:
+                return "Learnweb";
         }
     }
 
@@ -850,12 +851,12 @@ public class ResourceManager
     {
         switch(type)
         {
-        case survey:
-            return new SurveyResource();
-        case glossary2:
-            return new GlossaryResource();
-        default:
-            return new Resource();
+            case survey:
+                return new SurveyResource();
+            case glossary2:
+                return new GlossaryResource();
+            default:
+                return new Resource();
         }
     }
 

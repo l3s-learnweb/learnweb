@@ -537,9 +537,9 @@ public class UserManager
             try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM " + table + " WHERE `user_id` = ?"))
             {
                 delete.setInt(1, user.getId());
-                //log.debug(delete);
                 int numRowsAffected = delete.executeUpdate();
-                log.debug("Deleted " + numRowsAffected + " rows from " + table);
+                if(numRowsAffected > 0)
+                    log.debug("Deleted " + numRowsAffected + " rows from " + table);
             }
         }
 
