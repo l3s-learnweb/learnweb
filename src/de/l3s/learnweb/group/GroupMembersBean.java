@@ -11,7 +11,11 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 
-// TODO: remove it later (merged with GroupOverviewBean)
+/**
+ * Not used right now.
+ * But will be used again. Do not delete it.
+ *
+ */
 @Named
 @ViewScoped
 public class GroupMembersBean extends ApplicationBean implements Serializable
@@ -22,7 +26,7 @@ public class GroupMembersBean extends ApplicationBean implements Serializable
     private int groupId;
     private Group group;
 
-    private User clickedUser;
+    private User selectedUser;
     private List<User> members;
 
     public void onLoad() throws SQLException
@@ -38,7 +42,6 @@ public class GroupMembersBean extends ApplicationBean implements Serializable
 
         if(null != group)
         {
-            user.setActiveGroup(group);
             group.setLastVisit(user);
         }
     }
@@ -58,14 +61,14 @@ public class GroupMembersBean extends ApplicationBean implements Serializable
         return group;
     }
 
-    public User getClickedUser()
+    public User getSelectedUser()
     {
-        return clickedUser;
+        return selectedUser;
     }
 
-    public void setClickedUser(User clickedUser)
+    public void setSelectedUser(User selectedUser)
     {
-        this.clickedUser = clickedUser;
+        this.selectedUser = selectedUser;
     }
 
     public boolean isMember() throws SQLException

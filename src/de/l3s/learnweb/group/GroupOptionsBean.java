@@ -53,7 +53,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
 
         if(null != group)
         {
-            user.setActiveGroup(group);
             group.setLastVisit(user);
         }
 
@@ -92,8 +91,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
 
         try
         {
-            getUser().setActiveGroup(group);
-
             if(!editedGroupDescription.equals(group.getDescription()))
             {
                 group.setDescription(editedGroupDescription);
@@ -106,7 +103,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
             }
             if(editedGroupLeaderId != group.getLeaderUserId())
             {
-                if (group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId())
+                if(group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId())
                 {
                     getUserBean().setSidebarMenuModel(null);
                 }

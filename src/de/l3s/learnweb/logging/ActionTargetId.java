@@ -6,7 +6,7 @@ package de.l3s.learnweb.logging;
  * @author Philipp
  *
  */
-enum ActionTargetId
+public enum ActionTargetId
 {
     NONE,
     RESOURCE_ID,
@@ -16,4 +16,5 @@ enum ActionTargetId
     FORUM_POST_ID,
     COURSE_ID,
     FOLDER_ID,
+    OTHER
 }

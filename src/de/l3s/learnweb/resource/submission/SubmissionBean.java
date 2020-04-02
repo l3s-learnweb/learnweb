@@ -99,7 +99,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
             if(selectedSubmission != null && selectedSubmission.isPastSubmission())
                 submitted = true;
 
-            log(Action.submission_view_resource, 0, submissionId, userId);
+            log(Action.submission_view_resources, 0, submissionId, userId);
         }
 
         getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
@@ -150,19 +150,19 @@ public class SubmissionBean extends ApplicationBean implements Serializable
 
             switch(action)
             {
-            case "add":
-                this.actionAddSelectedItems(items);
-                break;
-            case "remove":
-                this.actionRemoveItems(items);
-                break;
-            case "update":
-                selectedResources.clear();
-                this.actionAddSelectedItems(items);
-                break;
-            default:
-                log.error("Unsupported action: " + action);
-                break;
+                case "add":
+                    this.actionAddSelectedItems(items);
+                    break;
+                case "remove":
+                    this.actionRemoveItems(items);
+                    break;
+                case "update":
+                    selectedResources.clear();
+                    this.actionAddSelectedItems(items);
+                    break;
+                default:
+                    log.error("Unsupported action: " + action);
+                    break;
             }
         }
         catch(JSONException e)
@@ -182,7 +182,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         }
         if(selectedResources.size() > selectedSubmission.getNoOfResources())
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, getLocaleMessage("submission.resource_limit_exceeded",selectedSubmission.getNoOfResources()));
+            addGrowl(FacesMessage.SEVERITY_ERROR, getLocaleMessage("submission.resource_limit_exceeded", selectedSubmission.getNoOfResources()));
             return;
         }
         try
@@ -234,7 +234,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
 
                     getLearnweb().getSubmissionManager().saveSubmissionResource(submissionId, clonedResource.getId(), userId);
 
-                    log(Action.submission_submitted, 0, clonedResource.getId());
+                    log(Action.submission_submitted, 0, r.getId()); // this doesn't happen in a group context. Hence group_id = 0
 
                     clonedSelectedResources.add(clonedResource);
                 }

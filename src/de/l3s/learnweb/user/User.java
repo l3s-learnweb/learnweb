@@ -101,9 +101,6 @@ public class User implements Comparable<User>, Serializable, HasId
     private String credits;
     private boolean acceptTermsAndConditions = false;
 
-    private Group activeGroup;
-    private int activeGroupId;
-
     private boolean admin;
     private boolean moderator;
 
@@ -431,8 +428,6 @@ public class User implements Comparable<User>, Serializable, HasId
         groups = null; // force reload
 
         group.clearCaches();
-
-        setActiveGroup(group);
     }
 
     public void leaveGroup(Group group) throws SQLException
@@ -442,66 +437,12 @@ public class User implements Comparable<User>, Serializable, HasId
         groups = null; // force reload
 
         group.clearCaches();
-
-        if(activeGroup == group)
-            setActiveGroup(null);
     }
 
     @Override
     public int compareTo(User o)
     {
         return getUsername().compareTo(o.getUsername());
-    }
-
-    /**
-     * Defines the group, the user ist currently working on
-     *
-     * @param group
-     */
-    public void setActiveGroup(Group group)
-    {
-        setActiveGroup(null == group ? 0 : group.getId());
-
-        this.activeGroup = group;
-    }
-
-    /**
-     * Defines the group, the user ist currently working on
-     *
-     * @param groupId
-     */
-    public void setActiveGroup(int groupId)
-    {
-        this.activeGroup = null; // force to reload group
-        this.activeGroupId = groupId;
-    }
-
-    /**
-     * Returns the group, which the user is currently working on
-     *
-     * @return may be null if not yet set
-     * @throws SQLException
-     */
-    public Group getActiveGroup() throws SQLException
-    {
-        if(activeGroupId == 0)
-            return null;
-
-        if(null == activeGroup)
-            activeGroup = Learnweb.getInstance().getGroupManager().getGroupById(activeGroupId);
-
-        return activeGroup;
-    }
-
-    /**
-     * Returns the id of the group, which the user is currently working on
-     *
-     * @return may be null if not yet set
-     * @throws SQLException
-     */
-    public int getActiveGroupId()
-    {
-        return activeGroupId;
     }
 
     public void setImage(InputStream inputStream) throws SQLException, IOException

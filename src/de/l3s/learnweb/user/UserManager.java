@@ -44,7 +44,7 @@ public class UserManager
      * If the User is not yet stored at the database, a new record will be created and the returned User contains the new id.
      */
     private static final String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, " +
-            "active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, " +
+            "image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, " +
             "is_moderator, registration_date, password, hashing, preferences, credits, fullname, affiliation, accept_terms_and_conditions, deleted";
 
     // if you change this, you have to change createUser() too
@@ -381,7 +381,7 @@ public class UserManager
         Objects.requireNonNull(user.getRealUsername());
         Objects.requireNonNull(user.getRegistrationDate());
 
-        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
         {
             if(user.getId() < 0) // the User is not yet stored at the database
                 replace.setNull(1, java.sql.Types.INTEGER);
@@ -392,28 +392,27 @@ public class UserManager
             replace.setString(4, user.getEmailConfirmationToken());
             replace.setBoolean(5, user.isEmailConfirmed());
             replace.setInt(6, user.getOrganisationId());
-            replace.setInt(7, user.getActiveGroupId());
-            replace.setInt(8, user.getImageFileId());
-            replace.setInt(9, user.getGender().ordinal());
-            replace.setDate(10, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
-            replace.setString(11, user.getAddress());
-            replace.setString(12, user.getProfession());
+            replace.setInt(7, user.getImageFileId());
+            replace.setInt(8, user.getGender().ordinal());
+            replace.setDate(9, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
+            replace.setString(10, user.getAddress());
+            replace.setString(11, user.getProfession());
             replace.setString(13, user.getAdditionalInformation());
-            replace.setString(14, user.getInterest());
-            replace.setString(15, user.getStudentId());
-            replace.setInt(16, user.isAdmin() ? 1 : 0);
-            replace.setInt(17, user.isModerator() ? 1 : 0);
-            replace.setTimestamp(18, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
-            replace.setString(19, user.getPassword());
-            replace.setString(20, user.getHashing().name());
+            replace.setString(13, user.getInterest());
+            replace.setString(14, user.getStudentId());
+            replace.setInt(15, user.isAdmin() ? 1 : 0);
+            replace.setInt(16, user.isModerator() ? 1 : 0);
+            replace.setTimestamp(17, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
+            replace.setString(18, user.getPassword());
+            replace.setString(19, user.getHashing().name());
 
-            Sql.setSerializedObject(replace, 21, user.getPreferences());
+            Sql.setSerializedObject(replace, 20, user.getPreferences());
 
-            replace.setString(22, user.getCredits());
-            replace.setString(23, user.getFullName());
-            replace.setString(24, user.getAffiliation());
-            replace.setBoolean(25, user.isAcceptTermsAndConditions());
-            replace.setBoolean(26, user.isDeleted());
+            replace.setString(21, user.getCredits());
+            replace.setString(22, user.getFullName());
+            replace.setString(23, user.getAffiliation());
+            replace.setBoolean(24, user.isAcceptTermsAndConditions());
+            replace.setBoolean(25, user.isDeleted());
             replace.executeUpdate();
 
             if(user.getId() < 0) // get the assigned id
@@ -452,9 +451,7 @@ public class UserManager
         user.setPasswordRaw(rs.getString("password"));
         user.setHashing(rs.getString("hashing"));
         user.setOrganisationId(rs.getInt("organisation_id"));
-        user.setActiveGroup(rs.getInt("active_group_id"));
         user.setImageFileId(rs.getInt("image_file_id"));
-
         user.setGender(Gender.values()[rs.getInt("gender")]);
         user.setDateOfBirth(rs.getDate("dateofbirth"));
         user.setFullName(rs.getString("fullname"));

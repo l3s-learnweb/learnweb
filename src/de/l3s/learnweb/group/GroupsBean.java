@@ -116,7 +116,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
                 return null;
             }
 
-            getUser().setActiveGroup(selectedGroup);
             log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getId(), selectedGroup.getTitle());
 
             selectedGroup.delete();

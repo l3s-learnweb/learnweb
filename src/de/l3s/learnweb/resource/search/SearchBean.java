@@ -82,7 +82,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
         log.debug("mode/action: " + queryMode + "; filter: " + queryFilters + " - service: " + queryService + "; query:" + query);
 
-        if(isAjaxRequest())
+        if(isAjaxRequest() || !isLoggedIn())
             return;
 
         if(null == queryMode)
@@ -188,7 +188,6 @@ public class SearchBean extends ApplicationBean implements Serializable
             // add resource to a group if selected
             newResource.setGroup(selectLocationBean.getTargetGroup());
             newResource.setFolder(selectLocationBean.getTargetFolder());
-            user.setActiveGroup(selectLocationBean.getTargetGroup());
 
             log.debug("Add resource); group: " + newResource.getGroupId() + "; folder: " + newResource.getFolderId());
 

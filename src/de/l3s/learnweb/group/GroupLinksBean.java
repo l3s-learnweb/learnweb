@@ -52,7 +52,6 @@ public class GroupLinksBean extends ApplicationBean implements Serializable
 
         if(null != group)
         {
-            user.setActiveGroup(group);
             group.setLastVisit(user);
         }
     }

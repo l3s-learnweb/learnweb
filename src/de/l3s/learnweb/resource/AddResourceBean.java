@@ -229,7 +229,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void addResource()
     {
-        if (this.resource.isOfficeResource())
+        if(this.resource.isOfficeResource())
         {
             this.createDocument();
         }
@@ -249,15 +249,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             // add resource to a group if selected
             resource.setGroupId(targetGroup.getId());
             resource.setFolderId(targetFolder != null ? targetFolder.getId() : 0);
-            getUser().setActiveGroup(targetGroup.getId());
             resource.save();
 
             log(Action.adding_resource, resource.getGroupId(), resource.getId());
-            //detailed logging of new metadata (author, language)
-            if(resource.getAuthor() != null)
-                log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Author");
-            if(resource.getLanguage() != null)
-                log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Language");
 
             // create temporal thumbnails
             resource.postConstruct();

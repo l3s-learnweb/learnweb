@@ -28,7 +28,7 @@ public class LogManager
     // TODO Philipp: check if join with user column is still necessary
     private static final String LOG_SELECT = "SELECT user_id, u.username, action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title, u.image_file_id FROM lw_user_log ul JOIN lw_user u USING(user_id) LEFT JOIN lw_resource r ON action IN(0,1,2,3,15,14,19,21,32,11,54,55,6,8) AND target_id = r.resource_id LEFT JOIN lw_group g ON ul.group_id = g.group_id";
     private static final Action[] LOG_DEFAULT_FILTER = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description,
-            Action.group_changing_leader, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource,
+            Action.group_changing_leader, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
             Action.changing_office_resource, Action.forum_topic_added, Action.forum_post_added, Action.deleting_folder, Action.add_folder };
 
     private static LogManager instance;
@@ -69,7 +69,7 @@ public class LogManager
         }
 
         if(groupId == -1)
-            groupId = (null == user) ? 0 : user.getActiveGroupId(); // TODO remove that. the group must be provided explicitly
+            groupId = 0;
 
         log(userId, action, groupId, targetId, params, sessionId);
     }
@@ -163,6 +163,7 @@ public class LogManager
             sb.append(action.ordinal());
         }
 
+        // TODO philipp change query and add index
         String limitStr = limit > 0 ? "LIMIT " + limit : "";
         PreparedStatement select = learnweb.getConnection().prepareStatement(LOG_SELECT + " WHERE target_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
         select.setInt(1, resourceId);
@@ -243,40 +244,40 @@ public class LogManager
                 LogEntry logEntry = new LogEntry(rs);
                 switch(logEntry.getAction())
                 {
-                case deleting_resource:
-                    summary.getDeletedResources().add(logEntry);
-                    break;
-                case adding_resource:
-                    Resource resource = logEntry.getResource();
-                    if(resource != null)
-                    {
-                        summary.getAddedResources().add(logEntry);
-                    }
-                    break;
-                case forum_topic_added:
-                case forum_post_added:
-                    summary.getForumsInfo().add(logEntry);
-                    break;
-                case group_joining:
-                case group_leaving:
-                    summary.getMembersInfo().add(logEntry);
-                    break;
-                case changing_office_resource:
-                    Resource logEntryResource = logEntry.getResource();
-                    if(logEntryResource != null)
-                    {
-                        if(summary.getUpdatedResources().keySet().contains(logEntryResource))
+                    case deleting_resource:
+                        summary.getDeletedResources().add(logEntry);
+                        break;
+                    case adding_resource:
+                        Resource resource = logEntry.getResource();
+                        if(resource != null)
                         {
-                            summary.getUpdatedResources().get(logEntryResource).add(logEntry);
+                            summary.getAddedResources().add(logEntry);
                         }
-                        else
+                        break;
+                    case forum_topic_added:
+                    case forum_post_added:
+                        summary.getForumsInfo().add(logEntry);
+                        break;
+                    case group_joining:
+                    case group_leaving:
+                        summary.getMembersInfo().add(logEntry);
+                        break;
+                    case changing_office_resource:
+                        Resource logEntryResource = logEntry.getResource();
+                        if(logEntryResource != null)
                         {
-                            summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Collections.singletonList(logEntry)));
+                            if(summary.getUpdatedResources().keySet().contains(logEntryResource))
+                            {
+                                summary.getUpdatedResources().get(logEntryResource).add(logEntry);
+                            }
+                            else
+                            {
+                                summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Collections.singletonList(logEntry)));
+                            }
                         }
-                    }
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
                 }
             }
             while(rs.next());

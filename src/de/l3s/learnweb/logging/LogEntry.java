@@ -52,11 +52,11 @@ public class LogEntry implements Serializable
 
         switch(action.getTargetId())
         {
-        case RESOURCE_ID:
-            resourceId = targetId;
-            break;
-        default:
-            break; // right now other id types are not handled
+            case RESOURCE_ID:
+                resourceId = targetId;
+                break;
+            default:
+                break; // right now other id types are not handled
         }
 
         String url = "";//Learnweb.getInstance().getServerUrl() + "/lw/";
@@ -84,7 +84,8 @@ public class LogEntry implements Serializable
                 description = usernameLink + UtilBean.getLocaleMessage("log_adding_resource", resourceTitle, groupLink);
                 break;
             case deleting_resource:
-                if(!StringUtils.isEmpty(params)) resourceTitle = "<b>" + params + "</b>";
+                if(!StringUtils.isEmpty(params))
+                    resourceTitle = "<b>" + params + "</b>";
                 description = usernameLink + UtilBean.getLocaleMessage("log_deleting_resource", resourceTitle); // resourceTitle
                 break;
             case edit_resource:
@@ -102,15 +103,13 @@ public class LogEntry implements Serializable
             case commenting_resource:
                 description = usernameLink + UtilBean.getLocaleMessage("log_commenting_resource", resourceTitle);
                 Comment comment = Learnweb.getInstance().getResourceManager().getComment(StringHelper.parseInt(params));
-                if(comment != null) description += " " + UtilBean.getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
+                if(comment != null)
+                    description += " " + UtilBean.getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
                 break;
             case rating_resource:
             case thumb_rating_resource:
                 description = usernameLink + UtilBean.getLocaleMessage("log_thumb_rating_resource", resourceTitle);
                 break;
-            // case opening_url:
-            //     description = usernameLink + UtilBean.getLocaleMessage("log_opening_url_resource", params);
-            //     break;
             case searching:
                 description = usernameLink + UtilBean.getLocaleMessage("log_searching_resource", params);
                 break;
@@ -177,33 +176,31 @@ public class LogEntry implements Serializable
                 String topic = "<a href=\"" + url + "group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + params + "</a>";
                 description = usernameLink + "has replied to " + "<b>" + topic + "</b>" + " topic";
                 break;
-            case group_removing_resource: // TODO: replace or implement
-                if(!StringUtils.isEmpty(params)) resourceTitle = "<b>" + params + "</b>";
-                description = usernameLink + UtilBean.getLocaleMessage("log_group_removing_resource", resourceTitle, groupLink);
-                break;
 
             // General actions
             case login:
-                description = usernameLink + UtilBean.getLocaleMessage("log_login", params);
+                description = usernameLink + UtilBean.getLocaleMessage("log_login");
                 break;
             case logout:
-                description = usernameLink + UtilBean.getLocaleMessage("log_logout", params);
+                description = usernameLink + UtilBean.getLocaleMessage("log_logout");
                 break;
             case register:
-                description = usernameLink + UtilBean.getLocaleMessage("log_register", params);
+                description = usernameLink + UtilBean.getLocaleMessage("log_register");
                 break;
             case changing_profile:
-                description = usernameLink + UtilBean.getLocaleMessage("log_change_profile", params);
+                description = usernameLink + UtilBean.getLocaleMessage("log_change_profile");
                 break;
-            case submission_view_resource:
-                description = usernameLink + UtilBean.getLocaleMessage("log_submission_view_resource", params);
+            case submission_view_resources:
+                description = usernameLink + UtilBean.getLocaleMessage("log_submission_view_resources");
                 break;
             case submission_submitted:
-                description = usernameLink + UtilBean.getLocaleMessage("log_submission_submit", params);
+                description = usernameLink + UtilBean.getLocaleMessage("log_submission_submit");
                 break;
 
             default:
                 description = "no message for action " + action.name(); // should never happen;
+
+                // unused translations that might become useful again: log_opening_url_resource, log_group_removing_resource
         }
     }
 

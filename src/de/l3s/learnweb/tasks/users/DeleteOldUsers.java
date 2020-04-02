@@ -51,7 +51,7 @@ public class DeleteOldUsers
             rm.setReindexMode(true);
             learnweb.getSolrClient().reIndexResource(rm.getResource(200233));
 
-            //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
+            deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
             /*
             deleteUsersWhoHaveBeenSoftDeleted(1);
             deleteAbandonedGroups();
@@ -128,6 +128,7 @@ public class DeleteOldUsers
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_user` WHERE (organisation_id = ? AND is_moderator = 0 AND is_admin = 0 AND `registration_date` < ?) OR deleted = 1");
         select.setInt(1, organisationId);
         select.setTimestamp(2, Timestamp.from(deadline));
+
         ResultSet rs = select.executeQuery();
 
         while(rs.next())
@@ -143,17 +144,24 @@ public class DeleteOldUsers
                 continue;
             }
 
-            if(user.getUsername().startsWith("Anonym"))
-            {
-                log.debug("Ignore anonymous user: " + userId);
-                continue;
-            }
-
             log.debug("Delete: " + user.getUsername() + "; registration=" + user.getRegistrationDate() + "; login=" + lastLogin + "; mail=" + user.getEmail() + "; " + user.isModerator());
 
             um.deleteUserHard(user);
         }
 
+        /*
+        // remove references to deleted resources
+        String[] tables = { "lw_user_log" };
+        
+        for(String table : tables)
+        {
+            try(PreparedStatement delete = learnweb.getConnection().prepareStatement("delete d FROM `" + table + "` d LEFT JOIN lw_user u USING(user_id) WHERE d.user_id != 0 AND u.user_id is null"))
+            {
+                int numRowsAffected = delete.executeUpdate();
+                log.debug("Deleted " + numRowsAffected + " rows from " + table);
+            }
+        }
+        */
         log.info("deleteUsersThatHaventLoggedInForYears() - End");
     }
 

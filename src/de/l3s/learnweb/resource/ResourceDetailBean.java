@@ -64,7 +64,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public void onLoad()
     {
-        if(isAjaxRequest())
+        if(isAjaxRequest() || !isLoggedIn())
             return;
 
         if(resourceId > 0)
