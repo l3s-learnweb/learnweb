@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.survey.SurveyQuestion.QuestionType;
 import de.l3s.learnweb.user.User;
@@ -323,7 +322,7 @@ public class SurveyManager
      */
     public List<Resource> getSurveyResourcesByUserAndCourse(int courseId) throws SQLException
     {
-        return learnweb.getResourceManager().getResources("SELECT " + ResourceManager.RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_group g USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND g.course_id=? ORDER BY r.title", null, courseId);
+        return learnweb.getResourceManager().getSurveyResourcesByUserAndCourse(courseId);
     }
 
     protected Resource saveSurveyResource(SurveyResource surveyResource) throws SQLException
@@ -371,19 +370,6 @@ public class SurveyManager
             }
         }
         return users;
-    }
-
-    /**
-     * Returns all survey resources by survey id
-     *
-     * @param surveyId
-     * @return
-     * @throws SQLException
-     */
-
-    public List<Resource> getSurveyResourcesBySurveyId(int surveyId) throws SQLException
-    {
-        return learnweb.getResourceManager().getResources("SELECT " + ResourceManager.RESOURCE_COLUMNS + " FROM `lw_resource` r JOIN `lw_survey_resource` sr ON r.`resource_id`=sr.`resource_id` WHERE `survey_id`=?", null, surveyId);
     }
 
     /**

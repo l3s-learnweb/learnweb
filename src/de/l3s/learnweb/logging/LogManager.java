@@ -4,13 +4,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -25,13 +28,28 @@ public class LogManager
 {
     private static final Logger log = Logger.getLogger(LogManager.class);
 
-    // TODO Philipp: check if join with user column is still necessary
-    private static final String LOG_SELECT = "SELECT user_id, u.username, action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title, u.image_file_id FROM lw_user_log ul JOIN lw_user u USING(user_id) LEFT JOIN lw_resource r ON action IN(0,1,2,3,15,14,19,21,32,11,54,55,6,8) AND target_id = r.resource_id LEFT JOIN lw_group g ON ul.group_id = g.group_id";
+    // TODO Philipp: WIP refactoring
+    private static final String LOG_SELECT = "SELECT user_id, '',action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title FROM lw_user_log ul LEFT JOIN lw_resource r ON action IN(0,1,2,3,15,14,19,21,32,11,54,55,6,8) AND target_id = r.resource_id LEFT JOIN lw_group g ON ul.group_id = g.group_id";
     private static final Action[] LOG_DEFAULT_FILTER = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description,
             Action.group_changing_leader, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
             Action.changing_office_resource, Action.forum_topic_added, Action.forum_post_added, Action.deleting_folder, Action.add_folder };
 
     private static LogManager instance;
+
+    private static String resourceActionIds; // only log entries representing theses actions will be retrieved for a given resource
+    static
+    {
+        Set<Action> resourceActions = Arrays.stream(Action.values()).filter(a -> a.getTargetId() == ActionTargetId.RESOURCE_ID).collect(Collectors.toSet());
+        // remove actions we don't want to show
+        resourceActions.remove(Action.opening_resource);
+        resourceActions.remove(Action.glossary_open);
+        resourceActions.remove(Action.lock_interrupted_returned_resource);
+        resourceActions.remove(Action.lock_rejected_edit_resource);
+        //resourceActions.remove(Action.downloading);
+
+        resourceActionIds = resourceActions.stream().map(a -> Integer.toString(a.ordinal())).collect(Collectors.joining(","));
+    }
+
     private final Learnweb learnweb;
 
     public static LogManager getInstance(Learnweb learnweb)
@@ -76,7 +94,7 @@ public class LogManager
 
     /**
      * Logs a user action. The parameters "targetId" and "params" depend on the
-     * logged action. Look at the code of LogEntry.Action for explanation.
+     * logged action. Look at the code of @see de.l3s.learnweb.logging.Action for explanation.
      *
      * @param userId
      * @param action
@@ -120,62 +138,68 @@ public class LogManager
      */
     public List<LogEntry> getLogsByUser(int userId, Action[] actions, int limit) throws SQLException
     {
-        LinkedList<LogEntry> log = new LinkedList<>();
 
         if(null == actions)
             actions = LOG_DEFAULT_FILTER;
 
+        return getLogs(LOG_SELECT + " WHERE user_id = ? AND action IN(" + idsFromActions(actions) + ") ORDER BY timestamp DESC LIMIT " + limit, userId);
+    }
+
+    public List<LogEntry> getLogs(String query, Object... parameter)
+    {
+        LinkedList<LogEntry> logEntries = new LinkedList<>();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(query))
+        {
+            int i = 1;
+            for(Object param : parameter)
+            {
+                select.setObject(i++, param);
+            }
+
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                logEntries.add(new LogEntry(rs));
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Can't get logs for query: " + query + "; parmeter: " + parameter, e);
+        }
+        return logEntries;
+    }
+
+    private static String idsFromActions(Action[] actions)
+    {
         StringBuilder sb = new StringBuilder();
         for(Action action : actions)
         {
             sb.append(",");
             sb.append(action.ordinal());
         }
-        PreparedStatement select = learnweb.getConnection().prepareStatement(LOG_SELECT + " WHERE user_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC LIMIT " + limit);
-        select.setInt(1, userId);
-
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            log.add(new LogEntry(rs));
-        }
-        select.close();
-
-        return log;
+        return sb.substring(1).toString();
     }
 
     /**
      *
      * @param limit if limit is -1 all log entries are returned
      */
-    public List<LogEntry> getLogsByResource(int resourceId, int limit) throws SQLException
+    public List<LogEntry> getLogsByResource(Resource resource, int limit) throws SQLException
     {
-        LinkedList<LogEntry> log = new LinkedList<>();
-
-        Set<Action> actions = new HashSet<>(Action.getActionsByCategory(ActionCategory.RESOURCE));
-        actions.remove(Action.opening_resource);
-        actions.remove(Action.lock_interrupted_returned_resource);
-        actions.remove(Action.lock_rejected_edit_resource);
-        StringBuilder sb = new StringBuilder();
-        for(Action action : actions)
-        {
-            sb.append(",");
-            sb.append(action.ordinal());
-        }
-
         // TODO philipp change query and add index
         String limitStr = limit > 0 ? "LIMIT " + limit : "";
-        PreparedStatement select = learnweb.getConnection().prepareStatement(LOG_SELECT + " WHERE target_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
-        select.setInt(1, resourceId);
 
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            log.add(new LogEntry(rs));
-        }
-        select.close();
+        Instant start = Instant.now();
+        List<LogEntry> logs = getLogs(LOG_SELECT + " WHERE ul.group_id = ? AND action IN(" + resourceActionIds + ") AND target_id = ? ORDER BY timestamp DESC " + limitStr, resource.getGroupId(), resource.getId());
+        log.debug("getLogsByResource: " + Duration.between(start, Instant.now()).getNano());
 
-        return log;
+        return logs;
+        /*
+         * LIMIT ? OFFSET ?
+         *  int page, int pageSize
+         *          select.setInt(2, pageSize);
+        select.setInt(3, page * pageSize);
+         */
     }
 
     /**
@@ -188,44 +212,18 @@ public class LogManager
      */
     public List<LogEntry> getLogsByGroup(int groupId, Action[] actions, int limit) throws SQLException
     {
-        LinkedList<LogEntry> log = new LinkedList<>();
-
         if(null == actions)
             actions = LOG_DEFAULT_FILTER;
 
-        StringBuilder sb = new StringBuilder();
-        for(Action action : actions)
-        {
-            sb.append(",");
-            sb.append(action.ordinal());
-        }
-
         String limitStr = limit > 0 ? "LIMIT " + limit : "";
 
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr))
-        {
-            select.setInt(1, groupId);
-
-            ResultSet rs = select.executeQuery();
-            while(rs.next())
-            {
-                log.add(new LogEntry(rs));
-            }
-        }
-        return log;
+        return getLogs(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + idsFromActions(actions) + ") ORDER BY timestamp DESC " + limitStr, groupId);
     }
 
     public SummaryOverview getLogsByGroup(int groupId, Action[] actions, LocalDateTime from, LocalDateTime to) throws SQLException
     {
-        StringBuilder actionsString = new StringBuilder();
-        for(Action action : actions)
-        {
-            actionsString.append(",");
-            actionsString.append(action.ordinal());
-        }
-
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString.toString().substring(1) + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))
+                LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + idsFromActions(actions) + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))
         {
             select.setInt(1, groupId);
             select.setTimestamp(2, Timestamp.valueOf(from));
@@ -294,19 +292,12 @@ public class LogManager
         if(null == actions)
             actions = LOG_DEFAULT_FILTER;
 
-        StringBuilder sb = new StringBuilder();
-        for(Action action : actions)
-        {
-            sb.append(",");
-            sb.append(action.ordinal());
-        }
-
         String limitStr = "";
         if(limit > 0)
             limitStr = "LIMIT " + limit;
 
         PreparedStatement select = learnweb.getConnection()
-                .prepareStatement(LOG_SELECT + " WHERE ul.group_id IN(SELECT group_id FROM lw_group_user WHERE user_id=?) AND user_id != 0 AND user_id!=? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
+                .prepareStatement(LOG_SELECT + " WHERE ul.group_id IN(SELECT group_id FROM lw_group_user WHERE user_id=?) AND user_id != 0 AND user_id!=? AND action IN(" + idsFromActions(actions) + ") ORDER BY timestamp DESC " + limitStr);
         select.setInt(1, userId);
         select.setInt(2, userId);
 
@@ -320,8 +311,4 @@ public class LogManager
         return log;
     }
 
-    public void onDestroy()
-    {
-
-    }
 }

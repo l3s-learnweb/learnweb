@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +19,6 @@ import org.apache.log4j.Logger;
 import de.l3s.interwebj.jaxb.SearchResultEntity;
 import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
@@ -36,23 +34,14 @@ import de.l3s.util.StringHelper;
 
 public class ResourceManager
 {
-    private static final String COMMENT_COLUMNS = "`comment_id`, `resource_id`, `user_id`, `text`, `date`";
-    public final static String RESOURCE_COLUMNS = "r.read_only_transcript, r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.resource_timestamp, r.creation_date, r.metadata, r.group_id, r.folder_id";
-
     private static final Logger log = Logger.getLogger(ResourceManager.class);
+    private static final String COMMENT_COLUMNS = "`comment_id`, `resource_id`, `user_id`, `text`, `date`";
+    private static final String RESOURCE_COLUMNS = "r.read_only_transcript, r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.resource_timestamp, r.creation_date, r.metadata, r.group_id, r.folder_id";
 
     private final Learnweb learnweb;
-
-    private ICache<Resource> cache;
+    private final ICache<Resource> cache;
 
     private boolean reindexMode = false; // if this flag is true some performance optimizations for reindexing all resources are enabled
-
-    public enum Order
-    {
-        TITLE,
-        TYPE,
-        DATE
-    }
 
     public ResourceManager(Learnweb learnweb)
     {
@@ -61,7 +50,6 @@ public class ResourceManager
 
         this.learnweb = learnweb;
         this.cache = cacheSize == 0 ? new DummyCache<>() : new Cache<>(cacheSize);
-
     }
 
     public int getResourceCount() throws SQLException
@@ -84,7 +72,7 @@ public class ResourceManager
 
     public List<Resource> getResourcesByTagthewebCategory(String category, int maxResults) throws SQLException
     {
-        return learnweb.getResourceManager().getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category_tagtheweb USING ( resource_id ) WHERE category = ? AND deleted = 0 LIMIT ? ", category, maxResults);
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category_tagtheweb USING ( resource_id ) WHERE category = ? AND deleted = 0 LIMIT ? ", category, maxResults);
     }
 
     public List<Resource> getResourcesByUserId(int userId) throws SQLException
@@ -101,10 +89,6 @@ public class ResourceManager
     {
         return getResourcesByTagId(tagId, 1000);
     }
-
-    /**
-     * @see de.l3s.learnweb.resource.ResourceManager#getResourcesByTagId(int, int)
-     */
 
     public List<Resource> getResourcesByTagId(int tagId, int maxResults) throws SQLException
     {
@@ -126,29 +110,31 @@ public class ResourceManager
 
     public boolean isResourceRatedByUser(int resourceId, int userId) throws SQLException
     {
-        PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_resource_rating WHERE resource_id =  ? AND user_id = ?");
-        stmt.setInt(1, resourceId);
-        stmt.setInt(2, userId);
-        ResultSet rs = stmt.executeQuery();
-        boolean response = rs.next();
-        stmt.close();
-        return response;
+        try(PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_resource_rating WHERE resource_id =  ? AND user_id = ?"))
+        {
+            stmt.setInt(1, resourceId);
+            stmt.setInt(2, userId);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        }
     }
 
     protected void rateResource(int resourceId, int userId, int value) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO lw_resource_rating (`resource_id`, `user_id`, `rating`) VALUES(?, ?, ?)");
-        replace.setInt(1, resourceId);
-        replace.setInt(2, userId);
-        replace.setInt(3, value);
-        replace.executeUpdate();
-        replace.close();
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO lw_resource_rating (`resource_id`, `user_id`, `rating`) VALUES(?, ?, ?)"))
+        {
+            replace.setInt(1, resourceId);
+            replace.setInt(2, userId);
+            replace.setInt(3, value);
+            replace.executeUpdate();
+        }
 
-        PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE lw_resource SET rating = rating + ?, rate_number = rate_number + 1 WHERE resource_id = ?");
-        update.setInt(1, value);
-        update.setInt(2, resourceId);
-        update.executeUpdate();
-        update.close();
+        try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE lw_resource SET rating = rating + ?, rate_number = rate_number + 1 WHERE resource_id = ?"))
+        {
+            update.setInt(1, value);
+            update.setInt(2, resourceId);
+            update.executeUpdate();
+        }
     }
 
     protected void thumbRateResource(int resourceId, int userId, int direction) throws SQLException
@@ -156,72 +142,49 @@ public class ResourceManager
         if(direction != 1 && direction != -1)
             throw new IllegalArgumentException("Illegal value [" + direction + "] for direction. Valid values are 1 and -1");
 
-        PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_thumb` (`resource_id` ,`user_id` ,`direction`) VALUES (?,?,?)");
-        insert.setInt(1, resourceId);
-        insert.setInt(2, userId);
-        insert.setInt(3, direction);
-        insert.executeUpdate();
-        insert.close();
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_thumb` (`resource_id` ,`user_id` ,`direction`) VALUES (?,?,?)"))
+        {
+            insert.setInt(1, resourceId);
+            insert.setInt(2, userId);
+            insert.setInt(3, direction);
+            insert.executeUpdate();
+        }
     }
 
     protected void loadThumbRatings(Resource resource) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM `lw_thumb` WHERE `resource_id` = ?");
-        select.setInt(1, resource.getId());
-        ResultSet rs = select.executeQuery();
-
-        if(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM `lw_thumb` WHERE `resource_id` = ?"))
         {
-            resource.setThumbUp(rs.getInt(1));
-            resource.setThumbDown(rs.getInt(2));
+            select.setInt(1, resource.getId());
+            ResultSet rs = select.executeQuery();
+
+            if(rs.next())
+            {
+                resource.setThumbUp(rs.getInt(1));
+                resource.setThumbDown(rs.getInt(2));
+            }
         }
-        else
-            log.warn("no results for id: " + resource.getId());
-
-        select.close();
     }
-
-    public LogEntry loadThumbnailUpdateInfo(int resourceId) throws SQLException
-    {
-        LogEntry e = null;
-
-        PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT user_id, u.username, action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title, u.image_file_id FROM lw_user_log ul JOIN lw_user u USING(user_id) JOIN lw_resource r ON action=45 AND target_id = r.resource_id JOIN lw_group g ON ul.group_id = g.group_id WHERE r.resource_id = ? ORDER BY timestamp DESC LIMIT 1");
-        select.setInt(1, resourceId);
-        ResultSet rs = select.executeQuery();
-
-        if(rs.next())
-        {
-            e = new LogEntry(rs);
-        }
-
-        return e;
-    }
-
-    /**
-     * @see de.l3s.learnweb.resource.ResourceManager#isResourceThumbRatedByUser(int, int)
-     */
 
     public boolean isResourceThumbRatedByUser(int resourceId, int userId) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_thumb WHERE resource_id = ? AND user_id = ?");
-        select.setInt(1, resourceId);
-        select.setInt(2, userId);
-        ResultSet rs = select.executeQuery();
-        boolean isRated = rs.next();
-        select.close();
-
-        return isRated;
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_thumb WHERE resource_id = ? AND user_id = ?"))
+        {
+            select.setInt(1, resourceId);
+            select.setInt(2, userId);
+            ResultSet rs = select.executeQuery();
+            return rs.next();
+        }
     }
 
-    private Resource getResource(int resourceId, boolean useCache) throws SQLException
+    public Resource getResource(int resourceId) throws SQLException
     {
         if(resourceId < 0)
             return null;
 
         Resource resource = cache.get(resourceId);
 
-        if(null != resource && useCache)
+        if(null != resource)
             return resource;
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM `lw_resource` r WHERE resource_id = ?"))
@@ -232,15 +195,8 @@ public class ResourceManager
             if(!rs.next())
                 return null;
 
-            resource = createResource(rs);
+            return createResource(rs);
         }
-
-        return resource;
-    }
-
-    public Resource getResource(int resourceId) throws SQLException
-    {
-        return getResource(resourceId, true);
     }
 
     public void deleteResource(Resource resource) throws SQLException
@@ -261,10 +217,11 @@ public class ResourceManager
         }
 
         // flag the resource as deleted
-        PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_resource` SET deleted = 1 WHERE `resource_id` = ?");
-        update.setInt(1, resourceId);
-        update.executeUpdate();
-        update.close();
+        try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_resource` SET deleted = 1 WHERE `resource_id` = ?"))
+        {
+            update.setInt(1, resourceId);
+            update.executeUpdate();
+        }
 
         // remove resource from cache
         cache.remove(resourceId);
@@ -307,92 +264,92 @@ public class ResourceManager
             throw new IllegalArgumentException("Resource has no owner");
 
         String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted, read_only_transcript) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-
-        if(resource.getId() < 0) // the Resource is not yet stored at the database
-            replace.setNull(1, java.sql.Types.INTEGER);
-        else
-            replace.setInt(1, resource.getId());
-        replace.setString(2, resource.getTitle());
-        replace.setString(3, resource.getDescription());
-        replace.setString(4, resource.getUrl());
-        replace.setInt(5, resource.getStorageType());
-        replace.setInt(6, resource.getRights());
-        replace.setString(7, resource.getSource().name());
-        replace.setString(8, resource.getType().name());
-        replace.setString(9, resource.getFormat());
-        replace.setInt(10, resource.getUserId());
-        replace.setInt(11, resource.getRatingSum());
-        replace.setInt(12, resource.getRateNumber());
-        replace.setString(13, resource.getQuery());
-        replace.setString(14, resource.getFileName());
-        replace.setString(15, resource.getMaxImageUrl());
-        replace.setInt(16, resource.getOriginalResourceId());
-        replace.setString(17, resource.getMachineDescription());
-        replace.setString(18, resource.getAuthor());
-        replace.setString(19, resource.getFileUrl());
-
-        Thumbnail[] thumbnails = { resource.getThumbnail0(), resource.getThumbnail1(), resource.getThumbnail2(), resource.getThumbnail3(), resource.getThumbnail4() };
-
-        for(int i = 0, m = 20; i < 5; i++)
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
         {
-            String url = null;
-            int fileId = 0;
-            int width = 0;
-            int height = 0;
+            if(resource.getId() < 0) // the Resource is not yet stored at the database
+                replace.setNull(1, java.sql.Types.INTEGER);
+            else
+                replace.setInt(1, resource.getId());
+            replace.setString(2, resource.getTitle());
+            replace.setString(3, resource.getDescription());
+            replace.setString(4, resource.getUrl());
+            replace.setInt(5, resource.getStorageType());
+            replace.setInt(6, resource.getRights());
+            replace.setString(7, resource.getSource().name());
+            replace.setString(8, resource.getType().name());
+            replace.setString(9, resource.getFormat());
+            replace.setInt(10, resource.getUserId());
+            replace.setInt(11, resource.getRatingSum());
+            replace.setInt(12, resource.getRateNumber());
+            replace.setString(13, resource.getQuery());
+            replace.setString(14, resource.getFileName());
+            replace.setString(15, resource.getMaxImageUrl());
+            replace.setInt(16, resource.getOriginalResourceId());
+            replace.setString(17, resource.getMachineDescription());
+            replace.setString(18, resource.getAuthor());
+            replace.setString(19, resource.getFileUrl());
 
-            Thumbnail tn = thumbnails[i];
-            if(tn != null) // a thumbnail is defined
+            Thumbnail[] thumbnails = { resource.getThumbnail0(), resource.getThumbnail1(), resource.getThumbnail2(), resource.getThumbnail3(), resource.getThumbnail4() };
+
+            for(int i = 0, m = 20; i < 5; i++)
             {
-                if(tn.getFileId() == 0) // TODO in the future don't save urls
-                    url = tn.getUrl();
-                fileId = tn.getFileId();
-                width = tn.getWidth();
-                height = tn.getHeight();
+                String url = null;
+                int fileId = 0;
+                int width = 0;
+                int height = 0;
+
+                Thumbnail tn = thumbnails[i];
+                if(tn != null) // a thumbnail is defined
+                {
+                    if(tn.getFileId() == 0)
+                    {
+                        url = tn.getUrl();
+                    }
+                    fileId = tn.getFileId();
+                    width = tn.getWidth();
+                    height = tn.getHeight();
+                }
+                replace.setString(m++, url);
+                replace.setInt(m++, fileId);
+                replace.setInt(m++, width);
+                replace.setInt(m++, height);
             }
-            replace.setString(m++, url);
-            replace.setInt(m++, fileId);
-            replace.setInt(m++, width);
-            replace.setInt(m++, height);
+
+            replace.setString(40, resource.getEmbeddedRaw());
+            replace.setString(41, resource.getTranscript());
+            replace.setString(42, resource.getOnlineStatus().name());
+            replace.setString(43, resource.getIdAtService());
+            replace.setInt(44, resource.getDuration());
+            replace.setInt(45, resource.isRestricted() ? 1 : 0);
+            replace.setString(46, resource.getLanguage());
+            replace.setTimestamp(47, Sql.convertDateTime(resource.getCreationDate()));
+            Sql.setSerializedObject(replace, 48, resource.getMetadata());
+            replace.setInt(49, resource.getGroupId());
+            replace.setInt(50, resource.getFolderId());
+            replace.setInt(51, resource.isDeleted() ? 1 : 0);
+            replace.setInt(52, resource.isReadOnlyTranscript() ? 1 : 0);
+
+            replace.executeUpdate();
+
+            if(resource.getId() < 0) // get the assigned id
+            {
+                ResultSet rs = replace.getGeneratedKeys();
+                if(!rs.next())
+                    throw new SQLException("database error: no id generated");
+                resource.setId(rs.getInt(1));
+                resource.setLocation(getLocation(resource));
+                cache.put(resource);
+
+                // persist the relation between the resource and its files
+                learnweb.getFileManager().addFilesToResource(resource.getFiles().values(), resource);
+            }
+            else // edited resources need to be updated in the cache
+            {
+                cache.remove(resource.getId());
+                cache.put(resource);
+                resource.clearCaches();
+            }
         }
-
-        replace.setString(40, resource.getEmbeddedRaw());
-        replace.setString(41, resource.getTranscript());
-        replace.setString(42, resource.getOnlineStatus().name());
-        replace.setString(43, resource.getIdAtService());
-        replace.setInt(44, resource.getDuration());
-        replace.setInt(45, resource.isRestricted() ? 1 : 0);
-        replace.setString(46, resource.getLanguage());
-        replace.setTimestamp(47, Sql.convertDateTime(resource.getCreationDate()));
-        Sql.setSerializedObject(replace, 48, resource.getMetadata());
-        replace.setInt(49, resource.getGroupId());
-        replace.setInt(50, resource.getFolderId());
-        replace.setInt(51, resource.isDeleted() ? 1 : 0);
-        replace.setInt(52, resource.isReadOnlyTranscript() ? 1 : 0);
-
-        replace.executeUpdate();
-
-        if(resource.getId() < 0) // get the assigned id
-        {
-            ResultSet rs = replace.getGeneratedKeys();
-            if(!rs.next())
-                throw new SQLException("database error: no id generated");
-            resource.setId(rs.getInt(1));
-            resource.setLocation(getLocation(resource));
-            cache.put(resource);
-
-            // persist the relation between the resource and its files
-            learnweb.getFileManager().addFilesToResource(resource.getFiles().values(), resource);
-        }
-        else // edited resources need to be updated in the cache
-        {
-            cache.remove(resource.getId());
-            cache.put(resource);
-            resource.clearCaches();
-        }
-
-        replace.close();
-
         learnweb.getSolrClient().reIndexResource(resource);
 
         return resource;
@@ -429,17 +386,11 @@ public class ResourceManager
         return comment;
     }
 
-    private static String COMMENT_SELECT = "comment_id, resource_id, user_id, text, date";
-
-    /**
-     * @see de.l3s.learnweb.resource.ResourceManager#getCommentsByUserId(int)
-     */
-
     public List<Comment> getCommentsByUserId(int userId) throws SQLException
     {
         List<Comment> comments = new LinkedList<>();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` JOIN lw_resource USING(resource_id) WHERE `user_id` = ? AND deleted = 0");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_COLUMNS + " FROM `lw_comment` JOIN lw_resource USING(resource_id) WHERE `user_id` = ? AND deleted = 0");
         select.setInt(1, userId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -457,7 +408,7 @@ public class ResourceManager
 
         List<Comment> comments = new LinkedList<>();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` JOIN lw_resource USING(resource_id) WHERE `user_id` IN(" + userIdString + ") AND deleted = 0");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_COLUMNS + " FROM `lw_comment` JOIN lw_resource USING(resource_id) WHERE `user_id` IN(" + userIdString + ") AND deleted = 0");
 
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -473,7 +424,7 @@ public class ResourceManager
     {
         Comment comment = null;
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` WHERE `comment_id` = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_COLUMNS + " FROM `lw_comment` WHERE `comment_id` = ?");
         select.setInt(1, commentId);
         ResultSet rs = select.executeQuery();
 
@@ -490,7 +441,7 @@ public class ResourceManager
     {
         List<Comment> comments = new LinkedList<>();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` WHERE `resource_id` = ? ORDER BY date DESC");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_COLUMNS + " FROM `lw_comment` WHERE `resource_id` = ? ORDER BY date DESC");
         select.setInt(1, id);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -504,32 +455,34 @@ public class ResourceManager
 
     public Tag getTag(String tagName) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name FROM lw_tag WHERE name LIKE ? ORDER BY tag_id LIMIT 1");
-        select.setString(1, tagName);
-        ResultSet rs = select.executeQuery();
-        if(!rs.next())
-            return null;
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name FROM lw_tag WHERE name LIKE ? ORDER BY tag_id LIMIT 1"))
+        {
+            select.setString(1, tagName);
+            ResultSet rs = select.executeQuery();
+            if(!rs.next())
+                return null;
 
-        Tag tag = new Tag(rs.getInt("tag_id"), rs.getString("name"));
-        select.close();
-        return tag;
+            return new Tag(rs.getInt("tag_id"), rs.getString("name"));
+        }
     }
 
     protected void deleteTag(Tag tag, Resource resource) throws SQLException
     {
-        PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_tag WHERE resource_id = ? AND tag_id = ?");
-        delete.setInt(1, resource.getId());
-        delete.setInt(2, tag.getId());
-        delete.executeUpdate();
-        delete.close();
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_tag WHERE resource_id = ? AND tag_id = ?"))
+        {
+            delete.setInt(1, resource.getId());
+            delete.setInt(2, tag.getId());
+            delete.executeUpdate();
+        }
     }
 
     protected void deleteComment(Comment comment) throws SQLException
     {
-        PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_comment WHERE comment_id = ?");
-        delete.setInt(1, comment.getId());
-        delete.executeUpdate();
-        delete.close();
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_comment WHERE comment_id = ?"))
+        {
+            delete.setInt(1, comment.getId());
+            delete.executeUpdate();
+        }
     }
 
     /**
@@ -540,14 +493,15 @@ public class ResourceManager
     {
         LinkedList<Tag> tags = new LinkedList<>();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name FROM `lw_resource_tag` JOIN lw_tag USING(tag_id) JOIN lw_resource USING(resource_id) WHERE `user_id` = ? AND deleted = 0");
-        select.setInt(1, userId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name FROM `lw_resource_tag` JOIN lw_tag USING(tag_id) JOIN lw_resource USING(resource_id) WHERE `user_id` = ? AND deleted = 0"))
         {
-            tags.add(new Tag(rs.getInt("tag_id"), rs.getString("name")));
+            select.setInt(1, userId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                tags.add(new Tag(rs.getInt("tag_id"), rs.getString("name")));
+            }
         }
-        select.close();
         return tags;
     }
 
@@ -580,31 +534,34 @@ public class ResourceManager
 
     public void tagResource(Resource resource, Tag tag, User user) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_tag` (`resource_id`, `tag_id`, `user_id`) VALUES (?, ?, ?)");
-        replace.setInt(1, null == resource ? 0 : resource.getId());
-        replace.setInt(2, tag.getId());
-        replace.setInt(3, null == user ? 0 : user.getId());
-        replace.executeUpdate();
-        replace.close();
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_tag` (`resource_id`, `tag_id`, `user_id`) VALUES (?, ?, ?)"))
+        {
+            replace.setInt(1, null == resource ? 0 : resource.getId());
+            replace.setInt(2, tag.getId());
+            replace.setInt(3, null == user ? 0 : user.getId());
+            replace.executeUpdate();
+        }
     }
 
     public void addCategory(Resource resource, String category, Double precision) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category_tagtheweb` (`resource_id`, `category`, `precision`) VALUES (?, ?, ?)");
-        replace.setInt(1, null == resource ? 0 : resource.getId());
-        replace.setString(2, category);
-        replace.setDouble(3, precision);
-        replace.executeUpdate();
-        replace.close();
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category_tagtheweb` (`resource_id`, `category`, `precision`) VALUES (?, ?, ?)"))
+        {
+            replace.setInt(1, null == resource ? 0 : resource.getId());
+            replace.setString(2, category);
+            replace.setDouble(3, precision);
+            replace.executeUpdate();
+        }
     }
 
     protected void deleteCategory(Resource resource, String category) throws SQLException
     {
-        PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_category_tagtheweb WHERE resource_id = ? AND category = ?");
-        delete.setInt(1, resource.getId());
-        delete.setString(2, category);
-        delete.executeUpdate();
-        delete.close();
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_category_tagtheweb WHERE resource_id = ? AND category = ?"))
+        {
+            delete.setInt(1, resource.getId());
+            delete.setString(2, category);
+            delete.executeUpdate();
+        }
     }
 
     public Map<String, Double> getCategoriesByResource(int resourceId) throws SQLException
@@ -633,79 +590,61 @@ public class ResourceManager
 
     private void saveTag(Tag tag) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_tag` (tag_id, name) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
-
-        if(tag.getId() < 0) // the tag is not yet stored at the database
-            replace.setNull(1, java.sql.Types.INTEGER);
-        else
-            replace.setInt(1, tag.getId());
-        replace.setString(2, tag.getName());
-        replace.executeUpdate();
-
-        if(tag.getId() < 0) // get the assigned id
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_tag` (tag_id, name) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS))
         {
-            ResultSet rs = replace.getGeneratedKeys();
-            if(!rs.next())
-                throw new SQLException("database error: no id generated");
-            tag.setId(rs.getInt(1));
+            if(tag.getId() < 0) // the tag is not yet stored at the database
+                replace.setNull(1, java.sql.Types.INTEGER);
+            else
+                replace.setInt(1, tag.getId());
+            replace.setString(2, tag.getName());
+            replace.executeUpdate();
+
+            if(tag.getId() < 0) // get the assigned id
+            {
+                ResultSet rs = replace.getGeneratedKeys();
+                if(!rs.next())
+                    throw new SQLException("database error: no id generated");
+                tag.setId(rs.getInt(1));
+            }
         }
-
-        replace.close();
-    }
-
-    /**
-     * Extracts the plain resources from a list of decorated resources
-     *
-     * @param resources
-     * @return
-     */
-    public static List<Resource> convertDecoratedResources(List<ResourceDecorator> resources)
-    {
-        ArrayList<Resource> output = new ArrayList<>(resources.size());
-
-        for(ResourceDecorator decoratedResource : resources)
-            output.add(decoratedResource.getResource());
-
-        return output;
     }
 
     public void saveComment(Comment comment) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_comment` (" + COMMENT_COLUMNS + ") VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-
-        if(comment.getId() < 0) // the comment is not yet stored at the database
-            replace.setNull(1, java.sql.Types.INTEGER);
-        else
-            replace.setInt(1, comment.getId());
-        replace.setInt(2, comment.getResourceId());
-        replace.setInt(3, comment.getUserId());
-        replace.setString(4, comment.getText());
-        replace.setTimestamp(5, Sql.convertDateTime(comment.getDate()));
-        replace.executeUpdate();
-
-        if(comment.getId() < 0) // get the assigned id
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_comment` (" + COMMENT_COLUMNS + ") VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
         {
-            ResultSet rs = replace.getGeneratedKeys();
-            if(!rs.next())
-                throw new SQLException("database error: no id generated");
-            comment.setId(rs.getInt(1));
-        }
+            if(comment.getId() < 0) // the comment is not yet stored at the database
+                replace.setNull(1, java.sql.Types.INTEGER);
+            else
+                replace.setInt(1, comment.getId());
+            replace.setInt(2, comment.getResourceId());
+            replace.setInt(3, comment.getUserId());
+            replace.setString(4, comment.getText());
+            replace.setTimestamp(5, Sql.convertDateTime(comment.getDate()));
+            replace.executeUpdate();
 
-        replace.close();
+            if(comment.getId() < 0) // get the assigned id
+            {
+                ResultSet rs = replace.getGeneratedKeys();
+                if(!rs.next())
+                    throw new SQLException("database error: no id generated");
+                comment.setId(rs.getInt(1));
+            }
+        }
     }
 
     public LinkedList<ArchiveUrl> getArchiveUrlsByResourceId(int id) throws SQLException
     {
-
         LinkedList<ArchiveUrl> archiveUrls = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT archive_url, timestamp FROM `lw_resource_archiveurl` WHERE `resource_id` = ? ORDER BY timestamp");
-        select.setInt(1, id);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT archive_url, timestamp FROM `lw_resource_archiveurl` WHERE `resource_id` = ? ORDER BY timestamp"))
         {
-            archiveUrls.add(new ArchiveUrl(rs.getString("archive_url"), rs.getTimestamp("timestamp")));
+            select.setInt(1, id);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                archiveUrls.add(new ArchiveUrl(rs.getString("archive_url"), rs.getTimestamp("timestamp")));
+            }
         }
-        select.close();
         return archiveUrls;
     }
 
@@ -713,101 +652,42 @@ public class ResourceManager
     {
         SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         LinkedList<ArchiveUrl> archiveUrls = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT url_id FROM `wb_url` WHERE `url` = ?");
-        select.setString(1, url);
-        ResultSet rs = select.executeQuery();
-        if(rs.next())
+        int urlId;
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT url_id FROM `wb_url` WHERE `url` = ?"))
         {
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `wb_url_capture` WHERE `url_id` = ? ORDER BY timestamp");
-            pStmt.setInt(1, rs.getInt(1));
+            select.setString(1, url);
+            ResultSet rs = select.executeQuery();
+            if(!rs.next())
+                return archiveUrls;
+
+            urlId = rs.getInt(1);
+        }
+
+        try(PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `wb_url_capture` WHERE `url_id` = ? ORDER BY timestamp"))
+        {
+            pStmt.setInt(1, urlId);
             ResultSet rs2 = pStmt.executeQuery();
             while(rs2.next())
             {
                 Date timestamp = new Date(rs2.getTimestamp(1).getTime());
                 archiveUrls.add(new ArchiveUrl("https://web.archive.org/web/" + waybackDateFormat.format(timestamp) + "/" + url, timestamp));
             }
-            pStmt.close();
         }
-        select.close();
         return archiveUrls;
     }
 
     public void saveArchiveUrlsByResourceId(int resourceId, List<ArchiveUrl> archiveUrls) throws SQLException
     {
-        for(ArchiveUrl version : archiveUrls)
+        try(PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)"))
         {
-            PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
-            prepStmt.setInt(1, resourceId);
-            prepStmt.setString(2, version.getArchiveUrl());
-            prepStmt.setTimestamp(3, Sql.convertDateTime(version.getTimestamp()));
-            prepStmt.executeUpdate();
-            prepStmt.close();
+            for(ArchiveUrl version : archiveUrls)
+            {
+                prepStmt.setInt(1, resourceId);
+                prepStmt.setString(2, version.getArchiveUrl());
+                prepStmt.setTimestamp(3, Sql.convertDateTime(version.getTimestamp()));
+                prepStmt.executeUpdate();
+            }
         }
-    }
-
-    public List<Resource> getResourcesByGroupId(int groupId) throws SQLException
-    {
-        List<Resource> resources = new LinkedList<>();
-
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? and deleted = 0");
-        select.setInt(1, groupId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            Resource resource = createResource(rs);
-
-            if(null != resource)
-                resources.add(resource);
-        }
-        select.close();
-
-        return resources;
-    }
-
-    public List<Resource> getResourcesByCourseId(int courseId) throws SQLException
-    {
-        List<Resource> resources = new LinkedList<>();
-
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` IN (SELECT group_id FROM lw_group WHERE course_id = ?) and deleted = 0");
-        select.setInt(1, courseId);
-
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            Resource resource = createResource(rs);
-
-            if(null != resource)
-                resources.add(resource);
-        }
-        select.close();
-
-        return resources;
-    }
-
-    public List<ResourceDecorator> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
-    {
-        List<ResourceDecorator> resources = new LinkedList<>();
-
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
-        select.setInt(1, groupId);
-        select.setInt(2, pageSize);
-        select.setInt(3, page * pageSize);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            Resource resource = createResource(rs);
-
-            ResourceDecorator decoratedResource = new ResourceDecorator(resource);
-
-            resources.add(decoratedResource);
-            /*
-            if(null != resource)
-            resources.add(resource, resource.getOwnerUser(), resource.getCreationDate());
-            */
-        }
-        select.close();
-
-        return resources;
     }
 
     /**
@@ -1111,6 +991,11 @@ public class ResourceManager
         return resource;
     }
 
+    public List<Resource> getResourcesByGroupId(int groupId) throws SQLException
+    {
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? and deleted = 0", null, groupId);
+    }
+
     public List<Resource> getResourcesByFolderId(int folderId) throws SQLException
     {
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r  WHERE folder_id = ? AND deleted = 0", null, folderId);
@@ -1119,6 +1004,18 @@ public class ResourceManager
     public List<Resource> getFolderResourcesByUserId(int groupId, int folderId, int userId, int limit) throws SQLException
     {
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r  WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?", null, groupId, folderId, userId, limit);
+    }
+
+    /**
+     * Returns all survey resources that exists in the groups of the given course
+     *
+     * @param courseId
+     * @return
+     * @throws SQLException
+     */
+    public List<Resource> getSurveyResourcesByUserAndCourse(int courseId) throws SQLException
+    {
+        return getResources("SELECT " + ResourceManager.RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_group g USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND g.course_id=? ORDER BY r.title", null, courseId);
     }
 
     /**

@@ -40,8 +40,6 @@ public class LogEntry implements Serializable
             username = user.getUsername();
             userImage = user.getImage();
         }
-        else
-            username = rs.getString(2);
 
         action = Action.values()[rs.getInt(3)];
         params = rs.getString(5);

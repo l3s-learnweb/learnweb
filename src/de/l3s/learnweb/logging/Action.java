@@ -16,7 +16,7 @@ public enum Action
     rating_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = rate
     commenting_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = comment id
     opening_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    submission_view_resources(ActionTargetId.OTHER, ActionCategory.RESOURCE), // target_id = submission_id; param = user_id of the submission
+    submission_view_resources(ActionTargetId.OTHER, ActionCategory.OTHER), // target_id = submission_id; param = user_id of the submission
     searching(ActionTargetId.NONE, ActionCategory.SEARCH), // param = search query
     group_joining(ActionTargetId.GROUP_ID, ActionCategory.GROUP),
     group_creating(ActionTargetId.GROUP_ID, ActionCategory.GROUP),

@@ -2,14 +2,10 @@ package de.l3s.learnweb.resource.submission;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
@@ -22,7 +18,7 @@ import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
 public class SubmissionModeratorBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -2494182373382483709L;
-    private static final Logger log = Logger.getLogger(SubmissionModeratorBean.class);
+    //private static final Logger log = Logger.getLogger(SubmissionModeratorBean.class);
 
     private int submissionId = -1;
 

@@ -102,7 +102,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     private Map<String, String> metadata = new HashMap<>(); // field_name : field_value
 
     private boolean deleted = false; // indicates whether this resource has been deleted
-    private LogEntry thumbnailUpdateInfo = null;
 
     private int thumbUp = -1;
     private int thumbDown = -1;
@@ -134,9 +133,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     protected void postConstruct() throws SQLException
     {
         setDefaultThumbnailIfNull();
-
-        // TODO: add creating a URL
-        // resource.setUrl(getLearnweb().getServerUrl() + "/xxxxxsurvey.jsf?resource_id=" + resource.getId()); // TODO: why do we need it?
     }
 
     /**
@@ -164,18 +160,18 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
             switch(type)
             {
-            case audio:
-            case document:
-            case image:
-            case presentation:
-            case spreadsheet:
-            case text:
-            case video:
-            case website:
-                dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/" + type.name() + "-file.png", 128, 128);
-                break;
-            default:
-                dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/grain.png", 200, 200);
+                case audio:
+                case document:
+                case image:
+                case presentation:
+                case spreadsheet:
+                case text:
+                case video:
+                case website:
+                    dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/" + type.name() + "-file.png", 128, 128);
+                    break;
+                default:
+                    dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/grain.png", 200, 200);
             }
 
             if(null == thumbnail0)
@@ -406,17 +402,17 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         switch(rights)
         {
-        case 0:
-            this.rights = ResourceViewRights.DEFAULT_RIGHTS;
-            break;
-        case 1:
-            this.rights = ResourceViewRights.SUBMISSION_READABLE;
-            break;
-        case 2:
-            this.rights = ResourceViewRights.LEARNWEB_READABLE;
-            break;
-        case 3:
-            this.rights = ResourceViewRights.WORLD_READABLE;
+            case 0:
+                this.rights = ResourceViewRights.DEFAULT_RIGHTS;
+                break;
+            case 1:
+                this.rights = ResourceViewRights.SUBMISSION_READABLE;
+                break;
+            case 2:
+                this.rights = ResourceViewRights.LEARNWEB_READABLE;
+                break;
+            case 3:
+                this.rights = ResourceViewRights.WORLD_READABLE;
         }
     }
 
@@ -1472,21 +1468,21 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
         switch(rights)
         {
-        case WORLD_READABLE:
-            return true;
-        case LEARNWEB_READABLE:
-            return user != null;
+            case WORLD_READABLE:
+                return true;
+            case LEARNWEB_READABLE:
+                return user != null;
 
-        case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) can view the resource
-            Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
-            if(originalResource != null && originalResource.getUserId() == user.getId())
-                return true; // the submitter can view his resource
-            return false;
+            case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) can view the resource
+                Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
+                if(originalResource != null && originalResource.getUserId() == user.getId())
+                    return true; // the submitter can view his resource
+                return false;
 
-        case DEFAULT_RIGHTS: // if the resource is part of the group the group permissions are used
-            Group group = getGroup();
-            if(group != null)
-                return group.canViewResources(user);
+            case DEFAULT_RIGHTS: // if the resource is part of the group the group permissions are used
+                Group group = getGroup();
+                if(group != null)
+                    return group.canViewResources(user);
         }
 
         return false;
@@ -1539,11 +1535,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public LogEntry getThumbnailUpdateInfo() throws SQLException
     {
-        if(thumbnailUpdateInfo == null)
-        {
-            thumbnailUpdateInfo = Learnweb.getInstance().getResourceManager().loadThumbnailUpdateInfo(getId());
-        }
-        return thumbnailUpdateInfo;
+        /*
+         This method returned a LogEntry for the following query:
+         select * FROM lw_user_log WHERE action=45 AND target_id = ? ORDER BY timestamp DESC LIMIT 1
+         setInt(1, getResource_id)
+         But the implementation was bad and it was very rarely used. Let's see if someone misses it. Philipp 02.04.2020
+         */
+        return null;
     }
 
     /**
@@ -1652,14 +1650,14 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
             switch(keyString)
             {
-            case "title":
-                return getTitle();
-            case "author":
-                return getAuthor();
-            case "description":
-                return getDescription();
-            case "language":
-                return getLanguage();
+                case "title":
+                    return getTitle();
+                case "author":
+                    return getAuthor();
+                case "description":
+                    return getDescription();
+                case "language":
+                    return getLanguage();
             }
             return wrappedMap.get(key);
         }
@@ -1669,18 +1667,18 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         {
             switch(key)
             {
-            case "title":
-                setTitle(value);
-                return value;
-            case "author":
-                setAuthor(value);
-                return value;
-            case "description":
-                setDescription(value);
-                return value;
-            case "language":
-                setLanguage(value);
-                return value;
+                case "title":
+                    setTitle(value);
+                    return value;
+                case "author":
+                    setAuthor(value);
+                    return value;
+                case "description":
+                    setDescription(value);
+                    return value;
+                case "language":
+                    setLanguage(value);
+                    return value;
             }
 
             return wrappedMap.put(key, value);
@@ -1942,7 +1940,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public List<LogEntry> getLogs() throws SQLException
     {
-        return Learnweb.getInstance().getLogManager().getLogsByResource(getId(), -1);
+        return Learnweb.getInstance().getLogManager().getLogsByResource(this, -1);
     }
 
     /**

@@ -854,4 +854,15 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         return Learnweb.getInstance().getForumManager().getPostsByUser(getId());
     }
+
+    // TODO delete after breadcrumb bug is fixed
+    public Group getActiveGroup()
+    {
+        return null;
+    }
+
+    public int getActiveGroupId()
+    {
+        return 0;
+    }
 }

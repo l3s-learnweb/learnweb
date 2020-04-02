@@ -47,7 +47,8 @@ public class TagthewebClient
 
             try(CloseableHttpResponse response = httpClient.execute(httpPost))
             {
-                if (response.getStatusLine().getStatusCode() == 200) {
+                if(response.getStatusLine().getStatusCode() == 200)
+                {
                     return EntityUtils.toString(response.getEntity());
                 }
 
@@ -62,11 +63,14 @@ public class TagthewebClient
     {
         Map<String, Double> categories = new HashMap<>();
         String jsonResults = requestCategories(text, language);
-        if (jsonResults != null) {
+        if(jsonResults != null)
+        {
             JSONObject resultsJson = new JSONObject(jsonResults);
-            for (String key : resultsJson.keySet()) {
+            for(String key : resultsJson.keySet())
+            {
                 Double value = resultsJson.getDouble(key);
-                if (value > 0d) {
+                if(value > 0d)
+                {
                     categories.put(key, value);
                 }
             }
@@ -83,7 +87,8 @@ public class TagthewebClient
     public static Map<String, Double> getTopCategories(final String text, final String language, final int limit) throws IOException
     {
         Map<String, Double> categories = getCategories(text, language);
-        if (categories.size() <= 5) return categories;
+        if(categories.size() <= 5)
+            return categories;
 
         List<Map.Entry<String, Double>> entryList = new ArrayList<>(categories.entrySet());
         entryList.sort(Comparator.comparingDouble(Map.Entry::getValue));
@@ -95,18 +100,21 @@ public class TagthewebClient
         Learnweb learnweb = Learnweb.createInstance();
         ResourceManager rm = new ResourceManager(learnweb);
 
-        List<Resource> resources = learnweb.getResourceManager().getResourcesByCourseId(505);
-        // List<Resource> resources = learnweb.getResourceManager().getResourcesByGroupId(1158);
+        //List<Resource> resources = learnweb.getResourceManager().getResourcesByCourseId(505);
+        List<Resource> resources = learnweb.getResourceManager().getResourcesByGroupId(1158);
 
         log.info("Total resources found " + resources.size());
 
         for(Resource resource : resources)
         {
-            try {
+            try
+            {
                 Map<String, Double> currentCategories = rm.getCategoriesByResource(resource.getId());
 
-                if (currentCategories.size() == 0) {
-                    if (StringUtils.isEmpty(resource.getMachineDescription())) {
+                if(currentCategories.size() == 0)
+                {
+                    if(StringUtils.isEmpty(resource.getMachineDescription()))
+                    {
                         log.info("Starting getting resource metadata " + resource.getId());
                         learnweb.getResourceMetadataExtractor().processResource(resource);
 
@@ -114,23 +122,29 @@ public class TagthewebClient
                         resource.save();
                     }
 
-                    if (StringUtils.isNotEmpty(resource.getMachineDescription())) {
+                    if(StringUtils.isNotEmpty(resource.getMachineDescription()))
+                    {
                         log.info("Getting categories of resource " + resource.getId());
                         String text = StringHelper.shortnString(resource.getMachineDescription(), 1000);
 
                         log.info("Retrieving categories from TagTheWeb");
                         Map<String, Double> categories = TagthewebClient.getCategories(text, "en");
                         log.info("Retrieved " + categories.size() + " categories.");
-                        for (Map.Entry<String, Double> category : categories.entrySet()) {
+                        for(Map.Entry<String, Double> category : categories.entrySet())
+                        {
                             rm.addCategory(resource, category.getKey(), category.getValue());
                         }
 
                         log.info(categories.size() + " categories were added to resource " + resource.getId());
-                    } else {
+                    }
+                    else
+                    {
                         log.warn("No description for resource " + resource.getId());
                     }
                 }
-            } catch(Exception e) {
+            }
+            catch(Exception e)
+            {
                 log.error("Error found ", e);
             }
         }
