@@ -105,7 +105,7 @@ public class Learnweb
             // throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)");
         }
         return learnweb;
-    }
+    } 
 
     /**
      * The same as getInstance() but as Optional and without logging warnings.
@@ -159,7 +159,7 @@ public class Learnweb
     }
 
     private void loadProperties()
-    {
+    { 
         // TODO: retrieve mode from web.xml configuration
         String workingDirectory = new File(".").getAbsolutePath();
         log.debug("workingDirectory: " + workingDirectory);
