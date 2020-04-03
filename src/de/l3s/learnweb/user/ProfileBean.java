@@ -96,6 +96,9 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     public ProfileBean() throws SQLException
     {
+        if(getUser() == null)
+            return;
+
         Integer userId = getParameterInt("user_id");
 
         if(userId != null) // moderator edits the defined user

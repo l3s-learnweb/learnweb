@@ -63,20 +63,6 @@ public class FileEditorBean extends ApplicationBean implements Serializable
         return getLearnweb().getSecureServerUrl() + "/save" + "?fileId=" + getMainFileId();
     }
 
-    /*
-    private String getServerUrl()
-    {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        return getServerUrlWithoutContextPath() + request.getContextPath();
-    }
-    
-    private String getServerUrlWithoutContextPath()
-    {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        return request.getScheme() + "://" + request.getServerName() + ':' + request.getServerPort();
-    }
-    */
-
     private String getMainFileId()
     {
         return mainFile != null ? Integer.toString(mainFile.getId()) : "";
