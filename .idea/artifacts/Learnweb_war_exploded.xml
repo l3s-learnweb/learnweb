@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="Learnweb:war exploded">
-    <output-path>$PROJECT_DIR$/target/v3##3.0.0-beta3</output-path>
+    <output-path>$PROJECT_DIR$/target/Learnweb</output-path>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>
@@ -127,7 +127,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/v3##3.0.0-beta3/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/Learnweb/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="Learnweb/web/Web" />
     </root>
