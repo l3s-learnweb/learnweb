@@ -70,7 +70,7 @@ public class TedCrawlerSimple implements Runnable
     {
         try
         {
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
+            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("INSERT INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
             pStmt.setInt(1, resourceId);
             pStmt.setString(2, lang);
 
@@ -313,7 +313,7 @@ public class TedCrawlerSimple implements Runnable
                      log.warn("Http exception while fetching page: " + slug, e);
                  else if(response != null)
                      log.warn("Http exception other than service unavailable while fetching page: " + slug, e);
-
+              
                  lastException = e;
                  Misc.sleep(60000);
               }*/

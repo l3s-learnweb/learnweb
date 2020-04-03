@@ -90,7 +90,7 @@ public class LogManager
 
         params = StringHelper.shortnString(params, 250);
 
-        try(PreparedStatement pstmtLog = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)"))
+        try(PreparedStatement pstmtLog = learnweb.getConnection().prepareStatement("INSERT INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)"))
         {
             pstmtLog.setInt(1, userId);
             pstmtLog.setString(2, sessionId);
