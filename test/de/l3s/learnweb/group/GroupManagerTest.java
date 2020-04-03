@@ -11,12 +11,14 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 
+@Disabled
 class GroupManagerTest
 {
     private Learnweb learnweb = Learnweb.createInstance();

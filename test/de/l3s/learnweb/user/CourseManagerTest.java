@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.l3s.learnweb.Learnweb;
 
+@Disabled
 class CourseManagerTest
 {
     Learnweb learnweb =  Learnweb.createInstance();

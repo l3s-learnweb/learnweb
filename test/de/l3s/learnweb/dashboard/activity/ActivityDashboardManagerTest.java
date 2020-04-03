@@ -1,5 +1,7 @@
 package de.l3s.learnweb.dashboard.activity;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,18 +10,16 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import de.l3s.learnweb.Learnweb;
-
+@Disabled
 class ActivityDashboardManagerTest
 {
-    private Learnweb learnweb = Learnweb.createInstance();
-
-    public ActivityDashboardManagerTest() throws SQLException, ClassNotFoundException {}
+    public ActivityDashboardManagerTest() throws SQLException, ClassNotFoundException
+    {
+    }
 
     @Test
     void getActionsCountPerDay() throws ParseException, SQLException
@@ -46,11 +46,10 @@ class ActivityDashboardManagerTest
 
         ArrayList<Integer> users = new ArrayList<>(Arrays.asList(12502, 12600, 11700));
         Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2018-01-20");
-        Date endDate   = new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-20");
+        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-20");
         String actions = "4, 1, 2";
         Map<String, Integer> result = dashboardManager.getActionsCountPerDay(users, startDate, endDate, actions);
 
         assertEquals(expected, result);
     }
-
 }

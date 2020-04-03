@@ -1,22 +1,27 @@
 package de.l3s.learnweb.forum;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.group.Group;
 
+@Disabled
 class ForumManagerTest
 {
     private Learnweb learnweb = Learnweb.createInstance();
 
-    ForumManagerTest() throws SQLException, ClassNotFoundException {}
+    ForumManagerTest() throws SQLException, ClassNotFoundException
+    {
+    }
 
     @Test
     void getTopicsByGroup() throws SQLException
