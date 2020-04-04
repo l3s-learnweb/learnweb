@@ -428,12 +428,13 @@
                 </includes>
             </resource>
         </resources>
-        <testResources>
+        <!-- Causing issues in Eclipse, it removes Resources from src path and include only to test -->
+        <!--<testResources>
             <testResource>
                 <directory>Resources</directory>
                 <filtering>false</filtering>
             </testResource>
-        </testResources>
+        </testResources>-->
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

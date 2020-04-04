@@ -7,7 +7,7 @@
 
     <ui:fragment rendered="#{res.type ne 'file'}">
         <div class="preview-wrapper d-flex">
-            <ui:fragment rendered="#{res.isOfficeResource() and not res.isOffline()}">
+            <ui:fragment rendered="#{res.officeResource and not res.offline}">
                 <div id="iframe_editor"></div>
                 <h:outputScript>
                     const editorConfigValues = {
@@ -42,11 +42,11 @@
                 <iframe src="#{res.url}" title="#{res.title}"></iframe>
             </ui:fragment>
 
-            <ui:fragment rendered="#{not empty res.thumbnail4 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
+            <ui:fragment rendered="#{not empty res.thumbnail4 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.officeResource}">
                 <img src="#{res.thumbnail4.url}" alt="#{res.title}" class="img-fluid m-auto d-block"/>
             </ui:fragment>
 
-            <ui:fragment rendered="#{empty res.thumbnail4 and not empty res.thumbnail0 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
+            <ui:fragment rendered="#{empty res.thumbnail4 and not empty res.thumbnail0 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.officeResource}">
                 <img src="#{res.largestThumbnail.url}" alt="#{res.title}" class="img-fluid m-auto d-block"/>
             </ui:fragment>
         </div>

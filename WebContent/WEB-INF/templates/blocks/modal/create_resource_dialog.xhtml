@@ -17,7 +17,7 @@
             <p:commandLink update=":selectDestinationDialog" value="#{addResourceBean.currentPath}"
                            oncomplete="createConfirmDialog('selectDestination', updateLocationCommand);return false;"/>
 
-            <ui:fragment rendered="#{addResourceBean.resource.isOfficeResource()}">
+            <ui:fragment rendered="#{addResourceBean.resource.officeResource}">
                 <p:outputLabel for="@next" value="#{msg.file_name}:"/>
                 <div class="fg-col">
                     <p:inputText value="#{addResourceBean.resource.fileName}" required="true"/>
@@ -128,7 +128,7 @@
 
                 <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update=":growl" ajax="true" global="false"
                                  onsuccess="PF('createResourceDialog').hide();resourceAddedHook();return false;"
-                                 rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.isOfficeResource()}">
+                                 rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">
                     <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
                 </p:commandButton>
 

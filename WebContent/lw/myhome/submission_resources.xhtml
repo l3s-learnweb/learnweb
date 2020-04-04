@@ -88,7 +88,7 @@
             <p:commandButton value="#{msg.select}" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}" update="@form" onclick="PF('selectDlg').show();" />
 
             <p:commandButton value="#{msg.submit}" action="#{submissionBean.actionSubmitItems}"
-                             update="@form :growl" rendered="#{not submissionBean.submitted and submissionBean.selectedResources.size() > 0}">
+                             update="@form :growl" rendered="#{not submissionBean.submitted and not empty submissionBean.selectedResources}">
                     <p:confirm message="#{msg['submission.are_you_sure_you_want_to_submit']}" icon="pi pi-exclamation-triangle"/>
             </p:commandButton>
         </h:form>
