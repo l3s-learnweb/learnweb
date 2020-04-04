@@ -52,7 +52,7 @@ public class PasswordBean extends ApplicationBean implements Serializable
             }
             //sendMail(user);
 
-            addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_send");
+            addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
         }
         catch(Exception e)
         {

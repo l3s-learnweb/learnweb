@@ -16,7 +16,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 @SessionScoped
 public class ConfirmRequiredBean extends ApplicationBean implements Serializable
 {
-    //private static final Logger log = Logger.getLogger(ConfirmRequiredBean.class);
     private static final long serialVersionUID = 934105342636869805L;
 
     private User loggedInUser;
@@ -45,14 +44,14 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
         User user = getUser();
         try
         {
-            if(!StringUtils.equals(user.getEmail(), email))
+            if(StringUtils.isNotEmpty(email) && !StringUtils.equals(user.getEmail(), email))
             {
                 user.setEmail(email);
                 user.save();
             }
 
             if(user.sendEmailConfirmation())
-                addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_send");
+                addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
             else
                 addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
         }

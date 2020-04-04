@@ -10,43 +10,45 @@
 <ui:param name="hideBreadcrumbs" value="true"/>
 
 <ui:define name="center_layout">
-    <h:panelGroup id="confirmRequiredContent" layout="block">
-        <p:panel header="#{msg.email_validation}" rendered="#{confirmRequiredBean.confirmed}">
-            <a href="#{userBean.bannerLink}">
-                <h:outputText value="#{msg.return_to_welcome_page}"/>
-            </a>
-        </p:panel>
+    <p:panel header="#{msg.email_validation}" rendered="#{confirmRequiredBean.confirmed}">
+        <a href="#{userBean.bannerLink}">
+            <h:outputText value="#{msg.return_to_welcome_page}"/>
+        </a>
+    </p:panel>
 
-        <p:panel header="#{msg.email_validation}" rendered="#{!confirmRequiredBean.confirmed and confirmRequiredBean.user != null}">
+    <p:panel header="#{msg.email_validation}" rendered="#{!confirmRequiredBean.confirmed and confirmRequiredBean.user != null}">
+        <h:outputFormat value="#{msg['email_confirm_required_text']}" escape="false">
+            <f:param value="#{confirmRequiredBean.user.realUsername}"/>
+            <f:param value="#{confirmRequiredBean.user.email}"/>
+        </h:outputFormat>
 
-            <script>
-            function openEmailChangeForm()
-            {
-                $('#emailChangeForm').show();
-                return false;
-            }
-            </script>
+        <h:form styleClass="mt-2">
+            <p:commandButton action="#{confirmRequiredBean.onSubmitNewEmail}" value="#{msg.send_again}" ajax="false"/>
+            <p:linkButton value="#{msg.change_email}" onclick="PF('changeMailDialog').show();return false;"/>
+        </h:form>
+    </p:panel>
 
-            <h:outputFormat value="#{msg['email_confirm_required_text']}" escape="false">
-                <f:param value="#{confirmRequiredBean.user.realUsername}"/>
-                <f:param value="#{confirmRequiredBean.user.email}"/>
-            </h:outputFormat>
-        </p:panel>
+    <p:dialog widgetVar="changeMailDialog" header="#{msg.change_email}"
+              modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+        <h:form>
+            <div class="fg-grid mb-3">
+                <p:outputLabel for="@next" value="#{msg.email_address}:"/>
+                <div class="fg-col">
+                    <p:inputText type="email" value="#{confirmRequiredBean.email}" label="#{msg.email_address}" required="true" validator="emailValidator"/>
+                    <p:message for="@previous"/>
+                </div>
+            </div>
 
-        <p:panel header="#{msg.email_validation}" style="display: none;" id="emailChangeForm">
-            <h:form id="emailform">
-                <h:panelGrid columns="3">
-                    <h:outputLabel for="email">#{msg.email_address}: *</h:outputLabel>
-                    <p:inputText id="email" type="email" value="#{confirmRequiredBean.email}" label="#{msg.email_address}" required="true" style="width:20rem" validator="emailValidator"/>
-                    <p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email"/>
-
-                    <h:outputText value=""/>
-                    <p:commandButton actionListener="#{confirmRequiredBean.onSubmitNewEmail()}" value="#{msg.send_email}" update=":confirmRequiredContent" ajax="false"/>
-                    <h:outputText value=""/>
-                </h:panelGrid>
-            </h:form>
-        </p:panel>
-    </h:panelGroup>
+            <div class="d-flex">
+                <div class="mr-auto">
+                    <h:outputText value="* #{msg.mandatory_field}"/>
+                </div>
+                <div class="d-flex flex-row-reverse">
+                    <p:commandButton action="#{confirmRequiredBean.onSubmitNewEmail}" value="#{msg.send_email}" ajax="false"/>
+                </div>
+            </div>
+        </h:form>
+    </p:dialog>
 </ui:define>
 
 </ui:composition>

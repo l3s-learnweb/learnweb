@@ -126,7 +126,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
             selectedUser.setEmail(email);
 
             if(selectedUser.sendEmailConfirmation())
-                addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_send");
+                addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
             else
                 addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
         }
