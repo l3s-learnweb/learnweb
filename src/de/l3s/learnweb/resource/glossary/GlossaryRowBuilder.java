@@ -10,7 +10,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.beans.UtilBean;
 
 public class GlossaryRowBuilder
 {
@@ -108,7 +107,7 @@ public class GlossaryRowBuilder
     {
         for(Locale localeToCheck : LanguageBundle.getSupportedLocales())
         {
-            String translation = UtilBean.getLocaleMessage(localeToCheck, propertyAlias);
+            String translation = LanguageBundle.getLocaleMessage(localeToCheck, propertyAlias);
 
             if(value.equalsIgnoreCase(translation))
             {

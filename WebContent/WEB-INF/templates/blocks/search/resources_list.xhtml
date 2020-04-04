@@ -54,7 +54,7 @@
             </h:form>
 
             <div class="item-description">
-                <h:outputLink styleClass="res-link text-decoration-none" target="_blank" value="#{res.urlProxied}">
+                <h:outputLink styleClass="res-link text-decoration-none" target="_blank" value="#{userBean.getUrlProxied(res)}">
                     <h:outputText value="#{res.title}" escape="false" styleClass="item-title h5 mb-0 text-truncate"/><br/>
                     <h:outputText value="#{res.url}" escape="false" styleClass="item-origin text-truncate"/>
                 </h:outputLink>
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="text-truncate">
-                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}">
+                    <h:outputLink rendered="#{res.id != -1}" value="group/resources.jsf?group_id=#{res.groupId}">
                         <i class="fa fa-angle-double-right" aria-hidden="true"></i> Stored in #{msg['application.name']} group : #{res.group.title}
                     </h:outputLink>
                 </div>

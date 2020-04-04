@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -18,8 +19,8 @@ import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.pie.PieChartDataSet;
 import org.primefaces.model.charts.pie.PieChartModel;
 
+import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ColorUtils;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.util.MapHelper;
@@ -29,7 +30,7 @@ class GlossaryDashboardChartsFactory
     private static final Logger log = Logger.getLogger(GlossaryDashboardChartsFactory.class);
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap)
+    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap, Locale locale)
     {
         BarChartModel model = new BarChartModel();
 
@@ -62,14 +63,14 @@ class GlossaryDashboardChartsFactory
 
         ChartData data = new ChartData();
         List<String> labels = new ArrayList<>();
-        labels.add(UtilBean.getLocaleMessage("glossary"));
-        labels.add(UtilBean.getLocaleMessage("Search"));
-        labels.add(UtilBean.getLocaleMessage("system"));
-        labels.add(UtilBean.getLocaleMessage("resource"));
+        labels.add(LanguageBundle.getLocaleMessage(locale, "glossary"));
+        labels.add(LanguageBundle.getLocaleMessage(locale, "Search"));
+        labels.add(LanguageBundle.getLocaleMessage(locale, "system"));
+        labels.add(LanguageBundle.getLocaleMessage(locale, "resource"));
         data.setLabels(labels);
 
         BarChartDataSet barDataSet = new BarChartDataSet();
-        barDataSet.setLabel(UtilBean.getLocaleMessage("interactions"));
+        barDataSet.setLabel(LanguageBundle.getLocaleMessage(locale, "interactions"));
         List<Number> values = new ArrayList<>();
         values.add(glossary);
         values.add(search);

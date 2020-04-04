@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -9,14 +10,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
-
-import de.l3s.learnweb.beans.UtilBean;
 
 /**
  * Enables constant substitution in property values
@@ -61,30 +61,24 @@ public class LanguageBundle extends ResourceBundle
 
     private Map<String, String> values;
 
-    public LanguageBundle()
+    public LanguageBundle() // this is required by JSF because we can't pass arguments to the default constructor
     {
-        this(BASE_NAME, FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        this(FacesContext.getCurrentInstance().getViewRoot().getLocale());
     }
 
-    public LanguageBundle(Locale locale)
+    private LanguageBundle(Locale locale)
     {
-        this(BASE_NAME, locale);
+        setParent(getLanguageBundle(locale));
     }
 
-    public LanguageBundle(String baseName, Locale locale)
+    public static ResourceBundle getLanguageBundle(Locale locale)
     {
-        setParent(getLanguageBundle(baseName, locale));
-    }
-
-    public static ResourceBundle getLanguageBundle(String baseName, Locale locale)
-    {
-
-        return cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(baseName, loc, control)));
+        return cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(BASE_NAME, loc, control)));
     }
 
     private LanguageBundle(ResourceBundle sourceBundle)
     {
-
+        // iterate over keys an replace constants of type #[key_name]
         ArrayList<String> keys = Collections.list(sourceBundle.getKeys());
 
         values = new HashMap<>(keys.size());
@@ -194,6 +188,34 @@ public class LanguageBundle extends ResourceBundle
         return supportedLocales;
     }
 
+    public static String getLocaleMessage(Locale locale, String msgKey, Object... args)
+    {
+        ResourceBundle bundle = getLanguageBundle(locale);
+
+        String msg = "";
+        try
+        {
+            msg = bundle.getString(msgKey);
+            if(args != null)
+            {
+                MessageFormat format = new MessageFormat(msg);
+                msg = format.format(args);
+            }
+        }
+        catch(MissingResourceException e)
+        {
+            //      log.warn("Missing translation for key: " + msgKey);
+            msg = msgKey;
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.error("Can't translate msgKey=" + msgKey + " with msg=" + msg + "; May happen if the msg contains unexpected curly brackets.", e);
+
+            msg = msgKey;
+        }
+        return msg;
+    }
+
     public static void main(String[] args)
     {
 
@@ -201,8 +223,7 @@ public class LanguageBundle extends ResourceBundle
 
         log.debug(locale + "; " + locale.toLanguageTag());
 
-        ResourceBundle bundle = ResourceBundle.getBundle(BASE_NAME, locale);
-        bundle = new LanguageBundle(locale);
+        ResourceBundle bundle = new LanguageBundle(locale);
         log.debug(bundle.getString("homepageTitle"));
         //bundle = new LanguageBundle(locale);
         log.debug(bundle.getString("register_account_already_wizard"));
@@ -226,8 +247,6 @@ public class LanguageBundle extends ResourceBundle
         log.debug(bundle.getString("homepageTitle"));
         log.debug(bundle.getString("validation.please_confirm"));
         //log.debug(bundle.getString("does not exist"));
-
-        log.debug(UtilBean.getLocaleMessage(locale, "Glossary.description"));
 
     }
 

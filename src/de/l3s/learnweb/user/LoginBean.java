@@ -17,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.net.InetAddresses;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.util.bean.BeanHelper;
@@ -136,7 +135,7 @@ public class LoginBean extends ApplicationBean implements Serializable
      */
     public static String loginUser(ApplicationBean bean, User user, int moderatorUserId) throws SQLException
     {
-        UtilBean.getUserBean().setUser(user); // logs the user in
+        bean.getUserBean().setUser(user); // logs the user in
         //addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 
         user.updateLoginDate(); // the last login date has to be updated before we log a new login event
@@ -178,7 +177,7 @@ public class LoginBean extends ApplicationBean implements Serializable
      */
     public String logout()
     {
-        UserBean userBean = UtilBean.getUserBean();
+        UserBean userBean = getUserBean();
         User user = userBean.getUser();
         String logoutPage = user.getOrganisation().getLogoutPage();
 

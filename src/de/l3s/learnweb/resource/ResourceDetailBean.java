@@ -25,7 +25,6 @@ import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.archive.TimelineData;
@@ -248,7 +247,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 {
                     JSONObject archiveVersion = new JSONObject();
                     archiveVersion.put("url", archiveUrl.getArchiveUrl());
-                    archiveVersion.put("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, UtilBean.getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
+                    archiveVersion.put("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
                     archiveVersions.put(archiveVersion);
                 }
                 archiveDay.put("dayEvents", archiveVersions);
@@ -268,7 +267,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
      */
     public List<String> getShortWeekDays()
     {
-        DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
+        DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
         List<String> dayNames = Arrays.asList(symbols.getShortWeekdays());
         Collections.rotate(dayNames.subList(1, 8), -1);
         return dayNames.subList(1, 8);
@@ -280,7 +279,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
      */
     public String getMonthNames()
     {
-        DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
+        DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
         JSONArray monthNames = new JSONArray();
         for(String month : symbols.getMonths())
             if(!month.isBlank())
@@ -294,7 +293,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
      */
     public String getShortMonthNames()
     {
-        DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
+        DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
         JSONArray monthNames = new JSONArray();
         for(String month : symbols.getShortMonths())
             if(!month.isBlank())

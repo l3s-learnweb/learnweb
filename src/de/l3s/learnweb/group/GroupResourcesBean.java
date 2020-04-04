@@ -25,7 +25,6 @@ import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
@@ -158,7 +157,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         else
         {
-            group = new PrivateGroup(UtilBean.getLocaleMessage("myPrivateResources"), getUser());
+            group = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());
         }
 
         if(folderId > 0)

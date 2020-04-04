@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User.Gender;
 
@@ -177,7 +176,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
             setKeepMessages();
 
             // perform logout if necessary
-            UserBean userBean = UtilBean.getUserBean();
+            UserBean userBean = getUserBean();
             if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) // a moderator was logged into another user's account
             {
                 userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator

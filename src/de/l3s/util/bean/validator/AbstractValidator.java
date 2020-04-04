@@ -3,9 +3,10 @@ package de.l3s.util.bean.validator;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 
-import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.LanguageBundle;
 
 /**
  * Adds a helper method to the Validator interface
@@ -25,7 +26,7 @@ public abstract class AbstractValidator<T> implements Validator<T>
      * @param message
      * @return
      */
-    public FacesMessage getFacesMessage(UIComponent component, FacesMessage.Severity severity, String message)
+    public FacesMessage getFacesMessage(FacesContext context, UIComponent component, FacesMessage.Severity severity, String message)
     {
         String validatorMessage = ((UIInput) component).getValidatorMessage();
 
@@ -37,13 +38,10 @@ public abstract class AbstractValidator<T> implements Validator<T>
                 label = component.getValueExpression("label");
             }
 
+            validatorMessage = LanguageBundle.getLocaleMessage(context.getViewRoot().getLocale(), message);
             if(label == null)
             {
-                validatorMessage = UtilBean.getLocaleMessage(message);
-            }
-            else
-            {
-                validatorMessage = label + ": " + UtilBean.getLocaleMessage(message);
+                validatorMessage = label + ": " + validatorMessage;
             }
         }
         return new FacesMessage(FacesMessage.SEVERITY_ERROR, validatorMessage, validatorMessage);

@@ -15,7 +15,7 @@ public class RequiredCheckboxValidator extends AbstractValidator<Object>
     {
         if(value.equals(Boolean.FALSE))
         {
-            throw new ValidatorException(getFacesMessage(component, FacesMessage.SEVERITY_ERROR, "validation.please_confirm"));
+            throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, "validation.please_confirm"));
         }
     }
 }

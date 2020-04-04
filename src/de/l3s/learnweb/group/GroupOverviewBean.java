@@ -11,7 +11,6 @@ import javax.inject.Named;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.user.Organisation;
@@ -112,17 +111,17 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
             if(groupSummary == null || groupSummary.isEmpty())
             {
                 groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, OVERVIEW_ACTIONS, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
-                summaryTitle = UtilBean.getLocaleMessage("last_week_changes");
+                summaryTitle = getLocaleMessage("last_week_changes");
             }
             if(groupSummary == null || groupSummary.isEmpty())
             {
                 groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, OVERVIEW_ACTIONS, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
-                summaryTitle = UtilBean.getLocaleMessage("last_month_overview_changes");
+                summaryTitle = getLocaleMessage("last_month_overview_changes");
             }
             if(groupSummary == null || groupSummary.isEmpty())
             {
                 groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, OVERVIEW_ACTIONS, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
-                summaryTitle = UtilBean.getLocaleMessage("last_six_month_changes");
+                summaryTitle = getLocaleMessage("last_six_month_changes");
             }
             return groupSummary;
         }

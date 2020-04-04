@@ -118,10 +118,8 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
             if(actionsCountPerDay == null)
             {
                 actionsCountPerDay = dashboardManager.getActionsCountPerDay(getSelectedUsersIds(), startDate, endDate);
-                interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
             }
-            else
-                interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
+            interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
         }
         return interactionsChart;
     }
@@ -133,10 +131,8 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
             if(actionsWithCounters == null)
             {
                 actionsWithCounters = dashboardManager.getActionsWithCounters(getSelectedUsersIds(), startDate, endDate);
-                usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
             }
-            else
-                usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+            usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters, getUserBean().getLocale());
         }
         return usersActivityTypesChart;
     }
@@ -149,10 +145,8 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
             {
                 glossaryConceptsCountPerUser = dashboardManager.getGlossaryConceptsCountPerUser(getSelectedUsersIds(), startDate, endDate);
                 glossaryTermsCountPerUser = dashboardManager.getGlossaryTermsCountPerUser(getSelectedUsersIds(), startDate, endDate);
-                usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
             }
-            else
-                usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
+            usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
         }
         return usersGlossaryChart;
     }
@@ -164,10 +158,8 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
             if(glossarySourcesWithCounters == null)
             {
                 glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(getSelectedUsersIds(), startDate, endDate);
-                usersSourcesChart = GlossaryDashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
             }
-            else
-                usersSourcesChart = GlossaryDashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
+            usersSourcesChart = GlossaryDashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
         }
         return usersSourcesChart;
     }

@@ -30,7 +30,7 @@ public class EmailValidator extends AbstractValidator<Object>
                 {
                     message = "This mail address is invalid! Check the domain.";
                 }
-                throw new ValidatorException(getFacesMessage(component, FacesMessage.SEVERITY_ERROR, message));
+                throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, message));
             }
             else // TODO connect to bounce manager
             {

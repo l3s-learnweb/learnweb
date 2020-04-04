@@ -21,7 +21,7 @@
 
         <div class="form-group">
             <h:outputText value="#{msg.location}: " styleClass="font-weight-bold"/>
-            <h:outputLink value="${res.urlProxied}">
+            <h:outputLink value="${userBean.getUrlProxied(res)}">
                 <h:outputText value="${res.location}" escape="false"/>
             </h:outputLink>
         </div>

@@ -24,7 +24,6 @@ import org.jsoup.helper.Validate;
 import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
@@ -584,7 +583,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }
@@ -773,24 +772,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     public String getUrl()
     {
         return url;
-    }
-
-    /**
-     * Returns the url of this resource but proxied through WAPS.io if enabled
-     *
-     * @return
-     */
-    public String getUrlProxied()
-    {
-        return UtilBean.getUserBean().getUrlProxied(getUrl());
-    }
-
-    public String getLearnwebUrl() throws SQLException
-    {
-        if(getId() != -1) // && getGroupId() != 0)
-            return "group/resources.jsf?group_id=" + getGroupId() + "&resource_id=" + getId();
-
-        return getUrlProxied();
     }
 
     public String getServiceIcon()

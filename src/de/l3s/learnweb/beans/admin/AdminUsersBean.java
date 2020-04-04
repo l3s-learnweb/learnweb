@@ -10,7 +10,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.LoginBean;
@@ -60,7 +59,7 @@ public class AdminUsersBean extends ApplicationBean implements Serializable
             addErrorMessage(new IllegalAccessError(getUser() + " tried to hijack account"));
             return "";
         }
-        UtilBean.getUserBean().setModeratorUser(getUser()); // store moderator account while logged in as user
+        getUserBean().setModeratorUser(getUser()); // store moderator account while logged in as user
 
         return LoginBean.loginUser(this, user, getUser().getId());
     }

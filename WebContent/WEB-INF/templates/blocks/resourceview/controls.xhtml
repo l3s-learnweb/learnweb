@@ -18,5 +18,5 @@
         <f:param name="resource_id" value="#{res.id}"/>
     </p:linkButton>
 
-    <p:linkButton href="#{res.urlProxied}" target="_blank" icon="fa fa-external-link" styleClass="secondary-btn" title="#{res.url}" rendered="#{res.type eq 'text' or res.type eq 'website' or res.type eq 'pdf'}"/>
+    <p:linkButton href="#{userBean.getUrlProxied(res)}" target="_blank" icon="fa fa-external-link" styleClass="secondary-btn" title="#{res.url}" rendered="#{res.type eq 'text' or res.type eq 'website' or res.type eq 'pdf'}"/>
 </ui:composition>

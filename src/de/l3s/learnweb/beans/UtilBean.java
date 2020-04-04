@@ -2,10 +2,7 @@ package de.l3s.learnweb.beans;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.ExternalContext;
@@ -29,17 +26,6 @@ public class UtilBean implements Serializable
     {
         FacesContext fc = FacesContext.getCurrentInstance();
         return fc.getExternalContext();
-    }
-
-    private static Object getManagedBean(String beanName)
-    {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        return fc.getApplication().getELResolver().getValue(fc.getELContext(), null, beanName);
-    }
-
-    public static UserBean getUserBean()
-    {
-        return (UserBean) getManagedBean("userBean");
     }
 
     public static String getContextPath()
@@ -87,6 +73,27 @@ public class UtilBean implements Serializable
         }
     }
 
+    /**
+     * Use ApplicationBean.getUserBean() instead. This method must only be called on a bean/facesContext not from any models.
+     *
+     * @return
+     */
+    @Deprecated
+    public static UserBean getUserBean()
+    {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        return (UserBean) fc.getApplication().getELResolver().getValue(fc.getELContext(), null, "userBean");
+    }
+
+    /**
+     * This method should not be used any more. It will only work correctly when it is used in a faces context.
+     * Move translations to the bean oder XHTML file. In beans you can use getLocaleMessage() in XHTML files use #{msg['a_pfrefix' += your_key]}
+     *
+     * The method is also used in many XHTML files. That's acceptable.
+     * But o:outputformat could be used instead: http://showcase.omnifaces.org/components/outputFormat
+     *
+     */
+    @Deprecated
     public static String getLocaleMessage(String msgKey, Object... args)
     {
         // guess locale
@@ -101,40 +108,6 @@ public class UtilBean implements Serializable
             locale = Locale.ENGLISH;
         }
 
-        return getLocaleMessage(locale, msgKey, args);
-    }
-
-    public static String getLocaleMessage(Locale locale, String msgKey, Object... args)
-    {
-        ResourceBundle bundle = LanguageBundle.getLanguageBundle("de.l3s.learnweb.lang.messages", locale);
-
-        String msg = "";
-        try
-        {
-            msg = bundle.getString(msgKey);
-            if(args != null)
-            {
-                MessageFormat format = new MessageFormat(msg);
-                msg = format.format(args);
-            }
-        }
-        catch(MissingResourceException e)
-        {
-            //	    log.warn("Missing translation for key: " + msgKey);
-            msg = msgKey;
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.error("Can't translate msgKey=" + msgKey + " with msg=" + msg + "; May happen if the msg contains unexpected curly brackets.", e);
-
-            msg = msgKey;
-        }
-        return msg;
-    }
-
-    public static String getLocaleMessage(String msgKey)
-    {
-        Object[] args = new Object[0];
-        return getLocaleMessage(msgKey, args);
+        return LanguageBundle.getLocaleMessage(locale, msgKey, args);
     }
 }

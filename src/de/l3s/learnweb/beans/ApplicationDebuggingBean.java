@@ -71,7 +71,7 @@ public class ApplicationDebuggingBean implements Serializable
      */
     protected String getLocaleMessage(String msgKey, Object... args)
     {
-        ResourceBundle bundle = LanguageBundle.getLanguageBundle("de.l3s.learnweb.lang.messages", Locale.US);
+        ResourceBundle bundle = LanguageBundle.getLanguageBundle(Locale.US);
 
         String msg;
         try

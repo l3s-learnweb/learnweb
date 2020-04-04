@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
@@ -118,11 +119,17 @@ public class ApplicationBean
         return getUserBean().isLoggedIn();
     }
 
-    protected UserBean getUserBean()
+    public UserBean getUserBean()
     {
         if(null == userBean)
-            userBean = UtilBean.getUserBean();
+            userBean = (UserBean) getManagedBean("userBean");
         return userBean;
+    }
+
+    private static Object getManagedBean(String beanName)
+    {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        return fc.getApplication().getELResolver().getValue(fc.getELContext(), null, beanName);
     }
 
     protected Learnweb getLearnweb()
@@ -141,7 +148,18 @@ public class ApplicationBean
      */
     public String getLocaleMessage(String msgKey, Object... args)
     {
-        return UtilBean.getLocaleMessage(msgKey, args);
+        // guess locale
+        Locale locale;
+        try
+        {
+            locale = getUserBean().getLocale();
+        }
+        catch(Exception e)
+        {
+            locale = Locale.ENGLISH;
+        }
+
+        return LanguageBundle.getLocaleMessage(locale, msgKey, args);
     }
 
     protected FacesMessage getFacesMessage(FacesMessage.Severity severity, String msgKey, Object... args)
@@ -231,7 +249,7 @@ public class ApplicationBean
      */
     public void setPreference(String key, String value)
     {
-        UtilBean.getUserBean().setPreference(key, value);
+        getUserBean().setPreference(key, value);
     }
 
     /**

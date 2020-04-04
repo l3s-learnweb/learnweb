@@ -76,11 +76,6 @@ public class ResourceDecorator implements Serializable
         return resource.getServiceIcon();
     }
 
-    public String getLearnwebUrl() throws SQLException
-    {
-        return resource.getLearnwebUrl();
-    }
-
     /**
      * The title with highlighted search terms
      *
@@ -167,11 +162,6 @@ public class ResourceDecorator implements Serializable
     public String getUrl()
     {
         return resource.getUrl();
-    }
-
-    public String getUrlProxied()
-    {
-        return resource.getUrlProxied();
     }
 
     public String getDurationInMinutes()

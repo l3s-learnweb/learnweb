@@ -21,7 +21,6 @@ import org.primefaces.PrimeFaces;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -130,7 +129,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             search.setMode(searchMode);
             searchFilters.setFiltersFromString(queryFilters);
             searchFilters.setFilter(FILTERS.service, searchService);
-            searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
+            searchFilters.setLanguageFilter(getUserBean().getLocaleCode());
 
             search.logQuery(query, searchService, searchFilters.getLanguageFilter(), queryFilters);
             search.getResourcesByPage(1); // load first page
@@ -420,7 +419,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             metaSearch.setResultsPerService(32);
             metaSearch.setConfigGroupResultsByField("location");
             metaSearch.setConfigResultsPerGroup(10);
-            searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
+            searchFilters.setLanguageFilter(getUserBean().getLocaleCode());
             metaSearch.getResourcesByPage(2); // fetch resources
             resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(minResourcesPerGroup, searchService);
             Collections.sort(resourcesGroupedBySource);

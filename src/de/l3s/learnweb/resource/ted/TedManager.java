@@ -33,7 +33,6 @@ import com.sun.jersey.api.client.WebResource;
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Resource;
@@ -187,7 +186,6 @@ public class TedManager
 
     public Map<String, String> getLangList(int resourceId) throws SQLException
     {
-        String langFromPropFile;
         Map<String, String> langList = new HashMap<>();
         PreparedStatement getLangList = learnweb.getConnection().prepareStatement("SELECT DISTINCT(t1.language) as language_code, t2.language FROM `ted_transcripts_paragraphs` t1 JOIN ted_transcripts_lang_mapping t2 ON t1.language=t2.language_code WHERE resource_id=?");
         getLangList.setInt(1, resourceId);
@@ -195,11 +193,7 @@ public class TedManager
 
         while(rs.next())
         {
-            langFromPropFile = UtilBean.getLocaleMessage("language_" + rs.getString("language_code"));
-            if(langFromPropFile == null)
-                langList.put(rs.getString("language"), rs.getString("language_code"));
-            else
-                langList.put(langFromPropFile, rs.getString("language_code"));
+            langList.put(rs.getString("language"), rs.getString("language_code"));
         }
         rs.close();
         getLangList.close();

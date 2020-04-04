@@ -28,7 +28,6 @@ import org.primefaces.PrimeFaces;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
@@ -92,7 +91,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         //rcs.put("v", new LeacockChodorow(db));
         //rcs.put("a", new Lesk(db));
         //rcs.put("r", new Lesk(db));
-        locale = UtilBean.getUserBean().getLocaleCode();
+        locale = getUserBean().getLocaleCode();
 
         //String logPreference = getPreference("transcript_show_del_res");
         //if(logPreference != null)
@@ -405,10 +404,10 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
         try
         {
-            if(!locale.equals(UtilBean.getUserBean().getLocaleCode()))
+            if(!locale.equals(getUserBean().getLocaleCode()))
             {
                 languageList = null;
-                locale = UtilBean.getUserBean().getLocaleCode();
+                locale = getUserBean().getLocaleCode();
             }
 
             if(languageList == null)
@@ -419,9 +418,15 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
                 if(!langList.isEmpty())
                 {
+                    String langFromPropFile;
+
                     for(Map.Entry<String, String> entry : langList.entrySet())
                     {
-                        languageList.add(new SelectItem(entry.getValue(), entry.getKey()));
+                        langFromPropFile = getLocaleMessage("language_" + entry.getValue());
+                        if(langFromPropFile == null)
+                            langFromPropFile = entry.getKey();
+
+                        languageList.add(new SelectItem(entry.getValue(), langFromPropFile));
                     }
                     languageList.sort(languageComparator());
                 }
@@ -532,16 +537,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
         return Comparator.comparing(SelectItem::getLabel);
     }
-
-    /*public int getSelectedCourseId()
-    {
-        return selectedCourseId;
-    }
-
-    public void setSelectedCourseId(int selectedCourseId)
-    {
-        this.selectedCourseId = selectedCourseId;
-    }*/
 
     public boolean isShowDeletedResources()
     {
