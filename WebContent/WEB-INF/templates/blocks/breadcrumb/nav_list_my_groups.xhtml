@@ -4,8 +4,8 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-<li><a href="group/overview.jsf?group_id=#{userBean.user.activeGroup.id}">#{msg.overview}</a></li>
-<li><a href="group/resources.jsf?group_id=#{userBean.user.activeGroup.id}">#{msg.resources}</a></li>
-<li><a href="group/forum.jsf?group_id=#{userBean.user.activeGroup.id}">#{msg.forum}</a></li>
-<li><a href="group/options.jsf?group_id=#{userBean.user.activeGroup.id}">#{msg.options}</a></li>
+<li><a href="group/overview.jsf?group_id=#{groupId}">#{msg.overview}</a></li>
+<li><a href="group/resources.jsf?group_id=#{groupId}">#{msg.resources}</a></li>
+<li><a href="group/forum.jsf?group_id=#{groupId}">#{msg.forum}</a></li>
+<li><a href="group/options.jsf?group_id=#{groupId}">#{msg.options}</a></li>
 </ui:composition>

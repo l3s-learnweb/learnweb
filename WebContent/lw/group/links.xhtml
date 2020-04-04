@@ -21,14 +21,16 @@
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item link="group/resources.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{userBean.user.activeGroup.title}" >
+    <lw:breadcrumb-item link="group/resources.jsf?group_id=#{groupLinksBean.groupId}" title="#{groupLinksBean.group.title}" >
         <p:repeat var="groups" value="#{userBean.user.groups}">
             <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
         </p:repeat>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item link="group/links.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{msg.links}">
-        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
+    <lw:breadcrumb-item link="group/links.jsf?group_id=#{groupLinksBean.groupId}" title="#{msg.links}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml">
+            <ui:param name="groupId" value="#{groupLinksBean.groupId}"/>
+        </ui:decorate>
     </lw:breadcrumb-item>
 </ui:define>
 

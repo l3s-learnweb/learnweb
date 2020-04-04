@@ -30,7 +30,9 @@
 		</lw:breadcrumb-item>
 
 		<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{msg.resources}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml">
+				<ui:param name="groupId" value="#{surveyBean.resource.groupId}"/>
+			</ui:decorate>
 		</lw:breadcrumb-item>
 	</ui:fragment>
 
