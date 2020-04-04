@@ -16,7 +16,7 @@
 				<h5>#{user.username}</h5>
 			</div>
 
-			<h:panelGroup styleClass="text-right" layout="block" rendered="#{userBean.canModerateCourses(user.courses)}">
+			<h:panelGroup styleClass="text-right" layout="block" rendered="#{userBean.user.canModerateUser(user)}">
 				<h:outputLink value="myhome/profile.jsf" styleClass="pr-1">
 					<f:param name="user_id" value="#{user.id}"/>
 					<h:outputText value="#{msg.edit_profile}"/>

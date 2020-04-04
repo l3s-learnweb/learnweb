@@ -86,7 +86,7 @@
 				<h:outputText value="#{userDetailBean.selectedUser.credits}" escape="false"/>
 			</p:panel>
 
-			<p:panel header="#{msg.moderator_options}" rendered="${userBean.canModerateCourses(userDetailBean.selectedUser.courses)}">
+			<p:panel header="#{msg.moderator_options}" rendered="${userBean.user.canModerateUser(userDetailBean.selectedUser)}">
 				<h:outputLink value="myhome/profile.jsf">
 					<f:param name="user_id" value="#{userDetailBean.selectedUser.id}"/>
 					<h:outputText value="#{msg.edit_profile}" escape="false"/>

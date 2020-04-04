@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -308,51 +307,6 @@ public class UserBean implements Serializable
         catch(SQLException e)
         {
             log.error("sql error", e);
-        }
-
-        return false;
-    }
-
-    /**
-     * returns true when the currently logged in user is allowed to moderate the given courses
-     *
-     * @param course
-     * @return
-     * @throws SQLException
-     */
-    public boolean canModerateCourse(Course course) throws SQLException
-    {
-        List<Course> courses = new ArrayList<>(1); // create dummy list with single entry
-        courses.add(course);
-
-        return canModerateCourses(courses);
-    }
-
-    /**
-     * returns true when the currently logged in user is allowed to moderate one of the given courses
-     *
-     * @param courses
-     * @return
-     * @throws SQLException
-     */
-    public boolean canModerateCourses(List<Course> courses) throws SQLException
-    {
-        User user = getUser();
-        if(null == user)
-            return false;
-
-        if(user.isAdmin())
-            return true;
-
-        if(user.isModerator()) // check whether the user is moderator of one of the given courses
-        {
-            List<Course> moderatorsCourses = user.getCourses();
-
-            for(Course course : courses)
-            {
-                if(moderatorsCourses.contains(course))
-                    return true;
-            }
         }
 
         return false;

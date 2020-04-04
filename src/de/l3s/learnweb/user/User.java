@@ -609,7 +609,7 @@ public class User implements Comparable<User>, Serializable, HasId
     public InputStream getDefaultImageIS() throws IOException
     {
         URL url = new URL(getDefaultImage());
-        log.debug(url);
+
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
@@ -855,14 +855,21 @@ public class User implements Comparable<User>, Serializable, HasId
         return Learnweb.getInstance().getForumManager().getPostsByUser(getId());
     }
 
-    // TODO delete after breadcrumb bug is fixed
-    public Group getActiveGroup()
+    /**
+     * returns true when this user is allowed to moderate the given user
+     *
+     * @param user
+     * @return
+     * @throws SQLException
+     */
+    public boolean canModerateUser(User user) throws SQLException
     {
-        return null;
-    }
+        if(isAdmin())
+            return true;
 
-    public int getActiveGroupId()
-    {
-        return 0;
+        if(isModerator() && user.getOrganisation().equals(this.getOrganisation())) // check whether the user is moderator of the given users organisation
+            return true;
+
+        return false;
     }
 }

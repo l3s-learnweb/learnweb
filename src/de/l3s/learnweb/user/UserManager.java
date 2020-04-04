@@ -397,7 +397,7 @@ public class UserManager
             replace.setDate(9, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
             replace.setString(10, user.getAddress());
             replace.setString(11, user.getProfession());
-            replace.setString(13, user.getAdditionalInformation());
+            replace.setString(12, user.getAdditionalInformation());
             replace.setString(13, user.getInterest());
             replace.setString(14, user.getStudentId());
             replace.setInt(15, user.isAdmin() ? 1 : 0);

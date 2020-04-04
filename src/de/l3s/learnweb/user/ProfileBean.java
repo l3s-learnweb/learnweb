@@ -71,7 +71,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
             return;
         }
 
-        if(moderatorAccess && !UtilBean.getUserBean().canModerateCourses(selectedUser.getCourses()))
+        if(moderatorAccess && !loggedinUser.canModerateUser(selectedUser))
         {
             selectedUser = null;
             addAccessDeniedMessage();
@@ -162,10 +162,9 @@ public class ProfileBean extends ApplicationBean implements Serializable
     {
         try
         {
-            UserBean userBean = UtilBean.getUserBean();
-            User user = userBean.getUser();
+            User user = getUser();
 
-            if(!user.equals(getSelectedUser()) && !userBean.canModerateCourses(getSelectedUser().getCourses()))
+            if(!user.equals(getSelectedUser()) && !user.canModerateUser(getSelectedUser()))
             {
                 addAccessDeniedMessage();
                 return null;
@@ -178,7 +177,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
             setKeepMessages();
 
             // perform logout if necessary
-
+            UserBean userBean = UtilBean.getUserBean();
             if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) // a moderator was logged into another user's account
             {
                 userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator

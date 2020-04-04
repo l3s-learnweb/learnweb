@@ -31,7 +31,7 @@ public class UtilBean implements Serializable
         return fc.getExternalContext();
     }
 
-    public static Object getManagedBean(String beanName)
+    private static Object getManagedBean(String beanName)
     {
         FacesContext fc = FacesContext.getCurrentInstance();
         return fc.getApplication().getELResolver().getValue(fc.getELContext(), null, beanName);

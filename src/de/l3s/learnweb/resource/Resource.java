@@ -1502,7 +1502,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             {
                 if(getGroupId() == 0) // check permission for a private resource
                 {
-                    return UtilBean.getUserBean().canModerateCourses(getUser().getCourses());
+                    return user.canModerateUser(getUser());
                 }
                 else // check group access permissions
                 {

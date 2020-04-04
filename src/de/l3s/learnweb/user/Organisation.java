@@ -524,4 +524,16 @@ public class Organisation implements Serializable, Comparable<Organisation>
     {
         return Learnweb.getInstance().getUserManager().getUsersByOrganisationId(getId());
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if(obj == null)
+            return false;
+        if(obj.getClass() != getClass())
+            return false;
+
+        Organisation other = (Organisation) obj;
+        return other.getId() == getId();
+    }
 }
