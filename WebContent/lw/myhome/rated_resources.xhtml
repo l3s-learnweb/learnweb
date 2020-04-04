@@ -25,7 +25,7 @@
 					</f:facet>
 
 					<p:column headerText="#{msg.title}">
-						<h:outputLink value="resource.jsf">
+						<h:outputLink value="#{res.view}">
 							<f:param name="resource_id" value="#{res.id}"/>
 							#{res.title}
 						</h:outputLink>

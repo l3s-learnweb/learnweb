@@ -774,6 +774,15 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         return url;
     }
 
+    /**
+     *
+     * @return The page that is used to visualize this resource
+     */
+    public String getView()
+    {
+        return "resource/default.jsf";
+    }
+
     public String getServiceIcon()
     {
         if(getId() != -1) // is stored in Learnweb

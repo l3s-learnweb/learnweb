@@ -1,0 +1,82 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
+
+<ui:define name="body_content">
+	<h:outputScript library="primefaces" name="jquery/jquery.js"/>
+	<h:outputScript library="learnweb-layout" name="js/resource-view.js" target="body"/>
+
+	<h:form styleClass="d-none">
+		<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":growl"
+						 global="false" onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
+	</h:form>
+
+    <!--  TODO these check should be optimized https://stackoverflow.com/a/14719863/11665099
+    
+    A link to the login page or the form needs to be shown.
+     -->
+	<h:outputText value="This resource has been removed" rendered="${not res.canViewResource(userBean.user) and (res.deleted or res.groupId eq 0)}"/>
+
+	<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not res.canViewResource(userBean.user) and not (res.deleted or res.groupId eq 0)}"/>
+
+	<ui:fragment rendered="#{not userBean.loggedIn}"><p>You need to login to access this resource.</p></ui:fragment>
+
+	<ui:fragment rendered="#{res.canViewResource(userBean.user)}">
+		<div class="res-view">
+			<div class="row">			
+                
+                <ui:insert name="resource_view">   
+                    no resource view defined       
+                </ui:insert>
+
+				<div class="col-12 col-lg-4 res-view-details">
+					<div class="res-view-controls">
+						<div class="mr-auto">
+							<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn" title="#{msg.edit_resource}"
+											 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceViewForm" global="false" form="resourceViewForm"
+											 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').hide();"/>
+
+							<ui:decorate template="/WEB-INF/templates/blocks/resourceview/controls.xhtml">
+								<ui:param name="res" value="#{res}"/>
+							</ui:decorate>
+						</div>
+						<div class="ml-auto">
+							<p:button icon="fa fa-eye-slash" styleClass="secondary-btn" title="#{msg.toggle_details}"
+									  onclick="$('.res-view-details').toggleClass('collapse-details');$('.ui-icon', this).toggleClass('fa-eye-slash fa-eye');return false;"/>
+
+							<p:commandButton icon="fa fa-times" styleClass="secondary-btn show-in-iframe" title="#{msg.close}"
+											 action="#{resourceDetailBean.cancelEdit}" immediate="true" form="resourceViewForm"
+											 onstart="parent.$.fancybox.close();"/>
+						</div>
+					</div>
+
+					<div class="res-view-panel">
+						<h2><h:outputText value="#{res.title}" escape="false"/></h2>
+
+						<h:form id="resourceViewForm" prependId="false" styleClass="resource-details">
+							<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
+								<h:outputText value="#{msg.please_wait}"/>
+							</p:blockUI>                            
+                            
+							<ui:fragment rendered="#{resourceDetailBean.viewAction == 'viewResource'}">
+								<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view.xhtml">
+									<ui:param name="res" value="#{res}"/>
+								</ui:decorate>
+							</ui:fragment>
+
+							<ui:fragment rendered="#{resourceDetailBean.viewAction == 'editResource'}">
+								<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_edit.xhtml">
+									<ui:param name="res" value="#{res}"/>
+								</ui:decorate>
+							</ui:fragment>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ui:fragment>
+</ui:define>
+
+</ui:composition>

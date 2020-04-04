@@ -59,6 +59,12 @@ public class GlossaryResource extends Resource
     }
 
     @Override
+    public String getView()
+    {
+        return "glossary/glossary.jsf";
+    }
+
+    @Override
     public GlossaryResource clone()
     {
         return new GlossaryResource(this);
