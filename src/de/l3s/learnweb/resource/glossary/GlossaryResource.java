@@ -21,7 +21,7 @@ public class GlossaryResource extends Resource
 
     private List<Locale> allowedLanguages = new ArrayList<>();
     private List<GlossaryEntry> entries = new LinkedList<>();
-    private boolean deleted = false;
+    private boolean deleted = false; // TODO added by riShita; check why this is used, it exists already in resource.class
     private boolean clonedButNotSaved = false;
 
     public GlossaryResource()
@@ -100,6 +100,12 @@ public class GlossaryResource extends Resource
     public void setEntries(List<GlossaryEntry> entries)
     {
         this.entries = entries;
+    }
+
+    @Override
+    public String getView()
+    {
+        return "glossary/glossary.jsf"; // TODO move to resorces view folder. requires refactoring of glossarybean
     }
 
     @Override

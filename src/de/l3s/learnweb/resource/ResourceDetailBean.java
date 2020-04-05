@@ -48,7 +48,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     private Tag selectedTag;
     private String tagName;
-    private Comment clickedComment;
+    private Comment clickedComment; // TODO rename to selectedcomment
     private String newComment;
 
     // Url params
@@ -59,7 +59,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private ViewAction viewAction = ViewAction.viewResource;
 
     @Inject
-    private FileEditorBean fileEditorBean; // TODO is this really necessary? I don't see a need for this (Philipp 21.03.2020)
+    private FileEditorBean fileEditorBean; // TODO remove.
 
     public void onLoad()
     {
@@ -203,7 +203,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     /**
      * The method is used from JS in resource_view_archive_timeline.xhtml
      */
-    public String getArchiveTimelineJsonData()
+    public String getArchiveTimelineJsonData() // TODO move this and all other archive related methods to new WebResourceBean
     {
         JSONArray highChartsData = new JSONArray();
         try
@@ -416,7 +416,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    private void showTagWarningMessage() // TODO rishita refactor
+    private void showTagWarningMessage() // TODO riShita refactor. Someone else has to do it.
     {
         String title = getLocaleMessage("incorrect_tags");
 
@@ -593,12 +593,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         this.tagName = tagName;
     }
 
-    public Comment getClickedComment()
+    public Comment getClickedComment() // TODO rename to selectedcomment
     {
         return clickedComment;
     }
 
-    public void setClickedComment(Comment clickedComment)
+    public void setClickedComment(Comment clickedComment) // TODO rename to selectedcomment
     {
         this.clickedComment = clickedComment;
     }
@@ -706,12 +706,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     /* Load beans  */
 
-    public FileEditorBean getFileEditorBean()
+    public FileEditorBean getFileEditorBean() // TODO remove
     {
         return fileEditorBean;
     }
 
-    public void setFileEditorBean(FileEditorBean fileEditorBean)
+    public void setFileEditorBean(FileEditorBean fileEditorBean) // TODO remove
     {
         this.fileEditorBean = fileEditorBean;
     }
