@@ -161,10 +161,9 @@
                     </p:column>
                     <p:column headerText="#{msg['Glossary.pronounciation']}" style=" width:5%;">
                         <p:commandLink type="button" rendered="#{item.term ne null and glossaryBean.getPronounciationVoice(item.language) ne null}"
-                                       onclick="responsiveVoice.speak('#{item.term}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
+                                       onclick="responsiveVoice.speak('#{utilBean.escapeJS(item.term)}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
                             <i class="fa fa-fw fa-volume-up"></i>
                         </p:commandLink>
-
                         <h:outputText value="#{item.pronounciation}"/>
                     </p:column>
                     <p:column headerText="#{msg['Glossary.acronym']}" filterable="true" filterBy="#{item.acronym}">
@@ -295,11 +294,11 @@
                         </p:column>
                         <p:column headerText="#{msg['Glossary.pronounciation']}" rendered="#{not term.deleted}">
 
-                            <p:inputText id="pronoun" value='#{term.pronounciation}' style="width: 90%" pt:onpaste="setPasteStatus(this, 'pronounciation');"/>
+                            <p:inputText id="pronoun" value="#{term.pronounciation}" style="width: 90%" pt:onpaste="setPasteStatus(this, 'pronounciation');"/>
                         </p:column>
                         <p:column headerText="#{msg['Glossary.acronym']}" rendered="#{not term.deleted}">
 
-                            <p:inputText id="acro" value='#{term.acronym}' style="width: 90%" pt:onpaste="setPasteStatus(this, 'acronym');"/>
+                            <p:inputText id="acro" value="#{term.acronym}" style="width: 90%" pt:onpaste="setPasteStatus(this, 'acronym');"/>
                         </p:column>
                         <p:column headerText="#{msg.source}" rendered="#{not term.deleted}">
 

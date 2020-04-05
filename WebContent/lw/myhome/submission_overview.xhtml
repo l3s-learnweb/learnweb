@@ -102,7 +102,7 @@
 					<p:defaultCommand target="saveBtn"/>
 					<div class="mr-auto">
 						<p:commandButton value="#{msg.delete}" update=":submissions" process="@this" actionListener="#{submissionBean.deleteSubmission()}"
-										 onclick="return confirmSubmissionDelete('#{submissionBean.selectedSubmission.title}');"
+										 onclick="return confirmSubmissionDelete('#{utilBean.escapeJS(submissionBean.selectedSubmission.title)}');"
 										 oncomplete="addSubmissionHeaderClickHandler();"/>
 					</div>
 					<div>

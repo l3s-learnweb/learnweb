@@ -13,11 +13,11 @@
                     const editorConfigValues = {
                         user: {
                             id: '#{userBean.user.id}',
-                            name: '#{userBean.user.username}'
+                            name: '#{utilBean.escapeJS(userBean.user.username)}'
                         },
                         documentType: '#{fileEditorBean.fileType}',
                         document: {
-                            title: '#{res.fileName}',
+                            title: '#{utilBean.escapeJS(res.fileName)}',
                             url: '#{fileEditorBean.fullFilesUrl}',
                             fileType: '#{fileEditorBean.filesExtension}',
                             key: '#{fileEditorBean.key}',

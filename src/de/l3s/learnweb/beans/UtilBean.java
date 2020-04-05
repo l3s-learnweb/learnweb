@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
@@ -109,5 +110,22 @@ public class UtilBean implements Serializable
         }
 
         return LanguageBundle.getLocaleMessage(locale, msgKey, args);
+    }
+
+    /**
+     * This method shall only be used in XHTML files!
+     *
+     * @param msgKey
+     * @param args
+     * @return The translation for the msgKey. Escaped so that it can be included in JS strings.
+     */
+    public String getLocaleMessageEscaped(String msgKey, Object... args)
+    {
+        return escapeJS(getLocaleMessage(msgKey, args));
+    }
+
+    public String escapeJS(String input)
+    {
+        return StringEscapeUtils.escapeEcmaScript(input);
     }
 }
