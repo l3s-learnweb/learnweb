@@ -2,7 +2,6 @@ package de.l3s.learnweb.group;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.group.Link.LinkType;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.AbstractResource;
@@ -107,22 +105,17 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private int maxMemberCount = -1; // defines how many users can join this group
 
     // caches
-    protected transient List<Link> documentLinks;
     protected transient List<User> members;
-    protected transient List<Link> links;
     protected transient List<Folder> folders;
     private transient Course course;
     private long cacheTime = 0L;
     private int resourceCount = -1;
     private int memberCount = -1;
-    private int linkCount = -1;
     private HashMap<Integer, Integer> lastVisitCache = new HashMap<>();
 
     public void clearCaches()
     {
-        documentLinks = null;
         members = null;
-        links = null;
         folders = null;
         resourceCount = -1;
         memberCount = -1;
@@ -324,60 +317,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.leader = null; // force reload
     }
 
-    public List<Link> getDocumentLinks() throws SQLException
-    {
-        if(null == documentLinks)
-            documentLinks = Learnweb.getInstance().getLinkManager().getLinksByGroupId(id, LinkType.DOCUMENT);
-
-        return documentLinks;
-    }
-
-    public List<Link> getLinks() throws SQLException
-    {
-        if(null == links)
-            links = Learnweb.getInstance().getLinkManager().getLinksByGroupId(id, LinkType.LINK);
-
-        return Collections.unmodifiableList(links);
-    }
-
-    public boolean hasLinks()
-    {
-        try
-        {
-            if(linkCount < 0)
-                linkCount = Learnweb.getInstance().getLinkManager().getLinksByGroupId(id, LinkType.LINK).size();
-
-            return linkCount > 0;
-        }
-        catch(SQLException e)
-        {
-            log.error(e);
-        }
-        return false;
-    }
-
-    public void addLink(String title, String url, LinkType type) throws SQLException
-    {
-        Link link = new Link();
-        link.setGroupId(id);
-        link.setType(type);
-        link.setTitle(title);
-        link.setUrl(url);
-        Learnweb.getInstance().getLinkManager().save(link);
-
-        links = null; // force reload
-        documentLinks = null;
-    }
-
-    public void deleteLink(int linkId) throws SQLException
-    {
-        Learnweb.getInstance().getLinkManager().deleteLink(linkId);
-
-        links = null; // force reload
-        documentLinks = null;
-    }
-
-    public static int time()
+    private static int time()
     {
         return (int) (System.currentTimeMillis() / 1000);
     }
@@ -570,12 +510,12 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
         switch(policyEdit)
         {
-        case GROUP_MEMBERS:
-            return isMember(user);
-        case GROUP_LEADER:
-            return isLeader(user);
-        case GROUP_LEADER_AND_FILE_OWNER:
-            return isLeader(user) || resource.getUserId() == user.getId();
+            case GROUP_MEMBERS:
+                return isMember(user);
+            case GROUP_LEADER:
+                return isLeader(user);
+            case GROUP_LEADER_AND_FILE_OWNER:
+                return isLeader(user) || resource.getUserId() == user.getId();
         }
 
         throw new NotImplementedException("this should never happen");
@@ -602,14 +542,14 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
         switch(policyJoin)
         {
-        case ALL_LEARNWEB_USERS:
-            return true;
-        case ORGANISATION_MEMBERS:
-            return getCourse().getOrganisationId() == user.getOrganisationId();
-        case COURSE_MEMBERS:
-            return getCourse().isMember(user);
-        case NOBODY:
-            return false;
+            case ALL_LEARNWEB_USERS:
+                return true;
+            case ORGANISATION_MEMBERS:
+                return getCourse().getOrganisationId() == user.getOrganisationId();
+            case COURSE_MEMBERS:
+                return getCourse().isMember(user);
+            case NOBODY:
+                return false;
         }
 
         throw new NotImplementedException("this should never happen");
@@ -626,14 +566,14 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         //noinspection Duplicates
         switch(policyView)
         {
-        case ALL_LEARNWEB_USERS:
-            return true;
-        case COURSE_MEMBERS:
-            return getCourse().isMember(user) || isMember(user);
-        case GROUP_MEMBERS:
-            return isMember(user);
-        case GROUP_LEADER:
-            return isLeader(user);
+            case ALL_LEARNWEB_USERS:
+                return true;
+            case COURSE_MEMBERS:
+                return getCourse().isMember(user) || isMember(user);
+            case GROUP_MEMBERS:
+                return isMember(user);
+            case GROUP_LEADER:
+                return isLeader(user);
         }
 
         return false;
@@ -650,14 +590,14 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         //noinspection Duplicates
         switch(policyAnnotate)
         {
-        case ALL_LEARNWEB_USERS:
-            return true;
-        case COURSE_MEMBERS:
-            return getCourse().isMember(user) || isMember(user);
-        case GROUP_MEMBERS:
-            return isMember(user);
-        case GROUP_LEADER:
-            return isLeader(user);
+            case ALL_LEARNWEB_USERS:
+                return true;
+            case COURSE_MEMBERS:
+                return getCourse().isMember(user) || isMember(user);
+            case GROUP_MEMBERS:
+                return isMember(user);
+            case GROUP_LEADER:
+                return isLeader(user);
         }
 
         return false;

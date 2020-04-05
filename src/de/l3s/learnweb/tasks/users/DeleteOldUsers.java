@@ -238,7 +238,7 @@ public class DeleteOldUsers
         }
 
         // remove references to deleted resources
-        String[] tables = { "lw_link", "lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_user_log" };
+        String[] tables = { "lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_user_log" };
 
         for(String table : tables)
         {

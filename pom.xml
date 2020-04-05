@@ -261,19 +261,7 @@
             <groupId>net.bramp.ffmpeg</groupId>
             <artifactId>ffmpeg</artifactId>
             <version>0.6.2</version>
-        </dependency>
-        <!-- Used in GoogleDriveManager to create links to documents, presentations, etc.  -->
-        <dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-            <version>1.30.9</version>
-        </dependency>
-        <!-- Used in GoogleDriveManager to create links to documents, presentations, etc.  -->
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-drive</artifactId>
-            <version>v2-rev20200306-1.30.9</version>
-        </dependency>
+        </dependency>  
         <!-- Used in ExportManager, what it does?  -->
         <dependency>
             <groupId>com.googlecode.plist</groupId>

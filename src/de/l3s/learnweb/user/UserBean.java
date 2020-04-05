@@ -423,10 +423,6 @@ public class UserBean implements Serializable
                 ActiveSubMenu.Builder groupBuilder = ActiveSubMenu.builder().label(group.getTitle()).url(su + "/lw/group/overview.jsf?group_id=" + group.getId()).styleClass("ui-menuitem-group");
                 groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("overview")).icon("fa fa-fw fa-list-ul").url(su + "/lw/group/overview.jsf?group_id=" + group.getId()).build());
                 groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("resources")).icon("fa fa-fw fa-folder-open").url(su + "/lw/group/resources.jsf?group_id=" + group.getId()).build());
-                if(!group.getLinks().isEmpty() || !group.getDocumentLinks().isEmpty())
-                {
-                    groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("links")).icon("fa fa-fw fa-link").url(su + "/lw/group/links.jsf?group_id=" + group.getId()).build());
-                }
                 groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("forum")).icon("fa fa-fw fa-comments-o").url(su + "/lw/group/forum.jsf?group_id=" + group.getId()).build());
                 if(group.getCourse().isModerator(getUser()) || group.isLeader(getUser()))
                 {

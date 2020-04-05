@@ -119,11 +119,11 @@ public class GroupManager
     /**
      * Returns a list of Groups which belong to the defined courses and were created after the specified date
      */
-    public List<Group> getGroupsByCourseId(List<Course> list, Instant newerThan) throws SQLException
+    public List<Group> getGroupsByCourseId(List<Course> courses, Instant newerThan) throws SQLException
     {
-        if(list.isEmpty())
+        if(courses.isEmpty())
             return Collections.emptyList();
-        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g WHERE g.course_id IN(" + HasId.implodeIds(list) + ") AND g.deleted = 0 AND `creation_time` > ? ORDER BY title";
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g WHERE g.course_id IN(" + HasId.implodeIds(courses) + ") AND g.deleted = 0 AND `creation_time` > ? ORDER BY title";
         return getGroups(query, Timestamp.from(newerThan));//(int) (newerThan.getTime() / 1000));
     }
 
@@ -363,7 +363,7 @@ public class GroupManager
 
         List<User> members = group.getMembers();
 
-        String[] tables = { "lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_link", "lw_user_log", "lw_group" };
+        String[] tables = { "lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_user_log", "lw_group" };
 
         for(String table : tables)
         {

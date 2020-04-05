@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
-import de.l3s.learnweb.group.LinkManager;
 import de.l3s.learnweb.logging.LogManager;
 import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.ResourceManager;
@@ -63,7 +62,6 @@ public class Learnweb
     private final CourseManager courseManager;
     private final GroupManager groupManager;
     private final UserManager userManager;
-    private final LinkManager linkManager;
     private final FileManager fileManager;
     private final TedManager tedManager; //For logging transcript actions by users
     private final ArchiveUrlManager archiveUrlManager; //For creating archive pages of resources saved to LearnWeb
@@ -236,7 +234,6 @@ public class Learnweb
         courseManager = new CourseManager(this);
         groupManager = new GroupManager(this);
         userManager = new UserManager(this);
-        linkManager = new LinkManager(this);
         fileManager = new FileManager(this);
         solrClient = SolrClient.getInstance(this);
         resourcePreviewMaker = new ResourcePreviewMaker(this);
@@ -309,11 +306,6 @@ public class Learnweb
     public UserManager getUserManager()
     {
         return userManager;
-    }
-
-    public LinkManager getLinkManager()
-    {
-        return linkManager;
     }
 
     public ResourcePreviewMaker getResourcePreviewMaker()
