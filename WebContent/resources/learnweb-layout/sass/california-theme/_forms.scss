@@ -245,19 +245,19 @@ body {
             }
         }
 
-        &.bluegrey-btn {
-            background-color: $bluegreyButtonBgColor;
-            border: 1px solid $bluegreyButtonBgColor;
-            color: $bluegreyButtonTextColor;
+        &.bluegray-btn {
+            background-color: $bluegrayButtonBgColor;
+            border: 1px solid $bluegrayButtonBgColor;
+            color: $bluegrayButtonTextColor;
 
             &:hover, &.ui-state-hover, &.ui-state-focus {
-                background-color: $bluegreyButtonHoverBgColor;
-                border-color: $bluegreyButtonHoverBgColor;
+                background-color: $bluegrayButtonHoverBgColor;
+                border-color: $bluegrayButtonHoverBgColor;
             }
 
             &.ui-state-active {
-                background-color: $bluegreyButtonActiveBgColor;
-                border-color: $bluegreyButtonActiveBgColor;
+                background-color: $bluegrayButtonActiveBgColor;
+                border-color: $bluegrayButtonActiveBgColor;
             }
         }
 
@@ -293,19 +293,19 @@ body {
             }
         }
 
-        &.grey-btn {
-            background-color: $greyButtonBgColor;
-            border: 1px solid $greyButtonBgColor;
-            color: $greyButtonTextColor;
+        &.gray-btn {
+            background-color: $grayButtonBgColor;
+            border: 1px solid $grayButtonBgColor;
+            color: $grayButtonTextColor;
 
             &:hover, &.ui-state-hover, &.ui-state-focus {
-                background-color: $greyButtonHoverBgColor;
-                border-color: $greyButtonHoverBgColor;
+                background-color: $grayButtonHoverBgColor;
+                border-color: $grayButtonHoverBgColor;
             }
 
             &.ui-state-active {
-                background-color: $greyButtonActiveBgColor;
-                border-color: $greyButtonActiveBgColor;
+                background-color: $grayButtonActiveBgColor;
+                border-color: $grayButtonActiveBgColor;
             }
         }
     }
