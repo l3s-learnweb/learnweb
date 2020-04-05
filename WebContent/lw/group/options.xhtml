@@ -198,16 +198,16 @@
 							</p:selectOneMenu>
 						</div>
 
-						<p:commandButton value="#{msg.copy}" action="#{groupOptionsBean.copyGroup}" process="@form" update=":growl"
-										 onstart="return confirm('#{utilBean.getLocaleMessage('group_copy_resources_question', groupOptionsBean.group.resources.size())}');"/>
+						<p:commandButton value="#{msg.copy}" action="#{groupOptionsBean.copyGroup}" process="@form" update=":growl">
+							<p:confirm message="${utilBean.getLocaleMessage('group_copy_resources_question', groupOptionsBean.group.resources.size())}"/>
+						</p:commandButton>
 					</h:form>
 				</p:panel>
 
 				<p:panel header="#{msg['Miscellaneous']}">
 					<h:form id="group_delete_form">
-						<p:commandButton value="#{msg.delete_group}" title="#{msg.delete}"
-										 action="#{groupsBean.deleteGroup}" ajax="false" process="@this"
-										 onclick="return confirm('#{utilBean.getLocaleMessage('group_delete_question', groupOptionsBean.group.title)}')">
+						<p:commandButton value="#{msg.delete_group}" title="#{msg.delete}" action="#{groupsBean.deleteGroup}" ajax="false" process="@this">
+							<p:confirm message="${utilBean.getLocaleMessage('group_delete_question', groupOptionsBean.group.title)}"/>
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOptionsBean.group}"/>
 						</p:commandButton>
 					</h:form>
