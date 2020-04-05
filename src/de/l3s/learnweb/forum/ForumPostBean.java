@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 import javax.faces.view.ViewScoped;
@@ -37,13 +36,8 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         newPost = new ForumPost();
     }
 
-    public void preRenderView() throws SQLException
+    public void onLoad() throws SQLException
     {
-        if(topicId == 0)
-        {
-            addMessage(FacesMessage.SEVERITY_ERROR, "No topic_id provided");
-            return;
-        }
         ForumManager fm = getLearnweb().getForumManager();
         posts = fm.getPostsBy(topicId);
         topic = fm.getTopicById(topicId);

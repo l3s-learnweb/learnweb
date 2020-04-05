@@ -10,8 +10,8 @@
 
 <ui:define name="metadata">
     <f:metadata>
-        <f:viewParam name="topic_id" value="#{forumPostBean.topicId}"/>
-        <f:viewAction action="#{forumPostBean.preRenderView}"/>
+        <f:viewParam name="topic_id" value="#{forumPostBean.topicId}" required="true"/>
+        <f:viewAction action="#{forumPostBean.onLoad}"/>
     </f:metadata>
 </ui:define>
 

@@ -39,17 +39,10 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
         newPost = new ForumPost();
     }
 
-    public void preRenderView()
+    public void onLoad()
     {
         try
         {
-            if(0 == groupId)
-            {
-                Integer id = getParameterInt("group_id");
-                if(id != null)
-                    groupId = id;
-            }
-
             group = getLearnweb().getGroupManager().getGroupById(groupId);
             topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
         }
@@ -61,7 +54,6 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
         if(null == group)
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid or no group id");
-            return;
         }
     }
 

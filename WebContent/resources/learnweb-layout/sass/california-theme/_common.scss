@@ -26,6 +26,9 @@ body {
     .ui-state-default.ui-state-error {
         border: 1px solid $inputInvalidBorderColor !important;
     }
+    .ui-outputlabel.ui-state-error {
+        border: 0 none !important;
+    }
     .ui-state-disabled {
         opacity: .35;
         filter: Alpha(Opacity=35);

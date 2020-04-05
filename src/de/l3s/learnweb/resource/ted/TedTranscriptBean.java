@@ -68,7 +68,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     //private int selectedCourseId;
     private TreeSet<Integer> selectedUsers;
 
-    public void preRenderView() throws SQLException
+    public void onLoad() throws SQLException
     {
         if(isAjaxRequest())
             return;

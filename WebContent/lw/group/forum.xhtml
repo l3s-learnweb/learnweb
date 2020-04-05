@@ -10,8 +10,8 @@
 
 <ui:define name="metadata">
 	<f:metadata>
-		<f:viewParam name="group_id" value="#{forumTopicsBean.groupId}"/>
-		<f:viewAction action="#{forumTopicsBean.preRenderView}"/>
+		<f:viewParam name="group_id" value="#{forumTopicsBean.groupId}" required="true"/>
+		<f:viewAction action="#{forumTopicsBean.onLoad}"/>
 	</f:metadata>
 </ui:define>
 

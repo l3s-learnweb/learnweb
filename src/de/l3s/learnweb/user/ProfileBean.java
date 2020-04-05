@@ -287,20 +287,6 @@ public class ProfileBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void validatePassword(FacesContext context, UIComponent component, Object value) throws ValidatorException
-    {
-        // Find the actual JSF component for the first password field.
-        UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("passwordform:password");
-
-        // Get its value, the entered password of the first field.
-        String password = (String) passwordInput.getValue();
-
-        if(null != password && !password.equals(value))
-        {
-            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "passwords_do_not_match"));
-        }
-    }
-
     public boolean isAffiliationRequired()
     {
         return affiliationRequired;

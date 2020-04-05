@@ -21,20 +21,14 @@ public class ForumEditBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 6561750124856501158L;
     //private static final Logger log = Logger.getLogger(ForumEditBean.class);
 
-    int postId;
+    private int postId;
     private ForumPost post;
     private ForumTopic topic;
     private Group group;
     private List<ForumTopic> topics;
 
-    public void preRenderView() throws SQLException
+    public void onLoad() throws SQLException
     {
-        if(postId == 0)
-        {
-            addMessage(FacesMessage.SEVERITY_ERROR, "No post_id provided");
-            return;
-        }
-
         ForumManager fm = getLearnweb().getForumManager();
         post = fm.getPostById(postId);
         topic = fm.getTopicById(post.getTopicId());
