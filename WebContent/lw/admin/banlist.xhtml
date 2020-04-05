@@ -26,9 +26,9 @@
                 <h:form id="banformreg">
                     <div class="form-group">
                         <p:outputLabel for="@next" value="#{msg.name_or_ip}:"/>
-                        <p:inputText value="#{adminBanlistBean.name}" id="name" required="true"/>
+                        <p:inputText value="#{adminBanlistBean.name}" required="true"/>
                         <p:message for="@previous"/>
-                        <p:selectOneRadio value="#{adminBanlistBean.type}" id="type" styleClass="mt-3" required="true">
+                        <p:selectOneRadio value="#{adminBanlistBean.type}" styleClass="mt-3" required="true">
                             <f:selectItem itemValue="user" itemLabel="User"/>
                             <f:selectItem itemValue="ip" itemLabel="IP"/>
                         </p:selectOneRadio>
@@ -37,30 +37,38 @@
 
                     <div class="form-group">
                         <p:outputLabel for="@next" value="#{msg.ban_for}:"/>
-                        <div class="mb-3">
-                            <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
-                            <p:message for="@previous"/>
-                            <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
-                            <p:message for="@previous"/>
-                            <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
-                            <p:message for="@previous"/>
+                        <div class="row mb-3">
+                            <div class="col-12 col-md-4">
+                                <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
+                                <p:message for="@previous"/>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
+                                <p:message for="@previous"/>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
+                                <p:message for="@previous"/>
+                            </div>
                         </div>
-                        <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}" id="permabancheckbox"/>
+                        <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}"/>
                     </div>
 
-                    <p:commandButton global="false" onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" update=":banlistform" action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form"/>
+                    <p:commandButton global="false" onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" update=":banlist" action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form"/>
                 </h:form>
             </p:panel>
         </div>
     </div>
 
-    <h:form id="banlistform">
-        <p:blockUI block="banlistform" widgetVar="banlistformOverlay">
+    <h:form prependId="false">
+        <p:blockUI block="banlist" widgetVar="banlistformOverlay">
             <h:outputText value="#{msg.please_wait}"/>
         </p:blockUI>
 
-        <p:dataTable var="accessData" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
+        <p:dataTable id="banlist" var="accessData" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+            <f:facet name="header">#{msg.banlist}</f:facet>
+
             <p:column headerText="#{msg.name}" sortBy="#{accessData.name}">
                 <h:outputText value="#{accessData.name}"/>
             </p:column>
@@ -83,7 +91,7 @@
 
             <p:column headerText="#{msg.options}" styleClass="td-text-right">
                 <p:commandLink onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
-                               update=":banlistform :growl" styleClass="icon-link"
+                               update=":banlist :growl" styleClass="icon-link"
                                title="#{msg.unban}" global="false">
                     <i class="fa fa-fw fa-ban text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.unban}"/>
@@ -93,16 +101,16 @@
         </p:dataTable>
     </h:form>
 
-    <p:panel header="#{msg.suspicious_activity}" styleClass="mt-3" rendered="#{not empty adminBanlistBean.suspiciousActivityList}">
+    <p:panel header="#{msg.suspicious_activity}" styleClass="mt-3" rendered="#{true}">
         <p>#{msg.suspicious_activity_message}</p>
 
-        <p:dialog header="Ban" widgetVar="bandialog" modal="true" height="100">
-            <h:form class="banform" id="banformdialog">
+        <p:dialog header="Ban" widgetVar="banDialog" modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+            <h:form class="banform" id="banDialogForm">
                 <div class="form-group">
                     <p:outputLabel for="@next" value="#{msg.name_or_ip}:"/>
-                    <p:inputText value="#{adminBanlistBean.name}" id="name" required="true"/>
+                    <p:inputText value="#{adminBanlistBean.name}" required="true"/>
                     <p:message for="@previous"/>
-                    <p:selectOneRadio value="#{adminBanlistBean.type}" id="type" styleClass="mt-3" required="true">
+                    <p:selectOneRadio value="#{adminBanlistBean.type}" styleClass="mt-3" required="true">
                         <f:selectItem itemValue="user" itemLabel="User"/>
                         <f:selectItem itemValue="ip" itemLabel="IP"/>
                     </p:selectOneRadio>
@@ -111,15 +119,21 @@
 
                 <div class="form-group">
                     <p:outputLabel for="@next" value="#{msg.ban_for}:"/>
-                    <div class="mb-3">
-                        <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
-                        <p:message for="@previous"/>
-                        <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
-                        <p:message for="@previous"/>
-                        <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
-                        <p:message for="@previous"/>
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-4">
+                            <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
+                            <p:message for="@previous"/>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
+                            <p:message for="@previous"/>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
+                            <p:message for="@previous"/>
+                        </div>
                     </div>
-                    <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}" id="permabancheckbox"/>
+                    <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}"/>
                 </div>
 
                 <p:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form"/>
@@ -152,8 +166,8 @@
                 </p:column>
 
                 <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                    <p:commandLink onclick="PF('bandialog').show(); setname('#{entry.IP}')" process="@this"
-                        update=":suspiciouslistform :growl" styleClass="icon-link">
+                    <p:commandLink onclick="PF('banDialog').show(); updateFormValues('#{entry.IP}');" process="@this"
+                                   update=":suspiciouslistform :growl" styleClass="icon-link">
                         <i class="fa fa-fw fa-ban text-danger" aria-hidden="true"></i>
                         <h:outputText value="#{msg.ban}"/>
                     </p:commandLink>
@@ -170,12 +184,10 @@
     </p:panel>
 
     <script type="text/javascript">
-        function setname(name) {
-            formObj = document.getElementById('banformdialog');
-            nameObj = formObj.elements.item(0);
-            nameObj.value = name;
-            radioObj = formObj.elements.item(0);
-            radioObj.checked = true;
+        function updateFormValues(name) {
+            const formObj = document.getElementById('banDialogForm');
+            formObj.elements.item(0).value = name;
+            formObj.elements.item(2).parentNode.nextSibling.click();
         }
     </script>
 </ui:define>
