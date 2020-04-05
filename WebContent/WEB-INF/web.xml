@@ -51,7 +51,9 @@
 	</context-param>
     <context-param>
         <param-name>org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES</param-name>
-        <param-value>1209600000</param-value>
+        <!-- <param-value>1209600000</param-value> -->        
+                       
+        <param-value>18000000</param-value> <!-- expiration set to 5 minutes as long as v3 isn't stable  -->
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.commons.GZIP_RESOURCES_ENABLED</param-name>
