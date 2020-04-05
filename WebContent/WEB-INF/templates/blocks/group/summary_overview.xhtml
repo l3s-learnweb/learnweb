@@ -19,7 +19,7 @@
 
                 <div class="activity-feed-slider activity-feed-added-resources">
                     <p:carousel value="#{summary.addedResources}" var="item" styleClass="ui-carousel-light" responsive="true" circular="true" breakpoint="-1">
-                        <h:outputLink styleClass="mx-auto text-decoration-none" style="min-width:10rem;" value="#{item.resource.view}" pt:data-resview="default">
+                        <h:outputLink styleClass="mx-auto text-decoration-none" style="min-width:10rem;" value="resource.jsf" pt:data-resview="default">
                             <f:param name="resource_id" value="#{item.resource.id}"/>
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
@@ -54,7 +54,7 @@
                 <div class="activity-feed-slider activity-feed-updated-resources">
                     <p:carousel value="#{summary.updatedResources.keySet()}" var="item" styleClass="ui-carousel-light" responsive="true"
                                 circular="true" breakpoint="-1">
-                        <h:outputLink styleClass="mx-auto text-decoration-none" style="min-width:10rem;" value="#{item.resource.view}" pt:data-resview="default">
+                        <h:outputLink styleClass="mx-auto text-decoration-none" style="min-width:10rem;" value="resource.jsf" pt:data-resview="default">
                             <f:param name="resource_id" value="#{item.resource.id}"/>
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">

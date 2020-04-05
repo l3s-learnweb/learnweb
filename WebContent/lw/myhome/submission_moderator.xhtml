@@ -76,7 +76,7 @@
 
                     <h:panelGroup id="resourceGrid" styleClass="res-grid mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
                         <ui:repeat value="#{userSubmission.resources}" var="res">
-                            <h:outputLink styleClass="d-block res-item text-decoration-none" value="#{res.view}"
+                            <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
                                           pt:data-resview="default"
                                           pt:data-itemType="resource"
                                           pt:data-itemId="#{res.id}">

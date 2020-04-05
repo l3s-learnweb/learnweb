@@ -6,7 +6,7 @@
 
 <h:panelGroup styleClass="res-container-table" layout="block">
     <ui:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
-        <h:outputLink styleClass="d-block res-item text-decoration-none" value="#{res.resource.view}"
+        <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
                       pt:data-resview="grid"
                       pt:data-itemType="resource"
                       pt:data-itemId="#{res.resource.id}"
