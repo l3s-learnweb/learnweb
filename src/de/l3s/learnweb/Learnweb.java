@@ -1,6 +1,5 @@
 package de.l3s.learnweb;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -8,6 +7,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Properties;
+
+import javax.faces.application.ProjectStage;
+import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -88,7 +90,7 @@ public class Learnweb
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
-    private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
+    private static Boolean developmentStage = null;
 
     /**
      * Use createInstance() first
@@ -158,14 +160,6 @@ public class Learnweb
 
     private void loadProperties()
     {
-        // TODO: retrieve mode from web.xml configuration
-        String workingDirectory = new File(".").getAbsolutePath();
-        log.debug("workingDirectory: " + workingDirectory);
-        if(workingDirectory.startsWith("/home/learnweb_user"))
-        {
-            developmentMode = false;
-        }
-
         try
         {
             Properties fallbackProperties = new Properties();
@@ -272,10 +266,10 @@ public class Learnweb
     {
         log.debug("Init LearnwebServer");
 
-        if(!isInDevelopmentMode())
+        if(!isDevelopmentStage())
             jobScheduler.startAllJobs();
         else
-            log.debug("JobScheduler not started; development mode=" + isInDevelopmentMode());
+            log.debug("JobScheduler not started; development mode=" + isDevelopmentStage());
     }
 
     public FileManager getFileManager()
@@ -418,7 +412,7 @@ public class Learnweb
         this.serverUrl = serverUrl;
 
         // enforce HTTPS on the production server
-        if(serverUrl.startsWith("http://") && !Learnweb.isInDevelopmentMode())
+        if(serverUrl.startsWith("http://") && serverUrl.contains("learnweb.l3s.uni-hannover.de"))
             this.serverUrl = "https://" + serverUrl.substring(7);
 
         if(fileManager != null)
@@ -472,12 +466,23 @@ public class Learnweb
     }
 
     /**
-     *
      * @return true if it is not run on the Learnweb server
      */
-    public static boolean isInDevelopmentMode()
+    public static boolean isDevelopmentStage()
     {
-        return developmentMode;
+        if (developmentStage == null)
+        {
+            try {
+                // Development mode retrieved from FacesContext
+                developmentStage = FacesContext.getCurrentInstance().isProjectStage(ProjectStage.Development);
+            }
+            catch(NullPointerException e)
+            {
+                // While Learnweb is loading, FacesContext.getCurrentInstance() return null
+                return true;
+            }
+        }
+        return developmentStage;
     }
 
     public SearchLogManager getSearchLogManager()

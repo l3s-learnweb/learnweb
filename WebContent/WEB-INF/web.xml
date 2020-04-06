@@ -15,7 +15,7 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <!--<param-value>Development</param-value>-->
         <!--<param-value>Production</param-value>-->
-        <param-value>${jsfProjectStage}</param-value>
+        <param-value>${javax.faces.project_stage}</param-value>
     </context-param>
 
     <!-- PrimeFaces https://primefaces.github.io/primefaces/8_0/#/gettingstarted/configuration -->

@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.user.UserBean;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ApplicationScoped
@@ -23,39 +24,6 @@ public class UtilBean implements Serializable
     private static final long serialVersionUID = 6252597111468136574L;
     private static final Logger log = Logger.getLogger(UtilBean.class);
 
-    public static ExternalContext getExternalContext()
-    {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        return fc.getExternalContext();
-    }
-
-    public static String getContextPath()
-    {
-        ServletContext servletContext = (ServletContext) getExternalContext().getContext();
-        return servletContext.getContextPath();
-    }
-
-    /**
-     * @return example http://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
-     */
-    public static String getServerUrl()
-    {
-        try
-        {
-            ExternalContext ext = getExternalContext();
-
-            if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
-                return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
-            else
-                return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
-        }
-        catch(Exception e)
-        {
-            log.warn("Can't get server url. This is only expected in console mode");
-            return "https://learnweb.l3s.uni-hannover.de";
-        }
-    }
-
     /**
      * This method is intended only for special use cases. Discuss with project leader before using it.
      *
@@ -63,10 +31,11 @@ public class UtilBean implements Serializable
      */
     public static void redirect(String redirectPath)
     {
-        ExternalContext externalContext = getExternalContext();
         try
         {
-            externalContext.redirect(getContextPath() + redirectPath);
+            ExternalContext externalContext = BeanHelper.getExternalContext();
+            ServletContext servletContext = (ServletContext) externalContext.getContext();
+            externalContext.redirect(servletContext.getContextPath() + redirectPath);
         }
         catch(IOException e)
         {

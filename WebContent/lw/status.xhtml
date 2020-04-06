@@ -4,10 +4,11 @@
      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <f:view contentType="text/xml">
-    <application>
+    <app>
         <version>#{statusBean.version}</version>
-        <build_date>#{statusBean.buildDate}</build_date>
-    </application>
+        <development_stage>#{statusBean.developmentStage}</development_stage>
+        <uptime>#{statusBean.uptime}</uptime>
+    </app>
     <services>
         <ui:repeat var="service" value="#{statusBean.services}">
             <service>

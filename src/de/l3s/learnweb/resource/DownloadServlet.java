@@ -55,14 +55,9 @@ public class DownloadServlet extends HttpServlet
 
     public void init(HttpServletRequest request)
     {
-        String serverUrl;
-        if(request.getServerPort() == 80 || request.getServerPort() == 443)
-            serverUrl = request.getScheme() + "://" + request.getServerName() + request.getContextPath();
-        else
-            serverUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-
         try
         {
+            String serverUrl = BeanHelper.getServerUrl(request);
             this.learnweb = Learnweb.createInstance(serverUrl);
             this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
             this.fileManager = learnweb.getFileManager();

@@ -13,6 +13,41 @@ import de.l3s.util.StringHelper;
 
 public class BeanHelper
 {
+    public static ExternalContext getExternalContext()
+    {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        return fc.getExternalContext();
+    }
+
+    public static HttpServletRequest getRequest()
+    {
+        return (HttpServletRequest) getExternalContext().getRequest();
+    }
+    
+    public static String getServerUrl()
+    {
+        try
+        {
+            return getServerUrl(getRequest());
+        }
+        catch(Exception e)
+        {
+            // Can't get server url. This is only expected in console mode
+            return "https://learnweb.l3s.uni-hannover.de";
+        }
+    }
+
+    /**
+     * @return example http://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
+     */
+    public static String getServerUrl(HttpServletRequest request)
+    {
+        if(request.getServerPort() == 80 || request.getServerPort() == 443)
+            return request.getScheme() + "://" + request.getServerName() + request.getContextPath();
+        else
+            return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
+
     /**
      * Returns the remote address of the current request.
      * If available it returns the IP provided through the X-FORWARDED-FOR header
@@ -39,19 +74,18 @@ public class BeanHelper
     /**
      *
      * @param request
-     * @param ignoreForwardheader
+     * @param ignoreForwardHeader
      * @return
      */
-    public static String getIp(HttpServletRequest request, boolean ignoreForwardheader)
+    public static String getIp(HttpServletRequest request, boolean ignoreForwardHeader)
     {
         if(request == null)
         {
-            ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
-            request = (HttpServletRequest) ext.getRequest();
+            request = getRequest();
         }
 
         String ip = request.getHeader("X-FORWARDED-FOR");
-        if(ip != null && !ignoreForwardheader)
+        if(ip != null && !ignoreForwardHeader)
         {
             // the x forward header can contain all the ips of all rely proxies
             String[] ips = ip.split(",");
@@ -93,8 +127,7 @@ public class BeanHelper
         {
             if(request == null)
             {
-                ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
-                request = (HttpServletRequest) ext.getRequest();
+                request = getRequest();
             }
 
             referrer = request.getHeader("referer");
@@ -139,8 +172,7 @@ public class BeanHelper
 
         try
         {
-            ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
-            HttpServletRequest request = (HttpServletRequest) ext.getRequest();
+            HttpServletRequest request = getRequest();
 
             uri = request.getRequestURI();
             if(request.getQueryString() != null)

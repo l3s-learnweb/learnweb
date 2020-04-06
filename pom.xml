@@ -13,11 +13,10 @@
     <description>Learnweb is a collaborative search and sharing system which brings together different online services under one umbrella.</description>
 
     <properties>
-        <timestamp>${maven.build.timestamp}</timestamp>
+        <javax.faces.project_stage>Development</javax.faces.project_stage>
         <maven.assembly.mainClass>de.l3s.learnweb.tasks.users.DeleteOldUsers</maven.assembly.mainClass>
-        <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>11</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -110,11 +109,11 @@
             <version>2.6</version>
         </dependency>
         <!-- used for String escape methods -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-text</artifactId>
-			<version>1.8</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.8</version>
+        </dependency>
 
         <!-- ################ ImageIO (Image processing, Thumbnails) ################ -->
         <dependency>
@@ -267,7 +266,7 @@
             <groupId>net.bramp.ffmpeg</groupId>
             <artifactId>ffmpeg</artifactId>
             <version>0.6.2</version>
-        </dependency>  
+        </dependency>
         <!-- Used in ExportManager, what it does?  -->
         <dependency>
             <groupId>com.googlecode.plist</groupId>
@@ -409,17 +408,9 @@
                 <directory>Resources</directory>
                 <filtering>false</filtering>
                 <excludes>
-                    <exclude>**/version.properties</exclude>
                     <exclude>**/*test*.*</exclude>
                     <exclude>**/*local*.*</exclude>
                 </excludes>
-            </resource>
-            <resource>
-                <directory>Resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**/version.properties</include>
-                </includes>
             </resource>
         </resources>
         <!-- Causing issues in Eclipse, it removes Resources from src path and include only to test -->
@@ -483,9 +474,6 @@
     <profiles>
         <profile>
             <id>dev</id>
-            <properties>
-                <jsfProjectStage>Development</jsfProjectStage>
-            </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -503,7 +491,7 @@
         <profile>
             <id>prod</id>
             <properties>
-                <jsfProjectStage>Production</jsfProjectStage>
+                <javax.faces.project_stage>Production</javax.faces.project_stage>
             </properties>
             <build>
                 <finalName>v3##${project.version}</finalName>

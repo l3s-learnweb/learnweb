@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ApplicationScoped
@@ -25,7 +26,7 @@ public class LearnwebBean implements Serializable
 
     public LearnwebBean() throws ClassNotFoundException, SQLException
     {
-        learnweb = Learnweb.createInstance(UtilBean.getServerUrl());
+        learnweb = Learnweb.createInstance(BeanHelper.getServerUrl());
     }
 
     @PostConstruct

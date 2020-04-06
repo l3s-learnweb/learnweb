@@ -14,12 +14,11 @@ public class CustomEvaluator implements TriggeringEventEvaluator
 {
     private long cycleSeconds = 3600000L; // Sending a group of errors if the last check was more than an hour ago
     private long lastCheck = 0L;
-    //private Boolean isRunningOnLocalhost = null;
 
     @Override
     public boolean isTriggeringEvent(LoggingEvent event)
     {
-        if(Learnweb.isInDevelopmentMode())
+        if(Learnweb.isDevelopmentStage())
             return false;
 
         long now = System.currentTimeMillis();

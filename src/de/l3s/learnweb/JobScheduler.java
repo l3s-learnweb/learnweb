@@ -11,10 +11,7 @@ import it.sauronsoftware.cron4j.Scheduler;
 
 public class JobScheduler
 {
-    private final Logger log = Logger.getLogger(JobScheduler.class);
     private Scheduler scheduler;
-
-    private Learnweb learnweb;
 
     /**
      * Description about Scheduling patterns
@@ -22,22 +19,7 @@ public class JobScheduler
      */
     protected JobScheduler(Learnweb learnweb)
     {
-        this.learnweb = learnweb;
-        this.scheduler = new Scheduler();
-
-        if(Learnweb.isInDevelopmentMode())
-            return;
-
-        // checks if url ends with .de, .com or .de/, if it ends with something like .de/1 than it is not the root instance
-        //boolean isRootInstance = this.learnweb.getServerUrl().length() < this.learnweb.getServerUrl().lastIndexOf(".") + 3;
-
-        boolean isRootInstance = this.learnweb.getServerUrl().endsWith("learnweb.l3s.uni-hannover.de/v3/"); // TODO need to revert when V3 becomes ROOT
-
-        if(!isRootInstance)
-        {
-            log.warn("JobScheduler stopped because it seams that this instance is only for testing: " + this.learnweb.getServerUrl());
-            return;
-        }
+        scheduler = new Scheduler();
 
         //Cleans up expired bans once a week on Sunday at 3:00AM
         scheduler.schedule("0 3 * * Sun", new ExpiredBansCleaner());

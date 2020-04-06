@@ -32,14 +32,9 @@ public class RequestFilter implements Filter
 
     public void init(HttpServletRequest request)
     {
-        String serverUrl;
-        if(request.getServerPort() == 80 || request.getServerPort() == 443)
-            serverUrl = request.getScheme() + "://" + request.getServerName() + request.getContextPath();
-        else
-            serverUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-
         try
         {
+            String serverUrl = BeanHelper.getServerUrl(request);
             Learnweb learnweb = Learnweb.createInstance(serverUrl);
             requestManager = learnweb.getRequestManager();
             protectionManager = learnweb.getProtectionManager();
@@ -87,7 +82,7 @@ public class RequestFilter implements Filter
 
                 if(protectionManager.isBanned(ip) && redirectToBlockedRequestErrorPage(req, response))
                 {
-                    return; // stop processig if error page is displayed
+                    return; // stop processing if error page is displayed
                 }
             }
             catch(Throwable e)
