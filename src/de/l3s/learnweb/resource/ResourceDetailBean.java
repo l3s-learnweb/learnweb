@@ -149,9 +149,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public void saveEdit() throws SQLException
     {
-        if(resource == null || !resource.canEditResource(getUser()))
+        if(!resource.canEditResource(getUser()))
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceNotSelectedOrUserCanNotEditIt");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceEditUserNotAllowed");
             return;
         }
 

@@ -538,9 +538,6 @@ function createConfirmDialog(dialogId, successCallback) {
   const dialog = PF(dialogId);
   dialog.show();
 
-  dialog.jq.find('.collapse').hide();
-  dialog.jq.find(`.type-${selected.getSelectedType()}`).show();
-
   dialog.jq.off('click', '.confirm').one('click', '.confirm', (e) => {
     PF(dialogId).hide();
     if (successCallback) successCallback();

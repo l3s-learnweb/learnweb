@@ -203,11 +203,7 @@
 
 <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource}" widgetVar="deleteConfirm" appendTo="@(body)"
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
-    <p>
-        <h:outputText value="#{msg.delete_confirm_dialog_content_folder}" styleClass="type-folder collapse"/>
-        <h:outputText value="#{msg.delete_confirm_dialog_content}" styleClass="type-resource collapse"/>
-        <h:outputText value="#{msg.delete_confirm_dialog_content_plural}" styleClass="type-resources collapse"/>
-    </p>
+    <h:outputText value="#{msg.delete_confirm_dialog_content}"/>
 
     <h:panelGroup layout="block" styleClass="text-right">
         <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('deleteConfirm').hide(); return false;"/>

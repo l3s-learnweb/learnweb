@@ -40,9 +40,9 @@ public class EditFolderBean extends ApplicationBean implements Serializable
 
     public void saveChanges() throws SQLException
     {
-        if (folder == null || !folder.canEditResource(getUser()))
+        if (!folder.canEditResource(getUser()))
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceNotSelectedOrUserCanNotEditIt");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceEditUserNotAllowed");
             return;
         }
 
