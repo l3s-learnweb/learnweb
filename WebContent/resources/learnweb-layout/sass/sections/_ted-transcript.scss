@@ -55,10 +55,10 @@
     overflow-x: hidden;
     transition: 0.3s;
   }
-}
 
-.ui-tabs-panel {
-  border: 0 !important;
+  .ui-tabs-panel {
+    border: 0 !important;
+  }
 }
 
 // It is attached to context menu which is attached to body element, so we need keep it global
