@@ -7,8 +7,7 @@
 <p:dialog id="createResourceDialog" widgetVar="createResourceDialog" header="#{msg.create_resource}"
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
     <h:form id="create_resource_form">
-        <p:remoteCommand name="updateLocationCommand" actionListener="#{addResourceBean.updateTargetLocation}" update=":growl"
-                         global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
+        <p:remoteCommand name="updateLocationCommand" actionListener="#{addResourceBean.updateTargetLocation}" update=":growl :create_resource_form" global="false"/>
         <h:panelGroup layout="block" styleClass="fg-grid mb-3" rendered="#{addResourceBean.formStep == 1}">
             <h:outputText value="#{msg.type}:" styleClass="ui-outputlabel"/>
             <h:outputText value="#{addResourceBean.resource.type}" styleClass="fg-col text-capitalize"/>
@@ -18,7 +17,7 @@
                            oncomplete="createConfirmDialog('selectDestination', updateLocationCommand);return false;"/>
 
             <ui:fragment rendered="#{addResourceBean.resource.officeResource}">
-                <p:outputLabel for="@next" value="#{msg.file_name}:"/>
+                <p:outputLabel for="@next" value="#{msg.title}:"/>
                 <div class="fg-col">
                     <p:inputText value="#{addResourceBean.resource.fileName}" required="true"/>
                     <p:message for="@previous"/>
