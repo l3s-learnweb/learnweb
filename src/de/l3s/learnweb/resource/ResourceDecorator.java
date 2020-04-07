@@ -174,6 +174,11 @@ public class ResourceDecorator implements Serializable
         return resource.getGroup();
     }
 
+    public int getGroupId()
+    {
+        return resource.getGroupId();
+    }
+
     public int getId()
     {
         return resource.getId();
