@@ -138,7 +138,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         releaseResourceIfLocked();
         if(!resource.lockResource(getUser()))
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", resource.getLockUsername());
+            addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.locked_by_user", resource.getLockUsername());
             log(Action.lock_rejected_edit_resource, resource.getGroupId(), resource.getId());
             return;
         }
@@ -151,7 +151,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         if(!resource.canEditResource(getUser()))
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceEditUserNotAllowed");
+            addAccessDeniedMessage();
             return;
         }
 
@@ -191,7 +191,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         {
             releaseResourceIfLocked();
             log(Action.lock_interrupted_returned_resource, resource.getGroupId(), resource.getId());
-            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceEditInterrupt");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.edit_interrupted");
 
             viewAction = ViewAction.viewResource;
             PrimeFaces.current().ajax().update(":resourceViewForm");

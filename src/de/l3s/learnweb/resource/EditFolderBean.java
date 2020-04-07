@@ -42,7 +42,7 @@ public class EditFolderBean extends ApplicationBean implements Serializable
     {
         if (!folder.canEditResource(getUser()))
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceEditUserNotAllowed");
+            addAccessDeniedMessage();
             return;
         }
 

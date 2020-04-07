@@ -8,11 +8,15 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.Learnweb;
 import de.l3s.util.StringHelper;
 
 public class BeanHelper
 {
+    private static final Logger log = Logger.getLogger(BeanHelper.class);
+
     public static ExternalContext getExternalContext()
     {
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -32,7 +36,7 @@ public class BeanHelper
         }
         catch(Exception e)
         {
-            // Can't get server url. This is only expected in console mode
+            log.warn("Can't get server url. This is only expected in console mode");
             return "https://learnweb.l3s.uni-hannover.de";
         }
     }
