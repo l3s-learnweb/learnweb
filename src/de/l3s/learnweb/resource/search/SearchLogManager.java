@@ -83,7 +83,7 @@ public class SearchLogManager
         else if(searchFilters.length() > 1000)
             searchFilters = searchFilters.substring(0, 1000);
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", Statement.RETURN_GENERATED_KEYS))
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS + ", learnweb_version) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3);", Statement.RETURN_GENERATED_KEYS))
         {
             insert.setString(1, query);
             insert.setString(2, searchMode.name());
@@ -116,7 +116,7 @@ public class SearchLogManager
         else if(searchFilters.length() > 1000)
             searchFilters = searchFilters.substring(0, 1000);
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS_FOR_GROUP + ") VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", Statement.RETURN_GENERATED_KEYS))
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS_FOR_GROUP + ", learnweb_version) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3);", Statement.RETURN_GENERATED_KEYS))
         {
             insert.setInt(1, groupId);
             insert.setString(2, query);
