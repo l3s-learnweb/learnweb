@@ -761,6 +761,9 @@ public class ResourceManager
 
     public void saveArchiveUrlsByResourceId(int resourceId, List<ArchiveUrl> archiveUrls) throws SQLException
     {
+        if(null == archiveUrls)
+            return;
+
         for(ArchiveUrl version : archiveUrls)
         {
             PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");

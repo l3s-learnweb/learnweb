@@ -1,6 +1,6 @@
 # .idea
 
-## Plugins' garbadge
+## Plugins
 .idea/**/sonarlint
 .idea/**/checkstyleidea-libs
 .idea/**/checkstyleidea.tmp
@@ -9,6 +9,7 @@
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
+#.idea/**/dictionaries
 .idea/**/shelf
 
 ## Sensitive or high-churn files
@@ -21,11 +22,13 @@
 .idea/**/dbnavigator.xml
 .idea/**/watcherTasks.xml
 
-## Local libs
-.idea/**/libraries/*
-!.idea/**/libraries/testLibs.xml
+## Gradle
+.idea/**/gradle.xml
+.idea/**/libraries
 
-# Output folder
+
+# Output folders and local files
 target
 build
 node_modules
+learnweb_local.properties
