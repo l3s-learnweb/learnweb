@@ -2,11 +2,13 @@ package de.l3s.learnweb.beans.publicPages;
 
 import java.lang.management.ManagementFactory;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
@@ -20,11 +22,18 @@ import de.l3s.learnweb.beans.ApplicationBean;
 @RequestScoped
 public class StatusBean extends ApplicationBean
 {
-
-    private List<Service> services = new LinkedList<>();
     private Properties properties = new Properties();
+    private Map<String, String> variables = new HashMap<>();
+    private List<Service> services = new LinkedList<>();
 
     public StatusBean()
+    {
+        fetchProperties();
+        fetchVariables();
+        fetchServices();
+    }
+    
+    private void fetchProperties()
     {
         try
         {
@@ -34,72 +43,72 @@ public class StatusBean extends ApplicationBean
         {
             // ignore
         }
+    }
 
-        services.add(new Service("Learnweb Tomcat", "ok", "", "Obviously OK, otherwise this page would not be reachable"));
-
+    private void fetchVariables()
+    {
+        variables = System.getenv().entrySet()
+            .stream()
+            .filter(map -> map.getKey().startsWith("LEARNWEB_"))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+    
+    private void fetchServices()
+    {
         Learnweb learnweb = getLearnweb();
+        services.add(new Service("Learnweb Tomcat", "ok", learnweb.getServerUrl(), "Obviously OK, otherwise this page would not be reachable"));
 
         // test learnweb database
-        String status = "ok";
-        String comment = "";
+        Service lwDb = new Service("Learnweb Database", "ok", learnweb.getProperties().getProperty("mysql_url"), "");
         try
         {
             Statement stmt = learnweb.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("SELECT count(*) FROM lw_user");
 
             if(!rs.next() || rs.getInt(1) < 400)
-            {
-                status = "error";
-                comment = "unexpected result from database";
-            }
-        }
-        catch(SQLException e)
-        {
-            status = "error";
-            comment = e.getMessage();
-        }
-        services.add(new Service("Learnweb Database", status, learnweb.getProperties().getProperty("mysql_url"), comment));
-
-        // very simple database integrity test
-        status = "ok";
-        comment = "";
-
-        try
-        {
-            if(!learnweb.getResourceManager().isResourceRatedByUser(2811, 1684))
-            {
-                status = "warning";
-                comment = "unexpected result from database";
-            }
+                lwDb.setStatus("error", "unexpected result from database");
         }
         catch(Exception e)
         {
-            status = "error";
-            comment = e.getMessage();
+            lwDb.setStatus("error", e.getMessage());
         }
-        services.add(new Service("Learnweb Database integrity", status, learnweb.getProperties().getProperty("FEDORA_SERVER_URL"), comment));
+        services.add(lwDb);
 
-    }
-
-    public List<Service> getServices()
-    {
-        return services;
+        // very simple database integrity test
+        Service lwDbIntegrity = new Service("Learnweb Database integrity", "ok", learnweb.getProperties().getProperty("FEDORA_SERVER_URL"), "");
+        try
+        {
+            if(!learnweb.getResourceManager().isResourceRatedByUser(2811, 1684))
+                lwDbIntegrity.setStatus("warning", "unexpected result from database");
+        }
+        catch(Exception e)
+        {
+            lwDbIntegrity.setStatus("error", e.getMessage());
+        }
+        services.add(lwDbIntegrity);
     }
 
     public String getVersion()
     {
+        // TODO: version is not actually working
         return properties.getProperty("version", "unknown");
     }
 
     public String getUptime()
     {
+        // TODO: this is uptime of tomcat, not instance :(
         long uptime = ManagementFactory.getRuntimeMXBean().getUptime();
         return DurationFormatUtils.formatDurationWords(uptime, true, true);
     }
 
-    public boolean isDevelopmentStage()
+    public Map<String, String> getVariables()
     {
-        return Learnweb.isDevelopmentStage();
+        return variables;
+    }
+
+    public List<Service> getServices()
+    {
+        return services;
     }
 
     public static class Service
@@ -111,10 +120,15 @@ public class StatusBean extends ApplicationBean
 
         public Service(String name, String status, String url, String comment)
         {
-            super();
             this.name = name;
             this.status = status;
             this.url = url;
+            this.comment = comment;
+        }
+
+        public void setStatus(String status, String comment)
+        {
+            this.status = status;
             this.comment = comment;
         }
 
@@ -137,6 +151,5 @@ public class StatusBean extends ApplicationBean
         {
             return url;
         }
-
     }
 }

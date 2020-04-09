@@ -1,12 +1,6 @@
 package de.l3s.learnweb.beans;
 
-import java.util.Iterator;
-
-import javax.el.ELException;
-import javax.faces.FacesException;
-import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandler;
-import javax.faces.event.ExceptionQueuedEvent;
 
 import org.apache.log4j.Logger;
 import org.primefaces.application.exceptionhandler.PrimeExceptionHandler;
@@ -17,7 +11,6 @@ import de.l3s.util.bean.BeanHelper;
  * Used to log errors which are redirect to /lw/error.jsf
  *
  * @author Kemkes
- *
  */
 public class LearnwebExceptionHandler extends PrimeExceptionHandler
 {
@@ -29,42 +22,20 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
     }
 
     @Override
-    public void handle() throws FacesException
-    {
-        Iterator<ExceptionQueuedEvent> unhandledExceptionQueuedEvents = getUnhandledExceptionQueuedEvents().iterator();
-        if(unhandledExceptionQueuedEvents.hasNext())
+    protected void logException(Throwable rootCause) {
+        String description = BeanHelper.getRequestSummary();
+
+        if(rootCause instanceof IllegalStateException && rootCause.getMessage().startsWith("Cannot create a session"))
         {
-            Throwable exception = unhandledExceptionQueuedEvents.next().getContext().getException();
-
-            while((exception instanceof FacesException || exception instanceof ELException) && exception.getCause() != null)
-            {
-                exception = exception.getCause();
-            }
-
-            String description = BeanHelper.getRequestSummary();
-
-            if(exception instanceof ViewExpiredException)
-                log.info("View expired exception");
-            else if(exception instanceof IllegalStateException && exception.getMessage().startsWith("Cannot create a session"))
-            {
-                log.warn(exception.getMessage() + "; Happens mostly because of error 404; On " + description);
-
-                return;
-            }
-            else if(exception instanceof IllegalArgumentException && exception.getMessage().startsWith("Illegal base64 character -54"))
-            {
-                log.warn(exception.getMessage() + "; This happens often due to ; On " + description);
-
-                return;
-            }
-            else
-            {
-                log.fatal("Fatal unhandled error on " + description, exception);
-
-                //log.error(ExceptionUtils.getStackTrace(exception));
-            }
-
+            log.warn(rootCause.getMessage() + "; Happens mostly because of error 404; On " + description);
         }
-        super.handle();
+        else if(rootCause instanceof IllegalArgumentException && rootCause.getMessage().startsWith("Illegal base64 character -54"))
+        {
+            log.warn(rootCause.getMessage() + "; This happens often due to ; On " + description);
+        }
+        else
+        {
+            log.fatal("Fatal unhandled error on " + description, rootCause);
+        }
     }
 }

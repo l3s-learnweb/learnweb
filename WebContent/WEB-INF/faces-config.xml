@@ -47,7 +47,6 @@
     </lifecycle>
 
     <factory>
-        <!--<exception-handler-factory>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory</exception-handler-factory>-->
         <exception-handler-factory>de.l3s.learnweb.beans.LearnwebExceptionHandlerFactory</exception-handler-factory>
     </factory>
 
@@ -64,15 +63,7 @@
         </renderer>
     </render-kit>
 
-	<!--
-	 org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
-	 de.l3s.learnweb.beans.CustomExceptionHandlerFactory
-	 -->
-
-    <!--
-    	Trim all Text input fields
-    	http://showcase.omnifaces.org/converters/TrimConverter
-    -->
+    <!-- Trim all Text input fields http://showcase.omnifaces.org/converters/TrimConverter -->
 	<converter>
 		<converter-for-class>java.lang.String</converter-for-class>
 		<converter-class>org.omnifaces.converter.TrimConverter</converter-class>

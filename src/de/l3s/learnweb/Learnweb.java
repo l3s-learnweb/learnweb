@@ -8,9 +8,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Properties;
 
-import javax.faces.application.ProjectStage;
-import javax.faces.context.FacesContext;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -90,7 +87,6 @@ public class Learnweb
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
-    private static Boolean developmentStage = null;
 
     /**
      * Use createInstance() first
@@ -266,10 +262,12 @@ public class Learnweb
     {
         log.debug("Init LearnwebServer");
 
-        if(!isDevelopmentStage())
+        // We should run jobScheduler only on one server, otherwise they are conflicting
+        boolean isRootInstance = getServerUrl().endsWith("learnweb.l3s.uni-hannover.de/v3/"); // TODO need to revert when V3 becomes ROOT
+        if(isRootInstance)
             jobScheduler.startAllJobs();
         else
-            log.debug("JobScheduler not started; development mode=" + isDevelopmentStage());
+            log.warn("JobScheduler not started, because it seams that this instance is only for testing: " + getServerUrl());
     }
 
     public FileManager getFileManager()
@@ -404,21 +402,26 @@ public class Learnweb
 
     public void setServerUrl(String serverUrl)
     {
-        if(this.serverUrl == null)
-            this.serverUrl = serverUrl;
-        else if(this.serverUrl.startsWith("http") || this.serverUrl.equals(serverUrl))
+        if(this.serverUrl != null && this.serverUrl.equals(serverUrl))
             return; // ignore new serverUrl
 
-        this.serverUrl = serverUrl;
-
         // enforce HTTPS on the production server
-        if(serverUrl.startsWith("http://") && serverUrl.contains("learnweb.l3s.uni-hannover.de"))
-            this.serverUrl = "https://" + serverUrl.substring(7);
+        if(serverUrl.startsWith("http://") && isForceHttps())
+        {
+            log.info("Forcing HTTPS schema.");
+            serverUrl = "https://" + serverUrl.substring(7);
+        }
 
         if(fileManager != null)
             fileManager.setServerUrl(serverUrl);
 
+        this.serverUrl = serverUrl;
         log.debug("Server base url updated: " + serverUrl);
+    }
+
+    public static boolean isForceHttps()
+    {
+        return "true".equalsIgnoreCase(System.getenv("LEARNWEB_FORCE_HTTPS"));
     }
 
     public SolrClient getSolrClient()
@@ -463,26 +466,6 @@ public class Learnweb
     public WaybackCapturesLogger getWaybackCapturesLogger()
     {
         return waybackCapturesLogger;
-    }
-
-    /**
-     * @return true if it is not run on the Learnweb server
-     */
-    public static boolean isDevelopmentStage()
-    {
-        if (developmentStage == null)
-        {
-            try {
-                // Development mode retrieved from FacesContext
-                developmentStage = FacesContext.getCurrentInstance().isProjectStage(ProjectStage.Development);
-            }
-            catch(NullPointerException e)
-            {
-                // While Learnweb is loading, FacesContext.getCurrentInstance() return null
-                return true;
-            }
-        }
-        return developmentStage;
     }
 
     public SearchLogManager getSearchLogManager()

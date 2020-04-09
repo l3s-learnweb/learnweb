@@ -6,9 +6,16 @@
 <f:view contentType="text/xml">
     <app>
         <version>#{statusBean.version}</version>
-        <development_stage>#{statusBean.developmentStage}</development_stage>
         <uptime>#{statusBean.uptime}</uptime>
     </app>
+    <env>
+        <ui:repeat var="entry" value="#{statusBean.variables}">
+            <var>
+                <name>#{entry.key}</name>
+                <value>#{entry.value}</value>
+            </var>
+        </ui:repeat>
+    </env>
     <services>
         <ui:repeat var="service" value="#{statusBean.services}">
             <service>

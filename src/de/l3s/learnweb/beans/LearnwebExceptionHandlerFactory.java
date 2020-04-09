@@ -13,22 +13,15 @@ import org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory;
  */
 public class LearnwebExceptionHandlerFactory extends PrimeExceptionHandlerFactory
 {
-    private ExceptionHandlerFactory parent;
-
     // this injection handles jsf
     public LearnwebExceptionHandlerFactory(ExceptionHandlerFactory parent)
     {
         super(parent);
-        this.parent = parent;
     }
 
     @Override
     public ExceptionHandler getExceptionHandler()
     {
-
-        ExceptionHandler handler = new LearnwebExceptionHandler(parent.getExceptionHandler());
-
-        return handler;
+        return new LearnwebExceptionHandler(getWrapped().getExceptionHandler());
     }
-
 }

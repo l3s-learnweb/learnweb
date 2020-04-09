@@ -73,7 +73,6 @@ public class ResourceMetadataExtractor
     public void processFileResource(Resource resource) throws IOException, SQLException
     {
         File mainFile = resource.getFile(TYPE.FILE_MAIN);
-        log.debug("Get the mime type and extract text if possible");
         FileInfo fileInfo = this.getFileInfo(mainFile.getInputStream(), mainFile.getName());
         processFileResource(resource, fileInfo);
     }
@@ -419,8 +418,6 @@ public class ResourceMetadataExtractor
         resource.setTypeFromFormat(resource.getFormat());
         resource.setFileName(fileInfo.getFileName());
         resource.setFileUrl(resource.getUrl());
-
-        log.debug("type: " + resource.getType() + "; file: " + fileInfo.toString());
 
         if(StringUtils.isNotEmpty(fileInfo.getTitle()) && StringUtils.isEmpty(resource.getTitle()) && !fileInfo.getTitle().equalsIgnoreCase("unknown"))
             resource.setTitle(fileInfo.getTitle());
