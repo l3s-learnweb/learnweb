@@ -16,7 +16,7 @@
 
 <ui:define name="body_content">
 	<h:outputScript library="primefaces" name="jquery/jquery.js"/>
-	<h:outputScript library="learnweb-layout" name="js/resource-view.js" target="body"/>
+	<h:outputScript library="layout" name="js/resource-view.js" target="body"/>
 
 	<h:form styleClass="d-none">
 		<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":growl"

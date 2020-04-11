@@ -13,10 +13,10 @@
     "not dead"
   ],
   "scripts": {
-    "scss:watch": "sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed --watch",
-    "scss:build": "sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed",
-    "scss:lint": "stylelint WebContent/resources/learnweb-layout/sass",
-    "js:lint": "eslint WebContent/resources/learnweb-layout/js/**"
+    "scss:watch": "sass WebContent/resources/layout/sass:WebContent/resources/layout/css --style=compressed --watch",
+    "scss:build": "sass WebContent/resources/layout/sass:WebContent/resources/layout/css --style=compressed",
+    "scss:lint": "stylelint WebContent/resources/layout/sass",
+    "js:lint": "eslint WebContent/resources/layout/js/**"
   },
   "devDependencies": {
     "browserslist": "^4.11.0",

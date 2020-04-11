@@ -23,10 +23,10 @@
 
             <base href="#{request.contextPath}/lw/"/>
 
-            <h:outputStylesheet name="learnweb-layout/css/styles.css"/>
+            <h:outputStylesheet name="layout/css/styles.css"/>
 
             <h:outputScript library="primefaces" name="jquery/jquery.js"/>
-            <h:outputScript library="learnweb-layout" name="js/layout.js"/>
+            <h:outputScript library="layout" name="js/layout.js"/>
 
             <ui:fragment rendered="#{userBean.trackingEnabled}">
                 <script>
@@ -73,7 +73,7 @@
 
                                 <ui:fragment rendered="#{(hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission) and hideContent != true}">
                                     <ui:fragment rendered="#{not hideBreadcrumbs}">
-                                        <h:outputScript library="learnweb-layout" name="js/breadcrumb.js" target="body"/>
+                                        <h:outputScript library="layout" name="js/breadcrumb.js" target="body"/>
 
                                         <div class="breadcrumb mb-3">
                                             <ui:insert name="breadcrumb"/>

@@ -28,7 +28,7 @@ eslint:
     CI_PROJECT_DIR: '/builds/Learnweb/Learnweb/'
   script:
     - npm run js:lint -s
-#    - npx eslint --format gitlab WebContent/resources/learnweb-layout/js/**
+#    - npx eslint --format gitlab WebContent/resources/layout/js/**
 #  artifacts:
 #    reports:
 #      codequality: eslint-codequality.json
