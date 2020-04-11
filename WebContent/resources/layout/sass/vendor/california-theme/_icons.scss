@@ -1,46 +1,7 @@
-// Icon Override Mixin
-@mixin icon-override($icon) {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    text-indent: 0px !important;
-    background: none;
-    text-align: center;
-
-    &:before {
-        content: $icon;
-    }
-}
-
-@mixin icon($icon) {
-    content: $icon;
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    text-indent: 0px !important;
-    background: none;
-    text-align: center;
-    text-decoration: none;
-    text-transform: none;
-}
-
 //[class^="ui-icon-"]:before,
 //[class*=" ui-icon-"]:before,
 .ui-icon {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @include fa-icon();
 
     // override PrimeFaces default
     text-indent: 0 !important;
@@ -51,6 +12,16 @@
     &:before {
         content: $icon;
     }
+}
+
+// Icon Override Mixin
+@mixin icon-override($icon) {
+    @include fa-icon();
+    @include icon-simple($icon);
+
+    text-indent: 0 !important;
+    text-align: center;
+    background: none;
 }
 
 .ui-icon-carat-1-n { @include icon-simple("\f106"); }

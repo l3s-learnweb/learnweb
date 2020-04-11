@@ -1,69 +1,66 @@
-body {
-  .moderator-btn {
-    color: $themeElementTextColor;
-    border: 1px solid $themePrimaryColorDarker !important;
+.moderator-btn {
+  color: $themeElementTextColor;
+  border: 1px solid $themePrimaryColorDarker !important;
 
-    .ui-button-text {
-      position: relative;
+  .ui-button-text {
+    position: relative;
 
-      &::before {
-        content: '\f013';
-        display: inline-block;
-        font: normal normal normal 14px/1 FontAwesome;
-        padding-right: 0.5rem;
-        color: $themePrimaryAltColor;
-      }
+    &::before {
+      @include fa-icon();
+      content: '\f013';
+      padding-right: 0.5rem;
+      color: $themePrimaryAltColor;
     }
   }
+}
 
-  .fileupload-minimal {
-    .ui-fileupload-buttonbar {
-      padding: 0;
-      background: inherit;
+.fileupload-minimal {
+  .ui-fileupload-buttonbar {
+    padding: 0;
+    background: inherit;
+  }
+
+  .ui-fileupload-content {
+    border: none;
+    padding: 0;
+
+    .ui-fileupload-files {
+      margin: 0;
+      width: 100%;
     }
 
-    .ui-fileupload-content {
-      border: none;
-      padding: 0;
+    .ui-fileupload-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      font-size: 0.75rem;
 
-      .ui-fileupload-files {
-        margin: 0;
-        width: 100%;
+      > div {
+        padding: 0.25rem 0.5rem 0.25rem 0;
       }
+    }
 
-      .ui-fileupload-row {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        font-size: 0.75rem;
+    .ui-fileupload-filename,
+    .ui-fileupload-preview {
+      display: flex;
+    }
 
-        > div {
-          padding: 0.25rem 0.5rem 0.25rem 0;
-        }
-      }
+    .ui-fileupload-filename,
+    .ui-fileupload-progress {
+      flex-grow: 1;
+      min-width: 2rem;
+    }
 
-      .ui-fileupload-filename,
-      .ui-fileupload-preview {
-        display: flex;
-      }
+    .ui-progressbar {
+      width: 100%;
+      top: 0;
+      height: 1.8rem;
+      border: 0;
+      border-radius: 0.2rem;
+      overflow: hidden;
 
-      .ui-fileupload-filename,
-      .ui-fileupload-progress {
-        flex-grow: 1;
-        min-width: 2rem;
-      }
-
-      .ui-progressbar {
-        width: 100%;
-        top: 0;
-        height: 1.8rem;
-        border: 0;
-        border-radius: 0.2rem;
-        overflow: hidden;
-
-        .ui-progressbar-value {
-          border-radius: 0;
-        }
+      .ui-progressbar-value {
+        border-radius: 0;
       }
     }
   }

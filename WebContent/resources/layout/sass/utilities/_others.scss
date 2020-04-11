@@ -109,6 +109,13 @@ video {
   border: 0;
 }
 
+blockquote {
+  border-left: 4px solid $gray-500;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-left: 16px;
+}
+
 .message-container {
   p {
     margin-bottom: 0;

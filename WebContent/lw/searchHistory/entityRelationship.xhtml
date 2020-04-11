@@ -101,7 +101,7 @@
 											<h:panelGroup layout="block" class="session_block cursor-pointer" pt:data-sessionId="#{ss.sessionId}" pt:data-userId="#{ss.userId}">
 												<div class="info">
 													<p:repeat var="query" value="#{ss.queries}">
-														<span class="text-break source_#{query.service}">#{query.query}</span>
+														<span class="text-break search-source-icon source-#{query.service}">#{query.query}</span>
 													</p:repeat>
 												</div>
 

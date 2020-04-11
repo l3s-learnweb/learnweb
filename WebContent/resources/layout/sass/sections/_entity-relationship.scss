@@ -156,8 +156,6 @@
 
       > span {
         background-size: 10px 10px;
-        background-position: left center;
-        background-repeat: no-repeat;
         padding-left: 15px;
       }
 
@@ -171,23 +169,6 @@
         &:last-child::after {
           content: '';
         }
-      }
-
-      /*styles for service icons */
-      .source_bing {
-        background-image: url("\#{resource['images:services/bing.gif']}");
-      }
-
-      .source_learnweb {
-        background-image: url("\#{resource['images:services/learnweb.gif']}");
-      }
-
-      .source_archiveit {
-        background-image: url("\#{resource['images:services/archiveit.gif']}");
-      }
-
-      .source_loro {
-        background-image: url("\#{resource['images:services/loro.gif']}");
       }
     }
 

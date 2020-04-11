@@ -130,12 +130,11 @@ ul.res-breadcrumbs {
       margin-right: 1rem;
 
       &::after {
+        @include fa-icon();
         content: '\f105';
         position: absolute;
-        display: inline-block;
-        font-family: FontAwesome, sans-serif;
         font-size: 1.5em;
-        top: -0.1em;
+        top: 0.1em;
         right: -0.75em;
       }
     }
@@ -348,7 +347,8 @@ ul.res-filters {
     }
 
     &::after {
-      @include icon('\f0ee');
+      @include fa-icon();
+      content: '\f0ee';
       z-index: 10;
       color: $themePrimaryColor;
       position: absolute;
@@ -401,7 +401,8 @@ ul.res-filters {
     opacity: 0;
 
     &::before {
-      @include icon('\f05d');
+      @include fa-icon();
+      content: '\f05d';
 
       width: 2.5rem;
       height: 2.5rem;
