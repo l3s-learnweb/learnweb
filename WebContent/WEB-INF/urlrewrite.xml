@@ -32,17 +32,6 @@
 		<from>^/$</from>
 		<to type="redirect">%{context-path}/lw/</to>
 	</rule>
-	<!-- Redirects to help browsers fetch map files and sass sources -->
-	<rule match-type="wildcard">
-		<name>Forward source maps</name>
-		<from>/javax.faces.resource/**.map</from>
-		<to>/javax.faces.resource/$1.map.jsf</to>
-	</rule>
-	<rule match-type="wildcard">
-		<name>Forward scss files</name>
-		<from>/javax.faces.resource/**.scss</from>
-		<to>/javax.faces.resource/$1.scss.jsf</to>
-	</rule>
 	<!-- Redirects from one page to another -->
 	<rule>
 		<name>Short links to the wizard</name>

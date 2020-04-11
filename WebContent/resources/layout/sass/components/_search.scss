@@ -142,52 +142,52 @@
   margin: 0.1rem 0.2rem;
 
   &.source-bing {
-    background-image: url("\#{resource['images:services/bing.gif']}");
+    background-image: url('../../images/services/bing.gif');
   }
 
   &.source-flickr {
-    background-image: url("\#{resource['images:services/flickr.png']}");
+    background-image: url('../../images/services/flickr.png');
   }
 
   &.source-youtube {
-    background-image: url("\#{resource['images:services/youtube.png']}");
+    background-image: url('../../images/services/youtube.png');
   }
 
   &.source-vimeo {
-    background-image: url("\#{resource['images:services/vimeo.gif']}");
+    background-image: url('../../images/services/vimeo.gif');
   }
 
   &.source-ipernity {
-    background-image: url("\#{resource['images:services/ipernity.gif']}");
+    background-image: url('../../images/services/ipernity.gif');
   }
 
   &.source-ted {
-    background-image: url("\#{resource['images:services/ted.gif']}");
+    background-image: url('../../images/services/ted.gif');
   }
 
   &.source-tedx,
   &.source-teded {
-    background-image: url("\#{resource['images:services/tedx.gif']}");
+    background-image: url('../../images/services/tedx.gif');
   }
 
   &.source-loro {
-    background-image: url("\#{resource['images:services/loro.gif']}");
+    background-image: url('../../images/services/loro.gif');
   }
 
   &.source-yovisto {
-    background-image: url("\#{resource['images:services/yovisto.gif']}");
+    background-image: url('../../images/services/yovisto.gif');
   }
 
   &.source-learnweb {
-    background-image: url("\#{resource['images:services/learnweb.gif']}");
+    background-image: url('../../images/services/learnweb.gif');
   }
 
   &.source-archiveit {
-    background-image: url("\#{resource['images:services/archiveit.gif']}");
+    background-image: url('../../images/services/archiveit.gif');
   }
 
   &.source-factcheck {
-    background-image: url("\#{resource['images:services/learnweb.gif']}");
+    background-image: url('../../images/services/learnweb.gif');
   }
 }
 

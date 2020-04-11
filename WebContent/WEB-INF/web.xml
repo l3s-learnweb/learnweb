@@ -153,6 +153,7 @@
     <servlet-mapping>
         <servlet-name>facesServlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
+        <url-pattern>/javax.faces.resource/*</url-pattern>
     </servlet-mapping>
     <servlet>
         <description>Simple Servlet for Streaming Files to the Clients Browser</description>
