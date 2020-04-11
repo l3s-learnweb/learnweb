@@ -160,8 +160,8 @@
 
         <div id="searchResults" class="p-2 search-#{searchBean.view}">
             <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
-                <ui:param name="resources" value="#{searchBean.search.resources}"/>
                 <ui:param name="view" value="#{searchBean.view}"/>
+                <ui:param name="resources" value="#{searchBean.search.resources}"/>
             </ui:decorate>
         </div>
 

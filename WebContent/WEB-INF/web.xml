@@ -65,7 +65,7 @@
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.NUMBER_OF_SEQUENTIAL_VIEWS_IN_SESSION</param-name>
-        <param-value>30</param-value>
+        <param-value>30</param-value> <!-- TODO: Why do we have so high numbers? PrimeFaces recommends 3 -->
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.EARLY_FLUSH_ENABLED</param-name>
@@ -82,6 +82,14 @@
     <context-param>
         <param-name>org.apache.myfaces.SUPPORT_JSP_AND_FACES_EL</param-name>
         <param-value>false</param-value> <!-- Increase startup performance and EL resolution by disable deprecated features -->
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.SUPPORT_MANAGED_BEANS</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.CACHE_EL_EXPRESSIONS</param-name>
+        <param-value>alwaysRecompile</param-value> <!-- Let's try, if not cause any issues, should speed up page build -->
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.VIEW_UNIQUE_IDS_CACHE_ENABLED</param-name>

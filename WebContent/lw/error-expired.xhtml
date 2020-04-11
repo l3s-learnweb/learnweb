@@ -1,19 +1,19 @@
 <ui:composition template="/WEB-INF/templates/layout/template-public.xhtml"
-				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-    <ui:param name="pageTitle" value="#{msg.error}"/>
-    
-    <ui:define name="container_layout">
-    	<p:panel header="Session expired" styleClass="ui-widget-danger">
-    		<h5 class="text-danger">#{msg.reload_page}</h5>
-    
-            <a href="#{userBean.bannerLink}">
-                <h:outputText value="#{msg.return_to_welcome_page}"/>
-            </a>
-    	</p:panel>
-    </ui:define>
+<ui:param name="pageTitle" value="#{msg.error}"/>
+
+<ui:define name="container_layout">
+    <p:panel header="Session expired" styleClass="ui-widget-danger">
+        <h5 class="text-danger">#{msg.reload_page}</h5>
+
+        <a href="#{userBean.bannerLink}">
+            <h:outputText value="#{msg.return_to_welcome_page}"/>
+        </a>
+    </p:panel>
+</ui:define>
 
 </ui:composition>
