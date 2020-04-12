@@ -6,6 +6,7 @@
 
 class Emoji {
   constructor() {
+    // I don't know what is better: keeping it in memory or creating by each request
     this._emojiData = [
       {
         name: 'faces',
