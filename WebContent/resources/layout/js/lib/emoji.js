@@ -6,15 +6,7 @@
 
 class Emoji {
   constructor() {
-    const emojiInputs = document.querySelectorAll('[data-emoji="true"]');
-
-    emojiInputs.forEach((element) => {
-      this.generateElements(element);
-    });
-  }
-
-  createEmojiData() {
-    return [
+    this._emojiData = [
       {
         name: 'faces',
         items: [
@@ -82,10 +74,22 @@ class Emoji {
         icon: '<svg id="objects" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 150 150"><path id="objects" d="M107.78,129a4.55,4.55,0,0,1-2.67-.87l-30-21.79-30,21.79a4.53,4.53,0,0,1-5.34,0,4.58,4.58,0,0,1-1.65-5.08L49.59,87.82,19.6,66a4.54,4.54,0,0,1,2.67-8.22H59.34L70.8,22.55a4.55,4.55,0,0,1,8.64,0L90.89,57.81H128A4.54,4.54,0,0,1,130.63,66l-30,21.79,11.46,35.25a4.55,4.55,0,0,1-4.32,6ZM75.12,96.2a4.53,4.53,0,0,1,2.67.87l21.35,15.51L91,87.49a4.55,4.55,0,0,1,1.65-5.08L114,66.89H87.59a4.54,4.54,0,0,1-4.32-3.13l-8.15-25.1L67,63.76a4.53,4.53,0,0,1-4.32,3.13H36.25L57.61,82.41a4.54,4.54,0,0,1,1.65,5.08l-8.17,25.09L72.45,97.07a4.53,4.53,0,0,1,2.67-.87Z"/></svg>',
       },
     ];
+
+    this.init();
+  }
+
+  init() {
+    const emojiInputs = document.querySelectorAll('[data-emoji="true"]');
+
+    emojiInputs.forEach((element) => {
+      this.generateElements(element);
+    });
   }
 
   generateElements(emojiInput) {
-    emojiInput.style.width = '100%';
+    if (emojiInput.parentNode.classList.contains('emoji-picker-container')) {
+      return;
+    }
 
     const emojiContainer = document.createElement('div');
     emojiContainer.classList.add('emoji-picker-container');
@@ -122,9 +126,11 @@ class Emoji {
     emojiCategory.classList.add('emoji-picker-tabs');
     emojiPicker.appendChild(emojiCategory);
 
-    const clickLink = (event) => {
-      const caretPos = emojiInput.selectionStart;
-      emojiInput.value = `${emojiInput.value.substring(0, caretPos)} ${event.target.innerHTML}${emojiInput.value.substring(caretPos)}`;
+    const clickEmoji = (event) => {
+      // not really efficient way, using emojiInput will be faster, but cause issues when element was updated by primefaces
+      const inputField = document.querySelector('.emoji-picker-open [data-emoji="true"]');
+      const caretPos = inputField.selectionStart;
+      inputField.value = `${inputField.value.substring(0, caretPos)} ${event.target.innerHTML}${inputField.value.substring(caretPos)}`;
       emojiContainer.classList.add('emoji-picker-open');
     };
 
@@ -150,14 +156,13 @@ class Emoji {
       const emojiLink = document.createElement('span');
       emojiLink.classList.add('emoji-picker-emoji');
       emojiLink.innerHTML = String.fromCodePoint(item);
-      emojiLink.onmousedown = clickLink;
+      emojiLink.onmousedown = clickEmoji;
 
       emojiLi.appendChild(emojiLink);
       category.appendChild(emojiLi);
     };
 
-    const emojiCategories = this.createEmojiData();
-    emojiCategories.forEach((category, i) => {
+    this._emojiData.forEach((category, i) => {
       const emojiLi = document.createElement('li');
       const emojiEl = document.createElement('span');
       emojiEl.id = category.name;
