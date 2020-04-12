@@ -15,18 +15,18 @@
     </rule>
 	<rule>
 		<name>Redirect ArchiveWeb users to archived v2 instance</name>
-		<condition name="host" operator="equal">archiveweb.l3s.uni-hannover.de</condition>
+		<condition name="host">archiveweb.l3s.uni-hannover.de</condition>
 		<from>^/(.*)</from>
 		<to type="permanent-redirect" last="true">http://learnweb.l3s.uni-hannover.de/v2/aw/</to>
 	</rule>
 	<!-- General redirects -->
-	<rule>
+	<!--<rule> TODO: this rule is broken, because of proxy which always uses http protocol
 		<name>Redirect to HTTPS</name>
 		<condition type="scheme" operator="notequal">https</condition>
-		<condition name="host" operator="equal">learnweb.l3s.uni-hannover.de</condition>
+		<condition name="host">learnweb.l3s.uni-hannover.de</condition>
 		<from>^.*$</from>
-		<to type="redirect">https://%{server-name}%{request-uri}</to>
-	</rule>
+		<to type="redirect" last="true">https://%{server-name}%{request-uri}</to>
+	</rule>-->
 	<rule>
 		<name>Redirect to /lw/</name>
 		<from>^/$</from>
