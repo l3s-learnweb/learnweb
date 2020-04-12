@@ -251,7 +251,7 @@ public class FileManager
 
     public void addFilesToResource(Collection<File> files, Resource resource) throws SQLException
     {
-        if(files.size() == 0)
+        if(files.isEmpty())
             return;
 
         List<Integer> fileIds = new ArrayList<>(files.size());

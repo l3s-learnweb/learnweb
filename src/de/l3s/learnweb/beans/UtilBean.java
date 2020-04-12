@@ -57,11 +57,11 @@ public class UtilBean implements Serializable
 
     /**
      * This method should not be used any more. It will only work correctly when it is used in a faces context.
-     * Move translations to the bean oder XHTML file. In beans you can use getLocaleMessage() in XHTML files use #{msg['a_pfrefix' += your_key]}
+     * Move translations to the bean or XHTML file. In beans you can use getLocaleMessage() in XHTML files use #{msg['a_prefix' += your_key]}
      *
-     * The method is also used in many XHTML files. That's acceptable.
-     * But o:outputformat could be used instead: http://showcase.omnifaces.org/components/outputFormat
-     *
+     * The method is also used in many XHTML files. Consider using o:outputFormat or of:formatX() instead:
+     *  - http://showcase.omnifaces.org/components/outputFormat
+     *  - http://showcase.omnifaces.org/functions/Strings
      */
     @Deprecated
     public static String getLocaleMessage(String msgKey, Object... args)

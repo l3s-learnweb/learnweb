@@ -223,9 +223,9 @@ public class SearchHistoryManager
         for(Edge edge : edges)
         {
             //log.info(edge.getSource() + "," + edge.getTarget() + ":" + edge.getScore());
-            double score = 0.0;
+            double score;
             if(maxEdgeScore > 1000)
-                score = 1 - 50d / (50d + edge.getScore());
+                score = 1 - 50.0d / (50.0d + edge.getScore());
             else
                 score = edge.getScore() / maxEdgeScore;
 
@@ -342,7 +342,6 @@ public class SearchHistoryManager
 
         public Session(String sessionId, int userId, LinkedList<Query> queries)
         {
-            super();
             this.sessionId = sessionId;
             this.userId = userId;
             this.queries = queries;
@@ -595,7 +594,7 @@ public class SearchHistoryManager
     {
         private static final long serialVersionUID = 5313241019420503034L;
 
-        public InvalidEdgeException(String message)
+        InvalidEdgeException(String message)
         {
             super(message);
         }

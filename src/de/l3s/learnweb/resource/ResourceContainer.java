@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface ResourceContainer
 {
-    public List<Folder> getSubFolders() throws SQLException;
+    List<Folder> getSubFolders() throws SQLException;
 }

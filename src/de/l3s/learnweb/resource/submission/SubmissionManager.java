@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
-import de.l3s.learnweb.resource.survey.SurveyManager;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
@@ -27,8 +26,8 @@ import de.l3s.learnweb.user.UserManager;
 public class SubmissionManager
 {
     private static final String SUBMIT_RESOURCE_COLUMNS = "`submission_id`, `resource_id`, `user_id`";
-    private static final Logger log = Logger.getLogger(SurveyManager.class);
-    public final static int SUBMISSION_ADMIN_USER_ID = 11212;
+    private static final Logger log = Logger.getLogger(SubmissionManager.class);
+    public static final int SUBMISSION_ADMIN_USER_ID = 11212;
 
     private final Learnweb learnweb;
 
@@ -68,12 +67,9 @@ public class SubmissionManager
         List<Course> courses = user.getCourses();
         StringBuilder builder = new StringBuilder();
 
-        for(int i = 0; i < courses.size(); i++)
-        {
-            builder.append("?,");
-        }
+        builder.append("?,".repeat(courses.size()));
 
-        String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND deleted=0 ORDER BY close_datetime";
+        String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1) + ") AND deleted=0 ORDER BY close_datetime";
 
         try(PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt))
         {
@@ -111,17 +107,14 @@ public class SubmissionManager
             List<Course> courses = user.getCourses();
             StringBuilder builder = new StringBuilder();
 
-            for(int i = 0; i < courses.size(); i++)
-            {
-                builder.append("?,");
-            }
+            builder.append("?,".repeat(courses.size()));
 
             if (courses.isEmpty())
             {
                 return submissions;
             }
 
-            String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND close_datetime >= NOW() AND open_datetime < NOW() AND deleted=0 ORDER BY close_datetime";
+            String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1) + ") AND close_datetime >= NOW() AND open_datetime < NOW() AND deleted=0 ORDER BY close_datetime";
 
             PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);
             int index = 1;
@@ -412,12 +405,11 @@ public class SubmissionManager
         private int userId;
         private transient User user;
         private List<Resource> resources = new ArrayList<>(); // the submitted resources
-        private int surveyResourceId = -1; // the survey that was used to grade this submission
-        private boolean submitStatus = false; // keeps track of the submit status, so as to lock/unlock a submission
+        private int surveyResourceId; // the survey that was used to grade this submission
+        private boolean submitStatus; // keeps track of the submit status, so as to lock/unlock a submission
 
         public SubmittedResources(User user, int surveyResourceId, boolean submitStatus)
         {
-            super();
             this.user = user;
             this.userId = user.getId();
             this.surveyResourceId = surveyResourceId;

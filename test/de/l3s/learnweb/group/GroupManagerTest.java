@@ -1,7 +1,6 @@
 package de.l3s.learnweb.group;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,7 +54,7 @@ class GroupManagerTest
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(1559, 1543, 1463, 1309, 1537));
         List<Course> courses = learnweb.getCourseManager().getCoursesByUserId(12502);
         Calendar date = Calendar.getInstance();
-        date.set(2020, 01, 01);
+        date.set(2020, Calendar.FEBRUARY, 1);
         List<Group> result = learnweb.getGroupManager().getGroupsByCourseId(courses, date.toInstant());
         assertTrue(result.stream().allMatch(group -> expected.contains(group.getId())));
     }

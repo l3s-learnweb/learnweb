@@ -118,7 +118,7 @@ public class CDXClient
                 in.close();
 
                 String response = sb.toString();
-                if(response.trim().length() == 0)
+                if(response.trim().isEmpty())
                     return null;
 
                 synchronized(this)

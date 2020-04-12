@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 
@@ -187,15 +188,18 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object o)
     {
-        if(obj.getClass() == this.getClass())
-        {
-            Group g2 = (Group) obj;
-            return g2.getId() == this.getId();
-        }
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        final Group group = (Group) o;
+        return id == group.id;
+    }
 
-        return false;
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id);
     }
 
     public List<Resource> getResources() throws SQLException
@@ -242,7 +246,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         {
             Resource newResource = resource.clone();
             newResource.setGroupId(groupId);
-            newResource = user.addResource(newResource);
+            user.addResource(newResource);
         }
     }
 
@@ -563,7 +567,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         if(user.isAdmin() || getCourse().isModerator(user))
             return true;
 
-        //noinspection Duplicates
         switch(policyView)
         {
             case ALL_LEARNWEB_USERS:
@@ -587,7 +590,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         if(user.isAdmin() || getCourse().isModerator(user))
             return true;
 
-        //noinspection Duplicates
         switch(policyAnnotate)
         {
             case ALL_LEARNWEB_USERS:
@@ -652,7 +654,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     /**
-     * @see de.l3s.learnweb.group.GroupManager.deleteGroupHard
+     * @see de.l3s.learnweb.group.GroupManager#deleteGroupHard
      * @throws SQLException
      */
     public void deleteHard() throws SQLException

@@ -35,7 +35,6 @@ public class OrganisationManager
 
     public OrganisationManager(Learnweb learnweb) throws SQLException
     {
-        super();
         this.learnweb = learnweb;
         // TODO Oleh: Cache is not updated when organization changed, also user stores organization which is separated from cache.
         this.cache = Collections.synchronizedMap(new LinkedHashMap<>(30));

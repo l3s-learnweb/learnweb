@@ -17,10 +17,6 @@ import org.junit.jupiter.api.Test;
 @Disabled
 class ActivityDashboardManagerTest
 {
-    public ActivityDashboardManagerTest() throws SQLException, ClassNotFoundException
-    {
-    }
-
     @Test
     void getActionsCountPerDay() throws ParseException, SQLException
     {

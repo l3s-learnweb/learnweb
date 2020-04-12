@@ -1,7 +1,6 @@
 package de.l3s.learnweb.tasks.resources;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -62,7 +61,7 @@ public class IndexFakeNews
         }
     }
 
-    private void indexFullfactFile(String file) throws FileNotFoundException, IOException, SQLException
+    private void indexFullfactFile(String file) throws IOException, SQLException
     {
         CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.withHeader());
 

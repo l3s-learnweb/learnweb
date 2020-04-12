@@ -28,7 +28,7 @@ import de.l3s.learnweb.user.UserManager;
 @SuppressWarnings("unused")
 public class DeleteOldUsers
 {
-    private static Logger log = Logger.getLogger(DeleteOldUsers.class);
+    private static final Logger log = Logger.getLogger(DeleteOldUsers.class);
     private static Learnweb learnweb;
 
     /**
@@ -116,7 +116,6 @@ public class DeleteOldUsers
      * Use this method only if you know what you are doing.
      * It will also delete resources a user has created in public groups. Thus this call might affect other users.
      *
-     * @param learnweb
      * @param configYears number of years a user has to be inactive to be deleted
      * @param organisationId the organization from which inactive users are deleted
      * @throws Throwable

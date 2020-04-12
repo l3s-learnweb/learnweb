@@ -3,6 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="hideGrowl" value="true"/>
@@ -67,7 +68,7 @@
                                onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.delete}"/>
-                    <p:confirm message="${utilBean.getLocaleMessage('delete_entry_confirm_message', news.title)} "/>
+                    <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, news.title)}"/>
                 </p:commandLink>
             </p:column>
         </p:dataTable>

@@ -58,7 +58,7 @@ public class UserBean implements Serializable
     private transient Instant sidebarMenuModelUpdate;
     private HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
-    private int activeOrganisationId = 0;
+    private int activeOrganisationId;
     private transient Organisation activeOrganisation;
 
     public UserBean()
@@ -470,7 +470,7 @@ public class UserBean implements Serializable
             sidebarMenuModel = model;
             sidebarMenuModelUpdate = Instant.now();
             long elapsedMs = System.currentTimeMillis() - start;
-            log.info("Total time to build menu: " + elapsedMs + "ms.");
+            log.info("Total time to build menu: " + elapsedMs + " ms.");
         }
 
         return sidebarMenuModel;

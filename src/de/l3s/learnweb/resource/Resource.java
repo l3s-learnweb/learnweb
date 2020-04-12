@@ -364,25 +364,25 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public boolean isOfficeResource()
     {
-        if(getSource().equals(ResourceService.slideshare))
+        if(getSource() == ResourceService.slideshare)
             return false;
 
-        return ResourceType.document.equals(type) || ResourceType.spreadsheet.equals(type) || ResourceType.presentation.equals(type);
+        return ResourceType.document == type || ResourceType.spreadsheet == type || ResourceType.presentation == type;
     }
 
     public boolean isOnline()
     {
-        return OnlineStatus.ONLINE.equals(onlineStatus);
+        return OnlineStatus.ONLINE == onlineStatus;
     }
 
     public boolean isOffline()
     {
-        return OnlineStatus.OFFLINE.equals(onlineStatus);
+        return OnlineStatus.OFFLINE == onlineStatus;
     }
 
     public boolean isProcessing()
     {
-        return OnlineStatus.PROCESSING.equals(onlineStatus);
+        return OnlineStatus.PROCESSING == onlineStatus;
     }
 
     public void setStorageType(int type)
@@ -521,8 +521,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
-     * Creates a copy of a resource.<br/>
-     * Ratings and comments are not copied<br/>
+     * Creates a copy of a resource.
+     * Ratings and comments are not copied
      * (Ids are set to default this the Object isn't persisted yet).
      */
     @Override
@@ -812,7 +812,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
-     * Url to the best (high resolution) available preview image.<br/>
+     * Url to the best (high resolution) available preview image.
      * Only available for interweb search results + ResourceMetadataExtractor save thumbnail url to the field
      */
     public String getMaxImageUrl()
@@ -821,7 +821,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
-     * Url to the best (high resolution) available preview image.<br/>
+     * Url to the best (high resolution) available preview image.
      * Only available for interweb search results
      *
      * @param imageUrl
@@ -948,7 +948,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
-     * This method does not persist the changes.<br/>
+     * This method does not persist the changes.
      * see: FileManager.addFileToResource(file, resource);
      */
     public void addFile(File file) throws SQLException
@@ -1123,12 +1123,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         if(embeddedCode == null)
         {
-            if(getType().equals(ResourceType.image))
+            if(getType() == ResourceType.image)
             {
                 Thumbnail large = getLargestThumbnail();
                 embeddedCode = "<img src=\"" + large.getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\"/>";
             }
-            else if(getType().equals(ResourceType.website))
+            else if(getType() == ResourceType.website)
             {
                 if(thumbnail4 != null)
                 {
@@ -1138,7 +1138,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                 else
                     embeddedCode = "<iframe src=\"" + getUrl() + "\" scrolling=\"no\" />";
             }
-            else if(getType().equals(ResourceType.video))
+            else if(getType() == ResourceType.video)
             {
                 if(isProcessing())
                 {
@@ -1148,20 +1148,20 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
                 String iframeUrl = null;
 
-                if(getSource().equals(ResourceService.loro) || getSource().equals(ResourceService.yovisto) || getSource().equals(ResourceService.speechrepository) || getSource().equals(ResourceService.desktop))
+                if(getSource() == ResourceService.loro || getSource() == ResourceService.yovisto || getSource() == ResourceService.speechrepository || getSource() == ResourceService.desktop)
                     iframeUrl = "video.jsf?resource_id=" + id;
-                else if(getSource().equals(ResourceService.ted))
+                else if(getSource() == ResourceService.ted)
                     iframeUrl = getUrl().replace("http://www", "//embed").replace("https://www", "//embed");
-                else if(getSource().equals(ResourceService.youtube) || getSource().equals(ResourceService.teded) || getSource().equals(ResourceService.tedx))
+                else if(getSource() == ResourceService.youtube || getSource() == ResourceService.teded || getSource() == ResourceService.tedx)
                     iframeUrl = "https://www.youtube-nocookie.com/embed/" + getIdAtService();
-                else if(getSource().equals(ResourceService.vimeo))
+                else if(getSource() == ResourceService.vimeo)
                     iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
 
                 if(null != iframeUrl)
                     embeddedCode = "<iframe src=\"" + iframeUrl + "\" allowfullscreen referrerpolicy=\"origin\">Your browser has blocked this iframe</iframe>";
 
             }
-            else if(getType().equals(ResourceType.audio))
+            else if(getType() == ResourceType.audio)
             {
                 embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" scrolling=\"no\" allowfullscreen></iframe>";
             }
@@ -1175,7 +1175,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                     embeddedCode = getEmbeddedRaw();
                 }
 
-                log.warn("can't create embeddedCode for resource: " + toString());
+                log.warn("can't create embeddedCode for resource: " + this);
             }
         }
 
@@ -1291,7 +1291,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public boolean isArchived()
     {
-        return getArchiveUrls() != null && archiveUrls.size() > 0;
+        return getArchiveUrls() != null && !archiveUrls.isEmpty();
     }
 
     public ArchiveUrl getFirstArchivedObject()
@@ -1601,7 +1601,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         else
         {
             metadata = new HashMap<>();
-            log.error("resource = " + getId() + "unknown metadata format: " + metadataObj.getClass().getName());
+            log.error("resource = " + getId() + " unknown metadata format: " + metadataObj.getClass().getName());
         }
 
         //clear wrapper
@@ -1746,7 +1746,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         private static final long serialVersionUID = 1514209886446380743L;
         private Map<String, String> wrappedMap;
 
-        public MetadataMultiValueMapWrapper(Map<String, String> wrappedMap)
+        MetadataMultiValueMapWrapper(Map<String, String> wrappedMap)
         {
             this.wrappedMap = wrappedMap;
         }
@@ -1835,7 +1835,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         private static final long serialVersionUID = 1514209886446380743L;
         private Map<String, String> wrappedMap;
 
-        public MetadataMultiValueMapListWrapper(Map<String, String> wrappedMap)
+        MetadataMultiValueMapListWrapper(Map<String, String> wrappedMap)
         {
             this.wrappedMap = wrappedMap;
         }

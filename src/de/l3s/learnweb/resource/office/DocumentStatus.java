@@ -10,7 +10,7 @@ public enum DocumentStatus
     SAVED_AND_BEING_EDITED(6),
     FORCE_SAVING_ERROR(7);
 
-    private long status;
+    private final long status;
 
     DocumentStatus(long status)
     {

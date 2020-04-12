@@ -102,9 +102,9 @@ public class TedManager
             for(Element element : elements)
             {
                 int start = 0, end = 0;
-                if(!element.attr("data-start").equals(""))
+                if(!element.attr("data-start").isEmpty())
                     start = Integer.parseInt(element.attr("data-start"));
-                if(!element.attr("data-end").equals(""))
+                if(!element.attr("data-end").isEmpty())
                     end = Integer.parseInt(element.attr("data-end"));
 
                 pStmt.setInt(1, resourceId);
@@ -158,7 +158,7 @@ public class TedManager
     public int getTedVideoResourceId(String url) throws SQLException
     {
         int tedVideoResourceId = 0;
-        String slug = url.substring(url.lastIndexOf("/") + 1);
+        String slug = url.substring(url.lastIndexOf('/') + 1);
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE slug = ?");
         pStmt.setString(1, slug);
         ResultSet rs = pStmt.executeQuery();
@@ -203,7 +203,7 @@ public class TedManager
     public String getTranscript(int resourceId, String language) throws SQLException
     {
         String selectTranscript = "SELECT `starttime`, `paragraph` FROM ted_transcripts_paragraphs where resource_id = ? AND `language` = ?";
-        String transcript = "";
+        StringBuilder transcript = new StringBuilder();
 
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(selectTranscript);
         pStmt.setInt(1, resourceId);
@@ -215,11 +215,11 @@ public class TedManager
         {
             int startTime = rs.getInt("starttime") / 1000;
             String para = rs.getString("paragraph");
-            transcript += StringHelper.getDurationInMinutes(startTime) + "\t";
-            transcript += para + "\n";
+            transcript.append(StringHelper.getDurationInMinutes(startTime)).append("\t");
+            transcript.append(para).append("\n");
         }
 
-        return transcript;
+        return transcript.toString();
     }
 
     public List<TranscriptSummary> getTranscriptSummaries(TreeSet<Integer> selectedUserIds) throws SQLException
@@ -228,7 +228,7 @@ public class TedManager
 
         List<TranscriptSummary> transcriptSummaries = new ArrayList<>();
 
-        if(selectedUserIds.size() == 0)
+        if(selectedUserIds.isEmpty())
             return transcriptSummaries;
 
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM lw_transcript_summary WHERE user_id IN (" + userIdString + ") ORDER BY user_id");
@@ -270,7 +270,7 @@ public class TedManager
 
         List<TranscriptLog> transcriptLogs = new ArrayList<>();
 
-        if(selectedUserIds.size() == 0)
+        if(selectedUserIds.isEmpty())
             return transcriptLogs;
 
         String pStmtString;
@@ -478,7 +478,7 @@ public class TedManager
                     int resourceId = rs.getInt(1);
                     Resource learnwebResource = learnweb.getResourceManager().getResource(resourceId);
 
-                    if(learnwebResource.getIdAtService() == null || learnwebResource.getIdAtService().length() == 0)
+                    if(learnwebResource.getIdAtService() == null || learnwebResource.getIdAtService().isEmpty())
                     {
                         learnwebResource.setIdAtService(resource.getIdAtService());
 
@@ -495,7 +495,6 @@ public class TedManager
 
                     log.debug("Already stored: " + resource);
 
-                    resource = learnwebResource;
                 }
                 else
                 {
@@ -514,7 +513,7 @@ public class TedManager
             log.debug("page: " + page + " total results: " + resources.size());
             // break;
         }
-        while(resources.size() > 0 && page < 25);
+        while(!resources.isEmpty() && page < 25);
     }
 
     public void insertTedXTranscripts(String resourceIdAtService, int resourceId, JSONObject transcriptItem) throws JSONException, SQLException
@@ -553,7 +552,7 @@ public class TedManager
 
         JSONObject transcript = transcriptJSON.getJSONObject("transcript");
         JSONArray text = transcript.getJSONArray("text");
-        for(int j = 0; j < text.length(); j++)
+        for(int j = 0, len = text.length(); j < len; j++)
         {
             JSONObject contentObject = text.getJSONObject(j);
             String paragraph = contentObject.getString("content").replace("\n", " ");
@@ -589,7 +588,7 @@ public class TedManager
             if(track instanceof JSONArray)
             {
                 JSONArray trackJSONArray = (JSONArray) track;
-                for(int i = 0; i < trackJSONArray.length(); i++)
+                for(int i = 0, len = trackJSONArray.length(); i < len; i++)
                 {
                     insertTedXTranscripts(resourceIdAtService, resourceId, trackJSONArray.getJSONObject(i));
                 }

@@ -27,7 +27,7 @@ public class StringHelper
     private static final Logger log = Logger.getLogger(StringHelper.class);
 
     private static final Pattern NEW_LINE_PATTERN = Pattern.compile("\n");
-    private static final Pattern NOT_ALPHABETICAL_PATTERN = Pattern.compile("[^<\"\'a-zA-Z]+");
+    private static final Pattern NOT_ALPHABETICAL_PATTERN = Pattern.compile("[^<\"'a-zA-Z]+");
 
     public static String removeNewLines(String str)
     {
@@ -77,7 +77,7 @@ public class StringHelper
      */
     public static String[] remove(final String[] values, final char remove)
     {
-        for(int i = 0; i < values.length; ++i)
+        for(int i = 0, len = values.length; i < len; ++i)
         {
             values[i] = StringUtils.remove(values[i], remove);
         }
@@ -162,7 +162,7 @@ public class StringHelper
         {
             if(out.length() != 0)
                 out.append(delimiter);
-            out.append(item.toString());
+            out.append(item);
         }
         return out.toString();
     }
@@ -206,8 +206,8 @@ public class StringHelper
     }
 
     /**
-     * Translates a string into application/x-www-form-urlencoded format using a specific encoding scheme. <br/>
-     * This method uses UTF-8. <br/>
+     * Translates a string into application/x-www-form-urlencoded format using a specific encoding scheme.
+     * This method uses UTF-8.
      * It's just a convenience method to get rid of the UnsupportedEncodingException.
      */
     public static String urlEncode(String str)
@@ -282,7 +282,7 @@ public class StringHelper
     public static byte[] fromHex(String hex)
     {
         byte[] binary = new byte[hex.length() / 2];
-        for(int i = 0; i < binary.length; i++)
+        for(int i = 0, len = binary.length; i < len; i++)
         {
             binary[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
         }
@@ -354,7 +354,7 @@ public class StringHelper
     public static String clean(String html, Whitelist whitelist)
     {
         if(html == null)
-            return html;
+            return null;
         Document document = Jsoup.parse(html);
         document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve line breaks and spacing
         document.select("br").append("\\n");

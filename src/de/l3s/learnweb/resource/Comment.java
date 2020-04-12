@@ -25,7 +25,6 @@ public class Comment implements Serializable, Comparable<Comment>
 
     public Comment(String text, Date date, Resource resource, User user)
     {
-        super();
         this.text = text;
         this.date = date;
         this.resource = resource;

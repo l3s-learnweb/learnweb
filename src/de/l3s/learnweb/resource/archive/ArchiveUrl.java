@@ -3,6 +3,9 @@ package de.l3s.learnweb.resource.archive;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class ArchiveUrl implements Serializable
 {
@@ -100,16 +103,19 @@ public class ArchiveUrl implements Serializable
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(final Object o)
     {
-        if(!(o instanceof ArchiveUrl))
-            return false;
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        final ArchiveUrl that = (ArchiveUrl) o;
+        return StringUtils.equalsIgnoreCase(archiveUrl, that.archiveUrl) &&
+                Objects.equals(timestamp, that.timestamp);
+    }
 
-        ArchiveUrl other = (ArchiveUrl) o;
-        if(!this.archiveUrl.equalsIgnoreCase(other.archiveUrl) || !this.timestamp.equals(other.timestamp))
-            return false;
-
-        return true;
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(archiveUrl, timestamp);
     }
 
     @Override

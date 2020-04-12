@@ -123,7 +123,7 @@ public class AdminNotificationBean extends ApplicationBean
 
                 addMessage(FacesMessage.SEVERITY_INFO, recipientsArr.length + " emails send");
 
-                if(usersWithoutMail.size() > 0)
+                if(!usersWithoutMail.isEmpty())
                     addMessage(FacesMessage.SEVERITY_WARN, "Some users haven't defined a valid mail address: <b>" + StringHelper.implode(usersWithoutMail, ", ") + "</b>");
             }
             catch(Exception e)

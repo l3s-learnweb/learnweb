@@ -79,7 +79,7 @@
                                   label="" multiple="true" title="#{question.info}"
                                   required="#{question.required and empty param[save.clientId]}"
                                   filter="#{question.answers.size() gt 8}"
-                                  filterMatchMode="startsWith" panelStyle="">
+                                  filterMatchMode="startsWith">
                 <c:forEach var="answer" items="#{question.answers}">
                     <c:if test="#{!answer.deleted}">
                         <f:selectItem itemLabel="#{answer.value}" itemValue="#{answer.value}"/>
@@ -96,7 +96,7 @@
                               multiple="true" title="#{question.info}"
                               required="#{question.required and empty param[save.clientId]}"
                               filter="#{question.answers.size() gt 8}" layout="responsive" columns="1"
-                              filterMatchMode="startsWith" panelStyle="">
+                              filterMatchMode="startsWith">
                 <c:forEach var="answer" items="#{question.answers}">
                     <c:if test="#{!answer.deleted}">
                         <f:selectItem itemLabel="#{answer.value}" itemValue="#{answer.value}"/>
@@ -113,7 +113,7 @@
                                   label="" multiple="true" title="#{question.info}"
                                   required="#{question.required and empty param[save.clientId]}"
                                   filter="#{question.answers.size() gt 8}"
-                                  filterMatchMode="startsWith" panelStyle=""
+                                  filterMatchMode="startsWith"
                                   layout="grid" columns="1">
                 <c:forEach var="answer" items="#{question.answers}">
                     <c:if test="#{!answer.deleted}">

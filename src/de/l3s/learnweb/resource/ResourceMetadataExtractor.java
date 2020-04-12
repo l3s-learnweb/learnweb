@@ -3,7 +3,7 @@ package de.l3s.learnweb.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
@@ -284,7 +284,7 @@ public class ResourceMetadataExtractor
     {
         JSONObject json = readJsonObjectFromUrl(YOUTUBE_API_REQUEST + resource.getIdAtService());
         JSONArray items = json.getJSONArray("items");
-        if(items.length() > 0)
+        if(!items.isEmpty())
         {
             JSONObject snippet = items.getJSONObject(0).getJSONObject("snippet");
             if(StringUtils.isEmpty(resource.getTitle()))
@@ -315,7 +315,7 @@ public class ResourceMetadataExtractor
         JSONObject json = readJsonArrayFromUrl(VIMEO_API_REQUEST + resource.getIdAtService() + ".json").getJSONObject(0);
         if(json != null)
         {
-            if(resource.getTitle() == null || resource.getTitle().length() == 0)
+            if(resource.getTitle() == null || resource.getTitle().isEmpty())
                 resource.setTitle(json.getString("title"));
             if(StringUtils.isEmpty(resource.getDescription()))
                 resource.setDescription(StringHelper.shortnString(json.getString("description"), DESCRIPTION_LIMIT));
@@ -391,7 +391,7 @@ public class ResourceMetadataExtractor
             }*/
 
             JSONArray thumbnails = json.getJSONObject("thumbs").getJSONArray("thumb");
-            if(thumbnails != null && thumbnails.length() > 0)
+            if(thumbnails != null && !thumbnails.isEmpty())
             {
                 String thumbnailUrl = null;
                 for(int i = 0, len = thumbnails.length(), weight = 0; i < len; i++)
@@ -443,11 +443,11 @@ public class ResourceMetadataExtractor
     {
         long result = 0;
         long multi = 1;
-        while(snipCode.length() > 0)
+        while(!snipCode.isEmpty())
         {
             String digit = snipCode.substring(snipCode.length() - 1);
-            result = result + multi * base58alphabetString.lastIndexOf(digit);
-            multi = multi * base58alphabetString.length();
+            result += multi * base58alphabetString.lastIndexOf(digit);
+            multi *= base58alphabetString.length();
             snipCode = snipCode.substring(0, snipCode.length() - 1);
         }
         return Long.toString(result);
@@ -471,12 +471,12 @@ public class ResourceMetadataExtractor
 
     private static JSONObject readJsonObjectFromUrl(String url) throws IOException, JSONException
     {
-        return new JSONObject(IOUtils.toString(new URL(url), Charset.forName("UTF-8")));
+        return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
     }
 
     private static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException
     {
-        return new JSONArray(IOUtils.toString(new URL(url), Charset.forName("UTF-8")));
+        return new JSONArray(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
     }
 
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException

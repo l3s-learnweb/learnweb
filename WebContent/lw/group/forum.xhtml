@@ -3,6 +3,7 @@
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui"
+				xmlns:of="http://omnifaces.org/functions"
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="hideGrowl" value="true"/>
@@ -83,7 +84,7 @@
 			<p:column headerText="#{msg.options}" styleClass="text-center" rendered="#{(userBean.moderator)}" >
 				<p:commandButton value="#{msg.delete}" styleClass="moderator-btn ml-2" actionListener="#{forumTopicsBean.onDeleteTopic(topic)}" process="@this" global="false"
 								 update="@form :message" onstart="PF('topicsOverlay').show()" oncomplete="PF('topicsOverlay').hide()">
-					<p:confirm message="${utilBean.getLocaleMessage('delete_entry_confirm_message', topic.title)}"/>
+					<p:confirm message="#{of:format1(msg.delete_entry_confirm_message, topic.title)}"/>
 				</p:commandButton>
 			</p:column>
 		</p:dataTable>
@@ -98,7 +99,7 @@
 				<p:message for="@previous"/>
 			</div>
 
-			<ui:fragment rendered="#{forumTopicBean.group.restrictionForumCategoryEnabled}">
+			<ui:fragment rendered="#{forumTopicsBean.group.restrictionForumCategoryEnabled}">
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.category}:"/>
 					<p:selectOneMenu id="post_category" value="#{forumTopicsBean.newPost.category}" editable="true"

@@ -111,9 +111,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
         try
         {
-            if(tedResource.getSource().equals(ResourceService.ted))
+            if(tedResource.getSource() == ResourceService.ted)
                 this.videoResourceId = Learnweb.getInstance().getTedManager().getTedVideoResourceId(tedResource.getUrl());
-            else if(tedResource.getSource().equals(ResourceService.tedx))
+            else if(tedResource.getSource() == ResourceService.tedx)
                 this.videoResourceId = Learnweb.getInstance().getTedManager().getTedXVideoResourceId(tedResource.getUrl());
         }
         catch(SQLException e)
@@ -122,7 +122,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             log.error("Error while retrieving TED video id", e);
         }
 
-        if(tedResource.getSource().equals(ResourceService.tedx))
+        if(tedResource.getSource() == ResourceService.tedx)
             //this.tedResource.setEmbeddedRaw("<iframe width='100%' height='100%' src='https://www.youtube-nocookie.com/embed/" + tedResource.getIdAtService() + "' frameborder='0' scrolling='no' allowfullscreen></iframe>");
             this.tedResource.setEmbeddedRaw(tedResource.getEmbeddedRaw().replace("width=\"500\" height=\"400\"", "width='100%' height='100%'"));
         String transcript = tedResource.getTranscript();
@@ -154,11 +154,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             HashMap<SummaryType, String> summaries = Learnweb.getInstance().getTedManager().getTranscriptSummariesForResource(resourceId);
             for(Entry<SummaryType, String> e : summaries.entrySet())
             {
-                if(e.getKey().equals(SummaryType.SHORT))
+                if(e.getKey() == SummaryType.SHORT)
                     summaryTextS = e.getValue();
-                else if(e.getKey().equals(SummaryType.LONG))
+                else if(e.getKey() == SummaryType.LONG)
                     summaryTextM = e.getValue();
-                else if(e.getKey().equals(SummaryType.DETAILED))
+                else if(e.getKey() == SummaryType.DETAILED)
                     summaryTextL = e.getValue();
             }
         }
@@ -274,7 +274,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     public void processActionSetSynonyms()
     {
         String word = getParameter("word");
-        String synonymsList = "";
+        StringBuilder synonymsList = new StringBuilder();
         int wordCount = word.trim().split("\\s+").length;
         word = word.replaceAll("\\p{P}", "");
 
@@ -287,7 +287,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
             String[] pos = wordnet.getPos(word);
             String[] synonyms = new String[pos.length];
-            for(int i = 0; i < pos.length; i++)
+            for(int i = 0, wLen = pos.length; i < wLen; i++)
             {
                 synonyms[i] = word + "(" + pos[i] + ")- " + wordnet.getDescription(word, pos[i]) + ": ";
 
@@ -295,7 +295,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
                 //similarityMeasures.clear();
                 if(possynonyms != null)
                 {
-                    for(int j = 0; j < possynonyms.length; j++)
+                    for(int j = 0, pLen = possynonyms.length; j < pLen; j++)
                     {
                         //double measure = wordSimilarity(word, possynonyms[j], pos[i]);
 
@@ -330,15 +330,15 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
                     }*/
                 }
                 log.debug(synonyms[i]);
-                synonymsList += synonyms[i] + "&lt;br/&gt;";
+                synonymsList.append(synonyms[i]).append("&lt;br/&gt;");
 
             }
 
             if(pos.length == 0 && wordCount == 1)
-                synonymsList += getLocaleMessage("No definition available");
-            else if(synonymsList.isEmpty())
-                synonymsList += getLocaleMessage("Multiple");
-            PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList);
+                synonymsList.append(getLocaleMessage("No definition available"));
+            else if(synonymsList.length() == 0)
+                synonymsList.append(getLocaleMessage("Multiple"));
+            PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList.toString());
         }
         else
             PrimeFaces.current().ajax().addCallbackParam("synonyms", "multiple");
@@ -346,7 +346,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public void submitShortSummary()
     {
-        if(summaryTextS != null && summaryTextS.length() > 0)
+        if(summaryTextS != null && !summaryTextS.isEmpty())
         {
             try
             {
@@ -362,7 +362,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public void submitLongSummary()
     {
-        if(summaryTextM != null && summaryTextM.length() > 0)
+        if(summaryTextM != null && !summaryTextM.isEmpty())
         {
             try
             {
@@ -377,7 +377,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public void submitDetailedSummary()
     {
-        if(summaryTextL != null && summaryTextL.length() > 0)
+        if(summaryTextL != null && !summaryTextL.isEmpty())
         {
             try
             {

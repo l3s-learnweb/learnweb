@@ -49,7 +49,6 @@ public class SearchLogManager
 
     public SearchLogManager(Learnweb learnweb)
     {
-        super();
         this.learnweb = learnweb;
         this.felAnnotatorPath = learnweb.getProperties().getProperty("FEL_ANNOTATOR_PATH", "");
 
@@ -145,7 +144,7 @@ public class SearchLogManager
 
     public void logResources(int searchId, List<ResourceDecorator> resources, int pageId)
     {
-        if(resources.size() == 0)
+        if(resources.isEmpty())
         {
             log.warn("No resources to log for searchId=" + searchId);
             return;
@@ -180,8 +179,8 @@ public class SearchLogManager
                     if(thumbnail != null)
                     {
                         insert.setString(7, thumbnail.getUrl());
-                        insert.setInt(8, thumbnail.getHeight() > 65535 ? 65535 : thumbnail.getHeight());
-                        insert.setInt(9, thumbnail.getWidth() > 65535 ? 65535 : thumbnail.getWidth());
+                        insert.setInt(8, Math.min(thumbnail.getHeight(), 65535));
+                        insert.setInt(9, Math.min(thumbnail.getWidth(), 65535));
                     }
                     else
                     {

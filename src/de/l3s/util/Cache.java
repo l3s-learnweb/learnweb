@@ -34,14 +34,14 @@ public class Cache<E extends HasId> implements ICache<E>
     {
         this.capacity = capacity2;
 
-        values = new LinkedHashMap<Integer, E>(capacity + 1, .75F, true)
+        values = new LinkedHashMap<>(capacity + 1, 0.75F, true)
         {
             private static final long serialVersionUID = -7231532816950321903L;
 
             @Override
             public boolean removeEldestEntry(Map.Entry<Integer, E> eldest)
             {
-                return size() > capacity;
+                return this.size() > capacity;
             }
         };
 

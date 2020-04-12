@@ -21,7 +21,7 @@ import de.l3s.learnweb.Learnweb;
 public class SearchSessionEdgeComputator
 {
 
-    public final static Logger log = Logger.getLogger(SearchSessionEdgeComputator.class);
+    public static final Logger log = Logger.getLogger(SearchSessionEdgeComputator.class);
 
     private static SearchSessionEdgeComputator instance = null;
 
@@ -172,9 +172,9 @@ public class SearchSessionEdgeComputator
         String q1, q2;
 
         SolrQuery query = new SolrQuery();
-        for(int i = 0; i < entitylist.size(); i++)
+        for(int i = 0, fLen = entitylist.size(); i < fLen; i++)
         {
-            for(int j = i + 1; j < entitylist.size(); j++)
+            for(int j = i + 1, sLen = entitylist.size(); j < sLen; j++)
             {
                 q1 = entitylist.get(i);
                 q2 = entitylist.get(j);
@@ -201,7 +201,7 @@ public class SearchSessionEdgeComputator
     private static List<Map.Entry<EntityPair, Double>> sortByScore(Map<EntityPair, Double> m)
     {
         List<Map.Entry<EntityPair, Double>> sorted = new ArrayList<>(m.entrySet());
-        sorted.sort((o1, o2) -> (int) (o2.getValue() - o1.getValue()));
+        sorted.sort((o1, o2) -> Double.compare(o2.getValue(), o1.getValue()));
         return sorted;
     }
 

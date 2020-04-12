@@ -44,8 +44,8 @@ import de.l3s.util.email.BounceManager;
 
 public class Learnweb
 {
-    public final static String salt1 = "ff4a9ff19306ee0407cf69d592";
-    public final static String salt2 = "3a129713cc1b33650816d61450";
+    public static final String salt1 = "ff4a9ff19306ee0407cf69d592";
+    public static final String salt2 = "3a129713cc1b33650816d61450";
     private static final Logger log = Logger.getLogger(Learnweb.class);
 
     private Connection dbConnection;
@@ -185,7 +185,7 @@ public class Learnweb
 
     /**
      *
-     * @param serverUrl The servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
+     * @param serverUrl The servername + contextPath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
      *
      * @throws ClassNotFoundException
      * @throws SQLException
@@ -393,7 +393,7 @@ public class Learnweb
 
     /**
      *
-     * @return Returns the servername + contextpath. For the default installation this is: https://learnweb.l3s.uni-hannover.de
+     * @return Returns the servername + contextPath. For the default installation this is: https://learnweb.l3s.uni-hannover.de
      */
     public String getServerUrl()
     {

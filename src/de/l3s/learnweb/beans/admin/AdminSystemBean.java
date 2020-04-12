@@ -36,15 +36,14 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
         Runtime rt = Runtime.getRuntime();
         memoryInfo = "Total: " + (rt.totalMemory() / 1024 / 1024) + "mb - Free:" + (rt.freeMemory() / 1024 / 1024) + "mb - Max:" + (rt.maxMemory() / 1024 / 1024);
 
-        List<CacheStatistic> cacheSize = new ArrayList<>(6);
-        Learnweb lw = getLearnweb();
-
-        cacheSize.add(new CacheStatistic("Resources", lw.getResourceManager().getCacheSize()));
-        cacheSize.add(new CacheStatistic("Groups", lw.getGroupManager().getGroupCacheSize()));
-        cacheSize.add(new CacheStatistic("Users", lw.getUserManager().getCacheSize()));
-        cacheSize.add(new CacheStatistic("Folders", lw.getGroupManager().getFolderCacheSize()));
-        cacheSize.add(new CacheStatistic("Courses", lw.getCourseManager().getCacheSize()));
-        cacheSize.add(new CacheStatistic("Organisations", lw.getOrganisationManager().getCacheSize()));
+        // List<CacheStatistic> cacheSize = new ArrayList<>(6);
+        // Learnweb lw = getLearnweb();
+        // cacheSize.add(new CacheStatistic("Resources", lw.getResourceManager().getCacheSize()));
+        // cacheSize.add(new CacheStatistic("Groups", lw.getGroupManager().getGroupCacheSize()));
+        // cacheSize.add(new CacheStatistic("Users", lw.getUserManager().getCacheSize()));
+        // cacheSize.add(new CacheStatistic("Folders", lw.getGroupManager().getFolderCacheSize()));
+        // cacheSize.add(new CacheStatistic("Courses", lw.getCourseManager().getCacheSize()));
+        // cacheSize.add(new CacheStatistic("Organisations", lw.getOrganisationManager().getCacheSize()));
     }
 
     public void onResetCaches() throws SQLException
@@ -229,7 +228,6 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
 
         public CacheStatistic(String cache, int objects)
         {
-            super();
             this.cache = cache;
             this.objects = objects;
         }

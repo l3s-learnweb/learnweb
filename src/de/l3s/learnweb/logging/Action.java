@@ -109,15 +109,15 @@ public enum Action
     static
     {
         // init one hashset per category
-        for(int i = 0; i < ActionCategory.values().length; i++)
+        for(int i = 0, len = ActionCategory.values().length; i < len; i++)
             ACTIONS_BY_CATEGORY.add(new HashSet<>());
 
         // add actions to category hashsets
-        for(Action action : Action.values())
+        for(Action action : values())
             getActionsByCategory(action.getCategory()).add(action);
 
         // make hashsets immutable
-        for(int i = 0; i < ActionCategory.values().length; i++)
+        for(int i = 0, len = ActionCategory.values().length; i < len; i++)
             ACTIONS_BY_CATEGORY.set(i, Collections.unmodifiableSet(ACTIONS_BY_CATEGORY.get(i)));
     }
 
@@ -140,7 +140,7 @@ public enum Action
 
         try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_user_log_action` (`action`, `name`, `target`, `category`) VALUES (?,?,?,?)"))
         {
-            for(Action action : Action.values())
+            for(Action action : values())
             {
                 insert.setInt(1, action.ordinal());
                 insert.setString(2, action.name());

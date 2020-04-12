@@ -133,7 +133,6 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
     public List<AggregatedRequestData> getSuspiciousActivityList()
     {
 
-        //TODO: AAAAAAAAA
         try
         {
             new BounceManager(Learnweb.getInstance()).parseInbox();

@@ -27,7 +27,7 @@ class AnnouncementsManagerTest
         Announcement expected = new Announcement();
         expected.setId(113);
         expected.setTitle("ICWL conference, Magdeburg, Germany");
-        expected.setText("<p>MSc. Tetiana Tolmachova presented the full paper \"Visualizing Search History in Web Learning\" at the 18th International Conference on Web-based Learning (ICWL2019). The paper describes the LogCanvasTag interface for search history visualization, which supports users in re-constructing the semantic relationship between their search activities. Experimental results indicate that searching experience of both independent users and collaborative searching groups beneﬁt from this search history visualization.</p>");
+        expected.setText("<p>MSc. Tetiana Tolmachova presented the full paper \"Visualizing Search History in Web Learning\" at the 18th International Conference on Web-based Learning (ICWL2019). The paper describes the LogCanvasTag interface for search history visualization, which supports users in re-constructing the semantic relationship between their search activities. Experimental results indicate that searching experience of both independent users and collaborative searching groups benefit from this search history visualization.</p>");
 
         Announcement result = learnweb.getAnnouncementsManager().getAnnouncementById(expected.getId());
 

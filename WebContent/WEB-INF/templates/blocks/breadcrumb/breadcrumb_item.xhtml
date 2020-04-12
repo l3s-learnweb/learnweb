@@ -3,6 +3,10 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
+<!--@elvariable id="rendered" type="java.lang.Boolean"-->
+<!--@elvariable id="link" type="java.lang.String"-->
+<!--@elvariable id="title" type="java.lang.String"-->
+
 <ui:fragment rendered="#{empty rendered or rendered == true}">
     <div class="breadcrumb-menu#{empty link ? ' breadcrumb-menu-no-link' : ''}">
 

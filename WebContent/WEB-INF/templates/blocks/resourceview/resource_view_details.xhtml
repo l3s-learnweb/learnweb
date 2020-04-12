@@ -128,7 +128,7 @@
 
 	<ui:repeat var="entry" value="#{res.metadataEntries}">
 		<ui:fragment rendered="#{not empty entry.value}">
-			<dt class="col-sm-3"><h:outputText value="#{utilBean.getLocaleMessage(entry.key, null)}"/>:</dt>
+			<dt class="col-sm-3"><h:outputText value="#{msg[entry.key]}"/>:</dt>
 
 			<dd class="col-sm-9">
 				<ui:fragment rendered="#{entry.key eq 'language_level'}">

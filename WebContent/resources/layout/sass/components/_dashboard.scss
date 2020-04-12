@@ -41,7 +41,7 @@ $salesUpIconColor: $green;
 $salesDownIconColor: $red;
 
 /*Timeline*/
-$timelineSeperatorColor: $gray-300;
+$timelineSeparatorColor: $gray-300;
 $loveNotificationBgColor: $lightRed;
 $loveNotificationTextColor: $red;
 $checkedNotificationBgColor: $lightBlue;
@@ -531,7 +531,7 @@ $profileTextColor: $gray-900;
           width: 1px;
           height: 100%;
           margin-left: -1px;
-          background: $timelineSeperatorColor;
+          background: $timelineSeparatorColor;
           top: 0;
         }
       }

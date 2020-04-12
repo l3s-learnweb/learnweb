@@ -24,7 +24,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
     private static final long serialVersionUID = 6265758951073418345L;
     //private static final Logger log = Logger.getLogger(GlossaryDashboardBean.class);
 
-    private GlossaryDashboardManager dashboardManager = null;
+    private transient GlossaryDashboardManager dashboardManager = null;
 
     private transient Integer totalConcepts = null;
     private transient Integer totalTerms = null;

@@ -50,7 +50,7 @@ public class Message implements Comparable<Message>
 
         stmtGetUsers.setInt(1, user.getId());
         ResultSet rs = stmtGetUsers.executeQuery();
-        Message message = null;
+        Message message;
 
         User toUser = null;
         while(rs.next())
@@ -87,7 +87,7 @@ public class Message implements Comparable<Message>
 
         stmtGetUsers.setInt(1, user.getId());
         ResultSet rs = stmtGetUsers.executeQuery();
-        Message message = null;
+        Message message;
 
         User toUser = null;
         while(rs.next())

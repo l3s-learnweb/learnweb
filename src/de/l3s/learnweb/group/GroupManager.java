@@ -44,7 +44,7 @@ public class GroupManager
     // if you change this, you have to change the createGroup and save method too
     private static final String GROUP_COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count, g.hypothesis_link, g.hypothesis_token";
     private static final String FOLDER_COLUMNS = "f.folder_id, f.deleted, f.group_id, f.parent_folder_id, f.name, f.description, f.user_id";
-    private static Logger log = Logger.getLogger(GroupManager.class);
+    private static final Logger log = Logger.getLogger(GroupManager.class);
 
     private Learnweb learnweb;
     private ICache<Group> groupCache;
@@ -343,7 +343,7 @@ public class GroupManager
             delete.execute();
         }
 
-        members.forEach(m -> m.clearCaches());
+        members.forEach(User::clearCaches);
 
         groupCache.remove(group.getId());
     }
@@ -387,7 +387,7 @@ public class GroupManager
             update.executeUpdate();
         }
 
-        members.forEach(m -> m.clearCaches());
+        members.forEach(User::clearCaches);
 
         groupCache.remove(group.getId());
     }
@@ -558,14 +558,13 @@ public class GroupManager
                 if(!rs.next())
                     throw new SQLException("database error: no id generated");
                 folder.setId(rs.getInt(1));
-                folder = folderCache.put(folder);
             }
             else
             {
                 folder.clearCaches();
                 folderCache.remove(folder.getId());
-                folder = folderCache.put(folder);
             }
+            folder = folderCache.put(folder);
             return folder;
         }
     }

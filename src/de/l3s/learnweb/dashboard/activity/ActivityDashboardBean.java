@@ -30,7 +30,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 {
     private static final long serialVersionUID = 3326736281893564706L;
 
-    private ActivityDashboardManager dashboardManager;
+    private transient ActivityDashboardManager dashboardManager;
 
     private Map<String, String> actions;
     private List<SelectItemGroup> groupedActions;
@@ -154,7 +154,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     {
         if(interactionsTable == null)
             return null;
-        return interactionsTable.size() > 0 ? interactionsTable.get(0).keySet() : new HashSet<>();
+        return interactionsTable.isEmpty() ? new HashSet<>() : interactionsTable.get(0).keySet();
     }
 
     public Map<String, String> getActions()

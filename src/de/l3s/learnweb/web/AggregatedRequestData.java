@@ -21,12 +21,10 @@ public class AggregatedRequestData implements Serializable
 
     public AggregatedRequestData()
     {
-        super();
     }
 
     public AggregatedRequestData(String iP, int requests, int loginCount, String usernames, Date time)
     {
-        super();
         IP = iP;
         this.requests = requests;
         this.loginCount = loginCount;

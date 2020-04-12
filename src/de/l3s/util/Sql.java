@@ -46,7 +46,7 @@ public class Sql
         }
         catch(Exception e)
         {
-            log.error("Couldn't serialize preferences: " + obj.toString(), e);
+            log.error("Couldn't serialize preferences: " + obj, e);
         }
 
         stmt.setNull(parameterIndex, java.sql.Types.BLOB);
@@ -106,7 +106,7 @@ public class Sql
         String questionMarks = StringUtils.repeat(",?", columns.length).substring(1);
         sb.append(") VALUES (").append(questionMarks).append(") ON DUPLICATE KEY UPDATE ");
 
-        for(int i = 1; i < columns.length; i++) // skip first column
+        for(int i = 1, len = columns.length; i < len; i++) // skip first column
         {
             String column = columns[i];
             sb.append(column).append("=VALUES(").append(column).append("),");

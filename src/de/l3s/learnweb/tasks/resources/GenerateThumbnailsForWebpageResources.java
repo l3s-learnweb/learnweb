@@ -23,7 +23,7 @@ import de.l3s.util.UrlHelper;
  */
 public class GenerateThumbnailsForWebpageResources
 {
-    private static Logger log = Logger.getLogger(GenerateThumbnailsForWebpageResources.class);
+    private static final Logger log = Logger.getLogger(GenerateThumbnailsForWebpageResources.class);
 
     /**
      * @param args

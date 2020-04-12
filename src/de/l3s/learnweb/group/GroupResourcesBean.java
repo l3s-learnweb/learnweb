@@ -167,7 +167,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             if(null == currentFolder)
             {
                 addInvalidParameterMessage("folder_id");
-                return;
             }
         }
     }

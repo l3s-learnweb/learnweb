@@ -38,8 +38,8 @@
 		<h:outputScript library="layout" name="js/ted-transcript.js" target="body"/>
 
 		<script type="text/javascript">
-			var noteId = #{tedTranscriptBean.noteId};
-			var readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
+			let noteId = #{tedTranscriptBean.noteId};
+			let readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
 		</script>
 		<div class="col-md px-0 d-flex">
             <div id="ted_content" class="col position-sticky">
@@ -78,9 +78,9 @@
 						</h:form>
 					</div>
 					<div class="border border-dark my-2 p-2">
-						<strong>#{msg['ted_trascript.owner_of_transcript']}: </strong><h:outputText value="#{tedTranscriptBean.tedResource.user.username}"/><br/>
+						<strong>#{msg['ted_transcript.owner_of_transcript']}: </strong><h:outputText value="#{tedTranscriptBean.tedResource.user.username}"/><br/>
 						<strong>#{msg.note}:</strong><h:outputText value = " #{msg.transcript_warning}" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
-						<h:outputText value = " #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" style="color:red"/>
+						<h:outputText value = " #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" styleClass="text-danger"/>
 						<h:outputText value = " #{msg.transcript_note}" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 					</div>
 				</p:outputPanel>

@@ -19,7 +19,7 @@ import de.l3s.learnweb.user.UserManager;
  */
 public class ForceEmailValidation
 {
-    private static Logger log = Logger.getLogger(ForceEmailValidation.class);
+    private static final Logger log = Logger.getLogger(ForceEmailValidation.class);
 
     /**
      * @param args

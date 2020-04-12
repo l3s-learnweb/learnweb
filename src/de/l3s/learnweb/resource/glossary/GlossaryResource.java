@@ -21,7 +21,7 @@ public class GlossaryResource extends Resource
 
     private List<Locale> allowedLanguages = new ArrayList<>();
     private List<GlossaryEntry> entries = new LinkedList<>();
-    private boolean deleted = false; // TODO added by riShita; check why this is used, it exists already in resource.class
+    private boolean deleted = false; // TODO added by Rishita; check why this is used, it exists already in resource.class
     private boolean clonedButNotSaved = false;
 
     public GlossaryResource()
@@ -42,7 +42,7 @@ public class GlossaryResource extends Resource
         setDeleted(otherGlossaryResource.deleted);
         setClonedButNotPersisted(true);
         setEntries(new ArrayList<>(otherGlossaryResource.entries.size()));
-        for(int i = 0; i < otherGlossaryResource.entries.size(); i++)
+        for(int i = 0, len = otherGlossaryResource.entries.size(); i < len; i++)
         {
             this.entries.add(i, otherGlossaryResource.entries.get(i).clone());
         }
@@ -81,7 +81,7 @@ public class GlossaryResource extends Resource
         this.setThumbnail3(iconResource.getThumbnail3());
         this.setThumbnail4(iconResource.getThumbnail4());
 
-        this.setUser(getUser()); // added by rishita to fix copy bug; does this make sense? TODO: test
+        this.setUser(getUser()); // added by Rishita to fix copy bug; does this make sense? TODO: test
 
         // save normal resource fields
         super.save();
@@ -105,7 +105,7 @@ public class GlossaryResource extends Resource
     @Override
     public String getView()
     {
-        return "glossary/glossary.jsf"; // TODO move to resorces view folder. requires refactoring of glossarybean
+        return "glossary/glossary.jsf"; // TODO move to resources view folder. requires refactoring of glossaryBean
     }
 
     @Override

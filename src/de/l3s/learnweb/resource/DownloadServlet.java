@@ -45,8 +45,8 @@ public class DownloadServlet extends HttpServlet
     private static final int BUFFER_SIZE = 10240; // = 10KB.
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
-    private Learnweb learnweb;
-    private FileManager fileManager;
+    private transient Learnweb learnweb;
+    private transient FileManager fileManager;
     private String urlPattern = "/download/"; // as defined in web.xml
 
     public DownloadServlet() throws ClassNotFoundException, SQLException
@@ -80,8 +80,6 @@ public class DownloadServlet extends HttpServlet
 
     /**
      * Process HEAD request. This returns the same headers as GET request, but without content.
-     *
-     * @see HttpServlet#doHead(HttpServletRequest, HttpServletResponse).
      */
     @Override
     protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -92,8 +90,6 @@ public class DownloadServlet extends HttpServlet
 
     /**
      * Process GET request.
-     *
-     * @see HttpServlet#doGet(HttpServletRequest, HttpServletResponse).
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -120,7 +116,7 @@ public class DownloadServlet extends HttpServlet
 
         int index = requestString.indexOf(urlPattern);
         requestString = requestString.substring(index + urlPattern.length());
-        index = requestString.indexOf("/");
+        index = requestString.indexOf('/');
         String requestFileId = requestString.substring(0, index);
         //String requestFileName = requestString.substring(index + 1);
 
@@ -258,8 +254,8 @@ public class DownloadServlet extends HttpServlet
                     {
                         // Assuming a file with length of 100, the following examples returns bytes at:
                         // 50-80 (50 to 80), 40- (40 to length=100), -20 (length-20=80 to length=100).
-                        long start = sublong(part, 0, part.indexOf("-"));
-                        long end = sublong(part, part.indexOf("-") + 1, part.length());
+                        long start = sublong(part, 0, part.indexOf('-'));
+                        long end = sublong(part, part.indexOf('-') + 1, part.length());
 
                         if(start == -1)
                         {
@@ -523,7 +519,7 @@ public class DownloadServlet extends HttpServlet
     private static long sublong(String value, int beginIndex, int endIndex)
     {
         String substring = value.substring(beginIndex, endIndex);
-        return (substring.length() > 0) ? Long.parseLong(substring) : -1;
+        return substring.isEmpty() ? -1 : Long.parseLong(substring);
     }
 
     /**

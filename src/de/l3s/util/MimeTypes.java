@@ -123,7 +123,7 @@ public class MimeTypes
 
     static
     {
-        mimeTypeMapping = new HashMap<String, String>(200)
+        mimeTypeMapping = new HashMap<>(200)
         {
             private static final long serialVersionUID = 504794795433631388L;
 
@@ -371,7 +371,7 @@ public class MimeTypes
     }
 
     /**
-     * Simply returns MIME type or <code>null</code> if no type is found.
+     * Simply returns MIME type or {@code null} if no type is found.
      */
     public static String lookupMimeType(String ext)
     {

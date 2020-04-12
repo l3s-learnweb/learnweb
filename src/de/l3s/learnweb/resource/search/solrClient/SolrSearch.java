@@ -107,7 +107,7 @@ public class SolrSearch implements Serializable
             String newQuery = "";
             int start = matcher.start();
             if(start != 0) newQuery = query.substring(0, start);
-            newQuery = newQuery.concat(query.substring(matcher.end()));
+            newQuery += query.substring(matcher.end());
             return newQuery;
         }
         else return query;
@@ -348,10 +348,10 @@ public class SolrSearch implements Serializable
 
     private void applySearchFilters(final SolrQuery solrQuery)
     {
-        if(0 != filterLocation.length())
+        if(!filterLocation.isEmpty())
             solrQuery.addFilterQuery("location : " + filterLocation);
 
-        if(0 != filterType.length())
+        if(!filterType.isEmpty())
         {
             if("web".equalsIgnoreCase(filterType))
             {
@@ -368,44 +368,44 @@ public class SolrSearch implements Serializable
             }
         }
 
-        if(0 != filterDateFrom.length())
+        if(!filterDateFrom.isEmpty())
         {
-            if(0 != filterDateTo.length())
+            if(!filterDateTo.isEmpty())
                 solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO " + filterDateTo + "]");
             else
                 solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO NOW]");
         }
-        else if(0 != filterDateTo.length())
+        else if(!filterDateTo.isEmpty())
         {
             solrQuery.addFilterQuery("timestamp : [* TO " + filterDateTo + "]");
         }
 
-        if(0 != filterCollector.length())
+        if(!filterCollector.isEmpty())
         {
             solrQuery.addFilterQuery("collector_s : \"" + filterCollector + "\"");
         }
 
-        if(0 != filterAuthor.length())
+        if(!filterAuthor.isEmpty())
         {
             solrQuery.addFilterQuery("author_s : \"" + filterAuthor + "\"");
         }
 
-        if(0 != filterCoverage.length())
+        if(!filterCoverage.isEmpty())
         {
             solrQuery.addFilterQuery("coverage_s : \"" + filterCoverage + "\"");
         }
 
-        if(0 != filterPublisher.length())
+        if(!filterPublisher.isEmpty())
         {
             solrQuery.addFilterQuery("publisher_s : \"" + filterPublisher + "\"");
         }
 
-        if(0 != filterTags.length())
+        if(!filterTags.isEmpty())
         {
             solrQuery.addFilterQuery("tags : \"" + filterTags + "\"");
         }
 
-        if(0 != filterLanguage.length())
+        if(!filterLanguage.isEmpty())
         {
             solrQuery.addFilterQuery("language : " + filterLanguage);
         }
@@ -492,7 +492,7 @@ public class SolrSearch implements Serializable
 
         String oneLineSnippet = StringHelper.removeNewLines(snippet.toString());
         oneLineSnippet = StringHelper.trimNotAlphabetical(oneLineSnippet);
-        if(oneLineSnippet.length() != 0) decoratedResource.setSnippet(oneLineSnippet);
+        if(!oneLineSnippet.isEmpty()) decoratedResource.setSnippet(oneLineSnippet);
         return decoratedResource;
     }
 

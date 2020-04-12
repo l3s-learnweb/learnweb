@@ -142,7 +142,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         JSONArray items = new JSONArray(params.get("items"));
         if(items.length() > selectedSubmission.getNoOfResources())
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, getLocaleMessage("submission.resource_limit_exceeded", selectedSubmission.getNoOfResources()));
+            addGrowl(FacesMessage.SEVERITY_ERROR, "submission.resource_limit_exceeded", selectedSubmission.getNoOfResources());
             return;
         }
         try
@@ -177,12 +177,12 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         submitted = getLearnweb().getSubmissionManager().getSubmitStatusForUser(submissionId, userId);
         if(submitted)
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, getLocaleMessage("submission.already_submitted"));
+            addGrowl(FacesMessage.SEVERITY_ERROR, "submission.already_submitted");
             return;
         }
         if(selectedResources.size() > selectedSubmission.getNoOfResources())
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, getLocaleMessage("submission.resource_limit_exceeded", selectedSubmission.getNoOfResources()));
+            addGrowl(FacesMessage.SEVERITY_ERROR, "submission.resource_limit_exceeded", selectedSubmission.getNoOfResources());
             return;
         }
         try

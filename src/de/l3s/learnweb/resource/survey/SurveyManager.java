@@ -69,7 +69,7 @@ public class SurveyManager
                     // distinguish questions with single and multiple answers
                     QuestionType ansType = question.getType();
 
-                    if(ansType.equals(QuestionType.MULTIPLE_MENU) || ansType.equals(QuestionType.MANY_CHECKBOX))
+                    if(ansType == QuestionType.MULTIPLE_MENU || ansType == QuestionType.MANY_CHECKBOX)
                     {
                         String[] answer = StringUtils.defaultString(rs.getString("answer")).split("\\s*\\|\\|\\|\\s*");
 
@@ -257,14 +257,14 @@ public class SurveyManager
         if(ArrayUtils.isEmpty(answers))
             return "";
 
-        String str = "";
+        StringBuilder sb = new StringBuilder();
 
         for(String s : answers)
         {
-            str += "|||" + s.replace("|||", "|I|");
+            sb.append("|||").append(s.replace("|||", "|I|"));
         }
 
-        return str.substring(3);
+        return sb.substring(3);
     }
 
     /**

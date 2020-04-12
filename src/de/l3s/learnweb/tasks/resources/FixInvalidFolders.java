@@ -19,7 +19,7 @@ import de.l3s.learnweb.resource.ResourceManager;
  */
 public class FixInvalidFolders
 {
-    private static Logger log = Logger.getLogger(FixInvalidFolders.class);
+    private static final Logger log = Logger.getLogger(FixInvalidFolders.class);
 
     /**
      * @param args

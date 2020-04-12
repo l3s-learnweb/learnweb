@@ -107,14 +107,7 @@ public class AccessData implements Serializable
 
     public void setAttempts(int attempts)
     {
-        if(attempts > 0)
-        {
-            this.attempts = attempts;
-        }
-        else
-        {
-            this.attempts = 0;
-        }
+        this.attempts = Math.max(attempts, 0);
     }
 
     public Date getBanDate()

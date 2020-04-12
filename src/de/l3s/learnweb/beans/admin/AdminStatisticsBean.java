@@ -161,14 +161,14 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                         			    sb.append("; no description");
                         			}
                         		*/
-                        if(resource.getDescription().length() != 0)
+                        if(!resource.getDescription().isEmpty())
                         {
                             sb.append("<div class=\"description\" style=\"display:none\"><h4>Description</h4>");
                             sb.append(resource.getDescription());
                             sb.append("</div>");
                         }
 
-                        if(resource.getComments().size() != 0)
+                        if(!resource.getComments().isEmpty())
                         {
                             sb.append("<h4 class=\"admin_comments\" style=\"display:none\">Comments</h4><table class=\"admin_comments\" style=\"display:none\" border='1' cellspacing='0'>");
                             for(Comment comment : resource.getComments())
@@ -208,7 +208,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
             if(o1.getStorageType() == o2.getStorageType())
                 return o1.getTitle().compareTo(o2.getTitle());
 
-            return o1.getStorageType() - o2.getStorageType();
+            return Integer.compare(o1.getStorageType(), o2.getStorageType());
         }
 
     }

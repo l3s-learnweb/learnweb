@@ -361,7 +361,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return null;
         }
 
-        if(tagName == null || tagName.length() == 0)
+        if(tagName == null && tagName.isEmpty())
             return null;
 
         try
@@ -416,40 +416,22 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    private void showTagWarningMessage() // TODO riShita refactor. Someone else has to do it.
+    private void showTagWarningMessage()
     {
         String title = getLocaleMessage("incorrect_tags");
+        String text;
 
         if(tagName.contains("#"))
-        {
-            String newTags = tagName.replaceAll("#", " ");
-            int countTags = tagName.trim().length() - tagName.trim().replaceAll("#", "").length();
-            FacesMessage message = null;
-            String text = getLocaleMessage("tags_hashtag");
-            if(countTags > 1) //??????
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
-            else
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
-            PrimeFaces.current().dialog().showMessageDynamic(message); // duplicate
-        }
+            text = getLocaleMessage("tags_hashtag") + tagName.replaceAll("#", " ");
         else if(tagName.contains(","))
-        {
-            String text = getLocaleMessage("tags_specialCharacter");
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text); // duplicate
-            PrimeFaces.current().dialog().showMessageDynamic(message); // duplicate
-        }
+            text = getLocaleMessage("tags_specialCharacter");
         else if((StringUtils.countMatches(tagName, " ") > 3))
-        {
-            String text = getLocaleMessage("tags_spaces");
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text); // duplicate
-            PrimeFaces.current().dialog().showMessageDynamic(message); // duplicate
-        }
+            text = getLocaleMessage("tags_spaces");
         else
-        {
-            String text = getLocaleMessage("tags_tooLong");
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text); // duplicate
-            PrimeFaces.current().dialog().showMessageDynamic(message); // duplicate
-        }
+            text = getLocaleMessage("tags_tooLong");
+
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
+        PrimeFaces.current().dialog().showMessageDynamic(message);
     }
 
     public boolean canEditComment(Object commentO) throws SQLException
@@ -465,9 +447,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
         Comment comment = (Comment) commentO;
         User owner = comment.getUser();
-        if(user.equals(owner))
-            return true;
-        return false;
+        return user.equals(owner);
     }
 
     public boolean canDeleteTag(Object tagO) throws SQLException
@@ -483,9 +463,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
         Tag tag = (Tag) tagO;
         User owner = resource.getTags().getElementOwner(tag);
-        if(user.equals(owner))
-            return true;
-        return false;
+        return user.equals(owner);
     }
 
     public void onEditComment()
@@ -551,9 +529,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
             //Getting mime type
             FileInspector.FileInfo info = rme.getFileInfo(FileInspector.openStream(archiveUrl), resource.getFileName());
-            String type = info.getMimeType().substring(0, info.getMimeType().indexOf("/"));
+            String type = info.getMimeType().substring(0, info.getMimeType().indexOf('/'));
             if(type.equals("application"))
-                type = info.getMimeType().substring(info.getMimeType().indexOf("/") + 1);
+                type = info.getMimeType().substring(info.getMimeType().indexOf('/') + 1);
 
             if(type.equalsIgnoreCase("pdf"))
             {

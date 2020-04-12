@@ -29,7 +29,7 @@ public class PasswordBean extends ApplicationBean implements Serializable
         {
             List<User> users = getLearnweb().getUserManager().getUser(email);
 
-            if(users.size() == 0)
+            if(users.isEmpty())
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "unknown_email");
                 return;

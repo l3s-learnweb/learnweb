@@ -85,7 +85,8 @@ function filterSnippets() {
       value.reverse();
       for(var i = 0; i < value.length; i++)
       {
-          $('.snippet[data-searchid="' + key + '"][data-rank="'+ value[i] + '"]').addClass('selected_snippet');//.css('background-color', 'rgba(72, 154, 131, 0.22)');
+          //.css('background-color', 'rgba(72, 154, 131, 0.22)');
+          $('.snippet[data-searchid="' + key + '"][data-rank="'+ value[i] + '"]').addClass('selected_snippet');
           var detachedSnippet = $('.snippet[data-searchid="' + key + '"][data-rank="'+ value[i] + '"]').detach();
           $('#snippets div:first-child').after(detachedSnippet);
       }
@@ -115,8 +116,8 @@ function draw() {
       const entity = relatedEntities[j];
       entities.add(queriesJsonArr[i].query);
       entities.add(entity.entity_name);
-      if (entityRanksMap.has(entity.entity_name)) entityRanksMap.get(entity.entity_name).set(queryObj.search_id, entity.ranks);// .push({search_id: queryObj.search_id, ranks: entity.ranks});
-      else entityRanksMap.set(entity.entity_name, new Map([[queryObj.search_id, entity.ranks]]));// [{search_id: queryObj.search_id, ranks: entity.ranks}]);
+      if (entityRanksMap.has(entity.entity_name)) entityRanksMap.get(entity.entity_name).set(queryObj.search_id, entity.ranks);
+      else entityRanksMap.set(entity.entity_name, new Map([[queryObj.search_id, entity.ranks]]));
     }
   }
 

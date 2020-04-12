@@ -95,7 +95,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     {
         List<Locale> locales = LanguageBundle.getSupportedLocales();
 
-        return locales.stream().map(locale -> locale.getLanguage()).distinct().collect(Collectors.toList());
+        return locales.stream().map(Locale::getLanguage).distinct().collect(Collectors.toList());
     }
 
     /**
@@ -106,7 +106,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     {
         List<Locale> locales = LanguageBundle.getSupportedLocales();
 
-        return locales.stream().map(locale -> locale.getVariant()).filter(variant -> StringUtils.isNotEmpty(variant)).distinct().collect(Collectors.toList());
+        return locales.stream().map(Locale::getVariant).filter(StringUtils::isNotEmpty).distinct().collect(Collectors.toList());
     }
 
     public void onSave()
@@ -160,7 +160,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         for(Option option : optionsEnum)
         {
             // example: this gets "Services" from "Services_Allow_logout_from_Interweb"
-            String newOptionGroupName = option.name().substring(0, option.name().indexOf("_"));
+            String newOptionGroupName = option.name().substring(0, option.name().indexOf('_'));
 
             if(oldOptionGroupName != null && !oldOptionGroupName.equalsIgnoreCase(newOptionGroupName))
             {
@@ -222,14 +222,13 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
         public OptionWrapper(Option option, boolean value)
         {
-            super();
             this.option = option;
             this.value = value;
         }
 
         public String getName()
         {
-            return option.name().substring(option.name().indexOf("_")).replace("_", " ");
+            return option.name().substring(option.name().indexOf('_')).replace("_", " ");
         }
 
         public boolean getValue()
@@ -256,7 +255,6 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
         public OptionWrapperGroup(String title, List<OptionWrapper> options)
         {
-            super();
             this.title = title;
             this.options = options;
         }

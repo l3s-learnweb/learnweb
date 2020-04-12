@@ -26,7 +26,7 @@ public class StatisticsBean extends ApplicationBean implements Serializable
 
     private final List<SimpleEntry<LocalDate, Integer>> activeUsersPerMonth;
     private final List<SimpleEntry<String, Number>> resourcesPerSource;
-    private final Map<String, Number> generalStatistics = new LinkedHashMap<String, Number>();
+    private final Map<String, Number> generalStatistics = new LinkedHashMap<>();
 
     public StatisticsBean() throws SQLException
     {
@@ -85,7 +85,7 @@ public class StatisticsBean extends ApplicationBean implements Serializable
         {
             String key = rs.getString(1);
             if(highlightedEntries != null && highlightedEntries.contains(key))
-                key = key + " *";
+                key += " *";
 
             SimpleEntry<String, Number> row = new AbstractMap.SimpleEntry<>(key, rs.getInt(2));
             results.add(row);

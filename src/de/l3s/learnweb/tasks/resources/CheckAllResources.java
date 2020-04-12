@@ -35,7 +35,7 @@ public class CheckAllResources
             log.debug("Load page: " + i);
             List<Resource> resources = resourceManager.getResourcesAll(i, batchSize);
 
-            if(resources.size() == 0)
+            if(resources.isEmpty())
             {
                 log.debug("finished: last page");
                 break;
@@ -78,7 +78,7 @@ public class CheckAllResources
         }
     }
 
-    private static Map<String, MutableInt> freq = new HashMap<String, MutableInt>();
+    private static Map<String, MutableInt> freq = new HashMap<>();
 
     private static void count(String word)
     {

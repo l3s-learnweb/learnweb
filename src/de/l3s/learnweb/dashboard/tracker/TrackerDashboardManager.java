@@ -21,7 +21,7 @@ class TrackerDashboardManager
 
     private final Learnweb learnweb;
 
-    public TrackerDashboardManager()
+    TrackerDashboardManager()
     {
         this.learnweb = Learnweb.getInstance();
     }

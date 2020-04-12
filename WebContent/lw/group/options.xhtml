@@ -3,6 +3,7 @@
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui"
+				xmlns:of="http://omnifaces.org/functions"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 				xmlns:lw="http://l3s.de/learnweb">
 
@@ -199,7 +200,7 @@
 						</div>
 
 						<p:commandButton value="#{msg.copy}" action="#{groupOptionsBean.copyGroup}" process="@form" update=":growl">
-							<p:confirm message="${utilBean.getLocaleMessage('group_copy_resources_question', groupOptionsBean.group.resources.size())}"/>
+							<p:confirm message="#{of:format1(msg.group_copy_resources_question, groupOptionsBean.group.resources.size())}"/>
 						</p:commandButton>
 					</h:form>
 				</p:panel>
@@ -207,7 +208,7 @@
 				<p:panel header="#{msg['Miscellaneous']}">
 					<h:form id="group_delete_form">
 						<p:commandButton value="#{msg.delete_group}" title="#{msg.delete}" action="#{groupsBean.deleteGroup}" ajax="false" process="@this">
-							<p:confirm message="${utilBean.getLocaleMessage('group_delete_question', groupOptionsBean.group.title)}"/>
+							<p:confirm message="#{of:format1(msg.group_delete_question, groupOptionsBean.group.title)}"/>
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOptionsBean.group}"/>
 						</p:commandButton>
 					</h:form>

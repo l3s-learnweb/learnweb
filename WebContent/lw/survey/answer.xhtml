@@ -91,7 +91,7 @@
 						<p:outputLabel value="#{field.label}"/>
 						<p:selectOneRadio id="input_oneradio_#{field.id}" value="#{surveyBean.userAnswers.answers[field.id]}" label=""
 										  multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.optionsList.size() gt 8}"
-										  layout="responsive" columns="10" filterMatchMode="startsWith" panelStyle="">
+										  layout="responsive" columns="10" filterMatchMode="startsWith">
 							<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 						</p:selectOneRadio>				
 					</c:if>

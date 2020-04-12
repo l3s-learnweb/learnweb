@@ -19,7 +19,7 @@ public abstract class AbstractPaginator implements Serializable
     private int totalPages;
     private int totalResults = Integer.MIN_VALUE;
 
-    private transient List<ResourceDecorator> currentPageCache = null;
+    private transient List<ResourceDecorator> currentPageCache;
 
     public abstract List<ResourceDecorator> getCurrentPage() throws SQLException, IOException, SolrServerException;
 
@@ -93,7 +93,7 @@ public abstract class AbstractPaginator implements Serializable
             fromIndex = 1;
             endIndex = pageIndex + 4;
         }
-        else if(pageIndex >= 3 && pageIndex < 4)
+        else if(pageIndex == 3)
         {
             fromIndex = 1;
             endIndex = pageIndex + 3;
@@ -131,18 +131,12 @@ public abstract class AbstractPaginator implements Serializable
 
     public boolean isLessThanNPages()
     {
-        if(totalPages <= DEFAULT_N_PAGE_LIMIT)
-            return true;
-        else
-            return false;
+        return totalPages <= DEFAULT_N_PAGE_LIMIT;
     }
 
     public boolean isLessThanNPagesFromLast()
     {
-        if(pageIndex < totalPages - 3)
-            return true;
-        else
-            return false;
+        return pageIndex < totalPages - 3;
     }
 
     public boolean isEmpty()

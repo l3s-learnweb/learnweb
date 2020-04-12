@@ -312,11 +312,20 @@ public class GlossaryManager
                 term.setPhraseologyPasted(terms.getBoolean("phraseology_pasted"));
 
                 //Append fulltext with all words from term
-                fulltext.append(term.getTerm() + " " + term.getAcronym() + " " + term.getPronounciation() + " " + term.getSource() + " " + term.getPhraseology() + " " + term.getUses());
+                fulltext.append(term.getTerm()).append(" ")
+                        .append(term.getAcronym()).append(" ")
+                        .append(term.getPronounciation()).append(" ")
+                        .append(term.getSource()).append(" ")
+                        .append(term.getPhraseology()).append(" ")
+                        .append(term.getUses());
                 entryTerms.add(term);
             }
             //Append words from entry
-            fulltext.append(" " + entry.getTopicOne() + " " + entry.getTopicTwo() + " " + entry.getTopicThree() + " " + entry.getDescription());
+            fulltext.append(" ")
+                    .append(entry.getTopicOne()).append(" ")
+                    .append(entry.getTopicTwo()).append(" ")
+                    .append(entry.getTopicThree()).append(" ")
+                    .append(entry.getDescription());
             entry.setFulltext(fulltext.toString());
         }
         return entryTerms;
@@ -324,7 +333,7 @@ public class GlossaryManager
 
     public void delete(GlossaryResource resource) throws SQLException
     {
-        if(resource.getEntries() != null || !resource.getEntries().isEmpty())
+        if(resource.getEntries() != null && !resource.getEntries().isEmpty())
         {
             for(GlossaryEntry entry : resource.getEntries())
             {
@@ -335,7 +344,7 @@ public class GlossaryManager
     }
 
     /**
-     * loads glossary metadata into glossaryresource
+     * loads glossary metadata into glossaryResource
      *
      * @param glossaryResource
      * @throws SQLException
@@ -352,7 +361,6 @@ public class GlossaryManager
         else
         {
             log.error("Error in loading languages for glossary while loading glossary resource from Database. Resource ID: " + glossaryResource.getId());
-            glossaryResource = null;
             return;
         }
         //Glossary Entries details

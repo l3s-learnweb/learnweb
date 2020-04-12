@@ -13,7 +13,6 @@ public class GlossaryParserResponse implements Serializable
 
     public GlossaryParserResponse(List<GlossaryEntry> entries, List<ParsingError> errors)
     {
-        super();
         this.entries = entries;
         this.errors = Collections.unmodifiableList(errors);
     }

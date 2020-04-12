@@ -28,7 +28,7 @@ import de.l3s.util.Sql;
  */
 public class CourseManager
 {
-    protected final static int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
+    protected static final int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
     private static final String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "next_x_users_become_moderator", "welcome_message", "timestamp_creation", "options_field1" };
     private static final String SELECT = String.join(", ", COLUMNS);
     private static final String SAVE = Sql.getCreateStatement("lw_course", COLUMNS);
@@ -39,7 +39,6 @@ public class CourseManager
 
     public CourseManager(Learnweb learnweb) throws SQLException
     {
-        super();
         this.learnweb = learnweb;
         this.cache = Collections.synchronizedMap(new LinkedHashMap<>(80));
         this.resetCache();

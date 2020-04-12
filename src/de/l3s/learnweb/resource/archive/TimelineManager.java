@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import de.l3s.learnweb.Learnweb;
@@ -53,9 +54,9 @@ public class TimelineManager
                     monthlySeriesData.put(timestamp, rs3.getInt(2));
             }
         }
-        for(Date timestamp : monthlySeriesData.keySet())
+        for(final Map.Entry<Date, Integer> entry : monthlySeriesData.entrySet())
         {
-            TimelineData timelineData = new TimelineData(timestamp, monthlySeriesData.get(timestamp));
+            TimelineData timelineData = new TimelineData(entry.getKey(), entry.getValue());
             timelineMonthlyData.add(timelineData);
         }
         return timelineMonthlyData;
@@ -91,9 +92,9 @@ public class TimelineManager
                     dailySeriesData.put(timestamp, rs3.getInt(2));
             }
         }
-        for(Date timestamp : dailySeriesData.keySet())
+        for(final Map.Entry<Date, Integer> entry : dailySeriesData.entrySet())
         {
-            TimelineData timelineData = new TimelineData(timestamp, dailySeriesData.get(timestamp));
+            TimelineData timelineData = new TimelineData(entry.getKey(), entry.getValue());
             timelineDailyData.add(timelineData);
         }
 

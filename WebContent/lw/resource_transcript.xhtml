@@ -27,8 +27,8 @@
 	<h:outputScript library="layout" name="js/ted-transcript.js" target="body"/>
 
 	<script type="text/javascript">
-		var noteId = #{tedTranscriptBean.noteId};
-		var readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
+		let noteId = #{tedTranscriptBean.noteId};
+		let readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
 	</script>
 
 	<div id="ted_content" class="section-ted-transcript section-resource-transcript">
@@ -51,7 +51,7 @@
 					<h:outputText value="#{tedTranscriptBean.tedResource.user.username}"/>
 					<br/> <b>#{msg.note}:</b>
 					<h:outputText value=" #{msg.transcript_warning}" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
-					<h:outputText value=" #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" style="color:red"/>
+					<h:outputText value=" #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" styleClass="text-danger"/>
 					<h:outputText value=" #{msg.transcript_note}"
 						rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 				</div>

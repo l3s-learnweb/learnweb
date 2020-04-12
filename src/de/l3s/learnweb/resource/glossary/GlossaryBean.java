@@ -16,7 +16,6 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -78,60 +77,55 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private GlossaryParserResponse importResponse;
     private LazyGlossaryTableView lazyTableItems;
 
-    private static final Map<Locale, String> pronounciationVoices;
-    static // Add pronounciation voices
-    {
-        Map<Locale, String> voices = new HashMap<>();
-
-        voices.put(new Locale.Builder().setLanguage("sq").build(), "Albanian Male");
-        voices.put(new Locale.Builder().setLanguage("ar").build(), "Arabic Male");
-        voices.put(new Locale.Builder().setLanguage("ca").build(), "Catalan Male");
-        voices.put(Locale.CHINESE, "Chinese Male");
-        voices.put(new Locale.Builder().setLanguage("ch").setRegion("HK").build(), "Chinese (Hong Kong) Female");
-        voices.put(Locale.TAIWAN, "Chinese Taiwan Male");
-        voices.put(new Locale.Builder().setLanguage("hr").build(), "Croatian Male");
-        voices.put(new Locale.Builder().setLanguage("cs").build(), "Czech Female");
-        voices.put(new Locale.Builder().setLanguage("da").build(), "Danish Male");
-        voices.put(Locale.GERMAN, "Deutsch Male");
-        voices.put(new Locale.Builder().setLanguage("nl").build(), "Dutch Male");
-        voices.put(Locale.ENGLISH, "UK English Male");
-        voices.put(Locale.UK, "UK English Male");
-        voices.put(Locale.US, "US English Male");
-        voices.put(new Locale.Builder().setLanguage("en").setRegion("AU").build(), "Australian Female");
-        voices.put(new Locale.Builder().setLanguage("et").build(), "Estonian Female");
-        voices.put(new Locale.Builder().setLanguage("fi").build(), "Finnish Female");
-        voices.put(Locale.FRENCH, "French Female");
-        voices.put(Locale.FRANCE, "French Female");
-        voices.put(Locale.CANADA_FRENCH, "French Canadian Female");
-        voices.put(new Locale.Builder().setLanguage("el").build(), "Greek Male");
-        voices.put(new Locale.Builder().setLanguage("hi").setRegion("IN").build(), "Hindi Male");
-        voices.put(new Locale.Builder().setLanguage("hu").build(), "Hungarian Female");
-        voices.put(new Locale.Builder().setLanguage("is").build(), "Icelandic Male");
-        voices.put(new Locale.Builder().setLanguage("in").build(), "Indonesian Male");
-        voices.put(Locale.ITALIAN, "Italian Female");
-        voices.put(Locale.JAPAN, "Japanese Male");
-        voices.put(Locale.KOREA, "Korean Female");
-        voices.put(new Locale.Builder().setLanguage("lv").build(), "Latvian Male");
-        voices.put(new Locale.Builder().setLanguage("mk").build(), "Macedonian Male");
-        voices.put(new Locale.Builder().setLanguage("no").build(), "Norwegian Female");
-        voices.put(new Locale.Builder().setLanguage("pl").build(), "Polish Female");
-        voices.put(new Locale.Builder().setLanguage("pt").build(), "Portuguese Female");
-        voices.put(new Locale.Builder().setLanguage("pt").setRegion("PT").build(), "Portuguese Female");
-        voices.put(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "Brazilian Portuguese Female");
-        voices.put(new Locale.Builder().setLanguage("ro").build(), "Romanian Female");
-        voices.put(new Locale.Builder().setLanguage("ru").build(), "Russian Male");
-        voices.put(new Locale.Builder().setLanguage("sr").build(), "Serbian Male");
-        voices.put(new Locale.Builder().setLanguage("sk").build(), "Slovak Female");
-        voices.put(new Locale.Builder().setLanguage("es").build(), "Spanish Female");
-        voices.put(new Locale.Builder().setLanguage("es").setRegion("ES").build(), "Spanish Female");
-        voices.put(new Locale.Builder().setLanguage("es").setRegion("MX").build(), "Spanish Latin American Female");
-        voices.put(new Locale.Builder().setLanguage("sv").build(), "Swedish Male");
-        voices.put(new Locale.Builder().setLanguage("th").build(), "Thai Female");
-        voices.put(new Locale.Builder().setLanguage("tr").build(), "Turkish Male");
-        voices.put(new Locale.Builder().setLanguage("uk").build(), "Ukrainian Female");
-        voices.put(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male");
-        pronounciationVoices = Collections.unmodifiableMap(voices);
-    }
+    private static final Map<Locale, String> pronounciationVoices = Map.ofEntries(
+            Map.entry(new Locale.Builder().setLanguage("sq").build(), "Albanian Male"),
+            Map.entry(new Locale.Builder().setLanguage("ar").build(), "Arabic Male"),
+            Map.entry(new Locale.Builder().setLanguage("ca").build(), "Catalan Male"),
+            Map.entry(Locale.CHINESE, "Chinese Male"),
+            Map.entry(new Locale.Builder().setLanguage("ch").setRegion("HK").build(), "Chinese (Hong Kong) Female"),
+            Map.entry(Locale.TAIWAN, "Chinese Taiwan Male"),
+            Map.entry(new Locale.Builder().setLanguage("hr").build(), "Croatian Male"),
+            Map.entry(new Locale.Builder().setLanguage("cs").build(), "Czech Female"),
+            Map.entry(new Locale.Builder().setLanguage("da").build(), "Danish Male"),
+            Map.entry(Locale.GERMAN, "Deutsch Male"),
+            Map.entry(new Locale.Builder().setLanguage("nl").build(), "Dutch Male"),
+            Map.entry(Locale.ENGLISH, "UK English Male"),
+            Map.entry(Locale.UK, "UK English Male"),
+            Map.entry(Locale.US, "US English Male"),
+            Map.entry(new Locale.Builder().setLanguage("en").setRegion("AU").build(), "Australian Female"),
+            Map.entry(new Locale.Builder().setLanguage("et").build(), "Estonian Female"),
+            Map.entry(new Locale.Builder().setLanguage("fi").build(), "Finnish Female"),
+            Map.entry(Locale.FRENCH, "French Female"),
+            Map.entry(Locale.FRANCE, "French Female"),
+            Map.entry(Locale.CANADA_FRENCH, "French Canadian Female"),
+            Map.entry(new Locale.Builder().setLanguage("el").build(), "Greek Male"),
+            Map.entry(new Locale.Builder().setLanguage("hi").setRegion("IN").build(), "Hindi Male"),
+            Map.entry(new Locale.Builder().setLanguage("hu").build(), "Hungarian Female"),
+            Map.entry(new Locale.Builder().setLanguage("is").build(), "Icelandic Male"),
+            Map.entry(new Locale.Builder().setLanguage("in").build(), "Indonesian Male"),
+            Map.entry(Locale.ITALIAN, "Italian Female"),
+            Map.entry(Locale.JAPAN, "Japanese Male"),
+            Map.entry(Locale.KOREA, "Korean Female"),
+            Map.entry(new Locale.Builder().setLanguage("lv").build(), "Latvian Male"),
+            Map.entry(new Locale.Builder().setLanguage("mk").build(), "Macedonian Male"),
+            Map.entry(new Locale.Builder().setLanguage("no").build(), "Norwegian Female"),
+            Map.entry(new Locale.Builder().setLanguage("pl").build(), "Polish Female"),
+            Map.entry(new Locale.Builder().setLanguage("pt").build(), "Portuguese Female"),
+            Map.entry(new Locale.Builder().setLanguage("pt").setRegion("PT").build(), "Portuguese Female"),
+            Map.entry(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "Brazilian Portuguese Female"),
+            Map.entry(new Locale.Builder().setLanguage("ro").build(), "Romanian Female"),
+            Map.entry(new Locale.Builder().setLanguage("ru").build(), "Russian Male"),
+            Map.entry(new Locale.Builder().setLanguage("sr").build(), "Serbian Male"),
+            Map.entry(new Locale.Builder().setLanguage("sk").build(), "Slovak Female"),
+            Map.entry(new Locale.Builder().setLanguage("es").build(), "Spanish Female"),
+            Map.entry(new Locale.Builder().setLanguage("es").setRegion("ES").build(), "Spanish Female"),
+            Map.entry(new Locale.Builder().setLanguage("es").setRegion("MX").build(), "Spanish Latin American Female"),
+            Map.entry(new Locale.Builder().setLanguage("sv").build(), "Swedish Male"),
+            Map.entry(new Locale.Builder().setLanguage("th").build(), "Thai Female"),
+            Map.entry(new Locale.Builder().setLanguage("tr").build(), "Turkish Male"),
+            Map.entry(new Locale.Builder().setLanguage("uk").build(), "Ukrainian Female"),
+            Map.entry(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male")
+    );
 
     public GlossaryBean()
     {
@@ -237,13 +231,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
             if(formEntry.getTerms().size() == numberOfDeletedTerms())
             {
-                addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation"));
+                addMessage(FacesMessage.SEVERITY_ERROR, "Glossary.entry_validation");
                 setKeepMessages();
                 return null;
             }
 
             getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
-            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
+            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
             setKeepMessages();
         }
         catch(SQLException e)
@@ -309,7 +303,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             if(formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size())
             {
-                addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term_validation"));
+                addMessage(FacesMessage.SEVERITY_INFO, "Glossary.term_validation");
                 return;
             }
 
@@ -355,7 +349,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             {
                 unusedLanguages.remove(term.getLanguage());
             }
-            if(unusedLanguages.size() == 0) // all languages have been used in this glossary
+            if(unusedLanguages.isEmpty()) // all languages have been used in this glossary
                 unusedLanguages = glossaryResource.getAllowedLanguages();
 
             newTerm.setLanguage(unusedLanguages.get(0));
@@ -545,7 +539,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                         if(cell.getStringCellValue().equals(cell0.getStringCellValue()))
                         {
                             cell0.setCellValue(cell0.getStringCellValue());
-                            continue;
                         }
                         else
                         {

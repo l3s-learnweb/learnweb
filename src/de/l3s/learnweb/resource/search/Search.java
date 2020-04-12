@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -211,7 +212,7 @@ public class Search implements Serializable
             searchFilters.setTotalResultsLearnweb(solrSearch.getQueryResponse().getResults().getNumFound());
         }
 
-        if(learnwebResources.size() == 0)
+        if(learnwebResources.isEmpty())
             hasMoreLearnwebResults = false;
 
         int privateResourceCount = 0; // number of resources that match the query but will not be displayed to the user
@@ -317,7 +318,7 @@ public class Search implements Serializable
             searchFilters.setTotalResultsInterweb(interwebResponse.getTotalResultCount());
         }
 
-        if(interwebResults.size() == 0)
+        if(interwebResults.isEmpty())
             hasMoreInterwebResults = false;
 
         int duplicatedUrlCount = 0; // number of resources that already displayed to the user
@@ -329,7 +330,7 @@ public class Search implements Serializable
         {
             if(null == decoratedResource.getUrl())
             {
-                log.warn("url is null: " + decoratedResource.toString());
+                log.warn("url is null: " + decoratedResource);
                 continue;
             }
             // check if an other resource with the same url exists
@@ -510,14 +511,18 @@ public class Search implements Serializable
         LinkedList<ResourceDecorator> resources;
 
         @Override
-        public boolean equals(Object o)
+        public boolean equals(final Object o)
         {
-            if(o == null)
-                return false;
-            if(o == this)
-                return true;
+            if(this == o) return true;
+            if(o == null || getClass() != o.getClass()) return false;
+            final GroupedResources that = (GroupedResources) o;
+            return Objects.equals(groupAlias, that.groupAlias);
+        }
 
-            return this.groupAlias.equals(((GroupedResources) o).groupAlias);
+        @Override
+        public int hashCode()
+        {
+            return Objects.hash(groupAlias);
         }
 
         @Override

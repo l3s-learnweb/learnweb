@@ -46,7 +46,6 @@ public class Transcript
 
         public Paragraph(int startTime, String text)
         {
-            super();
             this.startTime = startTime;
             this.text = text;
         }

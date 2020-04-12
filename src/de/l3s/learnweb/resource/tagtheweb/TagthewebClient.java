@@ -68,8 +68,8 @@ public class TagthewebClient
             JSONObject resultsJson = new JSONObject(jsonResults);
             for(String key : resultsJson.keySet())
             {
-                Double value = resultsJson.getDouble(key);
-                if(value > 0d)
+                double value = resultsJson.getDouble(key);
+                if(value > 0.0d)
                 {
                     categories.put(key, value);
                 }
@@ -111,7 +111,7 @@ public class TagthewebClient
             {
                 Map<String, Double> currentCategories = rm.getCategoriesByResource(resource.getId());
 
-                if(currentCategories.size() == 0)
+                if(currentCategories.isEmpty())
                 {
                     if(StringUtils.isEmpty(resource.getMachineDescription()))
                     {
@@ -128,7 +128,7 @@ public class TagthewebClient
                         String text = StringHelper.shortnString(resource.getMachineDescription(), 1000);
 
                         log.info("Retrieving categories from TagTheWeb");
-                        Map<String, Double> categories = TagthewebClient.getCategories(text, "en");
+                        Map<String, Double> categories = getCategories(text, "en");
                         log.info("Retrieved " + categories.size() + " categories.");
                         for(Map.Entry<String, Double> category : categories.entrySet())
                         {

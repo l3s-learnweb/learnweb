@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.ted;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -78,7 +79,7 @@ public class TedCrawlerSimple implements Runnable
             pStmt.setString(2, language);
 
             InputStream inputStream = new URL("https://www.ted.com/talks/" + tedId + "/transcript.json?language=" + language).openStream();
-            String transcriptJSONStr = IOUtils.toString(inputStream, "UTF-8");
+            String transcriptJSONStr = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             JSONObject transcriptJSONObj = new JSONObject(transcriptJSONStr);
             JSONArray paragraphs = (JSONArray) transcriptJSONObj.get("paragraphs");
 
@@ -89,16 +90,16 @@ public class TedCrawlerSimple implements Runnable
                 JSONArray cues = (JSONArray) paragraph.get("cues");
                 JSONObject firstCue = (JSONObject) cues.get(0);
                 long startTime = (long) firstCue.get("time");
-                String paragraphText = (String) firstCue.get("text");
-                for(int j = 1; j < cues.length(); j++)
+                StringBuilder paragraphText = new StringBuilder((String) firstCue.get("text"));
+                for(int j = 1, len = cues.length(); j < len; j++)
                 {
                     JSONObject cue = (JSONObject) cues.get(j);
-                    paragraphText += " " + cue.get("text");
+                    paragraphText.append(" ").append(cue.get("text"));
                 }
-                paragraphText = paragraphText.replace("\n", " ");
+                paragraphText = new StringBuilder(paragraphText.toString().replace("\n", " "));
                 //log.info("start time: " + startTime + " paragraph: " + paragraphText);
                 pStmt.setInt(3, Math.toIntExact(startTime));
-                pStmt.setString(4, paragraphText);
+                pStmt.setString(4, paragraphText.toString());
                 pStmt.executeUpdate();
             }
 
@@ -229,13 +230,15 @@ public class TedCrawlerSimple implements Runnable
         HashSet<String> languageSet = new HashSet<>();
         HashSet<String> languageListFromDatabase = new HashSet<>();
 
-        String keywords = "", title = null, description = null;
+        StringBuilder keywords = new StringBuilder();
+        String title;
+        String description;
         //String url = page.getWebURL().getURL();
 
         String[] sub = url.split("talks/");
         String slug = sub[1];
         int resourceId = -1;
-        String tedId = null;
+        String tedId;
 
         try
         {
@@ -287,8 +290,7 @@ public class TedCrawlerSimple implements Runnable
             catch(IOException e)
             {
                 if(response != null)
-
-                    log.warn("Error while fetching ted talks page: " + slug + ((response == null) ? "" : "; response: " + response.statusCode() + ", " + response.statusMessage()), e);
+                    log.warn("Error while fetching ted talks page: " + slug + "; response: " + response.statusCode() + ", " + response.statusMessage(), e);
 
                 lastException = e;
                 Misc.sleep(60000);
@@ -360,10 +362,10 @@ public class TedCrawlerSimple implements Runnable
 
             Elements tags = doc.select("meta[property=og:video:tag");
             for(Element tag : tags)
-                keywords += tag.attr("content") + ",";
+                keywords.append(tag.attr("content")).append(",");
 
             if(keywords.length() > 0)
-                keywords = keywords.substring(0, keywords.length() - 1);
+                keywords = new StringBuilder(keywords.substring(0, keywords.length() - 1));
             log.info("keywords: " + keywords);
 
             Resource tedResource = new Resource();
@@ -400,7 +402,7 @@ public class TedCrawlerSimple implements Runnable
                 pStmt.setString(8, maxImageUrl);
                 pStmt.setInt(9, imageWidth);
                 pStmt.setInt(10, imageHeight);
-                pStmt.setString(11, keywords);
+                pStmt.setString(11, keywords.toString());
                 pStmt.setInt(12, duration);
                 int val = pStmt.executeUpdate();
                 if(val != 1)
@@ -421,7 +423,7 @@ public class TedCrawlerSimple implements Runnable
         //if the videos are already added, crawl for new transcripts
         //log.info("Extracting transcripts for existing ted video: " + resourceId);
         Elements transcriptLinkElements = doc.select("link[rel=alternate]");
-        if(transcriptLinkElements != null && transcriptLinkElements.size() > 0)
+        if(transcriptLinkElements != null && !transcriptLinkElements.isEmpty())
         {
             for(Element transcriptLinkElement : transcriptLinkElements)
             {
@@ -430,9 +432,7 @@ public class TedCrawlerSimple implements Runnable
                     languageSet.add(hrefLang);
             }
 
-            if(languageSet.equals(languageListFromDatabase))
-                return;
-            else
+            if(!languageSet.equals(languageListFromDatabase))
             {
                 languageSet.removeAll(languageListFromDatabase);
                 for(String langCode : languageSet)

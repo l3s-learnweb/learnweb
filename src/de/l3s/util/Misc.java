@@ -54,6 +54,6 @@ public class Misc
         return sb.toString();
     }
 
-    public final static Comparator<SelectItem> selectItemLabelComparator = Comparator.comparing(SelectItem::getLabel);
+    public static final Comparator<SelectItem> selectItemLabelComparator = Comparator.comparing(SelectItem::getLabel);
 
 }

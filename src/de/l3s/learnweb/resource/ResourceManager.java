@@ -105,7 +105,7 @@ public class ResourceManager
      */
     public List<Resource> getResourcesAll(int page, int pageSize) throws SQLException
     {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id LIMIT " + (page * pageSize) + "," + pageSize + "", null);
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id LIMIT " + (page * pageSize) + "," + pageSize, null);
     }
 
     public boolean isResourceRatedByUser(int resourceId, int userId) throws SQLException
@@ -485,10 +485,6 @@ public class ResourceManager
         }
     }
 
-    /**
-     * @see de.l3s.learnweb.resource.ResourceManager#getTagsByUserId(int)
-     */
-
     public List<Tag> getTagsByUserId(int userId) throws SQLException
     {
         LinkedList<Tag> tags = new LinkedList<>();
@@ -799,7 +795,7 @@ public class ResourceManager
                 for(File file : files)
                 {
                     resource.addFile(file);
-                    if(file.getType().equals(TYPE.FILE_MAIN))
+                    if(file.getType() == TYPE.FILE_MAIN)
                     {
                         resource.setFileUrl(file.getUrl());
                         resource.setFileName(file.getName());
@@ -919,7 +915,7 @@ public class ResourceManager
         if(resource.getTitle().equals(resource.getDescription())) // delete description when equal to title
             resource.setDescription("");
 
-        if(resource.getSource().equals(ResourceService.slideshare))
+        if(resource.getSource() == ResourceService.slideshare)
         {
             resource.setEmbeddedRaw(searchResult.getEmbeddedSize4());
             if(null == resource.getEmbeddedRaw())
@@ -948,7 +944,7 @@ public class ResourceManager
             {
                 if(width == 560 || height == 560)
                 {
-                    double ratio = 640.0 / 560.;
+                    double ratio = 640.0 / 560.0;
                     width *= ratio;
                     height *= ratio;
 
@@ -986,7 +982,7 @@ public class ResourceManager
         }
         else if(!searchResult.getType().equals("website"))
         {
-            log.warn("no image url for: " + searchResult.toString());
+            log.warn("no image url for: " + searchResult);
         }
         return resource;
     }
@@ -1015,7 +1011,7 @@ public class ResourceManager
      */
     public List<Resource> getSurveyResourcesByUserAndCourse(int courseId) throws SQLException
     {
-        return getResources("SELECT " + ResourceManager.RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_group g USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND g.course_id=? ORDER BY r.title", null, courseId);
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_group g USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND g.course_id=? ORDER BY r.title", null, courseId);
     }
 
     /**

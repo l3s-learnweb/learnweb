@@ -85,7 +85,7 @@ public class WaybackUrlManager
 
         cdxClient = new CDXClient();
 
-        cache = CacheBuilder.newBuilder().maximumSize(3000000).build(new CacheLoader<URL, UrlRecord>()
+        cache = CacheBuilder.newBuilder().maximumSize(3000000).build(new CacheLoader<>()
         {
             @Override
             public UrlRecord load(URL url) throws URISyntaxException, SQLException, RecordNotFoundException
@@ -292,8 +292,8 @@ public class WaybackUrlManager
                     Statement.RETURN_GENERATED_KEYS))
             {
                 urlRecordInsert.setString(1, record.getUrl().toString());
-                urlRecordInsert.setTimestamp(2, !record.isArchived() ? null : new java.sql.Timestamp(record.getFirstCapture().getTime()));
-                urlRecordInsert.setTimestamp(3, !record.isArchived() ? null : new java.sql.Timestamp(record.getLastCapture().getTime()));
+                urlRecordInsert.setTimestamp(2, record.isArchived() ? new Timestamp(record.getFirstCapture().getTime()) : null);
+                urlRecordInsert.setTimestamp(3, record.isArchived() ? new Timestamp(record.getLastCapture().getTime()) : null);
                 urlRecordInsert.setTimestamp(4, new java.sql.Timestamp(record.getCrawlDate().getTime()));
                 urlRecordInsert.setInt(5, record.isAllCapturesFetched() ? 1 : 0);
                 urlRecordInsert.setInt(6, record.getStatusCode());
@@ -334,8 +334,8 @@ public class WaybackUrlManager
         {
             // record is already stored => updated it
             PreparedStatement urlRecordUpdate = getConnection().prepareStatement("UPDATE learnweb_large.wb_url SET `first_capture` = ?, `last_capture` = ?, `crawl_time` = ?, all_captures_fetched = ?, status_code = ?, status_code_date = ? WHERE `url_id` = ?");
-            urlRecordUpdate.setTimestamp(1, !record.isArchived() ? null : new java.sql.Timestamp(record.getFirstCapture().getTime()));
-            urlRecordUpdate.setTimestamp(2, !record.isArchived() ? null : new java.sql.Timestamp(record.getLastCapture().getTime()));
+            urlRecordUpdate.setTimestamp(1, record.isArchived() ? new Timestamp(record.getFirstCapture().getTime()) : null);
+            urlRecordUpdate.setTimestamp(2, record.isArchived() ? new Timestamp(record.getLastCapture().getTime()) : null);
             urlRecordUpdate.setTimestamp(3, new java.sql.Timestamp(record.getCrawlDate().getTime()));
             urlRecordUpdate.setInt(4, record.isAllCapturesFetched() ? 1 : 0);
             urlRecordUpdate.setInt(5, record.getStatusCode());
@@ -466,27 +466,23 @@ public class WaybackUrlManager
             this.content = content;
         }
 
-        public boolean equals(UrlRecord obj)
+        @Override
+        public boolean equals(final Object o)
         {
-            if(!obj.getUrl().equals(getUrl()))
-                return false;
+            if(this == o) return true;
+            if(o == null || getClass() != o.getClass()) return false;
+            final UrlRecord urlRecord = (UrlRecord) o;
+            return allCapturesFetched == urlRecord.allCapturesFetched &&
+                    statusCode == urlRecord.statusCode &&
+                    Objects.equals(url, urlRecord.url) &&
+                    Objects.equals(firstCapture, urlRecord.firstCapture) &&
+                    Objects.equals(lastCapture, urlRecord.lastCapture);
+        }
 
-            if(obj.getStatusCode() != getStatusCode() || obj.isAllCapturesFetched() != isAllCapturesFetched())
-                return false;
-
-            if(obj.getFirstCapture() == null ^ getFirstCapture() == null) // if only one of them is null return false
-                return false;
-
-            if(obj.getFirstCapture() != null && !obj.getFirstCapture().equals(getFirstCapture())) // if both are not null but are not equal return false
-                return false;
-
-            if(obj.getLastCapture() == null ^ getLastCapture() == null) // if only one of them is null return false
-                return false;
-
-            if(obj.getLastCapture() != null && !obj.getLastCapture().equals(getLastCapture())) // if both are not null but are not equal return false
-                return false;
-
-            return true;
+        @Override
+        public int hashCode()
+        {
+            return Objects.hash(url, firstCapture, lastCapture, allCapturesFetched, statusCode);
         }
 
         public boolean isOffline()
@@ -591,7 +587,7 @@ public class WaybackUrlManager
 
                     if(location.startsWith("/"))
                     {
-                        int index = urlStr.indexOf("/", urlStr.indexOf("//") + 2);
+                        int index = urlStr.indexOf('/', urlStr.indexOf("//") + 2);
                         String domain = index > 0 ? urlStr.substring(0, index) : urlStr;
                         urlStr = domain + location;
                     }
@@ -622,12 +618,12 @@ public class WaybackUrlManager
                         {
                             //To handle gzip and deflate encodings
                             String contentEncoding = connection.getContentEncoding();
-                            InputStream inputStream = null;
-                            if(contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip"))
+                            InputStream inputStream;
+                            if("gzip".equalsIgnoreCase(contentEncoding))
                             {
                                 inputStream = new GZIPInputStream(connection.getInputStream());
                             }
-                            else if(contentEncoding != null && contentEncoding.equalsIgnoreCase("deflate"))
+                            else if("deflate".equalsIgnoreCase(contentEncoding))
                             {
                                 Inflater inf = new Inflater(true);
                                 inputStream = new InflaterInputStream(connection.getInputStream(), inf);
@@ -649,7 +645,6 @@ public class WaybackUrlManager
                             }
                             catch(IllegalCharsetNameException e)
                             {
-                                charset = null;
                             }
 
                             BufferedReader br;
@@ -766,7 +761,7 @@ public class WaybackUrlManager
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
             StringBuilder result = new StringBuilder();
-            String line = "";
+            String line;
             while((line = rd.readLine()) != null)
             {
                 result.append(line);
@@ -776,13 +771,13 @@ public class WaybackUrlManager
         }
         catch(IOException e)
         {
-            log.warn("HttpClient method: SSLException: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl().toString());
+            log.warn("HttpClient method: SSLException: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl());
             logUrlInFile(urlRecord.getUrl().toString());
             return 650;
         }
         catch(IllegalArgumentException e)
         {
-            log.warn("HttpClient method: Invalid url: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl().toString());
+            log.warn("HttpClient method: Invalid url: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl());
             logUrlInFile(urlRecord.getUrl().toString());
             return 650;
         }
@@ -810,10 +805,10 @@ public class WaybackUrlManager
         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,SSLv3");
         */
         /* Start of Fix */
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager()
+        TrustManager[] trustAllCerts = { new X509TrustManager()
         {
             @Override
-            public java.security.cert.X509Certificate[] getAcceptedIssuers()
+            public X509Certificate[] getAcceptedIssuers()
             {
                 return null;
             }

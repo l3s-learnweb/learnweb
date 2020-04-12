@@ -168,7 +168,7 @@ public class ApplicationBean
     }
 
     /**
-     * Call this method if you want to keep messages during a post-redirect-get. <br/>
+     * Call this method if you want to keep messages during a post-redirect-get.
      * This value determines whether or not any FacesMessage instances queued in the current FacesContext must be preserved so they are accessible on
      * the next traversal of the lifecycle on this session, regardless of the request being a redirect after post, or a normal postback.
      */
@@ -210,7 +210,7 @@ public class ApplicationBean
     protected static String getTemplateDir()
     {
         String path = getFacesContext().getExternalContext().getRequestServletPath();
-        int index = path.indexOf("/", 1);
+        int index = path.indexOf('/', 1);
 
         if(index == -1)
             return "";

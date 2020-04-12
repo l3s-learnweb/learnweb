@@ -19,7 +19,7 @@ public class DataExporterBean extends ApplicationBean implements Serializable
     //private static final Logger log = Logger.getLogger(DataExporterBean.class);
 
     private static final long serialVersionUID = -505457925640299810L;
-    private ExportManager exportManager;
+    private transient ExportManager exportManager;
 
     public DataExporterBean()
     {

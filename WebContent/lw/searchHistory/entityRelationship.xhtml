@@ -86,7 +86,7 @@
 				<h3>Sessions</h3>
 
 				<h:panelGroup id="sessionsList" styleClass="w-100 overflow-auto" layout="block">
-					<h:outputScript>var selectedGroupId = #{searchHistoryBean.selectedGroupId}</h:outputScript>
+					<h:outputScript>let selectedGroupId = #{searchHistoryBean.selectedGroupId}</h:outputScript>
 					<h:outputText value="No Sessions have been recorded yet." rendered="#{empty searchHistoryBean.sessions}"/>
 
 					<h:form>
@@ -168,8 +168,8 @@
 									<h:panelGroup id="updateGraph">
 										<!--<button onclick="drawQueryPath()" id="query_path_button" style="display: none;">Query Path</button>-->
 										<h:outputScript>
-											var queriesJsonArr = #{searchHistoryBean.queriesAsJson};
-											var edgesJsonArr = #{searchHistoryBean.edgesAsJson};
+											let queriesJsonArr = #{searchHistoryBean.queriesAsJson};
+											let edgesJsonArr = #{searchHistoryBean.edgesAsJson};
 										</h:outputScript>
 									</h:panelGroup>
 								</div>

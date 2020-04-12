@@ -20,7 +20,6 @@ public class AnnouncementsManager
 
     public AnnouncementsManager(Learnweb learnweb) throws SQLException
     {
-        super();
         this.learnweb = learnweb;
 
         resetCache();
@@ -123,7 +122,7 @@ public class AnnouncementsManager
 
     public List<Announcement> getAnnouncementsAll() throws SQLException
     {
-        List<Announcement> newList = new ArrayList<Announcement>();
+        List<Announcement> newList = new ArrayList<>();
         try(ResultSet resultSet = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM lw_news ORDER BY created_at DESC"))
         {
             while(resultSet.next())

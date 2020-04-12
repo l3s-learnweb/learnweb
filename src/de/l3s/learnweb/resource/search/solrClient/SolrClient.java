@@ -260,7 +260,7 @@ public class SolrClient
             log.debug("Load page: " + i);
             List<Resource> resources = resourceManager.getResourcesAll(i, batchSize);
 
-            if(resources.size() == 0)
+            if(resources.isEmpty())
             {
                 log.debug("finished: last page");
                 break;
@@ -278,7 +278,7 @@ public class SolrClient
 
             UpdateResponse response = server.addBeans(resourceDocuments);
             if(response.getStatus() != 0)
-                throw new RuntimeException("invalid response code: " + response.getStatus() + "; desc: " + response.toString());
+                throw new RuntimeException("invalid response code: " + response.getStatus() + "; desc: " + response);
 
             server.commit();
 

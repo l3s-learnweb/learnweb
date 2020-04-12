@@ -1,6 +1,5 @@
 package de.l3s.learnweb.resource.survey;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
@@ -12,7 +11,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 
-public class SurveyResource extends Resource implements Serializable
+public class SurveyResource extends Resource
 {
     private static final long serialVersionUID = 3431955030925189235L;
 

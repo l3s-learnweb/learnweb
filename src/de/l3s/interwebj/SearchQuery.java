@@ -76,7 +76,7 @@ public class SearchQuery implements Serializable
             {
                 Resource currentResource = ResourceManager.getResourceFromInterwebResult(searchResult);
 
-                if(!currentResource.getType().equals(ResourceType.website) && null == currentResource.getThumbnail2()) // no thumbnail set
+                if(currentResource.getType() != ResourceType.website && null == currentResource.getThumbnail2()) // no thumbnail set
                 {
                     log.error("Found no thumbnail:" + searchResult);
 
@@ -95,7 +95,7 @@ public class SearchQuery implements Serializable
                 decoratedResource.setTitle(searchResult.getTitle());
 
                 // bing description contains snippet with term highlighting
-                if(currentResource.getSource().equals(ResourceService.bing) && decoratedResource.getSnippet() == null)
+                if(currentResource.getSource() == ResourceService.bing && decoratedResource.getSnippet() == null)
                 {
                     // add snippet
                     decoratedResource.setSnippet(currentResource.getDescription());

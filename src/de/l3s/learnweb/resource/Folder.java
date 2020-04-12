@@ -30,7 +30,6 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     public Folder()
     {
-        super();
     }
 
     public Folder(int id, int groupId, String title)

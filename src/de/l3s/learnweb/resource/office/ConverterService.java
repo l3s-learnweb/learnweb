@@ -29,7 +29,7 @@ public class ConverterService
 
     public ConverterRequest createThumbnailConverterRequest(File file)
     {
-        String fileExt = file.getName().substring(file.getName().lastIndexOf("."));
+        String fileExt = file.getName().substring(file.getName().lastIndexOf('.'));
         String key = FileUtility.generateRevisionId(file);
         return new ConverterRequest(fileExt, "png", file.getName(), file.getUrl(), key, new OfficeThumbnailParams());
     }
@@ -42,7 +42,7 @@ public class ConverterService
     private ConverterResponse sendRequestToConvertServer(ConverterRequest model)
     {
         Gson gson = new Gson();
-        String stringResponse = null;
+        String stringResponse;
         ConverterResponse converterResponse = new ConverterResponse();
         try(CloseableHttpClient client = HttpClients.createDefault())
         {
@@ -105,7 +105,7 @@ public class ConverterService
         if(response.getPercent() == 0)
             throw new ConverterException("Percent is null");
 
-        if(response.getFileUrl() == null || response.getFileUrl().length() == 0)
+        if(response.getFileUrl() == null || response.getFileUrl().isEmpty())
             throw new ConverterException("FileUrl is null");
 
         return response.getFileUrl();

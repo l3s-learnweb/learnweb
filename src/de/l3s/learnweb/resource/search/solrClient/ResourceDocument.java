@@ -142,7 +142,7 @@ public class ResourceDocument
             }
             String[] value;
 
-            if(entry.getValue().indexOf(Resource.METADATA_SEPARATOR) != -1) // Warning: the presence of the separator char isn't a good indicator for a multi valued field. in the past singe calue fields were allowed to contain this separator
+            if(entry.getValue().indexOf(Resource.METADATA_SEPARATOR) != -1) // Warning: the presence of the separator char isn't a good indicator for a multi valued field. in the past singe value fields were allowed to contain this separator
                 value = StringUtils.split(entry.getValue(), Resource.METADATA_SEPARATOR);
             else
                 value = new String[] { entry.getValue() };

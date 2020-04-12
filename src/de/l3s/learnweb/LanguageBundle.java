@@ -171,7 +171,7 @@ public class LanguageBundle extends ResourceBundle
         return values != null ? Collections.enumeration(values.keySet()) : parent.getKeys();
     }
 
-    private static List<Locale> supportedLocales = Collections.synchronizedList(new ArrayList<Locale>());
+    private static List<Locale> supportedLocales = Collections.synchronizedList(new ArrayList<>());
 
     /**
      *

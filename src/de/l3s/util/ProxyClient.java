@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 
 public class ProxyClient
 {
-    public static Logger log = Logger.getLogger(ProxyClient.class);
+    public static final Logger log = Logger.getLogger(ProxyClient.class);
 
     public static void main(String[] args) throws Exception
     {

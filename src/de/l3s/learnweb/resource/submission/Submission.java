@@ -203,7 +203,7 @@ public class Submission implements Serializable
             }
             catch(SQLException e)
             {
-                log.error("Error while fetching survey resource " + getSurveyResourceId() + "for submission " + getId(), e);
+                log.error("Error while fetching survey resource " + getSurveyResourceId() + " for submission " + getId(), e);
             }
         }
 

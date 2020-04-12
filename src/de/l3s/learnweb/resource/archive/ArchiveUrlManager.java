@@ -84,7 +84,7 @@ public class ArchiveUrlManager
     {
         Resource resource;
 
-        public ArchiveNowWorker(Resource resource)
+        ArchiveNowWorker(Resource resource)
         {
             this.resource = resource;
         }
@@ -229,7 +229,7 @@ public class ArchiveUrlManager
     public String addResourceToArchive(Resource resource)
     {
         String response = "";
-        if(!(resource.getStorageType() == Resource.LEARNWEB_RESOURCE))
+        if(resource.getStorageType() != Resource.LEARNWEB_RESOURCE)
         {
             Future<String> executorResponse = executorService.submit(new ArchiveNowWorker(resource));
 

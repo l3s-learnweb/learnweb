@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.faces.model.SelectItem;
 import javax.validation.constraints.NotBlank;
@@ -28,7 +29,7 @@ import de.l3s.learnweb.resource.ResourceService;
 public class Organisation implements Serializable, Comparable<Organisation>
 {
     private static final long serialVersionUID = -5187205229505825818L;
-    private static Logger log = Logger.getLogger(Organisation.class);
+    private static final Logger log = Logger.getLogger(Organisation.class);
 
     // add new options add the end , don't delete options !!!!!
     // if you add 64 options you have to add one options_field{x} column in lw_organisation
@@ -526,14 +527,17 @@ public class Organisation implements Serializable, Comparable<Organisation>
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object o)
     {
-        if(obj == null)
-            return false;
-        if(obj.getClass() != getClass())
-            return false;
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        final Organisation that = (Organisation) o;
+        return id == that.id;
+    }
 
-        Organisation other = (Organisation) obj;
-        return other.getId() == getId();
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id);
     }
 }

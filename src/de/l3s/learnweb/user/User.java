@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import javax.mail.Message;
@@ -368,15 +369,18 @@ public class User implements Comparable<User>, Serializable, HasId
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object o)
     {
-        if(null == obj)
-            return false;
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        final User user = (User) o;
+        return id == user.id;
+    }
 
-        if(obj.getClass() != this.getClass())
-            return false;
-
-        return ((User) obj).getId() == this.getId();
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id);
     }
 
     private long groupsCacheTime = 0L;
@@ -491,7 +495,7 @@ public class User implements Comparable<User>, Serializable, HasId
         }
         catch(MessagingException e)
         {
-            log.error("Can't send confirmation mail to " + toString(), e);
+            log.error("Can't send confirmation mail to " + this, e);
         }
         return false;
     }
@@ -549,40 +553,40 @@ public class User implements Comparable<User>, Serializable, HasId
     private String getDefaultImage()
     {
         String name = StringUtils.isNotBlank(fullName) ? fullName : username;
-        String initials = "";
+        StringBuilder initials = new StringBuilder();
 
         if(StringUtils.isNumeric(name)) // happens when users use their student id as name
         {
-            initials = name.substring(name.length() - 2);
+            initials = new StringBuilder(name.substring(name.length() - 2));
         }
         else if(name.contains(" ") || name.contains(".")) // name consists of multiple terms separated by whitespaces or dots
         {
-            for(String part : name.split("[\\s\\.]+"))
+            for(String part : name.split("[\\s.]+"))
             {
-                if(part.length() == 0)
+                if(part.isEmpty())
                     continue;
                 int index = StringUtils.isNumeric(part) ? (part.length() - 1) : 0; // if is number use last digit as initial
-                initials += part.charAt(index);
+                initials.append(part.charAt(index));
             }
         }
         else if(!name.equals(name.toLowerCase()))
         {
-            initials += name.charAt(0); // always at first char
+            initials.append(name.charAt(0)); // always at first char
 
-            for(int i = 1; i < name.length() - 1; i++)
+            for(int i = 1, len = name.length() - 1; i < len; i++)
             {
                 if(Character.isUpperCase(name.charAt(i)))
                 {
-                    initials += name.charAt(i);
+                    initials.append(name.charAt(i));
                 }
             }
         }
 
-        if(StringUtils.isBlank(initials))
-            initials = name.substring(0, 1);
+        if(StringUtils.isBlank(initials.toString()))
+            initials = new StringBuilder(name.substring(0, 1));
 
-        if(initials.startsWith(".")) // ui-avatars can't handle dots in the beginning
-            initials = initials.replace(".", "X");
+        if(initials.toString().startsWith(".")) // ui-avatars can't handle dots in the beginning
+            initials = new StringBuilder(initials.toString().replace(".", "X"));
 
         String defaultAvatarUrl = "https://ui-avatars.com/api/" + initials + "/200/" + getDefaultColor() + "/ffffff";
 
@@ -644,7 +648,7 @@ public class User implements Comparable<User>, Serializable, HasId
             }
             catch(Exception e)
             {
-                log.error("Can't delete profile image of user " + toString());
+                log.error("Can't delete profile image of user " + this);
             }
         }
         this.imageFileId = imageFileId;
@@ -695,11 +699,11 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public boolean validatePassword(String password)
     {
-        if(hashing.equals(PasswordHashing.MD5))
+        if(hashing == PasswordHashing.MD5)
         {
             return this.password.equals(MD5.hash(password));
         }
-        else if(hashing.equals(PasswordHashing.PBKDF2))
+        else if(hashing == PasswordHashing.PBKDF2)
         {
             return PBKDF2.validatePassword(password, this.password);
         }

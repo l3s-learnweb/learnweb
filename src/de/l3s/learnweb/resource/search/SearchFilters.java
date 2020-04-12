@@ -37,7 +37,7 @@ import de.l3s.util.StringHelper;
 public class SearchFilters implements Serializable
 {
     private static final long serialVersionUID = 8012567994091306088L;
-    final static Logger log = Logger.getLogger(SearchFilters.class);
+    static final Logger log = Logger.getLogger(SearchFilters.class);
 
     private Long totalResultsLearnweb = null;
     private Long totalResultsInterweb = null;
@@ -411,7 +411,6 @@ public class SearchFilters implements Serializable
             String[] tempNames = key.split("\\.");
             if(tempNames.length != 2)
             {
-                continue;
             }
             else if(tempNames[0].equals("date"))
             {
@@ -434,7 +433,7 @@ public class SearchFilters implements Serializable
             {
                 availableResources.remove(f);
             }
-            else if(merge && availableResources.containsKey(f) && counts.size() > 0)
+            else if(merge && availableResources.containsKey(f) && !counts.isEmpty())
             {
                 List<Count> c = availableResources.get(f);
                 for(Count count : counts)
@@ -450,7 +449,7 @@ public class SearchFilters implements Serializable
                 }
                 availableResources.put(f, c);
             }
-            else if(counts.size() > 0)
+            else if(!counts.isEmpty())
             {
                 availableResources.put(f, counts);
             }
@@ -706,7 +705,7 @@ public class SearchFilters implements Serializable
     public boolean checkAfterLoadFilters(ResourceDecorator res)
     {
         //String type = res.getResource().getType(); // text Image Video
-        if(configFilters.containsKey(FILTERS.imageSize) && res.getResource().getType().equals(ResourceType.image))
+        if(configFilters.containsKey(FILTERS.imageSize) && res.getResource().getType() == ResourceType.image)
         {
             SIZE configSize = (SIZE) configFilters.get(FILTERS.imageSize);
             int width = res.getThumbnail4().getWidth(), minWidth = configSize.getMinWidth(), maxWidth = configSize.getMaxWidth();
@@ -717,15 +716,13 @@ public class SearchFilters implements Serializable
             }
         }
 
-        if(configFilters.containsKey(FILTERS.videoDuration) && res.getResource().getType().equals(ResourceType.video))
+        if(configFilters.containsKey(FILTERS.videoDuration) && res.getResource().getType() == ResourceType.video)
         {
             DURATION configDuration = (DURATION) configFilters.get(FILTERS.videoDuration);
-            int duration = res.getResource().getDuration(), minDuration = configDuration.getMinDuration(), maxDuration = configDuration.getMaxDuration();
-
-            if(minDuration > duration || (maxDuration != 0 && duration > maxDuration))
-            {
-                return false;
-            }
+            int duration = res.getResource().getDuration();
+            int minDuration = configDuration.getMinDuration();
+            int maxDuration = configDuration.getMaxDuration();
+            return minDuration <= duration && (maxDuration == 0 || duration <= maxDuration);
         }
 
         return true;
@@ -895,7 +892,7 @@ public class SearchFilters implements Serializable
 
     public Long getTotalResults()
     {
-        Long total = 0L;
+        long total = 0L;
         if(totalResultsInterweb != null)
         {
             total += totalResultsInterweb;

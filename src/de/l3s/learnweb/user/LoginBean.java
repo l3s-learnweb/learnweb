@@ -93,13 +93,13 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         if(ipBan != null && ipBan.after(now))
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned" + ipBan.toString());
+            addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned" + ipBan);
             return LOGIN_PAGE;
         }
 
         if(userBan != null && userBan.after(now))
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "username_banned" + userBan.toString());
+            addMessage(FacesMessage.SEVERITY_ERROR, "username_banned" + userBan);
             return LOGIN_PAGE;
         }
 

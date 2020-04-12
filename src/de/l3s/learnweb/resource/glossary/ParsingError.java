@@ -14,7 +14,6 @@ public class ParsingError implements Serializable
 
     public ParsingError(int row, String cell, String errorMessage)
     {
-        super();
         this.row = row;
         this.cell = cell;
         this.errorMessage = errorMessage;

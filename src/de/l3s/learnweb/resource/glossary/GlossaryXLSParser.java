@@ -2,7 +2,7 @@ package de.l3s.learnweb.resource.glossary;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -57,7 +57,6 @@ public class GlossaryXLSParser
             {
                 if(isEmptyRow(sheet.getRow(rowNumber))) // skip empty rows
                 {
-                    continue;
                 }
                 else if(glossaryRowBuilder == null) // parse header
                 {
@@ -80,7 +79,7 @@ public class GlossaryXLSParser
             }
 
             if(glossaryRowBuilder == null || glossaryEntries.isEmpty())
-                return new GlossaryParserResponse(null, Arrays.asList(new ParsingError(-1, "", "The file is empty")));
+                return new GlossaryParserResponse(null, Collections.singletonList(new ParsingError(-1, "", "The file is empty")));
 
             return new GlossaryParserResponse(joinEntries(glossaryEntries), glossaryRowBuilder.getErrors());
         }

@@ -3,6 +3,7 @@ package de.l3s.interwebj;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
@@ -109,17 +110,17 @@ public class InterWeb implements Serializable
      */
     public SearchQuery search(String query, TreeMap<String, String> params) throws IOException, IllegalResponseException
     {
-        if(null == query || query.length() == 0)
+        if(null == query || query.isEmpty())
         {
             throw new IllegalArgumentException("empty query");
         }
 
         WebResource resource = createWebResource("search", getIWToken());
         resource = resource.queryParam("q", query);
-        for(String key : params.keySet())
+        for(final Map.Entry<String, String> entry : params.entrySet())
         {
-            String value = params.get(key);
-            resource = resource.queryParam(key, value);
+            String value = entry.getValue();
+            resource = resource.queryParam(entry.getKey(), value);
         }
 
         ClientResponse response = resource.get(ClientResponse.class);

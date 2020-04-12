@@ -126,9 +126,8 @@ public class WaybackCapturesLogger
         long firstCapture;
         long lastCapture;
 
-        public Container(String url, long firstCapture, long lastCapture)
+        Container(String url, long firstCapture, long lastCapture)
         {
-            super();
             this.url = url;
             this.firstCapture = firstCapture;
             this.lastCapture = lastCapture;
@@ -146,7 +145,7 @@ public class WaybackCapturesLogger
     {
         Resource resource;
 
-        public CDXWorker(Resource resource)
+        CDXWorker(Resource resource)
         {
             this.resource = resource;
         }

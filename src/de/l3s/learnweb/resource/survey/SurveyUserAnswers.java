@@ -30,7 +30,6 @@ public class SurveyUserAnswers implements Serializable, HasId
 
     public SurveyUserAnswers(int userId, int surveyResourceId)
     {
-        super();
         this.userId = userId;
         this.surveyResourceId = surveyResourceId;
     }

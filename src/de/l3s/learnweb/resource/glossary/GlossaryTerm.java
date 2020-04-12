@@ -92,7 +92,7 @@ public class GlossaryTerm implements Serializable
         setPhraseologyPasted(oldTerm.phraseologyPasted);
 
         setUses(new ArrayList<>(oldTerm.uses.size()));
-        for(int i = 0; i < oldTerm.uses.size(); i++)
+        for(int i = 0, len = oldTerm.uses.size(); i < len; i++)
         {
             this.uses.add(i, oldTerm.uses.get(i));
         }

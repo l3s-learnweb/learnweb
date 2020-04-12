@@ -9,7 +9,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -353,7 +352,7 @@ public class Image
         img.flush();
     }
 
-    public static void main(String[] args) throws FileNotFoundException, IOException
+    public static void main(String[] args) throws IOException
     {
         Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("SVG");
         while(readers.hasNext())
@@ -363,6 +362,6 @@ public class Image
 
         BufferedImage image = ImageIO.read(new FileInputStream("D:\\Learnweb\\test_pattern.webp"));
         if(null == image)
-            System.err.println("mist");
+            log.error("mist");
     }
 }

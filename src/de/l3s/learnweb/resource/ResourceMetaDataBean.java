@@ -130,7 +130,7 @@ public class ResourceMetaDataBean
 
             authorLists.put(organisationId, authors);
 
-            log.debug("Load " + authors.size() + "authors of organisation: " + organisationId);
+            log.debug("Load " + authors.size() + " authors of organisation: " + organisationId);
 
             return authors;
         }

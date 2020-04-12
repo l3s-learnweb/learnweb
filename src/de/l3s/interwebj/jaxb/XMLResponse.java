@@ -1,7 +1,7 @@
 package de.l3s.interwebj.jaxb;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -54,9 +54,9 @@ public class XMLResponse
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             m.marshal(this, baos);
-            sb.append(baos.toString("UTF8"));
+            sb.append(baos.toString(StandardCharsets.UTF_8));
         }
-        catch(JAXBException | UnsupportedEncodingException e)
+        catch(JAXBException e)
         {
             sb.append("Interweb processing error: ").append(e.getMessage());
         }

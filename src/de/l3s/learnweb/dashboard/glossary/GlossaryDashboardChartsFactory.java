@@ -41,19 +41,20 @@ class GlossaryDashboardChartsFactory
         int resource = 0;
         int system = 0;
 
-        for(Integer actionId : actionsMap.keySet())
+        for(final Map.Entry<Integer, Integer> entry : actionsMap.entrySet())
         {
+            Integer actionId = entry.getKey();
             if(actionId < actionTypes.length)
             {
                 Action action = actionTypes[actionId];
                 if(Action.getActionsByCategory(ActionCategory.SEARCH).contains(action))
-                    search += actionsMap.get(actionId);
+                    search += entry.getValue();
                 else if(Action.getActionsByCategory(ActionCategory.GLOSSARY).contains(action))
-                    glossary += actionsMap.get(actionId);
+                    glossary += entry.getValue();
                 else if(Action.getActionsByCategory(ActionCategory.RESOURCE).contains(action))
-                    resource += actionsMap.get(actionId);
+                    resource += entry.getValue();
                 else
-                    system += actionsMap.get(actionId);
+                    system += entry.getValue();
             }
             else
             {

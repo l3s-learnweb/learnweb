@@ -54,7 +54,6 @@ public class UserManager
 
     public UserManager(Learnweb learnweb)
     {
-        super();
         Properties properties = learnweb.getProperties();
         int userCacheSize = Integer.parseInt(properties.getProperty("USER_CACHE"));
 
@@ -191,7 +190,7 @@ public class UserManager
                     User user = createUser(rs);
                     if(user.validatePassword(password))
                     {
-                        if(!user.getHashing().equals(User.PasswordHashing.PBKDF2))
+                        if(user.getHashing() != User.PasswordHashing.PBKDF2)
                         {
                             user.setPassword(password);
                             save(user);

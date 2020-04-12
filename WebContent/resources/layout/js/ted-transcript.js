@@ -87,9 +87,15 @@ $(() => {
       $(selectedElement).tooltipster({
         functionInit() {
           const $this = $(this);
-          if ($this.data('title') && $this.data('content')) return `${$this.data('title')}<hr/>${$this.data('content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`;
-          if ($this.data('content')) return $this.data('content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>');
-          if ($this.data('title')) return $this.data('title');
+          if ($this.data('title') && $this.data('content')) {
+            return `${$this.data('title')}<hr/>${$this.data('content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`;
+          }
+          if ($this.data('content')) {
+            return $this.data('content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>');
+          }
+          if ($this.data('title')) {
+            return $this.data('title');
+          }
         },
         contentAsHTML: true,
         maxWidth: 300,
@@ -108,16 +114,14 @@ $(() => {
   }
 
   $('#text').on('keypress', (event) => {
-    const keyCode = (event.keyCode ? event.keyCode : event.which);
-    if (keyCode === 13) {
+    if (event.key === 'Enter') {
       $('#userinput_ok').trigger('click');
       return false;
     }
   });
 
   $(document).on('keyup', (event) => {
-    const keyCode = (event.keyCode ? event.keyCode : event.which);
-    if (keyCode === 27) {
+    if (event.key === 'Escape') {
       $('#userinput_cancel').trigger('click');
       return false;
     }
@@ -137,8 +141,7 @@ $(() => {
     stop() {
       $('.ui-selected', this).each((i, el) => {
         const text = $(el).text();
-        $(`[data-title="${text}"]`).addClass('ui-state-hover');
-        $(`[data-title="${text}"]`).tooltipster('open');
+        $(`[data-title="${text}"]`).addClass('ui-state-hover').tooltipster('open');
       });
     },
     unselected(event, ui) {

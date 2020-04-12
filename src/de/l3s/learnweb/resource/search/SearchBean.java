@@ -170,7 +170,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             if(selectedResource.getId() == -1) // resource is not yet stored at the database
             {
                 newResource = selectedResource.getResource();
-                if(newResource.getSource().equals(ResourceService.bing)) //resource which is already saved in database already has wayback captures stored
+                if(newResource.getSource() == ResourceService.bing) //resource which is already saved in database already has wayback captures stored
                     getLearnweb().getWaybackCapturesLogger().logWaybackCaptures(newResource);
             }
             else
@@ -191,7 +191,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             log.debug("Add resource); group: " + newResource.getGroupId() + "; folder: " + newResource.getFolderId());
 
             // we need to check whether a Bing result is a PDF, Word or other document
-            if(newResource.getOriginalResourceId() == 0 && (newResource.getType().equals(ResourceType.website) || newResource.getType().equals(ResourceType.text)) && newResource.getSource().equals(ResourceService.bing))
+            if(newResource.getOriginalResourceId() == 0 && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text) && newResource.getSource() == ResourceService.bing)
             {
                 log.debug("Extracting info from given url...");
                 ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();

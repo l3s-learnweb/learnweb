@@ -111,7 +111,7 @@ public class FileUtility
 
     public static java.io.File getSampleOfficeFile(ResourceType resourceType) throws URISyntaxException
     {
-        String sampleFileName = FileUtility.getSampleFileName(resourceType);
+        String sampleFileName = getSampleFileName(resourceType);
         URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource(OFFICE_FILES_FOLDER + sampleFileName);
         return new java.io.File(resourceUrl.toURI());
     }

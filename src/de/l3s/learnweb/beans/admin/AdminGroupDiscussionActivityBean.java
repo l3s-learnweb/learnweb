@@ -32,7 +32,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 
 /**
- * Used to extract activities from hypothes.is
+ * Used to extract activities from http://hypothes.is
  *
  * @author Kate
  *
@@ -106,7 +106,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
             JSONObject jsonResponse = new JSONObject(responseString);
             JSONArray rows = jsonResponse.getJSONArray("rows");
 
-            for(int i = 0; i < rows.length(); i++)
+            for(int i = 0, len = rows.length(); i < len; i++)
             {
                 groupAnnotations.add(processJson(rows.getJSONObject(i)));
             }
@@ -191,7 +191,6 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
 
         public AnnotationEntity(String name, String annotation, String snippet, String url, String time)
         {
-            super();
             this.name = name;
             this.annotation = annotation;
             this.snippet = snippet;

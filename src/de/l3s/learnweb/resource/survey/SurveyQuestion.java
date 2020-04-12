@@ -76,7 +76,7 @@ public class SurveyQuestion implements Serializable
     private QuestionType type;
     private int id; //question id
     private int surveyId;
-    Map<String, Object> options = new HashMap<String, Object>(); // default options for some input types like OneMenu
+    Map<String, Object> options = new HashMap<>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
     private boolean deleted = false;
@@ -116,7 +116,7 @@ public class SurveyQuestion implements Serializable
     public void setType(QuestionType type)
     {
         this.type = type;
-        if(type.options && this.getAnswers().size() == 0)
+        if(type.options && this.getAnswers().isEmpty())
         {
             this.getAnswers().add(new SurveyQuestionOption());
             this.getAnswers().add(new SurveyQuestionOption());

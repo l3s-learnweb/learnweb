@@ -41,11 +41,11 @@
 
     return this.each((index, element) => {
       let myBloc;
-      const _this = $(element);
+      const $this = $(element);
       let visible = false;
 
       // START CALLBACK
-      settings.onStart(_this);
+      settings.onStart($this);
 
       // CLOSE FUNCTION
       function closeExpander(base) {
@@ -59,7 +59,7 @@
           });
         }
 
-        _this.removeClass('hasSelectedItem');
+        $this.removeClass('hasSelectedItem');
 
         // REMOVES GRIDDER EXPAND AREA
         visible = false;
@@ -78,27 +78,27 @@
       function openExpander(myself) {
         /* CURRENT ACTIVE GRIDDER */
         $('.currentGridder').removeClass('currentGridder');
-        _this.addClass('currentGridder');
+        $this.addClass('currentGridder');
 
         /* ENSURES THE CORRECT BLOC IS ACTIVE */
         if (!myself.hasClass('gridder-active')) {
-          _this.find('.gridder-active').removeClass('gridder-active');
+          $this.find('.gridder-active').removeClass('gridder-active');
           myself.addClass('gridder-active');
         } else {
           // THE SAME IS ALREADY OPEN, LET"S CLOSE IT
-          closeExpander(_this, settings);
+          closeExpander($this, settings);
           return;
         }
 
         /* REMOVES PREVIOUS BLOC */
-        _this.find('.gridder-show').remove();
+        $this.find('.gridder-show').remove();
 
 
         /* ADD CLASS TO THE GRIDDER CONTAINER
          * So you can apply global style when item selected.
          */
-        if (!_this.hasClass('hasSelectedItem')) {
-          _this.addClass('hasSelectedItem');
+        if (!$this.hasClass('hasSelectedItem')) {
+          $this.addClass('hasSelectedItem');
         }
 
         /* ADD LOADING BLOC */
@@ -124,8 +124,8 @@
 
           htmlContent += '<div class="gridder-navigation">';
           htmlContent += `<a href="#" class="gridder-close">${settings.closeText}</a>`;
-          htmlContent += `<a href="#" class="gridder-nav prev ${!prevItem.length ? 'disabled' : ''}">${settings.prevText}</a>`;
-          htmlContent += `<a href="#" class="gridder-nav next ${!nextItem.length ? 'disabled' : ''}">${settings.nextText}</a>`;
+          htmlContent += `<a href="#" class="gridder-nav prev ${prevItem.length ? '' : 'disabled'}">${settings.prevText}</a>`;
+          htmlContent += `<a href="#" class="gridder-nav next ${nextItem.length ? '' : 'disabled'}">${settings.nextText}</a>`;
           htmlContent += '</div>';
         }
 
@@ -156,7 +156,10 @@
 
         /* SCROLL TO CORRECT POSITION AFTER */
         if (settings.scroll) {
-          const offset = (settings.scrollTo === 'panel' ? myself.offset().top + myself.height() - settings.scrollOffset : myself.offset().top - settings.scrollOffset);
+          const offset = (settings.scrollTo === 'panel'
+            ? myself.offset().top + myself.height() - settings.scrollOffset
+            : myself.offset().top - settings.scrollOffset);
+
           $('html, body').animate({
             scrollTop: offset,
           }, {
@@ -170,29 +173,29 @@
       }
 
       /* CLICK EVENT */
-      _this.on('click', '.gridder-list', (e) => {
+      $this.on('click', '.gridder-list', (e) => {
         e.preventDefault();
         const myself = $(e.currentTarget);
         openExpander(myself);
       });
 
       /* NEXT BUTTON */
-      _this.on('click', '.gridder-nav.next', (e) => {
+      $this.on('click', '.gridder-nav.next', (e) => {
         e.preventDefault();
         $(e.currentTarget).parents('.gridder-show').next().trigger('click');
       });
 
       /* PREVIOUS BUTTON */
-      _this.on('click', '.gridder-nav.prev', (e) => {
+      $this.on('click', '.gridder-nav.prev', (e) => {
         e.preventDefault();
         $(e.currentTarget).parents('.gridder-show').prev().prev()
           .trigger('click');
       });
 
       /* CLOSE BUTTON */
-      _this.on('click', '.gridder-close', (e) => {
+      $this.on('click', '.gridder-close', (e) => {
         e.preventDefault();
-        closeExpander(_this);
+        closeExpander($this);
       });
     });
   };

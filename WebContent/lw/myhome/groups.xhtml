@@ -3,6 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.groupsTitle}"/>
@@ -61,7 +62,7 @@
                 <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this" update=":growl :my_groups :sidebar_menu">
                     <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                     <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
-                    <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
+                    <p:confirm message="#{of:format1(msg.leave_group_question, group.title)}"/>
 
                     <i class="fa fa-fw fa-sign-out text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.leave_group}"/>

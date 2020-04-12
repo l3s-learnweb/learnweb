@@ -201,7 +201,7 @@
                                 </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
-                                <f:facet name="header">#{msg['Glossary.pasted_pronounciations']}</f:facet>
+                                <f:facet name="header">#{msg['Glossary.pasted_pronunciations']}</f:facet>
                                 <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
                                     <f:param value="#{gfs.pronounciationPasted}"/>
                                     <f:param value="#{(gfs.pronounciationPasted / gfs.pronounciation) * 100}"/>

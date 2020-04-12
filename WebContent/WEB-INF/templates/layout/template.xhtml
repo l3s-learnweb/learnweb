@@ -103,27 +103,6 @@
                 </f:facet>
             </p:ajaxStatus>
 
-            <h:form id="ajax_error_handler">
-                <!-- TODO: check if we need this -->
-                <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" onexception="PF('expiredExceptionDialog').show();"/>
-                <p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();"/>
-
-                <p:dialog id="exceptionDialog" header="#{msg.error}" widgetVar="exceptionDialog"
-                          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
-                    <a class="error h4 mb-3" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</a>
-                    <div id="stacktrace" class="collapse">
-                        <h:outputText value="Message:#{pfExceptionHandler.message}"/>
-                        <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false"/>
-                    </div>
-                </p:dialog>
-
-                <p:dialog header="#{msg.session_expired}" widgetVar="expiredExceptionDialog"
-                          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
-                    <p class="error h4 mb-3">#{msg.reload_page}</p>
-                    <p:button onclick="document.location.reload(); return false;" value="#{msg.reload}"/>
-                </p:dialog>
-            </h:form>
-
             <h:form styleClass="d-none">
                 <p:remoteCommand name="setPreferenceRemote" actionListener="#{userBean.setPreferenceRemote}" global="false" immediate="true"/>
             </h:form>

@@ -10,15 +10,15 @@
 <c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
     <c:if test="#{fn:startsWith(field.type, 'FULLWIDTH_')}">
         <c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
-            <h4 class="fg-row"><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h4>
+            <h4 class="fg-row"><h:outputText value="#{msg[field.label]}"/></h4>
         </c:if>
         <c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
-            <h5 class="fg-row"><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h5>
+            <h5 class="fg-row"><h:outputText value="#{msg[field.label]}"/></h5>
         </c:if>
     </c:if>
 
     <c:if test="#{not fn:startsWith(field.type, 'FULLWIDTH_')}">
-        <p:outputLabel for="@next" value="#{utilBean.getLocaleMessage(field.name, null)}:"/>
+        <p:outputLabel for="@next" value="#{msg[field.name]}:"/>
         <div class="fg-col">
             <c:if test="#{field.moderatorOnly and not userBean.moderator}">
                 <p:inputText value="#{res.metadataWrapper[field.name]}" readonly="true"/>

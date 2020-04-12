@@ -20,12 +20,12 @@ public class Mail
     {
         System.setProperty("mail.mime.charset", "UTF-8");
         Properties props = new Properties();
-        props.put("mail.smtp.host", "mail.kbs.uni-hannover.de");
-        props.put("mail.smtp.socketFactory.port", "465");
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "465");
-        props.put("mail.debug", "true");
+        props.setProperty("mail.smtp.host", "mail.kbs.uni-hannover.de");
+        props.setProperty("mail.smtp.socketFactory.port", "465");
+        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.debug", "true");
 
         session = Session.getInstance(props, authenticator);
 

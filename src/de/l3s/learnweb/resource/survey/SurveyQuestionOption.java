@@ -22,7 +22,6 @@ public class SurveyQuestionOption implements Serializable
 
     public SurveyQuestionOption(String value)
     {
-        super();
         this.value = value;
     }
 

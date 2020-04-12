@@ -10,8 +10,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
   init(cfg) {
     this._super(cfg);
-    this.body = $(document.body);
-    this.wrapper = this.body.children('.layout-wrapper');
+    this.wrapper = $('.layout-wrapper');
 
     if (this.wrapper.length === 0) return;
     this.header = this.wrapper.children('.layout-header');

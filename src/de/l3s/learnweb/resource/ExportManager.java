@@ -110,8 +110,6 @@ public class ExportManager
                 }
                 zipOutputStream.closeEntry();
             }
-
-            zipOutputStream.close();
         }
         responseOutputStream.flush();
         responseOutputStream.close();
@@ -137,9 +135,7 @@ public class ExportManager
     private Map<String, InputStream> packGroupResources(Group group, String platform) throws Exception
     {
         final List<Resource> groupResources = group.getResources();
-        Map<String, InputStream> filesToPack = new HashMap<>();
-        filesToPack.putAll(this.getAllResources(groupResources, platform, group.getTitle()));
-        return filesToPack;
+        return new HashMap<>(this.getAllResources(groupResources, platform, group.getTitle()));
     }
 
     /**
@@ -314,11 +310,11 @@ public class ExportManager
                     "Type=Link\n" +
                     "URL=" + url;
 
-            return new SimpleEntry<String, InputStream>(title + ".desktop", new ByteArrayInputStream(desktopFile.getBytes()));
+            return new SimpleEntry<>(title + ".desktop", new ByteArrayInputStream(desktopFile.getBytes()));
         case "Windows":
             String urlFile = "[InternetShortcut]\n" +
                     "URL=" + url;
-            return new SimpleEntry<String, InputStream>(title + ".url", new ByteArrayInputStream(urlFile.getBytes()));
+            return new SimpleEntry<>(title + ".url", new ByteArrayInputStream(urlFile.getBytes()));
         case "macOS":
         case "Mac OS X":
             NSDictionary root = new NSDictionary();
@@ -327,9 +323,9 @@ public class ExportManager
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             PropertyListParser.saveAsXML(root, byteArrayOutputStream);
 
-            return new SimpleEntry<String, InputStream>(title + ".weblock", new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+            return new SimpleEntry<>(title + ".weblock", new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
         default:
-            return new SimpleEntry<String, InputStream>(title + ".txt", new ByteArrayInputStream(url.getBytes(StandardCharsets.UTF_8)));
+            return new SimpleEntry<>(title + ".txt", new ByteArrayInputStream(url.getBytes(StandardCharsets.UTF_8)));
         }
     }
 

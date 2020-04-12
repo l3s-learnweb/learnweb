@@ -3,6 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:lw="http://l3s.de/learnweb">
 
@@ -51,7 +52,7 @@
         <script>
         /* see LazyGlossaryTableView comments for more details */
         function correctPaginatorCount(index) {
-        	var option = $(this);
+        	const option = $(this);
         	option.text(option.val()/20);
         }
         
@@ -116,7 +117,7 @@
                         <div class="text-right">
                             <p:commandLink id="edit" action="#{glossaryBean.deleteEntry(item)}" styleClass="mr-2" process="@this" title="#{msg.delete}">
                                 <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
-                                <p:confirm message="${utilBean.getLocaleMessage('delete_entry_confirm_message', item.topics)} "/>
+                                <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, item.topics)}"/>
                             </p:commandLink>
 
                             <p:commandLink action="#{glossaryBean.setGlossaryForm(item)}" process="@this" oncomplete="openGlossForm();" update=":glossary_add" title="#{msg.edit_entry}">

@@ -47,8 +47,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     private int selectedUserId;
     private int selectedGroupId;
 
-    private Session selectedSession;
-    private Query selectedQuery;
+    private transient Session selectedSession;
+    private transient Query selectedQuery;
 
     private String selectedSessionId;
     private String selectedEntity;
@@ -411,9 +411,9 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         final String finalQuery = filterQuery;
 
         List<Session> allSessions = getSessions();
-        if(allSessions == null || allSessions.size() == 0)
+        if(allSessions == null || allSessions.isEmpty())
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "dsada");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Sessions list is empty.");
         }
         else
         {

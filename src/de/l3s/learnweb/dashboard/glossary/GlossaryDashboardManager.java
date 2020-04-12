@@ -20,7 +20,7 @@ class GlossaryDashboardManager
 
     private final Learnweb learnweb;
 
-    public GlossaryDashboardManager()
+    GlossaryDashboardManager()
     {
         this.learnweb = Learnweb.getInstance();
     }

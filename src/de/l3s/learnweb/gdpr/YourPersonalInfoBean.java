@@ -52,7 +52,7 @@ public class YourPersonalInfoBean extends ApplicationBean implements Serializabl
         Date birthDate = user.getDateOfBirth();
         if(null != birthDate)
         {
-            this.dateOfBirth = user.getDateOfBirth().toString(); // TODO this is bad. USe HSF date formating
+            this.dateOfBirth = birthDate.toString(); // TODO this is bad. USe HSF date formating
         }
         else
         {
@@ -74,7 +74,7 @@ public class YourPersonalInfoBean extends ApplicationBean implements Serializabl
         }
 
         this.userProfession = user.getProfession();
-        if(null == userProfession || userProfession.equals(""))
+        if(null == userProfession || userProfession.isEmpty())
         {
             this.userProfession = "N/A";
         }

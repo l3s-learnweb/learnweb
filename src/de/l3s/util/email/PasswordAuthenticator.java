@@ -10,7 +10,6 @@ public class PasswordAuthenticator extends Authenticator
 
     public PasswordAuthenticator(String username, String password)
     {
-        super();
         this.user = username;
         this.pw = password;
     }

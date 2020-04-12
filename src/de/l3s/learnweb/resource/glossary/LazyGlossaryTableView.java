@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource.glossary;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -58,21 +57,21 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView>
     public List<GlossaryTableView> load(int first, int pageSize, Map<String, SortMeta> sortMeta, Map<String, FilterMeta> filterMeta)
     {
         // create list of predicates for the given filters
-        List<Predicate<GlossaryEntry>> allPredicates = new ArrayList<Predicate<GlossaryEntry>>();
+        List<Predicate<GlossaryEntry>> allPredicates = new ArrayList<>();
 
         Map<String, String> simpleFilters = new HashMap<>(); // copies all non empty filters for fields of type String
 
         for(FilterMeta meta : filterMeta.values())
         {
-            String filterFieldOrginal = meta.getFilterField();
+            String filterFieldOriginal = meta.getFilterField();
             Object filterValue = meta.getFilterValue();
 
-            if(null == filterFieldOrginal || filterValue == null)
+            if(null == filterFieldOriginal || filterValue == null)
             {
                 //log.debug("skipped: " + meta);
                 continue;
             }
-            if(filterFieldOrginal.equals("language"))
+            if(filterFieldOriginal.equals("language"))
             {
                 @SuppressWarnings("unchecked")
                 List<Locale> localesFilter = (List<Locale>) filterValue;
@@ -80,11 +79,11 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView>
                 allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> localesFilter.contains(t.getLanguage())));
                 continue;
             }
-            else if(filterFieldOrginal.equals("globalFilter"))
+            else if(filterFieldOriginal.equals("globalFilter"))
             {
-                filterFieldOrginal = "fulltext";
+                filterFieldOriginal = "fulltext";
             }
-            final String filterField = filterFieldOrginal;
+            final String filterField = filterFieldOriginal;
 
             // ignore empty filter
             final String filterValueStr = String.valueOf(filterValue).toLowerCase();
@@ -128,12 +127,12 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView>
         {
             for(SortMeta meta : sortMeta.values())
             {
-                Collections.sort(data, new LazySorter(meta.getSortField(), meta.getSortOrder()));
+                data.sort(new LazySorter(meta.getSortField(), meta.getSortOrder()));
             }
         }
 
         //paginate
-        pageSize = pageSize / PAGE_SIZE_MULTIPLICATOR;
+        pageSize /= PAGE_SIZE_MULTIPLICATOR;
         first = (first == 0) ? 0 : first / PAGE_SIZE_MULTIPLICATOR;
 
         int dataSize = data.size();
@@ -212,7 +211,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView>
                 else
                     value = ((Comparable) value1).compareTo(value2);
 
-                return SortOrder.ASCENDING.equals(sortOrder) ? value : -1 * value;
+                return SortOrder.ASCENDING == sortOrder ? value : -1 * value;
             }
             catch(Exception e)
             {

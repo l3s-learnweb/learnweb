@@ -124,11 +124,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
     public boolean canEditPost(ForumPost obj)
     {
         User user = getUser();
-
-        if(user.isAdmin() || user.getId() == obj.getUserId())
-            return true;
-
-        return false;
+        return user.isAdmin() || user.getId() == obj.getUserId();
     }
 
     public void deletePost(ForumPost post) throws SQLException

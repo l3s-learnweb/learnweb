@@ -34,17 +34,18 @@ public class LocalizeMessagesTest
             HashSet<String> missingMessages = new HashSet<>();
             Properties localeMessages = getMessagesForLocale(locale);
 
-            baseMessages.keySet().forEach(key -> {
+            baseMessages.forEach((key, value) ->
+            {
                 if(!localeMessages.containsKey(key))
                 {
                     missingMessages.add(key.toString());
-                    writeCSV(locale, key, baseMessages.get(key), localeMessages.get(key), xyMessages.get(key));
+                    writeCSV(locale, key, value, localeMessages.get(key), xyMessages.get(key));
                 }
             });
 
             closeCSV();
             if(!missingMessages.isEmpty())
-                fail("Locale '" + locale + "' missing " + missingMessages.size() + " keys: " + missingMessages.toString());
+                fail("Locale '" + locale + "' missing " + missingMessages.size() + " keys: " + missingMessages);
         }));
     }
 
@@ -65,7 +66,7 @@ public class LocalizeMessagesTest
             });
 
             if(!extraMessages.isEmpty())
-                fail("Locale '" + locale + "' contains " + extraMessages.size() + " keys that not exist in default: " + extraMessages.toString());
+                fail("Locale '" + locale + "' contains " + extraMessages.size() + " keys that not exist in default: " + extraMessages);
         }));
     }
 

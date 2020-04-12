@@ -1,7 +1,5 @@
 package de.l3s.learnweb;
 
-import org.apache.log4j.Logger;
-
 import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryCrawlerSimple;
 import de.l3s.learnweb.resource.ted.TedCrawlerSimple;
 import de.l3s.learnweb.user.loginProtection.ExpiredBansCleaner;

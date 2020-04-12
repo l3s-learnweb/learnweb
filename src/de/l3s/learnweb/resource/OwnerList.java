@@ -33,7 +33,6 @@ public class OwnerList<E, O> extends LinkedList<E>
 
     public OwnerList()
     {
-        super();
     }
 
     public boolean add(E e, O owner, Date date)

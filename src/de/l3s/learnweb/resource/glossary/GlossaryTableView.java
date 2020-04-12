@@ -23,14 +23,12 @@ public class GlossaryTableView implements Serializable
 
     public GlossaryTableView(GlossaryEntry entry, GlossaryTerm term)
     {
-        super();
         this.entry = entry;
         this.term = term;
     }
 
     public GlossaryTableView(GlossaryEntry entry, GlossaryTerm term, Map<String, String> filter)
     {
-        super();
         this.entry = entry;
         this.term = term;
 

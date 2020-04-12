@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.BitSet;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 
@@ -264,15 +265,18 @@ public class Course implements Serializable, Comparable<Course>, HasId
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object o)
     {
-        if(obj == null)
-            return false;
-        if(obj.getClass() != getClass())
-            return false;
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        final Course course = (Course) o;
+        return id == course.id;
+    }
 
-        Course otherCourse = (Course) obj;
-        return otherCourse.getId() == getId();
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id);
     }
 
     @Override

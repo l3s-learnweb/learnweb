@@ -1,7 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,7 +37,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         Collections.sort(organisations);
     }
 
-    public void onLoad() throws SQLException
+    public void onLoad()
     {
         if(getUser() == null) // not logged in
             return;
@@ -64,7 +63,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         for(Option option : optionsEnum)
         {
             // example: this gets "Services" from "Services_Allow_logout_from_Interweb"
-            String newOptionGroupName = option.name().substring(0, option.name().indexOf("_"));
+            String newOptionGroupName = option.name().substring(0, option.name().indexOf('_'));
 
             if(newOptionGroupName.equals("Unused"))
                 continue;
@@ -145,14 +144,13 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
         public OptionWrapper(Option option, boolean value)
         {
-            super();
             this.option = option;
             this.value = value;
         }
 
         public String getName()
         {
-            return option.name().substring(option.name().indexOf("_")).replace("_", " ");
+            return option.name().substring(option.name().indexOf('_')).replace("_", " ");
         }
 
         public boolean getValue()
@@ -179,7 +177,6 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
         public OptionWrapperGroup(String title, List<OptionWrapper> options)
         {
-            super();
             this.title = title;
             this.options = options;
         }

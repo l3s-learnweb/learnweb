@@ -126,9 +126,12 @@ function attachEditor(elementId, editorType, configValues) {
       },
       onRequestHistoryData(event) {
         // noinspection JSIgnoredPromiseFromCall
-        $.post(`${configValues.historyUrl}?version=${event.data}&resourceId=${configValues.document.resourceId}`, JSON.stringify(historyInfo), (json) => {
-          docEditor.setHistoryData(json);
-        }, 'json');
+        $.post(
+          `${configValues.historyUrl}?version=${event.data}&resourceId=${configValues.document.resourceId}`,
+          JSON.stringify(historyInfo),
+          (json) => docEditor.setHistoryData(json),
+          'json'
+        );
       },
       onRequestHistory() {
         // noinspection JSIgnoredPromiseFromCall

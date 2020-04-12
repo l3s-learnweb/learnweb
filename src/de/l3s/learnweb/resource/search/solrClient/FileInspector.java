@@ -109,7 +109,7 @@ public class FileInspector
     private static String metadata2String(Object obj)
     {
         List<String> descriptions = (List<String>) obj;
-        if(descriptions.size() > 0 && descriptions.get(0).length() > 0)
+        if(!descriptions.isEmpty() && !descriptions.get(0).isEmpty())
             return descriptions.get(0);
 
         return null;
@@ -193,9 +193,8 @@ public class FileInspector
         private String mimeType;
         private InputStream inputStream;
 
-        public MyContentStream(String fileName, String mimeType, InputStream inputStream)
+        MyContentStream(String fileName, String mimeType, InputStream inputStream)
         {
-            super();
             this.fileName = fileName;
             this.mimeType = mimeType;
             this.inputStream = inputStream;
