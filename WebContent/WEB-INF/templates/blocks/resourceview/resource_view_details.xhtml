@@ -3,6 +3,7 @@
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 				xmlns:lw="http://l3s.de/learnweb">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
@@ -276,7 +277,9 @@
 		<dd class="col-sm-9">
 			<h:panelGroup styleClass="mb-2" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
 				<div class="form-group mb-1">
-					<p:inputTextarea id="comment_text_input" rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.new_comment_placeholder}" required="true" styleClass="d-block"/>
+					<p:inputTextarea id="comment_text_input" rows="3" value="#{resourceDetailBean.newComment}"
+									 placeholder="#{msg.new_comment_placeholder}" pt:data-emoji="true"
+									 required="true" styleClass="d-block"/>
 					<p:message for="@previous"/>
 				</div>
 

@@ -821,6 +821,7 @@ ul.res-filters {
     .res-view-panel {
       padding: $grid-gutter-width / 2;
       overflow: auto;
+      min-height: calc(100% - 5rem);
 
       h1 {
         margin: $grid-gutter-width 0;

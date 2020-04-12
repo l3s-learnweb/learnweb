@@ -49,13 +49,14 @@
 @import 'utilities/tables';
 
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
+@import 'components/breadcrumb';
 @import 'components/dashboard';
+@import 'components/emoji';
 @import 'components/groups';
 @import 'components/landing';
 @import 'components/og-grid';
 @import 'components/resources';
 @import 'components/search';
-@import 'components/breadcrumb';
 
 // The old styles used on specific pages, should be refactored and moved into components later
 @import 'sections/entity-relationship';
