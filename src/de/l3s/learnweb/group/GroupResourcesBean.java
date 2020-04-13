@@ -394,6 +394,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     private void copyResources(final ResourceUpdateBatch items, final Group targetGroup, final Folder targetFolder, boolean isRecursion) throws SQLException
     {
+        // TODO @Oleh check if this and other group_resources.xx messages really need translations
         if(targetGroup == null)
             throw new IllegalArgumentException("group_resources.target_not_exists");
         if(!group.canViewResources(getUser()))
