@@ -50,5 +50,5 @@ deployProd:
   script:
     - mvn tomcat7:redeploy -DskipTests -P prod,!local --batch-mode
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE == "chore: version release"'
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_TITLE == "chore: version release"'
       when: on_success
