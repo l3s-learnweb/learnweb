@@ -23,7 +23,7 @@ lint:
     - npm install --no-audit
     - npm run lint -s
 
-# Run Java tests. Only if list is passed, then if test is passed, run deploy
+# Run Java tests (only if `lint` is passed)
 test:
   stage: test
   tags:
@@ -31,7 +31,7 @@ test:
   script:
     - mvn test -Dexec.skip --batch-mode
 
-# Any commit to `master` branch will be deployed to /dev instance
+# Any commit to `master` branch will be deployed to /dev instance (only if `lint` and `test` have passed)
 deploy:
   stage: deploy
   tags:
