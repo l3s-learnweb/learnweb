@@ -1,43 +1,54 @@
 image: node:latest
 
+variables:
+  PROXY_SETTINGS: "-DproxySet=true -Dhttp.proxyHost=web-proxy.rrzn.uni-hannover.de -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=learnweb.l3s.uni-hannover.de -Dhttps.proxyHost=web-proxy.rrzn.uni-hannover.de -Dhttps.proxyPort=3128 -Dhttps.nonProxyHosts=learnweb.l3s.uni-hannover.de"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository $PROXY_SETTINGS"
+
 stages:
-  - build
   - lint
+  - test
+  - deploy
 
 cache:
   paths:
+    - .m2/repository/
     - node_modules/
 
-install_dependencies:
-  stage: build
-  tags:
-    - java
-  script:
-    - npm ci
-  artifacts:
-    paths:
-      - node_modules/
-
-# Lint JavaScript code using ESLint.
-eslint:
+# Check for code style issues
+lint:
   stage: lint
-  when: always
   tags:
-    - java
-  variables:
-    CI_PROJECT_DIR: '/builds/Learnweb/Learnweb/'
+    - javascript
   script:
-    - npm run js:lint -s
-#    - npx eslint --format gitlab WebContent/resources/layout/js/**
-#  artifacts:
-#    reports:
-#      codequality: eslint-codequality.json
+    - npm install --no-audit
+    - npm run lint -s
 
-# Lint SCSS using stylelint.
-stylelint:
-  stage: lint
-  when: always
+# Run Java tests. Only if list is passed, then if test is passed, run deploy
+test:
+  stage: test
   tags:
     - java
   script:
-    - npm run scss:lint -s
+    - mvn test -Dexec.skip --batch-mode
+
+# Any commit to `master` branch will be deployed to /dev instance
+deploy:
+  stage: deploy
+  tags:
+    - java
+  script:
+    - mvn tomcat7:redeploy -DskipTests -P dev,!local --batch-mode
+  only:
+    - master
+
+# A commit to `master` brunch with message `chore: version release` will be deployed to ROOT instance
+deployProd:
+  stage: deploy
+  tags:
+    - java
+  script:
+    - mvn tomcat7:redeploy -DskipTests -P prod,!local --batch-mode
+  only:
+    - master
+  except:
+    - $CI_COMMIT_MESSAGE =~ /^chore:\ version release$/

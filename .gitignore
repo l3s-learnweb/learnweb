@@ -32,3 +32,4 @@ target
 build
 node_modules
 learnweb_local.properties
+WebContent/resources/layout/css/*

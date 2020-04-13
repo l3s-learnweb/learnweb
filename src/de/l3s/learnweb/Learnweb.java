@@ -163,18 +163,18 @@ public class Learnweb
             fallbackProperties.load(defaultProperties);
             properties = new PropertiesBundle(fallbackProperties);
 
-            InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties");
-            if(localProperties != null)
-            {
-                properties.load(localProperties);
-                log.debug("Local properties loaded.");
-            }
-
             InputStream testProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_test.properties");
             if(testProperties != null)
             {
                 properties.load(testProperties);
                 log.debug("Test properties loaded.");
+            }
+
+            InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties");
+            if(localProperties != null)
+            {
+                properties.load(localProperties);
+                log.debug("Local properties loaded.");
             }
         }
         catch(IOException e)

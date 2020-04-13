@@ -16,7 +16,9 @@
     "scss:watch": "sass WebContent/resources/layout/sass:WebContent/resources/layout/css --style=compressed --watch",
     "scss:build": "sass WebContent/resources/layout/sass:WebContent/resources/layout/css --style=compressed",
     "scss:lint": "stylelint WebContent/resources/layout/sass",
-    "js:lint": "eslint WebContent/resources/layout/js/**"
+    "js:lint": "eslint WebContent/resources/layout/js/**",
+    "build": "npm run scss:build",
+    "lint": "npm run scss:lint & npm run js:lint"
   },
   "devDependencies": {
     "browserslist": "^4.11.1",
@@ -56,7 +58,10 @@
       "no-console": "off",
       "no-param-reassign": "off",
       "no-unused-vars": "off",
-      "comma-dangle": ["error", "always-multiline"],
+      "comma-dangle": [
+        "error",
+        "always-multiline"
+      ],
       "no-use-before-define": [
         "error",
         {
