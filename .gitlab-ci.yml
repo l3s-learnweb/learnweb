@@ -38,8 +38,9 @@ deploy:
     - java
   script:
     - mvn tomcat7:redeploy -DskipTests -P dev,!local --batch-mode
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: on_success
 
 # A commit to `master` brunch with message `chore: version release` will be deployed to ROOT instance
 deployProd:
@@ -48,7 +49,6 @@ deployProd:
     - java
   script:
     - mvn tomcat7:redeploy -DskipTests -P prod,!local --batch-mode
-  only:
-    - master
-  except:
-    - $CI_COMMIT_MESSAGE =~ /^chore:\ version release$/
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE == "chore: version release"'
+      when: on_success
