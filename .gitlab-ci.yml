@@ -5,12 +5,8 @@ variables:
 stages:
   - lint
   - test
+  - build
   - deploy
-
-cache:
-  paths:
-    - node_modules/
-    - target/Learnweb.war
 
 # Check for code style issues
 lint:
@@ -20,25 +16,33 @@ lint:
   script:
     - npm install --no-audit
     - npm run lint -s
+  cache:
+    paths:
+      - node_modules/
 
-# Run Java tests (only if `lint` is passed)
+# Run Java tests
 test:
   stage: test
   tags:
     - java
   script:
     - mvn $MAVEN_CLI_OPTS test
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master"'
 
-# Build Java sources (only if `test` is passed)
+# Build Java sources (includes tests)
 build:
-  stage: deploy
+  stage: build
   tags:
     - java
   script:
-    - mvn $MAVEN_CLI_OPTS install -DskipTests
+    - mvn $MAVEN_CLI_OPTS install
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-      when: on_success
+  cache:
+    paths:
+      - node_modules/
+      - target/Learnweb.war
 
 # Any commit to `master` branch will be deployed to /dev instance
 deploy_dev:
@@ -52,7 +56,10 @@ deploy_dev:
     url: https://learnweb.l3s.uni-hannover.de/dev/
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-      when: on_success
+  cache:
+    paths:
+      - target/Learnweb.war
+    policy: pull
 
 # A commit to `master` brunch with message `chore: version release` will be deployed to v3 (later ROOT) instance
 deploy_prod:
@@ -66,4 +73,7 @@ deploy_prod:
     url: https://learnweb.l3s.uni-hannover.de/
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_TITLE == "chore: version release"'
-      when: on_success
+  cache:
+    paths:
+      - target/Learnweb.war
+    policy: pull
