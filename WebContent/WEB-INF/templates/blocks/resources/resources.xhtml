@@ -75,7 +75,7 @@
                     <!-- TODO: The download dialog and its bean must be improved before it can be shown -->
                     <ui:fragment rendered="#{userBean.admin}">
                         <span class="ui-separator"><span class="ui-icon fa fa-ellipsis-v"/></span>
-                        <p:commandButton title="#{msg.download_group_resources}" icon="fa fa-cloud-download" onclick="PF('dlg1').show();" type="button" />
+                        <p:commandButton title="#{msg['group_resources.download_backup']}" icon="fa fa-cloud-download" onclick="PF('dlg1').show();" type="button" />
                     </ui:fragment>
                 </f:facet>
 
@@ -238,7 +238,7 @@
 </p:dialog>
 
 <ui:remove>
-    <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" appendTo="@(body)"
+    <p:dialog header="#{msg['group_resources.download_backup']}" widgetVar="dlg1" appendTo="@(body)"
               modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
         <h:outputFormat value="#{msg.export_resources_warning}">
             <f:param value="#{dialogBean.totalResourcesNum(groupResourcesBean.group.id)} "/>

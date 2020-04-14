@@ -56,7 +56,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
         if(!resource.canViewResource(user))
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "group_resources_access_denied");
+            addMessage(FacesMessage.SEVERITY_ERROR, "group_resources.access_denied");
             resource = null;
             return;
         }

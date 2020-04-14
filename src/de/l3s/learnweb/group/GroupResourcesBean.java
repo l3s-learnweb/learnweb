@@ -385,6 +385,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         catch(IllegalArgumentException | IllegalAccessError e)
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, e.getMessage());
+            log.error(e.getMessage(), e);
         }
         catch(JSONException | SQLException e)
         {
@@ -394,13 +395,12 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     private void copyResources(final ResourceUpdateBatch items, final Group targetGroup, final Folder targetFolder, boolean isRecursion) throws SQLException
     {
-        // TODO @Oleh check if this and other group_resources.xx messages really need translations
         if(targetGroup == null)
-            throw new IllegalArgumentException("group_resources.target_not_exists");
+            throw new IllegalArgumentException("Target group does dot exist!");
         if(!group.canViewResources(getUser()))
-            throw new IllegalAccessError("group_resources.cant_be_copied");
+            throw new IllegalAccessError("Not allowed to copy the resources!");
         if(!targetGroup.canAddResources(getUser()))
-            throw new IllegalAccessError("group_resources.target_permissions");
+            throw new IllegalAccessError("Not allowed to add resources to target group!");
 
         for(Resource resource : items.getResources())
         {
@@ -442,14 +442,14 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                 targetFolderId = HasId.getIdOrDefault(selectLocationBean.getTargetFolder(), 0);
             }
             else
-                throw new IllegalArgumentException("group_resources.target_not_exists");
+                throw new IllegalArgumentException("Target group does dot exist!");
         }
 
         if(targetGroupId != 0)
         {
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
             if(!targetGroup.canAddResources(getUser()))
-                throw new IllegalAccessError("group_resources.target_permissions");
+                throw new IllegalAccessError("You are not allowed to add resources to target group!");
         }
 
         for(Folder folder : items.getFolders())
@@ -537,7 +537,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         {
             if(!resource.canAnnotateResource(getUser()))
             {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.denied_annotate", resource.getTitle());
+                addGrowl(FacesMessage.SEVERITY_ERROR, "Sorry, you don't have permissions to annotate this resource '{0}'.", resource.getTitle());
                 skipped++;
                 continue;
             }
@@ -567,7 +567,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
         if(!resource.canDeleteResource(getUser()))
         {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.denied_delete", resource.getTitle());
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Sorry, you don't have permissions to delete this resource '{0}'.", resource.getTitle());
             return true;
         }
 

@@ -31,7 +31,7 @@
         <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_list_view.xhtml"></ui:decorate>
     </ui:fragment>
 
-    <h:outputText value="${msg.no_resources_found}" class="res-empty-text"
+    <h:outputText value="${msg['group_resources.no_resources_found']}" class="res-empty-text"
                   rendered="#{paginator.isEmpty() and paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
 
     <h:outputText value="#{msg.no_results_found}" class="res-empty-text"

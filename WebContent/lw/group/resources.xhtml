@@ -44,8 +44,8 @@
     <ui:fragment rendered="#{groupResourcesBean.group ne null}">
         <ui:fragment rendered="${not groupResourcesBean.group.canViewResources(userBean.user)}">
             <h3 class="error">
-                <h:outputText value="#{msg.group_resources_access_denied}"/>
-                <h:outputText value="#{msg.group_resources_access_denied_join_first}"
+                <h:outputText value="#{msg['group_resources.access_denied']}"/>
+                <h:outputText value="#{msg['group_resources.access_denied_join_first']}"
                               rendered="${groupResourcesBean.group.policyView != 'GROUP_LEADER' and groupResourcesBean.group.canJoinGroup(userBean.user)}"/>
             </h3>
         </ui:fragment>
