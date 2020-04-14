@@ -1,8 +1,6 @@
-image: node:latest
-
 variables:
-  PROXY_SETTINGS: "-DproxySet=true -Dhttp.proxyHost=web-proxy.rrzn.uni-hannover.de -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=learnweb.l3s.uni-hannover.de -Dhttps.proxyHost=web-proxy.rrzn.uni-hannover.de -Dhttps.proxyPort=3128 -Dhttps.nonProxyHosts=learnweb.l3s.uni-hannover.de"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository $PROXY_SETTINGS"
+  MAVEN_OPTS: "-DproxySet=true -Dhttp.proxyHost=web-proxy.rrzn.uni-hannover.de -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=learnweb.l3s.uni-hannover.de -Dhttps.proxyHost=web-proxy.rrzn.uni-hannover.de -Dhttps.proxyPort=3128 -Dhttps.nonProxyHosts=learnweb.l3s.uni-hannover.de"
+  MAVEN_CLI_OPTS: "-P prod,!local --batch-mode"
 
 stages:
   - lint
@@ -11,8 +9,8 @@ stages:
 
 cache:
   paths:
-    - .m2/repository/
     - node_modules/
+    - target/Learnweb.war
 
 # Check for code style issues
 lint:
@@ -29,26 +27,43 @@ test:
   tags:
     - java
   script:
-    - mvn test -Dexec.skip --batch-mode
+    - mvn $MAVEN_CLI_OPTS test
 
-# Any commit to `master` branch will be deployed to /dev instance (only if `lint` and `test` have passed)
-deploy:
+# Build Java sources (only if `test` is passed)
+build:
   stage: deploy
   tags:
     - java
   script:
-    - mvn tomcat7:redeploy -DskipTests -P dev,!local --batch-mode
+    - mvn $MAVEN_CLI_OPTS install -DskipTests
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
       when: on_success
 
-# A commit to `master` brunch with message `chore: version release` will be deployed to ROOT instance
-deployProd:
+# Any commit to `master` branch will be deployed to /dev instance
+deploy_dev:
   stage: deploy
   tags:
     - java
   script:
-    - mvn tomcat7:redeploy -DskipTests -P prod,!local --batch-mode
+    - mvn $MAVEN_CLI_OPTS tomcat7:redeploy-only -Dpath=dev
+  environment:
+    name: dev
+    url: https://learnweb.l3s.uni-hannover.de/dev/
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: on_success
+
+# A commit to `master` brunch with message `chore: version release` will be deployed to v3 (later ROOT) instance
+deploy_prod:
+  stage: deploy
+  tags:
+    - java
+  script:
+    - mvn $MAVEN_CLI_OPTS tomcat7:deploy-only -Dpath=v3
+  environment:
+    name: prod
+    url: https://learnweb.l3s.uni-hannover.de/
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" && $CI_COMMIT_TITLE == "chore: version release"'
       when: on_success
