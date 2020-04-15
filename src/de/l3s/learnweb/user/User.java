@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.mail.Message;
@@ -34,6 +35,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ColorUtils;
 import de.l3s.learnweb.forum.ForumPost;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
@@ -67,6 +69,14 @@ public class User implements Comparable<User>, Serializable, HasId
         OTHER
     }
 
+    public enum NotificationFrequency
+    {
+        NEVER,
+        DAILY,
+        WEEKLY,
+        MONTHLY
+    }
+
     private int id = -1;
     private boolean deleted;
     private int imageFileId; // profile image
@@ -84,6 +94,8 @@ public class User implements Comparable<User>, Serializable, HasId
     private boolean emailConfirmed = true;
     private String password;
     private PasswordHashing hashing;
+    private NotificationFrequency preferredNotificationFrequency = NotificationFrequency.NEVER; // how often will users get updates by mail
+    private Locale locale = Locale.forLanguageTag("en-US"); // preferred interface language
 
     private Gender gender = Gender.UNASSIGNED;
     private Date dateOfBirth;
@@ -348,6 +360,16 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setRealUsername(String username)
     {
         setUsername(username);
+    }
+
+    public NotificationFrequency getPreferredNotificationFrequency()
+    {
+        return preferredNotificationFrequency;
+    }
+
+    public void setPreferredNotificationFrequency(NotificationFrequency preferredNotificationFrequency)
+    {
+        this.preferredNotificationFrequency = preferredNotificationFrequency;
     }
 
     public void setOrganisationId(int organisationId)
@@ -860,6 +882,17 @@ public class User implements Comparable<User>, Serializable, HasId
     }
 
     /**
+     * Returns a list of all Groups this user belongs to with associated metadata like notification frequency
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public List<GroupUser> getGroupsRelations() throws SQLException
+    {
+        return Learnweb.getInstance().getGroupManager().getGroupsRelations(getId());
+    }
+
+    /**
      * returns true when this user is allowed to moderate the given user
      *
      * @param user
@@ -875,5 +908,15 @@ public class User implements Comparable<User>, Serializable, HasId
             return true;
 
         return false;
+    }
+
+    public Locale getLocale()
+    {
+        return locale;
+    }
+
+    public void setLocale(Locale locale)
+    {
+        this.locale = locale;
     }
 }

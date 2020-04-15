@@ -3,6 +3,7 @@ package de.l3s.learnweb.user;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -18,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User.Gender;
 
@@ -48,6 +50,12 @@ public class ProfileBean extends ApplicationBean implements Serializable
     private boolean studentIdRequired = false;
     private boolean mailRequired = false;
     private boolean anonymizeUsername;
+    private List<GroupUser> userGroups;
+
+    public User.NotificationFrequency[] getNotificationFrequencies()
+    {
+        return User.NotificationFrequency.values();
+    }
 
     public void onLoad() throws SQLException
     {
@@ -91,6 +99,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         }
 
         anonymizeUsername = selectedUser.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames);
+        userGroups = selectedUser.getGroupsRelations();
     }
 
     public void handleFileUpload(FileUploadEvent event)
@@ -267,6 +276,16 @@ public class ProfileBean extends ApplicationBean implements Serializable
         return selectedUser;
     }
 
+    public List<GroupUser> getUserGroups()
+    {
+        return userGroups;
+    }
+
+    public void setUserGroups(final List<GroupUser> userGroups)
+    {
+        this.userGroups = userGroups;
+    }
+
     public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
         if(getUser().isAdmin()) // admins can change the password of all users
@@ -329,4 +348,27 @@ public class ProfileBean extends ApplicationBean implements Serializable
         return User.Gender.values();
     }
 
+    /**
+     * Sets users preferredNotificationFrequency and the frequency of all his groups
+     * 
+     * @throws SQLException
+     */
+    public void onSaveAllNotificationFrequencies() throws SQLException
+    {
+        selectedUser.save();
+        for(GroupUser groupUser : userGroups)
+        {
+            groupUser.setNotificationFrequency(selectedUser.getPreferredNotificationFrequency());
+            getLearnweb().getGroupManager().updateNotificationFrequency(groupUser.getGroup().getId(), selectedUser.getId(), groupUser.getNotificationFrequency());
+        }
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+    }
+
+    public void onSaveNotificationFrequency(GroupUser group) throws SQLException
+    {
+        getLearnweb().getGroupManager().updateNotificationFrequency(group.getGroup().getId(), selectedUser.getId(), group.getNotificationFrequency());
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+    }
 }

@@ -28,6 +28,7 @@ import de.l3s.learnweb.resource.ResourceContainer;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.User.NotificationFrequency;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.HasId;
@@ -97,6 +98,28 @@ public class GroupManager
     {
         String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title";
         return getGroups(query, userId);
+    }
+
+    /**
+     * Returns a list of all Groups a user belongs to with associated metadata like notification frequency
+     *
+     * @throws SQLException
+     */
+    public List<GroupUser> getGroupsRelations(int userId) throws SQLException
+    {
+        List<GroupUser> groups = new ArrayList<>();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_id, notification_frequency FROM lw_group_user WHERE user_id = ?"))
+        {
+            select.setInt(1, userId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                Group group = getGroupById(rs.getInt("group_id"));
+                NotificationFrequency frequency = User.NotificationFrequency.valueOf(rs.getString("notification_frequency"));
+                groups.add(new GroupUser(group, frequency));
+            }
+        }
+        return groups;
     }
 
     public int getGroupCountByUserId(int userId) throws SQLException
@@ -304,10 +327,11 @@ public class GroupManager
 
     public void addUserToGroup(User user, Group group) throws SQLException
     {
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT IGNORE INTO `lw_group_user` (`group_id`,`user_id`) VALUES (?,?)"))
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT IGNORE INTO `lw_group_user` (`group_id`,`user_id`,`notification_frequency`) VALUES (?,?,?)"))
         {
             insert.setInt(1, group.getId());
             insert.setInt(2, user.getId());
+            insert.setString(3, user.getPreferredNotificationFrequency().toString());
             insert.execute();
         }
     }
@@ -698,4 +722,24 @@ public class GroupManager
             return 0;
         }
     }
+
+    /**
+     * Saves the setting that defines how often a user will retrieve notifications for the given group
+     * 
+     * @param groupId
+     * @param userId
+     * @param notificationFrequency
+     * @throws SQLException
+     */
+    public void updateNotificationFrequency(int groupId, int userId, User.NotificationFrequency notificationFrequency) throws SQLException
+    {
+        try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_group_user` SET `notification_frequency`= ? WHERE `user_id`= ? and `group_id`= ?"))
+        {
+            update.setString(1, notificationFrequency.toString());
+            update.setInt(2, userId);
+            update.setInt(3, groupId);
+            update.executeQuery();
+        }
+    }
+
 }

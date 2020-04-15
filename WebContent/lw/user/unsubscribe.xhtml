@@ -1,0 +1,32 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="pageTitle" value="#{msg['notification_settings.unsubscribe']}"/>
+	<ui:param name="hideBreadcrumbs" value="true"/>
+    <ui:param name="hideGrowl" value="true"/> 
+	<ui:param name="hasAccessPermission" value="true"/>
+
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="hash" value="#{unsubscribeBean.hash}" required="true" requiredMessage="Missing parameter: hash"/>
+			<f:viewAction action="#{unsubscribeBean.onLoad}"/>
+		</f:metadata>
+	</ui:define>
+
+	<ui:define name="center_layout">
+		<p:panel header="#{msg['notification_settings.unsubscribe']}" rendered="#{unsubscribeBean.hashValid}">
+			<div class="d-flex align-items-center flex-column">
+				<h:outputLink value="myhome/profile.jsf" styleClass="mb-2">
+					<h:outputText value="#{msg['email_forum_notifications.change_how_often_we_send_mails']}" escape="false"/>
+				</h:outputLink>
+				<div>
+					<p:commandButton actionListener="#{unsubscribeBean.onUnsubscribe}" value="#{msg['notification_settings.unsubscribe_from_all']}" update=":growl"/>
+				</div>
+			</div>
+		</p:panel>
+	</ui:define>
+
+</ui:composition>

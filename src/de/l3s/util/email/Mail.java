@@ -80,6 +80,11 @@ public class Mail
         message.setText(text, "UTF-8", "html");
     }
 
+    public void setContent(Object html,  String type) throws MessagingException
+    {
+        message.setContent(html, type);
+    }
+
     @Override
     public String toString()
     {
