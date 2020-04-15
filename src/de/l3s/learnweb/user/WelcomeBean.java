@@ -1,11 +1,14 @@
 package de.l3s.learnweb.user;
 
-import java.io.Serializable;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogEntry;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
-
-import de.l3s.learnweb.beans.ApplicationBean;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.List;
 
 @Named
 @RequestScoped
@@ -13,7 +16,28 @@ public class WelcomeBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -4337683111157393180L;
 
+    // Filter for topics
+    private static final Action[] TOPICS_FILTER = {
+            Action.forum_topic_added
+    };
+
+    // Filter for posts
+    private static final Action[] POSTS_FILTER = {
+            Action.forum_post_added
+    };
+
+    // Filter for resources
+    private static final Action[] RESOURCES_FILTER = {
+            Action.adding_resource,
+            Action.edit_resource,
+            Action.group_adding_document,
+            Action.group_adding_link
+    };
+
     private String welcomeMessage;
+    private List<LogEntry> newsTopics;
+    private List<LogEntry> newsPosts;
+    private List<LogEntry> newsResources;
 
     public WelcomeBean()
     {
@@ -22,44 +46,42 @@ public class WelcomeBean extends ApplicationBean implements Serializable
             return;
 
         welcomeMessage = user.getOrganisation().getWelcomeMessage();
-        /*
-         *     try
-        {
-        Action[] filter = new Action[]{
-        		Action.adding_resource,
-        		Action.commenting_resource,
-        		Action.edit_resource,
-        		Action.deleting_resource,
-        		Action.group_adding_document,
-        		Action.group_adding_link,
-        		Action.group_changing_description,
-        		Action.group_changing_leader,
-        		Action.group_changing_restriction,
-        		Action.group_changing_title,
-        		Action.group_creating,
-        		Action.group_deleting,
-        		Action.group_joining,
-        		Action.group_leaving,
-        		Action.rating_resource,
-        		Action.tagging_resource,
-        		Action.thumb_rating_resource					
-        };			
-        
-        for(Group group : user.getGroups())
-        {
-        	List<LogEntry> logMessages = getLearnweb().getLogsByGroup(group.getId(), filter, 5);	
-        }
-        }
-        catch(SQLException e)
-        {
-        addFatalMessage(e);
-        }
-        */
+    }
 
+    private List<LogEntry> fetchNewsList(Action[] filter) throws SQLException
+    {
+        return getLearnweb().getLogManager().getActivityLogOfUserGroups(getUser().getId(), filter, 5);
     }
 
     public String getWelcomeMessage()
     {
         return welcomeMessage;
+    }
+
+    public List<LogEntry> getNewsTopics() throws SQLException
+    {
+        if(null == newsTopics)
+        {
+            newsTopics = fetchNewsList(TOPICS_FILTER);
+        }
+        return newsTopics;
+    }
+
+    public List<LogEntry> getNewsResources() throws SQLException
+    {
+        if(null == newsResources)
+        {
+            newsResources = fetchNewsList(RESOURCES_FILTER);
+        }
+        return newsResources;
+    }
+
+    public List<LogEntry> getNewsPosts() throws SQLException
+    {
+        if(null == newsPosts)
+        {
+            newsPosts = fetchNewsList(POSTS_FILTER);
+        }
+        return newsPosts;
     }
 }
