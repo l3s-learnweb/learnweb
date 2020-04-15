@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import de.l3s.learnweb.forum.ForumNotificator;
 import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryCrawlerSimple;
 import de.l3s.learnweb.resource.ted.TedCrawlerSimple;
 import de.l3s.learnweb.user.loginProtection.ExpiredBansCleaner;
@@ -32,6 +33,9 @@ public class JobScheduler
 
         //Checks bounced mail every 5 minutes
         scheduler.schedule("0/5 * * * *", new BounceFetcher());
+
+        //Runs the Forum Notificator at 8:00AM once a day to send summary emails
+        scheduler.schedule("0 8 * * *", new ForumNotificator());
     }
 
     public void startAllJobs()

@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -45,7 +46,7 @@ public class UserManager
      */
     private static final String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, " +
             "image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, " +
-            "is_moderator, registration_date, password, hashing, preferences, credits, fullname, affiliation, accept_terms_and_conditions, deleted";
+            "is_moderator, registration_date, password, hashing, preferences, credits, fullname, affiliation, accept_terms_and_conditions, deleted, preferred_notification_frequency";
 
     // if you change this, you have to change createUser() too
 
@@ -380,7 +381,7 @@ public class UserManager
         Objects.requireNonNull(user.getRealUsername());
         Objects.requireNonNull(user.getRegistrationDate());
 
-        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
         {
             if(user.getId() < 0) // the User is not yet stored at the database
                 replace.setNull(1, java.sql.Types.INTEGER);
@@ -412,6 +413,7 @@ public class UserManager
             replace.setString(23, user.getAffiliation());
             replace.setBoolean(24, user.isAcceptTermsAndConditions());
             replace.setBoolean(25, user.isDeleted());
+            replace.setString(26, user.getPreferredNotificationFrequency().toString());
             replace.executeUpdate();
 
             if(user.getId() < 0) // get the assigned id
@@ -463,11 +465,13 @@ public class UserManager
         user.setRegistrationDate(new Date(rs.getTimestamp("registration_date").getTime()));
         user.setCredits(rs.getString("credits"));
         user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
+        user.setPreferredNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("preferred_notification_frequency")));
+
+        user.setTimeZone(TimeZone.getTimeZone("Europe/Berlin")); // TODO issue #85
+        user.setLocale(Locale.forLanguageTag("en-US")); // TODO issue #85
 
         user.setAdmin(rs.getInt("is_admin") == 1);
         user.setModerator(rs.getInt("is_moderator") == 1);
-
-        user.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
 
         // deserialize preferences
         HashMap<String, String> preferences = null;

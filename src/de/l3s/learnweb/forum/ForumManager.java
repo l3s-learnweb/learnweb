@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.user.User.NotificationFrequency;
 
 public class ForumManager
 {
@@ -271,6 +272,65 @@ public class ForumManager
         {
             ps.setInt(1, post.getId());
             ps.executeUpdate();
+        }
+    }
+
+    /**
+     * @param userId
+     * @param notificationFrequency
+     * @return list of topics, that were created in date interval
+     * @throws SQLException
+     */
+
+    public List<ForumTopic> getTopicByPeriod(int userId, NotificationFrequency notificationFrequency) throws SQLException
+    {
+        int days = -1;
+        switch(notificationFrequency)
+        {
+            case DAILY:
+                days = 1;
+                break;
+            case WEEKLY:
+                days = 7;
+                break;
+            case MONTHLY:
+                days = 30;
+                break;
+            case NEVER:
+                throw new IllegalArgumentException();
+        }
+
+        List<ForumTopic> topics = new LinkedList<>();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_forum_topic` f JOIN `lw_group_user` g USING(`group_id`) LEFT JOIN `lw_forum_topic_user` ft ON g.`user_id` = ft.`user_id` and f.`topic_id` = ft.`topic_id` WHERE " +
+                "TIMESTAMPDIFF(DAY, topic_last_post_time, CURRENT_TIMESTAMP) < ? AND g.`user_id` = ? AND g.`notification_frequency` = ? and (TIMESTAMPDIFF(DAY, ft.`last_visit`, CURRENT_TIMESTAMP) IS NULL or TIMESTAMPDIFF(DAY, ft.`last_visit`, CURRENT_TIMESTAMP)>=?) GROUP BY f.`topic_id`"))
+        {
+            select.setInt(1, days);
+            select.setInt(2, userId);
+            select.setString(3, notificationFrequency.toString());
+            select.setInt(4, days);
+            ResultSet rs = select.executeQuery();
+
+            while(rs.next())
+            {
+                topics.add(createTopic(rs));
+            }
+        }
+        return topics;
+    }
+
+    /**
+     * @param topicId
+     * @param userId
+     * @return update last_visit time when user open topic
+     * @throws SQLException
+     */
+    public void updatePostVisitTime(int topicId, int userId) throws SQLException
+    {
+        try(PreparedStatement update = learnweb.getConnection().prepareStatement("INSERT INTO `lw_forum_topic_user`(`topic_id`, `user_id`) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_visit = NOW();"))
+        {
+            update.setInt(1, topicId);
+            update.setInt(2, userId);
+            update.executeUpdate();
         }
     }
 

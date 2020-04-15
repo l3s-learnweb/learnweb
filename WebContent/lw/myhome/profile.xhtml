@@ -153,6 +153,34 @@
             </p:panel>
         </div>
         <div class="col-12 col-lg-6">
+            <p:panel header="#{msg['notifications']}" styleClass="mb-3" rendered="#{not empty profileBean.userGroups}">
+                <h:form>
+                    <p:dataTable var="group" styleClass="mb-3" value="#{profileBean.userGroups}" dynamic="false" sortBy="#{group.group.title}">
+
+                        <p:column headerText="#{msg.group}" sortBy="#{group.group.title}">
+                            <h:outputLink value="group/resources.jsf">
+                                <f:param name="group_id" value="#{group.group.id}"/>
+                                <h:outputText value="#{group.group.title}"/>
+                            </h:outputLink>
+                        </p:column>
+                        <p:column headerText="#{msg.notifications}">
+                            <p:selectOneMenu value="#{group.notificationFrequency}" styleClass="my-2 w-100">
+                                <f:selectItems var="frequency" value="#{profileBean.notificationFrequencies}"
+                                               itemValue="#{frequency}" itemLabel="#{msg['notification_type.'+=frequency]}"/>
+                                <p:ajax event="change" listener="#{profileBean.onSaveNotificationFrequency(group)}" update="@form :growl"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:dataTable>
+                    <div class="d-flex flex-nowrap flex-column">
+                        <h:outputText value="#{msg['notification_settings.set_frequency_for_all_my_groups']}" styleClass="mb-2"/>
+                        <p:selectOneMenu styleClass="flex-fill" value="#{profileBean.selectedUser.preferredNotificationFrequency}">
+                                <f:selectItems var="frequency" value="#{profileBean.notificationFrequencies}"
+                                       itemValue="#{frequency}" itemLabel="#{msg['notification_type.'+=frequency]}"/>
+                                <p:ajax event="change" listener="#{profileBean.onSaveAllNotificationFrequencies}" update="@form :growl"/>
+                        </p:selectOneMenu>
+                    </div>
+                </h:form>
+            </p:panel>
             <p:panel header="#{msg.change_password}" styleClass="mb-3">
                 <h:form id="passwordform">
                     <div class="form-group">
