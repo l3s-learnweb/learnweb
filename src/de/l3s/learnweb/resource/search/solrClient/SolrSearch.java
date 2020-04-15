@@ -106,11 +106,13 @@ public class SolrSearch implements Serializable
         {
             String newQuery = "";
             int start = matcher.start();
-            if(start != 0) newQuery = query.substring(0, start);
+            if(start != 0)
+                newQuery = query.substring(0, start);
             newQuery += query.substring(matcher.end());
             return newQuery;
         }
-        else return query;
+        else
+            return query;
     }
 
     protected int getUserId()
@@ -263,7 +265,7 @@ public class SolrSearch implements Serializable
         {
             solrQuery.addFilterQuery("groupId : (" + StringUtils.join(filterGroupIds, " OR ") + ")");
 
-            if (filterGroupIds.size() == 1 && filterGroupIds.contains(0))
+            if(filterGroupIds.size() == 1 && filterGroupIds.contains(0))
             {
                 solrQuery.addFilterQuery("ownerUserId: " + userId); // show only resources of the user
             }
@@ -456,7 +458,7 @@ public class SolrSearch implements Serializable
                 }
 
                 if(skipResourcesWithoutThumbnails && resource.getThumbnail2() == null &&
-                    (resource.getType() == ResourceType.image || resource.getType() == ResourceType.video))
+                        (resource.getType() == ResourceType.image || resource.getType() == ResourceType.video))
                 {
                     skippedResources++;
                     continue;
@@ -479,10 +481,14 @@ public class SolrSearch implements Serializable
         final ResourceDecorator decoratedResource = new ResourceDecorator(resource);
         StringBuilder snippet = new StringBuilder();
 
-        if(documentSnippets.get("title") != null) decoratedResource.setTitle(documentSnippets.get("title").get(0));
-        if(documentSnippets.get("description") != null) snippet.append(documentSnippets.get("description").get(0));
-        if(snippet.length() < 150 && documentSnippets.get("comments") != null) snippet.append(documentSnippets.get("comments").get(0));
-        if(snippet.length() < 150 && documentSnippets.get("machineDescription") != null) snippet.append(documentSnippets.get("machineDescription").get(0));
+        if(documentSnippets.get("title") != null)
+            decoratedResource.setTitle(documentSnippets.get("title").get(0));
+        if(documentSnippets.get("description") != null)
+            snippet.append(documentSnippets.get("description").get(0));
+        if(snippet.length() < 150 && documentSnippets.get("comments") != null)
+            snippet.append(documentSnippets.get("comments").get(0));
+        if(snippet.length() < 150 && documentSnippets.get("machineDescription") != null)
+            snippet.append(documentSnippets.get("machineDescription").get(0));
 
         // still no real snippet => use description
         if(snippet.length() < 40 && null != resource.getDescription())
@@ -492,7 +498,8 @@ public class SolrSearch implements Serializable
 
         String oneLineSnippet = StringHelper.removeNewLines(snippet.toString());
         oneLineSnippet = StringHelper.trimNotAlphabetical(oneLineSnippet);
-        if(!oneLineSnippet.isEmpty()) decoratedResource.setSnippet(oneLineSnippet);
+        if(!oneLineSnippet.isEmpty())
+            decoratedResource.setSnippet(oneLineSnippet);
         return decoratedResource;
     }
 

@@ -40,7 +40,7 @@ public class StringHelper
         if(matcher.lookingAt())
         {
             final String result = str.substring(matcher.end());
-            log.info("trimNotAlphabetical: '" + str + "' - '" + result + "'"); // for test, I want to know why we need it
+            //log.info("trimNotAlphabetical: '" + str + "' - '" + result + "'"); // for test, I want to know why we need it
             return result;
         }
 
@@ -70,7 +70,7 @@ public class StringHelper
 
     /**
      * The same as StringUtils.remove but is removes a char from an array of strings
-     * 
+     *
      * @param values
      * @param remove
      * @return

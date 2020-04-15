@@ -54,18 +54,20 @@
             </h:form>
 
             <div class="item-description">
-                <h:outputLink styleClass="res-link text-decoration-none" target="_blank" value="#{userBean.getUrlProxied(res)}">
-                    <h:outputText value="#{res.title}" escape="false" styleClass="item-title h5 mb-0 text-truncate"/><br/>
-                    <h:outputText value="#{res.url}" escape="false" styleClass="item-origin text-truncate"/>
+                <h:outputLink styleClass="res-link" target="_blank" value="#{userBean.getUrlProxied(res)}">
+                    <h:outputText value="#{res.title}" escape="false" styleClass="item-title h5 mb-0"/>
+                    <h:outputText value="#{res.url}" escape="false" styleClass="item-origin"/>
                 </h:outputLink>
 
-                <div class="text-truncate-multiline line-height-sm">
+                <div class="text-truncate-multiline line-height-sm pt-1">
                     <h:outputText value="#{res.snippet}" escape="false"/>
                 </div>
 
                 <div class="text-truncate">
-                    <h:outputLink rendered="#{res.id != -1}" value="group/resources.jsf?group_id=#{res.groupId}">
-                        <i class="fa fa-angle-double-right" aria-hidden="true"></i> Stored in #{msg['application.name']} group : #{res.group.title}
+                    <h:outputLink rendered="#{res.id != -1}" value="group/resources.jsf?=">
+                        <f:param name="group_id" value="#{res.resource.groupId}"/>
+                        <f:param name="folder_id" value="#{res.resource.folderId}"/>
+                        <i class="fa fa-angle-double-right" aria-hidden="true"></i> #{msg.stored_in} #{res.groupId == 0? msg.myPrivateResources : res.group.title}
                     </h:outputLink>
                 </div>
             </div>

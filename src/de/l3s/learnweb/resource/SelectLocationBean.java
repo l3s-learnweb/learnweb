@@ -34,6 +34,11 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
     private transient DefaultTreeNode groupsTree;
     private Instant groupsTreeUpdate;
 
+    public SelectLocationBean()
+    {
+        log.debug("Create new SelectLocationBean");
+    }
+
     public Group getTargetGroup()
     {
         if(targetGroup == null && targetFolder != null)

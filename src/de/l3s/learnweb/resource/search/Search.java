@@ -135,7 +135,7 @@ public class Search implements Serializable
             log.fatal("error during search", e);
         }
 
-        logResources(resources, page);
+        logResources(newResources, page);
 
         return newResources;
     }
@@ -513,8 +513,10 @@ public class Search implements Serializable
         @Override
         public boolean equals(final Object o)
         {
-            if(this == o) return true;
-            if(o == null || getClass() != o.getClass()) return false;
+            if(this == o)
+                return true;
+            if(o == null || getClass() != o.getClass())
+                return false;
             final GroupedResources that = (GroupedResources) o;
             return Objects.equals(groupAlias, that.groupAlias);
         }
