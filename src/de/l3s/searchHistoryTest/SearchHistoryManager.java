@@ -111,7 +111,7 @@ public class SearchHistoryManager
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
             {
-                Object object = Sql.getSerializedObject(rs, "relatedEntities");
+                Object object = Sql.getSerializedObject(rs, "related_entities");
                 if(object == null)
                     break;
                 List<String> relatedEntities = (List<String>) object;
