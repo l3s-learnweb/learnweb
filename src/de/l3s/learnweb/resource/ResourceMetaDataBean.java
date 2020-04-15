@@ -42,11 +42,13 @@ public class ResourceMetaDataBean
 
     /**
      * Creates a translated list of all available languages
-     * 
+     *
      * @return
      */
     public static List<SelectItem> getLanguageList()
     {
+        // TODO refactor. check if Applicationbean.localesToSelectItems can be used
+
         String locale = UtilBean.getUserBean().getLocaleCode();
         List<SelectItem> languageList;
 

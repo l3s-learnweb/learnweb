@@ -386,6 +386,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, e.getMessage());
             log.error(e.getMessage(), e);
+            // TODO still need to decide if growls can be used to handle errors
+            // addErrorGrowl(e.getMessage(), e);
         }
         catch(JSONException | SQLException e)
         {
@@ -396,7 +398,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private void copyResources(final ResourceUpdateBatch items, final Group targetGroup, final Folder targetFolder, boolean isRecursion) throws SQLException
     {
         if(targetGroup == null)
-            throw new IllegalArgumentException("Target group does dot exist!");
+            throw new IllegalArgumentException("Target group does not exist!");
         if(!group.canViewResources(getUser()))
             throw new IllegalAccessError("Not allowed to copy the resources!");
         if(!targetGroup.canAddResources(getUser()))
@@ -442,7 +444,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                 targetFolderId = HasId.getIdOrDefault(selectLocationBean.getTargetFolder(), 0);
             }
             else
-                throw new IllegalArgumentException("Target group does dot exist!");
+                throw new IllegalArgumentException("Target group does not exist!");
         }
 
         if(targetGroupId != 0)
