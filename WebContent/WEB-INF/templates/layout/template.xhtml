@@ -95,7 +95,7 @@
                 </div>
             </ui:insert>
 
-            <p:growl id="growl" rendered="#{not hideGrowl}" escape="false"/>
+            <p:growl id="growl" rendered="#{not hideGrowl}" escape="false" life="4000" skipDetailIfEqualsSummary="true"/>
 
             <p:ajaxStatus styleClass="ajax-status-screen" delay="100">
                 <f:facet name="start">

@@ -27,7 +27,7 @@ public class BeanHelper
     {
         return (HttpServletRequest) getExternalContext().getRequest();
     }
-    
+
     public static String getServerUrl()
     {
         try
@@ -134,6 +134,7 @@ public class BeanHelper
                 request = getRequest();
             }
 
+            parameters = request.getParameterMap();
             referrer = request.getHeader("referer");
             ip = getIp(request, true);
 
@@ -156,8 +157,6 @@ public class BeanHelper
                 if(learnweb != null)
                     user = learnweb.getUserManager().getUser(userId).toString();
             }
-
-            parameters = request.getParameterMap();
         }
         catch(Throwable t)
         {

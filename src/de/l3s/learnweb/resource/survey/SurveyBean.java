@@ -132,7 +132,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addErrorMessage("Can't save answers for User: " + surveyUserId + " for survey: " + surveyResourceId, e);
+            addErrorMessage("Can't save answers", e);
         }
         return false;
     }
@@ -213,10 +213,10 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
         switch(goBackPage)
         {
-        case "assessmentResults":
-            goBackPageLink = "myhome/assessmentResults.jsf";
-            goBackPageTitle = "Go back to the assessment results";
-            break;
+            case "assessmentResults":
+                goBackPageLink = "myhome/assessmentResults.jsf";
+                goBackPageTitle = "Go back to the assessment results";
+                break;
         }
     }
 
