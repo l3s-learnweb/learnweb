@@ -21,6 +21,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.omnifaces.util.Beans;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.Learnweb;
@@ -82,9 +83,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     @Inject
     private AddResourceBean addResourceBean;
-
-    @Inject
-    private SelectLocationBean selectLocationBean;
 
     public GroupResourcesBean()
     {
@@ -347,6 +345,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             String action = params.get("action");
             ResourceUpdateBatch items = new ResourceUpdateBatch(params.get("items"));
 
+            SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
             Group targetGroup = selectLocationBean.getTargetGroup();
             Folder targetFolder = selectLocationBean.getTargetFolder();
 
@@ -438,6 +437,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         int skipped = 0;
         if(targetGroupId == null)
         {
+            SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
             if(selectLocationBean.getTargetGroup() != null)
             {
                 targetGroupId = selectLocationBean.getTargetGroup().getId();
@@ -656,15 +656,5 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     public void setAddResourceBean(AddResourceBean addResourceBean)
     {
         this.addResourceBean = addResourceBean;
-    }
-
-    public SelectLocationBean getSelectLocationBean()
-    {
-        return selectLocationBean;
-    }
-
-    public void setSelectLocationBean(final SelectLocationBean selectLocationBean)
-    {
-        this.selectLocationBean = selectLocationBean;
     }
 }

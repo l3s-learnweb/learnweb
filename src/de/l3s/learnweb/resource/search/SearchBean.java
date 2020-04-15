@@ -12,11 +12,11 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.omnifaces.util.Beans;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.interwebj.InterWeb;
@@ -64,9 +64,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     private static final int minResourcesPerGroup = 2;
 
     private List<GroupedResources> resourcesGroupedBySource = null;
-
-    @Inject
-    private SelectLocationBean selectLocationBean;
 
     public SearchBean()
     {
@@ -185,6 +182,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             newResource.getMetadata().remove("last_timestamp");
 
             // add resource to a group if selected
+            SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
             newResource.setGroup(selectLocationBean.getTargetGroup());
             newResource.setFolder(selectLocationBean.getTargetFolder());
 
@@ -425,15 +423,5 @@ public class SearchBean extends ApplicationBean implements Serializable
             Collections.sort(resourcesGroupedBySource);
         }
         return resourcesGroupedBySource;
-    }
-
-    public SelectLocationBean getSelectLocationBean()
-    {
-        return selectLocationBean;
-    }
-
-    public void setSelectLocationBean(final SelectLocationBean selectLocationBean)
-    {
-        this.selectLocationBean = selectLocationBean;
     }
 }

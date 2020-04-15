@@ -40,7 +40,7 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
         {
             try
             {
-                return targetFolder.getGroup();
+                targetGroup = targetFolder.getGroup();
             }
             catch(SQLException e)
             {
@@ -83,9 +83,11 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
         if("group".equals(type))
         {
             targetGroup = (Group) event.getTreeNode().getData();
+            targetFolder = null;
         }
         else if("folder".equals(type))
         {
+            targetGroup = null;
             targetFolder = (Folder) event.getTreeNode().getData();
         }
     }

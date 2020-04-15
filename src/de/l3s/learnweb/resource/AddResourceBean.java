@@ -11,10 +11,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.log4j.Logger;
+import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
@@ -38,9 +38,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     private Resource resource;
     private Group targetGroup;
     private Folder targetFolder;
-
-    @Inject
-    private SelectLocationBean selectLocationBean;
 
     // caches
     private transient List<SelectItem> availableGlossaryLanguages;
@@ -299,12 +296,15 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
         this.targetGroup = targetGroup;
         this.targetFolder = targetFolder;
-        this.selectLocationBean.setTargetGroup(targetGroup);
-        this.selectLocationBean.setTargetFolder(targetFolder);
+
+        SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
+        selectLocationBean.setTargetGroup(targetGroup);
+        selectLocationBean.setTargetFolder(targetFolder);
     }
 
     public void updateTargetLocation()
     {
+        SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
         this.targetGroup = selectLocationBean.getTargetGroup();
         this.targetFolder = selectLocationBean.getTargetFolder();
     }
@@ -316,15 +316,5 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             availableGlossaryLanguages = localesToSelectItems(getUser().getOrganisation().getGlossaryLanguages());
         }
         return availableGlossaryLanguages;
-    }
-
-    public SelectLocationBean getSelectLocationBean()
-    {
-        return selectLocationBean;
-    }
-
-    public void setSelectLocationBean(final SelectLocationBean selectLocationBean)
-    {
-        this.selectLocationBean = selectLocationBean;
     }
 }
