@@ -2,7 +2,8 @@ package de.l3s.learnweb.beans;
 
 import javax.faces.context.ExceptionHandler;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.primefaces.application.exceptionhandler.PrimeExceptionHandler;
 
 import de.l3s.util.bean.BeanHelper;
@@ -14,7 +15,7 @@ import de.l3s.util.bean.BeanHelper;
  */
 public class LearnwebExceptionHandler extends PrimeExceptionHandler
 {
-    private static final Logger log = Logger.getLogger(LearnwebExceptionHandler.class.getCanonicalName());
+    private static final Logger log = LogManager.getLogger(LearnwebExceptionHandler.class.getCanonicalName());
 
     public LearnwebExceptionHandler(ExceptionHandler exception)
     {

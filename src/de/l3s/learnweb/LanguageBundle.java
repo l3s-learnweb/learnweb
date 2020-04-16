@@ -16,7 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Enables constant substitution in property values
@@ -32,7 +33,7 @@ import org.apache.log4j.Logger;
  */
 public class LanguageBundle extends ResourceBundle
 {
-    protected static final Logger log = Logger.getLogger(LanguageBundle.class);
+    protected static final Logger log = LogManager.getLogger(LanguageBundle.class);
     protected static final String BASE_NAME = "de.l3s.learnweb.lang.messages";
 
     /**

@@ -13,7 +13,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 
@@ -37,7 +38,7 @@ import de.l3s.util.StringHelper;
 public class SearchFilters implements Serializable
 {
     private static final long serialVersionUID = 8012567994091306088L;
-    static final Logger log = Logger.getLogger(SearchFilters.class);
+    static final Logger log = LogManager.getLogger(SearchFilters.class);
 
     private Long totalResultsLearnweb = null;
     private Long totalResultsInterweb = null;

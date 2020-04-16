@@ -11,7 +11,8 @@ import javax.inject.Named;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.user.UserBean;
@@ -22,7 +23,7 @@ import de.l3s.util.bean.BeanHelper;
 public class UtilBean implements Serializable
 {
     private static final long serialVersionUID = 6252597111468136574L;
-    private static final Logger log = Logger.getLogger(UtilBean.class);
+    private static final Logger log = LogManager.getLogger(UtilBean.class);
 
     /**
      * This method is intended only for special use cases. Discuss with project leader before using it.

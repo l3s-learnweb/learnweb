@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -19,7 +20,7 @@ import com.sun.jersey.oauth.signature.OAuthSecrets;
 
 public class InterWeb implements Serializable
 {
-    private static final Logger log = Logger.getLogger(InterWeb.class);
+    private static final Logger log = LogManager.getLogger(InterWeb.class);
     private static final long serialVersionUID = -1621494088505203391L;
 
     private final String consumerKey;
@@ -101,8 +102,7 @@ public class InterWeb implements Serializable
     }
 
     /**
-     *
-     * @param query The query string
+     * @param query  The query string
      * @param params see http://athena.l3s.uni-hannover.de:8000/doc/search
      * @return
      * @throws IOException

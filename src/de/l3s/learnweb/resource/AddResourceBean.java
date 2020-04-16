@@ -13,7 +13,8 @@ import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
@@ -32,7 +33,7 @@ import de.l3s.util.UrlHelper;
 public class AddResourceBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 1736402639245432708L;
-    private static final Logger log = Logger.getLogger(AddResourceBean.class);
+    private static final Logger log = LogManager.getLogger(AddResourceBean.class);
 
     private int formStep = 1;
     private Resource resource;

@@ -12,7 +12,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -39,7 +40,7 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
  */
 public class ResourcePreviewMaker
 {
-    private static final Logger log = Logger.getLogger(ResourcePreviewMaker.class);
+    private static final Logger log = LogManager.getLogger(ResourcePreviewMaker.class);
 
     private static final int SIZE0_MAX_WIDTH = 150;
     private static final int SIZE0_MAX_HEIGHT = 120;

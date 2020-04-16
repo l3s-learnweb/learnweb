@@ -9,7 +9,8 @@ import java.util.Map;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.GroupManager;
@@ -25,7 +26,7 @@ import de.l3s.learnweb.user.User;
 public class YourActivityBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -53694900500236594L;
-    private static final Logger log = Logger.getLogger(YourActivityBean.class);
+    private static final Logger log = LogManager.getLogger(YourActivityBean.class);
 
     private List<LogEntry> userActions;
     private Map<Integer, String> groupTitles;

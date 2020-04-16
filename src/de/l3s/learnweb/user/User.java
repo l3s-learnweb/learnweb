@@ -26,7 +26,8 @@ import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -51,7 +52,7 @@ import de.l3s.util.email.Mail;
 
 public class User implements Comparable<User>, Serializable, HasId
 {
-    private static final Logger log = Logger.getLogger(User.class);
+    private static final Logger log = LogManager.getLogger(User.class);
     private static final long serialVersionUID = 2482790243930271009L;
 
     public enum PasswordHashing

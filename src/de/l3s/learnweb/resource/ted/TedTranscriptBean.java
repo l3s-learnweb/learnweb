@@ -19,7 +19,8 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -40,7 +41,7 @@ import rita.wordnet.RiWordnet;
 @ViewScoped
 public class TedTranscriptBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = Logger.getLogger(TedTranscriptBean.class);
+    private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
     private static final long serialVersionUID = -1803725556672379697L;
     //private static ILexicalDatabase db = new NictWordNet();
     //private static HashMap<String, RelatednessCalculator> rcs = new HashMap<String, RelatednessCalculator>();

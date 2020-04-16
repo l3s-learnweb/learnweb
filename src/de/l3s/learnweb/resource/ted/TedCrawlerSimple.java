@@ -13,7 +13,8 @@ import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +36,7 @@ import de.l3s.util.Misc;
 
 public class TedCrawlerSimple implements Runnable
 {
-    private static final Logger log = Logger.getLogger(TedCrawlerSimple.class);
+    private static final Logger log = LogManager.getLogger(TedCrawlerSimple.class);
 
     private ResourcePreviewMaker rpm;
     private Group tedGroup;

@@ -23,7 +23,7 @@ import de.l3s.util.StringHelper;
  */
 public class OrganisationManager
 {
-    //private static final Logger log = Logger.getLogger(OrganisationManager.class);
+    //private static final Logger log = LogManager.getLogger(OrganisationManager.class);
     private static final int FIELDS = 1;
     private static final String[] COLUMNS = { "organisation_id", "title", "logout_page", "welcome_page", "welcome_message", "options_field1", "default_search_text", "default_search_image", "default_search_video", "default_language", "language_variant",
             "banner_image_file_id", "glossary_languages", "css_file" };

@@ -12,7 +12,8 @@ import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
@@ -24,7 +25,7 @@ import de.l3s.learnweb.user.User;
 @ViewScoped
 public class GroupsBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = Logger.getLogger(GroupsBean.class);
+    private static final Logger log = LogManager.getLogger(GroupsBean.class);
     private static final long serialVersionUID = 5364340827474357098L;
 
     private List<Group> joinAbleGroups;

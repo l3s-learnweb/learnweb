@@ -20,7 +20,7 @@ import de.l3s.learnweb.user.User;
 public class AdminSystemBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 1354024417928664741L;
-    //private static final Logger log = Logger.getLogger(AdminSystemBean.class);
+    //private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
     private LinkedList<Object> databaseProcessList;
     private String memoryInfo;
 

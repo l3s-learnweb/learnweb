@@ -25,7 +25,7 @@ import de.l3s.util.bean.BeanHelper;
 @RequestScoped
 public class LoginBean extends ApplicationBean implements Serializable
 {
-    // private static final Logger log = Logger.getLogger(LoginBean.class);
+    // private static final Logger log = LogManager.getLogger(LoginBean.class);
     private static final long serialVersionUID = 7980062591522267111L;
     private static final String LOGIN_PAGE = "/lw/user/login.xhtml";
 

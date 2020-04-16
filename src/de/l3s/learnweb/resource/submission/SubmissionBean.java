@@ -16,7 +16,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +44,7 @@ import de.l3s.util.bean.BeanHelper;
 public class SubmissionBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -2494290373382483709L;
-    private static final Logger log = Logger.getLogger(SubmissionBean.class);
+    private static final Logger log = LogManager.getLogger(SubmissionBean.class);
 
     private int userId; //For checking specific user's submission
     private int courseId; //For retrieving submissions of specific course

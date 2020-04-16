@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -32,7 +33,7 @@ public class CourseManager
     private static final String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "next_x_users_become_moderator", "welcome_message", "timestamp_creation", "options_field1" };
     private static final String SELECT = String.join(", ", COLUMNS);
     private static final String SAVE = Sql.getCreateStatement("lw_course", COLUMNS);
-    private static final Logger log = Logger.getLogger(CourseManager.class);
+    private static final Logger log = LogManager.getLogger(CourseManager.class);
 
     private Learnweb learnweb;
     private Map<Integer, Course> cache;

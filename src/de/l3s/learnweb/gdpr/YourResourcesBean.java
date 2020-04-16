@@ -19,7 +19,7 @@ import de.l3s.learnweb.user.User;
 public class YourResourcesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 5490911640532982940L;
-    //private static final Logger log = Logger.getLogger(YourResourcesBean.class);
+    //private static final Logger log = LogManager.getLogger(YourResourcesBean.class);
 
     private List<Resource> userResources;
 

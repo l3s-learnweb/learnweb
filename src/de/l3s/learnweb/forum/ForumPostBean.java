@@ -22,7 +22,7 @@ import de.l3s.learnweb.user.User;
 public class ForumPostBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6077135964610986190L;
-    // private static final Logger log = Logger.getLogger(ForumPostBean.class);
+    // private static final Logger log = LogManager.getLogger(ForumPostBean.class);
 
     private int topicId;
     private List<ForumPost> posts;

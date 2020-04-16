@@ -16,7 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
@@ -42,7 +43,7 @@ import de.l3s.learnweb.user.User;
 public class SaverServlet extends HttpServlet
 {
     private static final long serialVersionUID = 7296371511069054378L;
-    private static final Logger log = Logger.getLogger(SaverServlet.class);
+    private static final Logger log = LogManager.getLogger(SaverServlet.class);
 
     private static final String FILE_ID = "fileId";
     private static final String USER_ID = "userId";

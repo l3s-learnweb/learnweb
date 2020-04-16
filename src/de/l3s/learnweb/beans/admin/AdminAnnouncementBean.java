@@ -18,7 +18,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 public class AdminAnnouncementBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5638619327036890427L;
-    //    private static final Logger log = Logger.getLogger(AdminAnnouncementsBean.class);
+    //    private static final Logger log = LogManager.getLogger(AdminAnnouncementsBean.class);
 
     private int announcementId;
     private Announcement announcement;

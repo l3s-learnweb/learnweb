@@ -7,7 +7,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -25,7 +26,7 @@ import de.l3s.learnweb.resource.Tag;
 
 public class SolrClient
 {
-    private static final Logger log = Logger.getLogger(SolrClient.class);
+    private static final Logger log = LogManager.getLogger(SolrClient.class);
 
     private static SolrClient instance = null;
 

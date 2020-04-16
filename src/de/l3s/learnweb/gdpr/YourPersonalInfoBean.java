@@ -18,7 +18,7 @@ import de.l3s.learnweb.user.User;
 public class YourPersonalInfoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6016324259224515500L;
-    //private static final Logger log = Logger.getLogger(YourPersonalInfoBean.class);
+    //private static final Logger log = LogManager.getLogger(YourPersonalInfoBean.class);
 
     private String fullName;
     private String address;

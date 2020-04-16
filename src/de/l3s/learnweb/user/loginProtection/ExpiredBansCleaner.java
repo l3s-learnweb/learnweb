@@ -1,6 +1,7 @@
 package de.l3s.learnweb.user.loginProtection;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 
@@ -12,6 +13,7 @@ import de.l3s.learnweb.Learnweb;
  */
 public class ExpiredBansCleaner implements Runnable
 {
+    private static final Logger log = LogManager.getLogger(ExpiredBansCleaner.class);
 
     @Override
     public void run()
@@ -22,7 +24,7 @@ public class ExpiredBansCleaner implements Runnable
         }
         catch(Throwable e)
         {
-            Logger.getLogger(ExpiredBansCleaner.class).error("err", e);
+            log.error("err", e);
         }
     }
 

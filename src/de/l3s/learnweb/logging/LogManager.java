@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.SummaryOverview;
@@ -26,7 +26,7 @@ import de.l3s.util.StringHelper;
 
 public class LogManager
 {
-    private static final Logger log = Logger.getLogger(LogManager.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(LogManager.class);
 
     // TODO Philipp: WIP refactoring
     private static final String LOG_SELECT = "SELECT user_id, '',action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title FROM lw_user_log ul LEFT JOIN lw_resource r ON action IN(0,1,2,3,15,14,19,21,32,11,54,55,6,8) AND target_id = r.resource_id LEFT JOIN lw_group g ON ul.group_id = g.group_id";

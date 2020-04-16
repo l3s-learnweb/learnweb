@@ -11,7 +11,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
@@ -24,7 +25,7 @@ import de.l3s.learnweb.resource.office.converter.model.OfficeThumbnailParams;
 public class ConverterService
 {
 
-    private static final Logger log = Logger.getLogger(ConverterService.class);
+    private static final Logger log = LogManager.getLogger(ConverterService.class);
     private final Learnweb learnweb;
 
     public ConverterRequest createThumbnailConverterRequest(File file)

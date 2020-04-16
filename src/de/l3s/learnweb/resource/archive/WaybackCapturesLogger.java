@@ -11,14 +11,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 
 public class WaybackCapturesLogger
 {
-    private static final Logger log = Logger.getLogger(WaybackCapturesLogger.class);
+    private static final Logger log = LogManager.getLogger(WaybackCapturesLogger.class);
 
     private static final Container LAST_ENTRY = new Container("", 0L, 0L); // this element indicates that the consumer thread should stop
     private final Learnweb learnweb;

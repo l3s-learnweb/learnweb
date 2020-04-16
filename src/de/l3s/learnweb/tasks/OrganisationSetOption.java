@@ -3,7 +3,8 @@ package de.l3s.learnweb.tasks;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.Organisation;
@@ -12,7 +13,7 @@ import de.l3s.learnweb.user.OrganisationManager;
 
 public class OrganisationSetOption
 {
-    private static final Logger log = Logger.getLogger(OrganisationSetOption.class);
+    private static final Logger log = LogManager.getLogger(OrganisationSetOption.class);
 
     private Learnweb learnweb;
 

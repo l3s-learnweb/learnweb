@@ -5,7 +5,8 @@ import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -23,7 +24,7 @@ import de.l3s.util.UrlHelper;
  */
 public class GenerateThumbnailsForWebpageResources
 {
-    private static final Logger log = Logger.getLogger(GenerateThumbnailsForWebpageResources.class);
+    private static final Logger log = LogManager.getLogger(GenerateThumbnailsForWebpageResources.class);
 
     /**
      * @param args

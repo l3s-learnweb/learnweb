@@ -29,7 +29,8 @@ import javax.imageio.ImageIO;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFPatriarch;
@@ -56,7 +57,7 @@ import de.l3s.util.bean.BeanHelper;
 public class GlossaryBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 7104637880221636543L;
-    private static final Logger log = Logger.getLogger(GlossaryBean.class);
+    private static final Logger log = LogManager.getLogger(GlossaryBean.class);
 
     private int resourceId;
     private GlossaryResource glossaryResource;

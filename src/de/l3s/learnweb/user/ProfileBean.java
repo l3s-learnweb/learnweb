@@ -15,7 +15,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -27,7 +28,7 @@ import de.l3s.learnweb.user.User.Gender;
 @ViewScoped
 public class ProfileBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = Logger.getLogger(ProfileBean.class);
+    private static final Logger log = LogManager.getLogger(ProfileBean.class);
     private static final long serialVersionUID = -2460055719611784132L;
 
     private int userId;

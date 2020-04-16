@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
@@ -35,7 +36,7 @@ import de.l3s.util.StringHelper;
  */
 public class FileManager
 {
-    private static final Logger log = Logger.getLogger(FileManager.class);
+    private static final Logger log = LogManager.getLogger(FileManager.class);
 
     // if you change this, remember to change createFile()
     private static final String COLUMNS = "file_id, resource_id, resource_file_number, name, mime_type, log_actived, timestamp";

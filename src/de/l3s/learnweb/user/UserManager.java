@@ -19,7 +19,8 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
@@ -38,7 +39,7 @@ import de.l3s.util.Sql;
  */
 public class UserManager
 {
-    private static final Logger log = Logger.getLogger(UserManager.class);
+    private static final Logger log = LogManager.getLogger(UserManager.class);
 
     /**
      * Saves the User to the database.

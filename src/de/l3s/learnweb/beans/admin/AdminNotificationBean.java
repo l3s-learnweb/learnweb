@@ -14,7 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Message;
@@ -27,7 +28,7 @@ import de.l3s.util.email.Mail;
 @RequestScoped
 public class AdminNotificationBean extends ApplicationBean
 {
-    private static final Logger log = Logger.getLogger(AdminNotificationBean.class);
+    private static final Logger log = LogManager.getLogger(AdminNotificationBean.class);
     @NotBlank
     private String text;
     @NotBlank

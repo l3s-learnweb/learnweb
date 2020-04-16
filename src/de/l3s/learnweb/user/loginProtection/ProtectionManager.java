@@ -25,7 +25,8 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.web.AggregatedRequestData;
@@ -40,7 +41,7 @@ import de.l3s.util.email.Mail;
  */
 public class ProtectionManager
 {
-    private static final Logger log = Logger.getLogger(ProtectionManager.class);
+    private static final Logger log = LogManager.getLogger(ProtectionManager.class);
     private final Learnweb learnweb;
 
     private Map<String, AccessData> accessMap;

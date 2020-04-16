@@ -19,7 +19,7 @@ import de.l3s.util.email.Mail;
 public class PasswordBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 2237249691336567548L;
-    //private static final Logger log = Logger.getLogger(PasswordBean.class);
+    //private static final Logger log = LogManager.getLogger(PasswordBean.class);
 
     private String email;
 

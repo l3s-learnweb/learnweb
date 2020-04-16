@@ -11,7 +11,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import de.l3s.learnweb.Learnweb;
@@ -24,7 +25,7 @@ import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 @SuppressWarnings("unused")
 public class IndexFakeNews
 {
-    private static final Logger log = Logger.getLogger(IndexFakeNews.class);
+    private static final Logger log = LogManager.getLogger(IndexFakeNews.class);
 
     private Learnweb learnweb;
 

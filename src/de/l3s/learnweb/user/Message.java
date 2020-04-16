@@ -8,13 +8,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 
 // TODO this class needs to be refactored and split into a dao and pojo class
 public class Message implements Comparable<Message>
 {
+    private static final Logger log = LogManager.getLogger(Message.class);
 
     private int id;
     private User fromUser;
@@ -249,7 +251,7 @@ public class Message implements Comparable<Message>
         catch(SQLException e)
         {
             // TODO Auto-generated catch block
-            Logger.getLogger(Message.class).error("unhandled error", e);
+            log.error("unhandled error", e);
         }
         return read;
     }

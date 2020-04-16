@@ -6,7 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -18,7 +19,7 @@ import de.l3s.learnweb.Learnweb;
 
 public class SpeechRepositoryCrawlerSimple implements Runnable
 {
-    private static final Logger log = Logger.getLogger(SpeechRepositoryCrawlerSimple.class);
+    private static final Logger log = LogManager.getLogger(SpeechRepositoryCrawlerSimple.class);
 
     private static final int TIMEOUT = 60 * 1000;
 

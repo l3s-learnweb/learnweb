@@ -19,7 +19,7 @@ import de.l3s.learnweb.user.User;
 public class YourSubmissionsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -7818173987582995716L;
-    //private static final Logger log = Logger.getLogger(YourSubmissionsBean.class);
+    //private static final Logger log = LogManager.getLogger(YourSubmissionsBean.class);
 
     private List<Submission> userSubmissions;
 

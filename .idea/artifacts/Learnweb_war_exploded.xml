@@ -116,7 +116,6 @@
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-web:2.13.1" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.13.1" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.13.1" />
-          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-1.2-api:2.13.1" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.13.1" />
           <element id="library" level="project" name="Maven: org.hibernate.validator:hibernate-validator:6.1.2.Final" />
           <element id="library" level="project" name="Maven: jakarta.validation:jakarta.validation-api:2.0.2" />

@@ -8,7 +8,8 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
@@ -19,7 +20,7 @@ import de.l3s.util.bean.BeanHelper;
 public class LearnwebBean implements Serializable
 {
     private static final long serialVersionUID = 1286475643761742147L;
-    private static final Logger log = Logger.getLogger(LearnwebBean.class);
+    private static final Logger log = LogManager.getLogger(LearnwebBean.class);
 
     private transient Learnweb learnweb;
     private boolean maintenanceMode = false;

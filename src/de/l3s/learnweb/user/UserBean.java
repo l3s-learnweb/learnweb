@@ -20,7 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.primefaces.model.menu.BaseMenuModel;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.MenuModel;
@@ -40,7 +41,7 @@ import de.l3s.util.bean.BeanHelper;
 public class UserBean implements Serializable
 {
     private static final long serialVersionUID = -8577036953815676943L;
-    private static final Logger log = Logger.getLogger(UserBean.class);
+    private static final Logger log = LogManager.getLogger(UserBean.class);
 
     private int userId = 0;
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself

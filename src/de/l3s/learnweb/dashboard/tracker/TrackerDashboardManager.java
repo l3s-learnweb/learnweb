@@ -10,14 +10,15 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.util.StringHelper;
 
 class TrackerDashboardManager
 {
-    private static final Logger log = Logger.getLogger(TrackerDashboardManager.class);
+    private static final Logger log = LogManager.getLogger(TrackerDashboardManager.class);
 
     private final Learnweb learnweb;
 

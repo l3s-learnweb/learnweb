@@ -12,7 +12,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Course;
@@ -24,7 +25,7 @@ import de.l3s.learnweb.user.Organisation;
 public class AdminCourseBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -1276599881084055950L;
-    private static final Logger log = Logger.getLogger(AdminCourseBean.class);
+    private static final Logger log = LogManager.getLogger(AdminCourseBean.class);
 
     private Course course = null;
     private List<OptionWrapperGroup> optionGroups;

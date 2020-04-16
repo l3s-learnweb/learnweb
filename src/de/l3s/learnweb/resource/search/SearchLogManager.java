@@ -15,7 +15,8 @@ import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -26,7 +27,7 @@ import de.l3s.util.StringHelper;
 
 public class SearchLogManager
 {
-    private static final Logger log = Logger.getLogger(SearchLogManager.class);
+    private static final Logger log = LogManager.getLogger(SearchLogManager.class);
     private static final String QUERY_COLUMNS = "`query`, `mode`, `service`, `language`, `filters`, `user_id`, `timestamp`";
     private static final String QUERY_COLUMNS_FOR_GROUP = "`group_id`, `query`, `mode`, `service`, `language`, `filters`, `user_id`, `timestamp`";
     private static final String RESOURCE_COLUMNS = "`search_id`, `rank`, `resource_id`, `url`, `title`, `description`, `thumbnail_url`, `thumbnail_height`, `thumbnail_width`";

@@ -10,7 +10,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.jsoup.Jsoup;
@@ -26,7 +27,7 @@ import de.l3s.learnweb.resource.ResourceType;
 
 public class SearchQuery implements Serializable
 {
-    private static final Logger log = Logger.getLogger(SearchQuery.class);
+    private static final Logger log = LogManager.getLogger(SearchQuery.class);
 
     private static final long serialVersionUID = 681547180910687848L;
     private List<ResourceDecorator> results;

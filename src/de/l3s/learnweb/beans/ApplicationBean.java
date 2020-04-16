@@ -10,7 +10,8 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
@@ -23,6 +24,8 @@ import de.l3s.util.bean.BeanHelper;
 
 public class ApplicationBean
 {
+    private static final Logger log = LogManager.getLogger(ApplicationBean.class);
+
     private transient Learnweb learnweb;
     private transient String sessionId;
     private transient UserBean userBean;
@@ -259,7 +262,7 @@ public class ApplicationBean
     {
         addMessage(FacesMessage.SEVERITY_FATAL, (desc != null ? desc : "fatal_error"));
 
-        Logger.getLogger(ApplicationBean.class).error((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
+        log.error((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
     }
 
     /**
@@ -294,7 +297,7 @@ public class ApplicationBean
      *            {
      *            addMessage(FacesMessage.SEVERITY_FATAL, (desc != null ? desc : "fatal_error"));
      * 
-     *            Logger.getLogger(ApplicationBean.class).error((desc != null ? desc : "Fatal unhandled error") + "; " +
+     *            log.error((desc != null ? desc : "Fatal unhandled error") + "; " +
      *            BeanHelper.getRequestSummary(), exception);
      *            }
      */
@@ -327,7 +330,7 @@ public class ApplicationBean
                 sessionId = session.getId();
 
             if(sessionId == null)
-                Logger.getLogger(ApplicationBean.class).warn("Couldn't create session");
+                log.warn("Couldn't create session");
         }
         return sessionId;
     }

@@ -18,7 +18,7 @@ import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
 public class SubmissionModeratorBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -2494182373382483709L;
-    //private static final Logger log = Logger.getLogger(SubmissionModeratorBean.class);
+    //private static final Logger log = LogManager.getLogger(SubmissionModeratorBean.class);
 
     private int submissionId = -1;
 

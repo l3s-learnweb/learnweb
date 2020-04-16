@@ -10,7 +10,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -28,7 +29,7 @@ import de.l3s.learnweb.user.UserManager;
 @SuppressWarnings("unused")
 public class DeleteOldUsers
 {
-    private static final Logger log = Logger.getLogger(DeleteOldUsers.class);
+    private static final Logger log = LogManager.getLogger(DeleteOldUsers.class);
     private static Learnweb learnweb;
 
     /**

@@ -19,7 +19,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import de.l3s.learnweb.Learnweb;
@@ -29,7 +30,7 @@ import de.l3s.util.StringHelper;
 
 public class TagthewebClient
 {
-    private static final Logger log = Logger.getLogger(TagthewebClient.class);
+    private static final Logger log = LogManager.getLogger(TagthewebClient.class);
 
     private static String requestCategories(final String text, final String language) throws IOException
     {

@@ -17,7 +17,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +34,7 @@ import de.l3s.searchHistoryTest.SearchHistoryManager.Session;
 @ViewScoped
 public class SearchHistoryBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = Logger.getLogger(SearchHistoryBean.class);
+    private static final Logger log = LogManager.getLogger(SearchHistoryBean.class);
     private static final long serialVersionUID = -7682314831788865416L;
 
     private boolean toggleSwitch;

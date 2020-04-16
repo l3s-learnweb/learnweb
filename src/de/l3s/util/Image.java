@@ -17,12 +17,10 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.twelvemonkeys.image.ResampleOp;
-
-//import com.mortennobel.imagescaling.AdvancedResizeOp;
-//import com.mortennobel.imagescaling.MultiStepRescaleOp;
 
 /**
  * This is a utility class for performing basic functions on an image,
@@ -33,7 +31,7 @@ import com.twelvemonkeys.image.ResampleOp;
  */
 public class Image
 {
-    private static final Logger log = Logger.getLogger(Image.class);
+    private static final Logger log = LogManager.getLogger(Image.class);
 
     BufferedImage img;
 

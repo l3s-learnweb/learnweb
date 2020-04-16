@@ -15,7 +15,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
 import org.primefaces.PrimeFaces;
 
@@ -40,7 +41,7 @@ import de.l3s.learnweb.user.User;
 public class SearchBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 8540469716342051138L;
-    private static final Logger log = Logger.getLogger(SearchBean.class);
+    private static final Logger log = LogManager.getLogger(SearchBean.class);
 
     // Values from views are stored here
     private String query = "";

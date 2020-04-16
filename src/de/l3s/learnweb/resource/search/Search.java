@@ -14,7 +14,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.interwebj.IllegalResponseException;
@@ -31,7 +32,7 @@ import de.l3s.learnweb.user.User;
 public class Search implements Serializable
 {
     private static final long serialVersionUID = -2405235188000105509L;
-    private static final Logger log = Logger.getLogger(Search.class);
+    private static final Logger log = LogManager.getLogger(Search.class);
 
     private final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // SimpleDateFormat isn't thread save don't make it static again
     private final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

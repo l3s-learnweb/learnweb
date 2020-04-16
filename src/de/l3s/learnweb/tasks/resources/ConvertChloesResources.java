@@ -4,7 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -18,7 +19,7 @@ import de.l3s.learnweb.resource.ResourceManager;
  */
 public final class ConvertChloesResources
 {
-    private static final Logger log = Logger.getLogger(ConvertChloesResources.class);
+    private static final Logger log = LogManager.getLogger(ConvertChloesResources.class);
 
     public static void main(String[] args) throws Exception
     {

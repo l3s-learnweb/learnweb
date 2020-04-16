@@ -8,7 +8,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
@@ -20,7 +21,7 @@ import de.l3s.util.bean.BeanHelper;
 public class SurveyBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -6217166153267996666L;
-    private static final Logger log = Logger.getLogger(SurveyBean.class);
+    private static final Logger log = LogManager.getLogger(SurveyBean.class);
     private int surveyResourceId;
     private int surveyUserId; // the user whose answers are viewed, by default the currently logged in user
 

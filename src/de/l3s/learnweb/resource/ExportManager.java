@@ -22,7 +22,8 @@ import java.util.zip.ZipOutputStream;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSString;
@@ -46,7 +47,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 
 public class ExportManager
 {
-    private static final Logger log = Logger.getLogger(ExportManager.class);
+    private static final Logger log = LogManager.getLogger(ExportManager.class);
     private static final String EXPORT_FILE_NAME = "full_data.zip";
 
     private User user;

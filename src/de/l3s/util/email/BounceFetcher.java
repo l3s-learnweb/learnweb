@@ -1,6 +1,7 @@
 package de.l3s.util.email;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 
@@ -12,6 +13,7 @@ import de.l3s.learnweb.Learnweb;
  */
 public class BounceFetcher implements Runnable
 {
+    private static final Logger log = LogManager.getLogger(BounceFetcher.class);
 
     @Override
     public void run()
@@ -22,7 +24,7 @@ public class BounceFetcher implements Runnable
         }
         catch(Throwable e)
         {
-            Logger.getLogger(BounceFetcher.class).error("err", e);
+            log.error("err", e);
         }
     }
 

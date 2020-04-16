@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.bar.BarChartDataSet;
 import org.primefaces.model.charts.bar.BarChartModel;
@@ -27,7 +28,7 @@ import de.l3s.util.MapHelper;
 
 class GlossaryDashboardChartsFactory
 {
-    private static final Logger log = Logger.getLogger(GlossaryDashboardChartsFactory.class);
+    private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap, Locale locale)

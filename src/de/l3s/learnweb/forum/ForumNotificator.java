@@ -12,7 +12,8 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
@@ -24,7 +25,7 @@ import de.l3s.util.email.Mail;
 public class ForumNotificator implements Runnable, Serializable
 {
     private static final long serialVersionUID = -7141107765791779330L;
-    private static final Logger log = Logger.getLogger(ForumNotificator.class);
+    private static final Logger log = LogManager.getLogger(ForumNotificator.class);
 
     public ForumNotificator()
     {

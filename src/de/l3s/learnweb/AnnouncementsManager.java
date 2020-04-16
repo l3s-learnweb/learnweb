@@ -11,7 +11,7 @@ import de.l3s.util.Sql;
 
 public class AnnouncementsManager
 {
-    // private static final Logger log = Logger.getLogger(AnnouncementsManager.class);
+    // private static final Logger log = LogManager.getLogger(AnnouncementsManager.class);
 
     private static final int MAX_TOP_ANNOUNCEMENTS = 5; // maximal number of announcements that will be shown
 

@@ -15,7 +15,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
@@ -35,7 +36,7 @@ import de.l3s.util.Misc;
 public class AdminOrganisationBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -4815509777068373043L;
-    private static final Logger log = Logger.getLogger(AdminOrganisationBean.class);
+    private static final Logger log = LogManager.getLogger(AdminOrganisationBean.class);
 
     private int organisationId;
     private Organisation organisation;

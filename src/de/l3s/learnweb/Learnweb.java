@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.forum.ForumManager;
@@ -46,7 +46,7 @@ public class Learnweb
 {
     public static final String salt1 = "ff4a9ff19306ee0407cf69d592";
     public static final String salt2 = "3a129713cc1b33650816d61450";
-    private static final Logger log = Logger.getLogger(Learnweb.class);
+    private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Learnweb.class);
 
     private Connection dbConnection;
     private InterWeb interweb;

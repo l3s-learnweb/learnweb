@@ -15,7 +15,8 @@ import java.util.TreeSet;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,7 +49,7 @@ import de.l3s.util.StringHelper;
 
 public class TedManager
 {
-    private static final Logger log = Logger.getLogger(TedManager.class);
+    private static final Logger log = LogManager.getLogger(TedManager.class);
 
     private static final String TRANSCRIPT_COLUMNS = "`user_id`,`resource_id`,`words_selected`,`user_annotation`,`action`,`timestamp`";
     private static final String TRANSCRIPT_SELECTION_COLUMNS = "`resource_id`,`words_selected`,`user_annotation`,`start_offset`,`end_offset`";

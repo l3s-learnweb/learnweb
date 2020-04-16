@@ -9,7 +9,8 @@ import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
@@ -27,7 +28,7 @@ import de.l3s.util.HasId;
 public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer
 {
     private static final long serialVersionUID = -6209978709028007958L;
-    private static final Logger log = Logger.getLogger(Group.class);
+    private static final Logger log = LogManager.getLogger(Group.class);
 
     private int id;
     private int leaderUserId;

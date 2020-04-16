@@ -19,7 +19,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -32,7 +33,7 @@ import de.l3s.learnweb.resource.ResourceDecorator;
 
 public class ArchiveUrlManager
 {
-    private static final Logger log = Logger.getLogger(ArchiveUrlManager.class);
+    private static final Logger log = LogManager.getLogger(ArchiveUrlManager.class);
     private static ArchiveUrlManager instance;
     private final Learnweb learnweb;
 

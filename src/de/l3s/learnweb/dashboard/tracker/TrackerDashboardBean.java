@@ -20,7 +20,7 @@ import de.l3s.util.MapHelper;
 public class TrackerDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 3640317272542005280L;
-    //private static final Logger log = Logger.getLogger(TrackerDashboardBean.class);
+    //private static final Logger log = LogManager.getLogger(TrackerDashboardBean.class);
 
     private static final int TRACKER_CLIENT_ID = 2;
 

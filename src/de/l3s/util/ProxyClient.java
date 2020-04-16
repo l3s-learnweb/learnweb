@@ -13,11 +13,12 @@ import java.security.spec.RSAPublicKeySpec;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ProxyClient
 {
-    public static final Logger log = Logger.getLogger(ProxyClient.class);
+    public static final Logger log = LogManager.getLogger(ProxyClient.class);
 
     public static void main(String[] args) throws Exception
     {

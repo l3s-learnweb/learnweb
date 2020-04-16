@@ -10,7 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -20,7 +21,7 @@ import de.l3s.util.Sql;
 public class SearchHistoryManager
 {
 
-    private static final Logger log = Logger.getLogger(SearchHistoryManager.class);
+    private static final Logger log = LogManager.getLogger(SearchHistoryManager.class);
     private final Learnweb learnweb;
 
     public SearchHistoryManager(Learnweb learnweb)

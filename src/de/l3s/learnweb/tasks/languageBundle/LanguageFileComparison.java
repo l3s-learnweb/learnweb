@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Uses the list of corrected translations provided by Marco to check which translations were not yet checked.
@@ -16,7 +17,7 @@ import org.apache.log4j.Logger;
  */
 public class LanguageFileComparison
 {
-    private static final Logger log = Logger.getLogger(LanguageFileComparison.class);
+    private static final Logger log = LogManager.getLogger(LanguageFileComparison.class);
 
     public static void main(String[] args) throws Exception
     {

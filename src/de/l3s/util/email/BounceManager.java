@@ -23,7 +23,8 @@ import javax.mail.search.ComparisonTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 
@@ -34,7 +35,7 @@ import de.l3s.learnweb.Learnweb;
  */
 public class BounceManager
 {
-    private static final Logger log = Logger.getLogger(BounceManager.class);
+    private static final Logger log = LogManager.getLogger(BounceManager.class);
     private final Learnweb learnweb;
 
     private static final String login = "learnweb";

@@ -15,7 +15,8 @@ import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
@@ -29,7 +30,7 @@ import de.l3s.learnweb.resource.ResourceService;
 public class Organisation implements Serializable, Comparable<Organisation>
 {
     private static final long serialVersionUID = -5187205229505825818L;
-    private static final Logger log = Logger.getLogger(Organisation.class);
+    private static final Logger log = LogManager.getLogger(Organisation.class);
 
     // add new options add the end , don't delete options !!!!!
     // if you add 64 options you have to add one options_field{x} column in lw_organisation

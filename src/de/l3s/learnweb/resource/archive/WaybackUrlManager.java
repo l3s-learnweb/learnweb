@@ -51,7 +51,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -63,7 +64,7 @@ import de.l3s.util.URL;
 
 public class WaybackUrlManager
 {
-    private static final Logger log = Logger.getLogger(WaybackUrlManager.class);
+    private static final Logger log = LogManager.getLogger(WaybackUrlManager.class);
     private static WaybackUrlManager instance;
     private final Learnweb learnweb;
     private LoadingCache<URL, UrlRecord> cache;

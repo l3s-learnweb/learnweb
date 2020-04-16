@@ -19,8 +19,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
@@ -38,7 +39,7 @@ import de.l3s.util.bean.BeanHelper;
 public class DownloadServlet extends HttpServlet
 {
     private static final long serialVersionUID = 7083477094183456614L;
-    private static final Logger log = Logger.getLogger(DownloadServlet.class);
+    private static final Logger log = LogManager.getLogger(DownloadServlet.class);
 
     private static final int CACHE_DURATION_IN_SECOND = 60 * 60 * 24 * 365; // 1 year
     private static final long CACHE_DURATION_IN_MS = CACHE_DURATION_IN_SECOND * 1000L;

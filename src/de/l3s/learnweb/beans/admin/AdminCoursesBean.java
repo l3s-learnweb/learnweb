@@ -11,7 +11,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -26,7 +27,7 @@ import de.l3s.learnweb.user.User;
 public class AdminCoursesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5469152668344315959L;
-    private static final Logger log = Logger.getLogger(AdminCoursesBean.class);
+    private static final Logger log = LogManager.getLogger(AdminCoursesBean.class);
 
     private List<Course> courses;
     @NotBlank

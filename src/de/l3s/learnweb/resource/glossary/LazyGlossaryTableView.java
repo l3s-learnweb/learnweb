@@ -11,7 +11,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
@@ -20,7 +21,7 @@ import org.primefaces.model.SortOrder;
 public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView>
 {
     private static final long serialVersionUID = 4388428278103454292L;
-    private static final Logger log = Logger.getLogger(LazyGlossaryTableView.class);
+    private static final Logger log = LogManager.getLogger(LazyGlossaryTableView.class);
     static final int PAGE_SIZE_MULTIPLICATOR = 20; // necessary to make the datatable show multiple rows per GlossaryEntry. I assume that no GlossaryEntry will have more than 20 GlossaryTerms
 
     private GlossaryResource glossaryResource;

@@ -19,7 +19,7 @@ import de.l3s.learnweb.user.User;
 public class YourGroupsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -4009762445275495961L;
-    //private static final Logger log = Logger.getLogger(YourGroupsBean.class);
+    //private static final Logger log = LogManager.getLogger(YourGroupsBean.class);
 
     private List<Group> userGroups;
 

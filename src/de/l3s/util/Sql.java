@@ -12,13 +12,14 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 
 public class Sql
 {
-    private static final Logger log = Logger.getLogger(Sql.class);
+    private static final Logger log = LogManager.getLogger(Sql.class);
 
     public static Object getSingleResult(String query) throws SQLException
     {

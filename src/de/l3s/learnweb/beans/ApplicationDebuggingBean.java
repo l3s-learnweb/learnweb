@@ -9,7 +9,8 @@ import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
@@ -27,6 +28,8 @@ import de.l3s.util.bean.BeanHelper;
 public class ApplicationDebuggingBean implements Serializable
 {
     private static final long serialVersionUID = 6714523666863887982L;
+    private static final Logger log = LogManager.getLogger(ApplicationDebuggingBean.class);
+
     protected User user;
 
     public ApplicationDebuggingBean()
@@ -52,7 +55,7 @@ public class ApplicationDebuggingBean implements Serializable
     protected User getUser()
     {
         if(null == user)
-            Logger.getLogger(ApplicationDebuggingBean.class).warn("getUser() returns null of you do not manually set a user");
+            log.warn("getUser() returns null of you do not manually set a user");
         return user;
     }
 
@@ -169,7 +172,7 @@ public class ApplicationDebuggingBean implements Serializable
 
     protected void addFatalMessage(String desc, Throwable exception)
     {
-        Logger.getLogger(ApplicationDebuggingBean.class).fatal((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
+        log.fatal((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
     }
 
     public void addAccessDeniedMessage()

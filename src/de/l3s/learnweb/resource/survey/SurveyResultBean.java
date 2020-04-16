@@ -14,7 +14,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 public class SurveyResultBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 706177879900332816L;
-    //private static final Logger log = Logger.getLogger(SurveyResultBean.class);
+    //private static final Logger log = LogManager.getLogger(SurveyResultBean.class);
 
     private int surveyResourceId;
     private transient SurveyResource resource;

@@ -22,7 +22,7 @@ import de.l3s.learnweb.resource.Resource;
 public class GlossaryDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
-    //private static final Logger log = Logger.getLogger(GlossaryDashboardBean.class);
+    //private static final Logger log = LogManager.getLogger(GlossaryDashboardBean.class);
 
     private transient GlossaryDashboardManager dashboardManager = null;
 

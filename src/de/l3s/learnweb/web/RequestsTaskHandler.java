@@ -1,6 +1,7 @@
 package de.l3s.learnweb.web;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 
@@ -12,6 +13,8 @@ import de.l3s.learnweb.Learnweb;
  */
 public class RequestsTaskHandler implements Runnable
 {
+    private static final Logger log = LogManager.getLogger(RequestsTaskHandler.class);
+    
     @Override
     public void run()
     {
@@ -23,7 +26,7 @@ public class RequestsTaskHandler implements Runnable
         }
         catch(Throwable e)
         {
-            Logger.getLogger(RequestsTaskHandler.class).error("error", e);
+            log.error("error", e);
         }
     }
 

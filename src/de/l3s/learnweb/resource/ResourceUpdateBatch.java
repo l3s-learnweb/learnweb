@@ -4,7 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,7 +14,7 @@ import de.l3s.learnweb.group.GroupManager;
 
 public class ResourceUpdateBatch
 {
-    private static final Logger log = Logger.getLogger(ResourceUpdateBatch.class);
+    private static final Logger log = LogManager.getLogger(ResourceUpdateBatch.class);
 
     private List<Resource> resources;
     private List<Folder> folders;

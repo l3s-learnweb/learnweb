@@ -16,7 +16,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.JSONException;
@@ -47,7 +48,7 @@ import de.l3s.util.HasId;
 public class GroupResourcesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -9105093690086624246L;
-    private static final Logger log = Logger.getLogger(GroupResourcesBean.class);
+    private static final Logger log = LogManager.getLogger(GroupResourcesBean.class);
     private final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public enum ResourceView

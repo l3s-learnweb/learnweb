@@ -23,7 +23,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +47,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     private static final Pattern usernamePattern = Pattern.compile("acct:(.+)@");
     private static final Pattern groupIDPattern = Pattern.compile("hypothes.is/groups/(\\w*)");
 
-    private static final Logger log = Logger.getLogger(AdminGroupDiscussionActivityBean.class);
+    private static final Logger log = LogManager.getLogger(AdminGroupDiscussionActivityBean.class);
 
     private int groupID;
 

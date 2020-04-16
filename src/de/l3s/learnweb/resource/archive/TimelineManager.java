@@ -16,7 +16,7 @@ import de.l3s.learnweb.Learnweb;
 
 public class TimelineManager
 {
-    //private static final Logger log = Logger.getLogger(TimelineManager.class);
+    //private static final Logger log = LogManager.getLogger(TimelineManager.class);
     private final Learnweb learnweb;
 
     public TimelineManager(Learnweb learnweb)

@@ -19,7 +19,7 @@ import de.l3s.learnweb.user.User;
 public class ForumEditBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6561750124856501158L;
-    //private static final Logger log = Logger.getLogger(ForumEditBean.class);
+    //private static final Logger log = LogManager.getLogger(ForumEditBean.class);
 
     private int postId;
     private ForumPost post;

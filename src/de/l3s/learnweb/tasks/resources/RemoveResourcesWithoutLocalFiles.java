@@ -3,7 +3,8 @@ package de.l3s.learnweb.tasks.resources;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File;
@@ -18,7 +19,7 @@ import de.l3s.learnweb.resource.ResourceManager;
  */
 public class RemoveResourcesWithoutLocalFiles
 {
-    private static final Logger log = Logger.getLogger(RemoveResourcesWithoutLocalFiles.class);
+    private static final Logger log = LogManager.getLogger(RemoveResourcesWithoutLocalFiles.class);
 
     public static void main(String[] args) throws Exception
     {

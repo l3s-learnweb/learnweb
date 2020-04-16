@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -21,7 +22,7 @@ import de.l3s.learnweb.Learnweb;
 public class SearchSessionEdgeComputator
 {
 
-    public static final Logger log = Logger.getLogger(SearchSessionEdgeComputator.class);
+    public static final Logger log = LogManager.getLogger(SearchSessionEdgeComputator.class);
 
     private static SearchSessionEdgeComputator instance = null;
 

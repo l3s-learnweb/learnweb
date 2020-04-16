@@ -20,7 +20,7 @@ import de.l3s.searchHistoryTest.SearchHistoryManager;
 public class YourSearchHistoryBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 8515265854401597437L;
-    //private static final Logger log = Logger.getLogger(YourSearchHistoryBean.class);
+    //private static final Logger log = LogManager.getLogger(YourSearchHistoryBean.class);
 
     private List<SearchHistoryManager.Query> userQueries;
 

@@ -11,7 +11,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -45,7 +46,7 @@ public class GroupManager
     // if you change this, you have to change the createGroup and save method too
     private static final String GROUP_COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count, g.hypothesis_link, g.hypothesis_token";
     private static final String FOLDER_COLUMNS = "f.folder_id, f.deleted, f.group_id, f.parent_folder_id, f.name, f.description, f.user_id";
-    private static final Logger log = Logger.getLogger(GroupManager.class);
+    private static final Logger log = LogManager.getLogger(GroupManager.class);
 
     private Learnweb learnweb;
     private ICache<Group> groupCache;

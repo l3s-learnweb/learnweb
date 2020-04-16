@@ -11,7 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.common.util.ContentStream;
@@ -24,7 +25,7 @@ import de.l3s.util.StringHelper;
 
 public class FileInspector
 {
-    private static final Logger log = Logger.getLogger(FileInspector.class);
+    private static final Logger log = LogManager.getLogger(FileInspector.class);
     private SolrClient solrClient;
 
     public FileInspector(Learnweb learnweb)

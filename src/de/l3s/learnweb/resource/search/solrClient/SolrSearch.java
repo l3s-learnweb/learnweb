@@ -14,7 +14,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -35,7 +36,7 @@ import de.l3s.util.StringHelper;
 public class SolrSearch implements Serializable
 {
     private static final long serialVersionUID = 6623209570091677070L;
-    private static final Logger log = Logger.getLogger(SolrSearch.class);
+    private static final Logger log = LogManager.getLogger(SolrSearch.class);
 
     private static final int DEFAULT_GROUP_RESULTS_LIMIT = 2;
     private static final int DEFAULT_RESULTS_LIMIT = 8;

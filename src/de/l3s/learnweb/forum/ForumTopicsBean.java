@@ -11,7 +11,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -23,7 +24,7 @@ import de.l3s.learnweb.logging.Action;
 public class ForumTopicsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 8303246537720508084L;
-    private static final Logger log = Logger.getLogger(ForumTopicsBean.class);
+    private static final Logger log = LogManager.getLogger(ForumTopicsBean.class);
 
     private int groupId;
     private Group group;

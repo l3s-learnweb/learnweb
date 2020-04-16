@@ -14,7 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -23,7 +24,7 @@ import de.l3s.util.StringHelper;
 
 public class CDXClient
 {
-    private static final Logger log = Logger.getLogger(CDXClient.class);
+    private static final Logger log = LogManager.getLogger(CDXClient.class);
 
     private int waybackAPIerrors = 0;
     private int waybackAPIrequests = 0;

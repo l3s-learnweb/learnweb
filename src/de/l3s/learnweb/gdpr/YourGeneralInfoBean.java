@@ -21,7 +21,7 @@ import de.l3s.learnweb.user.User;
 public class YourGeneralInfoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 3786761818878931646L;
-    //private static final Logger log = Logger.getLogger(YourGeneralInfoBean.class);
+    //private static final Logger log = LogManager.getLogger(YourGeneralInfoBean.class);
 
     private String username;
     private int userCoursesCount;

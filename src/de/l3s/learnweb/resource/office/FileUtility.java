@@ -8,13 +8,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.ResourceType;
 
 public class FileUtility
 {
+    private static final Logger log = LogManager.getLogger(FileUtility.class);
+    
     private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
 
     private static final String TEXT = "text";
@@ -103,7 +106,7 @@ public class FileUtility
         }
         catch(Throwable e)
         {
-            Logger.getLogger(FileUtility.class).error("Can't get filename from URL: " + url, e);
+            log.error("Can't get filename from URL: " + url, e);
         }
 
         return "unknownFileName";

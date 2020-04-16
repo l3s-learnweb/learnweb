@@ -5,7 +5,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * It is used to hash emails, never use it for passwords!
@@ -13,6 +14,8 @@ import org.apache.log4j.Logger;
  */
 public class SHA512
 {
+    private static final Logger log = LogManager.getLogger(SHA512.class);
+    
     public static String hash(String value)
     {
         try
@@ -24,7 +27,7 @@ public class SHA512
         }
         catch(NoSuchAlgorithmException e)
         {
-            Logger.getLogger(SHA512.class).error("fatal hashing error", e);
+            log.error("fatal hashing error", e);
 
             return "error while hashing";
         }

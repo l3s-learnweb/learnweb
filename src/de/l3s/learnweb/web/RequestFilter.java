@@ -10,7 +10,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.net.InetAddresses;
 
@@ -25,7 +26,7 @@ import de.l3s.util.bean.BeanHelper;
  */
 public class RequestFilter implements Filter
 {
-    private static final Logger log = Logger.getLogger(RequestFilter.class);
+    private static final Logger log = LogManager.getLogger(RequestFilter.class);
 
     private RequestManager requestManager;
     private ProtectionManager protectionManager;

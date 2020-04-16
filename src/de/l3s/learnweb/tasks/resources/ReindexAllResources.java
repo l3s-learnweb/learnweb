@@ -3,7 +3,8 @@ package de.l3s.learnweb.tasks.resources;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.learnweb.Learnweb;
@@ -11,7 +12,7 @@ import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 
 public class ReindexAllResources
 {
-    private static final Logger log = Logger.getLogger(ReindexAllResources.class);
+    private static final Logger log = LogManager.getLogger(ReindexAllResources.class);
 
     public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException
     {

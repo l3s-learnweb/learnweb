@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -13,7 +14,7 @@ import de.l3s.learnweb.user.User;
 public class Folder extends AbstractResource implements Serializable, ResourceContainer
 {
     private static final long serialVersionUID = 2147007718176177138L;
-    private static final Logger log = Logger.getLogger(Folder.class);
+    private static final Logger log = LogManager.getLogger(Folder.class);
 
     private int id = -1;
     private int groupId = -1;

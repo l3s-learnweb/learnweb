@@ -16,7 +16,7 @@ import de.l3s.util.StringHelper;
 
 class GlossaryDashboardManager
 {
-    //private static final Logger log = Logger.getLogger(GlossaryDashboardManager.class);
+    //private static final Logger log = LogManager.getLogger(GlossaryDashboardManager.class);
 
     private final Learnweb learnweb;
 

@@ -21,7 +21,7 @@ import de.l3s.learnweb.user.User;
 public class GroupMembersBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -235626744365943867L;
-    //private static final Logger log = Logger.getLogger(GroupMembersBean.class);
+    //private static final Logger log = LogManager.getLogger(GroupMembersBean.class);
 
     private int groupId;
     private Group group;

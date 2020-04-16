@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
@@ -16,7 +17,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 public class MessageBean extends ApplicationBean implements Serializable // TODO refactor complete message system and the update this class
 {
     private static final long serialVersionUID = 6231162839099220868L;
-    private static final Logger log = Logger.getLogger(MessageBean.class);
+    private static final Logger log = LogManager.getLogger(MessageBean.class);
 
     private ArrayList<Message> receivedMessages;
     private Integer howManyNewMessages;

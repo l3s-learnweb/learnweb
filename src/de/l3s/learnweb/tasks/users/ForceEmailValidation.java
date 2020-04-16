@@ -5,7 +5,8 @@ import java.net.MalformedURLException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
@@ -19,7 +20,7 @@ import de.l3s.learnweb.user.UserManager;
  */
 public class ForceEmailValidation
 {
-    private static final Logger log = Logger.getLogger(ForceEmailValidation.class);
+    private static final Logger log = LogManager.getLogger(ForceEmailValidation.class);
 
     /**
      * @param args

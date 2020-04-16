@@ -17,14 +17,15 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
 public class StringHelper
 {
-    private static final Logger log = Logger.getLogger(StringHelper.class);
+    private static final Logger log = LogManager.getLogger(StringHelper.class);
 
     private static final Pattern NEW_LINE_PATTERN = Pattern.compile("\n");
     private static final Pattern NOT_ALPHABETICAL_PATTERN = Pattern.compile("[^<\"'a-zA-Z]+");

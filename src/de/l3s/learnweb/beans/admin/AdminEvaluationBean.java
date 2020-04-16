@@ -7,7 +7,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
@@ -25,7 +26,7 @@ import de.l3s.learnweb.user.User;
 @RequestScoped
 public class AdminEvaluationBean extends ApplicationBean
 {
-    private static final Logger log = Logger.getLogger(AdminEvaluationBean.class);
+    private static final Logger log = LogManager.getLogger(AdminEvaluationBean.class);
 
     private List<User> users;
 

@@ -17,7 +17,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.primefaces.PrimeFaces;
@@ -37,7 +38,7 @@ import de.l3s.learnweb.user.User;
 public class ResourceDetailBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 4911923763255682055L;
-    private static final Logger log = Logger.getLogger(ResourceDetailBean.class);
+    private static final Logger log = LogManager.getLogger(ResourceDetailBean.class);
     private static final String hypothesisProxy = "https://via.hypothes.is/";
 
     public enum ViewAction

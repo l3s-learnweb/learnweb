@@ -10,7 +10,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -26,7 +27,7 @@ import de.l3s.learnweb.user.User;
 public class YourPostsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 4437146430672930717L;
-    private static final Logger log = Logger.getLogger(YourPostsBean.class);
+    private static final Logger log = LogManager.getLogger(YourPostsBean.class);
 
     private List<ForumPost> userPosts;
     private Map<Integer, String> postThreadTopics;

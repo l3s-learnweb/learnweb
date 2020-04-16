@@ -1,6 +1,7 @@
 package de.l3s.learnweb.tasks;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.Course;
@@ -8,7 +9,7 @@ import de.l3s.learnweb.user.Course.Option;
 
 public class ChangeSettingsOfAllCourses
 {
-    private static final Logger log = Logger.getLogger(ChangeSettingsOfAllCourses.class);
+    private static final Logger log = LogManager.getLogger(ChangeSettingsOfAllCourses.class);
 
     public static void main(String[] args) throws Exception
     {

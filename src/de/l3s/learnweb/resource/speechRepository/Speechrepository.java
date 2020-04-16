@@ -9,7 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -22,7 +23,7 @@ import de.l3s.learnweb.user.User;
 
 public class Speechrepository
 {
-    private static final Logger log = Logger.getLogger(Speechrepository.class);
+    private static final Logger log = LogManager.getLogger(Speechrepository.class);
 
     public static void main(String[] args) throws Exception
     {

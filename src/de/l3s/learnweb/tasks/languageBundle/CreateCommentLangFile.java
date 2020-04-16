@@ -7,7 +7,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
  */
 public class CreateCommentLangFile
 {
-    private static final Logger log = Logger.getLogger(CreateCommentLangFile.class);
+    private static final Logger log = LogManager.getLogger(CreateCommentLangFile.class);
 
     public static void main(String[] args) throws IOException
     {
