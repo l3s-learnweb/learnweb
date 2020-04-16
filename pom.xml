@@ -267,11 +267,11 @@
             <artifactId>json</artifactId>
             <version>20190722</version>
         </dependency>
-        <!-- Solr client -->
+        <!-- Solr client (the library has 10 MB of dependencies :/) -->
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>8.2.0</version> <!-- TODO: New version available, but we need to update server first -->
+            <version>8.5.1</version>
         </dependency>
         <!-- Converting video files, a wrapper for ffmpeg -->
         <dependency>
