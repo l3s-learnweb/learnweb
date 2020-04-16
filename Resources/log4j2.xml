@@ -2,8 +2,8 @@
 <Configuration>
     <Properties>
         <Property name="LEARNWEB_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{9}:%line - %msg%n</Property>
-        <Property name="LEARNWEB_LOG_PATH">${sys:catalina.home}/logs/${web:contextPath}learnweb.log</Property>
-        <Property name="LEARNWEB_MAIL_SUBJECT">[Log4J][${web:contextPath}] Error detected on Learnweb</Property>
+        <Property name="LEARNWEB_LOG_PATH">${sys:catalina.home:-.}/logs/${web:contextPath:-}learnweb.log</Property>
+        <Property name="LEARNWEB_MAIL_SUBJECT">[Log4J][${web:contextPath:-console}] Error detected on Learnweb</Property>
         <Property name="LEARNWEB_MAIL_LOGLEVEL">OFF</Property>
     </Properties>
     <Appenders>
