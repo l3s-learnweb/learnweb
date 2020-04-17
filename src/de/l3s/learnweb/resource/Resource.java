@@ -118,7 +118,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     private transient String prettyPath = null;
     private transient MetadataMapWrapper metadataWrapper; // includes static fields like title, description and author into the map
     private transient MetadataMultiValueMapWrapper metadataMultiValue;
-    private transient MetadataMultiValueMapListWrapper metadataMultiValueList;
 
     /**
      * Do nothing constructor
@@ -1577,18 +1576,11 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         return metadataWrapper;
     }
 
-    public Map<String, String[]> getMetadataMultiValue()
+    public MetadataMultiValueMapWrapper getMetadataMultiValue()
     {
         if(null == metadataMultiValue)
             metadataMultiValue = new MetadataMultiValueMapWrapper(getMetadataWrapper());
         return metadataMultiValue;
-    }
-
-    public Map<String, List<String>> getMetadataMultiValueList() // TODO @oleh this method and the class are only used for field.type eq 'AUTOCOMPLETE_MULTIPLE' why can't getMetadataMultiValue used? or can we use the list for all other fields?
-    {
-        if(null == metadataMultiValueList)
-            metadataMultiValueList = new MetadataMultiValueMapListWrapper(getMetadataWrapper());
-        return metadataMultiValueList;
     }
 
     public void setMetadata(Object metadataObj)
@@ -1608,7 +1600,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         //clear wrapper
         metadataWrapper = null;
         metadataMultiValue = null;
-        metadataMultiValueList = null;
     }
 
     /**
@@ -1742,12 +1733,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
      *
      * @author Kemkes
      */
-    private class MetadataMultiValueMapWrapper implements Map<String, String[]>, Serializable
+    public static class MetadataMultiValueMapWrapper implements Map<String, String[]>, Serializable
     {
         private static final long serialVersionUID = 1514209886446380743L;
-        private Map<String, String> wrappedMap;
+        private final Map<String, String> wrappedMap;
 
-        MetadataMultiValueMapWrapper(Map<String, String> wrappedMap)
+        private MetadataMultiValueMapWrapper(Map<String, String> wrappedMap)
         {
             this.wrappedMap = wrappedMap;
         }
@@ -1821,98 +1812,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
         @Override
         public Collection<String[]> values()
-        {
-            return null;
-        }
-    }
-
-    /**
-     * A map wrapper to support multi valued input fields
-     *
-     * @author Kemkes
-     */
-    private class MetadataMultiValueMapListWrapper implements Map<String, List<String>>, Serializable
-    {
-        private static final long serialVersionUID = 1514209886446380743L;
-        private Map<String, String> wrappedMap;
-
-        MetadataMultiValueMapListWrapper(Map<String, String> wrappedMap)
-        {
-            this.wrappedMap = wrappedMap;
-        }
-
-        @Override
-        public List<String> get(Object key)
-        {
-            String value = wrappedMap.get(key);
-            if(StringUtils.isEmpty(value))
-                return null;
-            return Arrays.asList(StringUtils.split(wrappedMap.get(key), METADATA_SEPARATOR));
-        }
-
-        @Override
-        public List<String> put(String key, List<String> value)
-        {
-            wrappedMap.put(key, StringUtils.join(StringHelper.remove(value, METADATA_SEPARATOR), METADATA_SEPARATOR));
-            return null;
-        }
-
-        @Override
-        public void clear()
-        {
-            wrappedMap.clear();
-        }
-
-        @Override
-        public boolean containsKey(Object key)
-        {
-            return wrappedMap.containsKey(key);
-        }
-
-        @Override
-        public boolean containsValue(Object value)
-        {
-            return false;
-        }
-
-        @Override
-        public Set<java.util.Map.Entry<String, List<String>>> entrySet()
-        {
-            return null;
-        }
-
-        @Override
-        public boolean isEmpty()
-        {
-            return wrappedMap.isEmpty();
-        }
-
-        @Override
-        public Set<String> keySet()
-        {
-            return wrappedMap.keySet();
-        }
-
-        @Override
-        public void putAll(Map<? extends String, ? extends List<String>> m)
-        {
-        }
-
-        @Override
-        public List<String> remove(Object key)
-        {
-            wrappedMap.remove(key);
-            return null;
-        }
-
-        @Override
-        public int size()
-        {
-            return wrappedMap.size();
-        }
-
-        @Override
-        public Collection<List<String>> values()
         {
             return null;
         }

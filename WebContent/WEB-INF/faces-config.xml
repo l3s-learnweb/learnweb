@@ -52,6 +52,12 @@
         </renderer>
     </render-kit>
 
+    <!-- Override PrimeFaces components -->
+    <component>
+        <component-type>org.primefaces.component.AutoComplete</component-type>
+        <component-class>de.l3s.learnweb.component.LwAutoComplete</component-class>
+    </component>
+
     <!-- Trim all Text input fields http://showcase.omnifaces.org/converters/TrimConverter -->
     <converter>
         <converter-for-class>java.lang.String</converter-for-class>
