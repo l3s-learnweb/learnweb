@@ -9,10 +9,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.common.util.ContentStream;
@@ -26,84 +28,100 @@ import de.l3s.util.StringHelper;
 public class FileInspector
 {
     private static final Logger log = LogManager.getLogger(FileInspector.class);
-    private SolrClient solrClient;
+    private static final Pattern INVALID_CHARS_FILENAME = Pattern.compile("[\\\\/:*?\"<>|]");
+    private static final Pattern INVALID_CHARS_TEXT = Pattern.compile("(?m)^[ \t]*\r?\n");
+
+    private final SolrClient solrClient;
 
     public FileInspector(Learnweb learnweb)
     {
         solrClient = learnweb.getSolrClient();
     }
 
-    @SuppressWarnings("unchecked")
-    public FileInfo inspect(InputStream inputStream, String fileName)
+    public static FileInfo inspectFileName(String fileName)
     {
-        FileInfo info = new FileInfo();
-        info.fileName = StringUtils.defaultString(fileName).replaceAll("[\\\\/:*?\"<>|]", "_"); // replace invalid characters;
+        fileName = StringUtils.defaultString(fileName); // if null, use empty string
+
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.fileName = INVALID_CHARS_FILENAME.matcher(fileName).replaceAll("_");
 
         int i = fileName.lastIndexOf('.');
         if(i > 0)
         {
-            String extension = fileName.substring(i + 1);
-            info.mimeType = MimeTypes.getMimeType(extension);
-            info.title = fileName.substring(0, i);
+            fileInfo.mimeType = MimeTypes.getMimeType(fileName.substring(i + 1));
+            fileInfo.title = fileName.substring(0, i);
         }
         else
         {
-            info.mimeType = "application/octet-stream";
-            info.title = fileName;
+            fileInfo.mimeType = "application/octet-stream";
+            fileInfo.title = fileName;
         }
 
-        if(info.mimeType.startsWith("video/")) // solr/tika doesn't work good with videos
-            return info;
+        return fileInfo;
+    }
 
+    public FileInfo inspect(InputStream inputStream, String fileName)
+    {
+        FileInfo fileInfo = inspectFileName(fileName);
+
+        if(fileInfo.getMimeType().startsWith("video/")) // solr/tika doesn't work good with videos
+            return fileInfo;
+
+        try
+        {
+            NamedList<Object> result = requestSolrExtract(new MyContentStream(fileInfo.getFileName(), fileInfo.getMimeType(), inputStream));
+            saveSolrMetadata(result, fileInfo);
+        }
+        catch(SolrServerException | IOException e)
+        {
+            log.error("FileInspector: Can't extract Text from File; " + Misc.getSystemDescription(), e);
+        }
+
+        return fileInfo;
+    }
+
+    private NamedList<Object> requestSolrExtract(MyContentStream contentStream) throws IOException, SolrServerException
+    {
         HttpSolrClient server = solrClient.getSolrServer();
 
         ContentStreamUpdateRequest up = new ContentStreamUpdateRequest("/update/extract");
-        up.addContentStream(new MyContentStream(info.fileName, info.mimeType, inputStream));
+        up.addContentStream(contentStream);
         up.setParam("extractOnly", "true");
         up.setParam("extractFormat", "text"); // default : xml(with xml tags)
 
-        NamedList<Object> result;
-        try
-        {
-            result = server.request(up);
-        }
-        catch(Exception e)
-        {
-            log.error("FileInspector: Can't extract Text from File; " + Misc.getSystemDescription(), e);
+        return server.request(up);
+    }
 
-            return info;
-        }
-
+    private static void saveSolrMetadata(NamedList<Object> result, FileInfo fileInfo)
+    {
         NamedList<Object> metadata = (NamedList<Object>) result.get("null_metadata");
 
         if(metadata.indexOf("title", 0) > -1)
         {
             String title = metadata2String(metadata.get("title"));
             if(title != null)
-                info.title = title;
+                fileInfo.title = title;
         }
         if(metadata.indexOf("description", 0) > -1)
         {
             String description = metadata2String(metadata.get("description"));
             if(description != null)
-                info.description = description;
+                fileInfo.description = description;
         }
         if(metadata.indexOf("Author", 0) > -1)
         {
             String author = metadata2String(metadata.get("Author"));
             if(author != null)
-                info.description = author;
+                fileInfo.author = author;
         }
         if(metadata.indexOf("Content-Type", 0) > -1)
         {
             String mimeType = metadata2String(metadata.get("Content-Type"));
             if(mimeType != null)
-                info.mimeType = mimeType.split(";")[0];
+                fileInfo.mimeType = mimeType.split(";")[0];
         }
 
-        info.textContent = result.getVal(1).toString().trim().replaceAll("(?m)^[ \t]*\r?\n", "");
-
-        return info;
+        fileInfo.textContent = INVALID_CHARS_TEXT.matcher(result.getVal(1).toString().trim()).replaceAll("");
     }
 
     @SuppressWarnings("unchecked")
@@ -120,8 +138,7 @@ public class FileInspector
     {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setInstanceFollowRedirects(true);
-        con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
-
+        con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
         return con.getInputStream();
     }
 
@@ -140,12 +157,13 @@ public class FileInspector
         */
     }
 
-    public class FileInfo
+    public static class FileInfo
     {
-        private String mimeType;
-        private String title;
-        private String textContent;
         private String fileName;
+        private String title;
+        private String mimeType;
+
+        private String textContent;
         private String author;
         private String description;
 
@@ -154,16 +172,16 @@ public class FileInspector
             return fileName;
         }
 
+        public String getTitle()
+        {
+            return title == null ? fileName : title;
+        }
+
         public String getMimeType()
         {
             if(null == mimeType)
                 return null;
             return mimeType.toLowerCase();
-        }
-
-        public String getTitle()
-        {
-            return title == null ? fileName : title;
         }
 
         public String getTextContent()
@@ -184,39 +202,45 @@ public class FileInspector
         @Override
         public String toString()
         {
-            return "FileInfo [mimeType=" + mimeType + ", title=" + title + ", fileName=" + fileName + ", author=" + author + ", textContent:\n" + StringHelper.shortnString(textContent, 80) + "]";
+            return "FileInfo [" +
+                        "mimeType=" + mimeType + ", " +
+                        "title=" + title + ", " +
+                        "fileName=" + fileName + ", " +
+                        "author=" + author + ", " +
+                        "textContent:" + System.lineSeparator() + StringHelper.shortnString(textContent, 80)
+                    + "]";
         }
     }
 
-    private class MyContentStream implements ContentStream
+    private static class MyContentStream implements ContentStream
     {
-        private String fileName;
-        private String mimeType;
-        private InputStream inputStream;
+        private final String name;
+        private final String contentType;
+        private final InputStream stream;
 
-        MyContentStream(String fileName, String mimeType, InputStream inputStream)
+        MyContentStream(String name, String contentType, InputStream stream)
         {
-            this.fileName = fileName;
-            this.mimeType = mimeType;
-            this.inputStream = inputStream;
+            this.name = name;
+            this.contentType = contentType;
+            this.stream = stream;
         }
 
         @Override
         public String getContentType()
         {
-            return mimeType;
+            return contentType;
         }
 
         @Override
         public String getName()
         {
-            return fileName;
+            return name;
         }
 
         @Override
         public Reader getReader()
         {
-            return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            return new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
         }
 
         @Override
@@ -235,8 +259,7 @@ public class FileInspector
         @Override
         public InputStream getStream() throws IOException
         {
-            return inputStream;
+            return stream;
         }
-
     }
 }

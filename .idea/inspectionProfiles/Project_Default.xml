@@ -650,7 +650,9 @@
     </inspection_tool>
     <inspection_tool class="StringBufferField" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StringBufferToStringInConcatenation" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="StringConcatenationArgumentToLogCall" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="StringConcatenationArgumentToLogCall" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="warnLevel" value="1" />
+    </inspection_tool>
     <inspection_tool class="StringConcatenationInFormatCall" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StringConcatenationInMessageFormatCall" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="StringConcatenationMissingWhitespace" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -756,10 +758,6 @@
     </inspection_tool>
     <inspection_tool class="UpperCaseFieldNameNotConstant" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UseOfAWTPeerClass" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="UseOfAnotherObjectsPrivateField" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="ignoreSameClass" value="true" />
-      <option name="ignoreEquals" value="false" />
-    </inspection_tool>
     <inspection_tool class="UseOfJDBCDriverClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UseOfObsoleteAssert" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UseOfObsoleteDateTimeApi" enabled="true" level="WARNING" enabled_by_default="true" />

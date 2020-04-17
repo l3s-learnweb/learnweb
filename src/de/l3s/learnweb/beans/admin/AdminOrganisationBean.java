@@ -60,11 +60,9 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     {
         UploadedFile uploadedFile = event.getFile();
 
-        FileInspector fileInspector = new FileInspector(getLearnweb());
-
         try
         {
-            FileInfo fileInfo = fileInspector.inspect(uploadedFile.getInputStream(), uploadedFile.getFileName());
+            FileInfo fileInfo = FileInspector.inspectFileName(uploadedFile.getFileName());
 
             File file = new File();
             file.setType(TYPE.SYSTEM_FILE);
@@ -79,7 +77,6 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             }
 
             organisation.setBannerImageFileId(file.getId());
-
         }
         catch(Exception e)
         {
