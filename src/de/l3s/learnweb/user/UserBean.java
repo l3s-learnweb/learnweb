@@ -457,7 +457,7 @@ public class UserBean implements Serializable
             {
                 ActiveSubMenu adminSubmenu = ActiveSubMenu.builder()
                         .label(msg.getString("admin"))
-                        .url(su + "/lw/admin.jsf")
+                        .url(su + "/lw/admin/index.jsf")
                         .addElement(DefaultMenuItem.builder().value(msg.getString("organisations")).icon("fa fa-fw fa-sitemap").url(su + "/lw/admin/organisations.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(msg.getString("banlist")).icon("fa fa-fw fa-area-chart").url(su + "/lw/admin/banlist.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(msg.getString("ip_requests")).icon("fa fa-fw fa-line-chart").url(su + "/lw/admin/requests.jsf").build())
