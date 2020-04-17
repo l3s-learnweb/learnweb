@@ -193,6 +193,10 @@ function createContextMenu() {
   }
 }
 
+function isFileDrag(e) {
+  return e.dataTransfer && e.dataTransfer.types.includes('Files');
+}
+
 function createDropArea(resContainerId) {
   $(window).on('drop dragover', (e) => {
     e.stopPropagation();
@@ -200,12 +204,18 @@ function createDropArea(resContainerId) {
   });
 
   $(document).on('dragenter dragover', `#${resContainerId}`, (e) => {
-    $(e.currentTarget).addClass('ui-state-dragenter');
+    if (isFileDrag(e.originalEvent)) {
+      $(e.currentTarget).addClass('ui-state-dragenter');
+    }
   }).on('dragleave dragend drop', `#${resContainerId}`, (e) => {
-    $(e.currentTarget).removeClass('ui-state-dragenter');
+    if (isFileDrag(e.originalEvent)) {
+      $(e.currentTarget).removeClass('ui-state-dragenter');
+    }
   }).on('drop', `#${resContainerId}`, (e) => {
     // Actually we don't need a check for files.length, but we need to access e.originalEvent.dataTransfer before triggering second event
-    if (e.nested || e.originalEvent.dataTransfer.files.length === 0) return true; e.nested = true;
+    if (e.nested || !isFileDrag(e.originalEvent)) return true;
+    e.nested = true;
+
     $('#res_toolbar\\:menu_upload_file').trigger('click');
 
     window.formLoadedCallback = () => {
