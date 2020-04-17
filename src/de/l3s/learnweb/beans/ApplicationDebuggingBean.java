@@ -66,7 +66,6 @@ public class ApplicationDebuggingBean implements Serializable
 
     /**
      * get a message from the message property files depending on the currently used local
-     * // TODO Dupe: the same code exists in UtilBean.getLocaleMessage method
      *
      * @param msgKey
      * @param args
@@ -177,7 +176,6 @@ public class ApplicationDebuggingBean implements Serializable
 
     public void addAccessDeniedMessage()
     {
-        // TODO Auto-generated method stub
 
     }
 }
