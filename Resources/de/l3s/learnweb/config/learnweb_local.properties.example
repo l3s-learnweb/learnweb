@@ -1,5 +1,5 @@
-# This properties are only applied for development profile which is active by default, but disabled on production
 # If you need to update properties for local development, do that in your local file (copy it and rename to `learnweb_local.properties`)
+# This properties are only applied for development profile which is active by default, but disabled on production
 
 # Decide where you want to locally store files uploaded to Learnweb (primarily needed for Group's resources)
 # On Windows the path should looks like the following L:\\learnweb\uploaded_files

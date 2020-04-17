@@ -30,6 +30,7 @@
 # Output folders and local files
 target
 build
+logs
 node_modules
 learnweb_local.properties
 WebContent/resources/layout/css/*

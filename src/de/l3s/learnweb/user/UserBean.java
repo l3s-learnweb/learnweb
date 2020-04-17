@@ -597,7 +597,7 @@ public class UserBean implements Serializable
             return "https://waps.io/open?c=2" +
                     "&u=" + StringHelper.urlEncode(url) +
                     "&i=" + user.getId() +
-                    "&t=" + Learnweb.getInstance().getProperties().getProperty("tracker.key");
+                    "&t=" + Learnweb.getInstance().getProperties().getProperty("TRACKER_API_KEY");
         }
 
     }

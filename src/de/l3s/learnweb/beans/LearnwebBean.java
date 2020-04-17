@@ -84,7 +84,7 @@ public class LearnwebBean implements Serializable
 
     public String getTrackerApiKey()
     {
-        return this.learnweb.getProperties().getProperty("tracker.key");
+        return this.learnweb.getProperties().getProperty("TRACKER_API_KEY");
     }
 
 }
