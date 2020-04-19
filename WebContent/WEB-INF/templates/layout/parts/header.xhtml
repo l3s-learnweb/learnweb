@@ -26,6 +26,8 @@
                     <p:inputText id="searchfield" value="#{userBean.searchQuery}" pt:placeholder="#{msg.searchLabel}" pt:type="search"/>
                     <p:commandButton action="#{userBean.search}" title="#{msg.searchLabel}" icon="fa fa-search"/>
                 </div>
+
+                <p:lifecycle rendered="#{userBean.admin}"/>
             </h:form>
 
             <h:form id="header_right" styleClass="d-flex ml-auto">

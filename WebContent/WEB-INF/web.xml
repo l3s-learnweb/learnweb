@@ -4,7 +4,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
-    <display-name>${project.name} Web Application</display-name>
+    <display-name>${project.name} WebApp - ${project.version}</display-name>
     <description>${project.description}</description>
 
     <session-config>
@@ -65,7 +65,7 @@
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.NUMBER_OF_SEQUENTIAL_VIEWS_IN_SESSION</param-name>
-        <param-value>30</param-value> <!-- TODO: Why do we have so high numbers? PrimeFaces recommends 3 -->
+        <param-value>5</param-value>
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.EARLY_FLUSH_ENABLED</param-name>

@@ -1,19 +1,17 @@
 package de.l3s.learnweb.beans.publicPages;
 
-import java.lang.management.ManagementFactory;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -22,27 +20,13 @@ import de.l3s.learnweb.beans.ApplicationBean;
 @RequestScoped
 public class StatusBean extends ApplicationBean
 {
-    private Properties properties = new Properties();
     private Map<String, String> variables = new HashMap<>();
     private List<Service> services = new LinkedList<>();
 
     public StatusBean()
     {
-        fetchProperties();
         fetchVariables();
         fetchServices();
-    }
-    
-    private void fetchProperties()
-    {
-        try
-        {
-            properties.load(this.getClass().getResourceAsStream("/META-INF/maven/de.l3s/learnweb/pom.properties"));
-        }
-        catch(Exception e)
-        {
-            // ignore
-        }
     }
 
     private void fetchVariables()
@@ -90,15 +74,20 @@ public class StatusBean extends ApplicationBean
 
     public String getVersion()
     {
-        // TODO: version is not actually working
-        return properties.getProperty("version", "unknown");
+        final String displayName = Faces.getServletContext().getServletContextName();
+
+        int i = displayName.indexOf('-');
+        if (i != -1)
+        {
+            return displayName.substring(i + 1).trim();
+        }
+
+        return displayName;
     }
 
-    public String getUptime()
+    public String getProjectStage()
     {
-        // TODO: this is uptime of tomcat, not instance :(
-        long uptime = ManagementFactory.getRuntimeMXBean().getUptime();
-        return DurationFormatUtils.formatDurationWords(uptime, true, true);
+        return Faces.getProjectStage().toString();
     }
 
     public Map<String, String> getVariables()
