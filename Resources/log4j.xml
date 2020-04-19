@@ -26,10 +26,7 @@
 
         <param name="To" value="kemkes@l3s.de,astappiev@l3s.de"/>
         <param name="Subject" value="[log4J] Error detected on LearnWeb V2"/>
-        <!--
-        <param name="To" value="kemkes@l3s.de,rokicki@l3s.de" />
-        <param name="Subject" value="[log4J] Error detected on AMA network" />
-        -->
+
         <param name="evaluatorClass" value="de.l3s.util.CustomEvaluator"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{9}:%L - %m%n"/>

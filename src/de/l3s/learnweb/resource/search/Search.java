@@ -137,7 +137,7 @@ public class Search implements Serializable
             log.fatal("error during search", e);
         }
 
-        logResources(resources, page);
+        logResources(newResources, page);
 
         return newResources;
     }
