@@ -5,8 +5,11 @@
 # On Windows the path should looks like the following L:\\learnweb\uploaded_files
 FILE_MANAGER_FOLDER=/mnt/learnweb/uploaded_files
 
+# for interweb we run a public proxy:
+INTERWEBJ_API_URL=http://hermes.kbs.uni-hannover.de/interweb/api/
+
 # If you work from the University or using LUIS VPN this settings should be enough
-INTERWEBJ_API_URL=http://***REMOVED***/interweb/api/
+#INTERWEBJ_API_URL=http://hermes.kbs.uni-hannover.de/interweb/api/
 SOLR_SERVER_URL=http://***REMOVED***/solr/learnweb
 mysql_url=jdbc:mysql://***REMOVED***/learnweb_main
 
