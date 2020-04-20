@@ -12,12 +12,12 @@ import java.util.Map;
 import javax.faces.application.ProjectStage;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.shared.resource.AliasResourceMetaImpl;
-import org.apache.myfaces.shared.resource.ResourceHandlerSupport;
-import org.apache.myfaces.shared.resource.ResourceImpl;
-import org.apache.myfaces.shared.resource.ResourceLoader;
-import org.apache.myfaces.shared.resource.ResourceLoaderUtils;
-import org.apache.myfaces.shared.resource.ResourceMeta;
+import org.apache.myfaces.resource.AliasResourceMetaImpl;
+import org.apache.myfaces.resource.ResourceHandlerSupport;
+import org.apache.myfaces.resource.ResourceImpl;
+import org.apache.myfaces.resource.ResourceLoader;
+import org.apache.myfaces.resource.ResourceLoaderUtils;
+import org.apache.myfaces.resource.ResourceMeta;
 
 public class FixedMyFacesResource extends ResourceImpl
 {

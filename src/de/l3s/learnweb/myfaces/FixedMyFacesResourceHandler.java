@@ -6,12 +6,12 @@ import javax.faces.application.Resource;
 import javax.faces.context.FacesContext;
 
 import org.apache.myfaces.application.ResourceHandlerImpl;
-import org.apache.myfaces.shared.resource.ContractResourceLoader;
-import org.apache.myfaces.shared.resource.ResourceCachedInfo;
-import org.apache.myfaces.shared.resource.ResourceHandlerCache;
-import org.apache.myfaces.shared.resource.ResourceLoader;
-import org.apache.myfaces.shared.resource.ResourceMeta;
-import org.apache.myfaces.shared.resource.ResourceValidationUtils;
+import org.apache.myfaces.resource.ContractResourceLoader;
+import org.apache.myfaces.resource.ResourceCachedInfo;
+import org.apache.myfaces.resource.ResourceHandlerCache;
+import org.apache.myfaces.resource.ResourceLoader;
+import org.apache.myfaces.resource.ResourceMeta;
+import org.apache.myfaces.resource.ResourceValidationUtils;
 
 public class FixedMyFacesResourceHandler extends ResourceHandlerImpl
 {

@@ -20,67 +20,65 @@
     </properties>
 
     <dependencies>
-        <!-- ################ Java EE & JSF (Faces) ################ -->
-        <!-- Java EE CDI -->
+        <!-- ################ APIs provided by Tomcat ################ -->
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>8.0.1</version>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>9.0.34</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Servlet Spec -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jsp-api</artifactId>
+            <version>9.0.34</version>
             <scope>provided</scope>
         </dependency>
-        <!-- JSP Spec -->
         <dependency>
-            <groupId>javax.faces</groupId>
-            <artifactId>javax.faces-api</artifactId>
-            <version>2.3</version>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-el-api</artifactId>
+            <version>9.0.34</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Java EE CDI -->
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>2.0.SP1</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- JSF Faces -->
-        <dependency>
-            <groupId>org.apache.myfaces.core</groupId>
-            <artifactId>myfaces-api</artifactId>
-            <version>2.3.6</version>
-        </dependency>
-        <!-- JSF Faces Impl -->
+
+        <!-- ################ Java EE & JSF ################ -->
+        <!-- JSF API & Impl -->
         <dependency>
             <groupId>org.apache.myfaces.core</groupId>
             <artifactId>myfaces-impl</artifactId>
-            <version>2.3.6</version>
+            <version>2.3-next-M2</version>
         </dependency>
-        <!-- JSF Tools e.g. we use the Trimconverter -->
-        <dependency>
-            <groupId>org.omnifaces</groupId>
-            <artifactId>omnifaces</artifactId>
-            <version>3.4.1</version>
-        </dependency>
-        <!-- Required for mails -->
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <!-- Required by Tomcat to work with Java EE CDI API -->
+        <!-- CDI API Impl for Servlet container (Tomcat) -->
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-shaded</artifactId>
             <version>3.1.4.Final</version>
         </dependency>
+        <!-- CDI Validator Impl -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.1.4.Final</version>
+        </dependency>
+        <!-- Mail Impl -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+        <!-- XML API, used in Interweb client (deprecated API, removed from Java 11) -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <!-- XML Impl, used in Interweb client (deprecated API, removed from Java 11) -->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.2</version>
+        </dependency>
 
-        <!-- ################ PrimeFaces ################ -->
+        <!-- ################ JSF Libraries ################ -->
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
@@ -104,6 +102,12 @@
             <artifactId>owasp-java-html-sanitizer</artifactId>
             <version>20191001.1</version>
         </dependency>
+        <!-- JSF Tools -->
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>omnifaces</artifactId>
+            <version>3.5</version>
+        </dependency>
 
         <!-- ################ Apache commons ################ -->
         <dependency>
@@ -126,7 +130,7 @@
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
         </dependency>
-        <!-- used for String escape methods -->
+        <!-- Used for String escape methods -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
@@ -135,8 +139,13 @@
 
         <!-- ################ ImageIO (Image processing, Thumbnails) ################ -->
         <dependency>
+            <groupId>com.twelvemonkeys.servlet</groupId>
+            <artifactId>servlet</artifactId>
+            <version>3.5</version>
+        </dependency>
+        <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-metadata</artifactId>
+            <artifactId>imageio-bmp</artifactId>
             <version>3.5</version>
         </dependency>
         <dependency>
@@ -146,42 +155,12 @@
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-psd</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-tiff</artifactId>
             <version>3.5</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-pnm</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-hdr</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-pcx</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-pict</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-sgi</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-tga</artifactId>
+            <artifactId>imageio-psd</artifactId>
             <version>3.5</version>
         </dependency>
         <dependency>
@@ -191,57 +170,49 @@
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-thumbsdb</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-clippath</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-iff</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.imageio</groupId>
-            <artifactId>imageio-bmp</artifactId>
-            <version>3.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.twelvemonkeys.servlet</groupId>
-            <artifactId>servlet</artifactId>
+            <artifactId>imageio-pict</artifactId>
             <version>3.5</version>
         </dependency>
 
-        <!-- ################ Dependencies missing in Java 11 (for backward compatibility) ################ -->
-        <!-- XML library, used in Interweb client-->
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>2.3.0.1</version>
-        </dependency>
-        <!-- XML library, used in Interweb client-->
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-        <!-- XML library, used in Interweb client-->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-
-        <!-- ################ Other ################ -->
-        <!-- MySQL client -->
+        <!-- ################ Core dependencies ################ -->
+        <!-- Database client -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
             <version>2.6.0</version>
         </dependency>
+        <!-- Solr client (the library has 10 MB of dependencies :/) -->
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>8.5.1</version>
+        </dependency>
+        <!-- URL rewrite -->
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>4.0.4</version>
+        </dependency>
+        <!-- Cron tasks manager -->
+        <dependency>
+            <groupId>it.sauronsoftware.cron4j</groupId>
+            <artifactId>cron4j</artifactId>
+            <version>2.2.5</version>
+        </dependency>
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-web</artifactId>
+            <version>2.13.1</version>
+        </dependency>
+        <!-- Binding from slf4j to log4j, required by solr client -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.13.1</version>
+        </dependency>
+
+        <!-- ################ Other dependencies (usually your dependencies go to this section) ################ -->
         <!-- Converts Java Objects into JSON and back -->
         <!-- TODO: should be replaced by org.json -->
         <dependency>
@@ -249,13 +220,7 @@
             <artifactId>gson</artifactId>
             <version>2.8.6</version>
         </dependency>
-        <!-- needed for redirects -->
-        <dependency>
-            <groupId>org.tuckey</groupId>
-            <artifactId>urlrewritefilter</artifactId>
-            <version>4.0.4</version>
-        </dependency>
-        <!-- Resources, parsing html, remove Html from String -->
+        <!-- HTML parsed. Used in crawlers, resources, removing html from strings -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
@@ -267,13 +232,7 @@
             <artifactId>json</artifactId>
             <version>20190722</version>
         </dependency>
-        <!-- Solr client (the library has 10 MB of dependencies :/) -->
-        <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-solrj</artifactId>
-            <version>8.5.1</version>
-        </dependency>
-        <!-- Converting video files, a wrapper for ffmpeg -->
+        <!-- Converting video files, extracting thumbnails (only a wrapper for ffmpeg) -->
         <dependency>
             <groupId>net.bramp.ffmpeg</groupId>
             <artifactId>ffmpeg</artifactId>
@@ -303,63 +262,30 @@
             <artifactId>prettytime</artifactId>
             <version>4.0.4.Final</version>
         </dependency>
-        <!-- Interweb connection manager -->
-        <dependency>
-            <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-            <artifactId>oauth-signature</artifactId>
-            <version>1.19.4</version>
-        </dependency>
-        <!-- Interweb connection manager -->
-        <dependency>
-            <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-            <artifactId>oauth-client</artifactId>
-            <version>1.19.4</version>
-        </dependency>
-        <!-- Connection manager ??? -->
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-bundle</artifactId>
-            <version>1.19.4</version>
-        </dependency>
-        <!-- Interweb (TODO: not needed?) -->
-        <!--<dependency>-->
-        <!--    <groupId>com.sun.jersey.contribs</groupId>-->
-        <!--    <artifactId>jersey-multipart</artifactId>-->
-        <!--    <version>1.19.4</version>-->
-        <!--</dependency>-->
         <!-- Used to make a thumbnail of PDF in ResourcePreviewMaker -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>2.0.19</version>
         </dependency>
-        <!-- Cronjob manager -->
+        <!-- Interweb connection manager (Can be updated to v2 or removed) -->
         <dependency>
-            <groupId>it.sauronsoftware.cron4j</groupId>
-            <artifactId>cron4j</artifactId>
-            <version>2.2.5</version>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-bundle</artifactId>
+            <version>1.19.4</version>
         </dependency>
-        <!-- Logging -->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-web</artifactId>
-            <version>2.13.1</version>
+            <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+            <artifactId>oauth-signature</artifactId>
+            <version>1.19.4</version>
         </dependency>
-        <dependency> <!-- Binding from slf4j to log4j, required by solr client -->
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.13.1</version>
-        </dependency>
-
-        <!-- Bean Validator -->
         <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>6.1.2.Final</version>
+            <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+            <artifactId>oauth-client</artifactId>
+            <version>1.19.4</version>
         </dependency>
 
         <!-- ################ Local dependencies (TODO: get rid of them!) ################ -->
-
         <!-- Added by Trevor, TEDWordnet, used in TedTranscriptBean -->
         <dependency>
             <groupId>rita</groupId>
@@ -383,11 +309,11 @@
             <version>3.3.7</version>
         </dependency>
 
-        <!-- ################ Tests ################ -->
+        <!-- ################ Test dependencies ################ -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.6.0</version>
+            <version>5.6.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
