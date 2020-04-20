@@ -35,8 +35,12 @@
             <param name="LevelMin" value="ERROR"/>
             <param name="LevelMax" value="FATAL"/>
         </filter>
+        
+        
     </appender>
-
+    <logger name="httpclient">
+        <level value="ERROR"/>
+    </logger>
     <logger name="org.apache">
         <level value="FATAL"/>
     </logger>

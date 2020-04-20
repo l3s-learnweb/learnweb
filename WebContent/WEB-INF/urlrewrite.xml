@@ -30,6 +30,11 @@
 		<to type="redirect">http://alexandria-project.eu/archivesearch/$1</to>
 	</rule>
 	
+	<rule>
+		<from>/interweb/(.*)</from>
+		<to type="proxy">http://localhost:11080/interweb/$1</to>
+	</rule>
+	
 	<!-- redirect old to new survey and glossary page -->
 	<rule>
 		<from>/templates/resources/survey.jsf(.*)</from>
