@@ -6,6 +6,7 @@ import java.util.List;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.render.FacesRenderer;
 
 import org.primefaces.component.menu.AbstractMenu;
 import org.primefaces.component.menu.BaseMenuRenderer;
@@ -15,6 +16,7 @@ import org.primefaces.model.menu.MenuItem;
 import org.primefaces.model.menu.Submenu;
 import org.primefaces.util.WidgetBuilder;
 
+@FacesRenderer(componentFamily = "de.l3s.learnweb.component", rendererType = "de.l3s.learnweb.component.LearnwebMenuRenderer")
 public class LearnwebMenuRenderer extends BaseMenuRenderer
 {
     @Override
