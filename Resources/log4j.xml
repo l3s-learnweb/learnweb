@@ -38,9 +38,10 @@
         
         
     </appender>
+    <!-- 
     <logger name="httpclient">
         <level value="ERROR"/>
-    </logger>
+    </logger> -->
     <logger name="org.apache">
         <level value="FATAL"/>
     </logger>

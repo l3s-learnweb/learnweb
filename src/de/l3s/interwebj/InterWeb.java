@@ -85,6 +85,7 @@ public class InterWeb implements Serializable
         OAuthClientFilter filter = new OAuthClientFilter(client.getProviders(), oauthParams, oauthSecrets);
         resource.addFilter(filter);
 
+        log.debug("created WebResource: " + resource.toString());
         return resource;
     }
 
