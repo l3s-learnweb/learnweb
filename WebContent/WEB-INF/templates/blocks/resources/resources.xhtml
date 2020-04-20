@@ -262,6 +262,11 @@
      * This event is fired every time when resources reloaded from backend, here you can update event listeners to use new elements
      */
     function onResourcesUpdated() {
+        $('.res-item').each((i, el) => {
+            const itemId = $(el).find('.res-selector').data('itemid');
+            $(el).attr('data-itemid', itemId);
+            $(el).attr('data-itemtype', "resource");
+        });
         createSelectableArea('resourcesView');
         createDragAndDrop('resourcesView', 'breadcrumbs', 'group_folders_tree');
     }

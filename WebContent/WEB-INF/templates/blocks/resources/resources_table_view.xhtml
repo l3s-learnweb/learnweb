@@ -2,25 +2,42 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:p="http://primefaces.org/ui">
 
-<h:panelGroup styleClass="res-container-table" layout="block">
-    <ui:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
-        <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
-                      pt:data-resview="grid"
-                      pt:data-itemType="resource"
-                      pt:data-itemId="#{res.resource.id}"
-                      pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"
-                      pt:data-canEditResource="#{res.resource.canEditResource(userBean.user)}"
-                      pt:data-canDeleteResource="#{res.resource.canDeleteResource(userBean.user)}"
-                      pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
-            <f:param name="resource_id" value="#{res.resource.id}"/>
+    <h:panelGroup id="folderList" styleClass="res-container-table" layout="block" rendered="#{groupResourcesBean.query == null}">
+    </h:panelGroup>
 
-            <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_row.xhtml">
-                <ui:param name="res" value="#{res.resource}"/>
-            </ui:decorate>
-        </h:outputLink>
-    </ui:repeat>
-</h:panelGroup>
+    <h:panelGroup styleClass="res-container-table" layout="block">
+        <p:dataTable tableStyleClass="table-responsive res-datatable" var="res" value="#{groupResourcesBean.paginator.currentPage}" reflow="true"
+                     rows="100" paginator="true" paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records" rowStyleClass="res-item">
+            <p:ajax event="page" oncomplete="onResourcesUpdated();"/>
+            <p:ajax event="sort" oncomplete="onResourcesUpdated();"/>
+
+            <p:column>
+                <button class="res-selector" data-itemid="#{res.id}"></button>
+            </p:column>
+
+            <p:column headerText="#{msg.type}" sortBy="#{res.type}" styleClass="res-row-type">
+                <i class="fa res-t-icon t-#{res.type}" aria-hidden="true"></i>
+            </p:column>
+
+            <p:column headerText="#{msg.title}" styleClass="res-row-title text-left" sortBy="#{res.title}">
+                <h:outputText value="#{res.title}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.user}" styleClass="res-row-owner" sortBy="#{res.user.username}">
+                <h:outputText value="#{res.user.username}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.creation_date}" styleClass="res-row-date" sortBy="#{res.resource.creationDate}">
+                <h:outputText  value="#{res.resource.creationDate}">
+                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+                </h:outputText>
+            </p:column>
+        </p:dataTable>
+    </h:panelGroup>
 
 </ui:composition>
