@@ -48,7 +48,7 @@
                     </f:facet>
                     <ui:repeat var="entry" value="#{welcomeBean.newsTopics}" varStatus="status">
                         <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
-                            <ui:param name="showPreview" value="true"/>
+                            <ui:param name="showPreview" value="false"/>
                             <ui:param name="logEntry" value="#{entry}"/>
                         </ui:decorate>
                     </ui:repeat>
@@ -60,7 +60,7 @@
                     </f:facet>
                     <ui:repeat var="entry" value="#{welcomeBean.newsPosts}" varStatus="status">
                         <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
-                            <ui:param name="showPreview" value="true"/>
+                            <ui:param name="showPreview" value="false"/>
                             <ui:param name="logEntry" value="#{entry}"/>
                         </ui:decorate>
                     </ui:repeat>

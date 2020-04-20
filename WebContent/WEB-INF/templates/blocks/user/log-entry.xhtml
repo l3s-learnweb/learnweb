@@ -11,12 +11,12 @@
 
 <div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') }">
 	<h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
-	<h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="head"/>
+	<h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
 
 	<img class="profile-picture align-self-start mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
 
 	<div class="overflow-hidden">
-		<p class="mb-0">
+		<p class="mb-0 log-title">
 			<h:outputText value="#{logEntry.description}" escape="false"/>
 			<h:panelGroup rendered="#{logEntry.queryNeeded}">
 				<h:outputText value=" #{msg.with_query}" escape="false"/>
@@ -32,32 +32,30 @@
 			<lw:timeAgo date="#{logEntry.date}"/>
 		</p>
 
-		<ui:fragment rendered="#{showPreview}">
-			<h:panelGroup rendered="#{not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
-				<h:outputLink styleClass="resource-preview text-decoration-none mx-auto" style="min-width:10rem;" value="resource.jsf" pt:data-resview="default" rendered="#{not empty logEntry.resource.thumbnail1}">
-					<f:param name="resource_id" value="#{logEntry.resource.id}"/>
+		<h:panelGroup rendered="#{showPreview and not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
+			<h:outputLink styleClass="resource-preview text-decoration-none mx-auto" style="min-width:10rem;" value="resource.jsf" pt:data-resview="default" rendered="#{not empty logEntry.resource.thumbnail1}">
+				<f:param name="resource_id" value="#{logEntry.resource.id}"/>
 
-					<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-						<ui:param name="res" value="#{logEntry.resource}"/>
-						<ui:param name="showSelectIcon" value="false"/>
-					</ui:decorate>
-				</h:outputLink>
+				<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+					<ui:param name="res" value="#{logEntry.resource}"/>
+					<ui:param name="showSelectIcon" value="false"/>
+				</ui:decorate>
+			</h:outputLink>
 
-				<div class="resource-details pl-3">
-					<h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>
+			<div class="resource-details pl-3">
+				<h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>
 
-					<h:panelGroup rendered="#{not empty logEntry.resource.author}" layout="block" styleClass="mb-1">
-						<h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
-						<h:outputText value="#{logEntry.resource.author}"/>
-					</h:panelGroup>
+				<h:panelGroup rendered="#{not empty logEntry.resource.author}" layout="block" styleClass="mb-1">
+					<h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
+					<h:outputText value="#{logEntry.resource.author}"/>
+				</h:panelGroup>
 
-					<h:panelGroup rendered="#{not empty logEntry.resource.tagsAsString}" layout="block" styleClass="mb-1">
-						<h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
-						<h:outputText value="#{logEntry.resource.tagsAsString}"/>
-					</h:panelGroup>
-				</div>
-			</h:panelGroup>
-		</ui:fragment>
+				<h:panelGroup rendered="#{not empty logEntry.resource.tagsAsString}" layout="block" styleClass="mb-1">
+					<h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
+					<h:outputText value="#{logEntry.resource.tagsAsString}"/>
+				</h:panelGroup>
+			</div>
+		</h:panelGroup>
 	</div>
 </div>
 
