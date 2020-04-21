@@ -263,10 +263,13 @@
      */
     function onResourcesUpdated() {
         $('.res-item').each((i, el) => {
-            const itemId = $(el).find('.res-selector').data('itemid');
-            $(el).attr('data-itemid', itemId);
-            $(el).attr('data-itemtype', "resource");
+            if (!$(el).data('itemid')) {
+                const itemId = $(el).find('.res-selector').data('itemid');
+                $(el).attr('data-itemid', itemId);
+                $(el).attr('data-itemtype', "resource");
+            }
         });
+
         createSelectableArea('resourcesView');
         createDragAndDrop('resourcesView', 'breadcrumbs', 'group_folders_tree');
     }
