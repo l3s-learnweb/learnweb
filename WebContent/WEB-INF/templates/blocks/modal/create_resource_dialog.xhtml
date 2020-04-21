@@ -12,9 +12,8 @@
             <h:outputText value="#{msg.type}:" styleClass="ui-outputlabel"/>
             <h:outputText value="#{addResourceBean.resource.type}" styleClass="fg-col text-capitalize"/>
 
-            <p:outputLabel for="@next" value="#{msg.location}:"/>
-            <p:commandLink update=":selectDestinationDialog" value="#{addResourceBean.currentPath}"
-                           oncomplete="createConfirmDialog('selectDestination', updateLocationCommand);return false;"/>
+            <h:outputText value="#{msg.location}:" styleClass="ui-outputlabel"/>
+            <h:outputText value="#{addResourceBean.currentPath}" styleClass="fg-col"/>
 
             <ui:fragment rendered="#{addResourceBean.resource.officeResource}">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
