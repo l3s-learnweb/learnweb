@@ -17,11 +17,9 @@ import de.l3s.learnweb.resource.ResourceType;
 public class GlossaryResource extends Resource
 {
     private static final long serialVersionUID = 8388778401614338522L;
-    private static final String PATH = "/lw/glossary/glossary.jsf?resource_id=";
 
     private List<Locale> allowedLanguages = new ArrayList<>();
     private List<GlossaryEntry> entries = new LinkedList<>();
-    private boolean deleted = false; // TODO added by Rishita; check why this is used, it exists already in resource.class
     private boolean clonedButNotSaved = false;
 
     public GlossaryResource()
@@ -35,16 +33,16 @@ public class GlossaryResource extends Resource
     /**
      * copy constructor
      */
-    public GlossaryResource(GlossaryResource otherGlossaryResource)
+    public GlossaryResource(GlossaryResource other)
     {
-        super(otherGlossaryResource);
-        setAllowedLanguages(new ArrayList<>(otherGlossaryResource.allowedLanguages));
-        setDeleted(otherGlossaryResource.deleted);
+        super(other);
+        setAllowedLanguages(new ArrayList<>(other.allowedLanguages));
         setClonedButNotPersisted(true);
-        setEntries(new ArrayList<>(otherGlossaryResource.entries.size()));
-        for(int i = 0, len = otherGlossaryResource.entries.size(); i < len; i++)
+
+        setEntries(new ArrayList<>(other.entries.size()));
+        for(int i = 0, len = other.entries.size(); i < len; i++)
         {
-            this.entries.add(i, otherGlossaryResource.entries.get(i).clone());
+            this.entries.add(i, other.entries.get(i).clone());
         }
     }
 
@@ -102,24 +100,6 @@ public class GlossaryResource extends Resource
         this.entries = entries;
     }
 
-    @Override
-    public String getView()
-    {
-        return "glossary/glossary.jsf"; // TODO move to resources view folder. requires refactoring of glossaryBean
-    }
-
-    @Override
-    public boolean isDeleted()
-    {
-        return deleted;
-    }
-
-    @Override
-    public void setDeleted(boolean deleted)
-    {
-        this.deleted = deleted;
-    }
-
     public boolean isClonedButNotPersisted()
     {
         return clonedButNotSaved;
@@ -146,11 +126,5 @@ public class GlossaryResource extends Resource
             }
         }
         return tableView;
-    }
-
-    @Override
-    public String getUrl()
-    {
-        return Learnweb.getInstance().getServerUrl() + PATH + this.getId();
     }
 }

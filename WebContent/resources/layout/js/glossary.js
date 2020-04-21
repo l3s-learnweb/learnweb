@@ -3,6 +3,10 @@ function openGlossForm() {
   document.getElementById('glossaryForm').scrollIntoView();
 }
 
+function closeGlossForm() {
+  $('#glossaryForm').css('display', 'none');
+}
+
 function scrollToAnchor() {
   $('html, body').animate({
     scrollBottom: $('#glossaryForm').offset().top,

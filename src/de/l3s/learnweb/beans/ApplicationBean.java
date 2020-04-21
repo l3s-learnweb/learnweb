@@ -279,28 +279,21 @@ public class ApplicationBean
         addErrorMessage("access_denied", new IllegalAccessException());
     }
 
-    // I'm not sure yet if we should really use that. I don't like it.
+    protected void addErrorGrowl(Throwable exception)
+    {
+        addErrorGrowl(null, exception);
+    }
+
     /**
-     * Shows a default fatal_error growl
-     * /
-     * protected void addErrorGrowl(Throwable exception)
-     * {
-     * addErrorMessage(null, exception);
-     * }
-     * 
-     * /**
-     *
      * @param desc A descriptive message that is shown to the user. If null a default fatal_error message will be shown
      * @param exception
-     *            /
-     *            protected void addErrorGrowl(String desc, Throwable exception)
-     *            {
-     *            addMessage(FacesMessage.SEVERITY_FATAL, (desc != null ? desc : "fatal_error"));
-     * 
-     *            log.error((desc != null ? desc : "Fatal unhandled error") + "; " +
-     *            BeanHelper.getRequestSummary(), exception);
-     *            }
      */
+    protected void addErrorGrowl(String desc, Throwable exception)
+    {
+        addGrowl(FacesMessage.SEVERITY_FATAL, (desc != null ? desc : "fatal_error"));
+
+        log.error((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
+    }
 
     /*****************************************************************************
      ********************************* Helper ********************************

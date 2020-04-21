@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -40,6 +41,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
 
 import com.lowagie.text.Document;
@@ -48,9 +50,10 @@ import com.lowagie.text.PageSize;
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -59,7 +62,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 7104637880221636543L;
     private static final Logger log = LogManager.getLogger(GlossaryBean.class);
 
-    private int resourceId;
     private GlossaryResource glossaryResource;
     private List<GlossaryTableView> tableItems;
 
@@ -128,12 +130,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             Map.entry(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male")
     );
 
-    public GlossaryBean()
-    {
-
-    }
-
-    public void onLoad()
+    @PostConstruct
+    public void init()
     {
         try
         {
@@ -142,15 +140,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 return;
 
             Instant start = Instant.now();
-            glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
+            Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
+            glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resource);
             log.debug("Glossary loading time: " + Duration.between(start, Instant.now()).toMillis());
 
-            if(glossaryResource == null)
-            {
-                log.error("Error in loading glossary resource for resource ID: " + resourceId + "\n" + BeanHelper.getRequestSummary());
-                addInvalidParameterMessage("resource_id");
-                return;
-            }
             log(Action.glossary_open, glossaryResource);
 
             // for labint francesca.bianchi@unisalento.it
@@ -170,7 +163,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             // convert tree like glossary structure to flat table
             repaintTable();
 
-            setNewFormEntry();
+            clear();
 
             tableLanguageFilter = new ArrayList<>(glossaryResource.getAllowedLanguages());
 
@@ -179,7 +172,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addErrorMessage(e);
+            addErrorGrowl(e);
         }
     }
 
@@ -202,11 +195,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addErrorMessage(e);
+            addErrorGrowl(e);
         }
     }
 
-    public String onSave()
+    public void onSave()
     {
         try
         {
@@ -232,47 +225,33 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
             if(formEntry.getTerms().size() == numberOfDeletedTerms())
             {
-                addMessage(FacesMessage.SEVERITY_ERROR, "Glossary.entry_validation");
-                setKeepMessages();
-                return null;
+                addGrowl(FacesMessage.SEVERITY_ERROR, "Glossary.entry_validation");
+                return;
             }
 
             getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
-            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-            setKeepMessages();
+            addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+
+            clear();
         }
         catch(SQLException e)
         {
             log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
-            addErrorMessage(e);
-            setKeepMessages();
-            return null;
-
+            addErrorGrowl(e);
         }
-        setNewFormEntry();
-        return "/lw/glossary/glossary.jsf?resource_id=" + getResourceId() + "&faces-redirect=true";
     }
 
-    /**
-     * Method undoes any action taken on formEntry on click of "Cancel"
-     */
-    public String onCancel()
-    {
-        setNewFormEntry();
-        return "/lw/glossary/glossary.jsf?resource_id=" + getResourceId() + "&faces-redirect=true";
-    }
-
-    public void setNewFormEntry()
+    public void clear()
     {
         formEntry = new GlossaryEntry();
-        formEntry.setResourceId(resourceId);
+        formEntry.setResourceId(glossaryResource.getId());
 
         // add two terms
         addTerm();
         addTerm();
     }
 
-    public String deleteEntry(GlossaryTableView row)
+    public void deleteEntry(GlossaryTableView row)
     {
         try
         {
@@ -284,18 +263,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), glossaryResource);
             //Remove entry from resource
             glossaryResource.getEntries().remove(row.getEntry());
-            addMessage(FacesMessage.SEVERITY_INFO, "entry_deleted");
-            setKeepMessages();
-            return "/lw/glossary/glossary.jsf?resource_id=" + getResourceId() + "&faces-redirect=true";
+            addGrowl(FacesMessage.SEVERITY_INFO, "entry_deleted");
         }
         catch(SQLException e)
         {
             log.error("Unable to delete entry for resource " + row.getEntry().getResourceId() + ", entry ID: " + row.getEntry().getId(), e);
-            addErrorMessage(e);
-            setKeepMessages();
-            return null;
+            addErrorGrowl(e);
         }
-
     }
 
     public void deleteTerm(GlossaryTerm term)
@@ -304,7 +278,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             if(formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size())
             {
-                addMessage(FacesMessage.SEVERITY_INFO, "Glossary.term_validation");
+                addGrowl(FacesMessage.SEVERITY_INFO, "Glossary.term_validation");
                 return;
             }
 
@@ -316,13 +290,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             }
             formEntry.setFulltext(null); // reset full text index
 
-            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("entry_deleted") + ": " + term.getTerm());
+            addGrowl(FacesMessage.SEVERITY_INFO, getLocaleMessage("entry_deleted") + ": " + term.getTerm());
 
             log(Action.glossary_term_delete, glossaryResource, term.getId());
         }
         catch(Exception e)
         {
-            addErrorMessage(e);
+            addErrorGrowl(e);
         }
     }
 
@@ -358,7 +332,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addErrorMessage(e);
+            addErrorGrowl(e);
         }
     }
 
@@ -517,7 +491,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
                 HSSFCell cell0 = row0.getCell(0);
 
-                File watermark = text2Image(getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername());
+                File watermark = text2Image(glossaryResource.getUser().getUsername());
 
                 InputStream is = new FileInputStream(watermark);
 
@@ -575,8 +549,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            log.error("Error in postprocessing Glossary xls for resource: " + resourceId, e);
-            addErrorMessage(e);
+            log.error("Error in postprocessing Glossary xls for resource: " + glossaryResource.getId(), e);
+            addErrorGrowl(e);
         }
     }
 
@@ -629,16 +603,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         Document doc = (Document) document;
         doc.setPageSize(PageSize.A4.rotate());
-    }
-
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-
-    public void setResourceId(int resourceId)
-    {
-        this.resourceId = resourceId;
     }
 
     public GlossaryResource getGlossaryResource()

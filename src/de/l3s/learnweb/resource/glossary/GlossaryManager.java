@@ -372,7 +372,11 @@ public class GlossaryManager
     public GlossaryResource getGlossaryResource(int resourceId) throws SQLException
     {
         Resource resource = learnweb.getResourceManager().getResource(resourceId);
+        return getGlossaryResource(resource);
+    }
 
+    public GlossaryResource getGlossaryResource(Resource resource)
+    {
         if(resource == null)
             return null;
 

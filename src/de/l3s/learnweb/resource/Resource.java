@@ -772,16 +772,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         return url;
     }
 
-    /**
-     *
-     * @return The page that is used to visualize this resource
-     */
-    public String getView()
-    {
-        // TODO add different views depending on type
-        return "resource_view/default.jsf";
-    }
-
     public String getServiceIcon()
     {
         if(getId() != -1) // is stored in Learnweb
@@ -1121,22 +1111,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         if(embeddedCode == null)
         {
-            if(getType() == ResourceType.image)
-            {
-                Thumbnail large = getLargestThumbnail();
-                embeddedCode = "<img src=\"" + large.getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\"/>";
-            }
-            else if(getType() == ResourceType.website)
-            {
-                if(thumbnail4 != null)
-                {
-                    Thumbnail large = thumbnail4;
-                    embeddedCode = "<img src=\"" + large.getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\"/>";
-                }
-                else
-                    embeddedCode = "<iframe src=\"" + getUrl() + "\" scrolling=\"no\" />";
-            }
-            else if(getType() == ResourceType.video)
+            if(getType() == ResourceType.video)
             {
                 if(isProcessing())
                 {
@@ -1146,9 +1121,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
                 String iframeUrl = null;
 
-                if(getSource() == ResourceService.loro || getSource() == ResourceService.yovisto || getSource() == ResourceService.speechrepository || getSource() == ResourceService.desktop)
-                    iframeUrl = "video.jsf?resource_id=" + id;
-                else if(getSource() == ResourceService.ted)
+                if(getSource() == ResourceService.ted)
                     iframeUrl = getUrl().replace("http://www", "//embed").replace("https://www", "//embed");
                 else if(getSource() == ResourceService.youtube || getSource() == ResourceService.teded || getSource() == ResourceService.tedx)
                     iframeUrl = "https://www.youtube-nocookie.com/embed/" + getIdAtService();
@@ -1157,23 +1130,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
                 if(null != iframeUrl)
                     embeddedCode = "<iframe src=\"" + iframeUrl + "\" allowfullscreen referrerpolicy=\"origin\">Your browser has blocked this iframe</iframe>";
-
-            }
-            else if(getType() == ResourceType.audio)
-            {
-                embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" scrolling=\"no\" allowfullscreen></iframe>";
             }
 
             // if no rule above works
-            if(embeddedCode == null)
+            if(embeddedCode == null && StringUtils.isNoneEmpty(getEmbeddedRaw()))
             {
-                if(StringUtils.isNoneEmpty(getEmbeddedRaw()))
-                {
-                    // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
-                    embeddedCode = getEmbeddedRaw();
-                }
-
-                log.warn("can't create embeddedCode for resource: " + this);
+                // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
+                embeddedCode = getEmbeddedRaw();
             }
         }
 
