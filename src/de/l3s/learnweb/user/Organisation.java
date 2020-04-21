@@ -41,7 +41,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
         Groups_Hide_public_groups,
         Privacy_Proxy_enabled,
         Privacy_Anonymize_usernames,
-        Resource_Show_Content_Annotation_Field,
+        Resource_Show_Content_Annotation_Field, // not used any more
         Privacy_Logging_disabled,
         Privacy_Tracker_disabled,
         Users_Hide_language_switch,
@@ -530,8 +530,10 @@ public class Organisation implements Serializable, Comparable<Organisation>
     @Override
     public boolean equals(final Object o)
     {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
         final Organisation that = (Organisation) o;
         return id == that.id;
     }

@@ -613,11 +613,6 @@ public class UserBean implements Serializable
 
     }
 
-    public boolean isOptionContentAnnotationFieldEnabled()
-    {
-        return getActiveOrganisation().getOption(Option.Resource_Show_Content_Annotation_Field);
-    }
-
     public boolean isStarRatingEnabled()
     {
         return !getActiveOrganisation().getOption(Option.Resource_Hide_Star_rating);

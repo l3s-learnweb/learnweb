@@ -198,16 +198,6 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{(userBean.optionContentAnnotationFieldEnabled and res.type eq 'website')}">
-		<dt class="col-sm-3">#{msg.content}:</dt>
-		<dd class="col-sm-9">
-			<h:outputLink value="resource_transcript.jsf">
-				<f:param name="resource_id" value="#{res.id}"/>
-				#{msg.link_to_content}
-			</h:outputLink>
-		</dd>
-	</ui:fragment>
-
 	<ui:fragment rendered="${not empty res.creationDate}">
 		<dt class="col-sm-3">#{msg.date}:</dt>
 		<dd class="col-sm-9">

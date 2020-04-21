@@ -72,12 +72,4 @@
     </c:if>
 </c:forEach>
 
-<ui:fragment rendered="#{userBean.optionContentAnnotationFieldEnabled and res.type eq 'website'}">
-    <p:outputLabel for="@next" value="#{msg.content}:"/>
-    <div class="fg-col">
-        <p:inputTextarea value="#{res.transcript}" rows="6" autoResize="false"/>
-        <p:message for="@previous"/>
-    </div>
-</ui:fragment>
-
 </ui:composition>
