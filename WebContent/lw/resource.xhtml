@@ -32,13 +32,13 @@
 
 	<ui:fragment rendered="#{resourceDetailBean.resource.canViewResource(userBean.user)}">
 		<div class="res-view">
-			<div class="row">
+			<div class="row no-gutters">
 				<div class="col res-view-embedded d-flex justify-content-center align-items-center">
 					<ui:decorate template="/WEB-INF/templates/blocks/resourceview/preview.xhtml">
 						<ui:param name="res" value="#{resourceDetailBean.resource}"/>
 					</ui:decorate>
 				</div>
-				<div class="col-12 col-lg-4 res-view-details">
+				<div class="col-12 col-lg-4 res-view-details border-left">
 					<div class="res-view-controls">
 						<div class="mr-auto">
 							<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn" title="#{msg.edit_resource}"

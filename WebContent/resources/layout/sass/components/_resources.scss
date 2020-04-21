@@ -831,8 +831,6 @@ ul.res-filters {
 }
 
 .res-view {
-  padding-right: $grid-gutter-width / 2;
-  padding-left: $grid-gutter-width / 2;
   background: $dark;
 
   &,
@@ -863,7 +861,6 @@ ul.res-filters {
     .res-view-controls {
       display: flex;
       flex-direction: row;
-      margin: 0 (-$grid-gutter-width / 2);
       padding: $grid-gutter-width / 2;
       background: $themePrimaryColor;
 
