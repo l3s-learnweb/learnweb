@@ -67,28 +67,6 @@
 				</h:panelGroup>
 			</h:panelGroup>
 		</h:panelGroup>
-
-		<div id="myNav" class="overlay">
-			<a href="javascript:void(0)" class="closebtn" onclick="closeTagsDiv()" aria-label="Close">
-				<i class="fa fa-fw fa-times fa-inverse" aria-hidden="true"></i>
-			</a>
-			<ul class="tab">
-				<li>
-					<a href="javascript:void(0)" id="tags_button" class="tablinks" onclick="openTab(event, 'tags')">
-						<h:outputText value="#{msg.tags}"/>
-					</a>
-				</li>
-				<li>
-					<a href="javascript:void(0)" id="summary_button" class="tablinks" onclick="openTab(event, 'summary')">
-						<h:outputText value="#{msg.summary}"/>
-					</a>
-				</li>
-			</ul>
-			<div id="tags" class="overlay-content">
-				<ol id="selectable">
-				</ol>
-			</div>
-		</div>
 	</div>
 </ui:define>
 
