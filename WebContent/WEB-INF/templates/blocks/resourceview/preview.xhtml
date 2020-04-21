@@ -15,18 +15,18 @@
                             id: '#{userBean.user.id}',
                             name: '#{utilBean.escapeJS(userBean.user.username)}'
                         },
-                        documentType: '#{fileEditorBean.fileType}',
+                        documentType: '#{officeResourceBean.fileType}',
                         document: {
                             title: '#{utilBean.escapeJS(res.fileName)}',
-                            url: '#{fileEditorBean.fullFilesUrl}',
-                            fileType: '#{fileEditorBean.filesExtension}',
-                            key: '#{fileEditorBean.key}',
+                            url: '#{officeResourceBean.fullFilesUrl}',
+                            fileType: '#{officeResourceBean.filesExtension}',
+                            key: '#{officeResourceBean.key}',
                             resourceId: '#{res.id}',
                             canBeEdited: '#{res.canEditResource(userBean.user)}'
                         },
-                        historyUrl: '#{fileEditorBean.historyUrl}',
-                        callbackUrl: '#{fileEditorBean.callbackUrl}',
-                        clientUrl: '#{fileEditorBean.onlyOfficeClientUrl}'
+                        historyUrl: '#{officeResourceBean.historyUrl}',
+                        callbackUrl: '#{officeResourceBean.callbackUrl}',
+                        clientUrl: '#{officeResourceBean.onlyOfficeClientUrl}'
                     };
                     $(function () {
                       loadPreviewEditor();

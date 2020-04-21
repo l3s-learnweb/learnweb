@@ -29,7 +29,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.archive.TimelineData;
-import de.l3s.learnweb.resource.office.FileEditorBean;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
 
@@ -58,9 +57,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     private Resource resource;
     private ViewAction viewAction = ViewAction.viewResource;
-
-    @Inject
-    private FileEditorBean fileEditorBean; // TODO remove.
 
     public void onLoad()
     {
@@ -119,9 +115,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public void setResource(Resource resource)
     {
         this.resource = resource;
-
-        if(resource != null && resource.isOfficeResource())
-            fileEditorBean.fillInFileInfo(resource);
     }
 
     public ViewAction getViewAction()
@@ -682,17 +675,4 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         return hypothesisProxy + resource.getUrl();
     }
-
-    /* Load beans  */
-
-    public FileEditorBean getFileEditorBean() // TODO remove
-    {
-        return fileEditorBean;
-    }
-
-    public void setFileEditorBean(FileEditorBean fileEditorBean) // TODO remove
-    {
-        this.fileEditorBean = fileEditorBean;
-    }
-
 }
