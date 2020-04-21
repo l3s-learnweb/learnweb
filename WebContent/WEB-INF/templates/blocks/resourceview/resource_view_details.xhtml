@@ -12,14 +12,14 @@
 	<ui:fragment rendered="${not empty res.fileName and res.source ne 'loro'}">
 		<dt class="col-sm-3">#{msg.file}:</dt>
 		<dd class="col-sm-9">
-			<a href="#{res.fileUrl}">
+			<a href="#{res.fileUrl}" target="_blank">
 				<i class="fa fa-fw fa-download" aria-hidden="true"></i>
 				#{res.fileName}
 			</a>
 
 			<ui:fragment rendered="${not empty res.originalFile}">
 				<div>
-					<a href="#{res.originalFile.url}">
+					<a href="#{res.originalFile.url}" target="_blank">
 						<i class="fa fa-fw fa-download" aria-hidden="true"></i>
 						#{res.originalFile.name}
 					</a>
@@ -58,8 +58,8 @@
 	<ui:fragment rendered="#{not empty res.group and res.type eq 'website' and not empty res.group.hypothesisLink}">
 		<dt class="col-sm-3">#{msg.discuss}:</dt>
 		<dd class="col-sm-9">
-			<h:outputLink value="#{resourceDetailBean.hypothesisLink}">#{msg.link_to_discuss}</h:outputLink>
-			<h:outputLink value="#{res.group.hypothesisLink}">(#{msg.discuss_group_invite})</h:outputLink>
+			<h:outputLink value="#{resourceDetailBean.hypothesisLink}" target="_blank">#{msg.link_to_discuss}</h:outputLink>
+			<h:outputLink value="#{res.group.hypothesisLink}" target="_blank">(#{msg.discuss_group_invite})</h:outputLink>
 
 			<h:outputLink value="discussion_help.jsf" target="_blank">
 				<f:param name="type" value="user"/>[?]
@@ -93,13 +93,13 @@
 
 	<dt class="col-sm-3">#{msg.source}:</dt>
 	<dd class="col-sm-9">
-		<a href="#{userBean.getUrlProxied(res)}"><h:outputText value="#{res.source.label}"/></a>
+		<a href="#{userBean.getUrlProxied(res)}" target="_blank"><h:outputText value="#{res.source.label}"/></a>
 	</dd>
 
 	<ui:fragment rendered="${not empty res.group}">
 		<dt class="col-sm-3">#{msg.group}:</dt>
 		<dd class="col-sm-9">
-			<h:outputLink value="group/overview.jsf">
+			<h:outputLink value="group/overview.jsf" target="_blank">
 				<f:param name="group_id" value="#{res.group.id}"/>
 				<h:outputText value="#{res.group.title}"/>
 			</h:outputLink>
@@ -109,7 +109,7 @@
 	<ui:fragment rendered="${not empty res.originalGroup}">
 		<dt class="col-sm-3">#{msg.copied_from}:</dt>
 		<dd class="col-sm-9">
-			<h:outputLink value="group/overview.jsf">
+			<h:outputLink value="group/overview.jsf" target="_blank">
 				<f:param name="group_id" value="#{res.originalGroup.id}"/>
 				<h:outputText value="#{res.originalGroup.title}"/>
 			</h:outputLink>
@@ -191,7 +191,7 @@
 	<ui:fragment rendered="${res.source == 'ted' or res.source == 'tedx'}">
 		<dt class="col-sm-3">#{msg.transcript}:</dt>
 		<dd class="col-sm-9">
-			<h:outputLink value="ted_transcript.jsf">
+			<h:outputLink value="ted_transcript.jsf" target="_blank">
 				<f:param name="resource_id" value="#{res.id}"/>
 				#{msg.link_to_transcript}
 			</h:outputLink>
@@ -210,7 +210,7 @@
 	<ui:fragment rendered="#{res.folderId != 0}">
 		<dt class="col-sm-3">#{msg.path}:</dt>
 		<dd class="col-sm-9">
-			<h:outputLink value="group/resources.jsf">
+			<h:outputLink value="group/resources.jsf" target="_blank">
 				<f:param name="group_id" value="#{res.groupId}"/>
 				<f:param name="folder_id" value="#{res.folderId}"/>
 				<f:param name="resource_id" value="#{res.id}"/>
