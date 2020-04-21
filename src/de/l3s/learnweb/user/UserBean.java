@@ -32,6 +32,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.component.ActiveSubMenu;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
@@ -570,6 +571,16 @@ public class UserBean implements Serializable
      * @return the resources url proxied through WAPS.io if enabled for the current organization
      */
     public String getUrlProxied(Resource resource)
+    {
+        return getUrlProxied(resource.getUrl());
+    }
+
+    /**
+     *
+     * @param resource
+     * @return the resources url proxied through WAPS.io if enabled for the current organization
+     */
+    public String getUrlProxied(ResourceDecorator resource)
     {
         return getUrlProxied(resource.getUrl());
     }
