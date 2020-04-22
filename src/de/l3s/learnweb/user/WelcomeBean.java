@@ -1,14 +1,15 @@
 package de.l3s.learnweb.user;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.logging.LogEntry;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
+
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogEntry;
 
 @Named
 @RequestScoped
@@ -30,8 +31,6 @@ public class WelcomeBean extends ApplicationBean implements Serializable
     private static final Action[] RESOURCES_FILTER = {
             Action.adding_resource,
             Action.edit_resource,
-            Action.group_adding_document,
-            Action.group_adding_link
     };
 
     private String welcomeMessage;
@@ -48,7 +47,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable
         welcomeMessage = user.getOrganisation().getWelcomeMessage();
     }
 
-    private List<LogEntry> fetchNewsList(Action[] filter) throws SQLException
+    private List<LogEntry> getLogs(Action[] filter) throws SQLException
     {
         return getLearnweb().getLogManager().getActivityLogOfUserGroups(getUser().getId(), filter, 5);
     }
@@ -62,7 +61,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable
     {
         if(null == newsTopics)
         {
-            newsTopics = fetchNewsList(TOPICS_FILTER);
+            newsTopics = getLogs(TOPICS_FILTER);
         }
         return newsTopics;
     }
@@ -71,7 +70,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable
     {
         if(null == newsResources)
         {
-            newsResources = fetchNewsList(RESOURCES_FILTER);
+            newsResources = getLogs(RESOURCES_FILTER);
         }
         return newsResources;
     }
@@ -80,7 +79,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable
     {
         if(null == newsPosts)
         {
-            newsPosts = fetchNewsList(POSTS_FILTER);
+            newsPosts = getLogs(POSTS_FILTER);
         }
         return newsPosts;
     }

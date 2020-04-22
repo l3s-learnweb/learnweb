@@ -157,12 +157,6 @@ public class LogEntry implements Serializable
             case group_changing_leader:
                 description = usernameLink + UtilBean.getLocaleMessage("log_group_changing_leader", groupLink);
                 break;
-            case group_adding_document:
-                description = usernameLink + UtilBean.getLocaleMessage("log_group_adding_document", groupLink);
-                break;
-            case group_adding_link:
-                description = usernameLink + UtilBean.getLocaleMessage("log_group_adding_link", groupLink);
-                break;
             case group_deleting_link:
                 description = usernameLink + UtilBean.getLocaleMessage("log_group_deleting_link", groupLink);
                 break;

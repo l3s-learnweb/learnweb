@@ -22,8 +22,6 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
             Action.adding_resource,
             Action.commenting_resource,
             Action.edit_resource,
-            Action.group_adding_document,
-            Action.group_adding_link,
             Action.group_changing_description,
             Action.group_changing_leader,
             Action.group_changing_title,

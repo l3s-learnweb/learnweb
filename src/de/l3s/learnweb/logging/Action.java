@@ -39,11 +39,11 @@ public enum Action
     group_changing_title(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = old title
     group_changing_leader(ActionTargetId.GROUP_ID, ActionCategory.GROUP), //
     group_changing_restriction(ActionTargetId.GROUP_ID, ActionCategory.GROUP), //
-    group_adding_link(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = title
-    group_adding_document(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = title
+    unused9(ActionTargetId.NONE, ActionCategory.OTHER),
+    unused10(ActionTargetId.NONE, ActionCategory.OTHER),
     opening_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER),
     unused7(ActionTargetId.NONE, ActionCategory.OTHER),
-    deleting_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // target_id = folder_id, param = folder name;
+    deleting_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name;
     downloading(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = file_id
     group_deleting_link(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = title of deleted link;
     group_resource_search(ActionTargetId.NONE, ActionCategory.SEARCH), // param = query
@@ -57,7 +57,7 @@ public enum Action
     glossary_term_edit(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary id
     glossary_term_add(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary id
     glossary_term_delete(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary_term_id
-    resource_thumbnail_update(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // target_id = resource_id
+    resource_thumbnail_update(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
     submission_submitted(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), //target_id = resource_id
     unused8(ActionTargetId.NONE, ActionCategory.OTHER),
     unused2(ActionTargetId.NONE, ActionCategory.OTHER),
@@ -77,8 +77,8 @@ public enum Action
     unused6(ActionTargetId.NONE, ActionCategory.OTHER),
     deleted_user_soft(ActionTargetId.USER_ID, ActionCategory.USER),
     deleted_user_hard(ActionTargetId.USER_ID, ActionCategory.USER),
-    move_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // target_id = folder_id, param = folder name;
-    move_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // target_id = resource_id, param = resource name;
+    move_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name;
+    move_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = resource name;
     ;
 
     private final ActionTargetId targetId;
