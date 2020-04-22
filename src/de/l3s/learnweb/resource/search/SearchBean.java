@@ -31,8 +31,8 @@ import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.SelectLocationBean;
 import de.l3s.learnweb.resource.search.Search.GroupedResources;
-import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
 import de.l3s.learnweb.resource.search.filters.Filter;
+import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.User;
 
@@ -126,7 +126,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             search = new Search(interweb, query, searchFilters, getUser());
             search.setMode(searchMode);
             searchFilters.setFiltersFromString(queryFilters);
-            searchFilters.setFilter(FILTERS.service, searchService);
+            searchFilters.setFilter(FilterType.service, searchService);
             searchFilters.setLanguageFilter(getUserBean().getLocaleCode());
 
             search.logQuery(query, searchService, searchFilters.getLanguageFilter(), queryFilters);
@@ -277,7 +277,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public List<Filter> getAvailableFilters()
     {
-        FILTERS[] except = { FILTERS.service };
+        FilterType[] except = { FilterType.service };
         return searchFilters.getAvailableFilters(except);
     }
 

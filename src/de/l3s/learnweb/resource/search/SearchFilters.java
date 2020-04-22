@@ -18,14 +18,13 @@ import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterOption;
+import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.util.StringHelper;
 
 /**
@@ -44,10 +43,10 @@ public class SearchFilters implements Serializable
     private Long totalResultsInterweb = null;
     private String stringFilters = null;
     private SearchMode configMode = SearchMode.text;
-    private FILTERS lastFilter = null;
+    private FilterType lastFilter = null;
     private int prevFilters = 0;
-    private Map<FILTERS, Object> configFilters = new EnumMap<>(FILTERS.class);
-    private Map<FILTERS, List<Count>> availableResources = new HashMap<>();
+    private Map<FilterType, Object> configFilters = new EnumMap<>(FilterType.class);
+    private Map<FilterType, List<Count>> availableResources = new HashMap<>();
     private boolean isFilterRemoved = false;
     private boolean canNotRequestLearnweb = false;
     private boolean canNotRequestInterweb = false;
@@ -250,96 +249,6 @@ public class SearchFilters implements Serializable
         }
     }
 
-    public enum FILTERS
-    {
-        service,
-        type,
-        date,
-        group,
-        collector,
-        author,
-        coverage,
-        publisher,
-        tags,
-        imageSize,
-        videoDuration,
-        language;
-
-        public static FILTERS[] getFilterByMode(SearchMode m)
-        {
-            switch(m)
-            {
-            case text:
-                return new FILTERS[] { service, date, group, collector, author, coverage, publisher, tags };
-            case image:
-                return new FILTERS[] { service, date, group, author, tags, imageSize };
-            case video:
-                return new FILTERS[] { service, date, group, author, tags, videoDuration };
-            case group:
-                return new FILTERS[] { service, type, date, collector, author, coverage, publisher, tags };
-            default:
-                return values();
-            }
-        }
-
-        @Override
-        public String toString()
-        {
-            switch(this)
-            {
-            case imageSize:
-                return UtilBean.getLocaleMessage("size");
-            case videoDuration:
-                return UtilBean.getLocaleMessage("duration");
-            default:
-                return UtilBean.getLocaleMessage(this.name());
-            }
-        }
-
-        public String getLocaleAnyString()
-        {
-            switch(this)
-            {
-            case date:
-                return UtilBean.getLocaleMessage("any_time");
-            case imageSize:
-                return UtilBean.getLocaleMessage("any_size");
-            case videoDuration:
-                return UtilBean.getLocaleMessage("any_duration");
-            default:
-                return UtilBean.getLocaleMessage("any_" + this.name());
-            }
-        }
-
-        public String getItemName(String item)
-        {
-            switch(this)
-            {
-            case service:
-                return ResourceService.parse(item).toString();
-            case group:
-                return getGroupNameById(item);
-            default:
-                return item;
-            }
-        }
-
-        public boolean isEncodeBase64()
-        {
-            switch(this)
-            {
-            case collector:
-            case author:
-            case coverage:
-            case publisher:
-            case tags:
-                return true;
-            default:
-                return false;
-            }
-        }
-    }
-
     public String[] getFacetFields()
     {
         return new String[] { "location", "type", "groupId", "collector_s", "author_s", "coverage_s", "publisher_s", "tags_ss" };
@@ -377,28 +286,28 @@ public class SearchFilters implements Serializable
             switch(ff.getName())
             {
                 case "location":
-                    putResourceCounter(FILTERS.service, ff.getValues(), false);
+                    putResourceCounter(FilterType.service, ff.getValues(), false);
                     break;
                 case "type":
-                    putResourceCounter(FILTERS.type, ff.getValues(), false);
+                    putResourceCounter(FilterType.type, ff.getValues(), false);
                     break;
                 case "groupId":
-                    putResourceCounter(FILTERS.group, ff.getValues(), false);
+                    putResourceCounter(FilterType.group, ff.getValues(), false);
                     break;
                 case "collector_s":
-                    putResourceCounter(FILTERS.collector, ff.getValues(), false);
+                    putResourceCounter(FilterType.collector, ff.getValues(), false);
                     break;
                 case "author_s":
-                    putResourceCounter(FILTERS.author, ff.getValues(), false);
+                    putResourceCounter(FilterType.author, ff.getValues(), false);
                     break;
                 case "coverage_s":
-                    putResourceCounter(FILTERS.coverage, ff.getValues(), false);
+                    putResourceCounter(FilterType.coverage, ff.getValues(), false);
                     break;
                 case "publisher_s":
-                    putResourceCounter(FILTERS.publisher, ff.getValues(), false);
+                    putResourceCounter(FilterType.publisher, ff.getValues(), false);
                     break;
                 case "tags_ss":
-                    putResourceCounter(FILTERS.tags, ff.getValues(), false);
+                    putResourceCounter(FilterType.tags, ff.getValues(), false);
                     break;
             }
         }
@@ -416,17 +325,17 @@ public class SearchFilters implements Serializable
             else if(tempNames[0].equals("date"))
             {
                 Count c = new Count(new FacetField(tempNames[0]), tempNames[1], entry.getValue());
-                putResourceCounter(FILTERS.date, new ArrayList<>(Collections.singletonList(c)), true);
+                putResourceCounter(FilterType.date, new ArrayList<>(Collections.singletonList(c)), true);
             }
             else if(tempNames[0].equals("type"))
             {
                 Count c = new Count(new FacetField(tempNames[0]), tempNames[1], entry.getValue());
-                putResourceCounter(FILTERS.type, new ArrayList<>(Collections.singletonList(c)), true);
+                putResourceCounter(FilterType.type, new ArrayList<>(Collections.singletonList(c)), true);
             }
         }
     }
 
-    public void putResourceCounter(FILTERS f, List<Count> counts, boolean merge)
+    public void putResourceCounter(FilterType f, List<Count> counts, boolean merge)
     {
         if(lastFilter == null || lastFilter != f)
         {
@@ -480,7 +389,7 @@ public class SearchFilters implements Serializable
                 {
                     try
                     {
-                        FILTERS f = FILTERS.valueOf(nameValue[0]);
+                        FilterType f = FilterType.valueOf(nameValue[0]);
                         String fValue = f.isEncodeBase64() ? StringHelper.decodeBase64(nameValue[1]) : nameValue[1];
 
                         switch(f)
@@ -528,7 +437,7 @@ public class SearchFilters implements Serializable
         return stringFilters;
     }
 
-    private String changeFilterInUrl(FILTERS f, String value)
+    private String changeFilterInUrl(FilterType f, String value)
     {
         value = value == null ? null : (f.isEncodeBase64() ? StringHelper.encodeBase64(value.getBytes()) : value);
 
@@ -560,16 +469,16 @@ public class SearchFilters implements Serializable
 
     public List<Filter> getAvailableFilters()
     {
-        FILTERS[] empty = {};
+        FilterType[] empty = {};
         return this.getAvailableFilters(empty);
     }
 
-    public List<Filter> getAvailableFilters(FILTERS[] except)
+    public List<Filter> getAvailableFilters(FilterType[] except)
     {
         List<Filter> list = new ArrayList<>();
-        FILTERS[] filters = ArrayUtils.removeElements(FILTERS.getFilterByMode(configMode), except);
+        FilterType[] filters = ArrayUtils.removeElements(FilterType.getFilters(configMode), except);
 
-        for(FILTERS fs : filters)
+        for(FilterType fs : filters)
         {
             boolean containsFilter = configFilters.containsKey(fs);
             Filter nf = new Filter(containsFilter ? fs.getItemName(configFilters.get(fs).toString()) : fs.toString(), fs.getLocaleAnyString(), changeFilterInUrl(fs, null), containsFilter);
@@ -614,7 +523,7 @@ public class SearchFilters implements Serializable
                 }
                 break;
             case date:
-                if(!configFilters.containsKey(FILTERS.service) || !configFilters.get(FILTERS.service).equals(ResourceService.bing) || !configFilters.get(FILTERS.service).equals(ResourceService.vimeo))
+                if(!configFilters.containsKey(FilterType.service) || !configFilters.get(FilterType.service).equals(ResourceService.bing) || !configFilters.get(FilterType.service).equals(ResourceService.vimeo))
                 {
                     for(DATE d : DATE.values())
                     {
@@ -681,7 +590,7 @@ public class SearchFilters implements Serializable
         return list;
     }
 
-    public Long getTotalResources(FILTERS fs, String fn)
+    public Long getTotalResources(FilterType fs, String fn)
     {
         if(availableResources.containsKey(fs))
         {
@@ -706,9 +615,9 @@ public class SearchFilters implements Serializable
     public boolean checkAfterLoadFilters(ResourceDecorator res)
     {
         //String type = res.getResource().getType(); // text Image Video
-        if(configFilters.containsKey(FILTERS.imageSize) && res.getResource().getType() == ResourceType.image)
+        if(configFilters.containsKey(FilterType.imageSize) && res.getResource().getType() == ResourceType.image)
         {
-            SIZE configSize = (SIZE) configFilters.get(FILTERS.imageSize);
+            SIZE configSize = (SIZE) configFilters.get(FilterType.imageSize);
             int width = res.getThumbnail4().getWidth(), minWidth = configSize.getMinWidth(), maxWidth = configSize.getMaxWidth();
 
             if(minWidth > width || (maxWidth != 0 && width > maxWidth))
@@ -717,9 +626,9 @@ public class SearchFilters implements Serializable
             }
         }
 
-        if(configFilters.containsKey(FILTERS.videoDuration) && res.getResource().getType() == ResourceType.video)
+        if(configFilters.containsKey(FilterType.videoDuration) && res.getResource().getType() == ResourceType.video)
         {
-            DURATION configDuration = (DURATION) configFilters.get(FILTERS.videoDuration);
+            DURATION configDuration = (DURATION) configFilters.get(FilterType.videoDuration);
             int duration = res.getResource().getDuration();
             int minDuration = configDuration.getMinDuration();
             int maxDuration = configDuration.getMaxDuration();
@@ -729,7 +638,7 @@ public class SearchFilters implements Serializable
         return true;
     }
 
-    public void setFilter(FILTERS f, Object o)
+    public void setFilter(FilterType f, Object o)
     {
         if(!isFilterRemoved)
         {
@@ -741,54 +650,54 @@ public class SearchFilters implements Serializable
 
     public String getServiceFilter()
     {
-        if(configFilters.containsKey(FILTERS.service))
+        if(configFilters.containsKey(FilterType.service))
         {
-            return ((ResourceService) configFilters.get(FILTERS.service)).name();
+            return ((ResourceService) configFilters.get(FilterType.service)).name();
         }
         return null;
     }
 
     public String getTypeFilter()
     {
-        if(configFilters.containsKey(FILTERS.type))
+        if(configFilters.containsKey(FilterType.type))
         {
-            return ((TYPE) configFilters.get(FILTERS.type)).name();
+            return ((TYPE) configFilters.get(FilterType.type)).name();
         }
         return null;
     }
 
     public String getDateFromFilterAsString()
     {
-        if(configFilters.containsKey(FILTERS.date) && ((DATE) configFilters.get(FILTERS.date)).getDateFrom() != null)
+        if(configFilters.containsKey(FilterType.date) && ((DATE) configFilters.get(FilterType.date)).getDateFrom() != null)
         {
-            return configFilters.get(FILTERS.date).toString();
+            return configFilters.get(FilterType.date).toString();
         }
         return null;
     }
 
     public Date getDateFromFilter()
     {
-        if(configFilters.containsKey(FILTERS.date))
+        if(configFilters.containsKey(FilterType.date))
         {
-            return ((DATE) configFilters.get(FILTERS.date)).getDateFrom();
+            return ((DATE) configFilters.get(FilterType.date)).getDateFrom();
         }
         return null;
     }
 
     public String getDateToFilterAsString()
     {
-        if(configFilters.containsKey(FILTERS.date) && ((DATE) configFilters.get(FILTERS.date)).getDateTo() != null)
+        if(configFilters.containsKey(FilterType.date) && ((DATE) configFilters.get(FilterType.date)).getDateTo() != null)
         {
-            return configFilters.get(FILTERS.date).toString();
+            return configFilters.get(FilterType.date).toString();
         }
         return null;
     }
 
     public Date getDateToFilter()
     {
-        if(configFilters.containsKey(FILTERS.date))
+        if(configFilters.containsKey(FilterType.date))
         {
-            return ((DATE) configFilters.get(FILTERS.date)).getDateTo();
+            return ((DATE) configFilters.get(FilterType.date)).getDateTo();
         }
         return null;
     }
@@ -800,32 +709,32 @@ public class SearchFilters implements Serializable
 
     public String getGroupFilter()
     {
-        return (String) configFilters.get(FILTERS.group);
+        return (String) configFilters.get(FilterType.group);
     }
 
     public String getCollectorFilter()
     {
-        return (String) configFilters.get(FILTERS.collector);
+        return (String) configFilters.get(FilterType.collector);
     }
 
     public String getAuthorFilter()
     {
-        return (String) configFilters.get(FILTERS.author);
+        return (String) configFilters.get(FilterType.author);
     }
 
     public String getCoverageFilter()
     {
-        return (String) configFilters.get(FILTERS.coverage);
+        return (String) configFilters.get(FilterType.coverage);
     }
 
     public String getPublisherFilter()
     {
-        return (String) configFilters.get(FILTERS.publisher);
+        return (String) configFilters.get(FilterType.publisher);
     }
 
     public String getTagsFilter()
     {
-        return (String) configFilters.get(FILTERS.tags);
+        return (String) configFilters.get(FilterType.tags);
     }
 
     public void setMode(SearchMode m)
@@ -844,12 +753,12 @@ public class SearchFilters implements Serializable
 
     public String getLanguageFilter()
     {
-        return (String) configFilters.get(FILTERS.language);
+        return (String) configFilters.get(FilterType.language);
     }
 
     public void setLanguageFilter(String language)
     {
-        setFilter(FILTERS.language, language);
+        setFilter(FilterType.language, language);
     }
 
     public boolean isFiltersEnabled()
@@ -859,36 +768,20 @@ public class SearchFilters implements Serializable
 
     public boolean isLearnwebSearchEnabled()
     {
-        if(configFilters.containsKey(FILTERS.service))
+        if(configFilters.containsKey(FilterType.service))
         {
-            return !((ResourceService) configFilters.get(FILTERS.service)).isInterweb();
+            return !((ResourceService) configFilters.get(FilterType.service)).isInterweb();
         }
         return !canNotRequestLearnweb;
     }
 
     public boolean isInterwebSearchEnabled()
     {
-        if(configFilters.containsKey(FILTERS.service))
+        if(configFilters.containsKey(FilterType.service))
         {
-            return ((ResourceService) configFilters.get(FILTERS.service)).isInterweb();
+            return ((ResourceService) configFilters.get(FilterType.service)).isInterweb();
         }
         return !canNotRequestInterweb;
-    }
-
-    public static String getGroupNameById(String id)
-    {
-        try
-        {
-            Group group;
-            group = Learnweb.getInstance().getGroupManager().getGroupById(Integer.parseInt(id));
-            if(null == group)
-                return "deleted";
-            return group.getTitle();
-        }
-        catch(NumberFormatException | SQLException e)
-        {
-            return id;
-        }
     }
 
     public Long getTotalResults()

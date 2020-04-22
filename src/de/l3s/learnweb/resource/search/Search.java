@@ -25,7 +25,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
-import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
+import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.User;
 
@@ -315,7 +315,7 @@ public class Search implements Serializable
 
         if(page == 1)
         {
-            searchFilters.putResourceCounter(FILTERS.service, interwebResponse.getResultCountPerService(), true);
+            searchFilters.putResourceCounter(FilterType.service, interwebResponse.getResultCountPerService(), true);
             searchFilters.setTotalResultsInterweb(interwebResponse.getTotalResultCount());
         }
 
@@ -452,7 +452,7 @@ public class Search implements Serializable
             }
             else
             {
-                resGroup.setTotalResources(searchFilters.getTotalResources(FILTERS.service, resGroup.getGroupAlias()).intValue());
+                resGroup.setTotalResources(searchFilters.getTotalResources(FilterType.service, resGroup.getGroupAlias()).intValue());
                 resGroup.addResource(res);
                 resourcesByGroups.add(resGroup);
             }
