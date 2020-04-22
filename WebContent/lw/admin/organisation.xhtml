@@ -74,8 +74,9 @@
                         <div class="form-group">
                             <p:outputLabel for="@next" value="#{msg.welcome_page}:"/>
                             <p:selectOneMenu id="welcomePage" value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
-                                <f:selectItem itemValue="/lw/myhome/activity.jsf" itemLabel="/lw/myhome/activity.jsf"/>
                                 <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf"/>
+                                <f:selectItem itemValue="/lw/myhome/resources.jsf" itemLabel="/lw/myhome/resources.jsf"/>
+                                <f:selectItem itemValue="/lw/myhome/groups.jsf" itemLabel="/lw/myhome/groups.jsf"/>
                             </p:selectOneMenu>
                             <p:message for="@previous"/>
                         </div>

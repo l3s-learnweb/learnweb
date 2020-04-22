@@ -528,7 +528,7 @@ public class UserBean implements Serializable
     public boolean isShowMessageAddResourceInHeader() throws SQLException
     {
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        if(viewId.contains("overview.xhtml") || viewId.contains("resources.xhtml") || viewId.contains("activity.xhtml"))
+        if(viewId.contains("overview.xhtml") || viewId.contains("resources.xhtml") || viewId.contains("welcome.xhtml"))
             return false;
 
         return isShowMessageAddResource();

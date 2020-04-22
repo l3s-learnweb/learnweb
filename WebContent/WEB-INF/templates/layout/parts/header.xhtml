@@ -46,7 +46,7 @@
                         <p:menuitem url="#{request.contextPath}/lw/user/detail.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-user" value="#{msg.myProfileTitle}"/>
                         <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-cog" value="#{msg.settings}"/>
                         <p:menuitem url="#{request.contextPath}/lw/dashboard/index.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}"/>
-                        <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}"/>
+                        <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf" icon="fa fa-fw fa-history" value="#{msg.search_history}" rendered="#{userBean.admin}"/>
                         <p:menuitem action="#{loginBean.logout}" icon="fa fa-fw fa-sign-out" value="#{msg.logout}"/>
                     </p:menu>
                 </ui:fragment>
