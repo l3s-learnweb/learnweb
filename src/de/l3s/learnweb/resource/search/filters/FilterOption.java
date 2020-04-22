@@ -42,7 +42,7 @@ public class FilterOption implements Serializable, Comparable<FilterOption>
 
     public void setTotalResults(final Long totalResults)
     {
-        if (totalResults == null || totalResults <= 0) this.totalResults = null;
+        if(totalResults == null || totalResults <= 0) this.totalResults = null;
         else this.totalResults = totalResults;
     }
 
@@ -59,14 +59,17 @@ public class FilterOption implements Serializable, Comparable<FilterOption>
     @Override
     public int compareTo(FilterOption another)
     {
-        return this.getTotalResults() > another.getTotalResults() ? -1 : 1;
+        return Long.compare(totalResults, another.totalResults);
     }
 
     @Override
     public boolean equals(final Object o)
     {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
+
         final FilterOption that = (FilterOption) o;
         return title.equals(that.title) && value.equals(that.value);
     }

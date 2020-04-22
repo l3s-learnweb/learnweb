@@ -164,7 +164,7 @@ public class Search implements Serializable
         this.solrSearch.setFilterType(configMode == SearchMode.text ? "web" : configMode.name());
         if(searchFilters.getServiceFilter() != null)
         {
-            this.solrSearch.setFilterLocation(searchFilters.getServiceFilter());
+            this.solrSearch.setFilterLocation(searchFilters.getServiceFilter().name());
             this.solrSearch.setResultsPerPage(configResultsPerService * 4);
         }
         else
@@ -178,10 +178,10 @@ public class Search implements Serializable
             this.solrSearch.setGroupResultsLimit(this.configResultsPerGroup);
         }
 
-        if(searchFilters.getDateFromFilterAsString() != null)
-            this.solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
-        if(searchFilters.getDateToFilterAsString() != null)
-            this.solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
+        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateFrom() != null)
+            this.solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFilter().getDateFrom()));
+        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateTo() != null)
+            this.solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateFilter().getDateTo()));
         if(searchFilters.getGroupFilter() != null)
             this.solrSearch.setFilterGroups(Integer.parseInt(searchFilters.getGroupFilter()));
         if(searchFilters.getCollectorFilter() != null)
@@ -277,7 +277,7 @@ public class Search implements Serializable
 
         if(searchFilters.getServiceFilter() != null)
         {
-            params.put("services", searchFilters.getServiceFilter());
+            params.put("services", searchFilters.getServiceFilter().name());
             params.put("number_of_results", String.valueOf(configResultsPerService * 4));
         }
         else
@@ -297,11 +297,11 @@ public class Search implements Serializable
             params.put("number_of_results", configResultsPerService.toString());
         }
 
-        if(searchFilters.getDateFromFilterAsString() != null)
-            params.put("date_from", DEFAULT_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
+        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateFrom() != null)
+            params.put("date_from", DEFAULT_DATE_FORMAT.format(searchFilters.getDateFilter().getDateFrom()));
 
-        if(searchFilters.getDateToFilterAsString() != null)
-            params.put("date_to", DEFAULT_DATE_FORMAT.format(searchFilters.getDateToFilter()));
+        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateTo() != null)
+            params.put("date_to", DEFAULT_DATE_FORMAT.format(searchFilters.getDateFilter().getDateTo()));
 
         if(searchFilters.getLanguageFilter() != null)
             params.put("language", searchFilters.getLanguageFilter());
@@ -436,8 +436,6 @@ public class Search implements Serializable
         {
             GroupedResources resGroup = new GroupedResources();
             resGroup.setGroupName(res.getLocation());
-
-            //log.debug("getResourcesGroupedBySource: resource " + res.getId() + " location " + res.getLocation());
 
             if(res.getLocation().equalsIgnoreCase(searchService.name()))
                 continue;

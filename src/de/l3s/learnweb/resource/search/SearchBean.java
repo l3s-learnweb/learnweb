@@ -125,9 +125,9 @@ public class SearchBean extends ApplicationBean implements Serializable
 
             search = new Search(interweb, query, searchFilters, getUser());
             search.setMode(searchMode);
-            searchFilters.setFiltersFromString(queryFilters);
+            searchFilters.setFilters(queryFilters);
             searchFilters.setFilter(FilterType.service, searchService);
-            searchFilters.setLanguageFilter(getUserBean().getLocaleCode());
+            searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());
 
             search.logQuery(query, searchService, searchFilters.getLanguageFilter(), queryFilters);
             search.getResourcesByPage(1); // load first page
@@ -410,7 +410,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public List<GroupedResources> getResourcesGroupedBySource()
     {
-        if((resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty()) && StringUtils.isNotEmpty(query))
+        if(StringUtils.isNoneBlank(query) && (resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty()))
         {
             SearchFilters searchFilters = new SearchFilters();
             Search metaSearch = new Search(interweb, query, searchFilters, getUser());
@@ -418,7 +418,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             metaSearch.setResultsPerService(32);
             metaSearch.setConfigGroupResultsByField("location");
             metaSearch.setConfigResultsPerGroup(10);
-            searchFilters.setLanguageFilter(getUserBean().getLocaleCode());
+            searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());
             metaSearch.getResourcesByPage(2); // fetch resources
             resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(minResourcesPerGroup, searchService);
             Collections.sort(resourcesGroupedBySource);

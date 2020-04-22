@@ -202,7 +202,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public String changeFilters(String queryFilters)
     {
-        searchFilters.setFiltersFromString(queryFilters);
+        searchFilters.setFilters(queryFilters);
         clearCaches();
         return queryFilters;
     }
@@ -239,13 +239,13 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         solrSearch.setOrder("timestamp", SolrQuery.ORDER.desc);
 
         if(searchFilters.getServiceFilter() != null)
-            solrSearch.setFilterLocation(searchFilters.getServiceFilter());
+            solrSearch.setFilterLocation(searchFilters.getServiceFilter().name());
         if(searchFilters.getTypeFilter() != null)
-            solrSearch.setFilterType(searchFilters.getTypeFilter());
-        if(searchFilters.getDateFromFilterAsString() != null)
-            solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
-        if(searchFilters.getDateToFilterAsString() != null)
-            solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
+            solrSearch.setFilterType(searchFilters.getTypeFilter().name());
+        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateFrom() != null)
+            solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFilter().getDateFrom()));
+        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateTo() != null)
+            solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateFilter().getDateTo()));
         if(searchFilters.getAuthorFilter() != null)
             solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
 
