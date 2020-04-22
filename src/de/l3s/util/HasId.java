@@ -29,12 +29,20 @@ public interface HasId
 
     static String implodeIds(Collection<? extends HasId> list)
     {
-        return StringHelper.implodeInt(collectIds(list), ",");
+        StringBuilder out = new StringBuilder();
+        for(HasId item : list)
+        {
+            if(out.length() != 0)
+                out.append(',');
+            out.append(item.getId());
+        }
+        return out.toString();
     }
 
     static int getIdOrDefault(HasId object, Integer def)
     {
-        if (object == null || object.getId() <= 0) return def;
+        if(object == null || object.getId() <= 0)
+            return def;
         return object.getId();
     }
 }

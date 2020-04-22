@@ -44,11 +44,19 @@ public class Message implements Comparable<Message>
 
     public static ArrayList<Message> getAllMessagesToUser(User user) throws SQLException
     {
+        return getAllMessagesToUser(user, -1);
+
+    }
+
+    public static ArrayList<Message> getAllMessagesToUser(User user, int limit) throws SQLException
+    {
         ArrayList<Message> messageList = new ArrayList<>();
         if(user == null)
             return messageList;
 
-        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc");
+        String limitStr = limit <= 0 ? "" : " limit " + limit;
+
+        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc" + limitStr);
 
         stmtGetUsers.setInt(1, user.getId());
         ResultSet rs = stmtGetUsers.executeQuery();
@@ -80,7 +88,8 @@ public class Message implements Comparable<Message>
         return messageList;
     }
 
-    public static ArrayList<Message> getAllMessagesFromUser(User user) throws SQLException{
+    public static ArrayList<Message> getAllMessagesFromUser(User user) throws SQLException
+    {
         ArrayList<Message> messageList = new ArrayList<>();
         if(user == null)
             return messageList;
@@ -126,8 +135,8 @@ public class Message implements Comparable<Message>
         stmt.setInt(2, toUser.getId());
         stmt.setString(3, title);
 
-        String convertedText = convertText(text);
-        stmt.setString(4, convertedText);
+        //String convertedText = convertText(text);
+        stmt.setString(4, text);
         stmt.setBoolean(5, seen);
         stmt.setBoolean(6, read);
         stmt.setString(7, format.format(time.getTime()));
@@ -160,12 +169,6 @@ public class Message implements Comparable<Message>
 
         stmt.executeUpdate();
         stmt.close();
-    }
-
-    private String convertText(String text)
-    {
-        String replacement = "<a target=\"_blank\" href=\"../lw/link/link.jsf?link=";
-        return text.replaceAll("<a href=\"", replacement);
     }
 
     @Override

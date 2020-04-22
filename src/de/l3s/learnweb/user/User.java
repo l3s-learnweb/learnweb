@@ -9,13 +9,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import javax.mail.Message;
@@ -42,6 +43,7 @@ import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
+import de.l3s.learnweb.resource.submission.Submission;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
@@ -123,11 +125,13 @@ public class User implements Comparable<User>, Serializable, HasId
 
     // caches
     private transient List<Course> courses;
+    private long groupsCacheTime = 0L;
     private transient List<Group> groups;
     private String imageUrl;
     private transient Instant lastLoginDate = null;
     private int forumPostCount = -1;
     private transient Organisation organisation;
+    private transient ArrayList<Submission> activeSubmissions;
 
     public User()
     {
@@ -140,6 +144,7 @@ public class User implements Comparable<User>, Serializable, HasId
         organisation = null;
         imageUrl = null;
         forumPostCount = -1;
+        activeSubmissions = null;
     }
 
     public void onDestroy()
@@ -394,8 +399,10 @@ public class User implements Comparable<User>, Serializable, HasId
     @Override
     public boolean equals(final Object o)
     {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+        if(this == o)
+            return true;
+        if(o == null || getClass() != o.getClass())
+            return false;
         final User user = (User) o;
         return id == user.id;
     }
@@ -405,8 +412,6 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         return Objects.hash(id);
     }
-
-    private long groupsCacheTime = 0L;
 
     /**
      * Returns the groups the user is member off.
@@ -884,7 +889,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * Returns a list of all Groups this user belongs to with associated metadata like notification frequency
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -919,5 +924,14 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setLocale(Locale locale)
     {
         this.locale = locale;
+    }
+
+    public ArrayList<Submission> getActiveSubmissions() throws SQLException
+    {
+        if(null == activeSubmissions)
+        {
+            activeSubmissions = Learnweb.getInstance().getSubmissionManager().getActiveSubmissionsByUser(this);
+        }
+        return activeSubmissions;
     }
 }

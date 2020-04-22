@@ -33,6 +33,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
 
+// TODO the whole class needs to be refactored. First it has to be splitted into individual beans for the different pages
 /**
  * Bean for pages myhome/submission_overview.jsf and myhome/submission_resources.jsf
  *
@@ -372,12 +373,17 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     }
 
     /* -------- Methods below are used for the submission overview page ---------*/
+    // TODO use one bean per page
+
     public void createNewSubmission()
     {
         getLearnweb().getSubmissionManager().saveSubmission(newSubmission);
         clearSubmissionLists();
         this.newSubmission = new Submission();
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+
+        getUser().clearCaches();
+        // TODO call User.clearCaches of all users of the affected course
     }
 
     public Submission getNewSubmission()
@@ -473,19 +479,6 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         return null;
     }
 
-    /**
-     * To list the current submissions active for a course
-     * in the homepage of each user
-     *
-     * @return
-     */
-    public List<Submission> getActiveSubmissions()
-    {
-        if(currentSubmissions == null)
-            currentSubmissions = getLearnweb().getSubmissionManager().getActiveSubmissionsByUser(getUser());
-        return currentSubmissions;
-    }
-
     public List<SelectItem> getSurveyResourcesList()
     {
         return surveyResourcesList;
@@ -497,7 +490,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         try
         {
             if(r.getGroupId() == 0)
-                resourcePath = "My Resources > " + r.getTitle();
+                resourcePath = "My Resources > " + r.getTitle(); // TODO translate
             else if(r.getGroupId() > 0)
             {
                 if(r.getPrettyPath() != null)

@@ -30,6 +30,7 @@ import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.component.ActiveSubMenu;
+import de.l3s.learnweb.component.ActiveSubMenu.Builder;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -407,16 +408,18 @@ public class UserBean implements Serializable
             ResourceBundle msg = LanguageBundle.getLanguageBundle(getLocale());
 
             // My resources
-            ActiveSubMenu myResources = ActiveSubMenu.builder()
+            Builder myResources = ActiveSubMenu.builder()
                     .label(msg.getString("myResourcesTitle"))
                     .url(su + "/lw/myhome/resources.jsf")
                     .addElement(DefaultMenuItem.builder().value(msg.getString("myPrivateResources")).icon("fa fa-fw fa-folder").url(su + "/lw/myhome/resources.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("myCommentsTitle")).icon("fa fa-fw fa-comments").url(su + "/lw/myhome/comments.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("myTags")).icon("fa fa-fw fa-tags").url(su + "/lw/myhome/tags.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("myRatedResourcesTitle")).icon("fa fa-fw fa-star").url(su + "/lw/myhome/rated_resources.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("Submission.my_submissions")).icon("fa fa-fw fa-credit-card-alt").url(su + "/lw/myhome/submission_overview.jsf").build())
-                    .build();
-            model.getElements().add(myResources);
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("myRatedResourcesTitle")).icon("fa fa-fw fa-star").url(su + "/lw/myhome/rated_resources.jsf").build());
+
+            if(!user.getActiveSubmissions().isEmpty())
+                myResources.addElement(DefaultMenuItem.builder().value(msg.getString("Submission.my_submissions")).icon("fa fa-fw fa-credit-card-alt").url(su + "/lw/myhome/submission_overview.jsf").build());
+
+            model.getElements().add(myResources.build());
 
             // My groups
             ActiveSubMenu.Builder groupsBuilder = ActiveSubMenu.builder().label(msg.getString("myGroups")).url(su + "/lw/myhome/groups.jsf");

@@ -357,11 +357,27 @@ public class StringHelper
         if(html == null)
             return null;
         Document document = Jsoup.parse(html);
-        document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve line breaks and spacing
+        document.outputSettings(new Document.OutputSettings().prettyPrint(false)); //makes html() preserve line breaks and spacing
         document.select("br").append("\\n");
         document.select("p").prepend("\\n\\n");
         String s = document.html().replaceAll("\\\\n", "\n");
         return Jsoup.clean(s, "", whitelist, new Document.OutputSettings().prettyPrint(false));
+    }
+
+    /**
+     * Works as StringUtils.isBlank but in addition it ignores all HTML tags. E.g. "&lt;p&gt; &lt;/p&gt;" will return true
+     *
+     * @param text
+     * @return
+     */
+    public static boolean isBlankDisregardingHTML(String text)
+    {
+        if(StringUtils.isBlank(text))
+            return true;
+
+        text = clean(text, Whitelist.none());
+
+        return StringUtils.isBlank(text);
     }
 
     /**

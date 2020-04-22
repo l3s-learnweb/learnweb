@@ -485,10 +485,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public String getTagsAsString(String delim) throws SQLException
     {
-        tags = getTags();
-
         StringBuilder out = new StringBuilder();
-        for(Tag tag : tags)
+        for(Tag tag : getTags())
         {
             if(out.length() != 0)
                 out.append(delim);
@@ -583,7 +581,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }

@@ -49,11 +49,6 @@
 					<h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
 					<h:outputText value="#{logEntry.resource.author}"/>
 				</h:panelGroup>
-
-				<h:panelGroup rendered="#{not empty logEntry.resource.tagsAsString}" layout="block" styleClass="mb-1">
-					<h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
-					<h:outputText value="#{logEntry.resource.tagsAsString}"/>
-				</h:panelGroup>
 			</div>
 		</h:panelGroup>
 	</div>

@@ -16,8 +16,17 @@
 <ui:define name="center_layout">
     <div class="row">
         <div class="col-12 col-md-6">
-            <p:panel header="#{msg.welcome}">
-                <div class="d-flex align-items-center border-bottom mb-3 pb-3">
+            <p:panel>                
+                <f:facet name="header">
+                    #{msg.welcome}
+                    <ui:fragment rendered="#{userBean.moderator}">
+                        <h:link outcome="/lw/admin/organisation.jsf">
+                            <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                        </h:link>
+                    </ui:fragment>
+                </f:facet>
+                
+                <div class="d-flex align-items-center">
                     <img class="d-block profile-picture mr-3" src="${userBean.user.image}" alt="Profile image"/>
                     <div>
                         <p class="mb-0">
@@ -26,46 +35,45 @@
                         </p>
                     </div>
                 </div>
-                <p><h:outputText value="#{welcomeBean.welcomeMessage}" escape="false"/></p>
+                
+                <ui:fragment rendered="#{userBean.user.organisationId == 480}">
+                    <hr/>
+                    <p>#{msg.share_yell}</p>
+                    <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Flearnweb.l3s.uni-hannover.de%2Flw%2Fpublic%2Fyell.jsf&amp;width&amp;layout=button&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=80&amp;appId=181712555296062" style="border:none; overflow:hidden; height:25px;"></iframe>
+                    <p>Explore the <h:outputLink value="public/yell.jsf">YELL user guide</h:outputLink>.</p>
+                </ui:fragment>
 
-                <h4>#{msg.courses}</h4>
-                <ui:repeat var="course" value="#{userBean.user.courses}">
-                    <h5>
+                <ui:fragment rendered="#{welcomeBean.organisationWelcomeMessage ne null}">
+                    <hr/>
+                    <h:outputText value="#{welcomeBean.organisationWelcomeMessage}" escape="false"/>
+                </ui:fragment>
+
+                <ui:repeat var="course" value="#{welcomeBean.coursesWithWelcomeMessage}">
+                    <hr/>
+                    <h3>
                         <h:outputText value="#{course.title}"/>
                         <h:link rendered="#{userBean.user.moderator}" outcome="/lw/admin/course.jsf?course_id=#{course.id}">
                             <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
                         </h:link>
-                    </h5>
-                    <p><h:outputText value="#{course.welcomeMessage}" escape="false"/></p>
+                    </h3>
+                    <h:outputText value="#{course.welcomeMessage}" escape="false"/>
                 </ui:repeat>
             </p:panel>
 
-            <p:tabView styleClass="ui-tabs-transparent">
-                <p:tab>
+            <p:tabView styleClass="ui-tabs-transparent" rendered="#{not welcomeBean.hideNewsPanel}">
+                <p:tab rendered="#{not empty welcomeBean.newsForums}">
                     <f:facet name="title">
                         <i class="fa fa-fw fa-commenting-o" aria-hidden="true"></i>
-                        #{msg.topic}
+                        #{msg.forum}
                     </f:facet>
-                    <ui:repeat var="entry" value="#{welcomeBean.newsTopics}" varStatus="status">
+                    <ui:repeat var="entry" value="#{welcomeBean.newsForums}" varStatus="status">
                         <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
                             <ui:param name="showPreview" value="false"/>
                             <ui:param name="logEntry" value="#{entry}"/>
                         </ui:decorate>
                     </ui:repeat>
-                </p:tab>
-                <p:tab>
-                    <f:facet name="title">
-                        <i class="fa fa-fw fa-paper-plane-o" aria-hidden="true"></i>
-                        #{msg.forum_posts}
-                    </f:facet>
-                    <ui:repeat var="entry" value="#{welcomeBean.newsPosts}" varStatus="status">
-                        <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
-                            <ui:param name="showPreview" value="false"/>
-                            <ui:param name="logEntry" value="#{entry}"/>
-                        </ui:decorate>
-                    </ui:repeat>
-                </p:tab>
-                <p:tab>
+                </p:tab>           
+                <p:tab rendered="#{not empty welcomeBean.newsResources}">
                     <f:facet name="title">
                         <i class="fa fa-fw fa-file-o" aria-hidden="true"></i>
                         #{msg.resources}
@@ -77,19 +85,19 @@
                         </ui:decorate>
                     </ui:repeat>
                 </p:tab>
-                <p:tab rendered="#{not empty messageBean.receivedMessages}">
+                <p:tab rendered="#{not empty welcomeBean.receivedMessages}">
                     <f:facet name="title">
                         <i class="fa fa-fw fa-bell-o" aria-hidden="true"></i>
                         #{msg.notifications}
                     </f:facet>
-                    <ui:repeat var="message" value="#{messageBean.receivedMessages}" varStatus="status">
+                    <ui:repeat var="message" value="#{welcomeBean.receivedMessages}" varStatus="status">
                         <div class="d-flex #{status.first ? '' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
                             <img class="profile-picture mr-3" src="#{message.fromUser.image}" alt="Profile picture"/>
 
                             <div class="text-break">
                                 <p class="h5">
                                     <h:outputText value="#{message.title}"/>
-                                    <h:outputText rendered="#{message.read}" value=" (#{msg.new_word})"/>
+                                    <h:outputText rendered="#{not message.read}" value=" (#{msg.new_word})"/>
                                 </p>
                                 <div class="message-container m-1">
                                     <h:outputText value="#{message.text}" escape="false"/>
@@ -107,28 +115,6 @@
                     </ui:repeat>
                 </p:tab>
             </p:tabView>
-
-            <p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}" styleClass="mb-3">
-                <f:facet name="header">
-                    #{msg.welcome}
-                    <ui:fragment rendered="#{userBean.moderator}">
-                        <h:link outcome="/lw/admin/organisation.jsf">
-                            <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
-                        </h:link>
-                    </ui:fragment>
-                </f:facet>
-
-                <ui:fragment rendered="#{userBean.user.organisationId == 480}">
-                    <div>
-                        <p>#{msg.share_yell}</p>
-                        <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Flearnweb.l3s.uni-hannover.de%2Flw%2Fpublic%2Fyell.jsf&amp;width&amp;layout=button&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=80&amp;appId=181712555296062" style="border:none; overflow:hidden; height:25px;"></iframe>
-                        <p>Click <h:outputLink value="public/yell.jsf" style="text-decoration:underline;">here</h:outputLink> to view the user guide.
-                        </p>
-                    </div>
-                </ui:fragment>
-
-                <h:outputText value="#{welcomeBean.welcomeMessage}" escape="false"/>
-            </p:panel>
         </div>
 
         <div class="col-12 col-md-6">
@@ -137,22 +123,23 @@
             </p:panel>
 
             <!--Submissions-->
-            <p:panel header="#{msg.submissions}" rendered="#{not empty submissionBean.activeSubmissions}">
+            <p:panel header="#{msg.submissions}" rendered="#{not empty welcomeBean.activeSubmissions}">
                 <h:panelGroup layout="block">
                     <a href="myhome/submission_overview.jsf" target="_blank">
                         <h:outputFormat value="#{msg.ongoing_submissions}">
-                            <f:param value="#{submissionBean.activeSubmissions.size()}"/>
+                            <f:param value="#{welcomeBean.activeSubmissions.size()}"/>
                         </h:outputFormat>
                     </a>
 
                     <ul class="list-unstyled pl-3">
-                        <ui:repeat var="submission" value="#{submissionBean.activeSubmissions}" varStatus="status">
+                        <ui:repeat var="submission" value="#{welcomeBean.activeSubmissions}" varStatus="status">
                             <ui:fragment rendered="#{submission.isSurveySubmitted(userBean.user.id)}">
                                 <li class="#{status.last ? '' : 'border-bottom'} mt-3 d-flex flex-column">
                                     <h:outputLink style="width: fit-content;" value="myhome/submission_resources.jsf">
                                         <f:param name="user_id" value="${userBean.user.id}"/>
                                         <f:param name="submission_id" value="${submission.id}"/>
-                                        <b>${submission.title} (Will be expired on #{submission.closeDatetime} )</b>
+                                        <!-- TODO Submission_refactoring: translate, format date -->
+                                        <b>${submission.title} (Will expire on #{submission.closeDatetime})</b>
                                     </h:outputLink>
                                     <small class="#{status.last ? '' : 'mb-3 mt-1'}">${submission.description}</small>
                                 </li>
@@ -166,7 +153,7 @@
             <p:panel header="#{msg.activity_stream}">
                 <p>#{msg.activity_message}</p>
 
-                <ui:repeat var="entry" value="#{activityResourceBean.newsList}" varStatus="status">
+                <ui:repeat var="entry" value="#{welcomeBean.newsGeneral}" varStatus="status">
                     <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
                         <ui:param name="showPreview" value="true"/>
                         <ui:param name="logEntry" value="#{entry}"/>
