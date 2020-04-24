@@ -355,7 +355,7 @@ public class SearchFilters implements Serializable
             }
             else if(!counts.isEmpty())
             {
-                availableResources.put(filterType, counts);
+                availableResources.put(filterType, new ArrayList<>(counts));
             }
         }
     }
