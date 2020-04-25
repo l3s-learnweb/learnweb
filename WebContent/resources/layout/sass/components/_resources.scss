@@ -185,6 +185,9 @@ ul.res-filters {
     left: 0;
     z-index: 10;
     border: $border-width solid $gray-400;
+    max-height: 15rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
 
     li {
       background: $gray-200;

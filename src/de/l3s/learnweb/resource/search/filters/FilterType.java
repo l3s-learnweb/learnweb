@@ -1,27 +1,43 @@
 package de.l3s.learnweb.resource.search.filters;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.resource.ResourceService;
-import de.l3s.learnweb.resource.search.SearchMode;
+import org.apache.logging.log4j.LogManager;
 
-import java.sql.SQLException;
+import de.l3s.learnweb.resource.search.SearchMode;
 
 public enum FilterType
 {
-    service,
-    type,
-    date,
-    group,
-    collector,
-    author,
-    coverage,
-    publisher,
-    tags,
-    imageSize,
-    videoDuration,
-    language;
+    service(ServiceFilter.class),
+    type(TypeFilter.class),
+    date(DateFilter.class),
+    group(GroupFilter.class),
+    collector(Filter.class),
+    author(Filter.class),
+    coverage(Filter.class),
+    publisher(Filter.class),
+    tags(Filter.class),
+    size(SizeFilter.class),
+    duration(DurationFilter.class),
+    language(Filter.class);
+
+    private final Class<? extends Filter> filterClass;
+
+    FilterType(final Class<? extends Filter> filterClass)
+    {
+        this.filterClass = filterClass;
+    }
+
+    public Filter createFilter()
+    {
+        try
+        {
+            return filterClass.getConstructor(FilterType.class).newInstance(this);
+        }
+        catch(ReflectiveOperationException e)
+        {
+            LogManager.getLogger(FilterType.class).error("Can't create a filter for type {}", this, e);
+            return new Filter(this);
+        }
+    }
 
     public static FilterType[] getFilters(SearchMode searchMode)
     {
@@ -30,56 +46,13 @@ public enum FilterType
             case text:
                 return new FilterType[]{ service, date, group, collector, author, coverage, publisher, tags };
             case image:
-                return new FilterType[]{ service, date, group, author, tags, imageSize };
+                return new FilterType[]{ service, date, group, author, tags, size };
             case video:
-                return new FilterType[]{ service, date, group, author, tags, videoDuration };
+                return new FilterType[]{ service, date, group, author, tags, duration };
             case group:
                 return new FilterType[]{ service, type, date, collector, author, coverage, publisher, tags };
             default:
                 return values();
-        }
-    }
-
-    public String getLocaleAnyString()
-    {
-        switch(this)
-        {
-            case date:
-                return UtilBean.getLocaleMessage("any_time");
-            case imageSize:
-                return UtilBean.getLocaleMessage("any_size");
-            case videoDuration:
-                return UtilBean.getLocaleMessage("any_duration");
-            default:
-                return UtilBean.getLocaleMessage("any_" + name());
-        }
-    }
-
-    public String getItemName(String item)
-    {
-        switch(this)
-        {
-            case service:
-                return ResourceService.parse(item).toString();
-            case group:
-                return getGroupNameById(item);
-            default:
-                return item;
-        }
-    }
-
-    private static String getGroupNameById(String groupId)
-    {
-        try
-        {
-            Group group = Learnweb.getInstance().getGroupManager().getGroupById(Integer.parseInt(groupId));
-            if(null == group)
-                return "deleted";
-            return group.getTitle();
-        }
-        catch(NumberFormatException | SQLException e)
-        {
-            return groupId;
         }
     }
 
@@ -95,20 +68,6 @@ public enum FilterType
                 return true;
             default:
                 return false;
-        }
-    }
-
-    @Override
-    public String toString()
-    {
-        switch(this)
-        {
-            case imageSize:
-                return UtilBean.getLocaleMessage("size");
-            case videoDuration:
-                return UtilBean.getLocaleMessage("duration");
-            default:
-                return UtilBean.getLocaleMessage(name());
         }
     }
 }

@@ -5,6 +5,8 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.StringHelper;
 
 @Named
 @ViewScoped
@@ -72,7 +75,7 @@ public class SearchBean extends ApplicationBean implements Serializable
         log.debug("SearchBean()");
 
         interweb = getLearnweb().getInterweb();
-        searchFilters = new SearchFilters();
+        searchFilters = new SearchFilters(SearchMode.text);
     }
 
     public void onLoad()
@@ -111,7 +114,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     public String onSearch()
     {
         // search if a query is given and (it was not searched before or the query or search mode has been changed)
-        if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !queryService.equals(searchService.name()) || !StringUtils.equals(queryFilters, searchFilters.getFiltersString())))
+        if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !queryService.equals(searchService.name())))
         {
             if(null != search)
                 search.stop();
@@ -126,10 +129,10 @@ public class SearchBean extends ApplicationBean implements Serializable
             search = new Search(interweb, query, searchFilters, getUser());
             search.setMode(searchMode);
             searchFilters.setFilters(queryFilters);
-            searchFilters.setFilter(FilterType.service, searchService);
+            searchFilters.setFilter(FilterType.service, searchService.name());
             searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());
 
-            search.logQuery(query, searchService, searchFilters.getLanguageFilter(), queryFilters);
+            search.logQuery(query, searchService, searchFilters.getFilterValue(FilterType.language), queryFilters);
             search.getResourcesByPage(1); // load first page
 
             log(Action.searching, 0, search.getId(), query);
@@ -275,7 +278,7 @@ public class SearchBean extends ApplicationBean implements Serializable
         page++;
     }
 
-    public List<Filter> getAvailableFilters()
+    public Collection<Filter> getAvailableFilters()
     {
         FilterType[] except = { FilterType.service };
         return searchFilters.getAvailableFilters(except);
@@ -320,6 +323,42 @@ public class SearchBean extends ApplicationBean implements Serializable
     public String getSearchMode()
     {
         return searchMode.name();
+    }
+
+    public String createFilterUrl(FilterType filterType, String value)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        int next = -1;
+        if (StringUtils.isNotBlank(queryFilters))
+        {
+            boolean startWith = queryFilters.startsWith(filterType.name() + ':');
+            int index = startWith ? 0 : queryFilters.indexOf(',' + filterType.name() + ':');
+            next = queryFilters.indexOf(',', index + 1);
+
+            if(index > 0)
+            {
+                sb.append(queryFilters, 0, index);
+            }
+            else if (index == -1)
+            {
+                sb.append(queryFilters);
+                next = -1;
+            }
+        }
+
+        if (StringUtils.isNotBlank(value))
+        {
+            if (sb.length() > 0) sb.append(':');
+            sb.append(filterType.name()).append(':').append(filterType.isEncodeBase64() ? StringHelper.encodeBase64(value) : value);
+        }
+
+        if(next != -1)
+        {
+            sb.append(queryFilters, next, queryFilters.length());
+        }
+
+        return sb.toString();
     }
 
     public Search getSearch()
@@ -412,7 +451,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
         if(StringUtils.isNoneBlank(query) && (resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty()))
         {
-            SearchFilters searchFilters = new SearchFilters();
+            SearchFilters searchFilters = new SearchFilters(searchMode);
             Search metaSearch = new Search(interweb, query, searchFilters, getUser());
             metaSearch.setMode(searchMode);
             metaSearch.setResultsPerService(32);

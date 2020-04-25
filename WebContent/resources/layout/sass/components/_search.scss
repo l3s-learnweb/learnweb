@@ -36,9 +36,10 @@
 
   .item-description {
     min-width: 0;
-    
-    a,a:hover {
-      text-decoration:none;
+
+    a,
+    a:hover {
+      text-decoration: none;
     }
   }
 
@@ -47,8 +48,8 @@
       display: block;
       max-width: 100%;
       overflow: hidden;
-	  text-overflow: ellipsis;	
-	  white-space: nowrap;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .item-origin {

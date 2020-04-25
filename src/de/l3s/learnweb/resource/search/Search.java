@@ -3,8 +3,8 @@ package de.l3s.learnweb.resource.search;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -34,8 +34,8 @@ public class Search implements Serializable
     private static final long serialVersionUID = -2405235188000105509L;
     private static final Logger log = LogManager.getLogger(Search.class);
 
-    private final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // SimpleDateFormat isn't thread save don't make it static again
-    private final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private static final DateTimeFormatter DEFAULT_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
+    private static final DateTimeFormatter SOLR_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC);
 
     private String query;
     private SearchMode configMode;
@@ -162,9 +162,9 @@ public class Search implements Serializable
         }
 
         this.solrSearch.setFilterType(configMode == SearchMode.text ? "web" : configMode.name());
-        if(searchFilters.getServiceFilter() != null)
+        if(searchFilters.isFilterActive(FilterType.service))
         {
-            this.solrSearch.setFilterLocation(searchFilters.getServiceFilter().name());
+            this.solrSearch.setFilterLocation(searchFilters.getFilterValue(FilterType.service));
             this.solrSearch.setResultsPerPage(configResultsPerService * 4);
         }
         else
@@ -178,22 +178,22 @@ public class Search implements Serializable
             this.solrSearch.setGroupResultsLimit(this.configResultsPerGroup);
         }
 
-        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateFrom() != null)
-            this.solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFilter().getDateFrom()));
-        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateTo() != null)
-            this.solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateFilter().getDateTo()));
-        if(searchFilters.getGroupFilter() != null)
-            this.solrSearch.setFilterGroups(Integer.parseInt(searchFilters.getGroupFilter()));
-        if(searchFilters.getCollectorFilter() != null)
-            this.solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
-        if(searchFilters.getAuthorFilter() != null)
-            this.solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
-        if(searchFilters.getCoverageFilter() != null)
-            this.solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
-        if(searchFilters.getPublisherFilter() != null)
-            this.solrSearch.setFilterPublisher(searchFilters.getPublisherFilter());
-        if(searchFilters.getTagsFilter() != null)
-            this.solrSearch.setFilterTags(searchFilters.getTagsFilter());
+        if(searchFilters.getFilterDateFrom() != null)
+            this.solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getFilterDateFrom()));
+        if(searchFilters.getFilterDateTo() != null)
+            this.solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getFilterDateTo()));
+        if(searchFilters.isFilterActive(FilterType.group))
+            this.solrSearch.setFilterGroups(Integer.parseInt(searchFilters.getFilterValue(FilterType.group)));
+        if(searchFilters.isFilterActive(FilterType.collector))
+            this.solrSearch.setFilterCollector(searchFilters.getFilterValue(FilterType.collector));
+        if(searchFilters.isFilterActive(FilterType.author))
+            this.solrSearch.setFilterAuthor(searchFilters.getFilterValue(FilterType.author));
+        if(searchFilters.isFilterActive(FilterType.coverage))
+            this.solrSearch.setFilterCoverage(searchFilters.getFilterValue(FilterType.coverage));
+        if(searchFilters.isFilterActive(FilterType.publisher))
+            this.solrSearch.setFilterPublisher(searchFilters.getFilterValue(FilterType.publisher));
+        if(searchFilters.isFilterActive(FilterType.tags))
+            this.solrSearch.setFilterTags(searchFilters.getFilterValue(FilterType.tags));
 
         List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
 
@@ -204,10 +204,10 @@ public class Search implements Serializable
 
         if(page == 1)
         {
-            searchFilters.putResourceCounter(solrSearch.getQueryResponse().getFacetFields());
+            searchFilters.putResourceCounters(solrSearch.getQueryResponse().getFacetFields());
             if(!searchFilters.isInterwebSearchEnabled())
             {
-                searchFilters.putResourceCounter(solrSearch.getQueryResponse().getFacetQuery());
+                searchFilters.putResourceCounters(solrSearch.getQueryResponse().getFacetQuery());
             }
 
             searchFilters.setTotalResultsLearnweb(solrSearch.getQueryResponse().getResults().getNumFound());
@@ -242,7 +242,7 @@ public class Search implements Serializable
                 continue;
             }
 
-            if(!searchFilters.checkAfterLoadFilters(decoratedResource))
+            if(!searchFilters.checkAfterLoadFilters(decoratedResource.getResource()))
             {
                 notSatisfyFiltersCount++;
                 continue;
@@ -275,9 +275,9 @@ public class Search implements Serializable
         params.put("page", Integer.toString(page));
         params.put("timeout", "50");
 
-        if(searchFilters.getServiceFilter() != null)
+        if(searchFilters.isFilterActive(FilterType.service))
         {
-            params.put("services", searchFilters.getServiceFilter().name());
+            params.put("services", searchFilters.getFilterValue(FilterType.service));
             params.put("number_of_results", String.valueOf(configResultsPerService * 4));
         }
         else
@@ -297,14 +297,14 @@ public class Search implements Serializable
             params.put("number_of_results", configResultsPerService.toString());
         }
 
-        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateFrom() != null)
-            params.put("date_from", DEFAULT_DATE_FORMAT.format(searchFilters.getDateFilter().getDateFrom()));
+        if(searchFilters.getFilterDateFrom() != null)
+            params.put("date_from", DEFAULT_DATE_FORMAT.format(searchFilters.getFilterDateFrom()));
 
-        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateTo() != null)
-            params.put("date_to", DEFAULT_DATE_FORMAT.format(searchFilters.getDateFilter().getDateTo()));
+        if(searchFilters.getFilterDateTo() != null)
+            params.put("date_to", DEFAULT_DATE_FORMAT.format(searchFilters.getFilterDateTo()));
 
-        if(searchFilters.getLanguageFilter() != null)
-            params.put("language", searchFilters.getLanguageFilter());
+        if(searchFilters.isFilterActive(FilterType.language))
+            params.put("language", searchFilters.getFilterValue(FilterType.language));
 
         SearchQuery interwebResponse = interweb.search(query, params);
         List<ResourceDecorator> interwebResults = interwebResponse.getResults();
@@ -315,7 +315,7 @@ public class Search implements Serializable
 
         if(page == 1)
         {
-            searchFilters.putResourceCounter(FilterType.service, interwebResponse.getResultCountPerService(), true);
+            searchFilters.putResourceCounters(FilterType.service, interwebResponse.getResultCountPerService(), true);
             searchFilters.setTotalResultsInterweb(interwebResponse.getTotalResultCount());
         }
 
@@ -341,7 +341,7 @@ public class Search implements Serializable
                 continue;
             }
 
-            if(!searchFilters.checkAfterLoadFilters(decoratedResource))
+            if(!searchFilters.checkAfterLoadFilters(decoratedResource.getResource()))
             {
                 notSatisfyFiltersCount++;
                 continue;
@@ -374,7 +374,7 @@ public class Search implements Serializable
     public void setMode(SearchMode searchMode)
     {
         this.configMode = searchMode;
-        searchFilters.setMode(searchMode);
+        searchFilters.setSearchMode(searchMode);
     }
 
     public SearchMode getMode()
@@ -450,7 +450,7 @@ public class Search implements Serializable
             }
             else
             {
-                resGroup.setTotalResources(searchFilters.getTotalResources(FilterType.service, resGroup.getGroupAlias()).intValue());
+                resGroup.setTotalResources(Math.toIntExact(searchFilters.getTotalResults(FilterType.service, resGroup.getGroupAlias())));
                 resGroup.addResource(res);
                 resourcesByGroups.add(resGroup);
             }

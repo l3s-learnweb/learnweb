@@ -9,20 +9,15 @@ public class FilterOption implements Serializable, Comparable<FilterOption>
 
     private final String title;
     private final String value;
-    private Long totalResults;
+    private final Long totalResults;
     private boolean active;
-
-    public FilterOption(final String title, final String value)
-    {
-        this.title = title;
-        this.value = value;
-    }
 
     public FilterOption(final String title, final String value, final Long totalResults, final boolean active)
     {
-        this(title, value);
-        setTotalResults(totalResults);
-        setActive(active);
+        this.title = title;
+        this.value = value;
+        this.totalResults = totalResults;
+        this.active = active;
     }
 
     public String getTitle()
@@ -35,15 +30,14 @@ public class FilterOption implements Serializable, Comparable<FilterOption>
         return value;
     }
 
+    public void setActive(final boolean active)
+    {
+        this.active = active;
+    }
+
     public Long getTotalResults()
     {
         return totalResults;
-    }
-
-    public void setTotalResults(final Long totalResults)
-    {
-        if(totalResults == null || totalResults <= 0) this.totalResults = null;
-        else this.totalResults = totalResults;
     }
 
     public boolean isActive()
@@ -51,15 +45,10 @@ public class FilterOption implements Serializable, Comparable<FilterOption>
         return active;
     }
 
-    public void setActive(boolean active)
-    {
-        this.active = active;
-    }
-
     @Override
     public int compareTo(FilterOption another)
     {
-        return Long.compare(totalResults, another.totalResults);
+        return Long.compare(another.totalResults, totalResults);
     }
 
     @Override
@@ -71,12 +60,12 @@ public class FilterOption implements Serializable, Comparable<FilterOption>
             return false;
 
         final FilterOption that = (FilterOption) o;
-        return title.equals(that.title) && value.equals(that.value);
+        return value.equals(that.value);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(title, value);
+        return Objects.hash(value);
     }
 }

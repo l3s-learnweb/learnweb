@@ -261,17 +261,17 @@ public class StringHelper
     public static String decodeBase64(String encoded)
     {
         //decode byte array
-        byte[] decoded = Base64.decodeBase64(encoded.getBytes());
+        byte[] decoded = Base64.decodeBase64(encoded.getBytes(StandardCharsets.UTF_8));
         //byte to string and return it
-        return new String(decoded);
+        return new String(decoded, StandardCharsets.UTF_8);
     }
 
-    public static String encodeBase64(byte[] bytes)
+    public static String encodeBase64(String str)
     {
         //decode byte array
-        byte[] encoded = Base64.encodeBase64(bytes);
+        byte[] encoded = Base64.encodeBase64(str.getBytes(StandardCharsets.UTF_8));
         //byte to string and return it
-        return new String(encoded);
+        return new String(encoded, StandardCharsets.UTF_8);
     }
 
     /**

@@ -1,12 +1,11 @@
 package de.l3s.learnweb.resource.search;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,13 +16,16 @@ import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 
-import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.search.filters.DateFilter;
+import de.l3s.learnweb.resource.search.filters.DurationFilter;
 import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterOption;
 import de.l3s.learnweb.resource.search.filters.FilterType;
+import de.l3s.learnweb.resource.search.filters.ServiceFilter;
+import de.l3s.learnweb.resource.search.filters.SizeFilter;
 import de.l3s.util.StringHelper;
 
 /**
@@ -31,222 +33,71 @@ import de.l3s.util.StringHelper;
  * Once you are done trying to 'optimize' this routine, and have realized what a terrible mistake that was,
  * please increment the following counter as a warning to the next guy:
  *
- * total_hours_wasted_here = 50
+ * total_hours_wasted_here = 58
  */
 public class SearchFilters implements Serializable
 {
     private static final long serialVersionUID = 8012567994091306088L;
     static final Logger log = LogManager.getLogger(SearchFilters.class);
 
-    private boolean isFilterRemoved = false;
-    private FilterType lastFilter = null;
-    private int prevFilters = 0;
+    private SearchMode searchMode;
+    private FilterType freezeFilter; // to show alternative options for last selected filter
 
-    private String stringFilters = null;
-    private SearchMode searchMode = SearchMode.text;
-    private Map<FilterType, Object> currentFilters = new EnumMap<>(FilterType.class);
+    // Some filters are available only on certain provider
+    private boolean learnwebSearchAvailable = true;
+    private boolean interwebSearchAvailable = true;
 
-    private Map<FilterType, List<Count>> availableResources = new HashMap<>();
-    private boolean canNotRequestLearnweb = false;
-    private boolean canNotRequestInterweb = false;
-    private Long totalResultsLearnweb = null;
-    private Long totalResultsInterweb = null;
+    private long totalResultsLearnweb;
+    private long totalResultsInterweb;
 
-    public enum TYPE
+    private final transient EnumMap<FilterType, Filter> activeFilters = new EnumMap<>(FilterType.class);
+    private final transient EnumMap<FilterType, Filter> availableFilters = new EnumMap<>(FilterType.class);
+
+    public SearchFilters(SearchMode searchMode)
     {
-        text,
-        image,
-        video,
-        pdf,
-        other;
-
-        @Override
-        public String toString()
-        {
-            return UtilBean.getLocaleMessage(this.name());
-        }
+        this.searchMode = searchMode;
     }
 
-    public enum DATE
+    public void reset()
     {
-        d, // day
-        w, // week (7 days)
-        m, // month
-        y, // year
-        old;
-
-        @Override
-        public String toString()
-        {
-            switch(this)
-            {
-            case d:
-                return UtilBean.getLocaleMessage("past_24_hours");
-            case w:
-                return UtilBean.getLocaleMessage("past_week");
-            case m:
-                return UtilBean.getLocaleMessage("past_month");
-            case y:
-                return UtilBean.getLocaleMessage("past_year");
-            case old:
-                return UtilBean.getLocaleMessage("older_than_year");
-            default:
-                return UtilBean.getLocaleMessage("any_time");
-            }
-        }
-
-        public Date getDateFrom()
-        {
-            Calendar cal = Calendar.getInstance();
-            switch(this)
-            {
-            case d:
-                cal.add(Calendar.DATE, -1);
-                break;
-            case w:
-                cal.add(Calendar.DATE, -7);
-                break;
-            case m:
-                cal.add(Calendar.MONTH, -1);
-                break;
-            case y:
-                cal.add(Calendar.YEAR, -1);
-                break;
-            case old:
-                return null;
-            default:
-                break;
-            }
-
-            return cal.getTime();
-        }
-
-        public Date getDateTo()
-        {
-            Calendar cal = Calendar.getInstance();
-            switch(this)
-            {
-            case old:
-                cal.add(Calendar.YEAR, -1);
-                break;
-            default:
-                return null;
-            }
-
-            return cal.getTime();
-        }
+        freezeFilter = null;
+        activeFilters.clear();
+        learnwebSearchAvailable = true;
+        interwebSearchAvailable = true;
+        resetCounters();
     }
 
-    public enum SIZE
+    public void resetCounters()
     {
-        small,
-        medium,
-        large,
-        extraLarge;
+        availableFilters.clear();
+        totalResultsLearnweb = 0;
+        totalResultsInterweb = 0;
 
-        @Override
-        public String toString()
-        {
-            switch(this)
-            {
-            case small:
-                return UtilBean.getLocaleMessage("small");
-            case medium:
-                return UtilBean.getLocaleMessage("medium");
-            case large:
-                return UtilBean.getLocaleMessage("large");
-            case extraLarge:
-                return UtilBean.getLocaleMessage("extra_large");
-            default:
-                return UtilBean.getLocaleMessage("any_size");
-            }
-        }
-
-        public int getMaxWidth()
-        {
-            switch(this)
-            {
-            case small:
-                return 150;
-            case medium:
-                return 600;
-            case large:
-                return 1200;
-            case extraLarge:
-                return 0;
-            default:
-                return 0;
-            }
-        }
-
-        public int getMinWidth()
-        {
-            switch(this)
-            {
-            case small:
-                return 0;
-            case medium:
-                return 150;
-            case large:
-                return 600;
-            case extraLarge:
-                return 1200;
-            default:
-                return 0;
-            }
-        }
+        if(freezeFilter != null)
+            availableFilters.put(freezeFilter, activeFilters.get(freezeFilter));
     }
 
-    public enum DURATION
+    public String[] getFacetQueries()
     {
-        s,
-        m,
-        l;
+        return new String[]{
+                "{!key='date.older'}timestamp:[* TO NOW-365DAY]",
+                "{!key='date.year'}timestamp:[NOW-365DAY TO NOW]",
+                "{!key='date.month'}timestamp:[NOW-30DAY TO NOW]",
+                "{!key='date.week'}timestamp:[NOW-7DAY TO NOW]",
+                "{!key='date.day'}timestamp:[NOW-1DAY TO NOW]"
+        };
+    }
 
-        @Override
-        public String toString()
+    public void putResourceCounters(Map<String, Integer> facetQueries)
+    {
+        for(Map.Entry<String, Integer> facetQuery : facetQueries.entrySet())
         {
-            switch(this)
-            {
-            case s:
-                return UtilBean.getLocaleMessage("short");
-            case m:
-                return UtilBean.getLocaleMessage("medium");
-            case l:
-                return UtilBean.getLocaleMessage("long");
-            default:
-                return UtilBean.getLocaleMessage("any_duration");
-            }
-        }
+            String[] tempNames = facetQuery.getKey().split("\\.");
+            if(tempNames.length != 2 || facetQuery.getValue() == 0) continue;
 
-        public int getMaxDuration()
-        {
-            switch(this)
-            {
-            case s:
-                return 240; // 4 min
-            case m:
-                return 1200; // 20 min
-            case l:
-                return 0;
-            default:
-                return 0;
-            }
-        }
-
-        public int getMinDuration()
-        {
-            switch(this)
-            {
-            case s:
-                return 0;
-            case m:
-                return 240;
-            case l:
-                return 1200;
-            default:
-                return 0;
-            }
+            Count count = new Count(new FacetField(tempNames[0]), tempNames[1], facetQuery.getValue());
+            if("date".equals(tempNames[0]))
+                putResourceCounters(FilterType.date, Collections.singletonList(count), true);
         }
     }
 
@@ -255,114 +106,54 @@ public class SearchFilters implements Serializable
         return new String[]{ "location", "type", "groupId", "collector_s", "author_s", "coverage_s", "publisher_s", "tags_ss" };
     }
 
-    public String[] getFacetQueries()
-    {
-        return new String[]{ "{!key='type.other'}-type:text,video,image,pdf", "{!key='date.old'}timestamp:[* TO NOW-365DAY]", "{!key='date.y'}timestamp:[NOW-365DAY TO NOW]", "{!key='date.m'}timestamp:[NOW-30DAY TO NOW]", "{!key='date.w'}timestamp:[NOW-7DAY TO NOW]",
-                "{!key='date.d'}timestamp:[NOW-1DAY TO NOW]" };
-    }
-
-    public void clean()
-    {
-        lastFilter = null;
-        currentFilters.clear();
-        canNotRequestLearnweb = false;
-        canNotRequestInterweb = false;
-    }
-
-    public void cleanAll()
-    {
-        lastFilter = null;
-        currentFilters.clear();
-        availableResources.clear();
-        canNotRequestLearnweb = false;
-        canNotRequestInterweb = false;
-        totalResultsLearnweb = null;
-        totalResultsInterweb = null;
-    }
-
-    public void putResourceCounter(List<FacetField> facetFields)
+    public void putResourceCounters(List<FacetField> facetFields)
     {
         for(FacetField facetField : facetFields)
         {
             switch(facetField.getName())
             {
                 case "location":
-                    putResourceCounter(FilterType.service, facetField.getValues(), false);
+                    putResourceCounters(FilterType.service, facetField.getValues(), false);
                     break;
                 case "type":
-                    putResourceCounter(FilterType.type, facetField.getValues(), false);
+                    putResourceCounters(FilterType.type, facetField.getValues(), false);
                     break;
                 case "groupId":
-                    putResourceCounter(FilterType.group, facetField.getValues(), false);
+                    putResourceCounters(FilterType.group, facetField.getValues(), false);
                     break;
                 case "collector_s":
-                    putResourceCounter(FilterType.collector, facetField.getValues(), false);
+                    putResourceCounters(FilterType.collector, facetField.getValues(), false);
                     break;
                 case "author_s":
-                    putResourceCounter(FilterType.author, facetField.getValues(), false);
+                    putResourceCounters(FilterType.author, facetField.getValues(), false);
                     break;
                 case "coverage_s":
-                    putResourceCounter(FilterType.coverage, facetField.getValues(), false);
+                    putResourceCounters(FilterType.coverage, facetField.getValues(), false);
                     break;
                 case "publisher_s":
-                    putResourceCounter(FilterType.publisher, facetField.getValues(), false);
+                    putResourceCounters(FilterType.publisher, facetField.getValues(), false);
                     break;
                 case "tags_ss":
-                    putResourceCounter(FilterType.tags, facetField.getValues(), false);
+                    putResourceCounters(FilterType.tags, facetField.getValues(), false);
                     break;
             }
         }
     }
 
-    public void putResourceCounter(Map<String, Integer> facetQueries)
+    public void putResourceCounters(FilterType filterType, Collection<Count> counts, boolean merge)
     {
-        for(Map.Entry<String, Integer> facetQuery : facetQueries.entrySet())
+        if(freezeFilter == null || freezeFilter != filterType)
         {
-            String[] tempNames = facetQuery.getKey().split("\\.");
-            if(tempNames.length != 2) continue;
-
-            Count count = new Count(new FacetField(tempNames[0]), tempNames[1], facetQuery.getValue());
-            if("date".equals(tempNames[0]))
-                putResourceCounter(FilterType.date, Collections.singletonList(count), true);
-            else if("type".equals(tempNames[0]))
-                putResourceCounter(FilterType.type, Collections.singletonList(count), true);
-        }
-    }
-
-    public void putResourceCounter(FilterType filterType, List<Count> counts, boolean merge)
-    {
-        if(lastFilter == null || lastFilter != filterType)
-        {
-            if(counts.isEmpty() && availableResources.containsKey(filterType) && !merge)
+            if(counts.isEmpty() && availableFilters.containsKey(filterType) && !merge)
             {
-                availableResources.remove(filterType);
-            }
-            else if(merge && availableResources.containsKey(filterType) && !counts.isEmpty())
-            {
-                List<Count> availableCount = availableResources.get(filterType);
-                for(Count count : counts)
-                {
-                    if(availableCount.contains(count))
-                    {
-                        availableCount.set(availableCount.indexOf(count), count);
-                    }
-                    else
-                    {
-                        availableCount.add(count);
-                    }
-                }
-                availableResources.put(filterType, availableCount);
+                availableFilters.remove(filterType);
             }
             else if(!counts.isEmpty())
             {
-                availableResources.put(filterType, new ArrayList<>(counts));
+                Filter filter = availableFilters.computeIfAbsent(filterType, key -> activeFilters.getOrDefault(key, key.createFilter()));
+                filter.createOption(counts, merge);
             }
         }
-    }
-
-    public String getFiltersString()
-    {
-        return stringFilters;
     }
 
     /**
@@ -371,331 +162,159 @@ public class SearchFilters implements Serializable
      */
     public void setFilters(String filters)
     {
+        reset();
+
         if(StringUtils.isEmpty(filters))
-        {
-            cleanAll();
-            this.stringFilters = null;
             return;
-        }
 
-        clean();
-        this.stringFilters = filters;
         String[] splitFilters = filters.split(",");
-
-        isFilterRemoved = splitFilters.length < prevFilters;
-        prevFilters = splitFilters.length;
 
         for(String splitFilter : splitFilters)
         {
-            try
-            {
-                String[] nameValue = splitFilter.split(":");
-                if(nameValue.length != 2) continue; // something wrong, skip it
+            String[] nameValue = splitFilter.split(":");
+            if(nameValue.length != 2) continue; // something wrong, skip it
 
-                FilterType filter = FilterType.valueOf(nameValue[0]);
-                String value = filter.isEncodeBase64() ? StringHelper.decodeBase64(nameValue[1]) : nameValue[1];
-                setRawFilter(filter, value);
+            FilterType filter = FilterType.valueOf(nameValue[0]);
+            String value = filter.isEncodeBase64() ? StringHelper.decodeBase64(nameValue[1]) : nameValue[1];
+            setFilter(filter, value);
+        }
+    }
+
+    public void setFilter(FilterType filterType, String value)
+    {
+        if(StringUtils.isBlank(value))
+        {
+            Filter filter = activeFilters.remove(filterType);
+            if (filter != null)
+            {
+                filter.setActiveValue(null);
+                freezeFilter = null;
             }
-            catch(Exception e)
+            return;
+        }
+
+        try
+        {
+            Filter filter = activeFilters.computeIfAbsent(filterType, key -> availableFilters.computeIfAbsent(key, FilterType::createFilter));
+            freezeFilter = filterType;
+            filter.setActiveValue(value);
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.error("Not valid value of {} filter attempt to set active: {}", filterType, value, e);
+        }
+    }
+
+    public Collection<Filter> getAvailableFilters()
+    {
+        return this.getAvailableFilters(new FilterType[]{});
+    }
+
+    public Collection<Filter> getAvailableFilters(final FilterType[] excludeFilters)
+    {
+        ArrayList<Filter> results = new ArrayList<>();
+        FilterType[] possibleFilters = ArrayUtils.removeElements(FilterType.getFilters(searchMode), excludeFilters);
+
+        for(FilterType filterType : possibleFilters)
+        {
+            Filter filter = availableFilters.get(filterType);
+
+            if(filterType == FilterType.date)
             {
-                log.error("Filter '" + splitFilter + "' can not be processed and was ignored.", e);
-            }
-        }
-    }
-
-    private void setRawFilter(FilterType filter, String value)
-    {
-        switch(filter)
-        {
-            case service:
-                setFilter(filter, ResourceService.parse(value));
-                break;
-            case type:
-                setFilter(filter, TYPE.valueOf(value));
-                break;
-            case date:
-                setFilter(filter, DATE.valueOf(value));
-                break;
-            case group:
-            case collector:
-            case author:
-            case coverage:
-            case publisher:
-            case tags:
-                canNotRequestInterweb = true;
-                setFilter(filter, value);
-                break;
-            case videoDuration:
-                setFilter(filter, DURATION.valueOf(value));
-                break;
-            case imageSize:
-                setFilter(filter, SIZE.valueOf(value));
-                break;
-            default:
-                setFilter(filter, value);
-                break;
-        }
-    }
-
-    private String changeFilterInUrl(FilterType filter, String value)
-    {
-        StringBuilder output = new StringBuilder();
-        if(currentFilters.containsKey(filter) && stringFilters != null)
-        {
-            int startIndex = stringFilters.indexOf(filter.name());
-            int endIndex = stringFilters.indexOf(',', startIndex);
-
-            if(startIndex != 0) output.append(stringFilters, 0, startIndex - 1);
-            if(endIndex != -1) output.append(stringFilters, endIndex + 1, stringFilters.length());
-        }
-        else if(stringFilters != null)
-        {
-            output.append(stringFilters);
-        }
-
-        if (value != null)
-        {
-            value = filter.isEncodeBase64() ? StringHelper.encodeBase64(value.getBytes()) : value;
-            if (output.length() != 0) output.append(",");
-            output.append(filter.name()).append(":").append(value);
-        }
-
-        return output.length() != 0 ? output.toString() : null;
-    }
-
-    public List<Filter> getAvailableFilters()
-    {
-        FilterType[] empty = {};
-        return this.getAvailableFilters(empty);
-    }
-
-    public List<Filter> getAvailableFilters(final FilterType[] except)
-    {
-        List<Filter> results = new ArrayList<>();
-        FilterType[] filterTypes = ArrayUtils.removeElements(FilterType.getFilters(searchMode), except);
-
-        for(FilterType filterType : filterTypes)
-        {
-            boolean isActive = currentFilters.containsKey(filterType);
-            final String filterName = isActive ? filterType.getItemName(currentFilters.get(filterType).toString()) : filterType.toString();
-            Filter filter = new Filter(filterName, filterType.getLocaleAnyString(), changeFilterInUrl(filterType, null), isActive);
-
-            switch(filterType)
-            {
-                case service:
-                    if(availableResources.containsKey(filterType))
-                    {
-                        for(Count count : availableResources.get(filterType))
-                        {
-                            FilterOption fi = new FilterOption(filterType.getItemName(count.getName()), changeFilterInUrl(filterType, count.getName().toLowerCase()), count.getCount(), isActive && currentFilters.get(filterType).toString().equals(count.getName()));
-                            filter.addOption(fi);
-                        }
-                    }
-                    break;
-                case type:
-                    if(availableResources.containsKey(filterType))
-                    {
-                        for(TYPE type : TYPE.values())
-                        {
-                            Long counter = null;
-                            if(availableResources.containsKey(filterType))
-                            {
-                                for(Count count : availableResources.get(filterType))
-                                {
-                                    if(count.getName().equals(type.name()))
-                                    {
-                                        counter = count.getCount();
-                                        break;
-                                    }
-                                }
-
-                                if(counter == null || counter == 0)
-                                {
-                                    continue;
-                                }
-                            }
-                            FilterOption fi = new FilterOption(type.toString(), changeFilterInUrl(filterType, type.name()), counter, isActive && currentFilters.get(filterType) == type);
-                            filter.addOption(fi);
-                        }
-                    }
-                    break;
-                case date:
-                    if(!currentFilters.containsKey(FilterType.service) || currentFilters.get(FilterType.service) != ResourceService.bing || currentFilters.get(FilterType.service) != ResourceService.vimeo)
-                    {
-                        for(DATE date : DATE.values())
-                        {
-                            Long counter = null;
-                            if(availableResources.containsKey(filterType))
-                            {
-                                for(Count count : availableResources.get(filterType))
-                                {
-                                    if(count.getName().equals(date.name()))
-                                    {
-                                        counter = count.getCount();
-                                        break;
-                                    }
-                                }
-
-                                if(counter == null || counter == 0)
-                                {
-                                    continue;
-                                }
-                            }
-                            FilterOption fi = new FilterOption(date.toString(), changeFilterInUrl(filterType, date.name()), counter, isActive && currentFilters.get(filterType) == date);
-                            filter.addOption(fi);
-                        }
-                    }
-                    break;
-                case group:
-                case collector:
-                case author:
-                case coverage:
-                case publisher:
-                case tags:
-                    if(availableResources.containsKey(filterType))
-                    {
-                        for(Count count : availableResources.get(filterType))
-                        {
-                            if(count.getName().isEmpty() || count.getName().equals("\n") || count.getName().equals("0"))
-                                continue;
-                            FilterOption fi = new FilterOption(filterType.getItemName(count.getName()), changeFilterInUrl(filterType, count.getName()), count.getCount(), isActive && currentFilters.get(filterType).equals(count.getName()));
-                            filter.addOption(fi);
-                        }
-                    }
-                    break;
-                case videoDuration:
-                    for(DURATION duration : DURATION.values())
-                    {
-                        FilterOption fi = new FilterOption(duration.toString(), changeFilterInUrl(filterType, duration.name()), null, isActive && currentFilters.get(filterType) == duration);
-                        filter.addOption(fi);
-                    }
-                    break;
-                case imageSize:
-                    for(SIZE size : SIZE.values())
-                    {
-                        FilterOption fi = new FilterOption(size.toString(), changeFilterInUrl(filterType, size.name()), null, isActive && currentFilters.get(filterType) == size);
-                        filter.addOption(fi);
-                    }
-                    break;
-                case language:
-                    break;
+                // skip date filter for services that not support it
+                Filter sf = availableFilters.get(FilterType.service);
+                if(sf != null && (ResourceService.bing.name().equals(sf.getActiveValue()) || ResourceService.vimeo.name().equals(sf.getActiveValue())))
+                    continue;
             }
 
-            results.add(filter);
+            if(filter == null && (filterType == FilterType.duration || filterType == FilterType.size || filterType == FilterType.date))
+            {
+                // some filters doesn't have facet fields, just init them
+                filter = filterType.createFilter();
+                availableFilters.put(filterType, filter);
+            }
+
+            if(filter != null)
+                results.add(filter);
         }
         return results;
     }
 
-    public Long getTotalResources(FilterType filter, String value)
-    {
-        if(availableResources.containsKey(filter))
-        {
-            for(Count count : availableResources.get(filter))
-            {
-                if(count.getName().equalsIgnoreCase(value))
-                {
-                    return count.getCount();
-                }
-            }
-        }
-
-        return 0L;
-    }
-
     /**
-     * Check filters like image width and video duration
-     *
-     * @param res
-     * @return boolean
+     * Check filters applied after resources are loaded from provider
      */
-    public boolean checkAfterLoadFilters(ResourceDecorator res)
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean checkAfterLoadFilters(Resource res)
     {
-        if(res.getResource().getType() == ResourceType.image && currentFilters.containsKey(FilterType.imageSize))
+        if(res.getType() == ResourceType.image && activeFilters.containsKey(FilterType.size))
         {
-            SIZE configSize = (SIZE) currentFilters.get(FilterType.imageSize);
-            int width = res.getThumbnail4().getWidth();
-            int minWidth = configSize.getMinWidth();
-            int maxWidth = configSize.getMaxWidth();
-            return minWidth <= width && (maxWidth == 0 || width <= maxWidth);
+            SizeFilter activeFilter = (SizeFilter) activeFilters.get(FilterType.size);
+            return activeFilter.isValid(res.getThumbnail4().getWidth());
         }
 
-        if(res.getResource().getType() == ResourceType.video && currentFilters.containsKey(FilterType.videoDuration))
+        if(res.getType() == ResourceType.video && activeFilters.containsKey(FilterType.duration))
         {
-            DURATION configDuration = (DURATION) currentFilters.get(FilterType.videoDuration);
-            int duration = res.getResource().getDuration();
-            int minDuration = configDuration.getMinDuration();
-            int maxDuration = configDuration.getMaxDuration();
-            return minDuration <= duration && (maxDuration == 0 || duration <= maxDuration);
+            DurationFilter activeFilter = (DurationFilter) activeFilters.get(FilterType.duration);
+            return activeFilter.isValid(res.getDuration());
         }
 
         return true;
     }
 
-    public void setFilter(FilterType filter, Object o)
-    {
-        if(!isFilterRemoved)
-        {
-            this.lastFilter = filter;
-        }
-
-        this.currentFilters.put(filter, o);
-    }
-
-    public void setMode(SearchMode mode)
+    public void setSearchMode(SearchMode mode)
     {
         if(mode != searchMode)
         {
             this.searchMode = mode;
-            cleanAll();
+            reset();
         }
     }
 
-    public SearchMode getMode()
+    public SearchMode getSearchMode()
     {
         return searchMode;
     }
 
-    public boolean isFiltersEnabled()
+    public boolean isFiltersActive()
     {
-        return StringUtils.isNotBlank(stringFilters);
+        return !activeFilters.isEmpty();
     }
 
     public boolean isLearnwebSearchEnabled()
     {
-        if(currentFilters.containsKey(FilterType.service))
+        if(activeFilters.containsKey(FilterType.service))
         {
-            return !((ResourceService) currentFilters.get(FilterType.service)).isInterweb();
+            return !((ServiceFilter) activeFilters.get(FilterType.service)).getService().isInterweb();
         }
-        return !canNotRequestLearnweb;
+        return learnwebSearchAvailable;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isInterwebSearchEnabled()
     {
-        if(currentFilters.containsKey(FilterType.service))
+        if(activeFilters.containsKey(FilterType.service))
         {
-            return ((ResourceService) currentFilters.get(FilterType.service)).isInterweb();
+            return ((ServiceFilter) activeFilters.get(FilterType.service)).getService().isInterweb();
         }
-        return !canNotRequestInterweb;
+        return interwebSearchAvailable;
     }
 
     public long getTotalResults()
     {
-        long results = 0L;
-        if(totalResultsInterweb != null)
-        {
-            results += totalResultsInterweb;
-        }
-        if(totalResultsLearnweb != null)
-        {
-            results += totalResultsLearnweb;
-        }
-
-        return results;
+        return totalResultsLearnweb + totalResultsInterweb;
     }
 
-    public Long getTotalResultsLearnweb()
+    public long getTotalResults(FilterType filterType, String value)
     {
-        return totalResultsLearnweb;
+        Filter filter = availableFilters.get(filterType);
+        if(filter != null)
+        {
+            FilterOption option = filter.findOption(value);
+            if(option != null)
+                return option.getTotalResults();
+        }
+
+        return 0;
     }
 
     public void setTotalResultsLearnweb(Long totalResultsLearnweb)
@@ -703,75 +322,41 @@ public class SearchFilters implements Serializable
         this.totalResultsLearnweb = totalResultsLearnweb;
     }
 
-    public Long getTotalResultsInterweb()
-    {
-        return totalResultsInterweb;
-    }
-
     public void setTotalResultsInterweb(Long totalResultsInterweb)
     {
         this.totalResultsInterweb = totalResultsInterweb;
     }
 
-    /* ------------------- GETTERS FOR EACH FILTER ------------------- */
-
-    public ResourceService getServiceFilter()
+    public boolean isFilterActive(FilterType filterType)
     {
-        return (ResourceService) currentFilters.get(FilterType.service);
+        return activeFilters.containsKey(filterType);
     }
 
-    public TYPE getTypeFilter()
+    public Filter getFilter(FilterType filterType)
     {
-        return (TYPE) currentFilters.get(FilterType.type);
+        return activeFilters.get(filterType);
     }
 
-    public DATE getDateFilter()
+    public String getFilterValue(FilterType filterType)
     {
-        return (DATE) currentFilters.get(FilterType.date);
+        return activeFilters.get(filterType).getActiveValue();
     }
 
-    public String getGroupFilter()
+    /* --- Some special getters for Filters --- */
+
+    public Instant getFilterDateFrom()
     {
-        return (String) currentFilters.get(FilterType.group);
+        if(!activeFilters.containsKey(FilterType.date))
+            return null;
+
+        return ((DateFilter) activeFilters.get(FilterType.date)).getDateFrom();
     }
 
-    public String getCollectorFilter()
+    public Instant getFilterDateTo()
     {
-        return (String) currentFilters.get(FilterType.collector);
-    }
+        if(!activeFilters.containsKey(FilterType.date))
+            return null;
 
-    public String getAuthorFilter()
-    {
-        return (String) currentFilters.get(FilterType.author);
-    }
-
-    public String getCoverageFilter()
-    {
-        return (String) currentFilters.get(FilterType.coverage);
-    }
-
-    public String getPublisherFilter()
-    {
-        return (String) currentFilters.get(FilterType.publisher);
-    }
-
-    public String getTagsFilter()
-    {
-        return (String) currentFilters.get(FilterType.tags);
-    }
-
-    public SIZE getImageSizeFilter()
-    {
-        return (SIZE) currentFilters.get(FilterType.imageSize);
-    }
-
-    public DURATION getVideoDurationFilter()
-    {
-        return (DURATION) currentFilters.get(FilterType.videoDuration);
-    }
-
-    public String getLanguageFilter()
-    {
-        return (String) currentFilters.get(FilterType.language);
+        return ((DateFilter) activeFilters.get(FilterType.date)).getDateTo();
     }
 }

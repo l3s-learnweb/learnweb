@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
-    <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block" rendered="#{groupResourcesBean.query == null}">
+    <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block" rendered="#{groupResourcesBean.searchQuery == null}">
         <ui:repeat value="#{groupResourcesBean.subFolders}" var="folder">
             <h:outputLink styleClass="d-block res-item text-decoration-none" value="group/resources.jsf" title="#{folder.description}"
                           pt:data-itemType="folder"

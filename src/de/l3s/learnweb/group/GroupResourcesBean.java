@@ -3,16 +3,16 @@ package de.l3s.learnweb.group;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +30,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
-import de.l3s.learnweb.resource.AddResourceBean;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceUpdateBatch;
@@ -38,6 +37,7 @@ import de.l3s.learnweb.resource.SelectLocationBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.learnweb.resource.search.filters.Filter;
+import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.SolrPaginator;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.User;
@@ -49,9 +49,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -9105093690086624246L;
     private static final Logger log = LogManager.getLogger(GroupResourcesBean.class);
-    private final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private static final DateTimeFormatter SOLR_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC);
 
-    public enum ResourceView
+    private enum ResourceView
     {
         grid,
         table,
@@ -72,8 +72,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private final int pageSize;
 
     // In group search/filters
-    private String query;
-    private SearchFilters searchFilters;
+    private String searchQuery;
+    private final SearchFilters searchFilters = new SearchFilters(SearchMode.group);
 
     // resources
     private transient AbstractPaginator paginator;
@@ -82,15 +82,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private transient TreeNode foldersTree;
     private transient TreeNode selectedTreeNode; // Selected node in the left Folder's panel
 
-    @Inject
-    private AddResourceBean addResourceBean;
-
     public GroupResourcesBean()
     {
         pageSize = getLearnweb().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
-
-        searchFilters = new SearchFilters();
-        searchFilters.setMode(SearchMode.group);
     }
 
     public void clearCaches()
@@ -189,7 +183,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         {
             try
             {
-                paginator = getResourcesFromSolr(group.getId(), HasId.getIdOrDefault(currentFolder, 0), query, getUser());
+                paginator = getResourcesFromSolr(group.getId(), HasId.getIdOrDefault(currentFolder, 0), searchQuery, getUser());
             }
             catch(SQLException | IOException | SolrServerException e)
             {
@@ -200,17 +194,17 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         return paginator;
     }
 
-    public String changeFilters(String queryFilters)
+    public void changeFilter(FilterType type, String filterValue)
     {
-        searchFilters.setFilters(queryFilters);
+        searchFilters.setFilter(type, filterValue);
         clearCaches();
-        return queryFilters;
     }
 
     public void clearFilters()
     {
-        setQuery(null);
-        changeFilters(null);
+        setSearchQuery(null);
+        searchFilters.reset();
+        paginator = null;
     }
 
     public void onQueryChange()
@@ -218,13 +212,15 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         clearCaches();
     }
 
-    public List<Filter> getAvailableFilters()
+    public Collection<Filter> getAvailableFilters()
     {
         getPaginator();
-        if(searchFilters == null) // should only happen for private resources
-            return null;
-
         return searchFilters.getAvailableFilters();
+    }
+
+    public boolean isFiltersActive()
+    {
+        return searchFilters.isFiltersActive();
     }
 
     private SolrPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws SQLException, IOException, SolrServerException
@@ -238,32 +234,32 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         solrSearch.setFacetQueries(searchFilters.getFacetQueries());
         solrSearch.setOrder("timestamp", SolrQuery.ORDER.desc);
 
-        if(searchFilters.getServiceFilter() != null)
-            solrSearch.setFilterLocation(searchFilters.getServiceFilter().name());
-        if(searchFilters.getTypeFilter() != null)
-            solrSearch.setFilterType(searchFilters.getTypeFilter().name());
-        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateFrom() != null)
-            solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFilter().getDateFrom()));
-        if(searchFilters.getDateFilter() != null && searchFilters.getDateFilter().getDateTo() != null)
-            solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateFilter().getDateTo()));
-        if(searchFilters.getAuthorFilter() != null)
-            solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
+        if(searchFilters.isFilterActive(FilterType.service))
+            solrSearch.setFilterLocation(searchFilters.getFilterValue(FilterType.service));
+        if(searchFilters.isFilterActive(FilterType.type))
+            solrSearch.setFilterType(searchFilters.getFilterValue(FilterType.type));
+        if(searchFilters.getFilterDateFrom() != null)
+            solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getFilterDateFrom()));
+        if(searchFilters.getFilterDateTo() != null)
+            solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getFilterDateTo()));
+        if(searchFilters.isFilterActive(FilterType.author))
+            solrSearch.setFilterAuthor(searchFilters.getFilterValue(FilterType.author));
 
-        if(searchFilters.getTagsFilter() != null)
-            solrSearch.setFilterTags(searchFilters.getTagsFilter());
+        if(searchFilters.isFilterActive(FilterType.tags))
+            solrSearch.setFilterTags(searchFilters.getFilterValue(FilterType.tags));
 
         // TODO @Oleh these filters are specific for archiveweb which doesn't exist any more. Couldn't it be generalized for the fields defined per organisation?
-        if(searchFilters.getCoverageFilter() != null)
-            solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
-        if(searchFilters.getPublisherFilter() != null)
-            solrSearch.setFilterPublisher(searchFilters.getPublisherFilter());
-        if(searchFilters.getCollectorFilter() != null)
-            solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
+        if(searchFilters.isFilterActive(FilterType.coverage))
+            solrSearch.setFilterCoverage(searchFilters.getFilterValue(FilterType.coverage));
+        if(searchFilters.isFilterActive(FilterType.publisher))
+            solrSearch.setFilterPublisher(searchFilters.getFilterValue(FilterType.publisher));
+        if(searchFilters.isFilterActive(FilterType.collector))
+            solrSearch.setFilterCollector(searchFilters.getFilterValue(FilterType.collector));
 
         SolrPaginator sp = new SolrPaginator(solrSearch);
-        // searchFilters.cleanAll();
-        searchFilters.putResourceCounter(sp.getFacetFields());
-        searchFilters.putResourceCounter(sp.getFacetQueries());
+        searchFilters.resetCounters();
+        searchFilters.putResourceCounters(sp.getFacetFields());
+        searchFilters.putResourceCounters(sp.getFacetQueries());
         return sp;
     }
 
@@ -619,43 +615,21 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         this.showFoldersTree = showFoldersTree;
     }
 
-    public String getQuery()
+    public String getSearchQuery()
     {
-        return query;
+        return searchQuery;
     }
 
-    public void setQuery(String query)
+    public void setSearchQuery(String searchQuery)
     {
-        if(StringUtils.isBlank(query))
+        if(StringUtils.isBlank(searchQuery))
         {
-            this.query = null;
+            this.searchQuery = null;
         }
-        else if(!query.equalsIgnoreCase(this.query))
+        else if(!searchQuery.equalsIgnoreCase(this.searchQuery))
         {
-            this.query = query;
-            log(Action.group_resource_search, group.getId(), 0, query);
+            this.searchQuery = searchQuery;
+            log(Action.group_resource_search, group.getId(), 0, searchQuery);
         }
-    }
-
-    public SearchFilters getSearchFilters()
-    {
-        return searchFilters;
-    }
-
-    public void setSearchFilters(SearchFilters searchFilters)
-    {
-        this.searchFilters = searchFilters;
-    }
-
-    /* ------------------------ Beans getters/setters ------------------------ */
-
-    public AddResourceBean getAddResourceBean()
-    {
-        return addResourceBean;
-    }
-
-    public void setAddResourceBean(AddResourceBean addResourceBean)
-    {
-        this.addResourceBean = addResourceBean;
     }
 }
