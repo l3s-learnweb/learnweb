@@ -925,6 +925,46 @@
   }
 }
 
+.vis-timeline {
+  border-color: $contentBorderColor;
+  background-color: $contentBgColor;
+
+  .vis-item {
+    border-color: $contentBorderColor;
+    background-color: $contentBgColor;
+
+    .vis-item-content {
+      color: $body-color;
+    }
+
+    &.vis-selected {
+      background-color: $primaryColor;
+      border-color: $primaryColor;
+
+      .vis-item-content {
+        color: $primaryTextColor;
+      }
+    }
+  }
+
+  .vis-time-axis {
+    .vis-text {
+      color: $body-color;
+    }
+
+    .vis-grid {
+      &.vis-minor,
+      &.vis-major {
+        border-color: $contentBorderColor;
+      }
+    }
+  }
+
+  .vis-panel .vis-shadow {
+    box-shadow: none;
+  }
+}
+
 .fc {
   .fc-event {
     background-color: $primaryDarkest;
@@ -991,9 +1031,9 @@
           }
 
           &.ui-state-active {
+            box-shadow: none;
             border-bottom: 4px solid $buttonHoverBorderColor;
             font-weight: 600;
-
           }
         }
       }
@@ -1004,7 +1044,8 @@
     border: 1px solid $primaryColor;
     border-top-color: $headerLightBorderColor;
 
-    .ui-widget-header {
+    .ui-widget-header,
+    .fc-widget-header {
       background-color: $primaryColor;
       color: $primaryTextColor;
       font-weight: 600;
@@ -1023,5 +1064,90 @@
       text-align: center;
       text-transform: uppercase;
     }
+  }
+}
+
+.fc-unthemed {
+  .fc-toolbar {
+    background-color: $primaryColor;
+    color: $primaryTextColor;
+    font-size: $font-size-lg;
+    padding: 6px 12px 0 12px;
+    margin: 0;
+
+    h2 {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .fc-right {
+      .fc-button-group {
+        .ui-button {
+          border-radius: 0;
+          outline-color: transparent;
+        }
+
+        button {
+          font-weight: 400;
+          background-color: $primaryColor;
+          border: 0 none;
+          border-radius: 0;
+          padding: 16px 10px 20px 10px;
+          border-bottom: 4px solid transparent;
+
+          &:not(:disabled):hover {
+            border-bottom: 4px solid $buttonHoverBorderColor;
+          }
+
+          &:not(:disabled):active,
+          &:not(:disabled):active:focus,
+          &:not(:disabled):focus,
+          &:not(:disabled).fc-button-active:focus,
+          &.fc-button-active {
+            box-shadow: none;
+            border-color: transparent;
+            border-bottom: 4px solid $buttonHoverBorderColor;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+
+  td {
+    &.fc-today {
+      background-color: $primaryColor;
+      color: $primaryTextColor;
+    }
+  }
+
+  .fc-button-primary {
+    border: 0 none;
+    color: $primaryTextColor;
+    background-color: $primaryColor;
+
+    &:not(:disabled):active,
+    &:not(:disabled):active:focus,
+    &:not(:disabled):focus,
+    &:not(:disabled).fc-button-active:focus,
+    &.fc-button-active {
+      box-shadow: none;
+      background-color: $primaryColor;
+      border-color: transparent;
+    }
+  }
+
+  th,
+  td,
+  thead,
+  tbody,
+  .fc-divider,
+  .fc-row,
+  .fc-content,
+  .fc-popover,
+  .fc-list-view,
+  .fc-list-heading td {
+    border-color: $contentBorderColor;
   }
 }
