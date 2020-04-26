@@ -17,19 +17,14 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 669287762248912801L;
 
     private Survey selectedSurvey;
-    private final List<Survey> surveys = new ArrayList<>();
+    private List<Survey> surveys = new ArrayList<>();
 
     public SurveyTemplatesBean() throws SQLException
     {
         if(!isLoggedIn())
             return;
 
-        List<Survey> allSurveysPerOrganisation = getLearnweb().getSurveyManager().getSurveysByOrganisation(getUser().getOrganisationId());
-        for (Survey survey : allSurveysPerOrganisation)
-        {
-            if(survey.isPublicTemplate() || getUser().getId() == survey.getUserId())
-                surveys.add(survey);
-        }
+        this.surveys = getLearnweb().getSurveyManager().getPublicSurveysByOrganisationOrUser(getUser());
     }
 
     public Survey getSelectedSurvey()
@@ -62,6 +57,7 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
         selectedSurvey = new Survey();
         selectedSurvey.setOrganizationId(getUser().getOrganisationId());
         selectedSurvey.setUserId(getUser().getId());
+        selectedSurvey.setPublicTemplate(true);
     }
 
     /**
@@ -72,7 +68,7 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
      */
     public String onSave() throws SQLException
     {
-        selectedSurvey.save();
+        selectedSurvey.save(false);
         return "/lw/survey/template.xhtml?survey_id=" + selectedSurvey.getId() + "&faces-redirect=true";
     }
 
@@ -81,10 +77,10 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
         return "/lw/survey/template.xhtml?survey_id=" + surveyId + "&faces-redirect=true";
     }
 
-    public void onDeleteSurvey(Survey survey) throws SQLException
+    public void onDeleteSurvey(Survey surveyToDelete) throws SQLException
     {
-        getLearnweb().getSurveyManager().deleteSurvey(survey.getId());
-        surveys.remove(survey);
+        getLearnweb().getSurveyManager().deleteSurvey(surveyToDelete.getId());
+        surveys.removeIf(survey -> survey.getId() == surveyToDelete.getId());
     }
 
 }

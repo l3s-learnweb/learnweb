@@ -467,7 +467,7 @@ public class UserBean implements Serializable
                         .addElement(DefaultMenuItem.builder().value(msg.getString("ip_requests")).icon("fa fa-fw fa-line-chart").url(su + "/lw/admin/requests.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(msg.getString("system_tools")).icon("fa fa-fw fa-language").url(su + "/lw/admin/systemtools.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(msg.getString("announcements")).icon("fa fa-fw fa-language").url(su + "/lw/admin/announcements.jsf").build())
-                        .addElement(DefaultMenuItem.builder().value(msg.getString("survey.survey_overview")).icon("fa fa-question-circle").url(su + "/lw/survey/templates.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(msg.getString("survey.survey_overview")).icon("fa fa-question-circle").url(su + "/lw/survey/surveys.jsf").build())
                         .build();
                 model.getElements().add(adminSubmenu);
             }

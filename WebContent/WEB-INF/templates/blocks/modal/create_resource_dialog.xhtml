@@ -18,14 +18,17 @@
             <ui:fragment rendered="#{addResourceBean.resource.officeResource}">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
                 <div class="fg-col">
-                    <p:inputText value="#{addResourceBean.resource.fileName}" required="true"/>
+                    <p:inputText value="#{addResourceBean.resource.fileName}" required="true" />
                     <p:message for="@previous"/>
                 </div>
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'website'}">
                 <p:outputLabel for="@next" value="#{msg.url}:"/>
-                <p:inputText value="#{addResourceBean.resource.url}" required="true" requiredmessage="#{msg.mandatory_field}" validator="#{addResourceBean.validateUrl}"/>
+                <div class="fg-col">
+                    <p:inputText value="#{addResourceBean.resource.url}" required="true" requiredmessage="#{msg.mandatory_field}" validator="#{addResourceBean.validateUrl}"/>
+                    <p:message for="@previous"/>
+                </div>
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'file'}">
@@ -41,8 +44,10 @@
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary2'}">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
-                <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"/>
-
+                <div class="fg-col">
+                    <p:inputText value="#{addResourceBean.resource.title}" required="true" />
+                    <p:message for="@previous"/>
+                </div>
                 <p:outputLabel for="@next" value="Allowed languages:"/>
                 <p:selectCheckboxMenu value="#{addResourceBean.resource.allowedLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
                                       label="#{msg.language}" multiple="true" converter="#{localeConverter}">
@@ -52,62 +57,56 @@
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'survey'}">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
-                <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"/>
+                <div class="fg-col">
+                    <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"/>
+                    <p:message for="@previous"/>
+                </div>
 
                 <p:outputLabel for="@next" value="#{msg.description}:"/>
-                <p:inputText value="#{addResourceBean.resource.description}"/>
+                <div class="fg-col">
+                    <p:inputText value="#{addResourceBean.resource.description}"/>
+                </div>
 
-                <!--<p:outputLabel for="@next" value="Survey Open Date:"/>
-                <p:calendar value="#{addResourceBean.surveyOpenDate}" showOn="button"/>
+                <p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
+                <div class="fg-col">
+                    <p:calendar value="#{addResourceBean.resource.start}" id="editDialogOpenDate" binding="#{startDateComponent}"
+                                required="true" locale="#{userBean.locale}" navigator="true" showOn="button">
+                    </p:calendar>
+                    <p:message for="@previous"/>
+                </div>
 
-                <p:outputLabel for="@next" value="Survey Close Date:"/>
-                <p:calendar value="#{addResourceBean.surveyCloseDate}" showOn="button"/>-->
+                <p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
+                <div class="fg-col">
+                    <p:calendar value="#{addResourceBean.resource.end}" id="editDialogCloseDate" required="true"
+                                locale="#{userBean.locale}" navigator="true" showOn="button">
+                        <f:validator validatorId="dateRangeValidator"/>
+                        <f:attribute name="startDate" value="#{startDateComponent}"/>
+                    </p:calendar>
+                    <p:message for="@previous"/>
+                </div>
             </ui:fragment>
-            <h:outputScript>if (typeof formLoadedCallback === 'function') formLoadedCallback();</h:outputScript>
         </h:panelGroup>
 
         <h:panelGroup layout="block" styleClass="fg-grid mb-3" rendered="#{addResourceBean.formStep != 1}">
             <h:outputText value="#{msg.type}:" styleClass="ui-outputlabel"/>
             <h:outputText value="#{addResourceBean.resource.type}" styleClass="fg-col text-capitalize"/>
 
-            <p:outputLabel for="@next" value="#{msg.location}:"/>
-            <p:inputText value="#{addResourceBean.currentPath}" readonly="true"/>
+            <h:outputText value="#{msg.location}:" styleClass="ui-outputlabel"/>
+            <h:outputText value="#{addResourceBean.currentPath}"/>
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'website'}">
-                <p:outputLabel for="@next" value="#{msg.url}:"/>
-                <p:inputText value="#{addResourceBean.resource.url}" readonly="true"/>
+                <h:outputText value="#{msg.url}:" styleClass="ui-outputlabel"/>
+                <h:outputText value="#{addResourceBean.resource.url}" />
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'file'}">
-                <p:outputLabel for="@next" value="#{msg.file}:"/>
-                <p:inputText value="#{addResourceBean.resource.url}" readonly="true"/>
+                <h:outputText value="#{msg.file}:" styleClass="ui-outputlabel"/>
+                <h:outputText value="#{addResourceBean.resource.url}" />
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.thumbnail3 != null}">
-                <p:outputLabel value="#{msg.preview}:"/>
+                <h:outputText value="#{msg.preview}:" styleClass="ui-outputlabel"/>
                 <h:outputText escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
-            </ui:fragment>
-
-            <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary2'}">
-                <p:outputLabel for="@next" value="#{msg.title}:"/>
-                <p:inputText value="#{addResourceBean.resource.title}" readonly="true"/>
-
-                <p:outputLabel for="@next" value="Allowed languages:"/>
-                <p:inputText value="#{addResourceBean.resource.allowedLanguages}" readonly="true"/>
-            </ui:fragment>
-
-            <ui:fragment rendered="#{addResourceBean.resource.type eq 'survey'}">
-                <p:outputLabel for="@next" value="#{msg.title}:"/>
-                <p:inputText value="#{addResourceBean.resource.title}" readonly="true"/>
-
-                <p:outputLabel for="@next" value="#{msg.description}:"/>
-                <p:inputText value="#{addResourceBean.resource.description}" readonly="true"/>
-
-                <!--<p:outputLabel for="@next" value="Survey Open Date:"/>
-                <p:inputText value="#{addResourceBean.surveyOpenDate}" readonly="true"/>
-
-                <p:outputLabel for="@next" value="Survey Close Date:"/>
-                <p:inputText value="#{addResourceBean.surveyCloseDate}" readonly="true"/>-->
             </ui:fragment>
 
             <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
@@ -124,8 +123,9 @@
                                  rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}">
                 </p:commandButton>
 
-                <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update=":growl" ajax="true" global="false"
-                                 onsuccess="PF('createResourceDialog').hide();resourceAddedHook();return false;"
+                <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update=":growl create_resource_form" global="false"
+                                 onsuccess="resourceAddedHook(); return false;"
+                                 oncomplete="handleDialogSubmit(xhr, status, args)"
                                  rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">
                 </p:commandButton>
 
@@ -135,4 +135,10 @@
     </h:form>
 </p:dialog>
 
+<script type="text/javascript">
+  function handleDialogSubmit(xhr, status, args) {
+    if (!args.validationFailed)
+      PF('createResourceDialog').hide();
+  }
+</script>
 </ui:composition>

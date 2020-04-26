@@ -17,12 +17,12 @@ public class SurveyResource extends Resource
 
     private static final String PATH = "/lw/survey/answer.jsf?resource_id=";
 
-    private int surveyId;
+    private int surveyId = -1;
     private Date start = null;
     private Date end = null;
     private boolean saveable; // if true users can save their answers before finally submitting them
 
-    private Survey survey;
+    private Survey survey = null;
 
     private transient Cache<SurveyUserAnswers> answerCache;
 
@@ -31,6 +31,7 @@ public class SurveyResource extends Resource
      */
     public SurveyResource()
     {
+
     }
 
     @Override
@@ -68,6 +69,12 @@ public class SurveyResource extends Resource
         if(null == survey)
             survey = Learnweb.getInstance().getSurveyManager().getSurvey(surveyId);
         return survey;
+    }
+
+    public void setSurvey(Survey survey)
+    {
+        this.survey = survey;
+        this.surveyId = survey.getId();
     }
 
     public Collection<SurveyQuestion> getQuestions() throws SQLException
@@ -156,8 +163,12 @@ public class SurveyResource extends Resource
     {
         // save normal resource fields
         super.save();
-
         // save SurveyResource fields
+        if(surveyId == -1)
+        {
+            survey.save(true);
+            surveyId = survey.getId();
+        }
         Learnweb.getInstance().getSurveyManager().saveSurveyResource(this);
 
         return this;

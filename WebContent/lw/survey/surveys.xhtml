@@ -6,10 +6,10 @@
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg['surveys']}"/>
-<ui:param name="hasAccessPermission" value="#{userBean.admin}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
 <ui:define name="breadcrumb">
-	<lw:breadcrumb-item link="admin/index.jsf" title="#{msg.admin}">
+	<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 	</lw:breadcrumb-item>
 
@@ -19,11 +19,11 @@
 </ui:define>
 
 <ui:define name="center_layout">
-	<h:form id="form">
+	<h:form>
 		<p:dataTable var="survey" styleClass="mb-3" value="#{surveyTemplatesBean.surveys}" emptyMessage="#{msg['no_survey_found']}">
 			<f:facet name="header">
 				<div class="d-flex">
-					<div class="mr-auto">#{msg['surveys']}</div>
+					<div class="mr-auto">#{msg['templates']}</div>
 					<div class="d-md-block d-flex flex-column">
 						<p:commandButton value="#{msg['survey.create_new_survey']}" action="#{surveyTemplatesBean.onCreateSurvey}" onsuccess="PF('createSurvey').show();" update="createSurvey" styleClass="alt-btn mt-2 mt-md-0" global="false"/>
 					</div>
@@ -33,12 +33,12 @@
 			<p:column headerText="#{msg['title']}" styleClass="d-none d-sm-table-cell">
 				<h:outputLink value="#{request.contextPath}/lw/survey/template_readonly.jsf">
 					<f:param name="survey_id" value="#{survey.id}"/>
-					<h:outputText value="#{survey.title}"/>
+					<h:outputText value="#{survey.title}" escape="false"/>
 				</h:outputLink>
 			</p:column>
 
 			<p:column headerText="#{msg['description']}" styleClass="d-none d-md-table-cell">
-				<h:outputText value="#{survey.description}"/>
+				<h:outputText value="#{survey.description}" escape="false"/>
 			</p:column>
 
 			<p:column headerText="#{msg['options']}" styleClass="td-text-right">
@@ -47,16 +47,16 @@
 						<i class="fa fa-fw fa-files-o text-warning" aria-hidden="true"></i>
 						<h:outputText value="#{msg['copy']}"/>
 					</p:commandLink>
-					<p:tooltip for="@next" rendered="#{survey.surveyAssociatedWithResource}" value="#{msg['survey.template_already_associated']}." position="left"/>
+					<p:tooltip for="@next" rendered="#{survey.associated}" value="#{msg['survey.template_already_associated']}." position="left"/>
 					<h:panelGroup id="edit" layout="block" styleClass="mr-2">
-						<p:commandLink styleClass="icon-link" action="#{surveyTemplatesBean.onEditSurvey(survey.id)}" disabled="#{survey.surveyAssociatedWithResource}">
+						<p:commandLink styleClass="icon-link" action="#{surveyTemplatesBean.onEditSurvey(survey.id)}" disabled="#{survey.associated}">
 							<i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
 							<h:outputText value="#{msg['edit']}"/>
 						</p:commandLink>
 					</h:panelGroup>
-					<p:tooltip for="@next" rendered="#{survey.surveyAssociatedWithResource}" value="#{msg['survey.template_already_associated']}." position="left"/>
+					<p:tooltip for="@next" rendered="#{survey.associated}" value="#{msg['survey.template_already_associated']}." position="left"/>
 					<h:panelGroup id="delete" layout="block">
-						<p:commandLink styleClass="icon-link" disabled="#{survey.surveyAssociatedWithResource}" action="#{surveyTemplatesBean.onDeleteSurvey(survey)}" update="form" process="@this">
+						<p:commandLink styleClass="icon-link" disabled="#{survey.associated}" action="#{surveyTemplatesBean.onDeleteSurvey(survey)}" update="@form" process="@this">
 							<p:confirm header="#{msg['delete']}" message="#{msg['survey.delete_template']}" icon="ui-icon-alert"/>
 							<i class="fa fa-fw fa-trash-o text-warning" aria-hidden="true"></i>
 							<h:outputText value="#{msg['delete']}"/>
@@ -72,7 +72,7 @@
 			<div class="d-flex flex-column mb-3">
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="font-weight-bold"/>
-					<p:inputText value="#{surveyTemplatesBean.selectedSurvey.title}" />
+					<p:inputText value="#{surveyTemplatesBean.selectedSurvey.title}" label="#{msg['title']}" />
 					<p:message for="@previous"/>
 				</div>
 				<div class="form-group">
@@ -93,7 +93,7 @@
 					<p:message for="@previous"/>
 				</div>
 				<p:outputPanel layout="block" styleClass="d-flex flex-column">
-					<p:outputLabel for="@next" value="#{msg['public']}:" styleClass="font-weight-bold"/>
+					<p:outputLabel for="@next" value="#{msg['public']}:" styleClass="font-weight-bold" />
 					<p:tooltip for="@next" value="#{msg['survey.public_explanation']}." position="right"/>
 					<p:toggleSwitch value="#{surveyTemplatesBean.selectedSurvey.publicTemplate}"/>
 				</p:outputPanel>

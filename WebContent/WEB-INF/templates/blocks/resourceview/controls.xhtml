@@ -6,16 +6,6 @@
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-    <p:linkButton outcome="/lw/survey/survey" icon="fa fa-window-maximize" styleClass="secondary-btn" title="#{msg['survey.open']}"
-                  target="_blank" rendered="#{res.type eq 'survey'}">
-        <f:param name="resource_id" value="#{res.id}"/>
-    </p:linkButton>
-
-    <p:linkButton outcome="/lw/survey/results" icon="fa fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open_results']}"
-                  target="_blank" rendered="#{res.type eq 'survey' and userBean.user.moderator}">
-        <f:param name="resource_id" value="#{res.id}"/>
-    </p:linkButton>
-
     <p:linkButton href="#{userBean.getUrlProxied(res)}" icon="fa fa-external-link" styleClass="secondary-btn" title="#{res.url}"
                   target="_blank" rendered="#{res.type eq 'text' or res.type eq 'website' or res.type eq 'pdf'}"/>
 </ui:composition>

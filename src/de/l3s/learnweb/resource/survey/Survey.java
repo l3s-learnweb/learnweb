@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -32,16 +31,17 @@ public class Survey implements Serializable, HasId
     private int organizationId; // if <> 0 only the specified organization can use this survey
     private int userId; // user who created this survey
     private boolean deleted;
-    private boolean publicTemplate; // specifies whether the template is public (if "true", other users in the organization see it in the list of templates and can copy it)
+    private boolean publicTemplate = true; // specifies whether the template is public (if "true", other users in the organization see it in the list of templates and can copy it)
+    private boolean associated; //'true' if survey associated with at least one resource
 
-    private List<SurveyQuestion> questions = new ArrayList<>();
+    private List<SurveyQuestion> questions;
 
     public Survey()
     {
 
     }
 
-    public Survey(Survey old)
+    public Survey(Survey old) throws SQLException
     {
         setId(-1);
         setTitle(old.getTitle());
@@ -50,14 +50,10 @@ public class Survey implements Serializable, HasId
         setUserId(old.getUserId());
         setDeleted(old.isDeleted());
         setPublicTemplate(old.isPublicTemplate());
+
         for(SurveyQuestion question : old.getQuestions())
         {
-            question.setId(0);
-            for(SurveyQuestionOption answer : question.getAnswers())
-            {
-                answer.setId(0);
-            }
-            questions.add(question);
+            questions.add(question.clone());
         }
     }
 
@@ -102,24 +98,32 @@ public class Survey implements Serializable, HasId
         this.organizationId = organizationId;
     }
 
-    public List<SurveyQuestion> getQuestions()
+    public List<SurveyQuestion> getQuestions() throws SQLException
     {
+        if(null == questions)
+        {
+            questions = Learnweb.getInstance().getSurveyManager().getQuestions(id);
+        }
         return questions;
     }
 
-    public void addQuestion(SurveyQuestion question)
+    public void setQuestions(List<SurveyQuestion> questions)
     {
-        questions.add(question);
+        this.questions = questions;
     }
 
-    public SurveyQuestion getQuestion(int questionId)
+    public SurveyQuestion getQuestion(int questionId) throws SQLException
     {
-        return questions.stream().filter(q -> q.getId() == questionId).findFirst().get();
+        return getQuestions().stream().filter(q -> q.getId() == questionId).findFirst().get();
     }
 
-    public void save() throws SQLException
+    /**
+     * @param updateMetadataOnly performance optimization: if true only metadata like title and description will be saved but not changes to questions
+     * @throws SQLException
+     */
+    public void save(boolean updateMetaDataOnly) throws SQLException
     {
-        Learnweb.getInstance().getSurveyManager().save(this, true);
+        Learnweb.getInstance().getSurveyManager().save(this, updateMetaDataOnly);
     }
 
     public int getUserId()
@@ -158,15 +162,24 @@ public class Survey implements Serializable, HasId
     @Override
     public Survey clone()
     {
-        return new Survey(this);
+        try
+        {
+            return new Survey(this);
+        }
+        catch(SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
-    /**
-     * returns 'true' if survey associated with at least one resource
-     */
-    public boolean isSurveyAssociatedWithResource() throws SQLException
+    public boolean isAssociated()
     {
-        return Learnweb.getInstance().getSurveyManager().isSurveyAssociatedWithResource(id);
+        return associated;
+    }
+
+    public void setAssociated(final boolean associated)
+    {
+        this.associated = associated;
     }
 
 }

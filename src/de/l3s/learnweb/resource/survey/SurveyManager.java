@@ -131,27 +131,45 @@ public class SurveyManager
 
     public Survey getSurvey(int surveyId) throws SQLException
     {
-        Survey survey = new Survey();
-        survey.setId(surveyId);
-
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey` WHERE `survey_id` = ?"))
         {
             select.setInt(1, surveyId);
             ResultSet rs = select.executeQuery();
             if(rs.next())
             {
-                survey.setTitle(rs.getString("title"));
-                survey.setDescription(rs.getString("description"));
-                survey.setOrganizationId(rs.getInt("organization_id"));
-                survey.setUserId(rs.getInt("creator_id"));
-                survey.setDeleted(rs.getInt("deleted") == 1);
-                survey.setPublicTemplate(rs.getInt("public_template") == 1);
+                return createSurvey(rs);
             }
             else
             {
                 log.warn("Can't get survey: " + surveyId);
                 return null;
             }
+        }
+    }
+
+    private Survey createSurvey(ResultSet rs) throws SQLException
+    {
+        Survey survey = new Survey();
+
+        survey.setId(rs.getInt("survey_id"));
+        survey.setTitle(rs.getString("title"));
+        survey.setDescription(rs.getString("description"));
+        survey.setOrganizationId(rs.getInt("organization_id"));
+        survey.setUserId(rs.getInt("user_id"));
+        survey.setDeleted(rs.getInt("deleted") == 1);
+        survey.setPublicTemplate(rs.getInt("public_template") == 1);
+        survey.setAssociated(isSurveyAssociatedWithResource(rs.getInt("survey_id")));
+
+        return survey;
+    }
+
+    public List<SurveyQuestion> getQuestions(int surveyId) throws SQLException
+    {
+        List<SurveyQuestion> questions = new ArrayList<>();
+
+        if(surveyId <= 0)
+        {
+            return questions;
         }
 
         // load survey questions
@@ -204,10 +222,10 @@ public class SurveyManager
                     }
                 }
 
-                survey.addQuestion(question);
+                questions.add(question);
             }
         }
-        return survey;
+        return questions;
     }
 
     /**
@@ -380,7 +398,6 @@ public class SurveyManager
      * @return
      * @throws SQLException
      */
-
     public boolean isSurveyAssociatedWithResource(int surveyId) throws SQLException
     {
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE survey_id=? LIMIT 1"))
@@ -396,33 +413,24 @@ public class SurveyManager
         return false;
     }
 
-    public List<Survey> getSurveysByOrganisation(int organisationId) throws SQLException
+    /**
+     * @param user
+     * @throws SQLException
+     */
+    public List<Survey> getPublicSurveysByOrganisationOrUser(User user) throws SQLException
     {
         List<Survey> surveys = new ArrayList<>();
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey` WHERE organization_id = ? and deleted=0"))
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey` WHERE `organization_id` = ? and `deleted` = 0 and (`public_template` = 1 or `user_id` = ?)"))
         {
-            select.setInt(1, organisationId);
+            select.setInt(1, user.getOrganisationId());
+            select.setInt(2, user.getId());
             ResultSet rs = select.executeQuery();
             while(rs.next())
             {
                 surveys.add(createSurvey(rs));
             }
         }
-
         return surveys;
-    }
-
-    private Survey createSurvey(ResultSet rs) throws SQLException
-    {
-        Survey survey = new Survey();
-        survey.setId(rs.getInt("survey_id"));
-        survey.setOrganizationId(rs.getInt("organization_id"));
-        survey.setTitle(rs.getString("title"));
-        survey.setDescription(rs.getString("description"));
-        survey.setUserId(rs.getInt("creator_id"));
-        survey.setDeleted(rs.getInt("deleted") == 1);
-        survey.setPublicTemplate(rs.getInt("public_template") == 1);
-        return survey;
     }
 
     public void save(Survey survey) throws SQLException
@@ -442,7 +450,7 @@ public class SurveyManager
         // persists metadata
         if(survey.getId() <= 0)
         {
-            try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_survey (organization_id, title, description, creator_id, public_template) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
+            try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_survey (organization_id, title, description, user_id, public_template) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
             {
                 insert.setInt(1, survey.getOrganizationId());
                 insert.setString(2, survey.getTitle());
@@ -458,7 +466,7 @@ public class SurveyManager
         }
         else
         {
-            try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_survey` SET `organization_id`=?, `title`=?, `description`=?, `creator_id`=?, `public_template`=? WHERE `survey_id`=?"))
+            try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_survey` SET `organization_id`=?, `title`=?, `description`=?, `user_id`=?, `public_template`=? WHERE `survey_id`=?"))
             {
                 update.setInt(1, survey.getOrganizationId());
                 update.setString(2, survey.getTitle());
@@ -482,23 +490,7 @@ public class SurveyManager
 
     protected void saveQuestion(SurveyQuestion question) throws SQLException
     {
-        if(question.getId() != 0)
-        {
-            try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_survey_question` SET `deleted`=?, `survey_id`=?, `order`=?, `question`=?, `question_type`=?, `option`=?, `info`=?, `required`=? WHERE question_id=?"))
-            {
-                update.setInt(1, question.isDeleted() ? 1 : 0);
-                update.setInt(2, question.getSurveyId());
-                update.setInt(3, question.getOrder());
-                update.setString(4, question.getLabel());
-                update.setString(5, question.getType().toString());
-                update.setString(6, question.getOptions().values().toString().substring(1, question.getOptions().values().toString().length() - 1).replace(",", "|||").replaceAll("\\s", ""));
-                update.setString(7, question.getInfo());
-                update.setInt(8, question.isRequired() ? 1 : 0);
-                update.setInt(9, question.getId());
-                update.executeUpdate();
-            }
-        }
-        else if(!question.isDeleted())
+        if(question.getId() <= 0)
         {
             try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_survey_question`(`deleted`, `survey_id`, `order`, `question`, `question_type`, `option`, `info`, `required`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
             {
@@ -515,6 +507,22 @@ public class SurveyManager
                 if(!rs.next())
                     throw new SQLException("database error: no id generated");
                 question.setId(rs.getInt(1));
+            }
+        }
+        else
+        {
+            try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_survey_question` SET `deleted`=?, `survey_id`=?, `order`=?, `question`=?, `question_type`=?, `option`=?, `info`=?, `required`=? WHERE question_id=?"))
+            {
+                update.setInt(1, question.isDeleted() ? 1 : 0);
+                update.setInt(2, question.getSurveyId());
+                update.setInt(3, question.getOrder());
+                update.setString(4, question.getLabel());
+                update.setString(5, question.getType().toString());
+                update.setString(6, question.getOptions().values().toString().substring(1, question.getOptions().values().toString().length() - 1).replace(",", "|||").replaceAll("\\s", ""));
+                update.setString(7, question.getInfo());
+                update.setInt(8, question.isRequired() ? 1 : 0);
+                update.setInt(9, question.getId());
+                update.executeUpdate();
             }
         }
 

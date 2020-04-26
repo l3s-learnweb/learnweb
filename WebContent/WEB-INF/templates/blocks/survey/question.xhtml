@@ -11,13 +11,13 @@
     <c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">
         <div class="d-flex justify-content-center align-items-center my-3">
             <h3>
-                <p:outputLabel value="${question.label}" escape="false" for="@next"/>
+                <p:outputLabel value="${question.label}" escape="false"/>
             </h3>
         </div>
     </c:if>
     <c:if test="#{question.type eq 'FULLWIDTH_DESCRIPTION'}">
         <div class="d-flex flex-column flex-grow-1 justify-content-center">
-            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
+            <p:outputLabel value="${question.label}" escape="false"/>
         </div>
     </c:if>
     <c:if test="#{question.type eq 'INPUT_TEXT'}">

@@ -26,6 +26,8 @@ import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.resource.survey.Survey;
+import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.util.UrlHelper;
 
 @Named
@@ -76,7 +78,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 this.setResourceTypeGlossary();
                 break;
             case "survey":
-                this.resource.setType(ResourceType.survey);
+                this.setResourceTypeSurvey();
                 break;
             case "document":
                 this.resource.setType(ResourceType.document);
@@ -104,6 +106,27 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
 
         this.resource = glossaryResource;
+    }
+
+    private void setResourceTypeSurvey()
+    {
+
+        Survey survey = new Survey();
+        survey.setOrganizationId(getUser().getOrganisationId());
+        survey.setUserId(getUser().getId());
+        survey.setTitle("Title");
+        survey.setDescription("Description");
+
+        SurveyResource surveyResource = new SurveyResource();
+        surveyResource.setSurvey(survey);
+        surveyResource.setUser(getUser());
+        surveyResource.setDeleted(true);
+        surveyResource.setSource(ResourceService.learnweb);
+        surveyResource.setLocation("Learnweb");
+        surveyResource.setStorageType(Resource.LEARNWEB_RESOURCE);
+        surveyResource.setType(ResourceType.survey);
+
+        this.resource = surveyResource;
     }
 
     public void handleFileUpload(FileUploadEvent event)
@@ -280,7 +303,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             return targetGroup.getTitle();
         }
 
-        return getLocaleMessage("myResourcesTitle");
+        return getLocaleMessage("myResourcesTitle"); // TODO @astappiev private group can have folders please checkAddResourceBean.java
     }
 
     public Resource getResource()
@@ -303,6 +326,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         selectLocationBean.setTargetFolder(targetFolder);
     }
 
+    // TODO @astappiev is this method and remoteCommand name="updateLocationCommand" obsolete?
     public void updateTargetLocation()
     {
         SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);

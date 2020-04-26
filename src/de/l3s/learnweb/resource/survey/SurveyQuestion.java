@@ -24,14 +24,14 @@ public class SurveyQuestion implements Serializable
 
     public enum QuestionType // represents primefaces input types
     {
-        INPUT_TEXT (false, false), // options define the valid length (first entry = min length, second entry = max length)
-        INPUT_TEXTAREA (false, false), // options define the valid length (first entry = min length, second entry = max length)
-        AUTOCOMPLETE (false, true),
-        ONE_MENU (false, true),
-        ONE_MENU_EDITABLE (false, true),
-        MULTIPLE_MENU (false, true),
-        ONE_RADIO (false, true),
-        MANY_CHECKBOX (false, true),
+        INPUT_TEXT(false, false), // options define the valid length (first entry = min length, second entry = max length)
+        INPUT_TEXTAREA(false, false), // options define the valid length (first entry = min length, second entry = max length)
+        AUTOCOMPLETE(false, true),
+        ONE_MENU(false, true),
+        ONE_MENU_EDITABLE(false, true),
+        MULTIPLE_MENU(false, true),
+        ONE_RADIO(false, true),
+        MANY_CHECKBOX(false, true),
         FULLWIDTH_HEADER(true, false),
         FULLWIDTH_DESCRIPTION(true, false);
 
@@ -105,7 +105,25 @@ public class SurveyQuestion implements Serializable
     {
         this(type);
         setSurveyId(surveyId);
+    }
 
+    public SurveyQuestion(SurveyQuestion question)
+    {
+        setId(-1);
+        setSurveyId(-1);
+        setLabel(question.label);
+        setInfo(question.info);
+        setOptions(question.options);
+        setModeratorOnly(question.moderatorOnly);
+        setRequired(question.required);
+        setDeleted(question.deleted);
+        setOrder(question.order);
+        for(SurveyQuestionOption answer : question.getAnswers())
+        {
+            answer.setId(0);
+            answers.add(answer);
+        }
+        setType(question.type);
     }
 
     public QuestionType getType()
@@ -175,7 +193,7 @@ public class SurveyQuestion implements Serializable
 
     public void setLabel(String label)
     {
-        this.label = label;
+        this.label = label.replaceAll("<p>", "").replaceAll("</p>", "");
     }
 
     public String getInfo()
@@ -251,6 +269,15 @@ public class SurveyQuestion implements Serializable
     public void setOrder(int order)
     {
         this.order = order;
+    }
+
+    /**
+     * Returns a copy of this Survey Question (Ids are set to default this the Object isn't persisted yet).
+     */
+    @Override
+    public SurveyQuestion clone()
+    {
+        return new SurveyQuestion(this);
     }
 
 }

@@ -2,6 +2,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
@@ -38,6 +39,28 @@
 
         <c:when test="${res.type eq 'pdf'}">
             <iframe src="#{res.url}" title="#{res.title}"></iframe>
+        </c:when>
+
+        <c:when test="${res.type eq 'survey'}">
+            <!-- quick and dirty solution to link to surveys need complete refactoring -->
+            <div style=" position: absolute; top: 50%; transform: translateY(-50%);text-align: center;width: 100%;" >
+                <ui:fragment rendered="#{userBean.admin}">
+                    <p:linkButton outcome="/lw/survey/template" icon="fa fa-window-maximize" styleClass="secondary-btn" value="Edit Template"
+                                  target="_top" rendered="#{res.type eq 'survey'}">
+                        <f:param name="resource_id" value="#{res.id}"/>
+                    </p:linkButton>
+                
+                    <p:linkButton outcome="/lw/survey/results" icon="fa fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open_results']}"
+                                  target="_top" rendered="#{res.type eq 'survey' and userBean.user.moderator}">
+                        <f:param name="resource_id" value="#{res.id}"/>
+                    </p:linkButton>
+                </ui:fragment>    
+                    
+                <p:linkButton outcome="/lw/survey/survey" icon="fa fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open']}"
+                              target="_top" >
+                    <f:param name="resource_id" value="#{res.id}"/>
+                </p:linkButton>
+            </div>
         </c:when>
 
         <c:when test="${not empty res.thumbnail4}">
