@@ -316,7 +316,7 @@ public class FileManager
 
         if(!file.getActualFile().exists())
         {
-            log.warn("Can't find file: " + file.getActualFile().getAbsolutePath());
+            log.warn("Can't find file '{}' for resource {}", file.getActualFile().getAbsolutePath(), file.getResourceId());
 
             file.setExists(false);
 

@@ -14,9 +14,13 @@
 
     <properties>
         <javax.faces.project_stage>Development</javax.faces.project_stage>
-        <maven.assembly.mainClass>de.l3s.learnweb.tasks.users.DeleteOldUsers</maven.assembly.mainClass>
+
         <maven.compiler.release>11</maven.compiler.release>
+        <maven.dependency.tomcat.version>9.0.34</maven.dependency.tomcat.version>
+        <maven.dependency.imageio.version>3.5</maven.dependency.imageio.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.assembly.mainClass>de.l3s.learnweb.tasks.users.DeleteOldUsers</maven.assembly.mainClass>
     </properties>
 
     <dependencies>
@@ -24,19 +28,25 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
-            <version>9.0.34</version>
+            <version>${maven.dependency.tomcat.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jsp-api</artifactId>
-            <version>9.0.34</version>
+            <version>${maven.dependency.tomcat.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-el-api</artifactId>
-            <version>9.0.34</version>
+            <version>${maven.dependency.tomcat.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>${maven.dependency.tomcat.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -141,37 +151,37 @@
         <dependency>
             <groupId>com.twelvemonkeys.servlet</groupId>
             <artifactId>servlet</artifactId>
-            <version>3.5</version>
+            <version>${maven.dependency.imageio.version}</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-bmp</artifactId>
-            <version>3.5</version>
+            <version>${maven.dependency.imageio.version}</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-jpeg</artifactId>
-            <version>3.5</version>
+            <version>${maven.dependency.imageio.version}</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-tiff</artifactId>
-            <version>3.5</version>
+            <version>${maven.dependency.imageio.version}</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-psd</artifactId>
-            <version>3.5</version>
+            <version>${maven.dependency.imageio.version}</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-icns</artifactId>
-            <version>3.5</version>
+            <version>${maven.dependency.imageio.version}</version>
         </dependency>
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
             <artifactId>imageio-pict</artifactId>
-            <version>3.5</version>
+            <version>${maven.dependency.imageio.version}</version>
         </dependency>
 
         <!-- ################ Core dependencies ################ -->

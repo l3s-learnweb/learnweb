@@ -10,13 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
@@ -83,7 +83,7 @@ public class DownloadServlet extends HttpServlet
      * Process HEAD request. This returns the same headers as GET request, but without content.
      */
     @Override
-    protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void doHead(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         // Process request without content.
         processRequest(request, response, false);
@@ -93,7 +93,7 @@ public class DownloadServlet extends HttpServlet
      * Process GET request.
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         // Process request with content.
         processRequest(request, response, true);
@@ -114,11 +114,10 @@ public class DownloadServlet extends HttpServlet
 
         // extract the file id from the request string
         String requestString = request.getRequestURI();
+        // remove urlPattern from requestString
+        requestString = requestString.substring(requestString.indexOf(urlPattern) + urlPattern.length());
 
-        int index = requestString.indexOf(urlPattern);
-        requestString = requestString.substring(index + urlPattern.length());
-        index = requestString.indexOf('/');
-        String requestFileId = requestString.substring(0, index);
+        String requestFileId = requestString.substring(0, requestString.indexOf('/'));
         //String requestFileName = requestString.substring(index + 1);
 
         int fileId = NumberUtils.toInt(requestFileId);
@@ -129,7 +128,7 @@ public class DownloadServlet extends HttpServlet
 
             // only log the error if the referrer is uni-hannover.de. Otherwise we have no chance to fix the link
             Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
-            log.log(logLevel, "Invalid download URL: " + requestString + "; " + BeanHelper.getRequestSummary(request));
+            log.log(logLevel, "Invalid download URL: {}; {}", requestString, BeanHelper.getRequestSummary(request));
 
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -145,7 +144,7 @@ public class DownloadServlet extends HttpServlet
             File file = fileManager.getFileById(fileId);
             if(null == file) // TODO Oleh: compare file name (right now do not work with thumbnails) !file.getName().equals(requestFileName)
             {
-                log.warn("Requested file " + fileId + " does not exist or was deleted");
+                log.warn("Requested file {} does not exist or was deleted", fileId);
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
@@ -184,6 +183,7 @@ public class DownloadServlet extends HttpServlet
             {
                 log.error("Illegal If-Modified-Since header: " + e.getMessage() + "; " + BeanHelper.getRequestSummary(request));
             }
+
             if(ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified)
             {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -408,23 +408,13 @@ public class DownloadServlet extends HttpServlet
                 }
             }
         }
-        catch(IOException e)
+        catch(ClientAbortException e)
         {
-            // to avoid dependence of Tomcat we don't import org.apache.catalina.connector.ClientAbortException
-            if(e.getClass().getSimpleName().equals("ClientAbortException"))
-            {
-                // we do not care
-                //log.debug("Download interrupted. File: " + fileId);
-            }
-            else
-            {
-                log.error("Error while downloading file: " + fileId, e);
-                response.setStatus(500);
-            }
+            // we do not care
         }
         catch(Exception e)
         {
-            log.error("Error while downloading file: " + fileId, e);
+            log.error("Error while downloading file {}", fileId, e);
             response.setStatus(500);
         }
         finally
@@ -526,7 +516,7 @@ public class DownloadServlet extends HttpServlet
     /**
      * This class represents a byte range.
      */
-    protected class Range
+    protected static class Range
     {
         long start;
         long end;
