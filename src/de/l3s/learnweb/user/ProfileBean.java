@@ -2,8 +2,10 @@ package de.l3s.learnweb.user;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -366,6 +368,10 @@ public class ProfileBean extends ApplicationBean implements Serializable
         getLearnweb().getGroupManager().updateNotificationFrequency(group.getGroup().getId(), selectedUser.getId(), group.getNotificationFrequency());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+    }
+
+    public List<String> getTimeZonesIds(){
+        return Arrays.asList(TimeZone.getAvailableIDs());
     }
 
     public User.NotificationFrequency[] getNotificationFrequencies()

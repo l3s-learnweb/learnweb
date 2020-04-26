@@ -117,6 +117,14 @@
                                 <p:message for="@previous"/>
                             </div>
 
+                            <div class="form-group">
+                                <p:outputLabel for="@next" value="#{msg.time_zone}:"/>
+                                <p:selectOneMenu converter="timeZoneConverter" value="#{profileBean.selectedUser.timeZone}">
+                                    <f:selectItems value="#{profileBean.timeZonesIds}"/>
+                                </p:selectOneMenu>
+                                <p:message for="@previous"/>
+                            </div>
+
                             <h:panelGroup layout="block" styleClass="form-group" rendered="false">
                                 <p:outputLabel for="@next" value="#{msg.dateofbirth}:"/>
                                 <p:calendar id="userdateofbirth" value="#{profileBean.selectedUser.dateOfBirth}" navigator="true" locale="de"

@@ -3,9 +3,13 @@ package de.l3s.learnweb.user;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
@@ -52,12 +56,18 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     private boolean mailRequired = false;
     private boolean affiliationRequired = false;
     private boolean studentIdRequired = false;
+    private String timeZone;
+    private Locale locale;
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
     public String onLoad() throws IOException, SQLException
     {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
+        locale = viewRoot != null ? viewRoot.getLocale() : externalContext.getRequestLocale();
+
         if(StringUtils.isNotEmpty(wizard))
         {
             course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
@@ -126,6 +136,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         {
             user.setStudentId(studentId);
             user.setAffiliation(affiliation);
+            user.setTimeZone(TimeZone.getTimeZone(timeZone.isEmpty() ? "Europa/Berlin" : timeZone));
+            user.setLocale(locale);
             user.save();
         }
 
@@ -287,6 +299,16 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     public Course getCourse()
     {
         return course;
+    }
+
+    public String getTimeZone()
+    {
+        return timeZone;
+    }
+
+    public void setTimeZone(final String preferredTimeZone)
+    {
+        this.timeZone = preferredTimeZone;
     }
 
 }

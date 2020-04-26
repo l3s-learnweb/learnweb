@@ -173,6 +173,7 @@ public class UserBean implements Serializable
         // persist user preferences in database
         if(null != user)
         {
+            user.setLocale(locale);
             user.onDestroy();
         }
     }
@@ -226,8 +227,15 @@ public class UserBean implements Serializable
      */
     private void refreshLocale()
     {
-        String localeCode = getActiveOrganisation().getDefaultLanguage() != null ? activeOrganisation.getDefaultLanguage() : locale.getLanguage();
-        setLocaleCode(localeCode);
+        if(isLoggedIn() && getUser().getLocale() != null)
+        {
+            setLocaleCode(getUser().getLocale().getLanguage());
+        }
+        else
+        {
+            String localeCode = getActiveOrganisation().getDefaultLanguage() != null ? activeOrganisation.getDefaultLanguage() : locale.getLanguage();
+            setLocaleCode(localeCode);
+        }
     }
 
     public String setLocaleCode(String localeCode)

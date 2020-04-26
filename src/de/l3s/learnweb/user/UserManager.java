@@ -47,7 +47,7 @@ public class UserManager
      */
     private static final String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, " +
             "image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, " +
-            "is_moderator, registration_date, password, hashing, preferences, credits, fullname, affiliation, accept_terms_and_conditions, deleted, preferred_notification_frequency";
+            "is_moderator, registration_date, password, hashing, preferences, credits, fullname, affiliation, accept_terms_and_conditions, deleted, preferred_notification_frequency, time_zone, language";
 
     // if you change this, you have to change createUser() too
 
@@ -382,7 +382,7 @@ public class UserManager
         Objects.requireNonNull(user.getRealUsername());
         Objects.requireNonNull(user.getRegistrationDate());
 
-        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
         {
             if(user.getId() < 0) // the User is not yet stored at the database
                 replace.setNull(1, java.sql.Types.INTEGER);
@@ -415,6 +415,8 @@ public class UserManager
             replace.setBoolean(24, user.isAcceptTermsAndConditions());
             replace.setBoolean(25, user.isDeleted());
             replace.setString(26, user.getPreferredNotificationFrequency().toString());
+            replace.setString(27, user.getTimeZone().getID());
+            replace.setString(28, user.getLocale().toString());
             replace.executeUpdate();
 
             if(user.getId() < 0) // get the assigned id
@@ -468,8 +470,8 @@ public class UserManager
         user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
         user.setPreferredNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("preferred_notification_frequency")));
 
-        user.setTimeZone(TimeZone.getTimeZone("Europe/Berlin")); // TODO issue #85
-        user.setLocale(Locale.forLanguageTag("en-US")); // TODO issue #85
+        user.setTimeZone(TimeZone.getTimeZone(rs.getString("time_zone")));
+        user.setLocale(Locale.forLanguageTag(rs.getString("language").replace("_", "-")));
 
         user.setAdmin(rs.getInt("is_admin") == 1);
         user.setModerator(rs.getInt("is_moderator") == 1);

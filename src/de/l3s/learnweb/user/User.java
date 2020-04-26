@@ -121,7 +121,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private boolean moderator;
 
     private HashMap<String, String> preferences;
-    private TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
+    private TimeZone timeZone;
 
     // caches
     private transient List<Course> courses;

@@ -2,7 +2,8 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+				xmlns:o="http://omnifaces.org/ui">
 
 <ui:param name="pageTitle" value="#{msg.registerLabel}"/>
 <ui:param name="extraPageClass" value="container"/>
@@ -15,6 +16,7 @@
 		<f:viewParam name="wizard" value="#{registrationBean.wizard}"/>
 		<f:viewParam name="fastLogin" value="#{registrationBean.fastLogin}"/>
 		<f:viewAction action="#{registrationBean.onLoad}"/>
+		<o:scriptParam script="Intl.DateTimeFormat().resolvedOptions().timeZone" value="#{registrationBean.timeZone}"/>
 	</f:metadata>
 </ui:define>
 
@@ -27,7 +29,7 @@
 				<p>You have to <h:commandLink action="#{loginBean.logout}">logout</h:commandLink> before you can create a new account.</p>
 			</h:form>
 
-			<h:form id="registerform" rendered="#{not userBean.loggedIn}">
+			<h:form id="registerForm" rendered="#{not userBean.loggedIn}">
 				<div class="form-group mw-r25">
 					<p:outputLabel for="@next" value="#{msg.username}:"/>
 					<p:inputText value="#{registrationBean.username}" label="#{msg.username}" required="true" />
