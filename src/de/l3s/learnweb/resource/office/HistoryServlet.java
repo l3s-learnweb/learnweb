@@ -21,7 +21,6 @@ import de.l3s.learnweb.resource.office.history.model.HistoryInfo;
 
 public class HistoryServlet extends HttpServlet
 {
-
     private static final long serialVersionUID = -1782046122568142569L;
 
     private static final Logger logger = LogManager.getLogger(HistoryServlet.class);
@@ -31,6 +30,7 @@ public class HistoryServlet extends HttpServlet
     {
         String resourceId = request.getParameter("resourceId");
         String json = getRefreshHistoryString(Integer.parseInt(resourceId));
+        response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
@@ -44,20 +44,18 @@ public class HistoryServlet extends HttpServlet
         Gson gson = new Gson();
         HistoryInfo info = gson.fromJson(body, HistoryInfo.class);
         HistoryData data = new HistoryData();
-        if(version != null)
+        for(History history : info.getHistory())
         {
-            for(History history : info.getHistory())
+            if(version.equals(history.getVersion()))
             {
-                if(version.equals(history.getVersion()))
-                {
-                    data = getHistoryDataForHistory(history);
-                    break;
-                }
+                data = getHistoryDataForHistory(history);
+                break;
             }
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(gson.toJson(data));
         }
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(gson.toJson(data));
     }
 
     private HistoryData getHistoryDataForHistory(History history)
@@ -68,12 +66,12 @@ public class HistoryServlet extends HttpServlet
         }
         catch(SQLException e)
         {
-            logger.error("HistoryData cannot be loaded for historyId = " + history.getId());
+            logger.error("HistoryData cannot be loaded for history {}", history.getId());
+            return null;
         }
-        return null;
     }
 
-    public String getRefreshHistoryString(Integer resourceId)
+    private String getRefreshHistoryString(Integer resourceId)
     {
         try
         {
@@ -83,9 +81,9 @@ public class HistoryServlet extends HttpServlet
         }
         catch(SQLException e)
         {
-            logger.error("History cannot be loaded for resourceId = " + resourceId);
+            logger.error("History cannot be loaded for resource {}", resourceId);
+            return null;
         }
-        return null;
     }
 
 }

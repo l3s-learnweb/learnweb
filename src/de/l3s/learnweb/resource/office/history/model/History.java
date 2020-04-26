@@ -10,23 +10,14 @@ import de.l3s.learnweb.resource.office.HistoryManager;
 public class History
 {
     private List<Change> changes;
-
     private Integer id;
-
     private Integer resourceId;
-
     private Integer previousVersionFileId;
-
     private String created;
-
     private String key;
-
     private String serverVersion;
-
     private OfficeUser user;
-
     private Integer version;
-
     private Integer changesFileId;
 
     public Integer getId()

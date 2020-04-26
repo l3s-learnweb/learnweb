@@ -5,11 +5,8 @@
 # On Windows the path should looks like the following L:\\learnweb\uploaded_files
 FILE_MANAGER_FOLDER=/mnt/learnweb/uploaded_files
 
-# for interweb we run a public proxy:
-INTERWEBJ_API_URL=http://hermes.kbs.uni-hannover.de/interweb/api/
-
 # If you work from the University or using LUIS VPN this settings should be enough
-#INTERWEBJ_API_URL=http://hermes.kbs.uni-hannover.de/interweb/api/
+INTERWEBJ_API_URL=http://hermes.kbs.uni-hannover.de/interweb/api/
 SOLR_SERVER_URL=http://***REMOVED***/solr/learnweb
 mysql_url=jdbc:mysql://***REMOVED***/learnweb_main
 
@@ -26,3 +23,7 @@ mysql_url=jdbc:mysql://***REMOVED***/learnweb_main
 # If you need to work with videos, install FFmpeg on your system and update these paths
 #FFMPEG_PATH=/usr/bin/ffmpeg
 #FFPROBE_PATH=/usr/bin/ffprobe
+
+# The document server requires "real" url to request resources via callback
+# you can't use 'localhost' for that, but you can use this property to forward this requests to real Learnweb server
+DOCUMENT_SERVER_URL=https://learnweb.l3s.uni-hannover.de

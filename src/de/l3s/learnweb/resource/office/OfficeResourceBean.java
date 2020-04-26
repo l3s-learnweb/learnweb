@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
@@ -31,10 +32,17 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable
     private String key;
 
     private String onlyOfficeClientUrl;
+    private String documentServerUrl;
 
     @PostConstruct
     public void init()
     {
+        onlyOfficeClientUrl = getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT");
+        documentServerUrl = getLearnweb().getProperties().getProperty("DOCUMENT_SERVER_URL");
+
+        if (StringUtils.isBlank(documentServerUrl) || "auto".equalsIgnoreCase(documentServerUrl))
+            documentServerUrl = getLearnweb().getServerUrl();
+
         Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
         fillInFileInfo(resource);
     }
@@ -80,21 +88,17 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable
 
     public String getOnlyOfficeClientUrl()
     {
-        if(null == onlyOfficeClientUrl)
-        {
-            onlyOfficeClientUrl = getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT");
-        }
         return onlyOfficeClientUrl;
     }
 
     public String getCallbackUrl()
     {
         final String fileId = mainFile != null ? Integer.toString(mainFile.getId()) : "";
-        return getLearnweb().getServerUrl() + "/save?fileId=" + fileId;
+        return documentServerUrl + "/save?fileId=" + fileId;
     }
 
     public String getHistoryUrl()
     {
-        return getLearnweb().getServerUrl() + "/history";
+        return documentServerUrl + "/history";
     }
 }

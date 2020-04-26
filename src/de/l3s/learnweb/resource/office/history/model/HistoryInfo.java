@@ -5,7 +5,6 @@ import java.util.List;
 public class HistoryInfo
 {
     private int currentVersion;
-
     private List<History> history;
 
     public List<History> getHistory()
