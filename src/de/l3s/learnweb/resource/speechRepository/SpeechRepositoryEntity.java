@@ -18,6 +18,7 @@ public class SpeechRepositoryEntity
     private String type;
     private String domains;
     private String terminology;
+    private int learnwebResourceId;
 
     public int getId()
     {
@@ -119,9 +120,14 @@ public class SpeechRepositoryEntity
         return duration;
     }
 
-    public void setDuration(String durationstr)
+    public void setDuration(Integer duration)
     {
-        String[] tokens = durationstr.split(":");
+        this.duration = duration;
+    }
+
+    public void setDuration(String durationStr)
+    {
+        String[] tokens = durationStr.split(":");
         int duration = 0, multiply = 0;
         for(int i = tokens.length - 1; i >= 0; --i)
         {
@@ -189,5 +195,15 @@ public class SpeechRepositoryEntity
     public void setTerminology(String terminology)
     {
         this.terminology = terminology;
+    }
+
+    public int getLearnwebResourceId()
+    {
+        return learnwebResourceId;
+    }
+
+    public void setLearnwebResourceId(int learnwebResourceId)
+    {
+        this.learnwebResourceId = learnwebResourceId;
     }
 }

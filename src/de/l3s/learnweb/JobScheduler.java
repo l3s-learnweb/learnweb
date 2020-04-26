@@ -1,7 +1,7 @@
 package de.l3s.learnweb;
 
 import de.l3s.learnweb.forum.ForumNotificator;
-import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryCrawlerSimple;
+import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryCrawler;
 import de.l3s.learnweb.resource.ted.TedCrawlerSimple;
 import de.l3s.learnweb.user.loginProtection.ExpiredBansCleaner;
 import de.l3s.learnweb.web.RequestsTaskHandler;
@@ -29,7 +29,7 @@ public class JobScheduler
         //Runs the TED crawler at 23:00 once a month to check for new/update TED videos
         scheduler.schedule("0 23 1 * *", new TedCrawlerSimple());
         //Runs the speech repository crawler at 22:00 once a month to check for new/update of videos
-        scheduler.schedule("0 22 2 * *", new SpeechRepositoryCrawlerSimple());
+        scheduler.schedule("0 22 2 * *", new SpeechRepositoryCrawler());
 
         //Checks bounced mail every 5 minutes
         scheduler.schedule("0/5 * * * *", new BounceFetcher());
