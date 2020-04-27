@@ -8,7 +8,7 @@
 <ui:param name="pageTitle" value="#{msg.notifications}"/>
 
 <f:metadata>
-	<f:viewAction action="#{messageBean.setAllMessagesSeen}" />
+	<f:viewAction action="#{messageBean.onLoad}" if="#{userBean.user ne null}"/>
 </f:metadata>
 
 <ui:define name="breadcrumb">
