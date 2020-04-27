@@ -193,9 +193,6 @@
 
     <p:panel header="#{msg['Glossary.edit_glossary']}" id="glossaryForm" style="display: none;">
         <h:form id="glossary_add" prependId="false">
-            <p:growl id="glossgrowl" redisplay="true" globalOnly="true" showDetail="true">
-                <p:autoUpdate/>
-            </p:growl>
             <div class="text-center">
                 <p:panelGrid id="grid" styleClass="my-0 mx-auto" columns="3">
                     <p:outputLabel for="topic_1" styleClass="font-weight-bold" value="#{msg['Glossary.topic']} 1 "/>
@@ -295,7 +292,7 @@
                                      pt:onpaste="setPasteStatus(this, 'phraseology');"/>
                 </p:column>
                 <p:column width="20" rendered="#{not term.deleted}">
-                    <p:commandLink id="delete_term" actionListener="#{glossaryBean.deleteTerm(term)}" update=":glossgrowl :lang_terms :growl"
+                    <p:commandLink id="delete_term" actionListener="#{glossaryBean.deleteTerm(term)}" update=":lang_terms :growl"
                                    title="#{msg.delete}">
                         <f:ajax execute="@this lang_terms"/>
                         <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
