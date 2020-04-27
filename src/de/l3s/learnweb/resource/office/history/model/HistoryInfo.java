@@ -2,6 +2,9 @@ package de.l3s.learnweb.resource.office.history.model;
 
 import java.util.List;
 
+/**
+ * Object used to send data to `docEditor.refreshHistory` method
+ */
 public class HistoryInfo
 {
     private int currentVersion;
@@ -12,9 +15,14 @@ public class HistoryInfo
         return history;
     }
 
-    public void setHistory(List<History> history)
+    public void setHistory(final List<History> history)
     {
         this.history = history;
+
+        if (history != null && !history.isEmpty())
+        {
+            this.currentVersion = history.get(history.size() -1).getVersion();
+        }
     }
 
     public int getCurrentVersion()
@@ -22,7 +30,7 @@ public class HistoryInfo
         return currentVersion;
     }
 
-    public void setCurrentVersion(int currentVersion)
+    public void setCurrentVersion(final int currentVersion)
     {
         this.currentVersion = currentVersion;
     }

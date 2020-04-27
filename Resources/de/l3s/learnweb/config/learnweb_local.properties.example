@@ -23,7 +23,3 @@ mysql_url=jdbc:mysql://***REMOVED***/learnweb_main
 # If you need to work with videos, install FFmpeg on your system and update these paths
 #FFMPEG_PATH=/usr/bin/ffmpeg
 #FFPROBE_PATH=/usr/bin/ffprobe
-
-# The document server requires "real" url to request resources via callback
-# you can't use 'localhost' for that, but you can use this property to forward this requests to real Learnweb server
-DOCUMENT_SERVER_URL=https://learnweb.l3s.uni-hannover.de

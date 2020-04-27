@@ -26,22 +26,20 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable
     private static final Logger log = LogManager.getLogger(OfficeResourceBean.class);
 
     private File mainFile;
-    private String filesExtension;
-    private String fileType;
-    private String fullFilesUrl;
-    private String key;
 
-    private String onlyOfficeClientUrl;
+    private String documentType;
+    private String documentFileType;
+    private String documentUrl;
+    private String documentKey;
+
+    private String officeServerUrl;
     private String documentServerUrl;
 
     @PostConstruct
     public void init()
     {
-        onlyOfficeClientUrl = getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT");
-        documentServerUrl = getLearnweb().getProperties().getProperty("DOCUMENT_SERVER_URL");
-
-        if (StringUtils.isBlank(documentServerUrl) || "auto".equalsIgnoreCase(documentServerUrl))
-            documentServerUrl = getLearnweb().getServerUrl();
+        officeServerUrl = getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT");
+        documentServerUrl = getLearnweb().getServerUrl();
 
         Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
         fillInFileInfo(resource);
@@ -49,15 +47,16 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable
 
     private void fillInFileInfo(Resource resource)
     {
-        filesExtension = FileUtility.getFileExtension(resource.getFileName());
+        documentFileType = FileUtility.getFileExtension(resource.getFileName());
 
-        if(FileUtility.canBeViewed(filesExtension))
+        if(FileUtility.canBeViewed(documentFileType))
         {
             mainFile = resource.getFile(TYPE.FILE_MAIN);
-            fullFilesUrl = resource.getFileUrl();
-            fileType = FileUtility.getFileType(resource.getFileName());
-            filesExtension = FileUtility.getFileExtension(resource.getFileName());
-            if(mainFile != null) key = FileUtility.generateRevisionId(mainFile);
+            documentUrl = resource.getFileUrl();
+            documentType = FileUtility.getFileType(resource.getFileName());
+            documentFileType = FileUtility.getFileExtension(resource.getFileName());
+            if(mainFile != null)
+                documentKey = FileUtility.generateRevisionId(mainFile);
         }
         else
         {
@@ -66,35 +65,34 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    public String getFilesExtension()
+    public String getDocumentFileType()
     {
-        return filesExtension;
+        return documentFileType;
     }
 
-    public String getFileType()
+    public String getDocumentType()
     {
-        return fileType;
+        return documentType;
     }
 
-    public String getFullFilesUrl()
+    public String getDocumentUrl()
     {
-        return fullFilesUrl;
+        return documentUrl;
     }
 
-    public String getKey()
+    public String getDocumentKey()
     {
-        return key;
+        return documentKey;
     }
 
-    public String getOnlyOfficeClientUrl()
+    public String getOfficeServerUrl()
     {
-        return onlyOfficeClientUrl;
+        return officeServerUrl;
     }
 
     public String getCallbackUrl()
     {
-        final String fileId = mainFile != null ? Integer.toString(mainFile.getId()) : "";
-        return documentServerUrl + "/save?fileId=" + fileId;
+        return documentServerUrl + "/save?fileId=" + (mainFile != null ? mainFile.getId() : "");
     }
 
     public String getHistoryUrl()

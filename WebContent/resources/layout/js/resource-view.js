@@ -45,7 +45,7 @@ const editorFrames = [];
 
 function loadPreviewEditor() {
   if (document.getElementById('iframe_editor')) {
-    loadEditorScript(editorConfigValues.clientUrl);
+    loadEditorScript(editorConfigValues.officeServerUrl);
     editorFrames.push(['iframe_editor', 'desktop', editorConfigValues]);
   }
 }
@@ -60,9 +60,9 @@ function loadScript(scriptUrl, callback) {
   t.parentNode.insertBefore(s, t);
 }
 
-function loadEditorScript(clientUrl) {
+function loadEditorScript(officeServerUrl) {
   if (!editorFrames.loaded) {
-    loadScript(`${clientUrl}/apps/api/documents/api.js`, () => {
+    loadScript(`${officeServerUrl}/apps/api/documents/api.js`, () => {
       editorFrames.loaded = true;
 
       editorFrames.push = (args) => {
@@ -77,7 +77,6 @@ function loadEditorScript(clientUrl) {
 }
 
 function attachEditor(elementId, editorType, configValues) {
-  let historyInfo = {};
   const docEditor = new DocsAPI.DocEditor(elementId, {
     width: '100%',
     height: '100%',
@@ -127,18 +126,16 @@ function attachEditor(elementId, editorType, configValues) {
       onRequestHistoryData(event) {
         // noinspection JSIgnoredPromiseFromCall
         $.post(
-          `${configValues.historyUrl}?version=${event.data}&resourceId=${configValues.document.resourceId}`,
-          JSON.stringify(historyInfo),
-          (json) => docEditor.setHistoryData(json),
-          'json'
+          `${configValues.historyUrl}?resourceId=${configValues.document.resourceId}&version=${event.data}`,
+          (json) => docEditor.setHistoryData(json)
         );
       },
       onRequestHistory() {
         // noinspection JSIgnoredPromiseFromCall
-        $.get(`${configValues.historyUrl}?resourceId=${configValues.document.resourceId}`, (json) => {
-          historyInfo = json;
-          docEditor.refreshHistory(json);
-        });
+        $.get(
+          `${configValues.historyUrl}?resourceId=${configValues.document.resourceId}`,
+          (json) => docEditor.refreshHistory(json)
+        );
       },
       onRequestHistoryClose() {
         document.location.reload();

@@ -223,8 +223,7 @@
         </dependency>
 
         <!-- ################ Other dependencies (usually your dependencies go to this section) ################ -->
-        <!-- Converts Java Objects into JSON and back -->
-        <!-- TODO: should be replaced by org.json -->
+        <!-- Converts Java Objects into JSON and back, it has more abilities compared to org.json -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -236,7 +235,7 @@
             <artifactId>jsoup</artifactId>
             <version>1.13.1</version>
         </dependency>
-        <!-- Converts Java Objects into JSON and back -->
+        <!-- JSON reader and parser, consider using gson instead as it is more powerful -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -295,7 +294,7 @@
             <version>1.19.4</version>
         </dependency>
 
-        <!-- ################ Local dependencies (TODO: get rid of them!) ################ -->
+        <!-- ################ Local dependencies ################ -->
         <!-- Added by Trevor, TEDWordnet, used in TedTranscriptBean -->
         <dependency>
             <groupId>rita</groupId>

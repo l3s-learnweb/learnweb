@@ -533,7 +533,7 @@ public class UserManager
             log.info("Delete user ");
         }
 
-        String[] tables = { "lw_group_user", "lw_user_log", "lw_user_course", "lw_comment", "lw_resource_rating", "lw_resource_tag", "lw_thumb", "lw_survey_answer", "lw_survey_resource_user", "lw_glossary_entry", "lw_glossary_term", "lw_history_change",
+        String[] tables = { "lw_group_user", "lw_user_log", "lw_user_course", "lw_comment", "lw_resource_rating", "lw_resource_tag", "lw_thumb", "lw_survey_answer", "lw_survey_resource_user", "lw_glossary_entry", "lw_glossary_term",
                 "lw_news", "lw_resource_history", "lw_submit_resource", "lw_submit_status", "lw_transcript_actions", "lw_transcript_summary" };
 
         for(String table : tables)
