@@ -37,43 +37,33 @@ var onRequestHistoryClose = function() {
     document.location.reload();
 };
 
-var history_info = {};  
-
-
 var onRequestHistoryData = function(event) {
-	// TODO use real url
-	var url = "/Learnweb-Tomcat/history";
-    $.post(url+"?version=" + event.data+"&resourceId=" + $('#ed_resource_id').val(),JSON.stringify(history_info), function(json) {   
+    $.post($('#ed_history_url').val() + "&version=" + event.data,function(json) {   
     	docEditor.setHistoryData(json);    
-    }, "json"); 
-   
+    }, "json");
 };
 
-
-
 var onRequestHistory = function() {
-	var url = "/Learnweb-Tomcat/history?resourceId=" + $('#ed_resource_id').val()
-        $.get(url, function(json) {  
-        	history_info = json;
-        	docEditor.refreshHistory(json);
-        });   
-    };
+	$.get($('#ed_history_url').val(), function(json) {  
+		docEditor.refreshHistory(json);
+	});   
+};
 
-    /*
-    jQuery.loadScript = function (url, callback) {
-        jQuery.ajax({
-            url: url,
-            dataType: 'script',
-            success: callback,
-            async: true
-        });
-    }
+/*
+jQuery.loadScript = function (url, callback) {
+	jQuery.ajax({
+		url: url,
+		dataType: 'script',
+		success: callback,
+		async: true
+	});
+}
 
-    if (typeof someObject == 'undefined') $.loadScript('https://haydn.kbs.uni-hannover.de/web-apps/apps/api/documents/api.js', function(){
-        //Stuff to do after someScript has loaded
-    });
-    
+if (typeof someObject == 'undefined') $.loadScript('https://haydn.kbs.uni-hannover.de/web-apps/apps/api/documents/api.js', function(){
+	//Stuff to do after someScript has loaded
+});
 */
+
 var connectEditor = function(id_div, type) {
 	var mode = type=="edit"?"edit":"view"; 
 	var canBeEdited = type=="edit"?true:false; 

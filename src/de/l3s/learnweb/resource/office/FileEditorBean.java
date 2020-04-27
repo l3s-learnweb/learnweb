@@ -60,7 +60,12 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     public String getCallbackUrl()
     {
-        return getLearnweb().getSecureServerUrl() + "/save" + "?fileId=" + getMainFileId();
+        return getLearnweb().getSecureServerUrl() + "/save?fileId=" + getMainFileId();
+    }
+
+    public String getHistoryUrl()
+    {
+        return getLearnweb().getSecureServerUrl() + "/history?resourceId=" + resource.getId();
     }
 
     private String getMainFileId()

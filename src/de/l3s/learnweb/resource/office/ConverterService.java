@@ -4,12 +4,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.SSLContext;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
@@ -24,12 +32,12 @@ import de.l3s.learnweb.resource.office.converter.model.OfficeThumbnailParams;
 public class ConverterService
 {
 
-    private final static Logger log = Logger.getLogger(ConverterService.class);
+    private static final Logger log = Logger.getLogger(ConverterService.class);
     private final Learnweb learnweb;
 
     public ConverterRequest createThumbnailConverterRequest(File file)
     {
-        String fileExt = file.getName().substring(file.getName().lastIndexOf("."));
+        String fileExt = file.getName().substring(file.getName().lastIndexOf('.'));
         String key = FileUtility.generateRevisionId(file);
         return new ConverterRequest(fileExt, "png", file.getName(), file.getUrl(), key, new OfficeThumbnailParams());
     }
@@ -42,9 +50,10 @@ public class ConverterService
     private ConverterResponse sendRequestToConvertServer(ConverterRequest model)
     {
         Gson gson = new Gson();
-        String stringResponse = null;
+        String stringResponse;
         ConverterResponse converterResponse = new ConverterResponse();
-        try(CloseableHttpClient client = HttpClients.createDefault())
+
+        try(CloseableHttpClient client = createUnsafeSSLClient()) //HttpClients.createDefault())
         {
             HttpPost httpPost = new HttpPost(learnweb.getProperties().getProperty("FILES.DOCSERVICE.URL.CONVERTER"));
             String json = gson.toJson(model);
@@ -105,7 +114,7 @@ public class ConverterService
         if(response.getPercent() == 0)
             throw new ConverterException("Percent is null");
 
-        if(response.getFileUrl() == null || response.getFileUrl().length() == 0)
+        if(response.getFileUrl() == null || response.getFileUrl().isEmpty())
             throw new ConverterException("FileUrl is null");
 
         return response.getFileUrl();
@@ -159,5 +168,29 @@ public class ConverterService
         }
 
         private static final long serialVersionUID = 8151643724813680762L;
+    }
+
+    /**
+     * Creates an HTTP client that ignores most SSL problems
+     * 
+     * @return
+     */
+    private static CloseableHttpClient createUnsafeSSLClient()
+    {
+        org.apache.http.ssl.SSLContextBuilder sslContextBuilder = SSLContextBuilder.create();
+        try
+        {
+            sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
+
+            SSLContext sslContext = sslContextBuilder.build();
+            org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, new org.apache.http.conn.ssl.DefaultHostnameVerifier());
+
+            HttpClientBuilder httpClientBuilder = HttpClients.custom().setSSLSocketFactory(sslSocketFactory);
+            return httpClientBuilder.build();
+        }
+        catch(KeyManagementException | NoSuchAlgorithmException | KeyStoreException e1)
+        {
+            throw new RuntimeException(e1);
+        }
     }
 }

@@ -1,45 +1,24 @@
 package de.l3s.learnweb.resource.office.history.model;
 
+/**
+ * Object used to send data to `docEditor.setHistoryData` method
+ */
 public class HistoryData
 {
-    private String changesUrl;
-
     private String key;
-
-    private FileData previous;
-
-    private String url; // of current file 
-
+    private String url;
+    private String changesUrl;
+    private HistoryData previous;
     private int version;
-
-    public String getChangesUrl()
-    {
-        return changesUrl;
-    }
-
-    public void setChangesUrl(String changesUrl)
-    {
-        this.changesUrl = changesUrl;
-    }
 
     public String getKey()
     {
         return key;
     }
 
-    public void setKey(String key)
+    public void setKey(final String key)
     {
         this.key = key;
-    }
-
-    public FileData getPrevious()
-    {
-        return previous;
-    }
-
-    public void setPrevious(FileData previous)
-    {
-        this.previous = previous;
     }
 
     public String getUrl()
@@ -47,9 +26,29 @@ public class HistoryData
         return url;
     }
 
-    public void setUrl(String url)
+    public void setUrl(final String url)
     {
         this.url = url;
+    }
+
+    public String getChangesUrl()
+    {
+        return changesUrl;
+    }
+
+    public void setChangesUrl(final String changesUrl)
+    {
+        this.changesUrl = changesUrl;
+    }
+
+    public HistoryData getPrevious()
+    {
+        return previous;
+    }
+
+    public void setPrevious(final HistoryData previous)
+    {
+        this.previous = previous;
     }
 
     public int getVersion()
@@ -57,9 +56,8 @@ public class HistoryData
         return version;
     }
 
-    public void setVersion(int version)
+    public void setVersion(final int version)
     {
         this.version = version;
     }
-
 }

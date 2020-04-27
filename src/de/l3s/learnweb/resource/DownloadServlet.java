@@ -175,6 +175,8 @@ public class DownloadServlet extends HttpServlet
 
         try
         {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+
             // Check if file actually exists in filesystem.
             File file = fileManager.getFileById(fileId);
             if(null == file) // TODO Oleh: compare file name (right now do not work with thumbnails) !file.getName().equals(requestFileName)
@@ -359,6 +361,7 @@ public class DownloadServlet extends HttpServlet
             // Initialize response.
             response.reset();
             response.setBufferSize(BUFFER_SIZE);
+            response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Content-Disposition", disposition + ";filename=\"" + file.getName() + "\"");
             response.setHeader("Accept-Ranges", "bytes");
             response.setHeader("ETag", eTag);

@@ -2,20 +2,16 @@ package de.l3s.learnweb.resource.office;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Scanner;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
@@ -25,124 +21,113 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.office.history.model.Change;
 import de.l3s.learnweb.resource.office.history.model.History;
-import de.l3s.learnweb.resource.office.history.model.OfficeUser;
-import de.l3s.learnweb.resource.office.history.model.SavingInfo;
+import de.l3s.learnweb.resource.office.history.model.CallbackData;
 import de.l3s.learnweb.user.User;
 
 /**
- * Servlet Class
+ * SaverServlet Class
  *
- * @web.servlet name="saverServlet" display-name="Simple SaverServlet"
+ * @web.servlet name="saverServlet" display-name="SaverServlet"
  *              description="Servlet for saving edited documents"
  * @web.servlet-mapping url-pattern="/save"
  */
-
 public class SaverServlet extends HttpServlet
 {
     private static final long serialVersionUID = 7296371511069054378L;
-    private final static Logger log = Logger.getLogger(SaverServlet.class);
+    private static final Logger log = Logger.getLogger(SaverServlet.class);
 
     private static final String FILE_ID = "fileId";
     private static final String USER_ID = "userId";
 
     private static final String ERROR_0 = "{\"error\":0}";
-    private static final String DELIMITER = "\\A";
 
-    private static Learnweb learnweb;
-
+    /**
+     * Method called via callback to save edited resource
+     *
+     * Requires `fileId` and `userId` parameters.
+     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException
-    {
-        HttpSession session = request.getSession(true);
-        try(PrintWriter writer = response.getWriter())
-        {
-            int fileId = Integer.parseInt(request.getParameter(FILE_ID));
-            int userId = Integer.parseInt(request.getParameter(USER_ID));
-            try(Scanner scanner = new Scanner(request.getInputStream()))
-            {
-                scanner.useDelimiter(DELIMITER);
-                String body = scanner.hasNext() ? scanner.next() : StringUtils.EMPTY;
-                Gson gson = new Gson();
-                SavingInfo savingInfo = gson.fromJson(body, SavingInfo.class);
-                parseResponse(savingInfo, fileId, userId, session.getId());
-            }
-            writer.write(ERROR_0);
-        }
-        catch(IOException e)
-        {
-            log.error(e);
-        }
-    }
-
-    private void parseResponse(SavingInfo info, int fileId, int userId, String sessionId)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
         try
         {
-            log.info("Document " + fileId + " status : " + info.getStatus());
-            if(info.getStatus() == DocumentStatus.READY_FOR_SAVING.getStatus())
-            {
-                learnweb = Learnweb.getInstance();
-                File file = learnweb.getFileManager().getFileById(fileId);
-                File previousVersionFile = learnweb.getFileManager().copy(file);
-                file.setLastModified(new Date());
-                Resource resource = learnweb.getResourceManager().getResource(file.getResourceId());
-                URL url = new URL(info.getUrl());
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                InputStream inputStream = connection.getInputStream();
-                learnweb.getFileManager().save(previousVersionFile, file.getInputStream());
-                learnweb.getFileManager().save(file, inputStream);
-                resource.setUrl(file.getUrl());
-                learnweb.getResourcePreviewMaker().processResource(resource);
-                log.info("Started history saving for resourceId = " + file.getResourceId());
-                previousVersionFile.setType(TYPE.HISTORY_FILE);
-                log.info("History is saved resourceId = " + file.getResourceId());
-                createResourceHistory(info, previousVersionFile, file.getResourceId(), userId);
+            HttpSession session = request.getSession(true);
+            int fileId = Integer.parseInt(request.getParameter(FILE_ID));
+            int userId = Integer.parseInt(request.getParameter(USER_ID));
+            String body = IOUtils.toString(request.getReader());
 
-                User user = learnweb.getUserManager().getUser(userId);
-                learnweb.getLogManager().log(user, Action.changing_office_resource, resource.getGroupId(), resource.getId(), null, sessionId);
-            }
+            Gson gson = new Gson();
+            CallbackData callbackData = gson.fromJson(body, CallbackData.class);
+
+            log.debug("Document " + fileId + " status: " + callbackData.getStatus());
+            if(callbackData.getStatus() == 2) // READY_FOR_SAVING
+                saveEditedDocument(callbackData, fileId, userId, session.getId());
+
+            response.getWriter().write(ERROR_0);
         }
-        catch(NumberFormatException | SQLException | IOException e)
+        catch(NumberFormatException | IOException | SQLException e)
         {
-            log.error(e);
+            log.error("Error processing callback from OnlyOffice", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
-
     }
 
-    private void createResourceHistory(SavingInfo info, File previousVersion, int resourceId, int userId) throws IOException, SQLException
+    private void saveEditedDocument(CallbackData data, int fileId, int userId, String sessionId) throws SQLException, IOException
     {
-        History history = new History();
-        history.setResourceId(resourceId);
-        OfficeUser officeUser = new OfficeUser();
-        officeUser.setId(userId);
-        history.setUser(officeUser);
-        history.setCreated(info.getLastSave().replace('T', ' ').substring(0, info.getLastSave().indexOf('.')));
-        history.setPreviousVersionFileId(previousVersion.getId());
-        history.setServerVersion(info.getHistory().getServerVersion());
-        history.setKey(info.getKey());
+        Learnweb learnweb = Learnweb.getInstance();
+        User user = learnweb.getUserManager().getUser(userId);
+
+        // The idea of what is going here: we copy existing file, to a new file and than replace old file with new one
+        // I'm not sure why it is necessary, but I guess to have permanent link to latest file (also to avoid reindex resource)
+        File file = learnweb.getFileManager().getFileById(fileId);
+        File previousFile = learnweb.getFileManager().copy(file);
+
+        // save copy of existing file as a history file
+        previousFile.setType(TYPE.HISTORY_FILE);
+        learnweb.getFileManager().save(previousFile, file.getInputStream());
+
+        file.setLastModified(null); // the correct value will be set on save
+        learnweb.getFileManager().save(file, getInputStream(data.getUrl()));
+
+        try {
+            log.debug("Started history saving for resource " + file.getResourceId());
+            data.getHistory().setUser(userId);
+            data.getHistory().setFileId(file.getId());
+            data.getHistory().setPrevFileId(previousFile.getId());
+            saveDocumentHistory(learnweb, data, file);
+            log.debug("History saved for resource " + file.getResourceId());
+        }
+        catch(IOException | SQLException e)
+        {
+            log.error("Unable to store document history " + file.getResourceId(), e);
+        }
+
+        Resource resource = learnweb.getResourceManager().getResource(file.getResourceId());
+        learnweb.getResourcePreviewMaker().processResource(resource); // create new thumbnails for the resource
+        learnweb.getLogManager().log(user, Action.changing_office_resource, resource.getGroupId(), resource.getId(), null, sessionId);
+    }
+
+    private void saveDocumentHistory(Learnweb learnweb, CallbackData data, File file) throws IOException, SQLException
+    {
         File changesFile = new File();
+        changesFile.setResourceId(file.getResourceId());
         changesFile.setType(TYPE.CHANGES);
         changesFile.setName("changes.zip");
         changesFile.setMimeType("zip");
-        changesFile.setResourceId(resourceId);
-        URL url = new URL(info.getChangesUrl());
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        InputStream inputStream = connection.getInputStream();
-        learnweb.getFileManager().save(changesFile, inputStream);
+        learnweb.getFileManager().save(changesFile, getInputStream(data.getChangesUrl()));
+
+        History history = data.getHistory();
+        history.setResourceId(file.getResourceId());
         history.setChangesFileId(changesFile.getId());
+        history.setKey(FileUtility.generateRevisionId(file));
         learnweb.getHistoryManager().saveHistory(history);
-        for(Change change : info.getHistory().getChanges())
-        {
-            Change fileChange = new Change();
-            OfficeUser user = new OfficeUser();
-            user.setId(change.getUser().getId());
-            fileChange.setUser(user);
-            fileChange.setHistoryId(history.getId());
-            fileChange.setCreated(change.getCreated());
-            learnweb.getHistoryManager().saveChange(fileChange);
-            history.addChange(fileChange);
-        }
+    }
+
+    private InputStream getInputStream(String strUrl) throws IOException
+    {
+        URL url = new URL(strUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        return connection.getInputStream();
     }
 }

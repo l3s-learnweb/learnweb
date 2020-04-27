@@ -1,40 +1,32 @@
 package de.l3s.learnweb.resource.office.history.model;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.office.HistoryManager;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class History
 {
-    private List<Change> changes;
-
+    // only used to store and retrieve data from database
     private Integer id;
-
     private Integer resourceId;
-
-    private Integer previousVersionFileId;
-
-    private String created;
-
-    private String key;
-
-    private String serverVersion;
-
-    private OfficeUser user;
-
-    private Integer version;
-
+    private Integer fileId;
+    private Integer prevFileId;
     private Integer changesFileId;
+
+    // values received from OnlyOffice and should be send back by request
+    private JsonArray changes;
+    private String created;
+    private String key;
+    private Integer version;
+    private JsonObject user;
+    private String serverVersion;
 
     public Integer getId()
     {
         return id;
     }
 
-    public void setId(Integer id)
+    public void setId(final Integer id)
     {
         this.id = id;
     }
@@ -44,19 +36,29 @@ public class History
         return resourceId;
     }
 
-    public void setResourceId(Integer resourceId)
+    public void setResourceId(final Integer resourceId)
     {
         this.resourceId = resourceId;
     }
 
-    public Integer getPreviousVersionFileId()
+    public Integer getFileId()
     {
-        return previousVersionFileId;
+        return fileId;
     }
 
-    public void setPreviousVersionFileId(Integer previousVersionFileId)
+    public void setFileId(final Integer fileId)
     {
-        this.previousVersionFileId = previousVersionFileId;
+        this.fileId = fileId;
+    }
+
+    public Integer getPrevFileId()
+    {
+        return prevFileId;
+    }
+
+    public void setPrevFileId(final Integer prevFileId)
+    {
+        this.prevFileId = prevFileId;
     }
 
     public Integer getChangesFileId()
@@ -64,9 +66,24 @@ public class History
         return changesFileId;
     }
 
-    public void setChangesFileId(Integer changesFileId)
+    public void setChangesFileId(final Integer changesFileId)
     {
         this.changesFileId = changesFileId;
+    }
+
+    public JsonArray getChanges()
+    {
+        return changes;
+    }
+
+    public void setChanges(final JsonArray changes)
+    {
+        this.changes = changes;
+    }
+
+    public void setChanges(final String changes)
+    {
+        this.changes = JsonParser.parseString(changes).getAsJsonArray();
     }
 
     public String getCreated()
@@ -74,41 +91,9 @@ public class History
         return created;
     }
 
-    public void setCreated(String lastSaveDate)
+    public void setCreated(final String created)
     {
-        this.created = lastSaveDate;
-    }
-
-    public String getServerVersion()
-    {
-        return serverVersion;
-    }
-
-    public void setServerVersion(String serverVersion)
-    {
-        this.serverVersion = serverVersion;
-    }
-
-    public List<Change> getChanges()
-    {
-        return changes;
-    }
-
-    public void setChanges(List<Change> changes)
-    {
-        this.changes = changes;
-    }
-
-    public void addChange(Change fileChange) throws SQLException
-    {
-        if(changes == null)
-            changes = new ArrayList<>();
-        HistoryManager hm = Learnweb.getInstance().getHistoryManager();
-        if(id > 0)
-        {
-            hm.addChangeToHistory(this, fileChange);
-            changes.add(fileChange);
-        }
+        this.created = created;
     }
 
     public String getKey()
@@ -116,29 +101,51 @@ public class History
         return key;
     }
 
-    public void setKey(String key)
+    public void setKey(final String key)
     {
         this.key = key;
     }
 
-    public int getVersion()
+    public Integer getVersion()
     {
         return version;
     }
 
-    public void setVersion(int version)
+    public void setVersion(final Integer version)
     {
         this.version = version;
     }
 
-    public OfficeUser getUser()
+    public JsonObject getUser()
     {
         return user;
     }
 
-    public void setUser(OfficeUser user)
+    public void setUser(final JsonObject user)
     {
         this.user = user;
     }
 
+    public void setUser(final int userId)
+    {
+        this.user = new JsonObject();
+        this.user.addProperty("id", String.valueOf(userId));
+    }
+
+    public void setUser(final String userId, final String name)
+    {
+        this.user = new JsonObject();
+        this.user.addProperty("id", userId);
+        this.user.addProperty("name", name);
+    }
+
+    public String getServerVersion()
+    {
+        return serverVersion;
+    }
+
+    public void setServerVersion(final String serverVersion)
+    {
+        this.serverVersion = serverVersion;
+    }
 }
