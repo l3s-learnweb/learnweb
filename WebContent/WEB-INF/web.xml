@@ -84,6 +84,10 @@
         <param-value>false</param-value> <!-- Increase startup performance and EL resolution by disable deprecated features -->
     </context-param>
     <context-param>
+        <param-name>org.apache.myfaces.SUPPORT_JSP</param-name>
+        <param-value>false</param-value> <!-- Because Faces EL was completely removed from myfaces-2.3-next, the config property above was renamed -->
+    </context-param>
+    <context-param>
         <param-name>org.apache.myfaces.SUPPORT_MANAGED_BEANS</param-name>
         <param-value>false</param-value>
     </context-param>
