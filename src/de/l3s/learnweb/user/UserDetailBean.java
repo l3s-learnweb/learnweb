@@ -26,7 +26,7 @@ public class UserDetailBean extends ApplicationBean
     private boolean pageHidden = false; // true when the course uses username anonymization
     private List<LogEntry> latestLogEntries;
 
-    public void loadUser() throws SQLException
+    public void onLoad() throws SQLException
     {
         if(getUser() == null)
             return;

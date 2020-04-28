@@ -153,7 +153,7 @@ public class ResourcePreviewMaker
         {
             processOfficeDocument(resource);
         }
-        else if(resource.getType() == ResourceType.text || resource.getType() == ResourceType.audio)
+        else if(resource.getType() == ResourceType.text || resource.getType() == ResourceType.audio || resource.getType() == ResourceType.file)
         {
             // TODO add default icons
             // Oleh: I think we don't need to store default icon in database,
