@@ -417,6 +417,7 @@ public class UserBean implements Serializable
             // My resources
             Builder myResources = ActiveSubMenu.builder()
                     .label(msg.getString("myResourcesTitle"))
+                    .styleClass("guide-my-resources")
                     .url(su + "/lw/myhome/resources.jsf")
                     .addElement(DefaultMenuItem.builder().value(msg.getString("myPrivateResources")).icon("fa fa-fw fa-folder").url(su + "/lw/myhome/resources.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("myCommentsTitle")).icon("fa fa-fw fa-comments").url(su + "/lw/myhome/comments.jsf").build())
@@ -429,7 +430,7 @@ public class UserBean implements Serializable
             model.getElements().add(myResources.build());
 
             // My groups
-            ActiveSubMenu.Builder groupsBuilder = ActiveSubMenu.builder().label(msg.getString("myGroups")).url(su + "/lw/myhome/groups.jsf");
+            ActiveSubMenu.Builder groupsBuilder = ActiveSubMenu.builder().label(msg.getString("myGroups")).url(su + "/lw/myhome/groups.jsf").styleClass("guide-my-groups");
             for(Group group : getUser().getGroups())
             {
                 ActiveSubMenu.Builder groupBuilder = ActiveSubMenu.builder().label(group.getTitle()).url(su + "/lw/group/overview.jsf?group_id=" + group.getId()).styleClass("ui-menuitem-group");
