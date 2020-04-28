@@ -36,8 +36,7 @@ import de.l3s.learnweb.user.OrganisationManager;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.learnweb.web.RequestManager;
-import de.l3s.searchHistoryTest.SearchHistoryManager;
-import de.l3s.searchHistoryTest.SearchSessionEdgeComputator;
+import de.l3s.learnweb.searchhistory.SearchHistoryManager;
 import de.l3s.util.Misc;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.email.BounceManager;
@@ -77,7 +76,6 @@ public class Learnweb
     private final GlossaryManager glossaryManager; //new Glossary Manager
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
-    private final SearchSessionEdgeComputator searchSessionEdgeComputator;
     private final RequestManager requestManager;
     private final ProtectionManager protectionManager;
     private final BounceManager bounceManager;
@@ -246,7 +244,6 @@ public class Learnweb
 
         historyManager = new HistoryManager(this);
         searchHistoryManager = new SearchHistoryManager(this);
-        searchSessionEdgeComputator = SearchSessionEdgeComputator.getInstance(this);
 
         //Managers added by Kate
         requestManager = RequestManager.getInstance(this);
@@ -370,7 +367,6 @@ public class Learnweb
         jobScheduler.stopAllJobs();
         archiveUrlManager.onDestroy();
         waybackCapturesLogger.stop();
-        searchLogManager.stop();
 
         try
         {
@@ -501,11 +497,6 @@ public class Learnweb
     public SearchHistoryManager getSearchHistoryManager()
     {
         return searchHistoryManager;
-    }
-
-    public SearchSessionEdgeComputator getSearchSessionEdgeComputator()
-    {
-        return searchSessionEdgeComputator;
     }
 
     public ProtectionManager getProtectionManager()

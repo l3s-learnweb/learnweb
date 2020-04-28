@@ -10,7 +10,7 @@ import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
-import de.l3s.searchHistoryTest.SearchHistoryManager;
+import de.l3s.learnweb.searchhistory.SearchHistoryManager;
 
 /**
  * YourSearchHistoryBean is responsible for displaying user queries supplied to search field.

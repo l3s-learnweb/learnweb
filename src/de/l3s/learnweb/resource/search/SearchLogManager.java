@@ -1,20 +1,12 @@
 package de.l3s.learnweb.resource.search;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.LinkedBlockingQueue;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,12 +26,6 @@ public class SearchLogManager
     private static final String ACTION_COLUMNS = "`search_id`, `rank`, `user_id`, `action`, `timestamp`";
     private static final String LAST_ENTRY = "last_entry"; // this element indicates that the consumer thread should stop
 
-    //Queue to hold the search ids that needs to be annotated using yahooFEL
-    private LinkedBlockingQueue<String> searchIdQueue;
-    private Thread felAnnotationConsumerThread;
-    private String felAnnotatorPath;
-    private boolean felAnnotate = false;
-
     public enum LOG_ACTION
     {
         resource_clicked,
@@ -51,27 +37,6 @@ public class SearchLogManager
     public SearchLogManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
-        this.felAnnotatorPath = learnweb.getProperties().getProperty("FEL_ANNOTATOR_PATH", "");
-
-        if(StringUtils.isEmpty(felAnnotatorPath))
-            log.warn("'FEL_ANNOTATOR_PATH' not set in properties. Feature disabled");
-        else
-        {
-            File felJarFile = new File(felAnnotatorPath);
-            if(felJarFile.exists())
-            {
-                this.searchIdQueue = new LinkedBlockingQueue<>();
-
-                this.felAnnotationConsumerThread = new Thread(new FELAnnotationConsumer());
-                this.felAnnotationConsumerThread.start();
-
-                felAnnotate = true;
-
-                //log.debug("FEL Annotator disabled"); // temporarily or for ever?
-            }
-            else
-                log.error("Couldn't load FEL Annotator jar");
-        }
     }
 
     public int logQuery(String query, SearchMode searchMode, ResourceService searchService, String language, String searchFilters, User user)
@@ -194,14 +159,6 @@ public class SearchLogManager
             }
 
             insert.executeBatch();
-
-            if(felAnnotate)
-            {
-                if(pageId == 1 && resources.size() >= 10)
-                    searchIdQueue.put(Integer.toString(searchId));
-                else if(pageId == 2)
-                    searchIdQueue.put(Integer.toString(searchId));
-            }
         }
         catch(Exception e)
         {
@@ -246,25 +203,6 @@ public class SearchLogManager
         }
     }
 
-    public void stop()
-    {
-        try
-        {
-            if(felAnnotate)
-            {
-                searchIdQueue.put(LAST_ENTRY);
-                felAnnotationConsumerThread.join();
-
-                log.debug("SearchLogManager fel annotation thread was stopped");
-            }
-        }
-        catch(InterruptedException e)
-        {
-            log.fatal("Couldn't stop SearchLog manager html fetcher thread", e);
-            Thread.currentThread().interrupt();
-        }
-    }
-
     private boolean checkRelatedEntitiesForSearch(String searchId)
     {
         boolean relatedEntitiesExists = false;
@@ -281,59 +219,5 @@ public class SearchLogManager
             log.error("Error while retrieving related entities for search id: " + searchId, e);
         }
         return relatedEntitiesExists;
-    }
-
-    private class FELAnnotationConsumer implements Runnable
-    {
-
-        @Override
-        public void run()
-        {
-            try
-            {
-                while(true)
-                {
-                    String searchId;
-
-                    searchId = searchIdQueue.take();
-
-                    if(Objects.equals(searchId, LAST_ENTRY)) //stop method was called
-                        break;
-
-                    boolean relatedEntitiesExist = checkRelatedEntitiesForSearch(searchId);
-                    if(!relatedEntitiesExist)
-                    {
-                        try
-                        {
-                            Process proc = Runtime.getRuntime().exec("java -Xmx4g -jar " + felAnnotatorPath + " " + searchId);
-
-                            InputStream in = proc.getInputStream();
-                            InputStream err = proc.getErrorStream();
-                            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-                            String line;
-                            while((line = br.readLine()) != null)
-                                log.debug(line);
-                            br.close();
-
-                            BufferedReader brError = new BufferedReader(new InputStreamReader(err));
-                            while((line = brError.readLine()) != null)
-                                log.error("Error during FEL annotation process for search id: " + searchId + ";\n" + line);
-                            brError.close();
-                        }
-                        catch(IOException e)
-                        {
-                            log.error("Error while annotating search id: " + searchId);
-                        }
-                        learnweb.getSearchSessionEdgeComputator().insertEdgesForSessionGivenSearchId(searchId);
-                    }
-                }
-
-                log.debug("SearchLogger FEL annotation thread for annotating search ids has stopped");
-            }
-            catch(InterruptedException e)
-            {
-                log.error("SearchLogger FEL annotation thread for annotating search ids has crashed", e);
-            }
-        }
     }
 }

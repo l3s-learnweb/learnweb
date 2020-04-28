@@ -1,10 +1,10 @@
-package de.l3s.searchHistoryTest;
+package de.l3s.learnweb.searchhistory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.l3s.searchHistoryTest.SearchHistoryManager.Session;
+import de.l3s.learnweb.searchhistory.SearchHistoryManager.Session;
 
 public class SessionCache
 {

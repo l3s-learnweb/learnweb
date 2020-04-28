@@ -10,34 +10,20 @@
 
 <ui:define name="metadata">
 	<f:metadata>
-		<f:viewParam name="user_id" value="#{searchHistoryBean.userId}"/>
+		<f:viewParam name="user_id" value="#{searchHistoryBean.selectedUserId}"/>
 		<f:viewParam name="group_id" value="#{searchHistoryBean.selectedGroupId}"/>
 		<f:viewAction action="#{searchHistoryBean.onLoad}"/>
 	</f:metadata>
 </ui:define>
 
 <ui:define name="breadcrumb">
-	<lw:breadcrumb-item link="searchHistory/entityRelationship.jsf" title="#{msg.search_history}">
+	<lw:breadcrumb-item link="myhome/search_history.jsf" title="#{msg.search_history}">
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 	</lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-	<h:outputScript library="vendor" name="d3js-v3.5.17/d3.min.js" target="body"/>
-	<h:outputScript library="vendor" name="d3js-v3.5.17/d3-tip.js" target="body"/>
-	<h:outputScript library="vendor" name="d3js-v3.5.17/d3-color.v1.min.js" target="body"/>
-	<h:outputScript library="vendor" name="d3js-v3.5.17/d3-interpolate.v1.min.js" target="body"/>
-	<h:outputScript library="vendor" name="d3js-v3.5.17/d3-scale-chromatic.v1.min.js" target="body"/>
-	<h:outputScript library="vendor" name="d3js-v3.5.17/d3-scale.v1.min.js" target="body"/>
-	<h:outputScript library="vendor" name="jsnetworkx-v0.3.4/jsnetworkx.js" target="body"/>
-	<h:outputScript library="layout" name="js/entity-relationship.js" target="body"/>
-
-	<h:form styleClass="d-none">
-		<p:remoteCommand name="updateKG" actionListener="#{searchHistoryBean.actionUpdateKGData}" update="updateGraph" oncomplete="draw()"/>
-		<p:remoteCommand name="setSelectedSearchId" actionListener="#{searchHistoryBean.actionSelectedSearchId}" update="snippets snippet-viewer-entity" oncomplete="showKGSnippet();"/>
-		<p:remoteCommand name="setSelectedSearchIds" actionListener="#{searchHistoryBean.actionSelectedSearchIds}" update="snippets snippet-viewer-entity" oncomplete="filterSnippets();"/>
-		<p:remoteCommand name="setSelectedGroupId" actionListener="#{searchHistoryBean.actionSelectedGroupId}" update="sessionsList"/>
-	</h:form>
+	<h:outputScript library="layout" name="js/search-history.js" target="body"/>
 
 	<p:panel styleClass="section-entity-relationship">
 		<div class="row">
@@ -65,28 +51,25 @@
 						</div>
 					</div>
 
-					<h:panelGroup id="sh_nav_desc" layout="block">
-						<div class="" id="select-groups">
-							<ui:fragment rendered="#{not searchHistoryBean.showGroupHistory}">
-								<h:outputText value="Show history for User #{searchHistoryBean.currentUser.username}"/>
-							</ui:fragment>
-
-							<h:form rendered="#{searchHistoryBean.showGroupHistory}" id="select_grouo_form">
-								<h:outputText value="Show history for Group: "/>
-								<p:selectOneMenu id="select-group-menu" value="#{searchHistoryBean.selectedGroupId}">
-									<f:selectItem itemLabel="---------------" itemValue="-1"/>
-									<f:selectItems var="group" value="#{searchHistoryBean.currentUser.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
-									<p:ajax listener="#{searchHistoryBean.onChangeGroup}" update=":sessionsList @form"/>
-								</p:selectOneMenu>
-							</h:form>
-						</div>
-					</h:panelGroup>
+					<div class="row">
+						<h:panelGroup id="sh_nav_desc" layout="block">
+							<div class="" id="select-groups">
+								<h:form rendered="#{searchHistoryBean.showGroupHistory}" id="select_grouo_form">
+									<h:outputText value="Show history for Group: "/>
+									<p:selectOneMenu id="select-group-menu" value="#{searchHistoryBean.selectedGroupId}">
+										<f:selectItem itemLabel="---------------" itemValue="-1"/>
+										<f:selectItems var="group" value="#{searchHistoryBean.currentUser.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
+										<p:ajax listener="#{searchHistoryBean.onChangeGroup}" update=":sessionsList @form"/>
+									</p:selectOneMenu>
+								</h:form>
+							</div>
+						</h:panelGroup>
+					</div>
 				</div>
 
 				<h3>Sessions</h3>
 
 				<h:panelGroup id="sessionsList" styleClass="w-100 overflow-auto" layout="block">
-					<h:outputScript>let selectedGroupId = #{searchHistoryBean.selectedGroupId}</h:outputScript>
 					<h:outputText value="No Sessions have been recorded yet." rendered="#{empty searchHistoryBean.sessions}"/>
 
 					<h:form>
@@ -127,27 +110,17 @@
 					<div class="col-12 col-md-12 col-lg-12 knowledge-graph" id="queries">
 						<h3>Queries</h3>
 
-						<h:form columns="1">
-							<h:panelGrid columns="3">
-								<h:outputText value="List" />
-								<p:toggleSwitch value="#{searchHistoryBean.toggleSwitch}" immediate="true">
-									<p:ajax event="change" update=":queriesList" oncomplete="draw()"/>
-								</p:toggleSwitch>
-								<h:outputText value="Graph" />
-							</h:panelGrid>
-						</h:form>
-
-						<h:panelGroup id="queriesList" styleClass="w-100 overflow-auto" layout="block" toggleable="true">
+						<h:panelGroup id="queriesList" styleClass="w-100 overflow-auto" layout="block">
 							<h:outputText value="Choose any session." rendered="#{empty searchHistoryBean.queries}"/>
 
-							<h:form styleClass="timeline" rendered="#{not searchHistoryBean.toggleSwitch}">
+							<h:form styleClass="timeline">
 								<h:outputText value="#{searchHistoryBean.selectedSession.startTimestamp}">
 									<f:convertDateTime type="date" dateStyle="full" />
 								</h:outputText>
 								<ul class="queries-list">
 									<ui:repeat var="sq" value="#{searchHistoryBean.queries}">
 										<li class="py-2 queries-background">
-											<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="white-space-normal px-2" oncomplete="showKGSnippet();">
+											<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="white-space-normal px-2" oncomplete="showQueriesList();">
 												<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{sq}"/>
 
 												<h:outputText value="#{sq.timestamp}" styleClass="query-time">
@@ -162,38 +135,24 @@
 									</ui:repeat>
 								</ul>
 							</h:form>
-
-							<h:panelGroup id="knowledge-graph" styleClass="knowledge-graph w-100" toggleable="true" rendered="#{searchHistoryBean.toggleSwitch}">
-								<div id="canvas" class="w3-container h-100 m-auto">
-									<h:panelGroup id="updateGraph">
-										<!--<button onclick="drawQueryPath()" id="query_path_button" style="display: none;">Query Path</button>-->
-										<h:outputScript>
-											let queriesJsonArr = #{searchHistoryBean.queriesAsJson};
-											let edgesJsonArr = #{searchHistoryBean.edgesAsJson};
-										</h:outputScript>
-									</h:panelGroup>
-								</div>
-							</h:panelGroup>
 						</h:panelGroup>
 					</div>
 
 					<h:panelGroup id="snippetsList" styleClass="col-6 col-md-6 col-lg-6 snippet-viewer p-3 overflow-auto" layout="block">
 						<h3>Snippets for query: #{searchHistoryBean.selectedQuery.query}</h3>
 
-						<span class="hideIcon" onclick="hideKGSnippet();">
-						<svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
-							<polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 ">
-							</polygon>
-						</svg>
-					</span>
-						<h:outputText id="snippet-viewer-entity" styleClass="font-italic" value="#{searchHistoryBean.selectedEntity}"/>
+						<span class="hideIcon" onclick="hideQueriesList();">
+							<svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
+								<polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 ">
+								</polygon>
+							</svg>
+						</span>
 						<h:panelGroup layout="block" id="snippets">
 							<ui:repeat var="sr" value="#{searchHistoryBean.searchResults}">
 								<h:panelGroup layout="block" pt:data-searchId="#{sr.searchId}" pt:data-rank="#{sr.rank}" styleClass="snippet my-3">
 									<span><a href="#{sr.url}" target="_blank"><h:outputText value="#{sr.title}" escape="false"/></a></span><br/>
 									<span class="reference_url">#{sr.url}</span><br/>
 									<span>#{sr.description}</span><br/>
-									<span class="snippet_query">#{searchHistoryBean.getQuery(sr.searchId)}</span>
 									<span class="float-right">rank: &#35;#{sr.rank}</span>
 								</h:panelGroup>
 							</ui:repeat>
@@ -204,4 +163,5 @@
 		</div>
 	</p:panel>
 </ui:define>
+
 </ui:composition>

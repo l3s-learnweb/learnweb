@@ -1,5 +1,6 @@
-package de.l3s.searchHistoryTest;
+package de.l3s.learnweb.searchhistory;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.Sql;
 
 public class SearchHistoryManager
 {
@@ -101,37 +101,6 @@ public class SearchHistoryManager
         return searchResults;
     }
 
-    @SuppressWarnings("unchecked")
-    public List<Entity> getRelatedEntitiesForSearchId(int searchId)
-    {
-        List<Entity> entities = new ArrayList<>();
-        try
-        {
-            PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT related_entities FROM learnweb_large.sl_query_entities WHERE search_id = ?");
-            pstmt.setInt(1, searchId);
-            ResultSet rs = pstmt.executeQuery();
-            while(rs.next())
-            {
-                Object object = Sql.getSerializedObject(rs, "related_entities");
-                if(object == null)
-                    break;
-                List<String> relatedEntities = (List<String>) object;
-
-                for(String re : relatedEntities)
-                {
-                    Entity entity = Entity.fromString(re);
-                    entities.add(entity);
-                }
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while fetching related entities for search id: " + searchId, e);
-        }
-        //log.info("related entities: " + entities);
-        return entities;
-    }
-
     public List<Query> getQueriesForSessionFromCache(int userId, String sessionId)
     {
         List<Query> queries = new ArrayList<>();
@@ -200,74 +169,6 @@ public class SearchHistoryManager
         return sessions;
     }
 
-    public Set<Edge> getAllEdges(Set<String> entities)
-    {
-        Set<Edge> edges = new HashSet<>();
-        int maxEdgeScore = 0;
-        for(String entity : entities)
-        {
-            Set<Edge> edgesForEachEntity = this.getEdgesForEntity(entity);
-            for(Edge edge : edgesForEachEntity)
-            {
-                //Because the getEdgesForEntity returns all edges where source = entity thus source is already in entities
-                if(entities.contains(edge.target))
-                {
-                    edges.add(edge);
-                    if(edge.getScore() > maxEdgeScore)
-                        maxEdgeScore = (int) edge.getScore();
-                }
-            }
-        }
-        //log.info("max edge score:" + maxEdgeScore);
-
-        Set<Edge> filteredEdges = new HashSet<>();
-        for(Edge edge : edges)
-        {
-            //log.info(edge.getSource() + "," + edge.getTarget() + ":" + edge.getScore());
-            double score;
-            if(maxEdgeScore > 1000)
-                score = 1 - 50.0d / (50.0d + edge.getScore());
-            else
-                score = edge.getScore() / maxEdgeScore;
-
-            edge.setScore(score);
-            //log.info(edge.getSource() + "," + edge.getTarget() + ":" + edge.getScore());
-            if(score >= 0.1)
-                filteredEdges.add(edge);
-        }
-        return filteredEdges;
-    }
-
-    private Set<Edge> getEdgesForEntity(String entity)
-    {
-        Set<Edge> edges = new HashSet<>();
-
-        try
-        {
-            PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_entity_co_occur WHERE score > 0 AND source = ?");
-            pstmt.setString(1, entity);
-            ResultSet rs = pstmt.executeQuery();
-            while(rs.next())
-            {
-                try
-                {
-                    edges.add(new Edge(rs.getString("source"), rs.getString("target"), rs.getDouble("score")));
-                }
-                catch(InvalidEdgeException e)
-                {
-                    log.error("Invalid edge fetched for " + entity, e);
-                }
-
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while fetching edges for entity: " + entity, e);
-        }
-
-        return edges;
-    }
-
     public List<Session> getSessionsForGroupId(int groupId) throws SQLException
     {
         List<Session> sessions = new ArrayList<>();
@@ -309,34 +210,10 @@ public class SearchHistoryManager
         return sessions;
     }
 
-    /*
-    unused
-    public Set<Integer> getGroupIds() throws SQLException
+    public static class Session implements Serializable
     {
-        Set<Integer> groupIds = new HashSet<>();
-        PreparedStatement pstmt1 = learnweb.getConnection().prepareStatement("SELECT `search_id`, `rank` FROM learnweb_large.sl_action JOIN learnweb_large.sl_query USING(search_id) WHERE action='resource_saved' AND mode='text'");
-        ResultSet rs = pstmt1.executeQuery();
-        while(rs.next())
-        {
-            String params = rs.getString("search_id") + " - " + rs.getString("rank");
-            PreparedStatement pstmt2 = learnweb.getConnection().prepareStatement("SELECT target_id, group_id from learnweb_main.lw_user_log WHERE action = 15 AND params = ?");
-            pstmt2.setString(1, params);
-            ResultSet rs2 = pstmt2.executeQuery();
-            while(rs2.next())
-            {
-                int target_id = rs2.getInt("target_id");
-                Resource re = learnweb.getResourceManager().getResource(target_id);
-                //you don't have to check for resource type as you filter actions by search type 'text'
-                if(re.getGroupId() != 0)
-                    groupIds.add(re.getGroupId());
-            }
-        }
-        return groupIds;
-    }
-    */
+        private static final long serialVersionUID = 6139247221701183553L;
 
-    public static class Session
-    {
         private final int userId;
         private final String sessionId;
         private final LinkedList<Query> queries;
@@ -398,8 +275,6 @@ public class SearchHistoryManager
         private String query;
         private Date timestamp;
         private String service;
-        private List<String> relatedEntities;
-        //private List<Entity> relatedEntitiesInEntity;
 
         public Query(int searchId, String query)
         {
@@ -434,26 +309,6 @@ public class SearchHistoryManager
         {
             return this.service;
         }
-
-        public List<String> getRelatedEntities()
-        {
-            return this.relatedEntities;
-        }
-
-        public void setRelatedEntities(List<String> relatedEntities)
-        {
-            this.relatedEntities = relatedEntities;
-        }
-
-        //public List<Entity> getRelatedEntitiesInEntity()
-        //{
-        //  return this.relatedEntitiesInEntity;
-        //}
-
-        //public void setRelatedEntitiesInEntityForm(List<Entity> relatedEntities)
-        //{
-        //  this.relatedEntitiesInEntity = relatedEntities;
-        //}
     }
 
     public class SearchResult
@@ -512,92 +367,6 @@ public class SearchHistoryManager
         public void setDescription(String description)
         {
             this.description = description;
-        }
-    }
-
-    public class Edge
-    {
-        private String source;
-        private String target;
-        private double score;
-
-        public Edge(String source, String target, double score) throws InvalidEdgeException
-        {
-            if(source == null || target == null)
-            {
-                throw new InvalidEdgeException("source: " + source + ", target: " + target);
-            }
-            this.source = source;
-            this.target = target;
-            this.score = score;
-        }
-
-        public Edge(String source, String target) throws InvalidEdgeException
-        {
-            if(source == null || target == null)
-            {
-                throw new InvalidEdgeException("source: " + source + ", target: " + target);
-            }
-            this.source = source;
-            this.target = target;
-        }
-
-        public String getSource()
-        {
-            return source;
-        }
-
-        public String getTarget()
-        {
-            return target;
-        }
-
-        public double getScore()
-        {
-            return score;
-        }
-
-        public void setScore(double score)
-        {
-            this.score = score;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return this.source.hashCode() ^ this.target.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj)
-        {
-            if(obj instanceof Edge)
-            {
-                Edge edge = (Edge) obj;
-
-                return (this.source.equals(edge.source) && this.target.equals(edge.target)) || (this.source.equals(edge.target) && this.target.equals(edge.source));
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        @Override
-        public String toString()
-        {
-            return this.source + "<-->" + this.target + ": (" + this.score + ")";
-        }
-
-    }
-
-    class InvalidEdgeException extends Exception
-    {
-        private static final long serialVersionUID = 5313241019420503034L;
-
-        InvalidEdgeException(String message)
-        {
-            super(message);
         }
     }
 }
