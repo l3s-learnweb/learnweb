@@ -105,11 +105,8 @@
                 <p:autoUpdate />
             </p:growl>
 
-            <p:ajaxStatus styleClass="ajax-status-screen" delay="100">
-                <f:facet name="start">
-                    <div class="ui-blockui bg-center position-fixed" style="z-index: 1050 !important;"></div>
-                </f:facet>
-            </p:ajaxStatus>
+            <p:ajaxStatus onstart="$('.layout-combined-loader').addClass('loading');" delay="100" widgetVar="ajax-status"
+                          oncomplete="$('.layout-combined-loader').removeClass('loading');"/>
 
             <h:form styleClass="d-none">
                 <p:remoteCommand name="setPreferenceRemote" actionListener="#{userBean.setPreferenceRemote}" global="false" immediate="true" ignoreAutoUpdate="true" />

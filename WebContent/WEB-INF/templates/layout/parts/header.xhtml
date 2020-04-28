@@ -7,10 +7,14 @@
 
     <header class="layout-header bg-primary">
         <div class="layout-container d-flex">
-            <div class="d-flex">
+            <div class="d-flex layout-combined-loader">
                 <ui:fragment rendered="#{userBean.loggedIn}">
                     <a href="#{userBean.bannerLink}" id="menu-button" class="header-element menu-button">
-                        <i class="fa fa-bars mx-auto" aria-hidden="true"></i>
+                        <i class="fa fa-bars mx-auto content-element" aria-hidden="true"></i>
+                        <div class="la-ball-clip-rotate-pulse mx-auto loader-element collapse">
+                            <div></div>
+                            <div></div>
+                        </div>
                     </a>
                 </ui:fragment>
                 <a href="#{userBean.bannerLink}" class="header-element header-logo no-hover-bg">
