@@ -29,7 +29,7 @@
 		<p:remoteCommand name="saveTranscriptLog" actionListener="${tedTranscriptBean.processActionSaveLog()}" immediate="true" process="@this" update="@none"/>
 	</h:form>
 
-	<div class="mt-3 row section-ted-transcript">
+	<div class="mt-3 row">
 		<h:outputStylesheet library="vendor" name="tooltipster-v3.3.0/tooltipster.min.css"/>
 		<h:outputStylesheet library="vendor" name="spectrum-v1.8.0/spectrum.css"/>
 		<h:outputScript library="vendor" name="spectrum-v1.8.0/spectrum.js" target="body"/>
@@ -85,15 +85,15 @@
 					</div>
 				</p:outputPanel>
 				<h:panelGroup layout="block" id="transcript">
-					<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" styleClass="transcript-container my-3 p-3 border border-dark" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
+					<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" styleClass="transcript-container text-justify tran-selection my-3 p-3 border border-dark" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 					</h:panelGroup>
-					<h:panelGroup layout="block" styleClass="my-3 p-3 border border-dark transcript-container" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
+					<h:panelGroup layout="block" styleClass="my-3 p-3 border border-dark transcript-container text-justify" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 					</h:panelGroup>
 				</h:panelGroup>
 			</h:panelGroup>
-			<p:outputPanel styleClass="bg-light overlay">
+			<p:outputPanel styleClass="bg-light tran-tabs-overlay">
                 <div class="d-flex justify-content-end my-1">
                     <a onclick="closeTagsDiv(); return false;" href="">
                         <i class="fa fa-times mr-1" aria-hidden="true"></i>
@@ -102,7 +102,7 @@
                 <h:form>
 					<p:tabView id="myNav" widgetVar="tabViewVar" styleClass="ui-tabs-full-width bg-light">
 						<p:tab title="#{msg.tags}">
-							<ol id="selectable"></ol>
+							<ol id="selectable" class="tran-tabs-selectable"></ol>
 						</p:tab>
 						<p:tab title="#{msg.summary}">
 							<div class="d-flex justify-content-between flex-column">
