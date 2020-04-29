@@ -854,6 +854,12 @@ ul.res-filters {
         min-height: 25rem;
       }
     }
+
+    @include media-breakpoint-down(md) {
+      border-bottom: $border-width solid $border-color;
+      overflow: initial;
+      height: auto;
+    }
   }
 
   .res-view-details {
@@ -904,6 +910,10 @@ ul.res-filters {
         display: none;
       }
     }
+
+    @include media-breakpoint-up(lg) {
+      border-left: $border-width solid $border-color;
+    }
   }
 }
 
@@ -919,5 +929,13 @@ ul.res-filters {
     &:last-child {
       margin-right: 0;
     }
+  }
+}
+
+.glossary-table {
+  background: $body-bg;
+  
+  .ui-datatable-tablewrapper {
+    margin: 0 $grid-gutter-width / 2;
   }
 }

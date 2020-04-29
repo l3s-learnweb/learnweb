@@ -60,6 +60,15 @@ function setPasteStatus(element, field) {
   $(id).val('true');
 }
 
+/* see LazyGlossaryTableView comments for more details */
+function correctPaginatorCount(index) {
+  const option = $(this);
+  option.text(option.val() / 20);
+}
+
 $(() => {
   groupRow();
+
+  $('#glossary_table_paginator_bottom select option').each(correctPaginatorCount);
+  $('#glossary_table_paginator_top select option').each(correctPaginatorCount);
 });

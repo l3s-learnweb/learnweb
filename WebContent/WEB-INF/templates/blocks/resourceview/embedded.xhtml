@@ -7,7 +7,7 @@
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-<div class="preview-wrapper d-flex">
+<div class="preview-wrapper d-flex flex-column">
     <c:choose>
         <c:when test="${res.officeResource and not res.offline}">
             <ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded_office.xhtml">
