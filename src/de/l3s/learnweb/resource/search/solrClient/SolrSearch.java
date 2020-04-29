@@ -53,6 +53,9 @@ public class SolrSearch implements Serializable
     private String filterAuthor = "";
     private String filterCoverage = "";
     private String filterPublisher = "";
+    private String filterLanguageLevel = "";
+    private String filterYellTarget = "";
+    private String filterYellPurpose = "";
     private String filterTags = "";
     private String filterLanguage = ""; // for example en_US
 
@@ -181,6 +184,21 @@ public class SolrSearch implements Serializable
         this.filterPublisher = publisher;
     }
 
+    public void setFilterLanguageLevel(final String filterLanguageLevel)
+    {
+        this.filterLanguageLevel = filterLanguageLevel;
+    }
+
+    public void setFilterYellTarget(final String filterYellTarget)
+    {
+        this.filterYellTarget = filterYellTarget;
+    }
+
+    public void setFilterYellPurpose(final String filterYellPurpose)
+    {
+        this.filterYellPurpose = filterYellPurpose;
+    }
+
     public void setFilterTags(String tags)
     {
         this.filterTags = tags;
@@ -201,6 +219,9 @@ public class SolrSearch implements Serializable
         this.filterAuthor = "";
         this.filterCoverage = "";
         this.filterPublisher = "";
+        this.filterLanguageLevel = "";
+        this.filterYellTarget = "";
+        this.filterYellPurpose = "";
         this.filterTags = "";
     }
 
@@ -401,6 +422,21 @@ public class SolrSearch implements Serializable
         if(!filterPublisher.isEmpty())
         {
             solrQuery.addFilterQuery("publisher_s : \"" + filterPublisher + "\"");
+        }
+
+        if(!filterLanguageLevel.isEmpty())
+        {
+            solrQuery.addFilterQuery("language_level_ss : \"" + filterLanguageLevel + "\"");
+        }
+
+        if(!filterYellTarget.isEmpty())
+        {
+            solrQuery.addFilterQuery("yell_target_ss : \"" + filterYellTarget + "\"");
+        }
+
+        if(!filterYellPurpose.isEmpty())
+        {
+            solrQuery.addFilterQuery("yell_purpose_ss : \"" + filterYellPurpose + "\"");
         }
 
         if(!filterTags.isEmpty())

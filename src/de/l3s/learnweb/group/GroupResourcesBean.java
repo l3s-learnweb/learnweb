@@ -255,6 +255,14 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             solrSearch.setFilterPublisher(searchFilters.getFilterValue(FilterType.publisher));
         if(searchFilters.isFilterActive(FilterType.collector))
             solrSearch.setFilterCollector(searchFilters.getFilterValue(FilterType.collector));
+        if(searchFilters.isFilterActive(FilterType.language_level))
+            solrSearch.setFilterLanguageLevel(searchFilters.getFilterValue(FilterType.language_level));
+        if(searchFilters.isFilterActive(FilterType.yell_purpose))
+            solrSearch.setFilterYellPurpose(searchFilters.getFilterValue(FilterType.yell_purpose));
+        if(searchFilters.isFilterActive(FilterType.yell_target))
+            solrSearch.setFilterYellTarget(searchFilters.getFilterValue(FilterType.yell_target));
+        if(searchFilters.isFilterActive(FilterType.language))
+            solrSearch.setFilterLanguage(searchFilters.getFilterValue(FilterType.language));
 
         SolrPaginator sp = new SolrPaginator(solrSearch);
         searchFilters.resetCounters();

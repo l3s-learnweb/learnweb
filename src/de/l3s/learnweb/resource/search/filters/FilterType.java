@@ -10,13 +10,16 @@ public enum FilterType
     type(TypeFilter.class),
     date(DateFilter.class),
     group(GroupFilter.class),
+    size(SizeFilter.class),
+    duration(DurationFilter.class),
     collector(Filter.class),
     author(Filter.class),
     coverage(Filter.class),
     publisher(Filter.class),
+    language_level(Filter.class),
+    yell_target(Filter.class),
+    yell_purpose(Filter.class),
     tags(Filter.class),
-    size(SizeFilter.class),
-    duration(DurationFilter.class),
     language(Filter.class);
 
     private final Class<? extends Filter> filterClass;
@@ -50,7 +53,7 @@ public enum FilterType
             case video:
                 return new FilterType[]{ service, date, group, author, tags, duration };
             case group:
-                return new FilterType[]{ service, type, date, collector, author, coverage, publisher, tags };
+                return new FilterType[]{ service, type, date, collector, author, coverage, publisher, language_level, yell_target, yell_purpose, tags, language };
             default:
                 return values();
         }
@@ -64,6 +67,8 @@ public enum FilterType
             case author:
             case coverage:
             case publisher:
+            case yell_target:
+            case yell_purpose:
             case tags:
                 return true;
             default:
