@@ -45,17 +45,17 @@ function selectTab(divName) {
 } */
 
 function openTagsDiv() {
-  if ($('.overlay').width() === 0) {
-    $('.overlay').width('256px');
+  if ($('.tran-tabs-overlay').width() === 0) {
+    $('.tran-tabs-overlay').width('256px');
     $('.right_bar').css('margin-right', '256px');
     PF('tabViewVar').select(0);
   }
 }
 
 function closeTagsDiv() {
-  $('.overlay').width('0px');
+  $('.tran-tabs-overlay').width('0px');
   $('.right_bar').css('margin-right', '0px');
-  $('.note').removeClass('ui-state-hover');
+  $('.tran-note').removeClass('ui-state-hover');
   $('.ui-selected').removeClass('ui-selected');
 }
 
@@ -64,9 +64,9 @@ function selectTab(id) {
 }
 
 $(() => {
-  const selectedElements = document.getElementsByClassName('note');
+  const selectedElements = document.getElementsByClassName('tran-note');
   if (readOnly) {
-    $(document).on('click', '.note', (e) => {
+    $(document).on('click', '.tran-note', (e) => {
       const $this = $(e.currentTarget);
       // eslint-disable-next-line no-alert
       if (window.confirm(`${deleteSelectionText}(${this.text()})?`)) {
@@ -100,7 +100,7 @@ $(() => {
         contentAsHTML: true,
         maxWidth: 300,
         position: 'left',
-        theme: 'tooltipster-custom-theme',
+        theme: 'tooltipster-transcript',
       });
     }
 
@@ -165,7 +165,7 @@ function clearTagList() {
 // To dynamically create/update the tags list in the 'Show Tags' pane
 function updateTagList() {
   $('#selectable li').remove();
-  $('.note').removeClass('ui-state-hover');
+  $('.tran-note').removeClass('ui-state-hover');
 
   Object.values(tags).forEach((value) => {
     $('#selectable').append(`<li class="ui-widget-content">${value}</li>`);
@@ -178,7 +178,7 @@ function initializeJQueryContextMenu() {
   if (!$contextmenuItems) return;
 
   $.contextMenu({
-    selector: '.note',
+    selector: '.tran-note',
     build() {
       const items = {};
       $('li', $contextmenuItems).each((i, el) => {
@@ -269,7 +269,6 @@ function doAction(action, item) {
         ],
         change(color) {
           $(`#${selectedNodeId}`).css('background-color', color.toHexString());
-          $('.color-picker').css('background', color.toHexString());
         },
       });
       break;
@@ -279,7 +278,7 @@ function doAction(action, item) {
 }
 
 function disableJQueryContextMenu() {
-  $('.note').contextMenu(false);
+  $('.tran-note').contextMenu(false);
 }
 
 let usertext = '';
@@ -299,7 +298,7 @@ function setSynonyms(xhr, status, args) {
         contentAsHTML: true,
         maxWidth: 300,
         position: 'right',
-        theme: 'tooltipster-custom-theme',
+        theme: 'tooltipster-transcript',
       });
     } else {
       selectedNode.tooltipster('content', `${selectedNode.data('title')}<hr/>${selectedNode.data('content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`);
@@ -311,7 +310,7 @@ function setSynonyms(xhr, status, args) {
   /* noteId++;
 
   let span = document.createElement('span');
-  span.setAttribute('class', 'note');
+  span.setAttribute('class', 'tran-note');
   span.setAttribute('id', noteId);
   $(span).on('click',function(){
       if (window.confirm('Delete this selection (' + $(this).text() + ')?')) {
@@ -382,7 +381,7 @@ function noteSelectedText() {
     noteId++;
 
     const span = document.createElement('span');
-    span.setAttribute('class', 'note');
+    span.setAttribute('class', 'tran-note');
     span.setAttribute('id', `note${noteId}`);
 
     $(span).on('mouseenter', (e) => {
@@ -488,7 +487,7 @@ function getUserText(buttonClicked) {
         contentAsHTML: true,
         maxWidth: 300,
         position: 'right',
-        theme: 'tooltipster-custom-theme',
+        theme: 'tooltipster-transcript',
       });
     } else if (selectedNode.data('content')) {
       selectedNode.tooltipster('content', `${selectedNode.attr('data-title')}<hr/>${selectedNode.attr('data-content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`);
@@ -516,7 +515,7 @@ function getUserText(buttonClicked) {
           contentAsHTML: true,
           maxWidth: 300,
           position:'right',
-          theme:'tooltipster-custom-theme'
+          theme:'tooltipster-transcript'
       });
   } */
   /* if(escape_key_flag)

@@ -23,9 +23,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-	<h:outputScript library="layout" name="js/search-history.js" target="body"/>
-
-	<p:panel styleClass="section-entity-relationship">
+	<p:panel>
 		<div class="row">
 			<div class="col-12 col-xl-4 border-right" id="col_sessions">
 				<div class="d-flex flex-column-reverse flex-sm-row justify-content-between align-items-center">
@@ -69,97 +67,85 @@
 
 				<h3>Sessions</h3>
 
-				<h:panelGroup id="sessionsList" styleClass="w-100 overflow-auto" layout="block">
+				<h:panelGroup id="sessionsList" layout="block">
 					<h:outputText value="No Sessions have been recorded yet." rendered="#{empty searchHistoryBean.sessions}"/>
 
 					<h:form>
-						<div class="box #{searchHistoryBean.showGroupHistory == false ? 'box-user' : 'box-group'}">
-							<ul id="first-list" class="sessions-list">
-								<ui:repeat var="ss" value="#{searchHistoryBean.sessions}">
-									<li>
-										<p:commandLink update=":queriesList" process="@this" global="false" styleClass="white-space-normal">
-											<f:setPropertyActionListener target="#{searchHistoryBean.selectedSession}" value="#{ss}"/>
-											<span></span>
+						<ul class="sh-sessions-list #{searchHistoryBean.showGroupHistory == false ? '' : 'sh-session-group'} overflow-auto vh-100">
+							<ui:repeat var="ss" value="#{searchHistoryBean.sessions}">
+								<li>
+									<p:commandLink update=":queriesList" process="@this" global="false" styleClass="white-space-normal">
+										<f:setPropertyActionListener target="#{searchHistoryBean.selectedSession}" value="#{ss}"/>
+										<span></span>
 
-											<h:panelGroup layout="block" class="session_block cursor-pointer" pt:data-sessionId="#{ss.sessionId}" pt:data-userId="#{ss.userId}">
-												<div class="info">
-													<p:repeat var="query" value="#{ss.queries}">
-														<span class="text-break search-source-icon source-#{query.service}">#{query.query}</span>
-													</p:repeat>
-												</div>
+										<h:panelGroup layout="block" class="cursor-pointer" pt:data-sessionId="#{ss.sessionId}" pt:data-userId="#{ss.userId}">
+											<div class="info">
+												<p:repeat var="query" value="#{ss.queries}">
+													<span class="text-break search-source-icon source-#{query.service}">#{query.query}</span>
+												</p:repeat>
+											</div>
 
-												<div class="time">
-													<h:outputFormat value="#{msg.format_date_and_time_between}" escape="false">
-														<f:param value="#{ss.startTimestamp}"/>
-														<f:param value="#{ss.endTimestamp}"/>
-													</h:outputFormat>
-												</div>
-												<span><b>#{searchHistoryBean.showGroupHistory == false ? '' : 'From: '.concat(ss.userName)}</b></span>
-											</h:panelGroup>
-										</p:commandLink>
-									</li>
-								</ui:repeat>
-							</ul>
-						</div>
+											<div class="time">
+												<h:outputFormat value="#{msg.format_date_and_time_between}" escape="false">
+													<f:param value="#{ss.startTimestamp}"/>
+													<f:param value="#{ss.endTimestamp}"/>
+												</h:outputFormat>
+											</div>
+											<span><b>#{searchHistoryBean.showGroupHistory == false ? '' : 'From: '.concat(ss.userName)}</b></span>
+										</h:panelGroup>
+									</p:commandLink>
+								</li>
+							</ui:repeat>
+						</ul>
 					</h:form>
 				</h:panelGroup>
 			</div>
 
-			<div class="col-12 col-xl-8 mt-5 mt-xl-0 d-none d-xl-block">
-				<div class="row">
-					<div class="col-12 col-md-12 col-lg-12 knowledge-graph" id="queries">
-						<h3>Queries</h3>
+			<div class="col-12 col-xl-4 mt-5 mt-xl-0">
+				<h3>Queries</h3>
 
-						<h:panelGroup id="queriesList" styleClass="w-100 overflow-auto" layout="block">
-							<h:outputText value="Choose any session." rendered="#{empty searchHistoryBean.queries}"/>
+				<h:panelGroup id="queriesList" layout="block">
+					<h:outputText value="Choose any session." rendered="#{empty searchHistoryBean.queries}"/>
 
-							<h:form styleClass="timeline">
-								<h:outputText value="#{searchHistoryBean.selectedSession.startTimestamp}">
-									<f:convertDateTime type="date" dateStyle="full" />
-								</h:outputText>
-								<ul class="queries-list">
-									<ui:repeat var="sq" value="#{searchHistoryBean.queries}">
-										<li class="py-2 queries-background">
-											<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="white-space-normal px-2" oncomplete="showQueriesList();">
-												<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{sq}"/>
+					<h:form>
+						<h:outputText value="#{searchHistoryBean.selectedSession.startTimestamp}">
+							<f:convertDateTime type="date" dateStyle="full" />
+						</h:outputText>
+						<ul class="sh-queries-list overflow-auto vh-100">
+							<ui:repeat var="sq" value="#{searchHistoryBean.queries}">
+								<li class="py-2 queries-background">
+									<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="white-space-normal px-2">
+										<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{sq}"/>
 
-												<h:outputText value="#{sq.timestamp}" styleClass="query-time">
-													<f:convertDateTime type="time" dateStyle="full" />
-												</h:outputText>
+										<h:outputText value="#{sq.timestamp}" styleClass="query-time">
+											<f:convertDateTime type="time" dateStyle="full" />
+										</h:outputText>
 
-												<span class="snippet-list-dot"></span>
+										<span class="snippet-list-dot"></span>
 
-												<h:outputText value="#{sq.query}" styleClass="d-block query-desc text-break ml-4"/>
-											</p:commandLink>
-										</li>
-									</ui:repeat>
-								</ul>
-							</h:form>
-						</h:panelGroup>
-					</div>
-
-					<h:panelGroup id="snippetsList" styleClass="col-6 col-md-6 col-lg-6 snippet-viewer p-3 overflow-auto" layout="block">
-						<h3>Snippets for query: #{searchHistoryBean.selectedQuery.query}</h3>
-
-						<span class="hideIcon" onclick="hideQueriesList();">
-							<svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
-								<polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 ">
-								</polygon>
-							</svg>
-						</span>
-						<h:panelGroup layout="block" id="snippets">
-							<ui:repeat var="sr" value="#{searchHistoryBean.searchResults}">
-								<h:panelGroup layout="block" pt:data-searchId="#{sr.searchId}" pt:data-rank="#{sr.rank}" styleClass="snippet my-3">
-									<span><a href="#{sr.url}" target="_blank"><h:outputText value="#{sr.title}" escape="false"/></a></span><br/>
-									<span class="reference_url">#{sr.url}</span><br/>
-									<span>#{sr.description}</span><br/>
-									<span class="float-right">rank: &#35;#{sr.rank}</span>
-								</h:panelGroup>
+										<h:outputText value="#{sq.query}" styleClass="d-block query-desc text-break ml-4"/>
+									</p:commandLink>
+								</li>
 							</ui:repeat>
-						</h:panelGroup>
-					</h:panelGroup>
-				</div>
+						</ul>
+					</h:form>
+				</h:panelGroup>
 			</div>
+
+			<h:panelGroup id="snippetsList" styleClass="col-12 col-xl-4 mt-5 mt-xl-0" layout="block">
+				<h:panelGroup styleClass="sh-snippets-list overflow-auto vh-100" rendered="#{searchHistoryBean.selectedQuery ne null}" layout="block">
+					<h3>Snippets for query: #{searchHistoryBean.selectedQuery.query}</h3>
+
+					<ui:repeat var="sr" value="#{searchHistoryBean.searchResults}">
+						<h:panelGroup layout="block" pt:data-searchId="#{sr.searchId}" pt:data-rank="#{sr.rank}" styleClass="snippet my-3">
+							<span><a href="#{sr.url}" target="_blank"><h:outputText value="#{sr.title}" escape="false"/></a></span><br/>
+							<span class="reference_url">#{sr.url}</span><br/>
+							<span>#{sr.description}</span><br/>
+							<span class="float-right">rank: &#35;#{sr.rank}</span>
+						</h:panelGroup>
+					</ui:repeat>
+				</h:panelGroup>
+			</h:panelGroup>
 		</div>
 	</p:panel>
 </ui:define>
