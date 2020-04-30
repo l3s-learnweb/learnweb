@@ -18,19 +18,14 @@
                         <p:dataExporter type="pdf" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-success float-right p-1">
+                    <h:commandLink styleClass="text-gray float-right p-1">
                         <i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
-                        <p:dataExporter type="xml" target="resources_tbl" fileName="resources"/>
+                        <p:dataExporter type="xls" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
                     <h:commandLink styleClass="text-gray float-right p-1">
                         <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="resources_tbl" fileName="resources"/>
-                    </h:commandLink>
-
-                    <h:commandLink styleClass="text-gray float-right p-1">
-                        <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
-                        <p:dataExporter type="xls" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
                     <h:commandButton styleClass="float-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only px-2 mx-2" rendered="#{exportable}" value="#{msg.request_all_data}" action="#{dataExporterBean.requestUserResources()}"/>

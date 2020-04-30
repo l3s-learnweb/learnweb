@@ -32,19 +32,14 @@
                         <p:dataExporter type="pdf" target="groups_tbl" fileName="groups"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-success float-right p-1">
+                    <h:commandLink styleClass="text-gray float-right p-1">
                         <i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
-                        <p:dataExporter type="xml" target="groups_tbl" fileName="groups"/>
+                        <p:dataExporter type="xls" target="groups_tbl" fileName="groups"/>
                     </h:commandLink>
 
                     <h:commandLink styleClass="text-gray float-right p-1">
                         <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="groups_tbl" fileName="groups"/>
-                    </h:commandLink>
-
-                    <h:commandLink styleClass="text-gray float-right p-1">
-                        <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
-                        <p:dataExporter type="xls" target="groups_tbl" fileName="groups"/>
                     </h:commandLink>
                 </h:panelGroup>
             </f:facet>
