@@ -3,15 +3,20 @@ package de.l3s.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
 
 import de.l3s.learnweb.resource.office.history.model.CallbackData;
 
-
+@Disabled
 class ExampleTest
 {
+    private static final Logger log = LogManager.getLogger(ExampleTest.class);
+
     @Test
     void gson()
     {

@@ -18,7 +18,7 @@
               from="no-reply@l3s.de" to="kemkes@l3s.de,astappiev@l3s.de" subject="${env:LEARNWEB_MAIL_SUBJECT}">
             <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
             <Filters>
-                <ThresholdFilter level="${env:LEARNWEB_MAIL_LOGLEVEL}" onMatch="ACCEPT"/>
+                <ThresholdFilter level="${env:LEARNWEB_MAIL_LOGLEVEL}" onMatch="NEUTRAL" onMismatch="DENY"/>
                 <!-- Rate is a number of events per second, current value is 2 messages per 1 hour (1/60/60 * maxBurst) -->
                 <BurstFilter level="OFF" rate="0.00056" maxBurst="2"/>
             </Filters>
