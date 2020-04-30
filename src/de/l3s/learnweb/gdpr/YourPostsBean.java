@@ -46,16 +46,23 @@ public class YourPostsBean extends ApplicationBean implements Serializable
 
         for(ForumPost post : userPosts)
         {
-            try {
+            try
+            {
                 StringBuilder allText = new StringBuilder();
                 String[] tds = StringUtils.substringsBetween(Jsoup.parse(post.getText()).outerHtml(), "<p>", "</p>");
-                for (String td : tds) {
-                    allText.append(td).append(" ");
+                if (tds != null) // for example, when message contains only quotes
+                {
+                    for (String td : tds)
+                    {
+                        allText.append(td).append(" ");
+                    }
                 }
                 post.setText(Jsoup.parse(allText.toString()).text());
 
                 postThreadTopics.put(post.getTopicId(), forumManager.getTopicById(post.getTopicId()).getTitle());
-            } catch(Exception e) {
+            }
+            catch(Exception e)
+            {
                 log.error("An error occurred during processing post " + post.getId(), e);
             }
         }
