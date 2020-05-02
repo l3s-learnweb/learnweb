@@ -40,22 +40,26 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
         newPost = new ForumPost();
     }
 
-    public void onLoad()
+    public void onLoad() throws SQLException
     {
-        try
-        {
-            group = getLearnweb().getGroupManager().getGroupById(groupId);
-            topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
-        }
-        catch(SQLException e1)
-        {
-            log.error("Cant load group", e1);
-        }
+        if(!isLoggedIn())
+            return;
+
+        group = getLearnweb().getGroupManager().getGroupById(groupId);
 
         if(null == group)
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "invalid or no group id");
+            addInvalidParameterMessage("group_id");
+            return;
         }
+        if(!group.canViewResources(getUser()))
+        {
+            group = null;
+            addAccessDeniedMessage();
+            return;
+        }
+
+        topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
     }
 
     public String onSavePost() throws SQLException

@@ -171,7 +171,6 @@ public class UserBean implements Serializable
     public void onDestroy()
     {
         // persist user preferences in database
-        User user = getUser();
         if(null != user)
         {
             user.onDestroy();

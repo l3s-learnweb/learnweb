@@ -3,6 +3,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:p="http://primefaces.org/ui"
       lang="#{userBean.localeCode}">
 
@@ -13,13 +14,14 @@
     <!--@elvariable id="hideGrowl" type="java.lang.Boolean"-->
     <!--@elvariable id="hideBreadcrumbs" type="java.lang.Boolean"-->
     <!--@elvariable id="hasAccessPermission" type="java.lang.Boolean"-->
+    <!--@elvariable id="hideContent" type="java.lang.Boolean"-->
 
     <f:view locale="#{userBean.locale}" contentType="text/html">
         <ui:insert name="metadata"/>
 
         <h:head>
             <ui:include src="parts/head.xhtml"/>
-            <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{!empty pageTitle}"/>#{msg['application.name']}</title>
+            <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{!empty pageTitle and not hideContent}"/>#{msg['application.name']}</title>
 
             <base href="#{request.contextPath}/lw/"/>
 
@@ -62,18 +64,20 @@
                             </ui:fragment>
                             <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
                                 <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
-
-                                <p:panel rendered="#{(userBean.loggedIn and hasAccessPermission != null) ? !hasAccessPermission : false}">
-                                    <h:outputText value="#{msg.access_denied}"/>
-                                </p:panel>
-
-                                <ui:fragment rendered="#{not (hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission) and !userBean.loggedIn}">
+                                
+                                <c:set var="accessDenied" value="#{not (hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission)}" scope="request" />
+                                
+                                <h:panelGroup rendered="#{accessDenied and userBean.loggedIn and empty facesContext.messageList}" styleClass="ui-messages">
+                                    <div class="ui-messages-fatal ui-corner-all"><span class="ui-messages-fatal-icon"></span><span class="ui-messages-fatal-summary">#{msg.access_denied}</span></div>
+                                </h:panelGroup>
+                                
+                                <ui:fragment rendered="#{accessDenied and not userBean.loggedIn}">
                                     <p:panel header="#{msg.loginTitle}" styleClass="container mw-r30">
                                         <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
                                     </p:panel>
                                 </ui:fragment>
 
-                                <ui:fragment rendered="#{(hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission) and hideContent != true}">
+                                <ui:fragment rendered="#{not accessDenied and not hideContent}">
                                     <ui:fragment rendered="#{not hideBreadcrumbs}">
                                         <h:outputScript library="layout" name="js/breadcrumb.js" target="body"/>
 

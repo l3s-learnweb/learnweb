@@ -53,11 +53,6 @@ public class ProfileBean extends ApplicationBean implements Serializable
     private boolean anonymizeUsername;
     private List<GroupUser> userGroups;
 
-    public User.NotificationFrequency[] getNotificationFrequencies()
-    {
-        return User.NotificationFrequency.values();
-    }
-
     public void onLoad() throws SQLException
     {
         User loggedinUser = getUser();
@@ -351,7 +346,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     /**
      * Sets users preferredNotificationFrequency and the frequency of all his groups
-     * 
+     *
      * @throws SQLException
      */
     public void onSaveAllNotificationFrequencies() throws SQLException
@@ -371,5 +366,10 @@ public class ProfileBean extends ApplicationBean implements Serializable
         getLearnweb().getGroupManager().updateNotificationFrequency(group.getGroup().getId(), selectedUser.getId(), group.getNotificationFrequency());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+    }
+
+    public User.NotificationFrequency[] getNotificationFrequencies()
+    {
+        return User.NotificationFrequency.values();
     }
 }
