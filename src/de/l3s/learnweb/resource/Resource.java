@@ -581,7 +581,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }
@@ -687,7 +687,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             this.type = ResourceType.presentation;
         else if(format.contains("msword") || format.contains("ms-word") || format.contains("wordprocessing") || format.contains("opendocument.text") || format.equals("application/rtf"))
             this.type = ResourceType.document;
-        else if(Arrays.asList("application/x-msdownload", "application/x-ms-dos-executable", "application/octet-stream", "application/x-gzip", "application/gzip", "application/x-rar-compressed", "application/zip", "application/x-shockwave-flash", "message/rfc822").contains(format))
+        else if(Arrays.asList("application/x-msdownload", "application/x-ms-dos-executable", "application/octet-stream", "application/x-gzip", "application/gzip", "application/x-rar-compressed", "application/zip", "application/x-shockwave-flash", "message/rfc822")
+                .contains(format))
             // handle known types of downloadable resources
             this.type = ResourceType.file;
         else
@@ -1792,7 +1793,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public List<LogEntry> getLogs() throws SQLException
     {
-        return Learnweb.getInstance().getLogManager().getLogsByResource(this, -1);
+        return Learnweb.getInstance().getLogManager().getLogsByResource(this, 50); // TODO this is only a quick fix to improve the loading speed. needs a better solution e.g. lazy pagination 
     }
 
     /**
