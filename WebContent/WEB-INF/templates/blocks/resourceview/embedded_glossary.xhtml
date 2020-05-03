@@ -59,7 +59,7 @@
         <p:column style="width: 57px;" exportable="false">
             <div class="text-right">
                 <p:commandLink action="#{glossaryBean.deleteEntry(item)}" title="#{msg.delete}"
-                               process="@this" update=":glossary_table_form" oncomplete="groupRow()">
+                               process="@this" update=":glossary_table_form " oncomplete="groupRow()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                     <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, item.topics)}"/>
                 </p:commandLink>
@@ -185,11 +185,11 @@
 
             <p:outputLabel for="@next" styleClass="font-weight-bold" value="#{msg['Glossary.Definition']}"/>
             <h:panelGroup>
+                <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description" />
                 <p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="w-100"
                              required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');"/>
-                <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description"></h:inputHidden>
             </h:panelGroup>
-            <p:message for="@previous"/>
+            <p:message for="description"/>
         </p:panelGrid>
 
         <p:dataTable value="#{glossaryBean.formEntry.terms}" var="term" id="lang_terms">
@@ -262,7 +262,7 @@
                 <p:commandButton value="#{msg.cancel}" action="#{glossaryBean.clear}"
                                  process="@this" resetValues="true" oncomplete="closeGlossForm()" styleClass="secondary-btn">
                 </p:commandButton>
-                <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave()}" update=":glossary_add :glossary_table_form"
+                <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave()}" update=":glossary_add :glossary_table_form "
                                  binding="#{save}" oncomplete="groupRow()">
                 </p:commandButton>
             </div>
