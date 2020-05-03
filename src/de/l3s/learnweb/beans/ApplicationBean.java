@@ -234,7 +234,7 @@ public class ApplicationBean
      */
     protected void addMessage(FacesMessage.Severity severity, String msgKey, Object... args)
     {
-        getFacesContext().addMessage("message", getFacesMessage(severity, msgKey, args));
+        getFacesContext().addMessage(null, getFacesMessage(severity, msgKey, args));
     }
 
     /**
@@ -242,7 +242,7 @@ public class ApplicationBean
      */
     protected void addGrowl(FacesMessage.Severity severity, String msgKey, Object... args)
     {
-        getFacesContext().addMessage(null, getFacesMessage(severity, msgKey, args));
+        getFacesContext().addMessage("growl", getFacesMessage(severity, msgKey, args));
     }
 
     /**
@@ -279,20 +279,13 @@ public class ApplicationBean
         addErrorMessage("access_denied", new IllegalAccessException());
     }
 
+    // TODO see https://git.l3s.uni-hannover.de/Learnweb/Learnweb/-/wikis/Rules/Use-of-Messages,-Growls-and-Validation
+    @Deprecated
     protected void addErrorGrowl(Throwable exception)
     {
-        addErrorGrowl(null, exception);
-    }
+        addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
-    /**
-     * @param desc A descriptive message that is shown to the user. If null a default fatal_error message will be shown
-     * @param exception
-     */
-    protected void addErrorGrowl(String desc, Throwable exception)
-    {
-        addGrowl(FacesMessage.SEVERITY_FATAL, (desc != null ? desc : "fatal_error"));
-
-        log.error((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
+        log.error("Fatal unhandled error" + "; " + BeanHelper.getRequestSummary(), exception);
     }
 
     /*****************************************************************************

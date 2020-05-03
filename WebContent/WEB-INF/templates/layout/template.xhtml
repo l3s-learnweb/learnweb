@@ -11,7 +11,6 @@
     <!--@elvariable id="helpText" type="java.lang.String"-->
     <!--@elvariable id="extraPageClass" type="java.lang.String"-->
 
-    <!--@elvariable id="hideGrowl" type="java.lang.Boolean"-->
     <!--@elvariable id="hideBreadcrumbs" type="java.lang.Boolean"-->
     <!--@elvariable id="hasAccessPermission" type="java.lang.Boolean"-->
     <!--@elvariable id="hideContent" type="java.lang.Boolean"-->
@@ -63,7 +62,9 @@
                                 <h2 class="text-danger">#{msg.service_unavailable}</h2>
                             </ui:fragment>
                             <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
-                                <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
+                                <p:messages id="message" showDetail="false" showSummary="true" escape="false" globalOnly="true">
+                                    <p:autoUpdate />
+                                </p:messages>
                                 
                                 <c:set var="accessDenied" value="#{not (hasAccessPermission == null ? userBean.loggedIn : hasAccessPermission)}" scope="request" />
                                 
@@ -100,8 +101,9 @@
                 </div>
             </ui:insert>
 
-            <p:growl id="growl" rendered="#{not hideGrowl}" escape="false" life="4000"
-                     showDetail="true" skipDetailIfEqualsSummary="true"/>
+            <p:growl id="growl" escape="false" life="4000" for="growl" showDetail="true" skipDetailIfEqualsSummary="true">
+                <p:autoUpdate />
+            </p:growl>
 
             <p:ajaxStatus styleClass="ajax-status-screen" delay="100">
                 <f:facet name="start">
@@ -110,7 +112,7 @@
             </p:ajaxStatus>
 
             <h:form styleClass="d-none">
-                <p:remoteCommand name="setPreferenceRemote" actionListener="#{userBean.setPreferenceRemote}" global="false" immediate="true"/>
+                <p:remoteCommand name="setPreferenceRemote" actionListener="#{userBean.setPreferenceRemote}" global="false" immediate="true" ignoreAutoUpdate="true" />
             </h:form>
 
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}" icon="ui-icon-alert">

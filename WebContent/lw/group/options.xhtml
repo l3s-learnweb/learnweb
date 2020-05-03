@@ -107,7 +107,7 @@
 							</ui:fragment>
 						</ui:fragment>
 
-						<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":growl :group_moderator_form"/>
+						<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":group_moderator_form"/>
 					</h:form>
 				</p:panel>
 
@@ -185,7 +185,7 @@
 							</div>
 						</ui:fragment>
 
-						<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":growl :group_security_form"/>
+						<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":group_security_form"/>
 					</h:form>
 				</p:panel>
 			</div>
@@ -199,7 +199,7 @@
 							</p:selectOneMenu>
 						</div>
 
-						<p:commandButton value="#{msg.copy}" action="#{groupOptionsBean.copyGroup}" process="@form" update=":growl">
+						<p:commandButton value="#{msg.copy}" action="#{groupOptionsBean.copyGroup}" process="@form">
 							<p:confirm message="#{of:format1(msg.group_copy_resources_question, groupOptionsBean.group.resources.size())}"/>
 						</p:commandButton>
 					</h:form>

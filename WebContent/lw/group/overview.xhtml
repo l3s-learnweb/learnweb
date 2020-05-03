@@ -44,13 +44,13 @@
             <p:panel header="#{msg.group_details}" styleClass="text-break">
                 <f:facet name="actions">
                     <h:form>
-                        <p:commandButton action="#{groupsBean.joinGroup}" disabled="#{not groupOverviewBean.group.canJoinGroup(userBean.user)}" styleClass="alt-btn" value="#{msg.join_group}" immediate="true" update=":growl"
+                        <p:commandButton action="#{groupsBean.joinGroup}" disabled="#{not groupOverviewBean.group.canJoinGroup(userBean.user)}" styleClass="alt-btn" value="#{msg.join_group}" immediate="true"
                                          oncomplete="window.location.replace(window.location.href);" rendered="${not groupOverviewBean.group.isMember(userBean.user)}">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
                             <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                         </p:commandButton>
 
-                        <p:commandButton action="#{groupsBean.leaveGroup}" styleClass="secondary-btn" value="#{msg.leave_group}" immediate="true" update=":growl"
+                        <p:commandButton action="#{groupsBean.leaveGroup}" styleClass="secondary-btn" value="#{msg.leave_group}" immediate="true"
                                          oncomplete="window.location.replace(window.location.href);" rendered="${groupOverviewBean.group.isMember(userBean.user)}">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
                             <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>

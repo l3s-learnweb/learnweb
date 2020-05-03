@@ -26,7 +26,7 @@
         <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" action="#{resourceDetailBean.cancelEdit}"
                          update=":resourceViewForm" global="false" immediate="true"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').show();"/>
-        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceViewForm :growl" global="false"
+        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceViewForm" global="false"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();" onsuccess="$('#resEditBtn').show();"/>
     </div>
 </div>

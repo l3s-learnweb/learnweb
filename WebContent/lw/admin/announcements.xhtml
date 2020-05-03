@@ -6,7 +6,7 @@
                 xmlns:of="http://omnifaces.org/functions"
                 xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="hideGrowl" value="true"/>
+
 <ui:param name="pageTitle" value="#{msg.announcements}"/>
 <ui:param name="hasAccessPermission" value="#{userBean.admin}"/>
 
@@ -51,7 +51,7 @@
 
             <p:column headerText="#{msg.hide}" sortBy="#{news.hidden}">
                 <p:selectBooleanCheckbox value="#{news.hidden}">
-                    <p:ajax update=":message" listener="#{adminAnnouncementsBean.onSave(news)}"
+                    <p:ajax listener="#{adminAnnouncementsBean.onSave(news)}"
                             global="false" onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()"/>
                 </p:selectBooleanCheckbox>
             </p:column>
@@ -64,7 +64,7 @@
                 </h:outputLink>
 
                 <p:commandLink actionListener="#{adminAnnouncementsBean.onDelete(news)}" styleClass="icon-link" process="@this" global="false"
-                               update="@form :message" title="#{msg.delete}"
+                               update="@form" title="#{msg.delete}"
                                onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.delete}"/>

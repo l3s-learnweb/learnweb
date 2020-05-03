@@ -65,7 +65,7 @@
                         <h:outputText value="#{msg.edit}"/>
                     </h:outputLink>
 
-                    <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :sidebar_menu" process="@this" styleClass="icon-link" title="#{msg.join}" >
+                    <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :sidebar_menu" process="@this" styleClass="icon-link" title="#{msg.join}" >
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                         <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
 

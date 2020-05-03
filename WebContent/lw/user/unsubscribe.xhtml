@@ -6,7 +6,7 @@
 
 	<ui:param name="pageTitle" value="#{msg['notification_settings.unsubscribe']}"/>
 	<ui:param name="hideBreadcrumbs" value="true"/>
-    <ui:param name="hideGrowl" value="true"/> 
+     
 	<ui:param name="hasAccessPermission" value="true"/>
 
 	<ui:define name="metadata">
@@ -23,7 +23,7 @@
 					<h:outputText value="#{msg['email_forum_notifications.change_how_often_we_send_mails']}" escape="false"/>
 				</h:outputLink>
 				<div>
-					<p:commandButton actionListener="#{unsubscribeBean.onUnsubscribe}" value="#{msg['notification_settings.unsubscribe_from_all']}" update=":growl"/>
+					<p:commandButton actionListener="#{unsubscribeBean.onUnsubscribe}" value="#{msg['notification_settings.unsubscribe_from_all']}"/>
 				</div>
 			</div>
 		</p:panel>

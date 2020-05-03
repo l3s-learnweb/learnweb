@@ -20,7 +20,7 @@
 	<h:outputScript library="layout" name="js/lib/emoji.js" target="body"/>
 
 	<h:form styleClass="d-none">
-		<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":growl"
+		<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
 						 global="false" onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
 	</h:form>
 

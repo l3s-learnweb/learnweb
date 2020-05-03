@@ -57,7 +57,7 @@
 				<p:message for="@previous"/>
 			</div>
 			<p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit"
-							 oncomplete="PF('createOrgWidget').hide();" process="@form" update=":organisationform :growl" global="false"/>
+							 oncomplete="PF('createOrgWidget').hide();" process="@form" update=":organisationform" global="false"/>
 		</h:form>
 	</p:dialog>
 </ui:define>

@@ -54,7 +54,7 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
         }
         if(!group.canViewResources(getUser()))
         {
-            group = null;
+            group = null; // set main object of this page to null to block access
             addAccessDeniedMessage();
             return;
         }

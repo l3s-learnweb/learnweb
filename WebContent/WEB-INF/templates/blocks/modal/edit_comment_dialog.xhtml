@@ -19,7 +19,7 @@
                 <h:outputText value="* #{msg.mandatory_field}"/>
             </div>
             <div class="d-flex flex-row-reverse">
-                <p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":comments_list :growl" process="@form"
+                <p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":comments_list" process="@form"
                                  value="#{msg.save}" onsuccess="PF('editCommentDialog').hide();"/>
                 <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('editCommentDialog').hide();return false;"/>
             </div>

@@ -7,7 +7,7 @@
 <p:dialog id="createResourceDialog" widgetVar="createResourceDialog" header="#{msg.create_resource}"
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
     <h:form id="create_resource_form">
-        <p:remoteCommand name="updateLocationCommand" actionListener="#{addResourceBean.updateTargetLocation}" update=":growl :create_resource_form" global="false"/>
+        <p:remoteCommand name="updateLocationCommand" actionListener="#{addResourceBean.updateTargetLocation}" update=":create_resource_form" global="false"/>
         <h:panelGroup layout="block" styleClass="fg-grid mb-3" rendered="#{addResourceBean.formStep == 1}">
             <h:outputText value="#{msg.type}:" styleClass="ui-outputlabel"/>
             <h:outputText value="#{addResourceBean.resource.type}" styleClass="fg-col text-capitalize"/>
@@ -34,7 +34,7 @@
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'file'}">
                 <p:outputLabel for="@next" value="#{msg.file}:"/>
                 <p:fileUpload id="fileUploadInput" listener="#{addResourceBean.handleFileUpload}" styleClass="fileupload-minimal" mode="advanced" auto="true"
-                              sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update=":growl @form" required="true"/>
+                              sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update="@form" required="true"/>
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.thumbnail3 != null}">
@@ -119,11 +119,11 @@
                 <h:outputText value="* #{msg.mandatory_field}"/>
             </div>
             <div class="d-flex flex-row-reverse">
-                <p:commandButton value="#{msg.next_step}" action="#{addResourceBean.handleUrlInput}" update=":growl @form" global="false"
+                <p:commandButton value="#{msg.next_step}" action="#{addResourceBean.handleUrlInput}" update="@form" global="false"
                                  rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}">
                 </p:commandButton>
 
-                <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update=":growl create_resource_form" global="false"
+                <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update="create_resource_form" global="false"
                                  onsuccess="resourceAddedHook(); return false;"
                                  oncomplete="handleDialogSubmit(xhr, status, args)"
                                  rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">

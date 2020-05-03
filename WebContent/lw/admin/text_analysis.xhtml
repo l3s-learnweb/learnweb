@@ -27,7 +27,7 @@
             <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 
             <p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
-                             update=":growl anlyse_form"/>
+                             update="anlyse_form"/>
 
             <p class="my-3">
                 <h:outputFormat value="#{msg.text_analysis_comments_count}">

@@ -6,7 +6,7 @@
 				xmlns:of="http://omnifaces.org/functions"
 				xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="hideGrowl" value="true"/>
+
 <ui:param name="pageTitle" value="#{msg.forum}"/>
 <ui:param name="hideContent" value="#{forumTopicsBean.group eq null}"/>
 
@@ -84,7 +84,7 @@
 
 			<p:column headerText="#{msg.options}" styleClass="text-center" rendered="#{(userBean.moderator)}" >
 				<p:commandButton value="#{msg.delete}" styleClass="moderator-btn ml-2" actionListener="#{forumTopicsBean.onDeleteTopic(topic)}" process="@this" global="false"
-								 update="@form :message" onstart="PF('topicsOverlay').show()" oncomplete="PF('topicsOverlay').hide()">
+								 update="@form" onstart="PF('topicsOverlay').show()" oncomplete="PF('topicsOverlay').hide()">
 					<p:confirm message="#{of:format1(msg.delete_entry_confirm_message, topic.title)}"/>
 				</p:commandButton>
 			</p:column>

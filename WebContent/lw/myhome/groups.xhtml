@@ -59,7 +59,7 @@
                     <h:outputText value="#{msg.edit}"/>
                 </h:outputLink>
 
-                <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this" update=":growl :my_groups :sidebar_menu">
+                <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this" update=":my_groups :sidebar_menu">
                     <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                     <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                     <p:confirm message="#{of:format1(msg.leave_group_question, group.title)}"/>
@@ -121,7 +121,7 @@
                 <div class="col text-right">
                     <p:commandButton ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}"
                                      oncomplete="if (!args.validationFailed) PF('createGroupDialog').hide();"
-                                     process="@form" update="@form :my_groups :growl"/>
+                                     process="@form" update="@form :my_groups"/>
                 </div>
             </div>
         </h:form>

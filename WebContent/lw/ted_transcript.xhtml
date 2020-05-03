@@ -24,8 +24,8 @@
 <ui:define name="center_layout">
 	<h:form styleClass="d-none">
 		<p:remoteCommand name="setSynonymsForWord" actionListener="${tedTranscriptBean.processActionSetSynonyms()}" immediate="true" process="@this" oncomplete="setSynonyms(xhr,status,args);" async="false"/>
-		<p:remoteCommand name="saveTedResource" actionListener="${tedTranscriptBean.processActionSaveResource()}" immediate="true" process="@this" update=":growl"/>
-		<p:remoteCommand name="submitTedResource" actionListener="${tedTranscriptBean.processActionSubmitResource()}" immediate="true" process="@this" update=":growl :transcript :transcript_options"/>
+		<p:remoteCommand name="saveTedResource" actionListener="${tedTranscriptBean.processActionSaveResource()}" immediate="true" process="@this"/>
+		<p:remoteCommand name="submitTedResource" actionListener="${tedTranscriptBean.processActionSubmitResource()}" immediate="true" process="@this" update=":transcript :transcript_options"/>
 		<p:remoteCommand name="saveTranscriptLog" actionListener="${tedTranscriptBean.processActionSaveLog()}" immediate="true" process="@this" update="@none"/>
 	</h:form>
 

@@ -36,7 +36,7 @@
                 <h:outputText value="* #{msg.mandatory_field}"/>
             </div>
             <div class="d-flex flex-row-reverse">
-                <p:commandButton value="#{msg.create_folder}" update=":growl :group_folders_tree :resourcesView" ajax="true" global="false"
+                <p:commandButton value="#{msg.create_folder}" update=":group_folders_tree :resourcesView" ajax="true" global="false"
                                  action="#{addFolderBean.saveFolder}" actionListener="#{groupResourcesBean.clearFoldersCaches}"
                                  onsuccess="PF('createFolderDialog').hide();resourceAddedHook();return false;"/>
 

@@ -7,7 +7,7 @@
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.survey}"/>
-<ui:param name="hideGrowl" value="true"/>
+
 
 <ui:define name="metadata">
 	<f:metadata>
@@ -68,11 +68,11 @@
 
 				<div class="d-flex mt-3">
 					<div class="mr-auto">
-						<p:commandButton value="#{msg.submit}" action="#{surveyBean.onSubmit()}" ajax="true" update=":message @form">
+						<p:commandButton value="#{msg.submit}" action="#{surveyBean.onSubmit()}" ajax="true" update="@form">
 							<p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}"/>
 						</p:commandButton>
 
-						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" ajax="true" update="@form :message" process="@form"
+						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" ajax="true" update="@form" process="@form"
 										 actionListener="#{surveyBean.onSave()}"
 										 rendered="#{surveyBean.resource.saveable}">
 						</p:commandButton>

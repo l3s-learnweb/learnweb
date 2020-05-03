@@ -8,16 +8,16 @@
 <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
 
 <h:form>
-    <p:remoteCommand name="commandOpenFolder" actionListener="#{groupResourcesBean.commandOpenFolder}" update=":resourcesWrapper :group_folders_tree :growl"
+    <p:remoteCommand name="commandOpenFolder" actionListener="#{groupResourcesBean.commandOpenFolder}" update=":resourcesWrapper :group_folders_tree"
                      global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
     <p:remoteCommand name="resourceAddedHook" actionListener="#{groupResourcesBean.clearCaches}" update=":resourcesWrapper :group_folders_tree"
                      global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 
     <p:remoteCommand name="commandBatchUpdateResources" actionListener="#{groupResourcesBean.commandBatchUpdateResources}"
-                     update=":resourcesWrapper :group_folders_tree :growl" global="false"
+                     update=":resourcesWrapper :group_folders_tree" global="false"
                      onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 
-    <p:remoteCommand name="commandEditFolder" actionListener="#{editFolderBean.commandEditFolder}" update=":growl :editFolderDialog"
+    <p:remoteCommand name="commandEditFolder" actionListener="#{editFolderBean.commandEditFolder}" update=":editFolderDialog"
                      global="false" oncomplete="PF('editFolderDialog').show();return false;"/>
 </h:form>
 

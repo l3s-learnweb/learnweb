@@ -35,7 +35,7 @@
 
     <h:form styleClass="d-none">
         <p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}"
-                         update=":submissionsWrapper :growl" global="false" oncomplete="PF('selectDlg').hide();"/>
+                         update=":submissionsWrapper" global="false" oncomplete="PF('selectDlg').hide();"/>
     </h:form>
 
     <p:dialog widgetVar="selectDlg" header="#{msg['Submission.select_resources_header']}" styleClass="ui-dialog-sticky-footer"
@@ -89,7 +89,7 @@
             <p:commandButton value="#{msg.select}" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}" update="@form" onclick="PF('selectDlg').show();" />
 
             <p:commandButton value="#{msg.submit}" action="#{submissionBean.actionSubmitItems}"
-                             update="@form :growl" rendered="#{not submissionBean.submitted and not empty submissionBean.selectedResources}">
+                             update="@form" rendered="#{not submissionBean.submitted and not empty submissionBean.selectedResources}">
                     <p:confirm message="#{msg['submission.are_you_sure_you_want_to_submit']}" icon="pi pi-exclamation-triangle"/>
             </p:commandButton>
         </h:form>

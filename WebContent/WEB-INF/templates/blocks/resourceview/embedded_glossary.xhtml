@@ -59,7 +59,7 @@
         <p:column style="width: 57px;" exportable="false">
             <div class="text-right">
                 <p:commandLink action="#{glossaryBean.deleteEntry(item)}" title="#{msg.delete}"
-                               process="@this" update=":glossary_table_form :growl" oncomplete="groupRow()">
+                               process="@this" update=":glossary_table_form" oncomplete="groupRow()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                     <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, item.topics)}"/>
                 </p:commandLink>
@@ -244,7 +244,7 @@
                                  pt:onpaste="setPasteStatus(this, 'phraseology');"/>
             </p:column>
             <p:column width="20" rendered="#{not term.deleted}">
-                <p:commandLink id="delete_term" actionListener="#{glossaryBean.deleteTerm(term)}" update=":lang_terms :growl" title="#{msg.delete}">
+                <p:commandLink id="delete_term" actionListener="#{glossaryBean.deleteTerm(term)}" update=":lang_terms " title="#{msg.delete}">
                     <f:ajax execute="@this lang_terms"/>
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                 </p:commandLink>
@@ -262,7 +262,7 @@
                 <p:commandButton value="#{msg.cancel}" action="#{glossaryBean.clear}"
                                  process="@this" resetValues="true" oncomplete="closeGlossForm()" styleClass="secondary-btn">
                 </p:commandButton>
-                <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave()}" update=":glossary_add :glossary_table_form :growl"
+                <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave()}" update=":glossary_add :glossary_table_form"
                                  binding="#{save}" oncomplete="groupRow()">
                 </p:commandButton>
             </div>
