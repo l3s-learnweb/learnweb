@@ -28,7 +28,8 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
 
     public void onLoad()
     {
-        try {
+        try
+        {
             String[] splits = parameter.split("_");
             int userId = Integer.parseInt(splits[0]);
             String hash = splits[1];
@@ -53,7 +54,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
             user.setPassword(password);
             um.save(user);
 
-            getFacesContext().getExternalContext().getFlash().setKeepMessages(true); // keep message after redirect
+            setKeepMessages();
             addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
             return "/lw/user/login.xhtml?faces-redirect=true";
         }
