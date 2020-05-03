@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +21,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     private int id = -1;
     private int groupId = -1;
     private int parentFolderId;
+    @NotBlank
     private String title;
     private String description;
     private int userId = -1;

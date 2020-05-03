@@ -11,7 +11,7 @@
     <p:remoteCommand name="commandOpenFolder" actionListener="#{groupResourcesBean.commandOpenFolder}" update=":resourcesWrapper :group_folders_tree"
                      global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
     <p:remoteCommand name="resourceAddedHook" actionListener="#{groupResourcesBean.clearCaches}" update=":resourcesWrapper :group_folders_tree"
-                     global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+                     global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();" ignoreAutoUpdate="true" />
 
     <p:remoteCommand name="commandBatchUpdateResources" actionListener="#{groupResourcesBean.commandBatchUpdateResources}"
                      update=":resourcesWrapper :group_folders_tree" global="false"
