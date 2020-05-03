@@ -36,14 +36,14 @@ public class ForumEditBean extends ApplicationBean implements Serializable
         topics = getLearnweb().getForumManager().getTopicsByGroup(group.getId());
 
         if(!canEditPost())
-            addMessage(FacesMessage.SEVERITY_ERROR, "no_view_right");
+            addAccessDeniedMessage();
     }
 
     public String onSavePost() throws SQLException
     {
         if(!canEditPost())
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "no_view_right");
+            addAccessDeniedMessage();
             return null;
         }
 

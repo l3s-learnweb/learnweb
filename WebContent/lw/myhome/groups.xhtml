@@ -106,14 +106,6 @@
                 <p:message for="@previous"/>
             </div>
 
-            <ui:fragment rendered="false">
-                <div class="form-group">
-                    <p:outputLabel for="@next" value="#{msg.language}:"/>
-                    <p:inputText id="new_language" value="#{groupsBean.newGroup.language}"/>
-                    <p:message for="@previous"/>
-                </div>
-            </ui:fragment>
-
             <div class="row">
                 <div class="col">
                     <h:outputText value="* #{msg.mandatory_field}"/>

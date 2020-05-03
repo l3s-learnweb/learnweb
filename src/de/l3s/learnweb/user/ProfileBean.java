@@ -149,7 +149,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
             getSelectedUser().setPassword(password);
             um.save(getSelectedUser());
 
-            addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
+            addGrowl(FacesMessage.SEVERITY_INFO, "password_changed");
 
             password = "";
             confirmPassword = "";
