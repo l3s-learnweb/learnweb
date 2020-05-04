@@ -6,14 +6,14 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-import javax.inject.Named;
+import javax.faces.convert.FacesConverter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.util.bean.BeanHelper;
 
-@Named
+@FacesConverter("localeConverter")
 public class LocaleConverter implements Converter<Locale>
 {
     private static final Logger log = LogManager.getLogger(LocaleConverter.class);
@@ -21,6 +21,7 @@ public class LocaleConverter implements Converter<Locale>
     @Override
     public Locale getAsObject(FacesContext arg0, UIComponent arg1, String value) throws ConverterException
     {
+        log.debug("LocaleConverter.getAsObject");
         if(null == value)
         {
             log.warn("value is null: " + BeanHelper.getRequestSummary());
@@ -32,6 +33,7 @@ public class LocaleConverter implements Converter<Locale>
     @Override
     public String getAsString(FacesContext arg0, UIComponent arg1, Locale value) throws ConverterException
     {
+        log.debug("LocaleConverter.getAsString");
         if(null == value)
         {
             log.warn("Locale is null: " + BeanHelper.getRequestSummary());
