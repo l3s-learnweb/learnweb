@@ -249,23 +249,11 @@
             <artifactId>ffmpeg</artifactId>
             <version>0.6.2</version>
         </dependency>
-        <!-- Used in ExportManager, what it does?  -->
-        <dependency>
-            <groupId>com.googlecode.plist</groupId>
-            <artifactId>dd-plist</artifactId>
-            <version>1.23</version>
-        </dependency>
         <!-- Used in ExportManager, generates HTML  -->
         <dependency>
             <groupId>com.hp.gagawa</groupId>
             <artifactId>gagawa</artifactId>
             <version>1.0.1</version>
-        </dependency>
-        <!-- Used in ResourceExport to determine user's platform -->
-        <dependency>
-            <groupId>eu.bitwalker</groupId>
-            <artifactId>UserAgentUtils</artifactId>
-            <version>1.21</version>
         </dependency>
         <!-- Date formatting, e.g. '10 minutes ago' -->
         <dependency>

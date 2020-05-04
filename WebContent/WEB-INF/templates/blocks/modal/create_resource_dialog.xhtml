@@ -7,7 +7,6 @@
 <p:dialog id="createResourceDialog" widgetVar="createResourceDialog" header="#{msg.create_resource}"
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
     <h:form id="create_resource_form">
-        <p:remoteCommand name="updateLocationCommand" actionListener="#{addResourceBean.updateTargetLocation}" update=":create_resource_form" global="false"/>
         <h:panelGroup layout="block" styleClass="fg-grid mb-3" rendered="#{addResourceBean.formStep == 1}">
             <h:outputText value="#{msg.type}:" styleClass="ui-outputlabel"/>
             <h:outputText value="#{addResourceBean.resource.type}" styleClass="fg-col text-capitalize"/>

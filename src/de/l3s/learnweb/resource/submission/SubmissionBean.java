@@ -486,26 +486,21 @@ public class SubmissionBean extends ApplicationBean implements Serializable
 
     public String getResourcePath(Resource r)
     {
-        String resourcePath = null;
+        StringBuilder sb = new StringBuilder();
         try
         {
-            if(r.getGroupId() == 0)
-                resourcePath = "My Resources > " + r.getTitle(); // TODO translate
-            else if(r.getGroupId() > 0)
-            {
-                if(r.getPrettyPath() != null)
-                {
-                    resourcePath = r.getPrettyPath() + " > " + r.getTitle();
-                }
-                else
-                    resourcePath = r.getGroup().getTitle() + " > " + r.getTitle();
-            }
+            sb.append(r.getGroupId() == 0 ? getLocaleMessage("myPrivateResources") : r.getGroup().getTitle());
+
+            if(r.getPrettyPath() != null)
+                sb.append(" > ").append(r.getPrettyPath());
+
+            sb.append(" > ").append(r.getTitle());
         }
         catch(SQLException e)
         {
             log.error("Error while retrieving group information for resource: " + r.getId(), e);
         }
-        return resourcePath;
+        return sb.toString();
     }
 
     public List<SelectItem> getEditSurveyResourcesList()

@@ -249,14 +249,12 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
             Folder folder = getParentFolder();
             while(folder != null)
             {
-                sb.insert(0, " > " + folder.getTitle());
+                sb.insert(0, " > ");
+                sb.insert(0, folder.getTitle());
                 folder = folder.getParentFolder();
             }
 
-            if(id != 0)
-                sb.append(" > ").append(title);
-            sb.insert(0, getGroup() != null ? getGroup().getTitle() : "Private resources");
-            prettyPath = sb.toString();
+            prettyPath = sb.append(title).toString();
         }
         return prettyPath;
     }

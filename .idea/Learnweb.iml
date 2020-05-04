@@ -137,9 +137,7 @@
     <orderEntry type="library" name="Maven: org.json:json:20190722" level="project" />
     <orderEntry type="library" name="Maven: net.bramp.ffmpeg:ffmpeg:0.6.2" level="project" />
     <orderEntry type="library" name="Maven: org.modelmapper:modelmapper:0.7.7" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.plist:dd-plist:1.23" level="project" />
     <orderEntry type="library" name="Maven: com.hp.gagawa:gagawa:1.0.1" level="project" />
-    <orderEntry type="library" name="Maven: eu.bitwalker:UserAgentUtils:1.21" level="project" />
     <orderEntry type="library" name="Maven: org.ocpsoft.prettytime:prettytime:4.0.5.Final" level="project" />
     <orderEntry type="library" name="Maven: org.apache.pdfbox:pdfbox:2.0.19" level="project" />
     <orderEntry type="library" name="Maven: org.apache.pdfbox:fontbox:2.0.19" level="project" />

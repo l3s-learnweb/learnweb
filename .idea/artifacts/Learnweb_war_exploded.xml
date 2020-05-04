@@ -108,9 +108,7 @@
           <element id="library" level="project" name="Maven: org.json:json:20190722" />
           <element id="library" level="project" name="Maven: net.bramp.ffmpeg:ffmpeg:0.6.2" />
           <element id="library" level="project" name="Maven: org.modelmapper:modelmapper:0.7.7" />
-          <element id="library" level="project" name="Maven: com.googlecode.plist:dd-plist:1.23" />
           <element id="library" level="project" name="Maven: com.hp.gagawa:gagawa:1.0.1" />
-          <element id="library" level="project" name="Maven: eu.bitwalker:UserAgentUtils:1.21" />
           <element id="library" level="project" name="Maven: org.ocpsoft.prettytime:prettytime:4.0.5.Final" />
           <element id="library" level="project" name="Maven: org.apache.pdfbox:pdfbox:2.0.19" />
           <element id="library" level="project" name="Maven: org.apache.pdfbox:fontbox:2.0.19" />

@@ -72,10 +72,11 @@
                         <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="table"/>
                     </p:commandButton>
 
-                    <!-- TODO: The download dialog and its bean must be improved before it can be shown -->
                     <ui:fragment rendered="#{userBean.admin}">
+                        <!-- TODO: The download dialog and its bean must be improved before it can be shown -->
                         <span class="ui-separator"><span class="ui-icon fa fa-ellipsis-v"/></span>
-                        <p:commandButton title="#{msg['group_resources.download_backup']}" icon="fa fa-cloud-download" onclick="PF('dlg1').show();" type="button" />
+                        <p:commandButton type="button" title="#{msg['group_resources.download_backup']}" icon="fa fa-cloud-download"
+                                         onclick="PF('dataExportedDialog').show();"/>
                     </ui:fragment>
                 </f:facet>
 
@@ -237,25 +238,16 @@
     </div>
 </p:dialog>
 
-<ui:remove>
-    <p:dialog header="#{msg['group_resources.download_backup']}" widgetVar="dlg1" appendTo="@(body)"
-              modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
-        <h:outputFormat value="#{msg.export_resources_warning}">
-            <f:param value="#{dialogBean.totalResourcesNum(groupResourcesBean.group.id)} "/>
-            <f:param value="#{dialogBean.externalResourcesNum(groupResourcesBean.group.id)}"/>
+<p:dialog header="#{msg['group_resources.download_backup']}" widgetVar="dataExportedDialog" appendTo="@(body)"
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" rendered="#{userBean.admin}">
+    <h:form>
+        <h:outputFormat value="#{msg.export_resources_warning}" styleClass="d-block mb-3">
+            <f:param value="#{groupResourcesBean.group.resourcesCount}"/>
         </h:outputFormat>
 
-        <p:dataTable var="entry" value="#{dialogBean.externalResourcesList(groupResourcesBean.group.id)}" scrollable="true" scrollHeight="150">
-            <p:column headerText="#{msg.external_resources}">
-                <h:outputText value="#{entry}"/>
-            </p:column>
-
-        </p:dataTable>
-        <!-- This needs to be rewritten. The group id should ne be passed this way !!!! -->
-        <h:inputHidden id="group_id" name="group_requested" value="#{groupResourcesBean.group.id}"/>
-        <h:commandLink value="#{msg.start_download}" action="#{dataExporterBean.requestGroupResources()}"/>
-    </p:dialog>
-</ui:remove>
+        <p:commandButton value="#{msg.start_download}" action="#{dataExporterBean.requestGroupResources(groupResourcesBean.group)}"/>
+    </h:form>
+</p:dialog>
 
 <h:outputScript>
     /**

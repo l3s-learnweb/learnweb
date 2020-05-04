@@ -15,7 +15,6 @@ import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
@@ -59,9 +58,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void create(final String type, Group targetGroup, Folder targetFolder)
     {
-        // Set target group and folder in beans
         this.reset();
-        this.setTarget(targetGroup, targetFolder);
+
+        // Set target group and folder in beans
+        this.targetGroup = targetGroup;
+        this.targetFolder = targetFolder;
 
         // Set target view and defaults
         switch(type)
@@ -90,7 +91,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 this.resource.setType(ResourceType.presentation);
                 break;
             default:
-                log.error("Unsupported item type: " + type);
+                log.error("Unsupported item type: {}", type);
                 break;
         }
     }
@@ -263,7 +264,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            log.debug("addResource; res=" + resource);
+            log.debug("addResource; res={}", resource);
 
             resource.setDeleted(false);
 
@@ -293,17 +294,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public String getCurrentPath() throws SQLException
     {
-        if(targetGroup != null)
+        if(targetFolder != null)
         {
-            if(targetFolder != null)
-            {
-                return targetFolder.getPrettyPath();
-            }
-
-            return targetGroup.getTitle();
+            return targetGroup.getTitle() + " > " + targetFolder.getPrettyPath();
         }
 
-        return getLocaleMessage("myResourcesTitle"); // TODO @astappiev private group can have folders please checkAddResourceBean.java
+        return targetGroup.getTitle();
     }
 
     public Resource getResource()
@@ -314,24 +310,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public int getFormStep()
     {
         return formStep;
-    }
-
-    public void setTarget(Group targetGroup, Folder targetFolder)
-    {
-        this.targetGroup = targetGroup;
-        this.targetFolder = targetFolder;
-
-        SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
-        selectLocationBean.setTargetGroup(targetGroup);
-        selectLocationBean.setTargetFolder(targetFolder);
-    }
-
-    // TODO @astappiev is this method and remoteCommand name="updateLocationCommand" obsolete?
-    public void updateTargetLocation()
-    {
-        SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
-        this.targetGroup = selectLocationBean.getTargetGroup();
-        this.targetFolder = selectLocationBean.getTargetFolder();
     }
 
     public List<SelectItem> getAvailableGlossaryLanguages()
