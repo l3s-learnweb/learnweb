@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -234,7 +235,14 @@ public class ApplicationBean
      */
     protected void addMessage(FacesMessage.Severity severity, String msgKey, Object... args)
     {
-        getFacesContext().addMessage(null, getFacesMessage(severity, msgKey, args));
+        FacesContext fc = getFacesContext();
+        fc.addMessage(null, getFacesMessage(severity, msgKey, args));
+
+        if(FacesMessage.SEVERITY_FATAL == severity)
+        {
+            HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
+            req.setAttribute("hideContent", true);
+        }
     }
 
     /**
