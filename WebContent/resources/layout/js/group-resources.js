@@ -413,22 +413,35 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
   }
 }
 
-function openFolder(folderId) {
-  selected.unselectAll();
-  PF('learnweb').updateSearchParams({ folder_id: folderId });
+function openFolder(folderId, pushHistoryState = true) {
+  if (pushHistoryState) {
+    pushHistoryStateOnOpenFolder(folderId);
+  }
 
+  selected.unselectAll();
   commandOpenFolder([
     { name: 'folderId', value: folderId },
   ]);
 }
 
-function openGroup(groupId) {
-  PF('learnweb').updateSearchParams({ group_id: groupId }, true);
+function pushHistoryStateOnOpenFolder(folderId) {
+  const sp = new URLSearchParams(window.location.search);
+  const oldFolderId = sp.get('folder_id') || 0;
+  sp.set('folder_id', folderId);
 
-  commandOpenFolder([
-    { name: 'groupId', value: groupId },
-  ]);
+  if (!window.history.state || window.history.state.folder_id == null) {
+    window.history.replaceState({ folder_id: oldFolderId }, null);
+  }
+
+  const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${sp.toString()}`;
+  window.history.pushState({ folder_id: folderId }, null, newUrl);
 }
+
+window.addEventListener('popstate', (e) => {
+  if (e.state && e.state.folder_id != null && e.state.fancybox_open == null) {
+    openFolder(e.state.folder_id, false);
+  }
+}, false);
 
 function doAction(action, extraAttr1, extraAttr2) {
   switch (action) {
@@ -443,10 +456,8 @@ function doAction(action, extraAttr1, extraAttr2) {
       break;
     case 'open-folder': {
       const last = selected.getItem(selected.size() - 1);
-      if (selected.size() > 0 && last.type === 'folder') {
+      if (selected.size() > 0) {
         openFolder(last.id);
-      } else if (selected.size() > 0 && last.type === 'group') {
-        openGroup(last.id);
       } else {
         console.error('No folder selected.');
       }
@@ -539,8 +550,6 @@ function openItems() {
     openResourceView($('[data-resview="grid"]'), $(this));
   } else if (itemId && itemType === 'folder') {
     openFolder(itemId);
-  } else if (itemId && itemType === 'group') {
-    openGroup(itemId);
   }
 }
 

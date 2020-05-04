@@ -82,23 +82,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     });
   },
 
-  updateSearchParams(searchParams, cleanExisting) {
-    const sp = new URLSearchParams(cleanExisting ? undefined : window.location.search);
-
-    Object.keys(searchParams).forEach((key) => {
-      const value = searchParams[key];
-
-      if (value === null) {
-        sp.delete(key);
-      } else {
-        sp.set(key, value);
-      }
-    });
-
-    const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${sp.toString()}`;
-    window.history.replaceState(searchParams, document.title, newUrl);
-  },
-
   isDesktop() {
     return window.innerWidth > 1200; // Do not forget to change scss value according
   },
@@ -245,6 +228,16 @@ function setPreference(prefKey, prefValue) {
   ]);
 }
 
+function handlePopstateResView(e) {
+  if (e.state && e.state.fancybox_open === false) {
+    $.fancybox.close();
+
+    const state = window.history.state || {};
+    delete state.fancybox_open;
+    window.history.replaceState(state, null);
+  }
+}
+
 function openResourceView(items, target, isEdit = false) {
   $.fancybox.open(items, {
     defaultType: 'iframe',
@@ -269,8 +262,20 @@ function openResourceView(items, target, isEdit = false) {
           break;
         }
       }
+
+      const state = window.history.state || {};
+      state.fancybox_open = false;
+      window.history.replaceState(state, null);
+      window.history.pushState({ fancybox_open: true }, null);
+    },
+    beforeClose: () => {
+      if (window.history.state && window.history.state.fancybox_open === true) {
+        window.history.back();
+      }
     },
   });
+
+  window.addEventListener('popstate', handlePopstateResView, false);
 }
 
 /**
