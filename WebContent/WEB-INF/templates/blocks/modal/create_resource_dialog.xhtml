@@ -25,7 +25,7 @@
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'website'}">
                 <p:outputLabel for="@next" value="#{msg.url}:"/>
                 <div class="fg-col">
-                    <p:inputText value="#{addResourceBean.resource.url}" required="true" requiredmessage="#{msg.mandatory_field}" validator="#{addResourceBean.validateUrl}"/>
+                    <p:inputText value="#{addResourceBean.resource.url}" required="true" requiredmessage="#{msg.mandatory_field}" validator="urlValidator"/>
                     <p:message for="@previous"/>
                 </div>
             </ui:fragment>
