@@ -183,7 +183,7 @@
             </h:panelGroup>
             <p:message for="@previous"/>
 
-            <p:outputLabel for="@next" styleClass="font-weight-bold" value="#{msg['Glossary.Definition']}"/>
+            <p:outputLabel for="description" styleClass="font-weight-bold" value="#{msg['Glossary.Definition']}"/>
             <h:panelGroup>
                 <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description" />
                 <p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="w-100"
