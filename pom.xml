@@ -18,6 +18,8 @@
         <maven.compiler.release>11</maven.compiler.release>
         <maven.dependency.tomcat.version>9.0.34</maven.dependency.tomcat.version>
         <maven.dependency.imageio.version>3.5</maven.dependency.imageio.version>
+        <maven.dependency.log4j.version>2.13.2</maven.dependency.log4j.version>
+        <maven.dependency.jersey.version>1.19.4</maven.dependency.jersey.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.learnweb.tasks.users.DeleteOldUsers</maven.assembly.mainClass>
@@ -116,7 +118,7 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>3.5</version>
+            <version>3.6</version>
         </dependency>
 
         <!-- ################ Apache commons ################ -->
@@ -213,13 +215,13 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-web</artifactId>
-            <version>2.13.1</version>
+            <version>${maven.dependency.log4j.version}</version>
         </dependency>
         <!-- Binding from slf4j to log4j, required by solr client -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.13.1</version>
+            <version>${maven.dependency.log4j.version}</version>
         </dependency>
 
         <!-- ################ Other dependencies (usually your dependencies go to this section) ################ -->
@@ -269,7 +271,7 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>4.0.4.Final</version>
+            <version>4.0.5.Final</version>
         </dependency>
         <!-- Used to make a thumbnail of PDF in ResourcePreviewMaker -->
         <dependency>
@@ -281,17 +283,17 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-bundle</artifactId>
-            <version>1.19.4</version>
+            <version>${maven.dependency.jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
             <artifactId>oauth-signature</artifactId>
-            <version>1.19.4</version>
+            <version>${maven.dependency.jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
             <artifactId>oauth-client</artifactId>
-            <version>1.19.4</version>
+            <version>${maven.dependency.jersey.version}</version>
         </dependency>
 
         <!-- ################ Local dependencies ################ -->
@@ -347,6 +349,7 @@
             </testResource>
         </testResources>
         <plugins>
+            <!-- Specifies target Java version for builds -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -354,10 +357,12 @@
                     <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
+            <!-- Runs tests before build -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.0.0-M4</version>
             </plugin>
+            <!-- Specifies WebARchive configuration -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.3</version>
@@ -381,6 +386,7 @@
                     </webResources>
                 </configuration>
             </plugin>
+            <!-- Builds scss styles as part of maven build process -->
             <plugin>
                 <artifactId>exec-maven-plugin</artifactId>
                 <groupId>org.codehaus.mojo</groupId>
@@ -416,6 +422,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Used to deploy application to Tomcat instance -->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -430,6 +437,8 @@
                     <path>/${path}##${project.version}</path>
                 </configuration>
             </plugin>
+            <!-- Can be used to create JAR archive and set specific class as entry point -->
+            <!-- Set the required class in properties, but avoid to commit this change -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -443,10 +452,17 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
+            <!-- Provides commands to check available updated for dependencies -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
         </plugins>
     </build>
 
     <profiles>
+        <!-- Used by default, aimed for local development -->
         <profile>
             <id>local</id>
             <activation>
@@ -463,6 +479,7 @@
                 </resources>
             </build>
         </profile>
+        <!-- Used on GitLab when creating package to deploy -->
         <profile>
             <id>prod</id>
             <properties>
