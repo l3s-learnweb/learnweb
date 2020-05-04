@@ -31,11 +31,11 @@
         <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_list_view.xhtml"></ui:decorate>
     </ui:fragment>
 
-    <h:outputText value="${msg['group_resources.no_resources_found']}" class="res-empty-text"
-                  rendered="#{paginator.isEmpty() and paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
+    <h:outputText value="${msg['group_resources.no_resources_found']}" class="text-muted p-2 d-flex"
+                  rendered="#{paginator.isEmpty() and query eq null}"/>
 
-    <h:outputText value="#{msg.no_results_found}" class="res-empty-text"
-                  rendered="#{paginator.isEmpty() and (paginator.getClass().getSimpleName() eq 'SearchPaginator' or paginator.getClass().getSimpleName() eq 'FilterPaginator')}"/>
+    <h:outputText value="#{msg.no_results_found}" class="text-muted p-2 d-flex"
+                  rendered="#{paginator.isEmpty() and query ne null}"/>
 </h:panelGroup>
 
 <ui:decorate template="/WEB-INF/templates/blocks/resources/paging.xhtml">

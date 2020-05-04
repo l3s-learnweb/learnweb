@@ -43,7 +43,7 @@
                     </p:treeNode>
                 </p:tree>
 
-                <h:outputText value="${msg.group_no_folders}" class="res-no-folders-text"
+                <h:outputText value="${msg['group_resources.no_folders_found']}" styleClass="text-muted"
                               rendered="#{empty groupResourcesBean.group.subFolders}"/>
             </h:form>
         </div>

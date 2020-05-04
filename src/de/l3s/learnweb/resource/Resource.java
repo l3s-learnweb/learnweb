@@ -1588,6 +1588,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         @Override
         public String get(Object key)
         {
+            // TODO: why the type of key can't be changed to String?
             if(!key.getClass().equals(String.class))
                 throw new IllegalArgumentException("key must be a string");
 
