@@ -383,13 +383,13 @@
     }
 
     .ui-icon-bullet {
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       margin-left: 0;
       display: inline-block;
       line-height: inherit;
       background-color: $primaryColor;
-      min-width: 12px;
+      min-width: 10px;
       @include border-radius(50%);
 
       &:before {

@@ -77,15 +77,15 @@
         <h:form id="create_group_form">
             <div class="form-group">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
-                <p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" required="true"/>
+                <p:inputText value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" label="#{msg.title}"/>
                 <p:message for="@previous"/>
             </div>
 
-            <ui:fragment rendered="#{userBean.user.courses.size() gt 1}">
+            <ui:fragment rendered="#{not empty userBean.user.courses}">
                 <div class="form-group">
                     <p:outputLabel for="@next" value="#{msg.course}:"/>
-                    <p:selectOneMenu id="course_id" value="#{groupsBean.newGroup.courseId}" required="true">
-                        <f:selectItems var="c" value="#{userBean.user.courses}" itemLabel="#{c.title}" itemValue="#{c.id}"/>
+                    <p:selectOneMenu value="#{groupsBean.newGroup.courseId}" required="true" label="#{msg.course}">
+                        <f:selectItems value="#{userBean.user.courses}" var="c" itemLabel="#{c.title}" itemValue="#{c.id}"/>
                     </p:selectOneMenu>
                     <p:message for="@previous"/>
                 </div>
@@ -93,7 +93,7 @@
 
             <div class="form-group">
                 <p:outputLabel for="@next" value="#{msg.description}:"/>
-                <p:textEditor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" height="200">
+                <p:textEditor widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" label="#{msg.description}" height="200">
                     <f:facet name="toolbar">
                         <span class="ql-formats">
                             <button class="ql-bold"></button>
@@ -111,9 +111,8 @@
                     <h:outputText value="* #{msg.mandatory_field}"/>
                 </div>
                 <div class="col text-right">
-                    <p:commandButton ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}"
-                                     oncomplete="if (!args.validationFailed) PF('createGroupDialog').hide();"
-                                     process="@form" update="@form :my_groups"/>
+                    <p:commandButton value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" process="@form" update="@form :my_groups"
+                                     oncomplete="if (!args.validationFailed) PF('createGroupDialog').hide();"/>
                 </div>
             </div>
         </h:form>

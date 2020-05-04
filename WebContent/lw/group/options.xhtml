@@ -119,7 +119,7 @@
                                 <c:if test="#{userBean.admin}">
 								    <f:selectItem itemValue="ALL_LEARNWEB_USERS" itemLabel="#{msg['policy.option.ALL_LEARNWEB_USERS']}" />
                                 </c:if>
-                                <c:if test="#{groupOptionsBean.group.course.organisation.courses.size() gt 1}">
+                                <c:if test="#{not empty groupOptionsBean.group.course.organisation.courses}">
                                     <f:selectItem itemValue="ORGANISATION_MEMBERS" itemLabel="#{msg['policy.option.ORGANISATION_MEMBERS']} (#{groupOptionsBean.group.course.organisation.title})" />
                                 </c:if>
                                 <f:selectItem itemValue="COURSE_MEMBERS" itemLabel="#{msg['policy.option.COURSE_MEMBERS']}"/>
@@ -207,7 +207,7 @@
 
 				<p:panel header="#{msg['Miscellaneous']}">
 					<h:form id="group_delete_form">
-						<p:commandButton value="#{msg.delete_group}" title="#{msg.delete}" action="#{groupsBean.deleteGroup}" ajax="false" process="@this">
+						<p:commandButton value="#{msg.delete_group}" title="#{msg.delete}" action="#{groupsBean.deleteGroup}" process="@this">
 							<p:confirm message="#{of:format1(msg.group_delete_question, groupOptionsBean.group.title)}"/>
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOptionsBean.group}"/>
 						</p:commandButton>
