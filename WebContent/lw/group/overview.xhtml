@@ -109,7 +109,7 @@
 
                     <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllMembers}" layout="block">
                         <p:commandButton id="loadAllMembers" value="#{msg.all_members}" styleClass="secondary-btn" onstart="PF('membersOverlay').show()" oncomplete="initGridder();PF('membersOverlay').hide()"
-                                         update="@form" actionListener="#{groupOverviewBean.fetchAllMembers()}" global="false"/>
+                                         update="@form" actionListener="#{groupOverviewBean.fetchAllMembers()}"/>
                     </h:panelGroup>
 
                     <p:blockUI block="members" widgetVar="membersOverlay"/>

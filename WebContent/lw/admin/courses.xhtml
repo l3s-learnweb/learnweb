@@ -31,8 +31,7 @@
                 <div class="d-flex">
                     <div class="mr-auto">#{msg.courses}</div>
                     <div class="d-md-block d-flex flex-column">
-                        <p:commandButton value="#{msg.create}" styleClass="float-right alt-btn"
-                                         onclick="PF('createCourseWidget').show();" global="false"/>
+                        <p:commandButton value="#{msg.create}" styleClass="float-right alt-btn" onclick="PF('createCourseWidget').show();"/>
                     </div>
                 </div>
             </f:facet>
@@ -65,7 +64,7 @@
                     <h:outputText value="#{msg.edit}"/>
                 </h:outputLink>
 
-                <p:commandLink styleClass="icon-link" actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" global="false"
+                <p:commandLink styleClass="icon-link" actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this"
                                update="@form" rendered="#{course.memberCount == 0 || userBean.admin}" title="#{msg.delete}"
                                onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
@@ -74,7 +73,7 @@
                 </p:commandLink>
 
                 <p:commandLink styleClass="icon-link" actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
-                               update="@form" rendered="#{userBean.admin}" global="false"
+                               update="@form" rendered="#{userBean.admin}"
                                onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
                     <i class="fa fa-fw fa-eye-slash text-muted" aria-hidden="true"></i>
                     <h:outputText value="#{msg.anonymise}"/>
@@ -97,7 +96,7 @@
                 <p:message for="@previous"/>
             </div>
             <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}"
-                             update=":courses_form" process="@form" global="false"
+                             update=":courses_form" process="@form"
                              onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide(); PF('createCourseWidget').hide();"/>
         </h:form>
     </p:dialog>

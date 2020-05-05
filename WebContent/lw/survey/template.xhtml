@@ -43,11 +43,11 @@
 			</f:facet>-->
 			<h:panelGroup id="questions">
 				<div class="d-flex flex-nowrap mb-2">
-					<p:commandLink  styleClass="bg-transparent border-0 text-dark fa fa-pencil align-self-center mr-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this" global="false"/>
+					<p:commandLink  styleClass="bg-transparent border-0 text-dark fa fa-pencil align-self-center mr-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
 					<h1><h:outputText value="#{surveyTemplateBean.survey.title}" escape="false"/></h1>
 				</div>
 				<div class="d-flex flex-nowrap mb-2">
-					<p:commandLink  styleClass="bg-transparent border-0 text-dark fa fa-pencil align-self-center mr-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this" global="false"/>
+					<p:commandLink  styleClass="bg-transparent border-0 text-dark fa fa-pencil align-self-center mr-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
 					<h:outputText value="#{surveyTemplateBean.survey.description}" escape="false"/>
 				</div>
 				<h:panelGroup layout="block" rendered="#{userBean.moderator}" class="d-flex flex-column mb-3">

@@ -28,7 +28,7 @@
 			<div class="form-group">
 				<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" itemLabel="#{msg.statistics_show_detailed}"/>
 			</div>
-			<p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminStatisticsBean.onGroupStatistics}" update="output" value="#{msg.statistics_show}" process="@form"/>
+			<p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" actionListener="#{adminStatisticsBean.onGroupStatistics}" update="output" value="#{msg.statistics_show}" process="@form"/>
 		</p:panel>
 
 		<p:dataTable id="output" var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">

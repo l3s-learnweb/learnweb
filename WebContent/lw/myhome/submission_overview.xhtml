@@ -83,7 +83,7 @@
 				<p:selectBooleanCheckbox value="#{submissionBean.selectedSubmission.surveyMandatory}"
 										 itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="editSurveyCheckBox">
 					<p:ajax update=":edit_dialog_survey_menu"
-							oncomplete="toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');" global="false"/>
+							oncomplete="toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');"/>
 				</p:selectBooleanCheckbox>
 			</div>
 
@@ -164,7 +164,7 @@
 				<p:selectBooleanCheckbox value="#{submissionBean.newSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}"
 										 widgetVar="surveyCheckBox" id="survey_checkbox">
 					<p:ajax update=":create_dialog_survey_menu"
-							oncomplete="toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');" global="false"/>
+							oncomplete="toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');"/>
 				</p:selectBooleanCheckbox>
 			</div>
 

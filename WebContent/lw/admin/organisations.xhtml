@@ -25,8 +25,7 @@
 				<div class="d-flex">
 					<div class="mr-auto">#{msg.organizations}</div>
 					<div class="d-md-block d-flex flex-column">
-						<p:commandButton value="#{msg.create}" styleClass="float-right alt-btn"
-										 onclick="PF('createOrgWidget').show();" global="false"/>
+						<p:commandButton value="#{msg.create}" styleClass="float-right alt-btn" onclick="PF('createOrgWidget').show();"/>
 					</div>
 				</div>
 			</f:facet>
@@ -57,7 +56,7 @@
 				<p:message for="@previous"/>
 			</div>
 			<p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit"
-							 oncomplete="PF('createOrgWidget').hide();" process="@form" update=":organisationform" global="false"/>
+							 oncomplete="PF('createOrgWidget').hide();" process="@form" update=":organisationform"/>
 		</h:form>
 	</p:dialog>
 </ui:define>

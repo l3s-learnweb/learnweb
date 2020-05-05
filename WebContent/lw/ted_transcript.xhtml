@@ -56,7 +56,7 @@
 							<p:outputLabel for="@next" styleClass="mr-2" value="#{msg.select_transcript_lang}:"/>
 							<p:selectOneMenu id="select_lang" styleClass="mr-2" value="#{tedTranscriptBean.transcriptLanguage}">
 								<f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
-								<p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" global="false" oncomplete="clearTagList();"/>
+								<p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
 							</p:selectOneMenu>
 							<p:commandButton id="save" styleClass="mr-2" value="#{msg.save}" onclick="saveEditing();" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 							<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
@@ -64,9 +64,9 @@
 							<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
 
 							<p:menuButton value="#{msg.options}" iconPos="right" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}">
-								<p:menuitem value="#{msg.show_summary}" global="false" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv(); selectTab(1);">
+								<p:menuitem value="#{msg.show_summary}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv(); selectTab(1);">
 								</p:menuitem>
-								<p:menuitem value="#{msg.show_tags}" global="false" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv(); selectTab(0);">
+								<p:menuitem value="#{msg.show_tags}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv(); selectTab(0);">
 								</p:menuitem>
 								<p:menuitem value="#{msg.disable_editing}" icon="ui-icon-pencil" rendered="#{!tedTranscriptBean.tedResource.readOnlyTranscript and userBean.moderator}" update=":transcript :transcript_options">
 									<f:setPropertyActionListener value="true" target="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
@@ -137,8 +137,8 @@
 				<p:inputText id="text" />
 				<div class="mt-2 d-flex justify-content-between">
 					<p:defaultCommand target="userinput_ok"/>
-					<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel'); return false;" global="false"></p:commandButton>
-					<p:commandButton id="userinput_ok" value="#{msg['ted_transcript.Ok']}" onclick="getUserText('ok'); return false;" global="false"></p:commandButton>
+					<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel'); return false;"></p:commandButton>
+					<p:commandButton id="userinput_ok" value="#{msg['ted_transcript.Ok']}" onclick="getUserText('ok'); return false;"></p:commandButton>
 				</div>
 			</h:form>
 		</p:dialog>

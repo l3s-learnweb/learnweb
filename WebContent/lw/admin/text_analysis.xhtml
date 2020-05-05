@@ -26,7 +26,7 @@
             </p:blockUI>
             <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 
-            <p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
+            <p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
                              update="anlyse_form"/>
 
             <p class="my-3">

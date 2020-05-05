@@ -25,12 +25,12 @@
     <h:outputScript library="layout" name="js/search.js" target="body"/>
 
     <h:form class="d-none">
-        <p:remoteCommand name="ajaxLoadNextPage" actionListener="${searchBean.loadNextPage()}" update=":searchResultsNext" immediate="true" global="false"
+        <p:remoteCommand name="ajaxLoadNextPage" actionListener="${searchBean.loadNextPage()}" update=":searchResultsNext" immediate="true"
                          onstart="console.log('loadingNextPage')" oncomplete="displayNextPage(xhr, status, args);"/>
-        <p:remoteCommand name="logResourceOpenedCommand" actionListener="${searchBean.logResourceOpened()}" immediate="true" global="false" async="true"/>
-        <p:remoteCommand name="getResourceDetailsCommand" actionListener="${searchBean.getResourceDetailsCommand}" immediate="true" global="false"
+        <p:remoteCommand name="logResourceOpenedCommand" actionListener="${searchBean.logResourceOpened()}" immediate="true" async="true"/>
+        <p:remoteCommand name="getResourceDetailsCommand" actionListener="${searchBean.getResourceDetailsCommand}" immediate="true"
                          update=":search_item_meta" oncomplete="updateSlideDetails(xhr, status, args);"/>
-        <p:remoteCommand name="saveResourceCommand" actionListener="${searchBean.selectResourceCommand}" immediate="true" global="false"
+        <p:remoteCommand name="saveResourceCommand" actionListener="${searchBean.selectResourceCommand}" immediate="true"
                          update=":copy_resource_dialog" onstart="$.fancybox.close();" oncomplete="PF('copyResourceDialog').show();"/>
     </h:form>
 

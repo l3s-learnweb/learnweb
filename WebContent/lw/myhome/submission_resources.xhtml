@@ -35,7 +35,7 @@
 
     <h:form styleClass="d-none">
         <p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}"
-                         update=":submissionsWrapper" global="false" oncomplete="PF('selectDlg').hide();"/>
+                         update=":submissionsWrapper" oncomplete="PF('selectDlg').hide();"/>
     </h:form>
 
     <p:dialog widgetVar="selectDlg" header="#{msg['Submission.select_resources_header']}" styleClass="ui-dialog-sticky-footer"

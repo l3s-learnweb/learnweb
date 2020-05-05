@@ -62,7 +62,7 @@
 
                 <c:if test="#{field.type eq 'AUTOCOMPLETE_MULTIPLE'}">
                     <p:autoComplete id="input_complete_multi_#{field.name}" title="#{field.info}" required="#{field.required}"
-                                    dropdown="true" multiple="true" dynamic="true" global="false" cache="true"
+                                    dropdown="true" multiple="true" dynamic="true" cache="true"
                                     value="#{res.metadataMultiValue[field.name]}" completeMethod="#{field.completeText}"/>
                     <p:tooltip for="input_complete_multi_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}"/>
                 </c:if>

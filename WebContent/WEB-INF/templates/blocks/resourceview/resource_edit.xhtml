@@ -19,14 +19,14 @@
     <p:defaultCommand target="saveResourceButton"/>
     <div class="mr-auto">
         <p:commandButton styleClass="alt-btn" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
-                         update=":resourceViewForm" global="false" immediate="true" rendered="#{userBean.admin}"
+                         update=":resourceViewForm" immediate="true" rendered="#{userBean.admin}"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').show();"/>
     </div>
     <div>
         <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" action="#{resourceDetailBean.cancelEdit}"
-                         update=":resourceViewForm" global="false" immediate="true"
+                         update=":resourceViewForm" immediate="true"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').show();"/>
-        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceViewForm" global="false"
+        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceViewForm"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();" onsuccess="$('#resEditBtn').show();"/>
     </div>
 </div>

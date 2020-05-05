@@ -44,7 +44,7 @@
 		<dt class="col-sm-3">#{msg.relevance}:</dt>
 		<dd class="col-sm-9">
 			<h:panelGroup id="relevance" layout="block">
-				<p:rating value="#{res.starRatingRounded}" cancel="false" global="false" immediate="true"
+				<p:rating value="#{res.starRatingRounded}" cancel="false" immediate="true"
 						  disabled="${res.isRatedByUser(userBean.user.id) or not res.canAnnotateResource(userBean.user)}">
 					<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update=":relevance"/>
 				</p:rating>
@@ -74,11 +74,11 @@
 		<dd class="col-sm-9">
 			<h:panelGrid id="reliability" columns="4">
 				<h:outputText value="+#{res.thumbUp}"/>
-				<p:commandLink action="#{resourceDetailBean.onThumbUp}" global="false" update=":reliability" ariaLabel="Rate thump up" process="@this">
+				<p:commandLink action="#{resourceDetailBean.onThumbUp}" update=":reliability" ariaLabel="Rate thump up" process="@this">
 					<i class="fa fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
 				</p:commandLink>
 
-				<p:commandLink action="#{resourceDetailBean.onThumbDown}" global="false" update=":reliability" ariaLabel="Rate thump down" process="@this">
+				<p:commandLink action="#{resourceDetailBean.onThumbDown}" update=":reliability" ariaLabel="Rate thump down" process="@this">
 					<i class="fa fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
 				</p:commandLink>
 				<h:outputText value="-#{res.thumbDown}"/>
@@ -240,7 +240,7 @@
 								<f:param name="query" value="#{tag.name}"/>
 							</p:linkButton>
 							<p:commandButton action="#{resourceDetailBean.onDeleteTag}" icon="fa fa-times" styleClass="secondary-btn rounded-0"
-											 global="false" update=":tags_list" process="@this"
+											 update=":tags_list" process="@this"
 											 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
 											 rendered="#{res.canEditResource(userBean.user)}">
 								<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
@@ -256,7 +256,7 @@
 					<p:message for="@previous"/>
 				</div>
 
-				<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" global="false" process=":tag_text_input"
+				<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process=":tag_text_input"
 								 update=":tag_text_input :tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 				</p:commandButton>
 			</h:panelGroup>
@@ -274,7 +274,7 @@
 					<p:message for="@previous"/>
 				</div>
 
-				<p:commandButton value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" global="false"
+				<p:commandButton value="#{msg.addComment}" action="#{resourceDetailBean.addComment}"
 								 update=":comments_list :comment_text_input" process=":comment_text_input"
 								 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 				</p:commandButton>
@@ -296,7 +296,7 @@
 											   rendered="#{resourceDetailBean.canEditComment(comment)}">
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 								</p:commandLink>
-								<p:commandLink value="#{msg.delete}" styleClass="text-danger" ajax="true" global="false"
+								<p:commandLink value="#{msg.delete}" styleClass="text-danger" ajax="true"
 											   action="#{resourceDetailBean.onDeleteComment}" update=":comments_list" process="@this"
 											   onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
 											   rendered="#{resourceDetailBean.canEditComment(comment)}">

@@ -20,7 +20,7 @@
 
 	<h:form styleClass="d-none">
 		<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
-						 global="false" onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
+						 onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
 	</h:form>
 
 	<h:outputText value="This resource has been removed" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0)}"/>
@@ -41,7 +41,7 @@
 					<div class="res-view-controls">
 						<div class="mr-auto">
 							<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn" title="#{msg.edit_resource}"
-											 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceViewForm" global="false" form="resourceViewForm"
+											 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceViewForm" form="resourceViewForm"
 											 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').hide();"
 											 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
 

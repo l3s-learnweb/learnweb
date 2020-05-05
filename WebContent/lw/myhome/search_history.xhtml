@@ -74,7 +74,7 @@
 						<ul class="sh-sessions-list #{searchHistoryBean.showGroupHistory == false ? '' : 'sh-session-group'} overflow-auto vh-100">
 							<ui:repeat var="ss" value="#{searchHistoryBean.sessions}">
 								<li>
-									<p:commandLink update=":queriesList" process="@this" global="false" styleClass="white-space-normal">
+										<p:commandLink update=":queriesList" process="@this" styleClass="white-space-normal">
 										<f:setPropertyActionListener target="#{searchHistoryBean.selectedSession}" value="#{ss}"/>
 										<span></span>
 
@@ -114,7 +114,7 @@
 						<ul class="sh-queries-list overflow-auto vh-100">
 							<ui:repeat var="sq" value="#{searchHistoryBean.queries}">
 								<li class="py-2 queries-background">
-									<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="white-space-normal px-2">
+									<p:commandLink update=":snippetsList" process="@this" styleClass="white-space-normal px-2">
 										<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{sq}"/>
 
 										<h:outputText value="#{sq.timestamp}" styleClass="query-time">

@@ -118,11 +118,11 @@
                 <h:outputText value="* #{msg.mandatory_field}"/>
             </div>
             <div class="d-flex flex-row-reverse">
-                <p:commandButton value="#{msg.next_step}" action="#{addResourceBean.handleUrlInput}" update="@form" global="false"
+                <p:commandButton value="#{msg.next_step}" action="#{addResourceBean.handleUrlInput}" update="@form"
                                  rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}">
                 </p:commandButton>
 
-                <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update="create_resource_form" global="false"
+                <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update="create_resource_form"
                                  onsuccess="resourceAddedHook(); return false;"
                                  oncomplete="handleDialogSubmit(xhr, status, args)"
                                  rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">

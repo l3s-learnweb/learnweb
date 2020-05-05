@@ -38,7 +38,7 @@
         <h:form>
             <div id="grouped_activities">
                 <p:selectManyCheckbox layout="responsive" columns="3" value="#{activityDashboardBean.selectedActionItems}" var="action">
-                    <p:ajax event="valueChange" global="false" process="@this"/>
+                    <p:ajax event="valueChange" process="@this"/>
 
                     <f:selectItems value="#{activityDashboardBean.actions.keySet()}" var="action" itemLabel="#{action}" itemValue="#{action}"/>
                 </p:selectManyCheckbox>
@@ -50,7 +50,7 @@
 
             <div id="all_activities" class="collapse">
                 <p:selectManyCheckbox layout="responsive" columns="3" value="#{activityDashboardBean.selectedGroupedActions}">
-                    <p:ajax event="valueChange" global="false" process="@this"/>
+                    <p:ajax event="valueChange" process="@this"/>
 
                     <f:selectItems value="#{activityDashboardBean.groupedActions}" var="groupedAction" itemLabel="#{groupedAction}" itemValue="#{groupedAction}"/>
                 </p:selectManyCheckbox>

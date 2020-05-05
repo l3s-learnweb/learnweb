@@ -54,7 +54,7 @@
                         <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}"/>
                     </div>
 
-                    <p:commandButton global="false" onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" update=":banlist" action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form"/>
+                    <p:commandButton onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" update=":banlist" action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form"/>
                 </h:form>
             </p:panel>
         </div>
@@ -90,9 +90,9 @@
             </p:column>
 
             <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                <p:commandLink onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
-                               update=":banlist" styleClass="icon-link"
-                               title="#{msg.unban}" global="false">
+                <p:commandLink onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()"
+                               actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this" update=":banlist"
+                               styleClass="icon-link" title="#{msg.unban}">
                     <i class="fa fa-fw fa-ban text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.unban}"/>
                     <p:confirm message="#{msg.unban} #{accessData.name}?"/>

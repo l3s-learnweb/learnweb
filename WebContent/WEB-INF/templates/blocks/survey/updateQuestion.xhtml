@@ -16,7 +16,7 @@
                 <h:panelGroup id="selectTypeWrapper" layout="block">
                 <p:selectOneMenu  value="#{question.type}" disabled="#{associated and question.id != 0}">
                     <f:selectItems value="#{question.questionTypes}" var="type" itemValue="#{type}" itemLabel="#{msg['question_type.'+=type]}" itemDescription="#{msg['question_type.desc_'+=type]}"/>
-                    <p:ajax event="change" update="answers" global="false" process="@this answers"/>
+                    <p:ajax event="change" update="answers" process="@this answers"/>
                 </p:selectOneMenu>
                 </h:panelGroup>
             </div>
@@ -72,13 +72,13 @@
                             <p:tooltip for="@next" value="#{msg['survey.delete_answer']}" position="right"/>
                             <p:outputPanel>
                                 <p:commandButton styleClass="bg-transparent border-0 text-dark fa fa-minus align-self-center" style="vertical-align: sub;"
-                                                 action="#{surveyTemplateBean.onDeleteAnswer(answer)}" update="updateForm:answers" value="" global="false" process="@form"/>
+                                                 action="#{surveyTemplateBean.onDeleteAnswer(answer)}" update="updateForm:answers" value="" process="@form"/>
                             </p:outputPanel>
                         </h:panelGroup>
                     </ui:repeat>
                     <p:tooltip for="@next" value="#{msg['survey.add_answer']}" position="left"/>
                     <p:commandButton styleClass="bg-transparent border-0 text-dark fa fa-plus align-self-center mt-2"
-                                     action="#{surveyTemplateBean.onAddEmptyAnswer}" update="@form" value="" global="false" process="@form"/>
+                                     action="#{surveyTemplateBean.onAddEmptyAnswer}" update="@form" value="" process="@form"/>
                 </div>
             </p:outputPanel>
         </p:outputPanel>
