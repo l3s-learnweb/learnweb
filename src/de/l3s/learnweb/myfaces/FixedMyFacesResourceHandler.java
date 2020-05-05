@@ -12,6 +12,7 @@ import org.apache.myfaces.resource.ResourceHandlerCache;
 import org.apache.myfaces.resource.ResourceLoader;
 import org.apache.myfaces.resource.ResourceMeta;
 import org.apache.myfaces.resource.ResourceValidationUtils;
+import org.apache.myfaces.util.lang.Assert;
 
 public class FixedMyFacesResourceHandler extends ResourceHandlerImpl
 {
@@ -20,14 +21,11 @@ public class FixedMyFacesResourceHandler extends ResourceHandlerImpl
     @Override
     public Resource createResource(String resourceName, String libraryName, String contentType)
     {
+        Assert.notNull(resourceName, "resourceName");
+
         Resource resource = null;
 
-        if(resourceName == null)
-        {
-            throw new NullPointerException();
-        }
-
-        if(resourceName.isEmpty())
+        if(resourceName.length() == 0)
         {
             return null;
         }

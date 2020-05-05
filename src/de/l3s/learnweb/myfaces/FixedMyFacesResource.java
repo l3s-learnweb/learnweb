@@ -1,18 +1,11 @@
 package de.l3s.learnweb.myfaces;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.faces.application.ProjectStage;
 import javax.faces.context.FacesContext;
 
-import org.apache.myfaces.resource.AliasResourceMetaImpl;
+import org.apache.myfaces.config.MyfacesConfig;
 import org.apache.myfaces.resource.ResourceHandlerSupport;
 import org.apache.myfaces.resource.ResourceImpl;
 import org.apache.myfaces.resource.ResourceLoader;
@@ -31,58 +24,40 @@ public class FixedMyFacesResource extends ResourceImpl
         super(resourceMeta, resourceLoader, support, contentType, url, requestPath);
     }
 
-    public Map<String, String> getResponseHeaders() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        if (facesContext.getApplication().getResourceHandler().isResourceRequest(facesContext)) {
-            HashMap<String, String> headers = new HashMap<>();
-
-            long lastModified;
-            try {
-                lastModified = getResourceLastModified(this.getURL());
-            } catch (IOException var7) {
-                lastModified = -1L;
-            }
-
-            if (this.couldResourceContainValueExpressions() && lastModified < getResourceHandlerSupport().getStartupTime()) {
-                lastModified = getResourceHandlerSupport().getStartupTime();
-            } else if (getResourceMeta() instanceof AliasResourceMetaImpl && lastModified < getResourceHandlerSupport().getStartupTime()) {
-                lastModified = getResourceHandlerSupport().getStartupTime();
-            }
-
-            if (lastModified >= 0L) {
-                headers.put("Last-Modified", ResourceLoaderUtils.formatDateHeader(lastModified));
-                long expires;
-                if (facesContext.isProjectStage(ProjectStage.Development)) {
-                    expires = System.currentTimeMillis();
-                } else {
-                    expires = System.currentTimeMillis() + getResourceHandlerSupport().getMaxTimeExpires();
+    protected long getLastModified(FacesContext facesContext)
+    {
+        if(MyfacesConfig.getCurrentInstance(facesContext).isResourceCacheLastModified())
+        {
+            Long lastModified = getResourceMeta().getLastModified();
+            if(lastModified == null)
+            {
+                try
+                {
+                    lastModified = getResourceLastModified(this.getURL());
+                }
+                catch(IOException e)
+                {
+                    lastModified = -1L;
                 }
 
-                headers.put("Expires", ResourceLoaderUtils.formatDateHeader(expires));
+                getResourceMeta().setLastModified(lastModified);
             }
 
-            return headers;
-        } else {
-            return Collections.emptyMap();
+            return lastModified;
+        }
+
+        try
+        {
+            return getResourceLastModified(this.getURL());
+        }
+        catch(IOException e)
+        {
+            return -1;
         }
     }
 
-    public static long getResourceLastModified(URL url) throws IOException {
-        if ("file".equals(url.getProtocol())) {
-            String externalForm = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
-            File file = new File(externalForm.substring(5));
-            return file.lastModified();
-        } else {
-            return ResourceLoaderUtils.getResourceLastModified(url.openConnection());
-        }
-    }
-
-    private boolean couldResourceContainValueExpressions() {
-        if (getResourceMeta().couldResourceContainValueExpressions()) {
-            return true;
-        } else {
-            String contentType = this.getContentType();
-            return "text/css".equals(contentType);
-        }
+    private static long getResourceLastModified(URL url) throws IOException
+    {
+        return ResourceLoaderUtils.getResourceLastModified(url.openConnection());
     }
 }
