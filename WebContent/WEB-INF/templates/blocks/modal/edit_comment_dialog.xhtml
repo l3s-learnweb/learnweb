@@ -2,6 +2,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:o="http://omnifaces.org/ui"
                 xmlns:p="http://primefaces.org/ui">
 
 <p:dialog id="editCommentDialog" widgetVar="editCommentDialog" header="#{msg.edit}" appendTo="@(body)"
@@ -10,7 +12,9 @@
         <div class="fg-grid mb-3">
             <p:outputLabel for="@next" value="#{msg.comment}:"/>
             <div class="fg-col">
-                <p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}"/>
+                <o:onloadScript>if (typeof emoji !== 'undefined') emoji.init();</o:onloadScript>
+                <p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}" pt:data-emoji="true"
+                                 required="true"/>
             </div>
         </div>
 

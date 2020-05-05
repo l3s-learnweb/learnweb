@@ -16,6 +16,10 @@
 
 .emoji-picker-container {
   position: relative;
+
+  textarea {
+    width: 100%;
+  }
 }
 
 .emoji-picker-open {
