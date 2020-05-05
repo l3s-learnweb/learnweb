@@ -47,7 +47,7 @@
 .emoji-picker {
   display: none;
   z-index: 999;
-  max-width: 18rem;
+  max-width: 16.5rem;
   overflow: hidden;
   background: $white;
   border: 1px solid $gray-500;
@@ -90,10 +90,13 @@
   }
 
   .emoji-picker-list {
-    padding: 0.5rem;
+    padding: 0.4rem;
     margin: 0;
     list-style: none;
     text-align: left;
+    max-height: 20rem;
+    overflow: auto;
+    scrollbar-width: thin;
 
     > li {
       display: inline-block;
@@ -104,6 +107,9 @@
       padding: 0.4rem 0.2rem 0.55rem;
       font-size: 1.5rem;
       line-height: 1;
+      width: 2.5rem;
+      height: 2.5rem;
+      text-align: center;
       cursor: pointer;
 
       &:hover {

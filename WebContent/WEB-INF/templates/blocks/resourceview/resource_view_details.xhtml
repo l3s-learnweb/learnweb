@@ -8,6 +8,8 @@
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
+<h:outputScript library="layout" name="js/lib/emoji.js" target="body"/>
+
 <dl class="row mb-n2">
 	<ui:fragment rendered="${not empty res.fileName and res.source ne 'loro'}">
 		<dt class="col-sm-3">#{msg.file}:</dt>
