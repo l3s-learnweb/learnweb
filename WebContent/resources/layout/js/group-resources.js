@@ -518,7 +518,7 @@ function doAction(action, extraAttr1, extraAttr2) {
             { name: 'itemId', value: item.id },
           ]);
         } else {
-          openResourceView($('[data-resview="grid"]'), $(item.element));
+          openResourceView($('[data-resview="grid"]'), $(item.element), true);
         }
       } else {
         console.error('No resources selected.');
