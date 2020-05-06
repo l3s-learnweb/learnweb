@@ -266,7 +266,7 @@ function openResourceView(items, target, isEdit = false) {
       const state = window.history.state || {};
       state.fancybox_open = false;
       window.history.replaceState(state, null);
-      window.history.pushState({ fancybox_open: true }, null);
+      window.history.pushState({ fancybox_open: true }, null, instance.group[instance.currIndex].src);
     },
     beforeClose: () => {
       if (window.history.state && window.history.state.fancybox_open === true) {
