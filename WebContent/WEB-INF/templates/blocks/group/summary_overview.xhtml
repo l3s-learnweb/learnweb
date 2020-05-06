@@ -53,13 +53,13 @@
                 </f:facet>
 
                 <div class="activity-feed-slider activity-feed-updated-resources">
-                    <p:carousel value="#{summary.updatedResources.keySet()}" var="item" styleClass="ui-carousel-light" responsive="true"
+                    <p:carousel value="#{summary.updatedResources.keySet()}" var="res" styleClass="ui-carousel-light" responsive="true"
                                 circular="true" breakpoint="-1">
                         <h:outputLink styleClass="mx-auto text-decoration-none" style="min-width:10rem;" value="resource.jsf" pt:data-resview="default">
-                            <f:param name="resource_id" value="#{item.resource.id}"/>
+                            <f:param name="resource_id" value="#{res.id}"/>
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                <ui:param name="res" value="#{item.resource}"/>
+                                <ui:param name="res" value="#{res}"/>
                                 <ui:param name="showSelectIcon" value="false"/>
                             </ui:decorate>
                         </h:outputLink>
