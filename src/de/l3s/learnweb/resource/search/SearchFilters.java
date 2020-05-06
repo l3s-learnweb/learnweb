@@ -103,7 +103,7 @@ public class SearchFilters implements Serializable
 
     public String[] getFacetFields()
     {
-        return new String[]{ "location", "type", "groupId", "collector_s", "author_s", "coverage_s", "publisher_s",  "language_level_ss",  "yell_target_ss",  "yell_purpose_ss", "tags_ss" };
+        return new String[]{ "location", "type", "groupId", "collector_s", "author_s", "coverage_s", "publisher_s", "language_level_ss", "yell_target_ss", "yell_purpose_ss", "tags_ss", "language" };
     }
 
     public void putResourceCounters(List<FacetField> facetFields)
@@ -144,6 +144,9 @@ public class SearchFilters implements Serializable
                     break;
                 case "tags_ss":
                     putResourceCounters(FilterType.tags, facetField.getValues(), false);
+                    break;
+                case "language":
+                    putResourceCounters(FilterType.language, facetField.getValues(), false);
                     break;
             }
         }
