@@ -290,22 +290,22 @@
             <groupId>rita</groupId>
             <artifactId>wordnet</artifactId>
             <version>1.0</version>
-            <systemPath>${basedir}/WebContent/WEB-INF/lib/ritaWN.jar</systemPath>
             <scope>system</scope>
+            <systemPath>${basedir}/WebContent/WEB-INF/lib/wordnet.jar</systemPath>
         </dependency>
-        <!-- most probably used for Wordnet on the TED transcript page -->
+        <!-- Dependency of rita.wordnet -->
         <dependency>
-            <groupId>com.nexagis.jawbone</groupId>
-            <artifactId>supportWN</artifactId>
+            <groupId>net.didion</groupId>
+            <artifactId>jwnl</artifactId>
             <version>1.0</version>
-            <systemPath>${basedir}/WebContent/WEB-INF/lib/supportWN.jar</systemPath>
             <scope>system</scope>
+            <systemPath>${basedir}/WebContent/WEB-INF/lib/jwnl.jar</systemPath>
         </dependency>
         <!-- Dependency of rita.wordnet -->
         <dependency>
             <groupId>org.processing</groupId>
             <artifactId>core</artifactId>
-            <version>3.3.7</version>
+            <version>2.2.1</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->

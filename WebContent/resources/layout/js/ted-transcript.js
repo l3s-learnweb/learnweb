@@ -284,6 +284,7 @@ function disableJQueryContextMenu() {
 let usertext = '';
 let selStr = '';
 
+// noinspection JSUnusedGlobalSymbols
 function setSynonyms(xhr, status, args) {
   let synonyms = '';
   synonyms += args.synonyms;

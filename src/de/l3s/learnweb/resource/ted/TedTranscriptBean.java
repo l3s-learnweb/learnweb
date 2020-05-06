@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource.ted;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -35,16 +37,16 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
-import rita.wordnet.RiWordnet;
+import de.l3s.util.NlpHelper;
 
 @Named
 @ViewScoped
 public class TedTranscriptBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
     private static final long serialVersionUID = -1803725556672379697L;
-    //private static ILexicalDatabase db = new NictWordNet();
-    //private static HashMap<String, RelatednessCalculator> rcs = new HashMap<String, RelatednessCalculator>();
+    private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
+
+    private static final Pattern SPACES = Pattern.compile("\\s+");
 
     private Resource tedResource;
     private String transcriptLanguage;
@@ -87,11 +89,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         if(user == null) // not logged in
             return;
 
-        //Setting the Relatedness Calculator to calculate the semantic similarity algorithms based on POS
-        //rcs.put("n", new LeacockChodorow(db));
-        //rcs.put("v", new LeacockChodorow(db));
-        //rcs.put("a", new Lesk(db));
-        //rcs.put("r", new Lesk(db));
         locale = getUserBean().getLocaleCode();
 
         //String logPreference = getPreference("transcript_show_del_res");
@@ -259,83 +256,23 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         }
     }
 
-    /*public double wordSimilarity(String word1, String word2, String pos)
-    {
-    WS4JConfiguration.getInstance().setMFS(true);
-
-    double s = rcs.get(pos).calcRelatednessOfWords(word1, word2);
-
-    return s;
-    }
-    */
-
     /**
      * Retrieves the set of synonyms from WordNet for given selection of word
      */
     public void processActionSetSynonyms()
     {
-        String word = getParameter("word");
+        String words = getParameter("word");
         StringBuilder synonymsList = new StringBuilder();
-        int wordCount = word.trim().split("\\s+").length;
-        word = word.replaceAll("\\p{P}", "");
+        int wordCount = SPACES.split(words.trim()).length;
 
         if(wordCount <= 5)
         {
-            RiWordnet wordnet = new RiWordnet(null);
+            ArrayList<String> definitions = NlpHelper.getRitaWordnetDefinitions(words);
+            
+            for(String definition : definitions)
+                synonymsList.append(definition).append("&lt;br/&gt;");
 
-            //For storing the similarity measures between input and retrieved synset words
-            //HashMap<String, Double> similarityMeasures = new HashMap<String, Double>();
-
-            String[] pos = wordnet.getPos(word);
-            String[] synonyms = new String[pos.length];
-            for(int i = 0, wLen = pos.length; i < wLen; i++)
-            {
-                synonyms[i] = word + "(" + pos[i] + ")- " + wordnet.getDescription(word, pos[i]) + ": ";
-
-                String[] possynonyms = wordnet.getAllSynsets(word, pos[i]);
-                //similarityMeasures.clear();
-                if(possynonyms != null)
-                {
-                    for(int j = 0, pLen = possynonyms.length; j < pLen; j++)
-                    {
-                        //double measure = wordSimilarity(word, possynonyms[j], pos[i]);
-
-                        //similarityMeasures.put(possynonyms[j], measure);
-                        if(j == possynonyms.length - 1 && j < 9)
-                            synonyms[i] += possynonyms[j] + ". ";
-                        else if(j < 9)
-                            synonyms[i] += possynonyms[j] + ", ";
-                        else if(j == 9)
-                        {
-                            synonyms[i] += possynonyms[j] + ". ";
-                            break;
-                        }
-
-                    }
-
-                    //HashMap<String, Double> sortedSimilarityMeasures = sortByValues(similarityMeasures);
-                    //int j = 0;
-                    //int synonymListSize = sortedSimilarityMeasures.entrySet().size();
-                    /*for(Map.Entry<String, Double> entry : sortedSimilarityMeasures.entrySet())
-                    {
-                    j++;
-                    if(j == synonymListSize)
-                        synonyms[i] += entry.getKey() + ".";
-                    else if(j < 10)
-                        synonyms[i] += entry.getKey() + ", ";
-                    else
-                    {
-                        synonyms[i] += entry.getKey() + ".";
-                        break;
-                    }
-                    }*/
-                }
-                log.debug(synonyms[i]);
-                synonymsList.append(synonyms[i]).append("&lt;br/&gt;");
-
-            }
-
-            if(pos.length == 0 && wordCount == 1)
+            if(definitions.isEmpty() && wordCount == 1)
                 synonymsList.append(getLocaleMessage("No definition available"));
             else if(synonymsList.length() == 0)
                 synonymsList.append(getLocaleMessage("Multiple"));
@@ -358,7 +295,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
                 addErrorMessage(e);
             }
         }
-
     }
 
     public void submitLongSummary()
@@ -421,7 +357,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
                 {
                     String langFromPropFile;
 
-                    for(Map.Entry<String, String> entry : langList.entrySet())
+                    for(Entry<String, String> entry : langList.entrySet())
                     {
                         langFromPropFile = getLocaleMessage("language_" + entry.getValue());
                         if(langFromPropFile == null)
