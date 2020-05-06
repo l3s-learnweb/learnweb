@@ -520,6 +520,7 @@ public class GroupManager
         if(folder.getGroupId() == newGroupId && folder.isParentOf(newParentFolderId))
             return; // if move to own sub folder
 
+        int groupId = folder.getGroupId();
         int parentFolderId = folder.getParentFolderId();
         List<Folder> subFolders = folder.getSubFolders();
 
@@ -542,10 +543,18 @@ public class GroupManager
         {
             getFolder(newParentFolderId).clearCaches();
         }
+        else if (newGroupId > 0)
+        {
+            getGroupById(newGroupId).clearCaches();
+        }
 
         if(parentFolderId > 0)
         {
             getFolder(parentFolderId).clearCaches();
+        }
+        else if(groupId > 0)
+        {
+            getGroupById(groupId).clearCaches();
         }
     }
 
