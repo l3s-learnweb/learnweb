@@ -283,29 +283,13 @@
             <artifactId>oauth-client</artifactId>
             <version>${maven.dependency.jersey.version}</version>
         </dependency>
-
-        <!-- ################ Local dependencies ################ -->
-        <!-- Added by Trevor, TEDWordnet, used in TedTranscriptBean -->
+        <!-- RiTa WordNet (used to retrieve Definitions for TedTranscript) -->
+        <!-- We are using an unofficial package from https://github.com/shibme/diction, the original repository
+             is https://github.com/dhowe/RiTa, but they don't provide maven repository and don't include data to JAR -->
         <dependency>
-            <groupId>rita</groupId>
-            <artifactId>wordnet</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/WebContent/WEB-INF/lib/wordnet.jar</systemPath>
-        </dependency>
-        <!-- Dependency of rita.wordnet -->
-        <dependency>
-            <groupId>net.didion</groupId>
-            <artifactId>jwnl</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/WebContent/WEB-INF/lib/jwnl.jar</systemPath>
-        </dependency>
-        <!-- Dependency of rita.wordnet -->
-        <dependency>
-            <groupId>org.processing</groupId>
-            <artifactId>core</artifactId>
-            <version>2.2.1</version>
+            <groupId>me.shib.java.lib</groupId>
+            <artifactId>diction</artifactId>
+            <version>0.1.1</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->

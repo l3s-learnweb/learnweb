@@ -119,7 +119,7 @@
           <element id="library" level="project" name="Maven: com.sun.jersey:jersey-core:1.19.4" />
           <element id="library" level="project" name="Maven: com.sun.jersey.contribs.jersey-oauth:oauth-client:1.19.4" />
           <element id="library" level="project" name="Maven: com.sun.jersey:jersey-client:1.19.4" />
-          <element id="library" level="project" name="Maven: org.processing:core:2.2.1" />
+          <element id="library" level="project" name="Maven: me.shib.java.lib:diction:0.1.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

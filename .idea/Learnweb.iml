@@ -148,25 +148,7 @@
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-core:1.19.4" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey.contribs.jersey-oauth:oauth-client:1.19.4" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-client:1.19.4" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: rita:wordnet:1.0">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/WebContent/WEB-INF/lib/wordnet.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: net.didion:jwnl:1.0">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/WebContent/WEB-INF/lib/jwnl.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="Maven: org.processing:core:2.2.1" level="project" />
+    <orderEntry type="library" name="Maven: me.shib.java.lib:diction:0.1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter:5.6.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.6.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.1.0" level="project" />

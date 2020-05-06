@@ -21,9 +21,8 @@ public final class NlpHelper
     {
         ArrayList<String> synonymsList = new ArrayList<>();
         words = PUNCTUATION.matcher(words).replaceAll(""); // remove punctuation characters
-        
-        RiWordnet wordnet = new RiWordnet(null);
 
+        RiWordnet wordnet = new RiWordnet();
         String[] pos = wordnet.getPos(words);
         for(final String p : pos)
         {
@@ -38,7 +37,7 @@ public final class NlpHelper
 
                 for(int j = 0, len = Math.min(synonyms.length, 10); j < len; j++)
                 {
-                    if (j != 0) sb.append(", ");
+                    if(j != 0) sb.append(", ");
                     sb.append(synonyms[j]);
                 }
             }
