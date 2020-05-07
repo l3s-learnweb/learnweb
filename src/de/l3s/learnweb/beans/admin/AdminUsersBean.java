@@ -21,7 +21,7 @@ public class AdminUsersBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 155899638864937408L;
 
-    private transient List<User> users;
+    private List<User> users;
     private int courseId;
 
     public void onLoad() throws SQLException

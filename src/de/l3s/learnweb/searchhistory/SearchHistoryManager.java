@@ -105,10 +105,10 @@ public class SearchHistoryManager
     {
         List<Query> queries = new ArrayList<>();
 
-        if(SessionCache.Instance().existsUserId(userId))
+        if(SessionCache.instance().existsUserId(userId))
         {
 
-            List<Session> sessions = SessionCache.Instance().getByUserId(userId);
+            List<Session> sessions = SessionCache.instance().getByUserId(userId);
 
             for(Session session : sessions)
             {
@@ -126,10 +126,10 @@ public class SearchHistoryManager
     {
         List<Query> queries = new ArrayList<>();
 
-        if(SessionCache.Instance().existsGroupId(groupId))
+        if(SessionCache.instance().existsGroupId(groupId))
         {
 
-            List<Session> sessions = SessionCache.Instance().getByGroupId(groupId);
+            List<Session> sessions = SessionCache.instance().getByGroupId(groupId);
 
             for(Session session : sessions)
             {
@@ -164,7 +164,7 @@ public class SearchHistoryManager
             sessions.add(session);
         }
 
-        SessionCache.Instance().cacheByUserId(userId, sessions);
+        SessionCache.instance().cacheByUserId(userId, sessions);
 
         return sessions;
     }
@@ -174,9 +174,9 @@ public class SearchHistoryManager
         List<Session> sessions = new ArrayList<>();
         Set<String> sessionIds = new HashSet<>();
 
-        if(SessionCache.Instance().existsGroupId(groupId))
+        if(SessionCache.instance().existsGroupId(groupId))
         {
-            return SessionCache.Instance().getByGroupId(groupId);
+            return SessionCache.instance().getByGroupId(groupId);
         }
 
         PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
@@ -205,7 +205,7 @@ public class SearchHistoryManager
             }
         }
 
-        SessionCache.Instance().cacheByGroupId(groupId, sessions);
+        SessionCache.instance().cacheByGroupId(groupId, sessions);
 
         return sessions;
     }
@@ -269,8 +269,10 @@ public class SearchHistoryManager
         }
     }
 
-    public class Query
+    public static class Query implements Serializable
     {
+        private static final long serialVersionUID = 4391998336381044255L;
+
         private int searchId;
         private String query;
         private Date timestamp;
@@ -311,8 +313,10 @@ public class SearchHistoryManager
         }
     }
 
-    public class SearchResult
+    public static class SearchResult implements Serializable
     {
+        private static final long serialVersionUID = 2951387044534205707L;
+
         private int searchId;
         private int rank;
         private String url;

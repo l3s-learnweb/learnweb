@@ -33,7 +33,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
-public class Resource extends AbstractResource implements Serializable // AbstractResultItem,
+public class Resource extends AbstractResource implements Serializable, Cloneable // AbstractResultItem,
 {
     private static final long serialVersionUID = -8486919346993051937L;
     private static final Logger log = LogManager.getLogger(Resource.class);
@@ -412,6 +412,9 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                 break;
             case 3:
                 this.rights = ResourceViewRights.WORLD_READABLE;
+                break;
+            default:
+                log.error("Unknown rights value {}", rights);
         }
     }
 

@@ -1,11 +1,12 @@
 package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Thumbnail implements Comparable<Thumbnail>, Serializable
+public class Thumbnail implements Comparable<Thumbnail>, Serializable, Cloneable
 {
     private static final long serialVersionUID = -792701713759619246L;
     private static final Logger log = LogManager.getLogger(Thumbnail.class);
@@ -87,6 +88,24 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable
             return 1;
         }
         return url.compareTo(t.url);
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        final Thumbnail thumbnail = (Thumbnail) o;
+        return width == thumbnail.width &&
+                height == thumbnail.height &&
+                fileId == thumbnail.fileId &&
+                Objects.equals(url, thumbnail.url);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(width, height, url, fileId);
     }
 
     public int getHeight()

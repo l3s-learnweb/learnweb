@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Objects;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
@@ -27,12 +28,9 @@ public class Comment implements Serializable, Comparable<Comment>
     {
         this.text = text;
         this.date = date;
-        this.resource = resource;
-        if(null != resource)
-            this.resourceId = resource.getId();
-        this.user = user;
-        if(null != user)
-            this.userId = user.getId();
+
+        setResource(resource);
+        setUser(user);
     }
 
     public int getId()
@@ -87,7 +85,7 @@ public class Comment implements Serializable, Comparable<Comment>
     public void setResourceId(int resourceId)
     {
         this.resourceId = resourceId;
-        this.resource = null; //force reload
+        setResource(null); //force reload
     }
 
     public void setId(int id)
@@ -108,18 +106,41 @@ public class Comment implements Serializable, Comparable<Comment>
     public void setResource(Resource resource)
     {
         this.resource = resource;
-        this.resourceId = resource.getId();
+
+        if(resource != null)
+            this.resourceId = resource.getId();
     }
 
     public void setUser(User user)
     {
         this.user = user;
-        this.userId = user.getId();
+
+        if(user != null)
+            this.userId = user.getId();
     }
 
     @Override
-    public int compareTo(Comment c)
+    public int compareTo(Comment comment)
     {
-        return c.getDate().compareTo(this.getDate());
+        return comment.getDate().compareTo(this.getDate());
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        final Comment comment = (Comment) o;
+        return id == comment.id &&
+                userId == comment.userId &&
+                resourceId == comment.resourceId &&
+                Objects.equals(text, comment.text) &&
+                Objects.equals(date, comment.date);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id, text, date, userId, resourceId);
     }
 }

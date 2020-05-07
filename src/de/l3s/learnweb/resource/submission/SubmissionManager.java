@@ -339,20 +339,20 @@ public class SubmissionManager
      * @author Philipp
      *
      */
-    public class SubmittedResources implements Serializable
+    public static class SubmittedResources implements Serializable
     {
         private static final long serialVersionUID = -7336342838037456587L;
 
         private int userId;
-        private transient User user;
         private List<Resource> resources = new ArrayList<>(); // the submitted resources
         private int surveyResourceId; // the survey that was used to grade this submission
         private boolean submitStatus; // keeps track of the submit status, so as to lock/unlock a submission
 
+        private transient User user;
+
         public SubmittedResources(User user, int surveyResourceId, boolean submitStatus)
         {
-            this.user = user;
-            this.userId = user.getId();
+            setUser(user);
             this.surveyResourceId = surveyResourceId;
             this.submitStatus = submitStatus;
         }
@@ -371,6 +371,13 @@ public class SubmissionManager
                 }
             }
             return user;
+        }
+
+        public void setUser(final User user)
+        {
+            this.user = user;
+            if(user != null)
+                this.userId = user.getId();
         }
 
         public int getUserId()

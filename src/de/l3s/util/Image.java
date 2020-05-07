@@ -357,9 +357,5 @@ public class Image
         {
             log.debug("reader: " + readers.next());
         }
-
-        BufferedImage image = ImageIO.read(new FileInputStream("D:\\Learnweb\\test_pattern.webp"));
-        if(null == image)
-            log.error("mist");
     }
 }

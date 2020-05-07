@@ -51,7 +51,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
 
     private int groupID;
 
-    private List<AnnotationEntity> groupAnnotations;
+    private transient List<AnnotationEntity> groupAnnotations;
 
     public AdminGroupDiscussionActivityBean()
     {
@@ -182,7 +182,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
         this.groupID = groupID;
     }
 
-    public class AnnotationEntity
+    public static class AnnotationEntity
     {
         String name;
         String annotation;

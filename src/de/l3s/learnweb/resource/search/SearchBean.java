@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -214,7 +215,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
         }
-        catch(Exception e)
+        catch(RuntimeException | IOException | SQLException e)
         {
             addErrorMessage(e);
         }

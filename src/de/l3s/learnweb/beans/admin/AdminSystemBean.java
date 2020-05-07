@@ -221,7 +221,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
         }
     }
 
-    public class CacheStatistic
+    public static class CacheStatistic
     {
         private String cache;
         private int objects;

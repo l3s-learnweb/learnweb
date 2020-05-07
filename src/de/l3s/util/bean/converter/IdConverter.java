@@ -23,9 +23,9 @@ import de.l3s.learnweb.LanguageBundle;
  *
  */
 @FacesConverter("idConverter")
-public class idConverter implements Converter<Integer>
+public class IdConverter implements Converter<Integer>
 {
-    private static final Logger log = LogManager.getLogger(idConverter.class);
+    private static final Logger log = LogManager.getLogger(IdConverter.class);
 
     @Override
     public Integer getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException

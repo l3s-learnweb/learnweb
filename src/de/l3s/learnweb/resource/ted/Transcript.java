@@ -39,7 +39,7 @@ public class Transcript
         getParagraphs().add(new Paragraph(startTime, text));
     }
 
-    public class Paragraph
+    public static class Paragraph
     {
         private int startTime;
         private String text;

@@ -41,7 +41,7 @@ public class Cache<E extends HasId> implements ICache<E>
             @Override
             public boolean removeEldestEntry(Map.Entry<Integer, E> eldest)
             {
-                return this.size() > capacity;
+                return super.size() > capacity;
             }
         };
 

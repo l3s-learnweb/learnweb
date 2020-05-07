@@ -24,10 +24,10 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
 
     private static final int TRACKER_CLIENT_ID = 2;
 
-    private transient TrackerDashboardManager dashboardManager;
-
     private Map<String, Integer> proxySourcesWithCounters;
-    private LinkedList<TrackerUserActivity> trackerStatistics;
+
+    private transient TrackerDashboardManager dashboardManager;
+    private transient LinkedList<TrackerUserActivity> trackerStatistics;
 
     @Override
     public void onLoad()

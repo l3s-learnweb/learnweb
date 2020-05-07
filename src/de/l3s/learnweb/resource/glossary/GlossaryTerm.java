@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
 
 import de.l3s.util.StringHelper;
 
-public class GlossaryTerm implements Serializable
+public class GlossaryTerm implements Serializable, Cloneable
 {
     private static final long serialVersionUID = -8309235925484416943L;
 

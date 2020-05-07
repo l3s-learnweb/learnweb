@@ -18,7 +18,7 @@ import de.l3s.learnweb.Learnweb;
  * @author Rishita
  *
  */
-public class SurveyQuestion implements Serializable
+public class SurveyQuestion implements Serializable, Cloneable
 {
     private static final long serialVersionUID = -7698089608547415349L;
 

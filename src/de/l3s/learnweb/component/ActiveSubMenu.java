@@ -33,7 +33,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable
     private String fragment;
     private boolean disableClientWindow;
     private Map<String, List<String>> params;
-    private transient List<MenuElement> elements;
+    private List<MenuElement> elements;
 
     public ActiveSubMenu()
     {

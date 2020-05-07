@@ -547,7 +547,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 watermark.delete();
             }
         }
-        catch(Exception e)
+        catch(RuntimeException | IOException | SQLException e)
         {
             log.error("Error in postprocessing Glossary xls for resource: " + glossaryResource.getId(), e);
             addErrorGrowl(e);

@@ -2,6 +2,7 @@ package de.l3s.learnweb.tasks.languageBundle;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -26,7 +27,7 @@ public class LanguageFileComparison
 
         String csvFile = "test.csv";
 
-        BufferedReader buffer = new BufferedReader(new FileReader(csvFile));
+        BufferedReader buffer = new BufferedReader(new FileReader(csvFile, StandardCharsets.UTF_8));
         String line;
         while((line = buffer.readLine()) != null)
         {

@@ -82,7 +82,7 @@ public class DeleteOldUsers
         UserManager um = learnweb.getUserManager();
 
         Instant now = Instant.now();
-        Instant deadline = now.minus(configYears * 365, ChronoUnit.DAYS);
+        Instant deadline = now.minus(configYears * 365L, ChronoUnit.DAYS);
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_user` WHERE deleted = 1");
         ResultSet rs = select.executeQuery();
@@ -127,7 +127,7 @@ public class DeleteOldUsers
         UserManager um = learnweb.getUserManager();
 
         Instant now = Instant.now();
-        Instant deadline = now.minus(configYears * 365, ChronoUnit.DAYS);
+        Instant deadline = now.minus(configYears * 365L, ChronoUnit.DAYS);
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_user` WHERE (organisation_id = ? AND is_moderator = 0 AND is_admin = 0 AND `registration_date` < ?) OR deleted = 1");
         select.setInt(1, organisationId);

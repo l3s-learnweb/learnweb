@@ -50,8 +50,8 @@ public class SearchFilters implements Serializable
     private long totalResultsLearnweb;
     private long totalResultsInterweb;
 
-    private final transient EnumMap<FilterType, Filter> activeFilters = new EnumMap<>(FilterType.class);
-    private final transient EnumMap<FilterType, Filter> availableFilters = new EnumMap<>(FilterType.class);
+    private final EnumMap<FilterType, Filter> activeFilters = new EnumMap<>(FilterType.class);
+    private final EnumMap<FilterType, Filter> availableFilters = new EnumMap<>(FilterType.class);
 
     public SearchFilters(SearchMode searchMode)
     {
@@ -148,6 +148,8 @@ public class SearchFilters implements Serializable
                 case "language":
                     putResourceCounters(FilterType.language, facetField.getValues(), false);
                     break;
+                default:
+                    log.error("Unknown facetField name {}", facetField);
             }
         }
     }

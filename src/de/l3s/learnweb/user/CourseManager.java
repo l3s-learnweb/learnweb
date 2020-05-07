@@ -205,9 +205,10 @@ public class CourseManager
      * courses are not affected.
      *
      * @param course
+     * @return The users who where not anonymize because they are member of other courses.
      * @throws SQLException
      */
-    public void anonymize(Course course) throws SQLException
+    public List<User> anonymize(Course course) throws SQLException
     {
         // disable registration wizard
         course.setOption(Option.Users_Disable_wizard, true);
@@ -227,6 +228,7 @@ public class CourseManager
                 learnweb.getUserManager().anonymize(user);
             }
         }
+        return undeletedUsers;
     }
 
     public void delete(Course course) throws SQLException
@@ -317,7 +319,7 @@ public class CourseManager
      *
      *
      */
-    private class CoursesList extends LinkedList<Course> implements Comparable<CoursesList>
+    private static class CoursesList extends LinkedList<Course> implements Comparable<CoursesList>
     {
         private static final long serialVersionUID = 8924683355506959050L;
 

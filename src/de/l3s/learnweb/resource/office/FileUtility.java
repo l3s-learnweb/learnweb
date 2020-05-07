@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.office;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -86,27 +87,29 @@ public class FileUtility
 
     public static String getFileName(String url)
     {
-        if(StringUtils.isEmpty(url))
-            return "unknownFileName";
-
-        try
+        if(StringUtils.isNotEmpty(url))
         {
-            URI uri = new URI(url);
-
-            String path = uri.getPath();
-
-            if(StringUtils.isEmpty(path) || path.equals("/"))
+            try
             {
-                path = uri.getHost();
-                if(path.startsWith("www."))
-                    path = path.substring(4);
-            }
+                URI uri = new URI(url);
 
-            return Paths.get(path).getFileName().toString();
-        }
-        catch(Throwable e)
-        {
-            log.error("Can't get filename from URL: " + url, e);
+                String path = uri.getPath();
+
+                if(StringUtils.isEmpty(path) || path.equals("/"))
+                {
+                    path = uri.getHost();
+                    if(path.startsWith("www."))
+                        path = path.substring(4);
+                }
+
+                Path fileName = Paths.get(path).getFileName();
+                if (fileName != null)
+                    return fileName.toString();
+            }
+            catch(Throwable e)
+            {
+                log.error("Can't get filename from URL: " + url, e);
+            }
         }
 
         return "unknownFileName";

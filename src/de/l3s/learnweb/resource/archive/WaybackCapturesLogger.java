@@ -32,8 +32,12 @@ public class WaybackCapturesLogger
         this.learnweb = learnweb;
         this.queue = new LinkedBlockingQueue<>();
         this.consumerThread = new Thread(new Consumer());
-        this.consumerThread.start();
         this.cdxExecutorService = Executors.newSingleThreadExecutor();
+    }
+
+    public void start()
+    {
+        this.consumerThread.start();
     }
 
     public void logWaybackUrl(String url, long firstCapture, long lastCapture)

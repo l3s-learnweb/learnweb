@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -354,7 +355,7 @@ public class WaybackUrlManager
      * @author Philipp
      *
      */
-    public class UrlRecord
+    public static class UrlRecord
     {
         private long id = -1L;
         private URL url;
@@ -505,9 +506,6 @@ public class WaybackUrlManager
         int responseCode = -1;
         String urlStr = urlRecord.getUrl().toString();
 
-        if(urlStr == null)
-            return urlRecord;
-
         urlStr = urlStr.replaceAll(" ", "%20"); //few urls from Bing do not encode space correctly
         String originalUrl = urlStr; // in case we get redirect we need to compare the urls
         int maxRedirects = 20;
@@ -652,7 +650,7 @@ public class WaybackUrlManager
                             if(charset != null)
                                 br = new BufferedReader(new InputStreamReader(inputStream, charset));
                             else
-                                br = new BufferedReader(new InputStreamReader(inputStream));
+                                br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
                             StringBuilder content = new StringBuilder();
                             String inputLine;
@@ -759,16 +757,17 @@ public class WaybackUrlManager
             HttpGet request = new HttpGet(urlRecord.getUrl().toString());
             request.addHeader("User-Agent", "Mozilla/5.0");
             HttpResponse response = client.execute(request);
-            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-            StringBuilder result = new StringBuilder();
-            String line;
-            while((line = rd.readLine()) != null)
+            try(BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8)))
             {
-                result.append(line);
+                StringBuilder result = new StringBuilder();
+                String line;
+                while((line = rd.readLine()) != null)
+                {
+                    result.append(line);
+                }
+                urlRecord.setContent(result.toString().trim());
+                return 200;
             }
-            urlRecord.setContent(result.toString().trim());
-            return 200;
         }
         catch(IOException e)
         {
@@ -788,7 +787,7 @@ public class WaybackUrlManager
     public void logUrlInFile(String url)
     {
         String filename = "/home/learnweb_user/searchlog_html_url_exceptions.txt";
-        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename, true))))
+        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename, StandardCharsets.UTF_8, true))))
         {
             out.println(url);
         }
@@ -847,10 +846,9 @@ public class WaybackUrlManager
         /* End of the fix*/
     }
 
-    private class RecordNotFoundException extends Exception
+    private static class RecordNotFoundException extends Exception
     {
         private static final long serialVersionUID = -1754500933829531955L;
-
     }
 
     public static class SSLSocketFactoryWrapper extends SSLSocketFactory
@@ -934,7 +932,7 @@ public class WaybackUrlManager
         UrlRecord record = manager.getHtmlContent(url);
         log.debug(record.getStatusCode());
         log.debug(record.getContent());
-        UrlRecord record2 = manager.new UrlRecord(new URL(url));
+        UrlRecord record2 = new UrlRecord(new URL(url));
         manager.getStatusCodeFromHttpClient(record2);
         log.debug(record2.getContent());
         System.exit(0);

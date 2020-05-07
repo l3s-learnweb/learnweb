@@ -1,5 +1,6 @@
 package de.l3s.util;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -19,7 +20,7 @@ public class MD5
             md5 = MessageDigest.getInstance("MD5");
 
             md5.reset();
-            md5.update(hashString.getBytes());
+            md5.update(hashString.getBytes(StandardCharsets.UTF_8));
             byte[] result = md5.digest();
 
             StringBuilder hexString = new StringBuilder();

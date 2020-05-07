@@ -17,7 +17,7 @@ import de.l3s.util.HasId;
  * @author Philipp
  *
  */
-public class Survey implements Serializable, HasId
+public class Survey implements Serializable, HasId, Cloneable
 {
     private static final long serialVersionUID = -7478683722354893077L;
 

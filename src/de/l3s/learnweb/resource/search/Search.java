@@ -500,7 +500,7 @@ public class Search implements Serializable
         this.stopped = true;
     }
 
-    public class GroupedResources implements Serializable, Comparable<GroupedResources>
+    public static class GroupedResources implements Serializable, Comparable<GroupedResources>
     {
         private static final long serialVersionUID = -1060339894351517966L;
 

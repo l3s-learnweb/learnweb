@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,8 +16,9 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 
 // TODO this class needs to be refactored and split into a dao and pojo class
-public class Message implements Comparable<Message>
+public class Message implements Comparable<Message>, Serializable
 {
+    private static final long serialVersionUID = -5510804242529450186L;
     private static final Logger log = LogManager.getLogger(Message.class);
 
     private int id;
@@ -175,6 +178,28 @@ public class Message implements Comparable<Message>
     public int compareTo(Message g)
     {
         return (this.toString()).compareTo(g.toString());
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        final Message message = (Message) o;
+        return id == message.id &&
+                seen == message.seen &&
+                read == message.read &&
+                Objects.equals(fromUser, message.fromUser) &&
+                Objects.equals(toUser, message.toUser) &&
+                Objects.equals(title, message.title) &&
+                Objects.equals(text, message.text) &&
+                Objects.equals(time, message.time);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id, fromUser, toUser, title, text, seen, read, time);
     }
 
     @Override

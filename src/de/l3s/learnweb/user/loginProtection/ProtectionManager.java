@@ -75,8 +75,13 @@ public class ProtectionManager
     {
         try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream("whitelist.txt"))
         {
-            Stream<String> stream = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines();
-            stream.forEach(whitelist::add);
+            try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)))
+            {
+                try(Stream<String> stream = bufferedReader.lines())
+                {
+                    stream.forEach(whitelist::add);
+                }
+            }
         }
         catch(IOException e)
         {

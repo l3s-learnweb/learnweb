@@ -2,6 +2,7 @@ package de.l3s.util.email;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -107,7 +108,7 @@ public class BounceManager
         try(ByteArrayOutputStream outStream = new ByteArrayOutputStream())
         {
             msg.writeTo(outStream);
-            return new String(outStream.toByteArray());
+            return new String(outStream.toByteArray(), StandardCharsets.UTF_8);
         }
 
     }
@@ -343,17 +344,17 @@ public class BounceManager
     {
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT MAX(timereceived) FROM lw_bounces"))
         {
-            ResultSet rs = select.executeQuery();
-
-            if(rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                Date ts = rs.getTimestamp(1);
-                if(ts != null)
+                if(rs.next())
                 {
-                    return ts;
+                    Date ts = rs.getTimestamp(1);
+                    if(ts != null)
+                    {
+                        return ts;
+                    }
                 }
             }
-
         }
         catch(SQLException e)
         {

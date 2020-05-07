@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -538,7 +539,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             log(Action.resource_thumbnail_update, resource.getGroupId(), resource.getId(), "");
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
         }
-        catch(Exception e)
+        catch(RuntimeException | IOException | SQLException e)
         {
             addErrorMessage(e);
         }

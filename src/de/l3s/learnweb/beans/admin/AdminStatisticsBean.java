@@ -200,8 +200,10 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
     }
 
-    private class ResourceComparator implements Comparator<Resource>
+    private static class ResourceComparator implements Comparator<Resource>, Serializable
     {
+        private static final long serialVersionUID = 132047489495909404L;
+
         @Override
         public int compare(Resource o1, Resource o2)
         {

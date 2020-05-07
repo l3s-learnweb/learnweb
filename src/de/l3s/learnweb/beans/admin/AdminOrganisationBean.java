@@ -212,7 +212,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     }
 
     // only helper classes to display the options
-    public class OptionWrapper implements Serializable
+    public static class OptionWrapper implements Serializable
     {
         private static final long serialVersionUID = 4028764135842666696L;
         private Option option;
@@ -245,7 +245,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         }
     }
 
-    public class OptionWrapperGroup implements Serializable
+    public static class OptionWrapperGroup implements Serializable
     {
         private static final long serialVersionUID = -7136479116433806735L;
         private String title;
@@ -268,8 +268,10 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         }
     }
 
-    private class EnumComparator implements Comparator<Option>
+    private static class EnumComparator implements Comparator<Option>, Serializable
     {
+        private static final long serialVersionUID = 6363944568317854215L;
+
         @Override
         public int compare(Option o1, Option o2)
         {

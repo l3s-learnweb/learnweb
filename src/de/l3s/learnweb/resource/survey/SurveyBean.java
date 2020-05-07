@@ -218,6 +218,8 @@ public class SurveyBean extends ApplicationBean implements Serializable
                 goBackPageLink = "myhome/assessmentResults.jsf";
                 goBackPageTitle = "Go back to the assessment results";
                 break;
+            default:
+                log.error("Unknown value of goBackPage {}", goBackPage);
         }
     }
 

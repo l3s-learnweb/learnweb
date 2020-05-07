@@ -165,12 +165,12 @@ public class Course implements Serializable, Comparable<Course>, HasId
         this.wizardParam = wizardParam;
     }
 
-    public int getNextXUsersBecomeModerator()
+    public synchronized int getNextXUsersBecomeModerator()
     {
         return nextXUsersBecomeModerator;
     }
 
-    public void setNextXUsersBecomeModerator(int nextXUsersBecomeModerator)
+    public synchronized void setNextXUsersBecomeModerator(int nextXUsersBecomeModerator)
     {
         this.nextXUsersBecomeModerator = nextXUsersBecomeModerator;
     }

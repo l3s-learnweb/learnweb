@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 
@@ -28,7 +29,7 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable
             int userId = Integer.parseInt(givenHash.substring(0, givenHash.indexOf(":")));
             user = getLearnweb().getUserManager().getUser(userId);
         }
-        catch(Exception e)
+        catch(RuntimeException | SQLException e)
         {
             // ignore all parsing problems
         }

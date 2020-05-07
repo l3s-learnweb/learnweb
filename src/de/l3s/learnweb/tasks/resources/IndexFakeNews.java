@@ -110,8 +110,6 @@ public class IndexFakeNews
             solrClient.reIndexResource(resource);
             //resourceManager.deleteResource(resource.getId());
         }
-
-        System.exit(0);
     }
 
     private void indexSnopes()
@@ -136,7 +134,7 @@ public class IndexFakeNews
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
 
-            JSONObject jsonObject = new JSONObject(new FileReader(file));
+            JSONObject jsonObject = new JSONObject(new FileReader(file, StandardCharsets.UTF_8));
 
             String title = (String) jsonObject.get("Fact Check");
             if(StringUtils.isEmpty(title))

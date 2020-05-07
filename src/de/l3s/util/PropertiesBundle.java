@@ -1,5 +1,6 @@
 package de.l3s.util;
 
+import java.util.Objects;
 import java.util.Properties;
 
 public class PropertiesBundle extends Properties
@@ -30,5 +31,21 @@ public class PropertiesBundle extends Properties
     public int getPropertyIntValue(String key)
     {
         return Integer.parseInt(getProperty(key));
+    }
+
+    @Override
+    public boolean equals(final Object o)
+    {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        if(!super.equals(o)) return false;
+        final PropertiesBundle that = (PropertiesBundle) o;
+        return Objects.equals(fallback, that.fallback);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(super.hashCode(), fallback);
     }
 }

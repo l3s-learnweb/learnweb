@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -112,7 +113,7 @@ public class CDXClient
                 connection.setRequestProperty("User-Agent", "L3S-CDX-Client/1.0 (User=https://learnweb.l3s.uni-hannover.de/)");
 
                 StringBuilder sb = new StringBuilder();
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
                 String inputLine;
                 while((inputLine = in.readLine()) != null)
                     sb.append(inputLine);

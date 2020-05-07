@@ -23,14 +23,15 @@ import de.l3s.learnweb.web.RequestData;
 public class AdminRequestListBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -3469152668344315959L;
-    private List<RequestData> requests;
-    private List<RequestData> filteredRequests;
 
     private List<Map.Entry<String, Set<String>>> logins;
     private List<Map.Entry<String, Set<String>>> filteredLogins;
 
     private List<AggregatedRequestData> aggregatedRequests = null;
     private List<AggregatedRequestData> filteredAggregatedRequests = null;
+
+    private transient List<RequestData> requests;
+    private transient List<RequestData> filteredRequests;
 
     public AdminRequestListBean()
     {

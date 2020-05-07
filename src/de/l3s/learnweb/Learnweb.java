@@ -137,6 +137,7 @@ public class Learnweb
                     return null; // to avoid infinite loop
                 }
 
+                learnwebIsLoading = true;
                 learnweb = new Learnweb(serverUrl);
             }
             else
@@ -190,8 +191,6 @@ public class Learnweb
      */
     private Learnweb(String serverUrl) throws ClassNotFoundException, SQLException
     {
-        learnwebIsLoading = true;
-
         loadProperties();
 
         // load server URL from config file or guess it
@@ -262,7 +261,10 @@ public class Learnweb
         // We should run jobScheduler only on one server, otherwise they are conflicting
         boolean isRootInstance = getServerUrl().endsWith("learnweb.l3s.uni-hannover.de/v3/"); // TODO need to revert when V3 becomes ROOT
         if(isRootInstance)
+        {
             jobScheduler.startAllJobs();
+            waybackCapturesLogger.start();
+        }
         else
             log.warn("JobScheduler not started, because it seams that this instance is only for testing: " + getServerUrl());
     }

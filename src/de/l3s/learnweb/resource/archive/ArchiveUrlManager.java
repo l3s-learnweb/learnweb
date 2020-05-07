@@ -138,7 +138,10 @@ public class ArchiveUrlManager
                     PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
                     prepStmt.setInt(1, resource.getId());
                     prepStmt.setString(2, archiveURL);
-                    prepStmt.setTimestamp(3, new java.sql.Timestamp(archiveUrlDate.getTime()));
+                    if (archiveUrlDate == null)
+                        prepStmt.setNull(3, java.sql.Types.TIMESTAMP);
+                    else
+                        prepStmt.setTimestamp(3, new java.sql.Timestamp(archiveUrlDate.getTime()));
                     prepStmt.executeUpdate();
                     prepStmt.close();
 
@@ -172,7 +175,7 @@ public class ArchiveUrlManager
 
     }
 
-    private class CDXWorker implements Callable<String>
+    private static class CDXWorker implements Callable<String>
     {
         private ResourceDecorator resource;
 

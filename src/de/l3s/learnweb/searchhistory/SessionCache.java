@@ -13,7 +13,7 @@ public class SessionCache
     private Map<Integer, List<Session>> userSessionCache;
     private Map<Integer, List<Session>> groupSessionCache;
 
-    public static SessionCache Instance()
+    public static SessionCache instance()
     {
         if(instance == null)
         {

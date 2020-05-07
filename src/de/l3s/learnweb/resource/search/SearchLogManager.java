@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.search;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -160,7 +161,7 @@ public class SearchLogManager
 
             insert.executeBatch();
         }
-        catch(Exception e)
+        catch(SQLException e)
         {
             log.error("Could not log resources of searchId=" + searchId, e);
         }

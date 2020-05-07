@@ -18,7 +18,7 @@ import com.sun.jersey.oauth.signature.HMAC_SHA1;
 import com.sun.jersey.oauth.signature.OAuthParameters;
 import com.sun.jersey.oauth.signature.OAuthSecrets;
 
-public class InterWeb implements Serializable
+public class InterWeb implements Serializable, Cloneable
 {
     private static final Logger log = LogManager.getLogger(InterWeb.class);
     private static final long serialVersionUID = -1621494088505203391L;
@@ -165,7 +165,7 @@ public class InterWeb implements Serializable
         InterWeb iw = new InterWeb("http://learnweb.l3s.uni-hannover.de/interweb/api/", "***REMOVED***", "***REMOVED***");
 
         SearchQuery interwebResponse = iw.search("london", params);
-        interwebResponse.getResults();
+        log.debug(interwebResponse.getResults());
 
     }
 }

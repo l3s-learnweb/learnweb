@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 
@@ -38,7 +39,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
             if(!hash.equals(PasswordBean.createPasswordChangeHash(user)))
                 throw new IllegalArgumentException();
         }
-        catch(Exception e)
+        catch(RuntimeException | SQLException e)
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
             user = null;

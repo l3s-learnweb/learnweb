@@ -37,7 +37,6 @@ public class SolrClient
 
     private SolrClient(Learnweb learnweb)
     {
-        instance = this;
         this.serverUrl = learnweb.getProperties().getProperty("SOLR_SERVER_URL");
         this.server = new HttpSolrClient.Builder(serverUrl).build();
         this.learnweb = learnweb;
@@ -46,7 +45,7 @@ public class SolrClient
     public static SolrClient getInstance(Learnweb learnweb)
     {
         if(null == instance)
-            return new SolrClient(learnweb);
+            instance = new SolrClient(learnweb);
 
         return instance;
     }

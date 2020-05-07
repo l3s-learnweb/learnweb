@@ -36,12 +36,12 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
     private String searchQuery;
     private boolean showGroupHistory;
 
-    private transient Session selectedSession;
-    private transient Query selectedQuery;
+    private Session selectedSession;
+    private Query selectedQuery;
 
-    private transient List<Session> sessions;
-    private transient List<Query> queries = new ArrayList<>();
-    private transient Map<Integer, List<SearchResult>> snippets = new HashMap<>();
+    private List<Session> sessions;
+    private List<Query> queries = new ArrayList<>();
+    private Map<Integer, List<SearchResult>> snippets = new HashMap<>();
 
     /**
      * Load the variables that needs values before the view is rendered
@@ -86,11 +86,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         {
             if(sessions == null && selectedGroupId > 0)
             {
-                if(!SessionCache.Instance().existsGroupId(selectedGroupId))
+                if(!SessionCache.instance().existsGroupId(selectedGroupId))
                 {
-                    SessionCache.Instance().cacheByGroupId(selectedGroupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId));
+                    SessionCache.instance().cacheByGroupId(selectedGroupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId));
                 }
-                sessions = SessionCache.Instance().getByGroupId(selectedGroupId);
+                sessions = SessionCache.instance().getByGroupId(selectedGroupId);
             }
         }
         else if(sessions == null)

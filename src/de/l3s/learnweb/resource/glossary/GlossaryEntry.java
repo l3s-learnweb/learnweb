@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
-public class GlossaryEntry implements Serializable
+public class GlossaryEntry implements Serializable, Cloneable
 {
     private static final long serialVersionUID = 1251808024273639912L;
 

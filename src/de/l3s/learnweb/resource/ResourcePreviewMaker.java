@@ -479,7 +479,8 @@ public class ResourcePreviewMaker
         }
         finally
         {
-            thumbnail.dispose();
+            if(thumbnail != null)
+                thumbnail.dispose();
             img.dispose();
         }
     }
@@ -509,22 +510,6 @@ public class ResourcePreviewMaker
             {
                 log.error("Error in CreateThumbnailThread " + e);
             }
-        }
-    }
-
-    public static void main(String[] ar)
-    {
-        try
-        {
-            Image img = new Image(FileInspector.openStream("http://www.filehippo.com/de/download/file/b9915e2b3dbaf63cc505890ee4cadd48302780c53bb04d55ecc8b3bd913ed7ce/"));
-
-            FileOutputStream out = new FileOutputStream("c:\\ablage\\test.dat");
-            IOUtils.copy(img.getInputStream(), out);
-        }
-        catch(Exception e)
-        {
-            log.fatal("Couldn't create an image of website: ", e);
-
         }
     }
 }
