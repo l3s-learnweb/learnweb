@@ -24,9 +24,8 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
 
     private static final int TRACKER_CLIENT_ID = 2;
 
-    private Map<String, Integer> proxySourcesWithCounters;
-
     private transient TrackerDashboardManager dashboardManager;
+    private transient Map<String, Integer> proxySourcesWithCounters;
     private transient LinkedList<TrackerUserActivity> trackerStatistics;
 
     @Override
@@ -36,7 +35,6 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
 
         try
         {
-            dashboardManager = new TrackerDashboardManager();
             cleanAndUpdateStoredData();
         }
         catch(SQLException e)
@@ -53,29 +51,44 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
 
         fetchDataFromManager();
     }
+    
+    private TrackerDashboardManager getDashboardManager()
+    {
+        if(dashboardManager == null)
+            dashboardManager = new TrackerDashboardManager();
+        
+        return dashboardManager;
+    }
 
     private void fetchDataFromManager() throws SQLException
     {
         if(!CollectionUtils.isEmpty(getSelectedUsersIds()))
         {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
-            trackerStatistics = dashboardManager.getTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
-            proxySourcesWithCounters = dashboardManager.getProxySourcesWithCounters(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
+            trackerStatistics = getDashboardManager().getTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
+            proxySourcesWithCounters = getDashboardManager().getProxySourcesWithCounters(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
         }
     }
 
-    public ArrayList<Map.Entry<String, Integer>> getUsersProxySourcesList()
+    public ArrayList<Map.Entry<String, Integer>> getUsersProxySourcesList() throws SQLException
     {
         if(proxySourcesWithCounters == null)
-        {
+            fetchDataFromManager();
+
+        if(proxySourcesWithCounters.isEmpty())
             return null;
-        }
 
         return new ArrayList<>(MapHelper.sortByValue(proxySourcesWithCounters).entrySet());
     }
 
-    public LinkedList<TrackerUserActivity> getTrackerStatistics()
+    public LinkedList<TrackerUserActivity> getTrackerStatistics() throws SQLException
     {
+        if (trackerStatistics == null)
+            fetchDataFromManager();
+
+        if(trackerStatistics.isEmpty())
+            return null;
+
         return trackerStatistics;
     }
 }

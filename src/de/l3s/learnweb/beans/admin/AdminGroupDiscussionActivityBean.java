@@ -51,10 +51,11 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
 
     private int groupID;
 
-    private transient List<AnnotationEntity> groupAnnotations;
+    private List<AnnotationEntity> groupAnnotations;
 
     public AdminGroupDiscussionActivityBean()
     {
+        // TODO: perhaps @PostConstructor or viewAction should be used instead
         load();
     }
 
@@ -182,8 +183,10 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
         this.groupID = groupID;
     }
 
-    public static class AnnotationEntity
+    public static class AnnotationEntity implements Serializable
     {
+        private static final long serialVersionUID = -5780824434073985590L;
+
         String name;
         String annotation;
         String snippet;

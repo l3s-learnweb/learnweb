@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
@@ -24,14 +23,9 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
 {
     private static final long serialVersionUID = -3469152668344315959L;
 
-    private List<Map.Entry<String, Set<String>>> logins;
-    private List<Map.Entry<String, Set<String>>> filteredLogins;
-
-    private List<AggregatedRequestData> aggregatedRequests = null;
-    private List<AggregatedRequestData> filteredAggregatedRequests = null;
-
-    private transient List<RequestData> requests;
-    private transient List<RequestData> filteredRequests;
+    private List<RequestData> requests;
+    private Map<String, Set<String>> logins;
+    private List<AggregatedRequestData> aggregatedRequests;
 
     public AdminRequestListBean()
     {
@@ -45,7 +39,7 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
             if(getUser() != null && getUser().isAdmin())
             {
                 requests = new ArrayList<>(getLearnweb().getRequestManager().getRequests());
-                logins = new ArrayList<>(getLearnweb().getRequestManager().getLogins().entrySet());
+                logins = getLearnweb().getRequestManager().getLogins();
                 aggregatedRequests = getLearnweb().getRequestManager().getAggregatedRequests();
                 onUpdateAggregatedRequests();
             }
@@ -58,9 +52,14 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
 
     public boolean filterByDate(Object value, Object filter, Locale locale)
     {
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-        String strDate = df.format(((Date) value));
-        return strDate.contains((String) filter);
+        if (filter != null)
+        {
+            DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            String strDate = df.format(((Date) value));
+            return strDate.contains((String) filter);
+        }
+
+        return true;
     }
 
     public List<RequestData> getRequests()
@@ -68,19 +67,9 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
         return requests;
     }
 
-    public List<Entry<String, Set<String>>> getLogins()
+    public Map<String, Set<String>> getLogins()
     {
         return logins;
-    }
-
-    public List<RequestData> getFilteredRequests()
-    {
-        return filteredRequests;
-    }
-
-    public void setFilteredRequests(List<RequestData> filteredRequests)
-    {
-        this.filteredRequests = filteredRequests;
     }
 
     public List<AggregatedRequestData> getAggregatedRequests()
@@ -101,26 +90,6 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
     public void onUpdateAggregatedRequests()
     {
         getLearnweb().getRequestManager().updateAggregatedRequests();
-    }
-
-    public List<Map.Entry<String, Set<String>>> getFilteredLogins()
-    {
-        return filteredLogins;
-    }
-
-    public void setFilteredLogins(List<Map.Entry<String, Set<String>>> filteredLogins)
-    {
-        this.filteredLogins = filteredLogins;
-    }
-
-    public List<AggregatedRequestData> getFilteredAggregatedRequests()
-    {
-        return filteredAggregatedRequests;
-    }
-
-    public void setFilteredAggregatedRequests(List<AggregatedRequestData> filteredAggregatedRequests)
-    {
-        this.filteredAggregatedRequests = filteredAggregatedRequests;
     }
 
 }

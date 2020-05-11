@@ -1,5 +1,6 @@
 package de.l3s.learnweb.web;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,8 +9,10 @@ import java.util.Date;
  * @author Kate
  *
  */
-public class RequestData
+public class RequestData implements Serializable
 {
+    private static final long serialVersionUID = -5311597999329037961L;
+
     private String IP;
     private Date time;
     private String URL;
