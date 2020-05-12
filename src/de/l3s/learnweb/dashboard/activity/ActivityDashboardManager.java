@@ -16,9 +16,9 @@ public class ActivityDashboardManager
 {
     private final Learnweb learnweb;
 
-    public ActivityDashboardManager()
+    public ActivityDashboardManager(Learnweb learnweb)
     {
-        this.learnweb = Learnweb.getInstance();
+        this.learnweb = learnweb;
     }
 
     public Map<String, Integer> getActionsCountPerDay(Collection<Integer> userIds, Date startDate, Date endDate, String actions) throws SQLException

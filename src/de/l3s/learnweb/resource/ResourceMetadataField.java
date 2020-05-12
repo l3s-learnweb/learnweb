@@ -35,9 +35,11 @@ public class ResourceMetadataField implements Serializable
     private String info; // an explanation, displayed as tooltip
     private MetadataType type; // represents primefaces input types
     private List<String> options = new LinkedList<>(); // default options for some input types like OneMenu
-    private transient List<SelectItem> optionsList; // options wrapped into select items
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
+
+    // cache
+    private transient List<SelectItem> optionsList; // options wrapped into select items
 
     public ResourceMetadataField(final String name, final String label, final MetadataType type)
     {
@@ -95,7 +97,8 @@ public class ResourceMetadataField implements Serializable
 
     public List<String> completeText(String query)
     {
-        if(StringUtils.isEmpty(query)) return getOptions();
+        if(StringUtils.isEmpty(query))
+            return getOptions();
         return getOptions().stream().filter(option -> StringUtils.containsIgnoreCase(option, query)).collect(Collectors.toList());
     }
 

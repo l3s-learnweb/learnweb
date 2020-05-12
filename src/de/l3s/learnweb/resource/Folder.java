@@ -29,7 +29,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     // cache
     private transient String path;
-    private transient String prettyPath = null;
+    private transient String prettyPath;
     private transient List<Folder> subFolders;
 
     public Folder()

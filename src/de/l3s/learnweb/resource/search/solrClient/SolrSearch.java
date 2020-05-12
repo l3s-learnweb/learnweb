@@ -540,7 +540,8 @@ public class SolrSearch implements Serializable
         return decoratedResource;
     }
 
-    public QueryResponse getQueryResponse()
+    @Deprecated
+    public QueryResponse getQueryResponse() // TODO @astappiev I think the public use of this transient field is very problematic. the needed fields of Queryresposne should be copied to this class on the first request
     {
         return queryResponse;
     }

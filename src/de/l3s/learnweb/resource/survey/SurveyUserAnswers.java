@@ -26,6 +26,7 @@ public class SurveyUserAnswers implements Serializable, HasId
     private boolean saved; // has the user saved the survey at least once
     private boolean submitted; // has the user submitted the survey finally
 
+    // cache
     private transient User user;
 
     public SurveyUserAnswers(int userId, int surveyResourceId)

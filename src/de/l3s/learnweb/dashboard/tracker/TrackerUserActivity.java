@@ -1,5 +1,6 @@
 package de.l3s.learnweb.dashboard.tracker;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.Duration;
 
@@ -7,8 +8,10 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
-public class TrackerUserActivity
+public class TrackerUserActivity implements Serializable
 {
+    private static final long serialVersionUID = 751932020577605715L;
+
     private int userId;
     private int totalEvents;
     private int timeStay;

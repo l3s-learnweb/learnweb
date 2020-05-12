@@ -80,7 +80,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private transient List<Folder> folders;
     private transient List<Folder> breadcrumbs;
     private transient TreeNode foldersTree;
-    private transient TreeNode selectedTreeNode; // Selected node in the left Folder's panel
+    private TreeNode selectedTreeNode; // Selected node in the left Folder's panel
 
     public GroupResourcesBean()
     {

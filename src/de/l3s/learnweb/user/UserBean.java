@@ -233,7 +233,8 @@ public class UserBean implements Serializable
         }
         else
         {
-            String localeCode = getActiveOrganisation().getDefaultLanguage() != null ? activeOrganisation.getDefaultLanguage() : locale.getLanguage();
+            String defaultLanguage = getActiveOrganisation().getDefaultLanguage();
+            String localeCode = defaultLanguage != null ? defaultLanguage : locale.getLanguage();
             setLocaleCode(localeCode);
         }
     }

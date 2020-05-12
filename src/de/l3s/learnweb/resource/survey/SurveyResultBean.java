@@ -17,12 +17,14 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
     //private static final Logger log = LogManager.getLogger(SurveyResultBean.class);
 
     private int surveyResourceId;
-    private transient SurveyResource resource;
     private LinkedList<SurveyQuestion> questionColumns; // lists the questions that are shown in the table
+
+    // cache
+    private transient SurveyResource resource;
 
     public void onLoad() throws SQLException
     {
-        if(getUser() == null)
+        if(!isLoggedIn())
             return;
 
         if(!getUser().isModerator())
@@ -39,7 +41,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
 
         // output only questions that are not readonly
         questionColumns = new LinkedList<>();
-        for(SurveyQuestion question : resource.getQuestions())
+        for(SurveyQuestion question : getResource().getQuestions())
         {
             if(question.getType().isReadonly())
                 continue;

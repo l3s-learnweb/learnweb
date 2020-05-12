@@ -30,8 +30,6 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 {
     private static final long serialVersionUID = 3326736281893564706L;
 
-    private transient ActivityDashboardManager dashboardManager;
-
     private Map<String, String> actions;
     private List<SelectItemGroup> groupedActions;
     private List<String> selectedActionItems;
@@ -72,7 +70,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         return itemGroup;
     }
 
-    private String getStringOfActions(Set<Action> actions)
+    private static String getStringOfActions(Set<Action> actions)
     {
         return actions.stream()
                 .map(a -> String.valueOf(a.ordinal()))
@@ -86,7 +84,6 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
         try
         {
-            dashboardManager = new ActivityDashboardManager();
             selectedActionItems = new ArrayList<>(actions.keySet());
 
             cleanAndUpdateStoredData();
@@ -118,7 +115,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 {
                     ActivityGraphData activityData = new ActivityGraphData();
                     activityData.setName(activityGroupName);
-                    activityData.setActionsPerDay(dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, actions.get(activityGroupName)));
+                    activityData.setActionsPerDay(getLearnweb().getActivityDashboardManager().getActionsCountPerDay(selectedUsersIds, startDate, endDate, actions.get(activityGroupName)));
                     data.add(activityData);
                 }
                 interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
@@ -131,7 +128,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 {
                     ActivityGraphData activityData = new ActivityGraphData();
                     activityData.setName(Action.values()[activityGroupName].name());
-                    activityData.setActionsPerDay(dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
+                    activityData.setActionsPerDay(getLearnweb().getActivityDashboardManager().getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
                     data.add(activityData);
                 }
                 interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
@@ -140,21 +137,28 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         }
     }
 
-    public LineChartModel getInteractionsChart()
+    public LineChartModel getInteractionsChart() throws SQLException
     {
+        if(null == interactionsChart)
+            fetchDataFromManager();
+
         return interactionsChart;
     }
 
-    public List<Map<String, Object>> getInteractionsTable()
+    public List<Map<String, Object>> getInteractionsTable() throws SQLException
     {
+        if(null == interactionsTable)
+            fetchDataFromManager();
+
         return interactionsTable;
     }
 
-    public Set<String> getInteractionsTableColumnNames()
+    public Set<String> getInteractionsTableColumnNames() throws SQLException
     {
-        if(interactionsTable == null)
+        if(getInteractionsTable() == null)
             return null;
-        return interactionsTable.isEmpty() ? new HashSet<>() : interactionsTable.get(0).keySet();
+
+        return getInteractionsTable().isEmpty() ? new HashSet<>() : interactionsTable.get(0).keySet();
     }
 
     public Map<String, String> getActions()

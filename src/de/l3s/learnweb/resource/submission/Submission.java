@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.survey.SurveyUserAnswers;
 import de.l3s.learnweb.user.Course;
@@ -36,6 +35,7 @@ public class Submission implements Serializable
     private boolean submitted = false;
     private List<Resource> submittedResources;
 
+    // caches
     private transient Course course;
     private transient List<SubmittedResources> submittedResourcesGroupedByUser;
     private transient SurveyUserAnswers surveyAnswer;

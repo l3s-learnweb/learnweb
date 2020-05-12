@@ -16,15 +16,15 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.util.StringHelper;
 
-class TrackerDashboardManager
+public class TrackerDashboardManager
 {
     private static final Logger log = LogManager.getLogger(TrackerDashboardManager.class);
 
     private final Learnweb learnweb;
 
-    TrackerDashboardManager()
+    public TrackerDashboardManager(Learnweb learnweb)
     {
-        this.learnweb = Learnweb.getInstance();
+        this.learnweb = learnweb;
     }
 
     Map<String, Integer> getProxySourcesWithCounters(int trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException

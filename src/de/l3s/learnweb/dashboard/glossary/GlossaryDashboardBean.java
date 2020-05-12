@@ -21,22 +21,20 @@ import de.l3s.learnweb.resource.Resource;
 @ViewScoped
 public class GlossaryDashboardBean extends CommonDashboardUserBean implements Serializable
 {
-    private static final long serialVersionUID = 6265758951073418345L;
+    private static final long serialVersionUID = 1708095580068235081L;
     //private static final Logger log = LogManager.getLogger(GlossaryDashboardBean.class);
 
-    private transient GlossaryDashboardManager dashboardManager = null;
-
-    private transient Integer totalConcepts = null;
-    private transient Integer totalTerms = null;
-    private transient Integer totalSources = null;
-    private transient List<GlossaryUserTermsSummary> glossaryFieldsSummeryPerUser;
-    private transient Map<Integer, GlossaryUserActivity> glossaryStatisticPerUser;
-    private transient Map<String, Integer> glossaryConceptsCountPerUser;
-    private transient Map<String, Integer> glossarySourcesWithCounters;
-    private transient Map<String, Integer> glossaryTermsCountPerUser;
-    private transient Map<Integer, Integer> actionsWithCounters;
-    private transient Map<String, Integer> actionsCountPerDay;
-    private transient List<GlossaryEntryDescLang> descFieldsStatistic;
+    private Integer totalConcepts;
+    private Integer totalTerms;
+    private Integer totalSources;
+    private List<GlossaryUserTermsSummary> glossaryFieldsSummeryPerUser;
+    private Map<Integer, GlossaryUserActivity> glossaryStatisticPerUser;
+    private Map<String, Integer> glossaryConceptsCountPerUser;
+    private Map<String, Integer> glossarySourcesWithCounters;
+    private Map<String, Integer> glossaryTermsCountPerUser;
+    private Map<Integer, Integer> actionsWithCounters;
+    private Map<String, Integer> actionsCountPerDay;
+    private List<GlossaryEntryDescLang> descFieldsStatistic;
 
     private transient LineChartModel interactionsChart;
     private transient BarChartModel usersActivityTypesChart;
@@ -52,7 +50,6 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
         try
         {
-            dashboardManager = new GlossaryDashboardManager();
             cleanAndUpdateStoredData();
         }
         catch(SQLException e)
@@ -88,6 +85,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
     {
         if(!CollectionUtils.isEmpty(getSelectedUsersIds()))
         {
+            GlossaryDashboardManager dashboardManager = getLearnweb().getGlossaryDashboardManager();
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             totalConcepts = dashboardManager.getTotalConcepts(selectedUsersIds, startDate, endDate);
             totalTerms = dashboardManager.getTotalTerms(selectedUsersIds, startDate, endDate);
@@ -117,7 +115,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         {
             if(actionsCountPerDay == null)
             {
-                actionsCountPerDay = dashboardManager.getActionsCountPerDay(getSelectedUsersIds(), startDate, endDate);
+                actionsCountPerDay = getLearnweb().getGlossaryDashboardManager().getActionsCountPerDay(getSelectedUsersIds(), startDate, endDate);
             }
             interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
         }
@@ -130,7 +128,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         {
             if(actionsWithCounters == null)
             {
-                actionsWithCounters = dashboardManager.getActionsWithCounters(getSelectedUsersIds(), startDate, endDate);
+                actionsWithCounters = getLearnweb().getGlossaryDashboardManager().getActionsWithCounters(getSelectedUsersIds(), startDate, endDate);
             }
             usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters, getUserBean().getLocale());
         }
@@ -143,8 +141,8 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         {
             if(glossaryConceptsCountPerUser == null)
             {
-                glossaryConceptsCountPerUser = dashboardManager.getGlossaryConceptsCountPerUser(getSelectedUsersIds(), startDate, endDate);
-                glossaryTermsCountPerUser = dashboardManager.getGlossaryTermsCountPerUser(getSelectedUsersIds(), startDate, endDate);
+                glossaryConceptsCountPerUser = getLearnweb().getGlossaryDashboardManager().getGlossaryConceptsCountPerUser(getSelectedUsersIds(), startDate, endDate);
+                glossaryTermsCountPerUser = getLearnweb().getGlossaryDashboardManager().getGlossaryTermsCountPerUser(getSelectedUsersIds(), startDate, endDate);
             }
             usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
         }
@@ -157,7 +155,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         {
             if(glossarySourcesWithCounters == null)
             {
-                glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(getSelectedUsersIds(), startDate, endDate);
+                glossarySourcesWithCounters = getLearnweb().getGlossaryDashboardManager().getGlossarySourcesWithCounters(getSelectedUsersIds(), startDate, endDate);
             }
             usersSourcesChart = GlossaryDashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
         }
@@ -189,7 +187,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return glossaryFieldsSummeryPerUser;
     }
 
-    public ArrayList<GlossaryUserActivity> getGlossaryStatisticPerUser()
+    public List<GlossaryUserActivity> getGlossaryStatisticPerUser()
     {
         return new ArrayList<>(glossaryStatisticPerUser.values());
     }

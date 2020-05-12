@@ -12,6 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.interwebj.InterWeb;
+import de.l3s.learnweb.dashboard.activity.ActivityDashboardManager;
+import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardManager;
+import de.l3s.learnweb.dashboard.tracker.TrackerDashboardManager;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.logging.LogManager;
@@ -31,12 +34,12 @@ import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.resource.submission.SubmissionManager;
 import de.l3s.learnweb.resource.survey.SurveyManager;
 import de.l3s.learnweb.resource.ted.TedManager;
+import de.l3s.learnweb.searchhistory.SearchHistoryManager;
 import de.l3s.learnweb.user.CourseManager;
 import de.l3s.learnweb.user.OrganisationManager;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.learnweb.web.RequestManager;
-import de.l3s.learnweb.searchhistory.SearchHistoryManager;
 import de.l3s.util.Misc;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.email.BounceManager;
@@ -82,6 +85,9 @@ public class Learnweb
     private final ConverterService serviceConverter;
     private final LogManager logManager;
     private final AnnouncementsManager announcementsManager;
+    private final ActivityDashboardManager activityDashboardManager;
+    private final GlossaryDashboardManager glossaryDashboardManager;
+    private final TrackerDashboardManager trackerDashboardManager;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
@@ -238,6 +244,9 @@ public class Learnweb
         glossaryManager = new de.l3s.learnweb.resource.glossary.GlossaryManager(this);
         logManager = LogManager.getInstance(this);
         announcementsManager = new AnnouncementsManager(this);
+        activityDashboardManager = new ActivityDashboardManager(this);
+        glossaryDashboardManager = new GlossaryDashboardManager(this);
+        trackerDashboardManager = new TrackerDashboardManager(this);
 
         learnwebIsLoading = false;
 
@@ -530,4 +539,20 @@ public class Learnweb
     {
         return announcementsManager;
     }
+
+    public ActivityDashboardManager getActivityDashboardManager()
+    {
+        return activityDashboardManager;
+    }
+
+    public GlossaryDashboardManager getGlossaryDashboardManager()
+    {
+        return glossaryDashboardManager;
+    }
+
+    public TrackerDashboardManager getTrackerDashboardManager()
+    {
+        return trackerDashboardManager;
+    }
+
 }

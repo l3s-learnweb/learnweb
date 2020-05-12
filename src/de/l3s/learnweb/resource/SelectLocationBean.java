@@ -14,7 +14,6 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupManager;
@@ -31,7 +30,7 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
     private Group targetGroup;
     private Folder targetFolder;
 
-    private transient TreeNode targetNode;
+    private TreeNode targetNode;
     private transient DefaultTreeNode groupsTree;
     private Instant groupsTreeUpdate;
 
@@ -106,7 +105,7 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
 
         if(groupsTree == null || groupsTreeUpdate.isBefore(Instant.now().minus(Duration.ofSeconds(15))))
         {
-            GroupManager gm = Learnweb.getInstance().getGroupManager();
+            GroupManager gm = getLearnweb().getGroupManager();
             DefaultTreeNode treeNode = new DefaultTreeNode("WriteAbleGroups");
 
             Group privateGroup = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());

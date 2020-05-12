@@ -14,15 +14,15 @@ import java.util.TreeMap;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.util.StringHelper;
 
-class GlossaryDashboardManager
+public class GlossaryDashboardManager
 {
     //private static final Logger log = LogManager.getLogger(GlossaryDashboardManager.class);
 
     private final Learnweb learnweb;
 
-    GlossaryDashboardManager()
+    public GlossaryDashboardManager(Learnweb learnweb)
     {
-        this.learnweb = Learnweb.getInstance();
+        this.learnweb = learnweb;
     }
 
     Integer getTotalConcepts(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException

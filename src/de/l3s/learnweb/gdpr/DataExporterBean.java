@@ -10,7 +10,6 @@ import javax.inject.Named;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.ExportManager;
-import de.l3s.learnweb.user.User;
 
 /**
  * Allows to download resources of a user or a group
@@ -21,25 +20,13 @@ public class DataExporterBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -505457925640299810L;
 
-    private transient ExportManager exportManager;
-
-    public DataExporterBean()
-    {
-        User user = getUser();
-        if(null == user)
-            // when not logged in
-            return;
-
-        exportManager = new ExportManager(getLearnweb());
-    }
-
     public void requestUserResources() throws IOException, SQLException
     {
-        exportManager.handleResponse(getUser());
+        new ExportManager(getLearnweb()).handleResponse(getUser());
     }
 
     public void requestGroupResources(final Group group) throws IOException, SQLException
     {
-        exportManager.handleResponse(group);
+        new ExportManager(getLearnweb()).handleResponse(group);
     }
 }

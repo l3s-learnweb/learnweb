@@ -64,9 +64,11 @@ public class Search implements Serializable
     private int removedResourceCount = 0;
     private int interwebPageOffset = 0;
     private boolean stopped;
-    private transient SearchLogManager searchLogger;
     private int searchId;
     private User user;
+
+    // cache
+    private transient SearchLogManager searchLogger;
 
     public Search(InterWeb interweb, String query, SearchFilters sf, User user)
     {
