@@ -14,14 +14,20 @@ import java.util.TreeMap;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import de.l3s.learnweb.Learnweb;
+
 @Disabled
 class ActivityDashboardManagerTest
 {
+    private ActivityDashboardManager dashboardManager = Learnweb.createInstance().getActivityDashboardManager();
+
+    ActivityDashboardManagerTest() throws SQLException, ClassNotFoundException
+    {
+    }
+
     @Test
     void getActionsCountPerDay() throws ParseException, SQLException
     {
-
-        ActivityDashboardManager dashboardManager = new ActivityDashboardManager();
 
         Map<String, Integer> expected = new TreeMap<>();
         expected.put("2019-02-23", 1);
