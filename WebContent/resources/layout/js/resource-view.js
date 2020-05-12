@@ -1,4 +1,4 @@
-/* global updateThumbnailCommand, editorConfigValues, DocsAPI */
+/* global editorConfigValues, DocsAPI */
 
 /* Modal to see archive versions */
 function loadArchiveUrlsModal() {
@@ -14,11 +14,6 @@ function loadArchiveUrlsModal() {
   $('#archive_iframe').attr('src', function () {
     return $(this).data('src');
   });
-}
-
-function updateThumbnail() {
-  const archiveUrl = $('#archive_iframe').attr('src');
-  updateThumbnailCommand([{ name: 'archive_url', value: archiveUrl }]);
 }
 
 $(document).on('click', '.archive-snapshot-list button', (e) => {
@@ -148,6 +143,10 @@ function attachEditor(elementId, editorType, configValues) {
 
 $(() => {
   if (window.self !== window.top) {
-    $(document.body).addClass('in-iframe');
+    $('.ui-button.navbar-back').on('click', (e) => {
+      // eslint-disable-next-line
+      parent.$.fancybox.close();
+      e.preventDefault();
+    });
   }
 });

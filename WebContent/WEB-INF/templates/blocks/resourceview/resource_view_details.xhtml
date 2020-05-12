@@ -10,10 +10,12 @@
 
 <h:outputScript library="layout" name="js/lib/emoji.js" target="body"/>
 
+<h5 class="res-details-title mt-0">#{msg.info}</h5>
+
 <dl class="row mb-n2">
 	<ui:fragment rendered="${not empty res.fileName and res.source ne 'loro'}">
-		<dt class="col-sm-3">#{msg.file}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.file}:</dt>
+		<dd class="col-sm-8">
 			<a href="#{res.fileUrl}" target="_top">
 				<i class="fa fa-fw fa-download" aria-hidden="true"></i>
 				#{res.fileName}
@@ -34,15 +36,15 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="${empty res.fileName and res.type == 'file' }">
-		<dt class="col-sm-3">#{msg.resource}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.resource}:</dt>
+		<dd class="col-sm-8">
 			<a href="#{userBean.getUrlProxied(res)}" target="_blank">#{res.url}</a>
 		</dd>
 	</ui:fragment>
 
 	<ui:fragment rendered="#{userBean.starRatingEnabled}">
-		<dt class="col-sm-3">#{msg.relevance}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.relevance}:</dt>
+		<dd class="col-sm-8">
 			<h:panelGroup id="relevance" layout="block">
 				<p:rating value="#{res.starRatingRounded}" cancel="false" immediate="true"
 						  disabled="${res.isRatedByUser(userBean.user.id) or not res.canAnnotateResource(userBean.user)}">
@@ -58,8 +60,8 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{not empty res.group and res.type eq 'website' and not empty res.group.hypothesisLink}">
-		<dt class="col-sm-3">#{msg.discuss}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.discuss}:</dt>
+		<dd class="col-sm-8">
 			<h:outputLink value="#{resourceDetailBean.hypothesisLink}" target="_top">#{msg.link_to_discuss}</h:outputLink>
 			<h:outputLink value="#{res.group.hypothesisLink}" target="_top">(#{msg.discuss_group_invite})</h:outputLink>
 
@@ -70,8 +72,8 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{userBean.thumbRatingEnabled}">
-		<dt class="col-sm-3">#{msg.reliability}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.reliability}:</dt>
+		<dd class="col-sm-8">
 			<h:panelGrid id="reliability" columns="4">
 				<h:outputText value="+#{res.thumbUp}"/>
 				<p:commandLink action="#{resourceDetailBean.onThumbUp}" update=":reliability" ariaLabel="Rate thump up" process="@this">
@@ -87,20 +89,20 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{not empty res.author}">
-		<dt class="col-sm-3">#{msg.author}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.author}:</dt>
+		<dd class="col-sm-8">
 			<h:outputText value="#{res.author}"/>
 		</dd>
 	</ui:fragment>
 
-	<dt class="col-sm-3">#{msg.source}:</dt>
-	<dd class="col-sm-9">
+	<dt class="col-sm-4">#{msg.source}:</dt>
+	<dd class="col-sm-8">
 		<a href="#{userBean.getUrlProxied(res)}" target="_top"><h:outputText value="#{res.source.label}"/></a>
 	</dd>
 
 	<ui:fragment rendered="${not empty res.group}">
-		<dt class="col-sm-3">#{msg.group}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.group}:</dt>
+		<dd class="col-sm-8">
 			<h:outputLink value="group/overview.jsf" target="_top">
 				<f:param name="group_id" value="#{res.group.id}"/>
 				<h:outputText value="#{res.group.title}"/>
@@ -109,8 +111,8 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="${not empty res.originalGroup}">
-		<dt class="col-sm-3">#{msg.copied_from}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.copied_from}:</dt>
+		<dd class="col-sm-8">
 			<h:outputLink value="group/overview.jsf" target="_top">
 				<f:param name="group_id" value="#{res.originalGroup.id}"/>
 				<h:outputText value="#{res.originalGroup.title}"/>
@@ -119,8 +121,8 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{not empty res.language}">
-		<dt class="col-sm-3">#{msg.language}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.language}:</dt>
+		<dd class="col-sm-8">
 			<p:repeat value="#{res.metadataMultiValue['language']}" var="language" varStatus="status">
 				<h:outputText value="#{msg['language_' += language]}" rendered="#{language.length() eq 2}" />
                 <h:outputText value="#{language}" rendered="#{language.length() ne 2}" />
@@ -131,9 +133,9 @@
 
 	<ui:repeat var="entry" value="#{res.metadataEntries}">
 		<ui:fragment rendered="#{not empty entry.value}">
-			<dt class="col-sm-3"><h:outputText value="#{msg[entry.key]}"/>:</dt>
+			<dt class="col-sm-4"><h:outputText value="#{msg[entry.key]}"/>:</dt>
 
-			<dd class="col-sm-9">
+			<dd class="col-sm-8">
 				<ui:fragment rendered="#{entry.key eq 'language_level'}">
 					<ui:repeat value="#{res.metadataMultiValue[entry.key]}" var="langLevel" varStatus="status">
 						<h:outputText value="#{langLevel}"/>
@@ -191,8 +193,8 @@
 	</ui:repeat>
 
 	<ui:fragment rendered="${res.source == 'ted' or res.source == 'tedx'}">
-		<dt class="col-sm-3">#{msg.transcript}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.transcript}:</dt>
+		<dd class="col-sm-8">
 			<h:outputLink value="ted_transcript.jsf" target="_top">
 				<f:param name="resource_id" value="#{res.id}"/>
 				#{msg.link_to_transcript}
@@ -201,8 +203,8 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="${not empty res.creationDate}">
-		<dt class="col-sm-3">#{msg.date}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.date}:</dt>
+		<dd class="col-sm-8">
 			<h:outputText value="#{res.creationDate}">
 				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 			</h:outputText>
@@ -210,8 +212,8 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{res.folderId != 0}">
-		<dt class="col-sm-3">#{msg.path}:</dt>
-		<dd class="col-sm-9">
+		<dt class="col-sm-4">#{msg.path}:</dt>
+		<dd class="col-sm-8">
 			<h:outputLink value="group/resources.jsf" target="_top">
 				<f:param name="group_id" value="#{res.groupId}"/>
 				<f:param name="folder_id" value="#{res.folderId}"/>
@@ -220,97 +222,90 @@
 			</h:outputLink>
 		</dd>
 	</ui:fragment>
-
-	<ui:fragment rendered="#{not empty res.description}">
-		<dt class="col-sm-3">#{msg.description}:</dt>
-		<dd class="col-sm-9">
-			<h:outputText value="#{res.descriptionHTML}" escape="false"/>
-		</dd>
-	</ui:fragment>
-
-	<ui:fragment rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">
-		<dt class="col-sm-3">#{msg.tags}:</dt>
-		<dd class="col-sm-9">
-			<h:panelGroup id="tags_list" layout="block">
-				<ul class="list-inline list-unstyled mb-1">
-					<ui:repeat var="tag" value="#{res.tags}">
-						<li class="list-inline-item mr-0 mb-1">
-							<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="secondary-btn mr-0 rounded-0">
-								<f:param name="action" value="image"/>
-								<f:param name="query" value="#{tag.name}"/>
-							</p:linkButton>
-							<p:commandButton action="#{resourceDetailBean.onDeleteTag}" icon="fa fa-times" styleClass="secondary-btn rounded-0"
-											 update=":tags_list" process="@this"
-											 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
-											 rendered="#{res.canEditResource(userBean.user)}">
-								<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
-							</p:commandButton>
-						</li>
-					</ui:repeat>
-				</ul>
-			</h:panelGroup>
-
-			<h:panelGroup layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
-				<div class="form-group mb-1">
-					<p:inputText id="tag_text_input" value="#{resourceDetailBean.tagName}" styleClass="flex-grow-1" placeholder="#{msg.new_tag_placeholder}" required="true"/>
-					<p:message for="@previous"/>
-				</div>
-
-				<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process=":tag_text_input"
-								 update=":tag_text_input :tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
-				</p:commandButton>
-			</h:panelGroup>
-		</dd>
-	</ui:fragment>
-
-	<ui:fragment rendered="#{not empty res.comments or res.canAnnotateResource(userBean.user)}">
-		<dt class="col-sm-3">#{msg.comments}:</dt>
-		<dd class="col-sm-9">
-			<h:panelGroup styleClass="mb-2" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
-				<div class="form-group mb-1">
-					<p:inputTextarea id="comment_text_input" rows="3" value="#{resourceDetailBean.newComment}"
-									 placeholder="#{msg.new_comment_placeholder}" pt:data-emoji="true"
-									 required="true" styleClass="d-block"/>
-					<p:message for="@previous"/>
-				</div>
-
-				<p:commandButton value="#{msg.addComment}" action="#{resourceDetailBean.addComment}"
-								 update=":comments_list :comment_text_input" process=":comment_text_input"
-								 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
-				</p:commandButton>
-			</h:panelGroup>
-			<h:panelGroup layout="block" id="comments_list">
-				<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
-					<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
-						<img class="profile-picture mr-3" src="#{comment.user.image}" alt="Profile picture"/>
-
-						<div class="comment-details">
-							<p class="mb-0">
-								<h:link value="#{comment.user.username}" outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="font-weight-bold comment-author mr-3"/>
-								<lw:timeAgo date="#{comment.date}" styleClass="small font-weight-light mb-0 comment-date"/>
-							</p>
-							<div class="mb-1">#{comment.text}</div>
-							<div class="small">
-								<p:commandLink value="#{msg.edit}" styleClass="text-success mr-2" ajax="true" update=":comment_edit_form"
-											   process="@this" onsuccess="PF('editCommentDialog').show();"
-											   rendered="#{resourceDetailBean.canEditComment(comment)}">
-									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
-								</p:commandLink>
-								<p:commandLink value="#{msg.delete}" styleClass="text-danger" ajax="true"
-											   action="#{resourceDetailBean.onDeleteComment}" update=":comments_list" process="@this"
-											   onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
-											   rendered="#{resourceDetailBean.canEditComment(comment)}">
-									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
-									<p:confirm message="#{msg.delete_message_comments}"/>
-								</p:commandLink>
-							</div>
-						</div>
-					</div>
-				</ui:repeat>
-			</h:panelGroup>
-		</dd>
-	</ui:fragment>
 </dl>
+
+<ui:fragment rendered="#{not empty res.description}">
+	<h5 class="res-details-title">#{msg.description}</h5>
+
+	<h:outputText value="#{res.descriptionHTML}" escape="false"/>
+</ui:fragment>
+
+<ui:fragment rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">
+	<h5 class="res-details-title">#{msg.tags}</h5>
+
+	<h:panelGroup id="tags_list" layout="block">
+		<ul class="list-inline list-unstyled mb-1">
+			<ui:repeat var="tag" value="#{res.tags}">
+				<li class="list-inline-item mr-0 mb-1">
+					<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="secondary-btn mr-0 rounded-0">
+						<f:param name="action" value="image"/>
+						<f:param name="query" value="#{tag.name}"/>
+					</p:linkButton>
+					<p:commandButton action="#{resourceDetailBean.onDeleteTag}" icon="fa fa-times" styleClass="secondary-btn rounded-0"
+									 update=":tags_list" process="@this"
+									 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
+									 rendered="#{res.canEditResource(userBean.user)}">
+						<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
+					</p:commandButton>
+				</li>
+			</ui:repeat>
+		</ul>
+	</h:panelGroup>
+
+	<h:panelGroup layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
+		<div class="form-group mb-1">
+			<p:inputText id="tag_text_input" value="#{resourceDetailBean.tagName}" styleClass="flex-grow-1" placeholder="#{msg.new_tag_placeholder}" required="true"/>
+			<p:message for="@previous"/>
+		</div>
+
+		<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process=":tag_text_input"
+						 update=":tag_text_input :tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
+		</p:commandButton>
+	</h:panelGroup>
+</ui:fragment>
+
+<ui:fragment rendered="#{not empty res.comments or res.canAnnotateResource(userBean.user)}">
+	<h5 class="res-details-title">#{msg.comments}</h5>
+
+	<h:panelGroup styleClass="mb-2" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
+		<div class="form-group mb-1">
+			<p:inputTextarea id="comment_text_input" rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.new_comment_placeholder}"
+							 pt:data-emoji="true" required="true" styleClass="d-block"/>
+			<p:message for="@previous"/>
+		</div>
+
+		<p:commandButton value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" update=":comments_list :comment_text_input"
+						 process=":comment_text_input" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
+		</p:commandButton>
+	</h:panelGroup>
+	<h:panelGroup layout="block" id="comments_list">
+		<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
+			<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
+				<img class="profile-picture mr-3" src="#{comment.user.image}" alt="Profile picture"/>
+
+				<div class="comment-details">
+					<p class="mb-0">
+						<h:link value="#{comment.user.username}" outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="font-weight-bold comment-author mr-3"/>
+						<lw:timeAgo date="#{comment.date}" styleClass="small font-weight-light mb-0 comment-date"/>
+					</p>
+					<div class="mb-1">#{comment.text}</div>
+					<div class="small">
+						<p:commandLink value="#{msg.edit}" styleClass="text-success mr-2" ajax="true" update=":comment_edit_form" process="@this"
+									   onsuccess="PF('editCommentDialog').show();" rendered="#{resourceDetailBean.canEditComment(comment)}">
+							<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
+						</p:commandLink>
+						<p:commandLink value="#{msg.delete}" styleClass="text-danger" ajax="true" action="#{resourceDetailBean.onDeleteComment}"
+									   update=":comments_list" process="@this" onstart="PF('detailsOverlay').show();"
+									   oncomplete="PF('detailsOverlay').hide();" rendered="#{resourceDetailBean.canEditComment(comment)}">
+							<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
+							<p:confirm message="#{msg.delete_message_comments}"/>
+						</p:commandLink>
+					</div>
+				</div>
+			</div>
+		</ui:repeat>
+	</h:panelGroup>
+</ui:fragment>
 
 <ui:decorate template="/WEB-INF/templates/blocks/modal/edit_comment_dialog.xhtml"/>
 </ui:composition>

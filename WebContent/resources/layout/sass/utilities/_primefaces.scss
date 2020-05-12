@@ -18,6 +18,25 @@
   }
 }
 
+.ui-button {
+  &.transparent-btn {
+    background-color: transparent;
+    border: 1px solid transparent;
+
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
+      background-color: $secondaryButtonHoverBgColor;
+      border-color: $secondaryButtonHoverBgColor;
+    }
+
+    &.ui-state-active {
+      background-color: $secondaryButtonActiveBgColor;
+      border-color: $secondaryButtonActiveBgColor;
+    }
+  }
+}
+
 .ui-blockui-content {
   background: transparent;
   border: 0;

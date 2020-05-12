@@ -14,7 +14,6 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -503,11 +502,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void setResourceThumbnail()
+    public void setResourceThumbnail(String archiveUrl)
     {
         try
         {
-            String archiveUrl = getParameter("archive_url");
             ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
             ResourceMetadataExtractor rme = Learnweb.getInstance().getResourceMetadataExtractor();
 

@@ -82,7 +82,9 @@
                                 <h:outputText id="archive_timestamp" value="#{res.lastArchivedObject.timestamp}">
                                     <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
                                 </h:outputText>
-                                <p:button value="#{msg['Archive.set_thumbnail']}" styleClass="ml-2 alt-btn" onclick="updateThumbnail();return false;"/>
+                                <p:commandButton value="#{msg['Archive.set_thumbnail']}" styleClass="ml-2 alt-btn"
+												 action="#{resourceDetailBean.setResourceThumbnail(res.lastArchivedObject.archiveUrl)}"
+												 onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
                             </span>
 						</div>
 					</div>

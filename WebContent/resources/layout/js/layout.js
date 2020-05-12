@@ -51,6 +51,8 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
   _bindEvents() {
     $(window).on('beforeunload', () => {
+      PF('ajax-status').trigger('start');
+
       if (typeof onUnloadCommand === 'function') {
         onUnloadCommand();
       }

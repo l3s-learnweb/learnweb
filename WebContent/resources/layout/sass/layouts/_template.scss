@@ -78,15 +78,3 @@ body,
     z-index: 990 !important;
   }
 }
-
-.hide-in-iframe {
-  body.in-iframe & {
-    display: none !important;
-  }
-}
-
-.show-in-iframe {
-  body:not(.in-iframe) & {
-    display: none !important;
-  }
-}

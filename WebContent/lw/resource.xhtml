@@ -18,11 +18,6 @@
 	<h:outputScript library="primefaces" name="jquery/jquery.js"/>
 	<h:outputScript library="layout" name="js/resource-view.js" target="body"/>
 
-	<h:form styleClass="d-none">
-		<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
-						 onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
-	</h:form>
-
 	<h:outputText value="This resource has been removed" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0)}"/>
 
 	<h:outputText value="#{msg['group_resources.access_denied']}" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and not (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0)}"/>
@@ -32,36 +27,39 @@
 	<ui:fragment rendered="#{resourceDetailBean.resource.canViewResource(userBean.user)}">
 		<div class="res-view">
 			<div class="row no-gutters">
-				<div class="col res-view-embedded d-flex justify-content-center align-items-center">
-					<ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded.xhtml">
-						<ui:param name="res" value="#{resourceDetailBean.resource}"/>
-					</ui:decorate>
-				</div>
-				<div class="col-12 col-lg-4 col-xl-3 res-view-details">
-					<div class="res-view-controls">
-						<div class="mr-auto">
-							<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn" title="#{msg.edit_resource}"
-											 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceViewForm" form="resourceViewForm"
-											 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').hide();"
-											 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
-
-							<ui:decorate template="/WEB-INF/templates/blocks/resourceview/controls.xhtml">
-								<ui:param name="res" value="#{resourceDetailBean.resource}"/>
-							</ui:decorate>
+				<div class="col res-view-embedded d-flex flex-column">
+					<div class="res-view-navbar d-flex flex-row align-items-center w-100 p-2">
+						<div class="res-buttons-left pr-3">
+							<p:linkButton icon="fa fa-arrow-left" styleClass="transparent-btn navbar-back" title="#{msg.close}" outcome="group/resources.jsf">
+								<f:param name="group_id" value="#{resourceDetailBean.resource.groupId}"/>
+								<f:param name="folder_id" value="#{resourceDetailBean.resource.folderId}"/>
+							</p:linkButton>
 						</div>
-						<div class="ml-auto">
-							<p:button icon="fa fa-eye-slash" styleClass="secondary-btn" title="#{msg.toggle_details}"
-									  onclick="$('.res-view-details').toggleClass('collapse-details');$('.ui-icon', this).toggleClass('fa-eye-slash fa-eye');return false;"/>
-
-							<p:commandButton icon="fa fa-times" styleClass="secondary-btn show-in-iframe" title="#{msg.close}"
-											 action="#{resourceDetailBean.cancelEdit}" immediate="true" form="resourceViewForm"
-											 onstart="parent.$.fancybox.close();"/>
+						<h4 class="text-white mr-auto m-0">#{resourceDetailBean.resource.title}</h4>
+						<div class="res-buttons-right pl-3">
+							<p:button icon="fa fa-toggle-on" styleClass="transparent-btn" title="#{msg.toggle_details}"
+									  onclick="$('.res-view-details').toggleClass('collapse');$('.ui-icon', this).toggleClass('fa fa-toggle-off fa fa-toggle-on');return false;"/>
 						</div>
 					</div>
 
-					<div class="res-view-panel">
-						<h2><h:outputText value="#{resourceDetailBean.resource.title}" escape="false"/></h2>
+					<div class="preview-wrapper d-flex flex-column">
+						<ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded.xhtml">
+							<ui:param name="res" value="#{resourceDetailBean.resource}"/>
+						</ui:decorate>
+					</div>
+				</div>
+				<div class="col-12 col-lg-4 col-xl-3 res-view-details">
+					<div class="res-view-controls d-flex flex-row justify-content-end p-2">
+						<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn" title="#{msg.edit_resource}"
+										 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceViewForm" form="resourceViewForm"
+										 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').hide();"
+										 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
 
+						<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource)}" icon="fa fa-external-link" styleClass="secondary-btn" title="#{resourceDetailBean.resource.url}"
+									  target="_blank" rendered="#{resourceDetailBean.resource.type eq 'text' or resourceDetailBean.resource.type eq 'website' or resourceDetailBean.resource.type eq 'pdf'}"/>
+					</div>
+
+					<div class="res-view-panel">
 						<h:form id="resourceViewForm" prependId="false" styleClass="resource-details">
 							<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
 								<h:outputText value="#{msg.please_wait}"/>
