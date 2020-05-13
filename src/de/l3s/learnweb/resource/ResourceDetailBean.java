@@ -346,17 +346,18 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return null;
         }
 
-        //Limit number of spaces in a tag = 3
+        if(StringUtils.isBlank(tagName))
+        {
+            return null;
+        }
 
+        //Limit number of spaces in a tag = 3
         if((StringUtils.countMatches(tagName, " ") > 3) || tagName.contains(",") || tagName.contains("#") || (tagName.length() > 50))
         {
             showTagWarningMessage();
 
             return null;
         }
-
-        if(tagName == null && tagName.isEmpty())
-            return null;
 
         try
         {

@@ -163,7 +163,7 @@ public class LogManager
         }
         catch(SQLException e)
         {
-            log.error("Can't get logs for query: " + query + "; parameter: " + parameter, e);
+            log.error("Can't get logs for query: " + query + "; parameter: " + Arrays.asList(parameter), e);
         }
         return logEntries;
     }
