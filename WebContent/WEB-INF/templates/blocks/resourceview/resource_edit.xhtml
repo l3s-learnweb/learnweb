@@ -6,30 +6,28 @@
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-<div class="p-3">
-    <p:remoteCommand name="onUnloadCommand" actionListener="#{resourceDetailBean.releaseResourceIfLocked}"/>
-    <p:poll interval="60" listener="#{resourceDetailBean.editActivityListener}"/>
+<p:remoteCommand name="onUnloadCommand" actionListener="#{resourceDetailBean.releaseResourceIfLocked}"/>
+<p:poll interval="60" listener="#{resourceDetailBean.editActivityListener}"/>
 
-    <div class="fg-grid mb-3">
-        <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
-            <ui:param name="res" value="#{res}"/>
-        </ui:decorate>
+<div class="fg-grid mb-3">
+    <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
+        <ui:param name="res" value="#{res}"/>
+    </ui:decorate>
+</div>
+
+<div class="d-flex">
+    <p:defaultCommand target="saveResourceButton"/>
+    <div class="mr-auto">
+        <p:commandButton styleClass="alt-btn" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
+                         update=":resourceDetails" immediate="true" rendered="#{userBean.admin}"
+                         onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
     </div>
-
-    <div class="d-flex">
-        <p:defaultCommand target="saveResourceButton"/>
-        <div class="mr-auto">
-            <p:commandButton styleClass="alt-btn" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
-                             update=":resourceViewForm" immediate="true" rendered="#{userBean.admin}"
-                             onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').show();"/>
-        </div>
-        <div>
-            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" action="#{resourceDetailBean.cancelEdit}"
-                             update=":resourceViewForm" immediate="true"
-                             onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').show();"/>
-            <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceViewForm"
-                             onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();" onsuccess="$('#resEditBtn').show();"/>
-        </div>
+    <div>
+        <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" action="#{resourceDetailBean.cancelEdit}"
+                         update=":resourceDetails" immediate="true"
+                         onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
+        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceDetails"
+                         onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"/>
     </div>
 </div>
 

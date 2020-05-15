@@ -48,15 +48,14 @@
                               target="_top" rendered="#{res.type eq 'survey'}">
                     <f:param name="resource_id" value="#{res.id}"/>
                 </p:linkButton>
-            
+
                 <p:linkButton outcome="/lw/survey/results" icon="fa fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open_results']}"
                               target="_top" rendered="#{res.type eq 'survey' and userBean.user.moderator}">
                     <f:param name="resource_id" value="#{res.id}"/>
                 </p:linkButton>
-            </ui:fragment>    
-                
-            <p:linkButton outcome="/lw/survey/survey" icon="fa fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open']}"
-                          target="_top" >
+            </ui:fragment>
+
+            <p:linkButton outcome="/lw/survey/survey" icon="fa fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open']}" target="_top" >
                 <f:param name="resource_id" value="#{res.id}"/>
             </p:linkButton>
         </div>

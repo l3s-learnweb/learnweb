@@ -16,16 +16,15 @@
   /* KEYPRESS LEFT & RIGHT ARROW */
   /* This will work only if a current gridder is opened. */
   $(document).on('keydown', (e) => {
-    const { keyCode } = e;
     const $currentGridder = $('.currentGridder');
     const $currentTarget = $currentGridder.find('.gridder-show');
     if ($currentGridder.length) {
-      if (keyCode === 37) {
+      if (e.key === 'ArrowLeft') {
         // console.log("Pressed Left Arrow");
         $currentTarget.prev().prev().trigger('click');
         e.preventDefault();
       }
-      if (keyCode === 39) {
+      if (e.key === 'ArrowRight') {
         // console.log("Pressed Right Arrow");
         $currentTarget.next().trigger('click');
         e.preventDefault();

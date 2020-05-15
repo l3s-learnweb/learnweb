@@ -10,7 +10,13 @@
 
 <h:outputScript library="layout" name="js/lib/emoji.js" target="body"/>
 
-<h5 class="res-details-title mt-0">#{msg.info}</h5>
+<div class="d-flex res-details-title mt-0 justify-content-between align-items-end">
+	<h5 class="mb-0">#{msg.info}</h5>
+	<p:commandButton icon="fa fa-pencil" styleClass="secondary-btn" title="#{msg.edit_resource}"
+					 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceDetails" form="resourceViewForm"
+					 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"
+					 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
+</div>
 
 <dl class="row mb-n2">
 	<ui:fragment rendered="${not empty res.fileName and res.source ne 'loro'}">
@@ -252,15 +258,17 @@
 		</ul>
 	</h:panelGroup>
 
-	<h:panelGroup layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
-		<div class="form-group mb-1">
-			<p:inputText id="tag_text_input" value="#{resourceDetailBean.tagName}" styleClass="flex-grow-1" placeholder="#{msg.new_tag_placeholder}" required="true"/>
+	<h:panelGroup layout="block" styleClass="d-flex" rendered="#{res.canAnnotateResource(userBean.user)}">
+		<div class="flex-grow-1">
+			<p:inputText id="tag_text_input" value="#{resourceDetailBean.tagName}" styleClass="w-100" placeholder="#{msg.new_tag_placeholder}" required="true"/>
 			<p:message for="@previous"/>
 		</div>
 
-		<p:commandButton action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process=":tag_text_input"
-						 update=":tag_text_input :tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
-		</p:commandButton>
+		<div class="pl-1">
+			<p:commandButton id="tag_text_btn" action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process=":tag_text_input"
+							 update=":tag_text_input :tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
+			</p:commandButton>
+		</div>
 	</h:panelGroup>
 </ui:fragment>
 
@@ -274,14 +282,16 @@
 			<p:message for="@previous"/>
 		</div>
 
-		<p:commandButton value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" update=":comments_list :comment_text_input"
-						 process=":comment_text_input" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
-		</p:commandButton>
+		<div class="d-flex justify-content-end">
+			<p:commandButton id="comment_text_btn" value="#{msg.addComment}" action="#{resourceDetailBean.addComment}" update=":comments_list :comment_text_input"
+							 process=":comment_text_input" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
+			</p:commandButton>
+		</div>
 	</h:panelGroup>
 	<h:panelGroup layout="block" id="comments_list">
 		<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
 			<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
-				<img class="profile-picture mr-3" src="#{comment.user.image}" alt="Profile picture"/>
+				<img class="profile-picture mr-3 mt-1" src="#{comment.user.image}" alt="Profile picture"/>
 
 				<div class="comment-details">
 					<p class="mb-0">

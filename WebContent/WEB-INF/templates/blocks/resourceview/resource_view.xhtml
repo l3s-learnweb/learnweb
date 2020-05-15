@@ -10,9 +10,19 @@
     <p:ajax event="tabChange" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
 
     <p:tab title="#{msg.details_right_pane}">
-        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_details.xhtml">
-            <ui:param name="res" value="#{res}"/>
-        </ui:decorate>
+        <h:panelGroup id="resourceDetails" layout="block">
+            <ui:fragment rendered="#{resourceDetailBean.viewAction == 'viewResource'}">
+                <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_details.xhtml">
+                    <ui:param name="res" value="#{res}"/>
+                </ui:decorate>
+            </ui:fragment>
+    
+            <ui:fragment rendered="#{resourceDetailBean.viewAction == 'editResource'}">
+                <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_edit.xhtml">
+                    <ui:param name="res" value="#{res}"/>
+                </ui:decorate>
+            </ui:fragment>
+        </h:panelGroup>
     </p:tab>
 
     <p:tab title="#{msg.activity_right_pane}">

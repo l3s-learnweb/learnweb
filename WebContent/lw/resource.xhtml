@@ -15,7 +15,6 @@
 </ui:define>
 
 <ui:define name="body_content">
-	<h:outputScript library="primefaces" name="jquery/jquery.js"/>
 	<h:outputScript library="layout" name="js/resource-view.js" target="body"/>
 
 	<h:outputText value="This resource has been removed" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0)}"/>
@@ -37,6 +36,9 @@
 						</div>
 						<h4 class="text-white mr-auto m-0">#{resourceDetailBean.resource.title}</h4>
 						<div class="res-buttons-right pl-3">
+							<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource)}" icon="fa fa-external-link" styleClass="transparent-btn" title="#{resourceDetailBean.resource.url}"
+										  target="_blank" rendered="#{resourceDetailBean.resource.type eq 'text' or resourceDetailBean.resource.type eq 'website' or resourceDetailBean.resource.type eq 'pdf'}"/>
+
 							<p:button icon="fa fa-toggle-on" styleClass="transparent-btn" title="#{msg.toggle_details}"
 									  onclick="$('.res-view-details').toggleClass('collapse');$('.ui-icon', this).toggleClass('fa fa-toggle-off fa fa-toggle-on');return false;"/>
 						</div>
@@ -49,33 +51,15 @@
 					</div>
 				</div>
 				<div class="col-12 col-lg-4 col-xl-3 res-view-details">
-					<div class="res-view-controls d-flex flex-row justify-content-end p-2">
-						<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn" title="#{msg.edit_resource}"
-										 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceViewForm" form="resourceViewForm"
-										 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').hide();"
-										 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
-
-						<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource)}" icon="fa fa-external-link" styleClass="secondary-btn" title="#{resourceDetailBean.resource.url}"
-									  target="_blank" rendered="#{resourceDetailBean.resource.type eq 'text' or resourceDetailBean.resource.type eq 'website' or resourceDetailBean.resource.type eq 'pdf'}"/>
-					</div>
-
 					<div class="res-view-panel">
 						<h:form id="resourceViewForm" prependId="false" styleClass="resource-details">
 							<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
 								<h:outputText value="#{msg.please_wait}"/>
 							</p:blockUI>
 
-							<ui:fragment rendered="#{resourceDetailBean.viewAction == 'viewResource'}">
-								<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view.xhtml">
-									<ui:param name="res" value="#{resourceDetailBean.resource}"/>
-								</ui:decorate>
-							</ui:fragment>
-
-							<ui:fragment rendered="#{resourceDetailBean.viewAction == 'editResource'}">
-								<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_edit.xhtml">
-									<ui:param name="res" value="#{resourceDetailBean.resource}"/>
-								</ui:decorate>
-							</ui:fragment>
+							<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view.xhtml">
+								<ui:param name="res" value="#{resourceDetailBean.resource}"/>
+							</ui:decorate>
 						</h:form>
 					</div>
 				</div>

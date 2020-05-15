@@ -142,6 +142,24 @@ function attachEditor(elementId, editorType, configValues) {
 }
 
 $(() => {
+  $(document).on('keydown', '#tag_text_input', (e) => {
+    if (e.key === 'Enter') {
+      $('#tag_text_btn').trigger('click');
+      return false;
+    }
+  });
+
+  $(document).on('keydown', '#comment_text_input', (e) => {
+    if (e.key === 'Enter') {
+      $('#comment_text_btn').trigger('click');
+      return false;
+    }
+  });
+
+  $('.preview-wrapper > img').on('click', (e) => {
+    $(e.currentTarget).toggleClass('amplified');
+  });
+
   if (window.self !== window.top) {
     $('.ui-button.navbar-back').on('click', (e) => {
       // eslint-disable-next-line
