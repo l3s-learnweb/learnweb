@@ -302,7 +302,8 @@ function setSynonyms(xhr, status, args) {
         theme: 'tooltipster-transcript',
       });
     } else {
-      selectedNode.tooltipster('content', `${selectedNode.data('title')}<hr/>${selectedNode.data('content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`);
+      selectedNode.tooltipster('content', `${selectedNode.data('title')}<hr/>${selectedNode.data('content')
+        .replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`);
     }
     selectedNode.trigger('mouseenter');
     saveTranscriptAction(selectedNode.text(), '', 'display definition');
@@ -491,7 +492,8 @@ function getUserText(buttonClicked) {
         theme: 'tooltipster-transcript',
       });
     } else if (selectedNode.data('content')) {
-      selectedNode.tooltipster('content', `${selectedNode.attr('data-title')}<hr/>${selectedNode.attr('data-content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`);
+      selectedNode.tooltipster('content', `${selectedNode.attr('data-title')}<hr/>${selectedNode.attr('data-content')
+        .replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`);
     } else selectedNode.tooltipster('content', selectedNode.attr('data-title'));
 
     selectedNode.trigger('mouseenter');

@@ -16,35 +16,21 @@
         <javax.faces.project_stage>Development</javax.faces.project_stage>
 
         <maven.compiler.release>11</maven.compiler.release>
-        <maven.dependency.tomcat.version>9.0.34</maven.dependency.tomcat.version>
+        <maven.dependency.tomcat.version>9.0.35</maven.dependency.tomcat.version>
         <maven.dependency.imageio.version>3.5</maven.dependency.imageio.version>
-        <maven.dependency.log4j.version>2.13.2</maven.dependency.log4j.version>
+        <maven.dependency.log4j.version>2.13.3</maven.dependency.log4j.version>
         <maven.dependency.jersey.version>1.19.4</maven.dependency.jersey.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.learnweb.tasks.users.DeleteOldUsers</maven.assembly.mainClass>
     </properties>
+    
+    <prerequisites>
+        <maven>3.6.0</maven>
+    </prerequisites>
 
     <dependencies>
         <!-- ################ APIs provided by Tomcat ################ -->
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-servlet-api</artifactId>
-            <version>${maven.dependency.tomcat.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-jsp-api</artifactId>
-            <version>${maven.dependency.tomcat.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-el-api</artifactId>
-            <version>${maven.dependency.tomcat.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-catalina</artifactId>
@@ -77,13 +63,7 @@
             <artifactId>jakarta.mail</artifactId>
             <version>1.6.5</version>
         </dependency>
-        <!-- XML API, used in Interweb client (deprecated API, removed from Java 11) -->
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-        <!-- XML Impl, used in Interweb client (deprecated API, removed from Java 11) -->
+        <!-- JAXB Impl, used in Interweb client -->
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
@@ -369,7 +349,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.0.2</version>
+                        <version>4.0.3</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -482,6 +462,18 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.7</version>
+            </plugin>
+            <!-- Provides commands to check dependency tree -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+            <!-- Provides commands to check for duplicate classes across dependencies -->
+            <plugin>
+                <groupId>org.basepom.maven</groupId>
+                <artifactId>duplicate-finder-maven-plugin</artifactId>
+                <version>1.4.0</version>
             </plugin>
         </plugins>
     </build>
