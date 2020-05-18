@@ -6,12 +6,12 @@
 FILE_MANAGER_FOLDER=/mnt/learnweb/uploaded_files
 
 # If you work from the University or using LUIS VPN this settings should be enough
-INTERWEBJ_API_URL=http://hermes.kbs.uni-hannover.de/interweb/api/
+INTERWEBJ_API_URL=http://learnweb.l3s.uni-hannover.de:8080/interweb/api/
 SOLR_SERVER_URL=http://***REMOVED***/solr/learnweb
 mysql_url=jdbc:mysql://***REMOVED***/learnweb_main
 
 # If you work from home, using SSH port forwarding, use the following values
-#INTERWEBJ_API_URL=http://localhost:11080/interweb/api/
+#INTERWEBJ_API_URL=https://learnweb.l3s.uni-hannover.de/interweb/api/
 #SOLR_SERVER_URL=http://localhost:8982/solr/learnweb
 #mysql_url=jdbc:mysql://localhost:3307/learnweb_main
 
