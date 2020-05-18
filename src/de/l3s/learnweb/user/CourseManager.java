@@ -68,7 +68,7 @@ public class CourseManager {
 
         long[] options = new long[FIELDS];
         for (int i = 0; i < FIELDS; i++) {
-            options[i] = rs.getLong("options_field" + i);
+            options[i] = rs.getLong("options_field" + (i + 1));
         }
         course.setOptions(options);
 
