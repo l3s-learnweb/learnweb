@@ -13,24 +13,13 @@ import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 
-public class UsersAddMissingProfilePictures
-{
-
-    public static void main(String[] args) throws Exception
-    {
-        //   System.exit(-1);
-
-        new UsersAddMissingProfilePictures();
-    }
-
+public class UsersAddMissingProfilePictures {
     private static final Logger log = LogManager.getLogger(UsersAddMissingProfilePictures.class);
 
-    private Learnweb learnweb;
+    private final Learnweb learnweb;
+    private final UserManager um;
 
-    private UserManager um;
-
-    public UsersAddMissingProfilePictures() throws Exception
-    {
+    public UsersAddMissingProfilePictures() throws Exception {
 
         learnweb = Learnweb.createInstance();
         um = learnweb.getUserManager();
@@ -42,19 +31,15 @@ public class UsersAddMissingProfilePictures
     }
 
     @SuppressWarnings("unused")
-    private void setDefaultAvatars() throws SQLException, IOException
-    {
+    private void setDefaultAvatars() throws SQLException, IOException {
         List<User> users = um.getUsers();
-        for(User user : users)
-        {
+        for (User user : users) {
             File file = user.getImageFile();
-            if(null == file || !file.exists())
-            {
+            if (null == file || !file.exists()) {
                 log.debug("Update user: " + user);
 
                 InputStream is = user.getDefaultImageIS();
-                if(is != null)
-                {
+                if (is != null) {
                     user.setImage(is);
                     user.save();
                 }
@@ -64,22 +49,25 @@ public class UsersAddMissingProfilePictures
     }
 
     /**
-     * deletes avatars that were created on elsewhere and aren't present on the server
+     * deletes avatars that were created on elsewhere and aren't present on the server.
      */
-    private void deleteMissingAvatars() throws SQLException, IOException
-    {
+    private void deleteMissingAvatars() throws SQLException, IOException {
         List<User> users = um.getUsers();
-        for(User user : users)
-        {
+        for (User user : users) {
             File file = user.getImageFile();
-            if(null != file && !file.exists())
-            {
+            if (null != file && !file.exists()) {
                 log.debug("Update user: " + user);
 
                 user.setImageFileId(0);
                 user.save();
             }
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        //   System.exit(-1);
+
+        new UsersAddMissingProfilePictures();
     }
 
 }

@@ -26,8 +26,7 @@ import de.l3s.learnweb.logging.ActionCategory;
 
 @Named
 @ViewScoped
-public class ActivityDashboardBean extends CommonDashboardUserBean implements Serializable
-{
+public class ActivityDashboardBean extends CommonDashboardUserBean implements Serializable {
     private static final long serialVersionUID = 3326736281893564706L;
 
     private Map<String, String> actions;
@@ -35,12 +34,11 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     private List<String> selectedActionItems;
     private List<Integer> selectedGroupedActions;
 
-    private transient LineChartModel interactionsChart = null;
-    private transient List<Map<String, Object>> interactionsTable = null;
+    private transient LineChartModel interactionsChart;
+    private transient List<Map<String, Object>> interactionsTable;
 
     @PostConstruct
-    public void init()
-    {
+    public void init() {
         actions = new TreeMap<>();
         actions.put("Resource actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.RESOURCE)));
         actions.put("Folder actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.FOLDER)));
@@ -57,12 +55,10 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         groupedActions.add(createGroupCheckboxes("Group actions", Action.getActionsByCategory(ActionCategory.GROUP)));
     }
 
-    private SelectItemGroup createGroupCheckboxes(String name, Set<Action> actions)
-    {
+    private SelectItemGroup createGroupCheckboxes(String name, Set<Action> actions) {
         SelectItemGroup itemGroup = new SelectItemGroup(name);
         List<SelectItem> itemList = new ArrayList<>();
-        for(Action action : actions)
-        {
+        for (Action action : actions) {
             itemList.add(new SelectItem(action.ordinal(), action.name()));
         }
         SelectItem[] itemArr = new SelectItem[itemList.size()];
@@ -70,49 +66,33 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         return itemGroup;
     }
 
-    private static String getStringOfActions(Set<Action> actions)
-    {
-        return actions.stream()
-                .map(a -> String.valueOf(a.ordinal()))
-                .collect(Collectors.joining(","));
-    }
-
     @Override
-    public void onLoad()
-    {
+    public void onLoad() {
         super.onLoad();
 
-        try
-        {
+        try {
             selectedActionItems = new ArrayList<>(actions.keySet());
 
             cleanAndUpdateStoredData();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
         }
     }
 
     @Override
-    public void cleanAndUpdateStoredData() throws SQLException
-    {
+    public void cleanAndUpdateStoredData() throws SQLException {
         interactionsChart = null;
         interactionsTable = null;
 
         fetchDataFromManager();
     }
 
-    private void fetchDataFromManager() throws SQLException
-    {
-        if(!CollectionUtils.isEmpty(getSelectedUsersIds()))
-        {
+    private void fetchDataFromManager() throws SQLException {
+        if (!CollectionUtils.isEmpty(getSelectedUsersIds())) {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
-            if(selectedActionItems != null)
-            {
+            if (selectedActionItems != null) {
                 List<ActivityGraphData> data = new ArrayList<>();
-                for(String activityGroupName : selectedActionItems)
-                {
+                for (String activityGroupName : selectedActionItems) {
                     ActivityGraphData activityData = new ActivityGraphData();
                     activityData.setName(activityGroupName);
                     activityData.setActionsPerDay(getLearnweb().getActivityDashboardManager().getActionsCountPerDay(selectedUsersIds, startDate, endDate, actions.get(activityGroupName)));
@@ -120,12 +100,9 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 }
                 interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
                 interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
-            }
-            else if(selectedGroupedActions != null)
-            {
+            } else if (selectedGroupedActions != null) {
                 List<ActivityGraphData> data = new ArrayList<>();
-                for(Integer activityGroupName : selectedGroupedActions)
-                {
+                for (Integer activityGroupName : selectedGroupedActions) {
                     ActivityGraphData activityData = new ActivityGraphData();
                     activityData.setName(Action.values()[activityGroupName].name());
                     activityData.setActionsPerDay(getLearnweb().getActivityDashboardManager().getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
@@ -137,65 +114,64 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         }
     }
 
-    public LineChartModel getInteractionsChart() throws SQLException
-    {
-        if(null == interactionsChart)
+    public LineChartModel getInteractionsChart() throws SQLException {
+        if (null == interactionsChart) {
             fetchDataFromManager();
+        }
 
         return interactionsChart;
     }
 
-    public List<Map<String, Object>> getInteractionsTable() throws SQLException
-    {
-        if(null == interactionsTable)
+    public List<Map<String, Object>> getInteractionsTable() throws SQLException {
+        if (null == interactionsTable) {
             fetchDataFromManager();
+        }
 
         return interactionsTable;
     }
 
-    public Set<String> getInteractionsTableColumnNames() throws SQLException
-    {
-        if(getInteractionsTable() == null)
+    public Set<String> getInteractionsTableColumnNames() throws SQLException {
+        if (getInteractionsTable() == null) {
             return null;
+        }
 
         return getInteractionsTable().isEmpty() ? new HashSet<>() : interactionsTable.get(0).keySet();
     }
 
-    public Map<String, String> getActions()
-    {
+    public Map<String, String> getActions() {
         return actions;
     }
 
-    public List<String> getSelectedActionItems()
-    {
+    public List<String> getSelectedActionItems() {
         return selectedActionItems;
     }
 
-    public List<SelectItemGroup> getGroupedActions()
-    {
-        return groupedActions;
-    }
-
-    public void setGroupedActions(List<SelectItemGroup> groupedActions)
-    {
-        this.groupedActions = groupedActions;
-    }
-
-    public void setSelectedActionItems(List<String> selectedActionItems)
-    {
+    public void setSelectedActionItems(List<String> selectedActionItems) {
         this.selectedGroupedActions = null;
         this.selectedActionItems = selectedActionItems;
     }
 
-    public List<Integer> getSelectedGroupedActions()
-    {
+    public List<SelectItemGroup> getGroupedActions() {
+        return groupedActions;
+    }
+
+    public void setGroupedActions(List<SelectItemGroup> groupedActions) {
+        this.groupedActions = groupedActions;
+    }
+
+    public List<Integer> getSelectedGroupedActions() {
         return selectedGroupedActions;
     }
 
-    public void setSelectedGroupedActions(List<Integer> selectedGroupedActions)
-    {
+    public void setSelectedGroupedActions(List<Integer> selectedGroupedActions) {
         this.selectedActionItems = null;
         this.selectedGroupedActions = selectedGroupedActions;
+    }
+
+    private static String getStringOfActions(Set<Action> actions) {
+        return actions.stream()
+            .map(a -> String.valueOf(a.ordinal()))
+            .collect(Collectors.joining(","));
     }
 
 }

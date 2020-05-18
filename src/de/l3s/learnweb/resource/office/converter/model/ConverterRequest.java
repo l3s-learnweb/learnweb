@@ -1,16 +1,15 @@
 package de.l3s.learnweb.resource.office.converter.model;
 
-public class ConverterRequest
-{
-    private String fileType;
-    private String key;
-    private String outputType;
-    private OfficeThumbnailParams thumbnail;
-    private String title;
-    private String url;
+public class ConverterRequest {
+    private final String fileType;
+    private final String outputType;
+    private final String title;
+    private final String url;
+    private final String key;
 
-    public ConverterRequest(String fileType, String outputType, String title, String url, String key)
-    {
+    private OfficeThumbnailParams thumbnail;
+
+    public ConverterRequest(String fileType, String outputType, String title, String url, String key) {
         this.fileType = fileType.replace(".", "");
         this.outputType = outputType.replace(".", "");
         this.title = title;
@@ -19,8 +18,7 @@ public class ConverterRequest
 
     }
 
-    public ConverterRequest(String fileType, String outputType, String title, String url, String key, OfficeThumbnailParams thumbnailParams)
-    {
+    public ConverterRequest(String fileType, String outputType, String title, String url, String key, OfficeThumbnailParams thumbnailParams) {
         this.fileType = fileType.replace(".", "");
         this.outputType = outputType.replace(".", "");
         this.title = title;
@@ -29,33 +27,27 @@ public class ConverterRequest
         this.key = key;
     }
 
-    public String getFileType()
-    {
+    public String getFileType() {
         return fileType;
     }
 
-    public String getOutputType()
-    {
+    public String getOutputType() {
         return outputType;
     }
 
-    public OfficeThumbnailParams getThumbnail()
-    {
+    public OfficeThumbnailParams getThumbnail() {
         return thumbnail;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public String getUrl()
-    {
+    public String getUrl() {
         return url;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return key;
     }
 

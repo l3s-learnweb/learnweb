@@ -28,16 +28,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.bean.BeanHelper;
 
-/**
- * Servlet Class
- *
- * @web.servlet name="downloadServlet" display-name="Simple DownloadServlet"
- *              description="Simple Servlet for Streaming Files to the Clients
- *              Browser"
- * @web.servlet-mapping url-pattern="/download"
- */
-public class DownloadServlet extends HttpServlet
-{
+public class DownloadServlet extends HttpServlet {
     private static final long serialVersionUID = 7083477094183456614L;
     private static final Logger log = LogManager.getLogger(DownloadServlet.class);
 
@@ -50,14 +41,11 @@ public class DownloadServlet extends HttpServlet
     private transient FileManager fileManager;
     private String urlPattern = "/download/"; // as defined in web.xml
 
-    public DownloadServlet() throws ClassNotFoundException, SQLException
-    {
+    public DownloadServlet() throws ClassNotFoundException, SQLException {
     }
 
-    public void init(HttpServletRequest request)
-    {
-        try
-        {
+    public void init(HttpServletRequest request) {
+        try {
             String serverUrl = BeanHelper.getServerUrl(request);
             this.learnweb = Learnweb.createInstance(serverUrl);
             this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
@@ -66,15 +54,12 @@ public class DownloadServlet extends HttpServlet
             // quick and dirty fix
             URL fileNotFoundResource = getServletContext().getResource("/resources/images/file-not-found.png");
             //URL fileNotFoundResource = getClass().getResource("/resources/images/file-not-found.png");
-            if(null == fileNotFoundResource)
+            if (null == fileNotFoundResource) {
                 throw new RuntimeException("Can't find file-not-found.png");
-            else
-            {
+            } else {
                 fileManager.setFileNotFoundErrorImage(new java.io.File(fileNotFoundResource.toURI()));
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.fatal("fatal error: ", e);
         }
     }
@@ -83,8 +68,7 @@ public class DownloadServlet extends HttpServlet
      * Process HEAD request. This returns the same headers as GET request, but without content.
      */
     @Override
-    protected void doHead(HttpServletRequest request, HttpServletResponse response) throws IOException
-    {
+    protected void doHead(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Process request without content.
         processRequest(request, response, false);
     }
@@ -93,8 +77,7 @@ public class DownloadServlet extends HttpServlet
      * Process GET request.
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException
-    {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Process request with content.
         processRequest(request, response, true);
     }
@@ -107,10 +90,10 @@ public class DownloadServlet extends HttpServlet
      * @param content Whether the request body should be written (GET) or not (HEAD).
      * @throws IOException If something fails at I/O level.
      */
-    private void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content) throws IOException
-    {
-        if(null == learnweb)
+    private void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content) throws IOException {
+        if (null == learnweb) {
             init(request);
+        }
 
         // extract the file id from the request string
         String requestString = request.getRequestURI();
@@ -122,8 +105,7 @@ public class DownloadServlet extends HttpServlet
 
         int fileId = NumberUtils.toInt(requestFileId);
 
-        if(fileId <= 0) // download url is incomplete
-        {
+        if (fileId <= 0) { // download url is incomplete
             String referrer = request.getHeader("referer");
 
             // only log the error if the referrer is uni-hannover.de. Otherwise we have no chance to fix the link
@@ -138,25 +120,16 @@ public class DownloadServlet extends HttpServlet
         RandomAccessFile input = null;
         OutputStream output = null;
 
-        try
-        {
+        try {
             response.setHeader("Access-Control-Allow-Origin", "*");
 
             // Check if file actually exists in filesystem.
             File file = fileManager.getFileById(fileId);
-            if(null == file) // TODO Oleh: compare file name (right now do not work with thumbnails) !file.getName().equals(requestFileName)
-            {
+            if (null == file) {
                 log.warn("Requested file {} does not exist or was deleted", fileId);
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
-
-            /*
-             * Name needs to be UrlDecoded. Is it really useful?
-            if(!file.getName().equals(requestFileData[1]))
-            {
-                log.warn("Requested file name (" + requestFileData[1] + ") does not match stored filename (" + file.getName() + "); fileId=" + fileId);
-            }*/
 
             long lastModified = file.getLastModified().getTime();
             String eTag = file.getName() + "_" + file.getLength() + "_" + lastModified;
@@ -166,8 +139,7 @@ public class DownloadServlet extends HttpServlet
 
             // If-None-Match header should contain "*" or ETag. If so, then return 304.
             String ifNoneMatch = request.getHeader("If-None-Match");
-            if(ifNoneMatch != null && matches(ifNoneMatch, eTag))
-            {
+            if (ifNoneMatch != null && matches(ifNoneMatch, eTag)) {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 response.setHeader("ETag", eTag);
                 response.setDateHeader("Expires", expires);
@@ -177,17 +149,13 @@ public class DownloadServlet extends HttpServlet
             // If-Modified-Since header should be greater than LastModified. If so, then return 304.
             // This header is ignored if any If-None-Match header is specified.
             long ifModifiedSince = -1;
-            try
-            {
+            try {
                 ifModifiedSince = request.getDateHeader("If-Modified-Since");
-            }
-            catch(IllegalArgumentException e)
-            {
+            } catch (IllegalArgumentException e) {
                 log.error("Illegal If-Modified-Since header: " + e.getMessage() + "; " + BeanHelper.getRequestSummary(request));
             }
 
-            if(ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified)
-            {
+            if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 response.setHeader("ETag", eTag);
                 response.setDateHeader("Expires", expires);
@@ -198,16 +166,14 @@ public class DownloadServlet extends HttpServlet
 
             // If-Match header should contain "*" or ETag. If not, then return 412.
             String ifMatch = request.getHeader("If-Match");
-            if(ifMatch != null && !matches(ifMatch, eTag))
-            {
+            if (ifMatch != null && !matches(ifMatch, eTag)) {
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
                 return;
             }
 
             // If-Unmodified-Since header should be greater than LastModified. If not, then return 412.
             long ifUnmodifiedSince = request.getDateHeader("If-Unmodified-Since");
-            if(ifUnmodifiedSince != -1 && ifUnmodifiedSince + 1000 <= lastModified)
-            {
+            if (ifUnmodifiedSince != -1 && ifUnmodifiedSince + 1000 <= lastModified) {
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
                 return;
             }
@@ -221,12 +187,10 @@ public class DownloadServlet extends HttpServlet
 
             // Validate and process Range and If-Range headers.
             String range = request.getHeader("Range");
-            if(range != null)
-            {
+            if (range != null) {
 
                 // Range header should match format "bytes=n-n,n-n,n-n...". If not, then return 416.
-                if(!range.matches("^bytes=\\d*-\\d*(,\\d*-\\d*)*$"))
-                {
+                if (!range.matches("^bytes=\\d*-\\d*(,\\d*-\\d*)*$")) {
                     response.setHeader("Content-Range", "bytes */" + length); // Required in 416.
                     response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
                     return;
@@ -234,45 +198,34 @@ public class DownloadServlet extends HttpServlet
 
                 // If-Range header should either match ETag or be greater then LastModified. If not, then return full file.
                 String ifRange = request.getHeader("If-Range");
-                if(ifRange != null && !ifRange.equals(eTag))
-                {
-                    try
-                    {
+                if (ifRange != null && !ifRange.equals(eTag)) {
+                    try {
                         long ifRangeTime = request.getDateHeader("If-Range"); // Throws IAE if invalid.
-                        if(ifRangeTime != -1 && ifRangeTime + 1000 < lastModified)
-                        {
+                        if (ifRangeTime != -1 && ifRangeTime + 1000 < lastModified) {
                             ranges.add(fullRange);
                         }
-                    }
-                    catch(IllegalArgumentException ignore)
-                    {
+                    } catch (IllegalArgumentException ignore) {
                         ranges.add(fullRange);
                     }
                 }
 
                 // If any valid If-Range header, then process each part of byte range.
-                if(ranges.isEmpty())
-                {
-                    for(String part : range.substring(6).split(","))
-                    {
+                if (ranges.isEmpty()) {
+                    for (String part : range.substring(6).split(",")) {
                         // Assuming a file with length of 100, the following examples returns bytes at:
                         // 50-80 (50 to 80), 40- (40 to length=100), -20 (length-20=80 to length=100).
                         long start = sublong(part, 0, part.indexOf('-'));
                         long end = sublong(part, part.indexOf('-') + 1, part.length());
 
-                        if(start == -1)
-                        {
+                        if (start == -1) {
                             start = length - end;
                             end = length - 1;
-                        }
-                        else if(end == -1 || end > length - 1)
-                        {
+                        } else if (end == -1 || end > length - 1) {
                             end = length - 1;
                         }
 
                         // Check if Range is syntactically valid. If not, then return 416.
-                        if(start > end)
-                        {
+                        if (start > end) {
                             response.setHeader("Content-Range", "bytes */" + length); // Required in 416.
                             response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
                             return;
@@ -284,19 +237,20 @@ public class DownloadServlet extends HttpServlet
                 }
             }
 
-            if(file.isDownloadLogActivated())
-            {
+            if (file.isDownloadLogActivated()) {
                 //log.debug(requestString + "\n" + StringHelper.urlDecode(requestString));
 
                 HttpSession session = request.getSession(true);
                 User user = null;
                 Integer userId = (Integer) session.getAttribute("learnweb_user_id");
 
-                if(userId != null)
+                if (userId != null) {
                     user = learnweb.getUserManager().getUser(userId);
+                }
 
-                if(null != user)
+                if (null != user) {
                     learnweb.getLogManager().log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId());
+                }
             }
 
             /* Prepare and initialize response */
@@ -304,22 +258,19 @@ public class DownloadServlet extends HttpServlet
             boolean acceptsGzip = false;
             String disposition = "inline";
 
-            if(contentType == null)
+            if (contentType == null) {
                 contentType = "application/octet-stream";
+            }
 
-            // If content type is text, then determine whether GZIP content encoding is supported by
-            // the browser and expand content type with the one and right character encoding.
-            if(contentType.startsWith("text"))
-            {
+            if (contentType.startsWith("text")) {
+                // If content type is text, then determine whether GZIP content encoding is supported by
+                // the browser and expand content type with the one and right character encoding.
                 String acceptEncoding = request.getHeader("Accept-Encoding");
                 acceptsGzip = acceptEncoding != null && accepts(acceptEncoding, "gzip");
                 contentType += ";charset=UTF-8";
-            }
-
-            // Else, expect for images, determine content disposition. If content type is supported by
-            // the browser, then set to inline, else attachment which will pop a 'save as' dialogue.
-            else if(!contentType.startsWith("image"))
-            {
+            } else if (!contentType.startsWith("image")) {
+                // Else, expect for images, determine content disposition. If content type is supported by
+                // the browser, then set to inline, else attachment which will pop a 'save as' dialogue.
                 String accept = request.getHeader("Accept");
                 disposition = accept != null && accepts(accept, contentType) ? "inline" : "attachment";
             }
@@ -342,21 +293,16 @@ public class DownloadServlet extends HttpServlet
             input = new RandomAccessFile(file.getActualFile(), "r");
             output = response.getOutputStream();
 
-            if(ranges.isEmpty() || ranges.get(0) == fullRange)
-            {
+            if (ranges.isEmpty() || ranges.get(0) == fullRange) {
                 // Return full file.
                 response.setContentType(contentType);
 
-                if(content)
-                {
-                    if(acceptsGzip)
-                    {
+                if (content) {
+                    if (acceptsGzip) {
                         // The browser accepts GZIP, so GZIP the content.
                         response.setHeader("Content-Encoding", "gzip");
                         output = new GZIPOutputStream(output, BUFFER_SIZE);
-                    }
-                    else
-                    {
+                    } else {
                         // Content length is not directly predictable in case of GZIP.
                         // So only add it if there is no means of GZIP, else browser will hang.
                         response.setHeader("Content-Length", String.valueOf(fullRange.length));
@@ -365,9 +311,7 @@ public class DownloadServlet extends HttpServlet
                     // Copy full range.
                     copyFileTo(input, output, fullRange.start, fullRange.length);
                 }
-            }
-            else if(ranges.size() == 1)
-            {
+            } else if (ranges.size() == 1) {
                 // Return single part of file.
                 Range r = ranges.get(0);
                 response.setContentType(contentType);
@@ -375,26 +319,21 @@ public class DownloadServlet extends HttpServlet
                 response.setHeader("Content-Length", String.valueOf(r.length));
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
-                if(content)
-                {
+                if (content) {
                     // Copy single part range.
                     copyFileTo(input, output, r.start, r.length);
                 }
-            }
-            else
-            {
+            } else {
                 // Return multiple parts of file.
                 response.setContentType("multipart/byteranges; boundary=" + MULTIPART_BOUNDARY);
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
-                if(content)
-                {
+                if (content) {
                     // Cast back to ServletOutputStream to get the easy println methods.
                     ServletOutputStream sos = (ServletOutputStream) output;
 
                     // Copy multi part range.
-                    for(Range r : ranges)
-                    {
+                    for (Range r : ranges) {
                         // Add multipart boundary and header fields for every range.
                         sos.println();
                         sos.println("--" + MULTIPART_BOUNDARY);
@@ -410,23 +349,19 @@ public class DownloadServlet extends HttpServlet
                     sos.println("--" + MULTIPART_BOUNDARY + "--");
                 }
             }
-        }
-        catch(ClientAbortException e)
-        {
+        } catch (ClientAbortException e) {
             // we do not care
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.error("Error while downloading file {}", fileId, e);
             response.setStatus(500);
-        }
-        finally
-        {
-            if(input != null)
+        } finally {
+            if (input != null) {
                 input.close();
+            }
 
-            if(output != null)
+            if (output != null) {
                 output.close();
+            }
         }
     }
 
@@ -439,33 +374,25 @@ public class DownloadServlet extends HttpServlet
      * @param length Length of the byte range.
      * @throws IOException If something fails at I/O level.
      */
-    private static void copyFileTo(RandomAccessFile input, OutputStream output, long start, long length) throws IOException
-    {
+    private static void copyFileTo(RandomAccessFile input, OutputStream output, long start, long length) throws IOException {
         byte[] buffer = new byte[BUFFER_SIZE];
         int read;
 
-        if(input.length() == length)
-        {
+        if (input.length() == length) {
             // Write full range.
-            while((read = input.read(buffer)) > 0)
-            {
+            while ((read = input.read(buffer)) > 0) {
                 output.write(buffer, 0, read);
             }
-        }
-        else
-        {
+        } else {
             // Write partial range.
             input.seek(start);
             long toRead = length;
 
-            while((read = input.read(buffer)) > 0)
-            {
-                if((toRead -= read) > 0)
-                {
+            while ((read = input.read(buffer)) > 0) {
+                toRead -= read;
+                if (toRead > 0) {
                     output.write(buffer, 0, read);
-                }
-                else
-                {
+                } else {
                     output.write(buffer, 0, (int) toRead + read);
                     break;
                 }
@@ -480,11 +407,12 @@ public class DownloadServlet extends HttpServlet
      * @param toAccept The value to be accepted.
      * @return True if the given accept header accepts the given value.
      */
-    private static boolean accepts(String acceptHeader, String toAccept)
-    {
+    private static boolean accepts(String acceptHeader, String toAccept) {
         String[] acceptValues = acceptHeader.split("\\s*([,;])\\s*");
         Arrays.sort(acceptValues);
-        return Arrays.binarySearch(acceptValues, toAccept) > -1 || Arrays.binarySearch(acceptValues, toAccept.replaceAll("/.*$", "/*")) > -1 || Arrays.binarySearch(acceptValues, "*/*") > -1;
+        return Arrays.binarySearch(acceptValues, toAccept) > -1
+            || Arrays.binarySearch(acceptValues, toAccept.replaceAll("/.*$", "/*")) > -1
+            || Arrays.binarySearch(acceptValues, "*/*") > -1;
     }
 
     /**
@@ -494,8 +422,7 @@ public class DownloadServlet extends HttpServlet
      * @param toMatch The value to be matched.
      * @return True if the given match header matches the given value.
      */
-    private static boolean matches(String matchHeader, String toMatch)
-    {
+    private static boolean matches(String matchHeader, String toMatch) {
         String[] matchValues = matchHeader.split("\\s*,\\s*");
         Arrays.sort(matchValues);
         return Arrays.binarySearch(matchValues, toMatch) > -1 || Arrays.binarySearch(matchValues, "*") > -1;
@@ -510,8 +437,7 @@ public class DownloadServlet extends HttpServlet
      * @param endIndex The end index of the substring to be returned as long.
      * @return A substring of the given string value as long or -1 if substring is empty.
      */
-    private static long sublong(String value, int beginIndex, int endIndex)
-    {
+    private static long sublong(String value, int beginIndex, int endIndex) {
         String substring = value.substring(beginIndex, endIndex);
         return substring.isEmpty() ? -1 : Long.parseLong(substring);
     }
@@ -519,8 +445,7 @@ public class DownloadServlet extends HttpServlet
     /**
      * This class represents a byte range.
      */
-    protected static class Range
-    {
+    protected static class Range {
         long start;
         long end;
         long length;
@@ -533,8 +458,7 @@ public class DownloadServlet extends HttpServlet
          * @param end End of the byte range.
          * @param total Total length of the byte source.
          */
-        public Range(long start, long end, long total)
-        {
+        public Range(long start, long end, long total) {
             this.start = start;
             this.end = end;
             this.length = end - start + 1;

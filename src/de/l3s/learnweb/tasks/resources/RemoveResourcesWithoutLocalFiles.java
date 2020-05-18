@@ -13,16 +13,14 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 
 /**
- * Read all files uploaded by a user, remove if there is no local copy of a file
+ * Read all files uploaded by a user, remove if there is no local copy of a file.
  *
  * @author Astappiev
  */
-public class RemoveResourcesWithoutLocalFiles
-{
+public class RemoveResourcesWithoutLocalFiles {
     private static final Logger log = LogManager.getLogger(RemoveResourcesWithoutLocalFiles.class);
 
-    public static void main(String[] args) throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         Learnweb learnweb = Learnweb.createInstance();
 
         ResourceManager resourceManager = learnweb.getResourceManager();
@@ -35,26 +33,20 @@ public class RemoveResourcesWithoutLocalFiles
         log.debug("Process resources: " + resources.size());
 
         long totalSize = 0;
-        for(Resource resource : resources)
-        {
-            try
-            {
+        for (Resource resource : resources) {
+            try {
                 List<File> files = fileManager.getFilesByResource(resource.getId());
-                for(File file : files)
-                {
+                for (File file : files) {
                     totalSize += file.getLength();
                 }
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 brokenResources.add(resource);
             }
         }
 
         log.debug("Total using space: " + (totalSize / 1_000_000) + " MB.");
         log.debug("Total broken: " + brokenResources.size());
-        for(Resource resource : brokenResources)
-        {
+        for (Resource resource : brokenResources) {
             log.debug(resource.getTitle());
             // resource.delete();
         }

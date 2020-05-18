@@ -12,35 +12,29 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 @FacesValidator("dateRangeValidator")
-public class DateRangeValidator implements Validator<Object>
-{
+public class DateRangeValidator implements Validator<Object> {
     @Override
-    public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException
-    {
-        if(value == null)
-        {
+    public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        if (value == null) {
             return;
         }
 
         UIInput startDateComponent = (UIInput) component.getAttributes().get("startDate");
 
-        if(!startDateComponent.isValid())
-        {
+        if (!startDateComponent.isValid()) {
             return;
         }
 
         Date startDate = (Date) startDateComponent.getValue();
 
-        if(startDate == null)
-        {
+        if (startDate == null) {
             return;
         }
 
         Date endDate;
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.setTime((Date) value);
-        if(c.get(java.util.Calendar.HOUR_OF_DAY) == 0 && c.get(java.util.Calendar.MINUTE) == 0 && c.get(java.util.Calendar.SECOND) == 0)
-        {
+        if (c.get(java.util.Calendar.HOUR_OF_DAY) == 0 && c.get(java.util.Calendar.MINUTE) == 0 && c.get(java.util.Calendar.SECOND) == 0) {
             c.set(java.util.Calendar.HOUR_OF_DAY, 23);
             c.set(java.util.Calendar.MINUTE, 59);
             c.set(java.util.Calendar.SECOND, 59);
@@ -48,8 +42,7 @@ public class DateRangeValidator implements Validator<Object>
         }
         endDate = c.getTime();
 
-        if(startDate.after(endDate))
-        {
+        if (startDate.after(endDate)) {
             startDateComponent.setValid(false);
             FacesContext.getCurrentInstance().addMessage("msg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Start date may not be after end date.", null));
         }

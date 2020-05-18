@@ -1,7 +1,6 @@
 package de.l3s.learnweb.tasks.resources;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,24 +12,17 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 
 /**
- * Find webpage resources that have no thumbnail and create it
+ * Find webpage resources that have no thumbnail and create it.
  *
  * @author Kemkes
- *
  */
-public class FixInvalidFolders
-{
+public class FixInvalidFolders {
     private static final Logger log = LogManager.getLogger(FixInvalidFolders.class);
 
     /**
-     * @param args
-     * @throws SQLException
-     * @throws IOException
-     * @throws MalformedURLException
-     * @throws ClassNotFoundException
+     *
      */
-    public static void main(String[] args) throws SQLException, MalformedURLException, IOException, ClassNotFoundException
-    {
+    public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException {
         //System.exit(0);
 
         Learnweb learnweb = Learnweb.createInstance();
@@ -41,8 +33,7 @@ public class FixInvalidFolders
 
         List<Resource> resources = rm.getResources(query, null);
         log.debug("start");
-        for(Resource resource : resources)
-        {
+        for (Resource resource : resources) {
             log.debug(resource);
 
             // resource.setFolderId(0);

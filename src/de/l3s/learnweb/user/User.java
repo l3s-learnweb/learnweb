@@ -52,28 +52,24 @@ import de.l3s.util.PBKDF2;
 import de.l3s.util.StringHelper;
 import de.l3s.util.email.Mail;
 
-public class User implements Comparable<User>, Serializable, HasId
-{
+public class User implements Comparable<User>, Serializable, HasId {
     private static final Logger log = LogManager.getLogger(User.class);
     private static final long serialVersionUID = 2482790243930271009L;
 
-    public enum PasswordHashing
-    {
+    public enum PasswordHashing {
         EMPTY,
         MD5,
         PBKDF2
     }
 
-    public enum Gender
-    {
+    public enum Gender {
         UNASSIGNED,
         MALE,
         FEMALE,
         OTHER
     }
 
-    public enum NotificationFrequency
-    {
+    public enum NotificationFrequency {
         NEVER,
         DAILY,
         WEEKLY,
@@ -92,7 +88,7 @@ public class User implements Comparable<User>, Serializable, HasId
     @Length(min = 2, max = 50)
     private String username;
     @Email
-    private String email = null; // it is important to set null instead of empty string
+    private String email; // it is important to set null instead of empty string
     private String emailConfirmationToken;
     private boolean emailConfirmed = true;
     private String password;
@@ -128,17 +124,15 @@ public class User implements Comparable<User>, Serializable, HasId
     private long groupsCacheTime = 0L;
     private transient List<Group> groups;
     private String imageUrl;
-    private transient Instant lastLoginDate = null;
+    private transient Instant lastLoginDate;
     private int forumPostCount = -1;
     private transient Organisation organisation;
     private transient ArrayList<Submission> activeSubmissions;
 
-    public User()
-    {
+    public User() {
     }
 
-    public void clearCaches()
-    {
+    public void clearCaches() {
         courses = null;
         groups = null;
         organisation = null;
@@ -147,279 +141,237 @@ public class User implements Comparable<User>, Serializable, HasId
         activeSubmissions = null;
     }
 
-    public void onDestroy()
-    {
-        try
-        {
+    public void onDestroy() {
+        try {
             this.save();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error("Couldn't save user onDestroy", e);
         }
     }
 
-    public void save() throws SQLException
-    {
+    public void save() throws SQLException {
         Learnweb.getInstance().getUserManager().save(this);
     }
 
-    public List<Course> getCourses() throws SQLException
-    {
-        if(courses == null)
-        {
+    public List<Course> getCourses() throws SQLException {
+        if (courses == null) {
             courses = Learnweb.getInstance().getCourseManager().getCoursesByUserId(id);
-            if(!courses.isEmpty())
+            if (!courses.isEmpty()) {
                 Collections.sort(courses);
+            }
         }
 
         return courses;
     }
 
-    public boolean isEmailRequired() throws SQLException
-    {
-        for(Course course : getCourses())
-        {
-            if(course.getOption(Course.Option.Users_Require_mail_address))
+    public boolean isEmailRequired() throws SQLException {
+        for (Course course : getCourses()) {
+            if (course.getOption(Course.Option.Users_Require_mail_address)) {
                 return true;
+            }
         }
 
         return false;
     }
 
-    public boolean isMemberOfCourse(int courseId) throws SQLException
-    {
-        for(Course course : getCourses())
-        {
-            if(courseId == course.getId())
+    public boolean isMemberOfCourse(int courseId) throws SQLException {
+        for (Course course : getCourses()) {
+            if (courseId == course.getId()) {
                 return true;
+            }
         }
 
         return false;
     }
 
-    public String getAdditionalInformation()
-    {
+    public String getAdditionalInformation() {
         return additionalInformation;
     }
 
-    public String getAddress()
-    {
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
+    }
+
+    public String getAddress() {
         return address;
     }
 
-    public List<Comment> getComments() throws SQLException
-    {
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public List<Comment> getComments() throws SQLException {
         return Learnweb.getInstance().getResourceManager().getCommentsByUserId(this.getId());
     }
 
-    public Date getDateOfBirth()
-    {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public String getEmail()
-    {
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getEmail() {
         return email;
     }
 
-    public String getEmailConfirmationToken()
-    {
+    public void setEmail(String email) {
+        if (StringUtils.isNotBlank(email) && !StringUtils.equalsIgnoreCase(email, this.email)) {
+            this.email = email;
+            this.emailConfirmed = false;
+            this.emailConfirmationToken = MD5.hash(RandomStringUtils.randomAlphanumeric(26) + this.id + email);
+        } else {
+            this.email = StringUtils.isNotBlank(email) ? email : null;
+        }
+    }
+
+    public String getEmailConfirmationToken() {
         return emailConfirmationToken;
     }
 
-    public boolean isEmailConfirmed()
-    {
+    public void setEmailConfirmationToken(String emailConfirmationToken) {
+        this.emailConfirmationToken = emailConfirmationToken;
+    }
+
+    public boolean isEmailConfirmed() {
         return emailConfirmed;
     }
 
+    public void setEmailConfirmed(boolean isEmailConfirmed) {
+        this.emailConfirmed = isEmailConfirmed;
+    }
+
     @Override
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public String getInterest()
-    {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getInterest() {
         return interest;
     }
 
-    public String getStudentId()
-    {
+    public void setInterest(String interest) {
+        this.interest = interest;
+    }
+
+    public String getStudentId() {
         return studentId;
     }
 
-    public String getProfession()
-    {
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getProfession() {
         return profession;
     }
 
-    public Resource addResource(Resource resource) throws SQLException
-    {
+    public void setProfession(String profession) {
+        this.profession = profession;
+    }
+
+    public Resource addResource(Resource resource) throws SQLException {
         return Learnweb.getInstance().getResourceManager().addResource(resource, this);
     }
 
-    public List<Resource> getResources() throws SQLException
-    {
+    public List<Resource> getResources() throws SQLException {
         return Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
     }
 
-    public int getResourceCount() throws SQLException
-    {
+    public int getResourceCount() throws SQLException {
         return Learnweb.getInstance().getResourceManager().getResourceCountByUserId(this.getId());
     }
 
-    public List<Resource> getRatedResources() throws SQLException
-    {
+    public List<Resource> getRatedResources() throws SQLException {
         return Learnweb.getInstance().getResourceManager().getRatedResourcesByUserId(this.getId());
     }
 
-    public List<Tag> getTags() throws SQLException
-    {
+    public List<Tag> getTags() throws SQLException {
         return Learnweb.getInstance().getResourceManager().getTagsByUserId(this.getId());
     }
 
-    public String getUsername()
-    {
-        if(getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
+    public String getUsername() {
+        if (getOrganisation().getOption(Option.Privacy_Anonymize_usernames)) {
             return "Anonymous";
+        }
 
         return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = StringUtils.trim(username);
     }
 
     /**
      * getUsername() may return "Anonymous" for some organizations.
      * This method will always return the real username
      */
-    public String getRealUsername()
-    {
+    public String getRealUsername() {
         return username;
     }
 
-    public void setAdditionalInformation(String additionalInformation)
-    {
-        this.additionalInformation = additionalInformation;
-    }
-
-    public void setAddress(String address)
-    {
-        this.address = address;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth)
-    {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public void setEmail(String email)
-    {
-        if(StringUtils.isNotBlank(email) && !StringUtils.equalsIgnoreCase(email, this.email))
-        {
-            this.email = email;
-            this.emailConfirmed = false;
-            this.emailConfirmationToken = MD5.hash(RandomStringUtils.randomAlphanumeric(26) + this.id + email);
-        }
-        else
-        {
-            this.email = StringUtils.isNotBlank(email) ? email : null;
-        }
+    public void setRealUsername(String username) {
+        setUsername(username);
     }
 
     /**
      * This method should be used when we read the email from database, but never for user input fields.
      */
-    public void setEmailRaw(String email)
-    {
+    public void setEmailRaw(String email) {
         this.email = email;
     }
 
-    public void setEmailConfirmationToken(String emailConfirmationToken)
-    {
-        this.emailConfirmationToken = emailConfirmationToken;
-    }
-
-    public void setEmailConfirmed(boolean isEmailConfirmed)
-    {
-        this.emailConfirmed = isEmailConfirmed;
-    }
-
-    public void setInterest(String interest)
-    {
-        this.interest = interest;
-    }
-
-    public void setStudentId(String studentId)
-    {
-        this.studentId = studentId;
-    }
-
-    public void setProfession(String profession)
-    {
-        this.profession = profession;
-    }
-
-    public void setUsername(String username)
-    {
-        this.username = StringUtils.trim(username);
-    }
-
-    public void setRealUsername(String username)
-    {
-        setUsername(username);
-    }
-
-    public NotificationFrequency getPreferredNotificationFrequency()
-    {
+    public NotificationFrequency getPreferredNotificationFrequency() {
         return preferredNotificationFrequency;
     }
 
-    public void setPreferredNotificationFrequency(NotificationFrequency preferredNotificationFrequency)
-    {
+    public void setPreferredNotificationFrequency(NotificationFrequency preferredNotificationFrequency) {
         this.preferredNotificationFrequency = preferredNotificationFrequency;
     }
 
-    public void setOrganisationId(int organisationId)
-    {
+    public int getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(int organisationId) {
         this.organisationId = organisationId;
         this.organisation = null;
     }
 
-    public int getOrganisationId()
-    {
-        return organisationId;
-    }
-
-    public Organisation getOrganisation()
-    {
-        if(organisation == null)
+    public Organisation getOrganisation() {
+        if (organisation == null) {
             organisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
+        }
         return organisation;
     }
 
     @Override
-    public boolean equals(final Object o)
-    {
-        if(this == o)
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         final User user = (User) o;
         return id == user.id;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(id);
     }
 
     /**
      * Returns the groups the user is member off.
      */
-    public List<Group> getGroups() throws SQLException
-    {
-        if(null == groups || groupsCacheTime + 3000L < System.currentTimeMillis())
-        {
+    public List<Group> getGroups() throws SQLException {
+        if (null == groups || groupsCacheTime + 3000L < System.currentTimeMillis()) {
             groups = Learnweb.getInstance().getGroupManager().getGroupsByUserId(id);
             groupsCacheTime = System.currentTimeMillis();
         }
@@ -429,32 +381,28 @@ public class User implements Comparable<User>, Serializable, HasId
     /**
      * @return number of groups this user is member of
      */
-    public int getGroupCount() throws SQLException
-    {
+    public int getGroupCount() throws SQLException {
         return Learnweb.getInstance().getGroupManager().getGroupCountByUserId(id);
     }
 
     /**
      * Returns the groups the user can add resources to.
      */
-    public List<Group> getWriteAbleGroups() throws SQLException
-    {
+    public List<Group> getWriteAbleGroups() throws SQLException {
         LinkedList<Group> writeAbleGroups = new LinkedList<>();
-        for(Group group : getGroups())
-        {
-            if(group.canAddResources(this))
+        for (Group group : getGroups()) {
+            if (group.canAddResources(this)) {
                 writeAbleGroups.add(group);
+            }
         }
         return writeAbleGroups;
     }
 
-    public void joinGroup(int groupId) throws SQLException
-    {
+    public void joinGroup(int groupId) throws SQLException {
         joinGroup(Learnweb.getInstance().getGroupManager().getGroupById(groupId));
     }
 
-    public void joinGroup(Group group) throws SQLException
-    {
+    public void joinGroup(Group group) throws SQLException {
         Learnweb.getInstance().getGroupManager().addUserToGroup(this, group);
 
         groups = null; // force reload
@@ -462,8 +410,7 @@ public class User implements Comparable<User>, Serializable, HasId
         group.clearCaches();
     }
 
-    public void leaveGroup(Group group) throws SQLException
-    {
+    public void leaveGroup(Group group) throws SQLException {
         Learnweb.getInstance().getGroupManager().removeUserFromGroup(this, group);
 
         groups = null; // force reload
@@ -472,13 +419,65 @@ public class User implements Comparable<User>, Serializable, HasId
     }
 
     @Override
-    public int compareTo(User o)
-    {
+    public int compareTo(User o) {
         return getUsername().compareTo(o.getUsername());
     }
 
-    public void setImage(InputStream inputStream) throws SQLException, IOException
-    {
+    /**
+     * @return FALSE if an error occurred while sending this message
+     */
+    public boolean sendEmailConfirmation() {
+        try {
+            String confirmEmailUrl = Learnweb.getInstance().getServerUrl() + "/lw/user/confirm_email.jsf?" +
+                "email=" + StringHelper.urlEncode(getEmail()) +
+                "&token=" + getEmailConfirmationToken();
+
+            Mail message = new Mail();
+            message.setSubject("Confirmation request from Learnweb");
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(getEmail()));
+            message.setText("Hi " + getRealUsername() + ",\n\n" +
+                "please use this link to confirm your mail address:\n" + confirmEmailUrl + "\n\n" +
+                "Or just ignore this email, if you haven't requested it.\n\n" +
+                "Best regards,\nLearnweb Team");
+
+            message.sendMail();
+
+            return true;
+        } catch (MessagingException e) {
+            log.error("Can't send confirmation mail to " + this, e);
+        }
+        return false;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public boolean isModerator() {
+        return moderator || admin;
+    }
+
+    public void setModerator(boolean moderator) {
+        this.moderator = moderator;
+    }
+
+    /**
+     * @return the url of the users image or a default image if no image has been added
+     */
+    public String getImage() throws SQLException {
+        if (imageUrl == null) {
+            File imageFile = getImageFile();
+            imageUrl = imageFile != null ? imageFile.getUrl() : getDefaultImage();
+        }
+
+        return imageUrl;
+    }
+
+    public void setImage(InputStream inputStream) throws SQLException, IOException {
         // process image
         Image img = new Image(inputStream);
 
@@ -498,438 +497,298 @@ public class User implements Comparable<User>, Serializable, HasId
     }
 
     /**
-     *
-     * @return FALSE if an error occurred while sending this message
-     */
-    public boolean sendEmailConfirmation()
-    {
-        try
-        {
-            String confirmEmailUrl = Learnweb.getInstance().getServerUrl() + "/lw/user/confirm_email.jsf?" +
-                    "email=" + StringHelper.urlEncode(getEmail()) +
-                    "&token=" + getEmailConfirmationToken();
-
-            Mail message = new Mail();
-            message.setSubject("Confirmation request from Learnweb");
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(getEmail()));
-            message.setText("Hi " + getRealUsername() + ",\n\n" +
-                    "please use this link to confirm your mail address:\n" + confirmEmailUrl + "\n\n" +
-                    "Or just ignore this email, if you haven't requested it.\n\n" +
-                    "Best regards,\nLearnweb Team");
-
-            message.sendMail();
-
-            return true;
-        }
-        catch(MessagingException e)
-        {
-            log.error("Can't send confirmation mail to " + this, e);
-        }
-        return false;
-    }
-
-    public boolean isAdmin()
-    {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin)
-    {
-        this.admin = admin;
-    }
-
-    public boolean isModerator()
-    {
-        return moderator || admin;
-    }
-
-    public void setModerator(boolean moderator)
-    {
-        this.moderator = moderator;
-    }
-
-    /**
-     * @return the url of the users image or a default image if no image has been added
-     */
-    public String getImage() throws SQLException
-    {
-        if(imageUrl == null)
-        {
-            File imageFile = getImageFile();
-            imageUrl = imageFile != null ? imageFile.getUrl() : getDefaultImage();
-        }
-
-        return imageUrl;
-    }
-
-    /**
-     * return the File of the profile picture
+     * return the File of the profile picture.
      *
      * @return Null if not present
-     * @throws SQLException
      */
-    public File getImageFile() throws SQLException
-    {
-        if(imageFileId > 0)
+    public File getImageFile() throws SQLException {
+        if (imageFileId > 0) {
             return Learnweb.getInstance().getFileManager().getFileById(imageFileId);
+        }
         return null;
     }
 
     /**
-     * get default avatar for user
+     * get default avatar for user.
      */
-    private String getDefaultImage()
-    {
+    private String getDefaultImage() {
         String name = StringUtils.isNotBlank(fullName) ? fullName : username;
         StringBuilder initials = new StringBuilder();
 
-        if(StringUtils.isNumeric(name)) // happens when users use their student id as name
-        {
+        if (StringUtils.isNumeric(name)) { // happens when users use their student id as name
             initials = new StringBuilder(name.substring(name.length() - 2));
-        }
-        else if(name.contains(" ") || name.contains(".")) // name consists of multiple terms separated by whitespaces or dots
-        {
-            for(String part : name.split("[\\s.]+"))
-            {
-                if(part.isEmpty())
+        } else if (name.contains(" ") || name.contains(".")) { // name consists of multiple terms separated by whitespaces or dots
+            for (String part : name.split("[\\s.]+")) {
+                if (part.isEmpty()) {
                     continue;
+                }
                 int index = StringUtils.isNumeric(part) ? (part.length() - 1) : 0; // if is number use last digit as initial
                 initials.append(part.charAt(index));
             }
-        }
-        else if(!name.equals(name.toLowerCase()))
-        {
+        } else if (!name.equals(name.toLowerCase())) {
             initials.append(name.charAt(0)); // always at first char
 
-            for(int i = 1, len = name.length() - 1; i < len; i++)
-            {
-                if(Character.isUpperCase(name.charAt(i)))
-                {
+            for (int i = 1, len = name.length() - 1; i < len; i++) {
+                if (Character.isUpperCase(name.charAt(i))) {
                     initials.append(name.charAt(i));
                 }
             }
         }
 
-        if(StringUtils.isBlank(initials.toString()))
+        if (StringUtils.isBlank(initials.toString())) {
             initials = new StringBuilder(name.substring(0, 1));
+        }
 
-        if(initials.toString().startsWith(".")) // ui-avatars can't handle dots in the beginning
+        if (initials.toString().startsWith(".")) { // ui-avatars can't handle dots in the beginning
             initials = new StringBuilder(initials.toString().replace(".", "X"));
+        }
 
         String defaultAvatarUrl = "https://ui-avatars.com/api/" + initials + "/200/" + getDefaultColor() + "/ffffff";
 
-        if(email != null)
+        if (email != null) {
             return "https://www.gravatar.com/avatar/" + MD5.hash(email) + "?d=" + StringHelper.urlEncode(defaultAvatarUrl);
-        else
+        } else {
             return defaultAvatarUrl;
+        }
     }
 
     /**
-     * Returns a color for the user
-     * If the user is registered this method will return always the same color otherwise a "random" color is returned
+     * Returns a color for the user.
+     * If the user is registered this method will return always the same color otherwise a "random" color is returned.
      *
      * @return color code without hash mark
      */
-    private String getDefaultColor()
-    {
+    private String getDefaultColor() {
         return ColorUtils.getColor(HasId.getIdOrDefault(this, (int) (System.currentTimeMillis() / 1000))).substring(1);
     }
 
     /**
-     * get default avatar for user
+     * get default avatar for user.
      */
-    public InputStream getDefaultImageIS() throws IOException
-    {
+    public InputStream getDefaultImageIS() throws IOException {
         URL url = new URL(getDefaultImage());
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
         int responseCode = con.getResponseCode();
-        if(responseCode == HttpURLConnection.HTTP_OK)
-        {
+        if (responseCode == HttpURLConnection.HTTP_OK) {
             return con.getInputStream();
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-
-    public int getImageFileId()
-    {
+    public int getImageFileId() {
         return imageFileId;
     }
 
-    public void setImageFileId(int imageFileId)
-    {
-        if(this.imageFileId != 0 && imageFileId != this.imageFileId) // delete existing image
-        {
-            try
-            {
+    public void setImageFileId(int imageFileId) {
+        if (this.imageFileId != 0 && imageFileId != this.imageFileId) { // delete existing image
+            try {
                 Learnweb.getInstance().getFileManager().delete(this.imageFileId);
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 log.error("Can't delete profile image of user " + this);
             }
         }
         this.imageFileId = imageFileId;
     }
 
-    public Date getRegistrationDate()
-    {
+    public Date getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(Date registrationDate)
-    {
+    public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
     }
 
-    public HashMap<String, String> getPreferences()
-    {
+    public HashMap<String, String> getPreferences() {
         return preferences;
     }
 
-    public void setPreferences(HashMap<String, String> preferences)
-    {
+    public void setPreferences(HashMap<String, String> preferences) {
         this.preferences = preferences;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 
-    public void setPasswordRaw(String password)
-    {
-        this.password = password;
-    }
-
-    public void setPassword(String password)
-    {
-        if(password != null)
-        {
+    public void setPassword(String password) {
+        if (password != null) {
             this.password = PBKDF2.hashPassword(password);
             this.hashing = PasswordHashing.PBKDF2;
-        }
-        else
-        {
+        } else {
             this.hashing = PasswordHashing.EMPTY;
         }
     }
 
-    public boolean validatePassword(String password)
-    {
-        if(hashing == PasswordHashing.MD5)
-        {
+    public void setPasswordRaw(String password) {
+        this.password = password;
+    }
+
+    public boolean validatePassword(String password) {
+        if (hashing == PasswordHashing.MD5) {
             return this.password.equals(MD5.hash(password));
-        }
-        else if(hashing == PasswordHashing.PBKDF2)
-        {
+        } else if (hashing == PasswordHashing.PBKDF2) {
             return PBKDF2.validatePassword(password, this.password);
         }
 
         return false;
     }
 
-    public PasswordHashing getHashing()
-    {
+    public PasswordHashing getHashing() {
         return hashing;
     }
 
-    public void setHashing(final String hashing)
-    {
+    public void setHashing(final String hashing) {
         this.hashing = PasswordHashing.valueOf(hashing);
     }
 
-    public TimeZone getTimeZone()
-    {
+    public TimeZone getTimeZone() {
         return timeZone;
     }
 
-    public void setTimeZone(TimeZone timeZone)
-    {
+    public void setTimeZone(TimeZone timeZone) {
         this.timeZone = timeZone;
     }
 
     /**
      * @return The dateTime of the last recorded login event of the user. Returns the registration date if the user has never logged in.
-     *         Note that this value is cached. Call {@link #updateLoginDate() updateLoginDate} to update it. This is useful to control whether the
-     *         current or the penultimate login time is returned.
-     * @throws SQLException
+     *     Note that this value is cached. Call {@link #updateLoginDate() updateLoginDate} to update it. This is useful to control whether the
+     *     current or the penultimate login time is returned.
      */
-    public Instant getLastLoginDate() throws SQLException
-    {
-        if(null == lastLoginDate)
-        {
+    public Instant getLastLoginDate() throws SQLException {
+        if (null == lastLoginDate) {
             updateLoginDate();
         }
         return lastLoginDate;
     }
 
-    public void updateLoginDate() throws SQLException
-    {
+    public void updateLoginDate() throws SQLException {
         this.lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(getId()).orElse(registrationDate.toInstant());
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "[userId: " + getId() + " name: " + getRealUsername() + "]";
     }
 
-    public int getForumPostCount() throws SQLException
-    {
-        if(forumPostCount == -1)
-        {
+    public int getForumPostCount() throws SQLException {
+        if (forumPostCount == -1) {
             forumPostCount = Learnweb.getInstance().getForumManager().getPostCountByUser(id);
         }
         return forumPostCount;
     }
 
-    public void incForumPostCount()
-    {
-        if(forumPostCount != -1)
+    public void incForumPostCount() {
+        if (forumPostCount != -1) {
             forumPostCount++;
+        }
     }
 
-    public String getCredits()
-    {
+    public String getCredits() {
         return credits;
     }
 
-    public void setCredits(String credits)
-    {
-        if(credits != null)
-        {
-            if(credits.startsWith("<br>"))
+    public void setCredits(String credits) {
+        if (credits != null) {
+            if (credits.startsWith("<br>")) {
                 credits = credits.substring(4);
+            }
 
             credits = Jsoup.clean(credits, Whitelist.basic());
         }
         this.credits = credits;
     }
 
-    public String getFullName()
-    {
+    public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(String fullName)
-    {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
-    public String getAffiliation()
-    {
+    public String getAffiliation() {
         return affiliation;
     }
 
-    public void setAffiliation(String affiliation)
-    {
+    public void setAffiliation(String affiliation) {
         this.affiliation = affiliation;
     }
 
-    public String getPreference(String key)
-    {
+    public String getPreference(String key) {
         return preferences.get(key);
     }
 
-    public void setPreference(String key, String value)
-    {
+    public void setPreference(String key, String value) {
         preferences.put(key, value);
     }
 
-    public boolean isAcceptTermsAndConditions()
-    {
+    public boolean isAcceptTermsAndConditions() {
         return acceptTermsAndConditions;
     }
 
-    public void setAcceptTermsAndConditions(boolean acceptTermsAndConditions)
-    {
+    public void setAcceptTermsAndConditions(boolean acceptTermsAndConditions) {
         this.acceptTermsAndConditions = acceptTermsAndConditions;
     }
 
-    public boolean isDeleted()
-    {
+    public boolean isDeleted() {
         return deleted;
     }
 
-    void setDeleted(boolean deleted)
-    {
+    void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 
-    public Gender getGender()
-    {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender)
-    {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
     /**
-     *
      * @return All forum posts this user created
-     * @throws SQLException
      */
-    public List<ForumPost> getForumPosts() throws SQLException
-    {
+    public List<ForumPost> getForumPosts() throws SQLException {
         return Learnweb.getInstance().getForumManager().getPostsByUser(getId());
     }
 
     /**
-     * Returns a list of all Groups this user belongs to with associated metadata like notification frequency
-     *
-     * @return
-     * @throws SQLException
+     * Returns a list of all Groups this user belongs to with associated metadata like notification frequency.
      */
-    public List<GroupUser> getGroupsRelations() throws SQLException
-    {
+    public List<GroupUser> getGroupsRelations() throws SQLException {
         return Learnweb.getInstance().getGroupManager().getGroupsRelations(getId());
     }
 
     /**
-     * returns true when this user is allowed to moderate the given user
-     *
-     * @param user
-     * @return
-     * @throws SQLException
+     * returns true when this user is allowed to moderate the given user.
      */
-    public boolean canModerateUser(User user) throws SQLException
-    {
-        if(isAdmin())
+    public boolean canModerateUser(User user) throws SQLException {
+        if (isAdmin()) {
             return true;
+        }
 
-        if(isModerator() && user.getOrganisation().equals(this.getOrganisation())) // check whether the user is moderator of the given users organisation
+        if (isModerator() && user.getOrganisation().equals(this.getOrganisation())) { // check whether the user is moderator of the given users organisation
             return true;
+        }
 
         return false;
     }
 
-    public Locale getLocale()
-    {
+    public Locale getLocale() {
         return locale;
     }
 
-    public void setLocale(Locale locale)
-    {
+    public void setLocale(Locale locale) {
         this.locale = locale;
     }
 
-    public ArrayList<Submission> getActiveSubmissions() throws SQLException
-    {
-        if(null == activeSubmissions)
-        {
+    public ArrayList<Submission> getActiveSubmissions() throws SQLException {
+        if (null == activeSubmissions) {
             activeSubmissions = Learnweb.getInstance().getSubmissionManager().getActiveSubmissionsByUser(this);
         }
         return activeSubmissions;

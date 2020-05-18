@@ -6,8 +6,7 @@ import org.primefaces.component.api.Widget;
 import org.primefaces.component.menu.AbstractMenu;
 
 @FacesComponent(createTag = true, tagName = "menu", namespace = "http://l3s.de/learnweb")
-public class LearnwebMenu extends AbstractMenu implements Widget
-{
+public class LearnwebMenu extends AbstractMenu implements Widget {
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component";
     public static final String COMPONENT_TYPE = "de.l3s.learnweb.component.LearnwebMenu";
     public static final String DEFAULT_RENDERER = "de.l3s.learnweb.component.LearnwebMenuRenderer";
@@ -24,63 +23,52 @@ public class LearnwebMenu extends AbstractMenu implements Widget
     public static final String DESCENDANT_SUBMENU_ICON_CLASS = MENUITEM_ICON_CLASS + " ui-menuitem-icon-expand fa fa-fw fa-angle-right";
     public static final String DESCENDANT_SUBMENU_LIST_CLASS = "ui-menu-list ui-helper-reset ui-helper-hidden";
 
-    public LearnwebMenu()
-    {
-        setRendererType(DEFAULT_RENDERER);
-    }
-
-    public enum PropertyKeys
-    {
+    public enum PropertyKeys {
         widgetVar,
         model,
         style,
         styleClass
     }
 
+    public LearnwebMenu() {
+        setRendererType(DEFAULT_RENDERER);
+    }
+
     @Override
-    public String getFamily()
-    {
+    public String getFamily() {
         return COMPONENT_FAMILY;
     }
 
-    public String getWidgetVar()
-    {
+    public String getWidgetVar() {
         return (String) getStateHelper().eval(LearnwebMenu.PropertyKeys.widgetVar, null);
     }
 
-    public void setWidgetVar(String widgetVar)
-    {
+    public void setWidgetVar(String widgetVar) {
         getStateHelper().put(LearnwebMenu.PropertyKeys.widgetVar, widgetVar);
     }
 
     @Override
-    public org.primefaces.model.menu.MenuModel getModel()
-    {
+    public org.primefaces.model.menu.MenuModel getModel() {
         return (org.primefaces.model.menu.MenuModel) getStateHelper().eval(LearnwebMenu.PropertyKeys.model, null);
     }
 
-    public void setModel(org.primefaces.model.menu.MenuModel model)
-    {
+    public void setModel(org.primefaces.model.menu.MenuModel model) {
         getStateHelper().put(LearnwebMenu.PropertyKeys.model, model);
     }
 
-    public String getStyle()
-    {
+    public String getStyle() {
         return (String) getStateHelper().eval(LearnwebMenu.PropertyKeys.style, null);
     }
 
-    public void setStyle(String style)
-    {
+    public void setStyle(String style) {
         getStateHelper().put(LearnwebMenu.PropertyKeys.style, style);
     }
 
-    public String getStyleClass()
-    {
+    public String getStyleClass() {
         return (String) getStateHelper().eval(LearnwebMenu.PropertyKeys.styleClass, null);
     }
 
-    public void setStyleClass(String styleClass)
-    {
+    public void setStyleClass(String styleClass) {
         getStateHelper().put(LearnwebMenu.PropertyKeys.styleClass, styleClass);
     }
 }

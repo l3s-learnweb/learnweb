@@ -34,8 +34,7 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Misc;
 
-public class TedCrawlerSimple implements Runnable
-{
+public class TedCrawlerSimple implements Runnable {
     private static final Logger log = LogManager.getLogger(TedCrawlerSimple.class);
 
     private ResourcePreviewMaker rpm;
@@ -44,37 +43,26 @@ public class TedCrawlerSimple implements Runnable
 
     private Learnweb learnweb;
 
-    public TedCrawlerSimple()
-    {
+    public TedCrawlerSimple() {
 
     }
 
-    public void initialize()
-    {
-        try
-        {
+    public void initialize() {
+        try {
             learnweb = Learnweb.getInstance();
             rpm = learnweb.getResourcePreviewMaker();
             tedGroup = learnweb.getGroupManager().getGroupById(862);
             admin = learnweb.getUserManager().getUser(7727);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error("Error while initializing TED crawler", e);
         }
     }
 
     /**
-     * Extract the transcript corresponding to a particular TED talk (TED id) and language
-     *
-     * @param tedId
-     * @param resourceId
-     * @param language
+     * Extract the transcript corresponding to a particular TED talk (TED id) and language.
      */
-    public void extractTranscript(String tedId, int resourceId, String language)
-    {
-        try
-        {
+    public void extractTranscript(String tedId, int resourceId, String language) {
+        try {
             PreparedStatement pStmt = learnweb.getConnection().prepareStatement("INSERT INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
             pStmt.setInt(1, resourceId);
             pStmt.setString(2, language);
@@ -84,16 +72,14 @@ public class TedCrawlerSimple implements Runnable
             JSONObject transcriptJSONObj = new JSONObject(transcriptJSONStr);
             JSONArray paragraphs = (JSONArray) transcriptJSONObj.get("paragraphs");
 
-            for(Object paragraph1 : paragraphs)
-            {
+            for (Object paragraph1 : paragraphs) {
                 JSONObject paragraph = (JSONObject) paragraph1;
                 //'cues' is a json array to split the paragraph into text segments to highlight in parallel while watching the video
                 JSONArray cues = (JSONArray) paragraph.get("cues");
                 JSONObject firstCue = (JSONObject) cues.get(0);
                 long startTime = (long) firstCue.get("time");
                 StringBuilder paragraphText = new StringBuilder((String) firstCue.get("text"));
-                for(int j = 1, len = cues.length(); j < len; j++)
-                {
+                for (int j = 1, len = cues.length(); j < len; j++) {
                     JSONObject cue = (JSONObject) cues.get(j);
                     paragraphText.append(" ").append(cue.get("text"));
                 }
@@ -105,26 +91,18 @@ public class TedCrawlerSimple implements Runnable
             }
 
             pStmt.close();
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             log.warn("Error while fetching transcript (" + language + ") for ted talk: " + resourceId, e);
-        }
-        catch(JSONException e)
-        {
+        } catch (JSONException e) {
             log.error("Error while parsing transcript json for ted talk: " + resourceId + " and language: " + language, e);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error("Error while inserting transcript for ted talk: " + resourceId + " and language: " + language, e);
 
         }
     }
 
-    public void start()
-    {
-        try
-        {
+    public void start() {
+        try {
             String tedTalksURLPrefix = "http://www.ted.com/talks?";
             Document doc = Jsoup.parse(new URL(tedTalksURLPrefix + "page=1"), 10000);
 
@@ -133,71 +111,55 @@ public class TedCrawlerSimple implements Runnable
             int totalPages = Integer.parseInt(lastPage);
             log.info("Total no. of pages: " + totalPages);
 
-            for(int i = 1; i <= totalPages; i++)
+            for (int i = 1; i <= totalPages; i++) {
                 visitTedTalksPage(tedTalksURLPrefix + "page=" + i);
-        }
-        catch(IOException e)
-        {
+            }
+        } catch (IOException e) {
             log.error("Error while fetching TED talks page:1", e);
         }
     }
 
     /**
-     * Extract individual TED talk URLs from the talks menu page
-     *
-     * @param tedTalksPageUrl
+     * Extract individual TED talk URLs from the talks menu page.
      */
-    public void visitTedTalksPage(String tedTalksPageUrl)
-    {
-        try
-        {
+    public void visitTedTalksPage(String tedTalksPageUrl) {
+        try {
             Document doc = Jsoup.parse(new URL(tedTalksPageUrl), 10000);
 
             Elements tedTalkURLs = doc.select("div.talk-link div.media__message a");
-            for(Element tedTalkUrlEl : tedTalkURLs)
-            {
+            for (Element tedTalkUrlEl : tedTalkURLs) {
                 String tedTalkURL = tedTalkUrlEl.attr("abs:href");
                 visit(tedTalkURL);
                 TimeUnit.SECONDS.sleep(5);
             }
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             log.error("Error while fetching ted talks page: " + tedTalksPageUrl, e);
-        }
-        catch(InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             log.error("Interrupted execution while visiting ted talks page: " + tedTalksPageUrl, e);
         }
     }
 
-    public int checkTEDIdExists(int tedId)
-    {
+    public int checkTEDIdExists(int tedId) {
         int resourceId = -1;
-        try
-        {
+        try {
             PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE ted_id = ?");
             pStmt.setInt(1, tedId);
             ResultSet rs = pStmt.executeQuery();
-            if(rs.next())
+            if (rs.next()) {
                 resourceId = rs.getInt(1);
-        }
-        catch(SQLException e)
-        {
+            }
+        } catch (SQLException e) {
             log.error("Error while fetching resource id for ted id: " + tedId, e);
         }
 
         return resourceId;
     }
 
-    public void updateResourceData(int resourceId, String slugFromCrawl, String title, String description)
-    {
-        try
-        {
+    public void updateResourceData(int resourceId, String slugFromCrawl, String title, String description) {
+        try {
             Resource r = learnweb.getResourceManager().getResource(resourceId);
             String slug = r.getUrl().split("talks/")[1];
-            if(!slug.equals(slugFromCrawl))
-            {
+            if (!slug.equals(slugFromCrawl)) {
                 r.setTitle(title);
                 r.setDescription(description);
                 r.setUrl("http://www.ted.com/talks/" + slugFromCrawl);
@@ -209,25 +171,20 @@ public class TedCrawlerSimple implements Runnable
                 pStmt.setString(3, slugFromCrawl);
                 pStmt.setInt(4, resourceId);
                 int dbReturnVal = pStmt.executeUpdate();
-                if(dbReturnVal == 1)
+                if (dbReturnVal == 1) {
                     log.info("Updated existing ted video: " + resourceId);
-
+                }
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error("Error while updating existing resource: " + resourceId, e);
         }
     }
 
     /**
-     * Extract data about a particular TED talk given the URL
-     * Update the data if talk already exists if not insert the new TED talk to the database
-     *
-     * @param url
+     * Extract data about a particular TED talk given the URL.
+     * Update the data if talk already exists if not insert the new TED talk to the database.
      */
-    public void visit(String url)
-    {
+    public void visit(String url) {
         HashSet<String> languageSet = new HashSet<>();
         HashSet<String> languageListFromDatabase = new HashSet<>();
 
@@ -241,24 +198,21 @@ public class TedCrawlerSimple implements Runnable
         int resourceId = -1;
         String tedId;
 
-        try
-        {
+        try {
             // check the database to identify if the video has already been crawled or if any new transcripts are added to the video
             PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT resource_id, language FROM ted_video JOIN ted_transcripts_paragraphs USING(resource_id) WHERE slug = ?");
             pStmt.setString(1, slug);
             ResultSet rs = pStmt.executeQuery();
 
-            while(rs.next())
-            {
+            while (rs.next()) {
                 resourceId = rs.getInt(1);
                 String languageCode = rs.getString(2);
-                if(languageCode != null)
+                if (languageCode != null) {
                     languageListFromDatabase.add(languageCode);
+                }
             }
 
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error("Error while checking if ted video exists for slug: " + slug, e);
         }
 
@@ -267,56 +221,40 @@ public class TedCrawlerSimple implements Runnable
         int retries = 3; // number of retries in case the connection fails
         Exception lastException = null;
 
-        while(retries > 0)
-        {
-            try
-            {
+        while (retries > 0) {
+            try {
                 retries--;
 
                 response = Jsoup.connect(url).timeout(10000).execute();
-                doc = response.parse();//Jsoup.parse(new URL(url), 10000);
+                doc = response.parse(); // Jsoup.parse(new URL(url), 10000);
 
                 break;
-            } /*
-              catch(HttpStatusException e)
-              {
-                 if(response != null && (response.statusCode() / 100 == 5))
-                     log.warn("Http exception while fetching page: " + slug, e);
-                 else if(response != null)
-                     log.warn("Http exception other than service unavailable while fetching page: " + slug, e);
-              
-                 lastException = e;
-                 Misc.sleep(60000);
-              }*/
-            catch(IOException e)
-            {
-                if(response != null)
+            } catch (IOException e) {
+                if (response != null) {
                     log.warn("Error while fetching ted talks page: " + slug + "; response: " + response.statusCode() + ", " + response.statusMessage(), e);
+                }
 
                 lastException = e;
                 Misc.sleep(60000);
             }
         }
 
-        if(null == doc)
-        {
+        if (null == doc) {
             log.error("Can't fetch ted talks page: " + slug, lastException);
             return;
         }
 
         //Since there is no explicit meta property for ted id, it is extracted like below in order to be able to get transcripts
         Element iosURLEl = doc.select("meta[property=al:ios:url]").first();
-        if(iosURLEl != null)
-        {
+        if (iosURLEl != null) {
             tedId = iosURLEl.attr("content").split("ted://talks/")[1];
             tedId = tedId.replace("?source=facebook", "");
-        }
-        else
+        } else {
             return; //Few TED talks have broken links and it redirects it to the homepage
+        }
 
         //Checking again if TED video exists since sometimes the slug of an existing video can change
-        if(resourceId == -1)
-        {
+        if (resourceId == -1) {
             resourceId = checkTEDIdExists(Integer.parseInt(tedId));
         }
 
@@ -327,8 +265,7 @@ public class TedCrawlerSimple implements Runnable
         description = descriptionEl.attr("content");
 
         //if the videos are new, crawl for the basic attributes such as title, speaker, transcripts
-        if(resourceId == -1)
-        {
+        if (resourceId == -1) {
             log.info("Crawling new ted talk: " + slug);
             log.info("ted id: " + tedId);
 
@@ -362,11 +299,13 @@ public class TedCrawlerSimple implements Runnable
             Date publishedAt = new Date(Integer.parseInt(releaseDateEl.attr("content")) * 1000L);
 
             Elements tags = doc.select("meta[property=og:video:tag");
-            for(Element tag : tags)
+            for (Element tag : tags) {
                 keywords.append(tag.attr("content")).append(",");
+            }
 
-            if(keywords.length() > 0)
+            if (keywords.length() > 0) {
                 keywords = new StringBuilder(keywords.substring(0, keywords.length() - 1));
+            }
             log.info("keywords: " + keywords);
 
             Resource tedResource = new Resource();
@@ -381,8 +320,7 @@ public class TedCrawlerSimple implements Runnable
             tedResource.setIdAtService(tedId);
             tedResource.setTranscript("");
 
-            try
-            {
+            try {
                 rpm.processImage(tedResource, FileInspector.openStream(tedResource.getMaxImageUrl()));
                 tedResource.setGroup(tedGroup);
                 admin.addResource(tedResource);
@@ -406,38 +344,35 @@ public class TedCrawlerSimple implements Runnable
                 pStmt.setString(11, keywords.toString());
                 pStmt.setInt(12, duration);
                 int val = pStmt.executeUpdate();
-                if(val != 1)
+                if (val != 1) {
                     log.error("Inserting ted video resource was not successful: " + tedResource.getId());
-            }
-            catch(SQLException | IOException e)
-            {
+                }
+            } catch (SQLException | IOException e) {
                 log.error("Error while processing ted video resource for ted_video: " + tedResource.getId(), e);
             }
         }
 
         //if video already added, check if slug has changed and then update basic attributes if so
-        if(resourceId > 0)
+        if (resourceId > 0) {
             updateResourceData(resourceId, slug, title, description);
-        else
+        } else {
             return;
+        }
 
         //if the videos are already added, crawl for new transcripts
         //log.info("Extracting transcripts for existing ted video: " + resourceId);
         Elements transcriptLinkElements = doc.select("link[rel=alternate]");
-        if(transcriptLinkElements != null && !transcriptLinkElements.isEmpty())
-        {
-            for(Element transcriptLinkElement : transcriptLinkElements)
-            {
+        if (transcriptLinkElements != null && !transcriptLinkElements.isEmpty()) {
+            for (Element transcriptLinkElement : transcriptLinkElements) {
                 String hrefLang = transcriptLinkElement.attr("hreflang");
-                if(hrefLang != null && !hrefLang.isEmpty() && !hrefLang.equals("x-default"))
+                if (hrefLang != null && !hrefLang.isEmpty() && !hrefLang.equals("x-default")) {
                     languageSet.add(hrefLang);
+                }
             }
 
-            if(!languageSet.equals(languageListFromDatabase))
-            {
+            if (!languageSet.equals(languageListFromDatabase)) {
                 languageSet.removeAll(languageListFromDatabase);
-                for(String langCode : languageSet)
-                {
+                for (String langCode : languageSet) {
                     log.info("inserting transcript for resource id: " + resourceId + "; language code: " + langCode);
                     extractTranscript(tedId, resourceId, langCode);
                 }
@@ -447,14 +382,12 @@ public class TedCrawlerSimple implements Runnable
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         initialize();
         start();
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException
-    {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Learnweb.createInstance();
         TedCrawlerSimple tedCrawler = new TedCrawlerSimple();
         tedCrawler.run();

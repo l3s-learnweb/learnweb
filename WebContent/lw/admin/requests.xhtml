@@ -26,8 +26,8 @@
 				<p:dataTable paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}" rows="100" paginator="true"
 					   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					   currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
-					<p:column headerText="IP" sortBy="#{reqData.IP}" filterBy="#{reqData.IP}" filterMatchMode="contains">
-						<h:outputText value="#{reqData.IP}"/>
+					<p:column headerText="IP" sortBy="#{reqData.ip}" filterBy="#{reqData.ip}" filterMatchMode="contains">
+						<h:outputText value="#{reqData.ip}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.time}" sortBy="#{reqData.time}" filterBy="#{reqData.time}" filterFunction="#{adminRequestListBean.filterByDate}">
@@ -36,8 +36,8 @@
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="URL" sortBy="#{reqData.URL}" filterBy="#{reqData.URL}" filterMatchMode="contains">
-						<h:outputText value="#{reqData.URL}"/>
+					<p:column headerText="URL" sortBy="#{reqData.url}" filterBy="#{reqData.url}" filterMatchMode="contains">
+						<h:outputText value="#{reqData.url}"/>
 					</p:column>
 				</p:dataTable>
 			</h:form>
@@ -76,8 +76,8 @@
 				</span>
 				<p:dataTable id="requestsTable" tableStyleClass="mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}" rows="50" paginator="true"
 					  paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-					<p:column headerText="IP" sortBy="#{aRequest.IP}" filterBy="#{aRequest.IP}" filterMatchMode="contains">
-						<h:outputText value="#{aRequest.IP}"/>
+					<p:column headerText="IP" sortBy="#{aRequest.ip}" filterBy="#{aRequest.ip}" filterMatchMode="contains">
+						<h:outputText value="#{aRequest.ip}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.requests_count}" sortBy="#{aRequest.requests}" filterBy="#{aRequest.requests}" filterMatchMode="contains">

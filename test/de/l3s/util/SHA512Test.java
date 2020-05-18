@@ -4,13 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-
-class SHA512Test
-{
-
+class SHA512Test {
     @Test
-    void hash()
-    {
+    void hash() {
         String email = "randomemail@gmail.com";
         String hash = SHA512.hash(email);
         assertNull(SHA512.hash(null));

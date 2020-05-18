@@ -14,8 +14,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
  */
 @Named
 @ViewScoped
-public class SubmissionModeratorBean extends ApplicationBean implements Serializable
-{
+public class SubmissionModeratorBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -2494182373382483709L;
     //private static final Logger log = LogManager.getLogger(SubmissionModeratorBean.class);
 
@@ -24,61 +23,47 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     private Submission submission;
     private SubmittedResources selectedUserSubmission;
 
-    public void onLoad()
-    {
-        try
-        {
+    public void onLoad() {
+        try {
             submission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
-            if(null == submission)
-            {
+            if (null == submission) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "missing parameter");
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
         }
 
     }
 
-    public int getSubmissionId()
-    {
+    public int getSubmissionId() {
         return submissionId;
     }
 
-    public void setSubmissionId(int submissionId)
-    {
+    public void setSubmissionId(int submissionId) {
         this.submissionId = submissionId;
     }
 
-    public Submission getSubmission()
-    {
+    public Submission getSubmission() {
         return submission;
     }
 
-    public SubmittedResources getSelectedUserSubmission()
-    {
+    public SubmittedResources getSelectedUserSubmission() {
         return selectedUserSubmission;
     }
 
-    public void setSelectedUserSubmission(SubmittedResources selectedUserSubmission)
-    {
+    public void setSelectedUserSubmission(SubmittedResources selectedUserSubmission) {
         this.selectedUserSubmission = selectedUserSubmission;
     }
 
-    public void unlockSubmission(int userId)
-    {
-        if(selectedUserSubmission != null)
-        {
+    public void unlockSubmission(int userId) {
+        if (selectedUserSubmission != null) {
             selectedUserSubmission.setSubmitStatus(false);
             getLearnweb().getSubmissionManager().saveSubmitStatusForUser(submission.getId(), userId, false);
         }
     }
 
-    public void lockSubmission(int userId)
-    {
-        if(selectedUserSubmission != null)
-        {
+    public void lockSubmission(int userId) {
+        if (selectedUserSubmission != null) {
             selectedUserSubmission.setSubmitStatus(true);
             getLearnweb().getSubmissionManager().saveSubmitStatusForUser(submission.getId(), userId, true);
         }

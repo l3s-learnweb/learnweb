@@ -18,116 +18,106 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
-public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView>
-{
+public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
     private static final long serialVersionUID = 4388428278103454292L;
     private static final Logger log = LogManager.getLogger(LazyGlossaryTableView.class);
-    static final int PAGE_SIZE_MULTIPLICATOR = 20; // necessary to make the datatable show multiple rows per GlossaryEntry. I assume that no GlossaryEntry will have more than 20 GlossaryTerms
 
-    private GlossaryResource glossaryResource;
+    /**
+     * Necessary to make the datatable show multiple rows per GlossaryEntry.
+     * I assume that no GlossaryEntry will have more than 20 GlossaryTerms.
+     */
+    static final int PAGE_SIZE_MULTIPLICATOR = 20;
 
-    public LazyGlossaryTableView(GlossaryResource glossaryResource)
-    {
+    private final GlossaryResource glossaryResource;
+
+    public LazyGlossaryTableView(GlossaryResource glossaryResource) {
         this.glossaryResource = glossaryResource;
         setRowCount(glossaryResource.getEntries().size() * PAGE_SIZE_MULTIPLICATOR);
     }
 
     /*
     @Override
-    public GlossaryTableView getRowData(String rowKey)
-    {
-        for(GlossaryTableView GlossaryTableView : datasource)
-        {
-            if(Integer.valueOf(GlossaryTableView.getTermId()).equals(rowKey)) // TODO fix
-            {
+    public GlossaryTableView getRowData(String rowKey) {
+        for(GlossaryTableView GlossaryTableView : datasource) {
+            if(Integer.valueOf(GlossaryTableView.getTermId()).equals(rowKey)) {
                 return GlossaryTableView;
             }
         }
-    
+
         return null;
     }
-    
+
     @Override
-    public Object getRowKey(GlossaryTableView GlossaryTableView)
-    {
-    
+    public Object getRowKey(GlossaryTableView GlossaryTableView) {
         return Integer.valueOf(GlossaryTableView.getTermId());
     }*/
 
     @Override
-    public List<GlossaryTableView> load(int first, int pageSize, Map<String, SortMeta> sortMeta, Map<String, FilterMeta> filterMeta)
-    {
+    public List<GlossaryTableView> load(int first, int pageSize, Map<String, SortMeta> sortMeta, Map<String, FilterMeta> filterMeta) {
         // create list of predicates for the given filters
         List<Predicate<GlossaryEntry>> allPredicates = new ArrayList<>();
 
         Map<String, String> simpleFilters = new HashMap<>(); // copies all non empty filters for fields of type String
 
-        for(FilterMeta meta : filterMeta.values())
-        {
+        for (FilterMeta meta : filterMeta.values()) {
             String filterFieldOriginal = meta.getFilterField();
             Object filterValue = meta.getFilterValue();
 
-            if(null == filterFieldOriginal || filterValue == null)
-            {
+            if (null == filterFieldOriginal || filterValue == null) {
                 //log.debug("skipped: " + meta);
                 continue;
             }
-            if(filterFieldOriginal.equals("language"))
-            {
+            if (filterFieldOriginal.equals("language")) {
                 @SuppressWarnings("unchecked")
                 List<Locale> localesFilter = (List<Locale>) filterValue;
 
                 allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> localesFilter.contains(t.getLanguage())));
                 continue;
-            }
-            else if(filterFieldOriginal.equals("globalFilter"))
-            {
+            } else if (filterFieldOriginal.equals("globalFilter")) {
                 filterFieldOriginal = "fulltext";
             }
             final String filterField = filterFieldOriginal;
 
             // ignore empty filter
             final String filterValueStr = String.valueOf(filterValue).toLowerCase();
-            if(StringUtils.isBlank(filterValueStr))
+            if (StringUtils.isBlank(filterValueStr)) {
                 continue;
+            }
 
             simpleFilters.put(filterField, filterValueStr);
 
-            switch(filterField) // TODO move fields to an ENUM rename topicOne to topic1 and so on
-            {
-            case "fulltext":
-            case "description":
-            case "topicOne":
-            case "topicTwo":
-            case "topicThree":
-                log.debug("added filter for:" + filterField + " = " + filterValueStr);
-                allPredicates.add(e -> e.get(filterField).toLowerCase().contains(filterValueStr));
-                break;
-            case "term":
-            case "pronounciation":
-            case "acronym":
-            case "source":
-            case "phraseology":
-                log.debug("added filter for:" + filterField + " = " + filterValueStr);
-                allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> t.get(filterField).toLowerCase().contains(filterValueStr)));
-                break;
-            default:
-                log.warn("unsupported filter:" + filterField);
+            switch (filterField) { // TODO move fields to an ENUM rename topicOne to topic1 and so on
+                case "fulltext":
+                case "description":
+                case "topicOne":
+                case "topicTwo":
+                case "topicThree":
+                    log.debug("added filter for:" + filterField + " = " + filterValueStr);
+                    allPredicates.add(e -> e.get(filterField).toLowerCase().contains(filterValueStr));
+                    break;
+                case "term":
+                case "pronounciation":
+                case "acronym":
+                case "source":
+                case "phraseology":
+                    log.debug("added filter for:" + filterField + " = " + filterValueStr);
+                    allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> t.get(filterField).toLowerCase().contains(filterValueStr)));
+                    break;
+                default:
+                    log.warn("unsupported filter:" + filterField);
             }
         }
 
         List<GlossaryEntry> data = glossaryResource.getEntries().stream()
-                .filter(allPredicates.stream().reduce(x -> true, Predicate::and))
-                .collect(Collectors.toList());
+            .filter(allPredicates.stream().reduce(x -> true, Predicate::and))
+            .collect(Collectors.toList());
 
         // single column sort
         //Collections.sort(data, new LazySorter(sortField, sortOrder));
 
         //multi sort
-        if(sortMeta != null && !sortMeta.isEmpty())
-        {
-            for(SortMeta meta : sortMeta.values())
-            {
+        if (sortMeta != null && !sortMeta.isEmpty()) {
+            for (SortMeta meta : sortMeta.values()) {
                 data.sort(new LazySorter(meta.getSortField(), meta.getSortOrder()));
             }
         }
@@ -141,81 +131,64 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView>
 
         List<GlossaryEntry> page;
 
-        if(dataSize > pageSize) //
-        {
-            try
-            {
+        if (dataSize > pageSize) {
+            try {
                 page = data.subList(first, first + pageSize);
-            }
-            catch(IndexOutOfBoundsException e)
-            {
+            } catch (IndexOutOfBoundsException e) {
                 page = data.subList(first, first + (dataSize % pageSize));
             }
-        }
-        else
-        {
+        } else {
             page = data;
         }
 
         // expand glossary entries; one row for term in each entry
         ArrayList<GlossaryTableView> tableView = new ArrayList<>(page.size() * 3);
 
-        for(GlossaryEntry entry : page)
-        {
-            for(GlossaryTerm term : entry.getTerms())
-            {
+        for (GlossaryEntry entry : page) {
+            for (GlossaryTerm term : entry.getTerms()) {
                 tableView.add(new GlossaryTableView(entry, term, simpleFilters));
             }
         }
         return tableView;
     }
 
-    public static class LazySorter implements Comparator<GlossaryEntry>
-    {
-        private String sortField;
-        private SortOrder sortOrder;
-        private Method fieldGetMethod;
+    public static class LazySorter implements Comparator<GlossaryEntry> {
+        private final String sortField;
+        private final SortOrder sortOrder;
+        private final Method fieldGetMethod;
 
-        public LazySorter(String sortField, SortOrder sortOrder) throws SecurityException
-        {
+        public LazySorter(String sortField, SortOrder sortOrder) throws SecurityException {
             this.sortField = sortField;
             this.sortOrder = sortOrder;
 
-            try
-            {
+            try {
                 fieldGetMethod = GlossaryEntry.class.getDeclaredMethod("get" + StringUtils.capitalize(sortField));
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
 
-        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
-        public int compare(GlossaryEntry car1, GlossaryEntry car2)
-        {
-            if(car1 == null || car2 == null)
-            {
+        public int compare(GlossaryEntry car1, GlossaryEntry car2) {
+            if (car1 == null || car2 == null) {
                 log.error("Sorting objects must not be null");
                 return 0;
             }
-            try
-            {
+            try {
                 Object value1 = fieldGetMethod.invoke(car1);
                 Object value2 = fieldGetMethod.invoke(car2);
 
                 int value;
 
-                if(value1 instanceof String)
+                if (value1 instanceof String) {
                     value = String.CASE_INSENSITIVE_ORDER.compare((String) value1, (String) value2);
-                else
+                } else {
                     value = ((Comparable) value1).compareTo(value2);
+                }
 
                 return SortOrder.ASCENDING == sortOrder ? value : -1 * value;
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 log.error("Sorting failed for field: " + sortField + " order: " + sortOrder, e);
 
                 return 0;

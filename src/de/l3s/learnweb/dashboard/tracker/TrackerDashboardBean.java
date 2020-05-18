@@ -17,8 +17,7 @@ import de.l3s.util.MapHelper;
 
 @Named
 @ViewScoped
-public class TrackerDashboardBean extends CommonDashboardUserBean implements Serializable
-{
+public class TrackerDashboardBean extends CommonDashboardUserBean implements Serializable {
     private static final long serialVersionUID = 3640317272542005280L;
     //private static final Logger log = LogManager.getLogger(TrackerDashboardBean.class);
 
@@ -28,46 +27,37 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
     private LinkedList<TrackerUserActivity> trackerStatistics;
 
     @Override
-    public void onLoad()
-    {
+    public void onLoad() {
         super.onLoad();
 
-        try
-        {
+        try {
             cleanAndUpdateStoredData();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
         }
     }
 
     @Override
-    public void cleanAndUpdateStoredData() throws SQLException
-    {
+    public void cleanAndUpdateStoredData() throws SQLException {
         trackerStatistics = null;
         proxySourcesWithCounters = null;
 
         fetchDataFromManager();
     }
 
-    private void fetchDataFromManager() throws SQLException
-    {
-        if(!CollectionUtils.isEmpty(getSelectedUsersIds()))
-        {
+    private void fetchDataFromManager() throws SQLException {
+        if (!CollectionUtils.isEmpty(getSelectedUsersIds())) {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             trackerStatistics = getLearnweb().getTrackerDashboardManager().getTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
             proxySourcesWithCounters = getLearnweb().getTrackerDashboardManager().getProxySourcesWithCounters(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
         }
     }
 
-    public ArrayList<Map.Entry<String, Integer>> getUsersProxySourcesList() throws SQLException
-    {
+    public ArrayList<Map.Entry<String, Integer>> getUsersProxySourcesList() throws SQLException {
         return new ArrayList<>(MapHelper.sortByValue(proxySourcesWithCounters).entrySet());
     }
 
-    public LinkedList<TrackerUserActivity> getTrackerStatistics() throws SQLException
-    {
+    public LinkedList<TrackerUserActivity> getTrackerStatistics() throws SQLException {
         return trackerStatistics;
     }
 }

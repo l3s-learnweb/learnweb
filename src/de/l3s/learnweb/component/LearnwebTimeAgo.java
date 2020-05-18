@@ -14,19 +14,16 @@ import javax.faces.context.ResponseWriter;
 import org.ocpsoft.prettytime.PrettyTime;
 
 @FacesComponent(createTag = true, tagName = "timeAgo", namespace = "http://l3s.de/learnweb")
-public class LearnwebTimeAgo extends UIComponentBase
-{
+public class LearnwebTimeAgo extends UIComponentBase {
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component.LearnwebTimeAgo";
 
     @Override
-    public String getFamily()
-    {
+    public String getFamily() {
         return COMPONENT_FAMILY;
     }
 
     @Override
-    public void encodeBegin(FacesContext context) throws IOException
-    {
+    public void encodeBegin(FacesContext context) throws IOException {
         Date date = (Date) getAttributes().get("date");
         String styleClass = (String) getAttributes().get("styleClass");
 
@@ -39,8 +36,7 @@ public class LearnwebTimeAgo extends UIComponentBase
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("span", this);
         writer.writeAttribute("title", df.format(date), null);
-        if (styleClass != null)
-        {
+        if (styleClass != null) {
             writer.writeAttribute("styleClass", styleClass, "styleClass");
         }
         writer.write(prettyTime.format(date));

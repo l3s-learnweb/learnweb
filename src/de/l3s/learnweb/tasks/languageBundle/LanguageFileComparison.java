@@ -10,18 +10,15 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Uses the list of corrected translations provided by Marco to check which translations were not yet checked.
- * 
- * The returned list represents translation keys which were not checked.
- * 
- * @author Philipp
  *
+ * The returned list represents translation keys which were not checked.
+ *
+ * @author Philipp
  */
-public class LanguageFileComparison
-{
+public class LanguageFileComparison {
     private static final Logger log = LogManager.getLogger(LanguageFileComparison.class);
 
-    public static void main(String[] args) throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         Properties languageProperties = new Properties();
         languageProperties.load(LanguageFileComparison.class.getClassLoader().getResourceAsStream("de/l3s/learnweb/lang/messages.properties"));
 
@@ -29,11 +26,9 @@ public class LanguageFileComparison
 
         BufferedReader buffer = new BufferedReader(new FileReader(csvFile, StandardCharsets.UTF_8));
         String line;
-        while((line = buffer.readLine()) != null)
-        {
+        while ((line = buffer.readLine()) != null) {
 
-            if(!line.startsWith("#") && line.endsWith("#"))
-            {
+            if (!line.startsWith("#") && line.endsWith("#")) {
                 log.error("Corrupted file at line: " + line);
                 continue;
             }
@@ -44,8 +39,7 @@ public class LanguageFileComparison
 
             log.debug(line);
 
-            if(translation == null)
-            {
+            if (translation == null) {
                 log.error("Illegal key: " + line);
                 continue;
             }
@@ -54,11 +48,11 @@ public class LanguageFileComparison
         }
 
         log.debug("unchecked keys:");
-        for(Object key : languageProperties.keySet())
-        {
+        for (Object key : languageProperties.keySet()) {
             String keyStr = (String) key;
-            if(keyStr.startsWith("ArchiveSearch.") || keyStr.startsWith("language_"))
+            if (keyStr.startsWith("ArchiveSearch.") || keyStr.startsWith("language_")) {
                 continue;
+            }
 
             log.debug(key);
         }

@@ -19,17 +19,13 @@ import de.l3s.learnweb.LanguageBundle;
  * If it fails it throws an exception but adds also a global faces message.
  *
  * TODO This is only a quick an dirty implementation
- *
- *
  */
 @FacesConverter("idConverter")
-public class IdConverter implements Converter<Integer>
-{
+public class IdConverter implements Converter<Integer> {
     private static final Logger log = LogManager.getLogger(IdConverter.class);
 
     @Override
-    public Integer getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException
-    {
+    public Integer getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException {
         /* should never happen for converter
         if(null == value)
         {
@@ -40,17 +36,12 @@ public class IdConverter implements Converter<Integer>
         */
 
         int valueInt = -1;
-        try
-        {
+        try {
             valueInt = Integer.parseInt(value);
-        }
-        catch(NumberFormatException e)
-        {
-            // ignore
+        } catch (NumberFormatException ignored) {
         }
 
-        if(valueInt < 0)
-        {
+        if (valueInt < 0) {
             addMessage(context, component, FacesMessage.SEVERITY_FATAL, ("has to be a positive number"));
             throw new ConverterException();
         }
@@ -59,28 +50,25 @@ public class IdConverter implements Converter<Integer>
     }
 
     @Override
-    public String getAsString(FacesContext arg0, UIComponent arg1, Integer value) throws ConverterException
-    {
-        if(null == value)
-        {
+    public String getAsString(FacesContext arg0, UIComponent arg1, Integer value) throws ConverterException {
+        if (null == value) {
             return null;
         }
 
         return value.toString();
     }
 
-    protected void addMessage(FacesContext context, UIComponent component, FacesMessage.Severity severity, String msgKey, Object... args)
-    {
+    protected void addMessage(FacesContext context, UIComponent component, FacesMessage.Severity severity, String msgKey, Object... args) {
         String name = (String) component.getAttributes().get("name");
         String message = LanguageBundle.getLocaleMessage(context.getViewRoot().getLocale(), msgKey, args);
 
-        if(StringUtils.isNotBlank(name))
+        if (StringUtils.isNotBlank(name)) {
             message = "parameter '" + name + "': " + message;
+        }
 
         context.addMessage(null, new FacesMessage(severity, message, null));
 
-        if(FacesMessage.SEVERITY_FATAL == severity)
-        {
+        if (FacesMessage.SEVERITY_FATAL == severity) {
             HttpServletRequest req = (HttpServletRequest) context.getExternalContext().getRequest();
             req.setAttribute("hideContent", true);
         }

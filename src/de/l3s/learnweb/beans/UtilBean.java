@@ -20,38 +20,41 @@ import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ApplicationScoped
-public class UtilBean implements Serializable
-{
+public class UtilBean implements Serializable {
     private static final long serialVersionUID = 6252597111468136574L;
     private static final Logger log = LogManager.getLogger(UtilBean.class);
 
     /**
-     * This method is intended only for special use cases. Discuss with project leader before using it.
+     * This method shall only be used in XHTML files!
      *
-     * @param redirectPath
+     * @return The translation for the msgKey. Escaped so that it can be included in JS strings.
      */
-    public static void redirect(String redirectPath)
-    {
-        try
-        {
+    public String getLocaleMessageEscaped(String msgKey, Object... args) {
+        return escapeJS(getLocaleMessage(msgKey, args));
+    }
+
+    public String escapeJS(String input) {
+        return StringEscapeUtils.escapeEcmaScript(input);
+    }
+
+    /**
+     * This method is intended only for special use cases. Discuss with project leader before using it.
+     */
+    public static void redirect(String redirectPath) {
+        try {
             ExternalContext externalContext = BeanHelper.getExternalContext();
             ServletContext servletContext = (ServletContext) externalContext.getContext();
             externalContext.redirect(servletContext.getContextPath() + redirectPath);
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
      * Use ApplicationBean.getUserBean() instead. This method must only be called on a bean/facesContext not from any models.
-     *
-     * @return
      */
     @Deprecated
-    public static UserBean getUserBean()
-    {
+    public static UserBean getUserBean() {
         FacesContext fc = FacesContext.getCurrentInstance();
         return (UserBean) fc.getApplication().getELResolver().getValue(fc.getELContext(), null, "userBean");
     }
@@ -61,41 +64,20 @@ public class UtilBean implements Serializable
      * Move translations to the bean or XHTML file. In beans you can use getLocaleMessage() in XHTML files use #{msg['a_prefix' += your_key]}
      *
      * The method is also used in many XHTML files. Consider using o:outputFormat or of:formatX() instead:
-     *  - http://showcase.omnifaces.org/components/outputFormat
-     *  - http://showcase.omnifaces.org/functions/Strings
+     * - http://showcase.omnifaces.org/components/outputFormat
+     * - http://showcase.omnifaces.org/functions/Strings
      */
     @Deprecated
-    public static String getLocaleMessage(String msgKey, Object... args)
-    {
+    public static String getLocaleMessage(String msgKey, Object... args) {
         // guess locale
         Locale locale;
-        try
-        {
+        try {
             locale = getUserBean().getLocale();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.error("Can't load current locale", e);
             locale = Locale.ENGLISH;
         }
 
         return LanguageBundle.getLocaleMessage(locale, msgKey, args);
-    }
-
-    /**
-     * This method shall only be used in XHTML files!
-     *
-     * @param msgKey
-     * @param args
-     * @return The translation for the msgKey. Escaped so that it can be included in JS strings.
-     */
-    public String getLocaleMessageEscaped(String msgKey, Object... args)
-    {
-        return escapeJS(getLocaleMessage(msgKey, args));
-    }
-
-    public String escapeJS(String input)
-    {
-        return StringEscapeUtils.escapeEcmaScript(input);
     }
 }

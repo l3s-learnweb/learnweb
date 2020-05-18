@@ -8,16 +8,14 @@ import de.l3s.learnweb.web.RequestsTaskHandler;
 import de.l3s.util.email.BounceFetcher;
 import it.sauronsoftware.cron4j.Scheduler;
 
-public class JobScheduler
-{
-    private Scheduler scheduler;
+public class JobScheduler {
+    private final Scheduler scheduler;
 
     /**
-     * Description about Scheduling patterns
+     * Description about Scheduling patterns.
      * http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
      */
-    protected JobScheduler(Learnweb learnweb)
-    {
+    protected JobScheduler(Learnweb learnweb) {
         scheduler = new Scheduler();
 
         //Cleans up expired bans once a week on Sunday at 3:00AM
@@ -38,15 +36,15 @@ public class JobScheduler
         scheduler.schedule("0 8 * * *", new ForumNotificator());
     }
 
-    public void startAllJobs()
-    {
-        if(!scheduler.isStarted())
+    public void startAllJobs() {
+        if (!scheduler.isStarted()) {
             scheduler.start();
+        }
     }
 
-    public void stopAllJobs()
-    {
-        if(scheduler.isStarted())
+    public void stopAllJobs() {
+        if (scheduler.isStarted()) {
             scheduler.stop();
+        }
     }
 }

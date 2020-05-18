@@ -21,8 +21,7 @@ import de.l3s.learnweb.logging.Action;
 
 @Named
 @ViewScoped
-public class ForumTopicsBean extends ApplicationBean implements Serializable
-{
+public class ForumTopicsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 8303246537720508084L;
     private static final Logger log = LogManager.getLogger(ForumTopicsBean.class);
 
@@ -33,27 +32,24 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
     @NotBlank
     @Length(max = 100)
     private String newTopicTitle;
-    private ForumPost newPost;
+    private final ForumPost newPost;
 
-    public ForumTopicsBean()
-    {
+    public ForumTopicsBean() {
         newPost = new ForumPost();
     }
 
-    public void onLoad() throws SQLException
-    {
-        if(!isLoggedIn())
+    public void onLoad() throws SQLException {
+        if (!isLoggedIn()) {
             return;
+        }
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
 
-        if(null == group)
-        {
+        if (null == group) {
             addInvalidParameterMessage("group_id");
             return;
         }
-        if(!group.canViewResources(getUser()))
-        {
+        if (!group.canViewResources(getUser())) {
             group = null; // set main object of this page to null to block access
             addAccessDeniedMessage();
             return;
@@ -62,8 +58,7 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
         topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
     }
 
-    public String onSavePost() throws SQLException
-    {
+    public String onSavePost() throws SQLException {
         Date now = new Date();
 
         ForumTopic topic = new ForumTopic();
@@ -87,57 +82,45 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
         return "forum_post.jsf?faces-redirect=true&topic_id=" + topic.getId();
     }
 
-    public void onDeleteTopic(ForumTopic topic)
-    {
-        try
-        {
+    public void onDeleteTopic(ForumTopic topic) {
+        try {
             getLearnweb().getForumManager().deleteTopic(topic);
             topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
             addMessage(FacesMessage.SEVERITY_INFO, "The topic '" + topic.getTitle() + "' has been deleted.");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public List<SelectItem> getCategories()
-    {
+    public List<SelectItem> getCategories() {
         return ForumPostBean.getCategoriesByCourse(group.getCourseId());
     }
 
-    public List<ForumTopic> getTopics() throws SQLException
-    {
+    public List<ForumTopic> getTopics() throws SQLException {
         return topics;
     }
 
-    public Group getGroup()
-    {
+    public Group getGroup() {
         return group;
     }
 
-    public int getGroupId()
-    {
+    public int getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId)
-    {
+    public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
 
-    public ForumPost getNewPost()
-    {
+    public ForumPost getNewPost() {
         return newPost;
     }
 
-    public String getNewTopicTitle()
-    {
+    public String getNewTopicTitle() {
         return newTopicTitle;
     }
 
-    public void setNewTopicTitle(String newTopicTitle)
-    {
+    public void setNewTopicTitle(String newTopicTitle) {
         this.newTopicTitle = newTopicTitle;
     }
 }

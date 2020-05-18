@@ -16,25 +16,22 @@ import de.l3s.learnweb.user.User;
  */
 @Named
 @ViewScoped
-public class YourGroupsBean extends ApplicationBean implements Serializable
-{
+public class YourGroupsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -4009762445275495961L;
     //private static final Logger log = LogManager.getLogger(YourGroupsBean.class);
 
     private List<Group> userGroups;
 
-    public YourGroupsBean() throws SQLException
-    {
+    public YourGroupsBean() throws SQLException {
         User user = getUser();
-        if(null == user)
-            // when not logged in
+        if (null == user) { // when not logged in
             return;
+        }
 
         this.userGroups = user.getGroups();
     }
 
-    public List<Group> getUserGroups()
-    {
+    public List<Group> getUserGroups() {
         return this.userGroups;
     }
 }

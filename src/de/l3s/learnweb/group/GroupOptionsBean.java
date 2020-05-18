@@ -23,8 +23,7 @@ import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
-public class GroupOptionsBean extends ApplicationBean implements Serializable
-{
+public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 7748993079932830367L;
     private static final Logger log = LogManager.getLogger(GroupOptionsBean.class);
 
@@ -41,24 +40,23 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
     private String editedHypothesisLink;
     private String editedHypothesisToken;
 
-    public void onLoad() throws SQLException
-    {
+    public void onLoad() throws SQLException {
         User user = getUser();
-        if(null == user) // not logged in
+        if (null == user) { // not logged in
             return;
+        }
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
 
-        if(null == group)
+        if (null == group) {
             addInvalidParameterMessage("group_id");
+        }
 
-        if(null != group)
-        {
+        if (null != group) {
             group.setLastVisit(user);
         }
 
-        if(group != null)
-        {
+        if (group != null) {
             editedGroupDescription = group.getDescription();
             editedGroupLeaderId = group.getLeaderUserId();
             editedGroupTitle = group.getTitle();
@@ -67,67 +65,53 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
         }
     }
 
-    public int getGroupId()
-    {
+    public int getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId)
-    {
+    public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
 
-    public Group getGroup()
-    {
+    public Group getGroup() {
         return group;
     }
 
-    public void onGroupEdit()
-    {
-        if(null == group)
-        {
+    public void onGroupEdit() {
+        if (null == group) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
             return;
         }
 
-        try
-        {
-            if(!editedGroupDescription.equals(group.getDescription()))
-            {
+        try {
+            if (!editedGroupDescription.equals(group.getDescription())) {
                 group.setDescription(editedGroupDescription);
                 log(Action.group_changing_description, group.getId(), group.getId());
             }
-            if(!editedGroupTitle.equals(group.getTitle()))
-            {
+            if (!editedGroupTitle.equals(group.getTitle())) {
                 log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
                 group.setTitle(editedGroupTitle);
             }
-            if(editedGroupLeaderId != group.getLeaderUserId())
-            {
-                if(group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId())
-                {
+            if (editedGroupLeaderId != group.getLeaderUserId()) {
+                if (group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId()) {
                     getUserBean().setSidebarMenuModel(null);
                 }
 
                 group.setLeaderUserId(editedGroupLeaderId);
                 log(Action.group_changing_leader, group.getId(), group.getId());
             }
-            if(!StringUtils.equals(editedHypothesisLink, group.getHypothesisLink()))
-            {
+            if (!StringUtils.equals(editedHypothesisLink, group.getHypothesisLink())) {
                 log(Action.group_changing_hypothesis_link, group.getId(), group.getId(), group.getHypothesisLink());
                 group.setHypothesisLink(editedHypothesisLink);
             }
-            if(!StringUtils.equals(editedHypothesisToken, group.getHypothesisToken()))
-            {
+            if (!StringUtils.equals(editedHypothesisToken, group.getHypothesisToken())) {
                 group.setHypothesisToken(editedHypothesisToken);
             }
             getLearnweb().getGroupManager().save(group);
             //getLearnweb().getGroupManager().resetCache();
             getUser().clearCaches();
 
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
             log.error("unhandled error", e);
         }
@@ -135,110 +119,92 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public void copyGroup()
-    {
+    public void copyGroup() {
 
-        if(null == group)
-        {
+        if (null == group) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
             return;
         }
 
-        try
-        {
+        try {
             group.copyResourcesToGroupById(selectedResourceTargetGroupId, getUser());
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
             log.error("unhandled error", e);
         }
         addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
     }
 
-    public List<Group> getUserCopyableGroups() throws SQLException
-    {
+    public List<Group> getUserCopyableGroups() throws SQLException {
         List<Group> copyableGroups = getUser().getWriteAbleGroups();
         copyableGroups.remove(group);
         return copyableGroups;
     }
 
-    public String getEditedGroupTitle()
-    {
+    public String getEditedGroupTitle() {
         return editedGroupTitle;
     }
 
-    public void setEditedGroupTitle(String editedGroupTitle)
-    {
+    public void setEditedGroupTitle(String editedGroupTitle) {
         this.editedGroupTitle = editedGroupTitle;
     }
 
-    public String getEditedGroupDescription()
-    {
+    public String getEditedGroupDescription() {
         return editedGroupDescription;
     }
 
-    public void setEditedGroupDescription(String editedGroupDescription)
-    {
+    public void setEditedGroupDescription(String editedGroupDescription) {
         this.editedGroupDescription = editedGroupDescription;
     }
 
-    public int getEditedGroupLeaderId()
-    {
+    public int getEditedGroupLeaderId() {
         return editedGroupLeaderId;
     }
 
-    public void setEditedGroupLeaderId(int editedGroupLeaderId)
-    {
+    public void setEditedGroupLeaderId(int editedGroupLeaderId) {
         this.editedGroupLeaderId = editedGroupLeaderId;
     }
 
-    public List<SelectItem> getMembersSelectItemList() throws SQLException
-    {
-        if(null == group)
+    public List<SelectItem> getMembersSelectItemList() throws SQLException {
+        if (null == group) {
             return new ArrayList<>();
+        }
 
         List<SelectItem> yourList;
         yourList = new ArrayList<>();
 
-        for(User member : group.getMembers())
+        for (User member : group.getMembers()) {
             yourList.add(new SelectItem(member.getId(), member.getUsername()));
+        }
 
         return yourList;
     }
 
-    public boolean isHypothesisEnabled() throws SQLException
-    {
+    public boolean isHypothesisEnabled() throws SQLException {
         return getGroup().getCourse().getOption(Option.Groups_Hypothesis_enabled);
     }
 
-    public String getNewHypothesisLink()
-    {
+    public String getNewHypothesisLink() {
         return editedHypothesisLink;
     }
 
-    public void setNewHypothesisLink(String newHypothesisLink)
-    {
+    public void setNewHypothesisLink(String newHypothesisLink) {
         this.editedHypothesisLink = newHypothesisLink;
     }
 
-    public String getNewHypothesisToken()
-    {
+    public String getNewHypothesisToken() {
         return editedHypothesisToken;
     }
 
-    public void setNewHypothesisToken(String newHypothesisToken)
-    {
+    public void setNewHypothesisToken(String newHypothesisToken) {
         this.editedHypothesisToken = newHypothesisToken;
     }
 
-    public int getSelectedResourceTargetGroupId()
-    {
+    public int getSelectedResourceTargetGroupId() {
         return selectedResourceTargetGroupId;
     }
 
-    public void setSelectedResourceTargetGroupId(int selectedResourceTargetGroupId)
-    {
+    public void setSelectedResourceTargetGroupId(int selectedResourceTargetGroupId) {
         this.selectedResourceTargetGroupId = selectedResourceTargetGroupId;
     }
 }

@@ -33,15 +33,14 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
-public class SolrSearch implements Serializable
-{
+public class SolrSearch implements Serializable {
     private static final long serialVersionUID = 6623209570091677070L;
     private static final Logger log = LogManager.getLogger(SolrSearch.class);
 
     private static final int DEFAULT_GROUP_RESULTS_LIMIT = 2;
     private static final int DEFAULT_RESULTS_LIMIT = 8;
 
-    private int userId;
+    private final int userId;
     private String query;
 
     // search filters
@@ -79,137 +78,97 @@ public class SolrSearch implements Serializable
     // results
     private transient QueryResponse queryResponse;
 
-    public SolrSearch(String query, User user)
-    {
+    public SolrSearch(String query, User user) {
         this.userId = user == null ? 0 : user.getId();
 
         this.query = query;
         String newQuery = removeMyGroupQuery(query);
-        if(!query.equals(newQuery))
-        {
+        if (!query.equals(newQuery)) {
             this.query = newQuery;
-            try
-            {
-                if(user != null && user.getGroups() != null)
-                {
+            try {
+                if (user != null && user.getGroups() != null) {
                     this.filterGroupIds = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
                 }
-            }
-            catch(SQLException e)
-            {
+            } catch (SQLException e) {
                 log.error("Could not retrieve users group", e);
             }
         }
     }
 
-    private static String removeMyGroupQuery(final String query)
-    {
-        Pattern pattern = Pattern.compile("groups\\s*:\\s*my\\s*");
-        Matcher matcher = pattern.matcher(query.toLowerCase(Locale.ENGLISH));
-        if(matcher.find())
-        {
-            String newQuery = "";
-            int start = matcher.start();
-            if(start != 0)
-                newQuery = query.substring(0, start);
-            newQuery += query.substring(matcher.end());
-            return newQuery;
-        }
-        else
-            return query;
-    }
-
-    protected int getUserId()
-    {
+    protected int getUserId() {
         return userId;
     }
 
-    protected String getQuery()
-    {
+    protected String getQuery() {
         return query;
     }
 
-    protected List<Integer> getFilterGroupIds()
-    {
+    protected List<Integer> getFilterGroupIds() {
         return filterGroupIds;
     }
 
-    protected String getFilterLanguage()
-    {
+    protected String getFilterLanguage() {
         return filterLanguage;
     }
 
-    public void setFilterLanguage(String filterLanguage)
-    {
+    public void setFilterLanguage(String filterLanguage) {
         this.filterLanguage = filterLanguage;
     }
 
-    public void setFilterType(String filterType)
-    {
+    public void setFilterType(String filterType) {
         this.filterType = filterType;
     }
 
-    public void setFilterLocation(String filterLocation)
-    {
+    public void setFilterLocation(String filterLocation) {
         this.filterLocation = filterLocation;
     }
 
-    public void setFilterDateFrom(String date)
-    {
+    public void setFilterDateFrom(String date) {
         this.filterDateFrom = date;
     }
 
-    public void setFilterDateTo(String date)
-    {
+    public void setFilterDateTo(String date) {
         this.filterDateTo = date;
     }
 
-    public void setFilterCollector(String collector)
-    {
+    public void setFilterCollector(String collector) {
         this.filterCollector = collector;
     }
 
-    public void setFilterAuthor(String author)
-    {
+    public void setFilterAuthor(String author) {
         this.filterAuthor = author;
     }
 
-    public void setFilterCoverage(String coverage)
-    {
+    public void setFilterCoverage(String coverage) {
         this.filterCoverage = coverage;
     }
 
-    public void setFilterPublisher(String publisher)
-    {
+    public void setFilterPublisher(String publisher) {
         this.filterPublisher = publisher;
     }
 
-    public void setFilterLanguageLevel(final String filterLanguageLevel)
-    {
+    public void setFilterLanguageLevel(final String filterLanguageLevel) {
         this.filterLanguageLevel = filterLanguageLevel;
     }
 
-    public void setFilterYellTarget(final String filterYellTarget)
-    {
+    public void setFilterYellTarget(final String filterYellTarget) {
         this.filterYellTarget = filterYellTarget;
     }
 
-    public void setFilterYellPurpose(final String filterYellPurpose)
-    {
+    public void setFilterYellPurpose(final String filterYellPurpose) {
         this.filterYellPurpose = filterYellPurpose;
     }
 
-    public void setFilterTags(String tags)
-    {
+    public void setFilterTags(String tags) {
         this.filterTags = tags;
     }
 
-    public void clearAllFilters()
-    {
+    public void clearAllFilters() {
         this.facetFields = null;
         this.facetQueries = null;
-        if(null != filterGroupIds)
+        if (null != filterGroupIds) {
             this.filterGroupIds.clear();
+        }
         this.filterLanguage = "";
         this.filterLocation = "";
         this.filterType = "";
@@ -225,95 +184,77 @@ public class SolrSearch implements Serializable
         this.filterTags = "";
     }
 
-    public void setFilterGroups(Integer... filterGroupIds)
-    {
+    public void setFilterGroups(Integer... filterGroupIds) {
         this.filterGroupIds = new ArrayList<>();
         Collections.addAll(this.filterGroupIds, filterGroupIds);
     }
 
-    public void setFilterFolder(Integer folderId, boolean isIncludeChild)
-    {
+    public void setFilterFolder(Integer folderId, boolean isIncludeChild) {
         this.filterFolderId = folderId;
         this.filterFolderIncludeChild = isIncludeChild;
     }
 
-    public void setOrder(String field, ORDER direction)
-    {
+    public void setOrder(String field, ORDER direction) {
         this.orderField = field;
         this.orderDirection = direction;
     }
 
-    public Integer getResultsPerPage()
-    {
+    public Integer getResultsPerPage() {
         return resultsPerPage;
     }
 
-    public void setResultsPerPage(int resultsPerPage)
-    {
+    public void setResultsPerPage(int resultsPerPage) {
         this.resultsPerPage = resultsPerPage;
     }
 
-    public void setSkipResourcesWithoutThumbnails(boolean skipResourcesWithoutThumbnails)
-    {
+    public void setSkipResourcesWithoutThumbnails(boolean skipResourcesWithoutThumbnails) {
         this.skipResourcesWithoutThumbnails = skipResourcesWithoutThumbnails;
     }
 
-    public void setGroupResultsByField(String groupResultsByField)
-    {
+    public void setGroupResultsByField(String groupResultsByField) {
         this.groupResultsByField = groupResultsByField;
     }
 
-    public void setGroupResultsLimit(int groupResultsLimit)
-    {
+    public void setGroupResultsLimit(int groupResultsLimit) {
         this.groupResultsLimit = groupResultsLimit;
     }
 
-    public void setFacetFields(String... facetFields)
-    {
+    public void setFacetFields(String... facetFields) {
         this.facetFields = facetFields;
     }
 
-    public void setFacetQueries(String... facetQueries)
-    {
+    public void setFacetQueries(String... facetQueries) {
         this.facetQueries = facetQueries;
     }
 
-    private QueryResponse getQueryResourcesByPage(int page) throws SolrServerException, IOException
-    {
+    private QueryResponse getQueryResourcesByPage(int page) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery(query);
         solrQuery.set("qt", "/LearnwebQuery");
 
-        if(filterGroupIds != null && !filterGroupIds.isEmpty())
-        {
+        if (filterGroupIds != null && !filterGroupIds.isEmpty()) {
             solrQuery.addFilterQuery("groupId : (" + StringUtils.join(filterGroupIds, " OR ") + ")");
 
-            if(filterGroupIds.size() == 1 && filterGroupIds.contains(0))
-            {
+            if (filterGroupIds.size() == 1 && filterGroupIds.contains(0)) {
                 solrQuery.addFilterQuery("ownerUserId: " + userId); // show only resources of the user
             }
-        }
-        else
-        {
+        } else {
             solrQuery.addFilterQuery("groupId: [* TO *] OR ownerUserId: " + userId); // hide private resources
         }
 
-        if(filterFolderId != null)
-        {
+        if (filterFolderId != null) {
             applyFolder(solrQuery, filterFolderId, filterFolderIncludeChild);
         }
 
         applySearchFilters(solrQuery);
 
-        if(groupResultsByField != null)
-        {
+        if (groupResultsByField != null) {
             solrQuery.set("group", "true");
             solrQuery.set("group.field", groupResultsByField);
             solrQuery.set("group.limit", groupResultsLimit);
             solrQuery.set("group.main", "true");
         }
 
-        if(orderField != null)
-        {
+        if (orderField != null) {
             solrQuery.addSort(orderField, orderDirection);
         }
 
@@ -332,8 +273,7 @@ public class SolrSearch implements Serializable
         solrQuery.setHighlightSimplePre("<strong>");
         solrQuery.setHighlightSimplePost("</strong>");
 
-        if(facetFields != null || facetQueries != null)
-        {
+        if (facetFields != null || facetQueries != null) {
             applyFacets(solrQuery, facetFields, facetQueries);
         }
 
@@ -343,26 +283,138 @@ public class SolrSearch implements Serializable
         return server.query(solrQuery);
     }
 
-    private static void applyFolder(final SolrQuery solrQuery, final Integer folderId, final boolean isIncludeChild)
-    {
-        if(folderId == null || folderId == 0)
-        {
-            if(!isIncludeChild)
-            {
+    private void applySearchFilters(final SolrQuery solrQuery) {
+        if (!filterLocation.isEmpty()) {
+            solrQuery.addFilterQuery("location : " + filterLocation);
+        }
+
+        if (!filterType.isEmpty()) {
+            if ("web".equalsIgnoreCase(filterType)) {
+                solrQuery.addFilterQuery("-type : (image OR video)");
+                solrQuery.add("bq", "description:*^9+description:*^9"); // boost results which have a title and description
+            } else if ("other".equalsIgnoreCase(filterType)) {
+                solrQuery.addFilterQuery("-type : (text OR image OR video OR pdf)");
+            } else {
+                solrQuery.addFilterQuery("type : " + filterType);
+            }
+        }
+
+        if (!filterDateFrom.isEmpty()) {
+            if (!filterDateTo.isEmpty()) {
+                solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO " + filterDateTo + "]");
+            } else {
+                solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO NOW]");
+            }
+        } else if (!filterDateTo.isEmpty()) {
+            solrQuery.addFilterQuery("timestamp : [* TO " + filterDateTo + "]");
+        }
+
+        if (!filterCollector.isEmpty()) {
+            solrQuery.addFilterQuery("collector_s : \"" + filterCollector + "\"");
+        }
+
+        if (!filterAuthor.isEmpty()) {
+            solrQuery.addFilterQuery("author_s : \"" + filterAuthor + "\"");
+        }
+
+        if (!filterCoverage.isEmpty()) {
+            solrQuery.addFilterQuery("coverage_s : \"" + filterCoverage + "\"");
+        }
+
+        if (!filterPublisher.isEmpty()) {
+            solrQuery.addFilterQuery("publisher_s : \"" + filterPublisher + "\"");
+        }
+
+        if (!filterLanguageLevel.isEmpty()) {
+            solrQuery.addFilterQuery("language_level_ss : \"" + filterLanguageLevel + "\"");
+        }
+
+        if (!filterYellTarget.isEmpty()) {
+            solrQuery.addFilterQuery("yell_target_ss : \"" + filterYellTarget + "\"");
+        }
+
+        if (!filterYellPurpose.isEmpty()) {
+            solrQuery.addFilterQuery("yell_purpose_ss : \"" + filterYellPurpose + "\"");
+        }
+
+        if (!filterTags.isEmpty()) {
+            solrQuery.addFilterQuery("tags : \"" + filterTags + "\"");
+        }
+
+        if (!filterLanguage.isEmpty()) {
+            solrQuery.addFilterQuery("language : " + filterLanguage);
+        }
+    }
+
+    public List<ResourceDecorator> getResourcesByPage(int page) throws SQLException, IOException, SolrServerException {
+        List<ResourceDecorator> resources = new LinkedList<>();
+
+        this.queryResponse = getQueryResourcesByPage(page);
+        if (queryResponse != null) {
+            List<ResourceDocument> resourceDocuments = queryResponse.getBeans(ResourceDocument.class);
+
+            ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
+
+            int skippedResources = 0;
+            for (ResourceDocument resourceDocument : resourceDocuments) {
+                int resourceId = extractResourceId(resourceDocument.getId());
+                Resource resource = resourceManager.getResource(resourceId);
+
+                if (resource == null) {
+                    log.warn("could not find resource with id:" + resourceDocument.getId());
+                    continue;
+                }
+
+                if (skipResourcesWithoutThumbnails && resource.getThumbnail2() == null
+                    && (resource.getType() == ResourceType.image || resource.getType() == ResourceType.video)) {
+                    skippedResources++;
+                    continue;
+                }
+
+                resources.add(createResourceDecorator(resource, queryResponse.getHighlighting().get(resourceDocument.getId())));
+            }
+
+            if (skippedResources > 0) {
+                log.error(skippedResources + " video/image resources have no thumbnails and were skipped");
+            }
+        }
+
+        return resources;
+    }
+
+    @Deprecated
+    public QueryResponse getQueryResponse() { // TODO @astappiev I think the public use of this transient field is very problematic. the needed fields of Queryresposne should be copied to this class on the first request
+        return queryResponse;
+    }
+
+    private static String removeMyGroupQuery(final String query) {
+        Pattern pattern = Pattern.compile("groups\\s*:\\s*my\\s*");
+        Matcher matcher = pattern.matcher(query.toLowerCase(Locale.ENGLISH));
+        if (matcher.find()) {
+            String newQuery = "";
+            int start = matcher.start();
+            if (start != 0) {
+                newQuery = query.substring(0, start);
+            }
+            newQuery += query.substring(matcher.end());
+            return newQuery;
+        } else {
+            return query;
+        }
+    }
+
+    private static void applyFolder(final SolrQuery solrQuery, final Integer folderId, final boolean isIncludeChild) {
+        if (folderId == null || folderId == 0) {
+            if (!isIncludeChild) {
                 // only from root directory: path field not exists or equals to "/"
                 solrQuery.addFilterQuery("(*:* NOT path:[* TO *]) OR path: \"/\"");
             }
             // else: root folder and all subfolders - no query needed
-        }
-        else
-        {
-            if(isIncludeChild)
-            {
+        } else {
+            if (isIncludeChild) {
                 // certain folder and subfolders: the path includes or ends with the folderId
                 solrQuery.addFilterQuery("path : (*/" + folderId + "/* OR */" + folderId + ")");
-            }
-            else
-            {
+            } else {
                 // only from certain folder without subfolders: the path should ends with the folderId
                 solrQuery.addFilterQuery("path : */" + folderId);
             }
@@ -370,98 +422,14 @@ public class SolrSearch implements Serializable
         }
     }
 
-    private void applySearchFilters(final SolrQuery solrQuery)
-    {
-        if(!filterLocation.isEmpty())
-            solrQuery.addFilterQuery("location : " + filterLocation);
-
-        if(!filterType.isEmpty())
-        {
-            if("web".equalsIgnoreCase(filterType))
-            {
-                solrQuery.addFilterQuery("-type : (image OR video)");
-                solrQuery.add("bq", "description:*^9+description:*^9"); // boost results which have a title and description
-            }
-            else if("other".equalsIgnoreCase(filterType))
-            {
-                solrQuery.addFilterQuery("-type : (text OR image OR video OR pdf)");
-            }
-            else
-            {
-                solrQuery.addFilterQuery("type : " + filterType);
-            }
-        }
-
-        if(!filterDateFrom.isEmpty())
-        {
-            if(!filterDateTo.isEmpty())
-                solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO " + filterDateTo + "]");
-            else
-                solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO NOW]");
-        }
-        else if(!filterDateTo.isEmpty())
-        {
-            solrQuery.addFilterQuery("timestamp : [* TO " + filterDateTo + "]");
-        }
-
-        if(!filterCollector.isEmpty())
-        {
-            solrQuery.addFilterQuery("collector_s : \"" + filterCollector + "\"");
-        }
-
-        if(!filterAuthor.isEmpty())
-        {
-            solrQuery.addFilterQuery("author_s : \"" + filterAuthor + "\"");
-        }
-
-        if(!filterCoverage.isEmpty())
-        {
-            solrQuery.addFilterQuery("coverage_s : \"" + filterCoverage + "\"");
-        }
-
-        if(!filterPublisher.isEmpty())
-        {
-            solrQuery.addFilterQuery("publisher_s : \"" + filterPublisher + "\"");
-        }
-
-        if(!filterLanguageLevel.isEmpty())
-        {
-            solrQuery.addFilterQuery("language_level_ss : \"" + filterLanguageLevel + "\"");
-        }
-
-        if(!filterYellTarget.isEmpty())
-        {
-            solrQuery.addFilterQuery("yell_target_ss : \"" + filterYellTarget + "\"");
-        }
-
-        if(!filterYellPurpose.isEmpty())
-        {
-            solrQuery.addFilterQuery("yell_purpose_ss : \"" + filterYellPurpose + "\"");
-        }
-
-        if(!filterTags.isEmpty())
-        {
-            solrQuery.addFilterQuery("tags : \"" + filterTags + "\"");
-        }
-
-        if(!filterLanguage.isEmpty())
-        {
-            solrQuery.addFilterQuery("language : " + filterLanguage);
-        }
-    }
-
-    private static void applyFacets(final SolrQuery solrQuery, final String[] facetFields, final String[] facetQueries)
-    {
+    private static void applyFacets(final SolrQuery solrQuery, final String[] facetFields, final String[] facetQueries) {
         solrQuery.setFacet(true);
-        if(facetFields != null)
-        {
+        if (facetFields != null) {
             solrQuery.addFacetField(facetFields);
         }
 
-        if(facetQueries != null && facetQueries.length > 0)
-        {
-            for(String facetQuery : facetQueries)
-            {
+        if (facetQueries != null && facetQueries.length > 0) {
+            for (String facetQuery : facetQueries) {
                 solrQuery.addFacetQuery(facetQuery);
             }
         }
@@ -471,89 +439,40 @@ public class SolrSearch implements Serializable
         solrQuery.setFacetMinCount(1);
     }
 
-    public List<ResourceDecorator> getResourcesByPage(int page) throws SQLException, IOException, SolrServerException
-    {
-        List<ResourceDecorator> resources = new LinkedList<>();
-
-        this.queryResponse = getQueryResourcesByPage(page);
-        if(queryResponse != null)
-        {
-            List<ResourceDocument> resourceDocuments = queryResponse.getBeans(ResourceDocument.class);
-
-            ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
-
-            int skippedResources = 0;
-            for(ResourceDocument resourceDocument : resourceDocuments)
-            {
-                int resourceId = extractResourceId(resourceDocument.getId());
-                Resource resource = resourceManager.getResource(resourceId);
-
-                if(resource == null)
-                {
-                    log.warn("could not find resource with id:" + resourceDocument.getId());
-                    continue;
-                }
-
-                if(skipResourcesWithoutThumbnails && resource.getThumbnail2() == null &&
-                        (resource.getType() == ResourceType.image || resource.getType() == ResourceType.video))
-                {
-                    skippedResources++;
-                    continue;
-                }
-
-                resources.add(createResourceDecorator(resource, queryResponse.getHighlighting().get(resourceDocument.getId())));
-            }
-
-            if(skippedResources > 0)
-            {
-                log.error(skippedResources + " video/image resources have no thumbnails and were skipped");
-            }
-        }
-
-        return resources;
-    }
-
-    private static ResourceDecorator createResourceDecorator(final Resource resource, final Map<String, List<String>> documentSnippets)
-    {
+    private static ResourceDecorator createResourceDecorator(final Resource resource, final Map<String, List<String>> documentSnippets) {
         final ResourceDecorator decoratedResource = new ResourceDecorator(resource);
         StringBuilder snippet = new StringBuilder();
 
-        if(documentSnippets.get("title") != null)
+        if (documentSnippets.get("title") != null) {
             decoratedResource.setTitle(documentSnippets.get("title").get(0));
-        if(documentSnippets.get("description") != null)
+        }
+        if (documentSnippets.get("description") != null) {
             snippet.append(documentSnippets.get("description").get(0));
-        if(snippet.length() < 150 && documentSnippets.get("comments") != null)
+        }
+        if (snippet.length() < 150 && documentSnippets.get("comments") != null) {
             snippet.append(documentSnippets.get("comments").get(0));
-        if(snippet.length() < 150 && documentSnippets.get("machineDescription") != null)
+        }
+        if (snippet.length() < 150 && documentSnippets.get("machineDescription") != null) {
             snippet.append(documentSnippets.get("machineDescription").get(0));
+        }
 
         // still no real snippet => use description
-        if(snippet.length() < 40 && null != resource.getDescription())
-        {
+        if (snippet.length() < 40 && null != resource.getDescription()) {
             snippet.append(StringHelper.shortnString(Jsoup.clean(resource.getDescription(), Whitelist.none()), 230));
         }
 
         String oneLineSnippet = StringHelper.removeNewLines(snippet.toString());
         oneLineSnippet = StringHelper.trimNotAlphabetical(oneLineSnippet);
-        if(!oneLineSnippet.isEmpty())
+        if (!oneLineSnippet.isEmpty()) {
             decoratedResource.setSnippet(oneLineSnippet);
+        }
         return decoratedResource;
     }
 
-    @Deprecated
-    public QueryResponse getQueryResponse() // TODO @astappiev I think the public use of this transient field is very problematic. the needed fields of Queryresposne should be copied to this class on the first request
-    {
-        return queryResponse;
-    }
-
-    private static int extractResourceId(String id)
-    {
-        try
-        {
+    private static int extractResourceId(String id) {
+        try {
             return Integer.parseInt(id.substring(2));
-        }
-        catch(NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             log.error("SolrSearch, NumberFormatException: " + e.getMessage());
             return -1;
         }

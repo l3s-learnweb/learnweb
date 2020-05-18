@@ -7,16 +7,13 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 
-public class ChangeSettingsOfAllCourses
-{
+public class ChangeSettingsOfAllCourses {
     private static final Logger log = LogManager.getLogger(ChangeSettingsOfAllCourses.class);
 
-    public static void main(String[] args) throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         Learnweb learnweb = Learnweb.createInstance();
 
-        for(Course course : learnweb.getCourseManager().getCoursesAll())
-        {
+        for (Course course : learnweb.getCourseManager().getCoursesAll()) {
             log.debug("Update " + course);
             course.setOption(Option.Groups_Forum_categories_enabled, false);
             course.save();

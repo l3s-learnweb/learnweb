@@ -15,8 +15,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @ViewScoped
-public class SurveyTemplateBean extends ApplicationBean implements Serializable
-{
+public class SurveyTemplateBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 669288862248912801L;
 
     private int surveyId;
@@ -26,112 +25,92 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable
     private List<Survey> surveys;
     private Survey selectedSurvey;
 
-    public SurveyTemplateBean()
-    {
+    public SurveyTemplateBean() {
     }
 
-    public void onLoad() throws SQLException
-    {
-        if(!isLoggedIn())
+    public void onLoad() throws SQLException {
+        if (!isLoggedIn()) {
             return;
+        }
 
-        if(resourceId != 0)
-        {
+        if (resourceId != 0) {
             SurveyResource surveyResource = getLearnweb().getSurveyManager().getSurveyResource(resourceId);
             surveyId = surveyResource.getSurveyId();
         }
 
-        if(surveyId != 0) // edit an existing survey
-        {
+        if (surveyId != 0) { // edit an existing survey
             survey = getLearnweb().getSurveyManager().getSurvey(surveyId);
         }
 
-        if(null == survey)
+        if (null == survey) {
             addInvalidParameterMessage("survey_id");
+        }
     }
 
-    public void onSave() throws SQLException
-    {
+    public void onSave() throws SQLException {
         survey.save(false);
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public SurveyQuestion getCurrentQuestion()
-    {
+    public SurveyQuestion getCurrentQuestion() {
         return currentQuestion;
     }
 
-    public void setCurrentQuestion(SurveyQuestion currentQuestion)
-    {
+    public void setCurrentQuestion(SurveyQuestion currentQuestion) {
         this.currentQuestion = currentQuestion;
     }
 
-    public void onAddEmptyAnswer()
-    {
+    public void onAddEmptyAnswer() {
         this.currentQuestion.getAnswers().add(new SurveyQuestionOption());
     }
 
-    public void onDeleteAnswer(SurveyQuestionOption answer)
-    {
+    public void onDeleteAnswer(SurveyQuestionOption answer) {
         answer.setDeleted(true);
     }
 
-    public Survey getSurvey()
-    {
+    public Survey getSurvey() {
         return survey;
     }
 
-    public int getSurveyId()
-    {
+    public int getSurveyId() {
         return surveyId;
     }
 
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-
-    public void setResourceId(final int resourceId)
-    {
-        this.resourceId = resourceId;
-    }
-
-    public void setSurveyId(final int surveyId)
-    {
+    public void setSurveyId(final int surveyId) {
         this.surveyId = surveyId;
     }
 
-    public void onAddEmptyQuestion() throws SQLException
-    {
+    public int getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(final int resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public void onAddEmptyQuestion() throws SQLException {
         List<SurveyQuestion> questions = getSurvey().getQuestions();
         SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.INPUT_TEXT, surveyId);
         question.setOrder(questions.size());
         setCurrentQuestion(question);
     }
 
-    public void onAddQuestion() throws SQLException
-    {
+    public void onAddQuestion() throws SQLException {
         getSurvey().getQuestions().add(currentQuestion);
     }
 
-    public void onMoveQuestionUp(SurveyQuestion question) throws SQLException
-    {
+    public void onMoveQuestionUp(SurveyQuestion question) throws SQLException {
         onMoveQuestion(question, -1);
     }
 
-    public void onMoveQuestionDown(SurveyQuestion question) throws SQLException
-    {
+    public void onMoveQuestionDown(SurveyQuestion question) throws SQLException {
         onMoveQuestion(question, 1);
     }
 
     /**
-     *
-     * @param question
      * @param direction set 1 to move upward or -1 to move down
-     * @throws SQLException
      */
-    private void onMoveQuestion(SurveyQuestion question, int direction) throws SQLException
-    {
+    private void onMoveQuestion(SurveyQuestion question, int direction) throws SQLException {
         int oldOrder = question.getOrder();
         question.setOrder(oldOrder + direction); // move selected question
 
@@ -140,45 +119,37 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable
         getSurvey().getQuestions().sort(Comparator.comparingInt(SurveyQuestion::getOrder));
     }
 
-    public void onDeleteQuestion(SurveyQuestion question)
-    {
+    public void onDeleteQuestion(SurveyQuestion question) {
         question.setDeleted(true);
     }
 
-    public List<SurveyQuestion> getQuestions() throws SQLException
-    {
+    public List<SurveyQuestion> getQuestions() throws SQLException {
         return survey.getQuestions().stream().filter(question -> !question.isDeleted()).collect(Collectors.toList());
     }
 
-    public Survey getSelectedSurvey()
-    {
+    public Survey getSelectedSurvey() {
         return selectedSurvey;
     }
 
-    public void setSelectedSurvey(Survey selectedSurvey)
-    {
+    public void setSelectedSurvey(Survey selectedSurvey) {
         this.selectedSurvey = selectedSurvey;
     }
 
-    public List<Survey> getSurveys() throws SQLException
-    {
-        if(surveys == null)
-        {
+    public List<Survey> getSurveys() throws SQLException {
+        if (surveys == null) {
             surveys = new ArrayList<>();
             List<Survey> allSurveysPerOrganisation = getLearnweb().getSurveyManager().getPublicSurveysByOrganisationOrUser(getUser());
-            for(Survey survey : allSurveysPerOrganisation)
-            {
-                if(survey.isPublicTemplate() || getUser().getId() == survey.getUserId() && survey.getId() != this.survey.getId())
+            for (Survey survey : allSurveysPerOrganisation) {
+                if (survey.isPublicTemplate() || getUser().getId() == survey.getUserId() && survey.getId() != this.survey.getId()) {
                     surveys.add(survey);
+                }
             }
         }
         return surveys;
     }
 
-    public void onCopyQuestions() throws SQLException
-    {
-        for(SurveyQuestion question : selectedSurvey.getQuestions())
-        {
+    public void onCopyQuestions() throws SQLException {
+        for (SurveyQuestion question : selectedSurvey.getQuestions()) {
             survey.getQuestions().add(question.clone());
         }
     }

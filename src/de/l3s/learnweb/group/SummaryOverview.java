@@ -9,8 +9,7 @@ import java.util.Map;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.Resource;
 
-public class SummaryOverview implements Serializable
-{
+public class SummaryOverview implements Serializable {
     private static final long serialVersionUID = 2180957883352434028L;
 
     private final List<LogEntry> addedResources = new LinkedList<>();
@@ -19,33 +18,27 @@ public class SummaryOverview implements Serializable
     private final List<LogEntry> membersInfo = new LinkedList<>();
     private final Map<Resource, List<LogEntry>> updatedResources = new HashMap<>();
 
-    public List<LogEntry> getAddedResources()
-    {
+    public List<LogEntry> getAddedResources() {
         return addedResources;
     }
 
-    public List<LogEntry> getDeletedResources()
-    {
+    public List<LogEntry> getDeletedResources() {
         return deletedResources;
     }
 
-    public List<LogEntry> getForumsInfo()
-    {
+    public List<LogEntry> getForumsInfo() {
         return forumsInfo;
     }
 
-    public List<LogEntry> getMembersInfo()
-    {
+    public List<LogEntry> getMembersInfo() {
         return membersInfo;
     }
 
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return addedResources.isEmpty() && deletedResources.isEmpty() && forumsInfo.isEmpty() && membersInfo.isEmpty() && getUpdatedResources().isEmpty();
     }
 
-    public Map<Resource, List<LogEntry>> getUpdatedResources()
-    {
+    public Map<Resource, List<LogEntry>> getUpdatedResources() {
         return updatedResources;
     }
 

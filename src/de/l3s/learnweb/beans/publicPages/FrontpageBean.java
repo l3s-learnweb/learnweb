@@ -12,25 +12,19 @@ import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @RequestScoped
-public class FrontpageBean extends ApplicationBean implements Serializable
-{
+public class FrontpageBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 6447676611928379575L;
     private List<Announcement> announcements;
 
-    public FrontpageBean()
-    {
-        try
-        {
+    public FrontpageBean() {
+        try {
             announcements = getLearnweb().getAnnouncementsManager().getTopAnnouncements();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage("Can't load announcements", e);
         }
     }
 
-    public List<Announcement> getAnnouncements()
-    {
+    public List<Announcement> getAnnouncements() {
         return announcements;
     }
 }

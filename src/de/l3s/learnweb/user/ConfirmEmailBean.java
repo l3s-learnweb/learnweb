@@ -14,36 +14,31 @@ import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @RequestScoped
-public class ConfirmEmailBean extends ApplicationBean implements Serializable
-{
+public class ConfirmEmailBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -6040579499279231182L;
 
     private String email;
     private String token;
 
-    private User user = null;
+    private User user;
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
-    public String onLoad() throws SQLException
-    {
-        if(StringUtils.isAnyEmpty(email, token))
-        {
+    public String onLoad() throws SQLException {
+        if (StringUtils.isAnyEmpty(email, token)) {
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
             return null;
         }
 
-        if(token.length() < 32)
-        {
+        if (token.length() < 32) {
             addMessage(FacesMessage.SEVERITY_ERROR, "confirm_token_to_short");
             return null;
         }
 
         user = getLearnweb().getUserManager().getUserByEmailAndConfirmationToken(email, token);
 
-        if(user == null)
-        {
+        if (user == null) {
             addMessage(FacesMessage.SEVERITY_ERROR, "confirm_token_invalid");
             return null;
         }
@@ -54,52 +49,43 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
 
         addMessage(FacesMessage.SEVERITY_INFO, "email_confirmed");
 
-        if(user.equals(getConfirmRequiredBean().getLoggedInUser()))
-        {
+        if (user.equals(getConfirmRequiredBean().getLoggedInUser())) {
             LoginBean.loginUser(this, user);
             return user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
         }
         return null;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getToken()
-    {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(String token)
-    {
+    public void setToken(String token) {
         this.token = token;
     }
 
-    public boolean isConfirmed()
-    {
+    public boolean isConfirmed() {
         return user != null && user.isEmailConfirmed();
     }
 
     @Override
-    public User getUser()
-    {
+    public User getUser() {
         return user;
     }
 
-    public ConfirmRequiredBean getConfirmRequiredBean()
-    {
+    public ConfirmRequiredBean getConfirmRequiredBean() {
         return confirmRequiredBean;
     }
 
-    public void setConfirmRequiredBean(ConfirmRequiredBean confirmRequiredBean)
-    {
+    public void setConfirmRequiredBean(ConfirmRequiredBean confirmRequiredBean) {
         this.confirmRequiredBean = confirmRequiredBean;
     }
 }

@@ -9,8 +9,7 @@ import java.util.Set;
 
 import de.l3s.learnweb.Learnweb;
 
-public enum Action
-{
+public enum Action {
     // add new values add the BOTTOM !!!
     tagging_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = the tag
     rating_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = rate
@@ -78,8 +77,26 @@ public enum Action
     deleted_user_soft(ActionTargetId.USER_ID, ActionCategory.USER),
     deleted_user_hard(ActionTargetId.USER_ID, ActionCategory.USER),
     move_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name;
-    move_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = resource name;
-    ;
+    move_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE); // param = resource name;
+
+    private static final ArrayList<Set<Action>> ACTIONS_BY_CATEGORY = new ArrayList<>(ActionCategory.values().length);
+
+    static {
+        // init one hashset per category
+        for (int i = 0, len = ActionCategory.values().length; i < len; i++) {
+            ACTIONS_BY_CATEGORY.add(new HashSet<>());
+        }
+
+        // add actions to category hashsets
+        for (Action action : values()) {
+            getActionsByCategory(action.getCategory()).add(action);
+        }
+
+        // make hashsets immutable
+        for (int i = 0, len = ActionCategory.values().length; i < len; i++) {
+            ACTIONS_BY_CATEGORY.set(i, Collections.unmodifiableSet(ACTIONS_BY_CATEGORY.get(i)));
+        }
+    }
 
     private final ActionTargetId targetId;
     private final ActionCategory category;
@@ -88,60 +105,33 @@ public enum Action
      * @param targetId the meaning of the target_id column of log entries of this type
      * @param category only relevant for the grouping of log entries in the admin dashboard
      */
-    Action(ActionTargetId targetId, ActionCategory category)
-    {
+    Action(ActionTargetId targetId, ActionCategory category) {
         this.targetId = targetId;
         this.category = category;
     }
 
-    public ActionTargetId getTargetId()
-    {
+    public ActionTargetId getTargetId() {
         return targetId;
     }
 
-    public ActionCategory getCategory()
-    {
+    public ActionCategory getCategory() {
         return category;
     }
 
-    private static final ArrayList<Set<Action>> ACTIONS_BY_CATEGORY = new ArrayList<>(ActionCategory.values().length);
-
-    static
-    {
-        // init one hashset per category
-        for(int i = 0, len = ActionCategory.values().length; i < len; i++)
-            ACTIONS_BY_CATEGORY.add(new HashSet<>());
-
-        // add actions to category hashsets
-        for(Action action : values())
-            getActionsByCategory(action.getCategory()).add(action);
-
-        // make hashsets immutable
-        for(int i = 0, len = ActionCategory.values().length; i < len; i++)
-            ACTIONS_BY_CATEGORY.set(i, Collections.unmodifiableSet(ACTIONS_BY_CATEGORY.get(i)));
-    }
-
-    public static Set<Action> getActionsByCategory(ActionCategory category)
-    {
+    public static Set<Action> getActionsByCategory(ActionCategory category) {
         return ACTIONS_BY_CATEGORY.get(category.ordinal());
     }
 
     /**
-     * Updates the lw_user_log_action table
-     *
-     * @param args
-     * @throws SQLException
-     * @throws ClassNotFoundException
+     * Updates the lw_user_log_action table.
      */
-    public static void main(String[] args) throws SQLException, ClassNotFoundException
-    {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Learnweb learnweb = Learnweb.createInstance();
         learnweb.getConnection().createStatement().execute("TRUNCATE TABLE `lw_user_log_action`");
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_user_log_action` (`action`, `name`, `target`, `category`) VALUES (?,?,?,?)"))
-        {
-            for(Action action : values())
-            {
+        try (PreparedStatement insert = learnweb.getConnection().prepareStatement(
+            "INSERT INTO `lw_user_log_action` (`action`, `name`, `target`, `category`) VALUES (?,?,?,?)")) {
+            for (Action action : values()) {
                 insert.setInt(1, action.ordinal());
                 insert.setString(2, action.name());
                 insert.setString(3, action.getTargetId().name());

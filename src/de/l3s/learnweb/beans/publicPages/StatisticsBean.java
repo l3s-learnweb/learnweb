@@ -20,16 +20,14 @@ import de.l3s.util.Sql;
 
 @Named
 @RequestScoped
-public class StatisticsBean extends ApplicationBean implements Serializable
-{
+public class StatisticsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 8540469716342151138L;
 
     private final List<SimpleEntry<LocalDate, Integer>> activeUsersPerMonth;
     private final List<SimpleEntry<String, Number>> resourcesPerSource;
     private final Map<String, Number> generalStatistics = new LinkedHashMap<>();
 
-    public StatisticsBean() throws SQLException
-    {
+    public StatisticsBean() throws SQLException {
         Long users = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user WHERE deleted = 0");
         Long groups = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_group WHERE deleted = 0");
         Long resources = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_resource WHERE deleted = 0");
@@ -77,15 +75,14 @@ public class StatisticsBean extends ApplicationBean implements Serializable
         resourcesPerSource = getEntriesForQuery("SELECT source, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY source ORDER BY count( * ) DESC", highlightedEntries);
     }
 
-    private List<SimpleEntry<String, Number>> getEntriesForQuery(String query, HashSet<String> highlightedEntries) throws SQLException
-    {
+    private List<SimpleEntry<String, Number>> getEntriesForQuery(String query, HashSet<String> highlightedEntries) throws SQLException {
         LinkedList<SimpleEntry<String, Number>> results = new LinkedList<>();
         ResultSet rs = getLearnweb().getConnection().createStatement().executeQuery(query);
-        while(rs.next())
-        {
+        while (rs.next()) {
             String key = rs.getString(1);
-            if(highlightedEntries != null && highlightedEntries.contains(key))
+            if (highlightedEntries != null && highlightedEntries.contains(key)) {
                 key += " *";
+            }
 
             SimpleEntry<String, Number> row = new AbstractMap.SimpleEntry<>(key, rs.getInt(2));
             results.add(row);
@@ -93,13 +90,11 @@ public class StatisticsBean extends ApplicationBean implements Serializable
         return results;
     }
 
-    private LinkedList<SimpleEntry<LocalDate, Integer>> calcActiveUsersPerMonth() throws SQLException
-    {
+    private LinkedList<SimpleEntry<LocalDate, Integer>> calcActiveUsersPerMonth() throws SQLException {
         LinkedList<SimpleEntry<LocalDate, Integer>> results = new LinkedList<>();
         ResultSet rs = getLearnweb().getConnection().createStatement().executeQuery(
-                "SELECT timestamp, count(distinct user_id) as active_users FROM `lw_user_log` WHERE `action` = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) group by year(timestamp) ,month(timestamp) ORDER BY  year(timestamp) DESC,month(timestamp) DESC LIMIT 13");
-        while(rs.next())
-        {
+            "SELECT timestamp, count(distinct user_id) as active_users FROM `lw_user_log` WHERE `action` = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) group by year(timestamp) ,month(timestamp) ORDER BY  year(timestamp) DESC,month(timestamp) DESC LIMIT 13");
+        while (rs.next()) {
             LocalDate date = rs.getObject(1, LocalDate.class);
 
             SimpleEntry<LocalDate, Integer> row = new AbstractMap.SimpleEntry<>(date, rs.getInt(2));
@@ -108,18 +103,15 @@ public class StatisticsBean extends ApplicationBean implements Serializable
         return results;
     }
 
-    public List<SimpleEntry<LocalDate, Integer>> getActiveUsersPerMonth()
-    {
+    public List<SimpleEntry<LocalDate, Integer>> getActiveUsersPerMonth() {
         return activeUsersPerMonth;
     }
 
-    public List<SimpleEntry<String, Number>> getResourcesPerSource()
-    {
+    public List<SimpleEntry<String, Number>> getResourcesPerSource() {
         return resourcesPerSource;
     }
 
-    public Map<String, Number> getGeneralStatistics()
-    {
+    public Map<String, Number> getGeneralStatistics() {
         return generalStatistics;
     }
 }

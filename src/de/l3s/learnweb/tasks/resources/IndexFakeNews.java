@@ -23,8 +23,7 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 
 @SuppressWarnings("unused")
-public class IndexFakeNews
-{
+public class IndexFakeNews {
     private static final Logger log = LogManager.getLogger(IndexFakeNews.class);
 
     private Learnweb learnweb;
@@ -33,17 +32,8 @@ public class IndexFakeNews
 
     private Resource logoResource;
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException
-    {
-        System.exit(-1);
-
-        new IndexFakeNews();
-    }
-
-    public IndexFakeNews()
-    {
-        try
-        {
+    public IndexFakeNews() {
+        try {
             learnweb = Learnweb.createInstance();
             resourceManager = learnweb.getResourceManager();
 
@@ -51,25 +41,19 @@ public class IndexFakeNews
             //reindexAllFakeNewsResources();
             //indexSnopes();
 
-        }
-        catch(Throwable e)
-        {
+        } catch (Throwable e) {
             log.fatal(e);
-        }
-        finally
-        {
+        } finally {
             learnweb.onDestroy();
         }
     }
 
-    private void indexFullfactFile(String file) throws IOException, SQLException
-    {
+    private void indexFullfactFile(String file) throws IOException, SQLException {
         CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.withHeader());
 
         logoResource = learnweb.getResourceManager().getResource(217749);
 
-        for(CSVRecord csvRecord : parser)
-        {
+        for (CSVRecord csvRecord : parser) {
             String title = csvRecord.get("title").trim();
             String url = csvRecord.get("url").trim();
             String description = csvRecord.get("claim_text").trim().replaceFirst("Claim\n", "<b>Claim</b>: ") + "\n<br/>" + csvRecord.get("conclusion_text").trim().replaceFirst("Conclusion\n", "<b>Conclusion</b>: ");
@@ -98,34 +82,28 @@ public class IndexFakeNews
         }
     }
 
-    public void reindexAllFakeNewsResources() throws SQLException
-    {
+    public void reindexAllFakeNewsResources() throws SQLException {
         int counter = 0;
         List<Resource> resources = resourceManager.getResources("SELECT * FROM lw_resource r WHERE deleted = 0 AND group_id = 1346 AND source = ? and url like 'http://fullfa%'", "FactCheck");
         resourceManager.setReindexMode(true);
         SolrClient solrClient = learnweb.getSolrClient();
-        for(Resource resource : resources)
-        {
+        for (Resource resource : resources) {
             log.debug("Process: " + counter++ + " - " + resource);
             solrClient.reIndexResource(resource);
             //resourceManager.deleteResource(resource.getId());
         }
     }
 
-    private void indexSnopes()
-    {
+    private void indexSnopes() {
         int i = 1;
-        for(File file : new File("./Snopes").listFiles())
-        {
+        for (File file : new File("./Snopes").listFiles()) {
             log.debug("process file: " + (i++) + ", " + file);
             indexSnopesFile(file);
         }
     }
 
-    private void indexSnopesFile(File file)
-    {
-        try
-        {
+    private void indexSnopesFile(File file) {
+        try {
             Resource resource = new Resource();
             resource.setType(ResourceType.website);
             resource.setSource(ResourceService.factcheck);
@@ -137,24 +115,27 @@ public class IndexFakeNews
             JSONObject jsonObject = new JSONObject(new FileReader(file, StandardCharsets.UTF_8));
 
             String title = (String) jsonObject.get("Fact Check");
-            if(StringUtils.isEmpty(title))
+            if (StringUtils.isEmpty(title)) {
                 title = (String) jsonObject.get("Claim");
-            if(StringUtils.isEmpty(title))
+            }
+            if (StringUtils.isEmpty(title)) {
                 title = ((String) jsonObject.get("Claim_ID")).replace("-", " ");
+            }
             resource.setTitle(title);
 
-            String Origins = (String) jsonObject.get("Origins");
+            String origins = (String) jsonObject.get("Origins");
             String description = (String) jsonObject.get("Description");
-            description += "\n" + Origins;
+            description += "\n" + origins;
             resource.setDescription(description);
 
             String machineDescription = (String) jsonObject.get("Example");
             resource.setMachineDescription(machineDescription);
 
-            String URL = (String) jsonObject.get("URL");
-            if(!URL.startsWith("http"))
-                URL = "http://" + URL;
-            resource.setUrl(URL);
+            String url = (String) jsonObject.get("URL");
+            if (!url.startsWith("http")) {
+                url = "http://" + url;
+            }
+            resource.setUrl(url);
 
             resource.save();
 
@@ -164,11 +145,15 @@ public class IndexFakeNews
             for(String tag : tags.split(";"))
                 resource.addTag(tag, user);
             */
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.error(e);
         }
+    }
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException {
+        System.exit(-1);
+
+        new IndexFakeNews();
     }
 
 }

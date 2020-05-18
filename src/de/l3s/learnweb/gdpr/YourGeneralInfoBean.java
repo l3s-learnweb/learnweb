@@ -18,8 +18,7 @@ import de.l3s.learnweb.user.User;
  */
 @Named
 @ViewScoped
-public class YourGeneralInfoBean extends ApplicationBean implements Serializable
-{
+public class YourGeneralInfoBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 3786761818878931646L;
     //private static final Logger log = LogManager.getLogger(YourGeneralInfoBean.class);
 
@@ -32,12 +31,12 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
     private int sentMessagesCount;
     private int submissionsCount;
 
-    public YourGeneralInfoBean() throws SQLException
-    {
+    public YourGeneralInfoBean() throws SQLException {
         User user = getUser();
         // when not logged in
-        if(null == user)
+        if (null == user) {
             return;
+        }
 
         this.username = user.getUsername();
         this.userCoursesCount = CollectionUtils.size(user.getCourses());
@@ -49,43 +48,35 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
         this.submissionsCount = CollectionUtils.size(this.getLearnweb().getSubmissionManager().getSubmissionsByUser(user));
     }
 
-    public String getUsername()
-    {
+    public String getUsername() {
         return this.username;
     }
 
-    public int getUserCoursesCount()
-    {
+    public int getUserCoursesCount() {
         return this.userCoursesCount;
     }
 
-    public int getUserGroupsCount()
-    {
+    public int getUserGroupsCount() {
         return this.userGroupsCount;
     }
 
-    public int getUserPostsCount()
-    {
+    public int getUserPostsCount() {
         return this.userPostsCount;
     }
 
-    public int getUserResourcesCount()
-    {
+    public int getUserResourcesCount() {
         return this.userResourcesCount;
     }
 
-    public int getReceivedMessagesCount()
-    {
+    public int getReceivedMessagesCount() {
         return this.receivedMessagesCount;
     }
 
-    public int getSentMessagesCount()
-    {
+    public int getSentMessagesCount() {
         return this.sentMessagesCount;
     }
 
-    public int getSubmissionsCount()
-    {
+    public int getSubmissionsCount() {
         return this.submissionsCount;
     }
 }

@@ -18,39 +18,34 @@ import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 
 @Disabled
-class GroupManagerTest
-{
-    private Learnweb learnweb = Learnweb.createInstance();
+class GroupManagerTest {
+    private final Learnweb learnweb = Learnweb.createInstance();
 
     GroupManagerTest() throws SQLException, ClassNotFoundException {}
 
     @Test
-    void getGroupsByUserId() throws SQLException
-    {
+    void getGroupsByUserId() throws SQLException {
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(185, 623, 896, 1307, 1309, 1434, 1463));
         List<Group> result = learnweb.getGroupManager().getGroupsByUserId(12502);
         assertTrue(result.stream().allMatch(group -> expected.contains(group.getId())));
     }
 
     @Test
-    void getGroupCountByUserId() throws SQLException
-    {
+    void getGroupCountByUserId() throws SQLException {
         int expected = 7;
         int result = learnweb.getGroupManager().getGroupCountByUserId(12502);
         assertEquals(expected, result);
     }
 
     @Test
-    void getGroupsByCourseId() throws SQLException
-    {
+    void getGroupsByCourseId() throws SQLException {
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(894, 896, 904, 1158, 1160, 1346));
         List<Group> result = learnweb.getGroupManager().getGroupsByCourseId(892);
         assertTrue(result.stream().allMatch(group -> expected.contains(group.getId())));
     }
 
     @Test
-    void testGetGroupsByCourseId() throws SQLException
-    {
+    void testGetGroupsByCourseId() throws SQLException {
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(1559, 1543, 1463, 1309, 1537));
         List<Course> courses = learnweb.getCourseManager().getCoursesByUserId(12502);
         Calendar date = Calendar.getInstance();
@@ -60,43 +55,37 @@ class GroupManagerTest
     }
 
     @Test
-    void getGroupsByUserIdFilteredByCourseId() throws SQLException
-    {
+    void getGroupsByUserIdFilteredByCourseId() throws SQLException {
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(623, 1463, 1309, 185, 1307));
         List<Group> result = learnweb.getGroupManager().getGroupsByUserIdFilteredByCourseId(12502, 485);
         assertTrue(result.stream().allMatch(group -> expected.contains(group.getId())));
     }
 
     @Test
-    void getGroupByTitleFilteredByOrganisation() throws SQLException
-    {
+    void getGroupByTitleFilteredByOrganisation() throws SQLException {
         String expected = "EU-MADE4LL project";
-        Group  result = learnweb.getGroupManager().getGroupByTitleFilteredByOrganisation(expected, 1249);
+        Group result = learnweb.getGroupManager().getGroupByTitleFilteredByOrganisation(expected, 1249);
         assertEquals(expected, result.getTitle());
     }
 
     @Test
-    void getJoinAbleGroups() throws SQLException
-    {
+    void getJoinAbleGroups() throws SQLException {
         int expected = 27;
-        List<Group> result =  learnweb.getGroupManager().getJoinAbleGroups(learnweb.getUserManager().getUser(12502));
+        List<Group> result = learnweb.getGroupManager().getJoinAbleGroups(learnweb.getUserManager().getUser(12502));
         assertEquals(expected, result.size());
     }
 
     @Test
-    void getGroupById() throws SQLException
-    {
+    void getGroupById() throws SQLException {
         String expected = "Learning Apps";
         Group result = learnweb.getGroupManager().getGroupById(1283);
         assertEquals(expected, result.getTitle());
     }
 
     @Test
-    void save() throws SQLException
-    {
+    void save() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
+        try {
             Group expected = learnweb.getGroupManager().getGroupById(1463);
             expected.setTitle("AleksTest");
             expected.setDescription("desc");
@@ -104,21 +93,17 @@ class GroupManagerTest
             Group result = learnweb.getGroupManager().getGroupById(1463);
             assertEquals(expected.getTitle(), result.getTitle());
             assertEquals(expected.getDescription(), result.getDescription());
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }
     }
 
     @Test
-    void addUserToGroup() throws SQLException
-    {
+    void addUserToGroup() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
-            User user  = learnweb.getUserManager().getUser(5267);
+        try {
+            User user = learnweb.getUserManager().getUser(5267);
             Group group = learnweb.getGroupManager().getGroupById(1463);
             learnweb.getGroupManager().addUserToGroup(user, group);
 
@@ -130,21 +115,17 @@ class GroupManagerTest
             select.close();
 
             assertEquals(user.getId(), rs.getInt("user_id"));
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }
     }
 
     @Test
-    void removeUserFromGroup() throws SQLException
-    {
+    void removeUserFromGroup() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
-            User user  = learnweb.getUserManager().getUser(12502);
+        try {
+            User user = learnweb.getUserManager().getUser(12502);
             Group group = learnweb.getGroupManager().getGroupById(1463);
             learnweb.getGroupManager().removeUserFromGroup(user, group);
 
@@ -154,17 +135,14 @@ class GroupManagerTest
             ResultSet rs = select.executeQuery();
             select.close();
             assertFalse(rs.next());
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }
     }
 
     @Test
-    void getMemberCount() throws SQLException
-    {
+    void getMemberCount() throws SQLException {
         int expected = 3;
         int result = learnweb.getGroupManager().getMemberCount(1463);
         assertEquals(expected, result);

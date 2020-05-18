@@ -9,8 +9,7 @@ import javax.validation.constraints.NotBlank;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
 
-public class ForumPost implements Serializable
-{
+public class ForumPost implements Serializable {
     private static final long serialVersionUID = 4093915855537221830L;
 
     private int id = -1;
@@ -29,119 +28,97 @@ public class ForumPost implements Serializable
     private transient User user;
     private transient User editUser;
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public void setId(int postId)
-    {
+    public void setId(int postId) {
         this.id = postId;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public int getTopicId()
-    {
+    public int getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(int topicId)
-    {
+    public void setTopicId(int topicId) {
         this.topicId = topicId;
     }
 
-    public String getText()
-    {
+    public String getText() {
         return text;
     }
 
-    public void setText(String text)
-    {
+    public void setText(String text) {
         this.text = text;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
-        if(lastEditDate == null)
+        if (lastEditDate == null) {
             this.lastEditDate = date;
+        }
     }
 
-    public int getEditCount()
-    {
+    public int getEditCount() {
         return editCount;
     }
 
-    public void setEditCount(int editCount)
-    {
+    public void setEditCount(int editCount) {
         this.editCount = editCount;
     }
 
-    public Date getLastEditDate()
-    {
+    public Date getLastEditDate() {
         return lastEditDate;
     }
 
-    public void setLastEditDate(Date lastEditDate)
-    {
+    public void setLastEditDate(Date lastEditDate) {
         this.lastEditDate = lastEditDate;
     }
 
-    public int getEditUserId()
-    {
+    public int getEditUserId() {
         return editUserId;
     }
 
-    public void setEditUserId(int editUserId)
-    {
+    public void setEditUserId(int editUserId) {
         this.editUserId = editUserId;
     }
 
-    public User getUser() throws SQLException
-    {
-        if(user == null)
-        {
+    public User getUser() throws SQLException {
+        if (user == null) {
             user = Learnweb.getInstance().getUserManager().getUser(userId);
         }
         return user;
     }
 
-    public User getEditUser() throws SQLException
-    {
-        if(editUser == null)
-        {
+    public User getEditUser() throws SQLException {
+        if (editUser == null) {
             editUser = Learnweb.getInstance().getUserManager().getUser(editUserId);
         }
         return editUser;
     }
 
-    public String getCategory()
-    {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category)
-    {
+    public void setCategory(String category) {
         this.category = category;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "ForumPost [id=" + id + ", userId=" + userId + ", topicId=" + topicId + ", text=" + text + ", date=" + date + ", editCount=" + editCount + ", lastEditDate=" + lastEditDate + ", editUserId=" + editUserId + "]";
     }
 }

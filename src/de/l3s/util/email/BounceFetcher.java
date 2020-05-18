@@ -9,21 +9,15 @@ import de.l3s.learnweb.Learnweb;
  * Every scheduled amount of time gets all emails from the inbox that were sent after last scan.
  *
  * @author Kate
- *
  */
-public class BounceFetcher implements Runnable
-{
+public class BounceFetcher implements Runnable {
     private static final Logger log = LogManager.getLogger(BounceFetcher.class);
 
     @Override
-    public void run()
-    {
-        try
-        {
+    public void run() {
+        try {
             Learnweb.getInstance().getBounceManager().parseInbox();
-        }
-        catch(Throwable e)
-        {
+        } catch (Throwable e) {
             log.error("err", e);
         }
     }

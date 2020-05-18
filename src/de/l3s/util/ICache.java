@@ -2,15 +2,14 @@ package de.l3s.util;
 
 import java.util.Collection;
 
-public interface ICache<E>
-{
+public interface ICache<E> {
 
     E get(int id);
 
     /**
      * This method behaves different from the underlying map method.
      * If the map previously contained a mapping for the key, the old value is <b>not</b> replaced by the specified value.
-     * 
+     *
      * @param resource Has to implement the interface HasId.
      * @return The mapping for the key (so maybe not the provided resource)
      */
@@ -21,15 +20,12 @@ public interface ICache<E>
     void clear();
 
     /**
-     * 
      * @return number of cached objects
      */
     int size();
 
     /**
-     * Return all values of this cache
-     * 
-     * @return
+     * Return all values of this cache.
      */
     Collection<E> getValues();
 }

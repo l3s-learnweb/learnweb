@@ -4,8 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CallbackData
-{
+public class CallbackData {
     // private List<Action> actions;
     @SerializedName("changesurl")
     private String changesUrl;
@@ -19,83 +18,67 @@ public class CallbackData
     private String userData;
     private List<Integer> users;
 
-    public String getChangesUrl()
-    {
+    public String getChangesUrl() {
         return changesUrl;
     }
 
-    public void setChangesUrl(final String changesUrl)
-    {
+    public void setChangesUrl(final String changesUrl) {
         this.changesUrl = changesUrl;
     }
 
-    public int getForceSaveType()
-    {
+    public int getForceSaveType() {
         return forceSaveType;
     }
 
-    public void setForceSaveType(final int forceSaveType)
-    {
+    public void setForceSaveType(final int forceSaveType) {
         this.forceSaveType = forceSaveType;
     }
 
-    public History getHistory()
-    {
+    public History getHistory() {
         return history;
     }
 
-    public void setHistory(final History history)
-    {
+    public void setHistory(final History history) {
         this.history = history;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(final String key)
-    {
+    public void setKey(final String key) {
         this.key = key;
     }
 
-    public int getStatus()
-    {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(final int status)
-    {
+    public void setStatus(final int status) {
         this.status = status;
     }
 
-    public String getUrl()
-    {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(final String url)
-    {
+    public void setUrl(final String url) {
         this.url = url;
     }
 
-    public String getUserData()
-    {
+    public String getUserData() {
         return userData;
     }
 
-    public void setUserData(final String userData)
-    {
+    public void setUserData(final String userData) {
         this.userData = userData;
     }
 
-    public List<Integer> getUsers()
-    {
+    public List<Integer> getUsers() {
         return users;
     }
 
-    public void setUsers(final List<Integer> users)
-    {
+    public void setUsers(final List<Integer> users) {
         this.users = users;
     }
 }

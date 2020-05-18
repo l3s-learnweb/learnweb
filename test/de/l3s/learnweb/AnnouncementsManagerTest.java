@@ -14,16 +14,13 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @Disabled
-class AnnouncementsManagerTest
-{
-    private Learnweb learnweb = Learnweb.createInstance();
+class AnnouncementsManagerTest {
+    private final Learnweb learnweb = Learnweb.createInstance();
 
     AnnouncementsManagerTest() throws SQLException, ClassNotFoundException {}
 
-
     @Test
-    void getAnnouncementById() throws SQLException
-    {
+    void getAnnouncementById() throws SQLException {
         Announcement expected = new Announcement();
         expected.setId(113);
         expected.setTitle("ICWL conference, Magdeburg, Germany");
@@ -37,38 +34,31 @@ class AnnouncementsManagerTest
     }
 
     @Test
-    void getAnnouncementsAll() throws SQLException
-    {
+    void getAnnouncementsAll() throws SQLException {
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(113, 114, 129, 131, 132));
         List<Announcement> result = learnweb.getAnnouncementsManager().getAnnouncementsAll();
         assertTrue(result.stream().allMatch(topic -> expected.contains(topic.getId())));
     }
 
     @Test
-    void delete() throws SQLException
-    {
+    void delete() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
+        try {
             Announcement announcement = new Announcement();
             announcement.setId(216);
             learnweb.getAnnouncementsManager().delete((announcement));
             Announcement result = learnweb.getAnnouncementsManager().getAnnouncementById(announcement.getId());
             assertNull(result);
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }
     }
 
     @Test
-    void insert() throws SQLException
-    {
+    void insert() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
+        try {
             Announcement expected = new Announcement();
             expected.setUserId(12502);
             expected.setHidden(false);
@@ -78,35 +68,32 @@ class AnnouncementsManagerTest
 
             learnweb.getAnnouncementsManager().save(expected);
 
-            try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_news WHERE user_id = ? AND title = ? and message = ?"))
-            {
+            try (PreparedStatement select = learnweb.getConnection().prepareStatement(
+                "SELECT * FROM lw_news WHERE user_id = ? AND title = ? and message = ?")) {
                 select.setInt(1, expected.getUserId());
                 select.setString(2, expected.getTitle());
                 select.setString(3, expected.getText());
 
                 ResultSet rs = select.executeQuery();
 
-                if(!rs.next())
+                if (!rs.next()) {
                     fail();
+                }
 
                 assertEquals(expected.getUserId(), rs.getInt("user_id"));
                 assertEquals(expected.getTitle(), rs.getString("title"));
                 assertEquals(expected.getText(), rs.getString("message"));
             }
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }
     }
 
     @Test
-    void update() throws SQLException
-    {
+    void update() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
+        try {
             Announcement expected = learnweb.getAnnouncementsManager().getAnnouncementById(113);
             expected.setHidden(false);
             expected.setTitle("Title");
@@ -119,9 +106,7 @@ class AnnouncementsManagerTest
             assertEquals(expected.getId(), result.getId());
             assertEquals(expected.getTitle(), result.getTitle());
             assertEquals(expected.getText(), result.getText());
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }

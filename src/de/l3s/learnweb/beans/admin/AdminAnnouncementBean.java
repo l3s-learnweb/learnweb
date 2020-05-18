@@ -15,8 +15,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @ViewScoped
-public class AdminAnnouncementBean extends ApplicationBean implements Serializable
-{
+public class AdminAnnouncementBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -5638619327036890427L;
     //    private static final Logger log = LogManager.getLogger(AdminAnnouncementsBean.class);
 
@@ -24,30 +23,25 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
     private Announcement announcement;
     private String pageTitle;
 
-    public void onLoad() throws SQLException
-    {
-        if(getUser() == null)
+    public void onLoad() throws SQLException {
+        if (getUser() == null) {
             return;
+        }
 
-/*        if(!getUser().isAdmin())
-        {
+        /*if (!getUser().isAdmin()) {
             addAccessDeniedMessage();
             return;
         }*/
 
-        if(announcementId == 0) // create new announcement
-        {
+        if (announcementId == 0) { // create new announcement
             pageTitle = StringUtils.capitalize(getLocaleMessage("new_word"));
 
             announcement = new Announcement();
             announcement.setUserId(getUser().getId());
             announcement.setDate(new Date());
-        }
-        else
-        {
+        } else {
             announcement = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId);
-            if(announcement == null)
-            {
+            if (announcement == null) {
                 addInvalidParameterMessage("announcement_id");
                 return;
             }
@@ -55,10 +49,8 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
         }
     }
 
-    public String onSave()
-    {
-        try
-        {
+    public String onSave() {
+        try {
             announcement.save();
 
             addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
@@ -66,32 +58,26 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
             setKeepMessages();
 
             return "/lw/admin/announcements.xhtml?faces-redirect=true";
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
 
             return null;
         }
     }
 
-    public Announcement getAnnouncement()
-    {
+    public Announcement getAnnouncement() {
         return announcement;
     }
 
-    public int getAnnouncementId()
-    {
+    public int getAnnouncementId() {
         return announcementId;
     }
 
-    public void setAnnouncementId(final int announcementId)
-    {
+    public void setAnnouncementId(final int announcementId) {
         this.announcementId = announcementId;
     }
 
-    public String getPageTitle()
-    {
+    public String getPageTitle() {
         return pageTitle;
     }
 

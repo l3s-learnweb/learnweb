@@ -12,31 +12,22 @@ import org.apache.myfaces.resource.ResourceLoader;
 import org.apache.myfaces.resource.ResourceLoaderUtils;
 import org.apache.myfaces.resource.ResourceMeta;
 
-public class FixedMyFacesResource extends ResourceImpl
-{
-    public FixedMyFacesResource(final ResourceMeta resourceMeta, final ResourceLoader resourceLoader, final ResourceHandlerSupport support, final String contentType)
-    {
+public class FixedMyFacesResource extends ResourceImpl {
+    public FixedMyFacesResource(final ResourceMeta resourceMeta, final ResourceLoader resourceLoader, final ResourceHandlerSupport support, final String contentType) {
         super(resourceMeta, resourceLoader, support, contentType);
     }
 
-    public FixedMyFacesResource(final ResourceMeta resourceMeta, final ResourceLoader resourceLoader, final ResourceHandlerSupport support, final String contentType, final URL url, final String requestPath)
-    {
+    public FixedMyFacesResource(final ResourceMeta resourceMeta, final ResourceLoader resourceLoader, final ResourceHandlerSupport support, final String contentType, final URL url, final String requestPath) {
         super(resourceMeta, resourceLoader, support, contentType, url, requestPath);
     }
 
-    protected long getLastModified(FacesContext facesContext)
-    {
-        if(MyfacesConfig.getCurrentInstance(facesContext).isResourceCacheLastModified())
-        {
+    protected long getLastModified(FacesContext facesContext) {
+        if (MyfacesConfig.getCurrentInstance(facesContext).isResourceCacheLastModified()) {
             Long lastModified = getResourceMeta().getLastModified();
-            if(lastModified == null)
-            {
-                try
-                {
+            if (lastModified == null) {
+                try {
                     lastModified = getResourceLastModified(this.getURL());
-                }
-                catch(IOException e)
-                {
+                } catch (IOException e) {
                     lastModified = -1L;
                 }
 
@@ -46,18 +37,14 @@ public class FixedMyFacesResource extends ResourceImpl
             return lastModified;
         }
 
-        try
-        {
+        try {
             return getResourceLastModified(this.getURL());
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             return -1;
         }
     }
 
-    private static long getResourceLastModified(URL url) throws IOException
-    {
+    private static long getResourceLastModified(URL url) throws IOException {
         return ResourceLoaderUtils.getResourceLastModified(url.openConnection());
     }
 }

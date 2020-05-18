@@ -25,32 +25,27 @@ import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 
-public class SearchQuery implements Serializable
-{
+public class SearchQuery implements Serializable {
     private static final Logger log = LogManager.getLogger(SearchQuery.class);
 
     private static final long serialVersionUID = 681547180910687848L;
     private List<ResourceDecorator> results;
 
     private long totalResults;
-    private List<Count> serviceCount = new ArrayList<>(); //service name, number of results at this service
-    private List<String> serviceCountSaver = new ArrayList<>();
+    private final List<Count> serviceCount = new ArrayList<>(); //service name, number of results at this service
+    private final List<String> serviceCountSaver = new ArrayList<>();
 
-    SearchQuery(InputStream inputStream) throws IllegalResponseException
-    {
+    SearchQuery(InputStream inputStream) throws IllegalResponseException {
         parse(inputStream);
     }
 
     /**
-     * replaces all fields of this object with the values from the xml @param inputStream
+     * replaces all fields of this object with the values from the xml @param inputStream.
      *
      * @param inputStream stream of an interweb search query
-     * @throws IllegalResponseException
      */
-    private void parse(InputStream inputStream) throws IllegalResponseException
-    {
-        try
-        {
+    private void parse(InputStream inputStream) throws IllegalResponseException {
+        try {
             FacetField ff = new FacetField("location");
             int counter = 0;
             results = new LinkedList<>();
@@ -60,31 +55,26 @@ public class SearchQuery implements Serializable
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             SearchResponse response = (SearchResponse) jaxbUnmarshaller.unmarshal(inputStream);
 
-            if(response == null)
-            {
+            if (response == null) {
                 log.fatal("response is null");
                 return;
             }
-            if(response.getQuery() == null)
-            {
+            if (response.getQuery() == null) {
                 log.fatal("response query is null");
                 return;
             }
 
             List<SearchResultEntity> searchResults = response.getQuery().getResults();
 
-            for(SearchResultEntity searchResult : searchResults)
-            {
+            for (SearchResultEntity searchResult : searchResults) {
                 Resource currentResource = ResourceManager.getResourceFromInterwebResult(searchResult);
 
-                if(currentResource.getType() != ResourceType.website && null == currentResource.getThumbnail2()) // no thumbnail set
-                {
+                if (currentResource.getType() != ResourceType.website && null == currentResource.getThumbnail2()) { // no thumbnail set
                     log.error("Found no thumbnail:" + searchResult);
 
                     counter++;
 
-                    if(counter > 5)
-                    {
+                    if (counter > 5) {
                         log.error("To many missing thumbnails", new Exception());
                         return;
                     }
@@ -96,48 +86,40 @@ public class SearchQuery implements Serializable
                 decoratedResource.setTitle(searchResult.getTitle());
 
                 // bing description contains snippet with term highlighting
-                if(currentResource.getSource() == ResourceService.bing && decoratedResource.getSnippet() == null)
-                {
+                if (currentResource.getSource() == ResourceService.bing && decoratedResource.getSnippet() == null) {
                     // add snippet
                     decoratedResource.setSnippet(currentResource.getDescription());
                     // remove search term highlighting from description
                     currentResource.setDescription(Jsoup.clean(currentResource.getDescription(), Whitelist.none()));
                 }
 
-                if(decoratedResource.getSnippet() == null)
-                {
+                if (decoratedResource.getSnippet() == null) {
                     decoratedResource.setSnippet(currentResource.getShortDescription());
                 }
                 results.add(decoratedResource);
 
-                if(!serviceCountSaver.contains(searchResult.getService()))
-                {
+                if (!serviceCountSaver.contains(searchResult.getService())) {
                     serviceCountSaver.add(searchResult.getService());
                     totalResults += searchResult.getTotalResultsAtService();
                     serviceCount.add(new Count(ff, searchResult.getService(), searchResult.getTotalResultsAtService()));
                 }
             }
 
-        }
-        catch(JAXBException e)
-        {
+        } catch (JAXBException e) {
             throw new IllegalResponseException(e);
         }
     }
 
-    public List<ResourceDecorator> getResults()
-    {
+    public List<ResourceDecorator> getResults() {
         return results;
     }
 
-    public long getTotalResultCount()
-    {
+    public long getTotalResultCount() {
 
         return totalResults;
     }
 
-    public List<Count> getResultCountPerService()
-    {
+    public List<Count> getResultCountPerService() {
         return serviceCount;
     }
 }

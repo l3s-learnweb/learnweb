@@ -17,30 +17,25 @@ import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ApplicationScoped
-public class LearnwebBean implements Serializable
-{
+public class LearnwebBean implements Serializable {
     private static final long serialVersionUID = 1286475643761742147L;
     private static final Logger log = LogManager.getLogger(LearnwebBean.class);
 
-    private transient Learnweb learnweb;
+    private final transient Learnweb learnweb;
     private boolean maintenanceMode = false;
 
-    public LearnwebBean() throws ClassNotFoundException, SQLException
-    {
+    public LearnwebBean() throws ClassNotFoundException, SQLException {
         learnweb = Learnweb.createInstance(BeanHelper.getServerUrl());
     }
 
     @PostConstruct
-    public void init()
-    {
+    public void init() {
         // initialize stuff which is not required by console tasks
         learnweb.initLearnwebServer();
     }
 
-    public Learnweb getLearnweb()
-    {
-        if(null == learnweb)
-        {
+    public Learnweb getLearnweb() {
+        if (null == learnweb) {
             log.error("LearnwebBean: learnweb is null -> redirect");
             UtilBean.redirect("/lw/error.jsf");
         }
@@ -48,42 +43,33 @@ public class LearnwebBean implements Serializable
     }
 
     @PreDestroy
-    public void onDestroy()
-    {
+    public void onDestroy() {
         learnweb.onDestroy();
     }
 
     /**
-     * Returns the path to the users profile image or a default image if no available
-     *
-     * @param user
-     * @return
-     * @throws SQLException
+     * Returns the path to the users profile image or a default image if no available.
      */
-    public String getProfileImage(User user) throws SQLException
-    {
-        if(user != null)
-        {
+    public String getProfileImage(User user) throws SQLException {
+        if (user != null) {
             String url = user.getImage();
 
-            if(null != url)
+            if (null != url) {
                 return url;
+            }
         }
         return learnweb.getServerUrl() + "/resources/images/no-profile-picture.jpg";
     }
 
-    public boolean isMaintenanceMode()
-    {
+    public boolean isMaintenanceMode() {
         return maintenanceMode;
     }
 
-    public void setMaintenanceMode(boolean maintenanceMode)
-    {
+    public void setMaintenanceMode(boolean maintenanceMode) {
         this.maintenanceMode = maintenanceMode;
     }
 
-    public String getTrackerApiKey()
-    {
+    public String getTrackerApiKey() {
         return this.learnweb.getProperties().getProperty("TRACKER_API_KEY");
     }
 

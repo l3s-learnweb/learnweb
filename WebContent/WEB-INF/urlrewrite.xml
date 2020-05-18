@@ -3,56 +3,56 @@
 <!-- Configuration file for UrlRewriteFilter https://github.com/paultuckey/urlrewritefilter/ -->
 <!-- Documentation https://cdn.rawgit.com/paultuckey/urlrewritefilter/master/src/doc/manual/4.0/index.html -->
 <urlrewrite use-query-string="true">
-	<!-- Redirects from one instance to another -->
+    <!-- Redirects from one instance to another -->
     <rule>
         <from>/v2/(.*)</from>
         <to type="redirect" last="true">/v3/$1</to>
     </rule>
     <rule>
-		<name>The Yell documentation still contains links to /new</name>
+        <name>The Yell documentation still contains links to /new</name>
         <from>/new/(.*)</from>
         <to type="redirect" last="true">/$1</to>
     </rule>
-	<rule>
-		<name>Redirect ArchiveWeb users to archived v2 instance</name>
-		<condition name="host">archiveweb.l3s.uni-hannover.de</condition>
-		<from>^/(.*)</from>
-		<to type="permanent-redirect" last="true">http://learnweb.l3s.uni-hannover.de/v2/aw/</to>
-	</rule>
-	<!-- General redirects -->
-	<!--<rule> TODO: this rule is broken, because of proxy which always uses http protocol
-		<name>Redirect to HTTPS</name>
-		<condition type="scheme" operator="notequal">https</condition>
-		<condition name="host">learnweb.l3s.uni-hannover.de</condition>
-		<from>^.*$</from>
-		<to type="redirect" last="true">https://%{server-name}%{request-uri}</to>
-	</rule>-->
-	<rule>
-		<name>Redirect to /lw/</name>
-		<from>^/$</from>
-		<to type="redirect">%{context-path}/lw/</to>
-	</rule>
-	<!-- Redirects from one page to another -->
-	<rule>
-		<name>Short links to the wizard</name>
-		<from>(?:/lw)?/wizard=(.*)</from>
-		<to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>
-	</rule>
-	<rule>
-		<from>/archive/(.*)</from>
-		<to type="redirect" last="true">http://alexandria-project.eu/archivesearch/$1</to>
-	</rule>
-	<!-- TODO: remove? // redirect old to new survey and glossary page -->
-	<rule>
-		<from>/templates/resources/survey.jsf(.*)</from>
-		<to type="redirect">%{context-path}/lw/survey/survey.jsf$1</to>
-	</rule>
-	<rule>
-		<from>/lw/survey/surveyResult.jsf(.*)</from>
-		<to type="redirect">%{context-path}/lw/survey/results.jsf$1</to>
-	</rule>	
-	<rule>
-		<from>/lw/showGlossary.jsf(.*)</from>
-		<to type="redirect">%{context-path}/lw/glossary/glossary.jsf$1</to>
-	</rule>
+    <rule>
+        <name>Redirect ArchiveWeb users to archived v2 instance</name>
+        <condition name="host">archiveweb.l3s.uni-hannover.de</condition>
+        <from>^/(.*)</from>
+        <to type="permanent-redirect" last="true">http://learnweb.l3s.uni-hannover.de/v2/aw/</to>
+    </rule>
+    <!-- General redirects -->
+    <!--<rule> TODO: this rule is broken, because of proxy which always uses http protocol
+        <name>Redirect to HTTPS</name>
+        <condition type="scheme" operator="notequal">https</condition>
+        <condition name="host">learnweb.l3s.uni-hannover.de</condition>
+        <from>^.*$</from>
+        <to type="redirect" last="true">https://%{server-name}%{request-uri}</to>
+    </rule>-->
+    <rule>
+        <name>Redirect to /lw/</name>
+        <from>^/$</from>
+        <to type="redirect">%{context-path}/lw/</to>
+    </rule>
+    <!-- Redirects from one page to another -->
+    <rule>
+        <name>Short links to the wizard</name>
+        <from>(?:/lw)?/wizard=(.*)</from>
+        <to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>
+    </rule>
+    <rule>
+        <from>/archive/(.*)</from>
+        <to type="redirect" last="true">http://alexandria-project.eu/archivesearch/$1</to>
+    </rule>
+    <!-- TODO: remove? // redirect old to new survey and glossary page -->
+    <rule>
+        <from>/templates/resources/survey.jsf(.*)</from>
+        <to type="redirect">%{context-path}/lw/survey/survey.jsf$1</to>
+    </rule>
+    <rule>
+        <from>/lw/survey/surveyResult.jsf(.*)</from>
+        <to type="redirect">%{context-path}/lw/survey/results.jsf$1</to>
+    </rule>
+    <rule>
+        <from>/lw/showGlossary.jsf(.*)</from>
+        <to type="redirect">%{context-path}/lw/glossary/glossary.jsf$1</to>
+    </rule>
 </urlrewrite>

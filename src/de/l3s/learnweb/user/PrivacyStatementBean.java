@@ -14,45 +14,43 @@ import de.l3s.learnweb.user.Organisation.Option;
  * process
  *
  * @author Philipp
- *
  */
 @Named
 @RequestScoped
 public class PrivacyStatementBean extends ApplicationBean implements Serializable {
-  private static final long serialVersionUID = -6243573356677232210L;
+    private static final long serialVersionUID = -6243573356677232210L;
 
-  private boolean isTrackingEnabled = false;
-  private int organisationId;
+    private boolean isTrackingEnabled = false;
+    private int organisationId;
 
-  public void onLoad() {
-    Organisation organisation = null;
+    public void onLoad() {
+        Organisation organisation = null;
 
-    if (organisationId > 0) {
-      organisation = getLearnweb().getOrganisationManager().getOrganisationById(organisationId);
-    } else if (getUser() != null) {
-      organisation = getUser().getOrganisation();
+        if (organisationId > 0) {
+            organisation = getLearnweb().getOrganisationManager().getOrganisationById(organisationId);
+        } else if (getUser() != null) {
+            organisation = getUser().getOrganisation();
+        }
+
+        if (organisation != null) {
+            isTrackingEnabled = organisation.getOption(Option.Privacy_Tracker_disabled);
+        }
     }
 
-    if (organisation != null) {
-      isTrackingEnabled = organisation.getOption(Option.Privacy_Tracker_disabled);
+    /**
+     * @return True either if tracking is enabled for the given organization id or if no id was gives
+     *     the setting for the currently logged in user is returned. If the current user isn't
+     *     logged in it returns false
+     */
+    public boolean isTrackingEnabled() {
+        return isTrackingEnabled;
     }
-  }
 
-  /**
-   *
-   * @return True either if tracking is enabled for the given organization id or if no id was gives
-   *         the setting for the currently logged in user is returned. If the current user isn't
-   *         logged in it returns false
-   */
-  public boolean isTrackingEnabled() {
-    return isTrackingEnabled;
-  }
+    public int getOrganisationId() {
+        return organisationId;
+    }
 
-  public int getOrganisationId() {
-    return organisationId;
-  }
-
-  public void setOrganisationId(int organisationId) {
-    this.organisationId = organisationId;
-  }
+    public void setOrganisationId(int organisationId) {
+        this.organisationId = organisationId;
+    }
 }

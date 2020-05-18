@@ -10,14 +10,13 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class Mail
-{
-    private static Authenticator authenticator = new PasswordAuthenticator("learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
-    private Session session;
-    private MimeMessage message;
+public class Mail {
+    private static final Authenticator AUTHENTICATOR = new PasswordAuthenticator("learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
 
-    public Mail() throws MessagingException
-    {
+    private final Session session;
+    private final MimeMessage message;
+
+    public Mail() throws MessagingException {
         System.setProperty("mail.mime.charset", "UTF-8");
         Properties props = new Properties();
         props.setProperty("mail.smtp.host", "mail.kbs.uni-hannover.de");
@@ -27,67 +26,56 @@ public class Mail
         props.setProperty("mail.smtp.port", "465");
         props.setProperty("mail.debug", "true");
 
-        session = Session.getInstance(props, authenticator);
+        session = Session.getInstance(props, AUTHENTICATOR);
 
         message = new MimeMessage(session);
         message.setFrom(new InternetAddress("learnweb@kbs.uni-hannover.de"));
     }
 
-    public void sendMail() throws MessagingException
-    {
+    public void sendMail() throws MessagingException {
         message.saveChanges();
         Transport.send(message);
     }
 
-    public void setReplyTo(InternetAddress internetAddress) throws MessagingException
-    {
-        InternetAddress[] addresses = { internetAddress };
+    public void setReplyTo(InternetAddress internetAddress) throws MessagingException {
+        InternetAddress[] addresses = {internetAddress};
         message.setReplyTo(addresses);
     }
 
-    public void setFrom(InternetAddress internetAddress) throws MessagingException
-    {
+    public void setFrom(InternetAddress internetAddress) throws MessagingException {
         message.setFrom(internetAddress);
     }
 
-    public void setRecipient(RecipientType type, InternetAddress address) throws MessagingException
-    {
+    public void setRecipient(RecipientType type, InternetAddress address) throws MessagingException {
         message.setRecipient(type, address);
     }
 
-    public void setRecipient(RecipientType type, String address) throws MessagingException
-    {
+    public void setRecipient(RecipientType type, String address) throws MessagingException {
         setRecipient(type, new InternetAddress(address));
     }
 
-    public void setRecipients(RecipientType type, InternetAddress[] addresses) throws MessagingException
-    {
+    public void setRecipients(RecipientType type, InternetAddress[] addresses) throws MessagingException {
         message.setRecipients(type, addresses);
     }
 
-    public void setSubject(String subject) throws MessagingException
-    {
+    public void setSubject(String subject) throws MessagingException {
         message.setSubject(subject);
     }
 
-    public void setText(String text) throws MessagingException
-    {
+    public void setText(String text) throws MessagingException {
         message.setText(text);
     }
 
-    public void setHTML(String text) throws MessagingException
-    {
+    public void setHTML(String text) throws MessagingException {
         message.setText(text, "UTF-8", "html");
     }
 
-    public void setContent(Object html,  String type) throws MessagingException
-    {
+    public void setContent(Object html, String type) throws MessagingException {
         message.setContent(html, type);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return message.toString();
     }
 }

@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource;
 
-public enum ResourceType
-{
+public enum ResourceType {
     text,
     video,
     image,
@@ -18,10 +17,8 @@ public enum ResourceType
     glossary2;
 
     @Override
-    public String toString()
-    {
-        switch(this)
-        {
+    public String toString() {
+        switch (this) {
             case text:
                 return "Document";
             default:
@@ -32,8 +29,7 @@ public enum ResourceType
     /**
      * Same as ResourceType.valueOf(), but case insensitive.
      */
-    public static ResourceType parse(String value)
-    {
+    public static ResourceType parse(String value) {
         return valueOf(value.toLowerCase());
     }
 }

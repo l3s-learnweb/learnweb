@@ -2,14 +2,13 @@ package de.l3s.util;
 
 //Copyright (c) 2003-2009, Jodd Team (jodd.org). All Rights Reserved.
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Map file extensions to MIME types. Based on the Apache mime.types file.
  * http://www.iana.org/assignments/media-types/
  */
-public class MimeTypes
-{
+public final class MimeTypes {
     public static final String MIME_APPLICATION_ANDREW_INSET = "application/andrew-inset";
     public static final String MIME_APPLICATION_JSON = "application/json";
     public static final String MIME_APPLICATION_ZIP = "application/zip";
@@ -119,252 +118,231 @@ public class MimeTypes
     public static final String MIME_VIDEO_X_SGI_MOVIE = "video/x-sgi-movie";
     public static final String MIME_X_CONFERENCE_X_COOLTALK = "x-conference/x-cooltalk";
 
-    private static HashMap<String, String> mimeTypeMapping;
+    private static final Map<String, String> MIME_TYPE_MAPPING = Map.ofEntries(
+        Map.entry("xul", MIME_APPLICATION_VND_MOZZILLA_XUL_XML),
+        Map.entry("json", MIME_APPLICATION_JSON),
+        Map.entry("ice", MIME_X_CONFERENCE_X_COOLTALK),
+        Map.entry("movie", MIME_VIDEO_X_SGI_MOVIE),
+        Map.entry("avi", MIME_VIDEO_X_MSVIDEO),
+        Map.entry("wmv", MIME_VIDEO_X_MS_WMV),
+        Map.entry("m4u", MIME_VIDEO_VND_MPEGURL),
+        Map.entry("mxu", MIME_VIDEO_VND_MPEGURL),
+        Map.entry("htc", MIME_TEXT_X_COMPONENT),
+        Map.entry("etx", MIME_TEXT_X_SETEXT),
+        Map.entry("wmls", MIME_TEXT_VND_WAP_WMLSCRIPT),
+        Map.entry("wml", MIME_TEXT_VND_WAP_XML),
+        Map.entry("tsv", MIME_TEXT_TAB_SEPARATED_VALUES),
+        Map.entry("sgm", MIME_TEXT_SGML),
+        Map.entry("sgml", MIME_TEXT_SGML),
+        Map.entry("css", MIME_TEXT_CSS),
+        Map.entry("ifb", MIME_TEXT_CALENDAR),
+        Map.entry("ics", MIME_TEXT_CALENDAR),
+        Map.entry("wrl", MIME_MODEL_VRLM),
+        Map.entry("vrlm", MIME_MODEL_VRLM),
+        Map.entry("silo", MIME_MODEL_MESH),
+        Map.entry("mesh", MIME_MODEL_MESH),
+        Map.entry("msh", MIME_MODEL_MESH),
+        Map.entry("iges", MIME_MODEL_IGES),
+        Map.entry("igs", MIME_MODEL_IGES),
+        Map.entry("rgb", MIME_IMAGE_X_RGB),
+        Map.entry("ppm", MIME_IMAGE_X_PORTABLE_PIXMAP),
+        Map.entry("pgm", MIME_IMAGE_X_PORTABLE_GRAYMAP),
+        Map.entry("pbm", MIME_IMAGE_X_PORTABLE_BITMAP),
+        Map.entry("pnm", MIME_IMAGE_X_PORTABLE_ANYMAP),
+        Map.entry("ico", MIME_IMAGE_X_ICON),
+        Map.entry("ras", MIME_IMAGE_X_CMU_RASTER),
+        Map.entry("wbmp", MIME_IMAGE_WAP_WBMP),
+        Map.entry("djv", MIME_IMAGE_VND_DJVU),
+        Map.entry("djvu", MIME_IMAGE_VND_DJVU),
+        Map.entry("svg", MIME_IMAGE_SVG_XML),
+        Map.entry("ief", MIME_IMAGE_IEF),
+        Map.entry("cgm", MIME_IMAGE_CGM),
+        Map.entry("bmp", MIME_IMAGE_BMP),
+        Map.entry("xyz", MIME_CHEMICAL_X_XYZ),
+        Map.entry("pdb", MIME_CHEMICAL_X_PDB),
+        Map.entry("ra", MIME_AUDIO_X_PN_REALAUDIO),
+        Map.entry("ram", MIME_AUDIO_X_PN_REALAUDIO),
+        Map.entry("m3u", MIME_AUDIO_X_MPEGURL),
+        Map.entry("aifc", MIME_AUDIO_X_AIFF),
+        Map.entry("aif", MIME_AUDIO_X_AIFF),
+        Map.entry("aiff", MIME_AUDIO_X_AIFF),
+        Map.entry("mp3", MIME_AUDIO_MPEG),
+        Map.entry("mp2", MIME_AUDIO_MPEG),
+        Map.entry("mp1", MIME_AUDIO_MPEG),
+        Map.entry("mpga", MIME_AUDIO_MPEG),
+        Map.entry("kar", MIME_AUDIO_MIDI),
+        Map.entry("mid", MIME_AUDIO_MIDI),
+        Map.entry("midi", MIME_AUDIO_MIDI),
+        Map.entry("dtd", MIME_APPLICATION_XML_DTD),
+        Map.entry("xsl", MIME_APPLICATION_XML),
+        Map.entry("xml", MIME_APPLICATION_XML),
+        Map.entry("xslt", MIME_APPLICATION_XSLT_XML),
+        Map.entry("xht", MIME_APPLICATION_XHTML_XML),
+        Map.entry("xhtml", MIME_APPLICATION_XHTML_XML),
+        Map.entry("src", MIME_APPLICATION_X_WAIS_SOURCE),
+        Map.entry("ustar", MIME_APPLICATION_X_USTAR),
+        Map.entry("ms", MIME_APPLICATION_X_TROFF_MS),
+        Map.entry("me", MIME_APPLICATION_X_TROFF_ME),
+        Map.entry("man", MIME_APPLICATION_X_TROFF_MAN),
+        Map.entry("roff", MIME_APPLICATION_X_TROFF),
+        Map.entry("tr", MIME_APPLICATION_X_TROFF),
+        Map.entry("t", MIME_APPLICATION_X_TROFF),
+        Map.entry("texi", MIME_APPLICATION_X_TEXINFO),
+        Map.entry("texinfo", MIME_APPLICATION_X_TEXINFO),
+        Map.entry("tex", MIME_APPLICATION_X_TEX),
+        Map.entry("tcl", MIME_APPLICATION_X_TCL),
+        Map.entry("sv4crc", MIME_APPLICATION_X_SV4CRC),
+        Map.entry("sv4cpio", MIME_APPLICATION_X_SV4CPIO),
+        Map.entry("sit", MIME_APPLICATION_X_STUFFIT),
+        Map.entry("swf", MIME_APPLICATION_X_SHOCKWAVE_FLASH),
+        Map.entry("shar", MIME_APPLICATION_X_SHAR),
+        Map.entry("sh", MIME_APPLICATION_X_SH),
+        Map.entry("cdf", MIME_APPLICATION_X_NETCDF),
+        Map.entry("nc", MIME_APPLICATION_X_NETCDF),
+        Map.entry("latex", MIME_APPLICATION_X_LATEX),
+        Map.entry("skm", MIME_APPLICATION_X_KOAN),
+        Map.entry("skt", MIME_APPLICATION_X_KOAN),
+        Map.entry("skd", MIME_APPLICATION_X_KOAN),
+        Map.entry("skp", MIME_APPLICATION_X_KOAN),
+        Map.entry("js", MIME_APPLICATION_X_JAVASCRIPT),
+        Map.entry("hdf", MIME_APPLICATION_X_HDF),
+        Map.entry("gtar", MIME_APPLICATION_X_GTAR),
+        Map.entry("spl", MIME_APPLICATION_X_FUTURESPLASH),
+        Map.entry("dvi", MIME_APPLICATION_X_DVI),
+        Map.entry("dxr", MIME_APPLICATION_X_DIRECTOR),
+        Map.entry("dir", MIME_APPLICATION_X_DIRECTOR),
+        Map.entry("dcr", MIME_APPLICATION_X_DIRECTOR),
+        Map.entry("csh", MIME_APPLICATION_X_CSH),
+        Map.entry("cpio", MIME_APPLICATION_X_CPIO),
+        Map.entry("pgn", MIME_APPLICATION_X_CHESS_PGN),
+        Map.entry("vcd", MIME_APPLICATION_X_CDLINK),
+        Map.entry("bcpio", MIME_APPLICATION_X_BCPIO),
+        Map.entry("rm", MIME_APPLICATION_VND_RNREALMEDIA),
+        Map.entry("ppt", MIME_APPLICATION_VND_MSPOWERPOINT),
+        Map.entry("mif", MIME_APPLICATION_VND_MIF),
+        Map.entry("grxml", MIME_APPLICATION_SRGS_XML),
+        Map.entry("gram", MIME_APPLICATION_SRGS),
+        Map.entry("smil", MIME_APPLICATION_RDF_SMIL),
+        Map.entry("smi", MIME_APPLICATION_RDF_SMIL),
+        Map.entry("rdf", MIME_APPLICATION_RDF_XML),
+        Map.entry("ogg", MIME_APPLICATION_X_OGG),
+        Map.entry("oda", MIME_APPLICATION_ODA),
+        Map.entry("dmg", MIME_APPLICATION_OCTET_STREAM),
+        Map.entry("lzh", MIME_APPLICATION_OCTET_STREAM),
+        Map.entry("so", MIME_APPLICATION_OCTET_STREAM),
+        Map.entry("lha", MIME_APPLICATION_OCTET_STREAM),
+        Map.entry("dms", MIME_APPLICATION_OCTET_STREAM),
+        Map.entry("bin", MIME_APPLICATION_OCTET_STREAM),
+        Map.entry("mathml", MIME_APPLICATION_MATHML_XML),
+        Map.entry("cpt", MIME_APPLICATION_MAC_COMPACTPRO),
+        Map.entry("hqx", MIME_APPLICATION_MAC_BINHEX40),
+        Map.entry("jnlp", MIME_APPLICATION_JNLP),
+        Map.entry("ez", MIME_APPLICATION_ANDREW_INSET),
+        Map.entry("txt", MIME_TEXT_PLAIN),
+        Map.entry("ini", MIME_TEXT_PLAIN),
+        Map.entry("c", MIME_TEXT_PLAIN),
+        Map.entry("h", MIME_TEXT_PLAIN),
+        Map.entry("cpp", MIME_TEXT_PLAIN),
+        Map.entry("cxx", MIME_TEXT_PLAIN),
+        Map.entry("cc", MIME_TEXT_PLAIN),
+        Map.entry("chh", MIME_TEXT_PLAIN),
+        Map.entry("java", MIME_TEXT_PLAIN),
+        Map.entry("csv", MIME_TEXT_PLAIN),
+        Map.entry("bat", MIME_TEXT_PLAIN),
+        Map.entry("cmd", MIME_TEXT_PLAIN),
+        Map.entry("asc", MIME_TEXT_PLAIN),
+        Map.entry("rtf", MIME_TEXT_RTF),
+        Map.entry("rtx", MIME_TEXT_RICHTEXT),
+        Map.entry("html", MIME_TEXT_HTML),
+        Map.entry("htm", MIME_TEXT_HTML),
+        Map.entry("zip", MIME_APPLICATION_ZIP),
+        Map.entry("rar", MIME_APPLICATION_X_RAR_COMPRESSED),
+        Map.entry("gzip", MIME_APPLICATION_X_GZIP),
+        Map.entry("gz", MIME_APPLICATION_X_GZIP),
+        Map.entry("tgz", MIME_APPLICATION_TGZ),
+        Map.entry("tar", MIME_APPLICATION_X_TAR),
+        Map.entry("gif", MIME_IMAGE_GIF),
+        Map.entry("jpeg", MIME_IMAGE_JPEG),
+        Map.entry("jpg", MIME_IMAGE_JPEG),
+        Map.entry("jpe", MIME_IMAGE_JPEG),
+        Map.entry("tiff", MIME_IMAGE_TIFF),
+        Map.entry("tif", MIME_IMAGE_TIFF),
+        Map.entry("png", MIME_IMAGE_PNG),
+        Map.entry("au", MIME_AUDIO_BASIC),
+        Map.entry("snd", MIME_AUDIO_BASIC),
+        Map.entry("wav", MIME_AUDIO_X_WAV),
+        Map.entry("mov", MIME_VIDEO_QUICKTIME),
+        Map.entry("qt", MIME_VIDEO_QUICKTIME),
+        Map.entry("mpeg", MIME_VIDEO_MPEG),
+        Map.entry("mpg", MIME_VIDEO_MPEG),
+        Map.entry("mpe", MIME_VIDEO_MPEG),
+        Map.entry("abs", MIME_VIDEO_MPEG),
+        Map.entry("doc", MIME_APPLICATION_MSWORD),
+        Map.entry("xls", MIME_APPLICATION_VND_MSEXCEL),
+        Map.entry("eps", MIME_APPLICATION_POSTSCRIPT),
+        Map.entry("ai", MIME_APPLICATION_POSTSCRIPT),
+        Map.entry("ps", MIME_APPLICATION_POSTSCRIPT),
+        Map.entry("pdf", MIME_APPLICATION_PDF),
+        Map.entry("exe", MIME_APPLICATION_OCTET_STREAM),
+        Map.entry("dll", MIME_APPLICATION_OCTET_STREAM),
+        Map.entry("class", MIME_APPLICATION_OCTET_STREAM),
+        Map.entry("jar", MIME_APPLICATION_JAVA_ARCHIVE),
 
-    static
-    {
-        mimeTypeMapping = new HashMap<>(200)
-        {
-            private static final long serialVersionUID = 504794795433631388L;
+        // MS Office
+        // Map.entry("doc", "application/msword"),
+        Map.entry("dot", "application/msword"),
+        Map.entry("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+        Map.entry("dotx", "application/vnd.openxmlformats-officedocument.wordprocessingml.template"),
+        Map.entry("docm", "application/vnd.ms-word.document.macroEnabled.12"),
+        Map.entry("dotm", "application/vnd.ms-word.template.macroEnabled.12"),
+        // Map.entry("xls", "application/vnd.ms-excel"),
+        Map.entry("xlt", "application/vnd.ms-excel"),
+        Map.entry("xla", "application/vnd.ms-excel"),
+        Map.entry("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+        Map.entry("xltx", "application/vnd.openxmlformats-officedocument.spreadsheetml.template"),
+        Map.entry("xlsm", "application/vnd.ms-excel.sheet.macroEnabled.12"),
+        Map.entry("xltm", "application/vnd.ms-excel.template.macroEnabled.12"),
+        Map.entry("xlam", "application/vnd.ms-excel.addin.macroEnabled.12"),
+        Map.entry("xlsb", "application/vnd.ms-excel.sheet.binary.macroEnabled.12"),
+        //Map.entry("ppt", "application/vnd.ms-powerpoint"),
+        Map.entry("pot", "application/vnd.ms-powerpoint"),
+        Map.entry("pps", "application/vnd.ms-powerpoint"),
+        Map.entry("ppa", "application/vnd.ms-powerpoint"),
+        Map.entry("pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation"),
+        Map.entry("potx", "application/vnd.openxmlformats-officedocument.presentationml.template"),
+        Map.entry("ppsx", "application/vnd.openxmlformats-officedocument.presentationml.slideshow"),
+        Map.entry("ppam", "application/vnd.ms-powerpoint.addin.macroEnabled.12"),
+        Map.entry("pptm", "application/vnd.ms-powerpoint.presentation.macroEnabled.12"),
+        Map.entry("potm", "application/vnd.ms-powerpoint.presentation.macroEnabled.12"),
+        Map.entry("ppsm", "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"),
+        // Open Office
+        Map.entry("odt", "application/vnd.oasis.opendocument.text"),
+        Map.entry("ott", "application/vnd.oasis.opendocument.text-template"),
+        Map.entry("oth", "application/vnd.oasis.opendocument.text-web"),
+        Map.entry("odm", "application/vnd.oasis.opendocument.text-master"),
+        Map.entry("odg", "application/vnd.oasis.opendocument.graphics"),
+        Map.entry("otg", "application/vnd.oasis.opendocument.graphics-template"),
+        Map.entry("odp", "application/vnd.oasis.opendocument.presentation"),
+        Map.entry("otp", "application/vnd.oasis.opendocument.presentation-template"),
+        Map.entry("ods", "application/vnd.oasis.opendocument.spreadsheet"),
+        Map.entry("ots", "application/vnd.oasis.opendocument.spreadsheet-template"),
+        Map.entry("odc", "application/vnd.oasis.opendocument.chart"),
+        Map.entry("odf", "application/vnd.oasis.opendocument.formula"),
+        Map.entry("odb", "application/vnd.oasis.opendocument.database"),
+        Map.entry("odi", "application/vnd.oasis.opendocument.image"),
+        Map.entry("oxt", "application/vnd.openofficeorg.extension"),
 
-            {
-                put("xul", MIME_APPLICATION_VND_MOZZILLA_XUL_XML);
-                put("json", MIME_APPLICATION_JSON);
-                put("ice", MIME_X_CONFERENCE_X_COOLTALK);
-                put("movie", MIME_VIDEO_X_SGI_MOVIE);
-                put("avi", MIME_VIDEO_X_MSVIDEO);
-                put("wmv", MIME_VIDEO_X_MS_WMV);
-                put("m4u", MIME_VIDEO_VND_MPEGURL);
-                put("mxu", MIME_VIDEO_VND_MPEGURL);
-                put("htc", MIME_TEXT_X_COMPONENT);
-                put("etx", MIME_TEXT_X_SETEXT);
-                put("wmls", MIME_TEXT_VND_WAP_WMLSCRIPT);
-                put("wml", MIME_TEXT_VND_WAP_XML);
-                put("tsv", MIME_TEXT_TAB_SEPARATED_VALUES);
-                put("sgm", MIME_TEXT_SGML);
-                put("sgml", MIME_TEXT_SGML);
-                put("css", MIME_TEXT_CSS);
-                put("ifb", MIME_TEXT_CALENDAR);
-                put("ics", MIME_TEXT_CALENDAR);
-                put("wrl", MIME_MODEL_VRLM);
-                put("vrlm", MIME_MODEL_VRLM);
-                put("silo", MIME_MODEL_MESH);
-                put("mesh", MIME_MODEL_MESH);
-                put("msh", MIME_MODEL_MESH);
-                put("iges", MIME_MODEL_IGES);
-                put("igs", MIME_MODEL_IGES);
-                put("rgb", MIME_IMAGE_X_RGB);
-                put("ppm", MIME_IMAGE_X_PORTABLE_PIXMAP);
-                put("pgm", MIME_IMAGE_X_PORTABLE_GRAYMAP);
-                put("pbm", MIME_IMAGE_X_PORTABLE_BITMAP);
-                put("pnm", MIME_IMAGE_X_PORTABLE_ANYMAP);
-                put("ico", MIME_IMAGE_X_ICON);
-                put("ras", MIME_IMAGE_X_CMU_RASTER);
-                put("wbmp", MIME_IMAGE_WAP_WBMP);
-                put("djv", MIME_IMAGE_VND_DJVU);
-                put("djvu", MIME_IMAGE_VND_DJVU);
-                put("svg", MIME_IMAGE_SVG_XML);
-                put("ief", MIME_IMAGE_IEF);
-                put("cgm", MIME_IMAGE_CGM);
-                put("bmp", MIME_IMAGE_BMP);
-                put("xyz", MIME_CHEMICAL_X_XYZ);
-                put("pdb", MIME_CHEMICAL_X_PDB);
-                put("ra", MIME_AUDIO_X_PN_REALAUDIO);
-                put("ram", MIME_AUDIO_X_PN_REALAUDIO);
-                put("m3u", MIME_AUDIO_X_MPEGURL);
-                put("aifc", MIME_AUDIO_X_AIFF);
-                put("aif", MIME_AUDIO_X_AIFF);
-                put("aiff", MIME_AUDIO_X_AIFF);
-                put("mp3", MIME_AUDIO_MPEG);
-                put("mp2", MIME_AUDIO_MPEG);
-                put("mp1", MIME_AUDIO_MPEG);
-                put("mpga", MIME_AUDIO_MPEG);
-                put("kar", MIME_AUDIO_MIDI);
-                put("mid", MIME_AUDIO_MIDI);
-                put("midi", MIME_AUDIO_MIDI);
-                put("dtd", MIME_APPLICATION_XML_DTD);
-                put("xsl", MIME_APPLICATION_XML);
-                put("xml", MIME_APPLICATION_XML);
-                put("xslt", MIME_APPLICATION_XSLT_XML);
-                put("xht", MIME_APPLICATION_XHTML_XML);
-                put("xhtml", MIME_APPLICATION_XHTML_XML);
-                put("src", MIME_APPLICATION_X_WAIS_SOURCE);
-                put("ustar", MIME_APPLICATION_X_USTAR);
-                put("ms", MIME_APPLICATION_X_TROFF_MS);
-                put("me", MIME_APPLICATION_X_TROFF_ME);
-                put("man", MIME_APPLICATION_X_TROFF_MAN);
-                put("roff", MIME_APPLICATION_X_TROFF);
-                put("tr", MIME_APPLICATION_X_TROFF);
-                put("t", MIME_APPLICATION_X_TROFF);
-                put("texi", MIME_APPLICATION_X_TEXINFO);
-                put("texinfo", MIME_APPLICATION_X_TEXINFO);
-                put("tex", MIME_APPLICATION_X_TEX);
-                put("tcl", MIME_APPLICATION_X_TCL);
-                put("sv4crc", MIME_APPLICATION_X_SV4CRC);
-                put("sv4cpio", MIME_APPLICATION_X_SV4CPIO);
-                put("sit", MIME_APPLICATION_X_STUFFIT);
-                put("swf", MIME_APPLICATION_X_SHOCKWAVE_FLASH);
-                put("shar", MIME_APPLICATION_X_SHAR);
-                put("sh", MIME_APPLICATION_X_SH);
-                put("cdf", MIME_APPLICATION_X_NETCDF);
-                put("nc", MIME_APPLICATION_X_NETCDF);
-                put("latex", MIME_APPLICATION_X_LATEX);
-                put("skm", MIME_APPLICATION_X_KOAN);
-                put("skt", MIME_APPLICATION_X_KOAN);
-                put("skd", MIME_APPLICATION_X_KOAN);
-                put("skp", MIME_APPLICATION_X_KOAN);
-                put("js", MIME_APPLICATION_X_JAVASCRIPT);
-                put("hdf", MIME_APPLICATION_X_HDF);
-                put("gtar", MIME_APPLICATION_X_GTAR);
-                put("spl", MIME_APPLICATION_X_FUTURESPLASH);
-                put("dvi", MIME_APPLICATION_X_DVI);
-                put("dxr", MIME_APPLICATION_X_DIRECTOR);
-                put("dir", MIME_APPLICATION_X_DIRECTOR);
-                put("dcr", MIME_APPLICATION_X_DIRECTOR);
-                put("csh", MIME_APPLICATION_X_CSH);
-                put("cpio", MIME_APPLICATION_X_CPIO);
-                put("pgn", MIME_APPLICATION_X_CHESS_PGN);
-                put("vcd", MIME_APPLICATION_X_CDLINK);
-                put("bcpio", MIME_APPLICATION_X_BCPIO);
-                put("rm", MIME_APPLICATION_VND_RNREALMEDIA);
-                put("ppt", MIME_APPLICATION_VND_MSPOWERPOINT);
-                put("mif", MIME_APPLICATION_VND_MIF);
-                put("grxml", MIME_APPLICATION_SRGS_XML);
-                put("gram", MIME_APPLICATION_SRGS);
-                put("smil", MIME_APPLICATION_RDF_SMIL);
-                put("smi", MIME_APPLICATION_RDF_SMIL);
-                put("rdf", MIME_APPLICATION_RDF_XML);
-                put("ogg", MIME_APPLICATION_X_OGG);
-                put("oda", MIME_APPLICATION_ODA);
-                put("dmg", MIME_APPLICATION_OCTET_STREAM);
-                put("lzh", MIME_APPLICATION_OCTET_STREAM);
-                put("so", MIME_APPLICATION_OCTET_STREAM);
-                put("lha", MIME_APPLICATION_OCTET_STREAM);
-                put("dms", MIME_APPLICATION_OCTET_STREAM);
-                put("bin", MIME_APPLICATION_OCTET_STREAM);
-                put("mathml", MIME_APPLICATION_MATHML_XML);
-                put("cpt", MIME_APPLICATION_MAC_COMPACTPRO);
-                put("hqx", MIME_APPLICATION_MAC_BINHEX40);
-                put("jnlp", MIME_APPLICATION_JNLP);
-                put("ez", MIME_APPLICATION_ANDREW_INSET);
-                put("txt", MIME_TEXT_PLAIN);
-                put("ini", MIME_TEXT_PLAIN);
-                put("c", MIME_TEXT_PLAIN);
-                put("h", MIME_TEXT_PLAIN);
-                put("cpp", MIME_TEXT_PLAIN);
-                put("cxx", MIME_TEXT_PLAIN);
-                put("cc", MIME_TEXT_PLAIN);
-                put("chh", MIME_TEXT_PLAIN);
-                put("java", MIME_TEXT_PLAIN);
-                put("csv", MIME_TEXT_PLAIN);
-                put("bat", MIME_TEXT_PLAIN);
-                put("cmd", MIME_TEXT_PLAIN);
-                put("asc", MIME_TEXT_PLAIN);
-                put("rtf", MIME_TEXT_RTF);
-                put("rtx", MIME_TEXT_RICHTEXT);
-                put("html", MIME_TEXT_HTML);
-                put("htm", MIME_TEXT_HTML);
-                put("zip", MIME_APPLICATION_ZIP);
-                put("rar", MIME_APPLICATION_X_RAR_COMPRESSED);
-                put("gzip", MIME_APPLICATION_X_GZIP);
-                put("gz", MIME_APPLICATION_X_GZIP);
-                put("tgz", MIME_APPLICATION_TGZ);
-                put("tar", MIME_APPLICATION_X_TAR);
-                put("gif", MIME_IMAGE_GIF);
-                put("jpeg", MIME_IMAGE_JPEG);
-                put("jpg", MIME_IMAGE_JPEG);
-                put("jpe", MIME_IMAGE_JPEG);
-                put("tiff", MIME_IMAGE_TIFF);
-                put("tif", MIME_IMAGE_TIFF);
-                put("png", MIME_IMAGE_PNG);
-                put("au", MIME_AUDIO_BASIC);
-                put("snd", MIME_AUDIO_BASIC);
-                put("wav", MIME_AUDIO_X_WAV);
-                put("mov", MIME_VIDEO_QUICKTIME);
-                put("qt", MIME_VIDEO_QUICKTIME);
-                put("mpeg", MIME_VIDEO_MPEG);
-                put("mpg", MIME_VIDEO_MPEG);
-                put("mpe", MIME_VIDEO_MPEG);
-                put("abs", MIME_VIDEO_MPEG);
-                put("doc", MIME_APPLICATION_MSWORD);
-                put("xls", MIME_APPLICATION_VND_MSEXCEL);
-                put("eps", MIME_APPLICATION_POSTSCRIPT);
-                put("ai", MIME_APPLICATION_POSTSCRIPT);
-                put("ps", MIME_APPLICATION_POSTSCRIPT);
-                put("pdf", MIME_APPLICATION_PDF);
-                put("exe", MIME_APPLICATION_OCTET_STREAM);
-                put("dll", MIME_APPLICATION_OCTET_STREAM);
-                put("class", MIME_APPLICATION_OCTET_STREAM);
-                put("jar", MIME_APPLICATION_JAVA_ARCHIVE);
-
-                // MS Office
-                // put("doc", "application/msword");
-                put("dot", "application/msword");
-                put("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-                put("dotx", "application/vnd.openxmlformats-officedocument.wordprocessingml.template");
-                put("docm", "application/vnd.ms-word.document.macroEnabled.12");
-                put("dotm", "application/vnd.ms-word.template.macroEnabled.12");
-                // put("xls", "application/vnd.ms-excel");
-                put("xlt", "application/vnd.ms-excel");
-                put("xla", "application/vnd.ms-excel");
-                put("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                put("xltx", "application/vnd.openxmlformats-officedocument.spreadsheetml.template");
-                put("xlsm", "application/vnd.ms-excel.sheet.macroEnabled.12");
-                put("xltm", "application/vnd.ms-excel.template.macroEnabled.12");
-                put("xlam", "application/vnd.ms-excel.addin.macroEnabled.12");
-                put("xlsb", "application/vnd.ms-excel.sheet.binary.macroEnabled.12");
-                //put("ppt", "application/vnd.ms-powerpoint");
-                put("pot", "application/vnd.ms-powerpoint");
-                put("pps", "application/vnd.ms-powerpoint");
-                put("ppa", "application/vnd.ms-powerpoint");
-                put("pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
-                put("potx", "application/vnd.openxmlformats-officedocument.presentationml.template");
-                put("ppsx", "application/vnd.openxmlformats-officedocument.presentationml.slideshow");
-                put("ppam", "application/vnd.ms-powerpoint.addin.macroEnabled.12");
-                put("pptm", "application/vnd.ms-powerpoint.presentation.macroEnabled.12");
-                put("potm", "application/vnd.ms-powerpoint.presentation.macroEnabled.12");
-                put("ppsm", "application/vnd.ms-powerpoint.slideshow.macroEnabled.12");
-                // Open Office
-                put("odt", "application/vnd.oasis.opendocument.text");
-                put("ott", "application/vnd.oasis.opendocument.text-template");
-                put("oth", "application/vnd.oasis.opendocument.text-web");
-                put("odm", "application/vnd.oasis.opendocument.text-master");
-                put("odg", "application/vnd.oasis.opendocument.graphics");
-                put("otg", "application/vnd.oasis.opendocument.graphics-template");
-                put("odp", "application/vnd.oasis.opendocument.presentation");
-                put("otp", "application/vnd.oasis.opendocument.presentation-template");
-                put("ods", "application/vnd.oasis.opendocument.spreadsheet");
-                put("ots", "application/vnd.oasis.opendocument.spreadsheet-template");
-                put("odc", "application/vnd.oasis.opendocument.chart");
-                put("odf", "application/vnd.oasis.opendocument.formula");
-                put("odb", "application/vnd.oasis.opendocument.database");
-                put("odi", "application/vnd.oasis.opendocument.image");
-                put("oxt", "application/vnd.openofficeorg.extension");
-
-                put("mp4", "video/mp4");
-                put("mkv", "video/x-matroska");
-
-            }
-        };
-    }
-
-    /**
-     * Registers MIME type for provided extension. Existing extension type will be overriden.
-     */
-    public static void registerMimeType(String ext, String mimeType)
-    {
-        mimeTypeMapping.put(ext, mimeType);
-    }
+        Map.entry("mp4", "video/mp4"),
+        Map.entry("mkv", "video/x-matroska")
+    );
 
     /**
      * Returns the corresponding MIME type to the given extension.
      * If no MIME type was found it returns 'application/octet-stream' type.
      */
-    public static String getMimeType(String ext)
-    {
+    public static String getMimeType(String ext) {
         String mimeType = lookupMimeType(ext);
-        if(mimeType == null)
-        {
+        if (mimeType == null) {
             mimeType = MIME_APPLICATION_OCTET_STREAM;
         }
         return mimeType;
@@ -373,8 +351,7 @@ public class MimeTypes
     /**
      * Simply returns MIME type or {@code null} if no type is found.
      */
-    public static String lookupMimeType(String ext)
-    {
-        return mimeTypeMapping.get(ext.toLowerCase());
+    public static String lookupMimeType(String ext) {
+        return MIME_TYPE_MAPPING.get(ext.toLowerCase());
     }
 }

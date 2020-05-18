@@ -28,8 +28,7 @@ import de.l3s.learnweb.user.User.Gender;
 
 @Named
 @ViewScoped
-public class ProfileBean extends ApplicationBean implements Serializable
-{
+public class ProfileBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(ProfileBean.class);
     private static final long serialVersionUID = -2460055719611784132L;
 
@@ -55,28 +54,25 @@ public class ProfileBean extends ApplicationBean implements Serializable
     private boolean anonymizeUsername;
     private List<GroupUser> userGroups;
 
-    public void onLoad() throws SQLException
-    {
+    public void onLoad() throws SQLException {
         User loggedinUser = getUser();
-        if(loggedinUser == null)
+        if (loggedinUser == null) {
             return;
+        }
 
-        if(userId == 0 || loggedinUser.getId() == userId)
+        if (userId == 0 || loggedinUser.getId() == userId) {
             selectedUser = getUser(); // user edits himself
-        else
-        {
+        } else {
             selectedUser = getLearnweb().getUserManager().getUser(userId); // an admin edits an user
             moderatorAccess = true;
         }
 
-        if(null == selectedUser)
-        {
+        if (null == selectedUser) {
             addInvalidParameterMessage("user_id");
             return;
         }
 
-        if(moderatorAccess && !loggedinUser.canModerateUser(selectedUser))
-        {
+        if (moderatorAccess && !loggedinUser.canModerateUser(selectedUser)) {
             selectedUser = null;
             addAccessDeniedMessage();
             return;
@@ -84,57 +80,52 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
         email = selectedUser.getEmail();
 
-        for(Course course : selectedUser.getCourses())
-        {
-            if(course.getOption(Course.Option.Users_Require_mail_address))
+        for (Course course : selectedUser.getCourses()) {
+            if (course.getOption(Course.Option.Users_Require_mail_address)) {
                 mailRequired = true;
+            }
 
-            if(course.getOption(Course.Option.Users_Require_affiliation))
+            if (course.getOption(Course.Option.Users_Require_affiliation)) {
                 affiliationRequired = true;
+            }
 
-            if(course.getOption(Course.Option.Users_Require_student_id))
+            if (course.getOption(Course.Option.Users_Require_student_id)) {
                 studentIdRequired = true;
+            }
         }
 
         anonymizeUsername = selectedUser.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames);
         userGroups = selectedUser.getGroupsRelations();
     }
 
-    public void handleFileUpload(FileUploadEvent event)
-    {
-        try
-        {
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
             getUser().setImage(event.getFile().getInputStream());
             getUser().save();
-        }
-        catch(IllegalArgumentException e) // image is smaller than 100px
-        {
-
+        } catch (IllegalArgumentException e) { // image is smaller than 100px
             log.error("unhandled error", e);
 
-            if(e.getMessage().startsWith("Width 100 exceeds"))
+            if (e.getMessage().startsWith("Width 100 exceeds")) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "Your image is to small.");
-            else
+            } else {
                 throw e;
-        }
-        catch(Exception e)
-        {
+            }
+        } catch (Exception e) {
             log.error("Fatal error while processing a user image", e);
             addMessage(FacesMessage.SEVERITY_FATAL, "Fatal error while processing your image.");
         }
     }
 
-    public void onSaveProfile() throws SQLException
-    {
+    public void onSaveProfile() throws SQLException {
         // send confirmation mail if mail has been changed
-        if(StringUtils.isNotEmpty(email) && !StringUtils.equals(selectedUser.getEmail(), email))
-        {
+        if (StringUtils.isNotEmpty(email) && !StringUtils.equals(selectedUser.getEmail(), email)) {
             selectedUser.setEmail(email);
 
-            if(selectedUser.sendEmailConfirmation())
+            if (selectedUser.sendEmailConfirmation()) {
                 addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
-            else
+            } else {
                 addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
+            }
         }
 
         getLearnweb().getUserManager().save(selectedUser);
@@ -143,11 +134,9 @@ public class ProfileBean extends ApplicationBean implements Serializable
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public void onChangePassword()
-    {
+    public void onChangePassword() {
         UserManager um = getLearnweb().getUserManager();
-        try
-        {
+        try {
             getSelectedUser().setPassword(password);
             um.save(getSelectedUser());
 
@@ -156,21 +145,16 @@ public class ProfileBean extends ApplicationBean implements Serializable
             password = "";
             confirmPassword = "";
             currentPassword = "";
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
         }
     }
 
-    public String onDeleteAccount()
-    {
-        try
-        {
+    public String onDeleteAccount() {
+        try {
             User user = getUser();
 
-            if(!user.equals(getSelectedUser()) && !user.canModerateUser(getSelectedUser()))
-            {
+            if (!user.equals(getSelectedUser()) && !user.canModerateUser(getSelectedUser())) {
                 addAccessDeniedMessage();
                 return null;
             }
@@ -183,111 +167,90 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
             // perform logout if necessary
             UserBean userBean = getUserBean();
-            if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) // a moderator was logged into another user's account
-            {
+            if (userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) { // a moderator was logged into another user's account
                 userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
                 userBean.setModeratorUser(null);
                 return "/lw/admin/users.xhtml?faces-redirect=true";
-            }
-            else if(user.isModerator() && !user.equals(getSelectedUser())) // a moderator deletes another user through his profile page
-            {
+            } else if (user.isModerator() && !user.equals(getSelectedUser())) { // a moderator deletes another user through his profile page
                 return "/lw/admin/users.xhtml?faces-redirect=true";
             }
 
             // a user deletes himself
             getFacesContext().getExternalContext().invalidateSession(); // end session
             return "/lw/user/login.xhtml?faces-redirect=true";
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
         return null;
     }
 
-    public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
-    {
+    public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException {
         String newName = ((String) value).trim();
-        if(getSelectedUser().getRealUsername().equals(newName)) // username not changed
-        {
+        if (getSelectedUser().getRealUsername().equals(newName)) { // username not changed
             return;
         }
 
-        if(getLearnweb().getUserManager().isUsernameAlreadyTaken(newName))
-        {
+        if (getLearnweb().getUserManager().isUsernameAlreadyTaken(newName)) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
         }
     }
 
-    public Date getMaxBirthday()
-    {
+    public Date getMaxBirthday() {
         return new Date();
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public boolean isModeratorAccess()
-    {
+    public boolean isModeratorAccess() {
         return moderatorAccess;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password)
-    {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getConfirmPassword()
-    {
+    public String getConfirmPassword() {
         return confirmPassword;
     }
 
-    public void setConfirmPassword(String confirmPassword)
-    {
+    public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
 
-    public String getCurrentPassword()
-    {
+    public String getCurrentPassword() {
         return currentPassword;
     }
 
-    public void setCurrentPassword(String currentPassword)
-    {
+    public void setCurrentPassword(String currentPassword) {
         this.currentPassword = currentPassword;
     }
 
-    public User getSelectedUser()
-    {
+    public User getSelectedUser() {
         return selectedUser;
     }
 
-    public List<GroupUser> getUserGroups()
-    {
+    public List<GroupUser> getUserGroups() {
         return userGroups;
     }
 
-    public void setUserGroups(final List<GroupUser> userGroups)
-    {
+    public void setUserGroups(final List<GroupUser> userGroups) {
         this.userGroups = userGroups;
     }
 
-    public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
-    {
-        if(getUser().isAdmin()) // admins can change the password of all users
+    public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException {
+        if (getUser().isAdmin()) { // admins can change the password of all users
             return;
+        }
 
         UserManager um = getLearnweb().getUserManager();
         User user = getSelectedUser(); // the current user
@@ -297,65 +260,51 @@ public class ProfileBean extends ApplicationBean implements Serializable
         // returns the same user, if the password is correct
         User checkUser = um.getUser(user.getRealUsername(), password);
 
-        if(!user.equals(checkUser))
-        {
+        if (!user.equals(checkUser)) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "password_incorrect"));
         }
     }
 
-    public boolean isAffiliationRequired()
-    {
+    public boolean isAffiliationRequired() {
         return affiliationRequired;
     }
 
-    public boolean isMailRequired()
-    {
+    public boolean isMailRequired() {
         return mailRequired;
     }
 
-    public boolean isStudentIdRequired()
-    {
+    public boolean isStudentIdRequired() {
         return studentIdRequired;
     }
 
-    public boolean isAnonymizeUsername()
-    {
+    public boolean isAnonymizeUsername() {
         return anonymizeUsername;
     }
 
-    public void validateConsent(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
-    {
-        if(value.equals(Boolean.FALSE))
-        {
+    public void validateConsent(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException {
+        if (value.equals(Boolean.FALSE)) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "consent_is_required"));
         }
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public Gender[] getGenders()
-    {
+    public Gender[] getGenders() {
         return User.Gender.values();
     }
 
     /**
-     * Sets users preferredNotificationFrequency and the frequency of all his groups
-     *
-     * @throws SQLException
+     * Sets users preferredNotificationFrequency and the frequency of all his groups.
      */
-    public void onSaveAllNotificationFrequencies() throws SQLException
-    {
+    public void onSaveAllNotificationFrequencies() throws SQLException {
         selectedUser.save();
-        for(GroupUser groupUser : userGroups)
-        {
+        for (GroupUser groupUser : userGroups) {
             groupUser.setNotificationFrequency(selectedUser.getPreferredNotificationFrequency());
             getLearnweb().getGroupManager().updateNotificationFrequency(groupUser.getGroup().getId(), selectedUser.getId(), groupUser.getNotificationFrequency());
         }
@@ -363,19 +312,17 @@ public class ProfileBean extends ApplicationBean implements Serializable
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public void onSaveNotificationFrequency(GroupUser group) throws SQLException
-    {
+    public void onSaveNotificationFrequency(GroupUser group) throws SQLException {
         getLearnweb().getGroupManager().updateNotificationFrequency(group.getGroup().getId(), selectedUser.getId(), group.getNotificationFrequency());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public List<String> getTimeZonesIds(){
+    public List<String> getTimeZonesIds() {
         return Arrays.asList(TimeZone.getAvailableIDs());
     }
 
-    public User.NotificationFrequency[] getNotificationFrequencies()
-    {
+    public User.NotificationFrequency[] getNotificationFrequencies() {
         return User.NotificationFrequency.values();
     }
 }

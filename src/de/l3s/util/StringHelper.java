@@ -23,23 +23,19 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
-public class StringHelper
-{
+public class StringHelper {
     private static final Logger log = LogManager.getLogger(StringHelper.class);
 
     private static final Pattern NEW_LINE_PATTERN = Pattern.compile("\n");
     private static final Pattern NOT_ALPHABETICAL_PATTERN = Pattern.compile("[^<\"'a-zA-Z]+");
 
-    public static String removeNewLines(String str)
-    {
+    public static String removeNewLines(String str) {
         return NEW_LINE_PATTERN.matcher(str).replaceAll(" ");
     }
 
-    public static String trimNotAlphabetical(final String str)
-    {
+    public static String trimNotAlphabetical(final String str) {
         Matcher matcher = NOT_ALPHABETICAL_PATTERN.matcher(str);
-        if(matcher.lookingAt())
-        {
+        if (matcher.lookingAt()) {
             final String result = str.substring(matcher.end());
             //log.info("trimNotAlphabetical: '" + str + "' - '" + result + "'"); // for test, I want to know why we need it
             return result;
@@ -49,20 +45,21 @@ public class StringHelper
     }
 
     /**
-     * If the string is longer than maxLength it is split at the nearest blank space
+     * If the string is longer than maxLength it is split at the nearest blank space.
      */
-    public static String shortnString(String str, int maxLength)
-    {
-        if(maxLength < 3)
+    public static String shortnString(String str, int maxLength) {
+        if (maxLength < 3) {
             throw new IllegalArgumentException("maxLength must be greater than 3");
-        if(null == str)
+        }
+        if (null == str) {
             return "";
+        }
 
-        if(str.length() > maxLength)
-        {
+        if (str.length() > maxLength) {
             int endIdx = maxLength - 3;
-            while(endIdx > 0 && str.charAt(endIdx) != ' ' && str.charAt(endIdx) != '\n')
+            while (endIdx > 0 && str.charAt(endIdx) != ' ' && str.charAt(endIdx) != '\n') {
                 endIdx--;
+            }
 
             str = str.substring(0, endIdx) + "...";
         }
@@ -70,80 +67,61 @@ public class StringHelper
     }
 
     /**
-     * The same as StringUtils.remove but is removes a char from an array of strings
-     *
-     * @param values
-     * @param remove
-     * @return
+     * The same as StringUtils.remove but is removes a char from an array of strings.
      */
-    public static String[] remove(final String[] values, final char remove)
-    {
-        for(int i = 0, len = values.length; i < len; ++i)
-        {
+    public static String[] remove(final String[] values, final char remove) {
+        for (int i = 0, len = values.length; i < len; ++i) {
             values[i] = StringUtils.remove(values[i], remove);
         }
         return values;
     }
 
-    public static List<String> remove(final List<String> values, final char remove)
-    {
-        for(int i = 0, l = values.size(); i < l; ++i)
-        {
+    public static List<String> remove(final List<String> values, final char remove) {
+        for (int i = 0, l = values.size(); i < l; ++i) {
             values.set(i, StringUtils.remove(values.get(i), remove));
         }
         return values;
     }
 
     /**
-     * Uses Integer.parseInt but instead of an exception it returns -1 if the input can not be parsed
+     * Uses Integer.parseInt but instead of an exception it returns -1 if the input can not be parsed.
      *
      * @param number string input
      * @return int value or -1 if can't be parsed
      */
-    public static int parseInt(String number)
-    {
+    public static int parseInt(String number) {
         return parseInt(number, -1);
     }
 
-    public static int parseInt(String number, int defaultValue)
-    {
-        try
-        {
+    public static int parseInt(String number, int defaultValue) {
+        try {
             return Integer.parseInt(number);
+        } catch (NumberFormatException expected) {
+            return defaultValue;
         }
-        catch(NumberFormatException e)
-        {
-            // ignore
-        }
-
-        return defaultValue;
     }
 
-    public static String getDomainName(String url)
-    {
+    public static String getDomainName(String url) {
         int index = url.indexOf('?');
-        if(index > 0) // remove parameters they can contain illegal characters
+        if (index > 0) { // remove parameters they can contain illegal characters
             url = url.substring(0, index);
+        }
 
-        try
-        {
+        try {
             URL uri = new URL(url);
             return uri.getHost();
-        }
-        catch(MalformedURLException e)
-        {
+        } catch (MalformedURLException e) {
             log.error("Can't get domain for url: " + url, e);
             return null;
         }
     }
 
-    public static String implode(Iterable<String> list, String delimiter)
-    {
+    public static String implode(Iterable<String> list, String delimiter) {
         StringBuilder out = new StringBuilder();
-        for(String item : list)
-        {
-            if(out.length() != 0)
+        for (String item : list) {
+            if (out.length() != 0) {
                 out.append(delimiter);
+            }
             out.append(item);
         }
         return out.toString();
@@ -151,55 +129,45 @@ public class StringHelper
 
     /**
      * TODO: should be replaced by StringUtils.join
-     *
-     * @param list
-     * @param delimiter
-     * @return
      */
-    public static String implodeInt(Collection<Integer> list, String delimiter)
-    {
+    public static String implodeInt(Collection<Integer> list, String delimiter) {
         StringBuilder out = new StringBuilder();
-        for(Integer item : list)
-        {
-            if(out.length() != 0)
+        for (Integer item : list) {
+            if (out.length() != 0) {
                 out.append(delimiter);
+            }
             out.append(item);
         }
         return out.toString();
     }
 
-    public static String implodeInt(int[] list, String delimiter)
-    {
+    public static String implodeInt(int[] list, String delimiter) {
         StringBuilder out = new StringBuilder();
-        for(int item : list)
-        {
-            if(out.length() != 0)
+        for (int item : list) {
+            if (out.length() != 0) {
                 out.append(delimiter);
+            }
             out.append(item);
         }
         return out.toString();
     }
 
-    public static String join(Collection<Locale> collection)
-    {
+    public static String join(Collection<Locale> collection) {
         return collection.stream()
-                .map(Locale::toLanguageTag)
-                .collect(Collectors.joining(","));
+            .map(Locale::toLanguageTag)
+            .collect(Collectors.joining(","));
     }
 
-    public static List<Locale> splitLocales(String input)
-    {
+    public static List<Locale> splitLocales(String input) {
         ArrayList<Locale> locales = new ArrayList<>();
 
-        if(StringUtils.isEmpty(input))
-        {
+        if (StringUtils.isEmpty(input)) {
             return locales;
         }
 
         String[] entries = input.split(",");
 
-        for(String entry : entries)
-        {
+        for (String entry : entries) {
             locales.add(Locale.forLanguageTag(entry));
         }
 
@@ -211,44 +179,38 @@ public class StringHelper
      * This method uses UTF-8.
      * It's just a convenience method to get rid of the UnsupportedEncodingException.
      */
-    public static String urlEncode(String str)
-    {
-        if(null == str)
+    public static String urlEncode(String str) {
+        if (null == str) {
             return "";
+        }
         return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 
-    public static String urlDecode(String str)
-    {
-        if(null == str)
+    public static String urlDecode(String str) {
+        if (null == str) {
             return "";
+        }
         return URLDecoder.decode(str, StandardCharsets.UTF_8);
     }
 
     /**
-     * Returns true if the given string contains only ASCII characters
+     * Returns true if the given string contains only ASCII characters.
      */
-    public static boolean isASCII(CharSequence sequence)
-    {
-        for(int i = sequence.length() - 1; i >= 0; i--)
-        {
-            if(sequence.charAt(i) > '\u007f')
-            {
+    public static boolean isASCII(CharSequence sequence) {
+        for (int i = sequence.length() - 1; i >= 0; i--) {
+            if (sequence.charAt(i) > '\u007f') {
                 return false;
             }
         }
         return true;
     }
 
-    public static String filenameChangeExt(String originalFilename, String newExt)
-    {
+    public static String filenameChangeExt(String originalFilename, String newExt) {
         return originalFilename.substring(0, originalFilename.lastIndexOf('.')) + "." + newExt;
     }
 
-    public static String getNameFromPath(String originalFilepath)
-    {
-        if(originalFilepath == null)
-        {
+    public static String getNameFromPath(String originalFilepath) {
+        if (originalFilepath == null) {
             return null;
         }
 
@@ -258,16 +220,14 @@ public class StringHelper
         return originalFilepath.substring(index + 1);
     }
 
-    public static String decodeBase64(String encoded)
-    {
+    public static String decodeBase64(String encoded) {
         //decode byte array
         byte[] decoded = Base64.decodeBase64(encoded.getBytes(StandardCharsets.UTF_8));
         //byte to string and return it
         return new String(decoded, StandardCharsets.UTF_8);
     }
 
-    public static String encodeBase64(String str)
-    {
+    public static String encodeBase64(String str) {
         //decode byte array
         byte[] encoded = Base64.encodeBase64(str.getBytes(StandardCharsets.UTF_8));
         //byte to string and return it
@@ -280,11 +240,9 @@ public class StringHelper
      * @param hex the hex string
      * @return the hex string decoded into a byte array
      */
-    public static byte[] fromHex(String hex)
-    {
+    public static byte[] fromHex(String hex) {
         byte[] binary = new byte[hex.length() / 2];
-        for(int i = 0, len = binary.length; i < len; i++)
-        {
+        for (int i = 0, len = binary.length; i < len; i++) {
             binary[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
         }
         return binary;
@@ -296,66 +254,62 @@ public class StringHelper
      * @param array the byte array to convert
      * @return a length*2 character string encoding the byte array
      */
-    public static String toHex(byte[] array)
-    {
+    public static String toHex(byte[] array) {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();
-        if(paddingLength > 0)
+        if (paddingLength > 0) {
             return String.format("%0" + paddingLength + "d", 0) + hex;
-        else
+        } else {
             return hex;
+        }
     }
 
     /**
      * Converts a duration given in seconds to human readable minutes e.g. 90 to 1:30
      *
      * @param duration a duration in seconds
-     * @return
      */
-    public static String getDurationInMinutes(int duration)
-    {
+    public static String getDurationInMinutes(int duration) {
         int rest = duration % 60;
         StringBuilder str = new StringBuilder();
         str.append((duration - rest) / 60);
         str.append(':');
         str.append(rest);
-        if(rest < 10)
+        if (rest < 10) {
             str.append('0');
+        }
         return str.toString();
     }
 
-    public static String formatDuration(Duration d)
-    {
+    public static String formatDuration(Duration d) {
         long hours = d.toHours();
         long minutes = d.minusHours(hours).toMinutes();
 
         StringBuilder output = new StringBuilder();
-        if(hours > 0)
-        {
+        if (hours > 0) {
             output.append(hours);
             output.append("h ");
         }
 
         output.append(minutes);
-        if(minutes < 10)
+        if (minutes < 10) {
             output.append('0');
+        }
         output.append("m");
 
         return output.toString();
     }
 
     /**
-     * Like Jsoup.clean but it preserves line breaks and spacing
+     * Like Jsoup.clean but it preserves line breaks and spacing.
      *
-     * @param html
      * @param whitelist for example: Whitelist.none()
-     * @return
      */
-    public static String clean(String html, Whitelist whitelist)
-    {
-        if(html == null)
+    public static String clean(String html, Whitelist whitelist) {
+        if (html == null) {
             return null;
+        }
         Document document = Jsoup.parse(html);
         document.outputSettings(new Document.OutputSettings().prettyPrint(false)); //makes html() preserve line breaks and spacing
         document.select("br").append("\\n");
@@ -366,14 +320,11 @@ public class StringHelper
 
     /**
      * Works as StringUtils.isBlank but in addition it ignores all HTML tags. E.g. "&lt;p&gt; &lt;/p&gt;" will return true
-     *
-     * @param text
-     * @return
      */
-    public static boolean isBlankDisregardingHTML(String text)
-    {
-        if(StringUtils.isBlank(text))
+    public static boolean isBlankDisregardingHTML(String text) {
+        if (StringUtils.isBlank(text)) {
             return true;
+        }
 
         text = clean(text, Whitelist.none());
 
@@ -381,22 +332,16 @@ public class StringHelper
     }
 
     /**
-     * Add HTML bold tags around the query if it is present in the given str
-     *
-     * @param str
-     * @param query
-     * @return
+     * Add HTML bold tags around the query if it is present in the given str.
      */
-    public static String highlightQuery(String str, String query)
-    {
+    public static String highlightQuery(String str, String query) {
         String strLowered = str.toLowerCase();
 
         int index = strLowered.indexOf(query.toLowerCase());
 
         StringBuilder result = new StringBuilder();
         result.append(str);
-        if(index != -1)
-        {
+        if (index != -1) {
             result.insert(index + query.length(), "</b>");
             result.insert(index, "<b>");
         }

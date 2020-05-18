@@ -32,10 +32,8 @@ import de.l3s.util.StringHelper;
  * DAO for the File class.
  *
  * @author Philipp
- *
  */
-public class FileManager
-{
+public class FileManager {
     private static final Logger log = LogManager.getLogger(FileManager.class);
 
     // if you change this, remember to change createFile()
@@ -48,8 +46,7 @@ public class FileManager
     private String basePath;
     private java.io.File fileNotFoundErrorImage;
 
-    public FileManager(Learnweb learnweb) throws SQLException
-    {
+    public FileManager(Learnweb learnweb) throws SQLException {
         Properties properties = learnweb.getProperties();
         int cacheSize = Integer.parseInt(properties.getProperty("FILE_MANAGER_CACHE_SIZE"));
 
@@ -59,74 +56,72 @@ public class FileManager
         this.folder = new java.io.File(properties.getProperty("FILE_MANAGER_FOLDER").trim());
         setServerUrl(learnweb.getServerUrl());
 
-        if(!folder.exists())
+        if (!folder.exists()) {
             throw new RuntimeException("Folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "' does not exist.");
-        else if(!folder.canRead())
+        } else if (!folder.canRead()) {
             throw new RuntimeException("Can't read from folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "'");
-        else if(!folder.canWrite())
+        } else if (!folder.canWrite()) {
             throw new RuntimeException("Can't write into folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "'");
+        }
 
     }
 
     @Deprecated
-    public void setFileNotFoundErrorImage(java.io.File fileNotFoundErrorImage)
-    {
+    public void setFileNotFoundErrorImage(java.io.File fileNotFoundErrorImage) {
         this.fileNotFoundErrorImage = fileNotFoundErrorImage;
     }
 
-    public void setServerUrl(String serverUrl)
-    {
+    public void setServerUrl(String serverUrl) {
 
         this.basePath = serverUrl + urlPattern;
     }
 
     /**
-     * Get a File by its id
+     * Get a File by its id.
      *
-     * @param id
      * @return null if not found
-     * @throws SQLException
      */
-    public File getFileById(int id) throws SQLException
-    {
+    public File getFileById(int id) throws SQLException {
         File file = cache.get(id);
 
-        if(null != file)
+        if (null != file) {
             return file;
+        }
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE file_id = ?");
         select.setInt(1, id);
         ResultSet rs = select.executeQuery();
-        if(rs.next())
+        if (rs.next()) {
             file = createFile(rs);
+        }
         select.close();
 
         return file;
     }
 
-    public List<File> getFilesByResource(int resourceId) throws SQLException
-    {
+    public List<File> getFilesByResource(int resourceId) throws SQLException {
         List<File> files = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER by resource_file_number, timestamp");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
-        while(rs.next())
+        while (rs.next()) {
             files.add(createFile(rs));
+        }
         select.close();
 
         return files;
     }
 
-    public List<File> getAllFiles() throws SQLException
-    {
+    public List<File> getAllFiles() throws SQLException {
         List<File> files = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE deleted = 0 order by resource_id desc");
 
         ResultSet rs = select.executeQuery();
-        while(rs.next())
+        while (rs.next()) {
             files.add(createFile(rs));
+        }
         select.close();
 
         return files;
@@ -135,55 +130,45 @@ public class FileManager
     /*
     public static void main(String[] args) throws SQLException
     {
-    // delete files which are not stored on the server
-    
-    FileManager fm = Learnweb.getInstance().getFileManager();
-    List<File> files = fm.getAllFiles();
-    
-    HashSet<Integer> set = new HashSet<Integer>();
-    
-    for(File file : files)
-    {
-        if(file.actualFile == null)
-        {
-    
-    	set.add(file.getResourceId());
-    
-    	//fm.delete(file);
+        // delete files which are not stored on the server
+
+        FileManager fm = Learnweb.getInstance().getFileManager();
+        List<File> files = fm.getAllFiles();
+
+        HashSet<Integer> set = new HashSet<Integer>();
+
+        for(File file : files) {
+            if(file.actualFile == null) {
+                set.add(file.getResourceId());
+                // fm.delete(file);
+            }
         }
-    }
-    
-    Iterator<Integer> iter = set.iterator();
-    
-    // delete the resources
-    ResourceManager rm = Learnweb.getInstance().getResourceManager();
-    
-    while(iter.hasNext())
-    {
-        Integer id = iter.next();
-    
-        if(id == 0)
-    	continue;
-    
-        rm.deleteResourcePermanent(id);
-    
-    }
-    
+
+        Iterator<Integer> iter = set.iterator();
+
+        // delete the resources
+        ResourceManager rm = Learnweb.getInstance().getResourceManager();
+
+        while(iter.hasNext()) {
+            Integer id = iter.next();
+
+            if(id == 0)
+            continue;
+
+            rm.deleteResourcePermanent(id);
+        }
     }
     */
 
-    public File save(File file) throws SQLException
-    {
-        if(file.getId() < 0)
+    public File save(File file) throws SQLException {
+        if (file.getId() < 0) {
             throw new IllegalArgumentException("This method can only update existing files");
+        }
 
-        try
-        {
+        try {
 
             return save(file, null);
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             log.error("this should never happen", e);
             throw new RuntimeException(e);
         }
@@ -192,24 +177,19 @@ public class FileManager
     /**
      * Saves the file to the database.
      * If the file is not yet stored at the database, a new record will be created and the returned file contains the new id.
-     *
-     * @param file
-     * @param inputStream
-     * @return
-     * @throws SQLException
-     * @throws IOException
      */
-    public File save(File file, InputStream inputStream) throws SQLException, IOException
-    {
-        if(file.getLastModified() == null)
+    public File save(File file, InputStream inputStream) throws SQLException, IOException {
+        if (file.getLastModified() == null) {
             file.setLastModified(new Date());
+        }
 
         PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_file` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-        if(file.getId() < 0) // the file is not yet stored at the database
+        if (file.getId() < 0) { // the file is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
-        else
+        } else {
             replace.setInt(1, file.getId());
+        }
         replace.setInt(2, file.getResourceId());
         replace.setInt(3, file.getType().ordinal());
         replace.setString(4, file.getName());
@@ -218,11 +198,11 @@ public class FileManager
         replace.setTimestamp(7, Sql.convertDateTime(file.getLastModified()));
         replace.executeUpdate();
 
-        if(file.getId() < 0) // it's a new file -> get the assigned id
-        {
+        if (file.getId() < 0) { // it's a new file -> get the assigned id
             ResultSet rs = replace.getGeneratedKeys();
-            if(!rs.next())
+            if (!rs.next()) {
                 throw new SQLException("database error: no id generated");
+            }
             file.setId(rs.getInt(1));
             file.setActualFile(createActualFile(file));
             file.setUrl(createUrl(file));
@@ -230,8 +210,7 @@ public class FileManager
         }
         replace.close();
 
-        if(inputStream != null)
-        {
+        if (inputStream != null) {
             // copy the data into the file
             OutputStream outputStream = new FileOutputStream(file.getActualFile());
             IOUtils.copy(inputStream, outputStream);
@@ -241,8 +220,7 @@ public class FileManager
         return file;
     }
 
-    public void addFileToResource(File file, Resource resource) throws SQLException
-    {
+    public void addFileToResource(File file, Resource resource) throws SQLException {
         PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_file` SET `resource_id` = ? WHERE file_id = ?");
         update.setInt(1, resource.getId());
         update.setInt(2, file.getId());
@@ -250,15 +228,14 @@ public class FileManager
         update.close();
     }
 
-    public void addFilesToResource(Collection<File> files, Resource resource) throws SQLException
-    {
-        if(files.isEmpty())
+    public void addFilesToResource(Collection<File> files, Resource resource) throws SQLException {
+        if (files.isEmpty()) {
             return;
+        }
 
         List<Integer> fileIds = new ArrayList<>(files.size());
 
-        for(File file : files)
-        {
+        for (File file : files) {
             file.setResourceId(resource.getId());
             fileIds.add(file.getId());
         }
@@ -268,13 +245,11 @@ public class FileManager
         stmt.close();
     }
 
-    public void delete(int fileId) throws SQLException
-    {
+    public void delete(int fileId) throws SQLException {
         delete(getFileById(fileId));
     }
 
-    public void delete(File file) throws SQLException
-    {
+    public void delete(File file) throws SQLException {
         PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_file` SET deleted = 1 WHERE file_id = ?");
         update.setInt(1, file.getId());
         update.executeUpdate();
@@ -282,26 +257,22 @@ public class FileManager
 
         cache.remove(file.getId());
 
-        if(file.exists())
-        {
-            try
-            {
+        if (file.exists()) {
+            try {
                 file.getActualFile().delete();
-            }
-            catch(Throwable e)
-            {
+            } catch (Throwable e) {
                 log.error("Could not delete file: " + file.getId(), e);
             }
         }
     }
 
-    private File createFile(ResultSet rs) throws SQLException
-    {
+    private File createFile(ResultSet rs) throws SQLException {
         int fileId = rs.getInt("file_id");
         File file = cache.get(fileId);
 
-        if(null != file)
+        if (null != file) {
             return file;
+        }
 
         file = new File();
         file.setId(fileId);
@@ -314,14 +285,13 @@ public class FileManager
         file.setUrl(createUrl(file));
         file.setLastModified(new Date(rs.getTimestamp("timestamp").getTime()));
 
-        if(!file.getActualFile().exists())
-        {
+        if (!file.getActualFile().exists()) {
             log.warn("Can't find file '{}' for resource {}", file.getActualFile().getAbsolutePath(), file.getResourceId());
 
             file.setExists(false);
 
             // if(file.getMimeType().startsWith("image/")) {
-            file.setActualFile(fileNotFoundErrorImage);//new java.io.File(folder, "404-no-file.png"));
+            file.setActualFile(fileNotFoundErrorImage); // new java.io.File(folder, "404-no-file.png"));
             file.setMimeType("image/png");
             //}  else file.setActualFile(null);
         }
@@ -330,76 +300,85 @@ public class FileManager
         return file;
     }
 
-    private String createUrl(File file)
-    {
+    private String createUrl(File file) {
         return createUrl(file.getId(), file.getName());
     }
 
     /**
      * This method should have package scope. Retrieve a full File object and use file.getUrl()
-     *
-     * @param fileId
-     * @param fileName
-     * @return
      */
     @Deprecated
-    public String createUrl(int fileId, String fileName)
-    {
+    public String createUrl(int fileId, String fileName) {
         return basePath + fileId + "/" + StringHelper.urlEncode(fileName);
     }
 
     /**
      * Returns the download url for a specific file and appends "thumbnail.png".
      * this method doesn't check if the file exists or the mime type is correct
-     *
-     * @param fileId
-     * @return
      */
-    public String getThumbnailUrl(int fileId, int size)
-    {
+    public String getThumbnailUrl(int fileId, int size) {
         return basePath + fileId + "/thumbnail" + size + ".png";
     }
 
-    private java.io.File createActualFile(File file)
-    {
+    private java.io.File createActualFile(File file) {
         return new java.io.File(folder, file.getId() + ".dat");
     }
 
     /**
-     *
      * @return number of cached objects
      */
-    public int getCacheSize()
-    {
+    public int getCacheSize() {
         return cache.size();
     }
 
-    public static void main(String[] args) throws SQLException
-    {
+    public void resetCache() {
+        cache.clear();
+    }
+
+    public File copy(File source) {
+        File destination = new File();
+        if (source.getName() != null) {
+            destination.setName(source.getName());
+        }
+        if (source.getUrl() != null) {
+            destination.setUrl(source.getUrl());
+        }
+        if (source.getType() != null) {
+            destination.setType(source.getType());
+        }
+        if (source.getLastModified() != null) {
+            destination.setLastModified(source.getLastModified());
+        }
+        if (source.getMimeType() != null) {
+            destination.setMimeType(source.getMimeType());
+        }
+        destination.setResourceId(source.getResourceId());
+        return destination;
+    }
+
+    public static void main(String[] args) throws SQLException {
         URL fileNotFoundResource = FileManager.class.getResource("/resources/images/file-not-found.png");
 
-        if(null == fileNotFoundResource)
+        if (null == fileNotFoundResource) {
             throw new RuntimeException("Can't find file-not-found.png");
+        }
 
         /*
         Learnweb learnweb = Learnweb.getInstance();
-        
+
         findAbandonedFiles();
-        
+
         learnweb.onDestroy();
         */
     }
 
-    protected static void findAbandonedFiles() throws SQLException
-    {
+    protected static void findAbandonedFiles() throws SQLException {
         FileManager fm = Learnweb.getInstance().getFileManager();
 
         PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("update lw_file set missing = 1 where file_id = ?");
 
-        for(File file : fm.getAllFiles())
-        {
-            if(!file.exists())
-            {
+        for (File file : fm.getAllFiles()) {
+            if (!file.exists()) {
 
                 update.setInt(1, file.getId());
                 update.executeUpdate();
@@ -409,28 +388,6 @@ public class FileManager
 
         update.close();
 
-    }
-
-    public void resetCache()
-    {
-        cache.clear();
-    }
-
-    public File copy(File source)
-    {
-        File destination = new File();
-        if(source.getName() != null)
-            destination.setName(source.getName());
-        if(source.getUrl() != null)
-            destination.setUrl(source.getUrl());
-        if(source.getType() != null)
-            destination.setType(source.getType());
-        if(source.getLastModified() != null)
-            destination.setLastModified(source.getLastModified());
-        if(source.getMimeType() != null)
-            destination.setMimeType(source.getMimeType());
-        destination.setResourceId(source.getResourceId());
-        return destination;
     }
 
 }

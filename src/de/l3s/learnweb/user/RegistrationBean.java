@@ -27,8 +27,7 @@ import de.l3s.learnweb.user.Course.Option;
 
 @Named
 @ViewScoped
-public class RegistrationBean extends ApplicationBean implements Serializable
-{
+public class RegistrationBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 4567220515408089722L;
 
     @Size(min = 2, max = 50)
@@ -62,78 +61,62 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
-    public String onLoad() throws IOException, SQLException
-    {
+    public String onLoad() throws IOException, SQLException {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
         locale = viewRoot != null ? viewRoot.getLocale() : externalContext.getRequestLocale();
 
-        if(StringUtils.isNotEmpty(wizard))
-        {
+        if (StringUtils.isNotEmpty(wizard)) {
             course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
-            if(null == course)
-            {
+            if (null == course) {
                 addMessage(FacesMessage.SEVERITY_FATAL, "register_invalid_wizard_error");
                 wizardParamInvalid = true;
-            }
-            else if(course.getOption(Option.Users_Disable_wizard))
-            {
+            } else if (course.getOption(Option.Users_Disable_wizard)) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "registration.wizard_disabled");
                 wizardParamInvalid = true;
-            }
-            else
-            {
+            } else {
                 // special message for yell
-                if(course.getId() == 505)
+                if (course.getId() == 505) {
                     addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
-                else
+                } else {
                     addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
+                }
 
                 mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
                 affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
                 studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
 
-                if(StringUtils.isNotEmpty(fastLogin))
+                if (StringUtils.isNotEmpty(fastLogin)) {
                     return fastLogin();
+                }
             }
-        }
-        else
-        {
+        } else {
             addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
         }
 
         return null;
     }
 
-    private String fastLogin() throws SQLException, IOException
-    {
+    private String fastLogin() throws SQLException, IOException {
         User user = getLearnweb().getUserManager().getUserByUsername(fastLogin);
 
-        if(user != null)
-        {
-            if(user.getPassword() == null && user.isMemberOfCourse(course.getId()))
-            {
+        if (user != null) {
+            if (user.getPassword() == null && user.isMemberOfCourse(course.getId())) {
                 return LoginBean.loginUser(this, user);
-            }
-            else
-            {
+            } else {
                 addMessage(FacesMessage.SEVERITY_FATAL, "You should use password to login.");
                 return "/lw/user/login.xhtml?faces-redirect=true";
             }
-        }
-        else
-        {
+        } else {
             user = getLearnweb().getUserManager().registerUser(fastLogin, null, null, course);
             return LoginBean.loginUser(this, user);
         }
     }
 
-    public String register() throws IOException, SQLException
-    {
+    public String register() throws IOException, SQLException {
         final User user = getLearnweb().getUserManager().registerUser(username, password, email, course);
 
-        if(StringUtils.isNotEmpty(studentId) || StringUtils.isNotEmpty(affiliation))
-        {
+        if (StringUtils.isNotEmpty(studentId) || StringUtils.isNotEmpty(affiliation)) {
             user.setStudentId(studentId);
             user.setAffiliation(affiliation);
             user.setTimeZone(TimeZone.getTimeZone(timeZone.isEmpty() ? "Europa/Berlin" : timeZone));
@@ -142,18 +125,15 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         }
 
         log(Action.register, 0, 0, null, user);
-        if(null != course && course.getDefaultGroupId() != 0)
-        {
+        if (null != course && course.getDefaultGroupId() != 0) {
             user.joinGroup(course.getDefaultGroupId());
             log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId(), null, user);
         }
 
-        if((mailRequired || StringUtils.isNotEmpty(email)) && !user.isEmailConfirmed())
-        {
+        if ((mailRequired || StringUtils.isNotEmpty(email)) && !user.isEmailConfirmed()) {
             user.sendEmailConfirmation();
 
-            if(mailRequired)
-            {
+            if (mailRequired) {
                 confirmRequiredBean.setLoggedInUser(user);
                 return "/lw/user/confirm_required.xhtml?faces-redirect=true";
             }
@@ -162,152 +142,121 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         return LoginBean.loginUser(this, user);
     }
 
-    public void validateUsername(FacesContext context, UIComponent component, Object value) throws SQLException
-    {
+    public void validateUsername(FacesContext context, UIComponent component, Object value) throws SQLException {
         String newName = ((String) value).trim();
 
-        if(newName.length() < 2)
-        {
+        if (newName.length() < 2) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "The username is to short."));
-        }
-        else if(getLearnweb().getUserManager().isUsernameAlreadyTaken(newName))
-        {
+        } else if (getLearnweb().getUserManager().isUsernameAlreadyTaken(newName)) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
         }
     }
 
-    public String getUsername()
-    {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username)
-    {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password)
-    {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getWizard()
-    {
+    public String getWizard() {
         return wizard;
     }
 
-    public void setWizard(String wizard)
-    {
+    public void setWizard(String wizard) {
         this.wizard = wizard;
     }
 
-    public String getFastLogin()
-    {
+    public String getFastLogin() {
         return fastLogin;
     }
 
-    public void setFastLogin(final String fastLogin)
-    {
+    public void setFastLogin(final String fastLogin) {
         this.fastLogin = fastLogin;
     }
 
-    public boolean isMailRequired()
-    {
+    public boolean isMailRequired() {
         return mailRequired;
     }
 
-    public String getAffiliation()
-    {
+    public String getAffiliation() {
         return affiliation;
     }
 
-    public void setAffiliation(String affiliation)
-    {
+    public void setAffiliation(String affiliation) {
         this.affiliation = affiliation;
     }
 
-    public String getStudentId()
-    {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(String studentId)
-    {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 
-    public boolean isAffiliationRequired()
-    {
+    public boolean isAffiliationRequired() {
         return affiliationRequired;
     }
 
-    public boolean isStudentIdRequired()
-    {
+    public boolean isStudentIdRequired() {
         return studentIdRequired;
     }
 
-    public boolean isWizardParamInvalid()
-    {
+    public boolean isWizardParamInvalid() {
         return wizardParamInvalid;
     }
 
-    public ConfirmRequiredBean getConfirmRequiredBean()
-    {
+    public ConfirmRequiredBean getConfirmRequiredBean() {
         return confirmRequiredBean;
     }
 
-    public void setConfirmRequiredBean(final ConfirmRequiredBean confirmRequiredBean)
-    {
+    public void setConfirmRequiredBean(final ConfirmRequiredBean confirmRequiredBean) {
         this.confirmRequiredBean = confirmRequiredBean;
     }
 
-    public boolean isAcceptPrivacyPolicy()
-    {
+    public boolean isAcceptPrivacyPolicy() {
         return acceptPrivacyPolicy;
     }
 
-    public void setAcceptPrivacyPolicy(boolean acceptPrivacyPolicy)
-    {
+    public void setAcceptPrivacyPolicy(boolean acceptPrivacyPolicy) {
         this.acceptPrivacyPolicy = acceptPrivacyPolicy;
     }
 
-    public boolean isAcceptTracking()
-    {
+    public boolean isAcceptTracking() {
         return acceptTracking;
     }
 
-    public void setAcceptTracking(boolean acceptTracking)
-    {
+    public void setAcceptTracking(boolean acceptTracking) {
         this.acceptTracking = acceptTracking;
     }
 
-    public Course getCourse()
-    {
+    public Course getCourse() {
         return course;
     }
 
-    public String getTimeZone()
-    {
+    public String getTimeZone() {
         return timeZone;
     }
 
-    public void setTimeZone(final String preferredTimeZone)
-    {
+    public void setTimeZone(final String preferredTimeZone) {
         this.timeZone = preferredTimeZone;
     }
 

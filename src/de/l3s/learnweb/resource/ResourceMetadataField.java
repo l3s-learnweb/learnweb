@@ -10,15 +10,13 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class ResourceMetadataField implements Serializable
-{
+public class ResourceMetadataField implements Serializable {
     private static final long serialVersionUID = -7698089608547415349L;
 
     /**
-     * Represents primefaces input types
+     * Represents primefaces input types.
      */
-    public enum MetadataType
-    {
+    public enum MetadataType {
         FULLWIDTH_HEADER,
         FULLWIDTH_DESCRIPTION,
         INPUT_TEXT,
@@ -41,109 +39,90 @@ public class ResourceMetadataField implements Serializable
     // cache
     private transient List<SelectItem> optionsList; // options wrapped into select items
 
-    public ResourceMetadataField(final String name, final String label, final MetadataType type)
-    {
+    public ResourceMetadataField(final String name, final String label, final MetadataType type) {
         this.name = name;
         this.label = label;
         this.type = type;
     }
 
-    public ResourceMetadataField(final String name, final String label, final MetadataType type, final boolean required)
-    {
+    public ResourceMetadataField(final String name, final String label, final MetadataType type, final boolean required) {
         this(name, label, type);
         this.required = required;
     }
 
-    public ResourceMetadataField(final String name, final MetadataType type, final boolean moderatorOnly)
-    {
+    public ResourceMetadataField(final String name, final MetadataType type, final boolean moderatorOnly) {
         this(name, name, type);
         this.moderatorOnly = moderatorOnly;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public MetadataType getType()
-    {
+    public MetadataType getType() {
         return type;
     }
 
-    public void setType(MetadataType type)
-    {
+    public void setType(MetadataType type) {
         this.type = type;
     }
 
-    public List<String> getOptions()
-    {
+    public List<String> getOptions() {
         return options;
     }
 
-    public List<SelectItem> getOptionsList()
-    {
-        if(null == optionsList)
-        {
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
+
+    public List<SelectItem> getOptionsList() {
+        if (null == optionsList) {
             optionsList = new ArrayList<>(options.size());
             options.forEach(option -> optionsList.add(new SelectItem(option, option)));
         }
         return optionsList;
     }
 
-    public List<String> completeText(String query)
-    {
-        if(StringUtils.isEmpty(query))
+    public List<String> completeText(String query) {
+        if (StringUtils.isEmpty(query)) {
             return getOptions();
+        }
         return getOptions().stream().filter(option -> StringUtils.containsIgnoreCase(option, query)).collect(Collectors.toList());
     }
 
-    public void setOptions(List<String> options)
-    {
-        this.options = options;
-    }
-
-    public boolean isModeratorOnly()
-    {
+    public boolean isModeratorOnly() {
         return moderatorOnly;
     }
 
-    public void setModeratorOnly(boolean moderatorOnly)
-    {
+    public void setModeratorOnly(boolean moderatorOnly) {
         this.moderatorOnly = moderatorOnly;
     }
 
-    public String getLabel()
-    {
+    public String getLabel() {
         return label;
     }
 
-    public void setLabel(String label)
-    {
+    public void setLabel(String label) {
         this.label = label;
     }
 
-    public String getInfo()
-    {
+    public String getInfo() {
         return info;
     }
 
-    public void setInfo(String info)
-    {
+    public void setInfo(String info) {
         this.info = info;
     }
 
-    public boolean isRequired()
-    {
+    public boolean isRequired() {
         return required;
     }
 
-    public void setRequired(boolean required)
-    {
+    public void setRequired(boolean required) {
         this.required = required;
     }
 

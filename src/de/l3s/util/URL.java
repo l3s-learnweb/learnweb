@@ -6,57 +6,45 @@ import java.nio.charset.StandardCharsets;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 
 /**
- * Stores an URL as ASCII encoded bytes
- * 
- * @author Philipp
+ * Stores an URL as ASCII encoded bytes.
  *
+ * @author Philipp
  */
-public class URL
-{
-    private byte[] url; // the ASCII encoded URL 
+public class URL {
+    private final byte[] url; // the ASCII encoded URL
 
     /**
      * @param url A UTF-8 encoded string
-     * 
-     * @throws URISyntaxException
      */
-    public URL(String url) throws URISyntaxException
-    {
+    public URL(String url) throws URISyntaxException {
         this.url = UrlHelper.toAscii(url).getBytes(StandardCharsets.US_ASCII);
     }
 
     /**
-     * 
      * @param url an ASCII encoded URL
      */
-    public URL(byte[] url)
-    {
+    public URL(byte[] url) {
         this.url = url;
     }
 
     /**
-     * Returns an ASCII encoded string
+     * Returns an ASCII encoded string.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new String(url, StandardCharsets.US_ASCII);
     }
 
     /**
-     * Returns an UTf8 encoded String
-     * 
-     * @return
+     * Returns an UTf8 encoded String.
      */
-    public String toUTF8String()
-    {
+    public String toUTF8String() {
         throw new NotImplementedException("");
         // TODO decode puny and percent-encoding
         //return new String(url, StandardCharsets.US_ASCII);
     }
 
-    public byte[] getBytes()
-    {
+    public byte[] getBytes() {
         return url;
     }
 

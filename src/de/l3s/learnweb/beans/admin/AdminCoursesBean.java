@@ -24,8 +24,7 @@ import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
-public class AdminCoursesBean extends ApplicationBean implements Serializable
-{
+public class AdminCoursesBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -5469152668344315959L;
     private static final Logger log = LogManager.getLogger(AdminCoursesBean.class);
 
@@ -38,27 +37,24 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
     @Length(min = 2, max = 50)
     private String newOrganisationTitle;
 
-    public AdminCoursesBean() throws SQLException
-    {
+    public AdminCoursesBean() throws SQLException {
         load();
     }
 
-    private void load() throws SQLException
-    {
-        if(getUser().isAdmin())
+    private void load() throws SQLException {
+        if (getUser().isAdmin()) {
             courses = new ArrayList<>(getLearnweb().getCourseManager().getCoursesAll());
-        else if(getUser().isModerator())
+        } else if (getUser().isModerator()) {
             courses = new ArrayList<>(getUser().getOrganisation().getCourses());
-        else
+        } else {
             return;
+        }
 
         Collections.sort(courses);
     }
 
-    public void onCreateCourse()
-    {
-        try
-        {
+    public void onCreateCourse() {
+        try {
             User user = getUser();
 
             Course course = new Course();
@@ -69,17 +65,13 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
             course.addUser(user);
             addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
             load(); // update course list
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void onDeleteCourse(Course course)
-    {
-        try
-        {
+    public void onDeleteCourse(Course course) {
+        try {
             List<User> undeletedUsers = getLearnweb().getCourseManager().deleteHard(course, getUser().isAdmin());
 
             log.info("Deleted course " + course);
@@ -87,17 +79,13 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
             addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been deleted. " + (undeletedUsers.isEmpty() ? "" : "But " + undeletedUsers.size() + " were not deleted because they are member of other courses."));
 
             load(); // update course list
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void onAnonymiseCourse(Course course)
-    {
-        try
-        {
+    public void onAnonymiseCourse(Course course) {
+        try {
             getLearnweb().getCourseManager().anonymize(course);
 
             log.info("Anonymized course " + course);
@@ -105,19 +93,15 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
             addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been anonymized.");
 
             load(); // update course list
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void onCreateOrganisation() throws SQLException
-    {
+    public void onCreateOrganisation() throws SQLException {
         OrganisationManager om = getLearnweb().getOrganisationManager();
 
-        if(om.getOrganisationByTitle(newOrganisationTitle) != null)
-        {
+        if (om.getOrganisationByTitle(newOrganisationTitle) != null) {
             addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
             return;
         }
@@ -127,28 +111,23 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
         load(); // update course list
     }
 
-    public List<Course> getCourses()
-    {
+    public List<Course> getCourses() {
         return courses;
     }
 
-    public String getNewCourseTitle()
-    {
+    public String getNewCourseTitle() {
         return newCourseTitle;
     }
 
-    public void setNewCourseTitle(String newCourseTitle)
-    {
+    public void setNewCourseTitle(String newCourseTitle) {
         this.newCourseTitle = newCourseTitle;
     }
 
-    public String getNewOrganisationTitle()
-    {
+    public String getNewOrganisationTitle() {
         return newOrganisationTitle;
     }
 
-    public void setNewOrganisationTitle(String newOrganisationTitle)
-    {
+    public void setNewOrganisationTitle(String newOrganisationTitle) {
         this.newOrganisationTitle = newOrganisationTitle;
     }
 }

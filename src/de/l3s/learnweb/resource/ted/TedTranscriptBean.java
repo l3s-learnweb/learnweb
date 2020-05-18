@@ -41,8 +41,7 @@ import de.l3s.util.NlpHelper;
 
 @Named
 @ViewScoped
-public class TedTranscriptBean extends ApplicationBean implements Serializable
-{
+public class TedTranscriptBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -1803725556672379697L;
     private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
 
@@ -71,23 +70,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     //private int selectedCourseId;
     private TreeSet<Integer> selectedUsers;
 
-    public void onLoad() throws SQLException
-    {
-        if(isAjaxRequest())
-            return;
-
-        if(resourceId > 0)
-        {
-            Resource resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-            setTedResource(resource);
-        }
-    }
-
-    public TedTranscriptBean()
-    {
+    public TedTranscriptBean() {
         User user = getUser();
-        if(user == null) // not logged in
+        if (user == null) { // not logged in
             return;
+        }
 
         locale = getUserBean().getLocaleCode();
 
@@ -98,86 +85,82 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         selectedUsers = new TreeSet<>();
     }
 
-    public Resource getTedResource()
-    {
+    public void onLoad() throws SQLException {
+        if (isAjaxRequest()) {
+            return;
+        }
+
+        if (resourceId > 0) {
+            Resource resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+            setTedResource(resource);
+        }
+    }
+
+    public Resource getTedResource() {
         return tedResource;
     }
 
-    public void setTedResource(Resource tedResource)
-    {
+    public void setTedResource(Resource tedResource) {
         this.tedResource = tedResource;
 
-        try
-        {
-            if(tedResource.getSource() == ResourceService.ted)
+        try {
+            if (tedResource.getSource() == ResourceService.ted) {
                 this.videoResourceId = Learnweb.getInstance().getTedManager().getTedVideoResourceId(tedResource.getUrl());
-            else if(tedResource.getSource() == ResourceService.tedx)
+            } else if (tedResource.getSource() == ResourceService.tedx) {
                 this.videoResourceId = Learnweb.getInstance().getTedManager().getTedXVideoResourceId(tedResource.getUrl());
-        }
-        catch(SQLException e)
-        {
+            }
+        } catch (SQLException e) {
             addErrorMessage(e);
             log.error("Error while retrieving TED video id", e);
         }
 
-        if(tedResource.getSource() == ResourceService.tedx)
+        if (tedResource.getSource() == ResourceService.tedx) {
             //this.tedResource.setEmbeddedRaw("<iframe width='100%' height='100%' src='https://www.youtube-nocookie.com/embed/" + tedResource.getIdAtService() + "' frameborder='0' scrolling='no' allowfullscreen></iframe>");
             this.tedResource.setEmbeddedRaw(tedResource.getEmbeddedRaw().replace("width=\"500\" height=\"400\"", "width='100%' height='100%'"));
+        }
         String transcript = tedResource.getTranscript();
         noteId = 0;
 
-        if(StringUtils.isNotEmpty(transcript))
-        {
+        if (StringUtils.isNotEmpty(transcript)) {
             Document doc = Jsoup.parse(transcript);
             Elements elements = doc.select("span");
-            for(Element element : elements)
-            {
+            for (Element element : elements) {
                 element.attr("id", Integer.toString(++noteId));
             }
 
-            if(tedResource.getType() != ResourceType.website)
-            {
+            if (tedResource.getType() != ResourceType.website) {
                 tedResource.setTranscript(doc.getElementsByTag("body").html());
             }
 
-        }
-        else
-        {
+        } else {
             transcriptLanguage = "en";
             setTranscript();
         }
 
-        try
-        {
+        try {
             HashMap<SummaryType, String> summaries = Learnweb.getInstance().getTedManager().getTranscriptSummariesForResource(resourceId);
-            for(Entry<SummaryType, String> e : summaries.entrySet())
-            {
-                if(e.getKey() == SummaryType.SHORT)
+            for (Entry<SummaryType, String> e : summaries.entrySet()) {
+                if (e.getKey() == SummaryType.SHORT) {
                     summaryTextS = e.getValue();
-                else if(e.getKey() == SummaryType.LONG)
+                } else if (e.getKey() == SummaryType.LONG) {
                     summaryTextM = e.getValue();
-                else if(e.getKey() == SummaryType.DETAILED)
+                } else if (e.getKey() == SummaryType.DETAILED) {
                     summaryTextL = e.getValue();
+                }
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
             log.error("Error while retrieving summaries for particular TED resource: " + resourceId, e);
         }
     }
 
-    public void setTranscript()
-    {
-        try
-        {
+    public void setTranscript() {
+        try {
             String transcript = Learnweb.getInstance().getTedManager().getTranscript(videoResourceId, transcriptLanguage);
             transcript = transcript.replaceAll("\n", "<br/><br/>");
             Document doc = Jsoup.parse(transcript);
             tedResource.setTranscript(doc.getElementsByTag("body").html());
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
             log.error("Error while fetching transcript for ted video id: " + videoResourceId + "; language: " + transcriptLanguage, e);
         }
@@ -185,21 +168,17 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     /**
      * Saves the changes in the TED transcript such as selections and user annotations;
-     * Also logs the 'save' event
+     * Also logs the 'save' event.
      */
-    public void processActionSaveResource()
-    {
+    public void processActionSaveResource() {
         String transcript = getParameter("transcript");
         tedResource.setTranscript(transcript);
-        try
-        {
+        try {
             Date actionTimestamp = new Date();
             tedResource.save();
             TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), "", "", "save transcript", actionTimestamp);
             getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
             log.error("Error while saving transcript changes for ted resource: " + tedResource.getId(), e);
         }
@@ -209,23 +188,19 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     /**
      * Submits the transcript of a TED resource for final evaluation;
-     * Saves the 'submit' event and also the final selections in lw_transcript_selections
+     * Saves the 'submit' event and also the final selections in lw_transcript_selections.
      */
-    public void processActionSubmitResource()
-    {
+    public void processActionSubmitResource() {
         String transcript = getParameter("transcript");
         tedResource.setTranscript(transcript);
         tedResource.setReadOnlyTranscript(true);
-        try
-        {
+        try {
             Date actionTimestamp = new Date();
             tedResource.save();
             TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), "", "", "submit transcript", actionTimestamp);
             getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
             getLearnweb().getTedManager().saveTranscriptSelection(transcript, tedResource.getId());
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
             log.error("Error while submitting TED resource: " + tedResource.getId(), e);
         }
@@ -234,12 +209,10 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     }
 
     /**
-     * Stores a transcript action such as selection, de-selection, user annotation
+     * Stores a transcript action such as selection, de-selection, user annotation.
      */
-    public void processActionSaveLog()
-    {
-        try
-        {
+    public void processActionSaveLog() {
+        try {
             Date actionTimestamp = new Date();
 
             String word = getParameter("word");
@@ -248,283 +221,229 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
             TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), word, userAnnotation, action, actionTimestamp);
             getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
             log.error("Error while storing transcription action", e);
         }
     }
 
     /**
-     * Retrieves the set of synonyms from WordNet for given selection of word
+     * Retrieves the set of synonyms from WordNet for given selection of word.
      */
-    public void processActionSetSynonyms()
-    {
+    public void processActionSetSynonyms() {
         String words = getParameter("word");
         StringBuilder synonymsList = new StringBuilder();
         int wordCount = SPACES.split(words.trim()).length;
 
-        if(wordCount <= 5)
-        {
+        if (wordCount <= 5) {
             ArrayList<String> definitions = NlpHelper.getRitaWordnetDefinitions(words);
-            
-            for(String definition : definitions)
+
+            for (String definition : definitions) {
                 synonymsList.append(definition).append("&lt;br/&gt;");
+            }
 
-            if(definitions.isEmpty() && wordCount == 1)
+            if (definitions.isEmpty() && wordCount == 1) {
                 synonymsList.append(getLocaleMessage("No definition available"));
-            else if(synonymsList.length() == 0)
+            } else if (synonymsList.length() == 0) {
                 synonymsList.append(getLocaleMessage("Multiple"));
+            }
             PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList.toString());
-        }
-        else
+        } else {
             PrimeFaces.current().ajax().addCallbackParam("synonyms", "multiple");
+        }
     }
 
-    public void submitShortSummary()
-    {
-        if(summaryTextS != null && !summaryTextS.isEmpty())
-        {
-            try
-            {
+    public void submitShortSummary() {
+        if (summaryTextS != null && !summaryTextS.isEmpty()) {
+            try {
                 getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryTextS, SummaryType.SHORT);
-            }
-            catch(SQLException e)
-            {
+            } catch (SQLException e) {
                 addErrorMessage(e);
             }
         }
     }
 
-    public void submitLongSummary()
-    {
-        if(summaryTextM != null && !summaryTextM.isEmpty())
-        {
-            try
-            {
+    public void submitLongSummary() {
+        if (summaryTextM != null && !summaryTextM.isEmpty()) {
+            try {
                 getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryTextM, SummaryType.LONG);
-            }
-            catch(SQLException e)
-            {
+            } catch (SQLException e) {
                 addErrorMessage(e);
             }
         }
     }
 
-    public void submitDetailedSummary()
-    {
-        if(summaryTextL != null && !summaryTextL.isEmpty())
-        {
-            try
-            {
+    public void submitDetailedSummary() {
+        if (summaryTextL != null && !summaryTextL.isEmpty()) {
+            try {
                 getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryTextL, SummaryType.DETAILED);
-            }
-            catch(SQLException e)
-            {
+            } catch (SQLException e) {
                 addErrorMessage(e);
             }
         }
     }
 
-    public String getTranscriptLanguage()
-    {
+    public String getTranscriptLanguage() {
         return transcriptLanguage;
     }
 
-    public void setTranscriptLanguage(String transcriptLanguage)
-    {
+    public void setTranscriptLanguage(String transcriptLanguage) {
         this.transcriptLanguage = transcriptLanguage;
     }
 
-    public List<SelectItem> getLanguageList()
-    {
-        try
-        {
-            if(!locale.equals(getUserBean().getLocaleCode()))
-            {
+    public List<SelectItem> getLanguageList() {
+        try {
+            if (!locale.equals(getUserBean().getLocaleCode())) {
                 languageList = null;
                 locale = getUserBean().getLocaleCode();
             }
 
-            if(languageList == null)
-            {
+            if (languageList == null) {
                 Map<String, String> langList;
                 languageList = new LinkedList<>();
                 langList = Learnweb.getInstance().getTedManager().getLangList(videoResourceId);
 
-                if(!langList.isEmpty())
-                {
+                if (!langList.isEmpty()) {
                     String langFromPropFile;
 
-                    for(Entry<String, String> entry : langList.entrySet())
-                    {
+                    for (Entry<String, String> entry : langList.entrySet()) {
                         langFromPropFile = getLocaleMessage("language_" + entry.getValue());
-                        if(langFromPropFile == null)
+                        if (langFromPropFile == null) {
                             langFromPropFile = entry.getKey();
+                        }
 
                         languageList.add(new SelectItem(entry.getValue(), langFromPropFile));
                     }
                     languageList.sort(languageComparator());
-                }
-                else
-                {
+                } else {
                     languageList.add(new SelectItem("NA", "No Transcripts Available"));
                 }
 
             }
 
-        }
-        catch(SQLException | RuntimeException e)
-        {
+        } catch (SQLException | RuntimeException e) {
             addErrorMessage(e);
         }
         return languageList;
     }
 
-    public int getNoteId()
-    {
+    public int getNoteId() {
         return noteId;
     }
 
     /**
-     * Returns detailed transcript logs for selected users
-     *
-     * @throws SQLException
+     * Returns detailed transcript logs for selected users.
      */
-    public List<TranscriptLog> getTranscriptLogs() throws SQLException
-    {
-        if(detailedTranscriptLogs == null)
+    public List<TranscriptLog> getTranscriptLogs() throws SQLException {
+        if (detailedTranscriptLogs == null) {
             detailedTranscriptLogs = getLearnweb().getTedManager().getTranscriptLogs(selectedUsers, showDeletedResources);
+        }
         return detailedTranscriptLogs;
     }
 
-    public TreeSet<Integer> getSelectedUsers() throws SQLException
-    {
+    public TreeSet<Integer> getSelectedUsers() throws SQLException {
         HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
         String[] tempSelectedUsers = request.getParameterValues("selected_users");
 
-        if(null == tempSelectedUsers || tempSelectedUsers.length == 0)
-        {
+        if (null == tempSelectedUsers || tempSelectedUsers.length == 0) {
             addMessage(FacesMessage.SEVERITY_WARN, "select_user");
             return null;
         }
 
         TreeSet<Integer> selectedUsersSet = new TreeSet<>();
-        for(String userId : tempSelectedUsers)
+        for (String userId : tempSelectedUsers) {
             selectedUsersSet.add(Integer.parseInt(userId));
+        }
 
         return selectedUsersSet;
     }
 
-    public void onSubmitSelectedUsers()
-    {
-        try
-        {
+    public void onSubmitSelectedUsers() {
+        try {
             this.selectedUsers = getSelectedUsers();
             resetTranscriptLogs();
             resetTranscriptSummaries();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
         }
     }
 
     /**
-     * Returns transcript logs of selected users aggregating selection, deselection and user annotation counts
-     *
-     * @throws SQLException
+     * Returns transcript logs of selected users aggregating selection, deselection and user annotation counts.
      */
-    public List<SimpleTranscriptLog> getSimpleTranscriptLogs() throws SQLException
-    {
-        if(simpleTranscriptLogs == null)
+    public List<SimpleTranscriptLog> getSimpleTranscriptLogs() throws SQLException {
+        if (simpleTranscriptLogs == null) {
             simpleTranscriptLogs = getLearnweb().getTedManager().getSimpleTranscriptLogs(selectedUsers, showDeletedResources);
+        }
         return simpleTranscriptLogs;
     }
 
     /**
-     * Returns transcript summaries of selected users
-     *
-     * @throws SQLException
+     * Returns transcript summaries of selected users.
      */
-    public List<TranscriptSummary> getTranscriptSummaries() throws SQLException
-    {
-        if(transcriptSummaries == null)
+    public List<TranscriptSummary> getTranscriptSummaries() throws SQLException {
+        if (transcriptSummaries == null) {
             transcriptSummaries = getLearnweb().getTedManager().getTranscriptSummaries(selectedUsers);
+        }
         return transcriptSummaries;
     }
 
-    public int getResourceId()
-    {
+    public int getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(int resourceId)
-    {
+    public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
     }
 
-    public List<Course> getCourses() throws SQLException
-    {
+    public List<Course> getCourses() throws SQLException {
         return getUser().getCourses();
     }
 
-    public static Comparator<SelectItem> languageComparator()
-    {
-        return Comparator.comparing(SelectItem::getLabel);
-    }
-
-    public boolean isShowDeletedResources()
-    {
+    public boolean isShowDeletedResources() {
         return showDeletedResources;
     }
 
-    public void setShowDeletedResources(boolean showDeletedResources)
-    {
+    public void setShowDeletedResources(boolean showDeletedResources) {
         this.showDeletedResources = showDeletedResources;
         setPreference("transcript_show_del_res", Boolean.toString(showDeletedResources));
     }
 
-    public void resetTranscriptLogs()
-    {
+    public void resetTranscriptLogs() {
         simpleTranscriptLogs = null;
         detailedTranscriptLogs = null;
     }
 
-    public void resetTranscriptSummaries()
-    {
+    public void resetTranscriptSummaries() {
         transcriptSummaries = null;
     }
 
-    public String getSummaryTextS()
-    {
+    public String getSummaryTextS() {
         return summaryTextS;
     }
 
-    public void setSummaryTextS(String summaryTextS)
-    {
+    public void setSummaryTextS(String summaryTextS) {
         this.summaryTextS = summaryTextS;
     }
 
-    public String getSummaryTextM()
-    {
+    public String getSummaryTextM() {
         return summaryTextM;
     }
 
-    public void setSummaryTextM(String summaryTextM)
-    {
+    public void setSummaryTextM(String summaryTextM) {
         this.summaryTextM = summaryTextM;
     }
 
-    public String getSummaryTextL()
-    {
+    public String getSummaryTextL() {
         return summaryTextL;
     }
 
-    public void setSummaryTextL(String summaryTextL)
-    {
+    public void setSummaryTextL(String summaryTextL) {
         this.summaryTextL = summaryTextL;
+    }
+
+    public static Comparator<SelectItem> languageComparator() {
+        return Comparator.comparing(SelectItem::getLabel);
     }
 
 }

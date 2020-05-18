@@ -28,14 +28,11 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.util.StringHelper;
 
-public class TagthewebClient
-{
+public class TagthewebClient {
     private static final Logger log = LogManager.getLogger(TagthewebClient.class);
 
-    private static String requestCategories(final String text, final String language) throws IOException
-    {
-        try(CloseableHttpClient httpClient = HttpClientBuilder.create().useSystemProperties().build())
-        {
+    private static String requestCategories(final String text, final String language) throws IOException {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().useSystemProperties().build()) {
             HttpPost httpPost = new HttpPost("http://tagtheweb.com.br/wiki/getFingerPrint.php");
             httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
@@ -46,10 +43,8 @@ public class TagthewebClient
             params.add(new BasicNameValuePair("depth", "0"));
             httpPost.setEntity(new UrlEncodedFormEntity(params, Consts.UTF_8));
 
-            try(CloseableHttpResponse response = httpClient.execute(httpPost))
-            {
-                if(response.getStatusLine().getStatusCode() == 200)
-                {
+            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
+                if (response.getStatusLine().getStatusCode() == 200) {
                     return EntityUtils.toString(response.getEntity());
                 }
 
@@ -60,18 +55,14 @@ public class TagthewebClient
         }
     }
 
-    public static Map<String, Double> getCategories(final String text, final String language) throws IOException
-    {
+    public static Map<String, Double> getCategories(final String text, final String language) throws IOException {
         Map<String, Double> categories = new HashMap<>();
         String jsonResults = requestCategories(text, language);
-        if(jsonResults != null)
-        {
+        if (jsonResults != null) {
             JSONObject resultsJson = new JSONObject(jsonResults);
-            for(String key : resultsJson.keySet())
-            {
+            for (String key : resultsJson.keySet()) {
                 double value = resultsJson.getDouble(key);
-                if(value > 0.0d)
-                {
+                if (value > 0.0d) {
                     categories.put(key, value);
                 }
             }
@@ -80,24 +71,22 @@ public class TagthewebClient
         return categories;
     }
 
-    public static Map<String, Double> getTopCategories(final String text, final String language) throws IOException
-    {
+    public static Map<String, Double> getTopCategories(final String text, final String language) throws IOException {
         return getTopCategories(text, language, 5);
     }
 
-    public static Map<String, Double> getTopCategories(final String text, final String language, final int limit) throws IOException
-    {
+    public static Map<String, Double> getTopCategories(final String text, final String language, final int limit) throws IOException {
         Map<String, Double> categories = getCategories(text, language);
-        if(categories.size() <= 5)
+        if (categories.size() <= 5) {
             return categories;
+        }
 
         List<Map.Entry<String, Double>> entryList = new ArrayList<>(categories.entrySet());
         entryList.sort(Comparator.comparingDouble(Map.Entry::getValue));
         return entryList.subList(0, limit).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException
-    {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Learnweb learnweb = Learnweb.createInstance();
         ResourceManager rm = new ResourceManager(learnweb);
 
@@ -106,16 +95,12 @@ public class TagthewebClient
 
         log.info("Total resources found " + resources.size());
 
-        for(Resource resource : resources)
-        {
-            try
-            {
+        for (Resource resource : resources) {
+            try {
                 Map<String, Double> currentCategories = rm.getCategoriesByResource(resource.getId());
 
-                if(currentCategories.isEmpty())
-                {
-                    if(StringUtils.isEmpty(resource.getMachineDescription()))
-                    {
+                if (currentCategories.isEmpty()) {
+                    if (StringUtils.isEmpty(resource.getMachineDescription())) {
                         log.info("Starting getting resource metadata " + resource.getId());
                         learnweb.getResourceMetadataExtractor().processResource(resource);
 
@@ -123,29 +108,23 @@ public class TagthewebClient
                         resource.save();
                     }
 
-                    if(StringUtils.isNotEmpty(resource.getMachineDescription()))
-                    {
+                    if (StringUtils.isNotEmpty(resource.getMachineDescription())) {
                         log.info("Getting categories of resource " + resource.getId());
                         String text = StringHelper.shortnString(resource.getMachineDescription(), 1000);
 
                         log.info("Retrieving categories from TagTheWeb");
                         Map<String, Double> categories = getCategories(text, "en");
                         log.info("Retrieved " + categories.size() + " categories.");
-                        for(Map.Entry<String, Double> category : categories.entrySet())
-                        {
+                        for (Map.Entry<String, Double> category : categories.entrySet()) {
                             rm.addCategory(resource, category.getKey(), category.getValue());
                         }
 
                         log.info(categories.size() + " categories were added to resource " + resource.getId());
-                    }
-                    else
-                    {
+                    } else {
                         log.warn("No description for resource " + resource.getId());
                     }
                 }
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 log.error("Error found ", e);
             }
         }

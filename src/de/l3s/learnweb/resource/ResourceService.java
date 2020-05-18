@@ -2,8 +2,7 @@ package de.l3s.learnweb.resource;
 
 import java.util.regex.Pattern;
 
-public enum ResourceService // when adding more services remember to update the service column of learnweb_large.sl_query
-{
+public enum ResourceService { // when adding more services remember to update the service column of learnweb_large.sl_query
     bing("Bing"), // Does not support filtering by date
     flickr("Flickr"),
     youtube("YouTube"),
@@ -24,23 +23,12 @@ public enum ResourceService // when adding more services remember to update the 
 
     private final String label;
 
-    ResourceService(String label)
-    {
+    ResourceService(String label) {
         this.label = label;
     }
 
-    /**
-     * Same as valueOf(), but removes spaces and dashes, also case insensitive.
-     */
-    public static ResourceService parse(String value)
-    {
-        return valueOf(Pattern.compile("[ -]").matcher(value.toLowerCase()).replaceAll(""));
-    }
-
-    public boolean isInterweb()
-    {
-        switch(this)
-        {
+    public boolean isInterweb() {
+        switch (this) {
             case bing:
             case flickr:
             case youtube:
@@ -53,14 +41,19 @@ public enum ResourceService // when adding more services remember to update the 
         }
     }
 
-    public String getLabel()
-    {
+    public String getLabel() {
         return label;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return label;
+    }
+
+    /**
+     * Same as valueOf(), but removes spaces and dashes, also case insensitive.
+     */
+    public static ResourceService parse(String value) {
+        return valueOf(Pattern.compile("[ -]").matcher(value.toLowerCase()).replaceAll(""));
     }
 }

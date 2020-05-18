@@ -15,8 +15,7 @@ import de.l3s.learnweb.user.User;
  */
 @Named
 @ViewScoped
-public class YourPersonalInfoBean extends ApplicationBean implements Serializable
-{
+public class YourPersonalInfoBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 6016324259224515500L;
     //private static final Logger log = LogManager.getLogger(YourPersonalInfoBean.class);
 
@@ -28,95 +27,78 @@ public class YourPersonalInfoBean extends ApplicationBean implements Serializabl
     private String userOrganisation;
     private String userProfession;
 
-    public YourPersonalInfoBean() throws SQLException
-    {
+    public YourPersonalInfoBean() throws SQLException {
         User user = getUser();
-        if(null == user)
-            // when not logged in
+        if (null == user) { // when not logged in
             return;
+        }
 
         // TODO use a helper method to get rid of all these if statements
 
         this.fullName = user.getFullName();
-        if(null == fullName)
-        {
+        if (null == fullName) {
             this.fullName = "N/A";
         }
 
         this.address = user.getAddress();
-        if(null == address)
-        {
+        if (null == address) {
             this.address = "N/A";
         }
 
         Date birthDate = user.getDateOfBirth();
-        if(null != birthDate)
-        {
+        if (null != birthDate) {
             this.dateOfBirth = birthDate.toString(); // TODO this is bad. USe HSF date formatting
-        }
-        else
-        {
+        } else {
             this.dateOfBirth = "N/A";
         }
 
         this.studentId = user.getStudentId();
-        if(null == studentId)
-        {
+        if (null == studentId) {
             this.studentId = "N/A";
         }
 
         this.userImage = user.getImage();
 
         this.userOrganisation = user.getOrganisation().getTitle();
-        if(null == userOrganisation)
-        {
+        if (null == userOrganisation) {
             this.userOrganisation = "N/A";
         }
 
         this.userProfession = user.getProfession();
-        if(null == userProfession || userProfession.isEmpty())
-        {
+        if (null == userProfession || userProfession.isEmpty()) {
             this.userProfession = "N/A";
         }
     }
 
-    public String getFullName()
-    {
+    public String getFullName() {
         return this.fullName;
     }
 
-    public String getAddress()
-    {
+    public String getAddress() {
         return this.address;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return this.getUser().getEmail();
     }
 
-    public String getDateOfBirth()
-    {
+    public String getDateOfBirth() {
         return this.dateOfBirth;
     }
 
-    public String getStudentId()
-    {
+    public String getStudentId() {
         return this.studentId;
     }
 
-    public String getUserImage()
-    {
+    public String getUserImage() {
         return this.userImage;
     }
 
-    public String getUserOrganisation()
-    {
+    public String getUserOrganisation() {
         return userOrganisation;
     }
 
-    public String getUserProfession()
-    {
+    public String getUserProfession() {
         return userProfession;
     }
 }

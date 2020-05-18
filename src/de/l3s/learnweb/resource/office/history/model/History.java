@@ -4,8 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class History
-{
+public class History {
     // only used to store and retrieve data from database
     private Integer id;
     private Integer resourceId;
@@ -21,131 +20,106 @@ public class History
     private JsonObject user;
     private String serverVersion;
 
-    public Integer getId()
-    {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(final Integer id)
-    {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
-    public Integer getResourceId()
-    {
+    public Integer getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(final Integer resourceId)
-    {
+    public void setResourceId(final Integer resourceId) {
         this.resourceId = resourceId;
     }
 
-    public Integer getFileId()
-    {
+    public Integer getFileId() {
         return fileId;
     }
 
-    public void setFileId(final Integer fileId)
-    {
+    public void setFileId(final Integer fileId) {
         this.fileId = fileId;
     }
 
-    public Integer getPrevFileId()
-    {
+    public Integer getPrevFileId() {
         return prevFileId;
     }
 
-    public void setPrevFileId(final Integer prevFileId)
-    {
+    public void setPrevFileId(final Integer prevFileId) {
         this.prevFileId = prevFileId;
     }
 
-    public Integer getChangesFileId()
-    {
+    public Integer getChangesFileId() {
         return changesFileId;
     }
 
-    public void setChangesFileId(final Integer changesFileId)
-    {
+    public void setChangesFileId(final Integer changesFileId) {
         this.changesFileId = changesFileId;
     }
 
-    public JsonArray getChanges()
-    {
+    public JsonArray getChanges() {
         return changes;
     }
 
-    public void setChanges(final JsonArray changes)
-    {
+    public void setChanges(final JsonArray changes) {
         this.changes = changes;
     }
 
-    public void setChanges(final String changes)
-    {
+    public void setChanges(final String changes) {
         this.changes = JsonParser.parseString(changes).getAsJsonArray();
     }
 
-    public String getCreated()
-    {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(final String created)
-    {
+    public void setCreated(final String created) {
         this.created = created;
     }
 
-    public String getKey()
-    {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(final String key)
-    {
+    public void setKey(final String key) {
         this.key = key;
     }
 
-    public Integer getVersion()
-    {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(final Integer version)
-    {
+    public void setVersion(final Integer version) {
         this.version = version;
     }
 
-    public JsonObject getUser()
-    {
+    public JsonObject getUser() {
         return user;
     }
 
-    public void setUser(final JsonObject user)
-    {
+    public void setUser(final JsonObject user) {
         this.user = user;
     }
 
-    public void setUser(final int userId)
-    {
+    public void setUser(final int userId) {
         this.user = new JsonObject();
         this.user.addProperty("id", String.valueOf(userId));
     }
 
-    public void setUser(final String userId, final String name)
-    {
+    public void setUser(final String userId, final String name) {
         this.user = new JsonObject();
         this.user.addProperty("id", userId);
         this.user.addProperty("name", name);
     }
 
-    public String getServerVersion()
-    {
+    public String getServerVersion() {
         return serverVersion;
     }
 
-    public void setServerVersion(final String serverVersion)
-    {
+    public void setServerVersion(final String serverVersion) {
         this.serverVersion = serverVersion;
     }
 }

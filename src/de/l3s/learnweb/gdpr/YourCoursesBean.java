@@ -16,25 +16,22 @@ import de.l3s.learnweb.user.User;
  */
 @Named
 @ViewScoped
-public class YourCoursesBean extends ApplicationBean implements Serializable
-{
+public class YourCoursesBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 2345329598608998027L;
     //private static final Logger log = LogManager.getLogger(YourCoursesBean.class);
 
     private List<Course> courses;
 
-    public YourCoursesBean() throws SQLException
-    {
+    public YourCoursesBean() throws SQLException {
         User user = getUser();
-        if(null == user)
-            // when not logged in
+        if (null == user) { // when not logged in
             return;
+        }
 
         courses = user.getCourses();
     }
 
-    public List<Course> getUserCourses()
-    {
+    public List<Course> getUserCourses() {
         return courses;
     }
 }

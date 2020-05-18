@@ -13,65 +13,58 @@ import de.l3s.learnweb.user.Organisation.Option;
 
 @Named
 @RequestScoped
-public class UserDetailBean extends ApplicationBean
-{
+public class UserDetailBean extends ApplicationBean {
     //private static final Logger log = LogManager.getLogger(UserDetailBean.class);
 
-    private static final Action[] filter = { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_changing_description, Action.group_changing_leader,
-            Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
-            Action.changing_office_resource };
+    private static final Action[] USER_ACTIONS = {Action.adding_resource, Action.commenting_resource, Action.edit_resource,
+        Action.deleting_resource, Action.group_changing_description, Action.group_changing_leader, Action.group_changing_restriction,
+        Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving,
+        Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.changing_office_resource};
 
     private int userId;
     private User selectedUser;
     private boolean pageHidden = false; // true when the course uses username anonymization
     private List<LogEntry> latestLogEntries;
 
-    public void onLoad() throws SQLException
-    {
-        if(getUser() == null)
+    public void onLoad() throws SQLException {
+        if (getUser() == null) {
             return;
+        }
 
         selectedUser = getLearnweb().getUserManager().getUser(userId);
 
-        if(null == selectedUser)
-        {
+        if (null == selectedUser) {
             addInvalidParameterMessage("user_id");
             return;
         }
 
-        if(selectedUser.getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
+        if (selectedUser.getOrganisation().getOption(Option.Privacy_Anonymize_usernames)) {
             pageHidden = true;
+        }
 
-        latestLogEntries = getLearnweb().getLogManager().getLogsByUser(userId, filter, 50);
+        latestLogEntries = getLearnweb().getLogManager().getLogsByUser(userId, USER_ACTIONS, 50);
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public User getSelectedUser()
-    {
+    public User getSelectedUser() {
         return selectedUser;
     }
 
     /**
-     * true when the course uses username anonymization
-     *
-     * @return
+     * true when the course uses username anonymization.
      */
-    public boolean isPageHidden()
-    {
+    public boolean isPageHidden() {
         return pageHidden;
     }
 
-    public List<LogEntry> getLatestLogEntries()
-    {
+    public List<LogEntry> getLatestLogEntries() {
         return latestLogEntries;
     }
 

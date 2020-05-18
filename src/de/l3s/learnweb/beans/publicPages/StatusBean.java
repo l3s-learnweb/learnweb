@@ -18,126 +18,106 @@ import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @RequestScoped
-public class StatusBean extends ApplicationBean
-{
+public class StatusBean extends ApplicationBean {
     private Map<String, String> variables = new HashMap<>();
-    private List<Service> services = new LinkedList<>();
+    private final List<Service> services = new LinkedList<>();
 
-    public StatusBean()
-    {
+    public StatusBean() {
         fetchVariables();
         fetchServices();
     }
 
-    private void fetchVariables()
-    {
+    private void fetchVariables() {
         variables = System.getenv().entrySet()
             .stream()
             .filter(map -> map.getKey().startsWith("LEARNWEB_"))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
-    
-    private void fetchServices()
-    {
+
+    private void fetchServices() {
         Learnweb learnweb = getLearnweb();
         services.add(new Service("Learnweb Tomcat", "ok", learnweb.getServerUrl(), "Obviously OK, otherwise this page would not be reachable"));
 
         // test learnweb database
         Service lwDb = new Service("Learnweb Database", "ok", learnweb.getProperties().getProperty("mysql_url"), "");
-        try
-        {
+        try {
             Statement stmt = learnweb.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("SELECT count(*) FROM lw_user");
 
-            if(!rs.next() || rs.getInt(1) < 400)
+            if (!rs.next() || rs.getInt(1) < 400) {
                 lwDb.setStatus("error", "unexpected result from database");
-        }
-        catch(Exception e)
-        {
+            }
+        } catch (Exception e) {
             lwDb.setStatus("error", e.getMessage());
         }
         services.add(lwDb);
 
         // very simple database integrity test
         Service lwDbIntegrity = new Service("Learnweb Database integrity", "ok", learnweb.getProperties().getProperty("FEDORA_SERVER_URL"), "");
-        try
-        {
-            if(!learnweb.getResourceManager().isResourceRatedByUser(2811, 1684))
+        try {
+            if (!learnweb.getResourceManager().isResourceRatedByUser(2811, 1684)) {
                 lwDbIntegrity.setStatus("warning", "unexpected result from database");
-        }
-        catch(Exception e)
-        {
+            }
+        } catch (Exception e) {
             lwDbIntegrity.setStatus("error", e.getMessage());
         }
         services.add(lwDbIntegrity);
     }
 
-    public String getVersion()
-    {
+    public String getVersion() {
         final String displayName = Faces.getServletContext().getServletContextName();
 
         int i = displayName.indexOf('-');
-        if (i != -1)
-        {
+        if (i != -1) {
             return displayName.substring(i + 1).trim();
         }
 
         return displayName;
     }
 
-    public String getProjectStage()
-    {
+    public String getProjectStage() {
         return Faces.getProjectStage().toString();
     }
 
-    public Map<String, String> getVariables()
-    {
+    public Map<String, String> getVariables() {
         return variables;
     }
 
-    public List<Service> getServices()
-    {
+    public List<Service> getServices() {
         return services;
     }
 
-    public static class Service
-    {
-        private String name;
+    public static class Service {
+        private final String name;
         private String status;
-        private String url;
+        private final String url;
         private String comment;
 
-        public Service(String name, String status, String url, String comment)
-        {
+        public Service(String name, String status, String url, String comment) {
             this.name = name;
             this.status = status;
             this.url = url;
             this.comment = comment;
         }
 
-        public void setStatus(String status, String comment)
-        {
+        public void setStatus(String status, String comment) {
             this.status = status;
             this.comment = comment;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return name;
         }
 
-        public String getStatus()
-        {
+        public String getStatus() {
             return status;
         }
 
-        public String getComment()
-        {
+        public String getComment() {
             return comment;
         }
 
-        public String getUrl()
-        {
+        public String getUrl() {
             return url;
         }
     }

@@ -19,38 +19,33 @@ import de.l3s.util.StringHelper;
  * Because there are only a few organisations we keep them all in memory
  *
  * @author Philipp
- *
  */
-public class OrganisationManager
-{
+public class OrganisationManager {
     //private static final Logger log = LogManager.getLogger(OrganisationManager.class);
     private static final int FIELDS = 1;
-    private static final String[] COLUMNS = { "organisation_id", "title", "logout_page", "welcome_page", "welcome_message", "options_field1", "default_search_text", "default_search_image", "default_search_video", "default_language", "language_variant",
-            "banner_image_file_id", "glossary_languages", "css_file" };
+    private static final String[] COLUMNS = {"organisation_id", "title", "logout_page", "welcome_page", "welcome_message",
+        "options_field1", "default_search_text", "default_search_image", "default_search_video", "default_language",
+        "language_variant", "banner_image_file_id", "glossary_languages", "css_file"};
     private static final String SELECT = String.join(", ", COLUMNS);
     private static final String SAVE = Sql.getCreateStatement("lw_organisation", COLUMNS);
 
-    private Learnweb learnweb;
-    private Map<Integer, Organisation> cache;
+    private final Learnweb learnweb;
+    private final Map<Integer, Organisation> cache;
 
-    public OrganisationManager(Learnweb learnweb) throws SQLException
-    {
+    public OrganisationManager(Learnweb learnweb) throws SQLException {
         this.learnweb = learnweb;
         // TODO Oleh: Cache is not updated when organization changed, also user stores organization which is separated from cache.
         this.cache = Collections.synchronizedMap(new LinkedHashMap<>(30));
         this.resetCache();
     }
 
-    public void resetCache() throws SQLException
-    {
+    public void resetCache() throws SQLException {
         cache.clear();
 
         // load all organizations into cache
-        try(Statement select = learnweb.getConnection().createStatement())
-        {
+        try (Statement select = learnweb.getConnection().createStatement()) {
             ResultSet rs = select.executeQuery("SELECT " + SELECT + " FROM lw_organisation ORDER BY title");
-            while(rs.next())
-            {
+            while (rs.next()) {
                 Organisation organisation = createOrganisation(rs);
                 cache.put(rs.getInt("organisation_id"), organisation);
             }
@@ -58,47 +53,40 @@ public class OrganisationManager
     }
 
     /**
-     *
      * @return number of cached objects
      */
-    public int getCacheSize()
-    {
+    public int getCacheSize() {
         return cache.size();
     }
 
     /**
-     * Returns a list of all Organisations
+     * Returns a list of all Organisations.
      *
      * @return The collection is unmodifiable
      */
-    public Collection<Organisation> getOrganisationsAll()
-    {
+    public Collection<Organisation> getOrganisationsAll() {
         return Collections.unmodifiableCollection(cache.values());
     }
 
     /**
-     * Get an Organisation by her id
+     * Get an Organisation by her id.
      *
-     * @param id
      * @return null if not found
      */
-    public Organisation getOrganisationById(int id)
-    {
+    public Organisation getOrganisationById(int id) {
         return cache.get(id);
     }
 
     /**
-     * Get an Organisation by her title
+     * Get an Organisation by her title.
      *
-     * @param title
      * @return null if not found
      */
-    public Organisation getOrganisationByTitle(String title)
-    {
-        for(Organisation org : cache.values())
-        {
-            if(org.getTitle().equalsIgnoreCase(title))
+    public Organisation getOrganisationByTitle(String title) {
+        for (Organisation org : cache.values()) {
+            if (org.getTitle().equalsIgnoreCase(title)) {
                 return org;
+            }
         }
 
         return null;
@@ -107,15 +95,9 @@ public class OrganisationManager
     /**
      * Saves the organisation to the database.
      * If the organisation is not yet stored at the database, a new record will be created and the returned organisation contains the new id.
-     *
-     * @param organisation
-     * @return
-     * @throws SQLException
      */
-    public Organisation save(Organisation organisation) throws SQLException
-    {
-        if(organisation.getId() < 0) // the organisation is not yet stored at the database
-        { // we have to get a new id from the groupManager
+    public Organisation save(Organisation organisation) throws SQLException {
+        if (organisation.getId() < 0) { // the organisation is not yet stored at the database // we have to get a new id from the groupManager
             Group group = new Group();
             group.setTitle(organisation.getTitle());
             group.setDescription("Organisation");
@@ -126,8 +108,7 @@ public class OrganisationManager
             cache.put(organisation.getId(), organisation);
         }
 
-        try(PreparedStatement save = learnweb.getConnection().prepareStatement(SAVE))
-        {
+        try (PreparedStatement save = learnweb.getConnection().prepareStatement(SAVE)) {
             save.setInt(1, organisation.getId());
             save.setString(2, organisation.getTitle());
             save.setString(3, organisation.getLogoutPage());
@@ -148,8 +129,7 @@ public class OrganisationManager
         return organisation;
     }
 
-    private Organisation createOrganisation(ResultSet rs) throws SQLException
-    {
+    private Organisation createOrganisation(ResultSet rs) throws SQLException {
         Organisation organisation = new Organisation(rs.getInt("organisation_id"));
         organisation.setTitle(rs.getString("title"));
         organisation.setLogoutPage(rs.getString("logout_page"));
@@ -164,8 +144,9 @@ public class OrganisationManager
         organisation.setGlossaryLanguages(StringHelper.splitLocales(rs.getString("glossary_languages")));
 
         long[] options = new long[FIELDS];
-        for(int i = 0; i < FIELDS;)
-            options[i] = rs.getLong("options_field" + ++i);
+        for (int i = 0; i < FIELDS; i++) {
+            options[i] = rs.getLong("options_field" + i);
+        }
         organisation.setOptions(options);
 
         return organisation;

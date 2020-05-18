@@ -28,8 +28,7 @@ import de.l3s.util.UrlHelper;
 
 @Named
 @ViewScoped
-public class AddResourceBean extends ApplicationBean implements Serializable
-{
+public class AddResourceBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 1736402639245432708L;
     private static final Logger log = LogManager.getLogger(AddResourceBean.class);
 
@@ -41,8 +40,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     // caches
     private transient List<SelectItem> availableGlossaryLanguages;
 
-    public void reset()
-    {
+    public void reset() {
         resource = new Resource();
         resource.setUser(getUser());
         resource.setSource(ResourceService.learnweb);
@@ -53,8 +51,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         formStep = 1;
     }
 
-    public void create(final String type, Group targetGroup, Folder targetFolder)
-    {
+    public void create(final String type, Group targetGroup, Folder targetFolder) {
         this.reset();
 
         // Set target group and folder in beans
@@ -62,8 +59,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         this.targetFolder = targetFolder;
 
         // Set target view and defaults
-        switch(type)
-        {
+        switch (type) {
             case "file":
                 this.resource.setType(ResourceType.file);
                 break;
@@ -93,8 +89,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    private void setResourceTypeGlossary()
-    {
+    private void setResourceTypeGlossary() {
         GlossaryResource glossaryResource = new GlossaryResource();
         glossaryResource.setUser(getUser());
         glossaryResource.setSource(ResourceService.learnweb);
@@ -106,8 +101,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         this.resource = glossaryResource;
     }
 
-    private void setResourceTypeSurvey()
-    {
+    private void setResourceTypeSurvey() {
 
         Survey survey = new Survey();
         survey.setOrganizationId(getUser().getOrganisationId());
@@ -127,10 +121,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         this.resource = surveyResource;
     }
 
-    public void handleFileUpload(FileUploadEvent event)
-    {
-        try
-        {
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
             log.debug("Handle File upload");
             resource.setSource(ResourceService.desktop);
             resource.setDeleted(true);
@@ -163,17 +155,13 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             log.debug("Next step");
             formStep++;
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void handleUrlInput()
-    {
-        try
-        {
+    public void handleUrlInput() {
+        try {
             log.debug("Handle Url input");
             resource.setSource(ResourceService.internet);
             resource.setStorageType(Resource.WEB_RESOURCE);
@@ -189,21 +177,17 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             log.debug("Next step");
             formStep++;
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    private void createDocument()
-    {
+    private void createDocument() {
         log.debug("Creating new document...");
         resource.setSource(ResourceService.learnweb);
         resource.setFileName(resource.getFileName() + FileUtility.getInternalExtension(resource.getType()));
 
-        try
-        {
+        try {
             log.debug("Getting the fileInfo from uploaded file...");
             FileInputStream sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType()));
             ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
@@ -231,24 +215,18 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             createThumbnailThread.join(1000);
 
             log.debug("Next step");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void addResource()
-    {
-        if(this.resource.isOfficeResource())
-        {
+    public void addResource() {
+        if (this.resource.isOfficeResource()) {
             this.createDocument();
         }
 
-        try
-        {
-            if(!targetGroup.canAddResources(getUser()))
-            {
+        try {
+            if (!targetGroup.canAddResources(getUser())) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
                 return;
             }
@@ -268,43 +246,35 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.postConstruct();
 
             // create thumbnails for the resource
-            if(!resource.isProcessing() && (resource.getThumbnail0() == null || resource.getThumbnail0().getFileId() == 0 || resource.getType() == ResourceType.video))
-            {
+            if (!resource.isProcessing()
+                && (resource.getThumbnail0() == null || resource.getThumbnail0().getFileId() == 0 || resource.getType() == ResourceType.video)) {
                 new ResourcePreviewMaker.CreateThumbnailThread(resource).start();
             }
 
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public String getCurrentPath() throws SQLException
-    {
-        if(targetFolder != null)
-        {
+    public String getCurrentPath() throws SQLException {
+        if (targetFolder != null) {
             return targetGroup.getTitle() + " > " + targetFolder.getPrettyPath();
         }
 
         return targetGroup.getTitle();
     }
 
-    public Resource getResource()
-    {
+    public Resource getResource() {
         return resource;
     }
 
-    public int getFormStep()
-    {
+    public int getFormStep() {
         return formStep;
     }
 
-    public List<SelectItem> getAvailableGlossaryLanguages()
-    {
-        if(null == availableGlossaryLanguages)
-        {
+    public List<SelectItem> getAvailableGlossaryLanguages() {
+        if (null == availableGlossaryLanguages) {
             availableGlossaryLanguages = localesToSelectItems(getUser().getOrganisation().getGlossaryLanguages());
         }
         return availableGlossaryLanguages;

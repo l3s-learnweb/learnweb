@@ -1,99 +1,99 @@
-$primaryColor:$themePrimaryColor;
-$primaryColorDarker:$themePrimaryColorDarker;
-$primaryDarkerAlt:$themePrimaryDarkerAlt;
-$primaryDarkest:$themePrimaryDarkest;
-$primaryTextColor:$themeElementTextColor; // common
+$primaryColor: $themePrimaryColor;
+$primaryColorDarker: $themePrimaryColorDarker;
+$primaryDarkerAlt: $themePrimaryDarkerAlt;
+$primaryDarkest: $themePrimaryDarkest;
+$primaryTextColor: $themeElementTextColor; // common
 
 // Buttons
-$buttonFocusOutlineColor:$gray-500; // common
+$buttonFocusOutlineColor: $gray-500; // common
 
-$primaryButtonBgColor:$themePrimaryColor;
-$primaryButtonHoverBgColor:$themePrimaryColorDarker;
-$primaryButtonActiveBgColor:$themePrimaryDarkest;
-$primaryButtonFocusBgColor:$gray-500; // common
-$primaryButtonTextColor:$themeElementTextColor; // common
+$primaryButtonBgColor: $themePrimaryColor;
+$primaryButtonHoverBgColor: $themePrimaryColorDarker;
+$primaryButtonActiveBgColor: $themePrimaryDarkest;
+$primaryButtonFocusBgColor: $gray-500; // common
+$primaryButtonTextColor: $themeElementTextColor; // common
 
-$primaryAltButtonBgColor:$themePrimaryAltColor;
-$primaryAltButtonHoverBgColor:$themePrimaryAltColorDarker;
-$primaryAltButtonActiveBgColor:$themePrimaryAltDarkerAlt;
-$primaryAltButtonFocusBgColor:$gray-500; // common
-$primaryAltButtonTextColor:$themeElementTextColor; // common
+$primaryAltButtonBgColor: $themePrimaryAltColor;
+$primaryAltButtonHoverBgColor: $themePrimaryAltColorDarker;
+$primaryAltButtonActiveBgColor: $themePrimaryAltDarkerAlt;
+$primaryAltButtonFocusBgColor: $gray-500; // common
+$primaryAltButtonTextColor: $themeElementTextColor; // common
 
-$secondaryButtonBgColor:$gray-600; // common
-$secondaryButtonHoverBgColor:$gray-800; // common
-$secondaryButtonActiveBgColor:$gray-900; // common
-$secondaryButtonFocusBgColor:$gray-600; // common
-$secondaryButtonTextColor:$themeElementTextColor; // common
+$secondaryButtonBgColor: $gray-600; // common
+$secondaryButtonHoverBgColor: $gray-800; // common
+$secondaryButtonActiveBgColor: $gray-900; // common
+$secondaryButtonFocusBgColor: $gray-600; // common
+$secondaryButtonTextColor: $themeElementTextColor; // common
 
-$outlineButtonBgColor:transparent; // common
-$outlineButtonHoverBgColor:transparent; // common
-$outlineButtonActiveBgColor:transparent; // common
-$outlineButtonFocusBgColor:transparent; // common
-$outlineButtonBorderColor:$themePrimaryColor;
-$outlineButtonTextColor:$themePrimaryColor;
-$outlineButtonHoverBorderColor:$themePrimaryColorDarker;
-$outlineButtonHoverTextColor:$themePrimaryColorDarker;
-$outlineButtonActiveBorderColor:$themePrimaryDarkest;
-$outlineButtonActiveTextColor:$themePrimaryDarkest;
+$outlineButtonBgColor: transparent; // common
+$outlineButtonHoverBgColor: transparent; // common
+$outlineButtonActiveBgColor: transparent; // common
+$outlineButtonFocusBgColor: transparent; // common
+$outlineButtonBorderColor: $themePrimaryColor;
+$outlineButtonTextColor: $themePrimaryColor;
+$outlineButtonHoverBorderColor: $themePrimaryColorDarker;
+$outlineButtonHoverTextColor: $themePrimaryColorDarker;
+$outlineButtonActiveBorderColor: $themePrimaryDarkest;
+$outlineButtonActiveTextColor: $themePrimaryDarkest;
 
-$menuitemHoverBgColor:$themePrimaryDarkest;
-$menuitemTextColor:$gray-900; // common
-$menuitemHoverTextColor:$themeElementTextColor; // common
-$carouselButtonHoverColor:$gray-500; // common
-$carouselPageLinksActiveColor:$themePrimaryDarkest;
+$menuitemHoverBgColor: $themePrimaryDarkest;
+$menuitemTextColor: $gray-900; // common
+$menuitemHoverTextColor: $themeElementTextColor; // common
+$carouselButtonHoverColor: $gray-500; // common
+$carouselPageLinksActiveColor: $themePrimaryDarkest;
 /* end color schema */
 
-$focusOutlineColor:$blue;
+$focusOutlineColor: $blue;
 
 /* Headers */
-$headerPadding:0.5rem 1rem;
-$headerPaddingReduced:0.25rem 1rem;
-$inputListHeaderPadding:0.5rem;
-$headerFontSize:$font-size-base;
-$headerBgColor:$primaryColor;
-$headerTextColor:$primaryTextColor;
-$headerLightBgColor:$gray-200;
-$headerLightTextColor:$gray-900;
-$headerLightHoverBgColor:$gray-400;
-$headerLightBorderColor:$gray-400;
+$headerPadding: 0.5rem 1rem;
+$headerPaddingReduced: 0.25rem 1rem;
+$inputListHeaderPadding: 0.5rem;
+$headerFontSize: $font-size-base;
+$headerBgColor: $primaryColor;
+$headerTextColor: $primaryTextColor;
+$headerLightBgColor: $gray-200;
+$headerLightTextColor: $gray-900;
+$headerLightHoverBgColor: $gray-400;
+$headerLightBorderColor: $gray-400;
 
 /* Contents */
-$contentPadding:$grid-gutter-width;
-$contentBgColor:$white;
-$contentBorderColor:$gray-400;
-$contentLighterBorderColor:$gray-200;
+$contentPadding: $grid-gutter-width;
+$contentBgColor: $white;
+$contentBorderColor: $gray-400;
+$contentLighterBorderColor: $gray-200;
 
 /* Forms */
-$buttonBorderRadius:$btn-border-radius;
-$inputPadding:$input-padding-x;
-$inputBgColor:$input-bg;
-$inputBorderColor:$gray-500;
-$inputHoverBorderColor:$gray-600;
-$inputInvalidBorderColor:$red;
-$inputHeaderBgColor:$gray-300;
-$inputSwitchOffBgColor:$gray-500;
-$inputSwitchOffTextColor:$white;
-$iconActiveColor:$white;
-$iconCloseColor:$gray-900;
-$inputTextHighlightColor:$white;
-$ratingCancelIconColor:$black;
-$ratingStarColor:$gray-500;
-$ratingStarHoverColor:$gray-600;
-$splitbuttonTextColor:$white;
-$datepickerButtonTextColor:$white;
-$keypadBgColor:$black;
+$buttonBorderRadius: $btn-border-radius;
+$inputPadding: $input-padding-x;
+$inputBgColor: $input-bg;
+$inputBorderColor: $gray-500;
+$inputHoverBorderColor: $gray-600;
+$inputInvalidBorderColor: $red;
+$inputHeaderBgColor: $gray-300;
+$inputSwitchOffBgColor: $gray-500;
+$inputSwitchOffTextColor: $white;
+$iconActiveColor: $white;
+$iconCloseColor: $gray-900;
+$inputTextHighlightColor: $white;
+$ratingCancelIconColor: $black;
+$ratingStarColor: $gray-500;
+$ratingStarHoverColor: $gray-600;
+$splitbuttonTextColor: $white;
+$datepickerButtonTextColor: $white;
+$keypadBgColor: $black;
 
 /*groups*/
-$inputGroupBorderColor:$gray-500;
-$inputGroupBgColor:$white;
-$inputGroupTextColor:$body-color;
-$inputGroupIconColor:$gray-400;
-$inputGroupAddonMinWidth:$h2-font-size;
-$checkboxWidth:20px;
-$checkboxHeight:20px;
+$inputGroupBorderColor: $gray-500;
+$inputGroupBgColor: $white;
+$inputGroupTextColor: $body-color;
+$inputGroupIconColor: $gray-400;
+$inputGroupAddonMinWidth: $h2-font-size;
+$checkboxWidth: 20px;
+$checkboxHeight: 20px;
 
 /* Buttons */
-$buttonPadding:$input-btn-padding-x;
+$buttonPadding: $input-btn-padding-x;
 
 //$secondaryButtonBgColor: $gray-600;
 //$secondaryButtonHoverBgColor:$gray-800;
@@ -101,134 +101,134 @@ $buttonPadding:$input-btn-padding-x;
 //$secondaryButtonFocusBgColor:$gray-600;
 //$secondaryButtonTextColor:$white;
 
-$blueButtonBgColor:$blue;
-$blueButtonHoverBgColor:$blueDarker;
-$blueButtonActiveBgColor:$blueDarkest;
-$blueButtonFocusBgColor:$gray-500;
-$blueButtonTextColor:$white;
+$blueButtonBgColor: $blue;
+$blueButtonHoverBgColor: $blueDarker;
+$blueButtonActiveBgColor: $blueDarkest;
+$blueButtonFocusBgColor: $gray-500;
+$blueButtonTextColor: $white;
 
-$cyanButtonBgColor:$cyan;
-$cyanButtonHoverBgColor:$cyanDarker;
-$cyanButtonActiveBgColor:$cyanDarkest;
-$cyanButtonFocusBgColor:$gray-500;
-$cyanButtonTextColor:$white;
+$cyanButtonBgColor: $cyan;
+$cyanButtonHoverBgColor: $cyanDarker;
+$cyanButtonActiveBgColor: $cyanDarkest;
+$cyanButtonFocusBgColor: $gray-500;
+$cyanButtonTextColor: $white;
 
-$greenButtonBgColor:$green;
-$greenButtonHoverBgColor:$greenDarker;
-$greenButtonActiveBgColor:$greenDarkest;
-$greenButtonFocusBgColor:$gray-500;
-$greenButtonTextColor:$white;
+$greenButtonBgColor: $green;
+$greenButtonHoverBgColor: $greenDarker;
+$greenButtonActiveBgColor: $greenDarkest;
+$greenButtonFocusBgColor: $gray-500;
+$greenButtonTextColor: $white;
 
-$yellowButtonBgColor:$yellow;
-$yellowButtonHoverBgColor:$yellowDarker;
-$yellowButtonActiveBgColor:$yellowDarkest;
-$yellowButtonFocusBgColor:$gray-500;
-$yellowButtonTextColor:$white;
+$yellowButtonBgColor: $yellow;
+$yellowButtonHoverBgColor: $yellowDarker;
+$yellowButtonActiveBgColor: $yellowDarkest;
+$yellowButtonFocusBgColor: $gray-500;
+$yellowButtonTextColor: $white;
 
-$purpleButtonBgColor:$purple;
-$purpleButtonHoverBgColor:$purpleDarker;
-$purpleButtonActiveBgColor:$purpleDarkest;
-$purpleButtonFocusBgColor:$gray-500;
-$purpleButtonTextColor:$white;
+$purpleButtonBgColor: $purple;
+$purpleButtonHoverBgColor: $purpleDarker;
+$purpleButtonActiveBgColor: $purpleDarkest;
+$purpleButtonFocusBgColor: $gray-500;
+$purpleButtonTextColor: $white;
 
-$pinkButtonBgColor:$pink;
-$pinkButtonHoverBgColor:$pinkDarker;
-$pinkButtonActiveBgColor:$pinkDarkest;
-$pinkButtonFocusBgColor:$gray-500;
-$pinkButtonTextColor:$white;
+$pinkButtonBgColor: $pink;
+$pinkButtonHoverBgColor: $pinkDarker;
+$pinkButtonActiveBgColor: $pinkDarkest;
+$pinkButtonFocusBgColor: $gray-500;
+$pinkButtonTextColor: $white;
 
-$bluegrayButtonBgColor:$bluegray;
-$bluegrayButtonHoverBgColor:$bluegrayDarker;
-$bluegrayButtonActiveBgColor:$bluegrayDarkest;
-$bluegrayButtonFocusBgColor:$gray-500;
-$bluegrayButtonTextColor:$white;
+$bluegrayButtonBgColor: $bluegray;
+$bluegrayButtonHoverBgColor: $bluegrayDarker;
+$bluegrayButtonActiveBgColor: $bluegrayDarkest;
+$bluegrayButtonFocusBgColor: $gray-500;
+$bluegrayButtonTextColor: $white;
 
-$tealButtonBgColor:$teal;
-$tealButtonHoverBgColor:$tealDarker;
-$tealButtonActiveBgColor:$tealDarkest;
-$tealButtonFocusBgColor:$gray-500;
-$tealButtonTextColor:$white;
+$tealButtonBgColor: $teal;
+$tealButtonHoverBgColor: $tealDarker;
+$tealButtonActiveBgColor: $tealDarkest;
+$tealButtonFocusBgColor: $gray-500;
+$tealButtonTextColor: $white;
 
-$orangeButtonBgColor:$orange;
-$orangeButtonHoverBgColor:$orangeDarker;
-$orangeButtonActiveBgColor:$orangeDarkest;
-$orangeButtonFocusBgColor:$gray-500;
-$orangeButtonTextColor:$white;
+$orangeButtonBgColor: $orange;
+$orangeButtonHoverBgColor: $orangeDarker;
+$orangeButtonActiveBgColor: $orangeDarkest;
+$orangeButtonFocusBgColor: $gray-500;
+$orangeButtonTextColor: $white;
 
 $grayButtonBgColor: $gray-600;
-$grayButtonHoverBgColor:$gray-700;
-$grayButtonActiveBgColor:$gray-900;
-$grayButtonFocusBgColor:$gray-500;
-$grayButtonTextColor:$white;
+$grayButtonHoverBgColor: $gray-700;
+$grayButtonActiveBgColor: $gray-900;
+$grayButtonFocusBgColor: $gray-500;
+$grayButtonTextColor: $white;
 
 /* List Items */
-$listItemPadding:4px 8px;
-$listItemHoverBgColor:$gray-200;
-$listItemHoverTextColor:$body-color;
+$listItemPadding: 4px 8px;
+$listItemHoverBgColor: $gray-200;
+$listItemHoverTextColor: $body-color;
 
 /* Messages */
-$infoMessageBgColor:$lightBlue;
-$infoMessageTextColor:$gray-900;
-$warnMessageBgColor:$lightYellow;
-$warnMessageTextColor:$gray-900;
-$errorMessageBgColor:$lightRed;
-$errorMessageTextColor:$gray-900;
-$fatalMessageBgColor:$gray-400;
-$fatalMessageTextColor:$gray-900;
-$messageCloseIconColor:$gray-600;
+$infoMessageBgColor: $lightBlue;
+$infoMessageTextColor: $gray-900;
+$warnMessageBgColor: $lightYellow;
+$warnMessageTextColor: $gray-900;
+$errorMessageBgColor: $lightRed;
+$errorMessageTextColor: $gray-900;
+$fatalMessageBgColor: $gray-400;
+$fatalMessageTextColor: $gray-900;
+$messageCloseIconColor: $gray-600;
 
 /* TabView */
-$headerTabBgColor:$white;
+$headerTabBgColor: $white;
 
 /* PanelGrid */
-$panelGridHeaderBorderColor:$white;
-$panelGridCellBorderColor:$gray-500;
-$toolbarBorderColor:$gray-400;
-$tabsBgColor:$white;
-$scrollpanelDragBgColor:$gray-500;
-$scrollpanelTrackBgColor:$gray-100;
-$tooltipTextBgColor:$gray-800;
-$wizardBgColor:$white;
+$panelGridHeaderBorderColor: $white;
+$panelGridCellBorderColor: $gray-500;
+$toolbarBorderColor: $gray-400;
+$tabsBgColor: $white;
+$scrollpanelDragBgColor: $gray-500;
+$scrollpanelTrackBgColor: $gray-100;
+$tooltipTextBgColor: $gray-800;
+$wizardBgColor: $white;
 
 /*Overlay*/
-$dialogTitlebarIconHover:$gray-500;
-$overlayIconColor:$white;
-$overlayIconHoverColor:$gray-400;
+$dialogTitlebarIconHover: $gray-500;
+$overlayIconColor: $white;
+$overlayIconHoverColor: $gray-400;
 
 /*misc*/
-$progressbarTextColor:$white;
-$progressbarBgColor:$gray-500;
+$progressbarTextColor: $white;
+$progressbarBgColor: $gray-500;
 
 /*Data*/
 $datatableCellPadding: $table-cell-padding;
-$paginatorBgColor:$white;
-$panelHeaderTextColor:$gray-500;
-$paginatorTextColor:$gray-500;
-$tableHoverColor:$gray-200;
-$datatableEvenColor:$gray-200;
-$panelTitlebarBgColor:$gray-100;
-$carouselBorderColor:$gray-500;
-$carouselTextColor:$white;
-$treeTextColor:$gray-600;
-$treetableActiveTextColor:$white;
-$panelButtonBgColor:$white;
-$scheduleHeaderButtonHoverColor:$gray-600;
-$scheduleHeaderButtonActiveColor:$blueDarkest;
-$tableColumnHeaderBgFocus:$gray-100;
-$buttonHoverBorderColor:$white;
-$tableColumnHeaderBgColor:$gray-100;
+$paginatorBgColor: $white;
+$panelHeaderTextColor: $gray-500;
+$paginatorTextColor: $gray-500;
+$tableHoverColor: $gray-200;
+$datatableEvenColor: $gray-200;
+$panelTitlebarBgColor: $gray-100;
+$carouselBorderColor: $gray-500;
+$carouselTextColor: $white;
+$treeTextColor: $gray-600;
+$treetableActiveTextColor: $white;
+$panelButtonBgColor: $white;
+$scheduleHeaderButtonHoverColor: $gray-600;
+$scheduleHeaderButtonActiveColor: $blueDarkest;
+$tableColumnHeaderBgFocus: $gray-100;
+$buttonHoverBorderColor: $white;
+$tableColumnHeaderBgColor: $gray-100;
 
 /*Menu*/
 $menuitemPadding: 6px 8px;
 $menuListPadding: 6px 0;
-$breadcrumbBgColor:$white;
-$breadcrumbTextColor:$gray-700;
-$breadcrumbBorderColor:$themePrimaryColor;
-$stepsItemHighlightBgColor:$lightBlue;
-$stepsItemHighlightTextColor:$blue;
-$stepsItemDisabledBgColor:$white;
-$stepsItemDisabledTextColor:$gray-900;
-$stepsItemBgColor:$lightGreen;
-$stepsItemColor:$greenDarker;
-$menuitemIconColor:$gray-600;
-$menuBgColor:$white;
+$breadcrumbBgColor: $white;
+$breadcrumbTextColor: $gray-700;
+$breadcrumbBorderColor: $themePrimaryColor;
+$stepsItemHighlightBgColor: $lightBlue;
+$stepsItemHighlightTextColor: $blue;
+$stepsItemDisabledBgColor: $white;
+$stepsItemDisabledTextColor: $gray-900;
+$stepsItemBgColor: $lightGreen;
+$stepsItemColor: $greenDarker;
+$menuitemIconColor: $gray-600;
+$menuBgColor: $white;

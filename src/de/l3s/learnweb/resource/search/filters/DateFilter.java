@@ -6,12 +6,10 @@ import java.util.ArrayList;
 
 import org.apache.solr.client.solrj.response.FacetField;
 
-public class DateFilter extends Filter
-{
+public class DateFilter extends Filter {
     private static final long serialVersionUID = 560235287682777075L;
 
-    private enum DATE_VALUES
-    {
+    private enum DefaultValues {
         day,
         week,
         month,
@@ -19,41 +17,37 @@ public class DateFilter extends Filter
         older
     }
 
-    private DATE_VALUES value;
+    private DefaultValues value;
     private final ArrayList<FilterOption> defaultOptions = new ArrayList<>();
 
-    public DateFilter(final FilterType type)
-    {
+    public DateFilter(final FilterType type) {
         super(type);
 
-        for (DATE_VALUES date : DATE_VALUES.values())
+        for (DefaultValues date : DefaultValues.values()) {
             defaultOptions.add(new FilterOption(null, date.name(), null, false));
+        }
     }
 
     @Override
-    public ArrayList<FilterOption> getOptions()
-    {
+    public ArrayList<FilterOption> getOptions() {
         return super.getOptions().isEmpty() ? defaultOptions : super.getOptions();
     }
 
     @Override
-    public void createOption(final FacetField.Count count)
-    {
+    public void createOption(final FacetField.Count count) {
         createOption(null, count.getName(), count.getCount());
     }
 
     @Override
-    public void setActiveValue(final String activeValue)
-    {
+    public void setActiveValue(final String activeValue) {
         super.setActiveValue(activeValue);
-        if (activeValue != null)
-            this.value = DATE_VALUES.valueOf(activeValue);
+        if (activeValue != null) {
+            this.value = DefaultValues.valueOf(activeValue);
+        }
     }
 
-    public Instant getDateFrom()
-    {
-        switch(value)
-        {
+    public Instant getDateFrom() {
+        switch (value) {
             case day:
                 return ZonedDateTime.now().minusDays(1).toInstant();
             case week:
@@ -67,10 +61,8 @@ public class DateFilter extends Filter
         }
     }
 
-    public Instant getDateTo()
-    {
-        switch(value)
-        {
+    public Instant getDateTo() {
+        switch (value) {
             case older:
                 return ZonedDateTime.now().minusYears(1).toInstant();
             default:

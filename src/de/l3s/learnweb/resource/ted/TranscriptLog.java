@@ -8,8 +8,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
-public class TranscriptLog implements Serializable
-{
+public class TranscriptLog implements Serializable {
     private static final long serialVersionUID = 6321296603254649454L;
 
     private int userId;
@@ -23,13 +22,11 @@ public class TranscriptLog implements Serializable
     private transient User user;
     private transient Resource resource;
 
-    public TranscriptLog()
-    {
+    public TranscriptLog() {
 
     }
 
-    public TranscriptLog(int userId, int resourceId, String wordsSelected, String userAnnotation, String action, Date timestamp)
-    {
+    public TranscriptLog(int userId, int resourceId, String wordsSelected, String userAnnotation, String action, Date timestamp) {
         this.userId = userId;
         this.resourceId = resourceId;
         this.wordsSelected = wordsSelected;
@@ -38,79 +35,67 @@ public class TranscriptLog implements Serializable
         this.timestamp = timestamp;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public int getResourceId()
-    {
+    public int getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(int resourceId)
-    {
+    public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
     }
 
-    public String getWordsSelected()
-    {
+    public String getWordsSelected() {
         return wordsSelected;
     }
 
-    public void setWordsSelected(String wordsSelected)
-    {
+    public void setWordsSelected(String wordsSelected) {
         this.wordsSelected = wordsSelected;
     }
 
-    public String getUserAnnotation()
-    {
+    public String getUserAnnotation() {
         return userAnnotation;
     }
 
-    public void setUserAnnotation(String userAnnotation)
-    {
+    public void setUserAnnotation(String userAnnotation) {
         this.userAnnotation = userAnnotation;
     }
 
-    public String getAction()
-    {
+    public String getAction() {
         return action;
     }
 
-    public void setAction(String action)
-    {
+    public void setAction(String action) {
         this.action = action;
     }
 
-    public Date getTimestamp()
-    {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp)
-    {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
     // ------------ convenience functions -----------------
 
-    public User getUser() throws SQLException
-    {
-        if(null == user)
+    public User getUser() throws SQLException {
+        if (null == user) {
             user = Learnweb.getInstance().getUserManager().getUser(getUserId());
+        }
         return user;
     }
 
-    public Resource getResource() throws SQLException
-    {
-        if(null == resource)
+    public Resource getResource() throws SQLException {
+        if (null == resource) {
             resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+        }
         return resource;
     }
 }

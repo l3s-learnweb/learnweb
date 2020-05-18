@@ -1,27 +1,27 @@
 //[class^="ui-icon-"]:before,
 //[class*=" ui-icon-"]:before,
 .ui-icon {
-    @include fa-icon();
+  @include fa-icon();
 
-    // override PrimeFaces default
-    text-indent: 0 !important;
-    text-align: center;
+  // override PrimeFaces default
+  text-indent: 0 !important;
+  text-align: center;
 }
 
 @mixin icon-simple($icon) {
-    &:before {
-        content: $icon;
-    }
+  &:before {
+    content: $icon;
+  }
 }
 
 // Icon Override Mixin
 @mixin icon-override($icon) {
-    @include fa-icon();
-    @include icon-simple($icon);
+  @include fa-icon();
+  @include icon-simple($icon);
 
-    text-indent: 0 !important;
-    text-align: center;
-    background: none;
+  text-indent: 0 !important;
+  text-align: center;
+  background: none;
 }
 
 .ui-icon-carat-1-n { @include icon-simple("\f106"); }

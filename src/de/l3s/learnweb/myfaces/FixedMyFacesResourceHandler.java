@@ -14,40 +14,33 @@ import org.apache.myfaces.resource.ResourceMeta;
 import org.apache.myfaces.resource.ResourceValidationUtils;
 import org.apache.myfaces.util.lang.Assert;
 
-public class FixedMyFacesResourceHandler extends ResourceHandlerImpl
-{
-    private ResourceHandlerCache _resourceHandlerCache;
+public class FixedMyFacesResourceHandler extends ResourceHandlerImpl {
+    private ResourceHandlerCache resourceHandlerCache;
 
     @Override
-    public Resource createResource(String resourceName, String libraryName, String contentType)
-    {
+    public Resource createResource(String resourceName, String libraryName, String contentType) {
         Assert.notNull(resourceName, "resourceName");
 
         Resource resource = null;
 
-        if(resourceName.length() == 0)
-        {
+        if (resourceName.length() == 0) {
             return null;
         }
 
-        if(resourceName.charAt(0) == '/')
-        {
+        if (resourceName.charAt(0) == '/') {
             // If resourceName starts with '/', remove that character because it
             // does not have any meaning (with and without should point to the
             // same resource).
             resourceName = resourceName.substring(1);
         }
-        if(!ResourceValidationUtils.isValidResourceName(resourceName))
-        {
+        if (!ResourceValidationUtils.isValidResourceName(resourceName)) {
             return null;
         }
-        if(libraryName != null && !ResourceValidationUtils.isValidLibraryName(libraryName, isAllowSlashesLibraryName()))
-        {
+        if (libraryName != null && !ResourceValidationUtils.isValidLibraryName(libraryName, isAllowSlashesLibraryName())) {
             return null;
         }
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        if(contentType == null)
-        {
+        if (contentType == null) {
             //Resolve contentType using ExternalContext.getMimeType
             contentType = facesContext.getExternalContext().getMimeType(resourceName);
         }
@@ -68,44 +61,33 @@ public class FixedMyFacesResourceHandler extends ResourceHandlerImpl
         // Check first the preferred contract if any. If not found, try the remaining
         // contracts and finally if not found try to found a resource without a
         // contract name.
-        if(contractPreferred != null)
-        {
+        if (contractPreferred != null) {
             resourceValue = getResourceLoaderCache().getResource(resourceName, libraryName, contentType, localePrefix, contractPreferred);
         }
-        if(resourceValue == null && !contracts.isEmpty())
-        {
+        if (resourceValue == null && !contracts.isEmpty()) {
             // Try to get resource but try with a contract name
-            for(String contract : contracts)
-            {
+            for (String contract : contracts) {
                 resourceValue = getResourceLoaderCache().getResource(resourceName, libraryName, contentType, localePrefix, contract);
-                if(resourceValue != null)
-                {
+                if (resourceValue != null) {
                     break;
                 }
             }
         }
         // Only if no contract preferred try without it.
-        if(resourceValue == null)
-        {
+        if (resourceValue == null) {
             // Try to get resource without contract name
             resourceValue = getResourceLoaderCache().getResource(resourceName, libraryName, contentType, localePrefix);
         }
 
-        if(resourceValue != null)
-        {
+        if (resourceValue != null) {
             resource = new FixedMyFacesResource(resourceValue.getResourceMeta(), resourceValue.getResourceLoader(), getResourceHandlerSupport(), contentType, resourceValue.getCachedInfo() != null ? resourceValue.getCachedInfo().getURL() : null, resourceValue.getCachedInfo() != null ? resourceValue.getCachedInfo().getRequestPath() : null);
-        }
-        else
-        {
+        } else {
             boolean resolved = false;
             // Try preferred contract first
-            if(contractPreferred != null)
-            {
-                for(ContractResourceLoader loader : getResourceHandlerSupport().getContractResourceLoaders())
-                {
+            if (contractPreferred != null) {
+                for (ContractResourceLoader loader : getResourceHandlerSupport().getContractResourceLoaders()) {
                     ResourceMeta resourceMeta = deriveResourceMeta(loader, resourceName, libraryName, localePrefix, contractPreferred);
-                    if(resourceMeta != null)
-                    {
+                    if (resourceMeta != null) {
                         resource = new FixedMyFacesResource(resourceMeta, loader, getResourceHandlerSupport(), contentType);
 
                         // cache it
@@ -115,15 +97,11 @@ public class FixedMyFacesResourceHandler extends ResourceHandlerImpl
                     }
                 }
             }
-            if(!resolved && !contracts.isEmpty())
-            {
-                for(ContractResourceLoader loader : getResourceHandlerSupport().getContractResourceLoaders())
-                {
-                    for(String contract : contracts)
-                    {
+            if (!resolved && !contracts.isEmpty()) {
+                for (ContractResourceLoader loader : getResourceHandlerSupport().getContractResourceLoaders()) {
+                    for (String contract : contracts) {
                         ResourceMeta resourceMeta = deriveResourceMeta(loader, resourceName, libraryName, localePrefix, contract);
-                        if(resourceMeta != null)
-                        {
+                        if (resourceMeta != null) {
                             resource = new FixedMyFacesResource(resourceMeta, loader, getResourceHandlerSupport(), contentType);
 
                             // cache it
@@ -134,14 +112,11 @@ public class FixedMyFacesResourceHandler extends ResourceHandlerImpl
                     }
                 }
             }
-            if(!resolved)
-            {
-                for(ResourceLoader loader : getResourceHandlerSupport().getResourceLoaders())
-                {
+            if (!resolved) {
+                for (ResourceLoader loader : getResourceHandlerSupport().getResourceLoaders()) {
                     ResourceMeta resourceMeta = deriveResourceMeta(loader, resourceName, libraryName, localePrefix);
 
-                    if(resourceMeta != null)
-                    {
+                    if (resourceMeta != null) {
                         resource = new FixedMyFacesResource(resourceMeta, loader, getResourceHandlerSupport(), contentType);
 
                         // cache it
@@ -154,13 +129,11 @@ public class FixedMyFacesResourceHandler extends ResourceHandlerImpl
         return resource;
     }
 
-    private ResourceHandlerCache getResourceLoaderCache()
-    {
-        if(this._resourceHandlerCache == null)
-        {
-            this._resourceHandlerCache = new ResourceHandlerCache();
+    private ResourceHandlerCache getResourceLoaderCache() {
+        if (this.resourceHandlerCache == null) {
+            this.resourceHandlerCache = new ResourceHandlerCache();
         }
 
-        return this._resourceHandlerCache;
+        return this.resourceHandlerCache;
     }
 }

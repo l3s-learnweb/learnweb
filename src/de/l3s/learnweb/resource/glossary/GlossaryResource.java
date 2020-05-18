@@ -14,16 +14,14 @@ import de.l3s.learnweb.resource.ResourceType;
 /**
  * @author Rishita
  */
-public class GlossaryResource extends Resource
-{
+public class GlossaryResource extends Resource {
     private static final long serialVersionUID = 8388778401614338522L;
 
     private List<Locale> allowedLanguages = new ArrayList<>();
     private List<GlossaryEntry> entries = new LinkedList<>();
     private boolean clonedButNotSaved = false;
 
-    public GlossaryResource()
-    {
+    public GlossaryResource() {
         this.setSource(ResourceService.learnweb);
         this.setLocation("Learnweb");
         this.setStorageType(Resource.LEARNWEB_RESOURCE);
@@ -31,47 +29,40 @@ public class GlossaryResource extends Resource
     }
 
     /**
-     * copy constructor
+     * copy constructor.
      */
-    public GlossaryResource(GlossaryResource other)
-    {
+    public GlossaryResource(GlossaryResource other) {
         super(other);
         setAllowedLanguages(new ArrayList<>(other.allowedLanguages));
         setClonedButNotPersisted(true);
 
         setEntries(new ArrayList<>(other.entries.size()));
-        for(int i = 0, len = other.entries.size(); i < len; i++)
-        {
+        for (int i = 0, len = other.entries.size(); i < len; i++) {
             this.entries.add(i, other.entries.get(i).clone());
         }
     }
 
-    public List<Locale> getAllowedLanguages()
-    {
+    public List<Locale> getAllowedLanguages() {
         return allowedLanguages;
     }
 
-    public void setAllowedLanguages(List<Locale> allowedLanguages)
-    {
+    public void setAllowedLanguages(List<Locale> allowedLanguages) {
         this.allowedLanguages = allowedLanguages;
     }
 
     @Override
-    public GlossaryResource clone()
-    {
+    public GlossaryResource clone() {
         return new GlossaryResource(this);
     }
 
     @Override
-    protected void postConstruct() throws SQLException
-    {
+    protected void postConstruct() throws SQLException {
         super.postConstruct();
         Learnweb.getInstance().getGlossaryManager().loadGlossaryResource(this);
     }
 
     @Override
-    public Resource save() throws SQLException
-    {
+    public Resource save() throws SQLException {
         Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(200233); // TODO find a better image, load it from resource folder
         this.setThumbnail0(iconResource.getThumbnail0());
         this.setThumbnail1(iconResource.getThumbnail1());
@@ -90,38 +81,30 @@ public class GlossaryResource extends Resource
         return this;
     }
 
-    public List<GlossaryEntry> getEntries()
-    {
+    public List<GlossaryEntry> getEntries() {
         return entries;
     }
 
-    public void setEntries(List<GlossaryEntry> entries)
-    {
+    public void setEntries(List<GlossaryEntry> entries) {
         this.entries = entries;
     }
 
-    public boolean isClonedButNotPersisted()
-    {
+    public boolean isClonedButNotPersisted() {
         return clonedButNotSaved;
     }
 
-    public void setClonedButNotPersisted(boolean cloned)
-    {
+    public void setClonedButNotPersisted(boolean cloned) {
         this.clonedButNotSaved = cloned;
     }
 
     /**
-     *
      * @return a flat table representation of the tree like glossary structure
      */
-    public List<GlossaryTableView> getGlossaryTableView()
-    {
+    public List<GlossaryTableView> getGlossaryTableView() {
         ArrayList<GlossaryTableView> tableView = new ArrayList<>(getEntries().size());
 
-        for(GlossaryEntry entry : getEntries())
-        {
-            for(GlossaryTerm term : entry.getTerms())
-            {
+        for (GlossaryEntry entry : getEntries()) {
+            for (GlossaryTerm term : entry.getTerms()) {
                 tableView.add(new GlossaryTableView(entry, term));
             }
         }

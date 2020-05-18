@@ -14,8 +14,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @SessionScoped
-public class ConfirmRequiredBean extends ApplicationBean implements Serializable
-{
+public class ConfirmRequiredBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 934105342636869805L;
 
     private User loggedInUser;
@@ -24,61 +23,50 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
     private String email;
 
     @Override
-    public User getUser()
-    {
-        if(super.getUser() != null)
-        {
+    public User getUser() {
+        if (super.getUser() != null) {
             return super.getUser();
         }
 
         return loggedInUser;
     }
 
-    public boolean isConfirmed()
-    {
+    public boolean isConfirmed() {
         return getUser() != null && getUser().isEmailConfirmed();
     }
 
-    public void onSubmitNewEmail()
-    {
+    public void onSubmitNewEmail() {
         User user = getUser();
-        try
-        {
-            if(StringUtils.isNotEmpty(email) && !StringUtils.equals(user.getEmail(), email))
-            {
+        try {
+            if (StringUtils.isNotEmpty(email) && !StringUtils.equals(user.getEmail(), email)) {
                 user.setEmail(email);
                 user.save();
             }
 
-            if(user.sendEmailConfirmation())
+            if (user.sendEmailConfirmation()) {
                 addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
-            else
+            } else {
                 addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
-        }
-        catch(SQLException e)
-        {
+            }
+        } catch (SQLException e) {
             addErrorMessage(e);
         }
     }
 
-    public User getLoggedInUser()
-    {
+    public User getLoggedInUser() {
         return loggedInUser;
     }
 
-    public void setLoggedInUser(User loggedInUser)
-    {
+    public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
         this.email = loggedInUser.getEmail();
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 }

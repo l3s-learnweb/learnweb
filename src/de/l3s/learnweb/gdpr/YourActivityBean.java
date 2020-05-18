@@ -23,31 +23,27 @@ import de.l3s.learnweb.user.User;
  */
 @Named
 @ViewScoped
-public class YourActivityBean extends ApplicationBean implements Serializable
-{
+public class YourActivityBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -53694900500236594L;
     private static final Logger log = LogManager.getLogger(YourActivityBean.class);
 
     private List<LogEntry> userActions;
     private Map<Integer, String> groupTitles;
 
-    public YourActivityBean() throws SQLException
-    {
+    public YourActivityBean() throws SQLException {
         User user = getUser();
-        if(null == user)
-            // when not logged in
+        if (null == user) { // when not logged in
             return;
+        }
 
         final GroupManager groupManager = this.getLearnweb().getGroupManager();
         groupTitles = new HashMap<>();
 
         this.userActions = getLearnweb().getLogManager().getLogsByUser(user.getId(), Action.values(), 1000);
-        for(LogEntry action : userActions)
-        {
+        for (LogEntry action : userActions) {
             try {
 
-                switch(action.getGroupId())
-                {
+                switch (action.getGroupId()) {
                     // general action, which has no group assigned
                     case 0:
                         groupTitles.put(action.getGroupId(), "");
@@ -56,27 +52,24 @@ public class YourActivityBean extends ApplicationBean implements Serializable
                         groupTitles.put(action.getGroupId(), groupManager.getGroupById(action.getGroupId()).getTitle());
                         break;
                 }
-            } catch(Throwable e) {
+            } catch (Throwable e) {
                 log.error("Can't process action '" + action.getAction() + "' in group " + action.getGroupId(), e);
             }
         }
     }
 
-    public List<LogEntry> getUserActions()
-    {
+    public List<LogEntry> getUserActions() {
         return userActions;
     }
 
-    public Map<Integer, String> getGroupTitles()
-    {
+    public Map<Integer, String> getGroupTitles() {
         return groupTitles;
     }
 
     /**
      * Omit underscores for frontend without modifying Action class.
      */
-    public String getAction(String action)
-    {
+    public String getAction(String action) {
         return action.replace("_", " ");
     }
 }

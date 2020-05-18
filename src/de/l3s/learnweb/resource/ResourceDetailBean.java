@@ -34,14 +34,13 @@ import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
-public class ResourceDetailBean extends ApplicationBean implements Serializable
-{
+public class ResourceDetailBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 4911923763255682055L;
     private static final Logger log = LogManager.getLogger(ResourceDetailBean.class);
-    private static final String hypothesisProxy = "https://via.hypothes.is/";
 
-    public enum ViewAction
-    {
+    private static final String HYPOTHESIS_PROXY = "https://via.hypothes.is/";
+
+    public enum ViewAction {
         viewResource,
         editResource
     }
@@ -58,18 +57,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private Resource resource;
     private ViewAction viewAction = ViewAction.viewResource;
 
-    public void onLoad()
-    {
-        if(isAjaxRequest() || !isLoggedIn())
+    public void onLoad() {
+        if (isAjaxRequest() || !isLoggedIn()) {
             return;
+        }
 
-        if(resourceId > 0)
-        {
-            try
-            {
+        if (resourceId > 0) {
+            try {
                 Resource openResource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-                if(openResource == null)
-                {
+                if (openResource == null) {
                     addInvalidParameterMessage("resource_id");
                     return;
                 }
@@ -77,61 +73,50 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 setResource(openResource);
                 log(Action.opening_resource, resource.getGroupId(), resource.getId());
 
-                if(editResource)
+                if (editResource) {
                     editResource();
-            }
-            catch(Exception e)
-            {
+                }
+            } catch (Exception e) {
                 addErrorMessage(e);
             }
         }
     }
 
-    public int getResourceId()
-    {
+    public int getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(int resourceId)
-    {
+    public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
     }
 
-    public boolean isEditResource()
-    {
+    public boolean isEditResource() {
         return editResource;
     }
 
-    public void setEditResource(final boolean editResource)
-    {
+    public void setEditResource(final boolean editResource) {
         this.editResource = editResource;
     }
 
-    public Resource getResource()
-    {
+    public Resource getResource() {
         return resource;
     }
 
-    public void setResource(Resource resource)
-    {
+    public void setResource(Resource resource) {
         this.resource = resource;
     }
 
-    public ViewAction getViewAction()
-    {
+    public ViewAction getViewAction() {
         return viewAction;
     }
 
-    public void setViewAction(ViewAction viewAction)
-    {
+    public void setViewAction(ViewAction viewAction) {
         this.viewAction = viewAction;
     }
 
-    public void editResource()
-    {
+    public void editResource() {
         releaseResourceIfLocked();
-        if(!resource.lockResource(getUser()))
-        {
+        if (!resource.lockResource(getUser())) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.locked_by_user", resource.getLockUsername());
             log(Action.lock_rejected_edit_resource, resource.getGroupId(), resource.getId());
             return;
@@ -141,16 +126,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         viewAction = ViewAction.editResource;
     }
 
-    public void saveEdit() throws SQLException
-    {
-        if(!resource.canEditResource(getUser()))
-        {
+    public void saveEdit() throws SQLException {
+        if (!resource.canEditResource(getUser())) {
             addAccessDeniedMessage();
             return;
         }
 
-        try
-        {
+        try {
             resource.save();
 
             log(Action.edit_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
@@ -158,31 +140,24 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
             resource.unlockResource(getUser());
             viewAction = ViewAction.viewResource;
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
         }
     }
 
-    public void cancelEdit()
-    {
+    public void cancelEdit() {
         releaseResourceIfLocked();
         viewAction = ViewAction.viewResource;
     }
 
-    public void releaseResourceIfLocked()
-    {
-        if(resource != null && resource.isEditLocked())
-        {
+    public void releaseResourceIfLocked() {
+        if (resource != null && resource.isEditLocked()) {
             resource.unlockResource(getUser());
         }
     }
 
-    public void editActivityListener()
-    {
-        if(resource != null && !resource.lockerUpdate(getUser()))
-        {
+    public void editActivityListener() {
+        if (resource != null && !resource.lockerUpdate(getUser())) {
             releaseResourceIfLocked();
             log(Action.lock_interrupted_returned_resource, resource.getGroupId(), resource.getId());
             addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.edit_interrupted");
@@ -192,28 +167,21 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    /* Archive view utils  */
-
     /**
-     * The method is used from JS in resource_view_archive_timeline.xhtml
+     * The method is used from JS in resource_view_archive_timeline.xhtml.
      */
-    public String getArchiveTimelineJsonData() // TODO move this and all other archive related methods to new WebResourceBean
-    {
+    public String getArchiveTimelineJsonData() { // TODO move this and all other archive related methods to new WebResourceBean
         JSONArray highChartsData = new JSONArray();
-        try
-        {
+        try {
             List<TimelineData> timelineMonthlyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByMonth(resource.getId(), resource.getUrl());
 
-            for(TimelineData timelineData : timelineMonthlyData)
-            {
+            for (TimelineData timelineData : timelineMonthlyData) {
                 JSONArray innerArray = new JSONArray();
                 innerArray.put(timelineData.getTimestamp().getTime());
                 innerArray.put(timelineData.getNumberOfVersions());
                 highChartsData.put(innerArray);
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error("Error while fetching the archive data aggregated by month for a resource", e);
             addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
         }
@@ -221,24 +189,20 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     }
 
     /**
-     * The method is used from JS in resource_view_archive_timeline.xhtml
+     * The method is used from JS in resource_view_archive_timeline.xhtml.
      */
-    public String getArchiveCalendarJsonData()
-    {
+    public String getArchiveCalendarJsonData() {
         JSONObject archiveDates = new JSONObject();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try
-        {
+        try {
             List<TimelineData> timelineDailyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByDay(resource.getId(), resource.getUrl());
-            for(TimelineData timelineData : timelineDailyData)
-            {
+            for (TimelineData timelineData : timelineDailyData) {
                 JSONObject archiveDay = new JSONObject();
                 archiveDay.put("number", timelineData.getNumberOfVersions());
                 archiveDay.put("badgeClass", "badge-warning");
                 List<ArchiveUrl> archiveUrlsData = getLearnweb().getTimelineManager().getArchiveUrlsByResourceIdAndTimestamp(resource.getId(), timelineData.getTimestamp(), resource.getUrl());
                 JSONArray archiveVersions = new JSONArray();
-                for(ArchiveUrl archiveUrl : archiveUrlsData)
-                {
+                for (ArchiveUrl archiveUrl : archiveUrlsData) {
                     JSONObject archiveVersion = new JSONObject();
                     archiveVersion.put("url", archiveUrl.getArchiveUrl());
                     archiveVersion.put("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
@@ -247,9 +211,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 archiveDay.put("dayEvents", archiveVersions);
                 archiveDates.put(dateFormat.format(timelineData.getTimestamp()), archiveDay);
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error("Error while fetching the archive data aggregated by day for a resource", e);
             addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
         }
@@ -257,10 +219,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     }
 
     /**
-     * Function to get short week day names for the calendar
+     * Function to get short week day names for the calendar.
      */
-    public List<String> getShortWeekDays()
-    {
+    public List<String> getShortWeekDays() {
         DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
         List<String> dayNames = Arrays.asList(symbols.getShortWeekdays());
         Collections.rotate(dayNames.subList(1, 8), -1);
@@ -268,131 +229,114 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     }
 
     /**
-     * Function to localized month names for the calendar
+     * Function to localized month names for the calendar.
      * The method is used from JS in resource_view_archive_timeline.xhtml
      */
-    public String getMonthNames()
-    {
+    public String getMonthNames() {
         DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
         JSONArray monthNames = new JSONArray();
-        for(String month : symbols.getMonths())
-            if(!month.isBlank())
+        for (String month : symbols.getMonths()) {
+            if (!month.isBlank()) {
                 monthNames.put(month);
+            }
+        }
         return monthNames.toString();
     }
 
     /**
-     * Function to get localized short month names for the timeline
+     * Function to get localized short month names for the timeline.
      * The method is used from JS in resource_view_archive_timeline.xhtml
      */
-    public String getShortMonthNames()
-    {
+    public String getShortMonthNames() {
         DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
         JSONArray monthNames = new JSONArray();
-        for(String month : symbols.getShortMonths())
-            if(!month.isBlank())
+        for (String month : symbols.getShortMonths()) {
+            if (!month.isBlank()) {
                 monthNames.put(month);
+            }
+        }
         return monthNames.toString();
     }
 
     @SuppressWarnings("unused")
-    public void setStarRatingRounded(int value)
-    {
+    public void setStarRatingRounded(int value) {
         // dummy method, is required by p:rating
     }
 
-    public void archiveCurrentVersion()
-    {
+    public void archiveCurrentVersion() {
         boolean addToQueue = true;
-        if(!resource.getArchiveUrls().isEmpty())
-        {
+        if (!resource.getArchiveUrls().isEmpty()) {
             long timeDifference = (new Date().getTime() - resource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
             addToQueue = timeDifference > 300;
         }
 
-        if(addToQueue)
-        {
+        if (addToQueue) {
             String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(resource);
-            if(response.equalsIgnoreCase("archive_success"))
+            if (response.equalsIgnoreCase("archive_success")) {
                 addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
-            else if(response.equalsIgnoreCase("robots_error"))
+            } else if (response.equalsIgnoreCase("robots_error")) {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "archiveRobotsMessage");
-            else if(response.equalsIgnoreCase("generic_error"))
+            } else if (response.equalsIgnoreCase("generic_error")) {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "archiveErrorMessage");
-        }
-        else
+            }
+        } else {
             addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
+        }
 
     }
 
-    public void onDeleteTag()
-    {
-        try
-        {
+    public void onDeleteTag() {
+        try {
             resource.deleteTag(selectedTag);
             addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public String addTag()
-    {
-        if(null == getUser())
-        {
+    public String addTag() {
+        if (null == getUser()) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
             return null;
         }
 
-        if(StringUtils.isBlank(tagName))
-        {
+        if (StringUtils.isBlank(tagName)) {
             return null;
         }
 
         //Limit number of spaces in a tag = 3
-        if((StringUtils.countMatches(tagName, " ") > 3) || tagName.contains(",") || tagName.contains("#") || (tagName.length() > 50))
-        {
+        if ((StringUtils.countMatches(tagName, " ") > 3) || tagName.contains(",") || tagName.contains("#") || (tagName.length() > 50)) {
             showTagWarningMessage();
 
             return null;
         }
 
-        try
-        {
+        try {
             resource.addTag(tagName, getUser());
             addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
             log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tagName);
             tagName = ""; // clear tag input field
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
         return null;
     }
 
     /**
-     * Recreates the thumbnails of the selected resource
-     *
-     * @throws SQLException
+     * Recreates the thumbnails of the selected resource.
      */
-    public void onUpdateThumbnail() throws SQLException
-    {
-        try
-        {
+    public void onUpdateThumbnail() throws SQLException {
+        try {
             User user = getUser();
-            if(user == null || !user.isAdmin())
+            if (user == null || !user.isAdmin()) {
                 return;
+            }
 
             // first delete old thumbnails
             FileManager fileManager = getLearnweb().getFileManager();
             Collection<File> files = resource.getFiles().values();
-            for(File file : files)
-            {
-                if(file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
-                {
+            for (File file : files) {
+                if (file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) { // number 4 is reserved for the source file
                     log.debug("Delete " + file.getName());
                     fileManager.delete(file);
                 }
@@ -404,118 +348,104 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             resource.save();
             releaseResourceIfLocked();
             viewAction = ViewAction.viewResource;
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    private void showTagWarningMessage()
-    {
+    private void showTagWarningMessage() {
         String title = getLocaleMessage("incorrect_tags");
         String text;
 
-        if(tagName.contains("#"))
+        if (tagName.contains("#")) {
             text = getLocaleMessage("tags_hashtag") + tagName.replaceAll("#", " ");
-        else if(tagName.contains(","))
+        } else if (tagName.contains(",")) {
             text = getLocaleMessage("tags_specialCharacter");
-        else if((StringUtils.countMatches(tagName, " ") > 3))
+        } else if ((StringUtils.countMatches(tagName, " ") > 3)) {
             text = getLocaleMessage("tags_spaces");
-        else
+        } else {
             text = getLocaleMessage("tags_tooLong");
+        }
 
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
         PrimeFaces.current().dialog().showMessageDynamic(message);
     }
 
-    public boolean canEditComment(Object commentO) throws SQLException
-    {
-        if(!(commentO instanceof Comment))
+    public boolean canEditComment(Object commentO) throws SQLException {
+        if (!(commentO instanceof Comment)) {
             return false;
+        }
 
         User user = getUser();
-        if(null == user)
+        if (null == user) {
             return false;
-        if(user.isAdmin() || user.isModerator())
+        }
+        if (user.isAdmin() || user.isModerator()) {
             return true;
+        }
 
         Comment comment = (Comment) commentO;
         User owner = comment.getUser();
         return user.equals(owner);
     }
 
-    public boolean canDeleteTag(Object tagO) throws SQLException
-    {
-        if(!(tagO instanceof Tag))
+    public boolean canDeleteTag(Object tagO) throws SQLException {
+        if (!(tagO instanceof Tag)) {
             return false;
+        }
 
         User user = getUser();
-        if(null == user)
+        if (null == user) {
             return false;
-        if(user.isAdmin() || user.isModerator())
+        }
+        if (user.isAdmin() || user.isModerator()) {
             return true;
+        }
 
         Tag tag = (Tag) tagO;
         User owner = resource.getTags().getElementOwner(tag);
         return user.equals(owner);
     }
 
-    public void onEditComment()
-    {
-        try
-        {
+    public void onEditComment() {
+        try {
             getLearnweb().getResourceManager().saveComment(clickedComment);
             addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void onDeleteComment()
-    {
-        try
-        {
+    public void onDeleteComment() {
+        try {
             resource.deleteComment(clickedComment);
             addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
             log(Action.deleting_comment, resource.getGroupId(), clickedComment.getResourceId(), clickedComment.getId());
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void addComment()
-    {
-        try
-        {
+    public void addComment() {
+        try {
             Comment comment = resource.addComment(newComment, getUser());
             log(Action.commenting_resource, resource.getGroupId(), resource.getId(), comment.getId());
             addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
             newComment = "";
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void setResourceThumbnail(String archiveUrl)
-    {
-        try
-        {
+    public void setResourceThumbnail(String archiveUrl) {
+        try {
             ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
             ResourceMetadataExtractor rme = Learnweb.getInstance().getResourceMetadataExtractor();
 
             FileManager fileManager = getLearnweb().getFileManager();
             Collection<File> files = resource.getFiles().values();
-            for(File file : files)
-            {
-                if(file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
-                {
+            for (File file : files) {
+                if (file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) { // number 4 is reserved for the source file
                     log.debug("Delete " + file.getName());
                     fileManager.delete(file);
                 }
@@ -524,103 +454,87 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             //Getting mime type
             FileInspector.FileInfo info = rme.getFileInfo(FileInspector.openStream(archiveUrl), resource.getFileName());
             String type = info.getMimeType().substring(0, info.getMimeType().indexOf('/'));
-            if(type.equals("application"))
+            if (type.equals("application")) {
                 type = info.getMimeType().substring(info.getMimeType().indexOf('/') + 1);
-
-            if(type.equalsIgnoreCase("pdf"))
-            {
-                rpm.processPdf(resource, FileInspector.openStream(archiveUrl));
             }
-            else
+
+            if (type.equalsIgnoreCase("pdf")) {
+                rpm.processPdf(resource, FileInspector.openStream(archiveUrl));
+            } else {
                 rpm.processArchivedVersion(resource, archiveUrl);
+            }
 
             resource.save();
             log(Action.resource_thumbnail_update, resource.getGroupId(), resource.getId(), "");
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
-        }
-        catch(RuntimeException | IOException | SQLException e)
-        {
+        } catch (RuntimeException | IOException | SQLException e) {
             addErrorMessage(e);
         }
     }
 
     // -------------------  Simple getters and setters ---------------------------
-    public Tag getSelectedTag()
-    {
+    public Tag getSelectedTag() {
         return selectedTag;
     }
 
-    public void setSelectedTag(Tag selectedTag)
-    {
+    public void setSelectedTag(Tag selectedTag) {
         this.selectedTag = selectedTag;
     }
 
-    public String getTagName()
-    {
+    public String getTagName() {
         return tagName;
     }
 
-    public void setTagName(String tagName)
-    {
+    public void setTagName(String tagName) {
         this.tagName = tagName;
     }
 
-    public Comment getClickedComment() // TODO rename to selectedcomment
-    {
+    public Comment getClickedComment() { // TODO rename to selectedcomment
         return clickedComment;
     }
 
-    public void setClickedComment(Comment clickedComment) // TODO rename to selectedcomment
-    {
+    public void setClickedComment(Comment clickedComment) { // TODO rename to selectedcomment
         this.clickedComment = clickedComment;
     }
 
-    public String getNewComment()
-    {
+    public String getNewComment() {
         return newComment;
     }
 
-    public void setNewComment(String newComment)
-    {
+    public void setNewComment(String newComment) {
         this.newComment = newComment;
     }
 
-    public boolean isStarRatedByUser() throws SQLException
-    {
-        if(getUser() == null || null == resource)
+    public boolean isStarRatedByUser() throws SQLException {
+        if (getUser() == null || null == resource) {
             return false;
+        }
 
         return resource.isRatedByUser(getUser().getId());
     }
 
-    public boolean isThumbRatedByUser() throws SQLException
-    {
-        if(getUser() == null || null == resource)
+    public boolean isThumbRatedByUser() throws SQLException {
+        if (getUser() == null || null == resource) {
             return false;
+        }
 
         return resource.isThumbRatedByUser(getUser().getId());
     }
 
-    public void handleRate(RateEvent<Integer> rateEvent)
-    {
-        if(null == getUser())
-        {
+    public void handleRate(RateEvent<Integer> rateEvent) {
+        if (null == getUser()) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
             return;
         }
 
-        try
-        {
-            if(isStarRatedByUser())
-            {
+        try {
+            if (isStarRatedByUser()) {
                 addGrowl(FacesMessage.SEVERITY_FATAL, "resource_already_rated");
                 return;
             }
 
             resource.rate(rateEvent.getRating(), getUser());
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addGrowl(FacesMessage.SEVERITY_FATAL, "error while rating");
             log.error("error while rating", e);
             return;
@@ -631,26 +545,20 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
 
-    private void handleThumbRating(int direction)
-    {
-        if(null == getUser())
-        {
+    private void handleThumbRating(int direction) {
+        if (null == getUser()) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
             return;
         }
 
-        try
-        {
-            if(isThumbRatedByUser())
-            {
+        try {
+            if (isThumbRatedByUser()) {
                 addGrowl(FacesMessage.SEVERITY_FATAL, "resource_already_rated");
                 return;
             }
 
             resource.thumbRate(getUser(), direction);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addGrowl(FacesMessage.SEVERITY_FATAL, "error while rating");
             log.error("error while rating", e);
             return;
@@ -661,18 +569,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
 
-    public void onThumbUp()
-    {
+    public void onThumbUp() {
         handleThumbRating(1);
     }
 
-    public void onThumbDown()
-    {
+    public void onThumbDown() {
         handleThumbRating(-1);
     }
 
-    public String getHypothesisLink()
-    {
-        return hypothesisProxy + resource.getUrl();
+    public String getHypothesisLink() {
+        return HYPOTHESIS_PROXY + resource.getUrl();
     }
 }

@@ -16,25 +16,22 @@ import de.l3s.learnweb.user.User;
  */
 @Named
 @ViewScoped
-public class YourSubmissionsBean extends ApplicationBean implements Serializable
-{
+public class YourSubmissionsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -7818173987582995716L;
     //private static final Logger log = LogManager.getLogger(YourSubmissionsBean.class);
 
     private List<Submission> userSubmissions;
 
-    public YourSubmissionsBean() throws SQLException
-    {
+    public YourSubmissionsBean() throws SQLException {
         User user = getUser();
-        if(null == user)
-            // when not logged in
+        if (null == user) { // when not logged in
             return;
+        }
 
         this.userSubmissions = this.getLearnweb().getSubmissionManager().getSubmissionsByUser(user);
     }
 
-    public List<Submission> getUserSubmissions()
-    {
+    public List<Submission> getUserSubmissions() {
         return userSubmissions;
     }
 }

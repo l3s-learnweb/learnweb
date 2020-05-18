@@ -20,8 +20,7 @@ import de.l3s.util.email.Mail;
 
 @Named
 @RequestScoped
-public class ContactBean extends ApplicationBean implements Serializable
-{
+public class ContactBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 1506604546829332647L;
 
     @NotBlank
@@ -34,23 +33,19 @@ public class ContactBean extends ApplicationBean implements Serializable
     @NotBlank
     private String message;
 
-    public ContactBean()
-    {
+    public ContactBean() {
         User user = getUser();
 
-        if(null != user) // set default value
-        {
+        if (null != user) { // set default value
             name = user.getUsername();
             email = user.getEmail();
         }
     }
 
-    public void sendMail()
-    {
+    public void sendMail() {
         String adminEmail = getLearnweb().getProperties().getProperty("ADMIN_MAIL");
 
-        try
-        {
+        try {
             Mail message = new Mail();
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(adminEmail));
             message.setSubject("Contact Form message");
@@ -59,57 +54,48 @@ public class ContactBean extends ApplicationBean implements Serializable
 
             addMessage(FacesMessage.SEVERITY_INFO, "Request sent successfully. We will get back to you shortly.");
             clearForm();
-        }
-        catch(MessagingException mex)
-        {
+        } catch (MessagingException mex) {
             addErrorMessage(mex);
         }
 
     }
 
-    public static String encryptMailAddress(String address)
-    {
-        if(StringUtils.isEmpty(address))
-            return "";
-
-        return address.replace(".", ".<span class=\"d-none\">[remove me]</span>");
-    }
-
-    public void clearForm()
-    {
+    public void clearForm() {
         name = null;
         email = null;
         message = null;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getMessage()
-    {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message)
-    {
+    public void setMessage(String message) {
         this.message = message;
+    }
+
+    public static String encryptMailAddress(String address) {
+        if (StringUtils.isEmpty(address)) {
+            return "";
+        }
+
+        return address.replace(".", ".<span class=\"d-none\">[remove me]</span>");
     }
 
 }

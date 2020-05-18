@@ -16,14 +16,11 @@ import de.l3s.learnweb.Learnweb;
 
 /**
  * @author Rishita
- *
  */
-public class SurveyQuestion implements Serializable, Cloneable
-{
+public class SurveyQuestion implements Serializable, Cloneable {
     private static final long serialVersionUID = -7698089608547415349L;
 
-    public enum QuestionType // represents primefaces input types
-    {
+    public enum QuestionType { // represents primefaces input types
         INPUT_TEXT(false, false), // options define the valid length (first entry = min length, second entry = max length)
         INPUT_TEXTAREA(false, false), // options define the valid length (first entry = min length, second entry = max length)
         AUTOCOMPLETE(false, true),
@@ -38,37 +35,23 @@ public class SurveyQuestion implements Serializable, Cloneable
         private final boolean readonly;
         private final boolean options;
 
-        QuestionType()
-        {
+        QuestionType() {
             this.readonly = false;
             this.options = false;
         }
 
-        QuestionType(boolean readonly, boolean options)
-        {
+        QuestionType(boolean readonly, boolean options) {
             this.readonly = readonly;
             this.options = options;
         }
 
-        public boolean isReadonly()
-        {
+        public boolean isReadonly() {
             return readonly;
         }
 
-        public boolean isOptions()
-        {
+        public boolean isOptions() {
             return options;
         }
-    }
-
-    public List<QuestionType> getQuestionTypes()
-    {
-        List<QuestionType> types = new ArrayList<>();
-        Arrays.asList(QuestionType.values()).forEach(type -> {
-            if(type != QuestionType.AUTOCOMPLETE && type != QuestionType.FULLWIDTH_HEADER)
-                types.add(type);
-        });
-        return types;
     }
 
     private String label; // label on the website, is replaced by a translated term if available
@@ -84,31 +67,26 @@ public class SurveyQuestion implements Serializable, Cloneable
     private List<SelectItem> optionsList;
     private List<SurveyQuestionOption> answers = new ArrayList<>(); // predefined answers for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
 
-    public SurveyQuestion(QuestionType type)
-    {
+    public SurveyQuestion(QuestionType type) {
         this.type = type;
         // set default length limits for text input fields
-        if(type == QuestionType.INPUT_TEXT || type == QuestionType.INPUT_TEXTAREA)
-        {
+        if (type == QuestionType.INPUT_TEXT || type == QuestionType.INPUT_TEXTAREA) {
             options.put("minLength", 0);
             options.put("maxLength", 6000);
         }
     }
 
-    public SurveyQuestion(QuestionType type, String label)
-    {
+    public SurveyQuestion(QuestionType type, String label) {
         this(type);
         setLabel(label);
     }
 
-    public SurveyQuestion(QuestionType type, int surveyId)
-    {
+    public SurveyQuestion(QuestionType type, int surveyId) {
         this(type);
         setSurveyId(surveyId);
     }
 
-    public SurveyQuestion(SurveyQuestion question)
-    {
+    public SurveyQuestion(SurveyQuestion question) {
         setId(-1);
         setSurveyId(-1);
         setLabel(question.label);
@@ -118,38 +96,45 @@ public class SurveyQuestion implements Serializable, Cloneable
         setRequired(question.required);
         setDeleted(question.deleted);
         setOrder(question.order);
-        for(SurveyQuestionOption answer : question.getAnswers())
-        {
+        for (SurveyQuestionOption answer : question.getAnswers()) {
             answer.setId(0);
             answers.add(answer);
         }
         setType(question.type);
     }
 
-    public QuestionType getType()
-    {
+    public List<QuestionType> getQuestionTypes() {
+        List<QuestionType> types = new ArrayList<>();
+        Arrays.asList(QuestionType.values()).forEach(type -> {
+            if (type != QuestionType.AUTOCOMPLETE && type != QuestionType.FULLWIDTH_HEADER) {
+                types.add(type);
+            }
+        });
+        return types;
+    }
+
+    public QuestionType getType() {
         return type;
     }
 
-    public void setType(QuestionType type)
-    {
+    public void setType(QuestionType type) {
         this.type = type;
-        if(type.options && this.getAnswers().isEmpty())
-        {
+        if (type.options && this.getAnswers().isEmpty()) {
             this.getAnswers().add(new SurveyQuestionOption());
             this.getAnswers().add(new SurveyQuestionOption());
         }
     }
 
-    public Map<String, Object> getOptions()
-    {
+    public Map<String, Object> getOptions() {
         return options;
     }
 
-    public List<SelectItem> getOptionsList()
-    {
-        if(null == optionsList)
-        {
+    public void setOptions(Map<String, Object> options) {
+        this.options = options;
+    }
+
+    public List<SelectItem> getOptionsList() {
+        if (null == optionsList) {
             // TODO what is the purpose of this method?
             /* maybe Options and Answers were confused
              * answers shall anyway be renamed to Options
@@ -158,116 +143,90 @@ public class SurveyQuestion implements Serializable, Cloneable
              */
 
             optionsList = new ArrayList<>(options.size());
-            for(Map.Entry<String, Object> option : options.entrySet())
-            {
+            for (Map.Entry<String, Object> option : options.entrySet()) {
                 optionsList.add(new SelectItem(option.getValue(), option.getKey()));
             }
         }
         return optionsList;
     }
 
-    public List<String> completeText(String query)
-    {
+    public List<String> completeText(String query) {
         return null; // until now never used in a survey. But let's see
     }
 
-    public void setOptions(Map<String, Object> options)
-    {
-        this.options = options;
-    }
-
-    public boolean isModeratorOnly()
-    {
+    public boolean isModeratorOnly() {
         return moderatorOnly;
     }
 
-    public void setModeratorOnly(boolean moderatorOnly)
-    {
+    public void setModeratorOnly(boolean moderatorOnly) {
         this.moderatorOnly = moderatorOnly;
     }
 
-    public String getLabel()
-    {
+    public String getLabel() {
         return label;
     }
 
-    public void setLabel(String label)
-    {
+    public void setLabel(String label) {
         this.label = label.replaceAll("<p>", "").replaceAll("</p>", "");
     }
 
-    public String getInfo()
-    {
+    public String getInfo() {
         return info;
     }
 
-    public void setInfo(String info)
-    {
+    public void setInfo(String info) {
         this.info = StringUtils.defaultString(info);
     }
 
-    public boolean isRequired()
-    {
+    public boolean isRequired() {
         return required;
     }
 
-    public void setRequired(boolean required)
-    {
+    public void setRequired(boolean required) {
         this.required = required;
     }
 
-    public List<SurveyQuestionOption> getAnswers()
-    {
+    public List<SurveyQuestionOption> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<SurveyQuestionOption> answers)
-    {
+    public void setAnswers(List<SurveyQuestionOption> answers) {
         this.answers = answers;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    void setId(int id)
-    {
+    void setId(int id) {
         this.id = id;
     }
 
-    public boolean isDeleted()
-    {
+    public boolean isDeleted() {
         return deleted;
     }
 
-    public void setDeleted(final boolean deleted)
-    {
+    public void setDeleted(final boolean deleted) {
         this.deleted = deleted;
     }
 
-    public void save() throws SQLException
-    {
+    public void save() throws SQLException {
         Learnweb.getInstance().getSurveyManager().saveQuestion(this);
     }
 
-    public int getSurveyId()
-    {
+    public int getSurveyId() {
         return surveyId;
     }
 
-    public void setSurveyId(int surveyId)
-    {
+    public void setSurveyId(int surveyId) {
         this.surveyId = surveyId;
     }
 
-    public int getOrder()
-    {
+    public int getOrder() {
         return order;
     }
 
-    public void setOrder(int order)
-    {
+    public void setOrder(int order) {
         this.order = order;
     }
 
@@ -275,8 +234,7 @@ public class SurveyQuestion implements Serializable, Cloneable
      * Returns a copy of this Survey Question (Ids are set to default this the Object isn't persisted yet).
      */
     @Override
-    public SurveyQuestion clone()
-    {
+    public SurveyQuestion clone() {
         return new SurveyQuestion(this);
     }
 

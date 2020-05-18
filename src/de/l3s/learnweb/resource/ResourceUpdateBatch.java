@@ -12,28 +12,29 @@ import org.json.JSONObject;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.GroupManager;
 
-public class ResourceUpdateBatch
-{
+public class ResourceUpdateBatch {
     private static final Logger log = LogManager.getLogger(ResourceUpdateBatch.class);
 
-    private List<Resource> resources;
-    private List<Folder> folders;
+    private final List<Resource> resources;
+    private final List<Folder> folders;
     private int failed = 0;
 
     private int totalSize = 0;
     private int totalFailed = 0;
 
-    public ResourceUpdateBatch(List<Resource> resources, List<Folder> folders)
-    {
+    public ResourceUpdateBatch(List<Resource> resources, List<Folder> folders) {
         this.resources = new ArrayList<>();
         this.folders = new ArrayList<>();
 
-        if (resources != null && !resources.isEmpty()) this.resources.addAll(resources);
-        if (folders != null && !folders.isEmpty()) this.folders.addAll(folders);
+        if (resources != null && !resources.isEmpty()) {
+            this.resources.addAll(resources);
+        }
+        if (folders != null && !folders.isEmpty()) {
+            this.folders.addAll(folders);
+        }
     }
 
-    public ResourceUpdateBatch(String json) throws SQLException
-    {
+    public ResourceUpdateBatch(String json) throws SQLException {
         resources = new ArrayList<>();
         folders = new ArrayList<>();
 
@@ -41,77 +42,63 @@ public class ResourceUpdateBatch
         ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
 
         JSONArray items = new JSONArray(json);
-        for(int i = 0, len = items.length(); i < len; ++i)
-        {
+        for (int i = 0, len = items.length(); i < len; ++i) {
             JSONObject object = items.getJSONObject(i);
             String itemType = object.getString("itemType");
             int itemId = object.getInt("itemId");
 
-            if("resource".equals(itemType))
-            {
+            if ("resource".equals(itemType)) {
                 Resource resource = resourceManager.getResource(itemId);
-                if (resource != null) resources.add(resource);
-                else
-                {
+                if (resource != null) {
+                    resources.add(resource);
+                } else {
                     log.error("Can't find resource requested in update!");
                     failed++;
                 }
-            }
-            else if("folder".equals(itemType))
-            {
+            } else if ("folder".equals(itemType)) {
                 Folder folder = groupManager.getFolder(itemId);
-                if (folder != null) folders.add(folder);
-                else
-                {
+                if (folder != null) {
+                    folders.add(folder);
+                } else {
                     log.error("Can't find folder requested in update!");
                     failed++;
                 }
-            }
-            else
-            {
+            } else {
                 log.error("Unsupported itemType: " + itemType);
                 failed++;
             }
         }
     }
 
-    public List<Resource> getResources()
-    {
+    public List<Resource> getResources() {
         return resources;
     }
 
-    public List<Folder> getFolders()
-    {
+    public List<Folder> getFolders() {
         return folders;
     }
 
-    public int size()
-    {
+    public int size() {
         return resources.size() + folders.size();
     }
 
-    public int failed()
-    {
+    public int failed() {
         return failed;
     }
 
-    public int getTotalSize()
-    {
+    public int getTotalSize() {
         return totalSize + this.size();
     }
 
-    public void addTotalSize(final int totalSize)
-    {
+    public void addTotalSize(final int totalSize) {
         this.totalSize += totalSize;
     }
 
-    public int getTotalFailed()
-    {
+    public int getTotalFailed() {
         return totalFailed + failed;
     }
 
-    public void addTotalFailed(final int totalFailed)
-    {
+    public void addTotalFailed(final int totalFailed) {
         this.totalFailed += totalFailed;
     }
 }

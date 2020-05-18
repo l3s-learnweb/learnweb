@@ -57,10 +57,59 @@ import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
-public class GlossaryBean extends ApplicationBean implements Serializable
-{
+public class GlossaryBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 7104637880221636543L;
     private static final Logger log = LogManager.getLogger(GlossaryBean.class);
+
+    private static final Map<Locale, String> PRONOUNCIATION_VOICES = Map.ofEntries(
+        Map.entry(new Locale.Builder().setLanguage("sq").build(), "Albanian Male"),
+        Map.entry(new Locale.Builder().setLanguage("ar").build(), "Arabic Male"),
+        Map.entry(new Locale.Builder().setLanguage("ca").build(), "Catalan Male"),
+        Map.entry(Locale.CHINESE, "Chinese Male"),
+        Map.entry(new Locale.Builder().setLanguage("ch").setRegion("HK").build(), "Chinese (Hong Kong) Female"),
+        Map.entry(Locale.TAIWAN, "Chinese Taiwan Male"),
+        Map.entry(new Locale.Builder().setLanguage("hr").build(), "Croatian Male"),
+        Map.entry(new Locale.Builder().setLanguage("cs").build(), "Czech Female"),
+        Map.entry(new Locale.Builder().setLanguage("da").build(), "Danish Male"),
+        Map.entry(Locale.GERMAN, "Deutsch Male"),
+        Map.entry(new Locale.Builder().setLanguage("nl").build(), "Dutch Male"),
+        Map.entry(Locale.ENGLISH, "UK English Male"),
+        Map.entry(Locale.UK, "UK English Male"),
+        Map.entry(Locale.US, "US English Male"),
+        Map.entry(new Locale.Builder().setLanguage("en").setRegion("AU").build(), "Australian Female"),
+        Map.entry(new Locale.Builder().setLanguage("et").build(), "Estonian Female"),
+        Map.entry(new Locale.Builder().setLanguage("fi").build(), "Finnish Female"),
+        Map.entry(Locale.FRENCH, "French Female"),
+        Map.entry(Locale.FRANCE, "French Female"),
+        Map.entry(Locale.CANADA_FRENCH, "French Canadian Female"),
+        Map.entry(new Locale.Builder().setLanguage("el").build(), "Greek Male"),
+        Map.entry(new Locale.Builder().setLanguage("hi").setRegion("IN").build(), "Hindi Male"),
+        Map.entry(new Locale.Builder().setLanguage("hu").build(), "Hungarian Female"),
+        Map.entry(new Locale.Builder().setLanguage("is").build(), "Icelandic Male"),
+        Map.entry(new Locale.Builder().setLanguage("in").build(), "Indonesian Male"),
+        Map.entry(Locale.ITALIAN, "Italian Female"),
+        Map.entry(Locale.JAPAN, "Japanese Male"),
+        Map.entry(Locale.KOREA, "Korean Female"),
+        Map.entry(new Locale.Builder().setLanguage("lv").build(), "Latvian Male"),
+        Map.entry(new Locale.Builder().setLanguage("mk").build(), "Macedonian Male"),
+        Map.entry(new Locale.Builder().setLanguage("no").build(), "Norwegian Female"),
+        Map.entry(new Locale.Builder().setLanguage("pl").build(), "Polish Female"),
+        Map.entry(new Locale.Builder().setLanguage("pt").build(), "Portuguese Female"),
+        Map.entry(new Locale.Builder().setLanguage("pt").setRegion("PT").build(), "Portuguese Female"),
+        Map.entry(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "Brazilian Portuguese Female"),
+        Map.entry(new Locale.Builder().setLanguage("ro").build(), "Romanian Female"),
+        Map.entry(new Locale.Builder().setLanguage("ru").build(), "Russian Male"),
+        Map.entry(new Locale.Builder().setLanguage("sr").build(), "Serbian Male"),
+        Map.entry(new Locale.Builder().setLanguage("sk").build(), "Slovak Female"),
+        Map.entry(new Locale.Builder().setLanguage("es").build(), "Spanish Female"),
+        Map.entry(new Locale.Builder().setLanguage("es").setRegion("ES").build(), "Spanish Female"),
+        Map.entry(new Locale.Builder().setLanguage("es").setRegion("MX").build(), "Spanish Latin American Female"),
+        Map.entry(new Locale.Builder().setLanguage("sv").build(), "Swedish Male"),
+        Map.entry(new Locale.Builder().setLanguage("th").build(), "Thai Female"),
+        Map.entry(new Locale.Builder().setLanguage("tr").build(), "Turkish Male"),
+        Map.entry(new Locale.Builder().setLanguage("uk").build(), "Ukrainian Female"),
+        Map.entry(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male")
+    );
 
     private GlossaryResource glossaryResource;
     private List<GlossaryTableView> tableItems;
@@ -80,64 +129,15 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private GlossaryParserResponse importResponse;
     private LazyGlossaryTableView lazyTableItems;
 
-    private static final Map<Locale, String> pronounciationVoices = Map.ofEntries(
-            Map.entry(new Locale.Builder().setLanguage("sq").build(), "Albanian Male"),
-            Map.entry(new Locale.Builder().setLanguage("ar").build(), "Arabic Male"),
-            Map.entry(new Locale.Builder().setLanguage("ca").build(), "Catalan Male"),
-            Map.entry(Locale.CHINESE, "Chinese Male"),
-            Map.entry(new Locale.Builder().setLanguage("ch").setRegion("HK").build(), "Chinese (Hong Kong) Female"),
-            Map.entry(Locale.TAIWAN, "Chinese Taiwan Male"),
-            Map.entry(new Locale.Builder().setLanguage("hr").build(), "Croatian Male"),
-            Map.entry(new Locale.Builder().setLanguage("cs").build(), "Czech Female"),
-            Map.entry(new Locale.Builder().setLanguage("da").build(), "Danish Male"),
-            Map.entry(Locale.GERMAN, "Deutsch Male"),
-            Map.entry(new Locale.Builder().setLanguage("nl").build(), "Dutch Male"),
-            Map.entry(Locale.ENGLISH, "UK English Male"),
-            Map.entry(Locale.UK, "UK English Male"),
-            Map.entry(Locale.US, "US English Male"),
-            Map.entry(new Locale.Builder().setLanguage("en").setRegion("AU").build(), "Australian Female"),
-            Map.entry(new Locale.Builder().setLanguage("et").build(), "Estonian Female"),
-            Map.entry(new Locale.Builder().setLanguage("fi").build(), "Finnish Female"),
-            Map.entry(Locale.FRENCH, "French Female"),
-            Map.entry(Locale.FRANCE, "French Female"),
-            Map.entry(Locale.CANADA_FRENCH, "French Canadian Female"),
-            Map.entry(new Locale.Builder().setLanguage("el").build(), "Greek Male"),
-            Map.entry(new Locale.Builder().setLanguage("hi").setRegion("IN").build(), "Hindi Male"),
-            Map.entry(new Locale.Builder().setLanguage("hu").build(), "Hungarian Female"),
-            Map.entry(new Locale.Builder().setLanguage("is").build(), "Icelandic Male"),
-            Map.entry(new Locale.Builder().setLanguage("in").build(), "Indonesian Male"),
-            Map.entry(Locale.ITALIAN, "Italian Female"),
-            Map.entry(Locale.JAPAN, "Japanese Male"),
-            Map.entry(Locale.KOREA, "Korean Female"),
-            Map.entry(new Locale.Builder().setLanguage("lv").build(), "Latvian Male"),
-            Map.entry(new Locale.Builder().setLanguage("mk").build(), "Macedonian Male"),
-            Map.entry(new Locale.Builder().setLanguage("no").build(), "Norwegian Female"),
-            Map.entry(new Locale.Builder().setLanguage("pl").build(), "Polish Female"),
-            Map.entry(new Locale.Builder().setLanguage("pt").build(), "Portuguese Female"),
-            Map.entry(new Locale.Builder().setLanguage("pt").setRegion("PT").build(), "Portuguese Female"),
-            Map.entry(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "Brazilian Portuguese Female"),
-            Map.entry(new Locale.Builder().setLanguage("ro").build(), "Romanian Female"),
-            Map.entry(new Locale.Builder().setLanguage("ru").build(), "Russian Male"),
-            Map.entry(new Locale.Builder().setLanguage("sr").build(), "Serbian Male"),
-            Map.entry(new Locale.Builder().setLanguage("sk").build(), "Slovak Female"),
-            Map.entry(new Locale.Builder().setLanguage("es").build(), "Spanish Female"),
-            Map.entry(new Locale.Builder().setLanguage("es").setRegion("ES").build(), "Spanish Female"),
-            Map.entry(new Locale.Builder().setLanguage("es").setRegion("MX").build(), "Spanish Latin American Female"),
-            Map.entry(new Locale.Builder().setLanguage("sv").build(), "Swedish Male"),
-            Map.entry(new Locale.Builder().setLanguage("th").build(), "Thai Female"),
-            Map.entry(new Locale.Builder().setLanguage("tr").build(), "Turkish Male"),
-            Map.entry(new Locale.Builder().setLanguage("uk").build(), "Ukrainian Female"),
-            Map.entry(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male")
-    );
+    private transient List<SelectItem> allowedTermLanguages; // cache for the allowed languages select list
 
     @PostConstruct
-    public void init()
-    {
-        try
-        {
+    public void init() {
+        try {
             User user = getUser();
-            if(user == null)
+            if (user == null) {
                 return;
+            }
 
             Instant start = Instant.now();
             Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
@@ -169,17 +169,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
             optionMandatoryDescription = user.getOrganisation().getOption(Option.Glossary_Mandatory_Description);
             optionImportEnabled = user.getOrganisation().getOption(Option.Glossary_Enable_Import);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorGrowl(e);
         }
     }
 
-    public void setGlossaryForm(GlossaryTableView tableItem)
-    {
-        try
-        {
+    public void setGlossaryForm(GlossaryTableView tableItem) {
+        try {
             //set form entry
             formEntry = tableItem.getEntry().clone();
             //Reset ID to old entry ID as it is not copy action
@@ -187,25 +183,21 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             //Reset original entry ID as it is not a copy action
             formEntry.setOriginalEntryId(tableItem.getEntry().getOriginalEntryId());
             //Reset old term ID and original term id as it is not a copy action
-            for(GlossaryTerm term : formEntry.getTerms())
-            {
+            for (GlossaryTerm term : formEntry.getTerms()) {
                 term.setId(term.getOriginalTermId());
                 term.setOriginalTermId(tableItem.getEntry().getTerm(term.getId()).getOriginalTermId());
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorGrowl(e);
         }
     }
 
-    public void onSave()
-    {
-        try
-        {
+    public void onSave() {
+        try {
             //logging
-            if(formEntry.getId() > 1)
+            if (formEntry.getId() > 1) {
                 log(Action.glossary_entry_edit, glossaryResource, formEntry.getId());
+            }
 
             formEntry.setLastChangedByUserId(getUser().getId());
 
@@ -213,18 +205,17 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             formEntry.setFulltext(null);
 
             //set last changed by user id for terms
-            for(GlossaryTerm term : formEntry.getTerms())
-            {
+            for (GlossaryTerm term : formEntry.getTerms()) {
                 // TODO check if the term was really modified
 
                 term.setLastChangedByUserId(getUser().getId());
                 //log term edit actions
-                if(term.getId() > 0)
+                if (term.getId() > 0) {
                     log(Action.glossary_term_edit, glossaryResource, term.getId());
+                }
             }
 
-            if(formEntry.getTerms().size() == numberOfDeletedTerms())
-            {
+            if (formEntry.getTerms().size() == numberOfDeletedTerms()) {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "Glossary.entry_validation");
                 return;
             }
@@ -233,16 +224,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
 
             clear();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
             addErrorGrowl(e);
         }
     }
 
-    public void clear()
-    {
+    public void clear() {
         formEntry = new GlossaryEntry();
         formEntry.setResourceId(glossaryResource.getId());
 
@@ -251,10 +239,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         addTerm();
     }
 
-    public void deleteEntry(GlossaryTableView row)
-    {
-        try
-        {
+    public void deleteEntry(GlossaryTableView row) {
+        try {
             row.getTopics();
             log(Action.glossary_entry_delete, glossaryResource, row.getEntryId());
             row.getEntry().setDeleted(true);
@@ -264,28 +250,22 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             //Remove entry from resource
             glossaryResource.getEntries().remove(row.getEntry());
             addGrowl(FacesMessage.SEVERITY_INFO, "entry_deleted");
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error("Unable to delete entry for resource " + row.getEntry().getResourceId() + ", entry ID: " + row.getEntry().getId(), e);
             addErrorGrowl(e);
         }
     }
 
-    public void deleteTerm(GlossaryTerm term)
-    {
-        try
-        {
-            if(formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size())
-            {
+    public void deleteTerm(GlossaryTerm term) {
+        try {
+            if (formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size()) {
                 addGrowl(FacesMessage.SEVERITY_INFO, "Glossary.term_validation");
                 return;
             }
 
             term.setDeleted(true);
 
-            if(term.getId() <= 0) //Its a new term. Safe to remove here.
-            {
+            if (term.getId() <= 0) { //Its a new term. Safe to remove here.
                 formEntry.getTerms().remove(term);
             }
             formEntry.setFulltext(null); // reset full text index
@@ -293,63 +273,53 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             addGrowl(FacesMessage.SEVERITY_INFO, getLocaleMessage("entry_deleted") + ": " + term.getTerm());
 
             log(Action.glossary_term_delete, glossaryResource, term.getId());
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorGrowl(e);
         }
     }
 
-    private int numberOfDeletedTerms()
-    {
+    private int numberOfDeletedTerms() {
         int deletedTerms = 0;
 
-        for(GlossaryTerm t : formEntry.getTerms())
-        {
-            if(t.isDeleted())
+        for (GlossaryTerm t : formEntry.getTerms()) {
+            if (t.isDeleted()) {
                 deletedTerms++;
+            }
         }
         return deletedTerms;
     }
 
-    public void addTerm()
-    {
-        try
-        {
+    public void addTerm() {
+        try {
             GlossaryTerm newTerm = new GlossaryTerm();
 
             // find a language that is not used yet in this entry
             List<Locale> unusedLanguages = new ArrayList<>(glossaryResource.getAllowedLanguages());
-            for(GlossaryTerm term : formEntry.getTerms())
-            {
+            for (GlossaryTerm term : formEntry.getTerms()) {
                 unusedLanguages.remove(term.getLanguage());
             }
-            if(unusedLanguages.isEmpty()) // all languages have been used in this glossary
+            if (unusedLanguages.isEmpty()) { // all languages have been used in this glossary
                 unusedLanguages = glossaryResource.getAllowedLanguages();
+            }
 
             newTerm.setLanguage(unusedLanguages.get(0));
             formEntry.addTerm(newTerm);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorGrowl(e);
         }
     }
 
-    public void changeTopicOne(AjaxBehaviorEvent event)
-    {
+    public void changeTopicOne(AjaxBehaviorEvent event) {
         createAvailableTopicsTwo();
         formEntry.setTopicTwo("");
         formEntry.setTopicThree("");
         availableTopicThree.clear();
     }
 
-    private void createAvailableTopicsTwo()
-    {
+    private void createAvailableTopicsTwo() {
         availableTopicTwo.clear();
 
-        if(formEntry.getTopicOne().equalsIgnoreCase("medicine"))
-        {
+        if (formEntry.getTopicOne().equalsIgnoreCase("medicine")) {
             availableTopicTwo.add(new SelectItem("Diseases and disorders"));
             availableTopicTwo.add(new SelectItem("Anatomy"));
             availableTopicTwo.add(new SelectItem("Medical branches"));
@@ -357,9 +327,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             availableTopicTwo.add(new SelectItem("Professions"));
             availableTopicTwo.add(new SelectItem("Food and nutrition"));
             availableTopicTwo.add(new SelectItem("other"));
-        }
-        else if(formEntry.getTopicOne().equalsIgnoreCase("TOURISM"))
-        {
+        } else if (formEntry.getTopicOne().equalsIgnoreCase("TOURISM")) {
             availableTopicTwo.add(new SelectItem("Accommodation"));
             availableTopicTwo.add(new SelectItem("Surroundings"));
             availableTopicTwo.add(new SelectItem("Heritage"));
@@ -369,37 +337,29 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void changeTopicTwo(AjaxBehaviorEvent event)
-    {
+    public void changeTopicTwo(AjaxBehaviorEvent event) {
         createAvailableTopicsThree();
         formEntry.setTopicThree("");
     }
 
-    private void createAvailableTopicsThree()
-    {
+    private void createAvailableTopicsThree() {
         availableTopicThree.clear();
 
-        if(formEntry.getTopicOne().equalsIgnoreCase("medicine"))
-        {
-            if(formEntry.getTopicTwo().equalsIgnoreCase("Diseases and disorders"))
-            {
+        if (formEntry.getTopicOne().equalsIgnoreCase("medicine")) {
+            if (formEntry.getTopicTwo().equalsIgnoreCase("Diseases and disorders")) {
                 availableTopicThree.add(new SelectItem("Signs and symptoms"));
                 availableTopicThree.add(new SelectItem("Diagnostic techniques"));
                 availableTopicThree.add(new SelectItem("Therapies"));
                 availableTopicThree.add(new SelectItem("Drugs"));
-            }
-            else if(formEntry.getTopicTwo().equalsIgnoreCase("Anatomy"))
-            {
+            } else if (formEntry.getTopicTwo().equalsIgnoreCase("Anatomy")) {
                 availableTopicThree.add(new SelectItem("Organs"));
                 availableTopicThree.add(new SelectItem("Bones"));
                 availableTopicThree.add(new SelectItem("Muscles"));
                 availableTopicThree.add(new SelectItem("Other"));
             }
         }
-        if(formEntry.getTopicOne().equalsIgnoreCase("TOURISM"))
-        {
-            if(formEntry.getTopicTwo().equalsIgnoreCase("Heritage"))
-            {
+        if (formEntry.getTopicOne().equalsIgnoreCase("TOURISM")) {
+            if (formEntry.getTopicTwo().equalsIgnoreCase("Heritage")) {
                 availableTopicThree.add(new SelectItem("History"));
                 availableTopicThree.add(new SelectItem("Architecture"));
                 availableTopicThree.add(new SelectItem("Festivals"));
@@ -408,42 +368,35 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     }
 
     /**
-     * Maps all valid names of allowed languages to their Locale
-     *
-     * @return
+     * Maps all valid names of allowed languages to their Locale.
      */
-    private Map<String, Locale> getLanguageMap()
-    {
+    private Map<String, Locale> getLanguageMap() {
         HashMap<String, Locale> languageMap = new HashMap<>();
-        for(Locale supportedLocale : LanguageBundle.getSupportedLocales())
-        {
-            for(Locale glossaryLocale : glossaryResource.getAllowedLanguages())
-            {
+        for (Locale supportedLocale : LanguageBundle.getSupportedLocales()) {
+            for (Locale glossaryLocale : glossaryResource.getAllowedLanguages()) {
                 languageMap.put(LanguageBundle.getLocaleMessage(supportedLocale, "language_" + glossaryLocale.getLanguage()), glossaryLocale);
             }
         }
         return languageMap;
     }
 
-    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException, IOException, IllegalAccessException
-    {
+    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException, IOException, IllegalAccessException {
         log.debug("parseXls");
 
         User user = getUser();
-        if(user == null)
+        if (user == null) {
             return;
+        }
 
-        if(!optionImportEnabled)
+        if (!optionImportEnabled) {
             throw new IllegalAccessException("This feature isn't enabled for your organization");
+        }
 
         //TODO check if user is moderator
-        if(overwriteGlossary)
-        {
+        if (overwriteGlossary) {
             log.debug("overrideGlossary is true");
             // delete previous entries, if not a moderator show an error
-        }
-        else
-        {
+        } else {
             log.debug("overrideGlossary is false");
         }
 
@@ -451,12 +404,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         importResponse = parser.parseGlossaryEntries();
 
-        if(importResponse.isSuccessful())
-        {
+        if (importResponse.isSuccessful()) {
             // persist parsed entries
             int userId = getUser().getId();
-            for(GlossaryEntry entry : importResponse.getEntries())
-            {
+            for (GlossaryEntry entry : importResponse.getEntries()) {
                 // set creator of new entries
                 entry.setUserId(userId);
                 entry.getTerms().forEach(term -> term.setUserId(userId));
@@ -470,24 +421,23 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         log.debug("parseXls done");
     }
 
-    public void postProcessXls(Object document)
-    {
+    public void postProcessXls(Object document) {
         User user = getUser();
-        if(user == null)
+        if (user == null) {
             return;
+        }
 
-        try
-        {
-            if(user.getOrganisation().getOption(Option.Glossary_Add_Watermark))
-            {
+        try {
+            if (user.getOrganisation().getOption(Option.Glossary_Add_Watermark)) {
                 log.debug("post processing glossary xls");
 
                 HSSFWorkbook wb = (HSSFWorkbook) document;
                 HSSFSheet sheet = wb.getSheetAt(0);
                 HSSFRow row0 = sheet.getRow(1);
 
-                if(row0 == null)
+                if (row0 == null) {
                     return;
+                }
 
                 HSSFCell cell0 = row0.getCell(0);
 
@@ -503,23 +453,17 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 ClientAnchor anchor = helper.createClientAnchor();
                 anchor.setAnchorType(ClientAnchor.AnchorType.DONT_MOVE_AND_RESIZE);
 
-                for(int i = 2; i <= sheet.getLastRowNum(); i++)
-                {
+                for (int i = 2; i <= sheet.getLastRowNum(); i++) {
                     HSSFRow row = sheet.getRow(i);
                     HSSFCell cell = row.getCell(0);
 
-                    if(cell != null)
-                    {
+                    if (cell != null) {
                         cell.setCellValue(cell.getStringCellValue());
-                        if(cell.getStringCellValue().equals(cell0.getStringCellValue()))
-                        {
+                        if (cell.getStringCellValue().equals(cell0.getStringCellValue())) {
                             cell0.setCellValue(cell0.getStringCellValue());
-                        }
-                        else
-                        {
+                        } else {
                             int rowIndex = i;
-                            if(sheet.getRow(rowIndex).getCell(0) != null)
-                            {
+                            if (sheet.getRow(rowIndex).getCell(0) != null) {
                                 cell0 = sheet.getRow(rowIndex).getCell(0);
                                 sheet.shiftRows(rowIndex, sheet.getLastRowNum(), 1);
                             }
@@ -546,16 +490,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 sheet.protectSheet("learnweb");
                 watermark.delete();
             }
-        }
-        catch(RuntimeException | IOException | SQLException e)
-        {
+        } catch (RuntimeException | IOException | SQLException e) {
             log.error("Error in postprocessing Glossary xls for resource: " + glossaryResource.getId(), e);
             addErrorGrowl(e);
         }
     }
 
-    public File text2Image(String textString) throws IOException
-    {
+    public File text2Image(String textString) throws IOException {
         //create a File Object
 
         File file = File.createTempFile(textString, ".png");
@@ -599,39 +540,32 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return file;
     }
 
-    public void rotatePDF(Object document)
-    {
+    public void rotatePDF(Object document) {
         Document doc = (Document) document;
         doc.setPageSize(PageSize.A4.rotate());
     }
 
-    public GlossaryResource getGlossaryResource()
-    {
+    public GlossaryResource getGlossaryResource() {
         return glossaryResource;
     }
 
     /**
-     * force reload of the tableItems from the glossaryResource
+     * force reload of the tableItems from the glossaryResource.
      */
-    private void repaintTable()
-    {
+    private void repaintTable() {
         tableItems = null;
     }
 
-    public List<GlossaryTableView> getTableItems()
-    {
-        if(null == tableItems && glossaryResource != null)
-        {
+    public List<GlossaryTableView> getTableItems() {
+        if (null == tableItems && glossaryResource != null) {
             tableItems = glossaryResource.getGlossaryTableView();
         }
 
         return tableItems;
     }
 
-    public LazyGlossaryTableView getLazyTableItems()
-    {
-        if(null == lazyTableItems && glossaryResource != null)
-        {
+    public LazyGlossaryTableView getLazyTableItems() {
+        if (null == lazyTableItems && glossaryResource != null) {
             lazyTableItems = new LazyGlossaryTableView(glossaryResource);
 
         }
@@ -639,44 +573,34 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return lazyTableItems;
     }
 
-    public int getEntryCount()
-    {
+    public int getEntryCount() {
         return glossaryResource.getEntries().size();
     }
 
-    public GlossaryEntry getFormEntry()
-    {
+    public GlossaryEntry getFormEntry() {
         return formEntry;
     }
 
-    public List<SelectItem> getAvailableTopicOne()
-    {
+    public List<SelectItem> getAvailableTopicOne() {
         return availableTopicOne;
     }
 
-    public List<SelectItem> getAvailableTopicTwo()
-    {
+    public List<SelectItem> getAvailableTopicTwo() {
         return availableTopicTwo;
     }
 
-    public List<SelectItem> getAvailableTopicThree()
-    {
+    public List<SelectItem> getAvailableTopicThree() {
         return availableTopicThree;
     }
 
-    private transient List<SelectItem> allowedTermLanguages; // cache for the allowed languages select list
-
-    public List<SelectItem> getAllowedTermLanguages()
-    {
-        if(null == allowedTermLanguages && glossaryResource != null)
-        {
+    public List<SelectItem> getAllowedTermLanguages() {
+        if (null == allowedTermLanguages && glossaryResource != null) {
             allowedTermLanguages = localesToSelectItems(glossaryResource.getAllowedLanguages());
         }
         return allowedTermLanguages;
     }
 
-    public boolean isOptionMandatoryDescription()
-    {
+    public boolean isOptionMandatoryDescription() {
         return optionMandatoryDescription;
     }
 
@@ -740,44 +664,36 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }*/
 
-    public boolean isOverwriteGlossary()
-    {
+    public boolean isOverwriteGlossary() {
         return overwriteGlossary;
     }
 
-    public GlossaryParserResponse getImportResponse()
-    {
-        return importResponse;
-    }
-
-    public void changeOverwriteFlag(AjaxBehaviorEvent overwriteGlossary)
-    {
-        log.debug("Value changed");
-    }
-
-    public List<Locale> getTableLanguageFilter()
-    {
-        return tableLanguageFilter;
-    }
-
-    public void setTableLanguageFilter(List<Locale> tableLanguageFilter)
-    {
-        this.tableLanguageFilter = tableLanguageFilter;
-    }
-
-    public String getPronounciationVoice(Locale locale)
-    {
-        return pronounciationVoices.getOrDefault(locale, null);
-    }
-
-    public void setOverwriteGlossary(final boolean overwriteGlossary)
-    {
+    public void setOverwriteGlossary(final boolean overwriteGlossary) {
         log.debug("setter");
         this.overwriteGlossary = overwriteGlossary;
     }
 
-    public boolean isOptionImportEnabled()
-    {
+    public GlossaryParserResponse getImportResponse() {
+        return importResponse;
+    }
+
+    public void changeOverwriteFlag(AjaxBehaviorEvent overwriteGlossary) {
+        log.debug("Value changed");
+    }
+
+    public List<Locale> getTableLanguageFilter() {
+        return tableLanguageFilter;
+    }
+
+    public void setTableLanguageFilter(List<Locale> tableLanguageFilter) {
+        this.tableLanguageFilter = tableLanguageFilter;
+    }
+
+    public String getPronounciationVoice(Locale locale) {
+        return PRONOUNCIATION_VOICES.getOrDefault(locale, null);
+    }
+
+    public boolean isOptionImportEnabled() {
         return optionImportEnabled;
     }
 

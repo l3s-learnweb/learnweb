@@ -11,8 +11,7 @@ import org.hibernate.validator.constraints.Length;
 
 import de.l3s.util.StringHelper;
 
-public class GlossaryTerm implements Serializable, Cloneable
-{
+public class GlossaryTerm implements Serializable, Cloneable {
     private static final long serialVersionUID = -8309235925484416943L;
 
     private int id = -1;
@@ -39,40 +38,13 @@ public class GlossaryTerm implements Serializable, Cloneable
     private boolean phraseologyPasted = false;
 
     /**
-     * Convenience function that calls the getter of a given field
-     *
-     * @param fieldName
-     * @return
+     * do nothing constructor.
      */
-    public String get(String fieldName)
-    {
-        switch(fieldName)
-        {
-        case "term":
-            return getTerm();
-        case "pronounciation":
-            return getPronounciation();
-        case "acronym":
-            return getAcronym();
-        case "source":
-            return getSource();
-        case "phraseology":
-            return getPhraseology();
-        default:
-            throw new IllegalArgumentException(fieldName + " is not implemented");
-        }
-    }
-
-    /**
-     * do nothing constructor
-     */
-    public GlossaryTerm()
-    {
+    public GlossaryTerm() {
 
     }
 
-    public GlossaryTerm(GlossaryTerm oldTerm)
-    {
+    public GlossaryTerm(GlossaryTerm oldTerm) {
         setId(-1);
         setOriginalTermId(oldTerm.id);
         setDeleted(oldTerm.deleted);
@@ -92,209 +64,195 @@ public class GlossaryTerm implements Serializable, Cloneable
         setPhraseologyPasted(oldTerm.phraseologyPasted);
 
         setUses(new ArrayList<>(oldTerm.uses.size()));
-        for(int i = 0, len = oldTerm.uses.size(); i < len; i++)
-        {
+        for (int i = 0, len = oldTerm.uses.size(); i < len; i++) {
             this.uses.add(i, oldTerm.uses.get(i));
         }
 
         // TODO since Strings are immutable this should be sufficient do clone the list. please test: setUses(new ArrayList<String>(oldTerm.uses));
     }
 
+    /**
+     * Convenience function that calls the getter of a given field.
+     */
+    public String get(String fieldName) {
+        switch (fieldName) {
+            case "term":
+                return getTerm();
+            case "pronounciation":
+                return getPronounciation();
+            case "acronym":
+                return getAcronym();
+            case "source":
+                return getSource();
+            case "phraseology":
+                return getPhraseology();
+            default:
+                throw new IllegalArgumentException(fieldName + " is not implemented");
+        }
+    }
+
     @Override
-    public GlossaryTerm clone()
-    {
+    public GlossaryTerm clone() {
         return new GlossaryTerm(this);
     }
 
-    public String getTerm()
-    {
+    public String getTerm() {
         return term;
     }
 
-    public void setTerm(String term)
-    {
+    public void setTerm(String term) {
         this.term = term;
     }
 
-    public List<String> getUses()
-    {
+    public List<String> getUses() {
         return uses;
     }
 
-    public void setUses(List<String> uses)
-    {
+    public void setUses(List<String> uses) {
         this.uses = uses;
     }
 
-    public String getPronounciation()
-    {
+    public String getPronounciation() {
         return pronounciation;
     }
 
-    public void setPronounciation(String pronounciation)
-    {
+    public void setPronounciation(String pronounciation) {
         this.pronounciation = pronounciation;
     }
 
-    public String getAcronym()
-    {
+    public String getAcronym() {
         return acronym;
     }
 
-    public void setAcronym(String acronym)
-    {
+    public void setAcronym(String acronym) {
         this.acronym = acronym;
     }
 
-    public String getSource()
-    {
+    public String getSource() {
         return source;
     }
 
-    public void setSource(String source)
-    {
+    public void setSource(String source) {
         this.source = source;
     }
 
-    public String getPhraseology()
-    {
+    public String getPhraseology() {
         return phraseology;
     }
 
-    public void setPhraseology(String phraseology)
-    {
+    public void setPhraseology(String phraseology) {
         this.phraseology = phraseology;
     }
 
-    public Locale getLanguage()
-    {
+    public Locale getLanguage() {
         return language;
     }
 
-    public void setLanguage(Locale language)
-    {
+    public void setLanguage(Locale language) {
         this.language = language;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public void setId(int id)
-    {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public boolean isTermPasted()
-    {
+    public boolean isTermPasted() {
         return termPasted;
     }
 
-    public void setTermPasted(boolean termPasted)
-    {
-        if(!StringUtils.isEmpty(term))
+    public void setTermPasted(boolean termPasted) {
+        if (!StringUtils.isEmpty(term)) {
             this.termPasted = termPasted;
+        }
     }
 
-    public boolean isPronounciationPasted()
-    {
+    public boolean isPronounciationPasted() {
         return pronounciationPasted;
     }
 
-    public void setPronounciationPasted(boolean pronounciationPasted)
-    {
-        if(!StringUtils.isEmpty(pronounciation))
+    public void setPronounciationPasted(boolean pronounciationPasted) {
+        if (!StringUtils.isEmpty(pronounciation)) {
             this.pronounciationPasted = pronounciationPasted;
+        }
     }
 
-    public boolean isAcronymPasted()
-    {
+    public boolean isAcronymPasted() {
         return acronymPasted;
     }
 
-    public void setAcronymPasted(boolean acronymPasted)
-    {
-        if(!StringUtils.isEmpty(acronym))
+    public void setAcronymPasted(boolean acronymPasted) {
+        if (!StringUtils.isEmpty(acronym)) {
             this.acronymPasted = acronymPasted;
+        }
     }
 
-    public boolean isPhraseologyPasted()
-    {
+    public boolean isPhraseologyPasted() {
         return phraseologyPasted;
     }
 
-    public void setPhraseologyPasted(boolean phraseologyPasted)
-    {
-        if(!StringUtils.isEmpty(phraseology))
+    public void setPhraseologyPasted(boolean phraseologyPasted) {
+        if (!StringUtils.isEmpty(phraseology)) {
             this.phraseologyPasted = phraseologyPasted;
+        }
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return userId;
     }
 
-    public int getLastChangedByUserId()
-    {
-        return lastChangedByUserId;
-    }
-
-    public void setLastChangedByUserId(int lastChangedByUserId)
-    {
-        this.lastChangedByUserId = lastChangedByUserId;
-    }
-
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public int getEntryId()
-    {
+    public int getLastChangedByUserId() {
+        return lastChangedByUserId;
+    }
+
+    public void setLastChangedByUserId(int lastChangedByUserId) {
+        this.lastChangedByUserId = lastChangedByUserId;
+    }
+
+    public int getEntryId() {
         return entryId;
     }
 
-    public void setEntryId(int entryId)
-    {
+    public void setEntryId(int entryId) {
         this.entryId = entryId;
     }
 
-    public boolean isDeleted()
-    {
+    public boolean isDeleted() {
         return deleted;
     }
 
-    public void setDeleted(boolean deleted)
-    {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 
-    public Timestamp getTimestamp()
-    {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp)
-    {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
-    public String getUsesDisplayLabel()
-    {
-        if(getUses() == null || getUses().isEmpty())
+    public String getUsesDisplayLabel() {
+        if (getUses() == null || getUses().isEmpty()) {
             return "Use";
-        else
+        } else {
             return StringHelper.implode(getUses(), ", ");
+        }
     }
 
-    public int getOriginalTermId()
-    {
+    public int getOriginalTermId() {
         return originalTermId;
     }
 
-    public void setOriginalTermId(int originalTermId)
-    {
+    public void setOriginalTermId(int originalTermId) {
         this.originalTermId = originalTermId;
     }
 }

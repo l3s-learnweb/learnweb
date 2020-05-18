@@ -26,13 +26,11 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.util.MapHelper;
 
-class GlossaryDashboardChartsFactory
-{
+class GlossaryDashboardChartsFactory {
     private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
-    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap, Locale locale)
-    {
+    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap, Locale locale) {
         BarChartModel model = new BarChartModel();
 
         Action[] actionTypes = Action.values();
@@ -42,23 +40,20 @@ class GlossaryDashboardChartsFactory
         int resource = 0;
         int system = 0;
 
-        for(final Map.Entry<Integer, Integer> entry : actionsMap.entrySet())
-        {
+        for (final Map.Entry<Integer, Integer> entry : actionsMap.entrySet()) {
             Integer actionId = entry.getKey();
-            if(actionId < actionTypes.length)
-            {
+            if (actionId < actionTypes.length) {
                 Action action = actionTypes[actionId];
-                if(Action.getActionsByCategory(ActionCategory.SEARCH).contains(action))
+                if (Action.getActionsByCategory(ActionCategory.SEARCH).contains(action)) {
                     search += entry.getValue();
-                else if(Action.getActionsByCategory(ActionCategory.GLOSSARY).contains(action))
+                } else if (Action.getActionsByCategory(ActionCategory.GLOSSARY).contains(action)) {
                     glossary += entry.getValue();
-                else if(Action.getActionsByCategory(ActionCategory.RESOURCE).contains(action))
+                } else if (Action.getActionsByCategory(ActionCategory.RESOURCE).contains(action)) {
                     resource += entry.getValue();
-                else
+                } else {
                     system += entry.getValue();
-            }
-            else
-            {
+                }
+            } else {
                 log.error("Unknown actionId: " + actionId);
             }
         }
@@ -86,8 +81,7 @@ class GlossaryDashboardChartsFactory
         return model;
     }
 
-    public static PieChartModel createUsersSourcesChart(Map<String, Integer> glossarySourcesWithCounters)
-    {
+    public static PieChartModel createUsersSourcesChart(Map<String, Integer> glossarySourcesWithCounters) {
         PieChartModel model = new PieChartModel();
 
         ChartData data = new ChartData();
@@ -96,15 +90,11 @@ class GlossaryDashboardChartsFactory
         List<Number> values = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
-        if(glossarySourcesWithCounters.isEmpty())
-        {
+        if (glossarySourcesWithCounters.isEmpty()) {
             labels.add("");
             values.add(0);
-        }
-        else
-        {
-            for(Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet())
-            {
+        } else {
+            for (Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet()) {
 
                 labels.add(source.getKey());
                 values.add(source.getValue());
@@ -120,8 +110,7 @@ class GlossaryDashboardChartsFactory
         return model;
     }
 
-    public static LineChartModel createInteractionsChart(Map<String, Integer> actionsCountPerDay, Date startDate, Date endDate)
-    {
+    public static LineChartModel createInteractionsChart(Map<String, Integer> actionsCountPerDay, Date startDate, Date endDate) {
         LineChartModel model = new LineChartModel();
         ChartData data = new ChartData();
         LineChartDataSet dataSet = new LineChartDataSet();
@@ -140,9 +129,8 @@ class GlossaryDashboardChartsFactory
         Calendar end = Calendar.getInstance();
         end.setTime(endDate);
 
-        for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
-        {
-            String dateKey = dateFormat.format(date.toInstant().atZone(ZoneId.systemDefault()));
+        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+            String dateKey = DATE_FORMAT.format(date.toInstant().atZone(ZoneId.systemDefault()));
             labels.add(dateKey);
             values.add(actionsCountPerDay.getOrDefault(dateKey, 0));
         }
@@ -154,8 +142,7 @@ class GlossaryDashboardChartsFactory
         return model;
     }
 
-    public static BarChartModel createUsersGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser)
-    {
+    public static BarChartModel createUsersGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser) {
         BarChartModel model = new BarChartModel();
         ChartData data = new ChartData();
 
@@ -165,15 +152,11 @@ class GlossaryDashboardChartsFactory
         concepts.setLabel("Concepts");
 
         List<Number> conceptsData = new ArrayList<>();
-        if(glossaryConceptsCountPerUser.isEmpty())
-        {
+        if (glossaryConceptsCountPerUser.isEmpty()) {
             conceptsData.add(0);
             labels.add("");
-        }
-        else
-        {
-            for(String key : glossaryConceptsCountPerUser.keySet())
-            {
+        } else {
+            for (String key : glossaryConceptsCountPerUser.keySet()) {
                 labels.add(key);
                 conceptsData.add(glossaryConceptsCountPerUser.getOrDefault(key, 0));
             }
@@ -185,14 +168,10 @@ class GlossaryDashboardChartsFactory
         terms.setLabel("Terms");
 
         List<Number> termsData = new ArrayList<>();
-        if(glossaryTermsCountPerUser.isEmpty())
-        {
+        if (glossaryTermsCountPerUser.isEmpty()) {
             conceptsData.add(0);
-        }
-        else
-        {
-            for(String key : glossaryTermsCountPerUser.keySet())
-            {
+        } else {
+            for (String key : glossaryTermsCountPerUser.keySet()) {
                 conceptsData.add(glossaryTermsCountPerUser.getOrDefault(key, 0));
             }
         }
@@ -208,8 +187,7 @@ class GlossaryDashboardChartsFactory
         return model;
     }
 
-    public static BarChartModel createProxySourcesChart(Map<String, Integer> proxySourcesWithCounters)
-    {
+    public static BarChartModel createProxySourcesChart(Map<String, Integer> proxySourcesWithCounters) {
         BarChartModel model = new BarChartModel();
         ChartData data = new ChartData();
 
@@ -218,15 +196,11 @@ class GlossaryDashboardChartsFactory
         List<Number> values = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
-        if(proxySourcesWithCounters.isEmpty())
-        {
+        if (proxySourcesWithCounters.isEmpty()) {
             labels.add("");
             values.add(0);
-        }
-        else
-        {
-            for(Map.Entry<String, Integer> e : MapHelper.sortByValue(proxySourcesWithCounters).entrySet())
-            {
+        } else {
+            for (Map.Entry<String, Integer> e : MapHelper.sortByValue(proxySourcesWithCounters).entrySet()) {
                 labels.add(e.getKey());
                 values.add(e.getValue());
             }
@@ -241,8 +215,7 @@ class GlossaryDashboardChartsFactory
         return model;
     }
 
-    public static BarChartModel createUserFieldsChart(List<GlossaryUserTermsSummary> glossaryFieldSummeryPerUser)
-    {
+    public static BarChartModel createUserFieldsChart(List<GlossaryUserTermsSummary> glossaryFieldSummeryPerUser) {
         BarChartModel model = new BarChartModel();
         ChartData data = new ChartData();
 
@@ -261,8 +234,7 @@ class GlossaryDashboardChartsFactory
         BarChartDataSet source = new BarChartDataSet();
         source.setLabel("source");
 
-        if(!glossaryFieldSummeryPerUser.isEmpty())
-        {
+        if (!glossaryFieldSummeryPerUser.isEmpty()) {
             GlossaryUserTermsSummary gfs = glossaryFieldSummeryPerUser.get(0);
             pronounciation.setData(Collections.singletonList(gfs.getPronounciation()));
             acronym.setData(Collections.singletonList(gfs.getAcronym()));

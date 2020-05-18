@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource.office.converter.model;
 
-public class ConverterResponse
-{
+public class ConverterResponse {
     private String fileUrl;
 
     private int percent;
@@ -10,43 +9,35 @@ public class ConverterResponse
 
     private Integer error;
 
-    public String getFileUrl()
-    {
+    public String getFileUrl() {
         return fileUrl;
     }
 
-    public void setFileUrl(String fileUrl)
-    {
+    public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
     }
 
-    public int getPercent()
-    {
+    public int getPercent() {
         return percent;
     }
 
-    public void setPercent(int percent)
-    {
+    public void setPercent(int percent) {
         this.percent = percent;
     }
 
-    public Boolean isEndConvert()
-    {
+    public Boolean isEndConvert() {
         return endConvert;
     }
 
-    public void setEndConvert(Boolean endConvert)
-    {
+    public void setEndConvert(Boolean endConvert) {
         this.endConvert = endConvert;
     }
 
-    public Integer getError()
-    {
+    public Integer getError() {
         return error;
     }
 
-    public void setError(Integer error)
-    {
+    public void setError(Integer error) {
         this.error = error;
     }
 

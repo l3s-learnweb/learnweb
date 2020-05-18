@@ -16,8 +16,7 @@ import de.l3s.learnweb.resource.Comment;
 
 @Named
 @SessionScoped
-public class AdminTextAnalysisBean extends ApplicationBean implements Serializable
-{
+public class AdminTextAnalysisBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -3957625443067966969L;
 
     private String textBR;
@@ -25,40 +24,33 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
     private int commentCount = 0;
     private List<Comment> comments;
 
-    public String getTextBR()
-    {
+    public String getTextBR() {
         return textBR;
     }
 
-    public String getTextNL()
-    {
+    public String getTextNL() {
         return textNL;
     }
 
-    public int getCommentCount()
-    {
+    public int getCommentCount() {
         return commentCount;
     }
 
-    public List<Comment> getComments()
-    {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public TreeSet<Integer> getSelectedUsers()
-    {
+    public TreeSet<Integer> getSelectedUsers() {
         HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
         String[] tempSelectedUsers = request.getParameterValues("selected_users");
 
-        if(null == tempSelectedUsers || tempSelectedUsers.length == 0)
-        {
+        if (null == tempSelectedUsers || tempSelectedUsers.length == 0) {
             addMessage(FacesMessage.SEVERITY_WARN, "select_user");
             return null;
         }
 
         TreeSet<Integer> selectedUsersSet = new TreeSet<>();
-        for(String userId : tempSelectedUsers)
-        {
+        for (String userId : tempSelectedUsers) {
             selectedUsersSet.add(Integer.parseInt(userId));
 
         }
@@ -66,14 +58,13 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
         return selectedUsersSet;
     }
 
-    public void onAnalyseComments()
-    {
-        try
-        {
+    public void onAnalyseComments() {
+        try {
             TreeSet<Integer> selectedUsers = getSelectedUsers();
 
-            if(null == selectedUsers)
+            if (null == selectedUsers) {
                 return;
+            }
 
             comments = getLearnweb().getResourceManager().getCommentsByUserIds(selectedUsers);
 
@@ -81,8 +72,7 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
 
             StringBuilder sbNL = new StringBuilder();
             StringBuilder sbBR = new StringBuilder();
-            for(Comment comment : comments)
-            {
+            for (Comment comment : comments) {
                 sbNL.append(comment.getText());
                 sbNL.append("\n");
                 //sbNL.append("\n-----\n");
@@ -93,9 +83,7 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
 
             textNL = sbNL.toString();
             textBR = sbBR.toString();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
         }
     }

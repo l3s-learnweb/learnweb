@@ -1,51 +1,43 @@
 package de.l3s.learnweb.resource.search.filters;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.solr.client.solrj.response.FacetField;
-
-public class DurationFilter extends Filter
-{
+public class DurationFilter extends Filter {
     private static final long serialVersionUID = 9120230856128443235L;
 
     @SuppressWarnings("StandardVariableNames")
-    private enum DURATION_VALUES
-    {
+    private enum DefaultValues {
         s,
         m,
         l
     }
 
-    private DURATION_VALUES value;
+    private DefaultValues value;
     private final ArrayList<FilterOption> defaultOptions = new ArrayList<>();
 
-    public DurationFilter(final FilterType type)
-    {
+    public DurationFilter(final FilterType type) {
         super(type);
 
-        for (DURATION_VALUES duration : DURATION_VALUES.values())
+        for (DefaultValues duration : DefaultValues.values()) {
             defaultOptions.add(new FilterOption(null, duration.name(), null, false));
+        }
     }
 
     @Override
-    public ArrayList<FilterOption> getOptions()
-    {
+    public ArrayList<FilterOption> getOptions() {
         return super.getOptions().isEmpty() ? defaultOptions : super.getOptions();
     }
 
     @Override
-    public void setActiveValue(final String activeValue)
-    {
+    public void setActiveValue(final String activeValue) {
         super.setActiveValue(activeValue);
-        if (activeValue != null)
-            this.value = DURATION_VALUES.valueOf(activeValue);
+        if (activeValue != null) {
+            this.value = DefaultValues.valueOf(activeValue);
+        }
     }
 
-    public boolean isValid(int duration)
-    {
-        switch(value)
-        {
+    public boolean isValid(int duration) {
+        switch (value) {
             case s:
                 return duration <= 240;
             case m:

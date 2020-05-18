@@ -33,59 +33,49 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 
 /**
- * Used to extract activities from http://hypothes.is
+ * Used to extract activities from http://hypothes.is.
  *
  * @author Kate
- *
  */
 @Named
 @RequestScoped
-public class AdminGroupDiscussionActivityBean extends ApplicationBean implements Serializable
-{
+public class AdminGroupDiscussionActivityBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 6519388228766929819L;
-    private static final Pattern datePattern = Pattern.compile("(\\d+\\D\\d+\\D\\d+).(\\d+\\D\\d+\\D\\d+)");
-    private static final Pattern usernamePattern = Pattern.compile("acct:(.+)@");
-    private static final Pattern groupIDPattern = Pattern.compile("hypothes.is/groups/(\\w*)");
-
     private static final Logger log = LogManager.getLogger(AdminGroupDiscussionActivityBean.class);
 
-    private int groupID;
+    private static final Pattern DATE_PATTERN = Pattern.compile("(\\d+\\D\\d+\\D\\d+).(\\d+\\D\\d+\\D\\d+)");
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("acct:(.+)@");
+    private static final Pattern GROUP_ID_PATTERN = Pattern.compile("hypothes.is/groups/(\\w*)");
 
+    private int groupID;
     private List<AnnotationEntity> groupAnnotations;
 
-    public AdminGroupDiscussionActivityBean()
-    {
+    public AdminGroupDiscussionActivityBean() {
         // TODO: perhaps @PostConstructor or viewAction should be used instead
         load();
     }
 
-    private void load()
-    {
+    private void load() {
         setGroupAnnotations(new ArrayList<>());
         FacesContext context = FacesContext.getCurrentInstance();
         Map<String, String> paramMap = context.getExternalContext().getRequestParameterMap();
 
         setGroupID(Integer.parseInt(paramMap.get("groupID")));
 
-        try
-        {
+        try {
             Group group = getLearnweb().getGroupManager().getGroupById(groupID);
 
-            if(group == null)
-            {
+            if (group == null) {
                 return;
             }
 
             String hypothesisLink = group.getHypothesisLink();
             String hypothesisGroupID;
 
-            Matcher matcher = groupIDPattern.matcher(hypothesisLink);
-            if(matcher.find())
-            {
+            Matcher matcher = GROUP_ID_PATTERN.matcher(hypothesisLink);
+            if (matcher.find()) {
                 hypothesisGroupID = matcher.group(1);
-            }
-            else
-            {
+            } else {
                 return;
             }
 
@@ -108,26 +98,21 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
             JSONObject jsonResponse = new JSONObject(responseString);
             JSONArray rows = jsonResponse.getJSONArray("rows");
 
-            for(int i = 0, len = rows.length(); i < len; i++)
-            {
+            for (int i = 0, len = rows.length(); i < len; i++) {
                 groupAnnotations.add(processJson(rows.getJSONObject(i)));
             }
-        }
-        catch(IOException | URISyntaxException | JSONException | ParseException | SQLException e)
-        {
+        } catch (IOException | URISyntaxException | JSONException | ParseException | SQLException e) {
             addErrorMessage(e);
         }
 
     }
 
-    private AnnotationEntity processJson(JSONObject row) throws JSONException, ParseException
-    {
+    private AnnotationEntity processJson(JSONObject row) throws JSONException, ParseException {
         log.debug(row.toString());
 
         String name = row.getString("user");
-        Matcher matcher = usernamePattern.matcher(name);
-        if(matcher.find())
-        {
+        Matcher matcher = USERNAME_PATTERN.matcher(name);
+        if (matcher.find()) {
             name = matcher.group(1);
         }
 
@@ -137,54 +122,43 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
         String timeJSON = row.getString("created");
         String time;
 
-        matcher = datePattern.matcher(timeJSON);
-        if(matcher.find())
-        {
+        matcher = DATE_PATTERN.matcher(timeJSON);
+        if (matcher.find()) {
             time = matcher.group(1) + " " + matcher.group(2);
-        }
-        else
-        {
+        } else {
             time = timeJSON;
         }
 
         JSONArray target = row.getJSONArray("target");
         String snippet;
 
-        if(target.length() > 1)
-        {
+        if (target.length() > 1) {
             snippet = target.getJSONArray(1).getJSONObject(3).getString("exact");
             snippet = StringUtils.abbreviate(snippet, 100);
-        }
-        else
-        {
+        } else {
             snippet = "";
         }
 
         return new AnnotationEntity(name, text, snippet, url, time);
     }
 
-    public List<AnnotationEntity> getGroupAnnotations()
-    {
+    public List<AnnotationEntity> getGroupAnnotations() {
         return groupAnnotations;
     }
 
-    public void setGroupAnnotations(List<AnnotationEntity> groupAnnotations)
-    {
+    public void setGroupAnnotations(List<AnnotationEntity> groupAnnotations) {
         this.groupAnnotations = groupAnnotations;
     }
 
-    public int getGroupID()
-    {
+    public int getGroupID() {
         return groupID;
     }
 
-    public void setGroupID(int groupID)
-    {
+    public void setGroupID(int groupID) {
         this.groupID = groupID;
     }
 
-    public static class AnnotationEntity implements Serializable
-    {
+    public static class AnnotationEntity implements Serializable {
         private static final long serialVersionUID = -5780824434073985590L;
 
         String name;
@@ -193,8 +167,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
         String url;
         String time;
 
-        public AnnotationEntity(String name, String annotation, String snippet, String url, String time)
-        {
+        public AnnotationEntity(String name, String annotation, String snippet, String url, String time) {
             this.name = name;
             this.annotation = annotation;
             this.snippet = snippet;
@@ -202,53 +175,43 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
             this.time = time;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return name;
         }
 
-        public String getAnnotation()
-        {
-            return annotation;
-        }
-
-        public String getSnippet()
-        {
-            return snippet;
-        }
-
-        public String getUrl()
-        {
-            return url;
-        }
-
-        public String getTime()
-        {
-            return time;
-        }
-
-        public void setName(String name)
-        {
+        public void setName(String name) {
             this.name = name;
         }
 
-        public void setAnnotation(String annotation)
-        {
+        public String getAnnotation() {
+            return annotation;
+        }
+
+        public void setAnnotation(String annotation) {
             this.annotation = annotation;
         }
 
-        public void setSnippet(String snippet)
-        {
+        public String getSnippet() {
+            return snippet;
+        }
+
+        public void setSnippet(String snippet) {
             this.snippet = snippet;
         }
 
-        public void setUrl(String url)
-        {
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
             this.url = url;
         }
 
-        public void setTime(String time)
-        {
+        public String getTime() {
+            return time;
+        }
+
+        public void setTime(String time) {
             this.time = time;
         }
     }

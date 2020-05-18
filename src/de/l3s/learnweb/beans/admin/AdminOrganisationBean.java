@@ -33,8 +33,7 @@ import de.l3s.util.Misc;
 
 @Named
 @ViewScoped
-public class AdminOrganisationBean extends ApplicationBean implements Serializable
-{
+public class AdminOrganisationBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -4815509777068373043L;
     private static final Logger log = LogManager.getLogger(AdminOrganisationBean.class);
 
@@ -43,25 +42,24 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     private LinkedList<OptionWrapperGroup> optionGroups;
     private ArrayList<SelectItem> availableGlossaryLanguages;
 
-    public void onLoad() throws SQLException
-    {
+    public void onLoad() throws SQLException {
         log.debug("init AdminOrganisationBean");
 
-        if(getUser() == null)
+        if (getUser() == null) {
             return;
+        }
 
-        if(organisationId > 0)
+        if (organisationId > 0) {
             setOrganisation(getLearnweb().getOrganisationManager().getOrganisationById(organisationId));
-        else
+        } else {
             setOrganisation(getUser().getOrganisation()); // by default edit the users organization
+        }
     }
 
-    public void handleFileUpload(FileUploadEvent event)
-    {
+    public void handleFileUpload(FileUploadEvent event) {
         UploadedFile uploadedFile = event.getFile();
 
-        try
-        {
+        try {
             FileInfo fileInfo = FileInspector.inspectFileName(uploadedFile.getFileName());
 
             File file = new File();
@@ -71,76 +69,60 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
             file = getLearnweb().getFileManager().save(file, uploadedFile.getInputStream());
 
-            if(organisation.getBannerImageFileId() > 0) // delete old image first
-            {
+            if (organisation.getBannerImageFileId() > 0) { // delete old image first
                 Learnweb.getInstance().getFileManager().delete(organisation.getBannerImageFileId());
             }
 
             organisation.setBannerImageFileId(file.getId());
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.error("Could not handle uploaded banner image", e);
             addGrowl(FacesMessage.SEVERITY_FATAL, "Could not store file");
         }
     }
 
     /**
-     *
      * @return list of supported languages (codes) of this Learnweb instance
      */
-    public List<String> getSupportedLanguages()
-    {
+    public List<String> getSupportedLanguages() {
         List<Locale> locales = LanguageBundle.getSupportedLocales();
 
         return locales.stream().map(Locale::getLanguage).distinct().collect(Collectors.toList());
     }
 
     /**
-     *
      * @return list of supported locale variants. At the time of writing: Archive
      */
-    public List<String> getSupportedLanguageVariants()
-    {
+    public List<String> getSupportedLanguageVariants() {
         List<Locale> locales = LanguageBundle.getSupportedLocales();
 
         return locales.stream().map(Locale::getVariant).filter(StringUtils::isNotEmpty).distinct().collect(Collectors.toList());
     }
 
-    public void onSave()
-    {
-        for(OptionWrapperGroup group : optionGroups)
-        {
-            for(OptionWrapper optionWrapper : group.getOptions())
-            {
+    public void onSave() {
+        for (OptionWrapperGroup group : optionGroups) {
+            for (OptionWrapper optionWrapper : group.getOptions()) {
                 organisation.setOption(optionWrapper.getOption(), optionWrapper.getValue());
             }
         }
 
-        try
-        {
+        try {
             getLearnweb().getOrganisationManager().save(organisation);
 
             addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             addErrorMessage(e);
         }
     }
 
-    public Organisation getSelectedOrganisation()
-    {
+    public Organisation getSelectedOrganisation() {
         return organisation;
     }
 
-    public List<OptionWrapperGroup> getOptionGroups()
-    {
+    public List<OptionWrapperGroup> getOptionGroups() {
         return optionGroups;
     }
 
-    private void setOrganisation(Organisation selectedOrganisation)
-    {
+    private void setOrganisation(Organisation selectedOrganisation) {
         log.debug("select organisation: " + selectedOrganisation);
 
         this.organisation = selectedOrganisation;
@@ -155,13 +137,11 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         EnumComparator c = new EnumComparator();
         java.util.Arrays.sort(optionsEnum, c);
 
-        for(Option option : optionsEnum)
-        {
+        for (Option option : optionsEnum) {
             // example: this gets "Services" from "Services_Allow_logout_from_Interweb"
             String newOptionGroupName = option.name().substring(0, option.name().indexOf('_'));
 
-            if(oldOptionGroupName != null && !oldOptionGroupName.equalsIgnoreCase(newOptionGroupName))
-            {
+            if (oldOptionGroupName != null && !oldOptionGroupName.equalsIgnoreCase(newOptionGroupName)) {
                 optionGroups.add(new OptionWrapperGroup(oldOptionGroupName, options));
 
                 options = new LinkedList<>();
@@ -173,10 +153,8 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         optionGroups.add(new OptionWrapperGroup(oldOptionGroupName, options));
     }
 
-    public List<SelectItem> getAvailableGlossaryLanguages()
-    {
-        if(null == availableGlossaryLanguages)
-        {
+    public List<SelectItem> getAvailableGlossaryLanguages() {
+        if (null == availableGlossaryLanguages) {
             ArrayList<Locale> glossaryLanguages = new ArrayList<>(4);
             glossaryLanguages.add(new Locale("ar"));
             glossaryLanguages.add(new Locale("de"));
@@ -192,89 +170,74 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             glossaryLanguages.add(new Locale("zh"));
             availableGlossaryLanguages = new ArrayList<>();
 
-            for(Locale locale : glossaryLanguages)
-            {
+            for (Locale locale : glossaryLanguages) {
                 availableGlossaryLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
             }
-            availableGlossaryLanguages.sort(Misc.selectItemLabelComparator);
+            availableGlossaryLanguages.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
         }
         return availableGlossaryLanguages;
     }
 
-    public int getOrganisationId()
-    {
+    public int getOrganisationId() {
         return organisationId;
     }
 
-    public void setOrganisationId(int organisationId)
-    {
+    public void setOrganisationId(int organisationId) {
         this.organisationId = organisationId;
     }
 
     // only helper classes to display the options
-    public static class OptionWrapper implements Serializable
-    {
+    public static class OptionWrapper implements Serializable {
         private static final long serialVersionUID = 4028764135842666696L;
-        private Option option;
+        private final Option option;
         private boolean value;
 
-        public OptionWrapper(Option option, boolean value)
-        {
+        public OptionWrapper(Option option, boolean value) {
             this.option = option;
             this.value = value;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return option.name().substring(option.name().indexOf('_')).replace("_", " ");
         }
 
-        public boolean getValue()
-        {
+        public boolean getValue() {
             return value;
         }
 
-        public void setValue(boolean value)
-        {
+        public void setValue(boolean value) {
             this.value = value;
         }
 
-        public Option getOption()
-        {
+        public Option getOption() {
             return option;
         }
     }
 
-    public static class OptionWrapperGroup implements Serializable
-    {
+    public static class OptionWrapperGroup implements Serializable {
         private static final long serialVersionUID = -7136479116433806735L;
-        private String title;
-        private List<OptionWrapper> options;
+        private final String title;
+        private final List<OptionWrapper> options;
 
-        public OptionWrapperGroup(String title, List<OptionWrapper> options)
-        {
+        public OptionWrapperGroup(String title, List<OptionWrapper> options) {
             this.title = title;
             this.options = options;
         }
 
-        public String getTitle()
-        {
+        public String getTitle() {
             return title;
         }
 
-        public List<OptionWrapper> getOptions()
-        {
+        public List<OptionWrapper> getOptions() {
             return options;
         }
     }
 
-    private static class EnumComparator implements Comparator<Option>, Serializable
-    {
+    private static class EnumComparator implements Comparator<Option>, Serializable {
         private static final long serialVersionUID = 6363944568317854215L;
 
         @Override
-        public int compare(Option o1, Option o2)
-        {
+        public int compare(Option o1, Option o2) {
             return o1.name().compareTo(o2.name());
         }
     }

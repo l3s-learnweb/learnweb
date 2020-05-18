@@ -29,6 +29,7 @@ function saveTranscriptAction(word, annotation, action) {
     $(evt.currentTarget).addClass('ui-state-active');
 
 } */
+
 /*
 function selectTab(divName) {
   let i, tabcontent, tablinks;
@@ -224,8 +225,9 @@ function doAction(action, item) {
       selectedNodeId = item.attr('id');
       saveTranscriptAction(item.text(), item.data('title'), 'delete annotation');
       item.removeAttr('data-title');
-      if (item.data('content')) item.tooltipster('content', item.data('content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>'));
-      else {
+      if (item.data('content')) {
+        item.tooltipster('content', item.data('content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>'));
+      } else {
         item.tooltipster('destroy');
         item.removeAttr('title');
       }
@@ -424,14 +426,18 @@ function noteSelectedText() {
         if (!backward) {
           start = $(sel.anchorNode.parentNode).data('start');
           $(sel.anchorNode.parentNode).contents().unwrap();
-        } else $(sel.anchorNode.parentNode).contents().unwrap();
+        } else {
+          $(sel.anchorNode.parentNode).contents().unwrap();
+        }
       }
 
       if (!($(sel.focusNode.parentNode).attr('id') === 'ted_transcript' || $(sel.focusNode.parentNode).attr('id') === 'transcript')) {
         if (backward) {
           start = $(sel.focusNode.parentNode).data('start');
           $(sel.focusNode.parentNode).contents().unwrap();
-        } else $(sel.focusNode.parentNode).contents().unwrap();
+        } else {
+          $(sel.focusNode.parentNode).contents().unwrap();
+        }
       }
       // console.log(sel.focusNode.parentNode);
 
@@ -468,8 +474,11 @@ function deleteSelection() {
 
 function getUserText(buttonClicked) {
   const selectedNode = $(`#${selectedNodeId}`);
-  if (buttonClicked === 'ok') usertext = $('#text').val();
-  else selectedNode.data('annotationdisabled', selectedNode.data('annotationdisabled') !== true);
+  if (buttonClicked === 'ok') {
+    usertext = $('#text').val();
+  } else {
+    selectedNode.data('annotationdisabled', selectedNode.data('annotationdisabled') !== true);
+  }
 
   PF('userinput_dialog').hide();
   $('#text').val('');
@@ -494,7 +503,9 @@ function getUserText(buttonClicked) {
     } else if (selectedNode.data('content')) {
       selectedNode.tooltipster('content', `${selectedNode.attr('data-title')}<hr/>${selectedNode.attr('data-content')
         .replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`);
-    } else selectedNode.tooltipster('content', selectedNode.attr('data-title'));
+    } else {
+      selectedNode.tooltipster('content', selectedNode.attr('data-title'));
+    }
 
     selectedNode.trigger('mouseenter');
     tags[selectedNodeId] = usertext;

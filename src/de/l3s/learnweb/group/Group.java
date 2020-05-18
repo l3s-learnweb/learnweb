@@ -25,10 +25,57 @@ import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
-public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer
-{
+public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer {
     private static final long serialVersionUID = -6209978709028007958L;
     private static final Logger log = LogManager.getLogger(Group.class);
+
+    /**
+     * Who can join this group?
+     */
+    public enum PolicyJoin { // be careful when adding options. The new option must be added to the lw_group table too
+        ALL_LEARNWEB_USERS,
+        ORGANISATION_MEMBERS,
+        COURSE_MEMBERS,
+        NOBODY
+    }
+
+    /**
+     * Who can add resources and folders to this group?
+     */
+    public enum PolicyAdd { // be careful when adding options. The new option must be added to the lw_group table too
+        GROUP_MEMBERS,
+        GROUP_LEADER
+    }
+
+    /**
+     * Who can delete or edit resources and folders of this group?
+     */
+    public enum PolicyEdit { // be careful when adding options. The new option must be added to the lw_group table too
+        GROUP_MEMBERS,
+        GROUP_LEADER_AND_FILE_OWNER,
+        GROUP_LEADER
+    }
+
+    /**
+     * Who can view resources of this group?
+     */
+    public enum PolicyView { // be careful when adding options. The new option must be added to the lw_group table too
+        ALL_LEARNWEB_USERS,
+        COURSE_MEMBERS,
+        GROUP_MEMBERS,
+        GROUP_LEADER
+    }
+
+    /**
+     * Who can tag or comment resources of this group?
+     */
+    public enum PolicyAnnotate { // be careful when adding options. The new option must be added to the lw_group table too
+        ALL_LEARNWEB_USERS,
+        COURSE_MEMBERS,
+        GROUP_MEMBERS,
+        GROUP_LEADER
+    }
+
 
     private int id;
     private int leaderUserId;
@@ -43,65 +90,11 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private String hypothesisLink;
     private String hypothesisToken;
 
-    // restrictions / access policy
-
-    /**
-     * Who can join this group? *
-     */
-    public enum POLICY_JOIN // be careful when adding options. The new option must be added to the lw_group table too
-    {
-        ALL_LEARNWEB_USERS,
-        ORGANISATION_MEMBERS,
-        COURSE_MEMBERS,
-        NOBODY
-    }
-
-    /**
-     * Who can add resources and folders to this group? *
-     */
-    public enum POLICY_ADD // be careful when adding options. The new option must be added to the lw_group table too
-    {
-        GROUP_MEMBERS,
-        GROUP_LEADER
-    }
-
-    /**
-     * Who can delete or edit resources and folders of this group?
-     */
-    public enum POLICY_EDIT // be careful when adding options. The new option must be added to the lw_group table too
-    {
-        GROUP_MEMBERS,
-        GROUP_LEADER_AND_FILE_OWNER,
-        GROUP_LEADER
-    }
-
-    /**
-     * Who can view resources of this group?
-     */
-    public enum POLICY_VIEW // be careful when adding options. The new option must be added to the lw_group table too
-    {
-        ALL_LEARNWEB_USERS,
-        COURSE_MEMBERS,
-        GROUP_MEMBERS,
-        GROUP_LEADER
-    }
-
-    /**
-     * Who can tag or comment resources of this group?
-     */
-    public enum POLICY_ANNOTATE // be careful when adding options. The new option must be added to the lw_group table too
-    {
-        ALL_LEARNWEB_USERS,
-        COURSE_MEMBERS,
-        GROUP_MEMBERS,
-        GROUP_LEADER
-    }
-
-    private POLICY_JOIN policyJoin = POLICY_JOIN.COURSE_MEMBERS;
-    private POLICY_ADD policyAdd = POLICY_ADD.GROUP_MEMBERS;
-    private POLICY_EDIT policyEdit = POLICY_EDIT.GROUP_MEMBERS;
-    private POLICY_VIEW policyView = POLICY_VIEW.COURSE_MEMBERS;
-    private POLICY_ANNOTATE policyAnnotate = POLICY_ANNOTATE.COURSE_MEMBERS;
+    private PolicyJoin policyJoin = Group.PolicyJoin.COURSE_MEMBERS;
+    private PolicyAdd policyAdd = Group.PolicyAdd.GROUP_MEMBERS;
+    private PolicyEdit policyEdit = Group.PolicyEdit.GROUP_MEMBERS;
+    private PolicyView policyView = Group.PolicyView.COURSE_MEMBERS;
+    private PolicyAnnotate policyAnnotate = Group.PolicyAnnotate.COURSE_MEMBERS;
 
     private boolean restrictionForumCategoryRequired = false;
     private int maxMemberCount = -1; // defines how many users can join this group
@@ -113,127 +106,117 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private long cacheTime = 0L;
     private int resourceCount = -1;
     private int memberCount = -1;
-    private HashMap<Integer, Integer> lastVisitCache = new HashMap<>();
+    private final HashMap<Integer, Integer> lastVisitCache = new HashMap<>();
 
-    public void clearCaches()
-    {
+    public Group() {
+        this.id = -1;
+    }
+
+    public Group(int id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    public void clearCaches() {
         members = null;
         folders = null;
         resourceCount = -1;
         memberCount = -1;
     }
 
-    public Group()
-    {
-        this.id = -1;
-    }
-
-    public Group(int id, String title)
-    {
-        this.id = id;
-        this.title = title;
-    }
-
     @Override
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public List<User> getMembers() throws SQLException
-    {
-        if(null == members)
-        {
+    void setId(int id) {
+        this.id = id;
+    }
+
+    public List<User> getMembers() throws SQLException {
+        if (null == members) {
             members = Learnweb.getInstance().getUserManager().getUsersByGroupId(id);
         }
         return members;
     }
 
-    public int getMemberCount() throws SQLException
-    {
-        if(-1 == memberCount)
-        {
+    public int getMemberCount() throws SQLException {
+        if (-1 == memberCount) {
             memberCount = Learnweb.getInstance().getGroupManager().getMemberCount(id);
         }
         return memberCount;
     }
 
     /**
-     *
      * @param user Returns TRUE if the user is member of this group
-     * @throws SQLException
      */
-    public boolean isMember(User user) throws SQLException
-    {
+    public boolean isMember(User user) throws SQLException {
         List<User> members = getMembers();
 
         return members.contains(user);
     }
 
-    public boolean isLeader(User user) throws SQLException
-    {
+    public boolean isLeader(User user) throws SQLException {
         return user.getId() == leaderUserId;
     }
 
-    public User getLeader() throws SQLException
-    {
-        if(null == leader)
+    public User getLeader() throws SQLException {
+        if (null == leader) {
             leader = Learnweb.getInstance().getUserManager().getUser(leaderUserId);
+        }
         return leader;
     }
 
+    public void setLeader(User user) {
+        this.leaderUserId = user.getId();
+        this.leader = user;
+    }
+
     @Override
-    public int compareTo(Group g)
-    {
+    public int compareTo(Group g) {
         return this.getTitle().compareTo(g.getTitle());
     }
 
     @Override
-    public boolean equals(final Object o)
-    {
-        if(this == o)
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
-        if(o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         final Group group = (Group) o;
         return id == group.id;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(id);
     }
 
-    public List<Resource> getResources() throws SQLException
-    {
+    public List<Resource> getResources() throws SQLException {
         return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(id);
 
     }
 
-    public int getResourcesCount() throws SQLException
-    {
+    public int getResourcesCount() throws SQLException {
         long now = System.currentTimeMillis();
 
-        if(resourceCount == -1 || cacheTime < now - 3000L)
-        {
+        if (resourceCount == -1 || cacheTime < now - 3000L) {
             resourceCount = Learnweb.getInstance().getResourceManager().getResourceCountByGroupId(id);
             cacheTime = now;
         }
         return resourceCount;
     }
 
+    //metadata
+
     /**
-     * Only root folders
-     *
-     * @return
-     * @throws SQLException
+     * Only root folders.
      */
     @Override
-    public List<Folder> getSubFolders() throws SQLException
-    {
-        if(folders == null)
-        {
+    public List<Folder> getSubFolders() throws SQLException {
+        if (folders == null) {
             folders = Learnweb.getInstance().getGroupManager().getFolders(id, 0);
         }
 
@@ -241,112 +224,78 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     /**
-     * Copy resource from this group to another group referred to by groupId, and by which user
+     * Copy resource from this group to another group referred to by groupId, and by which user.
      */
-    public void copyResourcesToGroupById(int groupId, User user) throws SQLException
-    {
-        for(Resource resource : getResources())
-        {
+    public void copyResourcesToGroupById(int groupId, User user) throws SQLException {
+        for (Resource resource : getResources()) {
             Resource newResource = resource.clone();
             newResource.setGroupId(groupId);
             user.addResource(newResource);
         }
     }
 
-    //metadata
-
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) throws SQLException
-    {
+    public void setTitle(String title) throws SQLException {
         this.title = title;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) throws SQLException
-    {
+    public void setDescription(String description) throws SQLException {
         this.description = description == null ? null : description.trim();
     }
 
-    void setId(int id)
-    {
-        this.id = id;
-    }
-
     /**
-     * The course of the user who created this group and which course this group will belong to
-     *
-     * @return
+     * The course of the user who created this group and which course this group will belong to.
      */
-    public int getCourseId()
-    {
+    public int getCourseId() {
         return courseId;
     }
 
-    public Course getCourse() throws SQLException
-    {
-        if(null == this.course)
-            this.course = Learnweb.getInstance().getCourseManager().getCourseById(courseId);
-
-        return this.course;
-    }
-
     /**
-     * The course which this group will belong to
+     * The course which this group will belong to.
      */
-    public void setCourseId(int courseId)
-    {
+    public void setCourseId(int courseId) {
         this.courseId = courseId;
         this.course = null;
     }
 
-    public int getLeaderUserId()
-    {
+    public Course getCourse() throws SQLException {
+        if (null == this.course) {
+            this.course = Learnweb.getInstance().getCourseManager().getCourseById(courseId);
+        }
+
+        return this.course;
+    }
+
+    public int getLeaderUserId() {
         return leaderUserId;
     }
 
-    public void setLeader(User user)
-    {
-        this.leaderUserId = user.getId();
-        this.leader = user;
-    }
-
-    public void setLeaderUserId(int userId)
-    {
+    public void setLeaderUserId(int userId) {
         this.leaderUserId = userId;
         this.leader = null; // force reload
     }
 
-    private static int time()
-    {
-        return (int) (System.currentTimeMillis() / 1000);
-    }
-
-    public void setLastVisit(User user) throws SQLException
-    {
+    public void setLastVisit(User user) throws SQLException {
         int time = time();
         Learnweb.getInstance().getGroupManager().setLastVisit(user, this, time);
         lastVisitCache.put(user.getId(), time);
     }
 
     /**
-     *
-     * @param user
      * @return unix timestamp when the user has visited the group the last time; returns -1 if he never viewed the group
-     * @throws Exception
      */
-    public int getLastVisit(User user) throws Exception
-    {
+    public int getLastVisit(User user) throws Exception {
         Integer time = lastVisitCache.get(user.getId());
-        if(null != time)
+        if (null != time) {
             return time;
+        }
 
         time = Learnweb.getInstance().getGroupManager().getLastVisit(user, this);
         lastVisitCache.put(user.getId(), time);
@@ -354,201 +303,174 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     /**
-     *
      * @param actions if actions is null the default filter is used
      * @param limit if limit is -1 all log entries are returned
-     * @return
-     * @throws SQLException
      */
-    public List<LogEntry> getLogs(Action[] actions, int limit) throws SQLException
-    {
+    public List<LogEntry> getLogs(Action[] actions, int limit) throws SQLException {
         return Learnweb.getInstance().getLogManager().getLogsByGroup(id, actions, limit);
     }
 
     /**
-     * returns the 5 newest log entries
-     *
-     * @return
-     * @throws SQLException
+     * Returns the 5 newest log entries.
      */
-    public List<LogEntry> getLogs() throws SQLException
-    {
+    public List<LogEntry> getLogs() throws SQLException {
         return getLogs(null, 5);
     }
 
-    public boolean isRestrictionForumCategoryEnabled()
-    {
-        try
-        {
+    public boolean isRestrictionForumCategoryEnabled() {
+        try {
             return getCourse().getOption(Option.Groups_Forum_categories_enabled);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.fatal("can't load setting", e);
             return false;
         }
     }
 
-    public boolean isRestrictionForumCategoryRequired()
-    {
+    public boolean isRestrictionForumCategoryRequired() {
         return restrictionForumCategoryRequired;
     }
 
-    public void setRestrictionForumCategoryRequired(boolean restrictionForumCategoryRequired)
-    {
+    public void setRestrictionForumCategoryRequired(boolean restrictionForumCategoryRequired) {
         this.restrictionForumCategoryRequired = restrictionForumCategoryRequired;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return this.title;
     }
 
-    public POLICY_JOIN getPolicyJoin()
-    {
+    public PolicyJoin getPolicyJoin() {
         return policyJoin;
     }
 
-    public void setPolicyJoin(POLICY_JOIN policyJoin)
-    {
+    public void setPolicyJoin(PolicyJoin policyJoin) {
         this.policyJoin = policyJoin;
     }
 
-    public POLICY_ADD getPolicyAdd()
-    {
+    public PolicyAdd getPolicyAdd() {
         return policyAdd;
     }
 
-    public void setPolicyAdd(POLICY_ADD policyAdd)
-    {
+    public void setPolicyAdd(PolicyAdd policyAdd) {
         this.policyAdd = policyAdd;
     }
 
-    public POLICY_EDIT getPolicyEdit()
-    {
+    public PolicyEdit getPolicyEdit() {
         return policyEdit;
     }
 
-    public void setPolicyEdit(POLICY_EDIT policyEdit)
-    {
+    public void setPolicyEdit(PolicyEdit policyEdit) {
         this.policyEdit = policyEdit;
     }
 
-    public POLICY_VIEW getPolicyView()
-    {
+    public PolicyView getPolicyView() {
         return policyView;
     }
 
-    public void setPolicyView(POLICY_VIEW policyView)
-    {
+    public void setPolicyView(PolicyView policyView) {
         this.policyView = policyView;
     }
 
-    public POLICY_ANNOTATE getPolicyAnnotate()
-    {
+    public PolicyAnnotate getPolicyAnnotate() {
         return policyAnnotate;
     }
 
-    public void setPolicyAnnotate(POLICY_ANNOTATE policyAnnotate)
-    {
+    public void setPolicyAnnotate(PolicyAnnotate policyAnnotate) {
         this.policyAnnotate = policyAnnotate;
     }
 
-    public POLICY_JOIN[] getPolicyJoinOptions()
-    {
-        return POLICY_JOIN.values();
+    public PolicyJoin[] getPolicyJoinOptions() {
+        return Group.PolicyJoin.values();
     }
 
-    public POLICY_ADD[] getPolicyAddOptions()
-    {
-        return POLICY_ADD.values();
+    public PolicyAdd[] getPolicyAddOptions() {
+        return Group.PolicyAdd.values();
     }
 
-    public POLICY_EDIT[] getPolicyEditOptions()
-    {
-        return POLICY_EDIT.values();
+    public PolicyEdit[] getPolicyEditOptions() {
+        return Group.PolicyEdit.values();
     }
 
-    public POLICY_VIEW[] getPolicyViewOptions()
-    {
-        return POLICY_VIEW.values();
+    public PolicyView[] getPolicyViewOptions() {
+        return Group.PolicyView.values();
     }
 
-    public POLICY_ANNOTATE[] getPolicyAnnotateOptions()
-    {
-        return POLICY_ANNOTATE.values();
+    public PolicyAnnotate[] getPolicyAnnotateOptions() {
+        return Group.PolicyAnnotate.values();
     }
 
-    public boolean canAddResources(User user) throws SQLException
-    {
-        if(user == null) // not logged in
+    public boolean canAddResources(User user) throws SQLException {
+        if (user == null) { // not logged in
             return false;
+        }
 
-        if(user.isAdmin() || isLeader(user) || getCourse().isModerator(user))
+        if (user.isAdmin() || isLeader(user) || getCourse().isModerator(user)) {
             return true;
+        }
 
-        if(policyAdd == POLICY_ADD.GROUP_MEMBERS && isMember(user))
+        if (policyAdd == Group.PolicyAdd.GROUP_MEMBERS && isMember(user)) {
             return true;
+        }
 
         return false;
     }
 
     /**
-     * Used for Drag&Drop functionality, using which it is possible to move resource between folders and groups
+     * Used for Drag&Drop functionality, using which it is possible to move resource between folders and groups.
      */
-    public boolean canMoveResources(User user) throws SQLException
-    {
+    public boolean canMoveResources(User user) throws SQLException {
         return canAddResources(user);
     }
 
-    public boolean canDeleteResource(User user, AbstractResource resource) throws SQLException
-    {
+    public boolean canDeleteResource(User user, AbstractResource resource) throws SQLException {
         return canEditResource(user, resource); // currently they share the same policy
     }
 
-    public boolean canEditResource(User user, AbstractResource resource) throws SQLException
-    {
-        if(user == null || resource == null)
+    public boolean canEditResource(User user, AbstractResource resource) throws SQLException {
+        if (user == null || resource == null) {
             return false;
+        }
 
-        if(getCourse().isModerator(user))
+        if (getCourse().isModerator(user)) {
             return true;
+        }
 
-        switch(policyEdit)
-        {
+        switch (policyEdit) {
             case GROUP_MEMBERS:
                 return isMember(user);
             case GROUP_LEADER:
                 return isLeader(user);
             case GROUP_LEADER_AND_FILE_OWNER:
                 return isLeader(user) || resource.getUserId() == user.getId();
+            default:
+                log.error("Unknown edit policy: {}", policyEdit);
         }
 
         throw new NotImplementedException("this should never happen");
     }
 
-    public boolean canDeleteGroup(User user) throws SQLException
-    {
-        if(user == null)
+    public boolean canDeleteGroup(User user) throws SQLException {
+        if (user == null) {
             return false;
+        }
 
-        if(user.isAdmin() || getCourse().isModerator(user) || isLeader(user))
+        if (user.isAdmin() || getCourse().isModerator(user) || isLeader(user)) {
             return true;
+        }
 
         return false;
     }
 
-    public boolean canJoinGroup(User user) throws SQLException
-    {
-        if(user == null || isMember(user))
+    public boolean canJoinGroup(User user) throws SQLException {
+        if (user == null || isMember(user)) {
             return false;
+        }
 
-        if(user.isAdmin() || getCourse().isModerator(user))
+        if (user.isAdmin() || getCourse().isModerator(user)) {
             return true;
+        }
 
-        switch(policyJoin)
-        {
+        switch (policyJoin) {
             case ALL_LEARNWEB_USERS:
                 return true;
             case ORGANISATION_MEMBERS:
@@ -557,21 +479,23 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
                 return getCourse().isMember(user);
             case NOBODY:
                 return false;
+            default:
+                log.error("Unknown join policy: {}", policyJoin);
         }
 
         throw new NotImplementedException("this should never happen");
     }
 
-    public boolean canViewResources(User user) throws SQLException
-    {
-        if(user == null)
+    public boolean canViewResources(User user) throws SQLException {
+        if (user == null) {
             return false;
+        }
 
-        if(user.isAdmin() || getCourse().isModerator(user))
+        if (user.isAdmin() || getCourse().isModerator(user)) {
             return true;
+        }
 
-        switch(policyView)
-        {
+        switch (policyView) {
             case ALL_LEARNWEB_USERS:
                 return true;
             case COURSE_MEMBERS:
@@ -580,21 +504,23 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
                 return isMember(user);
             case GROUP_LEADER:
                 return isLeader(user);
+            default:
+                log.error("Unknown view policy: {}", policyView);
         }
 
         return false;
     }
 
-    public boolean canAnnotateResources(User user) throws SQLException
-    {
-        if(user == null)
+    public boolean canAnnotateResources(User user) throws SQLException {
+        if (user == null) {
             return false;
+        }
 
-        if(user.isAdmin() || getCourse().isModerator(user))
+        if (user.isAdmin() || getCourse().isModerator(user)) {
             return true;
+        }
 
-        switch(policyAnnotate)
-        {
+        switch (policyAnnotate) {
             case ALL_LEARNWEB_USERS:
                 return true;
             case COURSE_MEMBERS:
@@ -603,73 +529,68 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
                 return isMember(user);
             case GROUP_LEADER:
                 return isLeader(user);
+            default:
+                log.error("Unknown annotate policy: {}", policyAnnotate);
         }
 
         return false;
     }
 
-    public int getMaxMemberCount()
-    {
+    public int getMaxMemberCount() {
         return maxMemberCount;
     }
 
-    public void setMaxMemberCount(int maxMemberCount)
-    {
+    public void setMaxMemberCount(int maxMemberCount) {
         this.maxMemberCount = maxMemberCount;
     }
 
-    public boolean isMemberCountLimited()
-    {
+    public boolean isMemberCountLimited() {
         return maxMemberCount > -1;
     }
 
-    public void setMemberCountLimited(boolean memberCountLimited)
-    {
-        if(!memberCountLimited) // if no limit > set the member limit infinite
+    public void setMemberCountLimited(boolean memberCountLimited) {
+        if (!memberCountLimited) { // if no limit > set the member limit infinite
             maxMemberCount = -1;
-        else if(maxMemberCount <= 0) // if limit true but not defined yet > set default limit = 1
+        } else if (maxMemberCount <= 0) { // if limit true but not defined yet > set default limit = 1
             maxMemberCount = 1;
+        }
     }
 
-    public String getHypothesisLink()
-    {
+    public String getHypothesisLink() {
         return hypothesisLink;
     }
 
-    public void setHypothesisLink(String hypothesisLink)
-    {
+    public void setHypothesisLink(String hypothesisLink) {
         this.hypothesisLink = hypothesisLink;
     }
 
-    public String getHypothesisToken()
-    {
+    public String getHypothesisToken() {
         return hypothesisToken;
     }
 
-    public void setHypothesisToken(String hypothesisToken)
-    {
+    public void setHypothesisToken(String hypothesisToken) {
         this.hypothesisToken = hypothesisToken;
     }
 
-    public boolean isGoogleDocsSignInEnabled() throws SQLException
-    {
+    public boolean isGoogleDocsSignInEnabled() throws SQLException {
         return getCourse().getOption(Course.Option.Groups_Google_Docs_sign_in_enabled);
     }
 
     /**
      * @see de.l3s.learnweb.group.GroupManager#deleteGroupHard
-     * @throws SQLException
      */
-    public void deleteHard() throws SQLException
-    {
+    public void deleteHard() throws SQLException {
         Learnweb.getInstance().getGroupManager().deleteGroupHard(this);
     }
 
     /**
-     * Flags the group and deleted and removes all users from the group
+     * Flags the group and deleted and removes all users from the group.
      */
-    public void delete() throws SQLException
-    {
+    public void delete() throws SQLException {
         Learnweb.getInstance().getGroupManager().deleteGroupSoft(this);
+    }
+
+    private static int time() {
+        return (int) (System.currentTimeMillis() / 1000);
     }
 }

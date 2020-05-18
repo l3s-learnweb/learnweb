@@ -16,8 +16,7 @@ import de.l3s.util.email.BounceManager;
 
 @Named
 @ViewScoped
-public class AdminBanlistBean extends ApplicationBean implements Serializable
-{
+public class AdminBanlistBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -4469152668344315959L;
     private List<AccessData> banlist;
     private List<AggregatedRequestData> suspiciousActivityList;
@@ -30,163 +29,126 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
 
     private String type;
 
-    public AdminBanlistBean()
-    {
+    public AdminBanlistBean() {
         load();
     }
 
-    private void load()
-    {
-        try
-        {
-            if(getUser().isAdmin() || getUser().isModerator())
-            {
+    private void load() {
+        try {
+            if (getUser().isAdmin() || getUser().isModerator()) {
                 banlist = getLearnweb().getProtectionManager().getBanlist();
 
                 getLearnweb().getRequestManager().updateAggregatedRequests();
                 suspiciousActivityList = getLearnweb().getProtectionManager().getSuspiciousActivityList();
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void onManualBan()
-    {
+    public void onManualBan() {
         boolean isIP;
-        if("ip".equals(type))
-        {
+        if ("ip".equals(type)) {
             isIP = true;
-        }
-        else if("user".equals(type))
-        {
+        } else if ("user".equals(type)) {
             isIP = false;
-        }
-        else
-        {
+        } else {
             return;
         }
 
-        if(permaban)
-        {
+        if (permaban) {
             getLearnweb().getProtectionManager().permaban(name, isIP);
-        }
-        else
-        {
+        } else {
             getLearnweb().getProtectionManager().ban(name, banDays, banHours, banMinutes, isIP);
         }
 
         load();
     }
 
-    public void onUnban(String name)
-    {
+    public void onUnban(String name) {
         getLearnweb().getProtectionManager().unban(name);
         load();
     }
 
-    public void onClearBanlist()
-    {
+    public void onClearBanlist() {
         getLearnweb().getProtectionManager().clearBans();
         load();
     }
 
-    public void onDeleteOutdatedBans()
-    {
+    public void onDeleteOutdatedBans() {
         getLearnweb().getProtectionManager().cleanUpOutdatedBans();
         load();
     }
 
-    public void onRemoveSuspicious(String name)
-    {
+    public void onRemoveSuspicious(String name) {
         getLearnweb().getProtectionManager().removeSuspicious(name);
         load();
     }
 
-    public List<AccessData> getBanlist()
-    {
+    public List<AccessData> getBanlist() {
         return banlist;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setType(String type)
-    {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
         this.type = type;
     }
 
-    public List<AggregatedRequestData> getSuspiciousActivityList()
-    {
+    public List<AggregatedRequestData> getSuspiciousActivityList() {
 
-        try
-        {
+        try {
             new BounceManager(Learnweb.getInstance()).parseInbox();
-        }
-        catch(MessagingException | IOException e)
-        {
+        } catch (MessagingException | IOException e) {
             addErrorMessage(e);
         }
         return suspiciousActivityList;
 
     }
 
-    public void setSuspiciousActivityList(List<AggregatedRequestData> suspiciousActivityList)
-    {
+    public void setSuspiciousActivityList(List<AggregatedRequestData> suspiciousActivityList) {
         this.suspiciousActivityList = suspiciousActivityList;
     }
 
-    public int getBanDays()
-    {
+    public int getBanDays() {
         return banDays;
     }
 
-    public void setBanDays(int banDays)
-    {
+    public void setBanDays(int banDays) {
         this.banDays = banDays;
     }
 
-    public int getBanHours()
-    {
+    public int getBanHours() {
         return banHours;
     }
 
-    public void setBanHours(int banHours)
-    {
+    public void setBanHours(int banHours) {
         this.banHours = banHours;
     }
 
-    public int getBanMinutes()
-    {
+    public int getBanMinutes() {
         return banMinutes;
     }
 
-    public void setBanMinutes(int banMinutes)
-    {
+    public void setBanMinutes(int banMinutes) {
         this.banMinutes = banMinutes;
     }
 
-    public boolean isPermaban()
-    {
+    public boolean isPermaban() {
         return permaban;
     }
 
-    public void setPermaban(boolean permaban)
-    {
+    public void setPermaban(boolean permaban) {
         this.permaban = permaban;
     }
 

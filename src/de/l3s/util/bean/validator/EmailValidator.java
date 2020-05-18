@@ -9,34 +9,24 @@ import javax.faces.validator.ValidatorException;
 import org.apache.commons.lang3.StringUtils;
 
 @FacesValidator
-public class EmailValidator extends AbstractValidator<Object>
-{
+public class EmailValidator extends AbstractValidator<Object> {
     @Override
-    public void validate(FacesContext context, UIComponent component, Object value)
-            throws ValidatorException
-    {
-        if(value instanceof String)
-        {
+    public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        if (value instanceof String) {
             String email = ((String) value).trim().toLowerCase();
 
-            if(StringUtils.endsWithAny(email, "aulecsit.uniud.it", "uni.au.dk", "studeniti.unisalento.it"))
-            {
+            if (StringUtils.endsWithAny(email, "aulecsit.uniud.it", "uni.au.dk", "studeniti.unisalento.it")) {
                 String message;
-                if(email.endsWith("aulecsit.uniud.it"))
-                {
+                if (email.endsWith("aulecsit.uniud.it")) {
                     message = "This mail address is invalid! Usually it is surname.name@spes.uniud.it";
-                }
-                else
-                {
+                } else {
                     message = "This mail address is invalid! Check the domain.";
                 }
                 throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, message));
             }
-            else // TODO connect to bounce manager
-            {
-                //                addMessage(FacesMessage.SEVERITY_ERROR, "The mail server at " + mailServer + " responds that the address " + email + " doesn't exist. Contact our support team to solve this issue: learnweb-support@l3s.de");
 
-            }
+            // TODO connect to bounce manager
+            // addMessage(FacesMessage.SEVERITY_ERROR, "The mail server at " + mailServer + " responds that the address " + email + " doesn't exist. Contact our support team to solve this issue: learnweb-support@l3s.de");
         }
     }
 }

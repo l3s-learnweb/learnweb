@@ -1,7 +1,6 @@
 package de.l3s.learnweb.tasks.resources;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.sql.SQLException;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,23 +12,15 @@ import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 
 /**
- *
  * @author Kemkes
- *
  */
-public class RemoveDescriptionsFromSubmittedResources
-{
+public class RemoveDescriptionsFromSubmittedResources {
     private static final Logger log = LogManager.getLogger(RemoveDescriptionsFromSubmittedResources.class);
 
     /**
-     * @param args
-     * @throws SQLException
-     * @throws IOException
-     * @throws MalformedURLException
-     * @throws ClassNotFoundException
+     *
      */
-    public static void main(String[] args) throws SQLException, MalformedURLException, IOException, ClassNotFoundException
-    {
+    public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException {
         System.exit(0);
 
         Learnweb learnweb = Learnweb.createInstance();
@@ -38,8 +29,7 @@ public class RemoveDescriptionsFromSubmittedResources
         User submitAdmin = um.getUser(11212);
 
         log.debug(submitAdmin);
-        for(Resource resource : submitAdmin.getResources())
-        {
+        for (Resource resource : submitAdmin.getResources()) {
             log.debug(resource);
             resource.setMachineDescription(resource.getDescription());
             resource.setDescription("");

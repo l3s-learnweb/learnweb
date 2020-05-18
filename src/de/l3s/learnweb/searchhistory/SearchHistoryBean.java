@@ -18,15 +18,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.searchhistory.SearchHistoryManager.Query;
 import de.l3s.learnweb.searchhistory.SearchHistoryManager.SearchResult;
 import de.l3s.learnweb.searchhistory.SearchHistoryManager.Session;
+import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
-public class SearchHistoryBean extends ApplicationBean implements Serializable
-{
+public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(SearchHistoryBean.class);
     private static final long serialVersionUID = -7682314831788865416L;
 
@@ -41,149 +40,126 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
 
     private List<Session> sessions;
     private List<Query> queries = new ArrayList<>();
-    private Map<Integer, List<SearchResult>> snippets = new HashMap<>();
+    private final Map<Integer, List<SearchResult>> snippets = new HashMap<>();
 
     /**
-     * Load the variables that needs values before the view is rendered
+     * Load the variables that needs values before the view is rendered.
      */
-    public void onLoad()
-    {
-        if(isAjaxRequest())
+    public void onLoad() {
+        if (isAjaxRequest()) {
             return;
+        }
 
-        if(getUser() == null)
+        if (getUser() == null) {
             return;
+        }
 
-        if(selectedUserId == 0)
+        if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
+        }
     }
 
-    public Session getSelectedSession()
-    {
+    public Session getSelectedSession() {
         return selectedSession;
     }
 
-    public void setSelectedSession(final Session selectedSession)
-    {
+    public void setSelectedSession(final Session selectedSession) {
         this.selectedSession = selectedSession;
 
         queries = null;
     }
 
-    public Query getSelectedQuery()
-    {
+    public Query getSelectedQuery() {
         return selectedQuery;
     }
 
-    public void setSelectedQuery(final Query selectedQuery)
-    {
+    public void setSelectedQuery(final Query selectedQuery) {
         this.selectedQuery = selectedQuery;
     }
 
-    public List<Session> getSessions() throws SQLException
-    {
-        if(this.showGroupHistory)
-        {
-            if(sessions == null && selectedGroupId > 0)
-            {
-                if(!SessionCache.instance().existsGroupId(selectedGroupId))
-                {
+    public List<Session> getSessions() throws SQLException {
+        if (this.showGroupHistory) {
+            if (sessions == null && selectedGroupId > 0) {
+                if (!SessionCache.instance().existsGroupId(selectedGroupId)) {
                     SessionCache.instance().cacheByGroupId(selectedGroupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId));
                 }
                 sessions = SessionCache.instance().getByGroupId(selectedGroupId);
             }
-        }
-        else if(sessions == null)
-        {
+        } else if (sessions == null) {
             sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(selectedUserId);
         }
 
         return sessions;
     }
 
-    public List<Query> getQueries()
-    {
-        if(queries == null && selectedSession != null)
-        {
-            if(!showGroupHistory)
+    public List<Query> getQueries() {
+        if (queries == null && selectedSession != null) {
+            if (!showGroupHistory) {
                 queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(selectedSession.getUserId(), selectedSession.getSessionId());
-            else
+            } else {
                 queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromGroupCache(selectedSession.getUserId(), selectedSession.getSessionId());
+            }
         }
         return queries;
     }
 
-    public List<SearchResult> getSearchResults()
-    {
+    public List<SearchResult> getSearchResults() {
         List<SearchResult> searchResults = new ArrayList<>();
-        if(selectedQuery != null)
-        {
-            if(!snippets.containsKey(selectedQuery.getSearchId()))
+        if (selectedQuery != null) {
+            if (!snippets.containsKey(selectedQuery.getSearchId())) {
                 snippets.put(selectedQuery.getSearchId(), getLearnweb().getSearchHistoryManager().getSearchResultsForSearchId(selectedQuery.getSearchId(), 100));
+            }
 
             searchResults.addAll(snippets.get(selectedQuery.getSearchId()));
         }
         return searchResults;
     }
 
-    public void onChangeGroup(AjaxBehaviorEvent event)
-    {
+    public void onChangeGroup(AjaxBehaviorEvent event) {
         //log.info("group id: " + selectedGroupId);
     }
 
-    public void actionSetShowGroupHistory()
-    {
+    public void actionSetShowGroupHistory() {
         showGroupHistory = true;
         searchQuery = null;
         sessions = null;
     }
 
-    public void actionSetShowUserHistory()
-    {
+    public void actionSetShowUserHistory() {
         showGroupHistory = false;
         searchQuery = null;
         sessions = null;
         selectedGroupId = -1;
     }
 
-    public boolean isShowGroupHistory()
-    {
+    public boolean isShowGroupHistory() {
         return showGroupHistory;
     }
 
-    public User getCurrentUser()
-    {
+    public User getCurrentUser() {
         User user = null;
-        try
-        {
+        try {
             user = getLearnweb().getUserManager().getUser(selectedUserId);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             log.error(e);
         }
         return user == null ? getUser() : user;
     }
 
-    public int getSelectedUserId()
-    {
+    public int getSelectedUserId() {
         return selectedUserId;
     }
 
-    public void setSelectedUserId(final int selectedUserId)
-    {
+    public void setSelectedUserId(final int selectedUserId) {
         this.selectedUserId = selectedUserId;
     }
 
-    public int getSelectedGroupId()
-    {
+    public int getSelectedGroupId() {
         return selectedGroupId;
     }
 
-    public void setSelectedGroupId(int selectedGroupId)
-    {
-        if(selectedGroupId != this.selectedGroupId)
-        {
+    public void setSelectedGroupId(int selectedGroupId) {
+        if (selectedGroupId != this.selectedGroupId) {
             showGroupHistory = true;
             searchQuery = null;
             sessions = null;
@@ -193,28 +169,23 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         this.selectedGroupId = selectedGroupId;
     }
 
-    public void search() throws SQLException
-    {
+    public void search() throws SQLException {
         sessions = null;
         filterSessionsByQuery(searchQuery);
     }
 
-    public void reset() throws SQLException
-    {
+    public void reset() throws SQLException {
         sessions = null;
         searchQuery = null;
     }
 
-    private void filterSessionsByQuery(String filterQuery) throws SQLException
-    {
-        if(StringUtils.isEmpty(filterQuery))
-        {
+    private void filterSessionsByQuery(String filterQuery) throws SQLException {
+        if (StringUtils.isEmpty(filterQuery)) {
             return;
         }
 
         boolean isSearchUser = false;
-        if(filterQuery.startsWith("user:") || filterQuery.startsWith("u:"))
-        {
+        if (filterQuery.startsWith("user:") || filterQuery.startsWith("u:")) {
             isSearchUser = true;
             filterQuery = filterQuery.replace("user:", "").replace("u:", "").trim();
         }
@@ -223,15 +194,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         final String finalQuery = filterQuery;
 
         List<Session> allSessions = getSessions();
-        if(allSessions == null || allSessions.isEmpty())
-        {
+        if (allSessions == null || allSessions.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "Sessions list is empty.");
-        }
-        else
-        {
+        } else {
             sessions = allSessions.stream().filter(session -> {
-                if(finalIsSearchUser)
-                {
+                if (finalIsSearchUser) {
                     return StringUtils.containsIgnoreCase(session.getUserName(), finalQuery);
                 }
 
@@ -241,13 +208,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public String getSearchQuery()
-    {
+    public String getSearchQuery() {
         return searchQuery;
     }
 
-    public void setSearchQuery(final String searchQuery)
-    {
+    public void setSearchQuery(final String searchQuery) {
         this.searchQuery = searchQuery;
     }
 }

@@ -6,55 +6,45 @@ import java.util.Map;
 
 import de.l3s.learnweb.searchhistory.SearchHistoryManager.Session;
 
-public class SessionCache
-{
-    private static SessionCache instance = null;
+public final class SessionCache {
+    private static SessionCache instance;
 
-    private Map<Integer, List<Session>> userSessionCache;
-    private Map<Integer, List<Session>> groupSessionCache;
+    private final Map<Integer, List<Session>> userSessionCache;
+    private final Map<Integer, List<Session>> groupSessionCache;
 
-    public static SessionCache instance()
-    {
-        if(instance == null)
-        {
-            instance = new SessionCache();
-        }
-        return instance;
-    }
-
-    private SessionCache()
-    {
+    private SessionCache() {
         userSessionCache = new HashMap<>();
         groupSessionCache = new HashMap<>();
     }
 
-    public synchronized void cacheByUserId(int userId, List<Session> sessions)
-    {
+    public synchronized void cacheByUserId(int userId, List<Session> sessions) {
         userSessionCache.put(userId, sessions);
     }
 
-    public synchronized List<Session> getByUserId(int userId)
-    {
+    public synchronized List<Session> getByUserId(int userId) {
         return userSessionCache.get(userId);
     }
 
-    public synchronized boolean existsUserId(int userId)
-    {
+    public synchronized boolean existsUserId(int userId) {
         return userSessionCache.containsKey(userId);
     }
 
-    public synchronized void cacheByGroupId(int groupId, List<Session> sessions)
-    {
+    public synchronized void cacheByGroupId(int groupId, List<Session> sessions) {
         groupSessionCache.put(groupId, sessions);
     }
 
-    public synchronized List<Session> getByGroupId(int groupId)
-    {
+    public synchronized List<Session> getByGroupId(int groupId) {
         return groupSessionCache.get(groupId);
     }
 
-    public synchronized boolean existsGroupId(int groupId)
-    {
+    public synchronized boolean existsGroupId(int groupId) {
         return groupSessionCache.containsKey(groupId);
+    }
+
+    public static SessionCache instance() {
+        if (instance == null) {
+            instance = new SessionCache();
+        }
+        return instance;
     }
 }

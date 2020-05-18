@@ -11,8 +11,7 @@ import de.l3s.util.HasId;
  * The abstract class which is extended by Resource and Folder.
  * Groups may contains Resources and Folders (AbstractResource is common for them)
  */
-public abstract class AbstractResource implements HasId
-{
+public abstract class AbstractResource implements HasId {
     private EditLocker editLocker;
 
     public abstract void setId(int id);
@@ -47,27 +46,31 @@ public abstract class AbstractResource implements HasId
 
     public abstract void moveTo(int newGroupId, int newFolderId) throws SQLException;
 
-    public boolean canEditResource(User user) throws SQLException
-    {
-        if(user == null) return false; // not logged in
+    public boolean canEditResource(User user) throws SQLException {
+        if (user == null) {
+            return false; // not logged in
+        }
 
-        if(getGroup() != null) return getGroup().canEditResource(user, this);
+        if (getGroup() != null) {
+            return getGroup().canEditResource(user, this);
+        }
         return user.isAdmin() || getUserId() == user.getId();
     }
 
-    public boolean canDeleteResource(User user) throws SQLException
-    {
-        if(user == null) return false; // not logged in
+    public boolean canDeleteResource(User user) throws SQLException {
+        if (user == null) {
+            return false; // not logged in
+        }
 
         // if the resource is part of a group the group policy has priority
-        if(getGroup() != null) return getGroup().canDeleteResource(user, this);
+        if (getGroup() != null) {
+            return getGroup().canDeleteResource(user, this);
+        }
         return user.isAdmin() || getUserId() == user.getId();
     }
 
-    public boolean lockResource(User user)
-    {
-        if(user != null && isEditPossible())
-        {
+    public boolean lockResource(User user) {
+        if (user != null && isEditPossible()) {
             editLocker = new EditLocker(user);
             return true;
         }
@@ -75,10 +78,8 @@ public abstract class AbstractResource implements HasId
         return false;
     }
 
-    public boolean unlockResource(User user)
-    {
-        if(editLocker != null && editLocker.getUser().equals(user))
-        {
+    public boolean unlockResource(User user) {
+        if (editLocker != null && editLocker.getUser().equals(user)) {
             editLocker = null;
             return true;
         }
@@ -86,10 +87,8 @@ public abstract class AbstractResource implements HasId
         return false;
     }
 
-    public boolean lockerUpdate(User user)
-    {
-        if(editLocker != null && editLocker.getUser().equals(user))
-        {
+    public boolean lockerUpdate(User user) {
+        if (editLocker != null && editLocker.getUser().equals(user)) {
             editLocker.setLastActivity(new Date());
             return true;
         }
@@ -97,27 +96,24 @@ public abstract class AbstractResource implements HasId
         return false;
     }
 
-    public boolean isEditLocked()
-    {
+    public boolean isEditLocked() {
         return editLocker != null;
     }
 
-    public String getLockUsername()
-    {
-        if(editLocker != null)
-        {
+    public String getLockUsername() {
+        if (editLocker != null) {
             return editLocker.getUser().getUsername();
         }
 
         return null;
     }
 
-    public boolean isEditPossible()
-    {
-        if(!isEditLocked()) return true;
+    public boolean isEditPossible() {
+        if (!isEditLocked()) {
+            return true;
+        }
 
-        if(editLocker.isSessionExpired())
-        {
+        if (editLocker.isSessionExpired()) {
             editLocker = null;
             return true;
         }

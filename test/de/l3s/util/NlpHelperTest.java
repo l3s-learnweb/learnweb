@@ -6,11 +6,9 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
-class NlpHelperTest
-{
+class NlpHelperTest {
     @Test
-    void getRitaWordnetDefinitions()
-    {
+    void getRitaWordnetDefinitions() {
         ArrayList<String> definitions = NlpHelper.getRitaWordnetDefinitions("hello world");
 
         assertEquals(2, definitions.size());
@@ -19,8 +17,7 @@ class NlpHelperTest
     }
 
     @Test
-    void getRitaWordnetDefinitions2()
-    {
+    void getRitaWordnetDefinitions2() {
         ArrayList<String> definitions = NlpHelper.getRitaWordnetDefinitions("elementary school");
 
         assertEquals(3, definitions.size());
@@ -30,8 +27,7 @@ class NlpHelperTest
     }
 
     @Test
-    void getRitaWordnetDefinitions3()
-    {
+    void getRitaWordnetDefinitions3() {
         ArrayList<String> definitions = NlpHelper.getRitaWordnetDefinitions("which");
 
         assertEquals(0, definitions.size());

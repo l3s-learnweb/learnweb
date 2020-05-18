@@ -16,25 +16,22 @@ import de.l3s.learnweb.user.User;
  */
 @Named
 @ViewScoped
-public class YourResourcesBean extends ApplicationBean implements Serializable
-{
+public class YourResourcesBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 5490911640532982940L;
     //private static final Logger log = LogManager.getLogger(YourResourcesBean.class);
 
     private List<Resource> userResources;
 
-    public YourResourcesBean() throws SQLException
-    {
+    public YourResourcesBean() throws SQLException {
         User user = getUser();
-        if(null == user)
-            // when not logged in
+        if (null == user) { // when not logged in
             return;
+        }
 
         this.userResources = user.getResources();
     }
 
-    public List<Resource> getUserResources()
-    {
+    public List<Resource> getUserResources() {
         return userResources;
     }
 }

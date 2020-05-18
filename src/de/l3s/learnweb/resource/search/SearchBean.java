@@ -1,11 +1,8 @@
 package de.l3s.learnweb.resource.search;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,10 +39,11 @@ import de.l3s.util.StringHelper;
 
 @Named
 @ViewScoped
-public class SearchBean extends ApplicationBean implements Serializable
-{
+public class SearchBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 8540469716342051138L;
     private static final Logger log = LogManager.getLogger(SearchBean.class);
+
+    private static final int MIN_RESOURCES_PER_GROUP = 2;
 
     // Values from views are stored here
     private String query = "";
@@ -55,8 +53,8 @@ public class SearchBean extends ApplicationBean implements Serializable
     private int page;
 
     private Search search;
-    private InterWeb interweb;
-    private SearchFilters searchFilters;
+    private final InterWeb interweb;
+    private final SearchFilters searchFilters;
 
     private ResourceDecorator selectedResource;
 
@@ -65,13 +63,9 @@ public class SearchBean extends ApplicationBean implements Serializable
     private String view = "float"; // float, grid or list
 
     private int counter = 0;
+    private List<GroupedResources> resourcesGroupedBySource;
 
-    private static final int minResourcesPerGroup = 2;
-
-    private List<GroupedResources> resourcesGroupedBySource = null;
-
-    public SearchBean()
-    {
+    public SearchBean() {
         // this method is called from every page because of search field in layout
         log.debug("SearchBean()");
 
@@ -79,28 +73,24 @@ public class SearchBean extends ApplicationBean implements Serializable
         searchFilters = new SearchFilters(SearchMode.text);
     }
 
-    public void onLoad()
-    {
+    public void onLoad() {
         log.debug("mode/action: " + queryMode + "; filter: " + queryFilters + " - service: " + queryService + "; query:" + query);
 
-        if(isAjaxRequest() || !isLoggedIn())
+        if (isAjaxRequest() || !isLoggedIn()) {
             return;
+        }
 
-        if(null == queryMode)
+        if (null == queryMode) {
             queryMode = getPreference("SEARCH_ACTION", "text");
+        }
 
-        if("text".equals(queryMode) || "web".equals(queryMode))
-        {
+        if ("text".equals(queryMode) || "web".equals(queryMode)) {
             searchMode = SearchMode.text;
             setView("list");
-        }
-        else if("image".equals(queryMode))
-        {
+        } else if ("image".equals(queryMode)) {
             searchMode = SearchMode.image;
             setView("float");
-        }
-        else if("video".equals(queryMode))
-        {
+        } else if ("video".equals(queryMode)) {
             searchMode = SearchMode.video;
             setView("grid");
         }
@@ -112,13 +102,12 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     // -------------------------------------------------------------------------
 
-    public String onSearch()
-    {
+    public String onSearch() {
         // search if a query is given and (it was not searched before or the query or search mode has been changed)
-        if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !queryService.equals(searchService.name())))
-        {
-            if(null != search)
+        if (!StringUtils.isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !queryService.equals(searchService.name()))) {
+            if (null != search) {
                 search.stop();
+            }
 
             setSearchService(queryService);
 
@@ -144,10 +133,10 @@ public class SearchBean extends ApplicationBean implements Serializable
         return "/lw/search.xhtml?faces-redirect=true";
     }
 
-    public List<ResourceDecorator> getNextPage()
-    {
-        if(!isSearched())
+    public List<ResourceDecorator> getNextPage() {
+        if (!isSearched()) {
             return null;
+        }
 
         // don't log anything here.
         // this method will be called multiple times for each page
@@ -156,27 +145,22 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     // -------------------------------------------------------------------------
 
-    public void addSelectedResource()
-    {
+    public void addSelectedResource() {
         User user = getUser();
-        if(null == user)
-        {
+        if (null == user) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
             return;
         }
 
-        try
-        {
+        try {
             Resource newResource;
 
-            if(selectedResource.getId() == -1) // resource is not yet stored at the database
-            {
+            if (selectedResource.getId() == -1) { // resource is not yet stored at the database
                 newResource = selectedResource.getResource();
-                if(newResource.getSource() == ResourceService.bing) //resource which is already saved in database already has wayback captures stored
+                if (newResource.getSource() == ResourceService.bing) { // resource which is already saved in database already has wayback captures stored
                     getLearnweb().getWaybackCapturesLogger().logWaybackCaptures(newResource);
-            }
-            else
-            {
+                }
+            } else {
                 // create a copy
                 newResource = selectedResource.getResource().clone();
             }
@@ -194,8 +178,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             log.debug("Add resource); group: " + newResource.getGroupId() + "; folder: " + newResource.getFolderId());
 
             // we need to check whether a Bing result is a PDF, Word or other document
-            if(newResource.getOriginalResourceId() == 0 && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text) && newResource.getSource() == ResourceService.bing)
-            {
+            if (newResource.getOriginalResourceId() == 0 && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text) && newResource.getSource() == ResourceService.bing) {
                 log.debug("Extracting info from given url...");
                 ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
                 FileInfo fileInfo = rme.getFileInfo(newResource.getUrl());
@@ -214,15 +197,12 @@ public class SearchBean extends ApplicationBean implements Serializable
             log(Action.adding_resource, newResource.getGroupId(), newResource.getId(), search.getId() + " - " + selectedResource.getRank());
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
-        }
-        catch(RuntimeException | IOException | SQLException e)
-        {
+        } catch (RuntimeException | IOException | SQLException e) {
             addErrorMessage(e);
         }
     }
 
-    public void getResourceDetailsCommand()
-    {
+    public void getResourceDetailsCommand() {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         int rank = Integer.parseInt(params.get("resourceRank"));
 
@@ -235,8 +215,7 @@ public class SearchBean extends ApplicationBean implements Serializable
         PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbedded());
     }
 
-    public void selectResourceCommand()
-    {
+    public void selectResourceCommand() {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         int rank = Integer.parseInt(params.get("resourceRank"));
 
@@ -245,19 +224,16 @@ public class SearchBean extends ApplicationBean implements Serializable
     }
 
     // -------------------------------------------------------------------------
+
     /**
      * This method logs a resource click event.
      */
-    public void logResourceOpened()
-    {
-        try
-        {
+    public void logResourceOpened() {
+        try {
             int tempResourceId = getParameterInt("resource_id");
 
             search.logResourceClicked(tempResourceId, getUser());
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.error("Can't log resource opened event", e);
         }
     }
@@ -265,193 +241,157 @@ public class SearchBean extends ApplicationBean implements Serializable
     // -------------------------------------------------------------------------
 
     /**
-     * True if a the user has started a search request
-     *
-     * @return
+     * True if a the user has started a search request.
      */
-    public boolean isSearched()
-    {
+    public boolean isSearched() {
         return search != null;
     }
 
-    public void loadNextPage()
-    {
+    public void loadNextPage() {
         page++;
     }
 
-    public Collection<Filter> getAvailableFilters()
-    {
-        FilterType[] except = { FilterType.service };
+    public Collection<Filter> getAvailableFilters() {
+        FilterType[] except = {FilterType.service};
         return searchFilters.getAvailableFilters(except);
     }
 
-    public ResourceService getSearchService()
-    {
+    public ResourceService getSearchService() {
         return searchService;
     }
 
-    private void setSearchService(String service)
-    {
-        try
-        {
-            if(service == null)
+    private void setSearchService(String service) {
+        try {
+            if (service == null) {
                 throw new IllegalArgumentException();
+            }
             searchService = ResourceService.valueOf(service);
-        }
-        catch(Exception e)
-        {
-            if(searchMode == SearchMode.text)
+        } catch (Exception e) {
+            if (searchMode == SearchMode.text) {
                 searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_TEXT", "bing"));
-            else if(searchMode == SearchMode.image)
+            } else if (searchMode == SearchMode.image) {
                 searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_IMAGE", "flickr"));
-            else if(searchMode == SearchMode.video)
+            } else if (searchMode == SearchMode.video) {
                 searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_VIDEO", "youtube"));
+            }
         }
 
         queryService = searchService.name();
     }
 
-    public Long getTotalFromCurrentService()
-    {
+    public Long getTotalFromCurrentService() {
         return searchFilters.getTotalResults() - search.getRemovedResourceCount();
     }
 
-    public SearchFilters getSearchFilters()
-    {
+    public SearchFilters getSearchFilters() {
         return searchFilters;
     }
 
-    public String getSearchMode()
-    {
+    public String getSearchMode() {
         return searchMode.name();
     }
 
-    public String createFilterUrl(FilterType filterType, String value)
-    {
+    public String createFilterUrl(FilterType filterType, String value) {
         StringBuilder sb = new StringBuilder();
 
         int next = -1;
-        if (StringUtils.isNotBlank(queryFilters))
-        {
+        if (StringUtils.isNotBlank(queryFilters)) {
             boolean startWith = queryFilters.startsWith(filterType.name() + ':');
             int index = startWith ? 0 : queryFilters.indexOf(',' + filterType.name() + ':');
             next = queryFilters.indexOf(',', index + 1);
 
-            if(index > 0)
-            {
+            if (index > 0) {
                 sb.append(queryFilters, 0, index);
-            }
-            else if (index == -1)
-            {
+            } else if (index == -1) {
                 sb.append(queryFilters);
                 next = -1;
             }
         }
 
-        if (StringUtils.isNotBlank(value))
-        {
-            if (sb.length() > 0) sb.append(':');
+        if (StringUtils.isNotBlank(value)) {
+            if (sb.length() > 0) {
+                sb.append(':');
+            }
             sb.append(filterType.name()).append(':').append(filterType.isEncodeBase64() ? StringHelper.encodeBase64(value) : value);
         }
 
-        if(next != -1)
-        {
+        if (next != -1) {
             sb.append(queryFilters, next, queryFilters.length());
         }
 
         return sb.toString();
     }
 
-    public Search getSearch()
-    {
+    public Search getSearch() {
         return search;
     }
 
-    public int getPage()
-    {
+    public int getPage() {
         return page;
     }
 
-    public String getQuery()
-    {
+    public String getQuery() {
         return query;
     }
 
-    public void setQuery(String query)
-    {
+    public void setQuery(String query) {
         this.query = query;
     }
 
-    public String getQueryMode()
-    {
+    public String getQueryMode() {
         return queryMode;
     }
 
-    public void setQueryMode(String queryMode)
-    {
-        if(StringUtils.isNotEmpty(queryMode))
-        {
+    public void setQueryMode(String queryMode) {
+        if (StringUtils.isNotEmpty(queryMode)) {
             this.queryMode = queryMode;
         }
     }
 
-    public String getQueryService()
-    {
+    public String getQueryService() {
         return queryService;
     }
 
-    public void setQueryService(String queryService)
-    {
-        if(StringUtils.isNotEmpty(queryService))
-        {
+    public void setQueryService(String queryService) {
+        if (StringUtils.isNotEmpty(queryService)) {
             this.queryService = queryService;
         }
     }
 
-    public String getQueryFilters()
-    {
+    public String getQueryFilters() {
         return queryFilters;
     }
 
-    public void setQueryFilters(String queryFilters)
-    {
+    public void setQueryFilters(String queryFilters) {
         this.queryFilters = queryFilters;
     }
 
-    public ResourceDecorator getSelectedResource()
-    {
+    public ResourceDecorator getSelectedResource() {
         return selectedResource;
     }
 
-    public void setSelectedResource(ResourceDecorator decoratedResource)
-    {
+    public void setSelectedResource(ResourceDecorator decoratedResource) {
         this.selectedResource = decoratedResource;
     }
 
-    public String getView()
-    {
+    public String getView() {
         return view;
     }
 
-    private void setView(String view)
-    {
+    private void setView(String view) {
         this.view = view;
     }
 
-    public int getCounter()
-    {
+    public int getCounter() {
         return counter++;
     }
 
-    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException
-    {
+    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         inputStream.defaultReadObject();
     }
 
-    public List<GroupedResources> getResourcesGroupedBySource()
-    {
-        if(StringUtils.isNoneBlank(query) && (resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty()))
-        {
+    public List<GroupedResources> getResourcesGroupedBySource() {
+        if (StringUtils.isNoneBlank(query) && (resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty())) {
             SearchFilters searchFilters = new SearchFilters(searchMode);
             Search metaSearch = new Search(interweb, query, searchFilters, getUser());
             metaSearch.setMode(searchMode);
@@ -460,7 +400,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             metaSearch.setConfigResultsPerGroup(10);
             searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());
             metaSearch.getResourcesByPage(2); // fetch resources
-            resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(minResourcesPerGroup, searchService);
+            resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(MIN_RESOURCES_PER_GROUP, searchService);
             Collections.sort(resourcesGroupedBySource);
         }
         return resourcesGroupedBySource;

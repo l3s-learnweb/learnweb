@@ -1,20 +1,14 @@
 package de.l3s.learnweb.tasks.resources;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.sql.SQLException;
 
-public class GenerateThumbnailsForImageVideoResources
-{
+public class GenerateThumbnailsForImageVideoResources {
 
     /**
-     * @param args
-     * @throws SQLException
-     * @throws IOException
-     * @throws MalformedURLException
+     *
      */
-    public static void main(String[] args) throws SQLException, MalformedURLException, IOException
-    {
+    public static void main(String[] args) throws SQLException, IOException {
 
         /*
 
@@ -26,28 +20,26 @@ public class GenerateThumbnailsForImageVideoResources
 
         List<Resource> resources = rm.getResources(query, null);
         log.debug("start");
-        for(Resource resource : resources)
-        {
+        for (Resource resource : resources) {
 
             String url = resource.getMaxImageUrl();
 
             log.debug(url);
             url = FileInspector.checkUrl(url);
 
-            if(null == url || url.contains("unavailable"))
-            {
-        	log.error("bild nicht erreichbar" + resource.getUrl());
+            if (null == url || url.contains("unavailable")) {
+                log.error("bild nicht erreichbar" + resource.getUrl());
 
-        	url = FileInspector.checkUrl(resource.getUrl());
+                url = FileInspector.checkUrl(resource.getUrl());
 
-        	log.debug(url);
-        	break;
+                log.debug(url);
+                break;
             }
 
             rpm.processImage(resource, new URL(url).openStream());
 
             if(resource.getType().equalsIgnoreCase("image") && resource.getEmbeddedRaw() == null)
-        	resource.setEmbeddedRaw(sdfsdf);
+            resource.setEmbeddedRaw(sdfsdf);
 
             resource.save();
 

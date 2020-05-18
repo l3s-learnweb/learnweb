@@ -143,8 +143,8 @@
         <h:form id="suspiciouslistform">
             <p:dataTable  paginatorPosition="bottom" var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true"
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-                <p:column headerText="IP" sortBy="#{aggrReqData.IP}">
-                    <h:outputText value="#{aggrReqData.IP}"/>
+                <p:column headerText="IP" sortBy="#{aggrReqData.ip}">
+                    <h:outputText value="#{aggrReqData.ip}"/>
                 </p:column>
 
                 <p:column headerText="#{msg.requests_count}" sortBy="#{aggrReqData.requests}">
@@ -172,9 +172,9 @@
                         <h:outputText value="#{msg.ban}"/>
                     </p:commandLink>
 
-                    <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.IP)}"
+                    <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.ip)}"
                                    update=":suspiciouslistform" styleClass="icon-link">
-                        <p:confirm message="#{msg.remove} #{aggrReqData.IP}?"/>
+                        <p:confirm message="#{msg.remove} #{aggrReqData.ip}?"/>
                         <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                         <h:outputText value="#{msg.remove}"/>
                     </p:commandLink>

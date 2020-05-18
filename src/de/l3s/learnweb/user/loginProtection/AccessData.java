@@ -10,10 +10,8 @@ import java.util.Date;
  * Contains: number of failed attempts and the time when the ban is lifted (set to 1970 if empty)
  *
  * @author Kate
- *
  */
-public class AccessData implements Serializable
-{
+public class AccessData implements Serializable {
     private static final long serialVersionUID = -2074629486516643542L;
 
     private int attempts;
@@ -24,21 +22,17 @@ public class AccessData implements Serializable
 
     /**
      * Default constructor for new data.
-     *
-     * @param name
      */
-    public AccessData(String name)
-    {
+    public AccessData(String name) {
         attempts = 0;
         this.name = name;
         allowedAttempts = 50;
     }
 
     /**
-     * Used when getting data from ban list
+     * Used when getting data from ban list.
      */
-    public AccessData(String name, int attempts, Date bannedUntil, Date bannedOn)
-    {
+    public AccessData(String name, int attempts, Date bannedUntil, Date bannedOn) {
         this.attempts = attempts;
         this.name = name;
         this.banDate = bannedUntil;
@@ -47,18 +41,16 @@ public class AccessData implements Serializable
     }
 
     /**
-     * Resets login attempts
+     * Resets login attempts.
      */
-    public void reset()
-    {
+    public void reset() {
         attempts = 0;
     }
 
     /**
-     * Resets ban time and banned on date
+     * Resets ban time and banned on date.
      */
-    public void unban()
-    {
+    public void unban() {
         banDate = null;
         bannedOn = null;
     }
@@ -66,8 +58,7 @@ public class AccessData implements Serializable
     /**
      * Bans the user for a given amount of minutes starting from now.
      */
-    public void setBan(int days, int hours, int minutes)
-    {
+    public void setBan(int days, int hours, int minutes) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
 
@@ -81,10 +72,9 @@ public class AccessData implements Serializable
     }
 
     /**
-     * Bans user for virtually forever (400 years)
+     * Bans user for virtually forever (400 years).
      */
-    public void permaban()
-    {
+    public void permaban() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.YEAR, 400);
@@ -94,59 +84,48 @@ public class AccessData implements Serializable
 
     }
 
-    public int getAttempts()
-    {
+    public int getAttempts() {
         return attempts;
     }
 
-    public void logAttempt()
-    {
+    public void setAttempts(int attempts) {
+        this.attempts = Math.max(attempts, 0);
+    }
+
+    public void logAttempt() {
         attempts++;
         allowedAttempts--;
     }
 
-    public void setAttempts(int attempts)
-    {
-        this.attempts = Math.max(attempts, 0);
-    }
-
-    public Date getBanDate()
-    {
+    public Date getBanDate() {
         return banDate;
     }
 
-    public void setBanDate(Date banDate)
-    {
+    public void setBanDate(Date banDate) {
         this.banDate = banDate;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public Date getBannedOn()
-    {
+    public Date getBannedOn() {
         return bannedOn;
     }
 
-    public void setBannedOn(Date bannedOn)
-    {
+    public void setBannedOn(Date bannedOn) {
         this.bannedOn = bannedOn;
     }
 
-    public int getAllowedAttempts()
-    {
+    public int getAllowedAttempts() {
         return allowedAttempts;
     }
 
-    public void setAllowedAttempts(int allowedAttempts)
-    {
+    public void setAllowedAttempts(int allowedAttempts) {
         this.allowedAttempts = allowedAttempts;
     }
 }

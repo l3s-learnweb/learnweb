@@ -15,10 +15,9 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.ResourceType;
 
-public class FileUtility
-{
+public class FileUtility {
     private static final Logger log = LogManager.getLogger(FileUtility.class);
-    
+
     private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
 
     private static final String TEXT = "text";
@@ -36,78 +35,71 @@ public class FileUtility
     private static final String SAMPLE_XLSX = "sample.xlsx";
     private static final String SAMPLE_DOCX = "sample.docx";
 
-    public static boolean canBeViewed(String fileExt)
-    {
+    public static boolean canBeViewed(String fileExt) {
         return !(EXT_DOCUMENT_CONVERT.contains(fileExt) || EXT_SPREADSHEET_CONVERT.contains(fileExt) || EXT_PRESENTATION_CONVERT.contains(fileExt));
     }
 
-    public static String getFileType(String fileName)
-    {
+    public static String getFileType(String fileName) {
         String ext = getFileExtension(fileName);
-        if(EXT_SPREADSHEET.contains(ext))
+        if (EXT_SPREADSHEET.contains(ext)) {
             return SPREADSHEET;
-        if(EXT_PRESENTATION.contains(ext))
+        }
+        if (EXT_PRESENTATION.contains(ext)) {
             return PRESENTATION;
+        }
         return TEXT;
     }
 
-    public static String getInfoForKey(File file)
-    {
+    public static String getInfoForKey(File file) {
         String infoForKey = null;
-        if(file != null && file.getLastModified() != null)
-        {
+        if (file != null && file.getLastModified() != null) {
             infoForKey = Long.toString(file.getLastModified().getTime()) + file.getId();
         }
         return infoForKey;
     }
 
-    public static String generateRevisionId(File file)
-    {
+    public static String generateRevisionId(File file) {
         String expectedKey = getInfoForKey(file);
-        if(expectedKey.length() > 20)
+        if (expectedKey.length() > 20) {
             expectedKey = Integer.toString(expectedKey.hashCode());
+        }
 
         String key = expectedKey.replace("[^0-9-.a-zA-Z_=]", "");
 
         return key.substring(0, Math.min(key.length(), 20));
     }
 
-    public static String getFileExtension(String fileName)
-    {
-        if(fileName != null)
-        {
+    public static String getFileExtension(String fileName) {
+        if (fileName != null) {
             int lastIndex = fileName.lastIndexOf('.');
-            if(lastIndex <= 0)
+            if (lastIndex <= 0) {
                 return null;
+            }
             String fileExt = fileName.substring(lastIndex + 1);
             return fileExt.toLowerCase();
         }
         return null;
     }
 
-    public static String getFileName(String url)
-    {
-        if(StringUtils.isNotEmpty(url))
-        {
-            try
-            {
+    public static String getFileName(String url) {
+        if (StringUtils.isNotEmpty(url)) {
+            try {
                 URI uri = new URI(url);
 
                 String path = uri.getPath();
 
-                if(StringUtils.isEmpty(path) || path.equals("/"))
-                {
+                if (StringUtils.isEmpty(path) || path.equals("/")) {
                     path = uri.getHost();
-                    if(path.startsWith("www."))
+                    if (path.startsWith("www.")) {
                         path = path.substring(4);
+                    }
                 }
 
                 Path fileName = Paths.get(path).getFileName();
-                if (fileName != null)
+                if (fileName != null) {
                     return fileName.toString();
-            }
-            catch(Throwable e)
-            {
+                }
+            } catch (Throwable e) {
                 log.error("Can't get filename from URL: " + url, e);
             }
         }
@@ -115,38 +107,33 @@ public class FileUtility
         return "unknownFileName";
     }
 
-    public static java.io.File getSampleOfficeFile(ResourceType resourceType) throws URISyntaxException
-    {
+    public static java.io.File getSampleOfficeFile(ResourceType resourceType) throws URISyntaxException {
         String sampleFileName = getSampleFileName(resourceType);
         URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource(OFFICE_FILES_FOLDER + sampleFileName);
         return new java.io.File(resourceUrl.toURI());
     }
 
-    public static String getInternalExtension(ResourceType fileType)
-    {
-        switch(fileType)
-        {
-        case spreadsheet:
-            return ".xlsx";
-        case presentation:
-            return ".pptx";
-        default:
-            return ".docx";
+    public static String getInternalExtension(ResourceType fileType) {
+        switch (fileType) {
+            case spreadsheet:
+                return ".xlsx";
+            case presentation:
+                return ".pptx";
+            default:
+                return ".docx";
         }
     }
 
-    public static String getSampleFileName(ResourceType fileType)
-    {
-        switch(fileType)
-        {
-        case document:
-            return SAMPLE_DOCX;
-        case spreadsheet:
-            return SAMPLE_XLSX;
-        case presentation:
-            return SAMPLE_PPTX;
-        default:
-            return null;
+    public static String getSampleFileName(ResourceType fileType) {
+        switch (fileType) {
+            case document:
+                return SAMPLE_DOCX;
+            case spreadsheet:
+                return SAMPLE_XLSX;
+            case presentation:
+                return SAMPLE_PPTX;
+            default:
+                return null;
         }
     }
 }

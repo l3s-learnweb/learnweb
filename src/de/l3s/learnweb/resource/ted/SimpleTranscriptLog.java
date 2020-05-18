@@ -7,8 +7,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
-public class SimpleTranscriptLog implements Serializable
-{
+public class SimpleTranscriptLog implements Serializable {
     private static final long serialVersionUID = -5957511920632610709L;
 
     private int userId;
@@ -21,12 +20,10 @@ public class SimpleTranscriptLog implements Serializable
     private transient User user;
     private transient Resource resource;
 
-    public SimpleTranscriptLog()
-    {
+    public SimpleTranscriptLog() {
     }
 
-    public SimpleTranscriptLog(int userId, int resourceId, int selectionCount, int deselectionCount, int userAnnotationCount)
-    {
+    public SimpleTranscriptLog(int userId, int resourceId, int selectionCount, int deselectionCount, int userAnnotationCount) {
         this.userId = userId;
         this.resourceId = resourceId;
         this.selectionCount = selectionCount;
@@ -34,42 +31,37 @@ public class SimpleTranscriptLog implements Serializable
         this.userAnnotationCount = userAnnotationCount;
     }
 
-    public User getUser() throws SQLException
-    {
-        if(null == user)
+    public User getUser() throws SQLException {
+        if (null == user) {
             user = Learnweb.getInstance().getUserManager().getUser(getUserId());
+        }
         return user;
     }
 
-    public Resource getResource() throws SQLException
-    {
-        if(null == resource)
+    public Resource getResource() throws SQLException {
+        if (null == resource) {
             resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+        }
         return resource;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public int getSelectionCount()
-    {
+    public int getSelectionCount() {
         return selectionCount;
     }
 
-    public int getDeselectionCount()
-    {
+    public int getDeselectionCount() {
         return deselectionCount;
     }
 
-    public int getUserAnnotationCount()
-    {
+    public int getUserAnnotationCount() {
         return userAnnotationCount;
     }
 

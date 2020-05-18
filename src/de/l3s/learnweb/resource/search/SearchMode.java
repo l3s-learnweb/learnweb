@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource.search;
 
-public enum SearchMode
-{
+public enum SearchMode {
     text,
     image,
     video,

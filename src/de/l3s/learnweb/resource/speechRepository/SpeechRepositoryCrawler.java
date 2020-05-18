@@ -27,8 +27,7 @@ import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 
-public class SpeechRepositoryCrawler implements Runnable
-{
+public class SpeechRepositoryCrawler implements Runnable {
     private static final Logger log = LogManager.getLogger(SpeechRepositoryCrawler.class);
 
     private static final Pattern LANGUAGE_PATTERN = Pattern.compile("\\(([a-z]{2,3})\\)");
@@ -38,42 +37,33 @@ public class SpeechRepositoryCrawler implements Runnable
 
     private Learnweb learnweb;
 
-    public SpeechRepositoryCrawler()
-    {
+    public SpeechRepositoryCrawler() {
 
     }
 
-    public void initialize()
-    {
+    public void initialize() {
         learnweb = Learnweb.getInstance();
     }
 
-    public void start()
-    {
-        try
-        {
+    public void start() {
+        try {
             String nextUrl = "https://webgate.ec.europa.eu/sr/search-speeches?entity%5B0%5D=&language=All&level=All&use=All&domain=All&type=All&title=&combine=&combine_1=&video_reference=&order=nid&sort=desc";
 
             int pageNumber = 0;
-            while(nextUrl != null)
-            {
+            while (nextUrl != null) {
                 log.info("Getting page " + pageNumber++);
                 nextUrl = visitCategoryPage(nextUrl);
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.error("Error while fetching speech repository page:1", e);
         }
     }
 
     /**
-     * Extract individual speech repository URLs from the menu page
+     * Extract individual speech repository URLs from the menu page.
      */
-    private String visitCategoryPage(String categoryPageUrl)
-    {
-        try
-        {
+    private String visitCategoryPage(String categoryPageUrl) {
+        try {
             Document doc = Jsoup.connect(categoryPageUrl).timeout(TIMEOUT).get();
             Element content = doc.select("#block-system-main").first();
             Element paginationElement = content.select(".item-list > .pager").first();
@@ -84,28 +74,22 @@ public class SpeechRepositoryCrawler implements Runnable
             Element tableElement = content.select(".view-content table").first();
             Elements tableRows = tableElement.select("tbody > tr");
 
-            for(Element tableRow : tableRows)
-            {
+            for (Element tableRow : tableRows) {
                 final int pageId = Integer.parseInt(tableRow.select(".views-field-nid").text());
                 final String pageUrl = tableRow.select(".views-field-title a").attr("href");
 
-                try
-                {
+                try {
                     if (!isPageSaved(pageId)) {
                         visitPage(pageUrl);
                         TimeUnit.SECONDS.sleep(5);
                     }
-                }
-                catch(Exception e)
-                {
+                } catch (Exception e) {
                     log.error("Error while fetching speech repository page: " + pageUrl, e);
                 }
             }
 
             return nextCategoryPageUrl;
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             log.error("Error while fetching speech repository page: " + categoryPageUrl, e);
         }
 
@@ -113,11 +97,10 @@ public class SpeechRepositoryCrawler implements Runnable
     }
 
     /**
-     * Extract data about a particular speech repository given the URL
-     * Update the data if speech already exists, if not - insert the new speech repository to the database
+     * Extract data about a particular speech repository given the URL.
+     * Update the data if speech already exists, if not - insert the new speech repository to the database.
      */
-    private void visitPage(final String pageUrl) throws IOException, SQLException
-    {
+    private void visitPage(final String pageUrl) throws IOException, SQLException {
         Document doc = Jsoup.connect(pageUrl).timeout(TIMEOUT).get();
         Element content = doc.select("#content > .content-inner").first();
         Element speechElement = content.select("#content-area .node-speech").first();
@@ -132,68 +115,48 @@ public class SpeechRepositoryCrawler implements Runnable
         speechEntity.setNotes(speechElement.select(".field-name-field-notes .field-items").text());
 
         // extracting details
-        for(Element element : speechDetailsElement.select(".field"))
-        {
+        for (Element element : speechDetailsElement.select(".field")) {
             String key = element.select(".field-label").text()
-                    .replace(":", "").replace("\u00a0", " ").trim();
+                .replace(":", "").replace("\u00a0", " ").trim();
             String value = element.select(".field-items").text();
 
-            if(key.contains("Duration"))
-            {
+            if (key.contains("Duration")) {
                 speechEntity.setDuration(value);
-            }
-            else if(key.contains("Language"))
-            {
+            } else if (key.contains("Language")) {
                 speechEntity.setLanguage(value);
-            }
-            else if(key.contains("Level"))
-            {
+            } else if (key.contains("Level")) {
                 speechEntity.setLevel(value);
-            }
-            else if(key.contains("Use"))
-            {
+            } else if (key.contains("Use")) {
                 speechEntity.setUse(value);
-            }
-            else if(key.contains("Type"))
-            {
+            } else if (key.contains("Type")) {
                 speechEntity.setType(value);
-            }
-            else if(key.contains("Domains"))
-            {
+            } else if (key.contains("Domains")) {
                 speechEntity.setDomains(value);
-            }
-            else if(key.contains("Terminology"))
-            {
+            } else if (key.contains("Terminology")) {
                 speechEntity.setTerminology(value);
             }
         }
 
         // extracting video url
-        for(Element element : doc.select("script").not("[src]"))
-        {
+        for (Element element : doc.select("script").not("[src]")) {
             String scriptData = element.data();
-            if(scriptData != null && !scriptData.isEmpty() && scriptData.contains("jQuery.extend(Drupal.settings"))
-            {
+            if (scriptData != null && !scriptData.isEmpty() && scriptData.contains("jQuery.extend(Drupal.settings")) {
                 scriptData = scriptData.substring(scriptData.indexOf('{'), scriptData.lastIndexOf('}') + 1);
 
                 JSONObject jsonObject = new JSONObject(scriptData);
                 JSONObject mediaPlayer = jsonObject.getJSONObject("ecspTranscodingPlayers").getJSONObject("ecsp-media-player");
 
-                if(mediaPlayer.has("image"))
-                {
+                if (mediaPlayer.has("image")) {
                     speechEntity.setImageLink(mediaPlayer.getString("image"));
                 }
 
-                if(mediaPlayer.has("entity_id"))
-                {
+                if (mediaPlayer.has("entity_id")) {
                     speechEntity.setId(mediaPlayer.getString("entity_id"));
                 }
 
-                for(Object source : mediaPlayer.getJSONArray("sources"))
-                {
+                for (Object source : mediaPlayer.getJSONArray("sources")) {
                     JSONObject objectSource = (JSONObject) source;
-                    if(!"auto".equals(objectSource.getString("label")))
-                    {
+                    if (!"auto".equals(objectSource.getString("label"))) {
                         speechEntity.setVideoLink(objectSource.getString("file"));
                         break;
                     }
@@ -207,8 +170,7 @@ public class SpeechRepositoryCrawler implements Runnable
         savePage(speechEntity);
     }
 
-    private boolean isPageSaved(final int pageId) throws SQLException
-    {
+    private boolean isPageSaved(final int pageId) throws SQLException {
         // check the database to identify if the video has already been crawled
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT id FROM speechrepository_video WHERE id = ?");
         pStmt.setInt(1, pageId);
@@ -217,13 +179,14 @@ public class SpeechRepositoryCrawler implements Runnable
     }
 
     /**
-     * Extract data about a particular speech repository given the URL
-     * Update the data if speech already exists, if not - insert the new speech repository to the database
+     * Extract data about a particular speech repository given the URL.
+     * Update the data if speech already exists, if not - insert the new speech repository to the database.
      */
-    private void savePage(final SpeechRepositoryEntity speechEntity) throws SQLException
-    {
-        PreparedStatement preparedStatement = learnweb.getConnection()
-                .prepareStatement("INSERT INTO speechrepository_video (id, title, url, rights, date, description, notes, image_link, video_link, duration, language, level, `use`, type, domains, terminology, learnweb_resource_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+    private void savePage(final SpeechRepositoryEntity speechEntity) throws SQLException {
+        PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement(
+            "INSERT INTO speechrepository_video (id, title, url, rights, date, description, notes, image_link, "
+                + "video_link, duration, language, level, `use`, type, domains, terminology, learnweb_resource_id)"
+                + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
         preparedStatement.setInt(1, speechEntity.getId());
         preparedStatement.setString(2, speechEntity.getTitle());
         preparedStatement.setString(3, speechEntity.getUrl());
@@ -243,17 +206,17 @@ public class SpeechRepositoryCrawler implements Runnable
         preparedStatement.setInt(17, speechEntity.getLearnwebResourceId());
 
         int val = preparedStatement.executeUpdate();
-        if(val != 1)
+        if (val != 1) {
             log.error("Inserting speech repository video resource was not successful: {}", speechEntity.getId());
-        else {
+        } else {
             log.info("New Speechrepository video was added: {} - {}", speechEntity.getId(), speechEntity.getTitle());
         }
     }
 
-    private Resource createResource(final SpeechRepositoryEntity speechEntity) throws SQLException, IOException
-    {
-        if (speechEntity.getLearnwebResourceId() > 0)
+    private Resource createResource(final SpeechRepositoryEntity speechEntity) throws SQLException, IOException {
+        if (speechEntity.getLearnwebResourceId() > 0) {
             return learnweb.getResourceManager().getResource(speechEntity.getLearnwebResourceId());
+        }
 
         Resource resource = new Resource();
         resource.setTitle(speechEntity.getTitle());
@@ -274,32 +237,31 @@ public class SpeechRepositoryCrawler implements Runnable
         //resource.setTranscript("");
 
         // parse language, example: ???
-        if(StringUtils.isNotBlank(speechEntity.getLanguage()))
-        {
+        if (StringUtils.isNotBlank(speechEntity.getLanguage())) {
             Matcher matcher = LANGUAGE_PATTERN.matcher(speechEntity.getLanguage());
-            if (matcher.find())
+            if (matcher.find()) {
                 resource.setLanguage(matcher.group(1));
-            else
+            } else {
                 log.error("Did not expect this lang value {}, speechEntity {}", speechEntity.getLanguage(), speechEntity.getId());
+            }
         }
 
         // parse date, example: Bruxelles, 09/04/2018
-        if(StringUtils.isNotBlank(speechEntity.getDate()))
-        {
+        if (StringUtils.isNotBlank(speechEntity.getDate())) {
             String dateStr = speechEntity.getDate();
             Matcher matcher = DATE_PATTERN.matcher(dateStr);
-            if(matcher.find())
+            if (matcher.find()) {
                 resource.setCreationDate(Date.from(LocalDate.parse(matcher.group(1), DATE_FORMATTER).atStartOfDay().toInstant(ZoneOffset.UTC)));
-            else
+            } else {
                 log.error("Did not expect this date value {}, speechEntity {}", speechEntity.getDate(), speechEntity.getId());
+            }
         }
 
         saveResource(resource);
         return resource;
     }
 
-    private void saveResource(final Resource resource) throws SQLException, IOException
-    {
+    private void saveResource(final Resource resource) throws SQLException, IOException {
         resource.setGroupId(1401);
         resource.setUserId(7727);
 
@@ -310,17 +272,14 @@ public class SpeechRepositoryCrawler implements Runnable
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         initialize();
         start();
     }
 
-    private void createResourcesForExistingSpeechrepositoryEntities() throws SQLException, IOException
-    {
+    private void createResourcesForExistingSpeechrepositoryEntities() throws SQLException, IOException {
         ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM speechrepository_video WHERE learnweb_resource_id = 0");
-        while(rs.next())
-        {
+        while (rs.next()) {
             SpeechRepositoryEntity speechEntity = createSpeechRepositoryEntity(rs);
             log.debug("process entry id {}", speechEntity.getId());
 
@@ -338,8 +297,7 @@ public class SpeechRepositoryCrawler implements Runnable
         learnweb.onDestroy();
     }
 
-    private SpeechRepositoryEntity createSpeechRepositoryEntity(ResultSet rs) throws SQLException
-    {
+    private SpeechRepositoryEntity createSpeechRepositoryEntity(ResultSet rs) throws SQLException {
         SpeechRepositoryEntity speechEntity = new SpeechRepositoryEntity();
         speechEntity.setId(rs.getInt("id"));
         speechEntity.setTitle(rs.getString("title"));
@@ -361,10 +319,9 @@ public class SpeechRepositoryCrawler implements Runnable
         return speechEntity;
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException
-    {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
         @SuppressWarnings("unused") // required for Learnweb.getInstance() to work properly inside .initialize() method
-        Learnweb learnweb = Learnweb.createInstance();
+            Learnweb learnweb = Learnweb.createInstance();
 
         SpeechRepositoryCrawler speechRepositoryCrawler = new SpeechRepositoryCrawler();
         speechRepositoryCrawler.initialize();

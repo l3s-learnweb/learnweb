@@ -23,64 +23,57 @@ import de.l3s.util.bean.BeanHelper;
 
 @Named
 @RequestScoped
-public class LoginBean extends ApplicationBean implements Serializable
-{
+public class LoginBean extends ApplicationBean implements Serializable {
     // private static final Logger log = LogManager.getLogger(LoginBean.class);
     private static final long serialVersionUID = 7980062591522267111L;
+
     private static final String LOGIN_PAGE = "/lw/user/login.xhtml";
 
     @NotBlank
     private String username;
     @NotBlank
     private String password;
-    private boolean captchaRequired;
+    private final boolean captchaRequired;
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
-    public LoginBean()
-    {
+    public LoginBean() {
         String ip = BeanHelper.getIp();
 
-        if(!InetAddresses.isInetAddress(ip))
+        if (!InetAddresses.isInetAddress(ip)) {
             captchaRequired = true;
-        else
+        } else {
             captchaRequired = getLearnweb().getProtectionManager().needsCaptcha(ip);
+        }
     }
 
-    public String getUsername()
-    {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username)
-    {
+    public void setUsername(String username) {
         this.username = StringUtils.trim(username);
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password)
-    {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public boolean isCaptchaRequired()
-    {
+    public boolean isCaptchaRequired() {
         return captchaRequired;
     }
 
-    public String login() throws SQLException
-    {
+    public String login() throws SQLException {
         //Getting IP
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String ip = BeanHelper.getIp(request);
 
-        if(!InetAddresses.isInetAddress(ip))
-        {
+        if (!InetAddresses.isInetAddress(ip)) {
             return LOGIN_PAGE;
         }
 
@@ -91,14 +84,12 @@ public class LoginBean extends ApplicationBean implements Serializable
         Date ipBan = pm.getBannedUntil(ip);
         Date userBan = pm.getBannedUntil(username);
 
-        if(ipBan != null && ipBan.after(now))
-        {
+        if (ipBan != null && ipBan.after(now)) {
             addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned" + ipBan);
             return LOGIN_PAGE;
         }
 
-        if(userBan != null && userBan.after(now))
-        {
+        if (userBan != null && userBan.after(now)) {
             addMessage(FacesMessage.SEVERITY_ERROR, "username_banned" + userBan);
             return LOGIN_PAGE;
         }
@@ -106,8 +97,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         //USER AUTHORIZATION HAPPENS HERE
         final User user = getLearnweb().getUserManager().getUser(username, password);
 
-        if(null == user)
-        {
+        if (null == user) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
             pm.updateFailedAttempts(ip, username);
             return LOGIN_PAGE;
@@ -116,8 +106,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         pm.updateSuccessfulAttempts(ip, username);
         getLearnweb().getRequestManager().recordLogin(ip, username);
 
-        if(!user.isEmailConfirmed() && user.isEmailRequired())
-        {
+        if (!user.isEmailConfirmed() && user.isEmailRequired()) {
             confirmRequiredBean.setLoggedInUser(user);
             return "/lw/user/confirm_required.xhtml?faces-redirect=true";
         }
@@ -125,70 +114,20 @@ public class LoginBean extends ApplicationBean implements Serializable
         return loginUser(this, user);
     }
 
-    public static String loginUser(ApplicationBean bean, User user) throws SQLException
-    {
-        return loginUser(bean, user, -1);
-    }
-
     /**
-     * @param moderatorUserId larger zero if a moderator logs into a user account through the admin interface
+     * Performs different logout actions depending on whether a simple user is currently logged in
+     * or if a moderator had logged into another user's account.
      */
-    public static String loginUser(ApplicationBean bean, User user, int moderatorUserId) throws SQLException
-    {
-        bean.getUserBean().setUser(user); // logs the user in
-        //addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
-
-        user.updateLoginDate(); // the last login date has to be updated before we log a new login event
-
-        if(moderatorUserId > 0)
-            bean.log(Action.moderator_login, 0, 0);
-        else
-            bean.log(Action.login, 0, 0, BeanHelper.getRequestURI());
-
-        Organisation userOrganisation = user.getOrganisation();
-
-        // set default search service if not already selected
-        if(bean.getPreference("SEARCH_SERVICE_TEXT") == null || bean.getPreference("SEARCH_SERVICE_IMAGE") == null || bean.getPreference("SEARCH_SERVICE_VIDEO") == null)
-        {
-            bean.setPreference("SEARCH_SERVICE_TEXT", userOrganisation.getDefaultSearchServiceText().name());
-            bean.setPreference("SEARCH_SERVICE_IMAGE", userOrganisation.getDefaultSearchServiceImage().name());
-            bean.setPreference("SEARCH_SERVICE_VIDEO", userOrganisation.getDefaultSearchServiceVideo().name());
-        }
-
-        if(userOrganisation.getId() == 1249) // EU-MADE4LL user have to be redirect to the backup of Learnweb V2
-            return "/lw/eumade4all/statistics.xhtml?faces-redirect=true";
-
-        // if the user logs in from the start or the login page, redirect him to the welcome page
-        String viewId = getFacesContext().getViewRoot().getViewId();
-        if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml") && moderatorUserId > 0)
-        {
-            return userOrganisation.getWelcomePage() + "?faces-redirect=true";
-        }
-
-        // otherwise reload his last page
-        return viewId + "?faces-redirect=true&includeViewParams=true";
-    }
-
-    /**
-     * Performs different logout actions depending on whether a simple user is currently logged in or if a moderator had logged into another user's
-     * account
-     *
-     * @return
-     */
-    public String logout()
-    {
+    public String logout() {
         UserBean userBean = getUserBean();
         User user = userBean.getUser();
         String logoutPage = user.getOrganisation().getLogoutPage();
 
-        if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) // a moderator logs out from a user account
-        {
+        if (userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) { // a moderator logs out from a user account
             userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
             userBean.setModeratorUser(null);
             return "/lw/admin/users.xhtml?faces-redirect=true";
-        }
-        else
-        {
+        } else {
             log(Action.logout, 0, 0);
             user.onDestroy();
             getFacesContext().getExternalContext().invalidateSession(); // end session
@@ -196,13 +135,53 @@ public class LoginBean extends ApplicationBean implements Serializable
         }
     }
 
-    public ConfirmRequiredBean getConfirmRequiredBean()
-    {
+    public ConfirmRequiredBean getConfirmRequiredBean() {
         return confirmRequiredBean;
     }
 
-    public void setConfirmRequiredBean(ConfirmRequiredBean confirmRequiredBean)
-    {
+    public void setConfirmRequiredBean(ConfirmRequiredBean confirmRequiredBean) {
         this.confirmRequiredBean = confirmRequiredBean;
+    }
+
+    public static String loginUser(ApplicationBean bean, User user) throws SQLException {
+        return loginUser(bean, user, -1);
+    }
+
+    /**
+     * @param moderatorUserId larger zero if a moderator logs into a user account through the admin interface
+     */
+    public static String loginUser(ApplicationBean bean, User user, int moderatorUserId) throws SQLException {
+        bean.getUserBean().setUser(user); // logs the user in
+        //addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
+
+        user.updateLoginDate(); // the last login date has to be updated before we log a new login event
+
+        if (moderatorUserId > 0) {
+            bean.log(Action.moderator_login, 0, 0);
+        } else {
+            bean.log(Action.login, 0, 0, BeanHelper.getRequestURI());
+        }
+
+        Organisation userOrganisation = user.getOrganisation();
+
+        // set default search service if not already selected
+        if (bean.getPreference("SEARCH_SERVICE_TEXT") == null || bean.getPreference("SEARCH_SERVICE_IMAGE") == null || bean.getPreference("SEARCH_SERVICE_VIDEO") == null) {
+            bean.setPreference("SEARCH_SERVICE_TEXT", userOrganisation.getDefaultSearchServiceText().name());
+            bean.setPreference("SEARCH_SERVICE_IMAGE", userOrganisation.getDefaultSearchServiceImage().name());
+            bean.setPreference("SEARCH_SERVICE_VIDEO", userOrganisation.getDefaultSearchServiceVideo().name());
+        }
+
+        if (userOrganisation.getId() == 1249) { // EU-MADE4LL user have to be redirect to the backup of Learnweb V2
+            return "/lw/eumade4all/statistics.xhtml?faces-redirect=true";
+        }
+
+        // if the user logs in from the start or the login page, redirect him to the welcome page
+        String viewId = getFacesContext().getViewRoot().getViewId();
+        if (viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml") && moderatorUserId > 0) {
+            return userOrganisation.getWelcomePage() + "?faces-redirect=true";
+        }
+
+        // otherwise reload his last page
+        return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 }

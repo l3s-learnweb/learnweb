@@ -8,8 +8,7 @@ import java.util.List;
 
 import org.apache.solr.client.solrj.SolrServerException;
 
-public abstract class AbstractPaginator implements Serializable
-{
+public abstract class AbstractPaginator implements Serializable {
     private static final long serialVersionUID = 2495539559727294482L;
     private static final int DEFAULT_PAGE_INDEX = 0;
     private static final int DEFAULT_N_PAGE_LIMIT = 5;
@@ -21,130 +20,108 @@ public abstract class AbstractPaginator implements Serializable
 
     private transient List<ResourceDecorator> currentPageCache;
 
-    public abstract List<ResourceDecorator> getCurrentPage() throws SQLException, IOException, SolrServerException;
-
     /**
-     * Classes which use this constructor must call setTotalResults(int totalResults) as soon as possible
+     * Classes which use this constructor must call setTotalResults(int totalResults) as soon as possible.
      */
-    public AbstractPaginator(int pageSize)
-    {
+    public AbstractPaginator(int pageSize) {
         this.pageSize = pageSize;
     }
 
-    public int getTotalResults()
-    {
+    public abstract List<ResourceDecorator> getCurrentPage() throws SQLException, IOException, SolrServerException;
+
+    public int getTotalResults() {
         return totalResults;
     }
 
-    protected void setTotalResults(int totalResults)
-    {
+    protected void setTotalResults(int totalResults) {
         this.totalResults = totalResults;
         this.totalPages = (totalResults + pageSize - 1) / pageSize;
     }
 
     /**
-     * Starting from 0
-     *
-     * @return
+     * Starting from 0.
      */
-    public int getPageIndex()
-    {
+    public int getPageIndex() {
         return pageIndex;
     }
 
-    public void setPageIndex(int pageIndex)
-    {
+    public void setPageIndex(int pageIndex) {
         this.pageIndex = pageIndex;
 
         setCurrentPageCache(null); // invalidate cache
     }
 
-    public int getTotalPages()
-    {
+    public int getTotalPages() {
         return totalPages;
     }
 
-    public void setTotalPages(int totalPages)
-    {
+    public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
     }
 
-    protected List<ResourceDecorator> getCurrentPageCache()
-    {
+    protected List<ResourceDecorator> getCurrentPageCache() {
         return currentPageCache;
     }
 
-    protected void setCurrentPageCache(List<ResourceDecorator> currentPageCache)
-    {
+    protected void setCurrentPageCache(List<ResourceDecorator> currentPageCache) {
         this.currentPageCache = currentPageCache;
     }
 
-    public List<Integer> getPageList()
-    {
+    public List<Integer> getPageList() {
         List<Integer> pages = new LinkedList<>();
-        int fromIndex = 0, endIndex = 0;
-        if(pageIndex == 0)
-        {
+        int fromIndex = 0;
+        int endIndex = 0;
+        if (pageIndex == 0) {
             fromIndex = pageIndex + 1;
             endIndex = fromIndex + 3;
-        }
-        else if(pageIndex >= 1 && pageIndex < 3)
-        {
+        } else if (pageIndex >= 1 && pageIndex < 3) {
             fromIndex = 1;
             endIndex = pageIndex + 4;
-        }
-        else if(pageIndex == 3)
-        {
+        } else if (pageIndex == 3) {
             fromIndex = 1;
             endIndex = pageIndex + 3;
-        }
-        else if(pageIndex >= 4 && pageIndex < totalPages - 3)
-        {
+        } else if (pageIndex >= 4 && pageIndex < totalPages - 3) {
             fromIndex = pageIndex - 1;
             endIndex = fromIndex + 4;
-        }
-        else if(pageIndex == totalPages - 3)
-        {
+        } else if (pageIndex == totalPages - 3) {
             fromIndex = pageIndex - 1;
             endIndex = totalPages;
-        }
-        else if(pageIndex >= totalPages - 2 && pageIndex < totalPages)
-        {
+        } else if (pageIndex >= totalPages - 2 && pageIndex < totalPages) {
             fromIndex = totalPages - 3;
             endIndex = totalPages;
-        }
-        else if(pageIndex == totalPages)
-        {
+        } else if (pageIndex == totalPages) {
             fromIndex = pageIndex - 3;
             endIndex = totalPages;
         }
 
-        if(totalPages <= 5)
-            for(int i = 0; i < totalPages; i++)
+        if (totalPages <= 5) {
+            for (int i = 0; i < totalPages; i++) {
                 pages.add(i + 1);
-        else
-            for(int i = fromIndex; i < endIndex - 1; i++)
+            }
+        } else {
+            for (int i = fromIndex; i < endIndex - 1; i++) {
                 pages.add(i + 1);
+            }
+        }
 
         return pages;
     }
 
-    public boolean isLessThanNPages()
-    {
+    public boolean isLessThanNPages() {
         return totalPages <= DEFAULT_N_PAGE_LIMIT;
     }
 
-    public boolean isLessThanNPagesFromLast()
-    {
+    public boolean isLessThanNPagesFromLast() {
         return pageIndex < totalPages - 3;
     }
 
-    public boolean isEmpty()
-    {
-        if(totalResults == Integer.MIN_VALUE)
+    public boolean isEmpty() {
+        if (totalResults == Integer.MIN_VALUE) {
             throw new IllegalStateException("Call getPageIndex() first");
-        if(totalResults == 0)
+        }
+        if (totalResults == 0) {
             return true;
+        }
         return false;
     }
 }

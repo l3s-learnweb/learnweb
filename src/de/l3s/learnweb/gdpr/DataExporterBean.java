@@ -12,21 +12,18 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.ExportManager;
 
 /**
- * Allows to download resources of a user or a group
+ * Allows to download resources of a user or a group.
  */
 @Named
 @ViewScoped
-public class DataExporterBean extends ApplicationBean implements Serializable
-{
+public class DataExporterBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -505457925640299810L;
 
-    public void requestUserResources() throws IOException, SQLException
-    {
+    public void requestUserResources() throws IOException, SQLException {
         new ExportManager(getLearnweb()).handleResponse(getUser());
     }
 
-    public void requestGroupResources(final Group group) throws IOException, SQLException
-    {
+    public void requestGroupResources(final Group group) throws IOException, SQLException {
         new ExportManager(getLearnweb()).handleResponse(group);
     }
 }

@@ -1,36 +1,31 @@
 package de.l3s.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class StringHelperTest
-{
+class StringHelperTest {
     @Test
-    void testRemoveNewLines()
-    {
+    void testRemoveNewLines() {
         assertEquals("Hello world ", StringHelper.removeNewLines("Hello\nworld\n"));
     }
 
     @Test
-    void testTrimNotAlphabetical()
-    {
+    void testTrimNotAlphabetical() {
         assertEquals("fsdfsdfsv", StringHelper.trimNotAlphabetical("43242424 234324 34 %%43 fsdfsdfsv"));
         assertEquals("Hello world", StringHelper.trimNotAlphabetical("Hello world"));
         assertEquals("Hello world", StringHelper.trimNotAlphabetical(" @#@@ Hello world"));
     }
 
     @Test
-    void testShortnString()
-    {
+    void testShortnString() {
         assertEquals(
-                "If the string is longer than maxLength it is...",
-                StringHelper.shortnString("If the string is longer than maxLength it is split at the nearest blank space", 50));
+            "If the string is longer than maxLength it is...",
+            StringHelper.shortnString("If the string is longer than maxLength it is split at the nearest blank space", 50));
     }
 
     @Test
-    void testParseInt()
-    {
+    void testParseInt() {
         assertEquals(123, StringHelper.parseInt("123"));
         assertEquals(-123, StringHelper.parseInt("-123"));
 
@@ -39,16 +34,14 @@ class StringHelperTest
     }
 
     @Test
-    void testGetDomainName()
-    {
+    void testGetDomainName() {
         assertEquals(
-                "learnweb.l3s.uni-hannover.de",
-                StringHelper.getDomainName("https://learnweb.l3s.uni-hannover.de/v3/lw/your_information/index.jsf"));
+            "learnweb.l3s.uni-hannover.de",
+            StringHelper.getDomainName("https://learnweb.l3s.uni-hannover.de/v3/lw/your_information/index.jsf"));
     }
 
     @Test
-    void testGetDurationInMinutes()
-    {
+    void testGetDurationInMinutes() {
         assertEquals("1:31", StringHelper.getDurationInMinutes(91));
     }
 }

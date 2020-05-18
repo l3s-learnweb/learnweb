@@ -12,25 +12,17 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 
 /**
- * Reeds through all undeleted resources and performs arbitrary tests
+ * Reeds through all undeleted resources and performs arbitrary tests.
  *
  * @author Kemkes
- *
  */
-public final class ConvertChloesResources
-{
+public final class ConvertChloesResources {
     private static final Logger log = LogManager.getLogger(ConvertChloesResources.class);
 
-    public static void main(String[] args) throws Exception
-    {
-        new ConvertChloesResources();
-    }
+    private final Learnweb learnweb;
+    private final ResourceManager resourceManager;
 
-    private Learnweb learnweb;
-    private ResourceManager resourceManager;
-
-    private ConvertChloesResources() throws SQLException, ClassNotFoundException
-    {
+    private ConvertChloesResources() throws SQLException, ClassNotFoundException {
         learnweb = Learnweb.createInstance();
 
         resourceManager = learnweb.getResourceManager();
@@ -43,13 +35,11 @@ public final class ConvertChloesResources
         learnweb.onDestroy();
     }
 
-    private void saveMetadata(int resourceId, String key, String[] values) throws SQLException
-    {
+    private void saveMetadata(int resourceId, String key, String[] values) throws SQLException {
         log.debug("saving " + key + " for " + resourceId);
         Resource resource = resourceManager.getResource(resourceId);
 
-        if (resource == null)
-        {
+        if (resource == null) {
             log.info("Resource is not exists!");
             return;
         }
@@ -58,14 +48,13 @@ public final class ConvertChloesResources
         resource.save();
     }
 
-    private void convertLanguageLevel() throws SQLException
-    {
+    private void convertLanguageLevel() throws SQLException {
         log.debug("convertLanguageLevel");
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id, GROUP_CONCAT(DISTINCT b.langlevel_name) AS csvalues FROM lw_resource_langlevel a INNER JOIN lw_rm_langlevel b ON a.langlevel_id = b.langlevel_id GROUP BY resource_id"))
-        {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement(
+            "SELECT resource_id, GROUP_CONCAT(DISTINCT b.langlevel_name) AS csvalues FROM lw_resource_langlevel a "
+                + "INNER JOIN lw_rm_langlevel b ON a.langlevel_id = b.langlevel_id GROUP BY resource_id")) {
             ResultSet rs = select.executeQuery();
-            while(rs.next())
-            {
+            while (rs.next()) {
                 int resourceId = rs.getInt("resource_id");
                 String[] values = rs.getString("csvalues").split(",");
                 saveMetadata(resourceId, "language_level", values);
@@ -74,14 +63,13 @@ public final class ConvertChloesResources
         }
     }
 
-    private void convertPurposeOfUse() throws SQLException
-    {
+    private void convertPurposeOfUse() throws SQLException {
         log.debug("convertPurposeOfUse");
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id, GROUP_CONCAT(DISTINCT b.purpose_name) AS csvalues FROM lw_resource_purpose a INNER JOIN lw_rm_purpose b ON a.purpose_id = b.purpose_id GROUP BY resource_id"))
-        {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement(
+            "SELECT resource_id, GROUP_CONCAT(DISTINCT b.purpose_name) AS csvalues FROM lw_resource_purpose a "
+                + "INNER JOIN lw_rm_purpose b ON a.purpose_id = b.purpose_id GROUP BY resource_id")) {
             ResultSet rs = select.executeQuery();
-            while(rs.next())
-            {
+            while (rs.next()) {
                 int resourceId = rs.getInt("resource_id");
                 String[] values = rs.getString("csvalues").split(",");
                 saveMetadata(resourceId, "yell_purpose", values);
@@ -90,19 +78,22 @@ public final class ConvertChloesResources
         }
     }
 
-    private void convertTargetLearner() throws SQLException
-    {
+    private void convertTargetLearner() throws SQLException {
         log.debug("convertTargetLearner");
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id, GROUP_CONCAT(DISTINCT b.audience_name) AS csvalues FROM lw_resource_audience a INNER JOIN lw_rm_audience b ON a.audience_id = b.audience_id GROUP BY resource_id"))
-        {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement(
+            "SELECT resource_id, GROUP_CONCAT(DISTINCT b.audience_name) AS csvalues FROM lw_resource_audience a "
+                + "INNER JOIN lw_rm_audience b ON a.audience_id = b.audience_id GROUP BY resource_id")) {
             ResultSet rs = select.executeQuery();
-            while(rs.next())
-            {
+            while (rs.next()) {
                 int resourceId = rs.getInt("resource_id");
                 String[] values = rs.getString("csvalues").split(",");
                 saveMetadata(resourceId, "yell_target", values);
             }
             rs.close();
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        new ConvertChloesResources();
     }
 }

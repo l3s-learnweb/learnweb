@@ -1,8 +1,6 @@
 package de.l3s.learnweb.forum;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,25 +13,20 @@ import org.junit.jupiter.api.Test;
 import de.l3s.learnweb.Learnweb;
 
 @Disabled
-class ForumManagerTest
-{
-    private Learnweb learnweb = Learnweb.createInstance();
+class ForumManagerTest {
+    private final Learnweb learnweb = Learnweb.createInstance();
 
-    ForumManagerTest() throws SQLException, ClassNotFoundException
-    {
-    }
+    ForumManagerTest() throws SQLException, ClassNotFoundException {}
 
     @Test
-    void getTopicsByGroup() throws SQLException
-    {
+    void getTopicsByGroup() throws SQLException {
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(901, 924, 928, 929, 933, 898, 936, 939));
         List<ForumTopic> result = learnweb.getForumManager().getTopicsByGroup(1463);
         assertTrue(result.stream().allMatch(topic -> expected.contains(topic.getId())));
     }
 
     @Test
-    void getTopicById() throws SQLException
-    {
+    void getTopicById() throws SQLException {
         ForumTopic expected = new ForumTopic();
         expected.setId(936);
         expected.setTitle("test123");
@@ -45,16 +38,14 @@ class ForumManagerTest
     }
 
     @Test
-    void getPostsBy() throws SQLException
-    {
+    void getPostsBy() throws SQLException {
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(9898, 9913));
         List<ForumPost> result = learnweb.getForumManager().getPostsBy(939);
         assertTrue(result.stream().allMatch(group -> expected.contains(group.getId())));
     }
 
     @Test
-    void getPostById() throws SQLException
-    {
+    void getPostById() throws SQLException {
         ForumPost expected = new ForumPost();
         expected.setId(9913);
         expected.setText("<p>123123123</p>");
@@ -64,28 +55,26 @@ class ForumManagerTest
     }
 
     @Test
-    void getPostsByUser() throws SQLException
-    {
-        ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(9697, 9698, 9699, 9700, 9701, 9705, 9707, 9846, 9847, 9848, 9850, 9851, 9852, 9853, 9854, 9855, 9857, 9862, 9863, 9864, 9865, 9866, 9867, 9868, 9869,
-                9870, 9871, 9872, 9874, 9875, 9876, 9877, 9878, 9882, 9883, 9884, 9889, 9890, 9891, 9892, 9893, 9894, 9895, 9896, 9897, 9898, 9899, 9900, 9901, 9907, 9912, 9913, 9914, 9915));
+    void getPostsByUser() throws SQLException {
+        ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(9697, 9698, 9699, 9700, 9701, 9705, 9707, 9846, 9847,
+            9848, 9850, 9851, 9852, 9853, 9854, 9855, 9857, 9862, 9863, 9864, 9865, 9866, 9867, 9868, 9869, 9870, 9871,
+            9872, 9874, 9875, 9876, 9877, 9878, 9882, 9883, 9884, 9889, 9890, 9891, 9892, 9893, 9894, 9895, 9896, 9897,
+            9898, 9899, 9900, 9901, 9907, 9912, 9913, 9914, 9915));
         List<ForumPost> result = learnweb.getForumManager().getPostsByUser(12502);
         assertTrue(result.stream().allMatch(topic -> expected.contains(topic.getId())));
     }
 
     @Test
-    void getPostCountByUser() throws SQLException
-    {
+    void getPostCountByUser() throws SQLException {
         int expected = 54;
         int result = learnweb.getForumManager().getPostCountByUser(12502);
         assertEquals(expected, result);
     }
 
     @Test
-    void saveTopic() throws SQLException
-    {
+    void saveTopic() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
+        try {
             ForumTopic expected = learnweb.getForumManager().getTopicById(216);
             expected.setGroupId(1253);
             expected.setTitle("test");
@@ -94,39 +83,31 @@ class ForumManagerTest
             assertEquals(expected.getId(), result.getId());
             assertEquals(expected.getTitle(), result.getTitle());
             assertEquals(expected.getGroupId(), result.getGroupId());
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }
     }
 
     @Test
-    void deleteTopic() throws SQLException
-    {
+    void deleteTopic() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
+        try {
             ForumTopic topic = new ForumTopic();
             topic.setId(216);
             learnweb.getForumManager().deleteTopic(topic);
             ForumTopic result = learnweb.getForumManager().getTopicById(topic.getId());
             assertNull(result);
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }
     }
 
     @Test
-    void savePost() throws SQLException
-    {
+    void savePost() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
+        try {
             ForumPost expected = learnweb.getForumManager().getPostById(9697);
             expected.setText("test");
             expected.setEditCount(5);
@@ -136,46 +117,36 @@ class ForumManagerTest
             assertEquals(expected.getId(), result.getId());
             assertEquals(expected.getEditCount(), result.getEditCount());
             assertEquals(expected.getUserId(), result.getUserId());
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }
     }
 
     @Test
-    void incViews() throws SQLException
-    {
+    void incViews() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
+        try {
             int expected = 129;
             learnweb.getForumManager().incViews(386);
             ForumTopic result = learnweb.getForumManager().getTopicById(386);
             assertEquals(expected, result.getViews());
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }
     }
 
     @Test
-    void deletePost() throws SQLException
-    {
+    void deletePost() throws SQLException {
         learnweb.getConnection().setAutoCommit(false);
-        try
-        {
+        try {
             ForumPost post = new ForumPost();
             post.setId(299);
             learnweb.getForumManager().deletePost(post);
             ForumTopic result = learnweb.getForumManager().getTopicById(post.getId());
             assertNull(result);
-        }
-        finally
-        {
+        } finally {
             learnweb.getConnection().rollback();
             learnweb.getConnection().close();
         }

@@ -20,9 +20,9 @@
 
     <!-- PrimeFaces https://primefaces.github.io/primefaces/8_0/#/gettingstarted/configuration -->
     <context-param>
-	    <param-name>primefaces.UPLOADER</param-name>
-	    <param-value>native</param-value>
-	</context-param>
+        <param-name>primefaces.UPLOADER</param-name>
+        <param-value>native</param-value>
+    </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>none</param-value>
@@ -42,13 +42,13 @@
 
     <!-- Check this recommendations https://primefaces.github.io/primefaces/8_0/#/core/performance?id=recommended-configuration -->
     <!-- Also this page provides description for everything https://myfaces.apache.org/core23/myfaces-impl/webconfig.html -->
-	<context-param>
-		<description>
+    <context-param>
+        <description>
             Removes HTML comments from the output like <!--@elvariable id="pageTitle" type="java.lang.String"-->
         </description>
-	    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
-	    <param-value>true</param-value>
-	</context-param>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
     <context-param>
         <param-name>org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES</param-name>
         <param-value>1209600000</param-value>
@@ -106,7 +106,7 @@
         <param-value>resources.application</param-value>
     </context-param>
     <context-param>
-		<description>
+        <description>
             Scanning for context init parameters not defined. It is not necessary to define
             them all into your web.xml, they are just provided here for informative purposes.
             To disable this messages set org.apache.myfaces.LOG_WEB_CONTEXT_PARAMS config param to 'false'
@@ -209,9 +209,9 @@
     </filter-mapping>
 
     <!--
-	Because the ImageIO plugin registry (the IIORegistry) is "VM global", it doesn't by default work well with servlet contexts.
-	https://github.com/haraldk/TwelveMonkeys#deploying-the-plugins-in-a-web-app
-	 -->
+    Because the ImageIO plugin registry (the IIORegistry) is "VM global", it doesn't by default work well with servlet contexts.
+    https://github.com/haraldk/TwelveMonkeys#deploying-the-plugins-in-a-web-app
+     -->
     <listener>
         <display-name>ImageIO service provider loader/unloader</display-name>
         <listener-class>com.twelvemonkeys.servlet.image.IIOProviderContextListener</listener-class>
@@ -245,7 +245,7 @@
     <error-page>
         <error-code>503</error-code>
         <location>/lw/error-server.jsf</location>
-    </error-page>    
+    </error-page>
 
     <welcome-file-list>
         <welcome-file>index.jsf</welcome-file>

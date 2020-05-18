@@ -22,19 +22,14 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.office.history.model.History;
 import de.l3s.learnweb.resource.office.history.model.CallbackData;
+import de.l3s.learnweb.resource.office.history.model.History;
 import de.l3s.learnweb.user.User;
 
 /**
- * SaverServlet Class
- *
- * @web.servlet name="saverServlet" display-name="SaverServlet"
- *              description="Servlet for saving edited documents"
- * @web.servlet-mapping url-pattern="/save"
+ * SaverServlet Class.
  */
-public class SaverServlet extends HttpServlet
-{
+public class SaverServlet extends HttpServlet {
     private static final long serialVersionUID = 7296371511069054378L;
     private static final Logger log = LogManager.getLogger(SaverServlet.class);
 
@@ -49,10 +44,8 @@ public class SaverServlet extends HttpServlet
      * Requires `fileId` and `userId` parameters.
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
-    {
-        try
-        {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
             HttpSession session = request.getSession(true);
             int fileId = Integer.parseInt(request.getParameter(FILE_ID));
             int userId = Integer.parseInt(request.getParameter(USER_ID));
@@ -62,20 +55,18 @@ public class SaverServlet extends HttpServlet
             CallbackData callbackData = gson.fromJson(body, CallbackData.class);
 
             log.debug("Document {} status: {}", fileId, callbackData.getStatus());
-            if(callbackData.getStatus() == 2) // READY_FOR_SAVING
+            if (callbackData.getStatus() == 2) { // READY_FOR_SAVING
                 saveEditedDocument(callbackData, fileId, userId, session.getId());
+            }
 
             response.getWriter().write(ERROR_0);
-        }
-        catch(NumberFormatException | IOException | SQLException e)
-        {
+        } catch (NumberFormatException | IOException | SQLException e) {
             log.error("Error processing callback from OnlyOffice", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
-    private void saveEditedDocument(CallbackData data, int fileId, int userId, String sessionId) throws SQLException, IOException
-    {
+    private void saveEditedDocument(CallbackData data, int fileId, int userId, String sessionId) throws SQLException, IOException {
         Learnweb learnweb = Learnweb.getInstance();
         User user = learnweb.getUserManager().getUser(userId);
 
@@ -98,9 +89,7 @@ public class SaverServlet extends HttpServlet
             data.getHistory().setPrevFileId(previousFile.getId());
             saveDocumentHistory(learnweb, data, file);
             log.debug("History saved for resource {}", file.getResourceId());
-        }
-        catch(IOException | SQLException e)
-        {
+        } catch (IOException | SQLException e) {
             log.error("Unable to store document history {}", file.getResourceId(), e);
         }
 
@@ -109,8 +98,7 @@ public class SaverServlet extends HttpServlet
         learnweb.getLogManager().log(user, Action.changing_office_resource, resource.getGroupId(), resource.getId(), null, sessionId);
     }
 
-    private void saveDocumentHistory(Learnweb learnweb, CallbackData data, File file) throws IOException, SQLException
-    {
+    private void saveDocumentHistory(Learnweb learnweb, CallbackData data, File file) throws IOException, SQLException {
         File changesFile = new File();
         changesFile.setResourceId(file.getResourceId());
         changesFile.setType(TYPE.CHANGES);
@@ -125,8 +113,7 @@ public class SaverServlet extends HttpServlet
         learnweb.getHistoryManager().saveHistory(history);
     }
 
-    private InputStream getInputStream(String strUrl) throws IOException
-    {
+    private InputStream getInputStream(String strUrl) throws IOException {
         URL url = new URL(strUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         return connection.getInputStream();

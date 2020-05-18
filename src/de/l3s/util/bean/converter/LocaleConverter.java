@@ -14,16 +14,13 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.util.bean.BeanHelper;
 
 @FacesConverter("localeConverter")
-public class LocaleConverter implements Converter<Locale>
-{
+public class LocaleConverter implements Converter<Locale> {
     private static final Logger log = LogManager.getLogger(LocaleConverter.class);
 
     @Override
-    public Locale getAsObject(FacesContext arg0, UIComponent arg1, String value) throws ConverterException
-    {
+    public Locale getAsObject(FacesContext arg0, UIComponent arg1, String value) throws ConverterException {
         log.debug("LocaleConverter.getAsObject");
-        if(null == value)
-        {
+        if (null == value) {
             log.warn("value is null: " + BeanHelper.getRequestSummary());
             return Locale.ENGLISH;
         }
@@ -31,11 +28,9 @@ public class LocaleConverter implements Converter<Locale>
     }
 
     @Override
-    public String getAsString(FacesContext arg0, UIComponent arg1, Locale value) throws ConverterException
-    {
+    public String getAsString(FacesContext arg0, UIComponent arg1, Locale value) throws ConverterException {
         log.debug("LocaleConverter.getAsString");
-        if(null == value)
-        {
+        if (null == value) {
             log.warn("Locale is null: " + BeanHelper.getRequestSummary());
             return null;
         }

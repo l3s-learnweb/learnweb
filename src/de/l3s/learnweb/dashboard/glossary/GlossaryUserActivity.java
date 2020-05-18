@@ -6,8 +6,7 @@ import java.sql.SQLException;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
 
-public class GlossaryUserActivity implements Serializable
-{
+public class GlossaryUserActivity implements Serializable {
     private static final long serialVersionUID = 7241101860157505330L;
 
     private int userId = -1;
@@ -17,61 +16,49 @@ public class GlossaryUserActivity implements Serializable
 
     private transient User user;
 
-    public GlossaryUserActivity()
-    {
+    public GlossaryUserActivity() {
     }
 
-    public GlossaryUserActivity(int userId)
-    {
+    public GlossaryUserActivity(int userId) {
         this.userId = userId;
     }
 
-    public User getUser() throws SQLException
-    {
-        if(null == user && userId > 0)
-        {
+    public User getUser() throws SQLException {
+        if (null == user && userId > 0) {
             user = Learnweb.getInstance().getUserManager().getUser(userId);
         }
         return user;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public int getTotalGlossaries()
-    {
+    public int getTotalGlossaries() {
         return totalGlossaries;
     }
 
-    public void setTotalGlossaries(int totalGlossaries)
-    {
+    public void setTotalGlossaries(int totalGlossaries) {
         this.totalGlossaries = totalGlossaries;
     }
 
-    public int getTotalTerms()
-    {
+    public int getTotalTerms() {
         return totalTerms;
     }
 
-    public void setTotalTerms(int totalTerms)
-    {
+    public void setTotalTerms(int totalTerms) {
         this.totalTerms = totalTerms;
     }
 
-    public int getTotalReferences()
-    {
+    public int getTotalReferences() {
         return totalReferences;
     }
 
-    public void setTotalReferences(int totalReferences)
-    {
+    public void setTotalReferences(int totalReferences) {
         this.totalReferences = totalReferences;
     }
 }

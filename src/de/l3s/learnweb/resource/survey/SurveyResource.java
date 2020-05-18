@@ -11,44 +11,31 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 
-public class SurveyResource extends Resource
-{
+public class SurveyResource extends Resource {
     private static final long serialVersionUID = 3431955030925189235L;
 
     private static final String PATH = "/lw/survey/answer.jsf?resource_id=";
 
     private int surveyId = -1;
-    private Date start = null;
-    private Date end = null;
+    private Date start;
+    private Date end;
     private boolean saveable; // if true users can save their answers before finally submitting them
 
-    private Survey survey = null;
+    private Survey survey;
 
     private transient Cache<SurveyUserAnswers> answerCache;
 
     /**
-     * Do nothing constructor
+     * Do nothing constructor.
      */
-    public SurveyResource()
-    {
+    public SurveyResource() {
 
-    }
-
-    @Override
-    public void clearCaches()
-    {
-        super.clearCaches();
-        answerCache = null;
-        survey = null;
     }
 
     /**
-     * Copy constructor
-     *
-     * @param other
+     * Copy constructor.
      */
-    public SurveyResource(SurveyResource other)
-    {
+    public SurveyResource(SurveyResource other) {
         super(other);
         setSurveyId(other.getSurveyId());
         setStart(other.getStart());
@@ -57,115 +44,101 @@ public class SurveyResource extends Resource
     }
 
     @Override
-    protected void postConstruct() throws SQLException
-    {
+    public void clearCaches() {
+        super.clearCaches();
+        answerCache = null;
+        survey = null;
+    }
+
+    @Override
+    protected void postConstruct() throws SQLException {
         super.postConstruct();
 
         Learnweb.getInstance().getSurveyManager().loadSurveyResource(this);
     }
 
-    public Survey getSurvey() throws SQLException
-    {
-        if(null == survey)
+    public Survey getSurvey() throws SQLException {
+        if (null == survey) {
             survey = Learnweb.getInstance().getSurveyManager().getSurvey(surveyId);
+        }
         return survey;
     }
 
-    public void setSurvey(Survey survey)
-    {
+    public void setSurvey(Survey survey) {
         this.survey = survey;
         this.surveyId = survey.getId();
     }
 
-    public Collection<SurveyQuestion> getQuestions() throws SQLException
-    {
+    public Collection<SurveyQuestion> getQuestions() throws SQLException {
         return getSurvey().getQuestions();
     }
 
-    private Cache<SurveyUserAnswers> getAnswerCache()
-    {
-        if(null == answerCache)
+    private Cache<SurveyUserAnswers> getAnswerCache() {
+        if (null == answerCache) {
             answerCache = new Cache<>(1000);
+        }
         return answerCache;
     }
 
     /**
-     *
-     * @param userId
      * @return true if this user has submitted this survey
-     * @throws SQLException
      */
-    public boolean isSubmitted(int userId) throws SQLException
-    {
+    public boolean isSubmitted(int userId) throws SQLException {
         return Learnweb.getInstance().getSurveyManager().getSurveyResourceSubmitStatus(this.getId(), userId);
     }
 
     /**
-     * Returns all answers of user even when they are incomplete or not final
-     *
-     * @return
-     * @throws SQLException
+     * Returns all answers of user even when they are incomplete or not final.
      */
-    public List<SurveyUserAnswers> getAnswersOfAllUsers() throws SQLException
-    {
+    public List<SurveyUserAnswers> getAnswersOfAllUsers() throws SQLException {
         return getAnswers(false);
     }
 
     /**
-     * Returns only answers that were finally submitted
-     *
-     * @return
-     * @throws SQLException
+     * Returns only answers that were finally submitted.
      */
-    public List<SurveyUserAnswers> getSubmittedAnswersOfAllUsers() throws SQLException
-    {
+    public List<SurveyUserAnswers> getSubmittedAnswersOfAllUsers() throws SQLException {
         return getAnswers(true);
     }
 
-    private List<SurveyUserAnswers> getAnswers(boolean returnOnlySubmittedAnswers) throws SQLException
-    {
+    private List<SurveyUserAnswers> getAnswers(boolean returnOnlySubmittedAnswers) throws SQLException {
         List<SurveyUserAnswers> answers = new LinkedList<>();
 
         SurveyManager surveyManager = Learnweb.getInstance().getSurveyManager();
 
-        List<User> users = returnOnlySubmittedAnswers ? surveyManager.getUsersWhoSubmittedSurveyResource(getId()) : surveyManager.getUsersWhoSavedSurveyResource(getId());
-        for(User user : users)
-        {
+        List<User> users = returnOnlySubmittedAnswers
+            ? surveyManager.getUsersWhoSubmittedSurveyResource(getId())
+            : surveyManager.getUsersWhoSavedSurveyResource(getId());
+        for (User user : users) {
             answers.add(getAnswersOfUser(user.getId()));
         }
 
         return answers;
     }
 
-    public SurveyUserAnswers getAnswersOfUser(int userId) throws SQLException
-    {
+    public SurveyUserAnswers getAnswersOfUser(int userId) throws SQLException {
         SurveyUserAnswers answers = getAnswerCache().get(userId);
-        if(null == answers)
-        {
+        if (null == answers) {
             answers = Learnweb.getInstance().getSurveyManager().getAnswersOfUser(this, userId);
             getAnswerCache().put(answers);
         }
         return answers;
     }
 
-    public List<User> getUsersWhoSaved() throws SQLException
-    {
+    public List<User> getUsersWhoSaved() throws SQLException {
         return Learnweb.getInstance().getSurveyManager().getUsersWhoSavedSurveyResource(getId());
     }
 
-    public List<User> getUsersWhoSubmitted() throws SQLException
-    {
+    public List<User> getUsersWhoSubmitted() throws SQLException {
         return Learnweb.getInstance().getSurveyManager().getUsersWhoSubmittedSurveyResource(getId());
     }
 
     @Override
-    public Resource save() throws SQLException
-    {
+    public Resource save() throws SQLException {
         // save normal resource fields
         super.save();
         // save SurveyResource fields
-        if(surveyId == -1)
-        {
+        if (surveyId == -1) {
             survey.save(true);
             surveyId = survey.getId();
         }
@@ -175,64 +148,52 @@ public class SurveyResource extends Resource
     }
 
     @Override
-    public SurveyResource clone()
-    {
+    public SurveyResource clone() {
         return new SurveyResource(this);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Survey" + super.toString();
     }
 
-    public int getSurveyId()
-    {
+    public int getSurveyId() {
         return surveyId;
     }
 
-    public void setSurveyId(int surveyId)
-    {
+    public void setSurveyId(int surveyId) {
         this.surveyId = surveyId;
     }
 
-    public Date getStart()
-    {
+    public Date getStart() {
         return start;
     }
 
-    public void setStart(Date start)
-    {
+    public void setStart(Date start) {
         this.start = start;
     }
 
-    public Date getEnd()
-    {
+    public Date getEnd() {
         return end;
     }
 
-    public void setEnd(Date end)
-    {
+    public void setEnd(Date end) {
         this.end = end;
     }
 
     /**
-     *
      * @return True if the form can be saved before submit
      */
-    public boolean isSaveable()
-    {
+    public boolean isSaveable() {
         return saveable;
     }
 
-    public void setSaveable(boolean editable)
-    {
+    public void setSaveable(boolean editable) {
         this.saveable = editable;
     }
 
     @Override
-    public String getUrl()
-    {
+    public String getUrl() {
         return Learnweb.getInstance().getServerUrl() + PATH + this.getId();
     }
 

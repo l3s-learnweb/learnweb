@@ -12,27 +12,22 @@ import de.l3s.learnweb.logging.Action;
 
 @Named
 @ViewScoped
-public class AddFolderBean extends ApplicationBean implements Serializable
-{
+public class AddFolderBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 3716630972434428811L;
 
     private Folder folder;
     private Group targetGroup;
     private Folder targetFolder;
 
-    public void create(Group targetGroup, Folder targetFolder)
-    {
+    public void create(Group targetGroup, Folder targetFolder) {
         this.folder = new Folder();
         this.targetGroup = targetGroup;
         this.targetFolder = targetFolder;
     }
 
-    public void saveFolder()
-    {
-        try
-        {
-            if (!targetGroup.canAddResources(getUser()))
-            {
+    public void saveFolder() {
+        try {
+            if (!targetGroup.canAddResources(getUser())) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
                 return;
             }
@@ -45,25 +40,20 @@ public class AddFolderBean extends ApplicationBean implements Serializable
             log(Action.add_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
 
             addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", folder.getTitle());
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public Group getTargetGroup()
-    {
+    public Group getTargetGroup() {
         return targetGroup;
     }
 
-    public Folder getTargetFolder()
-    {
+    public Folder getTargetFolder() {
         return targetFolder;
     }
 
-    public Folder getFolder()
-    {
+    public Folder getFolder() {
         return folder;
     }
 }

@@ -12,6 +12,7 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -30,32 +31,27 @@ import de.l3s.learnweb.resource.office.converter.model.ConverterRequest;
 import de.l3s.learnweb.resource.office.converter.model.ConverterResponse;
 import de.l3s.learnweb.resource.office.converter.model.OfficeThumbnailParams;
 
-public class ConverterService
-{
-
+public class ConverterService {
     private static final Logger log = LogManager.getLogger(ConverterService.class);
+
     private final Learnweb learnweb;
 
-    public ConverterRequest createThumbnailConverterRequest(File file)
-    {
+    public ConverterService(Learnweb learnweb) {
+        this.learnweb = learnweb;
+    }
+
+    public ConverterRequest createThumbnailConverterRequest(File file) {
         String fileExt = file.getName().substring(file.getName().lastIndexOf('.'));
         String key = FileUtility.generateRevisionId(file);
         return new ConverterRequest(fileExt, "png", file.getName(), file.getUrl(), key, new OfficeThumbnailParams());
     }
 
-    public ConverterService(Learnweb learnweb)
-    {
-        this.learnweb = learnweb;
-    }
-
-    private ConverterResponse sendRequestToConvertServer(ConverterRequest model)
-    {
+    private ConverterResponse sendRequestToConvertServer(ConverterRequest model) {
         Gson gson = new Gson();
         String stringResponse;
         ConverterResponse converterResponse = new ConverterResponse();
 
-        try(CloseableHttpClient client = createUnsafeSSLClient()) //HttpClients.createDefault())
-        {
+        try (CloseableHttpClient client = createUnsafeSSLClient()) { //HttpClients.createDefault())
             HttpPost httpPost = new HttpPost(learnweb.getProperties().getProperty("FILES.DOCSERVICE.URL.CONVERTER"));
             String json = gson.toJson(model);
             StringEntity entity = new StringEntity(json);
@@ -63,71 +59,58 @@ public class ConverterService
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Content-type", "application/json");
             CloseableHttpResponse response = client.execute(httpPost);
-            if(response.getEntity() != null)
-            {
+            if (response.getEntity() != null) {
                 stringResponse = EntityUtils.toString(response.getEntity());
                 converterResponse = gson.fromJson(stringResponse, ConverterResponse.class);
             }
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             log.error(e);
         }
         return converterResponse;
     }
 
-    public InputStream convert(ConverterRequest request) throws ConverterException, IOException
-    {/* test: handle exception in resource preview maker
-     
-     try
-     {*/
+    public InputStream convert(ConverterRequest request) throws ConverterException, IOException {
         String newFileUrl = getConvertedUri(request);
         URL url = new URL(newFileUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         InputStream stream = connection.getInputStream();
-        if(stream == null)
-        {
+        if (stream == null) {
             throw new ConverterException("Error during conversion : stream is null");
         }
         return stream;
-        /*
-        }
-        catch(Exception ex)
-        {
-        log.error("Error during conversion; URL: " + request.getUrl() + "; " , ex);
-        }
-        return null;*/
     }
 
-    public String getConvertedUri(ConverterRequest request) throws ConverterException
-    {
+    public String getConvertedUri(ConverterRequest request) throws ConverterException {
         ConverterResponse response = sendRequestToConvertServer(request);
 
-        if(response == null)
+        if (response == null) {
             throw new ConverterException("Invalid answer format");
+        }
 
-        if(response.getError() != null)
+        if (response.getError() != null) {
             processConvertServiceResponseError(response.getError());
+        }
 
-        if(response.isEndConvert() == null || !response.isEndConvert())
+        if (response.isEndConvert() == null || !response.isEndConvert()) {
             throw new ConverterException("Conversion is not finished");
+        }
 
-        if(response.getPercent() == 0)
+        if (response.getPercent() == 0) {
             throw new ConverterException("Percent is null");
+        }
 
-        if(response.getFileUrl() == null || response.getFileUrl().isEmpty())
+        if (response.getFileUrl() == null || response.getFileUrl().isEmpty()) {
             throw new ConverterException("FileUrl is null");
+        }
 
         return response.getFileUrl();
     }
 
-    private void processConvertServiceResponseError(int errorCode) throws ConverterException
-    {
+    private void processConvertServiceResponseError(int errorCode) throws ConverterException {
         String errorMessage = "";
         String errorMessageTemplate = "Error occurred in the ConverterService: ";
 
-        switch(errorCode)
-        {
+        switch (errorCode) {
             case -8:
                 errorMessage = errorMessageTemplate + "Error document VKey";
                 break;
@@ -161,37 +144,29 @@ public class ConverterService
         throw new ConverterException(errorMessage);
     }
 
-    public static class ConverterException extends Exception
-    {
-        public ConverterException(String errorMessage)
-        {
-            super(errorMessage);
-        }
-
-        private static final long serialVersionUID = 8151643724813680762L;
-    }
-
     /**
-     * Creates an HTTP client that ignores most SSL problems
-     * 
-     * @return
+     * Creates an HTTP client that ignores most SSL problems.
      */
-    private static CloseableHttpClient createUnsafeSSLClient()
-    {
+    private static CloseableHttpClient createUnsafeSSLClient() {
         org.apache.http.ssl.SSLContextBuilder sslContextBuilder = SSLContextBuilder.create();
-        try
-        {
+        try {
             sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
 
             SSLContext sslContext = sslContextBuilder.build();
-            org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, new org.apache.http.conn.ssl.DefaultHostnameVerifier());
+            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, new DefaultHostnameVerifier());
 
             HttpClientBuilder httpClientBuilder = HttpClients.custom().setSSLSocketFactory(sslSocketFactory);
             return httpClientBuilder.build();
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+            throw new RuntimeException(e);
         }
-        catch(KeyManagementException | NoSuchAlgorithmException | KeyStoreException e1)
-        {
-            throw new RuntimeException(e1);
+    }
+
+    public static class ConverterException extends Exception {
+        private static final long serialVersionUID = 8151643724813680762L;
+
+        public ConverterException(String errorMessage) {
+            super(errorMessage);
         }
     }
 }

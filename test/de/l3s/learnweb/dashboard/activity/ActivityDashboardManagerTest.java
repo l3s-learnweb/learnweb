@@ -1,6 +1,6 @@
 package de.l3s.learnweb.dashboard.activity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -17,18 +17,13 @@ import org.junit.jupiter.api.Test;
 import de.l3s.learnweb.Learnweb;
 
 @Disabled
-class ActivityDashboardManagerTest
-{
-    private ActivityDashboardManager dashboardManager = Learnweb.createInstance().getActivityDashboardManager();
+class ActivityDashboardManagerTest {
+    private final ActivityDashboardManager dashboardManager = Learnweb.createInstance().getActivityDashboardManager();
 
-    ActivityDashboardManagerTest() throws SQLException, ClassNotFoundException
-    {
-    }
+    ActivityDashboardManagerTest() throws SQLException, ClassNotFoundException {}
 
     @Test
-    void getActionsCountPerDay() throws ParseException, SQLException
-    {
-
+    void getActionsCountPerDay() throws ParseException, SQLException {
         Map<String, Integer> expected = new TreeMap<>();
         expected.put("2019-02-23", 1);
         expected.put("2019-02-25", 1);

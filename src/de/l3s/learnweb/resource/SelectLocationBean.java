@@ -22,8 +22,7 @@ import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
-public class SelectLocationBean extends ApplicationBean implements Serializable
-{
+public class SelectLocationBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 6699391944318695838L;
     private static final Logger log = LogManager.getLogger(SelectLocationBean.class);
 
@@ -34,21 +33,15 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
     private transient DefaultTreeNode groupsTree;
     private Instant groupsTreeUpdate;
 
-    public SelectLocationBean()
-    {
+    public SelectLocationBean() {
         log.debug("Create new SelectLocationBean");
     }
 
-    public Group getTargetGroup()
-    {
-        if(targetGroup == null && targetFolder != null)
-        {
-            try
-            {
+    public Group getTargetGroup() {
+        if (targetGroup == null && targetFolder != null) {
+            try {
                 targetGroup = targetFolder.getGroup();
-            }
-            catch(SQLException e)
-            {
+            } catch (SQLException e) {
                 log.error("Can't find group by folder's group_id", e);
             }
         }
@@ -56,55 +49,45 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
         return targetGroup;
     }
 
-    public void setTargetGroup(final Group targetGroup)
-    {
+    public void setTargetGroup(final Group targetGroup) {
         this.targetGroup = targetGroup;
     }
 
-    public Folder getTargetFolder()
-    {
+    public Folder getTargetFolder() {
         return targetFolder;
     }
 
-    public void setTargetFolder(final Folder targetFolder)
-    {
+    public void setTargetFolder(final Folder targetFolder) {
         this.targetFolder = targetFolder;
     }
 
-    public TreeNode getTargetNode()
-    {
+    public TreeNode getTargetNode() {
         return targetNode;
     }
 
-    public void setTargetNode(TreeNode targetNode)
-    {
+    public void setTargetNode(TreeNode targetNode) {
         this.targetNode = targetNode;
     }
 
-    public void onTargetNodeSelect(NodeSelectEvent event)
-    {
+    public void onTargetNodeSelect(NodeSelectEvent event) {
         String type = event.getTreeNode().getType();
 
-        if("group".equals(type))
-        {
+        if ("group".equals(type)) {
             targetGroup = (Group) event.getTreeNode().getData();
             targetFolder = null;
-        }
-        else if("folder".equals(type))
-        {
+        } else if ("folder".equals(type)) {
             targetGroup = null;
             targetFolder = (Folder) event.getTreeNode().getData();
         }
     }
 
-    public TreeNode getGroupsAndFoldersTree() throws SQLException
-    {
+    public TreeNode getGroupsAndFoldersTree() throws SQLException {
         User user = getUser();
-        if(user == null)
+        if (user == null) {
             return null;
+        }
 
-        if(groupsTree == null || groupsTreeUpdate.isBefore(Instant.now().minus(Duration.ofSeconds(15))))
-        {
+        if (groupsTree == null || groupsTreeUpdate.isBefore(Instant.now().minus(Duration.ofSeconds(15)))) {
             GroupManager gm = getLearnweb().getGroupManager();
             DefaultTreeNode treeNode = new DefaultTreeNode("WriteAbleGroups");
 
@@ -112,8 +95,7 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
             TreeNode privateGroupNode = new DefaultTreeNode("group", privateGroup, treeNode);
             privateGroupNode.setSelected(true);
 
-            for(Group group : user.getWriteAbleGroups())
-            {
+            for (Group group : user.getWriteAbleGroups()) {
                 TreeNode groupNode = new DefaultTreeNode("group", group, treeNode);
                 gm.getChildNodesRecursively(groupNode, group, 0);
             }

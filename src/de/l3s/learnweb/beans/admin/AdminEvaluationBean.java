@@ -14,47 +14,37 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
 
 /**
- * 
- * example
- * 
- * do what every you want with this class or delete it if you don't need it
- * 
+ * Example class, do what every you want with this class or delete it if you don't need it.
+ *
  * @author Kemkes
- * 
  */
 @Named
 @RequestScoped
-public class AdminEvaluationBean extends ApplicationBean
-{
+public class AdminEvaluationBean extends ApplicationBean {
     private static final Logger log = LogManager.getLogger(AdminEvaluationBean.class);
 
     private List<User> users;
 
-    public AdminEvaluationBean() throws SQLException
-    {
+    public AdminEvaluationBean() throws SQLException {
         User user = getUser();
 
-        if(null == user) // not logged in
-        {
+        if (null == user) { // not logged in
             log.debug("User is not logged in");
-        }
-        else
-        {
+        } else {
             users = getLearnweb().getUserManager().getUsersByOrganisationId(user.getOrganisationId());
 
-            if(user.isAdmin() || user.isModerator())
+            if (user.isAdmin() || user.isModerator()) {
                 log.info("User has special rights");
+            }
         }
 
     }
 
-    public List<User> getUsers()
-    {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void onClick()
-    {
+    public void onClick() {
         addMessage(FacesMessage.SEVERITY_INFO, "a message");
     }
 }

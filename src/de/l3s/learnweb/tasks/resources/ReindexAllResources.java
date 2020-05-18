@@ -10,12 +10,10 @@ import org.apache.solr.client.solrj.SolrServerException;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 
-public class ReindexAllResources
-{
+public class ReindexAllResources {
     private static final Logger log = LogManager.getLogger(ReindexAllResources.class);
 
-    public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException
-    {
+    public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException {
         Learnweb learnweb = Learnweb.createInstance();
         SolrClient solr = learnweb.getSolrClient();
 

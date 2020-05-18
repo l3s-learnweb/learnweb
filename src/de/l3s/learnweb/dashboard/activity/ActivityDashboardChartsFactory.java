@@ -15,18 +15,15 @@ import org.primefaces.model.charts.line.LineChartModel;
 
 import de.l3s.learnweb.beans.ColorUtils;
 
-public class ActivityDashboardChartsFactory
-{
-    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+public class ActivityDashboardChartsFactory {
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static LineChartModel createActivitiesChart(List<ActivityGraphData> data, Date startDate, Date endDate)
-    {
+    public static LineChartModel createActivitiesChart(List<ActivityGraphData> data, Date startDate, Date endDate) {
         LineChartModel model = new LineChartModel();
         ChartData chartData = new ChartData();
         List<String> colors = ColorUtils.getColorList(data.size());
 
-        for(ActivityGraphData activityData : data)
-        {
+        for (ActivityGraphData activityData : data) {
             LineChartDataSet dataSet = new LineChartDataSet();
 
             List<Object> values = new ArrayList<>();
@@ -44,9 +41,8 @@ public class ActivityDashboardChartsFactory
             Calendar end = Calendar.getInstance();
             end.setTime(endDate);
 
-            for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
-            {
-                String dateKey = dateFormat.format(date.toInstant().atZone(ZoneId.systemDefault()));
+            for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+                String dateKey = DATE_FORMAT.format(date.toInstant().atZone(ZoneId.systemDefault()));
                 labels.add(dateKey);
                 values.add(activityData.getActionsPerDay().getOrDefault(dateKey, 0));
             }
@@ -59,8 +55,7 @@ public class ActivityDashboardChartsFactory
         return model;
     }
 
-    public static List<Map<String, Object>> createActivitiesTable(List<ActivityGraphData> data, Date startDate, Date endDate)
-    {
+    public static List<Map<String, Object>> createActivitiesTable(List<ActivityGraphData> data, Date startDate, Date endDate) {
         List<Map<String, Object>> rows = new ArrayList<>();
 
         Calendar start = Calendar.getInstance();
@@ -68,14 +63,12 @@ public class ActivityDashboardChartsFactory
         Calendar end = Calendar.getInstance();
         end.setTime(endDate);
 
-        for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
-        {
+        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
             Map<String, Object> columns = new LinkedMap<>();
-            String dateKey = dateFormat.format(date.toInstant().atZone(ZoneId.systemDefault()));
+            String dateKey = DATE_FORMAT.format(date.toInstant().atZone(ZoneId.systemDefault()));
             columns.put("Date", dateKey);
 
-            for(ActivityGraphData activityData : data)
-            {
+            for (ActivityGraphData activityData : data) {
                 columns.put(activityData.getName(), activityData.getActionsPerDay().getOrDefault(dateKey, 0));
             }
             rows.add(columns);
@@ -84,29 +77,24 @@ public class ActivityDashboardChartsFactory
         return rows;
     }
 
-    public static class ActivityGraphData
-    {
+    public static class ActivityGraphData {
         private String name;
 
         private Map<String, Integer> actionsPerDay;
 
-        public Map<String, Integer> getActionsPerDay()
-        {
+        public Map<String, Integer> getActionsPerDay() {
             return actionsPerDay;
         }
 
-        public void setActionsPerDay(Map<String, Integer> actionsPerDay)
-        {
+        public void setActionsPerDay(Map<String, Integer> actionsPerDay) {
             this.actionsPerDay = actionsPerDay;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return name;
         }
 
-        public void setName(String name)
-        {
+        public void setName(String name) {
             this.name = name;
         }
     }

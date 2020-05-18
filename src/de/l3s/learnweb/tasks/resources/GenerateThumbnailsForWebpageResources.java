@@ -1,7 +1,6 @@
 package de.l3s.learnweb.tasks.resources;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,24 +16,17 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.util.UrlHelper;
 
 /**
- * Find webpage resources that have no thumbnail and create it
+ * Find webpage resources that have no thumbnail and create it.
  *
  * @author Kemkes
- *
  */
-public class GenerateThumbnailsForWebpageResources
-{
+public class GenerateThumbnailsForWebpageResources {
     private static final Logger log = LogManager.getLogger(GenerateThumbnailsForWebpageResources.class);
 
     /**
-     * @param args
-     * @throws SQLException
-     * @throws IOException
-     * @throws MalformedURLException
-     * @throws ClassNotFoundException
+     *
      */
-    public static void main(String[] args) throws SQLException, MalformedURLException, IOException, ClassNotFoundException
-    {
+    public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException {
         System.exit(0);
 
         Learnweb learnweb = Learnweb.createInstance();
@@ -45,8 +37,7 @@ public class GenerateThumbnailsForWebpageResources
 
         List<Resource> resources = rm.getResources(query, null);
         log.debug("start");
-        for(Resource resource : resources)
-        {
+        for (Resource resource : resources) {
             resource.setType(ResourceType.website);
 
             String url = resource.getUrl();
@@ -54,8 +45,7 @@ public class GenerateThumbnailsForWebpageResources
 
             url = UrlHelper.validateUrl(url);
 
-            if(url == null)
-            {
+            if (url == null) {
                 resource.setOnlineStatus(OnlineStatus.OFFLINE);
                 resource.save();
 
@@ -66,16 +56,12 @@ public class GenerateThumbnailsForWebpageResources
 
             log.debug("online");
 
-            if(resource.getThumbnail0().getFileId() == 0)
-            {
+            if (resource.getThumbnail0().getFileId() == 0) {
                 log.debug("create thumbnail");
-                try
-                {
+                try {
                     rpm.processWebsite(resource);
                     resource.setFormat("text/html");
-                }
-                catch(Throwable t)
-                {
+                } catch (Throwable t) {
                     log.warn("Can't create thumbnail for url: " + url, t);
                 }
             }

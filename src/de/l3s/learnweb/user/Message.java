@@ -16,8 +16,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 
 // TODO this class needs to be refactored and split into a dao and pojo class
-public class Message implements Comparable<Message>, Serializable
-{
+public class Message implements Comparable<Message>, Serializable {
     private static final long serialVersionUID = -5510804242529450186L;
     private static final Logger log = LogManager.getLogger(Message.class);
 
@@ -30,110 +29,11 @@ public class Message implements Comparable<Message>, Serializable
     private boolean read = false;
     private Date time;
 
-    public static int howManyNotSeenMessages(User user) throws SQLException
-    {
-        int count = 0;
-        PreparedStatement pstmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT count(*) as xCount FROM `message` WHERE to_user = ? and m_seen = 0");
-
-        pstmtGetUsers.setInt(1, user.getId());
-        ResultSet rs = pstmtGetUsers.executeQuery();
-
-        if(rs.next())
-        {
-            count = rs.getInt("xCount");
-        }
-        return count;
-    }
-
-    public static ArrayList<Message> getAllMessagesToUser(User user) throws SQLException
-    {
-        return getAllMessagesToUser(user, -1);
-
-    }
-
-    public static ArrayList<Message> getAllMessagesToUser(User user, int limit) throws SQLException
-    {
-        ArrayList<Message> messageList = new ArrayList<>();
-        if(user == null)
-            return messageList;
-
-        String limitStr = limit <= 0 ? "" : " limit " + limit;
-
-        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc" + limitStr);
-
-        stmtGetUsers.setInt(1, user.getId());
-        ResultSet rs = stmtGetUsers.executeQuery();
-        Message message;
-
-        User toUser = null;
-        while(rs.next())
-        {
-            message = new Message();
-            message.setId(rs.getInt("message_id"));
-            UserManager um = Learnweb.getInstance().getUserManager();
-            User fromUser = um.getUser(rs.getInt("from_user"));
-            message.setFromUser(fromUser);
-            if(toUser == null)
-            {
-                toUser = um.getUser(rs.getInt("to_user"));
-            }
-            message.setToUser(toUser);
-            message.setTitle(rs.getString("m_title"));
-            message.setText(rs.getString("m_text"));
-            message.setSeen(rs.getBoolean("m_seen"));
-            message.setRead(rs.getBoolean("m_read"));
-            message.setTime(rs.getTimestamp("m_time"));
-
-            messageList.add(message);
-        }
-        stmtGetUsers.close();
-
-        return messageList;
-    }
-
-    public static ArrayList<Message> getAllMessagesFromUser(User user) throws SQLException
-    {
-        ArrayList<Message> messageList = new ArrayList<>();
-        if(user == null)
-            return messageList;
-
-        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE from_user = ? order by m_time desc");
-
-        stmtGetUsers.setInt(1, user.getId());
-        ResultSet rs = stmtGetUsers.executeQuery();
-        Message message;
-
-        User toUser = null;
-        while(rs.next())
-        {
-            message = new Message();
-            message.setId(rs.getInt("message_id"));
-            UserManager um = Learnweb.getInstance().getUserManager();
-            User fromUser = um.getUser(rs.getInt("from_user"));
-            message.setFromUser(fromUser);
-            if(toUser == null)
-            {
-                toUser = um.getUser(rs.getInt("to_user"));
-            }
-            message.setToUser(toUser);
-            message.setTitle(rs.getString("m_title"));
-            message.setText(rs.getString("m_text"));
-            message.setSeen(rs.getBoolean("m_seen"));
-            message.setRead(rs.getBoolean("m_read"));
-            message.setTime(rs.getTimestamp("m_time"));
-
-            messageList.add(message);
-        }
-        stmtGetUsers.close();
-
-        return messageList;
-    }
-
-    public void save() throws SQLException
-    {
+    public void save() throws SQLException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO message (from_user, to_user, m_title, m_text, m_seen, m_read, m_time) " + "VALUES (?,?,?,?,?,?,?)");
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement(
+            "INSERT INTO message (from_user, to_user, m_title, m_text, m_seen, m_read, m_time) " + "VALUES (?,?,?,?,?,?,?)");
         stmt.setInt(1, fromUser.getId());
         stmt.setInt(2, toUser.getId());
         stmt.setString(3, title);
@@ -147,8 +47,7 @@ public class Message implements Comparable<Message>, Serializable
         stmt.close();
     }
 
-    public void seen() throws SQLException
-    {
+    public void seen() throws SQLException {
         PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where message_id = ?");
         stmt.setInt(1, this.id);
 
@@ -156,8 +55,7 @@ public class Message implements Comparable<Message>, Serializable
         stmt.close();
     }
 
-    public void messageRead() throws SQLException
-    {
+    public void messageRead() throws SQLException {
         PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_read=1 where message_id = ?");
         stmt.setInt(1, this.id);
 
@@ -165,145 +63,213 @@ public class Message implements Comparable<Message>, Serializable
         stmt.close();
     }
 
-    public static void setAllMessagesSeen(int userId) throws SQLException
-    {
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where to_user = ?");
-        stmt.setInt(1, userId);
-
-        stmt.executeUpdate();
-        stmt.close();
-    }
-
     @Override
-    public int compareTo(Message g)
-    {
+    public int compareTo(Message g) {
         return (this.toString()).compareTo(g.toString());
     }
 
     @Override
-    public boolean equals(final Object o)
-    {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         final Message message = (Message) o;
-        return id == message.id &&
-                seen == message.seen &&
-                read == message.read &&
-                Objects.equals(fromUser, message.fromUser) &&
-                Objects.equals(toUser, message.toUser) &&
-                Objects.equals(title, message.title) &&
-                Objects.equals(text, message.text) &&
-                Objects.equals(time, message.time);
+        return id == message.id && seen == message.seen && read == message.read
+            && Objects.equals(fromUser, message.fromUser) && Objects.equals(toUser, message.toUser)
+            && Objects.equals(title, message.title) && Objects.equals(text, message.text)
+            && Objects.equals(time, message.time);
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(id, fromUser, toUser, title, text, seen, read, time);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         String s = fromUser.getUsername() + " -> " + toUser.getUsername() + "\n" + time + ": " + "\n" + title;
 
         return s;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public void setId(int id)
-    {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public User getFromUser()
-    {
+    public User getFromUser() {
         return fromUser;
     }
 
-    public void setFromUser(User fromUser)
-    {
+    public void setFromUser(User fromUser) {
         this.fromUser = fromUser;
     }
 
-    public User getToUser()
-    {
+    public User getToUser() {
         return toUser;
     }
 
-    public void setToUser(User toUser)
-    {
+    public void setToUser(User toUser) {
         this.toUser = toUser;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title)
-    {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getText()
-    {
+    public String getText() {
         return text;
     }
 
-    public void setText(String text)
-    {
+    public void setText(String text) {
         this.text = text;
     }
 
-    public boolean isSeen()
-    {
+    public boolean isSeen() {
         return seen;
     }
 
-    public void setSeen(boolean seen)
-    {
+    public void setSeen(boolean seen) {
         this.seen = seen;
     }
 
-    public boolean isRead()
-    {
-        try
-        {
+    public boolean isRead() {
+        try {
             this.messageRead();
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             // TODO Auto-generated catch block
             log.error("unhandled error", e);
         }
         return read;
     }
 
-    public void setRead(boolean read)
-    {
+    public void setRead(boolean read) {
         this.read = read;
     }
 
-    public Date getTime()
-    {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(Date time)
-    {
+    public void setTime(Date time) {
         this.time = time;
     }
 
-    public String getFormattedTime()
-    {
+    public String getFormattedTime() {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String s = format.format(getTime());
         return s;
+    }
+
+    public static int howManyNotSeenMessages(User user) throws SQLException {
+        int count = 0;
+        PreparedStatement pstmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement(
+            "SELECT count(*) as xCount FROM `message` WHERE to_user = ? and m_seen = 0");
+
+        pstmtGetUsers.setInt(1, user.getId());
+        ResultSet rs = pstmtGetUsers.executeQuery();
+
+        if (rs.next()) {
+            count = rs.getInt("xCount");
+        }
+        return count;
+    }
+
+    public static ArrayList<Message> getAllMessagesToUser(User user) throws SQLException {
+        return getAllMessagesToUser(user, -1);
+
+    }
+
+    public static ArrayList<Message> getAllMessagesToUser(User user, int limit) throws SQLException {
+        ArrayList<Message> messageList = new ArrayList<>();
+        if (user == null) {
+            return messageList;
+        }
+
+        String limitStr = limit <= 0 ? "" : " limit " + limit;
+
+        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc" + limitStr);
+
+        stmtGetUsers.setInt(1, user.getId());
+        ResultSet rs = stmtGetUsers.executeQuery();
+        Message message;
+
+        User toUser = null;
+        while (rs.next()) {
+            message = new Message();
+            message.setId(rs.getInt("message_id"));
+            UserManager um = Learnweb.getInstance().getUserManager();
+            User fromUser = um.getUser(rs.getInt("from_user"));
+            message.setFromUser(fromUser);
+            if (toUser == null) {
+                toUser = um.getUser(rs.getInt("to_user"));
+            }
+            message.setToUser(toUser);
+            message.setTitle(rs.getString("m_title"));
+            message.setText(rs.getString("m_text"));
+            message.setSeen(rs.getBoolean("m_seen"));
+            message.setRead(rs.getBoolean("m_read"));
+            message.setTime(rs.getTimestamp("m_time"));
+
+            messageList.add(message);
+        }
+        stmtGetUsers.close();
+
+        return messageList;
+    }
+
+    public static ArrayList<Message> getAllMessagesFromUser(User user) throws SQLException {
+        ArrayList<Message> messageList = new ArrayList<>();
+        if (user == null) {
+            return messageList;
+        }
+
+        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE from_user = ? order by m_time desc");
+
+        stmtGetUsers.setInt(1, user.getId());
+        ResultSet rs = stmtGetUsers.executeQuery();
+        Message message;
+
+        User toUser = null;
+        while (rs.next()) {
+            message = new Message();
+            message.setId(rs.getInt("message_id"));
+            UserManager um = Learnweb.getInstance().getUserManager();
+            User fromUser = um.getUser(rs.getInt("from_user"));
+            message.setFromUser(fromUser);
+            if (toUser == null) {
+                toUser = um.getUser(rs.getInt("to_user"));
+            }
+            message.setToUser(toUser);
+            message.setTitle(rs.getString("m_title"));
+            message.setText(rs.getString("m_text"));
+            message.setSeen(rs.getBoolean("m_seen"));
+            message.setRead(rs.getBoolean("m_read"));
+            message.setTime(rs.getTimestamp("m_time"));
+
+            messageList.add(message);
+        }
+        stmtGetUsers.close();
+
+        return messageList;
+    }
+
+    public static void setAllMessagesSeen(int userId) throws SQLException {
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where to_user = ?");
+        stmt.setInt(1, userId);
+
+        stmt.executeUpdate();
+        stmt.close();
     }
 
 }

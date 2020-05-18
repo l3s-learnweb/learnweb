@@ -17,11 +17,9 @@ import org.primefaces.model.menu.Submenu;
 import org.primefaces.util.WidgetBuilder;
 
 @FacesRenderer(componentFamily = "de.l3s.learnweb.component", rendererType = "de.l3s.learnweb.component.LearnwebMenuRenderer")
-public class LearnwebMenuRenderer extends BaseMenuRenderer
-{
+public class LearnwebMenuRenderer extends BaseMenuRenderer {
     @Override
-    protected void encodeScript(FacesContext context, AbstractMenu abstractMenu) throws IOException
-    {
+    protected void encodeScript(FacesContext context, AbstractMenu abstractMenu) throws IOException {
         LearnwebMenu menu = (LearnwebMenu) abstractMenu;
         String clientId = menu.getClientId(context);
         WidgetBuilder wb = getWidgetBuilder(context);
@@ -31,8 +29,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
 
     @Override
     @SuppressWarnings("unchecked")
-    protected void encodeMarkup(FacesContext context, AbstractMenu abstractMenu) throws IOException
-    {
+    protected void encodeMarkup(FacesContext context, AbstractMenu abstractMenu) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         LearnwebMenu menu = (LearnwebMenu) abstractMenu;
         String clientId = menu.getClientId(context);
@@ -43,22 +40,19 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.startElement("ul", menu);
         writer.writeAttribute("id", clientId, "id");
         writer.writeAttribute("class", styleClass, "styleClass");
-        if(style != null)
-        {
+        if (style != null) {
             writer.writeAttribute("style", style, "style");
         }
         writer.writeAttribute("role", "menu", null);
 
-        if(menu.getElementsCount() > 0)
-        {
+        if (menu.getElementsCount() > 0) {
             encodeRootMenuElements(context, menu, menu.getElements());
         }
 
         writer.endElement("ul");
     }
 
-    private void encodeMenuItemWrapper(FacesContext context, AbstractMenu menu, MenuItem menuitem, String tabindex) throws IOException
-    {
+    private void encodeMenuItemWrapper(FacesContext context, AbstractMenu menu, MenuItem menuitem, String tabindex) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
 
         String containerStyle = menuitem.getContainerStyle();
@@ -67,8 +61,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
 
         writer.startElement("li", null);
         writer.writeAttribute("class", containerStyleClass, null);
-        if(containerStyle != null)
-        {
+        if (containerStyle != null) {
             writer.writeAttribute("style", containerStyle, null);
         }
         encodeMenuItem(context, menu, menuitem, tabindex);
@@ -76,8 +69,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
     }
 
     @SuppressWarnings("unchecked")
-    private void encodePanelSubmenu(FacesContext context, LearnwebMenu menu, Submenu submenu) throws IOException
-    {
+    private void encodePanelSubmenu(FacesContext context, LearnwebMenu menu, Submenu submenu) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String style = submenu.getStyle();
         String styleClass = submenu.getStyleClass();
@@ -87,8 +79,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         //wrapper
         writer.startElement("li", null);
         writer.writeAttribute("class", styleClass, null);
-        if(style != null)
-        {
+        if (style != null) {
             writer.writeAttribute("style", style, null);
         }
 
@@ -97,13 +88,10 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.writeAttribute("class", LearnwebMenu.MENUITEM_LINK_CLASS, null);
         writer.writeAttribute("role", "tab", null);
         writer.writeAttribute("tabindex", "0", null);
-        if(!(submenu instanceof ActiveSubMenu) || submenu.isDisabled())
-        {
+        if (!(submenu instanceof ActiveSubMenu) || submenu.isDisabled()) {
             writer.writeAttribute("href", "#", null);
             writer.writeAttribute("onclick", "return false;", null);
-        }
-        else
-        {
+        } else {
             setAnchorAttributes(context, (ActiveSubMenu) submenu);
         }
 
@@ -120,8 +108,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.endElement("a");
 
         //content
-        if(submenu.getElementsCount() > 0)
-        {
+        if (submenu.getElementsCount() > 0) {
             writer.startElement("ul", null);
             writer.writeAttribute("class", LearnwebMenu.DESCENDANT_SUBMENU_LIST_CLASS, null);
             encodeMenuElements(context, menu, submenu.getElements());
@@ -148,44 +135,34 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         if (value != null) {
             if (menuitem.isEscape()) {
                 writer.writeText(value, "value");
-            }
-            else {
+            } else {
                 writer.write(value.toString());
             }
-        }
-        else if (menuitem.shouldRenderChildren()) {
+        } else if (menuitem.shouldRenderChildren()) {
             renderChildren(context, (UIComponent) menuitem);
         }
 
         writer.endElement("span");
     }
 
-    private void setAnchorAttributes(FacesContext context, ActiveSubMenu activeSubMenu) throws IOException
-    {
+    private void setAnchorAttributes(FacesContext context, ActiveSubMenu activeSubMenu) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
 
-        //GET
-        if(activeSubMenu.getHref() != null || activeSubMenu.getOutcome() != null)
-        {
+        if (activeSubMenu.getHref() != null || activeSubMenu.getOutcome() != null) { // GET
             String targetURL = getTargetURL(context, activeSubMenu);
             writer.writeAttribute("href", targetURL, null);
 
-            if(activeSubMenu.getTarget() != null)
-            {
+            if (activeSubMenu.getTarget() != null) {
                 writer.writeAttribute("target", activeSubMenu.getTarget(), null);
             }
-        }
-        //POST
-        else
-        {
+        } else { // POST
             writer.writeAttribute("href", "#", null);
             writer.writeAttribute("onclick", "return false;", null);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void encodeDescendantSubmenu(FacesContext context, LearnwebMenu menu, Submenu submenu) throws IOException
-    {
+    private void encodeDescendantSubmenu(FacesContext context, LearnwebMenu menu, Submenu submenu) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String icon = submenu.getIcon();
         String style = submenu.getStyle();
@@ -199,16 +176,14 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.startElement("li", null);
         writer.writeAttribute("id", submenu.getClientId(), null);
         writer.writeAttribute("class", styleClass, null);
-        if(style != null)
-        {
+        if (style != null) {
             writer.writeAttribute("style", style, null);
         }
 
         writer.startElement("a", null);
         writer.writeAttribute("class", linkClass, null);
 
-        if((submenu instanceof ActiveSubMenu) && !submenu.isDisabled())
-        {
+        if ((submenu instanceof ActiveSubMenu) && !submenu.isDisabled()) {
             setAnchorAttributes(context, (ActiveSubMenu) submenu);
         }
 
@@ -218,8 +193,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.endElement("span");
 
         //user icon
-        if(hasIcon)
-        {
+        if (hasIcon) {
             writer.startElement("span", null);
             writer.writeAttribute("class", LearnwebMenu.MENUITEM_ICON_CLASS + " " + icon, null);
             writer.endElement("span");
@@ -234,8 +208,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.endElement("a");
 
         //submenu children
-        if(submenu.getElementsCount() > 0)
-        {
+        if (submenu.getElementsCount() > 0) {
             writer.startElement("ul", null);
             writer.writeAttribute("class", LearnwebMenu.DESCENDANT_SUBMENU_LIST_CLASS, null);
             encodeMenuElements(context, menu, submenu.getElements());
@@ -245,40 +218,26 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.endElement("li");
     }
 
-    private void encodeRootMenuElements(final FacesContext context, final LearnwebMenu menu, final List<MenuElement> elements) throws IOException
-    {
-        for(MenuElement element : elements)
-        {
-            if(element.isRendered())
-            {
-                if(element instanceof DefaultSubMenu)
-                {
+    private void encodeRootMenuElements(final FacesContext context, final LearnwebMenu menu, final List<MenuElement> elements) throws IOException {
+        for (MenuElement element : elements) {
+            if (element.isRendered()) {
+                if (element instanceof DefaultSubMenu) {
                     encodePanelSubmenu(context, menu, (Submenu) element);
-                }
-                else if(element instanceof Submenu)
-                {
+                } else if (element instanceof Submenu) {
                     encodeDescendantSubmenu(context, menu, (Submenu) element);
-                }
-                else if(element instanceof MenuItem)
-                {
+                } else if (element instanceof MenuItem) {
                     encodeMenuItemWrapper(context, menu, (MenuItem) element, "-1");
                 }
             }
         }
     }
 
-    private void encodeMenuElements(final FacesContext context, final LearnwebMenu menu, final List<MenuElement> elements) throws IOException
-    {
-        for(MenuElement element : elements)
-        {
-            if(element.isRendered())
-            {
-                if(element instanceof Submenu)
-                {
+    private void encodeMenuElements(final FacesContext context, final LearnwebMenu menu, final List<MenuElement> elements) throws IOException {
+        for (MenuElement element : elements) {
+            if (element.isRendered()) {
+                if (element instanceof Submenu) {
                     encodeDescendantSubmenu(context, menu, (Submenu) element);
-                }
-                else if(element instanceof MenuItem)
-                {
+                } else if (element instanceof MenuItem) {
                     encodeMenuItemWrapper(context, menu, (MenuItem) element, "-1");
                 }
             }

@@ -17,67 +17,58 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 
-public class WaybackCapturesLogger
-{
+public class WaybackCapturesLogger {
     private static final Logger log = LogManager.getLogger(WaybackCapturesLogger.class);
 
     private static final Container LAST_ENTRY = new Container("", 0L, 0L); // this element indicates that the consumer thread should stop
     private final Learnweb learnweb;
     private final LinkedBlockingQueue<Container> queue;
     private final Thread consumerThread;
-    private ExecutorService cdxExecutorService;
+    private final ExecutorService cdxExecutorService;
 
-    public WaybackCapturesLogger(Learnweb learnweb)
-    {
+    public WaybackCapturesLogger(Learnweb learnweb) {
         this.learnweb = learnweb;
         this.queue = new LinkedBlockingQueue<>();
         this.consumerThread = new Thread(new Consumer());
         this.cdxExecutorService = Executors.newSingleThreadExecutor();
     }
 
-    public void start()
-    {
+    public void start() {
         this.consumerThread.start();
     }
 
-    public void logWaybackUrl(String url, long firstCapture, long lastCapture)
-    {
-        try
-        {
+    public void logWaybackUrl(String url, long firstCapture, long lastCapture) {
+        try {
             Container c = new Container(url, firstCapture, lastCapture);
-            if(!queue.contains(c))
+            if (!queue.contains(c)) {
                 queue.put(c);
-        }
-        catch(InterruptedException e)
-        {
+            }
+        } catch (InterruptedException e) {
             log.fatal("Couldn't log wayback url capture", e);
         }
     }
 
-    public void logWaybackCaptures(Resource resource)
-    {
-        if(resource == null)
+    public void logWaybackCaptures(Resource resource) {
+        if (resource == null) {
             throw new NullPointerException();
+        }
 
         cdxExecutorService.submit(new CDXWorker(resource));
     }
 
-    public void stop()
-    {
-        try
-        {
+    public void stop() {
+        try {
             queue.put(LAST_ENTRY);
             consumerThread.join();
 
             cdxExecutorService.shutdown();
             //Wait for a while for currently executing tasks to terminate
-            if(!cdxExecutorService.awaitTermination(50, TimeUnit.SECONDS))
+            if (!cdxExecutorService.awaitTermination(50, TimeUnit.SECONDS)) {
                 cdxExecutorService.shutdownNow(); //cancelling currently executing tasks
+            }
 
             log.debug("Wayback captures executor service was stopped");
-        }
-        catch(InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             log.fatal("Couldn't stop wayback captures logger", e);
             // (Re-)Cancel if current thread also interrupted
             cdxExecutorService.shutdownNow();
@@ -86,22 +77,36 @@ public class WaybackCapturesLogger
         }
     }
 
-    private class Consumer implements Runnable
-    {
+    private static class Container {
+        String url;
+        long firstCapture;
+        long lastCapture;
+
+        Container(String url, long firstCapture, long lastCapture) {
+            this.url = url;
+            this.firstCapture = firstCapture;
+            this.lastCapture = lastCapture;
+        }
+
         @Override
-        public void run()
-        {
-            try
-            {
-                while(true)
-                {
+        public String toString() {
+            return "Container [url=" + url + ", firstCapture=" + firstCapture + ", lastCapture=" + lastCapture + "]";
+        }
+
+    }
+
+    private class Consumer implements Runnable {
+        @Override
+        public void run() {
+            try {
+                while (true) {
                     Container container = queue.take();
 
-                    if(container == LAST_ENTRY) // stop method was called
+                    if (container == LAST_ENTRY) { // stop method was called
                         break;
+                    }
 
-                    try
-                    {
+                    try {
                         PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `wb_url` (`url`, `first_capture`, `last_capture`) VALUES (?, ?, ?)");
                         insert.setString(1, container.url);
                         insert.setTimestamp(2, new Timestamp(container.firstCapture));
@@ -109,74 +114,45 @@ public class WaybackCapturesLogger
                         insert.executeUpdate();
 
                         //log.debug("Logged suggestion: " + container);
-                    }
-                    catch(SQLException e)
-                    {
+                    } catch (SQLException e) {
                         log.fatal("Couldn't log wayback url capture: " + container, e);
                     }
                 }
 
                 log.debug("Wayback Captures logger thread was stopped");
-            }
-            catch(InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 log.fatal("Wayback Captures logger crashed", e);
             }
         }
     }
 
-    private static class Container
-    {
-        String url;
-        long firstCapture;
-        long lastCapture;
-
-        Container(String url, long firstCapture, long lastCapture)
-        {
-            this.url = url;
-            this.firstCapture = firstCapture;
-            this.lastCapture = lastCapture;
-        }
-
-        @Override
-        public String toString()
-        {
-            return "Container [url=" + url + ", firstCapture=" + firstCapture + ", lastCapture=" + lastCapture + "]";
-        }
-
-    }
-
-    private class CDXWorker implements Callable<String>
-    {
+    private class CDXWorker implements Callable<String> {
         Resource resource;
 
-        CDXWorker(Resource resource)
-        {
+        CDXWorker(Resource resource) {
             this.resource = resource;
         }
 
         @Override
-        public String call() throws NumberFormatException, SQLException
-        {
+        public String call() throws NumberFormatException, SQLException {
             CDXClient cdxClient = new CDXClient();
             List<Long> timestamps = cdxClient.getCaptures(resource.getUrl());
             PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT url_id FROM wb_url WHERE url = ?");
             pStmt.setString(1, resource.getUrl());
             ResultSet rs = pStmt.executeQuery();
-            if(rs.next())
-            {
+            if (rs.next()) {
                 int urlId = rs.getInt(1);
                 PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("UPDATE wb_url SET all_captures_fetched = 1 WHERE url_id = ?");
                 PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("INSERT INTO `wb_url_capture`(`url_id`,`timestamp`) VALUES(?,?)");
                 pStmt2.setInt(1, urlId);
                 int batchCount = 0;
-                for(long timestamp : timestamps)
-                {
+                for (long timestamp : timestamps) {
                     batchCount++;
                     pStmt2.setTimestamp(2, new Timestamp(timestamp));
                     pStmt2.addBatch();
-                    if(batchCount % 1000 == 0 || batchCount == timestamps.size())
+                    if (batchCount % 1000 == 0 || batchCount == timestamps.size()) {
                         pStmt2.executeBatch();
+                    }
                 }
                 pStmt3.setInt(1, urlId);
                 pStmt3.executeUpdate();

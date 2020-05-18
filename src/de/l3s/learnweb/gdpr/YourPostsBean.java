@@ -24,57 +24,47 @@ import de.l3s.learnweb.user.User;
  */
 @Named
 @ViewScoped
-public class YourPostsBean extends ApplicationBean implements Serializable
-{
+public class YourPostsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 4437146430672930717L;
     private static final Logger log = LogManager.getLogger(YourPostsBean.class);
 
     private List<ForumPost> userPosts;
     private Map<Integer, String> postThreadTopics;
 
-    public YourPostsBean() throws SQLException
-    {
+    public YourPostsBean() throws SQLException {
         User user = getUser();
-        if(null == user)
-            // when not logged in
+        if (null == user) { // when not logged in
             return;
+        }
 
         final ForumManager forumManager = this.getLearnweb().getForumManager();
 
         postThreadTopics = new HashMap<>();
         userPosts = user.getForumPosts();
 
-        for(ForumPost post : userPosts)
-        {
-            try
-            {
+        for (ForumPost post : userPosts) {
+            try {
                 StringBuilder allText = new StringBuilder();
                 String[] tds = StringUtils.substringsBetween(Jsoup.parse(post.getText()).outerHtml(), "<p>", "</p>");
-                if (tds != null) // for example, when message contains only quotes
-                {
-                    for (String td : tds)
-                    {
+                if (tds != null) { // for example, when message contains only quotes
+                    for (String td : tds) {
                         allText.append(td).append(" ");
                     }
                 }
                 post.setText(Jsoup.parse(allText.toString()).text());
 
                 postThreadTopics.put(post.getTopicId(), forumManager.getTopicById(post.getTopicId()).getTitle());
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 log.error("An error occurred during processing post " + post.getId(), e);
             }
         }
     }
 
-    public List<ForumPost> getUserPosts()
-    {
+    public List<ForumPost> getUserPosts() {
         return this.userPosts;
     }
 
-    public Map<Integer, String> getPostThreadTopics()
-    {
+    public Map<Integer, String> getPostThreadTopics() {
         return postThreadTopics;
     }
 }

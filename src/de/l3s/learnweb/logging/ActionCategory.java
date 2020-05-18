@@ -5,10 +5,8 @@ package de.l3s.learnweb.logging;
  * They are only relevant to display grouped results
  *
  * @author Philipp
- *
  */
-public enum ActionCategory
-{
+public enum ActionCategory {
     OTHER,
     RESOURCE,
     FOLDER,

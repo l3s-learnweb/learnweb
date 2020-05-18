@@ -22,31 +22,28 @@ import de.l3s.learnweb.user.Organisation;
 
 @Named
 @ViewScoped
-public class AdminCourseBean extends ApplicationBean implements Serializable
-{
+public class AdminCourseBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -1276599881084055950L;
     private static final Logger log = LogManager.getLogger(AdminCourseBean.class);
 
-    private Course course = null;
+    private Course course;
     private List<OptionWrapperGroup> optionGroups;
     private int courseId;
     private final List<Organisation> organisations;
 
-    public AdminCourseBean()
-    {
+    public AdminCourseBean() {
         organisations = new ArrayList<>(getLearnweb().getOrganisationManager().getOrganisationsAll());
         Collections.sort(organisations);
     }
 
-    public void onLoad()
-    {
-        if(getUser() == null) // not logged in
+    public void onLoad() {
+        if (getUser() == null) { // not logged in
             return;
+        }
 
         course = getLearnweb().getCourseManager().getCourseById(courseId);
 
-        if(null == course)
-        {
+        if (null == course) {
             addGrowl(FacesMessage.SEVERITY_FATAL, "invalid course_id parameter");
             return;
         }
@@ -61,16 +58,15 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         EnumComparator c = new EnumComparator();
         java.util.Arrays.sort(optionsEnum, c);
 
-        for(Option option : optionsEnum)
-        {
+        for (Option option : optionsEnum) {
             // example: this gets "Services" from "Services_Allow_logout_from_Interweb"
             String newOptionGroupName = option.name().substring(0, option.name().indexOf('_'));
 
-            if(newOptionGroupName.equals("Unused"))
+            if (newOptionGroupName.equals("Unused")) {
                 continue;
+            }
 
-            if(oldOptionGroupName != null && !oldOptionGroupName.equalsIgnoreCase(newOptionGroupName))
-            {
+            if (oldOptionGroupName != null && !oldOptionGroupName.equalsIgnoreCase(newOptionGroupName)) {
                 optionGroups.add(new OptionWrapperGroup(oldOptionGroupName, options));
 
                 options = new LinkedList<>();
@@ -82,124 +78,100 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         optionGroups.add(new OptionWrapperGroup(oldOptionGroupName, options));
     }
 
-    public void save(ActionEvent actionEvent)
-    {
-        if(course == null)
+    public void save(ActionEvent actionEvent) {
+        if (course == null) {
             return;
+        }
 
-        for(OptionWrapperGroup group : optionGroups)
-        {
-            for(OptionWrapper optionWrapper : group.getOptions())
-            {
+        for (OptionWrapperGroup group : optionGroups) {
+            for (OptionWrapper optionWrapper : group.getOptions()) {
                 course.setOption(optionWrapper.getOption(), optionWrapper.getValue());
             }
         }
-        try
-        {
+        try {
             course.save();
             addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             log.error("unhandled error", e);
             addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
         }
     }
 
-    public List<OptionWrapperGroup> getOptionGroups()
-    {
+    public List<OptionWrapperGroup> getOptionGroups() {
         return optionGroups;
     }
 
-    public Course getCourse()
-    {
+    public Course getCourse() {
         return course;
     }
 
-    public void setCourseId(int courseId)
-    {
-        this.courseId = courseId;
+    public int getCourseId() {
+        return courseId;
     }
 
-    public int getCourseId()
-    {
-        return courseId;
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     /**
      * Returns a list of all available organisations. For select box to select to which organisation a course belongs
-     *
-     * @return
      */
-    public List<Organisation> getOrganisations()
-    {
+    public List<Organisation> getOrganisations() {
         return organisations;
     }
 
     // only helper classes to display the options
-    public static class OptionWrapper implements Serializable
-    {
+    public static class OptionWrapper implements Serializable {
         private static final long serialVersionUID = 2828959818690832148L;
-        private Option option;
+        private final Option option;
         private boolean value;
 
-        public OptionWrapper(Option option, boolean value)
-        {
+        public OptionWrapper(Option option, boolean value) {
             this.option = option;
             this.value = value;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return option.name().substring(option.name().indexOf('_')).replace("_", " ");
         }
 
-        public boolean getValue()
-        {
+        public boolean getValue() {
             return value;
         }
 
-        public void setValue(boolean value)
-        {
+        public void setValue(boolean value) {
             this.value = value;
         }
 
-        public Option getOption()
-        {
+        public Option getOption() {
             return option;
         }
     }
 
-    public static class OptionWrapperGroup implements Serializable
-    {
+    public static class OptionWrapperGroup implements Serializable {
         private static final long serialVersionUID = -2323320446956640229L;
-        private String title;
-        private List<OptionWrapper> options;
+        private final String title;
+        private final List<OptionWrapper> options;
 
-        public OptionWrapperGroup(String title, List<OptionWrapper> options)
-        {
+        public OptionWrapperGroup(String title, List<OptionWrapper> options) {
             this.title = title;
             this.options = options;
         }
 
-        public String getTitle()
-        {
+        public String getTitle() {
             return title;
         }
 
-        public List<OptionWrapper> getOptions()
-        {
+        public List<OptionWrapper> getOptions() {
             return options;
         }
     }
 
-    private static class EnumComparator implements Comparator<Option>, Serializable
-    {
+    private static class EnumComparator implements Comparator<Option>, Serializable {
         private static final long serialVersionUID = -6590111487348788376L;
 
         @Override
-        public int compare(Option o1, Option o2)
-        {
+        public int compare(Option o1, Option o2) {
             return o1.name().compareTo(o2.name());
         }
     }

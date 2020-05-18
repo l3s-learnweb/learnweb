@@ -16,11 +16,10 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
-public abstract class CommonDashboardUserBean extends ApplicationBean
-{
+public abstract class CommonDashboardUserBean extends ApplicationBean {
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
-    private static int USERS_LIMIT = 500;
+    private static final int USERS_LIMIT = 500;
 
     private Integer paramUserId;
 
@@ -36,8 +35,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
     private transient List<Group> allGroups;
     private transient List<User> allUsers;
 
-    public CommonDashboardUserBean()
-    {
+    public CommonDashboardUserBean() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -6); // load data from last 6 month until now
 
@@ -48,32 +46,24 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
         endDate = new Date(Long.parseLong(savedEndDate));
     }
 
-    public void onLoad()
-    {
+    public void onLoad() {
         User user = getUser(); // the current user
-        if(user == null) // not logged in or no privileges
+        if (user == null) { // not logged in or no privileges
             return;
+        }
 
-        if(!user.isModerator())
-        { // can see only their own statistic
+        if (!user.isModerator()) { // can see only their own statistic
             singleUser = true;
             selectedUsersIds = Collections.singletonList(user.getId());
-        }
-        else if(paramUserId != null)
-        { // statistic for one user from parameter
-            try
-            {
+        } else if (paramUserId != null) { // statistic for one user from parameter
+            try {
                 singleUser = true;
                 user = Learnweb.getInstance().getUserManager().getUser(paramUserId);
                 selectedUsersIds = Collections.singletonList(user.getId());
-            }
-            catch(SQLException e)
-            {
+            } catch (SQLException e) {
                 throw new RuntimeException("User not found.");
             }
-        }
-        else
-        {
+        } else {
             singleUser = false;
         }
     }
@@ -83,55 +73,52 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
     /**
      * @return all groups the current user can moderate
      */
-    public List<Group> getAllGroups() throws SQLException
-    {
-        if(null == allGroups)
+    public List<Group> getAllGroups() throws SQLException {
+        if (null == allGroups) {
             allGroups = getUser().getOrganisation().getGroups();
+        }
         return allGroups;
     }
 
     /**
      * @return all users the current user can moderate
      */
-    public List<User> getAllUsers() throws SQLException
-    {
-        if(null == allUsers)
+    public List<User> getAllUsers() throws SQLException {
+        if (null == allUsers) {
             allUsers = getUser().getOrganisation().getUsers();
+        }
         return allUsers;
     }
 
-    public Integer getParamUserId()
-    {
+    public Integer getParamUserId() {
         return paramUserId;
     }
 
-    public void setParamUserId(final Integer paramUserId)
-    {
+    public void setParamUserId(final Integer paramUserId) {
         this.paramUserId = paramUserId;
     }
 
-    public boolean isSingleUser()
-    {
+    public boolean isSingleUser() {
         return singleUser;
     }
 
-    public boolean isUsersLimitReached()
-    {
+    public boolean isUsersLimitReached() {
         return usersLimitReached;
     }
 
-    public int getSelectedType()
-    {
+    public int getSelectedType() {
         return selectedType;
     }
 
-    public void setSelectedType(final int selectedType)
-    {
+    public void setSelectedType(final int selectedType) {
         this.selectedType = selectedType;
     }
 
-    public void setSelectedUsersIds(List<Integer> selectedUsersIds)
-    {
+    public List<Integer> getSelectedUsersIds() {
+        return selectedUsersIds;
+    }
+
+    public void setSelectedUsersIds(List<Integer> selectedUsersIds) {
         if (selectedUsersIds.size() > USERS_LIMIT) {
             usersLimitReached = true;
             addMessage(FacesMessage.SEVERITY_ERROR, "Please, choose less than 500 users");
@@ -142,57 +129,44 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
         this.selectedUsersIds = selectedUsersIds;
     }
 
-    public List<Integer> getSelectedUsersIds()
-    {
-        return selectedUsersIds;
-    }
-
-    public User getFirstSelectedUser() throws SQLException
-    {
-        if(CollectionUtils.isEmpty(selectedUsersIds))
-        {
+    public User getFirstSelectedUser() throws SQLException {
+        if (CollectionUtils.isEmpty(selectedUsersIds)) {
             return null;
         }
 
         return Learnweb.getInstance().getUserManager().getUser(selectedUsersIds.get(0));
     }
 
-    public List<Integer> getSelectedGroupsIds()
-    {
+    public List<Integer> getSelectedGroupsIds() {
         return selectedGroupsIds;
     }
 
-    public void setSelectedGroupsIds(final List<Integer> selectedGroupsIds) throws SQLException
-    {
+    public void setSelectedGroupsIds(final List<Integer> selectedGroupsIds) throws SQLException {
         this.selectedGroupsIds = selectedGroupsIds;
         List<Integer> selectedUsers = new ArrayList<>();
-        for(Integer groupId : selectedGroupsIds)
-        {
+        for (Integer groupId : selectedGroupsIds) {
             Group group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
-            for(User user : group.getMembers())
+            for (User user : group.getMembers()) {
                 selectedUsers.add(user.getId());
+            }
         }
         this.setSelectedUsersIds(selectedUsers);
     }
 
-    public Date getStartDate()
-    {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate)
-    {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
         setPreference(PREFERENCE_STARTDATE, Long.toString(startDate.getTime()));
     }
 
-    public Date getEndDate()
-    {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate)
-    {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
         setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
     }

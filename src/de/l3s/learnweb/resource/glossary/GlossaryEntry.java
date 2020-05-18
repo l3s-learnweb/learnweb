@@ -9,8 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
-public class GlossaryEntry implements Serializable, Cloneable
-{
+public class GlossaryEntry implements Serializable, Cloneable {
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id = -1;
@@ -33,20 +32,16 @@ public class GlossaryEntry implements Serializable, Cloneable
     private String fulltext; //fulltext search in glossary
 
     /**
-     * do nothing constructor
+     * do nothing constructor.
      */
-    public GlossaryEntry()
-    {
+    public GlossaryEntry() {
 
     }
 
     /**
-     * copy constructor
-     *
-     * @param oldEntry
+     * copy constructor.
      */
-    public GlossaryEntry(GlossaryEntry oldEntry)
-    {
+    public GlossaryEntry(GlossaryEntry oldEntry) {
         setId(-1);
         setOriginalEntryId(oldEntry.id);
         setResourceId(oldEntry.resourceId);
@@ -61,20 +56,17 @@ public class GlossaryEntry implements Serializable, Cloneable
         setFulltext(oldEntry.fulltext);
         setTimestamp(oldEntry.timestamp);
 
-        for(GlossaryTerm oldTerm : oldEntry.terms)
-        {
+        for (GlossaryTerm oldTerm : oldEntry.terms) {
             this.addTerm(oldTerm.clone());
         }
     }
 
     @Override
-    public GlossaryEntry clone()
-    {
+    public GlossaryEntry clone() {
         return new GlossaryEntry(this);
     }
 
-    private void generateFulltext()
-    {
+    private void generateFulltext() {
         StringBuilder text = new StringBuilder();
         //entry details
         text.append(topicOne);
@@ -85,10 +77,10 @@ public class GlossaryEntry implements Serializable, Cloneable
         text.append(' ');
         text.append(description);
         //term details
-        for(GlossaryTerm term : terms)
-        {
-            if(term.isDeleted())
+        for (GlossaryTerm term : terms) {
+            if (term.isDeleted()) {
                 continue;
+            }
 
             text.append(' ');
             text.append(term.getTerm());
@@ -107,189 +99,158 @@ public class GlossaryEntry implements Serializable, Cloneable
 
     }
 
-    public GlossaryTerm getTerm(int termId)
-    {
-        for(GlossaryTerm term : terms)
-            if(term.getId() == termId)
+    public GlossaryTerm getTerm(int termId) {
+        for (GlossaryTerm term : terms) {
+            if (term.getId() == termId) {
                 return term;
+            }
+        }
         return null;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getTopicOne()
-    {
+    public String getTopicOne() {
         return topicOne;
     }
 
-    public void setTopicOne(String topicOne)
-    {
+    public void setTopicOne(String topicOne) {
         this.topicOne = topicOne;
     }
 
-    public String getTopicTwo()
-    {
+    public String getTopicTwo() {
         return topicTwo;
     }
 
-    public void setTopicTwo(String topicTwo)
-    {
+    public void setTopicTwo(String topicTwo) {
         this.topicTwo = topicTwo;
     }
 
-    public String getTopicThree()
-    {
+    public String getTopicThree() {
         return topicThree;
     }
 
-    public void setTopicThree(String topicThree)
-    {
+    public void setTopicThree(String topicThree) {
         this.topicThree = topicThree;
     }
 
-    public boolean isDescriptionPasted()
-    {
+    public boolean isDescriptionPasted() {
         return descriptionPasted;
     }
 
-    public void setDescriptionPasted(boolean onPasteDescription)
-    {
-        if(!StringUtils.isEmpty(description))
+    public void setDescriptionPasted(boolean onPasteDescription) {
+        if (!StringUtils.isEmpty(description)) {
             this.descriptionPasted = onPasteDescription;
+        }
     }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public void setId(int id)
-    {
+    public void setId(int id) {
         this.id = id;
 
         // update all terms too
         getTerms().forEach(term -> term.setEntryId(id));
     }
 
-    public int getResourceId()
-    {
+    public int getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(int resourceId)
-    {
+    public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
     }
 
-    public boolean isDeleted()
-    {
+    public boolean isDeleted() {
         return deleted;
     }
 
-    public void setDeleted(boolean deleted)
-    {
+    public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public List<GlossaryTerm> getTerms()
-    {
+    public List<GlossaryTerm> getTerms() {
         return terms;
     }
 
-    void setTerms(List<GlossaryTerm> terms)
-    {
+    void setTerms(List<GlossaryTerm> terms) {
         Validate.notNull(terms);
 
         this.terms = terms;
     }
 
-    public void addTerm(GlossaryTerm term)
-    {
+    public void addTerm(GlossaryTerm term) {
         this.terms.add(term);
     }
 
-    public int getLastChangedByUserId()
-    {
+    public int getLastChangedByUserId() {
         return lastChangedByUserId;
     }
 
-    public void setLastChangedByUserId(int lastChangedByUserId)
-    {
+    public void setLastChangedByUserId(int lastChangedByUserId) {
         this.lastChangedByUserId = lastChangedByUserId;
     }
 
-    public int getOriginalEntryId()
-    {
+    public int getOriginalEntryId() {
         return originalEntryId;
     }
 
-    public void setOriginalEntryId(int originalEntryId)
-    {
+    public void setOriginalEntryId(int originalEntryId) {
         this.originalEntryId = originalEntryId;
     }
 
-    public String getFulltext()
-    {
-        if(fulltext == null)
+    public String getFulltext() {
+        if (fulltext == null) {
             generateFulltext();
+        }
         return fulltext;
     }
 
-    public void setFulltext(String fulltext)
-    {
+    public void setFulltext(String fulltext) {
         this.fulltext = fulltext;
     }
 
-    public Timestamp getTimestamp()
-    {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp)
-    {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 
     /**
-     * Convenience function that calls the getter of a given field
-     *
-     * @param fieldName
-     * @return
+     * Convenience function that calls the getter of a given field.
      */
-    public String get(String fieldName)
-    {
-        switch(fieldName)
-        {
-        case "description":
-            return getDescription();
-        case "topicOne":
-            return getTopicOne();
-        case "topicTwo":
-            return getTopicTwo();
-        case "topicThree":
-            return getTopicThree();
-        case "fulltext":
-            return getFulltext();
-        default:
-            throw new IllegalArgumentException(fieldName + " is not implemented");
+    public String get(String fieldName) {
+        switch (fieldName) {
+            case "description":
+                return getDescription();
+            case "topicOne":
+                return getTopicOne();
+            case "topicTwo":
+                return getTopicTwo();
+            case "topicThree":
+                return getTopicThree();
+            case "fulltext":
+                return getFulltext();
+            default:
+                throw new IllegalArgumentException(fieldName + " is not implemented");
         }
     }
 }

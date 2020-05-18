@@ -44,17 +44,14 @@ import de.l3s.util.Misc;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.email.BounceManager;
 
-public class Learnweb
-{
-    public static final String salt1 = "ff4a9ff19306ee0407cf69d592";
-    public static final String salt2 = "3a129713cc1b33650816d61450";
+public final class Learnweb {
     private static final Logger log = org.apache.logging.log4j.LogManager.getLogger(Learnweb.class);
 
-    private Connection dbConnection;
-    private InterWeb interweb;
+    public static final String SALT_1 = "ff4a9ff19306ee0407cf69d592";
+    public static final String SALT_2 = "3a129713cc1b33650816d61450";
 
-    private PropertiesBundle properties;
-    private String serverUrl;
+    private static Learnweb learnweb;
+    private static boolean learnwebIsLoading = false;
 
     // Manager (Data Access Objects):
     private final ForumManager forumManager;
@@ -89,129 +86,28 @@ public class Learnweb
     private final GlossaryDashboardManager glossaryDashboardManager;
     private final TrackerDashboardManager trackerDashboardManager;
 
-    private static Learnweb learnweb = null;
-    private static boolean learnwebIsLoading = false;
+    private final InterWeb interweb;
+    private Connection dbConnection;
+
+    private PropertiesBundle properties;
+    private String serverUrl;
+
+    private long lastCheck = 0L;
 
     /**
-     * Use createInstance() first
-     *
-     * @return
-     */
-    public static Learnweb getInstance()
-    {
-        if(null == learnweb)
-        {
-            log.warn("Learnweb is not initialized correctly. You should call createInstance() first", new Exception());
-            // throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)");
-        }
-        return learnweb;
-    }
-
-    /**
-     * The same as getInstance() but as Optional and without logging warnings.
-     *
-     * @return
-     */
-    public static Optional<Learnweb> getInstanceOptional()
-    {
-        return Optional.ofNullable(learnweb);
-    }
-
-    public static Learnweb createInstance() throws ClassNotFoundException, SQLException
-    {
-        return createInstance(null);
-    }
-
-    /**
-     * This method should be used to create a Learnweb instance
-     *
-     * @param serverUrl https://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
-     * @return
-     * @throws ClassNotFoundException
-     * @throws SQLException
-     */
-    public static Learnweb createInstance(String serverUrl) throws ClassNotFoundException, SQLException
-    {
-        try
-        {
-            if(learnweb == null)
-            {
-                if(learnwebIsLoading)
-                {
-                    log.warn("Learnweb instance requested while it was still loading. Happens mostly because of connection or config problems");
-
-                    return null; // to avoid infinite loop
-                }
-
-                learnwebIsLoading = true;
-                learnweb = new Learnweb(serverUrl);
-            }
-            else
-                learnweb.setServerUrl(serverUrl);
-
-            return learnweb;
-        }
-        catch(Exception e)
-        {
-            learnwebIsLoading = false;
-            log.fatal("fatal error: ", e);
-            throw e;
-        }
-    }
-
-    private void loadProperties()
-    {
-        try
-        {
-            Properties fallbackProperties = new Properties();
-            InputStream defaultProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb.properties");
-            fallbackProperties.load(defaultProperties);
-            properties = new PropertiesBundle(fallbackProperties);
-
-            InputStream testProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_test.properties");
-            if(testProperties != null)
-            {
-                properties.load(testProperties);
-                log.debug("Test properties loaded.");
-            }
-
-            InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties");
-            if(localProperties != null)
-            {
-                properties.load(localProperties);
-                log.debug("Local properties loaded.");
-            }
-        }
-        catch(IOException e)
-        {
-            log.error("Property error", e);
-        }
-    }
-
-    /**
-     *
      * @param serverUrl The servername + contextPath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
-     *
-     * @throws ClassNotFoundException
-     * @throws SQLException
      */
-    private Learnweb(String serverUrl) throws ClassNotFoundException, SQLException
-    {
+    private Learnweb(String serverUrl) throws ClassNotFoundException, SQLException {
         loadProperties();
 
         // load server URL from config file or guess it
         String propertiesServerUrl = properties.getProperty("SERVER_URL");
 
-        if("auto".equalsIgnoreCase(propertiesServerUrl) && StringUtils.isNotEmpty(serverUrl))
-        {
+        if ("auto".equalsIgnoreCase(propertiesServerUrl) && StringUtils.isNotEmpty(serverUrl)) {
             setServerUrl(serverUrl);
-        }
-        else if(null != propertiesServerUrl && propertiesServerUrl.startsWith("http"))
-        {
+        } else if (null != propertiesServerUrl && propertiesServerUrl.startsWith("http")) {
             setServerUrl(propertiesServerUrl);
-        }
-        else
-        {
+        } else {
             setServerUrl("https://learnweb.l3s.uni-hannover.de");
             log.error("We could not guess the server name. Will use by default: " + this.serverUrl + "; on Machine: " + Misc.getSystemDescription());
         }
@@ -260,90 +156,95 @@ public class Learnweb
 
     }
 
+    private void loadProperties() {
+        try {
+            Properties fallbackProperties = new Properties();
+            InputStream defaultProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb.properties");
+            fallbackProperties.load(defaultProperties);
+            properties = new PropertiesBundle(fallbackProperties);
+
+            InputStream testProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_test.properties");
+            if (testProperties != null) {
+                properties.load(testProperties);
+                log.debug("Test properties loaded.");
+            }
+
+            InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties");
+            if (localProperties != null) {
+                properties.load(localProperties);
+                log.debug("Local properties loaded.");
+            }
+        } catch (IOException e) {
+            log.error("Property error", e);
+        }
+    }
+
     /**
-     * initialize stuff which are only required in server mode
+     * initialize stuff which are only required in server mode.
      */
-    public void initLearnwebServer()
-    {
+    public void initLearnwebServer() {
         log.debug("Init LearnwebServer");
 
         // We should run jobScheduler only on one server, otherwise they are conflicting
         boolean isRootInstance = getServerUrl().endsWith("learnweb.l3s.uni-hannover.de/v3/"); // TODO need to revert when V3 becomes ROOT
-        if(isRootInstance)
-        {
+        if (isRootInstance) {
             jobScheduler.startAllJobs();
             waybackCapturesLogger.start();
-        }
-        else
+        } else {
             log.warn("JobScheduler not started, because it seams that this instance is only for testing: " + getServerUrl());
+        }
     }
 
-    public FileManager getFileManager()
-    {
+    public FileManager getFileManager() {
         return fileManager;
     }
 
-    public ResourceManager getResourceManager()
-    {
+    public ResourceManager getResourceManager() {
         return resourceManager;
     }
 
-    public OrganisationManager getOrganisationManager()
-    {
+    public OrganisationManager getOrganisationManager() {
         return organisationManager;
     }
 
-    public CourseManager getCourseManager()
-    {
+    public CourseManager getCourseManager() {
         return courseManager;
     }
 
-    public GroupManager getGroupManager()
-    {
+    public GroupManager getGroupManager() {
         return groupManager;
     }
 
-    public UserManager getUserManager()
-    {
+    public UserManager getUserManager() {
         return userManager;
     }
 
-    public ResourcePreviewMaker getResourcePreviewMaker()
-    {
+    public ResourcePreviewMaker getResourcePreviewMaker() {
         return resourcePreviewMaker;
     }
 
-    public ResourceMetadataExtractor getResourceMetadataExtractor()
-    {
+    public ResourceMetadataExtractor getResourceMetadataExtractor() {
         return resourceMetadataExtractor;
     }
 
-    private void connect() throws SQLException
-    {
+    private void connect() throws SQLException {
         dbConnection = DriverManager.getConnection(properties.getProperty("mysql_url") + "?log=false", properties.getProperty("mysql_user"), properties.getProperty("mysql_password"));
         dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");
     }
 
-    private long lastCheck = 0L;
-
-    private void checkConnection() throws SQLException
-    {
-        synchronized(dbConnection)
-        {
+    private void checkConnection() throws SQLException {
+        synchronized (dbConnection) {
             // exit if last check was one or less seconds ago
-            if(lastCheck > System.currentTimeMillis() - 1000)
+            if (lastCheck > System.currentTimeMillis() - 1000) {
                 return;
+            }
 
-            if(!dbConnection.isValid(1))
-            {
+            if (!dbConnection.isValid(1)) {
                 log.warn("Database connection invalid try to reconnect");
 
-                try
-                {
+                try {
                     dbConnection.close();
-                }
-                catch(SQLException e)
-                {
+                } catch (SQLException ignored) {
                 }
 
                 connect();
@@ -354,115 +255,91 @@ public class Learnweb
     }
 
     /**
-     * Returns an instance of Interweb for the user anonymous
-     *
-     * @return
+     * Returns an instance of Interweb for the user anonymous.
      */
-    public InterWeb getInterweb()
-    {
+    public InterWeb getInterweb() {
         return interweb;
     }
 
-    public PropertiesBundle getProperties()
-    {
+    public PropertiesBundle getProperties() {
         return properties;
     }
 
     /**
-     * This method should be called before the system shuts down
+     * This method should be called before the system shuts down.
      */
-    public void onDestroy()
-    {
+    public void onDestroy() {
         log.info("Shutting down Learnweb");
 
         jobScheduler.stopAllJobs();
         archiveUrlManager.onDestroy();
         waybackCapturesLogger.stop();
 
-        try
-        {
+        try {
             dbConnection.close();
+        } catch (SQLException ignored) {
         }
-        catch(SQLException e)
-        {
-        } // ignore
 
         log.info("Shutdown Learnweb completed");
     }
 
     //should be used instead of the static method
-    public Connection getConnection() throws SQLException
-    {
+    public Connection getConnection() throws SQLException {
         checkConnection();
 
         return dbConnection;
     }
 
     /**
-     *
      * @return Returns the servername + contextPath. For the default installation this is: https://learnweb.l3s.uni-hannover.de
      */
-    public String getServerUrl()
-    {
+    public String getServerUrl() {
         return serverUrl;
     }
 
-    public void setServerUrl(String serverUrl)
-    {
-        if(this.serverUrl != null && this.serverUrl.equals(serverUrl))
+    public void setServerUrl(String serverUrl) {
+        if (this.serverUrl != null && this.serverUrl.equals(serverUrl)) {
             return; // ignore new serverUrl
+        }
 
         // enforce HTTPS on the production server
-        if(serverUrl.startsWith("http://") && isForceHttps())
-        {
+        if (serverUrl.startsWith("http://") && isForceHttps()) {
             log.info("Forcing HTTPS schema.");
             serverUrl = "https://" + serverUrl.substring(7);
         }
 
-        if(fileManager != null)
+        if (fileManager != null) {
             fileManager.setServerUrl(serverUrl);
+        }
 
         this.serverUrl = serverUrl;
         log.debug("Server base url updated: " + serverUrl);
     }
 
-    public static boolean isForceHttps()
-    {
-        return "true".equalsIgnoreCase(System.getenv("LEARNWEB_FORCE_HTTPS"));
-    }
-
-    public SolrClient getSolrClient()
-    {
+    public SolrClient getSolrClient() {
         return solrClient;
     }
 
-    public TedManager getTedManager()
-    {
+    public TedManager getTedManager() {
         return tedManager;
     }
 
-    public ArchiveUrlManager getArchiveUrlManager()
-    {
+    public ArchiveUrlManager getArchiveUrlManager() {
         return archiveUrlManager;
     }
 
-    public TimelineManager getTimelineManager()
-    {
+    public TimelineManager getTimelineManager() {
         return timelineManager;
     }
 
-    public ForumManager getForumManager()
-    {
+    public ForumManager getForumManager() {
         return forumManager;
     }
 
     /**
-     * You should never call this
-     *
-     * @throws SQLException
+     * You should never call this.
      */
-    public void resetCaches() throws SQLException
-    {
+    public void resetCaches() throws SQLException {
         organisationManager.resetCache();
         userManager.resetCache();
         resourceManager.resetCache();
@@ -470,89 +347,126 @@ public class Learnweb
         courseManager.resetCache();
     }
 
-    public WaybackCapturesLogger getWaybackCapturesLogger()
-    {
+    public WaybackCapturesLogger getWaybackCapturesLogger() {
         return waybackCapturesLogger;
     }
 
-    public SearchLogManager getSearchLogManager()
-    {
+    public SearchLogManager getSearchLogManager() {
         return searchLogManager;
     }
 
-    public WaybackUrlManager getWaybackUrlManager()
-    {
+    public WaybackUrlManager getWaybackUrlManager() {
         return waybackUrlManager;
     }
 
-    public SurveyManager getSurveyManager()
-    {
+    public SurveyManager getSurveyManager() {
         return surveyManager;
     }
 
-    public ConverterService getConverterService()
-    {
+    public ConverterService getConverterService() {
         return serviceConverter;
     }
 
-    public SubmissionManager getSubmissionManager()
-    {
+    public SubmissionManager getSubmissionManager() {
         return submissionManager;
     }
 
-    public HistoryManager getHistoryManager()
-    {
+    public HistoryManager getHistoryManager() {
         return historyManager;
     }
 
-    public SearchHistoryManager getSearchHistoryManager()
-    {
+    public SearchHistoryManager getSearchHistoryManager() {
         return searchHistoryManager;
     }
 
-    public ProtectionManager getProtectionManager()
-    {
+    public ProtectionManager getProtectionManager() {
         return protectionManager;
     }
 
-    public RequestManager getRequestManager()
-    {
+    public RequestManager getRequestManager() {
         return requestManager;
     }
 
-    public BounceManager getBounceManager()
-    {
+    public BounceManager getBounceManager() {
         return bounceManager;
     }
 
-    public GlossaryManager getGlossaryManager()
-    {
+    public GlossaryManager getGlossaryManager() {
         return glossaryManager;
     }
 
-    public LogManager getLogManager()
-    {
+    public LogManager getLogManager() {
         return logManager;
     }
 
-    public AnnouncementsManager getAnnouncementsManager()
-    {
+    public AnnouncementsManager getAnnouncementsManager() {
         return announcementsManager;
     }
 
-    public ActivityDashboardManager getActivityDashboardManager()
-    {
+    public ActivityDashboardManager getActivityDashboardManager() {
         return activityDashboardManager;
     }
 
-    public GlossaryDashboardManager getGlossaryDashboardManager()
-    {
+    public GlossaryDashboardManager getGlossaryDashboardManager() {
         return glossaryDashboardManager;
     }
 
-    public TrackerDashboardManager getTrackerDashboardManager()
-    {
+    public TrackerDashboardManager getTrackerDashboardManager() {
         return trackerDashboardManager;
+    }
+
+    /**
+     * Use createInstance() first.
+     */
+    public static Learnweb getInstance() {
+        if (null == learnweb) {
+            log.warn("Learnweb is not initialized correctly. You should call createInstance() first", new Exception());
+            // throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)");
+        }
+        return learnweb;
+    }
+
+    /**
+     * The same as getInstance() but as Optional and without logging warnings.
+     */
+    public static Optional<Learnweb> getInstanceOptional() {
+        return Optional.ofNullable(learnweb);
+    }
+
+    public static Learnweb createInstance() throws ClassNotFoundException, SQLException {
+        return createInstance(null);
+    }
+
+    /**
+     * This method should be used to create a Learnweb instance.
+     *
+     * @param serverUrl https://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
+     */
+    public static Learnweb createInstance(String serverUrl) throws ClassNotFoundException, SQLException {
+        try {
+            if (learnweb == null) {
+                if (learnwebIsLoading) {
+                    log.warn("Learnweb instance requested while it was still loading. Happens mostly because of connection or config problems");
+
+                    return null; // to avoid infinite loop
+                }
+
+                learnwebIsLoading = true;
+                learnweb = new Learnweb(serverUrl);
+            } else {
+                learnweb.setServerUrl(serverUrl);
+            }
+
+            return learnweb;
+        } catch (Exception e) {
+            learnwebIsLoading = false;
+            log.fatal("fatal error: ", e);
+            throw e;
+        }
+    }
+
+    public static boolean isForceHttps() {
+        return "true".equalsIgnoreCase(System.getenv("LEARNWEB_FORCE_HTTPS"));
     }
 
 }
