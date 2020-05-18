@@ -115,9 +115,10 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
             writer.endElement("ul");
         }
 
-        writer.endElement("li");   //wrapper
+        writer.endElement("li"); //wrapper
     }
 
+    @Override
     protected void encodeMenuItemContent(FacesContext context, AbstractMenu menu, MenuItem menuitem) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
         String icon = menuitem.getIcon();

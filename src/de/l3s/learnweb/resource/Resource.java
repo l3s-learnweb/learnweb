@@ -174,7 +174,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
         }
         */
     }
@@ -1335,7 +1334,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     /**
      * @return the previous value associated with key, or null if there was no mapping for key. (A null return can also indicate that the map
-     *     previously associated null with key.)
+     * previously associated null with key.)
      */
     public String setMetadataValue(String key, String value) {
         if (key == null || value == null) {

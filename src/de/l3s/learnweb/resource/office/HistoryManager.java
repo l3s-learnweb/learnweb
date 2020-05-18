@@ -37,7 +37,9 @@ public class HistoryManager {
 
     private List<History> getHistoryForHistoryInfo(int resourceId) throws SQLException {
         List<History> histories = new ArrayList<>();
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_history_id, server_version, document_created, document_key, document_version, document_changes, u.user_id, u.username FROM lw_resource_history h join lw_user u USING(user_id) WHERE resource_id = ? order by document_version")) {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement(
+            "SELECT resource_history_id, server_version, document_created, document_key, document_version, document_changes, u.user_id, u.username "
+                + "FROM lw_resource_history h join lw_user u USING(user_id) WHERE resource_id = ? order by document_version")) {
             select.setInt(1, resourceId);
             ResultSet rs = select.executeQuery();
             while (rs.next()) {

@@ -14,8 +14,8 @@ import de.l3s.util.StringHelper;
 /**
  * @author Kemkes
  *
- *     This class wraps a resource. It's necessary because a resource can appear in various search results with different search terms. Which lead
- *     to different text snippets.
+ * This class wraps a resource. It's necessary because a resource can appear in various search results with different search terms.
+ * Which lead to different text snippets.
  */
 public class ResourceDecorator implements Serializable {
     private static final long serialVersionUID = -6611930555147350248L;

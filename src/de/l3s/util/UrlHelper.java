@@ -19,7 +19,7 @@ public final class UrlHelper {
      * This function checks if a given String is a valid url.
      *
      * @return when the url leads to a redirect the function will return the target of the redirect.
-     *     Returns {@code null} if the url is invalid or not reachable.
+     * Returns {@code null} if the url is invalid or not reachable.
      */
     public static String validateUrl(String url) {
         try {

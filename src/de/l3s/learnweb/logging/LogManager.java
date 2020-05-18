@@ -216,8 +216,7 @@ public final class LogManager {
                     default:
                         break;
                 }
-            }
-            while (rs.next());
+            } while (rs.next());
 
             return summary;
         }

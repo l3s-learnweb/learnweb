@@ -321,7 +321,7 @@ public class SpeechRepositoryCrawler implements Runnable {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
         @SuppressWarnings("unused") // required for Learnweb.getInstance() to work properly inside .initialize() method
-            Learnweb learnweb = Learnweb.createInstance();
+        Learnweb learnweb = Learnweb.createInstance();
 
         SpeechRepositoryCrawler speechRepositoryCrawler = new SpeechRepositoryCrawler();
         speechRepositoryCrawler.initialize();

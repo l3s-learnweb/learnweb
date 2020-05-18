@@ -655,8 +655,8 @@ public class User implements Comparable<User>, Serializable, HasId {
 
     /**
      * @return The dateTime of the last recorded login event of the user. Returns the registration date if the user has never logged in.
-     *     Note that this value is cached. Call {@link #updateLoginDate() updateLoginDate} to update it. This is useful to control whether the
-     *     current or the penultimate login time is returned.
+     * Note that this value is cached. Call {@link #updateLoginDate() updateLoginDate} to update it. This is useful to control whether the
+     * current or the penultimate login time is returned.
      */
     public Instant getLastLoginDate() throws SQLException {
         if (null == lastLoginDate) {

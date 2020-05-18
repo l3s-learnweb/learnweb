@@ -11,11 +11,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * @author Philipp
+ * This script creates a placeholder so that we can identify language entries that have missing translations.
  *
- *     messages_xy.properties is used to store comments about translations
- *     But most of the translations don't have any comments yet. Because of this all language entries are marked as incomplete.
- *     This script creates a placeholder so that we can identify language entries that have missing translations.
+ * messages_xy.properties is used to store comments about translations
+ * But most of the translations don't have any comments yet. Because of this all language entries are marked as incomplete.
+ *
+ * @author Philipp
  */
 public class CreateCommentLangFile {
     private static final Logger log = LogManager.getLogger(CreateCommentLangFile.class);

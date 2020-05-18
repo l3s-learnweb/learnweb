@@ -38,14 +38,17 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.elements = new ArrayList<>();
     }
 
+    @Override
     public String getId() {
         return this.id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }
 
+    @Override
     public String getStyle() {
         return this.style;
     }
@@ -54,6 +57,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.style = style;
     }
 
+    @Override
     public String getStyleClass() {
         return this.styleClass;
     }
@@ -62,6 +66,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.styleClass = styleClass;
     }
 
+    @Override
     public String getIcon() {
         return this.icon;
     }
@@ -78,6 +83,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.iconPos = iconPos;
     }
 
+    @Override
     public String getLabel() {
         return this.label;
     }
@@ -86,6 +92,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.label = label;
     }
 
+    @Override
     public String getHref() {
         return href;
     }
@@ -102,6 +109,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.target = target;
     }
 
+    @Override
     public boolean isDisabled() {
         return this.disabled;
     }
@@ -110,6 +118,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.disabled = disabled;
     }
 
+    @Override
     public List<MenuElement> getElements() {
         return this.elements;
     }
@@ -123,6 +132,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         return elements == null ? 0 : elements.size();
     }
 
+    @Override
     public boolean isRendered() {
         return this.rendered;
     }
@@ -131,6 +141,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.rendered = rendered;
     }
 
+    @Override
     public boolean isExpanded() {
         return this.expanded;
     }
@@ -139,14 +150,17 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.expanded = expanded;
     }
 
+    @Override
     public Object getParent() {
         return null;
     }
 
+    @Override
     public String getClientId() {
         return this.id;
     }
 
+    @Override
     public String getOutcome() {
         return outcome;
     }
@@ -155,6 +169,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.outcome = outcome;
     }
 
+    @Override
     public boolean isIncludeViewParams() {
         return includeViewParams;
     }
@@ -163,6 +178,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.includeViewParams = includeViewParams;
     }
 
+    @Override
     public String getFragment() {
         return fragment;
     }
@@ -171,6 +187,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.fragment = fragment;
     }
 
+    @Override
     public boolean isDisableClientWindow() {
         return disableClientWindow;
     }
@@ -179,6 +196,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         this.disableClientWindow = disableClientWindow;
     }
 
+    @Override
     public Map<String, List<String>> getParams() {
         return params;
     }
@@ -203,6 +221,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
         }
     }
 
+    @Override
     public List<UIComponent> getChildren() {
         return Collections.emptyList();
     }

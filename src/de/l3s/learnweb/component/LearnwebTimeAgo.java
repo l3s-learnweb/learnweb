@@ -43,5 +43,3 @@ public class LearnwebTimeAgo extends UIComponentBase {
         writer.endElement("span");
     }
 }
-
-

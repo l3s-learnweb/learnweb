@@ -38,9 +38,8 @@ public class PrivacyStatementBean extends ApplicationBean implements Serializabl
     }
 
     /**
-     * @return True either if tracking is enabled for the given organization id or if no id was gives
-     *     the setting for the currently logged in user is returned. If the current user isn't
-     *     logged in it returns false
+     * @return True either if tracking is enabled for the given organization id or if no id was gives the setting for
+     * the currently logged in user is returned. If the current user isn't logged in it returns false
      */
     public boolean isTrackingEnabled() {
         return isTrackingEnabled;

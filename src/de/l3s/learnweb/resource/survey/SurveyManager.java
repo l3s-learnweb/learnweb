@@ -382,7 +382,8 @@ public class SurveyManager {
         if (question.getId() <= 0) {
             try (PreparedStatement insert = learnweb.getConnection().prepareStatement(
                 "INSERT INTO `lw_survey_question`(`deleted`, `survey_id`, `order`, `question`, `question_type`, `option`, `info`, `required`)"
-                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+                    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS)) {
                 insert.setInt(1, question.isDeleted() ? 1 : 0);
                 insert.setInt(2, question.getSurveyId());
                 insert.setInt(3, question.getOrder());

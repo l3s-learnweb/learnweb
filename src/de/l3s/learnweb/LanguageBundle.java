@@ -91,8 +91,7 @@ public class LanguageBundle extends ResourceBundle {
                     entry.setValue(newValue);
                 }
             }
-        }
-        while (replacedAtLeastOneConstant);
+        } while (replacedAtLeastOneConstant);
 
         setParent(null); // the entries have been copied -> release memory
     }

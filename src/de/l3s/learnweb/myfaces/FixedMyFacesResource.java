@@ -21,6 +21,7 @@ public class FixedMyFacesResource extends ResourceImpl {
         super(resourceMeta, resourceLoader, support, contentType, url, requestPath);
     }
 
+    @Override
     protected long getLastModified(FacesContext facesContext) {
         if (MyfacesConfig.getCurrentInstance(facesContext).isResourceCacheLastModified()) {
             Long lastModified = getResourceMeta().getLastModified();

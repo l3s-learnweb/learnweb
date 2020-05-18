@@ -191,7 +191,7 @@ public final class SolrClient {
         Collection<ResourceDocument> resourceDocuments = new ArrayList<>(batchSize);
         //long sendResources = 0;
 
-        for (int i = 0; ; i++) {
+        for (int i = 0; true; i++) {
             log.debug("Load page: " + i);
             List<Resource> resources = resourceManager.getResourcesAll(i, batchSize);
 

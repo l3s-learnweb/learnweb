@@ -76,7 +76,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         GROUP_LEADER
     }
 
-
     private int id;
     private int leaderUserId;
     private User leader;

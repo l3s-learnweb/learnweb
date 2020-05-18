@@ -477,8 +477,7 @@ public class TedManager {
             page++;
             log.debug("page: " + page + " total results: " + resources.size());
             // break;
-        }
-        while (!resources.isEmpty() && page < 25);
+        } while (!resources.isEmpty() && page < 25);
     }
 
     public void insertTedXTranscripts(String resourceIdAtService, int resourceId, JSONObject transcriptItem) throws JSONException, SQLException {

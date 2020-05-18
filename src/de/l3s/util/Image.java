@@ -232,11 +232,11 @@ public class Image {
      *
      * @param width Width of the resulting square
      * @param cropEdgesPct Specifies how much of an edge all around the square to crop,
-     *     which creates a zoom-in effect on the center of the resulting square. This may
-     *     be useful, given that when images are reduced to thumbnails, the detail of the
-     *     focus of the image is reduced. Specifying a value such as 0.1 may help preserve
-     *     this detail. You should experiment with it. The value must be between 0 and 0.5
-     *     (representing 0% to 50%)
+     * which creates a zoom-in effect on the center of the resulting square. This may
+     * be useful, given that when images are reduced to thumbnails, the detail of the
+     * focus of the image is reduced. Specifying a value such as 0.1 may help preserve
+     * this detail. You should experiment with it. The value must be between 0 and 0.5
+     * (representing 0% to 50%)
      * @return Image cropped and resized to a square; returns the same image if image is smaller than width parameter
      */
     public Image getResizedToSquare2(int width, double cropEdgesPct) {

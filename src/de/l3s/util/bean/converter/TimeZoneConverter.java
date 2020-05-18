@@ -13,10 +13,12 @@ public class TimeZoneConverter implements Converter {
     public TimeZoneConverter() {
     }
 
+    @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         return TimeZone.getTimeZone(value);
     }
 
+    @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         return TimeZone.getTimeZone(value.toString()).getID();
     }

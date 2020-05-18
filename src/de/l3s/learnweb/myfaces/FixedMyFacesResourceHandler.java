@@ -80,7 +80,9 @@ public class FixedMyFacesResourceHandler extends ResourceHandlerImpl {
         }
 
         if (resourceValue != null) {
-            resource = new FixedMyFacesResource(resourceValue.getResourceMeta(), resourceValue.getResourceLoader(), getResourceHandlerSupport(), contentType, resourceValue.getCachedInfo() != null ? resourceValue.getCachedInfo().getURL() : null, resourceValue.getCachedInfo() != null ? resourceValue.getCachedInfo().getRequestPath() : null);
+            resource = new FixedMyFacesResource(resourceValue.getResourceMeta(), resourceValue.getResourceLoader(),
+                getResourceHandlerSupport(), contentType, resourceValue.getCachedInfo() != null ? resourceValue.getCachedInfo().getURL() : null,
+                resourceValue.getCachedInfo() != null ? resourceValue.getCachedInfo().getRequestPath() : null);
         } else {
             boolean resolved = false;
             // Try preferred contract first
