@@ -342,11 +342,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             // TODO: remove it
             // PrimeFaces.current().ajax().update(":filters");
 
-            if(!StringHelper.empty(query))
-            {
-                logQuery(query, ""); //  searchFilters.toString()
-                logResources(paginator.getCurrentPage(), paginator.getPageIndex());
-            }
+            // if(!StringHelper.empty(query))
+            // {
+            //     logQuery(query, ""); //  searchFilters.toString()
+            //     logResources(paginator.getCurrentPage(), paginator.getPageIndex());
+            // }
         }
         catch(SQLException | IOException | SolrServerException e)
         {
