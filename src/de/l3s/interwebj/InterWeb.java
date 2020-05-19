@@ -104,7 +104,7 @@ public class InterWeb implements Serializable, Cloneable {
             resource = resource.queryParam(entry.getKey(), value);
         }
 
-        ClientResponse response = resource.get(ClientResponse.class);
+        ClientResponse response = resource.accept("application/xml").get(ClientResponse.class);
 
         if (response.getStatus() != 200) {
             String content = responseToString(response);
