@@ -123,7 +123,7 @@ public class InterWeb implements Serializable
             resource = resource.queryParam(key, value);
         }
 
-        ClientResponse response = resource.get(ClientResponse.class);
+        ClientResponse response = resource.accept("application/xml").get(ClientResponse.class);
 
         if(response.getStatus() != 200)
         {
