@@ -355,6 +355,7 @@ public class SolrSearch implements Serializable {
 
             ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
 
+            int resourceRank = (page - 1) * resultsPerPage;
             int skippedResources = 0;
             for (ResourceDocument resourceDocument : resourceDocuments) {
                 int resourceId = extractResourceId(resourceDocument.getId());
@@ -371,7 +372,8 @@ public class SolrSearch implements Serializable {
                     continue;
                 }
 
-                resources.add(createResourceDecorator(resource, queryResponse.getHighlighting().get(resourceDocument.getId())));
+                resources.add(createResourceDecorator(resource, resourceRank, queryResponse.getHighlighting().get(resourceDocument.getId())));
+                resourceRank += 1;
             }
 
             if (skippedResources > 0) {
@@ -439,10 +441,11 @@ public class SolrSearch implements Serializable {
         solrQuery.setFacetMinCount(1);
     }
 
-    private static ResourceDecorator createResourceDecorator(final Resource resource, final Map<String, List<String>> documentSnippets) {
+    private static ResourceDecorator createResourceDecorator(final Resource resource, final int resRank, final Map<String, List<String>> documentSnippets) {
         final ResourceDecorator decoratedResource = new ResourceDecorator(resource);
-        StringBuilder snippet = new StringBuilder();
+        final StringBuilder snippet = new StringBuilder();
 
+        decoratedResource.setRank(resRank);
         if (documentSnippets.get("title") != null) {
             decoratedResource.setTitle(documentSnippets.get("title").get(0));
         }
