@@ -60,16 +60,18 @@
 					<h:outputText value="#{userDetailBean.selectedUser.interest}" rendered="#{not empty userDetailBean.selectedUser.interest}"/>
 
 					<h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty userDetailBean.selectedUser.additionalInformation}"/>
-					<h:outputText value="#{userDetailBean.selectedUser.additionalInformation}" rendered="#{not empty userDetailBean.selectedUser.additionalInformation}"/>
+					<h:outputText value="#{userDetailBean.selectedUser.additionalInformation}"
+								  rendered="#{not empty userDetailBean.selectedUser.additionalInformation}"/>
 
 					<h:outputText value="#{msg.registered_since}:"/>
 					<h:outputText value="#{userDetailBean.selectedUser.registrationDate}">
 						<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
 					</h:outputText>
 				</p:panelGrid>
-			</p:panel>
+		  </p:panel>
 
-			<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{userDetailBean.selectedUser.username}">
+			<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{userDetailBean.selectedUser.username}"
+					 rendered="#{not empty userDetailBean.selectedUser.groups}">
 				<ul class="list-unstyled">
 					<ui:repeat var="g" value="#{userDetailBean.selectedUser.groups}">
 						<li>
