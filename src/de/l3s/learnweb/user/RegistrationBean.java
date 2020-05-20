@@ -108,21 +108,31 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
                 return "/lw/user/login.xhtml?faces-redirect=true";
             }
         } else {
-            user = getLearnweb().getUserManager().registerUser(fastLogin, null, null, course);
+            user = new User();
+            user.setUsername(fastLogin);
+            user.setEmail(null);
+            user.setPassword(null);
+
+            getLearnweb().getUserManager().registerUser(user, course);
             return LoginBean.loginUser(this, user);
         }
     }
 
     public String register() throws IOException, SQLException {
-        final User user = getLearnweb().getUserManager().registerUser(username, password, email, course);
+        final User user = new User();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(password);
+
+        user.setTimeZone(TimeZone.getTimeZone(timeZone.isEmpty() ? "Europa/Berlin" : timeZone));
+        user.setLocale(locale);
 
         if (StringUtils.isNotEmpty(studentId) || StringUtils.isNotEmpty(affiliation)) {
             user.setStudentId(studentId);
             user.setAffiliation(affiliation);
-            user.setTimeZone(TimeZone.getTimeZone(timeZone.isEmpty() ? "Europa/Berlin" : timeZone));
-            user.setLocale(locale);
-            user.save();
         }
+
+        getLearnweb().getUserManager().registerUser(user, course);
 
         log(Action.register, 0, 0, null, user);
         if (null != course && course.getDefaultGroupId() != 0) {

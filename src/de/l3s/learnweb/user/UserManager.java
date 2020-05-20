@@ -268,21 +268,18 @@ public class UserManager {
         }
     }
 
-    public User registerUser(String username, String password, String email, Course course) throws SQLException, IOException {
+    public User registerUser(final User user, Course course) throws SQLException, IOException {
         if (null == course) {
             course = learnweb.getCourseManager().getCourseByWizard("default");
         }
 
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
         user.setOrganisationId(course.getOrganisationId());
-        user.setPassword(password);
         user.setRegistrationDate(new Date());
         user.setPreferences(new HashMap<>());
-        // TODO: we should create it by first request, now when we create a user
+        // TODO: we should create it by first request, not when we create a user
         user.setImage(user.getDefaultImageIS());
-        user = save(user);
+
+        save(user);
 
         course.addUser(user);
         return user;
