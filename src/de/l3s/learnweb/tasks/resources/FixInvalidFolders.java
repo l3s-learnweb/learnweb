@@ -12,7 +12,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 
 /**
- * Find webpage resources that have no thumbnail and create it.
+ * Find resources with not existing folder_id.
  *
  * @author Kemkes
  */
