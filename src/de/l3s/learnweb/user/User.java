@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -17,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.TimeZone;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -117,7 +117,7 @@ public class User implements Comparable<User>, Serializable, HasId {
     private boolean moderator;
 
     private HashMap<String, String> preferences;
-    private TimeZone timeZone;
+    private ZoneId timeZone;
 
     // caches
     private transient List<Course> courses;
@@ -645,11 +645,11 @@ public class User implements Comparable<User>, Serializable, HasId {
         this.hashing = PasswordHashing.valueOf(hashing);
     }
 
-    public TimeZone getTimeZone() {
+    public ZoneId getTimeZone() {
         return timeZone;
     }
 
-    public void setTimeZone(TimeZone timeZone) {
+    public void setTimeZone(ZoneId timeZone) {
         this.timeZone = timeZone;
     }
 

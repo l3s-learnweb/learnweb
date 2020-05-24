@@ -3,8 +3,8 @@ package de.l3s.learnweb.user;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -124,7 +124,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         user.setEmail(email);
         user.setPassword(password);
 
-        user.setTimeZone(TimeZone.getTimeZone(timeZone.isEmpty() ? "Europa/Berlin" : timeZone));
+        user.setTimeZone(ZoneId.of(timeZone.isEmpty() ? "Europe/Berlin" : timeZone));
         user.setLocale(locale);
 
         if (StringUtils.isNotEmpty(studentId) || StringUtils.isNotEmpty(affiliation)) {
@@ -267,7 +267,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     public void setTimeZone(final String preferredTimeZone) {
-        this.timeZone = preferredTimeZone;
+        this.timeZone = preferredTimeZone.replaceAll("\"", "");
     }
 
 }

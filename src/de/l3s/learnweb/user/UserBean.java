@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
@@ -290,13 +289,13 @@ public class UserBean implements Serializable {
         return false;
     }
 
-    public TimeZone getTimeZone() {
+    public String getTimeZone() {
         User user = getUser();
         if (user == null) {
-            return TimeZone.getTimeZone("Europe/Berlin");
+            return "Europe/Berlin";
         }
 
-        return user.getTimeZone();
+        return user.getTimeZone().getId();
     }
 
     @Override

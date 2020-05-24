@@ -2,10 +2,11 @@ package de.l3s.learnweb.user;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -319,7 +320,9 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     }
 
     public List<String> getTimeZonesIds() {
-        return Arrays.asList(TimeZone.getAvailableIDs());
+        List<String> zoneList = new ArrayList<>(ZoneId.getAvailableZoneIds());
+        Collections.sort(zoneList);
+        return zoneList;
     }
 
     public User.NotificationFrequency[] getNotificationFrequencies() {
