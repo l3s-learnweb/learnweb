@@ -207,8 +207,8 @@
         <!--<module name="HiddenField"/> Changed: removed inspection -->
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <!--<module name="MagicNumber"/> Change: removed inspection -->
-        <module name="MissingSwitchDefault"/>
+        <!--<module name="MagicNumber"/> Changed: removed inspection -->
+        <!--<module name="MissingSwitchDefault"/> Changed: removed inspection -->
         <module name="MultipleVariableDeclarations"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
