@@ -14,9 +14,37 @@ import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User.NotificationFrequency;
+import de.l3s.util.database.IColumn;
 
 public class ForumManager {
     private static final Logger log = LogManager.getLogger(ForumManager.class);
+
+    enum POST_COLUMNS implements IColumn {
+        POST_ID,
+        DELETED,
+        TOPIC_ID,
+        USER_ID,
+        TEXT,
+        POST_TIME,
+        POST_EDIT_TIME,
+        POST_EDIT_COUNT,
+        POST_EDIT_USER_ID,
+        CATEGORY
+    };
+
+    enum TOPIC_COLUMNS implements IColumn {
+        TOPIC_ID,
+        GROUP_ID,
+        DELETED,
+        TOPIC_TITLE,
+        USER_ID,
+        TOPIC_TIME,
+        TOPIC_VIEWS,
+        TOPIC_REPLIES,
+        TOPIC_LAST_POST_ID,
+        TOPIC_LAST_POST_TIME,
+        TOPIC_LAST_POST_USER_ID
+    };
 
     private static final String POST_COLUMNS = "post_id, topic_id, user_id, text, post_time, post_edit_time, post_edit_count, post_edit_user_id, category";
     private static final String TOPIC_COLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id, topic_last_post_time, topic_last_post_user_id";
@@ -28,10 +56,11 @@ public class ForumManager {
     }
 
     /**
-     * returns all topic of the define group. Sorted by ORDER
+     * returns all topic of the defined group. Sorted by topic_last_post_time
      */
     public List<ForumTopic> getTopicsByGroup(int groupId) throws SQLException {
         LinkedList<ForumTopic> topics = new LinkedList<>();
+
         try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE group_id = ? ORDER BY topic_last_post_time DESC")) {
             select.setInt(1, groupId);
             ResultSet rs = select.executeQuery();
@@ -47,6 +76,7 @@ public class ForumManager {
      */
     public ForumTopic getTopicById(int topicId) throws SQLException {
         ForumTopic topic = null;
+
         try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE topic_id = ?")) {
             select.setInt(1, topicId);
             ResultSet rs = select.executeQuery();
@@ -114,6 +144,7 @@ public class ForumManager {
 
     public ForumTopic save(ForumTopic topic) throws SQLException {
         String sqlQuery = "REPLACE INTO `lw_forum_topic` (" + TOPIC_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?)";
+
         try (PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
             if (topic.getId() < 0) {
                 ps.setNull(1, java.sql.Types.INTEGER);
@@ -210,6 +241,7 @@ public class ForumManager {
         post.setEditCount(rs.getInt("post_edit_count"));
         post.setEditUserId(rs.getInt("post_edit_user_id"));
         post.setCategory(rs.getString("category"));
+
         return post;
     }
 
@@ -253,8 +285,6 @@ public class ForumManager {
                 break;
             case NEVER:
                 throw new IllegalArgumentException();
-            default:
-                log.error("Unknown notificationFrequency value {}", notificationFrequency);
         }
 
         List<ForumTopic> topics = new LinkedList<>();

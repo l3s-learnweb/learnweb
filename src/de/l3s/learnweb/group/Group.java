@@ -441,8 +441,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
                 return isLeader(user);
             case GROUP_LEADER_AND_FILE_OWNER:
                 return isLeader(user) || resource.getUserId() == user.getId();
-            default:
-                log.error("Unknown edit policy: {}", policyEdit);
         }
 
         throw new NotImplementedException("this should never happen");
@@ -478,8 +476,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
                 return getCourse().isMember(user);
             case NOBODY:
                 return false;
-            default:
-                log.error("Unknown join policy: {}", policyJoin);
         }
 
         throw new NotImplementedException("this should never happen");
@@ -503,8 +499,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
                 return isMember(user);
             case GROUP_LEADER:
                 return isLeader(user);
-            default:
-                log.error("Unknown view policy: {}", policyView);
         }
 
         return false;
@@ -528,8 +522,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
                 return isMember(user);
             case GROUP_LEADER:
                 return isLeader(user);
-            default:
-                log.error("Unknown annotate policy: {}", policyAnnotate);
         }
 
         return false;
