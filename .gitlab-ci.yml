@@ -14,20 +14,14 @@ lint:
   stage: lint
   tags:
     - javascript
+    - java
   script:
     - npm install --no-audit
     - npm run lint -s
+    - mvn $MAVEN_CLI_OPTS $MAVEN_CLI_QUIET checkstyle:check
   cache:
     paths:
       - node_modules/
-
-# Check for Java code style issues
-lint_java:
-  stage: lint
-  tags:
-    - java
-  script:
-    - mvn $MAVEN_CLI_OPTS $MAVEN_CLI_QUIET checkstyle:check
 
 # Run Java tests
 test:

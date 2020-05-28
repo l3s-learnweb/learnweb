@@ -19,7 +19,7 @@ import de.l3s.util.database.IColumn;
 public class ForumManager {
     private static final Logger log = LogManager.getLogger(ForumManager.class);
 
-    enum POST_COLUMNS implements IColumn {
+    enum PostColumns implements IColumn {
         POST_ID,
         DELETED,
         TOPIC_ID,
@@ -30,9 +30,9 @@ public class ForumManager {
         POST_EDIT_COUNT,
         POST_EDIT_USER_ID,
         CATEGORY
-    };
+    }
 
-    enum TOPIC_COLUMNS implements IColumn {
+    enum TopicColumns implements IColumn {
         TOPIC_ID,
         GROUP_ID,
         DELETED,
@@ -44,7 +44,7 @@ public class ForumManager {
         TOPIC_LAST_POST_ID,
         TOPIC_LAST_POST_TIME,
         TOPIC_LAST_POST_USER_ID
-    };
+    }
 
     private static final String POST_COLUMNS = "post_id, topic_id, user_id, text, post_time, post_edit_time, post_edit_count, post_edit_user_id, category";
     private static final String TOPIC_COLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id, topic_last_post_time, topic_last_post_user_id";
