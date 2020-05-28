@@ -18,9 +18,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
-import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.InterWeb;
-import de.l3s.interwebj.SearchQuery;
+import de.l3s.interwebj.model.SearchResponse;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -248,7 +247,7 @@ public class Search implements Serializable {
         return newResources;
     }
 
-    private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IOException, IllegalResponseException {
+    private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IOException, IllegalArgumentException {
         long start = System.currentTimeMillis();
 
         // Setup filters
@@ -283,20 +282,20 @@ public class Search implements Serializable {
             params.put("language", searchFilters.getFilterValue(FilterType.language));
         }
 
-        SearchQuery interwebResponse = interweb.search(query, params);
-        List<ResourceDecorator> interwebResults = interwebResponse.getResults();
-        log.debug("Interweb returned " + interwebResults.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
+        SearchResponse interwebResponse = interweb.search(query, params);
+        InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(interwebResponse);
+        log.debug("Interweb returned " + interwebResults.getResources().size() + " results in " + (System.currentTimeMillis() - start) + " ms");
 
         if (stopped) {
             return null;
         }
 
         if (page == 1) {
-            searchFilters.putResourceCounters(FilterType.service, interwebResponse.getResultCountPerService(), true);
-            searchFilters.setTotalResultsInterweb(interwebResponse.getTotalResultCount());
+            searchFilters.putResourceCounters(FilterType.service, interwebResults.getResultCountPerService(), true);
+            searchFilters.setTotalResultsInterweb(interwebResults.getTotalResults());
         }
 
-        if (interwebResults.isEmpty()) {
+        if (interwebResults.getResources().isEmpty()) {
             hasMoreInterwebResults = false;
         }
 
@@ -305,7 +304,7 @@ public class Search implements Serializable {
 
         LinkedList<ResourceDecorator> newResources = new LinkedList<>();
 
-        for (ResourceDecorator decoratedResource : interwebResults) {
+        for (ResourceDecorator decoratedResource : interwebResults.getResources()) {
             if (null == decoratedResource.getUrl()) {
                 log.warn("url is null: " + decoratedResource);
                 continue;

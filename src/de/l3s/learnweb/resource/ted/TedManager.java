@@ -1,6 +1,10 @@
 package de.l3s.learnweb.resource.ted;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,27 +16,17 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.ws.rs.core.MediaType;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.XML;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import de.l3s.interwebj.IllegalResponseException;
-import de.l3s.interwebj.SearchQuery;
+import de.l3s.interwebj.model.SearchResponse;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File;
@@ -41,6 +35,7 @@ import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.search.InterwebResultsWrapper;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.resource.ted.Transcript.Paragraph;
@@ -391,7 +386,7 @@ public class TedManager {
         return resource;
     }
 
-    public void fetchTedX() throws IOException, IllegalResponseException, SQLException {
+    public void fetchTedX() throws IOException, IllegalArgumentException, SQLException {
         ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
 
         //Group tedxGroup = learnweb.getGroupManager().getGroupById(921);
@@ -416,9 +411,10 @@ public class TedManager {
             //SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDx tedxtrento", params);
 
             //To fetch youtube videos from TED-Ed user
-            SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDEducation", params);
+            SearchResponse interwebResponse = learnweb.getInterweb().search("user::TEDEducation", params);
+            InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(interwebResponse);
             //log.debug(interwebResponse.getResultCountAtService());
-            resources = interwebResponse.getResults();
+            resources = interwebResults.getResources();
 
             for (ResourceDecorator decoratedResource : resources) {
                 Resource resource = decoratedResource.getResource();
@@ -480,10 +476,7 @@ public class TedManager {
         } while (!resources.isEmpty() && page < 25);
     }
 
-    public void insertTedXTranscripts(String resourceIdAtService, int resourceId, JSONObject transcriptItem) throws JSONException, SQLException {
-        String langCode = transcriptItem.getString("lang_code");
-        String langName = transcriptItem.getString("lang_translated");
-
+    public void insertTedXTranscripts(int resourceId, String resourceIdAtService, String langCode, String langName) throws SQLException {
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM `ted_transcripts_paragraphs` WHERE `resource_id` = ? AND `language` = ?");
         select.setInt(1, resourceId);
         select.setString(2, langCode);
@@ -493,13 +486,11 @@ public class TedManager {
             return; // transcript is already part of the database
         }
 
-        ClientResponse resp = getTedxData("http://video.google.com/timedtext?lang=" + langCode + "&v=", resourceIdAtService);
-        if (resp.getStatus() != 200 || resp.getLength() == 0) {
+        String respXml = getTedxData("https://www.youtube.com/api/timedtext?lang=" + langCode + "&v=" + resourceIdAtService);
+        if (respXml == null) {
             log.info("Transcript :" + langCode + " for resource ID: " + resourceIdAtService + " does not exist.");
-            return; //no transcript available for this language code
+            return; // no transcript available for this language code
         }
-
-        JSONObject transcriptJSON = XML.toJSONObject(resp.getEntity(String.class));
 
         PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("REPLACE INTO `ted_transcripts_lang_mapping`(`language_code`,`language`) VALUES (?,?)");
         pStmt2.setString(1, langCode);
@@ -511,58 +502,59 @@ public class TedManager {
         pStmt3.setInt(1, resourceId);
         pStmt3.setString(2, langCode);
 
-        JSONObject transcript = transcriptJSON.getJSONObject("transcript");
-        JSONArray text = transcript.getJSONArray("text");
-        for (int j = 0, len = text.length(); j < len; j++) {
-            JSONObject contentObject = text.getJSONObject(j);
-            String paragraph = contentObject.getString("content").replace("\n", " ");
-            double startTime = contentObject.getDouble("start");
-            int startTimeInt = (int) (startTime * 1000);
+        Document doc = Jsoup.parse(respXml, "", Parser.xmlParser());
+        Elements texts = doc.select("transcript text");
 
-            pStmt3.setInt(3, startTimeInt);
-            pStmt3.setString(4, paragraph);
-            pStmt3.addBatch();
+        if (!texts.isEmpty()) {
+            for (Element text : texts) {
+                double start = Double.parseDouble(text.attr("start"));
+                // double duration = Double.parseDouble(text.attr("dur"));
+                String paragraph = text.text().replace("\n", " ");
+
+                pStmt3.setInt(3, (int) (start * 1000));
+                pStmt3.setString(4, paragraph);
+                pStmt3.addBatch();
+            }
         }
+
         pStmt3.executeBatch();
         pStmt3.close();
     }
 
     public void fetchTedXTranscripts(String resourceIdAtService, int resourceId) throws SQLException {
-        ClientResponse resp = getTedxData("http://video.google.com/timedtext?type=list&v=", resourceIdAtService);
-
-        if (resp.getStatus() != 200) {
-            log.error("Failed to get list of transcripts for video: " + resourceIdAtService + "and HTTP error code : " + resp.getStatus());
-            return;
+        String respXml = getTedxData("https://www.youtube.com/api/timedtext?type=list&v=" + resourceIdAtService);
+        if (respXml == null) {
+            log.error("Failed to get list of transcripts for video: {}", resourceIdAtService);
+            return; // no transcript available for this language code
         }
 
-        String response = resp.getEntity(String.class);
+        Document doc = Jsoup.parse(respXml, "", Parser.xmlParser());
+        Elements tracks = doc.select("transcript_list track");
 
-        try {
-            JSONObject xmlJSONObj = XML.toJSONObject(response);
-            JSONObject transcriptList = xmlJSONObj.getJSONObject("transcript_list");
-            Object track = transcriptList.get("track");
+        if (!tracks.isEmpty()) {
+            for (Element track : tracks) {
+                String langCode = track.attr("lang_code");
+                String langName = track.attr("lang_translated");
 
-            if (track instanceof JSONArray) {
-                JSONArray trackJSONArray = (JSONArray) track;
-                for (int i = 0, len = trackJSONArray.length(); i < len; i++) {
-                    insertTedXTranscripts(resourceIdAtService, resourceId, trackJSONArray.getJSONObject(i));
-                }
-            } else {
-                insertTedXTranscripts(resourceIdAtService, resourceId, (JSONObject) track);
-
+                insertTedXTranscripts(resourceId, resourceIdAtService, langCode, langName);
             }
-        } catch (JSONException e) {
-            log.error(e);
         }
     }
 
-    public ClientResponse getTedxData(String url, String videoId) {
-        Client tedxClient = Client.create();
-        WebResource web = tedxClient.resource(url + videoId);
+    public static String getTedxData(String url) {
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).header("Accept", "application/xml").build();
+            HttpResponse<String> resp = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+            if (resp.statusCode() == 200 && !resp.body().isEmpty()) {
+                return resp.body();
+            }
+        } catch (IOException | InterruptedException e) {
+            log.error("Unexpected error during request for transcript", e);
+        }
 
-        return resp;
+        return null;
     }
 
     //Remove duplicate TED Resources from group 862 starting from the resourceId
@@ -628,7 +620,7 @@ public class TedManager {
         pStmt.close();
     }
 
-    public static void main(String[] args) throws IOException, IllegalResponseException, SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         Learnweb lw = Learnweb.createInstance();
         TedManager tm = lw.getTedManager();
         tm.removeDuplicateTEDResources(215353);

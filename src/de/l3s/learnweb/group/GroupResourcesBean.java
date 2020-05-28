@@ -20,10 +20,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.omnifaces.util.Beans;
 import org.primefaces.model.TreeNode;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -332,9 +334,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
                     break;
                 case "move":
                     if (params.containsKey("destination")) {
-                        JSONObject dest = new JSONObject(params.get("destination"));
-                        int targetGroupId = dest.isNull("groupId") ? group.getId() : dest.getInt("groupId");
-                        int targetFolderId = dest.isNull("folderId") ? 0 : dest.getInt("folderId");
+                        JsonObject dest = JsonParser.parseString(params.get("destination")).getAsJsonObject();
+                        int targetGroupId = dest.has("groupId") ? group.getId() : dest.get("groupId").getAsInt();
+                        int targetFolderId = dest.has("folderId") ? 0 : dest.get("folderId").getAsInt();
                         this.moveResources(items, targetGroupId, targetFolderId);
                         break;
                     }
@@ -361,7 +363,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             log.error(e.getMessage(), e);
             // TODO still need to decide if growls can be used to handle errors
             // addErrorGrowl(e.getMessage(), e);
-        } catch (JSONException | SQLException e) {
+        } catch (JsonParseException | SQLException e) {
             addErrorMessage(e);
         }
     }

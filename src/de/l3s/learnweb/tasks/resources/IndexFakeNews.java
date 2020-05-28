@@ -13,7 +13,9 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -112,26 +114,26 @@ public class IndexFakeNews {
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
 
-            JSONObject jsonObject = new JSONObject(new FileReader(file, StandardCharsets.UTF_8));
+            JsonObject jsonObject = JsonParser.parseReader(new FileReader(file, StandardCharsets.UTF_8)).getAsJsonObject();
 
-            String title = (String) jsonObject.get("Fact Check");
+            String title = jsonObject.get("Fact Check").getAsString();
             if (StringUtils.isEmpty(title)) {
-                title = (String) jsonObject.get("Claim");
+                title = jsonObject.get("Claim").getAsString();
             }
             if (StringUtils.isEmpty(title)) {
-                title = ((String) jsonObject.get("Claim_ID")).replace("-", " ");
+                title = jsonObject.get("Claim_ID").getAsString().replace("-", " ");
             }
             resource.setTitle(title);
 
-            String origins = (String) jsonObject.get("Origins");
-            String description = (String) jsonObject.get("Description");
+            String origins = jsonObject.get("Origins").getAsString();
+            String description = jsonObject.get("Description").getAsString();
             description += "\n" + origins;
             resource.setDescription(description);
 
-            String machineDescription = (String) jsonObject.get("Example");
+            String machineDescription = jsonObject.get("Example").getAsString();
             resource.setMachineDescription(machineDescription);
 
-            String url = (String) jsonObject.get("URL");
+            String url = jsonObject.get("URL").getAsString();
             if (!url.startsWith("http")) {
                 url = "http://" + url;
             }
@@ -141,7 +143,7 @@ public class IndexFakeNews {
 
             log.debug("Added resource: " + resource);
             /*
-            String tags = (String) jsonObject.get("Tags");
+            String tags = jsonObject.get("Tags").getAsString();
             for(String tag : tags.split(";"))
                 resource.addTag(tag, user);
             */

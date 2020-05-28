@@ -2,6 +2,10 @@ package de.l3s.learnweb.resource.archive;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -22,11 +27,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -195,19 +195,25 @@ public final class ArchiveUrlManager {
             String archiveURL = null;
             String mementoDateString = null;
             try {
-                Client client = Client.create();
-                WebResource webResource = client.resource(archiveSaveURL + resource.getUrl());
-                ClientResponse response = webResource.get(ClientResponse.class);
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(archiveSaveURL + resource.getUrl()))
+                    .header("Accept", "application/xml")
+                    .build();
 
-                if (response.getStatus() == HttpURLConnection.HTTP_OK) {
-                    if (response.getHeaders().containsKey("Content-Location")) {
-                        archiveURL = "http://web.archive.org" + response.getHeaders().getFirst("Content-Location");
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() == HttpURLConnection.HTTP_OK) {
+                    Optional<String> contentLocation = response.headers().firstValue("Content-Location");
+                    if (contentLocation.isPresent()) {
+                        archiveURL = "http://web.archive.org" + contentLocation.get();
                     } else {
                         log.debug("Content Location not found");
                     }
 
-                    if (response.getHeaders().containsKey("X-Archive-Orig-Date")) {
-                        mementoDateString = response.getHeaders().getFirst("X-Archive-Orig-Date");
+                    Optional<String> archiveOrigDate = response.headers().firstValue("X-Archive-Orig-Date");
+                    if (archiveOrigDate.isPresent()) {
+                        mementoDateString = archiveOrigDate.get();
                     } else {
                         log.debug("X-Archive-Orig-Date not found");
                     }
@@ -231,14 +237,15 @@ public final class ArchiveUrlManager {
                     prepStmt.close();
 
                     resource.addArchiveUrl(null); // TODO
-                } else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
-                    if (response.getHeaders().containsKey("X-Archive-Wayback-Liveweb-Error")) {
-                        if (response.getHeaders().getFirst("X-Archive-Wayback-Liveweb-Error").equalsIgnoreCase("RobotAccessControlException: Blocked By Robots")) {
+                } else if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+                    Optional<String> livewebError = response.headers().firstValue("X-Archive-Wayback-Liveweb-Error");
+                    if (livewebError.isPresent()) {
+                        if (livewebError.get().equalsIgnoreCase("RobotAccessControlException: Blocked By Robots")) {
                             return "ROBOTS_ERROR";
                         }
                     }
 
-                    log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId() + "; Response: " + InterWeb.responseToString(response));
+                    log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId() + "; Response: " + response.body());
                     return "GENERIC_ERROR";
                 }
             } catch (SQLException e) {

@@ -19,10 +19,12 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.RateEvent;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -171,51 +173,51 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
      * The method is used from JS in resource_view_archive_timeline.xhtml.
      */
     public String getArchiveTimelineJsonData() { // TODO move this and all other archive related methods to new WebResourceBean
-        JSONArray highChartsData = new JSONArray();
+        JsonArray highChartsData = new JsonArray();
         try {
             List<TimelineData> timelineMonthlyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByMonth(resource.getId(), resource.getUrl());
 
             for (TimelineData timelineData : timelineMonthlyData) {
-                JSONArray innerArray = new JSONArray();
-                innerArray.put(timelineData.getTimestamp().getTime());
-                innerArray.put(timelineData.getNumberOfVersions());
-                highChartsData.put(innerArray);
+                JsonArray innerArray = new JsonArray();
+                innerArray.add(timelineData.getTimestamp().getTime());
+                innerArray.add(timelineData.getNumberOfVersions());
+                highChartsData.add(innerArray);
             }
         } catch (SQLException e) {
             log.error("Error while fetching the archive data aggregated by month for a resource", e);
             addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
         }
-        return highChartsData.toString();
+        return new Gson().toJson(highChartsData);
     }
 
     /**
      * The method is used from JS in resource_view_archive_timeline.xhtml.
      */
     public String getArchiveCalendarJsonData() {
-        JSONObject archiveDates = new JSONObject();
+        JsonObject archiveDates = new JsonObject();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             List<TimelineData> timelineDailyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByDay(resource.getId(), resource.getUrl());
             for (TimelineData timelineData : timelineDailyData) {
-                JSONObject archiveDay = new JSONObject();
-                archiveDay.put("number", timelineData.getNumberOfVersions());
-                archiveDay.put("badgeClass", "badge-warning");
+                JsonObject archiveDay = new JsonObject();
+                archiveDay.addProperty("number", timelineData.getNumberOfVersions());
+                archiveDay.addProperty("badgeClass", "badge-warning");
                 List<ArchiveUrl> archiveUrlsData = getLearnweb().getTimelineManager().getArchiveUrlsByResourceIdAndTimestamp(resource.getId(), timelineData.getTimestamp(), resource.getUrl());
-                JSONArray archiveVersions = new JSONArray();
+                JsonArray archiveVersions = new JsonArray();
                 for (ArchiveUrl archiveUrl : archiveUrlsData) {
-                    JSONObject archiveVersion = new JSONObject();
-                    archiveVersion.put("url", archiveUrl.getArchiveUrl());
-                    archiveVersion.put("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
-                    archiveVersions.put(archiveVersion);
+                    JsonObject archiveVersion = new JsonObject();
+                    archiveVersion.addProperty("url", archiveUrl.getArchiveUrl());
+                    archiveVersion.addProperty("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
+                    archiveVersions.add(archiveVersion);
                 }
-                archiveDay.put("dayEvents", archiveVersions);
-                archiveDates.put(dateFormat.format(timelineData.getTimestamp()), archiveDay);
+                archiveDay.add("dayEvents", archiveVersions);
+                archiveDates.add(dateFormat.format(timelineData.getTimestamp()), archiveDay);
             }
         } catch (SQLException e) {
             log.error("Error while fetching the archive data aggregated by day for a resource", e);
             addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
         }
-        return archiveDates.toString();
+        return new Gson().toJson(archiveDates);
     }
 
     /**
@@ -234,13 +236,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
      */
     public String getMonthNames() {
         DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
-        JSONArray monthNames = new JSONArray();
+        JsonArray monthNames = new JsonArray();
         for (String month : symbols.getMonths()) {
             if (!month.isBlank()) {
-                monthNames.put(month);
+                monthNames.add(month);
             }
         }
-        return monthNames.toString();
+        return new Gson().toJson(monthNames);
     }
 
     /**
@@ -249,13 +251,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
      */
     public String getShortMonthNames() {
         DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
-        JSONArray monthNames = new JSONArray();
+        JsonArray monthNames = new JsonArray();
         for (String month : symbols.getShortMonths()) {
             if (!month.isBlank()) {
-                monthNames.put(month);
+                monthNames.add(month);
             }
         }
-        return monthNames.toString();
+        return new Gson().toJson(monthNames);
     }
 
     @SuppressWarnings("unused")

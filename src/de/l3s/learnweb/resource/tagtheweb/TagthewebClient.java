@@ -21,7 +21,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -59,14 +61,14 @@ public class TagthewebClient {
         Map<String, Double> categories = new HashMap<>();
         String jsonResults = requestCategories(text, language);
         if (jsonResults != null) {
-            JSONObject resultsJson = new JSONObject(jsonResults);
+            JsonObject resultsJson = JsonParser.parseString(jsonResults).getAsJsonObject();
             for (String key : resultsJson.keySet()) {
-                double value = resultsJson.getDouble(key);
+                double value = resultsJson.get(key).getAsDouble();
                 if (value > 0.0d) {
                     categories.put(key, value);
                 }
             }
-            log.info("TagTheWeb returned " + resultsJson.length() + " categories (" + categories.size() + " non-zero) for text: " + text);
+            log.info("TagTheWeb returned " + resultsJson.size() + " categories (" + categories.size() + " non-zero) for text: " + text);
         }
         return categories;
     }

@@ -18,9 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -30,7 +32,6 @@ import de.l3s.learnweb.resource.Resource.ResourceViewRights;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
 
 /**
@@ -132,8 +133,8 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     public void actionUpdateSelectedItems() {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String action = params.get("action");
-        JSONArray items = new JSONArray(params.get("items"));
-        if (items.length() > selectedSubmission.getNoOfResources()) {
+        JsonArray items = JsonParser.parseString(params.get("items")).getAsJsonArray();
+        if (items.size() > selectedSubmission.getNoOfResources()) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "submission.resource_limit_exceeded", selectedSubmission.getNoOfResources());
             return;
         }
@@ -154,7 +155,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                     log.error("Unsupported action: " + action);
                     break;
             }
-        } catch (JSONException e) {
+        } catch (JsonParseException e) {
             log.error("Exception while parsing items in actionUpdateSelectedItems", e);
         }
     }
@@ -229,15 +230,15 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
         }
     }
 
-    private void actionRemoveItems(JSONArray objects) {
+    private void actionRemoveItems(JsonArray objects) {
         try {
-            for (int i = 0, len = objects.length(); i < len; ++i) {
-                JSONObject item = objects.getJSONObject(i);
+            for (int i = 0, len = objects.size(); i < len; ++i) {
+                JsonObject item = objects.get(i).getAsJsonObject();
 
-                String itemType = item.getString("itemType");
-                int itemId = StringHelper.parseInt(item.getString("itemId"), -1);
+                String itemType = item.get("itemType").getAsString();
+                int itemId = item.get("itemId").getAsInt();
 
-                if (itemType != null && itemType.equals("resource") && itemId > 0) {
+                if ("resource".equals(itemType) && itemId > 0) {
                     Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                     if (resource != null && selectedResources.contains(resource)) {
                         selectedResources.remove(resource);
@@ -249,22 +250,20 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 }
             }
 
-        } catch (NullPointerException | JSONException | SQLException e) {
+        } catch (NullPointerException | JsonParseException | SQLException e) {
             log.error("Exception while parsing selected items in actionRemoveItems", e);
         }
 
     }
 
-    private void actionAddSelectedItems(JSONArray objects) {
+    private void actionAddSelectedItems(JsonArray objects) {
         try {
-            for (int i = 0, len = objects.length(); i < len; ++i) {
-                JSONObject item = objects.getJSONObject(i);
-                String itemType = item.getString("itemType");
+            for (int i = 0, len = objects.size(); i < len; ++i) {
+                JsonObject item = objects.get(i).getAsJsonObject();
+                String itemType = item.get("itemType").getAsString();
 
-                /*int itemId = StringHelper.parseInt(item.getString("itemId"), -1);*/
-
-                int itemId = item.getInt("itemId");
-                if (itemType != null && itemType.equals("resource") && itemId > 0) {
+                int itemId = item.get("itemId").getAsInt();
+                if ("resource".equals(itemType) && itemId > 0) {
                     Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                     if (resource != null && !selectedResources.contains(resource)) {
                         selectedResources.add(resource);
@@ -272,7 +271,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 }
             }
 
-        } catch (NullPointerException | JSONException | SQLException e) {
+        } catch (NullPointerException | JsonParseException | SQLException e) {
             log.error("Exception while parsing selected items in actionAddSelectedItems", e);
         }
     }

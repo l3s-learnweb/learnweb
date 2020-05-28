@@ -17,8 +17,6 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.interwebj.jaxb.SearchResultEntity;
-import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
@@ -824,81 +822,4 @@ public class ResourceManager {
                 return new Resource();
         }
     }
-
-    public static Resource getResourceFromInterwebResult(SearchResultEntity searchResult) {
-        Resource resource = new Resource();
-        resource.setType(ResourceType.valueOf(searchResult.getType()));
-        resource.setTitle(searchResult.getTitle());
-        resource.setLocation(searchResult.getService());
-        resource.setSource(searchResult.getService());
-        //resource.setViews(searchResult.getNumberOfViews());
-        resource.setIdAtService(searchResult.getIdAtService());
-        resource.setDuration(searchResult.getDuration());
-        resource.setDescription(searchResult.getDescription());
-        resource.setUrl(StringHelper.urlDecode(searchResult.getUrl()));
-
-        if (resource.getTitle().equals(resource.getDescription())) { // delete description when equal to title
-            resource.setDescription("");
-        }
-
-        if (resource.getSource() == ResourceService.slideshare) {
-            resource.setEmbeddedRaw(searchResult.getEmbeddedSize4());
-            if (null == resource.getEmbeddedRaw()) {
-                resource.setEmbeddedRaw(searchResult.getEmbeddedSize3());
-            }
-        }
-
-        ThumbnailEntity biggestThumbnail = null;
-        int biggestThumbnailHeight = 0;
-
-        List<ThumbnailEntity> thumbnails = searchResult.getThumbnailEntities();
-
-        for (ThumbnailEntity thumbnailElement : thumbnails) {
-            String url = thumbnailElement.getUrl();
-
-            int height = thumbnailElement.getHeight();
-            int width = thumbnailElement.getWidth();
-
-            if (height > biggestThumbnailHeight) {
-                biggestThumbnailHeight = height;
-                biggestThumbnail = thumbnailElement;
-            }
-            // ipernity api doesn't return largest available thumbnail, so we have to guess it
-            if (searchResult.getService().equals("Ipernity") && url.contains(".560.")) {
-                if (width == 560 || height == 560) {
-                    double ratio = 640.0 / 560.0;
-                    width *= ratio;
-                    height *= ratio;
-
-                    url = url.replace(".560.", ".640.");
-                }
-            }
-
-            Thumbnail thumbnail = new Thumbnail(url, width, height);
-
-            if (thumbnail.getHeight() <= 100 && thumbnail.getWidth() <= 100) {
-                resource.setThumbnail0(thumbnail);
-            } else if (thumbnail.getHeight() < 170 && thumbnail.getWidth() < 170) {
-                thumbnail = thumbnail.resize(120, 100);
-                resource.setThumbnail1(thumbnail);
-            } else if (thumbnail.getHeight() < 500 && thumbnail.getWidth() < 500) {
-                resource.setThumbnail2(thumbnail.resize(300, 220));
-            } else { // if (thumbnail.getHeight() < 600 && thumbnail.getWidth() < 600)
-                resource.setThumbnail4(thumbnail);
-            }
-        }
-
-        // remove old bing images first
-        if (biggestThumbnail != null) {
-            resource.setMaxImageUrl(biggestThumbnail.getUrl());
-
-            if (resource.getThumbnail2() == null) {
-                resource.setThumbnail2(new Thumbnail(biggestThumbnail.getUrl(), biggestThumbnail.getWidth(), biggestThumbnail.getHeight()));
-            }
-        } else if (!searchResult.getType().equals("website")) {
-            log.warn("no image url for: " + searchResult);
-        }
-        return resource;
-    }
-
 }

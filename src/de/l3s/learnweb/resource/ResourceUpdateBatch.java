@@ -6,8 +6,10 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.GroupManager;
@@ -41,11 +43,11 @@ public class ResourceUpdateBatch {
         GroupManager groupManager = Learnweb.getInstance().getGroupManager();
         ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
 
-        JSONArray items = new JSONArray(json);
-        for (int i = 0, len = items.length(); i < len; ++i) {
-            JSONObject object = items.getJSONObject(i);
-            String itemType = object.getString("itemType");
-            int itemId = object.getInt("itemId");
+        JsonArray items = JsonParser.parseString(json).getAsJsonArray();
+        for (int i = 0, len = items.size(); i < len; ++i) {
+            JsonObject object = items.get(i).getAsJsonObject();
+            String itemType = object.get("itemType").getAsString();
+            int itemId = object.get("itemId").getAsInt();
 
             if ("resource".equals(itemType)) {
                 Resource resource = resourceManager.getResource(itemId);

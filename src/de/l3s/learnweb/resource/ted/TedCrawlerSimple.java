@@ -15,14 +15,17 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -69,19 +72,19 @@ public class TedCrawlerSimple implements Runnable {
 
             InputStream inputStream = new URL("https://www.ted.com/talks/" + tedId + "/transcript.json?language=" + language).openStream();
             String transcriptJSONStr = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-            JSONObject transcriptJSONObj = new JSONObject(transcriptJSONStr);
-            JSONArray paragraphs = (JSONArray) transcriptJSONObj.get("paragraphs");
+            JsonObject transcriptJsonObj = JsonParser.parseString(transcriptJSONStr).getAsJsonObject();
+            JsonArray paragraphs = transcriptJsonObj.get("paragraphs").getAsJsonArray();
 
-            for (Object paragraph1 : paragraphs) {
-                JSONObject paragraph = (JSONObject) paragraph1;
+            for (JsonElement paragraph1 : paragraphs) {
+                JsonObject paragraph = paragraph1.getAsJsonObject();
                 //'cues' is a json array to split the paragraph into text segments to highlight in parallel while watching the video
-                JSONArray cues = (JSONArray) paragraph.get("cues");
-                JSONObject firstCue = (JSONObject) cues.get(0);
-                long startTime = (long) firstCue.get("time");
-                StringBuilder paragraphText = new StringBuilder((String) firstCue.get("text"));
-                for (int j = 1, len = cues.length(); j < len; j++) {
-                    JSONObject cue = (JSONObject) cues.get(j);
-                    paragraphText.append(" ").append(cue.get("text"));
+                JsonArray cues = paragraph.get("cues").getAsJsonArray();
+                JsonObject firstCue = cues.get(0).getAsJsonObject();
+                long startTime = firstCue.get("time").getAsLong();
+                StringBuilder paragraphText = new StringBuilder(firstCue.get("text").getAsString());
+                for (int j = 1, len = cues.size(); j < len; j++) {
+                    JsonObject cue = cues.get(j).getAsJsonObject();
+                    paragraphText.append(" ").append(cue.get("text").getAsString());
                 }
                 paragraphText = new StringBuilder(paragraphText.toString().replace("\n", " "));
                 //log.info("start time: " + startTime + " paragraph: " + paragraphText);
@@ -93,7 +96,7 @@ public class TedCrawlerSimple implements Runnable {
             pStmt.close();
         } catch (IOException e) {
             log.warn("Error while fetching transcript (" + language + ") for ted talk: " + resourceId, e);
-        } catch (JSONException e) {
+        } catch (JsonParseException e) {
             log.error("Error while parsing transcript json for ted talk: " + resourceId + " and language: " + language, e);
         } catch (SQLException e) {
             log.error("Error while inserting transcript for ted talk: " + resourceId + " and language: " + language, e);

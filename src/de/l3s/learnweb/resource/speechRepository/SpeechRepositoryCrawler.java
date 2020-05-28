@@ -15,11 +15,14 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -143,21 +146,21 @@ public class SpeechRepositoryCrawler implements Runnable {
             if (scriptData != null && !scriptData.isEmpty() && scriptData.contains("jQuery.extend(Drupal.settings")) {
                 scriptData = scriptData.substring(scriptData.indexOf('{'), scriptData.lastIndexOf('}') + 1);
 
-                JSONObject jsonObject = new JSONObject(scriptData);
-                JSONObject mediaPlayer = jsonObject.getJSONObject("ecspTranscodingPlayers").getJSONObject("ecsp-media-player");
+                JsonObject jsonObject = JsonParser.parseString(scriptData).getAsJsonObject();
+                JsonObject mediaPlayer = jsonObject.getAsJsonObject("ecspTranscodingPlayers").getAsJsonObject("ecsp-media-player");
 
                 if (mediaPlayer.has("image")) {
-                    speechEntity.setImageLink(mediaPlayer.getString("image"));
+                    speechEntity.setImageLink(mediaPlayer.get("image").getAsString());
                 }
 
                 if (mediaPlayer.has("entity_id")) {
-                    speechEntity.setId(mediaPlayer.getString("entity_id"));
+                    speechEntity.setId(mediaPlayer.get("entity_id").getAsString());
                 }
 
-                for (Object source : mediaPlayer.getJSONArray("sources")) {
-                    JSONObject objectSource = (JSONObject) source;
-                    if (!"auto".equals(objectSource.getString("label"))) {
-                        speechEntity.setVideoLink(objectSource.getString("file"));
+                for (JsonElement source : mediaPlayer.getAsJsonArray("sources")) {
+                    JsonObject objectSource = source.getAsJsonObject();
+                    if (!"auto".equals(objectSource.get("label").getAsString())) {
+                        speechEntity.setVideoLink(objectSource.get("file").getAsString());
                         break;
                     }
                 }

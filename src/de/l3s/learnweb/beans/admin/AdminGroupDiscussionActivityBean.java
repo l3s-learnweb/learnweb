@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +24,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
@@ -94,32 +96,32 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
             HttpEntity entity = response.getEntity();
             String responseString = EntityUtils.toString(entity, "UTF-8");
 
-            //Processing
-            JSONObject jsonResponse = new JSONObject(responseString);
-            JSONArray rows = jsonResponse.getJSONArray("rows");
+            // Processing
+            JsonObject jsonResponse = JsonParser.parseString(responseString).getAsJsonObject();
+            JsonArray rows = jsonResponse.getAsJsonArray("rows");
 
-            for (int i = 0, len = rows.length(); i < len; i++) {
-                groupAnnotations.add(processJson(rows.getJSONObject(i)));
+            for (JsonElement row : rows) {
+                groupAnnotations.add(processJson(row.getAsJsonObject()));
             }
-        } catch (IOException | URISyntaxException | JSONException | ParseException | SQLException e) {
+        } catch (IOException | URISyntaxException | JsonParseException | SQLException e) {
             addErrorMessage(e);
         }
 
     }
 
-    private AnnotationEntity processJson(JSONObject row) throws JSONException, ParseException {
+    private AnnotationEntity processJson(JsonObject row) {
         log.debug(row.toString());
 
-        String name = row.getString("user");
+        String name = row.get("user").getAsString();
         Matcher matcher = USERNAME_PATTERN.matcher(name);
         if (matcher.find()) {
             name = matcher.group(1);
         }
 
-        String url = row.getString("uri");
-        String text = StringUtils.abbreviate(row.getString("text"), 100);
+        String url = row.get("uri").getAsString();
+        String text = StringUtils.abbreviate(row.get("text").getAsString(), 100);
 
-        String timeJSON = row.getString("created");
+        String timeJSON = row.get("created").getAsString();
         String time;
 
         matcher = DATE_PATTERN.matcher(timeJSON);
@@ -129,11 +131,11 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
             time = timeJSON;
         }
 
-        JSONArray target = row.getJSONArray("target");
+        JsonArray target = row.getAsJsonArray("target");
         String snippet;
 
-        if (target.length() > 1) {
-            snippet = target.getJSONArray(1).getJSONObject(3).getString("exact");
+        if (target.size() > 1) {
+            snippet = target.get(1).getAsJsonArray().get(3).getAsJsonObject().get("exact").getAsString();
             snippet = StringUtils.abbreviate(snippet, 100);
         } else {
             snippet = "";

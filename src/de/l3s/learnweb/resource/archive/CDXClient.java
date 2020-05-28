@@ -170,7 +170,7 @@ public class CDXClient {
 
             url = url.substring(url.indexOf("//") + 2); // remove leading http(s)://
             log.debug("Getting wayback captures for: " + url);
-            response = IOUtils.readLines(new URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp").openStream(), "UTF-8");
+            response = IOUtils.readLines(new URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp").openStream(), StandardCharsets.UTF_8);
 
             if (response == null || response.isEmpty()) {
                 log.debug("No Captures for: " + url);

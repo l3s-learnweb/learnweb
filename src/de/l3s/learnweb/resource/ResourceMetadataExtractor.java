@@ -14,12 +14,14 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
@@ -166,13 +168,13 @@ public class ResourceMetadataExtractor {
                 resource.setTranscript(resource.getMachineDescription());
 
             }
-        } catch (JSONException | IOException e) {
+        } catch (JsonParseException | IOException e) {
             resource.setOnlineStatus(OnlineStatus.UNKNOWN); // most probably offline
             log.error("Can't get more details about resource (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
         }
     }
 
-    private void processSpeechRepositoryResource(Resource resource) throws IOException, JSONException {
+    private void processSpeechRepositoryResource(Resource resource) throws IOException, JsonParseException {
         Document document = Jsoup.connect(resource.getUrl()).get();
         Element content = document.select("#content > .content-inner").first();
 
@@ -226,23 +228,23 @@ public class ResourceMetadataExtractor {
             if (scriptData != null && !scriptData.isEmpty() && scriptData.contains("jQuery.extend(Drupal.settings")) {
                 scriptData = scriptData.substring(scriptData.indexOf('{'), scriptData.lastIndexOf('}') + 1);
 
-                JSONObject jsonObject = new JSONObject(scriptData);
-                JSONObject mediaPlayer = jsonObject.getJSONObject("ecspTranscodingPlayers").getJSONObject("ecsp-media-player");
+                JsonObject jsonObject = JsonParser.parseString(scriptData).getAsJsonObject();
+                JsonObject mediaPlayer = jsonObject.getAsJsonObject("ecspTranscodingPlayers").getAsJsonObject("ecsp-media-player");
 
                 if (mediaPlayer.has("image")) {
-                    resource.setMaxImageUrl(mediaPlayer.getString("image"));
+                    resource.setMaxImageUrl(mediaPlayer.get("image").getAsString());
                 }
 
                 // TODO Tetiana: remove entity_id from description. Line below can be replaced for extracting it from Speech details
                 if (mediaPlayer.has("entity_id")) {
-                    resource.setIdAtService(mediaPlayer.getString("entity_id"));
+                    resource.setIdAtService(mediaPlayer.get("entity_id").getAsString());
                 }
 
-                JSONArray sourcesJsonArray = mediaPlayer.getJSONArray("sources");
-                for (int i = 0, l = sourcesJsonArray.length(); i < l; ++i) {
-                    JSONObject objectSource = sourcesJsonArray.getJSONObject(i);
-                    if (!objectSource.getString("label").equals("auto")) {
-                        resource.setFileUrl(objectSource.getString("file"));
+                JsonArray sourcesJsonArray = mediaPlayer.getAsJsonArray("sources");
+                for (int i = 0, l = sourcesJsonArray.size(); i < l; ++i) {
+                    JsonObject objectSource = sourcesJsonArray.get(i).getAsJsonObject();
+                    if (!"auto".equals(objectSource.get("label").getAsString())) {
+                        resource.setFileUrl(objectSource.get("file").getAsString());
                         break;
                     }
                 }
@@ -250,51 +252,50 @@ public class ResourceMetadataExtractor {
         }
     }
 
-    private void processYoutubeResource(Resource resource) throws IOException, JSONException {
-        JSONObject json = readJsonObjectFromUrl(YOUTUBE_API_REQUEST + resource.getIdAtService());
-        JSONArray items = json.getJSONArray("items");
-        if (!items.isEmpty()) {
-            JSONObject snippet = items.getJSONObject(0).getJSONObject("snippet");
+    private void processYoutubeResource(Resource resource) throws IOException, JsonParseException {
+        JsonObject json = readJsonObjectFromUrl(YOUTUBE_API_REQUEST + resource.getIdAtService());
+        JsonArray items = json.getAsJsonArray("items");
+        if (items.size() > 0) {
+            JsonObject snippet = items.get(0).getAsJsonObject().getAsJsonObject("snippet");
             if (StringUtils.isEmpty(resource.getTitle())) {
-                resource.setTitle(snippet.getString("title"));
+                resource.setTitle(snippet.get("title").getAsString());
             }
             if (StringUtils.isEmpty(resource.getDescription())) {
-                resource.setDescription(StringHelper.shortnString(snippet.getString("description"), DESCRIPTION_LIMIT));
+                resource.setDescription(StringHelper.shortnString(snippet.get("description").getAsString(), DESCRIPTION_LIMIT));
             }
             if (StringUtils.isEmpty(resource.getAuthor())) {
-                resource.setAuthor(snippet.getString("channelTitle"));
+                resource.setAuthor(snippet.get("channelTitle").getAsString());
             }
 
             // TODO Oleh: save tags for resource
-            /*JSONArray tags = (JSONArray) snippet.get("tags");
-            if(tags != null && tags.length() > 0)
+            /*JsonArray tags = snippet.getAsJsonArray("tags");
+            if(tags != null && tags.size() > 0)
             {
-            for(int i = 0, len = tags.length(); i < len; i++)
+            for(int i = 0, len = tags.size(); i < len; i++)
             {
                 resource.addTag(tags.get(i).toString(), null);
-            }
             }*/
 
-            JSONObject thumbnails = snippet.getJSONObject("thumbnails");
+            JsonObject thumbnails = snippet.getAsJsonObject("thumbnails");
             Optional<String> size = Arrays.stream(new String[] {"maxres", "standard", "high", "medium", "default"}).filter(thumbnails::has).findFirst();
-            size.ifPresent(s -> resource.setMaxImageUrl(thumbnails.getJSONObject(s).getString("url")));
+            size.ifPresent(s -> resource.setMaxImageUrl(thumbnails.getAsJsonObject(s).get("url").getAsString()));
         }
     }
 
-    private void processVimeoResource(Resource resource) throws IOException, JSONException {
-        JSONObject json = readJsonArrayFromUrl(VIMEO_API_REQUEST + resource.getIdAtService() + ".json").getJSONObject(0);
+    private void processVimeoResource(Resource resource) throws IOException, JsonParseException {
+        JsonObject json = readJsonArrayFromUrl(VIMEO_API_REQUEST + resource.getIdAtService() + ".json").get(0).getAsJsonObject();
         if (json != null) {
             if (resource.getTitle() == null || resource.getTitle().isEmpty()) {
-                resource.setTitle(json.getString("title"));
+                resource.setTitle(json.get("title").getAsString());
             }
             if (StringUtils.isEmpty(resource.getDescription())) {
-                resource.setDescription(StringHelper.shortnString(json.getString("description"), DESCRIPTION_LIMIT));
+                resource.setDescription(StringHelper.shortnString(json.get("description").getAsString(), DESCRIPTION_LIMIT));
             }
             if (StringUtils.isEmpty(resource.getAuthor())) {
-                resource.setAuthor(json.getString("user_name"));
+                resource.setAuthor(json.get("user_name").getAsString());
             }
             if (resource.getDuration() == 0) {
-                resource.setDuration(json.getInt("duration"));
+                resource.setDuration(json.get("duration").getAsInt());
             }
 
             // TODO Oleh: save tags for resource
@@ -305,74 +306,73 @@ public class ResourceMetadataExtractor {
             }*/
 
             Optional<String> size = Arrays.stream(new String[] {"thumbnail_large", "thumbnail_medium", "thumbnail_small"}).filter(json::has).findFirst();
-            size.ifPresent(s -> resource.setMaxImageUrl(json.getString(s)));
+            size.ifPresent(s -> resource.setMaxImageUrl(json.get(s).getAsString()));
         }
     }
 
-    private void processFlickrResource(Resource resource) throws IOException, JSONException {
-        JSONObject json = readJsonObjectFromUrl(FLICKR_API_REQUEST + resource.getIdAtService()).getJSONObject("photo");
+    private void processFlickrResource(Resource resource) throws IOException, JsonParseException {
+        JsonObject json = readJsonObjectFromUrl(FLICKR_API_REQUEST + resource.getIdAtService()).getAsJsonObject("photo");
         if (json != null) {
             if (StringUtils.isEmpty(resource.getTitle())) {
-                resource.setTitle(json.getJSONObject("title").getString("_content"));
+                resource.setTitle(json.getAsJsonObject("title").get("_content").getAsString());
             }
             if (StringUtils.isEmpty(resource.getDescription())) {
-                resource.setDescription(StringHelper.shortnString(json.getJSONObject("description").getString("_content"), DESCRIPTION_LIMIT));
+                resource.setDescription(StringHelper.shortnString(json.getAsJsonObject("description").get("_content").getAsString(), DESCRIPTION_LIMIT));
             }
             if (StringUtils.isEmpty(resource.getAuthor())) {
-                JSONObject owner = json.getJSONObject("owner");
-                String realname = owner.getString("realname");
-                resource.setAuthor(StringUtils.isNotEmpty(realname) ? realname : owner.getString("username"));
+                JsonObject owner = json.getAsJsonObject("owner");
+                String realname = owner.get("realname").getAsString();
+                resource.setAuthor(StringUtils.isNotEmpty(realname) ? realname : owner.get("username").getAsString());
             }
 
             // TODO Oleh: save tags for resource
-            /*JSONArray tags = (JSONArray) ((JSONObject) photo.get("tags")).get("tag");
-            if(tags != null && tags.length() > 0)
+            /*JsonArray tags = json.getAsJsonObject("tags").getAsJsonArray("tag");
+            if(tags != null && tags.size() > 0)
             {
-            for(int i = 0, len = tags.length(); i < len; i++)
+            for(int i = 0, len = tags.size(); i < len; i++)
             {
-                resource.addTag(((JSONObject) tags.get(i)).get("raw").toString(), null);
-            }
+                resource.addTag(tags.get(i).getAsJsonObject().get("raw").toString(), null);
             }*/
 
-            String thumbnailUrl = "https://farm" + json.getString("farm") + ".staticflickr.com/" + json.getString("server") + "/" + json.getString("id") + "_" + json.getString("secret") + ".jpg";
+            String thumbnailUrl = "https://farm" + json.get("farm").getAsString() + ".staticflickr.com/" + json.get("server").getAsString()
+                + "/" + json.get("id").getAsString() + "_" + json.get("secret").getAsString() + ".jpg";
             resource.setMaxImageUrl(thumbnailUrl);
         }
     }
 
-    private void processIpernityResource(Resource resource) throws IOException, JSONException {
-        JSONObject json = readJsonObjectFromUrl(IPERNITY_API_REQUEST + resource.getIdAtService()).getJSONObject("doc");
+    private void processIpernityResource(Resource resource) throws IOException, JsonParseException {
+        JsonObject json = readJsonObjectFromUrl(IPERNITY_API_REQUEST + resource.getIdAtService()).getAsJsonObject("doc");
         if (json != null) {
             if (StringUtils.isEmpty(resource.getTitle())) {
-                resource.setTitle(json.getString("title"));
+                resource.setTitle(json.get("title").getAsString());
             }
             if (StringUtils.isEmpty(resource.getDescription())) {
-                resource.setDescription(StringHelper.shortnString(json.getString("description"), DESCRIPTION_LIMIT));
+                resource.setDescription(StringHelper.shortnString(json.get("description").getAsString(), DESCRIPTION_LIMIT));
             }
             if (StringUtils.isEmpty(resource.getAuthor())) {
-                resource.setAuthor(json.getJSONObject("owner").getString("username"));
+                resource.setAuthor(json.getAsJsonObject("owner").get("username").getAsString());
             }
 
             // TODO Oleh: save tags for resource
-            /*
-            JSONArray tags = (JSONArray) ((JSONObject) json.get("tags")).get("tag");
-            if(tags != null && tags.length() > 0)
+            /*JsonArray tags = json.getAsJsonObject("tags").getAsJsonArray("tag");
+            if(tags != null && tags.size() > 0)
             {
-            for(int i = 0, len = tags.length(); i < len; i++)
-            {
-                resource.addTag(((JSONObject) tags.get(i)).get("tag").toString(), null);
-            }
+                for(int i = 0, len = tags.size(); i < len; i++)
+                {
+                    resource.addTag(tags.get(i).getAsJsonObject().get("tag").getAsString(), null);
+                }
             }*/
 
-            JSONArray thumbnails = json.getJSONObject("thumbs").getJSONArray("thumb");
-            if (thumbnails != null && !thumbnails.isEmpty()) {
+            JsonArray thumbnails = json.getAsJsonObject("thumbs").getAsJsonArray("thumb");
+            if (thumbnails != null && thumbnails.size() > 0) {
                 String thumbnailUrl = null;
-                for (int i = 0, len = thumbnails.length(), weight = 0; i < len; i++) {
-                    JSONObject th = thumbnails.getJSONObject(i);
-                    int newWeight = Integer.parseInt(th.getString("w"));
+                for (int i = 0, len = thumbnails.size(), weight = 0; i < len; i++) {
+                    JsonObject th = thumbnails.get(i).getAsJsonObject();
+                    int newWeight = Integer.parseInt(th.get("w").getAsString());
 
                     if (newWeight > weight) {
                         weight = newWeight;
-                        thumbnailUrl = th.getString("url");
+                        thumbnailUrl = th.get("url").getAsString();
                     }
                 }
 
@@ -446,12 +446,12 @@ public class ResourceMetadataExtractor {
         return fileInspector.inspect(inputStream, fileName);
     }
 
-    private static JSONObject readJsonObjectFromUrl(String url) throws IOException, JSONException {
-        return new JSONObject(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
+    private static JsonObject readJsonObjectFromUrl(String url) throws IOException, JsonParseException {
+        return JsonParser.parseString(IOUtils.toString(new URL(url), StandardCharsets.UTF_8)).getAsJsonObject();
     }
 
-    private static JSONArray readJsonArrayFromUrl(String url) throws IOException, JSONException {
-        return new JSONArray(IOUtils.toString(new URL(url), StandardCharsets.UTF_8));
+    private static JsonArray readJsonArrayFromUrl(String url) throws IOException, JsonParseException {
+        return JsonParser.parseString(IOUtils.toString(new URL(url), StandardCharsets.UTF_8)).getAsJsonArray();
     }
 
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
