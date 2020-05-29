@@ -1,6 +1,9 @@
 /* global view */
 /* global ajaxLoadNextPage, logResourceOpenedCommand, getResourceDetailsCommand */
 
+let noMoreResults = false;
+let loading = false;
+
 function prepareResources() {
   if (view !== 'list') {
     $('.search-float').justifiedGallery({
@@ -10,6 +13,7 @@ function prepareResources() {
       border: 8,
       captionsShowAlways: true,
       captionsAnimation: true,
+      waitThumbnailsLoad: false,
     });
 
     $().fancybox({
@@ -84,7 +88,11 @@ function updateSlideDetails() {
 
 function prepareNewResources() {
   if (view !== 'list') {
-    $('.search-float').justifiedGallery('norewind');
+    $('.search-float').justifiedGallery('norewind').on('jg.rowflush', () => {
+      loading = false;
+    });
+  } else {
+    loading = false;
   }
 }
 
@@ -93,9 +101,6 @@ function testIfResultsFillPage() {
     loadNextPage();
   }
 }
-
-let noMoreResults = false;
-let loading = false;
 
 function loadNextPage() {
   if (noMoreResults || loading) return;
@@ -127,7 +132,6 @@ function displayNextPage(xhr, status) {
   // copy from #searchResultsNext to #searchResults
   $('#searchResultsNext > *').appendTo('#searchResults');
 
-  loading = false;
   prepareNewResources();
   testIfResultsFillPage();
 }

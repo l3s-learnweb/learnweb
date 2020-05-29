@@ -209,10 +209,14 @@ public class SearchBean extends ApplicationBean implements Serializable {
         ResourceDecorator resource = search.getResourceByRank(rank);
         setSelectedResource(resource);
 
-        PrimeFaces.current().ajax().update();
         PrimeFaces.current().ajax().addCallbackParam("slideIndex", params.get("slideIndex"));
         PrimeFaces.current().ajax().addCallbackParam("resourceRank", resource.getRank());
-        PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbedded());
+
+        if (resource.getEmbedded() != null) {
+            PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbedded());
+        } else {
+            PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getResource().getLargestThumbnail().getHtml());
+        }
     }
 
     public void selectResourceCommand() {

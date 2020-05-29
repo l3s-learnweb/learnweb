@@ -103,7 +103,6 @@ public class InterwebResultsWrapper implements Serializable {
 
         for (SearchThumbnail thumbnailElement : thumbnails) {
             String url = thumbnailElement.getUrl();
-
             int height = thumbnailElement.getHeight();
             int width = thumbnailElement.getWidth();
 
@@ -111,6 +110,7 @@ public class InterwebResultsWrapper implements Serializable {
                 biggestThumbnailHeight = height;
                 biggestThumbnail = thumbnailElement;
             }
+
             // ipernity api doesn't return largest available thumbnail, so we have to guess it
             if (resource.getSource() == ResourceService.ipernity && url.contains(".560.")) {
                 if (width == 560 || height == 560) {
@@ -124,12 +124,11 @@ public class InterwebResultsWrapper implements Serializable {
 
             Thumbnail thumbnail = new Thumbnail(url, width, height);
 
-            if (thumbnail.getHeight() <= 100 && thumbnail.getWidth() <= 100) {
+            if (resource.getThumbnail0() == null && thumbnail.getHeight() <= 100 && thumbnail.getWidth() <= 100) {
                 resource.setThumbnail0(thumbnail);
-            } else if (thumbnail.getHeight() < 170 && thumbnail.getWidth() < 170) {
-                thumbnail = thumbnail.resize(120, 100);
+            } else if (resource.getThumbnail1() == null && thumbnail.getHeight() <= 200 && thumbnail.getWidth() <= 200) {
                 resource.setThumbnail1(thumbnail);
-            } else if (thumbnail.getHeight() < 500 && thumbnail.getWidth() < 500) {
+            } else if (resource.getThumbnail2() == null && thumbnail.getHeight() < 500 && thumbnail.getWidth() < 500) {
                 resource.setThumbnail2(thumbnail.resize(300, 220));
             } else { // if (thumbnail.getHeight() < 600 && thumbnail.getWidth() < 600)
                 resource.setThumbnail4(thumbnail);

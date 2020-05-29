@@ -1,15 +1,14 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui">
+>
 
 	<!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
 	<ui:repeat var="res" value="#{resources}">
 		<a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-video search-item-lightbox" target="_blank">
 			<div class="item-thumbnail">
-				<img src="#{res.thumbnail2b.url}" alt="#{res.title}"/>
+				<img src="#{res.thumbnail2b.url}" height="#{res.thumbnail2b.height}" width="#{res.thumbnail2b.width}" alt="#{res.title}"/>
 
 				<h:outputText value="#{res.durationInMinutes}" styleClass="video-duration" rendered="#{res.resource.duration gt 0}"/>
 			</div>

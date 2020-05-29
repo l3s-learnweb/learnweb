@@ -29,7 +29,7 @@ test:
   tags:
     - java
   script:
-    - mvn $MAVEN_CLI_OPTS $MAVEN_CLI_QUIET spotbugs:check
+    - mvn $MAVEN_CLI_OPTS $MAVEN_CLI_QUIET compile spotbugs:check
     - mvn $MAVEN_CLI_OPTS test
   rules:
     - if: '$CI_COMMIT_BRANCH != "master"'
