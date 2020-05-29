@@ -141,53 +141,72 @@
   width: 1rem;
   margin: 0.1rem 0.2rem;
 
+  &.source-archiveit {
+    background-image: url('../../images/services/archiveit.png');
+  }
+
   &.source-bing {
-    background-image: url('../../images/services/bing.gif');
+    background-image: url('../../images/services/bing.png');
+  }
+
+  &.source-desktop {
+    background-image: url('../../images/services/desktop.png');
+  }
+
+  &.source-factcheck {
+    background-image: url('../../images/services/factcheck.png');
   }
 
   &.source-flickr {
     background-image: url('../../images/services/flickr.png');
   }
 
+  &.source-internet {
+    background-image: url('../../images/services/internet.png');
+  }
+
+  &.source-ipernity {
+    background-image: url('../../images/services/ipernity.png');
+  }
+
+  &.source-learnweb {
+    background-image: url('../../images/services/learnweb.png');
+  }
+
+  &.source-loro {
+    background-image: url('../../images/services/loro.png');
+  }
+
+  &.source-slideshare {
+    background-image: url('../../images/services/slideshare.png');
+  }
+
+  &.source-speechrepository {
+    background-image: url('../../images/services/speechrepository.png');
+  }
+
+  &.source-ted {
+    background-image: url('../../images/services/ted.png');
+  }
+
+  &.source-teded {
+    background-image: url('../../images/services/teded.png');
+  }
+
+  &.source-tedx {
+    background-image: url('../../images/services/tedx.png');
+  }
+
+  &.source-vimeo {
+    background-image: url('../../images/services/vimeo.png');
+  }
+
   &.source-youtube {
     background-image: url('../../images/services/youtube.png');
   }
 
-  &.source-vimeo {
-    background-image: url('../../images/services/vimeo.gif');
-  }
-
-  &.source-ipernity {
-    background-image: url('../../images/services/ipernity.gif');
-  }
-
-  &.source-ted {
-    background-image: url('../../images/services/ted.gif');
-  }
-
-  &.source-tedx,
-  &.source-teded {
-    background-image: url('../../images/services/tedx.gif');
-  }
-
-  &.source-loro {
-    background-image: url('../../images/services/loro.gif');
-  }
-
   &.source-yovisto {
-    background-image: url('../../images/services/yovisto.gif');
-  }
-
-  &.source-learnweb {
-    background-image: url('../../images/services/learnweb.gif');
-  }
-
-  &.source-archiveit {
-    background-image: url('../../images/services/archiveit.gif');
-  }
-
-  &.source-factcheck {
-    background-image: url('../../images/services/learnweb.gif');
+    background-image: url('../../images/services/yovisto.png');
   }
 }
 

@@ -715,15 +715,10 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public String getServiceIcon() {
         if (getId() != -1) { // is stored in Learnweb
-            return "/resources/images/services/learnweb.gif";
+            return "/resources/images/services/learnweb.png";
         }
 
-        String format = ".gif";
-        if (getLocation().equalsIgnoreCase("youtube") || getLocation().equalsIgnoreCase("flickr") || getLocation().equalsIgnoreCase("ipernity")) {
-            format = ".png";
-        }
-
-        return "/resources/images/services/" + getLocation().toLowerCase() + format;
+        return "/resources/images/services/" + getLocation().toLowerCase() + ".png";
     }
 
     /**
