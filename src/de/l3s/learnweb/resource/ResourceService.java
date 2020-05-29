@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 public enum ResourceService { // when adding more services remember to update the service column of learnweb_large.sl_query
     bing("Bing"), // Does not support filtering by date
     flickr("Flickr"),
+    giphy("Giphy"),
     youtube("YouTube"),
     vimeo("Vimeo"), // Does not support filtering by date
     ipernity("Ipernity"),
@@ -30,6 +31,7 @@ public enum ResourceService { // when adding more services remember to update th
     public boolean isInterweb() {
         switch (this) {
             case bing:
+            case giphy:
             case flickr:
             case youtube:
             case vimeo:

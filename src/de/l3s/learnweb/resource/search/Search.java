@@ -263,7 +263,7 @@ public class Search implements Serializable {
             if (configMode == SearchMode.text) {
                 params.put("services", "Bing");
             } else if (configMode == SearchMode.image) {
-                params.put("services", "Flickr,Bing,Ipernity");
+                params.put("services", "Flickr,Giphy,Bing,Ipernity");
             } else if (configMode == SearchMode.video) {
                 params.put("services", "YouTube,Vimeo");
             }
