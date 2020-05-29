@@ -22,31 +22,63 @@ public class SearchResult implements Serializable {
     @SerializedName("url")
     private String url;
     @SerializedName("image")
-    private String image;
-    @SerializedName("thumbnail")
-    private List<SearchThumbnail> thumbnails = null;
+    private String image; // TODO: remove?
     @SerializedName("date")
     private String date;
     @SerializedName("tags")
     private String tags;
     @SerializedName("rank_at_service")
-    private Integer rankAtService;
+    private Integer rankAtService; // TODO: remove?
     @SerializedName("total_results_at_service")
-    private Integer totalResultsAtService;
+    private Integer totalResultsAtService; // TODO: remove?
     @SerializedName("views")
-    private Integer numberOfViews;
+    private Integer numberOfViews; // TODO: remove?
     @SerializedName("number_of_comments")
-    private Integer numberOfComments;
+    private Integer numberOfComments; // TODO: remove?
+    /**
+     * TODO: add a type (small/medium/large/original) field or
+     * remove and replace embedded (change their type to SearchThumbnail, add `embedded` field to SearchThumbnail)
+     */
+    @SerializedName("thumbnail")
+    private List<SearchThumbnail> thumbnails;
+    /**
+     * html code, only image or text, max width and max height 100px.
+     * TODO:
+     * Used for small images preview in results from different services. Propose to define as image with height between 100 and 150 px.
+     * In case of missing fallback to size2 or size3.
+     */
     @SerializedName("embedded_size1")
     private String embeddedSize1;
+    /**
+     * html code, only image or text, max width and max height 240px.
+     * TODO:
+     * Used for results grid. Propose to define as image with height between 200 and 300 px.
+     * In case of missing fallback to size3 and size1.
+     */
     @SerializedName("embedded_size2")
     private String embeddedSize2;
+    /**
+     * html code, could be flash, max width and max height 500px.
+     * TODO:
+     * Used for resource details view in lightbox. Propose to define as image with height between 600 and 1800 px.
+     * In case of missing fallback to original or size2.
+     */
     @SerializedName("embedded_size3")
     private String embeddedSize3;
+    /**
+     * html code, could be flash, max width and max height 100%.
+     * TODO:
+     * Original image/view in max quality. Used only as link.
+     */
     @SerializedName("embedded_size4")
     private String embeddedSize4;
+    /**
+     * Url to the best (high resolution) available preview image.
+     * TODO:
+     * Remove?
+     */
     @SerializedName("max_image_url")
-    private String imageUrl;
+    private String imageUrl; // TODO: remove?
     @SerializedName("duration")
     private Integer duration;
     @SerializedName("snippet")
@@ -164,9 +196,6 @@ public class SearchResult implements Serializable {
         this.numberOfComments = numberOfComments;
     }
 
-    /**
-     * html code, only image or text, max width and max height 100px.
-     */
     public String getEmbeddedSize1() {
         return embeddedSize1;
     }
@@ -175,9 +204,6 @@ public class SearchResult implements Serializable {
         this.embeddedSize1 = embeddedSize1;
     }
 
-    /**
-     * html code, only image or text, max width and max height 240px.
-     */
     public String getEmbeddedSize2() {
         return embeddedSize2;
     }
@@ -186,9 +212,6 @@ public class SearchResult implements Serializable {
         this.embeddedSize2 = embeddedSize2;
     }
 
-    /**
-     * html code, could be flash, max width and max height 500px.
-     */
     public String getEmbeddedSize3() {
         return embeddedSize3;
     }
@@ -197,9 +220,6 @@ public class SearchResult implements Serializable {
         this.embeddedSize3 = embeddedSize3;
     }
 
-    /**
-     * html code, could be flash, max width and max height 100%.
-     */
     public String getEmbeddedSize4() {
         return embeddedSize4;
     }
@@ -208,9 +228,6 @@ public class SearchResult implements Serializable {
         this.embeddedSize4 = embeddedSize4;
     }
 
-    /**
-     * Url to the best (high resolution) available preview image.
-     */
     public String getImageUrl() {
         return imageUrl;
     }
