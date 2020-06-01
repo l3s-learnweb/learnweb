@@ -313,8 +313,8 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public void onSaveNotificationFrequency(GroupUser group) throws SQLException {
-        getLearnweb().getGroupManager().updateNotificationFrequency(group.getGroup().getId(), selectedUser.getId(), group.getNotificationFrequency());
+    public void onSaveNotificationFrequency(GroupUser group, int userId) throws SQLException {
+        getLearnweb().getGroupManager().updateNotificationFrequency(group.getGroup().getId(), userId, group.getNotificationFrequency());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }

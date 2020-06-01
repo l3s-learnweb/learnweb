@@ -390,9 +390,7 @@ public class UserBean implements Serializable {
                 groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("overview")).icon("fa fa-fw fa-list-ul").url(su + "/lw/group/overview.jsf?group_id=" + group.getId()).build());
                 groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("resources")).icon("fa fa-fw fa-folder-open").url(su + "/lw/group/resources.jsf?group_id=" + group.getId()).build());
                 groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("forum")).icon("fa fa-fw fa-comments-o").url(su + "/lw/group/forum.jsf?group_id=" + group.getId()).build());
-                if (group.getCourse().isModerator(getUser()) || group.isLeader(getUser())) {
-                    groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("options")).icon("fa fa-fw fa-sliders").url(su + "/lw/group/options.jsf?group_id=" + group.getId()).build());
-                }
+                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("options")).icon("fa fa-fw fa-sliders").url(su + "/lw/group/options.jsf?group_id=" + group.getId()).build());
                 groupsBuilder.addElement(groupBuilder.build());
             }
             model.getElements().add(groupsBuilder.build());

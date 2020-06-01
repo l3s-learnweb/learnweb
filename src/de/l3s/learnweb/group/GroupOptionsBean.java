@@ -39,6 +39,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private String editedGroupDescription; // Group edit fields (Required for editing group)
     private String editedHypothesisLink;
     private String editedHypothesisToken;
+    private GroupUser groupUser;
 
     public void onLoad() throws SQLException {
         User user = getUser();
@@ -62,6 +63,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
             editedGroupTitle = group.getTitle();
             editedHypothesisLink = group.getHypothesisLink();
             editedHypothesisToken = group.getHypothesisToken();
+            groupUser = getLearnweb().getGroupManager().getGroupUserRelation(user.getId(), group.getId());
         }
     }
 
@@ -206,5 +208,9 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
 
     public void setSelectedResourceTargetGroupId(int selectedResourceTargetGroupId) {
         this.selectedResourceTargetGroupId = selectedResourceTargetGroupId;
+    }
+
+    public GroupUser getGroupUser() {
+        return groupUser;
     }
 }
