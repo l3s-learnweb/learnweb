@@ -75,8 +75,9 @@
           color: $white;
         }
 
-        &:hover {
-          background-color: $themePrimaryColorDarker;
+        &:hover,
+        &.active {
+          background: $themePrimaryColorDarker;
         }
       }
     }
