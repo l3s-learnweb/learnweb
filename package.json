@@ -18,7 +18,7 @@
     "scss:lint": "stylelint WebContent/resources/layout/sass",
     "js:lint": "eslint WebContent/resources/layout/js/**",
     "build": "npm run scss:build",
-    "lint": "npm run scss:lint & npm run js:lint"
+    "lint": "npm run scss:lint && npm run js:lint"
   },
   "devDependencies": {
     "browserslist": "^4.12.0",
