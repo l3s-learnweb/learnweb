@@ -95,21 +95,20 @@ public class GroupManager {
     }
 
     /**
-     * Returns a group by user with notification frequency
-     *
-     * @throws SQLException
+     * Returns a group by user with notification frequency.
      */
     public GroupUser getGroupUserRelation(int userId, int groupId) throws SQLException {
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_id, notification_frequency FROM lw_group_user WHERE user_id = ? AND group_id=?")) {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_id, notification_frequency FROM lw_group_user WHERE user_id = ? AND group_id=?")) {
             select.setInt(1, userId);
             select.setInt(2, groupId);
             ResultSet rs = select.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 return new GroupUser(getGroupById(rs.getInt("group_id")), User.NotificationFrequency.valueOf(rs.getString("notification_frequency")));
             }
         }
         return null;
     }
+
     /**
      * Returns a list of all Groups a user belongs to with associated metadata like notification frequency.
      */
