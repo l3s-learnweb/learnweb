@@ -17,6 +17,11 @@ public final class SessionCache {
         groupSessionCache = new HashMap<>();
     }
 
+    private void clearCache() {
+        userSessionCache.clear();
+        groupSessionCache.clear();
+    }
+
     public synchronized void cacheByUserId(int userId, List<Session> sessions) {
         userSessionCache.put(userId, sessions);
     }

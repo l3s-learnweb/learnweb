@@ -18,8 +18,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.searchhistory.SearchHistoryManager.Query;
-import de.l3s.learnweb.searchhistory.SearchHistoryManager.SearchResult;
 import de.l3s.learnweb.searchhistory.SearchHistoryManager.Session;
 import de.l3s.learnweb.user.User;
 
@@ -40,7 +40,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
     private List<Session> sessions;
     private List<Query> queries = new ArrayList<>();
-    private final Map<Integer, List<SearchResult>> snippets = new HashMap<>();
+    private final Map<Integer, List<ResourceDecorator>> snippets = new HashMap<>();
 
     /**
      * Load the variables that needs values before the view is rendered.
@@ -78,13 +78,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public List<Session> getSessions() throws SQLException {
-        if (this.showGroupHistory) {
-            if (sessions == null && selectedGroupId > 0) {
-                if (!SessionCache.instance().existsGroupId(selectedGroupId)) {
-                    SessionCache.instance().cacheByGroupId(selectedGroupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId));
-                }
-                sessions = SessionCache.instance().getByGroupId(selectedGroupId);
-            }
+        if (sessions == null && showGroupHistory && selectedGroupId > 0) {
+            sessions = getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId);
         } else if (sessions == null) {
             sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(selectedUserId);
         }
@@ -103,8 +98,20 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         return queries;
     }
 
-    public List<SearchResult> getSearchResults() {
-        List<SearchResult> searchResults = new ArrayList<>();
+    public String getSearchResultsView() {
+        if ("text".equals(selectedQuery.getMode())) {
+            return "list";
+        } else if ("image".equals(selectedQuery.getMode())) {
+            return "float";
+        } else if ("video".equals(selectedQuery.getMode())) {
+            return "grid";
+        }
+
+        return null;
+    }
+
+    public List<ResourceDecorator> getSearchResults() {
+        List<ResourceDecorator> searchResults = new ArrayList<>();
         if (selectedQuery != null) {
             if (!snippets.containsKey(selectedQuery.getSearchId())) {
                 snippets.put(selectedQuery.getSearchId(), getLearnweb().getSearchHistoryManager().getSearchResultsForSearchId(selectedQuery.getSearchId(), 100));
@@ -115,8 +122,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         return searchResults;
     }
 
-    public void onChangeGroup(AjaxBehaviorEvent event) {
-        //log.info("group id: " + selectedGroupId);
+    public void onChangeGroup(AjaxBehaviorEvent event) throws SQLException {
+        reset();
     }
 
     public void actionSetShowGroupHistory() {

@@ -324,7 +324,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public void setGroup(Group group) {
-        this.groupId = group.getId();
+        this.groupId = HasId.getIdOrDefault(group, 0);
     }
 
     @Override

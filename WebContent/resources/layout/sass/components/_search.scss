@@ -25,13 +25,17 @@
 }
 
 .search-item-web {
-  .item-controls {
+  .item-controls > *:not(.always-visible) {
     opacity: 0;
     transition: all 0.2s ease-in-out;
 
     @media (hover: none) and (pointer: coarse) {
       opacity: 1;
     }
+  }
+
+  &:hover .item-controls > * {
+    opacity: 1;
   }
 
   .item-description {
@@ -63,10 +67,6 @@
     &:hover .item-title {
       text-decoration: underline !important;
     }
-  }
-
-  &:hover .item-controls {
-    opacity: 1;
   }
 }
 
@@ -211,6 +211,18 @@
 
   &.source-yovisto {
     background-image: url('../../images/services/yovisto.png');
+  }
+
+  &.mode-image::before {
+    font-family: FontAwesome;
+    margin-right: 5px;
+    content: '\f03e';
+  }
+
+  &.mode-video::before {
+    font-family: FontAwesome;
+    margin-right: 5px;
+    content: '\f03d';
   }
 }
 

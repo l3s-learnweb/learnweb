@@ -21,7 +21,6 @@
 <ui:define name="center_layout">
     <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
     <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
-    <h:outputScript library="vendor" name="justifiedGallery-v3.7.0/jquery.justifiedGallery.min.js" target="body"/>
     <h:outputScript library="layout" name="js/search.js" target="body"/>
 
     <h:form class="d-none">
@@ -165,19 +164,21 @@
             const userId = '#{userBean.user.id}';
         </script>
 
-        <div id="searchResults" class="p-2 search-#{searchBean.view}">
-            <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
-                <ui:param name="view" value="#{searchBean.view}"/>
-                <ui:param name="resources" value="#{searchBean.search.resources}"/>
-            </ui:decorate>
-        </div>
+        <h:form prependId="false">
+            <div id="searchResults" class="p-2 search-#{searchBean.view}">
+                <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
+                    <ui:param name="view" value="#{searchBean.view}"/>
+                    <ui:param name="resources" value="#{searchBean.search.resources}"/>
+                </ui:decorate>
+            </div>
 
-        <h:panelGroup id="searchResultsNext" layout="block" styleClass="d-none">
-            <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
-                <ui:param name="view" value="#{searchBean.view}"/>
-                <ui:param name="resources" value="#{searchBean.nextPage}"/>
-            </ui:decorate>
-        </h:panelGroup>
+            <h:panelGroup id="searchResultsNext" layout="block" styleClass="d-none">
+                <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
+                    <ui:param name="view" value="#{searchBean.view}"/>
+                    <ui:param name="resources" value="#{searchBean.nextPage}"/>
+                </ui:decorate>
+            </h:panelGroup>
+        </h:form>
 
         <div class="text-center font-weight-bold pb-2">
             <span id="search_loading_more_results" class="collapse">#{msg.loading_more_results} <i aria-hidden="true" class="fa fa-fw fa-cog fa-spin fa-fw"></i></span>

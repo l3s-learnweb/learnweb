@@ -16,10 +16,11 @@ import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.Thumbnail;
 import de.l3s.learnweb.user.User;
 
 public class SearchHistoryManager {
-
     private static final Logger log = LogManager.getLogger(SearchHistoryManager.class);
     private final Learnweb learnweb;
 
@@ -35,13 +36,20 @@ public class SearchHistoryManager {
 
         try {
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
-                "SELECT t1.search_id, t1.query, t1.timestamp, t1.service FROM learnweb_large.sl_query t1 JOIN learnweb_main.lw_user_log t2 "
-                    + "ON (t1.search_id=t2.target_id AND t1.user_id=t2.user_id AND t1.query=t2.params)  WHERE t2.action = 5 AND t1.mode='text' "
-                    + "AND t2.session_id=? AND t1.user_id != 0  ORDER BY t1.timestamp ASC");
+                "SELECT q.search_id, q.query, q.mode, q.timestamp, q.service " +
+                    "FROM learnweb_large.sl_query q join learnweb_main.lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id " +
+                    "WHERE l.action = 5 AND l.session_id = ? " +
+                    "ORDER BY q.timestamp ASC");
             pstmt.setString(1, sessionId);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                Query query = new Query(rs.getInt("search_id"), rs.getString("query"), new Date(rs.getTimestamp("timestamp").getTime()), rs.getString("service"));
+                Query query = new Query(
+                    rs.getInt("search_id"),
+                    rs.getString("query"),
+                    rs.getString("mode"),
+                    new Date(rs.getTimestamp("timestamp").getTime()),
+                    rs.getString("service")
+                );
                 queries.add(query);
             }
             pstmt.close();
@@ -52,30 +60,38 @@ public class SearchHistoryManager {
         return queries;
     }
 
-    public List<SearchResult> getSearchResultsForSearchId(int searchId, int limit) {
-        List<SearchResult> searchResults = new ArrayList<>();
+    public List<ResourceDecorator> getSearchResultsForSearchId(int searchId, int limit) {
+        List<ResourceDecorator> searchResults = new ArrayList<>();
+
         try {
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_resource WHERE search_id = ? ORDER BY `rank` LIMIT ?");
+            PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
+                "SELECT r.resource_id, r.rank, r.url, r.title, r.description, r.thumbnail_url, r.thumbnail_width, r.thumbnail_height, COUNT(a.action = 'resource_clicked') AS clicked, COUNT(a.action = 'resource_saved') AS saved " +
+                    "FROM learnweb_large.sl_resource r LEFT JOIN learnweb_large.sl_action a ON r.search_id = a.search_id AND r.rank = a.rank " +
+                    "WHERE r.search_id = ? GROUP BY r.resource_id, r.rank, r.url, r.title, r.description ORDER BY r.rank LIMIT ?");
             pStmt.setInt(1, searchId);
             pStmt.setInt(2, limit);
 
             ResultSet rs = pStmt.executeQuery();
             while (rs.next()) {
-                SearchResult result = new SearchResult();
-                result.setSearchId(searchId);
-                result.setRank(rs.getInt("rank"));
+                Resource res;
                 int resourceId = rs.getInt("resource_id");
                 if (resourceId > 0) {
-                    Resource r = learnweb.getResourceManager().getResource(resourceId);
-                    result.setUrl(r.getUrl());
-                    result.setTitle(r.getTitle());
-                    result.setDescription(r.getDescription());
+                    res = learnweb.getResourceManager().getResource(resourceId);
                 } else {
-                    result.setUrl(rs.getString("url"));
-                    result.setTitle(rs.getString("title"));
-                    result.setDescription(rs.getString("description"));
+                    res = new Resource();
+                    res.setUrl(rs.getString("url"));
+                    res.setTitle(rs.getString("title"));
+                    res.setDescription(rs.getString("description"));
+                    res.setThumbnail2(new Thumbnail(rs.getString("thumbnail_url"), rs.getInt("thumbnail_width"), rs.getInt("thumbnail_height")));
                 }
-                searchResults.add(result);
+
+                ResourceDecorator rd = new ResourceDecorator(res);
+                rd.setRank(rs.getInt("rank"));
+                rd.setTitle(rs.getString("title"));
+                rd.setSnippet(rs.getString("description"));
+                rd.setClicked(rs.getInt("clicked") > 0);
+                rd.setSaved(rs.getInt("saved") > 0);
+                searchResults.add(rd);
             }
             pStmt.close();
         } catch (SQLException e) {
@@ -106,7 +122,6 @@ public class SearchHistoryManager {
         List<Query> queries = new ArrayList<>();
 
         if (SessionCache.instance().existsGroupId(groupId)) {
-
             List<Session> sessions = SessionCache.instance().getByGroupId(groupId);
 
             for (Session session : sessions) {
@@ -122,11 +137,10 @@ public class SearchHistoryManager {
     public List<Session> getSessionsForUser(int userId) throws SQLException {
         List<Session> sessions = new ArrayList<>();
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
-            "SELECT t2.session_id " +
-                "FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 " +
-                "WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.user_id=? " +
-                "GROUP BY t2.session_id " +
-                "ORDER BY t1.timestamp DESC");
+            "SELECT DISTINCT l.session_id " +
+                "FROM learnweb_large.sl_query q JOIN learnweb_main.lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id " +
+                "WHERE l.action = 5 AND l.user_id = ? " +
+                "ORDER BY q.timestamp DESC LIMIT 30");
 
         pStmt.setInt(1, userId);
         ResultSet rs = pStmt.executeQuery();
@@ -144,32 +158,30 @@ public class SearchHistoryManager {
     }
 
     public List<Session> getSessionsForGroupId(int groupId) throws SQLException {
-        List<Session> sessions = new ArrayList<>();
-        Set<String> sessionIds = new HashSet<>();
-
         if (SessionCache.instance().existsGroupId(groupId)) {
             return SessionCache.instance().getByGroupId(groupId);
         }
 
+        List<Session> sessions = new ArrayList<>();
+        Set<String> sessionIds = new HashSet<>();
+
         PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
-            "SELECT t1.user_id, t1.session_id, t1.params " +
-                "FROM learnweb_main.lw_user_log t1 " +
-                "JOIN learnweb_main.lw_resource t2 ON (t1.target_id = t2.resource_id) " +
-                "WHERE ((t1.action = 15 AND t2.group_id = ?) OR (t1.action = 24 AND t1.group_id = ?)) AND t2.type NOT IN ('image', 'video') " +
-                "ORDER BY t1.timestamp DESC");
+            "SELECT l.user_id, l.session_id " +
+                "FROM learnweb_large.`sl_query` q " +
+                "JOIN learnweb_main.lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id " +
+                "JOIN learnweb_main.lw_group_user ug ON ug.user_id =  l.user_id " +
+                "WHERE l.action = 5 AND ug.group_id = ? " +
+                "GROUP BY l.user_id, l.session_id " +
+                "ORDER BY q.timestamp DESC LIMIT 30");
 
         pstmt.setInt(1, groupId);
-        pstmt.setInt(2, groupId);
         ResultSet rs = pstmt.executeQuery();
         while (rs.next()) {
             String sessionId = rs.getString("session_id");
             int userId = rs.getInt("user_id");
             if (!sessionIds.contains(sessionId)) {
-                String params = rs.getString("params");
-                if (params.matches("\\d+ - \\d+")) {
-                    Session session = new Session(sessionId, userId, getQueriesForSessionId(sessionId));
-                    sessions.add(session);
-                }
+                Session session = new Session(sessionId, userId, getQueriesForSessionId(sessionId));
+                sessions.add(session);
                 sessionIds.add(sessionId);
             }
         }
@@ -229,19 +241,16 @@ public class SearchHistoryManager {
     public static class Query implements Serializable {
         private static final long serialVersionUID = 4391998336381044255L;
 
-        private final int searchId;
-        private final String query;
+        private int searchId;
+        private String query;
+        private String mode;
         private Date timestamp;
         private String service;
 
-        public Query(int searchId, String query) {
+        public Query(int searchId, String query, String mode, Date timestamp, String service) {
             this.searchId = searchId;
             this.query = query;
-        }
-
-        public Query(int searchId, String query, Date timestamp, String service) {
-            this.searchId = searchId;
-            this.query = query;
+            this.mode = mode;
             this.timestamp = timestamp;
             this.service = service;
         }
@@ -252,6 +261,10 @@ public class SearchHistoryManager {
 
         public String getQuery() {
             return this.query;
+        }
+
+        public String getMode() {
+            return mode;
         }
 
         public Date getTimestamp() {
@@ -271,6 +284,10 @@ public class SearchHistoryManager {
         private String url;
         private String title;
         private String description;
+
+        public SearchResult(int searchId) {
+            this.searchId = searchId;
+        }
 
         public int getSearchId() {
             return searchId;

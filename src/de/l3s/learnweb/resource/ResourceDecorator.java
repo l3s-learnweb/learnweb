@@ -19,11 +19,16 @@ import de.l3s.util.StringHelper;
  */
 public class ResourceDecorator implements Serializable {
     private static final long serialVersionUID = -6611930555147350248L;
+
     private final Resource resource;
     private int rank;
     private String snippet;
     // the rank which the resource has in the current search result
     private String title;
+
+    // used for search history
+    private boolean clicked;
+    private boolean saved;
 
     public ResourceDecorator(Resource resource) {
         this.resource = resource;
@@ -195,9 +200,24 @@ public class ResourceDecorator implements Serializable {
         return resource.isEditLocked();
     }
 
+    public boolean getClicked() {
+        return clicked;
+    }
+
+    public void setClicked(final boolean clicked) {
+        this.clicked = clicked;
+    }
+
+    public boolean getSaved() {
+        return saved;
+    }
+
+    public void setSaved(final boolean saved) {
+        this.saved = saved;
+    }
+
     @Override
     public String toString() {
         return "ResourceDecorator [resource=" + resource + ", rank=" + rank + ", snippet=" + snippet + ", title=" + title + "]";
     }
-
 }

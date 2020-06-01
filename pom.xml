@@ -26,10 +26,6 @@
         <maven.assembly.mainClass>de.l3s.learnweb.tasks.users.DeleteOldUsers</maven.assembly.mainClass>
     </properties>
 
-    <prerequisites>
-        <maven>3.6.0</maven>
-    </prerequisites>
-
     <dependencies>
         <!-- ################ APIs provided by Tomcat ################ -->
         <dependency>

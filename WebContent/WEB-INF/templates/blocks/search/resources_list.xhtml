@@ -14,13 +14,21 @@
         </h:panelGroup>
 
         <div class="search-item search-item-web my-3 d-flex" id="resource_#{res.rank}">
-            <h:form styleClass="item-controls d-flex flex-column mr-1 mt-1 text-center">
+            <div class="item-controls d-flex flex-column mr-1 mt-1 text-center">
                 <ui:fragment>
                     <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
                                    update=":copy_resource_dialog" process="@this" oncomplete="PF('copyResourceDialog').show();"
-                                   styleClass="fa fa-fw fa-files-o text-decoration-none text-secondary"/>
+                                   styleClass="fa fa-fw fa-files-o mb-1 text-decoration-none text-secondary"/>
                     <p:tooltip for="@previous" value="#{msg.addToMyResources}" position="right"  hideEffect="clip"/>
                 </ui:fragment>
+
+                <ui:fragment rendered="${res.clicked}">
+                    <h:outputText styleClass="fa fa-hand-pointer-o mb-1 always-visible" value=""/>
+                </ui:fragment>
+
+                <!--<ui:fragment rendered="${res.saved}">
+                    <h:outputText styleClass="fa fa-floppy-o mb-1 always-visible" value=""/>
+                </ui:fragment>-->
 
                 <ui:fragment rendered="${res.archived}">
                     <h:outputLink id="archive" value="#{res.firstArchivedObject.archiveUrl}">
@@ -51,7 +59,7 @@
                     <p:outputLabel id="collector-fullname" class="fa fa-user-plus mb-1"/>
                     <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.fullName}" position="right" hideEffect="clip"/>
                 </ui:fragment>
-            </h:form>
+            </div>
 
             <div class="item-description">
                 <h:outputLink styleClass="res-link" target="_blank" value="#{userBean.getUrlProxied(res)}">

@@ -5,17 +5,7 @@ let noMoreResults = false;
 let loading = false;
 
 function prepareResources() {
-  if (view !== 'list') {
-    $('.search-float').justifiedGallery({
-      rowHeight: '160',
-      maxRowHeight: '180',
-      margins: 8,
-      border: 8,
-      captionsShowAlways: true,
-      captionsAnimation: true,
-      waitThumbnailsLoad: false,
-    });
-
+  if ($.fancybox) {
     $().fancybox({
       selector: '.search-item-lightbox',
       baseClass: 'fancybox-search-layout',
@@ -146,7 +136,7 @@ $(() => {
 
   // To keep track of resource click in the web search or resources_list view
   $(document).on('mouseup', '.search-item-web a.res-link', (e) => {
-    const tempResourceId = $(e.currentTarget).closest('.resource').attr('id').substring(9);
+    const tempResourceId = $(e.currentTarget).closest('.search-item').attr('id').substring(9);
     logResourceOpenedCommand([{ name: 'resource_id', value: tempResourceId }]);
   });
 });

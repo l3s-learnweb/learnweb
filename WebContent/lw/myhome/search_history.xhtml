@@ -4,9 +4,10 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:of="http://omnifaces.org/functions"
 				xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="pageTitle" value="#{msg.search_history}"/>
+<ui:param name="pageTitle" value="#{msg['search_history.title']}"/>
 
 <ui:define name="metadata">
 	<f:metadata>
@@ -17,43 +18,50 @@
 </ui:define>
 
 <ui:define name="breadcrumb">
-	<lw:breadcrumb-item link="myhome/search_history.jsf" title="#{msg.search_history}">
+	<lw:breadcrumb-item link="myhome/search_history.jsf" title="#{msg['search_history.title']}">
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 	</lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
+	<h:form class="d-none">
+		<p:remoteCommand name="saveResourceCommand" actionListener="${searchBean.selectResourceCommand}" immediate="true"
+						 update=":copy_resource_dialog" onstart="$.fancybox.close();" oncomplete="PF('copyResourceDialog').show();"/>
+	</h:form>
+
 	<p:panel>
 		<div class="row">
-			<div class="col-12 col-xl-4 border-right" id="col_sessions">
-				<div class="d-flex flex-column-reverse flex-sm-row justify-content-between align-items-center">
-					<div class="row">
-						<div class="col-6 pr-2">
-							<h:form id="search_mode_select">
-								<p:commandButton id="selected_group_id_button" value="Groups' History"
-												 actionListener="#{searchHistoryBean.actionSetShowGroupHistory}" update=":sessionsList @form"
-												 rendered="#{not searchHistoryBean.showGroupHistory}"/>
+			<div class="col-12 col-xl-4" id="col_sessions">
+				<h3>#{msg['search_history.sessions']}</h3>
+				<div class="row d-flex justify-content-between align-items-center pb-2">
+					<div class="col-4">
+						<h:form id="search_mode_select">
+							<p:commandButton id="selected_group_id_button" value="#{msg.groupsTitle}"
+											 actionListener="#{searchHistoryBean.actionSetShowGroupHistory}" update=":sessionsList @form :sh_nav_desc"
+											 rendered="#{not searchHistoryBean.showGroupHistory}"/>
 
-								<p:commandButton id="group_unselected_button" value="My History"
-												 actionListener="#{searchHistoryBean.actionSetShowUserHistory}" update=":sessionsList @form" oncomplete="bindClickToSessionBlock();"
-												 rendered="#{searchHistoryBean.showGroupHistory}"/>
-							</h:form>
-						</div>
-						<div class="col-6 pr-2 mb-3">
-							<h:form id="search_in_history">
-								<div class="ui-inputgroup">
-									<p:inputText placeholder="Search query" id="sh-query" value="#{searchHistoryBean.searchQuery}"/>
-									<p:commandButton icon="fa fa-search" id="sh-search" ajax="true" update=":sessionsList" actionListener="#{searchHistoryBean.search}"/>
-								</div>
-							</h:form>
-						</div>
+							<p:commandButton id="group_unselected_button" value="#{msg['search_history.my_history']}"
+											 actionListener="#{searchHistoryBean.actionSetShowUserHistory}" update=":sessionsList @form :sh_nav_desc"
+											 rendered="#{searchHistoryBean.showGroupHistory}"/>
+						</h:form>
 					</div>
+					<div class="col-6">
+						<h:form id="search_in_history" styleClass="ml-auto">
+							<div class="ui-inputgroup">
+								<p:inputText placeholder="#{msg['search_history.query']}" id="sh-query" styleClass="w-100" value="#{searchHistoryBean.searchQuery}"/>
+								<p:commandButton icon="fa fa-search" id="sh-search" ajax="true" update=":sessionsList" actionListener="#{searchHistoryBean.search}"/>
+								<p:commandButton icon="fa fa-times" id="sh-reset" ajax="true" update=":sessionsList @form" actionListener="#{searchHistoryBean.reset}"/>
+							</div>
+						</h:form>
+					</div>
+				</div>
 
-					<div class="row">
+				<div class="row d-flex justify-content-between align-items-center my-2">
+					<div class="col-12">
 						<h:panelGroup id="sh_nav_desc" layout="block">
-							<div class="" id="select-groups">
-								<h:form rendered="#{searchHistoryBean.showGroupHistory}" id="select_grouo_form">
-									<h:outputText value="Show history for Group: "/>
+							<div id="select-groups">
+								<h:form rendered="#{searchHistoryBean.showGroupHistory}" id="select_group_form">
+									<h:outputText value="#{msg['search_history.show_history_for_group']}"/>
 									<p:selectOneMenu id="select-group-menu" value="#{searchHistoryBean.selectedGroupId}">
 										<f:selectItem itemLabel="---------------" itemValue="-1"/>
 										<f:selectItems var="group" value="#{searchHistoryBean.currentUser.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
@@ -65,35 +73,34 @@
 					</div>
 				</div>
 
-				<h3>Sessions</h3>
-
 				<h:panelGroup id="sessionsList" layout="block">
-					<h:outputText value="No Sessions have been recorded yet." rendered="#{empty searchHistoryBean.sessions}"/>
+					<h:outputText value="#{msg['search_history.no_sessions_recorded']}" rendered="#{empty searchHistoryBean.sessions}"/>
 
 					<h:form>
 						<ul class="sh-sessions-list #{searchHistoryBean.showGroupHistory == false ? '' : 'sh-session-group'} overflow-auto vh-100">
 							<ui:repeat var="ss" value="#{searchHistoryBean.sessions}">
-								<li>
-										<p:commandLink update=":queriesList" process="@this" styleClass="white-space-normal">
-										<f:setPropertyActionListener target="#{searchHistoryBean.selectedSession}" value="#{ss}"/>
-										<span></span>
+								<li class="session-single">
+									<span></span>
 
-										<h:panelGroup layout="block" class="cursor-pointer" pt:data-sessionId="#{ss.sessionId}" pt:data-userId="#{ss.userId}">
-											<div class="info">
-												<p:repeat var="query" value="#{ss.queries}">
-													<span class="text-break search-source-icon source-#{query.service}">#{query.query}</span>
-												</p:repeat>
-											</div>
+									<h:panelGroup layout="block" class="cursor-pointer" pt:data-sessionId="#{ss.sessionId}" pt:data-userId="#{ss.userId}">
+										<div class="session-queries">
+											<p:repeat var="query" value="#{ss.queries}">
+												<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="white-space-normal p-1">
+													<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{query}"/>
 
-											<div class="time">
-												<h:outputFormat value="#{msg.format_date_and_time_between}" escape="false">
-													<f:param value="#{ss.startTimestamp}"/>
-													<f:param value="#{ss.endTimestamp}"/>
-												</h:outputFormat>
-											</div>
-											<span><b>#{searchHistoryBean.showGroupHistory == false ? '' : 'From: '.concat(ss.userName)}</b></span>
-										</h:panelGroup>
-									</p:commandLink>
+													<span class="search-source-icon source-#{query.service} mode-#{query.mode} py-2">#{query.query}</span>
+												</p:commandLink>
+											</p:repeat>
+										</div>
+
+										<div class="session-time">
+											<h:outputFormat value="#{msg.format_date_and_time_between}" escape="false">
+												<f:param value="#{ss.startTimestamp}"/>
+												<f:param value="#{ss.endTimestamp}"/>
+											</h:outputFormat>
+										</div>
+										<h:outputText value="#{msg.by}: #{ss.userName}" rendered="#{searchHistoryBean.showGroupHistory}" styleClass="font-weight-bold"/>
+									</h:panelGroup>
 								</li>
 							</ui:repeat>
 						</ul>
@@ -101,49 +108,71 @@
 				</h:panelGroup>
 			</div>
 
-			<div class="col-12 col-xl-4 mt-5 mt-xl-0">
-				<h3>Queries</h3>
+			<h:panelGroup id="snippetsList" styleClass="col-12 col-xl-8 mt-5 mt-xl-0 my-3 d-flex" layout="block">
+				<h:panelGroup styleClass="sh-snippets-list overflow-auto vh-100 w-100" rendered="#{searchHistoryBean.selectedQuery ne null}" layout="block">
+					<h:outputText styleClass="h6 text-muted" value="#{msg['search_history.results_for_query']} "/>
+					<h:outputText styleClass="h5" value="#{searchHistoryBean.selectedQuery.query}"/>
+					<h:outputText styleClass="h6 text-muted" value=" #{msg.on_date} #{of:formatDate(searchHistoryBean.selectedQuery.timestamp, 'E, MMM dd, yyyy')} "/>
+                    <h:outputText styleClass="h6 text-muted text-lowercase" value="#{msg['search_history.from_user']} "/>
+                    <h:outputText styleClass="h5" value=" #{searchHistoryBean.selectedSession.userName}"/>
 
-				<h:panelGroup id="queriesList" layout="block">
-					<h:outputText value="Choose any session." rendered="#{empty searchHistoryBean.queries}"/>
+                    <!--<div>
+                        <h:outputText styleClass="fa fa-arrow-left" value="1. On the left side you (will) see the list of all sessions with queries"/>
+                    </div>-->
 
-					<h:form>
-						<h:outputText value="#{searchHistoryBean.selectedSession.startTimestamp}">
-							<f:convertDateTime type="date" dateStyle="full" />
-						</h:outputText>
-						<ul class="sh-queries-list overflow-auto vh-100">
-							<ui:repeat var="sq" value="#{searchHistoryBean.queries}">
-								<li class="py-2 queries-background">
-									<p:commandLink update=":snippetsList" process="@this" styleClass="white-space-normal px-2">
-										<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{sq}"/>
+					<p:dialog header="#{msg.options}" widgetVar="copyResourceDialog" responsive="true" draggable="true" resizable="false" id="copy_resource_dialog" modal="true">
+						<h:form rendered="#{userBean.loggedIn and searchBean.selectedResource ne null}">
+							<div class="fg-grid mb-3">
+								<ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
+									<ui:param name="res" value="#{searchBean.selectedResource.resource}"/>
+								</ui:decorate>
 
-										<h:outputText value="#{sq.timestamp}" styleClass="query-time">
-											<f:convertDateTime type="time" dateStyle="full" />
-										</h:outputText>
+								<div class="fg-row">
+									<h:outputText value="#{msg.add_to}:" escape="false"/>
+									<p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="ui-tree-responsive ui-tree-limited"
+											animate="true" selectionMode="single" selection="#{selectLocationBean.targetNode}">
+										<p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 
-										<span class="snippet-list-dot"></span>
+										<p:treeNode type="group">
+											<h:outputText id="group" value="#{node.title}"/>
+										</p:treeNode>
 
-										<h:outputText value="#{sq.query}" styleClass="d-block query-desc text-break ml-4"/>
-									</p:commandLink>
-								</li>
-							</ui:repeat>
-						</ul>
+										<p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+											<h:outputText value="#{node.title}"/>
+										</p:treeNode>
+									</p:tree>
+									<p:message for="@previous"/>
+								</div>
+							</div>
+
+							<div class="text-right mt-3">
+								<p:defaultCommand target="addSelectedResourceButton"/>
+								<p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('copyResourceDialog').hide()"/>
+								<p:commandButton id="addSelectedResourceButton" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"
+												 widgetVar="add_button" onclick="PF('add_button').disable()" oncomplete="PF('copyResourceDialog').hide()"/>
+							</div>
+						</h:form>
+					</p:dialog>
+
+					<h:form prependId="false" styleClass="search-#{searchHistoryBean.searchResultsView}">
+						<ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
+							<ui:param name="view" value="#{searchHistoryBean.searchResultsView}"/>
+							<ui:param name="resources" value="#{searchHistoryBean.searchResults}"/>
+						</ui:decorate>
 					</h:form>
-				</h:panelGroup>
-			</div>
 
-			<h:panelGroup id="snippetsList" styleClass="col-12 col-xl-4 mt-5 mt-xl-0" layout="block">
-				<h:panelGroup styleClass="sh-snippets-list overflow-auto vh-100" rendered="#{searchHistoryBean.selectedQuery ne null}" layout="block">
-					<h3>Snippets for query: #{searchHistoryBean.selectedQuery.query}</h3>
+<!--					<ui:repeat var="sr" value="#{searchHistoryBean.searchResults}">-->
+<!--						<div class="snippet-description my-3">-->
+<!--							<h:outputLink styleClass="snippet" target="_blank" value="#{sr.url}">-->
+<!--								<h:outputText value="#{sr.title}" escape="false" styleClass="snippet-title h5 mb-0"/>-->
+<!--								<h:outputText value="#{sr.url}" escape="false" styleClass="snippet-link"/>-->
+<!--							</h:outputLink>-->
 
-					<ui:repeat var="sr" value="#{searchHistoryBean.searchResults}">
-						<h:panelGroup layout="block" pt:data-searchId="#{sr.searchId}" pt:data-rank="#{sr.rank}" styleClass="snippet my-3">
-							<span><a href="#{sr.url}" target="_blank"><h:outputText value="#{sr.title}" escape="false"/></a></span><br/>
-							<span class="reference_url">#{sr.url}</span><br/>
-							<span>#{sr.description}</span><br/>
-							<span class="float-right">rank: &#35;#{sr.rank}</span>
-						</h:panelGroup>
-					</ui:repeat>
+<!--							<div class="text-truncate-multiline line-height-sm pt-1">-->
+<!--								<h:outputText value="#{sr.description}"/>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--					</ui:repeat>-->
 				</h:panelGroup>
 			</h:panelGroup>
 		</div>

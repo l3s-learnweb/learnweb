@@ -5,14 +5,14 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="pageTitle" value="#{msg.search_history} - #{msg.your_information}"/>
+<ui:param name="pageTitle" value="#{msg['search_history.title']} - #{msg.your_information}"/>
 
 <ui:define name="breadcrumb">
     <lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item link="your_information/your_search_history.jsf" title="#{msg.search_history}">
+    <lw:breadcrumb-item link="your_information/your_search_history.jsf" title="#{msg['search_history.title']}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_your_info.xhtml"/>
     </lw:breadcrumb-item>
 </ui:define>
@@ -22,7 +22,7 @@
         <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" paginator="true" rows="30" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
-                <h:outputText value="#{msg.search_history}"/>
+                <h:outputText value="#{msg['search_history.title']}"/>
             </f:facet>
 
             <f:facet name="{Exporters}">

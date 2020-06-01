@@ -1,13 +1,28 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
->
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:o="http://omnifaces.org/ui">
 
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
+
+    <h:outputScript library="vendor" name="justifiedGallery-v3.7.0/jquery.justifiedGallery.min.js" target="body"/>
 
     <ui:repeat var="res" value="#{resources}">
         <a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-image search-item-lightbox d-inline-block">
             <img src="#{res.thumbnail2b.url}" height="#{res.thumbnail2b.height}" width="#{res.thumbnail2b.width}" alt="#{res.title}"/>
         </a>
     </ui:repeat>
+
+    <o:onloadScript>
+        $('.search-float').justifiedGallery({
+        rowHeight: '160',
+        maxRowHeight: '180',
+        margins: 8,
+        border: 8,
+        captionsShowAlways: true,
+        captionsAnimation: true,
+        waitThumbnailsLoad: false,
+        });
+    </o:onloadScript>
 
 </ui:composition>
