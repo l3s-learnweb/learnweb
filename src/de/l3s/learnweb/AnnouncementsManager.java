@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.l3s.util.Sql;
+import de.l3s.util.database.Sql;
 
 public class AnnouncementsManager {
     // private static final Logger log = LogManager.getLogger(AnnouncementsManager.class);

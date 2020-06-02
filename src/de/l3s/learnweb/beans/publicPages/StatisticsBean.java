@@ -16,7 +16,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.util.Sql;
+import de.l3s.util.database.Sql;
 
 @Named
 @RequestScoped

@@ -21,6 +21,7 @@ public class ForumPost implements Serializable {
     private int editCount;
     private Date lastEditDate;
     private int editUserId;
+    private boolean deleted;
 
     private String category;
 
@@ -115,6 +116,14 @@ public class ForumPost implements Serializable {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

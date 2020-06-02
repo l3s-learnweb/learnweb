@@ -25,8 +25,8 @@ import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
-import de.l3s.util.Sql;
 import de.l3s.util.StringHelper;
+import de.l3s.util.database.Sql;
 
 /**
  * DAO for the File class.

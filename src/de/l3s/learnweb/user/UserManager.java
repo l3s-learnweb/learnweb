@@ -30,7 +30,7 @@ import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
 import de.l3s.util.SHA512;
-import de.l3s.util.Sql;
+import de.l3s.util.database.Sql;
 
 /**
  * DAO for the User class.

@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.Course.Option;
-import de.l3s.util.Sql;
+import de.l3s.util.database.Sql;
 
 /**
  * DAO for the Course class.

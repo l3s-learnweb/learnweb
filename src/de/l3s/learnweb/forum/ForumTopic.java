@@ -20,7 +20,9 @@ public class ForumTopic implements Serializable {
     private int lastPostId;
     private Date lastPostDate;
     private int lastPostUserId;
+    private boolean deleted;
 
+    // cached values
     private transient User user;
     private transient User lastPostUser;
 
@@ -118,9 +120,16 @@ public class ForumTopic implements Serializable {
         this.lastPostDate = lastPostDate;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
         return "ForumTopic [id=" + id + ", userId=" + userId + ", groupId=" + groupId + ", title=" + title + ", date=" + date + ", views=" + views + ", replies=" + replies + ", lastPostId=" + lastPostId + ", lastPostDate=" + lastPostDate + "]";
     }
-
 }

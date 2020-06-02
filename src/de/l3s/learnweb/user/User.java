@@ -70,10 +70,20 @@ public class User implements Comparable<User>, Serializable, HasId {
     }
 
     public enum NotificationFrequency {
-        NEVER,
-        DAILY,
-        WEEKLY,
-        MONTHLY
+        NEVER(-1),
+        DAILY(1),
+        WEEKLY(7),
+        MONTHLY(30);
+
+        private final int days; // how many days this enum represents
+
+        private NotificationFrequency(int days) {
+            this.days = days;
+        }
+
+        public int getDays() {
+            return days;
+        }
     }
 
     private int id = -1;

@@ -1,4 +1,4 @@
-package de.l3s.util;
+package de.l3s.util.database;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,6 +101,45 @@ public class Sql {
         }
         sb.setLength(sb.length() - 1); // remove last comma
 
+        return sb.toString();
+    }
+
+    /**
+     * Creates INSERT INTO tableName ON DUPLICATE KEY UPDATE statement.
+     * Assumes that the first column is the primary key of this table.
+     */
+    public static String getCreateStatement(final String tableName, final IColumn[] columns) {
+        StringBuilder sb = new StringBuilder("INSERT INTO ");
+        sb.append(tableName).append(" (");
+
+        for (IColumn column : columns) {
+            sb.append(column).append(',');
+        }
+        sb.setLength(sb.length() - 1); // remove last comma
+
+        String questionMarks = StringUtils.repeat(",?", columns.length).substring(1);
+        sb.append(") VALUES (").append(questionMarks).append(") ON DUPLICATE KEY UPDATE ");
+
+        for (int i = 1; i < columns.length; i++) { // skip first column
+            IColumn column = columns[i];
+            sb.append(column).append("=VALUES(").append(column).append("),");
+        }
+        sb.setLength(sb.length() - 1); // remove last comma
+
+        return sb.toString();
+    }
+
+    public static String columns(IColumn[] values) {
+        if (ArrayUtils.isEmpty(values)) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (IColumn column : values) {
+            sb.append(column.toString());
+            sb.append(',');
+        }
+        sb.setLength(sb.length() - 1); // delete last ","
         return sb.toString();
     }
 

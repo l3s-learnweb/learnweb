@@ -28,8 +28,8 @@ import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
 import de.l3s.util.PropertiesBundle;
-import de.l3s.util.Sql;
 import de.l3s.util.StringHelper;
+import de.l3s.util.database.Sql;
 
 public class ResourceManager {
     private static final Logger log = LogManager.getLogger(ResourceManager.class);

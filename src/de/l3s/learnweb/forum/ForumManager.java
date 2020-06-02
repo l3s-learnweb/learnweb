@@ -9,15 +9,13 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User.NotificationFrequency;
 import de.l3s.util.database.IColumn;
+import de.l3s.util.database.Sql;
 
 public class ForumManager {
-    private static final Logger log = LogManager.getLogger(ForumManager.class);
+    //private static final Logger log = LogManager.getLogger(ForumManager.class);
 
     enum PostColumns implements IColumn {
         POST_ID,
@@ -46,8 +44,10 @@ public class ForumManager {
         TOPIC_LAST_POST_USER_ID
     }
 
-    private static final String POST_COLUMNS = "post_id, topic_id, user_id, text, post_time, post_edit_time, post_edit_count, post_edit_user_id, category";
-    private static final String TOPIC_COLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id, topic_last_post_time, topic_last_post_user_id";
+    private static final String POST_COLUMNS = Sql.columns(PostColumns.values());
+    private static final String TOPIC_COLUMNS = Sql.columns(TopicColumns.values());
+    private static final String QUERY_POST_SAVE = Sql.getCreateStatement("lw_forum_post", PostColumns.values());
+    private static final String QUERY_TOPIC_SAVE = Sql.getCreateStatement("lw_forum_topic", TopicColumns.values());
 
     private final Learnweb learnweb;
 
@@ -143,23 +143,22 @@ public class ForumManager {
     }
 
     public ForumTopic save(ForumTopic topic) throws SQLException {
-        String sqlQuery = "REPLACE INTO `lw_forum_topic` (" + TOPIC_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?)";
-
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement(QUERY_TOPIC_SAVE, Statement.RETURN_GENERATED_KEYS)) {
             if (topic.getId() < 0) {
                 ps.setNull(1, java.sql.Types.INTEGER);
             } else {
                 ps.setInt(1, topic.getId());
             }
             ps.setInt(2, topic.getGroupId());
-            ps.setString(3, topic.getTitle());
-            ps.setInt(4, topic.getUserId());
-            ps.setTimestamp(5, new java.sql.Timestamp(topic.getDate().getTime()));
-            ps.setInt(6, topic.getViews());
-            ps.setInt(7, topic.getReplies());
-            ps.setInt(8, topic.getLastPostId());
-            ps.setTimestamp(9, new java.sql.Timestamp(topic.getLastPostDate().getTime()));
-            ps.setInt(10, topic.getLastPostUserId());
+            ps.setBoolean(3, topic.isDeleted());
+            ps.setString(4, topic.getTitle());
+            ps.setInt(5, topic.getUserId());
+            ps.setTimestamp(6, new java.sql.Timestamp(topic.getDate().getTime()));
+            ps.setInt(7, topic.getViews());
+            ps.setInt(8, topic.getReplies());
+            ps.setInt(9, topic.getLastPostId());
+            ps.setTimestamp(10, new java.sql.Timestamp(topic.getLastPostDate().getTime()));
+            ps.setInt(11, topic.getLastPostUserId());
             ps.executeUpdate();
 
             if (topic.getId() < 0) { // get the assigned id
@@ -174,21 +173,21 @@ public class ForumManager {
     }
 
     public ForumPost save(ForumPost post) throws SQLException {
-        String sqlQuery = "REPLACE INTO `lw_forum_post` (" + POST_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?)";
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement(QUERY_POST_SAVE, Statement.RETURN_GENERATED_KEYS)) {
             if (post.getId() < 0) {
                 ps.setNull(1, java.sql.Types.INTEGER);
             } else {
                 ps.setInt(1, post.getId());
             }
-            ps.setInt(2, post.getTopicId());
-            ps.setInt(3, post.getUserId());
-            ps.setString(4, post.getText());
-            ps.setTimestamp(5, new java.sql.Timestamp(post.getDate().getTime()));
-            ps.setTimestamp(6, new java.sql.Timestamp(post.getLastEditDate().getTime()));
-            ps.setInt(7, post.getEditCount());
-            ps.setInt(8, post.getEditUserId());
-            ps.setString(9, post.getCategory());
+            ps.setBoolean(2, post.isDeleted());
+            ps.setInt(3, post.getTopicId());
+            ps.setInt(4, post.getUserId());
+            ps.setString(5, post.getText());
+            ps.setTimestamp(6, new java.sql.Timestamp(post.getDate().getTime()));
+            ps.setTimestamp(7, new java.sql.Timestamp(post.getLastEditDate().getTime()));
+            ps.setInt(8, post.getEditCount());
+            ps.setInt(9, post.getEditUserId());
+            ps.setString(10, post.getCategory());
             ps.executeUpdate();
 
             if (post.getId() < 0) { // get the assigned id
@@ -199,7 +198,7 @@ public class ForumManager {
                 post.setId(rs.getInt(1));
 
                 // updated view count and statistic of parent topic
-                sqlQuery = "UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ? AND topic_views > 0";
+                String sqlQuery = "UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ? AND topic_views > 0";
                 try (PreparedStatement update = learnweb.getConnection().prepareStatement(sqlQuery)) {
                     update.setInt(1, post.getId());
                     update.setTimestamp(2, new Timestamp(post.getDate().getTime()));
@@ -247,16 +246,16 @@ public class ForumManager {
 
     public ForumTopic createTopic(ResultSet rs) throws SQLException {
         ForumTopic topic = new ForumTopic();
-        topic.setId(rs.getInt("topic_id"));
-        topic.setUserId(rs.getInt("user_id"));
-        topic.setGroupId(rs.getInt("group_id"));
-        topic.setTitle(rs.getString("topic_title"));
-        topic.setDate(new Date(rs.getTimestamp("topic_time").getTime()));
-        topic.setViews(rs.getInt("topic_views"));
-        topic.setReplies(rs.getInt("topic_replies"));
-        topic.setLastPostId(rs.getInt("topic_last_post_id"));
-        topic.setLastPostDate(new Date(rs.getTimestamp("topic_last_post_time").getTime()));
-        topic.setLastPostUserId(rs.getInt("topic_last_post_user_id"));
+        topic.setId(rs.getInt(TopicColumns.TOPIC_ID.name()));
+        topic.setUserId(rs.getInt(TopicColumns.USER_ID.name()));
+        topic.setGroupId(rs.getInt(TopicColumns.GROUP_ID.name()));
+        topic.setTitle(rs.getString(TopicColumns.TOPIC_TITLE.name()));
+        topic.setDate(new Date(rs.getTimestamp(TopicColumns.TOPIC_TIME.name()).getTime()));
+        topic.setViews(rs.getInt(TopicColumns.TOPIC_VIEWS.name()));
+        topic.setReplies(rs.getInt(TopicColumns.TOPIC_REPLIES.name()));
+        topic.setLastPostId(rs.getInt(TopicColumns.TOPIC_LAST_POST_ID.name()));
+        topic.setLastPostDate(new Date(rs.getTimestamp(TopicColumns.TOPIC_LAST_POST_TIME.name()).getTime()));
+        topic.setLastPostUserId(rs.getInt(TopicColumns.TOPIC_LAST_POST_USER_ID.name()));
 
         return topic;
     }
@@ -272,31 +271,21 @@ public class ForumManager {
      * @return list of topics, that were created in date interval
      */
     public List<ForumTopic> getTopicByPeriod(int userId, NotificationFrequency notificationFrequency) throws SQLException {
-        int days = -1;
-        switch (notificationFrequency) {
-            case DAILY:
-                days = 1;
-                break;
-            case WEEKLY:
-                days = 7;
-                break;
-            case MONTHLY:
-                days = 30;
-                break;
-            case NEVER:
-                throw new IllegalArgumentException();
+        if (notificationFrequency.equals(NotificationFrequency.NEVER)) {
+            throw new IllegalArgumentException();
         }
 
         List<ForumTopic> topics = new LinkedList<>();
+
         try (PreparedStatement select = learnweb.getConnection().prepareStatement(
             "SELECT * FROM `lw_forum_topic` f JOIN `lw_group_user` g USING(`group_id`) LEFT JOIN `lw_forum_topic_user` ft ON g.`user_id` = ft.`user_id` "
                 + "AND f.`topic_id` = ft.`topic_id` WHERE TIMESTAMPDIFF(DAY, topic_last_post_time, CURRENT_TIMESTAMP) < ? AND g.`user_id` = ? "
                 + "AND g.`notification_frequency` = ? AND (TIMESTAMPDIFF(DAY, ft.`last_visit`, CURRENT_TIMESTAMP) IS NULL "
                 + "OR TIMESTAMPDIFF(DAY, ft.`last_visit`, CURRENT_TIMESTAMP)>=?) GROUP BY f.`topic_id`")) {
-            select.setInt(1, days);
+            select.setInt(1, notificationFrequency.getDays());
             select.setInt(2, userId);
             select.setString(3, notificationFrequency.toString());
-            select.setInt(4, days);
+            select.setInt(4, notificationFrequency.getDays());
             ResultSet rs = select.executeQuery();
 
             while (rs.next()) {

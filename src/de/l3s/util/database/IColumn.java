@@ -5,4 +5,7 @@ public interface IColumn {
     default boolean isReadOnly() {
         return false;
     }
+    /*
+    @Override
+    String toString();*/
 }
