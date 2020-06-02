@@ -77,7 +77,7 @@ public class User implements Comparable<User>, Serializable, HasId {
 
         private final int days; // how many days this enum represents
 
-        private NotificationFrequency(int days) {
+        NotificationFrequency(int days) {
             this.days = days;
         }
 
