@@ -8,6 +8,7 @@
 <ui:param name="hideGrowl" value="false"/>
 <ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
 <ui:param name="pageTitle" value="#{groupResourcesBean.group.title} - #{msg.resources}"/>
+<ui:param name="hasAccessPermission" value="#{groupResourcesBean.group ne null and groupResourcesBean.group.canViewResources(userBean.user)}"/>
 
 <ui:define name="metadata">
     <f:metadata>
@@ -41,18 +42,6 @@
     <h:outputScript library="vendor" name="contextMenu-v2.9.2/jquery.contextMenu.min.js" target="body"/>
     <h:outputScript library="layout" name="js/group-resources.js" target="body"/>
 
-    <ui:fragment rendered="#{groupResourcesBean.group ne null}">
-        <ui:fragment rendered="${not groupResourcesBean.group.canViewResources(userBean.user)}">
-            <h3 class="error">
-                <h:outputText value="#{msg['group_resources.access_denied']}"/>
-                <h:outputText value="#{msg['group_resources.access_denied_join_first']}"
-                              rendered="${groupResourcesBean.group.policyView != 'GROUP_LEADER' and groupResourcesBean.group.canJoinGroup(userBean.user)}"/>
-            </h3>
-        </ui:fragment>
-
-        <ui:fragment rendered="#{groupResourcesBean.group.canViewResources(userBean.user)}">
-            <ui:decorate template="/WEB-INF/templates/blocks/resources/resources.xhtml"/>
-        </ui:fragment>
-    </ui:fragment>
+    <ui:decorate template="/WEB-INF/templates/blocks/resources/resources.xhtml"/>
 </ui:define>
 </ui:composition>

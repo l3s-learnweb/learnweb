@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
@@ -35,8 +36,8 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
 
     @PostConstruct
     public void init() {
-        officeServerUrl = getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT");
-        documentServerUrl = getLearnweb().getServerUrl();
+        officeServerUrl = StringUtils.removeEnd(getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT"), "/");
+        documentServerUrl = StringUtils.removeEnd(getLearnweb().getServerUrl(), "/");
 
         Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
         fillInFileInfo(resource);

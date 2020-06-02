@@ -6,7 +6,7 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
+<ui:param name="pageTitle" value="#{msg['Submission.overview']}"/>
 <ui:param name="helpText" value=""/>
 
 <ui:define name="metadata">
@@ -21,7 +21,7 @@
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 	</lw:breadcrumb-item>
 
-	<lw:breadcrumb-item link="myhome/submission_overview.jsf" title="#{msg['Submission.overview_title']}">
+	<lw:breadcrumb-item link="myhome/submission_overview.jsf" title="#{msg['Submission.overview']}">
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
 	</lw:breadcrumb-item>
 </ui:define>

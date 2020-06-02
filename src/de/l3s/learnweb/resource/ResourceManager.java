@@ -95,13 +95,23 @@ public class ResourceManager {
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id LIMIT " + (page * pageSize) + "," + pageSize, null);
     }
 
-    public boolean isResourceRatedByUser(int resourceId, int userId) throws SQLException {
-        try (PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_resource_rating WHERE resource_id =  ? AND user_id = ?")) {
+    /**
+     * @return a rate given to the resource by the user, or {@code null} when resource is not rated by the user.
+     */
+    public Integer getResourceRateByUser(int resourceId, int userId) {
+        try (PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT rating FROM lw_resource_rating WHERE resource_id =  ? AND user_id = ?")) {
             stmt.setInt(1, resourceId);
             stmt.setInt(2, userId);
-            ResultSet rs = stmt.executeQuery();
-            return rs.next();
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("rating");
+                }
+            }
+        } catch (SQLException ignored) {
         }
+
+        return null;
     }
 
     protected void rateResource(int resourceId, int userId, int value) throws SQLException {
@@ -144,13 +154,20 @@ public class ResourceManager {
         }
     }
 
-    public boolean isResourceThumbRatedByUser(int resourceId, int userId) throws SQLException {
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_thumb WHERE resource_id = ? AND user_id = ?")) {
-            select.setInt(1, resourceId);
-            select.setInt(2, userId);
-            ResultSet rs = select.executeQuery();
-            return rs.next();
+    public Integer getResourceThumbRateByUser(int resourceId, int userId) {
+        try (PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT direction FROM lw_thumb WHERE resource_id = ? AND user_id = ?")) {
+            stmt.setInt(1, resourceId);
+            stmt.setInt(2, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("direction");
+                }
+            }
+        } catch (SQLException ignored) {
         }
+
+        return null;
     }
 
     public Resource getResource(int resourceId) throws SQLException {

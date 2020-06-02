@@ -28,9 +28,8 @@
 
 		<p:column headerText="#{msg.resource}">
 			<p:repeat var="res" value="#{tag.resources}">
-				<h:outputLink value="myhome/resources.jsf" styleClass="mr-1">
+				<h:outputLink value="resource.jsf" styleClass="mr-1">
 					<f:param name="resource_id" value="#{res.id}"/>
-					<f:param name="group_id" value="#{res.groupId}"/>
 					<h:outputText value="#{res.title}" escape="false"/>
 				</h:outputLink>
 			</p:repeat>

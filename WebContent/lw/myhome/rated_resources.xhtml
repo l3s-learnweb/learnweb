@@ -38,6 +38,19 @@
 					<p:column headerText="#{msg.type}">
 						#{res.type}
 					</p:column>
+
+					<p:column headerText="#{msg.star_ratings}" rendered="#{userBean.starRatingEnabled}">
+						<p:rating value="#{res.getRateByUser(userBean.user.id)}" disabled="true"/>
+					</p:column>
+
+					<p:column headerText="#{msg.thumb_ratings}" rendered="#{userBean.thumbRatingEnabled}">
+						<h:outputText rendered="#{res.getThumbRateByUser(userBean.user.id) eq 1}">
+							<i class="fa fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
+						</h:outputText>
+						<h:outputText rendered="#{res.getThumbRateByUser(userBean.user.id) eq -1}">
+							<i class="fa fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
+						</h:outputText>
+					</p:column>
 				</p:dataTable>
 			</h:form>
 		</ui:define>

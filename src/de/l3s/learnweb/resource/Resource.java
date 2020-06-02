@@ -102,8 +102,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     private int thumbUp = -1;
     private int thumbDown = -1;
-    private final HashMap<Integer, Boolean> isThumbRatedByUser = new HashMap<>(); // userId : hasRated
-    private final HashMap<Integer, Boolean> isRatedByUser = new HashMap<>(); // userId : hasRated
+    private final HashMap<Integer, Integer> thumbRateByUser = new HashMap<>(); // userId : direction, null if not rated
+    private final HashMap<Integer, Integer> rateByUser = new HashMap<>(); // userId : rate, null if not rated
     private LinkedHashMap<Integer, File> files = new LinkedHashMap<>(); // resource_file_number : file
 
     // caches
@@ -583,20 +583,18 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         rateNumber++;
         ratingSum += value;
 
-        isRatedByUser.put(user.getId(), true);
+        rateByUser.put(user.getId(), value);
     }
 
-    public boolean isRatedByUser(int userId) throws SQLException {
-        Boolean value = isRatedByUser.get(userId);
-        if (null != value) { // the answer is cached
-            return value;
-        }
+    public Integer getRateByUser(int userId) {
+        // get value from cache, or query database if absent
+        return rateByUser.computeIfAbsent(userId, key ->
+            Learnweb.getInstance().getResourceManager().getResourceRateByUser(id, key));
+    }
 
-        // the answer isn't cached we have to query the database
-        value = Learnweb.getInstance().getResourceManager().isResourceRatedByUser(id, userId);
-        isRatedByUser.put(userId, value); // cache answer
-
-        return value;
+    public boolean isRatedByUser(int userId) {
+        Integer value = getRateByUser(userId);
+        return value != null;
     }
 
     /**
@@ -685,20 +683,18 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
         Learnweb.getInstance().getResourceManager().thumbRateResource(id, user.getId(), direction);
 
-        isThumbRatedByUser.put(user.getId(), true);
+        thumbRateByUser.put(user.getId(), direction);
     }
 
-    public boolean isThumbRatedByUser(int userId) throws SQLException {
-        Boolean value = isThumbRatedByUser.get(userId);
-        if (null != value) { // the answer is cached
-            return value;
-        }
+    public Integer getThumbRateByUser(int userId) {
+        // get value from cache, or query database if absent
+        return thumbRateByUser.computeIfAbsent(userId, key ->
+            Learnweb.getInstance().getResourceManager().getResourceThumbRateByUser(id, key));
+    }
 
-        // the answer isn't cached load from db
-        value = Learnweb.getInstance().getResourceManager().isResourceThumbRatedByUser(id, userId);
-        isThumbRatedByUser.put(userId, value); // cache answer
-
-        return value;
+    public boolean isThumbRatedByUser(int userId) {
+        Integer value = getThumbRateByUser(userId);
+        return value != null;
     }
 
     public String getUrl() {

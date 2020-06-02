@@ -55,7 +55,7 @@ public class StatusBean extends ApplicationBean {
         // very simple database integrity test
         Service lwDbIntegrity = new Service("Learnweb Database integrity", "ok", learnweb.getProperties().getProperty("FEDORA_SERVER_URL"), "");
         try {
-            if (!learnweb.getResourceManager().isResourceRatedByUser(2811, 1684)) {
+            if (learnweb.getResourceManager().getResourceRateByUser(2811, 1684) == null) {
                 lwDbIntegrity.setStatus("warning", "unexpected result from database");
             }
         } catch (Exception e) {
