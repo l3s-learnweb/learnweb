@@ -43,7 +43,7 @@
             </p:column>
 
         <p:column headerText="Last login" sortBy="#{user.lastLoginDate}" styleClass="td-text-center d-none d-md-table-cell">
-            <h:outputText value="#{user.lastLoginDate.atZone(userBean.timeZone.toZoneId())}">
+            <h:outputText value="#{user.lastLoginDate.atZone(user.timeZone)}">
                 <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" />
             </h:outputText>
         </p:column>
