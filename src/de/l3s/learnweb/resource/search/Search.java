@@ -18,8 +18,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
-import de.l3s.interwebj.InterWeb;
-import de.l3s.interwebj.model.SearchResponse;
+import de.l3s.interwebj.client.InterWeb;
+import de.l3s.interwebj.client.model.SearchResponse;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -258,7 +258,7 @@ public class Search implements Serializable {
 
         if (searchFilters.isFilterActive(FilterType.service)) {
             params.put("services", searchFilters.getFilterValue(FilterType.service));
-            params.put("number_of_results", String.valueOf(configResultsPerService * 4));
+            params.put("per_page", String.valueOf(configResultsPerService * 4));
         } else {
             if (configMode == SearchMode.text) {
                 params.put("services", "Bing");
@@ -267,7 +267,7 @@ public class Search implements Serializable {
             } else if (configMode == SearchMode.video) {
                 params.put("services", "YouTube,Vimeo");
             }
-            params.put("number_of_results", configResultsPerService.toString());
+            params.put("per_page", configResultsPerService.toString());
         }
 
         if (searchFilters.getFilterDateFrom() != null) {
@@ -275,7 +275,7 @@ public class Search implements Serializable {
         }
 
         if (searchFilters.getFilterDateTo() != null) {
-            params.put("date_to", DEFAULT_DATE_FORMAT.format(searchFilters.getFilterDateTo()));
+            params.put("date_till", DEFAULT_DATE_FORMAT.format(searchFilters.getFilterDateTo()));
         }
 
         if (searchFilters.isFilterActive(FilterType.language)) {

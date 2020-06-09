@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
 import org.primefaces.PrimeFaces;
 
-import de.l3s.interwebj.InterWeb;
+import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;

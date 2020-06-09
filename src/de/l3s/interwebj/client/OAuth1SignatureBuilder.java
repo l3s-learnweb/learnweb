@@ -1,4 +1,4 @@
-package de.l3s.interwebj;
+package de.l3s.interwebj.client;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -239,7 +239,7 @@ public class OAuth1SignatureBuilder {
     /**
      * Add a parameter to the be included when building the signature.
      *
-     * @param name the parameter name
+     * @param name  the parameter name
      * @param value the parameter value
      * @return this
      */

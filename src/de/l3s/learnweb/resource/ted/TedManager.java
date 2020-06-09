@@ -26,7 +26,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
-import de.l3s.interwebj.model.SearchResponse;
+import de.l3s.interwebj.client.model.SearchResponse;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File;
@@ -399,7 +399,7 @@ public class TedManager {
         TreeMap<String, String> params = new TreeMap<>();
         params.put("media_types", "video");
         params.put("services", "YouTube");
-        params.put("number_of_results", "50");
+        params.put("per_page", "50");
         params.put("timeout", "500");
 
         List<ResourceDecorator> resources;

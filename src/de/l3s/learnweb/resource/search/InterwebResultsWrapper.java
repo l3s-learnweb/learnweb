@@ -13,9 +13,9 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
-import de.l3s.interwebj.model.SearchResponse;
-import de.l3s.interwebj.model.SearchResult;
-import de.l3s.interwebj.model.SearchThumbnail;
+import de.l3s.interwebj.client.model.SearchResponse;
+import de.l3s.interwebj.client.model.SearchResult;
+import de.l3s.interwebj.client.model.SearchThumbnail;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
@@ -37,16 +37,16 @@ public class InterwebResultsWrapper implements Serializable {
             return;
         }
 
-        totalResults = response.getQuery().getTotalResults();
+        totalResults = response.getTotalResults();
 
-        if (response.getQuery().getFacetSources() != null && !response.getQuery().getFacetSources().isEmpty()) {
+        if (response.getResultsPerService() != null && !response.getResultsPerService().isEmpty()) {
             FacetField facetField = new FacetField("location");
-            for (Map.Entry<String, Integer> serviceResults : response.getQuery().getFacetSources().entrySet()) {
+            for (Map.Entry<String, Long> serviceResults : response.getResultsPerService().entrySet()) {
                 resultCountPerService.add(new Count(facetField, serviceResults.getKey(), serviceResults.getValue()));
             }
         }
 
-        List<SearchResult> searchResults = response.getQuery().getResults();
+        List<SearchResult> searchResults = response.getResults();
 
         int counter = 0;
         for (SearchResult searchResult : searchResults) {
@@ -76,79 +76,64 @@ public class InterwebResultsWrapper implements Serializable {
         resource.setSource(searchResult.getService());
         // resource.setViews(searchResult.getNumberOfViews());
         resource.setIdAtService(searchResult.getIdAtService());
-        resource.setDuration(searchResult.getDuration());
         resource.setDescription(searchResult.getDescription());
-        resource.setUrl(StringHelper.urlDecode(searchResult.getUrl()));
 
         if (resource.getTitle().equals(resource.getDescription())) { // delete description when equal to title
             resource.setDescription("");
         }
 
-        if (resource.getSource() == ResourceService.slideshare) {
-            resource.setEmbeddedRaw(searchResult.getEmbeddedSize4());
-            if (null == resource.getEmbeddedRaw()) {
-                resource.setEmbeddedRaw(searchResult.getEmbeddedSize3());
-            }
+        if (searchResult.getUrl() != null) {
+            resource.setUrl(StringHelper.urlDecode(searchResult.getUrl()));
         }
 
-        setThumbnails(searchResult, resource);
+        if (searchResult.getDuration() != null) {
+            resource.setDuration(searchResult.getDuration().intValue());
+        }
+
+        if (searchResult.getEmbeddedCode() != null) {
+            resource.setEmbeddedRaw(searchResult.getEmbeddedCode());
+        }
+
+        setThumbnails(resource, searchResult);
         return resource;
     }
 
-    private static void setThumbnails(SearchResult searchResult, Resource resource) {
-        SearchThumbnail biggestThumbnail = null;
-        int biggestThumbnailHeight = 0;
-
-        List<SearchThumbnail> thumbnails = searchResult.getThumbnails();
-
-        for (SearchThumbnail thumbnailElement : thumbnails) {
-            String url = thumbnailElement.getUrl();
-            int height = thumbnailElement.getHeight();
-            int width = thumbnailElement.getWidth();
-
-            if (height > biggestThumbnailHeight) {
-                biggestThumbnailHeight = height;
-                biggestThumbnail = thumbnailElement;
-            }
-
-            // ipernity api doesn't return largest available thumbnail, so we have to guess it
-            if (resource.getSource() == ResourceService.ipernity && url.contains(".560.")) {
-                if (width == 560 || height == 560) {
-                    double ratio = 640.0 / 560.0;
-                    width *= ratio;
-                    height *= ratio;
-
-                    url = url.replace(".560.", ".640.");
-                }
-            }
-
-            Thumbnail thumbnail = new Thumbnail(url, width, height);
-
-            if (resource.getThumbnail0() == null && thumbnail.getHeight() <= 100 && thumbnail.getWidth() <= 100) {
-                resource.setThumbnail0(thumbnail);
-            } else if (resource.getThumbnail1() == null && thumbnail.getHeight() <= 200 && thumbnail.getWidth() <= 200) {
-                resource.setThumbnail1(thumbnail);
-            } else if (resource.getThumbnail2() == null && thumbnail.getHeight() < 500 && thumbnail.getWidth() < 500) {
-                resource.setThumbnail2(thumbnail.resize(300, 220));
-            } else { // if (thumbnail.getHeight() < 600 && thumbnail.getWidth() < 600)
-                resource.setThumbnail4(thumbnail);
-            }
+    private static void setThumbnails(Resource resource, SearchResult searchResult) {
+        if (searchResult.getThumbnailSmall() != null) {
+            resource.setThumbnail0(createThumbnail(searchResult.getThumbnailSmall()));
+        } else if (searchResult.getThumbnailLarge() != null) {
+            resource.setThumbnail0(createThumbnail(searchResult.getThumbnailLarge()));
         }
 
-        // remove old bing images first
-        if (biggestThumbnail != null) {
-            resource.setMaxImageUrl(biggestThumbnail.getUrl());
-
-            if (resource.getThumbnail2() == null) {
-                resource.setThumbnail2(new Thumbnail(biggestThumbnail.getUrl(), biggestThumbnail.getWidth(), biggestThumbnail.getHeight()));
-            }
-        } else if (resource.getType() != ResourceType.website) {
-            log.warn("no image url for: {}", searchResult);
+        if (searchResult.getThumbnailMedium() != null) {
+            resource.setThumbnail2(createThumbnail(searchResult.getThumbnailMedium()));
+        } else if (searchResult.getThumbnailLarge() != null) {
+            resource.setThumbnail2(createThumbnail(searchResult.getThumbnailLarge()));
         }
+
+        if (searchResult.getThumbnailLarge() != null) {
+            resource.setThumbnail4(createThumbnail(searchResult.getThumbnailLarge()));
+        } else if (searchResult.getThumbnailOriginal() != null) {
+            resource.setThumbnail4(createThumbnail(searchResult.getThumbnailOriginal()));
+        }
+
+        if (searchResult.getThumbnailOriginal() != null) {
+            resource.setMaxImageUrl(searchResult.getThumbnailOriginal().getUrl());
+        } else {
+            Thumbnail biggestThumbnail = resource.getLargestThumbnail();
+            if (biggestThumbnail != null) {
+                resource.setMaxImageUrl(biggestThumbnail.getUrl());
+            }
+        }
+    }
+
+    private static Thumbnail createThumbnail(SearchThumbnail searchThumbnail) {
+        return new Thumbnail(searchThumbnail.getUrl(), searchThumbnail.getWidth(), searchThumbnail.getHeight());
     }
 
     private static ResourceDecorator createDecoratedResource(SearchResult searchResult, Resource resource) {
         ResourceDecorator decoratedResource = new ResourceDecorator(resource);
+        decoratedResource.setRank(searchResult.getRankAtService());
         decoratedResource.setTitle(searchResult.getTitle());
         decoratedResource.setSnippet(searchResult.getSnippet());
 

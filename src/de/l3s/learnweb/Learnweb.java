@@ -11,7 +11,7 @@ import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.interwebj.InterWeb;
+import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardManager;
 import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardManager;
 import de.l3s.learnweb.dashboard.tracker.TrackerDashboardManager;
