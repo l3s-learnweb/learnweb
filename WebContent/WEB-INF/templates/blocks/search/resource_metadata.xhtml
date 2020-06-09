@@ -8,6 +8,16 @@
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
 
     <h:panelGroup layout="block" styleClass="metadata text-left" rendered="#{res ne null}">
+        <h:form styleClass="mb-2">
+            <p:linkButton href="${userBean.getUrlProxied(res)}" value="Visit Website" styleClass="secondary-btn mr-2" target="_blank"/>
+
+            <p:linkButton href="${res.thumbnail4.url}" value="Full-size image" styleClass="secondary-btn mr-2" target="_blank"
+                          rendered="#{res.type == 'image' and res.thumbnail4 ne null}"/>
+
+            <p:commandButton styleClass="mr-2" value="#{msg.save}"
+                             onclick="saveResourceCommand([{ name: 'resourceRank', value: this.dataset.resourcerank }]);" pt:data-resourceRank="#{res.rank}"/>
+        </h:form>
+
         <div class="form-group">
             <h:outputText value="#{msg.title}: " styleClass="font-weight-bold"/>
             <h:outputText value="${res.title}" escape="false"/>
@@ -20,14 +30,7 @@
         </h:panelGroup>
 
         <div class="form-group">
-            <h:outputText value="#{msg.location}: " styleClass="font-weight-bold"/>
-            <h:outputLink value="${userBean.getUrlProxied(res)}">
-                <h:outputText value="${res.location}" escape="false"/>
-            </h:outputLink>
-        </div>
-
-        <div class="form-group">
-            <h:outputText value="#{msg.resource_found_at}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{msg.source}: " styleClass="font-weight-bold"/>
             <h:outputText value="#{res.source.label}" escape="false"/>
         </div>
 
@@ -61,13 +64,5 @@
             <h:outputText value="#{msg.snippet}: " styleClass="font-weight-bold d-block"/>
             <h:outputText value="${res.snippet}" escape="false"/>
         </h:panelGroup>
-
-        <h:form styleClass="form-group">
-            <h:outputText value="#{msg.options}: " styleClass="font-weight-bold d-block"/>
-
-            <p:commandLink onclick="saveResourceCommand([{ name: 'resourceRank', value: this.dataset.resourcerank }]);" pt:data-resourceRank="#{res.rank}">
-                <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}
-            </p:commandLink>
-        </h:form>
     </h:panelGroup>
 </ui:composition>
