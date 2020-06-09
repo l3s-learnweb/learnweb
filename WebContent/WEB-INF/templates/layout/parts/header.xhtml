@@ -31,7 +31,7 @@
                     <p:commandButton action="#{userBean.search}" title="#{msg.searchLabel}" icon="fa fa-search" ajax="false"/>
                 </div>
 
-                <p:lifecycle rendered="#{userBean.admin}"/>
+                <p:lifecycle rendered="#{learnwebBean.developmentMode}"/>
             </h:form>
 
             <h:form id="header_right" styleClass="d-flex ml-auto">
