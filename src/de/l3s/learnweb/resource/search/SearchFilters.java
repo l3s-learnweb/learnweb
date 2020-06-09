@@ -242,7 +242,7 @@ public class SearchFilters implements Serializable {
     public boolean checkAfterLoadFilters(Resource res) {
         if (res.getType() == ResourceType.image && activeFilters.containsKey(FilterType.size)) {
             SizeFilter activeFilter = (SizeFilter) activeFilters.get(FilterType.size);
-            return activeFilter.isValid(res.getThumbnail4().getWidth());
+            return activeFilter.isValid(res.getLargestThumbnail().getWidth());
         }
 
         if (res.getType() == ResourceType.video && activeFilters.containsKey(FilterType.duration)) {

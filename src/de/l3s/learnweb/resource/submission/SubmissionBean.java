@@ -198,7 +198,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
 
                         String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clonedResource);
                         if (response.equals("ROBOTS_ERROR") || response.equals("GENERIC_ERROR") || response.equals("PARSE_DATE_ERROR") || response.equals("SQL_SAVE_ERROR")) {
-                            if (clonedResource.getThumbnail0() == null) {
+                            if (clonedResource.getSmallThumbnail() == null) {
                                 try {
                                     rpm.processResource(clonedResource);
                                 } catch (IOException | SQLException e) {

@@ -52,7 +52,7 @@ public class InterwebResultsWrapper implements Serializable {
         for (SearchResult searchResult : searchResults) {
             Resource resource = createResource(searchResult);
 
-            if (resource.getType() != ResourceType.website && null == resource.getThumbnail2()) { // no thumbnail set
+            if (resource.getType() != ResourceType.website && null == resource.getMediumThumbnail()) { // no thumbnail set
                 log.error("Found no thumbnail: {}", searchResult);
                 counter++;
 

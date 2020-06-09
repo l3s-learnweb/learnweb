@@ -61,11 +61,7 @@
         </div>
     </c:when>
 
-    <c:when test="${not empty res.thumbnail4}">
-        <img src="#{res.thumbnail4.url}" alt="#{res.title}" class="d-block"/>
-    </c:when>
-
-    <c:when test="${not empty res.thumbnail0}">
+    <c:when test="${not empty res.largestThumbnail}">
         <img src="#{res.largestThumbnail.url}" alt="#{res.title}" class="d-block"/>
     </c:when>
 

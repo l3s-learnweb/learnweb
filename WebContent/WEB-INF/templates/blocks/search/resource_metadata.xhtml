@@ -11,8 +11,8 @@
         <h:form styleClass="mb-2">
             <p:linkButton href="${userBean.getUrlProxied(res)}" value="Visit Website" styleClass="secondary-btn mr-2" target="_blank"/>
 
-            <p:linkButton href="${res.thumbnail4.url}" value="Full-size image" styleClass="secondary-btn mr-2" target="_blank"
-                          rendered="#{res.type == 'image' and res.thumbnail4 ne null}"/>
+            <p:linkButton href="${res.largestThumbnail.url}" value="Full-size image" styleClass="secondary-btn mr-2" target="_blank"
+                          rendered="#{res.type == 'image' and res.largestThumbnail ne null}"/>
 
             <p:commandButton styleClass="mr-2" value="#{msg.save}"
                              onclick="saveResourceCommand([{ name: 'resourceRank', value: this.dataset.resourcerank }]);" pt:data-resourceRank="#{res.rank}"/>

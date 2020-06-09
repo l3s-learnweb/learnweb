@@ -9,7 +9,7 @@
 
     <ui:repeat var="res" value="#{resources}">
         <a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-image search-item-lightbox d-inline-block">
-            <img src="#{res.thumbnail2b.url}" height="#{res.thumbnail2b.height}" width="#{res.thumbnail2b.width}" alt="#{res.title}"/>
+            <img src="#{res.getMediumThumbnail.url}" height="#{res.getMediumThumbnail.height}" width="#{res.getMediumThumbnail.width}" alt="#{res.title}"/>
         </a>
     </ui:repeat>
 

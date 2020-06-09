@@ -366,7 +366,7 @@ public class SolrSearch implements Serializable {
                     continue;
                 }
 
-                if (skipResourcesWithoutThumbnails && resource.getThumbnail2() == null
+                if (skipResourcesWithoutThumbnails && resource.getMediumThumbnail() == null
                     && (resource.getType() == ResourceType.image || resource.getType() == ResourceType.video)) {
                     skippedResources++;
                     continue;

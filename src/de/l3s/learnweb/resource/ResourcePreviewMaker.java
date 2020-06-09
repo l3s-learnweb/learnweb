@@ -220,7 +220,7 @@ public class ResourcePreviewMaker {
         File originalFile;
         FFmpegProbeResult ffProbeResult = null;
         try {
-            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video && (resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0)) {
+            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == 0)) {
                 originalFile = resource.getFile(TYPE.FILE_MAIN);
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 

@@ -81,13 +81,11 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private String query; // the query which was used to find this resource
     private int originalResourceId = 0; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
     private String machineDescription;
-    private Thumbnail thumbnail0;
-    private Thumbnail thumbnail1;
-    private Thumbnail thumbnail2;
-    private Thumbnail thumbnail2b;
-    private Thumbnail thumbnail2c;
-    private Thumbnail thumbnail3;
-    private Thumbnail thumbnail4;
+    private Thumbnail thumbnail0; // 150 / 120
+    private Thumbnail thumbnail1; // 150px
+    private Thumbnail thumbnail2; // 300 / 220
+    private Thumbnail thumbnail3; // 500 / 600
+    private Thumbnail thumbnail4; // 1280 / 1024
     private String embeddedRaw; // stored in the database
     private String embeddedCode; // derived from type or embedded raw. Does not need to be stored in DB
     private String transcript; //To store the English transcripts for TED videos and saved articles
@@ -878,20 +876,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.machineDescription = machineDescription;
     }
 
-    /**
-     * Get combined thumbnail.
-     */
-    public Thumbnail getSmallThumbnail() {
-        if (thumbnail1 != null) {
-            return thumbnail1;
-        }
-
-        return thumbnail0;
-    }
-
-    /**
-     * maximum width/height : 150 / 120.
-     */
     public Thumbnail getThumbnail0() {
         return thumbnail0;
     }
@@ -900,9 +884,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.thumbnail0 = thumbnail0;
     }
 
-    /**
-     * height and width = 150px.
-     */
     public Thumbnail getThumbnail1() {
         return thumbnail1;
     }
@@ -911,38 +892,14 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.thumbnail1 = thumbnail1;
     }
 
-    /**
-     * maximum width/height : 300 / 220.
-     */
     public Thumbnail getThumbnail2() {
         return thumbnail2;
     }
 
     public void setThumbnail2(Thumbnail thumbnail2) {
         this.thumbnail2 = thumbnail2;
-        if (thumbnail2 != null) {
-            this.thumbnail2b = thumbnail2.resize(240, 128);
-            this.thumbnail2c = thumbnail2.resize(171, 128);
-        }
     }
 
-    /**
-     * returns thumbnail2 but down scaled to a maximum size of 240 * 128.
-     */
-    public Thumbnail getThumbnail2b() {
-        return thumbnail2b;
-    }
-
-    /**
-     * returns thumbnail2 but down scaled to a maximum size of 171 * 128.
-     */
-    public Thumbnail getThumbnail2c() {
-        return thumbnail2c;
-    }
-
-    /**
-     * maximum width/height : 500 / 600.
-     */
     public Thumbnail getThumbnail3() {
         return thumbnail3;
     }
@@ -951,14 +908,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.thumbnail3 = thumbnail3;
     }
 
-    /**
-     * maximum width/height : 1280 / 1024.
-     */
     public Thumbnail getThumbnail4() {
-        if (null == thumbnail4) {
-            return getThumbnail3();
-        }
-
         return thumbnail4;
     }
 
@@ -966,6 +916,31 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.thumbnail4 = thumbnail4;
     }
 
+    /**
+     * Get combined thumbnail.
+     */
+    public Thumbnail getSmallThumbnail() {
+        if (thumbnail0 != null) {
+            return thumbnail0;
+        }
+
+        return thumbnail1;
+    }
+
+    /**
+     * Get combined medium thumbnail.
+     */
+    public Thumbnail getMediumThumbnail() {
+        if (thumbnail2 != null) {
+            return thumbnail2;
+        }
+
+        return thumbnail3;
+    }
+
+    /**
+     * Get combined large (largest) thumbnail.
+     */
     public Thumbnail getLargestThumbnail() {
         if (null != thumbnail4) {
             return thumbnail4;

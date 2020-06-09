@@ -56,7 +56,7 @@ public class GenerateThumbnailsForWebpageResources {
 
             log.debug("online");
 
-            if (resource.getThumbnail0().getFileId() == 0) {
+            if (resource.getSmallThumbnail().getFileId() == 0) {
                 log.debug("create thumbnail");
                 try {
                     rpm.processWebsite(resource);

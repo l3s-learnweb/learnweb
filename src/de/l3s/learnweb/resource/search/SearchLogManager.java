@@ -128,7 +128,7 @@ public class SearchLogManager {
                     insert.setString(5, StringHelper.shortnString(decoratedResource.getTitle(), 250));
                     insert.setString(6, StringHelper.shortnString(decoratedResource.getDescription(), 1000));
 
-                    Thumbnail thumbnail = decoratedResource.getThumbnail2();
+                    Thumbnail thumbnail = decoratedResource.getMediumThumbnail();
                     if (thumbnail != null) {
                         insert.setString(7, thumbnail.getUrl());
                         insert.setInt(8, Math.min(thumbnail.getHeight(), 65535));
