@@ -39,7 +39,7 @@
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.10" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-collections4:4.4" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-csv:1.8" />
-          <element id="library" level="project" name="Maven: commons-io:commons-io:2.6" />
+          <element id="library" level="project" name="Maven: commons-io:commons-io:2.7" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-text:1.8" />
           <element id="library" level="project" name="Maven: com.twelvemonkeys.servlet:servlet:3.5" />
           <element id="library" level="project" name="Maven: com.twelvemonkeys.common:common-lang:3.5" />
@@ -101,8 +101,8 @@
           <element id="library" level="project" name="Maven: org.modelmapper:modelmapper:0.7.7" />
           <element id="library" level="project" name="Maven: com.hp.gagawa:gagawa:1.0.1" />
           <element id="library" level="project" name="Maven: org.ocpsoft.prettytime:prettytime:4.0.5.Final" />
-          <element id="library" level="project" name="Maven: org.apache.pdfbox:pdfbox:2.0.19" />
-          <element id="library" level="project" name="Maven: org.apache.pdfbox:fontbox:2.0.19" />
+          <element id="library" level="project" name="Maven: org.apache.pdfbox:pdfbox:2.0.20" />
+          <element id="library" level="project" name="Maven: org.apache.pdfbox:fontbox:2.0.20" />
           <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.2" />
           <element id="library" level="project" name="Maven: me.shib.java.lib:diction:0.1.1" />
         </element>

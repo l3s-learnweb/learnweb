@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "browserslist": [
     "> 0.5% in DE",
-    "not edge < 17",
+    "not edge < 79",
     "not firefox < 54",
     "not chrome < 58",
     "not safari < 10.1",
@@ -24,10 +24,10 @@
     "browserslist": "^4.12.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.21.1",
     "eslint-plugin-compat": "^3.7.0",
-    "sass": "^1.26.5",
-    "stylelint": "^13.5.0",
+    "sass": "^1.26.8",
+    "stylelint": "^13.6.0",
     "stylelint-config-sass-guidelines": "^7.0.0",
     "stylelint-no-unsupported-browser-features": "^4.0.0"
   },
