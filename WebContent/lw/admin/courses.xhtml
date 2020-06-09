@@ -26,10 +26,13 @@
         </p:blockUI>
 
         <p:dataTable id="courses" var="course" value="#{adminCoursesBean.courses}">
-
             <f:facet name="header">
                 <div class="d-flex">
-                    <div class="mr-auto">#{msg.courses}</div>
+                    <div class="mr-auto">
+                        #{msg.courses}
+                        <p:button icon="ui-icon-help" onclick="return false;"/>
+                        <p:tooltip for="@previous" value="On this page you can add, delete and edit courses as well as view user submissions."/>
+                    </div>
                     <div class="d-md-block d-flex flex-column">
                         <p:commandButton value="#{msg.create}" styleClass="float-right alt-btn" onclick="PF('createCourseWidget').show();"/>
                     </div>

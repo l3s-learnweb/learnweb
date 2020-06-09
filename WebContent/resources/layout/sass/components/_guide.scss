@@ -1,0 +1,44 @@
+.guide-slideshow {
+  position: relative;
+  width: 100%;
+
+  &::before {
+    position: absolute;
+    content: '';
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: $transition-fade;
+    background-color: $white;
+  }
+
+  &::after {
+    content: '\f01d';
+    @include fa-icon;
+    position: absolute;
+    top: calc(50% - 3rem);
+    left: calc(50% - 3rem);
+    font-size: 6rem;
+    width: 6rem;
+    height: 6rem;
+    color: $white;
+    text-align: center;
+  }
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+
+    &::before {
+      opacity: 0.5;
+    }
+
+    &::after {
+      color: $themePrimaryColor;
+    }
+  }
+
+  img {
+    max-width: 100%;
+  }
+}

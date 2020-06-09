@@ -20,7 +20,13 @@
 
 <ui:define name="center_layout">
 	<h:form>
-		<p:panel header="#{msg.notifications}">
+		<p:panel>
+			<f:facet name="header">
+				#{msg.notifications}
+				<p:button icon="ui-icon-help" onclick="return false;"/>
+				<p:tooltip for="@previous" value="On this page you can send global alerts to a group of users."/>
+			</f:facet>
+
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg.title}:"/>
 				<p:inputText value="#{adminNotificationBean.title}" id="msg_title"/>
