@@ -10,7 +10,15 @@ class UrlHelperTest {
     void ensureTrailingSlash() {
         assertNull(UrlHelper.ensureTrailingSlash(null));
         assertEquals("", UrlHelper.ensureTrailingSlash(""));
+        assertEquals("https://learnweb.l3s.uni-hannover.de/", UrlHelper.ensureTrailingSlash("https://learnweb.l3s.uni-hannover.de"));
         assertEquals("https://learnweb.l3s.uni-hannover.de/", UrlHelper.ensureTrailingSlash("https://learnweb.l3s.uni-hannover.de/"));
-        assertEquals("https://learnweb.l3s.uni-hannover.de/", UrlHelper.ensureTrailingSlash("https://learnweb.l3s.uni-hannover.de/"));
+    }
+
+    @Test
+    void removeTrailingSlash() {
+        assertNull(UrlHelper.removeTrailingSlash(null));
+        assertEquals("", UrlHelper.removeTrailingSlash(""));
+        assertEquals("https://learnweb.l3s.uni-hannover.de", UrlHelper.removeTrailingSlash("https://learnweb.l3s.uni-hannover.de"));
+        assertEquals("https://learnweb.l3s.uni-hannover.de", UrlHelper.removeTrailingSlash("https://learnweb.l3s.uni-hannover.de/"));
     }
 }

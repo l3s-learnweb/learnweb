@@ -187,7 +187,7 @@ public final class Learnweb {
         log.debug("Init LearnwebServer");
 
         // We should run jobScheduler only on one server, otherwise they are conflicting
-        boolean isRootInstance = "https://learnweb.l3s.uni-hannover.de/".equals(serverUrl);
+        boolean isRootInstance = "https://learnweb.l3s.uni-hannover.de".equals(serverUrl);
         if (isRootInstance) {
             jobScheduler.startAllJobs();
             waybackCapturesLogger.start();
@@ -313,7 +313,7 @@ public final class Learnweb {
             fileManager.setServerUrl(serverUrl);
         }
 
-        this.serverUrl = UrlHelper.ensureTrailingSlash(serverUrl);
+        this.serverUrl = UrlHelper.removeTrailingSlash(serverUrl);
         log.debug("Server url updated: {}", serverUrl);
     }
 

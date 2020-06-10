@@ -92,4 +92,8 @@ public final class UrlHelper {
     public static String ensureTrailingSlash(String url) {
         return StringUtils.isEmpty(url) || url.charAt(url.length() - 1) == '/' ? url : url + '/';
     }
+
+    public static String removeTrailingSlash(String url) {
+        return StringUtils.isEmpty(url) || url.charAt(url.length() - 1) != '/' ? url : url.substring(0, url.length() - 1);
+    }
 }
