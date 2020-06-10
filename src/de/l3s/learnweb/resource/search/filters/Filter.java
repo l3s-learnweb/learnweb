@@ -30,7 +30,7 @@ public class Filter implements Serializable {
             return null;
         }
 
-        for (FilterOption option : options) {
+        for (FilterOption option : getOptions()) {
             if (option.isActive()) {
                 return option.getTitle();
             }
@@ -68,7 +68,7 @@ public class Filter implements Serializable {
     }
 
     public boolean isDisabled() {
-        return options.isEmpty();
+        return getOptions().isEmpty();
     }
 
     public ArrayList<FilterOption> getOptions() {
@@ -76,8 +76,8 @@ public class Filter implements Serializable {
     }
 
     public FilterOption findOption(String value) {
-        if (!options.isEmpty()) {
-            for (FilterOption option : options) {
+        if (!getOptions().isEmpty()) {
+            for (FilterOption option : getOptions()) {
                 if (option.getValue().equals(value)) {
                     return option;
                 }

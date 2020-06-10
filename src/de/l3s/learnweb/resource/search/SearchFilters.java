@@ -217,7 +217,7 @@ public class SearchFilters implements Serializable {
             if (filterType == FilterType.date) {
                 // skip date filter for services that not support it
                 Filter sf = availableFilters.get(FilterType.service);
-                if (sf != null && (ResourceService.bing.name().equals(sf.getActiveValue()) || ResourceService.vimeo.name().equals(sf.getActiveValue()))) {
+                if (sf != null && ResourceService.vimeo.name().equals(sf.getActiveValue())) {
                     continue;
                 }
             }

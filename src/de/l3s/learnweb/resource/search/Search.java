@@ -254,6 +254,7 @@ public class Search implements Serializable {
         TreeMap<String, String> params = new TreeMap<>();
         params.put("media_types", configMode.name());
         params.put("page", Integer.toString(page));
+        params.put("extras", "duration");
         params.put("timeout", "50");
 
         if (searchFilters.isFilterActive(FilterType.service)) {
