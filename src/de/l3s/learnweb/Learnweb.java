@@ -42,6 +42,7 @@ import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.learnweb.web.RequestManager;
 import de.l3s.util.Misc;
 import de.l3s.util.PropertiesBundle;
+import de.l3s.util.UrlHelper;
 import de.l3s.util.email.BounceManager;
 
 public final class Learnweb {
@@ -186,12 +187,12 @@ public final class Learnweb {
         log.debug("Init LearnwebServer");
 
         // We should run jobScheduler only on one server, otherwise they are conflicting
-        boolean isRootInstance = getServerUrl().endsWith("learnweb.l3s.uni-hannover.de/v3/"); // TODO need to revert when V3 becomes ROOT
+        boolean isRootInstance = "https://learnweb.l3s.uni-hannover.de/".equals(serverUrl);
         if (isRootInstance) {
             jobScheduler.startAllJobs();
             waybackCapturesLogger.start();
         } else {
-            log.warn("JobScheduler not started, because it seams that this instance is only for testing: " + getServerUrl());
+            log.warn("JobScheduler not started, because this instance is not recognized as the main instance.");
         }
     }
 
@@ -312,8 +313,8 @@ public final class Learnweb {
             fileManager.setServerUrl(serverUrl);
         }
 
-        this.serverUrl = serverUrl;
-        log.debug("Server base url updated: " + serverUrl);
+        this.serverUrl = UrlHelper.ensureTrailingSlash(serverUrl);
+        log.debug("Server url updated: {}", serverUrl);
     }
 
     public SolrClient getSolrClient() {
@@ -465,7 +466,7 @@ public final class Learnweb {
         }
     }
 
-    public static boolean isForceHttps() {
+    private static boolean isForceHttps() {
         return "true".equalsIgnoreCase(System.getenv("LEARNWEB_FORCE_HTTPS"));
     }
 

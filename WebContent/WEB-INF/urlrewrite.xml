@@ -5,8 +5,8 @@
 <urlrewrite use-query-string="true">
     <!-- Redirects from one instance to another -->
     <rule>
-        <from>/v2/(.*)</from>
-        <to type="redirect" last="true">/v3/$1</to>
+        <from>/v3/(.*)</from>
+        <to type="redirect" last="true">/$1</to>
     </rule>
     <rule>
         <name>The Yell documentation still contains links to /new</name>

@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -86,5 +87,9 @@ public final class UrlHelper {
             url = new URI(url).toASCIIString();
         }
         return url;
+    }
+
+    public static String ensureTrailingSlash(String url) {
+        return StringUtils.isEmpty(url) || url.charAt(url.length() - 1) == '/' ? url : url + '/';
     }
 }

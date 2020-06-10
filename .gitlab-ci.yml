@@ -66,13 +66,13 @@ deploy_dev:
       - target/Learnweb.war
     policy: pull
 
-# A commit to `master` brunch with message `chore: version release` will be deployed to v3 (later ROOT) instance
+# A commit to `master` brunch with message `chore: version release` will be deployed to ROOT instance
 deploy_prod:
   stage: deploy
   tags:
     - java
   script:
-    - mvn $MAVEN_CLI_OPTS tomcat7:deploy-only -Dpath=v3
+    - mvn $MAVEN_CLI_OPTS tomcat7:deploy-only -Dpath=ROOT
   environment:
     name: prod
     url: https://learnweb.l3s.uni-hannover.de/

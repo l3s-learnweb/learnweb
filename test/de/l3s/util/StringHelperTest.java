@@ -37,7 +37,7 @@ class StringHelperTest {
     void testGetDomainName() {
         assertEquals(
             "learnweb.l3s.uni-hannover.de",
-            StringHelper.getDomainName("https://learnweb.l3s.uni-hannover.de/v3/lw/your_information/index.jsf"));
+            StringHelper.getDomainName("https://learnweb.l3s.uni-hannover.de/lw/your_information/index.jsf"));
     }
 
     @Test
