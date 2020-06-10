@@ -279,7 +279,7 @@ public class Search implements Serializable
         if(searchFilters.getServiceFilter() != null)
         {
             params.put("services", searchFilters.getServiceFilter());
-            params.put("number_of_results", String.valueOf(configResultsPerService * 4));
+            params.put("per_page", String.valueOf(configResultsPerService * 4));
         }
         else
         {
@@ -295,14 +295,14 @@ public class Search implements Serializable
             {
                 params.put("services", "YouTube,Vimeo");
             }
-            params.put("number_of_results", configResultsPerService.toString());
+            params.put("per_page", configResultsPerService.toString());
         }
 
         if(searchFilters.getDateFromFilterAsString() != null)
             params.put("date_from", DEFAULT_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
 
         if(searchFilters.getDateToFilterAsString() != null)
-            params.put("date_to", DEFAULT_DATE_FORMAT.format(searchFilters.getDateToFilter()));
+            params.put("date_till", DEFAULT_DATE_FORMAT.format(searchFilters.getDateToFilter()));
 
         if(searchFilters.getLanguageFilter() != null)
             params.put("language", searchFilters.getLanguageFilter());

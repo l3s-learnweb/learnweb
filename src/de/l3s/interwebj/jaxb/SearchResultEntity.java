@@ -1,6 +1,8 @@
 package de.l3s.interwebj.jaxb;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -12,123 +14,97 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SearchResultEntity
 {
-
+    // base
     @XmlElement(name = "service")
-    protected String service;
-    @XmlElement(name = "id_at_service")
-    protected String idAtService;
-    @XmlElement(name = "type")
-    protected String type;
-    @XmlElement(name = "title")
-    protected String title;
-    @XmlElement(name = "description")
-    protected String description;
-    @XmlElement(name = "url")
-    protected String url;
-    // TODO: Remove image element. Used only for the InterWeb compatibility
-    @XmlElement(name = "image")
-    protected String image;
-    @XmlElementWrapper(name = "thumbnails")
-    @XmlElement(name = "thumbnail")
-    protected List<ThumbnailEntity> thumbnailEntities;
-    @XmlElement(name = "date")
-    protected String date;
-    @XmlElement(name = "tags")
-    protected String tags;
+    private String service;
     @XmlElement(name = "rank_at_service")
-    protected int rankAtService;
-    @XmlElement(name = "total_results_at_service")
-    protected long totalResultsAtService;
-    @XmlElement(name = "views")
-    protected int numberOfViews;
-    @XmlElement(name = "number_of_comments")
-    protected int numberOfComments;
-    @XmlElement(name = "privacy")
-    protected double privacy;
-    @XmlElement(name = "privacy_confidence")
-    protected double privacyConfidence;
-    @XmlElement(name = "embedded_size1")
-    private String embeddedSize1;
-    @XmlElement(name = "embedded_size2")
-    private String embeddedSize2;
-    @XmlElement(name = "embedded_size3")
-    private String embeddedSize3;
-    @XmlElement(name = "embedded_size4")
-    private String embeddedSize4;
-    @XmlElement(name = "max_image_url")
-    private String imageUrl;
-    @XmlElement(name = "duration")
-    private int duration;
+    private int rank;
+    @XmlElement(name = "id_at_service")
+    private String id;
+
+    // general
+    @XmlElement(name = "type")
+    private String type;
+    @XmlElement(name = "title")
+    private String title;
+    @XmlElement(name = "description")
+    private String description;
+    @XmlElement(name = "url")
+    private String url;
+    @XmlElement(name = "date")
+    private String date;
     @XmlElement(name = "snippet")
     private String snippet;
+    @XmlElement(name = "duration")
+    private Long duration;
+    @XmlElementWrapper(name = "tags")
+    @XmlElement(name = "tag")
+    private Set<String> tags;
+
+    // statistic
+    @XmlElement(name = "number_of_views")
+    private Long viewCount;
+    @XmlElement(name = "number_of_comments")
+    private Long commentCount;
+
+    // media
+    @XmlElement(name = "embedded_code")
+    private String embeddedCode;
+    /**
+     * Usually an image with HEIGHT between 100 and 180 px.
+     */
+    @XmlElement(name = "thumbnail_small")
+    private ThumbnailEntity thumbnailSmall;
+    /**
+     * Usually an image with HEIGHT between 200 and 440 px.
+     */
+    @XmlElement(name = "thumbnail_medium")
+    private ThumbnailEntity thumbnailMedium;
+    /**
+     * Usually an image with HEIGHT between 600 and 920 px.
+     */
+    @XmlElement(name = "thumbnail_large")
+    private ThumbnailEntity thumbnailLarge;
+    /**
+     * Image in max available quality, if bigger than large.
+     */
+    @XmlElement(name = "thumbnail_original")
+    private ThumbnailEntity thumbnailOriginal;
 
     public SearchResultEntity()
     {
+        tags = new HashSet<>();
     }
 
-    public String getDate()
-    {
-        return date;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    //	public String getEmbedded()
-    //	{
-    //		return embedded;
-    //	}
-
-    public String getIdAtService()
-    {
-        return idAtService;
-    }
-
-    public String getImage()
-    {
-        return image;
-    }
-
-    public int getNumberOfComments()
-    {
-        return numberOfComments;
-    }
-
-    public int getNumberOfViews()
-    {
-        return numberOfViews;
-    }
-
-    public int getRankAtService()
-    {
-        return rankAtService;
-    }
 
     public String getService()
     {
         return service;
     }
 
-    public String getTags()
+    public void setService(final String service)
     {
-        return tags;
+        this.service = service;
     }
 
-    public List<ThumbnailEntity> getThumbnailEntities()
+    public int getRank()
     {
-        return thumbnailEntities;
+        return rank;
     }
 
-    public String getTitle()
+    public void setRank(final int rank)
     {
-        return title;
+        this.rank = rank;
     }
 
-    public long getTotalResultsAtService()
+    public String getId()
     {
-        return totalResultsAtService;
+        return id;
+    }
+
+    public void setId(final String id)
+    {
+        this.id = id;
     }
 
     public String getType()
@@ -139,182 +115,49 @@ public class SearchResultEntity
         return type.toLowerCase();
     }
 
+    public void setType(final String type)
+    {
+        this.type = type;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(final String title)
+    {
+        this.title = title;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(final String description)
+    {
+        this.description = description;
+    }
+
     public String getUrl()
     {
         return url;
     }
 
-    public void setDate(String date)
-    {
-        this.date = date;
-    }
-
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-
-    public void setIdAtService(String idAtService)
-    {
-        this.idAtService = idAtService;
-    }
-
-    public void setImage(String image)
-    {
-        this.image = image;
-    }
-
-    public void setNumberOfComments(int numberOfComments)
-    {
-        this.numberOfComments = numberOfComments;
-    }
-
-    public void setNumberOfViews(int numberOfViews)
-    {
-        this.numberOfViews = numberOfViews;
-    }
-
-    public void setRankAtService(int rankAtService)
-    {
-        this.rankAtService = rankAtService;
-    }
-
-    public void setService(String service)
-    {
-        this.service = service;
-    }
-
-    public void setTags(String tags)
-    {
-        this.tags = tags;
-    }
-
-    public void setThumbnailEntities(List<ThumbnailEntity> thumbnailEntities)
-    {
-        this.thumbnailEntities = thumbnailEntities;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
-    public void setTotalResultsAtService(long totalResultsAtService)
-    {
-        this.totalResultsAtService = totalResultsAtService;
-    }
-
-    public void setType(String type)
-    {
-        this.type = type;
-    }
-
-    public void setUrl(String url)
+    public void setUrl(final String url)
     {
         this.url = url;
     }
 
-    public void setViews(int numberOfViews)
+    public String getDate()
     {
-        this.numberOfViews = numberOfViews;
+        return date;
     }
 
-    /**
-     * html code, could be flash
-     * max width and max height 500px
-     *
-     * @param embedded
-     */
-    public void setEmbeddedSize3(String embedded)
+    public void setDate(final String date)
     {
-        this.embeddedSize3 = embedded;
-    }
-
-    /**
-     * html code, could be flash
-     * max width and max height 500px
-     *
-     * @return
-     */
-    public String getEmbeddedSize3()
-    {
-        return embeddedSize3;
-    }
-
-    /**
-     * html code, only image or text
-     * max width and max height 100px
-     *
-     * @return
-     */
-    public String getEmbeddedSize1()
-    {
-        return embeddedSize1;
-    }
-
-    /**
-     * html code, only image or text
-     * max width and max height 100px
-     */
-    public void setEmbeddedSize1(String embeddedSize1)
-    {
-        this.embeddedSize1 = embeddedSize1;
-    }
-
-    /**
-     * html code, only image or text
-     * max width and max height 240px
-     */
-    public String getEmbeddedSize2()
-    {
-        return embeddedSize2;
-    }
-
-    /**
-     * html code, only image or text
-     * max width and max height 240px
-     */
-    public void setEmbeddedSize2(String embeddedSize2)
-    {
-        this.embeddedSize2 = embeddedSize2;
-    }
-
-    /**
-     * html code, could be flash
-     * max width and max height 100%
-     */
-    public String getEmbeddedSize4()
-    {
-        return embeddedSize4;
-    }
-
-    /**
-     * html code, could be flash
-     * max width and max height 100%
-     */
-    public void setEmbeddedSize4(String embeddedSize4)
-    {
-        this.embeddedSize4 = embeddedSize4;
-    }
-
-    /**
-     * Url to the best (high resolution) available preview image
-     *
-     * @return
-     */
-    public String getImageUrl()
-    {
-        return imageUrl;
-    }
-
-    /**
-     * Url to the best (high resolution) available preview image
-     *
-     * @param imageUrl
-     */
-    public void setImageUrl(String imageUrl)
-    {
-        this.imageUrl = imageUrl;
+        this.date = date;
     }
 
     public String getSnippet()
@@ -322,22 +165,123 @@ public class SearchResultEntity
         return snippet;
     }
 
-    public int getDuration()
+    public void setSnippet(final String snippet)
+    {
+        this.snippet = snippet;
+    }
+
+    public Long getDuration()
     {
         return duration;
     }
 
-    public void setDuration(int duration)
+    public void setDuration(final Long duration)
     {
         this.duration = duration;
+    }
+
+    public Set<String> getTags()
+    {
+        return tags;
+    }
+
+    public void setTags(final Set<String> tags)
+    {
+        this.tags = tags;
+    }
+
+    public Long getViewCount()
+    {
+        return viewCount;
+    }
+
+    public void setViewCount(final Long viewCount)
+    {
+        this.viewCount = viewCount;
+    }
+
+    public Long getCommentCount()
+    {
+        return commentCount;
+    }
+
+    public void setCommentCount(final Long commentCount)
+    {
+        this.commentCount = commentCount;
+    }
+
+    public String getEmbeddedCode()
+    {
+        return embeddedCode;
+    }
+
+    public void setEmbeddedCode(final String embeddedCode)
+    {
+        this.embeddedCode = embeddedCode;
+    }
+
+    public ThumbnailEntity getThumbnailSmall()
+    {
+        return thumbnailSmall;
+    }
+
+    public void setThumbnailSmall(final ThumbnailEntity thumbnailSmall)
+    {
+        this.thumbnailSmall = thumbnailSmall;
+    }
+
+    public ThumbnailEntity getThumbnailMedium()
+    {
+        return thumbnailMedium;
+    }
+
+    public void setThumbnailMedium(final ThumbnailEntity thumbnailMedium)
+    {
+        this.thumbnailMedium = thumbnailMedium;
+    }
+
+    public ThumbnailEntity getThumbnailLarge()
+    {
+        return thumbnailLarge;
+    }
+
+    public void setThumbnailLarge(final ThumbnailEntity thumbnailLarge)
+    {
+        this.thumbnailLarge = thumbnailLarge;
+    }
+
+    public ThumbnailEntity getThumbnailOriginal()
+    {
+        return thumbnailOriginal;
+    }
+
+    public void setThumbnailOriginal(final ThumbnailEntity thumbnailOriginal)
+    {
+        this.thumbnailOriginal = thumbnailOriginal;
     }
 
     @Override
     public String toString()
     {
-        return "SearchResultEntity [service=" + service + ", idAtService=" + idAtService + ", type=" + type + ", title=" + title + ", description=" + description + ", url=" + url + ", image=" + image + ", thumbnailEntities=" + thumbnailEntities + ", date=" + date + ", tags="
-                + tags + ", rankAtService=" + rankAtService + ", totalResultsAtService=" + totalResultsAtService + ", numberOfViews=" + numberOfViews + ", numberOfComments=" + numberOfComments + ", privacy=" + privacy + ", privacyConfidence=" + privacyConfidence
-                + ", embeddedSize1=" + embeddedSize1 + ", embeddedSize2=" + embeddedSize2 + ", embeddedSize3=" + embeddedSize3 + ", embeddedSize4=" + embeddedSize4 + ", imageUrl=" + imageUrl + ", duration=" + duration + ", snippet=" + snippet + "]";
+        return "SearchResultEntity [" +
+                "service='" + service + '\'' +
+                ", rank=" + rank +
+                ", id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                ", date='" + date + '\'' +
+                ", snippet='" + snippet + '\'' +
+                ", duration=" + duration +
+                ", tags=" + tags +
+                ", viewCount=" + viewCount +
+                ", commentCount=" + commentCount +
+                ", embeddedCode='" + embeddedCode + '\'' +
+                ", thumbnailSmall=" + thumbnailSmall +
+                ", thumbnailMedium=" + thumbnailMedium +
+                ", thumbnailLarge=" + thumbnailLarge +
+                ", thumbnailOriginal=" + thumbnailOriginal +
+                ']';
     }
-
 }

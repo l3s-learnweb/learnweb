@@ -430,7 +430,7 @@ public class TedManager
         TreeMap<String, String> params = new TreeMap<>();
         params.put("media_types", "video");
         params.put("services", "YouTube");
-        params.put("number_of_results", "50");
+        params.put("per_page", "50");
         params.put("timeout", "500");
 
         List<ResourceDecorator> resources;

@@ -158,14 +158,14 @@ public class InterWeb implements Serializable
         TreeMap<String, String> params = new TreeMap<>();
 
         params.put("media_types", "video");
-        //params.put("services", "YouTube,Vimeo");
-        params.put("number_of_results", "8");
+        params.put("services", "YouTube,Vimeo");
         params.put("page", "1");
+        params.put("per_page", "8");
 
         InterWeb iw = new InterWeb("http://learnweb.l3s.uni-hannover.de/interweb/api/", "***REMOVED***", "***REMOVED***");
 
         SearchQuery interwebResponse = iw.search("london", params);
-        interwebResponse.getResults();
-
+        var res = interwebResponse.getResults();
+        System.out.println(res);
     }
 }
