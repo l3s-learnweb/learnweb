@@ -29,7 +29,7 @@
 		</p:blockUI>
 		<p:panel header="#{msg.select_users}">
 			<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
-			<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
+			<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="#{msg['transcript.gather_logs']}"
 							 process="@form" update=":transcript_table" onstart="PF('transcriptTableOverlay').show()" oncomplete="PF('transcriptTableOverlay').hide()"/>
 		</p:panel>
 	</h:form>
