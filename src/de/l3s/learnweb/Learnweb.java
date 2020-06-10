@@ -193,7 +193,6 @@ public class Learnweb
         if(workingDirectory.startsWith("/home/learnweb_user"))
         {
             propertiesFileName = "learnweb";
-            //propertiesFileName = "learnweb_v2";
             developmentMode = false;
         }
         else if(workingDirectory.startsWith("/home/ama_user"))
