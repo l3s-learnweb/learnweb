@@ -139,6 +139,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
                 addInvalidParameterMessage("group_id");
                 return;
             }
+
+            if (!group.canViewResources(getUser())) {
+                addAccessDeniedMessage();
+                return;
+            }
             group.setLastVisit(user);
         } else {
             group = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());

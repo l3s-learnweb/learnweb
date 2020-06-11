@@ -13,7 +13,7 @@
 
 <ui:define name="metadata">
 	<f:metadata>
-		<f:viewParam name="group_id" value="#{groupOptionsBean.groupId}"/>
+		<f:viewParam name="group_id" value="#{groupOptionsBean.groupId}" converter="idConverter"/>
 		<f:viewAction action="#{groupOptionsBean.onLoad}"/>
 	</f:metadata>
 </ui:define>

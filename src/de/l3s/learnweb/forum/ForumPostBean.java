@@ -35,14 +35,25 @@ public class ForumPostBean extends ApplicationBean implements Serializable {
     }
 
     public void onLoad() throws SQLException {
-        if (!isLoggedIn())
+        if (!isLoggedIn()) {
             return;
+        }
 
         ForumManager fm = getLearnweb().getForumManager();
-        posts = fm.getPostsBy(topicId);
         topic = fm.getTopicById(topicId);
+
+        if (null == topic) {
+            addInvalidParameterMessage("topic_id");
+            return;
+        }
+        posts = fm.getPostsBy(topicId);
         group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
         topics = getLearnweb().getForumManager().getTopicsByGroup(group.getId());
+
+        if (!group.canViewResources(getUser())) {
+            addAccessDeniedMessage();
+            return;
+        }
 
         fm.incViews(topicId);
         fm.updatePostVisitTime(topicId, getUser().getId());

@@ -29,6 +29,12 @@ public class ForumEditBean extends ApplicationBean implements Serializable {
     public void onLoad() throws SQLException {
         ForumManager fm = getLearnweb().getForumManager();
         post = fm.getPostById(postId);
+
+        if (null == post) {
+            addInvalidParameterMessage("post_id");
+            return;
+        }
+
         topic = fm.getTopicById(post.getTopicId());
         group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
         topics = getLearnweb().getForumManager().getTopicsByGroup(group.getId());

@@ -8,12 +8,11 @@
 <ui:param name="hideGrowl" value="false"/>
 <ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
 <ui:param name="pageTitle" value="#{groupResourcesBean.group.title} - #{msg.resources}"/>
-<ui:param name="hasAccessPermission" value="#{groupResourcesBean.group ne null and groupResourcesBean.group.canViewResources(userBean.user)}"/>
 
 <ui:define name="metadata">
     <f:metadata>
-        <f:viewParam name="group_id" value="#{groupResourcesBean.groupId}" required="true"/>
-        <f:viewParam name="folder_id" value="#{groupResourcesBean.folderId}"/>
+        <f:viewParam name="group_id" value="#{groupResourcesBean.groupId}" converter="idConverter" />
+        <f:viewParam name="folder_id" value="#{groupResourcesBean.folderId}" converter="idConverter" />
         <f:viewAction action="#{groupResourcesBean.onLoad}"/>
     </f:metadata>
 </ui:define>
