@@ -76,7 +76,7 @@ public class FrontpageServlet extends HttpServlet
             case AMA:
                 server = "https://network.ama-academy.eu";
             default:
-                server = "https://learnweb.l3s.uni-hannover.de";
+                server = "https://learnweb.l3s.uni-hannover.de/v2";
             }
 
             response.sendRedirect(server + folder);
