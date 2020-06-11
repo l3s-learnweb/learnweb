@@ -39,7 +39,7 @@ public class SaverServlet extends HttpServlet {
     private static final String ERROR_0 = "{\"error\":0}";
 
     /**
-     * Method called via callback to save edited resource
+     * Method called via callback to save edited resource.
      *
      * Requires `fileId` and `userId` parameters.
      */
