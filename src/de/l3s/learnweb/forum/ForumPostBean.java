@@ -35,6 +35,9 @@ public class ForumPostBean extends ApplicationBean implements Serializable {
     }
 
     public void onLoad() throws SQLException {
+        if (!isLoggedIn())
+            return;
+
         ForumManager fm = getLearnweb().getForumManager();
         posts = fm.getPostsBy(topicId);
         topic = fm.getTopicById(topicId);
