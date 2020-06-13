@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Servlets;
 
 import com.google.common.net.InetAddresses;
 
@@ -32,7 +33,7 @@ public class RequestFilter implements Filter {
 
     public void init(HttpServletRequest request) {
         try {
-            String serverUrl = BeanHelper.getServerUrl(request);
+            String serverUrl = Servlets.getRequestBaseURL(request);
             Learnweb learnweb = Learnweb.createInstance(serverUrl);
             requestManager = learnweb.getRequestManager();
             protectionManager = learnweb.getProtectionManager();
@@ -51,7 +52,7 @@ public class RequestFilter implements Filter {
         if (requestManager != null && protectionManager != null) {
             try {
                 HttpServletRequest req = (HttpServletRequest) request;
-                String ip = BeanHelper.getIp(req);
+                String ip = Servlets.getRemoteAddr(req);
 
                 if (!InetAddresses.isInetAddress(ip)) {
                     log.error("Suspicious request: " + BeanHelper.getRequestSummary(req));

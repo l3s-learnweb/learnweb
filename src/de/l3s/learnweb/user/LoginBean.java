@@ -6,20 +6,18 @@ import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
+import org.omnifaces.util.Faces;
 
 import com.google.common.net.InetAddresses;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @RequestScoped
@@ -39,7 +37,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
     private ConfirmRequiredBean confirmRequiredBean;
 
     public LoginBean() {
-        String ip = BeanHelper.getIp();
+        String ip = Faces.getRemoteAddr();
 
         if (!InetAddresses.isInetAddress(ip)) {
             captchaRequired = true;
@@ -69,9 +67,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
     }
 
     public String login() throws SQLException {
-        //Getting IP
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String ip = BeanHelper.getIp(request);
+        String ip = Faces.getRemoteAddr();
 
         if (!InetAddresses.isInetAddress(ip)) {
             return LOGIN_PAGE;
@@ -130,7 +126,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         } else {
             log(Action.logout, 0, 0);
             user.onDestroy();
-            getFacesContext().getExternalContext().invalidateSession(); // end session
+            Faces.invalidateSession();
             return logoutPage + "?faces-redirect=true";
         }
     }
@@ -159,7 +155,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         if (moderatorUserId > 0) {
             bean.log(Action.moderator_login, 0, 0);
         } else {
-            bean.log(Action.login, 0, 0, BeanHelper.getRequestURI());
+            bean.log(Action.login, 0, 0, Faces.getRequestURI());
         }
 
         Organisation userOrganisation = user.getOrganisation();
@@ -176,8 +172,8 @@ public class LoginBean extends ApplicationBean implements Serializable {
         }
 
         // if the user logs in from the start or the login page, redirect him to the welcome page
-        String viewId = getFacesContext().getViewRoot().getViewId();
-        if (viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml") && moderatorUserId > 0) {
+        String viewId = Faces.getViewId();
+        if (viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml") && moderatorUserId > 0) {
             return userOrganisation.getWelcomePage() + "?faces-redirect=true";
         }
 

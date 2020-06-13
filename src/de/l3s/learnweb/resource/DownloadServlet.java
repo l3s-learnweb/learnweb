@@ -22,6 +22,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Servlets;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
@@ -46,7 +47,7 @@ public class DownloadServlet extends HttpServlet {
 
     public void init(HttpServletRequest request) {
         try {
-            String serverUrl = BeanHelper.getServerUrl(request);
+            String serverUrl = Servlets.getRequestBaseURL(request);
             this.learnweb = Learnweb.createInstance(serverUrl);
             this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
             this.fileManager = learnweb.getFileManager();

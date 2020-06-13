@@ -299,6 +299,8 @@ public final class Learnweb {
     }
 
     public void setServerUrl(String serverUrl) {
+        serverUrl = UrlHelper.removeTrailingSlash(serverUrl);
+
         if (this.serverUrl != null && this.serverUrl.equals(serverUrl)) {
             return; // ignore new serverUrl
         }
@@ -313,7 +315,7 @@ public final class Learnweb {
             fileManager.setServerUrl(serverUrl);
         }
 
-        this.serverUrl = UrlHelper.removeTrailingSlash(serverUrl);
+        this.serverUrl = serverUrl;
         log.debug("Server url updated: {}", serverUrl);
     }
 

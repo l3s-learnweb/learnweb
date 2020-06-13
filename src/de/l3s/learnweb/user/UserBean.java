@@ -13,7 +13,6 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,6 +20,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
+import org.omnifaces.util.Servlets;
 import org.primefaces.model.menu.BaseMenuModel;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.MenuModel;
@@ -35,7 +36,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.StringHelper;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @SessionScoped
@@ -62,9 +62,7 @@ public class UserBean implements Serializable {
 
     public UserBean() {
         // get preferred language
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
-        locale = viewRoot != null ? viewRoot.getLocale() : externalContext.getRequestLocale();
+        locale = Faces.getLocale();
 
         activeOrganisationId = 478; // public
 
@@ -94,10 +92,10 @@ public class UserBean implements Serializable {
      */
     private String storeMetadataInSession() {
         User user = getUser();
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        ExternalContext context = Faces.getExternalContext();
         HttpServletRequest request = (HttpServletRequest) context.getRequest();
 
-        String ipAddress = BeanHelper.getIp(request);
+        String ipAddress = Servlets.getRemoteAddr(request);
         String userAgent = request.getHeader("User-Agent");
         String userName = user == null ? "logged_out" : user.getRealUsername();
 
@@ -245,10 +243,7 @@ public class UserBean implements Serializable {
                 break;
         }
 
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        // facesContext.getViewRoot().setLocale(locale);
-
-        UIViewRoot viewRoot = facesContext.getViewRoot();
+        UIViewRoot viewRoot = Faces.getViewRoot();
         if (viewRoot == null) {
             return null;
         }
@@ -456,7 +451,7 @@ public class UserBean implements Serializable {
             return false;
         }
 
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+        String viewId = Faces.getViewId();
         if (viewId.contains("register.xhtml")) { // don't show any tooltips on the registration page
             return false;
         }
@@ -476,7 +471,7 @@ public class UserBean implements Serializable {
     }
 
     public boolean isShowMessageJoinGroupInHeader() throws SQLException {
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+        String viewId = Faces.getViewId();
         if (viewId.contains("groups.xhtml")) {
             return false;
         }
@@ -485,7 +480,7 @@ public class UserBean implements Serializable {
     }
 
     public boolean isShowMessageAddResourceInHeader() throws SQLException {
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+        String viewId = Faces.getViewId();
         if (viewId.contains("overview.xhtml") || viewId.contains("resources.xhtml") || viewId.contains("welcome.xhtml")) {
             return false;
         }

@@ -14,7 +14,6 @@ import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ApplicationScoped
@@ -27,7 +26,8 @@ public class LearnwebBean implements Serializable {
     private boolean developmentMode = false;
 
     public LearnwebBean() throws ClassNotFoundException, SQLException {
-        learnweb = Learnweb.createInstance(BeanHelper.getServerUrl());
+        String serverUrl = Faces.getRequestBaseURL();
+        learnweb = Learnweb.createInstance(serverUrl);
     }
 
     @PostConstruct
@@ -40,7 +40,7 @@ public class LearnwebBean implements Serializable {
     public Learnweb getLearnweb() {
         if (null == learnweb) {
             log.error("LearnwebBean: learnweb is null -> redirect");
-            UtilBean.redirect("/lw/error.jsf");
+            throw new IllegalStateException("Unable to initialize Learnweb.");
         }
         return learnweb;
     }
