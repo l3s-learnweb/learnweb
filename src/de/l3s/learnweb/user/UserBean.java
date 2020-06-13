@@ -350,7 +350,7 @@ public class UserBean implements Serializable {
         try {
             return getNewGroups().size();
         } catch (SQLException e) {
-            log.error(e);
+            log.catching(e);
         }
 
         return 0;

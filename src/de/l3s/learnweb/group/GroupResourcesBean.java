@@ -365,7 +365,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
         } catch (IllegalArgumentException | IllegalAccessError e) {
             addGrowl(FacesMessage.SEVERITY_ERROR, e.getMessage());
-            log.error(e.getMessage(), e);
+            log.catching(e);
             // TODO still need to decide if growls can be used to handle errors
             // addErrorGrowl(e.getMessage(), e);
         } catch (JsonParseException | SQLException e) {

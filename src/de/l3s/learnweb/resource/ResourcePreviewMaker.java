@@ -296,7 +296,7 @@ public class ResourcePreviewMaker {
     private void convertVideo(FFmpegProbeResult in, String outputMediaPath) throws IOException {
         FFmpegError error = in.getError();
         if (error != null) {
-            log.error(error);
+            log.error("{} - {}", error.code, error.string);
         }
 
         FFmpegFormat format = in.getFormat();
@@ -336,7 +336,7 @@ public class ResourcePreviewMaker {
     private void saveVideoThumbnail(FFmpegProbeResult in, String outputMediaPath, long seconds) throws IOException {
         FFmpegError error = in.getError();
         if (error != null) {
-            log.error(error);
+            log.error("{} - {}", error.code, error.string);
         }
 
         FFmpegFormat format = in.getFormat();

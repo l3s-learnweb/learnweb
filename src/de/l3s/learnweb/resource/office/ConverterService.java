@@ -64,7 +64,7 @@ public class ConverterService {
                 converterResponse = gson.fromJson(stringResponse, ConverterResponse.class);
             }
         } catch (IOException e) {
-            log.error(e);
+            log.catching(e);
         }
         return converterResponse;
     }

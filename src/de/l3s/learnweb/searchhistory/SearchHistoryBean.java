@@ -148,7 +148,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         try {
             user = getLearnweb().getUserManager().getUser(selectedUserId);
         } catch (SQLException e) {
-            log.error(e);
+            log.catching(e);
         }
         return user == null ? getUser() : user;
     }

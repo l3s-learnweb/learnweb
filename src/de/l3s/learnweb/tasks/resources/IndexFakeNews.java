@@ -148,7 +148,7 @@ public class IndexFakeNews {
                 resource.addTag(tag, user);
             */
         } catch (Exception e) {
-            log.error(e);
+            log.catching(e);
         }
     }
 

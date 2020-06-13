@@ -212,7 +212,7 @@ public class SearchHistoryManager {
             try {
                 return getUser().getUsername();
             } catch (Exception e) {
-                log.error(e);
+                log.catching(e);
                 return "unknown";
             }
         }
