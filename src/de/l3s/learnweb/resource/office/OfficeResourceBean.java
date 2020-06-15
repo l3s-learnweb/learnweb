@@ -23,7 +23,8 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
     private static final long serialVersionUID = -655001215017199006L;
     private static final Logger log = LogManager.getLogger(OfficeResourceBean.class);
 
-    private Integer documentFileId = 0;
+    private int documentResourceId = 0;
+    private int documentFileId = 0;
     private String documentType;
     private String documentFileType;
     private String documentUrl;
@@ -40,6 +41,7 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
     }
 
     private void fillInFileInfo(Resource resource) {
+        documentResourceId = resource.getId();
         documentFileType = FileUtility.getFileExtension(resource.getFileName());
 
         if (FileUtility.canBeViewed(documentFileType)) {
@@ -55,10 +57,6 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
             log.error("Office type resource has not supported extension: {}", documentFileType);
             resource.setOnlineStatus(OnlineStatus.OFFLINE);
         }
-    }
-
-    public Integer getDocumentFileId() {
-        return documentFileId;
     }
 
     public String getDocumentFileType() {
@@ -82,10 +80,10 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
     }
 
     public String getCallbackUrl() {
-        return getLearnweb().getServerUrl() + "/save";
+        return getLearnweb().getServerUrl() + "/save?resourceId=" + documentResourceId + "&fileId=" + documentFileId;
     }
 
     public String getHistoryUrl() {
-        return getLearnweb().getServerUrl() + "/history";
+        return getLearnweb().getServerUrl() + "/history?resourceId=" + documentResourceId;
     }
 }

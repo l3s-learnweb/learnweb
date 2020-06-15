@@ -23,8 +23,8 @@
             canBeEdited: '#{res.canEditResource(userBean.user)}'
         },
         lang: '#{userBean.localeCode}',
-        historyUrl: '#{officeResourceBean.historyUrl}?resourceId=${res.id}',
-        callbackUrl: '#{officeResourceBean.callbackUrl}?resourceId=${res.id}&fileId=${officeResourceBean.documentFileId}',
+        historyUrl: '#{officeResourceBean.historyUrl}',
+        callbackUrl: '#{officeResourceBean.callbackUrl}',
         officeServerUrl: '#{officeResourceBean.officeServerUrl}'
     };
     $(function () {
