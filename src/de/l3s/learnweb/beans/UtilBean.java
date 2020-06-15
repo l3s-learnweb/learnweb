@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,5 +49,9 @@ public class UtilBean implements Serializable {
         }
 
         return LanguageBundle.getLocaleMessage(locale, msgKey, args);
+    }
+
+    public String escapeJS(String input) {
+        return StringEscapeUtils.escapeEcmaScript(input);
     }
 }
