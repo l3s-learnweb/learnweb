@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 
 @Named
 @ViewScoped
@@ -25,20 +26,13 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
 
     private User user;
 
-    public void onLoad() {
-        try {
-            String[] splits = parameter.split("_");
-            int userId = Integer.parseInt(splits[0]);
-            String hash = splits[1];
+    public void onLoad() throws SQLException {
+        String[] splits = parameter.split("_");
+        int userId = Integer.parseInt(splits[0]);
+        String hash = splits[1];
 
-            user = getLearnweb().getUserManager().getUser(userId);
-            if (!hash.equals(PasswordBean.createPasswordChangeHash(user))) {
-                throw new IllegalArgumentException();
-            }
-        } catch (RuntimeException | SQLException e) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
-            user = null;
-        }
+        user = getLearnweb().getUserManager().getUser(userId);
+        BeanAsserts.validate(hash.equals(PasswordBean.createPasswordChangeHash(user)), "invalid_request");
     }
 
     public String changePassword() {

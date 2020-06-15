@@ -13,7 +13,13 @@
 
   &.ui-widget-danger {
     .ui-widget-header {
-      background-color: $red;
+      background-color: $danger;
+    }
+  }
+
+  &.ui-widget-warning {
+    .ui-widget-header {
+      background-color: $warning;
     }
   }
 }

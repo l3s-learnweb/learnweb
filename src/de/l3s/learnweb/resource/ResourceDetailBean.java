@@ -28,6 +28,7 @@ import com.google.gson.JsonObject;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
@@ -59,28 +60,23 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     private ViewAction viewAction = ViewAction.viewResource;
     private List<LogEntry> logs;
 
-    public void onLoad() {
-        if (isAjaxRequest() || !isLoggedIn()) {
+    public void onLoad() throws SQLException {
+        if (isAjaxRequest()) {
             return;
         }
 
-        if (resourceId > 0) {
-            try {
-                Resource openResource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-                if (openResource == null) {
-                    addInvalidParameterMessage("resource_id");
-                    return;
-                }
+        resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+        BeanAsserts.validateNotNull(resource, "The requested resource can't be found.");
+        BeanAsserts.found(!resource.isDeleted(), "This resource has been deleted.");
 
-                setResource(openResource);
-                log(Action.opening_resource, resource.getGroupId(), resource.getId());
+        BeanAsserts.authorized(isLoggedIn() || resource.canViewResource(getUser()));
 
-                if (editResource) {
-                    editResource();
-                }
-            } catch (Exception e) {
-                addErrorMessage(e);
-            }
+        BeanAsserts.hasPermission(resource.canViewResource(getUser()), "group_resources.access_denied");
+
+        log(Action.opening_resource, this.resource.getGroupId(), this.resource.getId());
+
+        if (editResource) {
+            editResource();
         }
     }
 
@@ -129,10 +125,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     }
 
     public void saveEdit() throws SQLException {
-        if (!resource.canEditResource(getUser())) {
-            addAccessDeniedMessage();
-            return;
-        }
+        BeanAsserts.hasPermission(resource.canEditResource(getUser()));
 
         try {
             resource.save();

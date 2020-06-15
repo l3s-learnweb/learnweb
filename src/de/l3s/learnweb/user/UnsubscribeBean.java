@@ -8,6 +8,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.forum.ForumNotificator;
 import de.l3s.learnweb.group.Group;
 
@@ -18,28 +19,19 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable {
 
     private String givenHash;
     private User user;
-    private boolean hashValid = false; // indicates if the given hash value is correct
 
     public void onLoad() throws SQLException {
         try {
-            int userId = Integer.parseInt(givenHash.substring(0, givenHash.indexOf(":")));
+            int userId = Integer.parseInt(givenHash.substring(0, givenHash.indexOf(':')));
             user = getLearnweb().getUserManager().getUser(userId);
         } catch (RuntimeException | SQLException ignored) {
             // ignore all parsing problems
         }
 
-        if (user == null) {
-            addInvalidParameterMessage("hash");
-            return;
-        }
+        BeanAsserts.validateNotNull(user, "Invalid value of 'hash' parameter.");
 
         String correctHash = ForumNotificator.getHash(user);
-
-        if (correctHash.equals(givenHash)) {
-            hashValid = true;
-        } else {
-            addInvalidParameterMessage("hash");
-        }
+        BeanAsserts.validate(correctHash.equals(givenHash), "Invalid value of 'hash' parameter.");
     }
 
     public String getHash() {
@@ -51,10 +43,6 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable {
     }
 
     public void onUnsubscribe() throws SQLException {
-        if (!hashValid) {
-            return;
-        }
-
         user.setPreferredNotificationFrequency(User.NotificationFrequency.NEVER);
         user.save();
 
@@ -62,9 +50,5 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable {
             getLearnweb().getGroupManager().updateNotificationFrequency(group.getId(), user.getId(), User.NotificationFrequency.NEVER);
         }
         addMessage(FacesMessage.SEVERITY_INFO, "notification_settings.unsubscribed");
-    }
-
-    public boolean isHashValid() {
-        return hashValid;
     }
 }

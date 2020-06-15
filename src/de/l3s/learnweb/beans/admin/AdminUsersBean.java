@@ -10,6 +10,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.LoginBean;
@@ -25,21 +26,15 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
 
     public void onLoad() throws SQLException {
         User user = getUser();
-
-        if (null == user) { // not logged in
-            return;
-        }
+        BeanAsserts.authorized(user);
+        BeanAsserts.hasPermission(user.isModerator());
 
         if (courseId != 0) {
             Course course = getLearnweb().getCourseManager().getCourseById(courseId);
-            if (null == course) {
-                addInvalidParameterMessage("course_id");
-                return;
-            }
-            if (!user.isAdmin() && !user.getCourses().contains(course)) { // make sure that moderators can access only their own courses
-                addAccessDeniedMessage();
-                return;
-            }
+            BeanAsserts.validateNotNull(course);
+            // make sure that moderators can access only their own courses
+            BeanAsserts.hasPermission(user.isAdmin() || (user.isModerator() && user.getCourses().contains(course)));
+
             users = course.getMembers();
         } else if (user.isAdmin()) {
             users = getLearnweb().getUserManager().getUsers();

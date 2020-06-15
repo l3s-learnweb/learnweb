@@ -29,6 +29,7 @@ import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
@@ -124,9 +125,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
     public void onLoad() throws SQLException {
         User user = getUser();
-        if (null == user) {
-            return;
-        }
+        BeanAsserts.authorized(user);
 
         if (user.getOrganisation().getId() == 480) {
             view = ResourceView.list;
@@ -134,16 +133,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
         if (groupId > 0) {
             group = getLearnweb().getGroupManager().getGroupById(groupId);
+            BeanAsserts.validateNotNull(group, "error_pages.bad_request_group_description");
 
-            if (null == group) {
-                addInvalidParameterMessage("group_id");
-                return;
-            }
-
-            if (!group.canViewResources(getUser())) {
-                addAccessDeniedMessage();
-                return;
-            }
+            BeanAsserts.hasPermission(group.canViewResources(getUser()));
             group.setLastVisit(user);
         } else {
             group = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());
@@ -151,10 +143,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
         if (folderId > 0) {
             currentFolder = getLearnweb().getGroupManager().getFolder(folderId);
-
-            if (null == currentFolder) {
-                addInvalidParameterMessage("folder_id");
-            }
+            BeanAsserts.validateNotNull(currentFolder, "The requested folder can't be found.");
         }
     }
 

@@ -31,12 +31,12 @@ import org.primefaces.PrimeFaces;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
 import de.l3s.learnweb.user.Course;
-import de.l3s.learnweb.user.User;
 import de.l3s.util.NlpHelper;
 
 @Named
@@ -71,10 +71,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     private TreeSet<Integer> selectedUsers;
 
     public TedTranscriptBean() {
-        User user = getUser();
-        if (user == null) { // not logged in
-            return;
-        }
+        BeanAsserts.authorized(isLoggedIn());
 
         locale = getUserBean().getLocaleCode();
 

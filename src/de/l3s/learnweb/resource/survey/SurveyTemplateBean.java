@@ -12,6 +12,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 
 @Named
 @ViewScoped
@@ -29,9 +30,7 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
     }
 
     public void onLoad() throws SQLException {
-        if (!isLoggedIn()) {
-            return;
-        }
+        BeanAsserts.authorized(isLoggedIn());
 
         if (resourceId != 0) {
             SurveyResource surveyResource = getLearnweb().getSurveyManager().getSurveyResource(resourceId);
@@ -42,9 +41,8 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
             survey = getLearnweb().getSurveyManager().getSurvey(surveyId);
         }
 
-        if (null == survey) {
-            addInvalidParameterMessage("survey_id");
-        }
+        BeanAsserts.validateNotNull(survey);
+        BeanAsserts.hasPermission(getUser().isAdmin() || getUser().getId() == survey.getUserId());
     }
 
     public void onSave() throws SQLException {

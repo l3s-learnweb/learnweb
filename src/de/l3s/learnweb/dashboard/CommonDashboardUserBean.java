@@ -13,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
@@ -46,23 +47,19 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
         endDate = new Date(Long.parseLong(savedEndDate));
     }
 
-    public void onLoad() {
-        User user = getUser(); // the current user
-        if (user == null) { // not logged in or no privileges
-            return;
-        }
+    public void onLoad() throws SQLException {
+        User loggedInUser = getUser(); // the current user
+        BeanAsserts.authorized(loggedInUser);
 
-        if (!user.isModerator()) { // can see only their own statistic
+        if (!loggedInUser.isModerator()) { // can see only their own statistic
             singleUser = true;
-            selectedUsersIds = Collections.singletonList(user.getId());
+            selectedUsersIds = Collections.singletonList(loggedInUser.getId());
         } else if (paramUserId != null) { // statistic for one user from parameter
-            try {
-                singleUser = true;
-                user = Learnweb.getInstance().getUserManager().getUser(paramUserId);
-                selectedUsersIds = Collections.singletonList(user.getId());
-            } catch (SQLException e) {
-                throw new RuntimeException("User not found.");
-            }
+            singleUser = true;
+            User user = Learnweb.getInstance().getUserManager().getUser(paramUserId);
+            BeanAsserts.validateNotNull(user);
+            selectedUsersIds = Collections.singletonList(user.getId());
+            BeanAsserts.hasPermission(loggedInUser.canModerateUser(user));
         } else {
             singleUser = false;
         }

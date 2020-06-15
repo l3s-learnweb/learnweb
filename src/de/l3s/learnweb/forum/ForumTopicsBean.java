@@ -14,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 
@@ -30,28 +31,14 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable {
     @NotBlank
     @Length(max = 100)
     private String newTopicTitle;
-    private final ForumPost newPost;
-
-    public ForumTopicsBean() {
-        newPost = new ForumPost();
-    }
+    private final ForumPost newPost = new ForumPost();
 
     public void onLoad() throws SQLException {
-        if (!isLoggedIn()) {
-            return;
-        }
+        BeanAsserts.authorized(isLoggedIn());
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
-
-        if (null == group) {
-            addInvalidParameterMessage("group_id");
-            return;
-        }
-        if (!group.canViewResources(getUser())) {
-            group = null; // set main object of this page to null to block access
-            addAccessDeniedMessage();
-            return;
-        }
+        BeanAsserts.validateNotNull(group, "error_pages.bad_request_group_description");
+        BeanAsserts.hasPermission(group.canViewResources(getUser()));
 
         topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
     }

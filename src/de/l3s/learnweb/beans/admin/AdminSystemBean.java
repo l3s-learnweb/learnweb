@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -23,10 +24,8 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
 
     public AdminSystemBean() throws SQLException {
         User user = getUser();
-
-        if (null == user || !user.isAdmin()) { // not logged in
-            return;
-        }
+        BeanAsserts.authorized(user);
+        BeanAsserts.hasPermission(user.isAdmin());
 
         loadDatabaseProcessList();
 

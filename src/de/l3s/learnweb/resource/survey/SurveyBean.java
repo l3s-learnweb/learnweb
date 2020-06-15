@@ -12,9 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.user.User;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -34,38 +33,20 @@ public class SurveyBean extends ApplicationBean implements Serializable {
     private String goBackPageTitle; //  title of the go back link
 
     public void onLoad() throws SQLException {
-        User user = getUser();
-        if (user == null) {
-            return;
-        }
+        BeanAsserts.authorized(isLoggedIn());
 
         resource = getLearnweb().getSurveyManager().getSurveyResource(surveyResourceId);
-
-        if (resource == null) {
-            addInvalidParameterMessage("resource_id");
-            return;
-        }
-
-        if (resource.isDeleted()) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "This resource has been deleted");
-            resource = null;
-            return;
-        }
-
-        if (!resource.canViewResource(user)) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "group_resources.access_denied");
-            resource = null;
-            return;
-        }
+        BeanAsserts.validateNotNull(resource);
+        BeanAsserts.found(!resource.isDeleted(), "This resource has been deleted");
+        BeanAsserts.hasPermission(resource.canViewResource(getUser()), "group_resources.access_denied");
 
         // whose answers shall be viewed
-        if (surveyUserId <= 0 || surveyUserId == getUser().getId()) { // by default view the answers of the current user
+        if (surveyUserId <= 0 || surveyUserId == getUser().getId()) {
+            // by default view the answers of the current user
             surveyUserId = getUser().getId();
-        } else if (!resource.canModerateResource(getUser())) { // if a user wants to see the answers of another user, make sure he is a moderator
-            addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
-            log.error("Illegal access: " + BeanHelper.getRequestSummary());
-            resource = null;
-            return;
+        } else {
+            // if a user wants to see the answers of another user, make sure he is a moderator
+            BeanAsserts.hasPermission(resource.canModerateResource(getUser()), "You are not allowed to view the answers of the given user");
         }
 
         userAnswers = resource.getAnswersOfUser(surveyUserId);
@@ -109,7 +90,7 @@ public class SurveyBean extends ApplicationBean implements Serializable {
     private boolean onSaveOrSubmit(boolean submit) {
         if (isSubmitted()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "This Survey has already been submitted");
-            log.error("Survey already submitted. Should not happen. User: " + surveyUserId + "; Survey: " + surveyResourceId);
+            log.error("Survey already submitted. Should not happen. User: {}; Survey: {}", surveyUserId, surveyResourceId);
             return false;
         }
 

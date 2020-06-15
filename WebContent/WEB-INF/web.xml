@@ -43,13 +43,6 @@
     <!-- Check this recommendations https://primefaces.github.io/primefaces/8_0/#/core/performance?id=recommended-configuration -->
     <!-- Also this page provides description for everything https://myfaces.apache.org/core23/myfaces-impl/webconfig.html -->
     <context-param>
-        <description>
-            Removes HTML comments from the output like <!--@elvariable id="pageTitle" type="java.lang.String"-->
-        </description>
-        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
         <param-name>org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES</param-name>
         <param-value>1209600000</param-value>
     </context-param>
@@ -59,7 +52,7 @@
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION</param-name>
-        <param-value>30</param-value> <!-- TODO: Why do we have so high numbers? PrimeFaces recommends 15 -->
+        <param-value>50</param-value> <!-- TODO: Why do we have so high numbers? PrimeFaces recommends 15 -->
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.NUMBER_OF_SEQUENTIAL_VIEWS_IN_SESSION</param-name>
@@ -124,6 +117,16 @@
         <param-value>false</param-value>
     </context-param>
     <context-param>
+        <description>Helps to show en error if it is occurred during RENDER_RESPONSE phase</description>
+        <param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>
+        <param-value>65535</param-value>
+    </context-param>
+    <context-param>
+        <description>Removes HTML comments from the output like <!--@elvariable id="pageTitle" type="java.lang.String"--></description>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
         <param-name>javax.faces.validator.ENABLE_VALIDATE_WHOLE_BEAN</param-name>
         <param-value>false</param-value> <!-- Enable if you want to use f:validateWholeBean -->
     </context-param>
@@ -186,24 +189,36 @@
     </security-constraint>
 
     <error-page>
-        <exception-type>java.sql.SQLNonTransientConnectionException</exception-type>
-        <location>/lw/error-db.jsf</location>
+        <error-code>400</error-code>
+        <location>/lw/error/400.jsf</location>
     </error-page>
     <error-page>
-        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-        <location>/lw/error-expired.jsf</location>
+        <error-code>401</error-code>
+        <location>/lw/error/401.jsf</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/lw/error/403.jsf</location>
     </error-page>
     <error-page>
         <error-code>404</error-code>
-        <location>/lw/error-404.jsf</location>
+        <location>/lw/error/404.jsf</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/lw/error/419.jsf</location>
+    </error-page>
+    <error-page>
+        <error-code>419</error-code>
+        <location>/lw/error/419.jsf</location>
     </error-page>
     <error-page>
         <error-code>500</error-code>
-        <location>/lw/error.jsf</location>
+        <location>/lw/error/500.jsf</location>
     </error-page>
     <error-page>
         <error-code>503</error-code>
-        <location>/lw/error-server.jsf</location>
+        <location>/lw/error/503.jsf</location>
     </error-page>
 
     <welcome-file-list>

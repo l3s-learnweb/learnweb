@@ -67,16 +67,12 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     }
 
     @Override
-    public void onLoad() {
+    public void onLoad() throws SQLException {
         super.onLoad();
 
-        try {
-            selectedActionItems = new ArrayList<>(actions.keySet());
+        selectedActionItems = new ArrayList<>(actions.keySet());
 
-            cleanAndUpdateStoredData();
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
+        cleanAndUpdateStoredData();
     }
 
     @Override

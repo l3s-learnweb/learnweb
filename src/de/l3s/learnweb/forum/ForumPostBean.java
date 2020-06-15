@@ -13,6 +13,7 @@ import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
@@ -35,25 +36,17 @@ public class ForumPostBean extends ApplicationBean implements Serializable {
     }
 
     public void onLoad() throws SQLException {
-        if (!isLoggedIn()) {
-            return;
-        }
+        BeanAsserts.authorized(isLoggedIn());
 
         ForumManager fm = getLearnweb().getForumManager();
         topic = fm.getTopicById(topicId);
+        BeanAsserts.validateNotNull(topic);
 
-        if (null == topic) {
-            addInvalidParameterMessage("topic_id");
-            return;
-        }
         posts = fm.getPostsBy(topicId);
         group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
         topics = getLearnweb().getForumManager().getTopicsByGroup(group.getId());
 
-        if (!group.canViewResources(getUser())) {
-            addAccessDeniedMessage();
-            return;
-        }
+        BeanAsserts.hasPermission(group.canViewResources(getUser()));
 
         fm.incViews(topicId);
         fm.updatePostVisitTime(topicId, getUser().getId());

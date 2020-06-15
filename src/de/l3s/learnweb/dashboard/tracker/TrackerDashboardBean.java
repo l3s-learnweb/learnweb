@@ -27,14 +27,10 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
     private LinkedList<TrackerUserActivity> trackerStatistics;
 
     @Override
-    public void onLoad() {
+    public void onLoad() throws SQLException {
         super.onLoad();
 
-        try {
-            cleanAndUpdateStoredData();
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
+        cleanAndUpdateStoredData();
     }
 
     @Override

@@ -11,6 +11,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
@@ -27,28 +28,22 @@ public class ForumEditBean extends ApplicationBean implements Serializable {
     private List<ForumTopic> topics;
 
     public void onLoad() throws SQLException {
+        BeanAsserts.authorized(isLoggedIn());
+
         ForumManager fm = getLearnweb().getForumManager();
         post = fm.getPostById(postId);
-
-        if (null == post) {
-            addInvalidParameterMessage("post_id");
-            return;
-        }
+        BeanAsserts.validateNotNull(post);
 
         topic = fm.getTopicById(post.getTopicId());
         group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
         topics = getLearnweb().getForumManager().getTopicsByGroup(group.getId());
 
-        if (!canEditPost()) {
-            addAccessDeniedMessage();
-        }
+        BeanAsserts.hasPermission(canEditPost());
     }
 
     public String onSavePost() throws SQLException {
-        if (!canEditPost()) {
-            addAccessDeniedMessage();
-            return null;
-        }
+        // TODO: it is possible to call the method avoiding onLoad method?
+        BeanAsserts.hasPermission(canEditPost());
 
         User user = getUser();
         post.setLastEditDate(new Date());

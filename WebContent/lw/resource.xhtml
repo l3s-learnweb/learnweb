@@ -8,7 +8,7 @@
 
 <ui:define name="metadata">
 	<f:metadata>
-		<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true"/>
+		<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true" converter="idConverter"/>
 		<f:viewParam name="edit" value="#{resourceDetailBean.editResource}" required="false"/>
 		<f:viewAction action="#{resourceDetailBean.onLoad}"/>
 	</f:metadata>
@@ -17,55 +17,48 @@
 <ui:define name="body_content">
 	<h:outputScript library="layout" name="js/resource-view.js" target="body"/>
 
-	<h:outputText value="This resource has been deleted." binding="#{warningResourceDeleted}" rendered="#{resourceDetailBean.resource.deleted}"/>
-    <h:outputText value="" binding="#{warningLoginRequired}" rendered="#{not warningResourceDeleted.rendered and not userBean.loggedIn and not resourceDetailBean.resource.canViewResource(userBean.user)}" escape="false">
-        You need to <a href="#{request.contextPath}" target="_top">login</a> to access this resource.
-    </h:outputText>
-    <h:outputText value="#{msg['group_resources.access_denied']}" rendered="#{not warningLoginRequired.rendered and not warningResourceDeleted.rendered and not resourceDetailBean.resource.canViewResource(userBean.user)}"/>
-
-	<ui:fragment rendered="#{resourceDetailBean.resource.canViewResource(userBean.user)}">
-		<div class="res-view">
-			<div class="row no-gutters">
-				<div class="col res-view-embedded d-flex flex-column">
-					<div class="res-view-navbar d-flex flex-row align-items-center w-100 p-2">
-						<div class="res-buttons-left pr-3">
-							<p:linkButton icon="fa fa-arrow-left" styleClass="transparent-btn navbar-back" title="#{msg.close}" outcome="group/resources.jsf">
-								<f:param name="group_id" value="#{resourceDetailBean.resource.groupId}"/>
-								<f:param name="folder_id" value="#{resourceDetailBean.resource.folderId}"/>
-							</p:linkButton>
-						</div>
-						<h4 class="text-white mr-auto m-0">#{resourceDetailBean.resource.title}</h4>
-						<div class="res-buttons-right pl-3">
-							<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource)}" icon="fa fa-external-link" styleClass="transparent-btn" title="#{resourceDetailBean.resource.url}"
-										  target="_blank" rendered="#{resourceDetailBean.resource.type eq 'text' or resourceDetailBean.resource.type eq 'website' or resourceDetailBean.resource.type eq 'pdf'}"/>
-
-							<p:button icon="fa fa-toggle-on" styleClass="transparent-btn" title="#{msg.toggle_details}"
-									  onclick="$('.res-view-details').toggleClass('collapse');$('.ui-icon', this).toggleClass('fa fa-toggle-off fa fa-toggle-on');return false;"/>
-						</div>
+	<div class="res-view">
+		<div class="row no-gutters">
+			<div class="col res-view-embedded d-flex flex-column">
+				<div class="res-view-navbar d-flex flex-row align-items-center w-100 p-2">
+					<div class="res-buttons-left pr-3">
+						<p:linkButton icon="fa fa-arrow-left" styleClass="transparent-btn navbar-back" title="#{msg.close}" outcome="group/resources.jsf">
+							<f:param name="group_id" value="#{resourceDetailBean.resource.groupId}"/>
+							<f:param name="folder_id" value="#{resourceDetailBean.resource.folderId}"/>
+						</p:linkButton>
 					</div>
+					<h4 class="text-white mr-auto m-0">#{resourceDetailBean.resource.title}</h4>
+					<div class="res-buttons-right pl-3">
+						<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource)}" icon="fa fa-external-link" styleClass="transparent-btn"
+									  title="#{resourceDetailBean.resource.url}" target="_blank" rendered="#{resourceDetailBean.resource.type eq 'text'
+									  or resourceDetailBean.resource.type eq 'website' or resourceDetailBean.resource.type eq 'pdf'}"/>
 
-					<div class="preview-wrapper d-flex flex-column">
-						<ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded.xhtml">
-							<ui:param name="res" value="#{resourceDetailBean.resource}"/>
-						</ui:decorate>
+						<p:button icon="fa fa-toggle-on" styleClass="transparent-btn" title="#{msg.toggle_details}"
+								  onclick="$('.res-view-details').toggleClass('collapse');$('.ui-icon', this).toggleClass('fa fa-toggle-off fa fa-toggle-on');return false;"/>
 					</div>
 				</div>
-				<div class="col-12 col-lg-4 col-xl-3 res-view-details">
-					<div class="res-view-panel">
-						<h:form id="resourceViewForm" prependId="false" styleClass="resource-details">
-							<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
-								<h:outputText value="#{msg.please_wait}"/>
-							</p:blockUI>
 
-							<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view.xhtml">
-								<ui:param name="res" value="#{resourceDetailBean.resource}"/>
-							</ui:decorate>
-						</h:form>
-					</div>
+				<div class="preview-wrapper d-flex flex-column">
+					<ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded.xhtml">
+						<ui:param name="res" value="#{resourceDetailBean.resource}"/>
+					</ui:decorate>
+				</div>
+			</div>
+			<div class="col-12 col-lg-4 col-xl-3 res-view-details">
+				<div class="res-view-panel">
+					<h:form id="resourceViewForm" prependId="false" styleClass="resource-details">
+						<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
+							<h:outputText value="#{msg.please_wait}"/>
+						</p:blockUI>
+
+						<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view.xhtml">
+							<ui:param name="res" value="#{resourceDetailBean.resource}"/>
+						</ui:decorate>
+					</h:form>
 				</div>
 			</div>
 		</div>
-	</ui:fragment>
+	</div>
 </ui:define>
 
 </ui:composition>

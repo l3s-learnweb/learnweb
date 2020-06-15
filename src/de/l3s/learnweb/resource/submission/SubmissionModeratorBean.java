@@ -3,11 +3,11 @@ package de.l3s.learnweb.resource.submission;
 import java.io.Serializable;
 import java.sql.SQLException;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 
 /**
  * @author Philipp
@@ -23,16 +23,9 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     private Submission submission;
     private SubmittedResources selectedUserSubmission;
 
-    public void onLoad() {
-        try {
-            submission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
-            if (null == submission) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "missing parameter");
-            }
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
-
+    public void onLoad() throws SQLException {
+        submission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
+        BeanAsserts.validateNotNull(submission);
     }
 
     public int getSubmissionId() {

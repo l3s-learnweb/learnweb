@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.resource.ted.TedTranscriptBean;
 import de.l3s.learnweb.user.User;
 
@@ -70,9 +71,7 @@ public class ResourceMetaDataBean {
      */
     public static List<String> completeAuthor(String query) {
         User user = UtilBean.getUserBean().getUser();
-        if (user == null) { // not logged in
-            return null;
-        }
+        BeanAsserts.authorized(user);
 
         int organisationId = user.getOrganisation().getId();
 

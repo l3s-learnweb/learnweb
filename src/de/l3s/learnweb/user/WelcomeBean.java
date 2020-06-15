@@ -10,6 +10,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.submission.Submission;
@@ -64,9 +65,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
 
     public WelcomeBean() {
         User user = getUser();
-        if (null == user) {
-            return;
-        }
+        BeanAsserts.authorized(user);
 
         try {
             newsGeneral = getLogs(GENERAL_FILTER, 20);

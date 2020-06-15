@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User.Gender;
@@ -60,28 +61,18 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     private transient List<SelectItem> timeZoneIds; // A list of all available time zone ids
 
     public void onLoad() throws SQLException {
-        User loggedinUser = getUser();
-        if (loggedinUser == null) {
-            return;
-        }
+        User loggedInUser = getUser();
+        BeanAsserts.authorized(loggedInUser);
 
-        if (userId == 0 || loggedinUser.getId() == userId) {
+        if (userId == 0 || loggedInUser.getId() == userId) {
             selectedUser = getUser(); // user edits himself
         } else {
             selectedUser = getLearnweb().getUserManager().getUser(userId); // an admin edits an user
             moderatorAccess = true;
         }
 
-        if (null == selectedUser) {
-            addInvalidParameterMessage("user_id");
-            return;
-        }
-
-        if (moderatorAccess && !loggedinUser.canModerateUser(selectedUser)) {
-            selectedUser = null;
-            addAccessDeniedMessage();
-            return;
-        }
+        BeanAsserts.validateNotNull(selectedUser);
+        BeanAsserts.hasPermission(!moderatorAccess || loggedInUser.canModerateUser(selectedUser));
 
         email = selectedUser.getEmail();
 
@@ -158,11 +149,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     public String onDeleteAccount() {
         try {
             User user = getUser();
-
-            if (!user.equals(getSelectedUser()) && !user.canModerateUser(getSelectedUser())) {
-                addAccessDeniedMessage();
-                return null;
-            }
+            BeanAsserts.hasPermission(user.equals(getSelectedUser()) || user.canModerateUser(getSelectedUser()));
 
             getLearnweb().getUserManager().deleteUserSoft(getSelectedUser());
             log(Action.deleted_user_soft, 0, getSelectedUser().getId());

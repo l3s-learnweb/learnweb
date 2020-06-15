@@ -7,7 +7,6 @@ import java.util.Locale;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -16,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.beans.exceptions.BadRequestBeanException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
@@ -188,8 +188,7 @@ public class ApplicationBean {
         fc.addMessage(null, getFacesMessage(severity, msgKey, args));
 
         if (FacesMessage.SEVERITY_FATAL == severity) {
-            HttpServletRequest req = (HttpServletRequest) fc.getExternalContext().getRequest();
-            req.setAttribute("hideContent", true);
+            throw new BadRequestBeanException(getLocaleMessage(msgKey, args));
         }
     }
 
@@ -214,17 +213,6 @@ public class ApplicationBean {
         addMessage(FacesMessage.SEVERITY_FATAL, (desc != null ? desc : "fatal_error"));
 
         log.error((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
-    }
-
-    /**
-     * @param parameter invalid parameters
-     */
-    protected void addInvalidParameterMessage(String parameter) {
-        addErrorMessage("Invalid Parameter given for '" + parameter + "'. Check the URL you used.", new IllegalArgumentException());
-    }
-
-    protected void addAccessDeniedMessage() {
-        addErrorMessage("access_denied", new IllegalAccessException());
     }
 
     // TODO see https://git.l3s.uni-hannover.de/Learnweb/Learnweb/-/wikis/Rules/Use-of-Messages,-Growls-and-Validation

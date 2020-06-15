@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Course.Option;
 
@@ -51,7 +52,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
     private String wizard;
     private String fastLogin;
-    private boolean wizardParamInvalid = false; // true if an invalid wizard parameter was given; no parameter is ok for the public course
 
     private String affiliation;
 
@@ -72,27 +72,22 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         if (StringUtils.isNotEmpty(wizard)) {
             course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
-            if (null == course) {
-                addMessage(FacesMessage.SEVERITY_FATAL, "register_invalid_wizard_error");
-                wizardParamInvalid = true;
-            } else if (course.getOption(Option.Users_Disable_wizard)) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "registration.wizard_disabled");
-                wizardParamInvalid = true;
+            BeanAsserts.validateNotNull(course, "register_invalid_wizard_error");
+            BeanAsserts.validate(!course.getOption(Option.Users_Disable_wizard), "registration.wizard_disabled");
+
+            // special message for yell
+            if (course.getId() == 505) {
+                addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
             } else {
-                // special message for yell
-                if (course.getId() == 505) {
-                    addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
-                } else {
-                    addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
-                }
+                addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
+            }
 
-                mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
-                affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
-                studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
+            mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
+            affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
+            studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
 
-                if (StringUtils.isNotEmpty(fastLogin)) {
-                    return fastLogin();
-                }
+            if (StringUtils.isNotEmpty(fastLogin)) {
+                return fastLogin();
             }
         } else {
             addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
@@ -248,10 +243,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
     public boolean isStudentIdRequired() {
         return studentIdRequired;
-    }
-
-    public boolean isWizardParamInvalid() {
-        return wizardParamInvalid;
     }
 
     public ConfirmRequiredBean getConfirmRequiredBean() {

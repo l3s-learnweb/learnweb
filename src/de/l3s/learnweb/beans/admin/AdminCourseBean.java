@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.Organisation;
@@ -37,16 +38,11 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
     }
 
     public void onLoad() {
-        if (getUser() == null) { // not logged in
-            return;
-        }
+        BeanAsserts.authorized(isLoggedIn());
+        BeanAsserts.hasPermission(getUser().isAdmin());
 
         course = getLearnweb().getCourseManager().getCourseById(courseId);
-
-        if (null == course) {
-            addGrowl(FacesMessage.SEVERITY_FATAL, "invalid course_id parameter");
-            return;
-        }
+        BeanAsserts.validateNotNull(course);
 
         // many string operations to display the options in a proper way
         optionGroups = new LinkedList<>();

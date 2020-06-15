@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 import org.junit.jupiter.api.Test;
 
 public class ValidateMessagesTest {
-    private static final List<String> LOCALES = Arrays.asList("de", "de_DE_Archive", "en", "en_UK_Archive", "it", "pt", "es", "uk");
+    private static final List<String> LOCALES = Arrays.asList("en", "de", "es", "it", "pt", "uk");
     private static final String MESSAGES_PATH = "de/l3s/learnweb/lang/messages";
 
     @Test

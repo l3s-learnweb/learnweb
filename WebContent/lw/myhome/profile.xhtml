@@ -6,16 +6,15 @@
                 xmlns:o="http://omnifaces.org/ui"
                 xmlns:lw="http://l3s.de/learnweb">
 
+<ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
+<ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="user_id" value="#{profileBean.userId}" />
         <f:viewAction action="#{profileBean.onLoad}"/>
     </f:metadata>
 </ui:define>
-
-<ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
-<ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
-<ui:param name="hideContent" value="#{null eq profileBean.selectedUser}"/>
 
 <ui:define name="breadcrumb">
     <lw:breadcrumb-item link="myhome/profile.jsf" title="#{msg.settings}">

@@ -43,14 +43,10 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
     private List<Resource> glossaryResources;
 
     @Override
-    public void onLoad() {
+    public void onLoad() throws SQLException {
         super.onLoad();
 
-        try {
-            cleanAndUpdateStoredData();
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
+        cleanAndUpdateStoredData();
     }
 
     @Override

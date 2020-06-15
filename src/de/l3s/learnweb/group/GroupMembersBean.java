@@ -8,6 +8,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 
@@ -29,15 +30,10 @@ public class GroupMembersBean extends ApplicationBean implements Serializable {
 
     public void onLoad() throws SQLException {
         User user = getUser();
-        if (null == user) { // not logged in
-            return;
-        }
+        BeanAsserts.authorized(user);
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
-
-        if (null == group) {
-            addInvalidParameterMessage("group_id");
-        }
+        BeanAsserts.validateNotNull(group, "error_pages.bad_request_group_description");
 
         if (null != group) {
             group.setLastVisit(user);

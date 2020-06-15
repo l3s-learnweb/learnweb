@@ -29,6 +29,8 @@ import org.primefaces.model.menu.MenuModel;
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.ForbiddenBeanException;
+import de.l3s.learnweb.beans.exceptions.UnauthorizedBeanException;
 import de.l3s.learnweb.component.ActiveSubMenu;
 import de.l3s.learnweb.component.ActiveSubMenu.Builder;
 import de.l3s.learnweb.group.Group;
@@ -587,5 +589,17 @@ public class UserBean implements Serializable {
             activeOrganisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(activeOrganisationId);
         }
         return activeOrganisation;
+    }
+
+    /**
+     * This is a workaround to keep old `hasPermission` param functionality.
+     * We need to create our own tag or find another way, this method is called on every page, but it is not needed for pages with `viewAction`
+     */
+    public void checkAccessPermission(Boolean hasAccess) {
+        if (!isLoggedIn() && (hasAccess == null || !hasAccess)) {
+            throw new UnauthorizedBeanException();
+        } else if (isLoggedIn() && (hasAccess != null && !hasAccess)) {
+            throw new ForbiddenBeanException();
+        }
     }
 }

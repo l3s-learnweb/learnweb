@@ -23,6 +23,7 @@ import org.primefaces.model.file.UploadedFile;
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
@@ -43,11 +44,8 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     private ArrayList<SelectItem> availableGlossaryLanguages;
 
     public void onLoad() throws SQLException {
-        log.debug("init AdminOrganisationBean");
-
-        if (getUser() == null) {
-            return;
-        }
+        BeanAsserts.authorized(isLoggedIn());
+        BeanAsserts.hasPermission(getUser().isModerator());
 
         if (organisationId > 0) {
             setOrganisation(getLearnweb().getOrganisationManager().getOrganisationById(organisationId));

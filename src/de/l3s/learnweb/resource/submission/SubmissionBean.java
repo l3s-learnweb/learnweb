@@ -26,13 +26,13 @@ import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceViewRights;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.bean.BeanHelper;
 
 /**
  * Bean for pages myhome/submission_overview.jsf and myhome/submission_resources.jsf
@@ -68,9 +68,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     private Map<Integer, Integer> userSubmissions; //to store map of user id and total no. of submissions
 
     public void onLoad() throws SQLException {
-        if (getUser() == null) { // not logged in
-            return;
-        }
+        BeanAsserts.authorized(isLoggedIn());
 
         if (this.userId == 0) { // don't want to view the submission of a specific user then use the current user (usual case)
             this.userId = getUser().getId();
@@ -81,11 +79,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
             submissionOverviewReadOnly = true;
 
             // check if moderator or submission assessor
-            if (!getUser().isModerator()) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view this submission");
-                log.error("Unprivileged access: " + BeanHelper.getRequestSummary());
-                return;
-            }
+            BeanAsserts.hasPermission(getUser().isModerator());
         }
 
         //When accessing the submission_resources page both these parameters are set

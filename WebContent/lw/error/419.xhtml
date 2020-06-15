@@ -1,0 +1,25 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+<ui:param name="pageTitle" value="#{msg['error_pages.session_expired']}"/>
+<ui:param name="hasAccessPermission" value="true"/>
+<ui:param name="extraPageClass" value="container"/>
+<ui:param name="hideBreadcrumbs" value="true"/>
+
+<ui:define name="center_layout">
+    <f:view transient="true">
+        <p:panel header="#{msg['error_pages.session_expired']}" styleClass="ui-widget-danger">
+            <h:outputText styleClass="h5 d-block" value="#{msg['error_pages.session_expired_default_description']}"/>
+
+            <h:panelGroup styleClass="mt-3" layout="block">
+                <p:linkButton onclick="window.location.reload();return false;" value="#{msg.reload}" styleClass="secondary-btn"/>
+                <p:linkButton href="#{userBean.bannerLink}" value="#{msg.return_to_welcome_page}"/>
+            </h:panelGroup>
+        </p:panel>
+    </f:view>
+</ui:define>
+
+</ui:composition>

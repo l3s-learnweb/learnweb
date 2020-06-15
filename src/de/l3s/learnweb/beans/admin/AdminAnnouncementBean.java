@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.Announcement;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 
 @Named
 @ViewScoped
@@ -24,14 +25,8 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
     private String pageTitle;
 
     public void onLoad() throws SQLException {
-        if (getUser() == null) {
-            return;
-        }
-
-        /*if (!getUser().isAdmin()) {
-            addAccessDeniedMessage();
-            return;
-        }*/
+        BeanAsserts.authorized(isLoggedIn());
+        BeanAsserts.hasPermission(getUser().isAdmin());
 
         if (announcementId == 0) { // create new announcement
             pageTitle = StringUtils.capitalize(getLocaleMessage("new_word"));
@@ -41,10 +36,7 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
             announcement.setDate(new Date());
         } else {
             announcement = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId);
-            if (announcement == null) {
-                addInvalidParameterMessage("announcement_id");
-                return;
-            }
+            BeanAsserts.validateNotNull(announcement);
             pageTitle = announcement.getTitle();
         }
     }
