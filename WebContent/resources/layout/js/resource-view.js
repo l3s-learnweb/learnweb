@@ -90,12 +90,9 @@ function attachEditor(elementId, editorType, configValues) {
     },
     editorConfig: {
       mode: configValues.document.canBeEdited === 'true' ? 'edit' : 'view',
-      lang: 'en',
-      callbackUrl: `${configValues.callbackUrl}&userId=${configValues.user.id}`,
-      user: {
-        id: configValues.user.id,
-        name: configValues.user.name,
-      },
+      lang: configValues.lang,
+      callbackUrl: configValues.callbackUrl,
+      user: configValues.user,
       embedded: {
         saveUrl: configValues.document.url,
         toolbarDocked: 'top',
@@ -120,17 +117,11 @@ function attachEditor(elementId, editorType, configValues) {
       },
       onRequestHistoryData(event) {
         // noinspection JSIgnoredPromiseFromCall
-        $.post(
-          `${configValues.historyUrl}?resourceId=${configValues.document.resourceId}&version=${event.data}`,
-          (json) => docEditor.setHistoryData(json)
-        );
+        $.post(`${configValues.historyUrl}&version=${event.data}`, (json) => docEditor.setHistoryData(json));
       },
       onRequestHistory() {
         // noinspection JSIgnoredPromiseFromCall
-        $.get(
-          `${configValues.historyUrl}?resourceId=${configValues.document.resourceId}`,
-          (json) => docEditor.refreshHistory(json)
-        );
+        $.get(configValues.historyUrl, (json) => docEditor.refreshHistory(json));
       },
       onRequestHistoryClose() {
         document.location.reload();

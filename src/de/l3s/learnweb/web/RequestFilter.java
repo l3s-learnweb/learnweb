@@ -7,6 +7,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,6 +26,7 @@ import de.l3s.util.bean.BeanHelper;
  *
  * @author Kate
  */
+@WebFilter(filterName = "RequestFilter", urlPatterns = "/*")
 public class RequestFilter implements Filter {
     private static final Logger log = LogManager.getLogger(RequestFilter.class);
 
@@ -55,7 +57,7 @@ public class RequestFilter implements Filter {
                 String ip = Servlets.getRemoteAddr(req);
 
                 if (!InetAddresses.isInetAddress(ip)) {
-                    log.error("Suspicious request: " + BeanHelper.getRequestSummary(req));
+                    log.error("Suspicious request: {}", BeanHelper.getRequestSummary(req));
 
                     if (ip.contains("JDatabaseDriverMysqli")) { // Joomla Unserialize Vulnerability
                         // TODO block real ip

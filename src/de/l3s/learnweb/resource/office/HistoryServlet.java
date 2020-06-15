@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.office;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,8 +18,9 @@ import de.l3s.learnweb.resource.office.history.model.HistoryData;
 import de.l3s.learnweb.resource.office.history.model.HistoryInfo;
 
 /**
- * HistoryServlet Class.
+ * Servlet for getting office document history.
  */
+@WebServlet(name = "HistoryServlet", urlPatterns = { "/history" }, loadOnStartup = 5)
 public class HistoryServlet extends HttpServlet {
     private static final long serialVersionUID = -1782046122568142569L;
     private static final Logger log = LogManager.getLogger(HistoryServlet.class);

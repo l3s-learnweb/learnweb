@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,10 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.bean.BeanHelper;
 
+/**
+ * Servlet for Streaming Files to the Clients Browser.
+ */
+@WebServlet(name = "DownloadServlet", urlPatterns = { "/download/*" }, loadOnStartup = 2)
 public class DownloadServlet extends HttpServlet {
     private static final long serialVersionUID = 7083477094183456614L;
     private static final Logger log = LogManager.getLogger(DownloadServlet.class);

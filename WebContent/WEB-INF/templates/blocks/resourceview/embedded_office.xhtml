@@ -20,11 +20,11 @@
             url: '#{officeResourceBean.documentUrl}',
             fileType: '#{officeResourceBean.documentFileType}',
             key: '#{officeResourceBean.documentKey}',
-            resourceId: '#{res.id}',
             canBeEdited: '#{res.canEditResource(userBean.user)}'
         },
-        historyUrl: '#{officeResourceBean.historyUrl}',
-        callbackUrl: '#{officeResourceBean.callbackUrl}',
+        lang: '#{userBean.localeCode}',
+        historyUrl: '#{officeResourceBean.historyUrl}?resourceId=${res.id}',
+        callbackUrl: '#{officeResourceBean.callbackUrl}?resourceId=${res.id}&fileId=${officeResourceBean.documentFileId}',
         officeServerUrl: '#{officeResourceBean.officeServerUrl}'
     };
     $(function () {

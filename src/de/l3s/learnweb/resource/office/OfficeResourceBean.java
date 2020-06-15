@@ -24,20 +24,17 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
     private static final long serialVersionUID = -655001215017199006L;
     private static final Logger log = LogManager.getLogger(OfficeResourceBean.class);
 
-    private File mainFile;
-
+    private Integer documentFileId = 0;
     private String documentType;
     private String documentFileType;
     private String documentUrl;
     private String documentKey;
 
     private String officeServerUrl;
-    private String documentServerUrl;
 
     @PostConstruct
     public void init() {
         officeServerUrl = StringUtils.removeEnd(getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT"), "/");
-        documentServerUrl = StringUtils.removeEnd(getLearnweb().getServerUrl(), "/");
 
         Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
         fillInFileInfo(resource);
@@ -47,19 +44,22 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
         documentFileType = FileUtility.getFileExtension(resource.getFileName());
 
         if (FileUtility.canBeViewed(documentFileType)) {
-            mainFile = resource.getFile(TYPE.FILE_MAIN);
             documentUrl = resource.getFileUrl();
             documentType = FileUtility.getFileType(resource.getFileName());
-            documentFileType = FileUtility.getFileExtension(resource.getFileName());
+
+            File mainFile = resource.getMainFile();
             if (mainFile != null) {
+                documentFileId = mainFile.getId();
                 documentKey = FileUtility.generateRevisionId(mainFile);
-            } else {
-                log.error("Office resource requested without main file, resourceId {}", resource.getId());
             }
         } else {
-            log.error("Office type resource has not supported extension.");
+            log.error("Office type resource has not supported extension: {}", documentFileType);
             resource.setOnlineStatus(OnlineStatus.OFFLINE);
         }
+    }
+
+    public Integer getDocumentFileId() {
+        return documentFileId;
     }
 
     public String getDocumentFileType() {
@@ -83,10 +83,10 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
     }
 
     public String getCallbackUrl() {
-        return documentServerUrl + "/save?fileId=" + (mainFile != null ? mainFile.getId() : "");
+        return getLearnweb().getServerUrl() + "/save";
     }
 
     public String getHistoryUrl() {
-        return documentServerUrl + "/history";
+        return getLearnweb().getServerUrl() + "/history";
     }
 }

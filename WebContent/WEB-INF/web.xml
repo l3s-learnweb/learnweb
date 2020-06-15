@@ -155,39 +155,6 @@
         <url-pattern>*.jsf</url-pattern>
         <url-pattern>/javax.faces.resource/*</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <description>Simple Servlet for Streaming Files to the Clients Browser</description>
-        <display-name>DownloadServlet</display-name>
-        <servlet-name>downloadServlet</servlet-name>
-        <servlet-class>de.l3s.learnweb.resource.DownloadServlet</servlet-class>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>downloadServlet</servlet-name>
-        <url-pattern>/download/*</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <description>Servlet for saving edited documents</description>
-        <display-name>SaverServlet</display-name>
-        <servlet-name>saverServlet</servlet-name>
-        <servlet-class>de.l3s.learnweb.resource.office.SaverServlet</servlet-class>
-        <load-on-startup>4</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>saverServlet</servlet-name>
-        <url-pattern>/save</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <description>Servlet for getting document history</description>
-        <display-name>HistoryServlet</display-name>
-        <servlet-name>historyServlet</servlet-name>
-        <servlet-class>de.l3s.learnweb.resource.office.HistoryServlet</servlet-class>
-        <load-on-startup>5</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>historyServlet</servlet-name>
-        <url-pattern>/history</url-pattern>
-    </servlet-mapping>
 
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
@@ -198,14 +165,6 @@
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
-    <filter>
-        <filter-name>RequestFilter</filter-name>
-        <filter-class>de.l3s.learnweb.web.RequestFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>RequestFilter</filter-name>
-        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <!--
