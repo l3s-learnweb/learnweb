@@ -13,7 +13,6 @@ import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.File;
-import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.ResourceDetailBean;
