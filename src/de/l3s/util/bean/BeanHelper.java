@@ -68,7 +68,7 @@ public final class BeanHelper {
             }
         } catch (Throwable ignored) {
         }
-        return "page: " + url + "; user: " + user + "; ip: " + ip + "; ipHeader: " + ipForwardedForHeader + "; referrer: " + referrer + "; userAgent: " + userAgent + "; parameters: " + printMap(parameters) + ";";
+        return "page: " + url + " ; user: " + user + "; ip: " + ip + "; ipHeader: " + ipForwardedForHeader + "; referrer: " + referrer + " ; userAgent: " + userAgent + "; parameters: " + printMap(parameters) + ";";
     }
 
     private static String printMap(Map<String, String[]> map) {

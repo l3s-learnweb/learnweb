@@ -537,7 +537,7 @@ public class UserBean implements Serializable {
      */
     public String getUrlProxied(String url) {
         User user = getUser();
-        if (user == null || !user.getOrganisation().getOption(Option.Privacy_Proxy_enabled)) {
+        if (url == null || user == null || !user.getOrganisation().getOption(Option.Privacy_Proxy_enabled)) {
             return url;
         }
 
