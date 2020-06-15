@@ -87,12 +87,12 @@ public class SaverServlet extends HttpServlet {
         Resource resource = learnweb.getResourceManager().getResource(resourceId);
 
         File file = new File();
-        file.setResourceId(resource.getId());
         file.setType(TYPE.FILE_MAIN);
         file.setName(resource.getFileName());
         file.setMimeType(resource.getFormat());
         learnweb.getFileManager().save(file, getInputStream(data.getUrl()));
 
+        resource.addFile(file);
         resource.setUrl(file.getUrl());
         resource.save();
 
