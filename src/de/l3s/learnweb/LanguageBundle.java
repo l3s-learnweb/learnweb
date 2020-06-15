@@ -143,7 +143,9 @@ public class LanguageBundle extends ResourceBundle {
 
     @Override
     protected Object handleGetObject(String key) {
-        return values != null ? values.get(key) : parent.getObject(key);
+        Object value = values != null ? values.get(key) : parent.getObject(key);
+        // to make sure we do not show questions marks on frontend like "??? key ???", show key instead
+        return value != null ? value : key;
     }
 
     @Override
