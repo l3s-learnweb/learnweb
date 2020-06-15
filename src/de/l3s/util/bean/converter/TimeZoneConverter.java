@@ -8,18 +8,18 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
 @FacesConverter("timeZoneConverter")
-public class TimeZoneConverter implements Converter {
+public class TimeZoneConverter implements Converter<ZoneId> {
 
     public TimeZoneConverter() {
     }
 
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component, String value) {
+    public ZoneId getAsObject(FacesContext context, UIComponent component, String value) {
         return ZoneId.of(value);
     }
 
     @Override
-    public String getAsString(FacesContext context, UIComponent component, Object value) {
-        return ZoneId.of(value.toString()).getId();
+    public String getAsString(FacesContext context, UIComponent component, ZoneId value) {
+        return value.getId();
     }
 }
