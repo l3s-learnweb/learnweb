@@ -323,7 +323,7 @@ public class GlossaryManager {
         if (result.next()) {
             glossaryResource.setAllowedLanguages(StringHelper.splitLocales(result.getString("allowed_languages")));
         } else {
-            log.error("Error in loading languages for glossary while loading glossary resource from Database. Resource ID: " + glossaryResource.getId());
+            log.error("Error loading glossary languages from database: {}", glossaryResource.getId(), new Exception());
             return;
         }
         //Glossary Entries details
