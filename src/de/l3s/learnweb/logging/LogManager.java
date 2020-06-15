@@ -13,9 +13,15 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.SummaryOverview;
@@ -51,8 +57,33 @@ public final class LogManager {
 
     private final Learnweb learnweb;
 
+    private LoadingCache<Resource, List<LogEntry>> logsByResourceCache;
+
     private LogManager(Learnweb learnweb) {
         this.learnweb = learnweb;
+
+        logsByResourceCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(1500, TimeUnit.MILLISECONDS)
+            .build(new CacheLoader<Resource, List<LogEntry>>() {
+                @Override
+                public List<LogEntry> load(Resource resource) throws Exception {
+                    int limit = 50;
+
+                    String limitStr = "LIMIT " + limit; // TODO this is only a quick fix to improve the loading speed. needs a better solution e.g. lazy pagination
+
+                    Instant start = Instant.now();
+
+                    // TODO philipp change query and add index
+                    List<LogEntry> logs = getLogs(LOG_SELECT + " WHERE ul.group_id = ? AND action IN(" + resourceActionIds + ") AND target_id = ? ORDER BY timestamp DESC " + limitStr, resource.getGroupId(), resource.getId());
+
+                    int duration = Duration.between(start, Instant.now()).getNano();
+                    if (duration > 500000) {
+                        log.warn("getLogs took {}ns; resourceId: {}; limit: {};", duration, resource.getId(), limit);
+                    }
+
+                    return logs;
+                }
+            });
     }
 
     /**
@@ -124,7 +155,7 @@ public final class LogManager {
             for (Object param : parameter) {
                 select.setObject(i++, param);
             }
-            log.debug(select);
+            //log.debug(select);
             ResultSet rs = select.executeQuery();
             while (rs.next()) {
                 logEntries.add(new LogEntry(rs));
@@ -138,35 +169,24 @@ public final class LogManager {
     /**
      * @param limit if limit is -1 all log entries are returned
      */
-    public List<LogEntry> getLogsByResource(Resource resource, int limit) throws SQLException {
-        // TODO philipp change query and add index
-        String limitStr = limit > 0 ? "LIMIT " + limit : "";
+    public List<LogEntry> getLogsByResource(Resource resource) throws SQLException {
 
-        Instant start = Instant.now();
-        List<LogEntry> logs = getLogs(LOG_SELECT + " WHERE ul.group_id = ? AND action IN(" + resourceActionIds + ") AND target_id = ? ORDER BY timestamp DESC " + limitStr, resource.getGroupId(), resource.getId());
-
-        int duration = Duration.between(start, Instant.now()).getNano();
-        if (duration > 500000) {
-            log.warn("getLogs took {}ns; resourceId: {}; limit: {};", duration, resource.getId(), limit, new Exception());
+        log.debug("get logs for resource: {}", resource);
+        try {
+            return logsByResourceCache.get(resource);
+        } catch (ExecutionException e) {
+            log.error("Can't get logs for resource: {}", resource, e);
+            return null;
         }
-
-        return logs;
-        /*
-         * LIMIT ? OFFSET ?
-         *  int page, int pageSize
-         *          select.setInt(2, pageSize);
-        select.setInt(3, page * pageSize);
-         */
     }
 
     /**
      * @param actions if actions is null the default filter is used
      * @param limit if limit is -1 all log entries are returned
      */
-    public List<LogEntry> getLogsByGroup(int groupId, Action[] actions, int limit) throws SQLException {
-        if (null == actions) {
-            actions = LOG_DEFAULT_FILTER;
-        }
+    public List<LogEntry> getLogsByGroup(int groupId, int limit) throws SQLException {
+
+        Action[] actions = LOG_DEFAULT_FILTER;
 
         String limitStr = limit > 0 ? "LIMIT " + limit : "";
 

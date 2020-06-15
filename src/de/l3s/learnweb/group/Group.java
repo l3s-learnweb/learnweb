@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
@@ -305,15 +304,15 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
      * @param actions if actions is null the default filter is used
      * @param limit if limit is -1 all log entries are returned
      */
-    public List<LogEntry> getLogs(Action[] actions, int limit) throws SQLException {
-        return Learnweb.getInstance().getLogManager().getLogsByGroup(id, actions, limit);
+    public List<LogEntry> getLogs(int limit) throws SQLException {
+        return Learnweb.getInstance().getLogManager().getLogsByGroup(id, limit);
     }
 
     /**
      * Returns the 5 newest log entries.
      */
     public List<LogEntry> getLogs() throws SQLException {
-        return getLogs(null, 5);
+        return getLogs(5);
     }
 
     public boolean isRestrictionForumCategoryEnabled() {

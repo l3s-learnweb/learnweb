@@ -77,7 +77,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
 
     public void fetchAllLogs() throws SQLException {
         showAllLogs = true;
-        logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, null, -1);
+        logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, -1);
     }
 
     public boolean isShowAllLogs() {
@@ -86,7 +86,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
 
     public List<LogEntry> getLogMessages() throws SQLException {
         if (null == logMessages) {
-            logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, null, ACTIVITY_LIST_LIMIT);
+            logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, ACTIVITY_LIST_LIMIT);
         }
         return logMessages;
     }

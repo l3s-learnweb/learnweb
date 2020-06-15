@@ -569,6 +569,21 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         return new Resource(this);
     }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (o != null && o instanceof Resource) {
+            return ((Resource) o).getId() == getId();
+
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId();
+    }
+
     /**
      * Rate this resource.
      *
@@ -586,8 +601,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public Integer getRateByUser(int userId) {
         // get value from cache, or query database if absent
-        return rateByUser.computeIfAbsent(userId, key ->
-            Learnweb.getInstance().getResourceManager().getResourceRateByUser(id, key));
+        return rateByUser.computeIfAbsent(userId, key -> Learnweb.getInstance().getResourceManager().getResourceRateByUser(id, key));
     }
 
     public boolean isRatedByUser(int userId) {
@@ -686,8 +700,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public Integer getThumbRateByUser(int userId) {
         // get value from cache, or query database if absent
-        return thumbRateByUser.computeIfAbsent(userId, key ->
-            Learnweb.getInstance().getResourceManager().getResourceThumbRateByUser(id, key));
+        return thumbRateByUser.computeIfAbsent(userId, key -> Learnweb.getInstance().getResourceManager().getResourceThumbRateByUser(id, key));
     }
 
     public boolean isThumbRatedByUser(int userId) {
@@ -800,6 +813,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * The place where the resource was found. Example: Flickr or Youtube or Desktop ...
      */
     public ResourceService getSource() {
+        log.debug("getSource");
         return source;
     }
 
@@ -1368,7 +1382,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public List<LogEntry> getLogs() throws SQLException {
-        return Learnweb.getInstance().getLogManager().getLogsByResource(this, 50); // TODO this is only a quick fix to improve the loading speed. needs a better solution e.g. lazy pagination
+        return Learnweb.getInstance().getLogManager().getLogsByResource(this);
     }
 
     /**
