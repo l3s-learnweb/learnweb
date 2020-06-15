@@ -50,8 +50,4 @@ public class UtilBean implements Serializable {
 
         return LanguageBundle.getLocaleMessage(locale, msgKey, args);
     }
-
-    public String escapeJS(String input) {
-        return StringEscapeUtils.escapeEcmaScript(input);
-    }
 }

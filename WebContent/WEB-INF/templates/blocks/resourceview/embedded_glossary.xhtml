@@ -112,7 +112,7 @@
         </p:column>
         <p:column headerText="#{msg['Glossary.pronounciation']}">
             <p:commandLink type="button" rendered="#{item.term ne null and glossaryBean.getPronounciationVoice(item.language) ne null}"
-                           onclick="responsiveVoice.speak('#{utilBean.escapeJS(item.term)}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
+                           onclick="responsiveVoice.speak('#{of:escapeJS(item.term)}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
                 <i class="fa fa-fw fa-volume-up"></i>
             </p:commandLink>
             <h:outputText value="#{item.pronounciation}"/>

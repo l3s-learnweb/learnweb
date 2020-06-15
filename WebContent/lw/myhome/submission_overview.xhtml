@@ -4,6 +4,7 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 				xmlns:p="http://primefaces.org/ui"
+				xmlns:of="http://omnifaces.org/functions"
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg['Submission.overview']}"/>
@@ -102,7 +103,7 @@
 					<p:defaultCommand target="saveBtn"/>
 					<div class="mr-auto">
 						<p:commandButton value="#{msg.delete}" update=":submissions" process="@this" actionListener="#{submissionBean.deleteSubmission()}"
-										 onclick="return confirmSubmissionDelete('#{utilBean.escapeJS(submissionBean.selectedSubmission.title)}');"
+										 onclick="return confirmSubmissionDelete('#{of:escapeJS(submissionBean.selectedSubmission.title)}');"
 										 oncomplete="addSubmissionHeaderClickHandler();"/>
 					</div>
 					<div>
