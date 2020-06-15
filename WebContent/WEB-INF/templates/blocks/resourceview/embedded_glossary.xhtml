@@ -11,6 +11,18 @@
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB" async="async"></script>
 <h:outputScript library="layout" name="js/glossary.js" target="body"/>
 
+
+<ui:fragment rendered="#{userBean.admin}">
+    <!-- some tests -->
+    <h:form id="updatetest">
+    
+        <p:commandButton value="dummy button" styleClass="alt-btn" actionListener="#{glossaryBean.getTableLanguageFilter()}" process="@this" update=":updatetest" immediate="true"/>
+    </h:form>
+    
+    <h:panelGroup id="test"></h:panelGroup>
+</ui:fragment>
+
+
 <h:form id="glossary_table_form" prependId="false">
     <p:dataTable id="glossary_table" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
                  styleClass="glossary-table" sortBy="#{item.timestamp}" sortOrder="descending"
@@ -27,8 +39,8 @@
                     <h:outputText value="#{msg.searchLabel}" styleClass="font-weight-light mr-2"/>
                     <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['Glossary.search_filter_placeholder']}"/>
                 </p:outputPanel>
-                <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.clear}" styleClass="alt-btn"
-                                 update=":glossary_add" oncomplete="openGlossForm();scrollToAnchor();"/>
+                <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.clear}" styleClass="alt-btn" process="@this"
+                                 update=":glossary_add" oncomplete="openGlossForm();" global="false"/>
             </div>
         </f:facet>
 
@@ -144,14 +156,16 @@
         <f:param value="#{glossaryBean.importResponse.entryCount}"/>
     </h:outputFormat>
     <h:outputText value="#{msg['Glossary.import_error']}" styleClass="d-block" rendered="#{not glossaryBean.importResponse.successful}"/>
-    <p:dataTable var="error" value="#{glossaryBean.importResponse.errors}" rendered="#{not glossaryBean.importResponse.successful}">
-        <p:column headerText="Excel cell">
-            <h:outputText value="#{error.cell}"/>
-        </p:column>
-        <p:column headerText="Error message">
-            <h:outputText value="#{error.errorMessage}"/>
-        </p:column>
-    </p:dataTable>
+    <h:form>
+        <p:dataTable var="error" value="#{glossaryBean.importResponse.errors}" rendered="#{not glossaryBean.importResponse.successful}">
+            <p:column headerText="Excel cell">
+                <h:outputText value="#{error.cell}"/>
+            </p:column>
+            <p:column headerText="Error message">
+                <h:outputText value="#{error.errorMessage}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
 </p:dialog>
 
 <p:panel header="#{msg['Glossary.edit_glossary']}" id="glossaryForm" styleClass="collapse mt-1">
