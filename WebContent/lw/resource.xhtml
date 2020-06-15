@@ -19,9 +19,9 @@
 
 	<h:outputText value="This resource has been removed" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0)}"/>
 
-	<h:outputText value="#{msg['group_resources.access_denied']}" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and not (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0)}"/>
+	<h:outputText value="#{msg['group_resources.access_denied']}" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and not (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0) and userBean.loggedIn}"/>
 
-	<ui:fragment rendered="#{not userBean.loggedIn}"><p>You need to login to access this resource.</p></ui:fragment>
+	<ui:fragment rendered="#{not userBean.loggedIn and not resourceDetailBean.resource.canViewResource(userBean.user)}"><p>You need to login to access this resource.</p></ui:fragment>
 
 	<ui:fragment rendered="#{resourceDetailBean.resource.canViewResource(userBean.user)}">
 		<div class="res-view">
