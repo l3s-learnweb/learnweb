@@ -2,8 +2,10 @@ package de.l3s.learnweb.component;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.faces.component.FacesComponent;
 import javax.faces.component.UIComponentBase;
@@ -25,12 +27,15 @@ public class LearnwebTimeAgo extends UIComponentBase {
     @Override
     public void encodeBegin(FacesContext context) throws IOException {
         Date date = (Date) getAttributes().get("date");
+        ZoneId timeZone = ZoneId.of((String) getAttributes().get("timeZone"));
         String styleClass = (String) getAttributes().get("styleClass");
 
         UIViewRoot viewRoot = context.getViewRoot();
         Locale locale = viewRoot.getLocale();
 
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, locale);
+        df.setTimeZone(TimeZone.getTimeZone(timeZone));
+
         PrettyTime prettyTime = new PrettyTime(locale);
 
         ResponseWriter writer = context.getResponseWriter();

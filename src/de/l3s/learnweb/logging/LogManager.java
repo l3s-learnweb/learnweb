@@ -124,7 +124,7 @@ public final class LogManager {
             for (Object param : parameter) {
                 select.setObject(i++, param);
             }
-
+            log.debug(select);
             ResultSet rs = select.executeQuery();
             while (rs.next()) {
                 logEntries.add(new LogEntry(rs));
@@ -147,7 +147,7 @@ public final class LogManager {
 
         int duration = Duration.between(start, Instant.now()).getNano();
         if (duration > 500000) {
-            log.warn("getLogs took {}ns; resourceId: {}; limit: {};", duration, resource.getId(), limit);
+            log.warn("getLogs took {}ns; resourceId: {}; limit: {};", duration, resource.getId(), limit, new Exception());
         }
 
         return logs;

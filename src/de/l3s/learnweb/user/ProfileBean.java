@@ -3,14 +3,16 @@ package de.l3s.learnweb.user;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.time.format.TextStyle;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -54,6 +56,8 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     private boolean mailRequired = false;
     private boolean anonymizeUsername;
     private List<GroupUser> userGroups;
+
+    private transient List<SelectItem> timeZoneIds; // A list of all available time zone ids
 
     public void onLoad() throws SQLException {
         User loggedinUser = getUser();
@@ -319,13 +323,23 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public List<String> getTimeZonesIds() {
-        List<String> zoneList = new ArrayList<>(ZoneId.getAvailableZoneIds());
-        Collections.sort(zoneList);
-        return zoneList;
+    /**
+     *
+     * @return A list of all available time zone ids
+     */
+    public List<SelectItem> getTimeZoneIds() {
+        if (null == timeZoneIds) {
+            Locale locale = getUserBean().getLocale();
+
+            timeZoneIds = ZoneId.getAvailableZoneIds().stream().filter(id -> !StringUtils.startsWithAny(id, "Etc/", "SystemV/", "PST8PDT", "GMT")).sorted()
+                .map(id -> new SelectItem(ZoneId.of(id), id.replace("_", " ") + " (" + ZoneId.of(id).getDisplayName(TextStyle.FULL_STANDALONE, locale) + ")"))
+                .collect(Collectors.toList());
+        }
+        return timeZoneIds;
     }
 
     public User.NotificationFrequency[] getNotificationFrequencies() {
         return User.NotificationFrequency.values();
     }
+
 }

@@ -296,7 +296,7 @@
 				<div class="comment-details">
 					<p class="mb-0">
 						<h:link value="#{comment.user.username}" outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="font-weight-bold comment-author mr-3"/>
-						<lw:timeAgo date="#{comment.date}" styleClass="small font-weight-light mb-0 comment-date"/>
+						<lw:timeAgo date="#{comment.date}" timeZone="#{userBean.timeZone}" styleClass="small font-weight-light mb-0 comment-date" />
 					</p>
 					<div class="mb-1">#{comment.text}</div>
 					<div class="small">

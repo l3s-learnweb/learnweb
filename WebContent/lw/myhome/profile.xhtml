@@ -120,7 +120,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.time_zone}:"/>
                                 <p:selectOneMenu converter="timeZoneConverter" value="#{profileBean.selectedUser.timeZone}">
-                                    <f:selectItems value="#{profileBean.timeZonesIds}"/>
+                                    <f:selectItems value="#{profileBean.timeZoneIds}" />
                                 </p:selectOneMenu>
                                 <p:message for="@previous"/>
                             </div>

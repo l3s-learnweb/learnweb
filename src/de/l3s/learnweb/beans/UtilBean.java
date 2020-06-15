@@ -24,15 +24,6 @@ public class UtilBean implements Serializable {
     private static final long serialVersionUID = 6252597111468136574L;
     private static final Logger log = LogManager.getLogger(UtilBean.class);
 
-    /**
-     * This method shall only be used in XHTML files!
-     *
-     * @return The translation for the msgKey. Escaped so that it can be included in JS strings.
-     */
-    public String getLocaleMessageEscaped(String msgKey, Object... args) {
-        return escapeJS(getLocaleMessage(msgKey, args));
-    }
-
     public String escapeJS(String input) {
         return StringEscapeUtils.escapeEcmaScript(input);
     }
