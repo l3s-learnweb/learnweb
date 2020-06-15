@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,7 +141,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             Instant start = Instant.now();
             Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
             glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resource);
-            log.debug("Glossary loading time: " + Duration.between(start, Instant.now()).toMillis());
+
+            //log.debug("Glossary loading time: " + Duration.between(start, Instant.now()).toMillis());
 
             log(Action.glossary_open, glossaryResource);
 
@@ -520,7 +520,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -608,56 +608,56 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     public List<ColumnModel> getColumns()
     {
         List<ColumnModel> columns = new ArrayList<>();
-
+    
         columns.add(new ColumnModel("uses", "uses"));
         columns.add(new ColumnModel("Pronunciation", "pronounciation"));
         columns.add(new ColumnModel("uses", "source"));
         columns.add(new ColumnModel("uses", "phraseology"));
-
+    
         return columns;
     }
-
-
+    
+    
     private void createDynamicColumns() {
         String[] columnKeys = columnTemplate.split(" ");
         columns = new ArrayList<ColumnModel>();
-
+    
         for(String columnKey : columnKeys) {
             String key = columnKey.trim();
-
+    
             if(VALID_COLUMN_KEYS.contains(key)) {
                 columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
             }
         }
     }
-
+    
     public void updateColumns()
     {
         //reset table state
         UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":form:cars");
         table.setValueExpression("sortBy", null);
-
+    
         //update columns
         createDynamicColumns();
     }
-
+    
     static public class ColumnModel implements Serializable
     {
-
+    
         private String header;
         private String property;
-
+    
         public ColumnModel(String header, String property)
         {
             this.header = header;
             this.property = property;
         }
-
+    
         public String getHeader()
         {
             return header;
         }
-
+    
         public String getProperty()
         {
             return property;

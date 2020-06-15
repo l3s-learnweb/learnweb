@@ -66,9 +66,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private List<GroupedResources> resourcesGroupedBySource;
 
     public SearchBean() {
-        // this method is called from every page because of search field in layout
-        log.debug("SearchBean()");
-
         interweb = getLearnweb().getInterweb();
         searchFilters = new SearchFilters(SearchMode.text);
     }

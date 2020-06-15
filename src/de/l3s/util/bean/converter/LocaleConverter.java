@@ -19,7 +19,6 @@ public class LocaleConverter implements Converter<Locale> {
 
     @Override
     public Locale getAsObject(FacesContext arg0, UIComponent arg1, String value) throws ConverterException {
-        log.debug("LocaleConverter.getAsObject");
         if (null == value) {
             log.warn("value is null: " + BeanHelper.getRequestSummary());
             return Locale.ENGLISH;
@@ -29,7 +28,6 @@ public class LocaleConverter implements Converter<Locale> {
 
     @Override
     public String getAsString(FacesContext arg0, UIComponent arg1, Locale value) throws ConverterException {
-        log.debug("LocaleConverter.getAsString");
         if (null == value) {
             log.warn("Locale is null: " + BeanHelper.getRequestSummary());
             return null;

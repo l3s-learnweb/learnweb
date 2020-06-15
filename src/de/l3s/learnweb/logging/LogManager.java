@@ -144,7 +144,11 @@ public final class LogManager {
 
         Instant start = Instant.now();
         List<LogEntry> logs = getLogs(LOG_SELECT + " WHERE ul.group_id = ? AND action IN(" + resourceActionIds + ") AND target_id = ? ORDER BY timestamp DESC " + limitStr, resource.getGroupId(), resource.getId());
-        log.debug("getLogsByResource: " + Duration.between(start, Instant.now()).getNano());
+
+        int duration = Duration.between(start, Instant.now()).getNano();
+        if (duration > 500000) {
+            log.warn("getLogs took {}ns; resourceId: {}; limit: {};", duration, resource.getId(), limit);
+        }
 
         return logs;
         /*

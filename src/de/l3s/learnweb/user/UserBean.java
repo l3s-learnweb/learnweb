@@ -69,9 +69,9 @@ public class UserBean implements Serializable {
         activeOrganisationId = 478; // public
 
         refreshLocale();
-        storeMetadataInSession();
+        String clientInfo = storeMetadataInSession();
 
-        log.debug("created UserBean");
+        log.debug("Session started: {}", clientInfo);
     }
 
     public String getSearchQuery() {
@@ -89,8 +89,10 @@ public class UserBean implements Serializable {
     /**
      * This method sets values which are required by the Download Servlet
      * and provides data which is shown on the Tomcat manager session page.
+     *
+     * @return userName | ipAddress | userAgent for the current request;
      */
-    private void storeMetadataInSession() {
+    private String storeMetadataInSession() {
         User user = getUser();
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) context.getRequest();
@@ -106,6 +108,8 @@ public class UserBean implements Serializable {
         session.setAttribute("userName", info); // set only to display it in Tomcat manager app
         session.setAttribute("Locale", locale); // set only to display it in Tomcat manager app
         session.setAttribute("learnweb_user_id", userId); // required by DownloadServlet
+
+        return info;
     }
 
     public boolean isLoggedIn() {
@@ -431,7 +435,10 @@ public class UserBean implements Serializable {
             sidebarMenuModel = model;
             sidebarMenuModelUpdate = Instant.now();
             long elapsedMs = System.currentTimeMillis() - start;
-            log.info("Total time to build menu: " + elapsedMs + " ms.");
+
+            if (elapsedMs > 20) {
+                log.warn("Total time to build menu: {} ms.", elapsedMs);
+            }
         }
 
         return sidebarMenuModel;

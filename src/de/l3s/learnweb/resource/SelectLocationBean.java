@@ -34,7 +34,7 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
     private Instant groupsTreeUpdate;
 
     public SelectLocationBean() {
-        log.debug("Create new SelectLocationBean");
+        //log.debug("Create new SelectLocationBean");
     }
 
     public Group getTargetGroup() {

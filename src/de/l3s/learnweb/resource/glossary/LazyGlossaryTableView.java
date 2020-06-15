@@ -92,7 +92,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
                 case "topicOne":
                 case "topicTwo":
                 case "topicThree":
-                    log.debug("added filter for:" + filterField + " = " + filterValueStr);
+                    //log.debug("added filter for:" + filterField + " = " + filterValueStr);
                     allPredicates.add(e -> e.get(filterField).toLowerCase().contains(filterValueStr));
                     break;
                 case "term":
@@ -100,11 +100,11 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
                 case "acronym":
                 case "source":
                 case "phraseology":
-                    log.debug("added filter for:" + filterField + " = " + filterValueStr);
+                    //log.debug("added filter for:" + filterField + " = " + filterValueStr);
                     allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> t.get(filterField).toLowerCase().contains(filterValueStr)));
                     break;
                 default:
-                    log.warn("unsupported filter:" + filterField);
+                    log.error("unsupported filter:" + filterField);
             }
         }
 
