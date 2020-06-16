@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,8 +143,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
             glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resource);
 
-            //log.debug("Glossary loading time: " + Duration.between(start, Instant.now()).toMillis());
-
+            long duration = Duration.between(start, Instant.now()).toMillis();
+            if (duration > 500) {
+                log.warn("Glossary loading time: {}", duration);
+            }
             log(Action.glossary_open, glossaryResource);
 
             // for labint francesca.bianchi@unisalento.it
@@ -163,7 +166,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             // convert tree like glossary structure to flat table
             repaintTable();
 
-            clear();
+            onClearEntryForm();
 
             tableLanguageFilter = new ArrayList<>(glossaryResource.getAllowedLanguages());
 
@@ -215,7 +218,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 }
             }
 
-            if (formEntry.getTerms().size() == numberOfDeletedTerms()) {
+            if (!containsUndeletedTerms(formEntry)) {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "Glossary.entry_validation");
                 return;
             }
@@ -223,20 +226,20 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
             addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
 
-            clear();
+            onClearEntryForm();
         } catch (SQLException e) {
             log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
             addErrorGrowl(e);
         }
     }
 
-    public void clear() {
+    public void onClearEntryForm() {
         formEntry = new GlossaryEntry();
         formEntry.setResourceId(glossaryResource.getId());
 
         // add two terms
-        addTerm();
-        addTerm();
+        onAddTerm();
+        onAddTerm();
     }
 
     public void deleteEntry(GlossaryTableView row) {
@@ -256,9 +259,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void deleteTerm(GlossaryTerm term) {
+    public void onDeleteTerm(GlossaryTerm term) {
         try {
-            if (formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size()) {
+            if (!containsUndeletedTerms(formEntry)) {
                 addGrowl(FacesMessage.SEVERITY_INFO, "Glossary.term_validation");
                 return;
             }
@@ -278,18 +281,18 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
     }
 
-    private int numberOfDeletedTerms() {
-        int deletedTerms = 0;
+    private boolean containsUndeletedTerms(GlossaryEntry entry) {
+        int undeletedTerms = 0;
 
-        for (GlossaryTerm t : formEntry.getTerms()) {
-            if (t.isDeleted()) {
-                deletedTerms++;
+        for (GlossaryTerm term : entry.getTerms()) {
+            if (!term.isDeleted()) {
+                undeletedTerms++;
             }
         }
-        return deletedTerms;
+        return undeletedTerms > 0;
     }
 
-    public void addTerm() {
+    public void onAddTerm() {
         try {
             GlossaryTerm newTerm = new GlossaryTerm();
 
@@ -309,7 +312,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void changeTopicOne(AjaxBehaviorEvent event) {
+    public void onChangeTopicOne(AjaxBehaviorEvent event) {
         createAvailableTopicsTwo();
         formEntry.setTopicTwo("");
         formEntry.setTopicThree("");
@@ -337,29 +340,31 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void changeTopicTwo(AjaxBehaviorEvent event) {
+    public void onChangeTopicTwo(AjaxBehaviorEvent event) {
         createAvailableTopicsThree();
         formEntry.setTopicThree("");
     }
 
     private void createAvailableTopicsThree() {
+        String topic1 = formEntry.getTopicOne();
+        String topic2 = formEntry.getTopicTwo();
         availableTopicThree.clear();
 
-        if (formEntry.getTopicOne().equalsIgnoreCase("medicine")) {
-            if (formEntry.getTopicTwo().equalsIgnoreCase("Diseases and disorders")) {
+        if (topic1.equalsIgnoreCase("medicine")) {
+            if (topic2.equalsIgnoreCase("Diseases and disorders")) {
                 availableTopicThree.add(new SelectItem("Signs and symptoms"));
                 availableTopicThree.add(new SelectItem("Diagnostic techniques"));
                 availableTopicThree.add(new SelectItem("Therapies"));
                 availableTopicThree.add(new SelectItem("Drugs"));
-            } else if (formEntry.getTopicTwo().equalsIgnoreCase("Anatomy")) {
+            } else if (topic2.equalsIgnoreCase("Anatomy")) {
                 availableTopicThree.add(new SelectItem("Organs"));
                 availableTopicThree.add(new SelectItem("Bones"));
                 availableTopicThree.add(new SelectItem("Muscles"));
                 availableTopicThree.add(new SelectItem("Other"));
             }
         }
-        if (formEntry.getTopicOne().equalsIgnoreCase("TOURISM")) {
-            if (formEntry.getTopicTwo().equalsIgnoreCase("Heritage")) {
+        if (topic1.equalsIgnoreCase("TOURISM")) {
+            if (topic2.equalsIgnoreCase("Heritage")) {
                 availableTopicThree.add(new SelectItem("History"));
                 availableTopicThree.add(new SelectItem("Architecture"));
                 availableTopicThree.add(new SelectItem("Festivals"));
@@ -609,10 +614,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public GlossaryParserResponse getImportResponse() {
         return importResponse;
-    }
-
-    public void changeOverwriteFlag(AjaxBehaviorEvent overwriteGlossary) {
-        log.debug("Value changed");
     }
 
     public List<Locale> getTableLanguageFilter() {

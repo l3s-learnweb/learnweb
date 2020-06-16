@@ -39,7 +39,7 @@
                     <h:outputText value="#{msg.searchLabel}" styleClass="font-weight-light mr-2"/>
                     <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['Glossary.search_filter_placeholder']}"/>
                 </p:outputPanel>
-                <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.clear}" styleClass="alt-btn" process="@this"
+                <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="alt-btn" process="@this"
                                  update=":glossary_add" oncomplete="openGlossForm();" global="false"/>
             </div>
         </f:facet>
@@ -138,9 +138,7 @@
                 <h:outputFormat value="#{msg['Glossary.overwrite_question']}" styleClass="d-block"/>
                 <h:outputText value="#{msg['Glossary.overwrite_description']}" styleClass="d-block mb-2"/>
 
-                <p:selectBooleanButton value="#{glossaryBean.overwriteGlossary}" onLabel="#{msg['yes']}" offLabel="#{msg['no']}">
-                    <p:ajax listener="#{glossaryBean.changeOverwriteFlag}"/>
-                </p:selectBooleanButton>
+                <p:selectBooleanButton value="#{glossaryBean.overwriteGlossary}" onLabel="#{msg['yes']}" offLabel="#{msg['no']}" />
             </h:panelGroup>
 
             <p:fileUpload mode="advanced" skinSimple="true" listener="#{glossaryBean.onImportXls}" styleClass="fileupload-minimal"
@@ -174,7 +172,7 @@
             <p:outputLabel for="@next" styleClass="font-weight-bold" value="#{msg['Glossary.topic']} 1"/>
             <p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" editable="true">
                 <f:selectItems value="#{glossaryBean.availableTopicOne}"/>
-                <f:ajax listener="#{glossaryBean.changeTopicOne}" render="topic_2 topic_3"/>
+                <p:ajax listener="#{glossaryBean.onChangeTopicOne}" update="topic_2 topic_3" process="topic_1"/>
             </p:selectOneMenu>
             <p:message for="@previous"/>
 
@@ -182,7 +180,7 @@
             <h:panelGroup id="topic_2">
                 <p:selectOneMenu value="#{glossaryBean.formEntry.topicTwo}" editable="true" rendered="#{not empty glossaryBean.availableTopicTwo}">
                     <f:selectItems value="#{glossaryBean.availableTopicTwo}"/>
-                    <f:ajax listener="#{glossaryBean.changeTopicTwo}" render="topic_3"/>
+                    <p:ajax listener="#{glossaryBean.onChangeTopicTwo}" update="topic_3" process="topic_1 topic_2"/>
                 </p:selectOneMenu>
                 <p:inputText value="#{glossaryBean.formEntry.topicTwo}" styleClass="w-100" rendered="#{empty glossaryBean.availableTopicTwo}"/>
             </h:panelGroup>
@@ -254,11 +252,11 @@
                 </p:selectOneMenu>
             </p:column>
             <p:column headerText="#{msg['Glossary.phraseology']}" rendered="#{not term.deleted}">
-                <p:inputTextarea id="phras" value="#{term.phraseology}" styleClass="w-100" autoResize="false"
+                <p:inputTextarea id="phraseology" value="#{term.phraseology}" styleClass="w-100" autoResize="false"
                                  pt:onpaste="setPasteStatus(this, 'phraseology');"/>
             </p:column>
             <p:column width="20" rendered="#{not term.deleted}">
-                <p:commandLink id="delete_term" actionListener="#{glossaryBean.deleteTerm(term)}" update=":lang_terms " title="#{msg.delete}">
+                <p:commandLink id="delete_term" actionListener="#{glossaryBean.onDeleteTerm(term)}" update=":lang_terms " title="#{msg.delete}">
                     <f:ajax execute="@this lang_terms"/>
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                 </p:commandLink>
@@ -267,16 +265,16 @@
 
         <div class="d-flex mt-3">
             <div class="mr-auto">
-                <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.addTerm()}"
+                <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}"
                                  update=":glossary_add :lang_terms" process="@this lang_terms" styleClass="alt-btn">
                 </p:commandButton>
             </div>
             <div>
                 <p:defaultCommand target="save"/>
-                <p:commandButton value="#{msg.cancel}" action="#{glossaryBean.clear}"
+                <p:commandButton value="#{msg.cancel}" action="#{glossaryBean.onClearEntryForm}"
                                  process="@this" resetValues="true" oncomplete="closeGlossForm()" styleClass="secondary-btn">
                 </p:commandButton>
-                <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave()}" update=":glossary_add :glossary_table_form "
+                <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave}" update=":glossary_add :glossary_table_form "
                                  binding="#{save}" oncomplete="groupRow()">
                 </p:commandButton>
             </div>

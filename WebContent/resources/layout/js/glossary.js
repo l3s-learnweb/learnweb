@@ -7,12 +7,6 @@ function closeGlossForm() {
   $('#glossaryForm').css('display', 'none');
 }
 
-function scrollToAnchor() {
-  $('html, body').animate({
-    scrollBottom: $('#glossaryForm').offset().top,
-  }, 2000);
-}
-
 function groupRow() {
   const columnsToMerge = 5; // number of first columns to merge
   const glossaryEntryColumn = 2; // index of column that contains the glossaryEntryId
@@ -63,6 +57,7 @@ function setPasteStatus(element, field) {
 /* see LazyGlossaryTableView comments for more details */
 function correctPaginatorCount(index) {
   const option = $(this);
+  console.log('correctPaginatorCount', option.val(), option);
   option.text(option.val() / 20);
 }
 
