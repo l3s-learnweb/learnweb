@@ -10,7 +10,7 @@
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
         </Console>
-        <RollingFile name="file" append="false" fileName="${env:LEARNWEB_LOG_PATH}" filePattern="${env:LEARNWEB_LOG_PATH}.%i">
+        <RollingFile name="file" append="false" bufferSize="10" fileName="${env:LEARNWEB_LOG_PATH}" filePattern="${env:LEARNWEB_LOG_PATH}.%i">
             <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
             <SizeBasedTriggeringPolicy size="250 MB"/>
         </RollingFile>
