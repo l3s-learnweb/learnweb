@@ -1,3 +1,4 @@
+/* global getWidgetVarById, emoji */
 /* global editorConfigValues, DocsAPI */
 
 /* Modal to see archive versions */
@@ -159,3 +160,22 @@ $(() => {
     });
   }
 });
+
+
+// Edit comments shortcuts
+function startEditComment(el) {
+  const commentDetails = $(el).closest('.comment-details');
+  commentDetails.children('[id$="editCommentControls"]').hide();
+
+  // show editable field
+  const editable = commentDetails.children('[id$="editCommentInplace"]').get(0);
+  getWidgetVarById(editable.id).show();
+
+  // init emoji button
+  if (typeof emoji !== 'undefined') emoji.init();
+}
+
+function showEditCommentControls(source) {
+  const commentDetails = $(`#${source.replaceAll(':', '\\:')}`).closest('.comment-details');
+  commentDetails.children('[id$="editCommentControls"]').show();
+}
