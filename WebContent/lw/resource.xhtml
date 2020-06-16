@@ -17,11 +17,13 @@
 <ui:define name="body_content">
 	<h:outputScript library="layout" name="js/resource-view.js" target="body"/>
 
-	<h:outputText value="This resource has been removed" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0)}"/>
+	<h:outputText value="This resource has been deleted." binding="#{warningResourceDeleted}" rendered="#{resourceDetailBean.resource.deleted}"/>
+    <h:outputText value="" binding="#{warningLoginRequired}" rendered="#{not warningResourceDeleted.rendered and not userBean.loggedIn and not resourceDetailBean.resource.canViewResource(userBean.user)}" escape="false">
+        You need to <a href="#{request.contextPath}" target="_top">login</a> to access this resource.
+    </h:outputText>
+    <h:outputText value="#{msg['group_resources.access_denied']}" rendered="#{not warningLoginRequired.rendered and not warningResourceDeleted.rendered and not resourceDetailBean.resource.canViewResource(userBean.user)}"/>
 
-	<h:outputText value="#{msg['group_resources.access_denied']}" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and not (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0) and userBean.loggedIn}"/>
-
-	<ui:fragment rendered="#{not userBean.loggedIn and not resourceDetailBean.resource.canViewResource(userBean.user)}"><p>You need to login to access this resource.</p></ui:fragment>
+	<ui:fragment rendered=""><p></p></ui:fragment>
 
 	<ui:fragment rendered="#{resourceDetailBean.resource.canViewResource(userBean.user)}">
 		<div class="res-view">

@@ -1237,6 +1237,9 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     @Override
     public boolean canViewResource(User user) throws SQLException {
+        if (isDeleted())
+            return false;
+
         //admins, moderators and resource owners can always view the resource
         if (user != null && (user.isModerator() || getUserId() == user.getId())) {
             return true;
@@ -1262,7 +1265,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public boolean canModerateResource(User user) {
-        if (user == null) { // not logged in
+        if (user == null || isDeleted()) {
             return false;
         }
 
@@ -1285,7 +1288,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public boolean canAnnotateResource(User user) throws SQLException {
-        if (user == null) { // not logged in
+        if (user == null || isDeleted()) {
             return false;
         }
 

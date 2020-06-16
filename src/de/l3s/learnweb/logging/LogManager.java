@@ -76,9 +76,9 @@ public final class LogManager {
                     // TODO philipp change query and add index
                     List<LogEntry> logs = getLogs(LOG_SELECT + " WHERE ul.group_id = ? AND action IN(" + resourceActionIds + ") AND target_id = ? ORDER BY timestamp DESC " + limitStr, resource.getGroupId(), resource.getId());
 
-                    int duration = Duration.between(start, Instant.now()).getNano();
-                    if (duration > 500000) {
-                        log.warn("getLogs took {}ns; resourceId: {}; limit: {};", duration, resource.getId(), limit);
+                    long duration = Duration.between(start, Instant.now()).toMillis();
+                    if (duration > 500) {
+                        log.warn("getLogs took {}ms; resourceId: {}; limit: {};", duration, resource.getId(), limit);
                     }
 
                     return logs;
