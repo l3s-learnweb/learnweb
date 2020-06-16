@@ -179,3 +179,54 @@
     margin: 0 $grid-gutter-width / 2;
   }
 }
+
+.comment-details {
+  .ui-inplace {
+    display: block;
+    margin-bottom: 0.25rem;
+
+    .ui-inputfield {
+      width: 100%;
+    }
+
+    .ui-inplace-display {
+      padding: 0;
+    }
+
+    .ui-inplace-editor {
+      display: block;
+      text-align: right;
+
+      button {
+        &:first-child {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        &:last-child {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-color: $secondaryButtonBgColor;
+          background: $secondaryButtonBgColor;
+        }
+      }
+    }
+
+    .ui-inplace-cancel {
+      border-color: $secondaryButtonBgColor;
+      background: $secondaryButtonBgColor;
+
+      &:hover,
+      &.ui-state-hover,
+      &.ui-state-focus {
+        background-color: $secondaryButtonHoverBgColor;
+        border-color: $secondaryButtonHoverBgColor;
+      }
+
+      &.ui-state-active {
+        background-color: $secondaryButtonActiveBgColor;
+        border-color: $secondaryButtonActiveBgColor;
+      }
+    }
+  }
+}

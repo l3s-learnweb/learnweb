@@ -247,12 +247,10 @@
 						<f:param name="action" value="image"/>
 						<f:param name="query" value="#{tag.name}"/>
 					</p:linkButton>
-					<p:commandButton action="#{resourceDetailBean.onDeleteTag}" icon="fa fa-times" styleClass="secondary-btn rounded-0"
+					<p:commandButton action="#{resourceDetailBean.onDeleteTag(tag)}" icon="fa fa-times" styleClass="secondary-btn rounded-0"
 									 update=":tags_list" process="@this"
 									 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
-									 rendered="#{res.canEditResource(userBean.user)}">
-						<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
-					</p:commandButton>
+									 rendered="#{res.canEditResource(userBean.user)}"/>
 				</li>
 			</ui:repeat>
 		</ul>
@@ -260,7 +258,7 @@
 
 	<h:panelGroup layout="block" styleClass="d-flex" rendered="#{res.canAnnotateResource(userBean.user)}">
 		<div class="flex-grow-1">
-			<p:inputText id="tag_text_input" value="#{resourceDetailBean.tagName}" styleClass="w-100" placeholder="#{msg.new_tag_placeholder}" required="true"/>
+			<p:inputText id="tag_text_input" value="#{resourceDetailBean.newTag}" styleClass="w-100" placeholder="#{msg.new_tag_placeholder}" required="true"/>
 			<p:message for="@previous"/>
 		</div>
 
@@ -293,29 +291,29 @@
 			<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
 				<img class="profile-picture mr-3 mt-1" src="#{comment.user.image}" alt="Profile picture"/>
 
-				<div class="comment-details">
+				<div class="comment-details flex-grow-1">
 					<p class="mb-0">
 						<h:link value="#{comment.user.username}" outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="font-weight-bold comment-author mr-3"/>
 						<lw:timeAgo date="#{comment.date}" timeZone="#{userBean.timeZone}" styleClass="small font-weight-light mb-0 comment-date" />
 					</p>
-					<div class="mb-1">#{comment.text}</div>
-					<div class="small">
-						<p:commandLink value="#{msg.edit}" styleClass="text-success mr-2" ajax="true" update=":comment_edit_form" process="@this"
-									   onsuccess="PF('editCommentDialog').show();" rendered="#{resourceDetailBean.canEditComment(comment)}">
-							<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
-						</p:commandLink>
-						<p:commandLink value="#{msg.delete}" styleClass="text-danger" ajax="true" action="#{resourceDetailBean.onDeleteComment}"
+					<p:inplace id="editCommentInplace" toggleable="false" editor="true" saveLabel="#{msg.save}" cancelLabel="#{msg.cancel}"
+							   disabled="#{!resourceDetailBean.canEditComment(comment)}">
+						<p:inputTextarea autoResize="1" maxHeight="20" value="#{comment.text}" pt:data-emoji="true" required="true"/>
+						<p:ajax event="save" listener="#{resourceDetailBean.onEditComment(comment)}" oncomplete="showEditCommentControls(this.source);"/>
+						<p:ajax event="cancel" oncomplete="showEditCommentControls(this.source);"/>
+					</p:inplace>
+					<h:panelGroup id="editCommentControls" styleClass="small" layout="block" rendered="#{resourceDetailBean.canEditComment(comment)}">
+						<p:commandLink id="editComment" value="#{msg.edit}" styleClass="text-success mr-2" onclick="startEditComment(this);return false;"/>
+						<p:commandLink id="deleteComment" value="#{msg.delete}" styleClass="text-danger" ajax="true" action="#{resourceDetailBean.onDeleteComment(comment)}"
 									   update=":comments_list" process="@this" onstart="PF('detailsOverlay').show();"
-									   oncomplete="PF('detailsOverlay').hide();" rendered="#{resourceDetailBean.canEditComment(comment)}">
-							<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
+									   oncomplete="PF('detailsOverlay').hide();">
 							<p:confirm message="#{msg.delete_message_comments}"/>
 						</p:commandLink>
-					</div>
+					</h:panelGroup>
 				</div>
 			</div>
 		</ui:repeat>
 	</h:panelGroup>
 </ui:fragment>
 
-<ui:decorate template="/WEB-INF/templates/blocks/modal/edit_comment_dialog.xhtml"/>
 </ui:composition>

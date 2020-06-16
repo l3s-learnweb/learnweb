@@ -47,9 +47,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         editResource
     }
 
-    private Tag selectedTag;
-    private String tagName;
-    private Comment clickedComment; // TODO rename to selectedcomment
+    private String newTag;
     private String newComment;
 
     // Url params
@@ -287,9 +285,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     }
 
-    public void onDeleteTag() {
+    public void onDeleteTag(Tag tag) {
         try {
-            resource.deleteTag(selectedTag);
+            resource.deleteTag(tag);
             addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
         } catch (Exception e) {
             addErrorMessage(e);
@@ -302,22 +300,22 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             return null;
         }
 
-        if (StringUtils.isBlank(tagName)) {
+        if (StringUtils.isBlank(newTag)) {
             return null;
         }
 
         //Limit number of spaces in a tag = 3
-        if ((StringUtils.countMatches(tagName, " ") > 3) || tagName.contains(",") || tagName.contains("#") || (tagName.length() > 50)) {
+        if ((StringUtils.countMatches(newTag, " ") > 3) || newTag.contains(",") || newTag.contains("#") || (newTag.length() > 50)) {
             showTagWarningMessage();
 
             return null;
         }
 
         try {
-            resource.addTag(tagName, getUser());
+            resource.addTag(newTag, getUser());
             addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-            log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tagName);
-            tagName = ""; // clear tag input field
+            log(Action.tagging_resource, resource.getGroupId(), resource.getId(), newTag);
+            newTag = ""; // clear tag input field
         } catch (Exception e) {
             addErrorMessage(e);
         }
@@ -359,11 +357,11 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         String title = getLocaleMessage("incorrect_tags");
         String text;
 
-        if (tagName.contains("#")) {
-            text = getLocaleMessage("tags_hashtag") + tagName.replaceAll("#", " ");
-        } else if (tagName.contains(",")) {
+        if (newTag.contains("#")) {
+            text = getLocaleMessage("tags_hashtag") + newTag.replaceAll("#", " ");
+        } else if (newTag.contains(",")) {
             text = getLocaleMessage("tags_specialCharacter");
-        } else if ((StringUtils.countMatches(tagName, " ") > 3)) {
+        } else if ((StringUtils.countMatches(newTag, " ") > 3)) {
             text = getLocaleMessage("tags_spaces");
         } else {
             text = getLocaleMessage("tags_tooLong");
@@ -409,20 +407,20 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         return user.equals(owner);
     }
 
-    public void onEditComment() {
+    public void onEditComment(Comment comment) {
         try {
-            getLearnweb().getResourceManager().saveComment(clickedComment);
+            getLearnweb().getResourceManager().saveComment(comment);
             addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
         } catch (Exception e) {
             addErrorMessage(e);
         }
     }
 
-    public void onDeleteComment() {
+    public void onDeleteComment(Comment comment) {
         try {
-            resource.deleteComment(clickedComment);
+            resource.deleteComment(comment);
             addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-            log(Action.deleting_comment, resource.getGroupId(), clickedComment.getResourceId(), clickedComment.getId());
+            log(Action.deleting_comment, resource.getGroupId(), comment.getResourceId(), comment.getId());
         } catch (Exception e) {
             addErrorMessage(e);
         }
@@ -475,28 +473,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     }
 
     // -------------------  Simple getters and setters ---------------------------
-    public Tag getSelectedTag() {
-        return selectedTag;
+
+    public String getNewTag() {
+        return newTag;
     }
 
-    public void setSelectedTag(Tag selectedTag) {
-        this.selectedTag = selectedTag;
-    }
-
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
-    }
-
-    public Comment getClickedComment() { // TODO rename to selectedcomment
-        return clickedComment;
-    }
-
-    public void setClickedComment(Comment clickedComment) { // TODO rename to selectedcomment
-        this.clickedComment = clickedComment;
+    public void setNewTag(String newTag) {
+        this.newTag = newTag;
     }
 
     public String getNewComment() {
