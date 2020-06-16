@@ -32,8 +32,9 @@
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'file'}">
                 <p:outputLabel for="@next" value="#{msg.file}:"/>
-                <p:fileUpload id="fileUploadInput" listener="#{addResourceBean.handleFileUpload}" styleClass="fileupload-minimal" mode="advanced" auto="true"
-                              sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update="@form" required="true"/>
+                <p:fileUpload id="fileUploadInput" listener="#{addResourceBean.handleFileUpload}" styleClass="fileupload-minimal" required="true"
+                              mode="advanced" auto="true" sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update="@form"
+                              oncomplete="PF('createResourceDialog').resetPosition();"/>
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.smallThumbnail != null}">
@@ -119,12 +120,13 @@
             </div>
             <div class="d-flex flex-row-reverse">
                 <p:commandButton value="#{msg.next_step}" action="#{addResourceBean.handleUrlInput}" update="@form"
+                                 oncomplete="PF('createResourceDialog').resetPosition();"
                                  rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}">
                 </p:commandButton>
 
                 <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update="create_resource_form"
                                  onsuccess="resourceAddedHook(); return false;"
-                                 oncomplete="handleDialogSubmit(xhr, status, args)"
+                                 oncomplete="if (!args.validationFailed) {PF('createResourceDialog').hide();}"
                                  rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">
                 </p:commandButton>
 
@@ -134,10 +136,4 @@
     </h:form>
 </p:dialog>
 
-<script type="text/javascript">
-  function handleDialogSubmit(xhr, status, args) {
-    if (!args.validationFailed)
-      PF('createResourceDialog').hide();
-  }
-</script>
 </ui:composition>

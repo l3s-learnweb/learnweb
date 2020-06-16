@@ -6,16 +6,13 @@ import java.util.List;
 import org.primefaces.component.autocomplete.AutoComplete;
 
 public class LwAutoComplete extends AutoComplete {
-    private boolean isInputValueArray = false;
 
     @Override
     public Object getValue() {
         Object value = super.getValue();
 
         if (value != null && value.getClass().isArray()) {
-            isInputValueArray = true;
-            Object[] array = (Object[]) value;
-            return Arrays.asList(array);
+            return Arrays.asList((Object[]) value);
         }
 
         return value;
@@ -24,7 +21,9 @@ public class LwAutoComplete extends AutoComplete {
     @SuppressWarnings("unchecked")
     @Override
     public void setValue(Object value) {
-        if (isInputValueArray && value instanceof List) {
+        boolean useArray = "true".equals(getAttributes().get("returnArray"));
+
+        if (useArray && value instanceof List) {
             value = ((List<String>) value).toArray(new String[0]);
         }
 

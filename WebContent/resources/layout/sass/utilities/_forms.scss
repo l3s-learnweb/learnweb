@@ -24,7 +24,7 @@
   display: grid;
   grid-gap: $form-group-margin-bottom;
 
-  > * {
+  > *:not(.fg-row) {
     min-width: 0;
     overflow-x: auto;
   }
@@ -37,6 +37,23 @@
   .fg-row {
     > * {
       min-width: 100%;
+    }
+
+    .ui-autocomplete {
+      .ui-autocomplete-input {
+        min-width: 100%;
+      }
+    }
+
+    .ui-autocomplete-multiple {
+      .ui-autocomplete-multiple-container {
+        min-width: 100%;
+        width: auto;
+      }
+
+      .ui-autocomplete-dropdown {
+        right: 0;
+      }
     }
   }
 
