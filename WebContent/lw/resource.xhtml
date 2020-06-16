@@ -23,8 +23,6 @@
     </h:outputText>
     <h:outputText value="#{msg['group_resources.access_denied']}" rendered="#{not warningLoginRequired.rendered and not warningResourceDeleted.rendered and not resourceDetailBean.resource.canViewResource(userBean.user)}"/>
 
-	<ui:fragment rendered=""><p></p></ui:fragment>
-
 	<ui:fragment rendered="#{resourceDetailBean.resource.canViewResource(userBean.user)}">
 		<div class="res-view">
 			<div class="row no-gutters">

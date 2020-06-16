@@ -11,18 +11,6 @@
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB" async="async"></script>
 <h:outputScript library="layout" name="js/glossary.js" target="body"/>
 
-
-<ui:fragment rendered="#{userBean.admin}">
-    <!-- some tests -->
-    <h:form id="updatetest">
-    
-        <p:commandButton value="dummy button" styleClass="alt-btn" actionListener="#{glossaryBean.getTableLanguageFilter()}" process="@this" update=":updatetest" immediate="true"/>
-    </h:form>
-    
-    <h:panelGroup id="test"></h:panelGroup>
-</ui:fragment>
-
-
 <h:form id="glossary_table_form" prependId="false">
     <p:dataTable id="glossary_table" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
                  styleClass="glossary-table" sortBy="#{item.timestamp}" sortOrder="descending"
