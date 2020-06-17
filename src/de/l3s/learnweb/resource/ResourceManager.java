@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -610,6 +611,9 @@ public class ResourceManager {
     }
 
     public void saveArchiveUrlsByResourceId(int resourceId, List<ArchiveUrl> archiveUrls) throws SQLException {
+        if (CollectionUtils.isEmpty(archiveUrls)) {
+            return;
+        }
         try (PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)")) {
             for (ArchiveUrl version : archiveUrls) {
                 prepStmt.setInt(1, resourceId);

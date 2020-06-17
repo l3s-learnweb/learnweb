@@ -809,7 +809,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * The place where the resource was found. Example: Flickr or Youtube or Desktop ...
      */
     public ResourceService getSource() {
-        log.debug("getSource");
         return source;
     }
 
