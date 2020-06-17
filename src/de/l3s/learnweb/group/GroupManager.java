@@ -369,10 +369,6 @@ public class GroupManager {
             update.setInt(1, group.getId());
             update.executeUpdate();
         }
-        try (PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE lw_user SET active_group_id = 0 WHERE active_group_id = ?")) {
-            update.setInt(1, group.getId());
-            update.executeUpdate();
-        }
 
         members.forEach(User::clearCaches);
 
