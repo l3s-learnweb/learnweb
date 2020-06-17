@@ -388,7 +388,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             Resource newResource = resource.clone();
             newResource.setGroupId(HasId.getIdOrDefault(targetGroup, 0));
             newResource.setFolderId(HasId.getIdOrDefault(targetFolder, 0));
-            resource = getUser().addResource(newResource);
+            newResource.setUser(getUser());
+            newResource.save();
             log(Action.adding_resource, targetGroup.getId(), resource.getId());
         }
 

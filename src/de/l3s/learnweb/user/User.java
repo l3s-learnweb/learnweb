@@ -285,10 +285,6 @@ public class User implements Comparable<User>, Serializable, HasId {
         this.profession = profession;
     }
 
-    public Resource addResource(Resource resource) throws SQLException {
-        return Learnweb.getInstance().getResourceManager().addResource(resource, this);
-    }
-
     public List<Resource> getResources() throws SQLException {
         return Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
     }

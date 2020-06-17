@@ -171,8 +171,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
             SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
             newResource.setGroup(selectLocationBean.getTargetGroup());
             newResource.setFolder(selectLocationBean.getTargetFolder());
+            newResource.setUser(user);
 
-            log.debug("Add resource); group: " + newResource.getGroupId() + "; folder: " + newResource.getFolderId());
+            log.debug("Add resource; group: " + newResource.getGroupId() + "; folder: " + newResource.getFolderId());
 
             // we need to check whether a Bing result is a PDF, Word or other document
             if (newResource.getOriginalResourceId() == 0 && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text) && newResource.getSource() == ResourceService.bing) {
@@ -180,11 +181,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
                 ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
                 FileInfo fileInfo = rme.getFileInfo(newResource.getUrl());
                 rme.processFileResource(newResource, fileInfo);
-                // TODO check if it would be better to use rme.processWebResource
-
             }
 
-            newResource = user.addResource(newResource);
+            newResource.save();
 
             log.debug("Creating thumbnails from given url...");
             Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(newResource);

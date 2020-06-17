@@ -614,10 +614,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      */
     @Override
     public Resource save() throws SQLException {
-        if (this.getId() == -1) { // a new resource which is not stored in the database yet
-            return this.getUser().addResource(this);
-        }
-
         return Learnweb.getInstance().getResourceManager().saveResource(this);
     }
 

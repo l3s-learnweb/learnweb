@@ -37,7 +37,6 @@ import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.InterwebResultsWrapper;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
-import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.resource.ted.Transcript.Paragraph;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -303,7 +302,6 @@ public class TedManager {
     //For saving crawled ted videos into lw_resource table
     public void saveTedResource() throws SQLException, IOException, SolrServerException {
         ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
-        SolrClient solr = learnweb.getSolrClient();
         Group tedGroup = learnweb.getGroupManager().getGroupById(862);
         User admin = learnweb.getUserManager().getUser(7727);
 
@@ -322,23 +320,24 @@ public class TedManager {
             tedVideo.setMachineDescription(concatenateTranscripts(learnwebResourceId));
             tedVideo.setUser(admin);
 
-            if (learnwebResourceId == 0) { // not yet stored in Learnweb
+            if (learnwebResourceId == 0 || tedVideo.getUserId() == 0) { // not yet stored in Learnweb
                 rpm.processImage(tedVideo, FileInspector.openStream(tedVideo.getMaxImageUrl()));
 
-                update.setInt(1, tedVideo.getId());
-                update.setInt(2, tedId);
-                update.executeUpdate();
-
                 tedVideo.setGroup(tedGroup);
-                admin.addResource(tedVideo);
+                tedVideo.setUser(admin);
+                tedVideo.save();
 
-                solr.indexResource(tedVideo);
+                if (learnwebResourceId == 0) {
+                    update.setInt(1, tedVideo.getId());
+                    update.setInt(2, tedId);
+                    update.executeUpdate();
+                }
 
             } else if (tedVideo.getUserId() == 0) {
                 rpm.processImage(tedVideo, FileInspector.openStream(tedVideo.getMaxImageUrl()));
                 tedVideo.setGroup(tedGroup);
-                admin.addResource(tedVideo);
-                solr.indexResource(tedVideo);
+                tedVideo.setUser(admin);
+                tedVideo.save();
             } else {
                 tedVideo.save();
             }
@@ -381,7 +380,8 @@ public class TedManager {
         resource.setMaxImageUrl(rs.getString("photo2_url"));
         resource.setIdAtService(Integer.toString(rs.getInt("ted_id")));
         resource.setCreationDate(rs.getTimestamp("published_at"));
-        resource.setEmbeddedRaw("<iframe src=\"https://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen></iframe>");
+        // player code is created on the fly in Resource.getEmbedded
+        //resource.setEmbeddedRaw("<iframe src=\"https://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen></iframe>");
         resource.setTranscript("");
         return resource;
     }
@@ -461,7 +461,8 @@ public class TedManager {
                 } else {
                     rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl().replace("hqdefault", "mqdefault")));
                     resource.setGroup(tedEdGroup);
-                    admin.addResource(resource);
+                    resource.setUser(admin);
+                    resource.save();
 
                     log.debug("new video added");
                 }

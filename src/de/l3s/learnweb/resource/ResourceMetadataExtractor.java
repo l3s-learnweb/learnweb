@@ -145,7 +145,7 @@ public class ResourceMetadataExtractor {
                 /*
                 try
                 {
-
+                
                     //ArticleExtractor.INSTANCE.getText(arg0)
                     String htmlContent = hh.process(new URL(resource.getUrl()), extractor);
                     Document jsoupDoc = Jsoup.parse(htmlContent);
@@ -153,11 +153,11 @@ public class ResourceMetadataExtractor {
                     jsoupDoc.select("br").after("\\n");
                     jsoupDoc.select("p").before("\\n");
                     String str = jsoupDoc.html().replaceAll("\\\\n", "\n");
-
+                
                     log.debug("machine:" + resource.getMachineDescription());
                     log.debug("boiler :" + str);
                     resource.setTranscript(Jsoup.clean(str, "", Whitelist.none(), new OutputSettings().prettyPrint(false)));
-
+                
                 }
                 catch(IOException | BoilerpipeProcessingException | SAXException e)
                 {
@@ -267,15 +267,6 @@ public class ResourceMetadataExtractor {
                 resource.setAuthor(snippet.get("channelTitle").getAsString());
             }
 
-            // TODO Oleh: save tags for resource
-            /*JsonArray tags = snippet.getAsJsonArray("tags");
-            if(tags != null && tags.size() > 0)
-            {
-            for(int i = 0, len = tags.size(); i < len; i++)
-            {
-                resource.addTag(tags.get(i).toString(), null);
-            }*/
-
             JsonObject thumbnails = snippet.getAsJsonObject("thumbnails");
             Optional<String> size = Arrays.stream(new String[] {"maxres", "standard", "high", "medium", "default"}).filter(thumbnails::has).findFirst();
             size.ifPresent(s -> resource.setMaxImageUrl(thumbnails.getAsJsonObject(s).get("url").getAsString()));
@@ -298,13 +289,6 @@ public class ResourceMetadataExtractor {
                 resource.setDuration(json.get("duration").getAsInt());
             }
 
-            // TODO Oleh: save tags for resource
-            /*String tags = object.get("tags").toString();
-            for(String tag : Arrays.asList(tags.split(", ")))
-            {
-            resource.addTag(tag, null);
-            }*/
-
             Optional<String> size = Arrays.stream(new String[] {"thumbnail_large", "thumbnail_medium", "thumbnail_small"}).filter(json::has).findFirst();
             size.ifPresent(s -> resource.setMaxImageUrl(json.get(s).getAsString()));
         }
@@ -325,15 +309,6 @@ public class ResourceMetadataExtractor {
                 resource.setAuthor(StringUtils.isNotEmpty(realname) ? realname : owner.get("username").getAsString());
             }
 
-            // TODO Oleh: save tags for resource
-            /*JsonArray tags = json.getAsJsonObject("tags").getAsJsonArray("tag");
-            if(tags != null && tags.size() > 0)
-            {
-            for(int i = 0, len = tags.size(); i < len; i++)
-            {
-                resource.addTag(tags.get(i).getAsJsonObject().get("raw").toString(), null);
-            }*/
-
             String thumbnailUrl = "https://farm" + json.get("farm").getAsString() + ".staticflickr.com/" + json.get("server").getAsString()
                 + "/" + json.get("id").getAsString() + "_" + json.get("secret").getAsString() + ".jpg";
             resource.setMaxImageUrl(thumbnailUrl);
@@ -352,16 +327,6 @@ public class ResourceMetadataExtractor {
             if (StringUtils.isEmpty(resource.getAuthor())) {
                 resource.setAuthor(json.getAsJsonObject("owner").get("username").getAsString());
             }
-
-            // TODO Oleh: save tags for resource
-            /*JsonArray tags = json.getAsJsonObject("tags").getAsJsonArray("tag");
-            if(tags != null && tags.size() > 0)
-            {
-                for(int i = 0, len = tags.size(); i < len; i++)
-                {
-                    resource.addTag(tags.get(i).getAsJsonObject().get("tag").getAsString(), null);
-                }
-            }*/
 
             JsonArray thumbnails = json.getAsJsonObject("thumbs").getAsJsonArray("thumb");
             if (thumbnails != null && thumbnails.size() > 0) {

@@ -44,7 +44,7 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
         documentResourceId = resource.getId();
         documentFileType = FileUtility.getFileExtension(resource.getFileName());
 
-        if (FileUtility.canBeViewed(documentFileType)) {
+        if (FileUtility.isSupportedFileType(documentFileType)) {
             documentUrl = resource.getFileUrl();
             documentType = FileUtility.getFileType(resource.getFileName());
 
@@ -54,7 +54,7 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
                 documentKey = FileUtility.generateRevisionId(mainFile);
             }
         } else {
-            log.error("Office type resource has not supported extension: {}", documentFileType);
+            log.error("Office type resource has unsupported extension: {}", documentFileType);
             resource.setOnlineStatus(OnlineStatus.OFFLINE);
         }
     }

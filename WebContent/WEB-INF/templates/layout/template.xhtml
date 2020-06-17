@@ -109,7 +109,7 @@
                           oncomplete="$('.layout-combined-loader').removeClass('loading');"/>
 
             <h:form styleClass="d-none">
-                <p:remoteCommand name="setPreferenceRemote" actionListener="#{userBean.setPreferenceRemote}" immediate="true" ignoreAutoUpdate="true" />
+                <p:remoteCommand name="setPreferenceRemote" actionListener="#{userBean.setPreferenceRemote}" immediate="true" ignoreAutoUpdate="true" process="@this" global="false" />
             </h:form>
 
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}" icon="ui-icon-alert">

@@ -243,9 +243,28 @@ public class ResourceManager {
         // TODO delete files (lw_file); but it's not possible yet because files are shared when a resource is copied
     }
 
+    /**
+     * Saves a resource but is shall be called only by Resource.save() because this method can be extended by resource subclasses
+     *
+     * @param resource
+     * @return
+     * @throws SQLException
+     */
     protected Resource saveResource(Resource resource) throws SQLException {
         if (resource.getUserId() <= 0) {
             throw new IllegalArgumentException("Resource has no owner");
+        }
+
+        // TODO this has to be moved to the save method of WebResource.class, which has to be created
+        if (resource.getId() == -1) { // a new resource which is not stored in the database yet
+            try {
+                //To copy archive versions of a resource if it exists
+                saveArchiveUrlsByResourceId(resource.getId(), resource.getArchiveUrls());
+            } catch (Exception e) {
+                log.error("Can't save archiveUrls", e);
+            }
+
+            //resource.postConstruct();
         }
 
         String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted, read_only_transcript) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -331,22 +350,6 @@ public class ResourceManager {
             }
         }
         learnweb.getSolrClient().reIndexResource(resource);
-
-        return resource;
-    }
-
-    public Resource addResource(Resource resource, User user) throws SQLException {
-        resource.setUser(user);
-        resource = Learnweb.getInstance().getResourceManager().saveResource(resource);
-
-        try {
-            //To copy archive versions of a resource if it exists
-            saveArchiveUrlsByResourceId(resource.getId(), resource.getArchiveUrls());
-        } catch (Exception e) {
-            log.error("Can't save archiveUrls", e);
-        }
-
-        resource.postConstruct();
 
         return resource;
     }

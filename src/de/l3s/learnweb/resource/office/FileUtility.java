@@ -35,7 +35,7 @@ public class FileUtility {
     private static final String SAMPLE_XLSX = "sample.xlsx";
     private static final String SAMPLE_DOCX = "sample.docx";
 
-    public static boolean canBeViewed(String fileExt) {
+    public static boolean isSupportedFileType(String fileExt) {
         return !(EXT_DOCUMENT_CONVERT.contains(fileExt) || EXT_SPREADSHEET_CONVERT.contains(fileExt) || EXT_PRESENTATION_CONVERT.contains(fileExt));
     }
 

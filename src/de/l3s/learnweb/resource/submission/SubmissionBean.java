@@ -187,8 +187,8 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                     clonedResource.setOriginalResourceId(r.getId());
                     clonedResource.setRights(ResourceViewRights.SUBMISSION_READABLE);
                     clonedResource.setCreationDate(submissionDate);
-
-                    specialAdmin.addResource(clonedResource); //save cloned resource with special user id
+                    clonedResource.setUser(specialAdmin);
+                    clonedResource.save();
 
                     //clone comments/tags of resource if it exists
                     clonedResource.cloneComments(r.getComments());

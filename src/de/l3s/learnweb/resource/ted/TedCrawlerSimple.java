@@ -326,8 +326,8 @@ public class TedCrawlerSimple implements Runnable {
             try {
                 rpm.processImage(tedResource, FileInspector.openStream(tedResource.getMaxImageUrl()));
                 tedResource.setGroup(tedGroup);
-                admin.addResource(tedResource);
-                //tedResource.save();
+                tedResource.setUser(admin);
+                tedResource.save();
 
                 //save new TED resource ID in order to use it later for saving transcripts
                 resourceId = tedResource.getId();
