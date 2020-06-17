@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 public enum ResourceService { // when adding more services remember to update the service column of learnweb_large.sl_query
     bing("Bing"), // Does not support filtering by date
     flickr("Flickr"),
-    giphy("Giphy"),
+    giphy("GIPHY"), // The uppercase name is required
     youtube("YouTube"),
     vimeo("Vimeo"), // Does not support filtering by date
     ipernity("Ipernity"),
