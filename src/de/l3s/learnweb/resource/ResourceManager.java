@@ -244,11 +244,7 @@ public class ResourceManager {
     }
 
     /**
-     * Saves a resource but is shall be called only by Resource.save() because this method can be extended by resource subclasses
-     *
-     * @param resource
-     * @return
-     * @throws SQLException
+     * Saves a resource but is shall be called only by Resource.save() because this method can be extended by resource subclasses.
      */
     protected Resource saveResource(Resource resource) throws SQLException {
         if (resource.getUserId() <= 0) {

@@ -145,7 +145,6 @@ public class ResourceMetadataExtractor {
                 /*
                 try
                 {
-                
                     //ArticleExtractor.INSTANCE.getText(arg0)
                     String htmlContent = hh.process(new URL(resource.getUrl()), extractor);
                     Document jsoupDoc = Jsoup.parse(htmlContent);
@@ -153,11 +152,11 @@ public class ResourceMetadataExtractor {
                     jsoupDoc.select("br").after("\\n");
                     jsoupDoc.select("p").before("\\n");
                     String str = jsoupDoc.html().replaceAll("\\\\n", "\n");
-                
+
                     log.debug("machine:" + resource.getMachineDescription());
                     log.debug("boiler :" + str);
                     resource.setTranscript(Jsoup.clean(str, "", Whitelist.none(), new OutputSettings().prettyPrint(false)));
-                
+
                 }
                 catch(IOException | BoilerpipeProcessingException | SAXException e)
                 {
