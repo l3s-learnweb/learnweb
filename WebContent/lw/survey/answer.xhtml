@@ -24,9 +24,9 @@
 		</lw:breadcrumb-item>
 
 		<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{surveyBean.resource.group.title}" >
-			<p:repeat var="groups" value="#{userBean.user.groups}">
+			<ui:repeat var="groups" value="#{userBean.user.groups}">
 				<li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
-			</p:repeat>
+			</ui:repeat>
 		</lw:breadcrumb-item>
 
 		<lw:breadcrumb-item link="group/resources.jsf?group_id=#{surveyBean.resource.groupId}" title="#{msg.resources}">

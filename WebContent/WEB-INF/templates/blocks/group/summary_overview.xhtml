@@ -38,11 +38,11 @@
                 </f:facet>
 
                 <div class="activity-feed">
-                    <p:repeat value="#{summary.deletedResources}" var="item">
+                    <ui:repeat value="#{summary.deletedResources}" var="item">
                         <div class="feed-entry-text">
                             <h:outputText value="#{item.description}" escape="false"/>
                         </div>
-                    </p:repeat>
+                    </ui:repeat>
                 </div>
             </p:tab>
 
@@ -74,11 +74,11 @@
                 </f:facet>
 
                 <div class="activity-feed activity-feed-forum">
-                    <p:repeat value="#{summary.forumsInfo}" var="item">
+                    <ui:repeat value="#{summary.forumsInfo}" var="item">
                         <div class="feed-entry-text">
                             <h:outputText value="#{item.description}" escape="false"/>
                         </div>
-                    </p:repeat>
+                    </ui:repeat>
                 </div>
             </p:tab>
 
@@ -89,11 +89,11 @@
                 </f:facet>
 
                 <div class="activity-feed activity-feed-members">
-                    <p:repeat value="#{summary.membersInfo}" var="item">
+                    <ui:repeat value="#{summary.membersInfo}" var="item">
                         <div class="feed-entry-text">
                             <h:outputText value="#{item.description}" escape="false"/>
                         </div>
-                    </p:repeat>
+                    </ui:repeat>
                 </div>
             </p:tab>
         </p:accordionPanel>

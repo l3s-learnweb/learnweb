@@ -26,13 +26,13 @@
     </p:tab>
 
     <p:tab title="#{msg.activity_right_pane}">
-        <p:repeat value="#{res.logs}" var="logEntry" varStatus="status">
+        <ui:repeat value="#{res.logs}" var="logEntry" varStatus="status">
             <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
                 <ui:param name="showPreview" value="false"/>
                 <ui:param name="status" value="#{status}"/>
                 <ui:param name="logEntry" value="#{logEntry}"/>
             </ui:decorate>
-        </p:repeat>
+        </ui:repeat>
     </p:tab>
 
     <p:tab title="#{msg['Archive.versions']} (#{res.archiveUrls.size()})"

@@ -23,7 +23,8 @@
 							<!-- some tests -->
 							<h:form id="updatetest">
 
-								<p:commandButton value="dummy button" styleClass="alt-btn" actionListener="#{resourceDetailBean.cancelEdit()}" process="@form" update=":updatetestpanel" />
+								<p:commandButton value="dummy button" styleClass="alt-btn" actionListener="#{resourceDetailBean.cancelEdit()}"
+												 process="@form" update=":updatetestpanel" />
 							</h:form>
 
 							<h:panelGroup id="updatetestpanel"></h:panelGroup>
@@ -33,13 +34,13 @@
 
 				<div class="col-12 col-lg-4 col-xl-3 res-view-details">
 					<div class="res-view-panel">
-						<p:repeat value="#{resourceDetailBean.resource.logs}" var="logEntry" varStatus="status">
+						<ui:repeat value="#{resourceDetailBean.resource.logs}" var="logEntry" varStatus="status">
 							<ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
 								<ui:param name="showPreview" value="false"/>
 								<ui:param name="status" value="#{status}"/>
 								<ui:param name="logEntry" value="#{logEntry}"/>
 							</ui:decorate>
-						</p:repeat>
+						</ui:repeat>
 					</div>
 				</div>
 			</div>

@@ -21,9 +21,9 @@
     </lw:breadcrumb-item>
 
     <lw:breadcrumb-item link="group/resources.jsf?group_id=#{forumPostBean.group.id}" title="#{forumPostBean.group.title}" >
-        <p:repeat var="groups" value="#{userBean.user.groups}">
+        <ui:repeat var="groups" value="#{userBean.user.groups}">
             <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
-        </p:repeat>
+        </ui:repeat>
     </lw:breadcrumb-item>
 
     <lw:breadcrumb-item link="group/forum.jsf?group_id=#{forumPostBean.group.id}" title="#{msg.forum}">
@@ -33,9 +33,9 @@
     </lw:breadcrumb-item>
 
     <lw:breadcrumb-item link="group/forum_post.jsf?topic_id=#{forumEditBean.topic.id}" title="#{forumPostBean.topic.title}">
-        <p:repeat var="topic" value="#{forumPostBean.topics}">
+        <ui:repeat var="topic" value="#{forumPostBean.topics}">
             <li><a href="group/forum_post.jsf?topic_id=#{topic.id}">#{topic.title}</a></li>
-        </p:repeat>
+        </ui:repeat>
     </lw:breadcrumb-item>
 </ui:define>
 

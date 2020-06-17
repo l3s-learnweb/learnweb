@@ -48,7 +48,7 @@
         <h:outputText value=" #{msg.courses}:" styleClass="font-weight-bold"/>
 
         <ul>
-            <p:repeat var="course" value="#{userBean.user.courses}">
+            <ui:repeat var="course" value="#{userBean.user.courses}">
                 <li>
 
                     <div class="klapper_zu klapper_auf align-middle">&#160;</div>
@@ -56,7 +56,7 @@
                     <h:outputText value=" #{course.title}" styleClass="font-weight-bold"/>
 
                     <ul style="display: none;">
-                        <p:repeat var="group" value="#{course.groups}">
+                        <ui:repeat var="group" value="#{course.groups}">
                             <li>
 
                                 <div class="klapper_zu klapper_auf">&#160;</div>
@@ -64,21 +64,21 @@
                                 <h:outputText value=" #{group.title} (#{msg.group})"/>
 
                                 <ul style="display: none;">
-                                    <p:repeat var="user" value="#{group.members}">
+                                    <ui:repeat var="user" value="#{group.members}">
                                         <li>
                                             <input name="selected_users" id="us_form:us_checkbox:#{course.id}:#{group.id}:#{user.id}" value="#{user.id}" type="checkbox"/>
                                             <label for="us_form:us_checkbox:#{course.id}:#{group.id}:#{user.id}"> #{user.username}</label>
                                         </li>
-                                    </p:repeat>
+                                    </ui:repeat>
 
                         			<ui:fragment rendered="#{empty group.members}"><li>This group has no members</li></ui:fragment>
                                 </ul>
                             </li>
-                        </p:repeat>
+                        </ui:repeat>
                         <ui:fragment rendered="#{empty course.groups}"><li>This course doesn't has any groups</li></ui:fragment>
                     </ul>
                 </li>
-            </p:repeat>
+            </ui:repeat>
         </ul>
 
     </div>

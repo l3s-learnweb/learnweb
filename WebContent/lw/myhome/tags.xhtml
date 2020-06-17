@@ -27,12 +27,12 @@
 		</p:column>
 
 		<p:column headerText="#{msg.resource}">
-			<p:repeat var="res" value="#{tag.resources}">
+			<ui:repeat var="res" value="#{tag.resources}">
 				<h:outputLink value="resource.jsf" styleClass="mr-1">
 					<f:param name="resource_id" value="#{res.id}"/>
 					<h:outputText value="#{res.title}" escape="false"/>
 				</h:outputLink>
-			</p:repeat>
+			</ui:repeat>
 		</p:column>
 	</p:dataTable>
 </ui:define>

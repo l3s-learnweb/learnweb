@@ -94,13 +94,13 @@
 
 									<h:panelGroup layout="block" class="cursor-pointer" pt:data-sessionId="#{ss.sessionId}" pt:data-userId="#{ss.userId}">
 										<div class="session-queries">
-											<p:repeat var="query" value="#{ss.queries}">
+											<ui:repeat var="query" value="#{ss.queries}">
 												<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="white-space-normal p-1">
 													<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{query}"/>
 
 													<span class="search-source-icon source-#{query.service} mode-#{query.mode} py-2">#{query.query}</span>
 												</p:commandLink>
-											</p:repeat>
+											</ui:repeat>
 										</div>
 
 										<div class="session-time">

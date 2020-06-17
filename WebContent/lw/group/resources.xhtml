@@ -23,9 +23,9 @@
     </lw:breadcrumb-item>
 
     <lw:breadcrumb-item link="group/resources.jsf?group_id=#{groupResourcesBean.groupId}" title="#{groupResourcesBean.group.title}" >
-        <p:repeat var="groups" value="#{userBean.user.groups}">
+        <ui:repeat var="groups" value="#{userBean.user.groups}">
             <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
-        </p:repeat>
+        </ui:repeat>
     </lw:breadcrumb-item>
 
     <lw:breadcrumb-item link="group/resources.jsf?group_id=#{groupResourcesBean.groupId}" title="#{msg.resources}">
@@ -43,4 +43,5 @@
 
     <ui:decorate template="/WEB-INF/templates/blocks/resources/resources.xhtml"/>
 </ui:define>
+
 </ui:composition>

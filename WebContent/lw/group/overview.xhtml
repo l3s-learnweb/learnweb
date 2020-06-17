@@ -22,9 +22,9 @@
     </lw:breadcrumb-item>
 
     <lw:breadcrumb-item link="group/resources.jsf?group_id=#{groupOverviewBean.groupId}" title="#{groupOverviewBean.group.title}" >
-        <p:repeat var="groups" value="#{userBean.user.groups}">
+        <ui:repeat var="groups" value="#{userBean.user.groups}">
             <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
-        </p:repeat>
+        </ui:repeat>
     </lw:breadcrumb-item>
 
     <lw:breadcrumb-item link="group/overview.jsf?group_id=#{groupOverviewBean.groupId}" title="#{msg.overview}">

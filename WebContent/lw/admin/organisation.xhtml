@@ -126,11 +126,11 @@
                         <p:accordionPanel autoHeight="false" id="courseoptions">
                             <c:forEach items="#{adminOrganisationBean.optionGroups}" var="group" varStatus="status">
                                 <p:tab title="${adminOrganisationBean.optionGroups[status.index].title}">
-                                    <p:repeat value="${adminOrganisationBean.optionGroups[status.index].options}" var="option">
+                                    <ui:repeat value="${adminOrganisationBean.optionGroups[status.index].options}" var="option">
                                         <div class="form-group">
                                             <p:selectBooleanCheckbox value="#{option.value}" itemLabel="#{option.name}" id="checkbox"/>
                                         </div>
-                                    </p:repeat>
+                                    </ui:repeat>
                                 </p:tab>
                             </c:forEach>
                         </p:accordionPanel>

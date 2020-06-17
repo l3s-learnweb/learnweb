@@ -106,13 +106,13 @@
 				<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}"/>
 
 				<ui:fragment rendered="#{not userDetailBean.pageHidden}">
-					<p:repeat value="#{userDetailBean.latestLogEntries}" var="logEntry" varStatus="status">
+					<ui:repeat value="#{userDetailBean.latestLogEntries}" var="logEntry" varStatus="status">
 						<ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
 							<ui:param name="showPreview" value="false"/>
 							<ui:param name="status" value="#{status}"/>
 							<ui:param name="logEntry" value="#{logEntry}"/>
 						</ui:decorate>
-					</p:repeat>
+					</ui:repeat>
 				</ui:fragment>
 			</p:panel>
 		</div>

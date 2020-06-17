@@ -54,7 +54,7 @@
         <p class="font-weight-lighter">#{submissionModeratorBean.submission.description}</p>
 
         <h:panelGroup layout="block" id="user_submissions" pt:data-canSelectResources="true">
-            <p:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
+            <ui:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
                 <div class="#{status.last ? '' : 'mb-4 border-bottom'}">
                     <div class="d-flex align-items-center p-2 bg-light">
                         <img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.user)}" alt="Profile picture"/>
@@ -90,7 +90,7 @@
                         </ui:repeat>
                     </h:panelGroup>
                 </div>
-            </p:repeat>
+            </ui:repeat>
         </h:panelGroup>
     </p:panel>
 </ui:define>

@@ -129,11 +129,11 @@
 	<ui:fragment rendered="#{not empty res.language}">
 		<dt class="col-sm-4">#{msg.language}:</dt>
 		<dd class="col-sm-8">
-			<p:repeat value="#{res.metadataMultiValue['language']}" var="language" varStatus="status">
+			<ui:repeat value="#{res.metadataMultiValue['language']}" var="language" varStatus="status">
 				<h:outputText value="#{msg['language_' += language]}" rendered="#{language.length() eq 2}" />
                 <h:outputText value="#{language}" rendered="#{language.length() ne 2}" />
 				<h:outputText value=", " rendered="#{!status.last}" escape="false"/>
-			</p:repeat>
+			</ui:repeat>
 		</dd>
 	</ui:fragment>
 
@@ -150,7 +150,7 @@
 				</ui:fragment>
 
 				<ui:fragment rendered="#{entry.key eq 'yell_target'}">
-					<p:repeat value="#{res.metadataMultiValue[entry.key]}" var="target">
+					<ui:repeat value="#{res.metadataMultiValue[entry.key]}" var="target">
 						<ui:fragment rendered="#{target == 'Pre-school'}">
 							<i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
 						</ui:fragment>
@@ -165,11 +165,11 @@
 						</ui:fragment>
 
 						<h:outputText value="#{target}"/>
-					</p:repeat>
+					</ui:repeat>
 				</ui:fragment>
 
 				<ui:fragment rendered="#{entry.key eq 'yell_purpose'}">
-					<p:repeat value="#{res.metadataMultiValue[entry.key]}" var="purpose">
+					<ui:repeat value="#{res.metadataMultiValue[entry.key]}" var="purpose">
 						<span class="text-nowrap d-inline-block">
 							<span class="bg-highlight">
 								<ui:fragment rendered="#{purpose == 'Speaking'}">
@@ -188,7 +188,7 @@
 								<h:outputText value="#{purpose}"/>
 							</span>
 						</span>
-					</p:repeat>
+					</ui:repeat>
 				</ui:fragment>
 
 				<ui:fragment rendered="#{entry.key ne 'language_level' and entry.key ne 'yell_target' and entry.key ne 'yell_purpose'}">
