@@ -33,7 +33,7 @@ public enum Action {
     edit_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
     survey_submit(ActionTargetId.RESOURCE_ID, ActionCategory.SURVEY), // target_id = survey resource id
     thumb_rating_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    group_deleting(ActionTargetId.GROUP_ID, ActionCategory.GROUP),
+    group_deleting(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = group name
     group_changing_description(ActionTargetId.GROUP_ID, ActionCategory.GROUP),
     group_changing_title(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = old title
     group_changing_leader(ActionTargetId.GROUP_ID, ActionCategory.GROUP), //

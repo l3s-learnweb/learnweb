@@ -42,7 +42,7 @@ public class UserDetailBean extends ApplicationBean {
             pageHidden = true;
         }
 
-        latestLogEntries = getLearnweb().getLogManager().getLogsByUser(userId, USER_ACTIONS, 50);
+        latestLogEntries = getLearnweb().getLogManager().getLogsByUser(userId, USER_ACTIONS, 50, getUser().equals(selectedUser) || getUser().isModerator());
     }
 
     public int getUserId() {

@@ -39,7 +39,7 @@ public class YourActivityBean extends ApplicationBean implements Serializable {
         final GroupManager groupManager = this.getLearnweb().getGroupManager();
         groupTitles = new HashMap<>();
 
-        this.userActions = getLearnweb().getLogManager().getLogsByUser(user.getId(), Action.values(), 1000);
+        this.userActions = getLearnweb().getLogManager().getLogsByUser(user.getId(), Action.values(), 100000000, true);
         for (LogEntry action : userActions) {
             try {
 

@@ -92,7 +92,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
     }
 
     private List<LogEntry> getLogs(Action[] filter, int limit) throws SQLException {
-        return getLearnweb().getLogManager().getActivityLogOfUserGroups(getUser().getId(), filter, limit);
+        return getLearnweb().getLogManager().getActivityLogOfUserGroups(getUser(), filter, limit);
     }
 
     public List<LogEntry> getNewsResources() {

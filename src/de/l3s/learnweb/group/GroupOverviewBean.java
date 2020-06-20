@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
@@ -25,10 +24,6 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
 
     private static final int MEMBERS_LIST_LIMIT = 12;
     private static final int ACTIVITY_LIST_LIMIT = 10;
-    private static final Action[] OVERVIEW_ACTIONS = {
-        Action.forum_topic_added, Action.deleting_resource, Action.adding_resource, Action.group_joining,
-        Action.group_leaving, Action.forum_post_added, Action.changing_office_resource
-    };
 
     private int groupId;
     private Group group;
@@ -98,15 +93,15 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
     public SummaryOverview getSummaryOverview() {
         try {
             if (groupSummary == null || groupSummary.isEmpty()) {
-                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, OVERVIEW_ACTIONS, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
+                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
                 summaryTitle = getLocaleMessage("last_week_changes");
             }
             if (groupSummary == null || groupSummary.isEmpty()) {
-                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, OVERVIEW_ACTIONS, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
+                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
                 summaryTitle = getLocaleMessage("last_month_overview_changes");
             }
             if (groupSummary == null || groupSummary.isEmpty()) {
-                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, OVERVIEW_ACTIONS, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
+                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
                 summaryTitle = getLocaleMessage("last_six_month_changes");
             }
             return groupSummary;

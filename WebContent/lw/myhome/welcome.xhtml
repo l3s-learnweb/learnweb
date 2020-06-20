@@ -60,7 +60,7 @@
                 </ui:repeat>
             </p:panel>
 
-            <p:tabView styleClass="ui-tabs-transparent" rendered="#{not welcomeBean.hideNewsPanel}">
+            <p:tabView styleClass="ui-tabs-transparent" rendered="#{not welcomeBean.hideNewsPanel}" dynamic="true">
                 <p:tab rendered="#{not empty welcomeBean.newsForums}">
                     <f:facet name="title">
                         <i class="fa fa-fw fa-commenting-o" aria-hidden="true"></i>

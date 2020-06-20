@@ -49,7 +49,7 @@
             </p:column>
 
             <p:column headerText="#{msg.action_description}">
-                <h:outputText escape="false" value="#{action.description}"/>
+                <h:outputText value="#{action.getDescription(userBean.locale)}" escape="false"/>
             </p:column>
 
             <p:column headerText="#{msg.group}">

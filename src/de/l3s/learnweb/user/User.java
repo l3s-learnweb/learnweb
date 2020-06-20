@@ -388,7 +388,7 @@ public class User implements Comparable<User>, Serializable, HasId {
      * @return number of groups this user is member of
      */
     public int getGroupCount() throws SQLException {
-        return Learnweb.getInstance().getGroupManager().getGroupCountByUserId(id);
+        return getGroups().size();
     }
 
     /**

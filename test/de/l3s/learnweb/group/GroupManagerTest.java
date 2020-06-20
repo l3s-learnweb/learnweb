@@ -1,6 +1,8 @@
 package de.l3s.learnweb.group;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,20 +23,14 @@ import de.l3s.learnweb.user.User;
 class GroupManagerTest {
     private final Learnweb learnweb = Learnweb.createInstance();
 
-    GroupManagerTest() throws SQLException, ClassNotFoundException {}
+    GroupManagerTest() throws SQLException, ClassNotFoundException {
+    }
 
     @Test
     void getGroupsByUserId() throws SQLException {
         ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(185, 623, 896, 1307, 1309, 1434, 1463));
         List<Group> result = learnweb.getGroupManager().getGroupsByUserId(12502);
         assertTrue(result.stream().allMatch(group -> expected.contains(group.getId())));
-    }
-
-    @Test
-    void getGroupCountByUserId() throws SQLException {
-        int expected = 7;
-        int result = learnweb.getGroupManager().getGroupCountByUserId(12502);
-        assertEquals(expected, result);
     }
 
     @Test

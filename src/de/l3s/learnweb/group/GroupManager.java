@@ -34,7 +34,6 @@ import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.HasId;
 import de.l3s.util.ICache;
-import de.l3s.util.database.Sql;
 
 /**
  * DAO for the Group class.
@@ -124,11 +123,6 @@ public class GroupManager {
             }
         }
         return groups;
-    }
-
-    public int getGroupCountByUserId(int userId) throws SQLException {
-        String query = "SELECT COUNT(*) FROM `lw_group` g JOIN lw_group_user u USING(group_id) WHERE u.user_id = " + userId;
-        return ((Long) Sql.getSingleResult(query)).intValue();
     }
 
     /**
@@ -244,7 +238,7 @@ public class GroupManager {
             return group;
         }
 
-        try (PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g WHERE group_id = ?")) {
+        try (PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g WHERE group_id = ? AND g.deleted = 0")) {
             pstmtGetGroup.setInt(1, id);
             ResultSet rs = pstmtGetGroup.executeQuery();
 
