@@ -69,19 +69,17 @@ public final class LogManager {
         this.learnweb = learnweb;
 
         logsByResourceCache = CacheBuilder.newBuilder()
-            .expireAfterAccess(3000, TimeUnit.MILLISECONDS)
+            .expireAfterAccess(1000, TimeUnit.MILLISECONDS)
             .build(new CacheLoader<Resource, List<LogEntry>>() {
                 @Override
                 public List<LogEntry> load(Resource resource) throws Exception {
-                    int limit = 50;
-
                     Instant start = Instant.now();
 
                     List<LogEntry> logs = getLogs(false, LOG_SELECT + " WHERE group_id = ? AND action IN(" + resourceActionIds + ") AND target_id = ? ORDER BY timestamp DESC ", resource.getGroupId(), resource.getId());
 
                     long duration = Duration.between(start, Instant.now()).toMillis();
                     if (duration > 100) {
-                        log.warn("getLogs took {}ms; resourceId: {}; limit: {};", duration, resource.getId(), limit);
+                        log.warn("getLogs took {}ms; resourceId: {};", duration, resource.getId());
                     }
 
                     return logs;
@@ -103,13 +101,14 @@ public final class LogManager {
     }
 
     /**
+     * Get logs by SQL query.
      *
      * @param includePrivateEntries set to true if user accesses his own logs. Or for moderators.
-     * @param query
-     * @param parameter
+     * @param query The query shall use the usual prepared statement placeholder ?
+     * @param parameter parameters to replace the placeholders in the query
      * @return
      */
-    public List<LogEntry> getLogs(boolean includePrivateEntries, String query, Object... parameter) {
+    private List<LogEntry> getLogs(boolean includePrivateEntries, String query, Object... parameter) {
         LinkedList<LogEntry> logEntries = new LinkedList<>();
         try (PreparedStatement select = learnweb.getConnection().prepareStatement(query)) {
             int i = 1;
@@ -132,8 +131,8 @@ public final class LogManager {
     }
 
     public List<LogEntry> getLogsByResource(Resource resource) throws SQLException {
+        //log.debug("get logs for resource: {}", resource);
 
-        log.debug("get logs for resource: {}", resource);
         try {
             return logsByResourceCache.get(resource);
         } catch (ExecutionException e) {
@@ -143,6 +142,8 @@ public final class LogManager {
     }
 
     /**
+     * Get logs for the given group. All actions that match the default filter will be returned
+     *
      * @param actions if actions is null the default filter is used
      * @param limit if limit is -1 all log entries are returned
      */
@@ -208,7 +209,7 @@ public final class LogManager {
     }
 
     /**
-     * Returns the newest log entries from the given users groups.
+     * Returns the newest log entries from the user's groups.
      * This doesn't include the user's own actions.
      *
      * @param user

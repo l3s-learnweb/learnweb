@@ -170,14 +170,14 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
 
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
-        public int compare(GlossaryEntry car1, GlossaryEntry car2) {
-            if (car1 == null || car2 == null) {
+        public int compare(GlossaryEntry entry1, GlossaryEntry entry2) {
+            if (entry1 == null || entry2 == null) {
                 log.error("Sorting objects must not be null");
                 return 0;
             }
             try {
-                Object value1 = fieldGetMethod.invoke(car1);
-                Object value2 = fieldGetMethod.invoke(car2);
+                Object value1 = fieldGetMethod.invoke(entry1);
+                Object value2 = fieldGetMethod.invoke(entry2);
 
                 int value;
 

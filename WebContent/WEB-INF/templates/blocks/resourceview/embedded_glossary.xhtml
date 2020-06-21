@@ -82,7 +82,7 @@
         <p:column headerText="#{msg['Glossary.Definition']}" filterable="true" sortBy="#{item.description}" filterBy="#{item.description}">
             <h:outputText value="#{item.description}" pt:data-itemId="#{item.entryId}" id="cell4"/>
         </p:column>
-        <p:column headerText="#{msg['Glossary.term']}" filterable="true" sortBy="#{item.term}" filterBy="#{item.term}">
+        <p:column headerText="#{msg['Glossary.term']}" filterable="true" filterBy="#{item.term}">
             <h:outputText value="#{item.term}"/>
         </p:column>
         <p:column headerText="#{msg.language}" filterBy="#{item.language}">

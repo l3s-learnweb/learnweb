@@ -26,7 +26,7 @@
     </p:tab>
 
     <p:tab title="#{msg.activity_right_pane}">
-        <ui:repeat value="#{res.logs}" var="logEntry" varStatus="status">
+        <ui:repeat value="#{resourceDetailBean.logs}" var="logEntry" varStatus="status">
             <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
                 <ui:param name="showPreview" value="false"/>
                 <ui:param name="status" value="#{status}"/>

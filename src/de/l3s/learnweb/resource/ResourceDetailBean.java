@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.archive.TimelineData;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
@@ -56,6 +57,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     private Resource resource;
     private ViewAction viewAction = ViewAction.viewResource;
+    private List<LogEntry> logs;
 
     public void onLoad() {
         if (isAjaxRequest() || !isLoggedIn()) {
@@ -564,5 +566,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public String getHypothesisLink() {
         return HYPOTHESIS_PROXY + resource.getUrl();
+    }
+
+    public List<LogEntry> getLogs() throws SQLException {
+        if (null == logs) {
+            logs = getResource().getLogs();
+        }
+        return logs;
     }
 }
