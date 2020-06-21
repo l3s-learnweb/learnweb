@@ -211,12 +211,6 @@ public final class LogManager {
     /**
      * Returns the newest log entries from the user's groups.
      * This doesn't include the user's own actions.
-     *
-     * @param user
-     * @param actions
-     * @param limit
-     * @return
-     * @throws SQLException
      */
     public List<LogEntry> getActivityLogOfUserGroups(User user, Action[] actions, int limit) throws SQLException {
         LinkedList<LogEntry> logs = new LinkedList<>();

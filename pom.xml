@@ -6,8 +6,8 @@
 
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
-    <!-- Because of Tomcat treat version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.00.02</version>
+    <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
+    <version>3.00.03</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
