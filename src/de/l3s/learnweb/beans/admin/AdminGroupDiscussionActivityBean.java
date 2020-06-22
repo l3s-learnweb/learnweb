@@ -49,7 +49,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     private static final Pattern USERNAME_PATTERN = Pattern.compile("acct:(.+)@");
     private static final Pattern GROUP_ID_PATTERN = Pattern.compile("hypothes.is/groups/(\\w*)");
 
-    private int groupID;
+    private int groupId;
     private List<AnnotationEntity> groupAnnotations;
 
     public AdminGroupDiscussionActivityBean() {
@@ -62,10 +62,10 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
         FacesContext context = FacesContext.getCurrentInstance();
         Map<String, String> paramMap = context.getExternalContext().getRequestParameterMap();
 
-        setGroupID(Integer.parseInt(paramMap.get("groupID")));
+        setGroupId(Integer.parseInt(paramMap.get("groupId")));
 
         try {
-            Group group = getLearnweb().getGroupManager().getGroupById(groupID);
+            Group group = getLearnweb().getGroupManager().getGroupById(groupId);
 
             if (group == null) {
                 return;
@@ -152,12 +152,12 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
         this.groupAnnotations = groupAnnotations;
     }
 
-    public int getGroupID() {
-        return groupID;
+    public int getGroupId() {
+        return groupId;
     }
 
-    public void setGroupID(int groupID) {
-        this.groupID = groupID;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public static class AnnotationEntity implements Serializable {

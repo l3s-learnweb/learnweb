@@ -206,7 +206,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         } else {
             sessions = allSessions.stream().filter(session -> {
                 if (finalIsSearchUser) {
-                    return StringUtils.containsIgnoreCase(session.getUserName(), finalQuery);
+                    return StringUtils.containsIgnoreCase(session.getUsername(), finalQuery);
                 }
 
                 return session.getQueries().stream().anyMatch(query -> StringUtils.containsIgnoreCase(query.getQuery(), finalQuery));

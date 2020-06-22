@@ -6,7 +6,7 @@
     <!-- Ignore false positive NP checks in try-with-resources: https://github.com/spotbugs/spotbugs/issues/259 -->
     <Match>
         <Or>
-            <!--<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>-->
+            <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
             <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
         </Or>
     </Match>
@@ -31,6 +31,7 @@
             <Bug pattern="ODR_OPEN_DATABASE_RESOURCE"/>
             <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
             <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
+            <Bug pattern="ODR_OPEN_DATABASE_RESOURCE_EXCEPTION_PATH"/>
         </Or>
     </Match>
     <!-- We need to create Learnweb if internal methods calls to Learnweb.getInstance() -->
@@ -54,8 +55,62 @@
     <Match>
         <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
     </Match>
+    <!-- We do not care about dynamic strings in SQL queries -->
+    <Match>
+        <Or>
+            <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
+            <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
+        </Or>
+    </Match>
+    <!-- We do not want to put locale to each .toLowerCase, .toUpperCase methods -->
+    <Match>
+        <Bug pattern="DM_CONVERT_CASE"/>
+    </Match>
+    <!-- It is OK to have uncalled private methods -->
+    <Match>
+        <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
+    </Match>
+    <!-- Allow return null from methods returning array -->
+    <Match>
+        <Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS"/>
+    </Match>
+    <!-- No deserialization methods -->
+    <Match>
+        <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>
+    </Match>
+    <!-- It doesn't check that values is written in onLoad method -->
+    <Match>
+        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
+    </Match>
+    <!-- Capture of runtime exception -->
+    <Match>
+        <Bug pattern="REC_CATCH_EXCEPTION"/>
+    </Match>
+    <!-- Serialized inner class -->
+    <Match>
+        <Bug pattern="SE_INNER_CLASS"/>
+    </Match>
+    <!-- Equals of parent class -->
+    <Match>
+        <Or>
+            <Class name="de.l3s.learnweb.resource.glossary.GlossaryResource"/>
+            <Class name="de.l3s.learnweb.resource.survey.SurveyResource"/>
+        </Or>
+        <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    </Match>
+    <!-- It simplifies how it looks -->
+    <Match>
+        <Class name="de.l3s.learnweb.user.Organisation"/>
+        <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
+    </Match>
+    <!-- It simplifies how it looks -->
+    <Match>
+        <Class name="de.l3s.learnweb.resource.survey.SurveyManager"/>
+        <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
+    </Match>
     <!-- This class use methods from parent class and can be static -->
-    <Match class="de.l3s.learnweb.resource.Resource$MetadataMapWrapper">
+    <Match>
+        <Class name="de.l3s.learnweb.resource.Resource$MetadataMapWrapper"/>
         <Bug pattern="SE_INNER_CLASS"/>
     </Match>
 </FindBugsFilter>

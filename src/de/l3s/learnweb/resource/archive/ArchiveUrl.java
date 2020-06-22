@@ -15,7 +15,6 @@ public class ArchiveUrl implements Serializable {
     private String archiveUrl;
     private String fileUrl;
     private Date timestamp;
-    private int fileId;
     private long simhash;
     private int shingleId;
 
@@ -61,10 +60,6 @@ public class ArchiveUrl implements Serializable {
 
     public void setArchiveUrl(String archiveUrl) {
         this.archiveUrl = archiveUrl;
-    }
-
-    public int getFileId() {
-        return fileId;
     }
 
     public Date getTimestamp() {

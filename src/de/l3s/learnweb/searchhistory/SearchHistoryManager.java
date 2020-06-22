@@ -208,7 +208,7 @@ public class SearchHistoryManager {
             return this.sessionId;
         }
 
-        public String getUserName() {
+        public String getUsername() {
             try {
                 return getUser().getUsername();
             } catch (Exception e) {

@@ -1,8 +1,6 @@
 package de.l3s.learnweb.resource.archive;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -93,15 +91,7 @@ public class CDXClient {
                 URLConnection connection = new java.net.URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp&limit=" + limit).openConnection();
                 connection.setRequestProperty("User-Agent", "L3S-CDX-Client/1.0 (User=https://learnweb.l3s.uni-hannover.de/)");
 
-                StringBuilder sb = new StringBuilder();
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    sb.append(inputLine);
-                }
-                in.close();
-
-                String response = sb.toString();
+                String response = IOUtils.toString(connection.getInputStream(), StandardCharsets.UTF_8);
                 if (response.trim().isEmpty()) {
                     return null;
                 }

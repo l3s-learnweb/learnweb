@@ -212,9 +212,9 @@ public class FileManager {
 
         if (inputStream != null) {
             // copy the data into the file
-            OutputStream outputStream = new FileOutputStream(file.getActualFile());
-            IOUtils.copy(inputStream, outputStream);
-            outputStream.close();
+            try (OutputStream outputStream = new FileOutputStream(file.getActualFile())) {
+                IOUtils.copy(inputStream, outputStream);
+            }
         }
 
         return file;

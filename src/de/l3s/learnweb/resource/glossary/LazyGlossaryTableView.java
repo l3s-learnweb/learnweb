@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -152,20 +153,24 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
         return tableView;
     }
 
-    public static class LazySorter implements Comparator<GlossaryEntry> {
+    public static class LazySorter implements Comparator<GlossaryEntry>, Serializable {
+        private static final long serialVersionUID = 899131076207451811L;
+
         private final String sortField;
         private final SortOrder sortOrder;
-        private final Method fieldGetMethod;
+
+        private transient Method fieldGetMethod;
 
         public LazySorter(String sortField, SortOrder sortOrder) throws SecurityException {
             this.sortField = sortField;
             this.sortOrder = sortOrder;
+        }
 
-            try {
+        private Method getFieldGetMethod() throws NoSuchMethodException {
+            if (fieldGetMethod == null) {
                 fieldGetMethod = GlossaryEntry.class.getDeclaredMethod("get" + StringUtils.capitalize(sortField));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
             }
+            return fieldGetMethod;
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -176,8 +181,8 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
                 return 0;
             }
             try {
-                Object value1 = fieldGetMethod.invoke(entry1);
-                Object value2 = fieldGetMethod.invoke(entry2);
+                Object value1 = getFieldGetMethod().invoke(entry1);
+                Object value2 = getFieldGetMethod().invoke(entry2);
 
                 int value;
 
@@ -189,7 +194,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
 
                 return SortOrder.ASCENDING == sortOrder ? value : -1 * value;
             } catch (Exception e) {
-                log.error("Sorting failed for field: " + sortField + " order: " + sortOrder, e);
+                log.error("Sorting failed for field: {} order: {}", sortField, sortOrder, e);
 
                 return 0;
             }

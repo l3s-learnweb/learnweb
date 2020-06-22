@@ -1,11 +1,9 @@
 package de.l3s.learnweb.resource.archive;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
@@ -46,6 +44,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -404,22 +403,11 @@ public final class WaybackUrlManager {
                                     charset = Charset.forName(charsetStr);
                                 }
                             } catch (IllegalCharsetNameException ignored) {
+                                charset = StandardCharsets.UTF_8;
                             }
 
-                            BufferedReader br;
-                            if (charset != null) {
-                                br = new BufferedReader(new InputStreamReader(inputStream, charset));
-                            } else {
-                                br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                            }
-
-                            StringBuilder content = new StringBuilder();
-                            String inputLine;
-                            while ((inputLine = br.readLine()) != null) {
-                                content.append(inputLine);
-                            }
-                            urlRecord.setContent(content.toString().trim());
-                            br.close();
+                            String content = IOUtils.toString(inputStream, charset);
+                            urlRecord.setContent(content.trim());
                         }
                     }
 
@@ -498,15 +486,9 @@ public final class WaybackUrlManager {
             HttpGet request = new HttpGet(urlRecord.getUrl().toString());
             request.addHeader("User-Agent", "Mozilla/5.0");
             HttpResponse response = client.execute(request);
-            try (BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8))) {
-                StringBuilder result = new StringBuilder();
-                String line;
-                while ((line = rd.readLine()) != null) {
-                    result.append(line);
-                }
-                urlRecord.setContent(result.toString().trim());
-                return 200;
-            }
+            String result = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+            urlRecord.setContent(result.trim());
+            return 200;
         } catch (IOException e) {
             log.warn("HttpClient method: SSLException: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl());
             logUrlInFile(urlRecord.getUrl().toString());

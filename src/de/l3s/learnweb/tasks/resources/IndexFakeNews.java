@@ -97,10 +97,13 @@ public class IndexFakeNews {
     }
 
     private void indexSnopes() {
-        int i = 1;
-        for (File file : new File("./Snopes").listFiles()) {
-            log.debug("process file: " + (i++) + ", " + file);
-            indexSnopesFile(file);
+        File[] files = new File("./Snopes").listFiles();
+        if (files != null) {
+            int i = 1;
+            for (File file : files) {
+                log.debug("process file: {}, {}", i++, file);
+                indexSnopesFile(file);
+            }
         }
     }
 

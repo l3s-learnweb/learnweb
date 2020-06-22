@@ -571,10 +571,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     @Override
     public boolean equals(Object o) {
-
         if (o != null && o instanceof Resource) {
             return ((Resource) o).getId() == getId();
-
         }
         return false;
     }

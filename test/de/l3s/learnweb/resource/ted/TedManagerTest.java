@@ -45,7 +45,7 @@ class TedManagerTest {
                 String paragraph = text.text().replace("\n", " ");
 
                 int startTimeInt = (int) (start * 1000);
-                log.info("{}: {}", startTimeInt, paragraph);
+                log.info("{}[{}]: {}", startTimeInt, duration, paragraph);
             }
         }
     }

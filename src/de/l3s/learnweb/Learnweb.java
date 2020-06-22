@@ -145,8 +145,6 @@ public final class Learnweb {
         glossaryDashboardManager = new GlossaryDashboardManager(this);
         trackerDashboardManager = new TrackerDashboardManager(this);
 
-        learnwebIsLoading = false;
-
         historyManager = new HistoryManager(this);
         searchHistoryManager = new SearchHistoryManager(this);
 
@@ -456,6 +454,7 @@ public final class Learnweb {
 
                 learnwebIsLoading = true;
                 learnweb = new Learnweb(serverUrl);
+                learnwebIsLoading = false;
             } else {
                 learnweb.setServerUrl(serverUrl);
             }
