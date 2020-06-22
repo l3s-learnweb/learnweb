@@ -190,7 +190,7 @@ public class LogEntry implements Serializable {
                 }
                 break;
             case deleting_comment:
-                description = usernameLink + LanguageBundle.getLocaleMessage(locale, "log_deleting_comment");
+                description = usernameLink + LanguageBundle.getLocaleMessage(locale, "log_deleting_comment", getResourceLink(locale));
                 break;
             case rating_resource:
             case thumb_rating_resource:

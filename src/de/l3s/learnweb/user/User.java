@@ -27,6 +27,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
@@ -656,6 +657,7 @@ public class User implements Comparable<User>, Serializable, HasId {
     }
 
     public void setTimeZone(ZoneId timeZone) {
+        Validate.notNull(timeZone);
         this.timeZone = timeZone;
     }
 

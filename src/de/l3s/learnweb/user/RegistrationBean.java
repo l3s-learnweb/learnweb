@@ -3,6 +3,7 @@ package de.l3s.learnweb.user;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.util.Locale;
 
@@ -20,6 +21,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
@@ -29,6 +32,7 @@ import de.l3s.learnweb.user.Course.Option;
 @ViewScoped
 public class RegistrationBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 4567220515408089722L;
+    private static final Logger log = LogManager.getLogger(RegistrationBean.class);
 
     @Size(min = 2, max = 50)
     private String username;
@@ -112,7 +116,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             user.setUsername(fastLogin);
             user.setEmail(null);
             user.setPassword(null);
-            user.setTimeZone(ZoneId.of(timeZone.isEmpty() ? "Europe/Berlin" : timeZone));
+            user.setTimeZone(ZoneId.of("Europe/Berlin"));
             user.setLocale(locale);
 
             getLearnweb().getUserManager().registerUser(user, course);
@@ -120,13 +124,27 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         }
     }
 
+    /**
+     * Handles errors that may occur while retrieving the users time zone
+     *
+     * @return ZoneId given by the user or GMT as default value
+     */
+    private ZoneId getZoneId() {
+        try {
+            return ZoneId.of(getTimeZone());
+        } catch (NullPointerException | DateTimeException e) {
+            log.error("Invalid timezone '{}' given for user '{}' will use default value.", getTimeZone(), getUsername(), e);
+        }
+
+        return ZoneId.of("GMT");
+    }
+
     public String register() throws IOException, SQLException {
         final User user = new User();
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
-
-        user.setTimeZone(ZoneId.of(timeZone.isEmpty() ? "Europe/Berlin" : timeZone));
+        user.setTimeZone(getZoneId());
         user.setLocale(locale);
 
         if (StringUtils.isNotEmpty(studentId) || StringUtils.isNotEmpty(affiliation)) {
@@ -271,5 +289,4 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     public void setTimeZone(final String preferredTimeZone) {
         this.timeZone = preferredTimeZone.replaceAll("\"", "");
     }
-
 }
