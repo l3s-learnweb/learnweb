@@ -112,6 +112,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             user.setUsername(fastLogin);
             user.setEmail(null);
             user.setPassword(null);
+            user.setTimeZone(ZoneId.of(timeZone.isEmpty() ? "Europe/Berlin" : timeZone));
+            user.setLocale(locale);
 
             getLearnweb().getUserManager().registerUser(user, course);
             return LoginBean.loginUser(this, user);
