@@ -89,7 +89,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
             addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
         } catch (Exception e) {
             log.error("unhandled error", e);
-            addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
+            addErrorGrowl(e);
         }
     }
 

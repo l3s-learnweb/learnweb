@@ -33,7 +33,7 @@ public class GroupMembersBean extends ApplicationBean implements Serializable {
         BeanAsserts.authorized(user);
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
-        BeanAsserts.validateNotNull(group, "error_pages.bad_request_group_description");
+        BeanAsserts.foundNotNull(group, "error_pages.not_found_group_description");
 
         if (null != group) {
             group.setLastVisit(user);

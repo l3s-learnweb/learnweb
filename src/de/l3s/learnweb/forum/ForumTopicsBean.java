@@ -37,7 +37,7 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable {
         BeanAsserts.authorized(isLoggedIn());
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
-        BeanAsserts.validateNotNull(group, "error_pages.bad_request_group_description");
+        BeanAsserts.foundNotNull(group, "error_pages.not_found_group_description");
         BeanAsserts.hasPermission(group.canViewResources(getUser()));
 
         topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);

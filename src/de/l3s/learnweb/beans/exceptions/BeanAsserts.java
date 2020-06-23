@@ -42,6 +42,21 @@ public final class BeanAsserts {
     }
 
     /**
+     * @see BeanAsserts#foundNotNull(Object, String)
+     */
+    public static void foundNotNull(final Object object) {
+        found(object != null, null);
+    }
+
+    /**
+     * @param object If the given object is {@code null} throws an error and displays '400 Not Found' error page
+     * @param message an optional message, which shows instead of default error description
+     */
+    public static void foundNotNull(final Object object, final String message) {
+        found(object != null, message);
+    }
+
+    /**
      * @see BeanAsserts#found(boolean, String)
      */
     public static void found(final boolean isFound) {

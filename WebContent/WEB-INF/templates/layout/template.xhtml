@@ -58,7 +58,7 @@
                     <div class="layout-main d-flex flex-column" id="main">
                         <main class="layout-main-content #{extraPageClass}">
                             <ui:fragment rendered="#{learnwebBean.maintenanceMode}">
-                                <h2 class="text-danger">#{msg.service_unavailable}</h2>
+                                <h2 class="text-danger">#{msg['error_pages.unavailable_default_description']}</h2>
                             </ui:fragment>
                             <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
                                 <p:messages id="message" showDetail="false" showSummary="true" escape="false" globalOnly="true">
