@@ -10,7 +10,7 @@
 
 <ui:define name="metadata">
 	<f:metadata>
-		<f:viewParam name="resource_id" value ="#{tedTranscriptBean.resourceId}"/>
+		<f:viewParam name="resource_id" value ="#{tedTranscriptBean.resourceId}" converter="idConverter"/>
 		<f:viewAction action="#{tedTranscriptBean.onLoad}"/>
 	</f:metadata>
 </ui:define>

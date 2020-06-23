@@ -7,6 +7,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,11 +29,14 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
 
     public void onLoad() throws SQLException {
         String[] splits = parameter.split("_");
+        BeanAsserts.validate(splits.length == 2 && !StringUtils.isAnyEmpty(splits), "error_pages.bad_request_email_link");
+
         int userId = Integer.parseInt(splits[0]);
         String hash = splits[1];
 
         user = getLearnweb().getUserManager().getUser(userId);
-        BeanAsserts.validate(hash.equals(PasswordBean.createPasswordChangeHash(user)), "invalid_request");
+        BeanAsserts.validateNotNull(user, "error_pages.bad_request_email_link");
+        BeanAsserts.validate(hash.equals(PasswordBean.createPasswordChangeHash(user)), "Your request seams to be invalid. Maybe you have already changed the password?");
     }
 
     public String changePassword() {

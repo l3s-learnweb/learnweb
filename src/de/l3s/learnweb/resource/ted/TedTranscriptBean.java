@@ -83,21 +83,17 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     }
 
     public void onLoad() throws SQLException {
-        if (isAjaxRequest()) {
-            return;
-        }
-
-        if (resourceId > 0) {
-            Resource resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-            setTedResource(resource);
-        }
+        Resource resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+        BeanAsserts.foundNotNull(resource);
+        BeanAsserts.found(!resource.isDeleted());
+        setTedResource(resource);
     }
 
     public Resource getTedResource() {
         return tedResource;
     }
 
-    public void setTedResource(Resource tedResource) {
+    private void setTedResource(Resource tedResource) {
         this.tedResource = tedResource;
 
         try {

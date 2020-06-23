@@ -7,7 +7,7 @@
 <ui:param name="pageTitle" value="#{msg['error_pages.unavailable']}"/>
 
 <ui:define name="container_layout">
-    <p:panel header="#{msg['error_pages.unavailable']}" styleClass="ui-widget-danger">
+    <p:panel header="#{msg['error']} 503: #{msg['error_pages.unavailable']}" styleClass="ui-widget-danger">
 		<h:outputText styleClass="h5 d-block" value="#{msg['error_pages.unavailable_default_description']}"/>
     </p:panel>
 </ui:define>

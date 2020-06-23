@@ -44,11 +44,14 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
     public void onLoad() throws SQLException {
         BeanAsserts.authorized(isLoggedIn());
-        BeanAsserts.hasPermission(getUser().isModerator());
 
         if (organisationId > 0) {
+            BeanAsserts.hasPermission(getUser().isAdmin());
+
             setOrganisation(getLearnweb().getOrganisationManager().getOrganisationById(organisationId));
         } else {
+            BeanAsserts.hasPermission(getUser().isModerator());
+
             setOrganisation(getUser().getOrganisation()); // by default edit the users organization
         }
     }
@@ -120,7 +123,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     }
 
     private void setOrganisation(Organisation selectedOrganisation) {
-        log.debug("select organisation: " + selectedOrganisation);
+        BeanAsserts.foundNotNull(selectedOrganisation);
 
         this.organisation = selectedOrganisation;
 

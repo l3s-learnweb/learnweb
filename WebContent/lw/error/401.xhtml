@@ -12,7 +12,7 @@
 
 <ui:define name="center_layout">
 	<f:view transient="true">
-		<p:panel header="#{msg['error_pages.unauthorized']}">
+		<p:panel header="#{msg['error']} 401: "#{msg['error_pages.unauthorized']}">
 			<h:outputText styleClass="h5 d-block" value="#{msg['error_pages.unauthorized_default_description']}"/>
 		</p:panel>
 	</f:view>

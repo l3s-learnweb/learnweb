@@ -14,7 +14,7 @@
 	<f:view transient="true">
 		<c:set var="message" value="#{requestScope['javax.servlet.error.message']}" scope="request"/>
 
-		<p:panel header="#{msg['error_pages.bad_request']}" styleClass="ui-widget-warning">
+		<p:panel header="#{msg['error']} 400: #{msg['error_pages.bad_request']}" styleClass="ui-widget-warning">
 			<h:outputText styleClass="h5 d-block" value="#{msg['error_pages.bad_request_default_description']}" rendered="#{empty message}"/>
 			<h:outputText styleClass="h5 d-block" value="#{msg[message]}" rendered="#{not empty message}"/>
 		</p:panel>
