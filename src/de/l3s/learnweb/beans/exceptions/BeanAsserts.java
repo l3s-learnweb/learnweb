@@ -42,6 +42,13 @@ public final class BeanAsserts {
     }
 
     /**
+     * @param object If the given object is {@code null} throws an error and displays '400 Not Found' error page
+     */
+    public static void groupNotNull(final Object object) {
+        found(object != null, "error_pages.not_found_group_description");
+    }
+
+    /**
      * @see BeanAsserts#foundNotNull(Object, String)
      */
     public static void foundNotNull(final Object object) {

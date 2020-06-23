@@ -146,7 +146,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                     this.actionAddSelectedItems(items);
                     break;
                 default:
-                    log.error("Unsupported action: " + action);
+                    log.error("Unsupported action: {}", action);
                     break;
             }
         } catch (JsonParseException e) {
@@ -500,14 +500,9 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
      * on the admin/users_submissions page
      */
     public List<User> getUsers() throws SQLException {
-        if (users == null) {
-            Integer courseId = getParameterInt("course_id"); // TODO don't use this
-
-            if (courseId != null) {
-                this.courseId = courseId;
-                users = getLearnweb().getCourseManager().getCourseById(courseId).getMembers();
-                userSubmissions = getLearnweb().getSubmissionManager().getUsersSubmissionsByCourseId(courseId);
-            }
+        if (users == null && courseId > 0) {
+            users = getLearnweb().getCourseManager().getCourseById(courseId).getMembers();
+            userSubmissions = getLearnweb().getSubmissionManager().getUsersSubmissionsByCourseId(courseId);
         }
         return users;
     }

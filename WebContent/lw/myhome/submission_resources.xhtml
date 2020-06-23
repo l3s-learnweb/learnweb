@@ -10,8 +10,9 @@
 
 <ui:define name="metadata">
     <f:metadata>
-        <f:viewParam name="submission_id" value="#{submissionBean.submissionId}"/>
-        <f:viewParam name="user_id" value="#{submissionBean.userId}"/>
+        <f:viewParam name="course_id" value="#{submissionBean.courseId}" converter="idConverter"/>
+        <f:viewParam name="submission_id" value="#{submissionBean.submissionId}" converter="idConverter"/>
+        <f:viewParam name="user_id" value="#{submissionBean.userId}" converter="idConverter"/>
         <f:viewAction action="#{submissionBean.onLoad}"/>
     </f:metadata>
 </ui:define>

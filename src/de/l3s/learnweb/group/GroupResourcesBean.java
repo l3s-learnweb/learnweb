@@ -133,7 +133,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
         if (groupId > 0) {
             group = getLearnweb().getGroupManager().getGroupById(groupId);
-            BeanAsserts.foundNotNull(group, "error_pages.not_found_group_description");
+            BeanAsserts.groupNotNull(group);
 
             BeanAsserts.hasPermission(group.canViewResources(getUser()));
             group.setLastVisit(user);

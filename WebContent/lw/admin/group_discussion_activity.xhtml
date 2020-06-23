@@ -7,6 +7,13 @@
 
 <ui:param name="pageTitle" value="#{msg.discussion_activity}"/>
 
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="group_id" value="#{adminGroupDiscussionActivityBean.groupId}" converter="idConverter" required="true"/>
+		<f:viewAction action="#{adminGroupDiscussionActivityBean.onLoad}"/>
+	</f:metadata>
+</ui:define>
+
 <ui:define name="breadcrumb">
 	<lw:breadcrumb-item link="myhome/group_discussion_activity.jsf" title="#{msg.discussion_activity}">
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>

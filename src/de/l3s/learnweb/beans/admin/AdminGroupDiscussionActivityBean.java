@@ -6,12 +6,10 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +30,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.Group;
 
 /**
@@ -52,24 +51,10 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     private int groupId;
     private List<AnnotationEntity> groupAnnotations;
 
-    public AdminGroupDiscussionActivityBean() {
-        // TODO: perhaps @PostConstructor or viewAction should be used instead
-        load();
-    }
-
-    private void load() {
-        setGroupAnnotations(new ArrayList<>());
-        FacesContext context = FacesContext.getCurrentInstance();
-        Map<String, String> paramMap = context.getExternalContext().getRequestParameterMap();
-
-        setGroupId(Integer.parseInt(paramMap.get("groupId")));
-
+    public void onLoad() {
         try {
             Group group = getLearnweb().getGroupManager().getGroupById(groupId);
-
-            if (group == null) {
-                return;
-            }
+            BeanAsserts.groupNotNull(group);
 
             String hypothesisLink = group.getHypothesisLink();
             String hypothesisGroupID;
@@ -100,6 +85,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
             JsonObject jsonResponse = JsonParser.parseString(responseString).getAsJsonObject();
             JsonArray rows = jsonResponse.getAsJsonArray("rows");
 
+            groupAnnotations = new ArrayList<>();
             for (JsonElement row : rows) {
                 groupAnnotations.add(processJson(row.getAsJsonObject()));
             }
