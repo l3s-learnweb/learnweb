@@ -39,7 +39,9 @@
 
 			<div class="form-group mw-r25">
 				<p:outputLabel for="@next" value="#{msg.username}:"/>
-				<p:inputText value="#{registrationBean.username}" label="#{msg.username}" required="true" />
+				<p:inputText value="#{registrationBean.username}" label="#{msg.username}" required="true" validator="#{registrationBean.validateUsername}">
+                    <p:ajax update="@next" />
+                </p:inputText>
 				<p:message for="@previous"/>
 			</div>
 

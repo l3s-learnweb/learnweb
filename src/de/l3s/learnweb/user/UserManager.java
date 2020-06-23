@@ -320,6 +320,10 @@ public class UserManager {
         Objects.requireNonNull(user.getRealUsername());
         Objects.requireNonNull(user.getRegistrationDate());
 
+        if (user.getId() <= 0 && isUsernameAlreadyTaken(user.getRealUsername())) { // for new users double check that the username is free. If not the existing user will be overwritten
+            throw new IllegalArgumentException("Username is already taken");
+        }
+
         try (PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
             if (user.getId() < 0) { // the User is not yet stored at the database
                 replace.setNull(1, java.sql.Types.INTEGER);

@@ -150,7 +150,7 @@
             </p:panel>
 
             <!--Activity stream-->
-            <p:panel header="#{msg.activity_stream}">
+            <p:panel header="#{msg.activity_stream}" rendered="#{not empty welcomeBean.newsGeneral}">
                 <p>#{msg.activity_message}</p>
 
                 <ui:repeat var="entry" value="#{welcomeBean.newsGeneral}" varStatus="status">

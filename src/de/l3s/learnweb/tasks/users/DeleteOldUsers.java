@@ -40,7 +40,7 @@ public class DeleteOldUsers {
             rm.setReindexMode(true);
             learnweb.getSolrClient().reIndexResource(rm.getResource(200233));
 
-            deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
+            //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
             /*
             deleteUsersWhoHaveBeenSoftDeleted(1);
             deleteAbandonedGroups();

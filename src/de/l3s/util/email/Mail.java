@@ -24,7 +24,7 @@ public class Mail {
         props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.setProperty("mail.smtp.auth", "true");
         props.setProperty("mail.smtp.port", "465");
-        props.setProperty("mail.debug", "true");
+        //props.setProperty("mail.debug", "true");
 
         session = Session.getInstance(props, AUTHENTICATOR);
 
