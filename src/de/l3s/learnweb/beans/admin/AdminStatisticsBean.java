@@ -12,9 +12,9 @@ import java.util.TreeSet;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
+
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -33,9 +33,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
     private String detailedDescription = "";
 
     public TreeSet<Integer> getSelectedUsers() throws SQLException {
-
-        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
-        String[] tempSelectedUsers = request.getParameterValues("selected_users");
+        String[] tempSelectedUsers = Faces.getRequestParameterValues("selected_users");
 
         if (null == tempSelectedUsers || tempSelectedUsers.length == 0) {
             addMessage(FacesMessage.SEVERITY_WARN, "select_user");
@@ -52,9 +50,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
     }
 
     public TreeSet<Integer> getSelectedGroups() throws SQLException {
-
-        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
-        String[] tempSelectedGroups = request.getParameterValues("selected_groups");
+        String[] tempSelectedGroups = Faces.getRequestParameterValues("selected_groups");
 
         if (null == tempSelectedGroups || tempSelectedGroups.length == 0) {
             addMessage(FacesMessage.SEVERITY_WARN, "select_group");

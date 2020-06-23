@@ -35,7 +35,7 @@
     <h:outputScript library="layout" name="js/group-resources.js" target="body"/>
 
     <h:form styleClass="d-none">
-        <p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}"
+        <p:remoteCommand name="commandUpdateSelectedItems" actionListener="#{submissionBean.commandUpdateSelectedItems}"
                          update=":submissionsWrapper" oncomplete="PF('selectDlg').hide();"/>
     </h:form>
 
@@ -97,10 +97,10 @@
     </p:panel>
 
     <script type="application/javascript">
-      /* global updateSelectedItemsCommand */
+      /* global commandUpdateSelectedItems */
 
       function confirmResourcesSelect() {
-        updateSelectedItemsCommand([
+        commandUpdateSelectedItems([
           { name: 'action', value: 'update' },
           { name: 'items', value: JSON.stringify(selected) }
         ]);

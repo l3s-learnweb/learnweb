@@ -1,4 +1,4 @@
-/* global onUnloadCommand, setPreferenceRemote */
+/* global onUnloadCommand, commandSetPreference */
 
 /**
  * PrimeFaces LearnwebTheme Layout
@@ -224,7 +224,7 @@ function getWidgetVarById(elementId) {
  * Store preferences in user account settings
  */
 function setPreference(prefKey, prefValue) {
-  setPreferenceRemote([
+  commandSetPreference([
     { name: 'key', value: prefKey },
     { name: 'value', value: prefValue },
   ]);

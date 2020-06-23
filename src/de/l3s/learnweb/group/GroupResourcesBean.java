@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -21,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.omnifaces.util.Beans;
+import org.omnifaces.util.Faces;
 import org.primefaces.model.TreeNode;
 
 import com.google.gson.JsonObject;
@@ -289,10 +289,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     }
 
     public void commandOpenFolder() {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 
         try {
+            Map<String, String> params = Faces.getRequestParameterMap();
             int folderId = Integer.parseInt(params.get("folderId"));
+
             if (folderId == 0) {
                 this.currentFolder = null;
             } else {
@@ -312,9 +313,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     }
 
     public void commandBatchUpdateResources() {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-
         try {
+            Map<String, String> params = Faces.getRequestParameterMap();
             String action = params.get("action");
             ResourceUpdateBatch items = new ResourceUpdateBatch(params.get("items"));
 

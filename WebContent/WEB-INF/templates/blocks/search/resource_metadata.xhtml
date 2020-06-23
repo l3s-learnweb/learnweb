@@ -15,7 +15,7 @@
                           rendered="#{res.type == 'image' and res.largestThumbnail ne null}"/>
 
             <p:commandButton styleClass="mr-2" value="#{msg.save}"
-                             onclick="saveResourceCommand([{ name: 'resourceRank', value: this.dataset.resourcerank }]);" pt:data-resourceRank="#{res.rank}"/>
+                             onclick="commandOnResourceSelect([{ name: 'resourceRank', value: this.dataset.resourcerank }]);" pt:data-resourceRank="#{res.rank}"/>
         </h:form>
 
         <div class="form-group">

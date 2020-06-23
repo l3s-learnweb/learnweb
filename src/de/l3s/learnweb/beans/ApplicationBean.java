@@ -227,6 +227,7 @@ public class ApplicationBean {
 
     /**
      * To overcome browser caching problems force revalidation.
+     * TODO: it is really necessary?
      */
     protected void forceRevalidation() {
         HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
@@ -252,11 +253,11 @@ public class ApplicationBean {
     }
 
     protected boolean isAjaxRequest() {
-        if (null == FacesContext.getCurrentInstance()) {
+        FacesContext context = getFacesContext();
+        if (null == context) {
             return false;
         }
-
-        return FacesContext.getCurrentInstance().isPostback() || FacesContext.getCurrentInstance().getPartialViewContext().isAjaxRequest();
+        return context.isPostback() || context.getPartialViewContext().isAjaxRequest();
     }
 
     protected Learnweb getLearnweb() {
@@ -268,38 +269,6 @@ public class ApplicationBean {
 
     protected static FacesContext getFacesContext() {
         return FacesContext.getCurrentInstance();
-    }
-
-    /**
-     * Returns the http get parameter or null if not found
-     *
-     * There are very few legitimate cases when this should be used! In most cases you should use template f:viewParam and f:viewAction!
-     */
-    public static String getParameter(String param) {
-        String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
-
-        return value;
-    }
-
-    /**
-     * Returns the http get parameter as int.
-     * Is null if not found or couldn't be parsed
-     *
-     * There are very few legitimate cases when this should be used! In most cases you should use template f:viewParam and f:viewAction
-     */
-    @Deprecated
-    public static Integer getParameterInt(String param) {
-        String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
-
-        if (null == value) {
-            return null;
-        }
-
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 
     private static Object getManagedBean(String beanName) {

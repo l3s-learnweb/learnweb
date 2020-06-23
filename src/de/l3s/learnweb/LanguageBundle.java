@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -14,10 +13,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.faces.context.FacesContext;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 
 /**
  * Enables constant substitution in property values.
@@ -62,7 +60,7 @@ public class LanguageBundle extends ResourceBundle {
     private Map<String, String> values;
 
     public LanguageBundle() { // this is required by JSF because we can't pass arguments to the default constructor
-        this(FacesContext.getCurrentInstance().getViewRoot().getLocale());
+        this(Faces.getViewRoot().getLocale());
     }
 
     private LanguageBundle(Locale locale) {
@@ -162,9 +160,7 @@ public class LanguageBundle extends ResourceBundle {
      */
     public static List<Locale> getSupportedLocales() {
         if (supportedLocales.isEmpty()) {
-            Iterator<Locale> iterator = FacesContext.getCurrentInstance().getApplication().getSupportedLocales();
-
-            iterator.forEachRemaining(supportedLocales::add);
+            supportedLocales.addAll(Faces.getSupportedLocales());
         }
         return supportedLocales;
     }

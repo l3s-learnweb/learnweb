@@ -7,9 +7,9 @@ import java.util.TreeSet;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
+
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.Comment;
@@ -41,8 +41,7 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
     }
 
     public TreeSet<Integer> getSelectedUsers() {
-        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
-        String[] tempSelectedUsers = request.getParameterValues("selected_users");
+        String[] tempSelectedUsers = Faces.getRequestParameterValues("selected_users");
 
         if (null == tempSelectedUsers || tempSelectedUsers.length == 0) {
             addMessage(FacesMessage.SEVERITY_WARN, "select_user");

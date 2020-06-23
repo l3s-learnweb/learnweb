@@ -158,6 +158,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable {
     }
 
     protected static List<SelectItem> getCategoriesByCourse(int courseId) {
+        // TODO: refactor
         SelectItemGroup g1 = new SelectItemGroup(UtilBean.getLocaleMessage("Forum.cell.category.1"));
         g1.setSelectItems(new SelectItem[] {new SelectItem("Forum.cell.category.1a", UtilBean.getLocaleMessage("Forum.cell.category.1a")), new SelectItem("Forum.cell.category.1b", UtilBean.getLocaleMessage("Forum.cell.category.1b")),
             new SelectItem("Forum.cell.category.1c", UtilBean.getLocaleMessage("Forum.cell.category.1c")), new SelectItem("Forum.cell.category.1d", UtilBean.getLocaleMessage("Forum.cell.category.1d"))});

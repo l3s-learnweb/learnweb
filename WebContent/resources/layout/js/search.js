@@ -1,5 +1,5 @@
 /* global view */
-/* global ajaxLoadNextPage, logResourceOpenedCommand, getResourceDetailsCommand */
+/* global commandLoadNextPage, commandOnResourceClick, commandGetResourceDetails */
 
 let noMoreResults = false;
 let loading = false;
@@ -38,7 +38,7 @@ function prepareResources() {
           slide.$slide.off('refresh').trigger('onReset').addClass(slide.opts.slideClass);
 
           const resourceRank = parseInt(slide.opts.$orig[0].id.replace('resource_', ''), 10);
-          getResourceDetailsCommand([
+          commandGetResourceDetails([
             { name: 'slideIndex', value: slide.index },
             { name: 'resourceRank', value: resourceRank },
           ]);
@@ -97,7 +97,7 @@ function loadNextPage() {
 
   loading = true;
   $('#search_loading_more_results').show();
-  ajaxLoadNextPage();
+  commandLoadNextPage();
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -137,6 +137,6 @@ $(() => {
   // To keep track of resource click in the web search or resources_list view
   $(document).on('mouseup', '.search-item-web a.res-link', (e) => {
     const tempResourceId = $(e.currentTarget).closest('.search-item').attr('id').substring(9);
-    logResourceOpenedCommand([{ name: 'resource_id', value: tempResourceId }]);
+    commandOnResourceClick([{ name: 'resourceId', value: tempResourceId }]);
   });
 });

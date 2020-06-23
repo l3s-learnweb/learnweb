@@ -1,4 +1,4 @@
-/* global saveTranscriptLog, submitTedResource, saveTedResource, setSynonymsForWord */
+/* global commandSaveLog, commandSubmitResource, commandSaveResource, commandSetSynonyms */
 /* global noteId:writable, readOnly */
 
 // let escape_key_flag = false;
@@ -8,7 +8,7 @@ let tags = {};
 const deleteSelectionText = document.getElementById('delete_selection').innerHTML;
 
 function saveTranscriptAction(word, annotation, action) {
-  saveTranscriptLog([
+  commandSaveLog([
     { name: 'word', value: word },
     { name: 'user_annotation', value: annotation },
     { name: 'action', value: action },
@@ -237,7 +237,7 @@ function doAction(action, item) {
       break;
     case 'add-wordnet-definition':
       selectedNodeId = item.attr('id');
-      setSynonymsForWord([{ name: 'word', value: item.text() }]);
+      commandSetSynonyms([{ name: 'word', value: item.text() }]);
       item.data('definitiondisabled', item.data('definitiondisabled') !== true);
       break;
     case 'delete-selection':
@@ -461,7 +461,7 @@ function noteSelectedText() {
       // PF('userinput_dialog').show();
     }
     saveTranscriptAction(selStr, '', 'selection');
-    // setSynonymsForWord([{name:'word', value:selStr}]);
+    // commandSetSynonyms([{name:'word', value:selStr}]);
   }
   deleteSelection();
 }
@@ -540,11 +540,11 @@ function getUserText(buttonClicked) {
 
 function saveEditing() {
   const update = document.getElementById('ted_transcript').innerHTML;
-  saveTedResource([{ name: 'transcript', value: update }]);
+  commandSaveResource([{ name: 'transcript', value: update }]);
 }
 
 function submitTranscript() {
   disableJQueryContextMenu();
   const update = document.getElementById('ted_transcript').innerHTML;
-  submitTedResource([{ name: 'transcript', value: update }]);
+  commandSubmitResource([{ name: 'transcript', value: update }]);
 }

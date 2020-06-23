@@ -14,11 +14,9 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +25,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.omnifaces.util.Faces;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.learnweb.Learnweb;
@@ -163,8 +162,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
      * Saves the changes in the TED transcript such as selections and user annotations;
      * Also logs the 'save' event.
      */
-    public void processActionSaveResource() {
-        String transcript = getParameter("transcript");
+    public void commandSaveResource() {
+        String transcript = Faces.getRequestParameter("transcript");
+
         tedResource.setTranscript(transcript);
         try {
             Date actionTimestamp = new Date();
@@ -175,6 +175,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             addErrorMessage(e);
             log.error("Error while saving transcript changes for ted resource: " + tedResource.getId(), e);
         }
+
         getUser().clearCaches();
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
@@ -183,10 +184,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
      * Submits the transcript of a TED resource for final evaluation;
      * Saves the 'submit' event and also the final selections in lw_transcript_selections.
      */
-    public void processActionSubmitResource() {
-        String transcript = getParameter("transcript");
+    public void commandSubmitResource() {
+        String transcript = Faces.getRequestParameter("transcript");
         tedResource.setTranscript(transcript);
         tedResource.setReadOnlyTranscript(true);
+
         try {
             Date actionTimestamp = new Date();
             tedResource.save();
@@ -197,6 +199,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             addErrorMessage(e);
             log.error("Error while submitting TED resource: " + tedResource.getId(), e);
         }
+
         getUser().clearCaches();
         addGrowl(FacesMessage.SEVERITY_INFO, "Transcript Submitted");
     }
@@ -204,15 +207,14 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     /**
      * Stores a transcript action such as selection, de-selection, user annotation.
      */
-    public void processActionSaveLog() {
+    public void commandSaveLog() {
         try {
-            Date actionTimestamp = new Date();
+            Map<String, String> params = Faces.getRequestParameterMap();
+            String word = params.get("word");
+            String userAnnotation = params.get("user_annotation");
+            String action = params.get("action");
 
-            String word = getParameter("word");
-            String userAnnotation = getParameter("user_annotation");
-            String action = getParameter("action");
-
-            TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), word, userAnnotation, action, actionTimestamp);
+            TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), word, userAnnotation, action, new Date());
             getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
         } catch (SQLException e) {
             addErrorMessage(e);
@@ -223,8 +225,8 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     /**
      * Retrieves the set of synonyms from WordNet for given selection of word.
      */
-    public void processActionSetSynonyms() {
-        String words = getParameter("word");
+    public void commandSetSynonyms() {
+        String words = Faces.getRequestParameter("word");
         StringBuilder synonymsList = new StringBuilder();
         int wordCount = SPACES.split(words.trim()).length;
 
@@ -335,8 +337,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     }
 
     public TreeSet<Integer> getSelectedUsers() throws SQLException {
-        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
-        String[] tempSelectedUsers = request.getParameterValues("selected_users");
+        String[] tempSelectedUsers = Faces.getRequestParameterValues("selected_users");
 
         if (null == tempSelectedUsers || tempSelectedUsers.length == 0) {
             addMessage(FacesMessage.SEVERITY_WARN, "select_user");

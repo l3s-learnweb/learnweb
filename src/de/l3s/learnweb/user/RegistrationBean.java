@@ -9,8 +9,6 @@ import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
@@ -23,6 +21,7 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.exceptions.BeanAsserts;
@@ -66,9 +65,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private ConfirmRequiredBean confirmRequiredBean;
 
     public String onLoad() throws IOException, SQLException {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
-        locale = viewRoot != null ? viewRoot.getLocale() : externalContext.getRequestLocale();
+        locale = Faces.getLocale();
 
         if (StringUtils.isNotEmpty(wizard)) {
             course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
@@ -120,7 +117,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     /**
-     * Handles errors that may occur while retrieving the users time zone
+     * Handles errors that may occur while retrieving the users time zone.
      *
      * @return ZoneId given by the user or GMT as default value
      */

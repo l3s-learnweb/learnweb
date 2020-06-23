@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.annotation.PreDestroy;
@@ -28,7 +29,6 @@ import org.primefaces.model.menu.MenuModel;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.exceptions.ForbiddenBeanException;
 import de.l3s.learnweb.beans.exceptions.UnauthorizedBeanException;
 import de.l3s.learnweb.component.ActiveSubMenu;
@@ -180,9 +180,10 @@ public class UserBean implements Serializable {
         preferences.put(key, value);
     }
 
-    public void setPreferenceRemote() {
-        String key = ApplicationBean.getParameter("key");
-        String value = ApplicationBean.getParameter("value");
+    public void commandSetPreference() {
+        Map<String, String> params = Faces.getRequestParameterMap();
+        String key = params.get("key");
+        String value = params.get("value");
 
         setPreference(key, value);
     }

@@ -44,6 +44,7 @@ public class DateRangeValidator implements Validator<Object> {
 
         if (startDate.after(endDate)) {
             startDateComponent.setValid(false);
+            // TODO: refactor, should not spawn a new message, but instead add validation error
             FacesContext.getCurrentInstance().addMessage("msg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Start date may not be after end date.", null));
         }
     }

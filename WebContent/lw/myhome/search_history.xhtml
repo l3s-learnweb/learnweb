@@ -24,7 +24,7 @@
 
 <ui:define name="center_layout">
 	<h:form class="d-none">
-		<p:remoteCommand name="saveResourceCommand" actionListener="${searchBean.selectResourceCommand}" immediate="true"
+		<p:remoteCommand name="commandOnResourceSelect" actionListener="${searchBean.commandOnResourceSelect}" immediate="true"
 						 update=":copy_resource_dialog" onstart="$.fancybox.close();" oncomplete="PF('copyResourceDialog').show();"/>
 	</h:form>
 

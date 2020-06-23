@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
@@ -18,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -47,8 +47,8 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -2494290373382483709L;
     private static final Logger log = LogManager.getLogger(SubmissionBean.class);
 
-    private int userId; //For checking specific user's submission
-    private int courseId; //For retrieving submissions of specific course
+    private int userId; // For checking specific user's submission
+    private int courseId; // For retrieving submissions of specific course
     private int submissionId;
     private Submission newSubmission = new Submission();
     private Submission selectedSubmission = new Submission();
@@ -124,16 +124,17 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
         return selectedResources;
     }
 
-    public void actionUpdateSelectedItems() {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    public void commandUpdateSelectedItems() {
+        Map<String, String> params = Faces.getRequestParameterMap();
         String action = params.get("action");
         JsonArray items = JsonParser.parseString(params.get("items")).getAsJsonArray();
+
         if (items.size() > selectedSubmission.getNoOfResources()) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "submission.resource_limit_exceeded", selectedSubmission.getNoOfResources());
             return;
         }
-        try {
 
+        try {
             switch (action) {
                 case "add":
                     this.actionAddSelectedItems(items);

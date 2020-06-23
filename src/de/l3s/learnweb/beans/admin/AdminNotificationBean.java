@@ -7,15 +7,14 @@ import java.util.TreeSet;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.mail.internet.InternetAddress;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Message;
@@ -50,9 +49,8 @@ public class AdminNotificationBean extends ApplicationBean {
     }
 
     public void send() throws SQLException {
-        // get selected users, complicated because jsf sucks
-        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
-        String[] tempSelectedUsers = request.getParameterValues("selected_users");
+        // get selected users, complicated because jsf sucks TODO: check a way to improve
+        String[] tempSelectedUsers = Faces.getRequestParameterValues("selected_users");
 
         if (null == tempSelectedUsers || tempSelectedUsers.length == 0) {
             addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");

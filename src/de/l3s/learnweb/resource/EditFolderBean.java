@@ -5,9 +5,10 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.exceptions.BeanAsserts;
@@ -21,9 +22,8 @@ public class EditFolderBean extends ApplicationBean implements Serializable {
     private Folder folder;
 
     public void commandEditFolder() {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-
         try {
+            Map<String, String> params = Faces.getRequestParameterMap();
             int itemId = Integer.parseInt(params.get("itemId"));
 
             Folder folder = getLearnweb().getGroupManager().getFolder(itemId);

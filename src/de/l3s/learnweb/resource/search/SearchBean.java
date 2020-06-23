@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -18,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
+import org.omnifaces.util.Faces;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.interwebj.client.InterWeb;
@@ -198,8 +198,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void getResourceDetailsCommand() {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    public void commandGetResourceDetails() {
+        Map<String, String> params = Faces.getRequestParameterMap();
         int rank = Integer.parseInt(params.get("resourceRank"));
 
         ResourceDecorator resource = search.getResourceByRank(rank);
@@ -215,30 +215,27 @@ public class SearchBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void selectResourceCommand() {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    public void commandOnResourceSelect() {
+        Map<String, String> params = Faces.getRequestParameterMap();
         int rank = Integer.parseInt(params.get("resourceRank"));
 
         ResourceDecorator resource = search.getResourceByRank(rank);
         setSelectedResource(resource);
     }
 
-    // -------------------------------------------------------------------------
-
     /**
      * This method logs a resource click event.
      */
-    public void logResourceOpened() {
+    public void commandOnResourceClick() {
         try {
-            int tempResourceId = getParameterInt("resource_id");
+            Map<String, String> params = Faces.getRequestParameterMap();
+            int tempResourceId = Integer.parseInt(params.get("resourceId"));
 
             search.logResourceClicked(tempResourceId, getUser());
         } catch (Exception e) {
             log.error("Can't log resource opened event", e);
         }
     }
-
-    // -------------------------------------------------------------------------
 
     /**
      * True if a the user has started a search request.
@@ -247,7 +244,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         return search != null;
     }
 
-    public void loadNextPage() {
+    public void commandLoadNextPage() {
         page++;
     }
 

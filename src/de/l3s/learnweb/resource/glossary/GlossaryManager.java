@@ -11,11 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
@@ -83,11 +81,9 @@ public class GlossaryManager {
 
                 // TODO philipp: check if this can be moved to glossaryBean
                 try {
-                    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-                    String sessionId = session != null ? session.getId() : null;
                     learnweb.getLogManager()
                         .log(learnweb.getUserManager().getUser(entry.getLastChangedByUserId()), Action.glossary_entry_add, glossaryResource.getGroupId(),
-                            glossaryResource.getId(), Integer.toString(entry.getId()), sessionId);
+                            glossaryResource.getId(), Integer.toString(entry.getId()), Faces.getSessionId());
                 } catch (Exception e) {
                     log.error("Error in logging " + Action.glossary_entry_add + " for entry ID: " + entry.getId() + " of resource: " + entry.getResourceId());
                 }
@@ -221,11 +217,9 @@ public class GlossaryManager {
             term.setLastChangedByUserId(entry.getLastChangedByUserId());
             term.setUserId(entry.getUserId());
 
-            HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-            String sessionId = session != null ? session.getId() : null;
             learnweb.getLogManager()
                 .log(learnweb.getUserManager().getUser(entry.getLastChangedByUserId()), Action.glossary_term_add, groupId, entry.getResourceId(),
-                    Integer.toString(entry.getId()), sessionId);
+                    Integer.toString(entry.getId()), Faces.getSessionId());
         }
     }
 

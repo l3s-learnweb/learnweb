@@ -94,7 +94,7 @@
                           oncomplete="$('.layout-combined-loader').removeClass('loading');"/>
 
             <h:form styleClass="d-none">
-                <p:remoteCommand name="setPreferenceRemote" actionListener="#{userBean.setPreferenceRemote}"
+                <p:remoteCommand name="commandSetPreference" actionListener="#{userBean.commandSetPreference}"
                                  immediate="true" ignoreAutoUpdate="true" process="@this" global="false" />
             </h:form>
 
