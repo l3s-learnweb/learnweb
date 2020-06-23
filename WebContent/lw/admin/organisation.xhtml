@@ -112,7 +112,7 @@
                         <div class="form-group">
                             <p:outputLabel for="@next" value="#{msg.glossary_languages}:"/>
                             <p:selectCheckboxMenu value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
-                                                  label="#{msg.language}" multiple="true" converter="#{localeConverter}">
+                                                  label="#{msg.language}" multiple="true" converter="localeConverter">
                                 <f:selectItems value="#{adminOrganisationBean.availableGlossaryLanguages}"></f:selectItems>
                             </p:selectCheckboxMenu>
                             <p:message for="@previous"/>

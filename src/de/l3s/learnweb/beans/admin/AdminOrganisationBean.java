@@ -2,7 +2,7 @@ package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +30,6 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.Organisation.Option;
-import de.l3s.util.Misc;
 
 @Named
 @ViewScoped
@@ -41,7 +40,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     private int organisationId;
     private Organisation organisation;
     private LinkedList<OptionWrapperGroup> optionGroups;
-    private ArrayList<SelectItem> availableGlossaryLanguages;
+    private List<SelectItem> availableGlossaryLanguages;
 
     public void onLoad() throws SQLException {
         BeanAsserts.authorized(isLoggedIn());
@@ -153,25 +152,10 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
     public List<SelectItem> getAvailableGlossaryLanguages() {
         if (null == availableGlossaryLanguages) {
-            ArrayList<Locale> glossaryLanguages = new ArrayList<>(4);
-            glossaryLanguages.add(new Locale("ar"));
-            glossaryLanguages.add(new Locale("de"));
-            glossaryLanguages.add(new Locale("el"));
-            glossaryLanguages.add(new Locale("en"));
-            glossaryLanguages.add(new Locale("es"));
-            glossaryLanguages.add(new Locale("fr"));
-            glossaryLanguages.add(new Locale("it"));
-            glossaryLanguages.add(new Locale("nl"));
-            glossaryLanguages.add(new Locale("pt"));
-            glossaryLanguages.add(new Locale("ru"));
-            glossaryLanguages.add(new Locale("sv"));
-            glossaryLanguages.add(new Locale("zh"));
-            availableGlossaryLanguages = new ArrayList<>();
+            List<Locale> glossaryLanguages = Arrays.asList(
+                new Locale("ar"), new Locale("de"), new Locale("el"), new Locale("en"), new Locale("es"), new Locale("fr"), new Locale("it"), new Locale("nl"), new Locale("pt"), new Locale("ru"), new Locale("sv"), new Locale("zh"));
 
-            for (Locale locale : glossaryLanguages) {
-                availableGlossaryLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
-            }
-            availableGlossaryLanguages.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
+            availableGlossaryLanguages = localesToSelectItems(glossaryLanguages);
         }
         return availableGlossaryLanguages;
     }
