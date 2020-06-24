@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -28,7 +27,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
 
     public String onLoad() throws SQLException {
         BeanAsserts.validate(!StringUtils.isAnyEmpty(email, token), "error_pages.bad_request_email_link");
-        BeanAsserts.validate(token.length() >= 32, "confirm_token_to_short");
+        BeanAsserts.validate(token.length() >= 32, "confirm_token_short");
 
         user = getLearnweb().getUserManager().getUserByEmailAndConfirmationToken(email, token);
         BeanAsserts.validateNotNull(user, "confirm_token_invalid");
@@ -36,8 +35,6 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
         user.setEmailConfirmed(true);
         user.setEmailConfirmationToken(null);
         user.save();
-
-        addMessage(FacesMessage.SEVERITY_INFO, "email_confirmed");
 
         if (user.equals(getConfirmRequiredBean().getLoggedInUser())) {
             LoginBean.loginUser(this, user);
