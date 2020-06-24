@@ -8,16 +8,15 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.util.StringHelper;
 
 @Named
 @ViewScoped
 public class PasswordChangeBean extends ApplicationBean implements Serializable {
-    private static final Logger log = LogManager.getLogger(PasswordChangeBean.class);
+    //private static final Logger log = LogManager.getLogger(PasswordChangeBean.class);
     private static final long serialVersionUID = 2237249691332567548L;
 
     private String parameter;
@@ -28,19 +27,19 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
     private User user;
 
     public void onLoad() throws SQLException {
+        BeanAsserts.validateNotEmpty(parameter);
         String[] splits = parameter.split("_");
         BeanAsserts.validate(splits.length == 2 && !StringUtils.isAnyEmpty(splits), "error_pages.bad_request_email_link");
 
-        int userId = Integer.parseInt(splits[0]);
+        int userId = StringHelper.parseInt(splits[0], 0);
         String hash = splits[1];
 
         user = getLearnweb().getUserManager().getUser(userId);
-        BeanAsserts.validateNotNull(user, "error_pages.bad_request_email_link");
+        BeanAsserts.validate(user != null && hash.length() == 32, "error_pages.bad_request_email_link");
         BeanAsserts.validate(hash.equals(PasswordBean.createPasswordChangeHash(user)), "Your request seams to be invalid. Maybe you have already changed the password?");
     }
 
     public String changePassword() {
-        log.debug("onChangePassword");
         UserManager um = getLearnweb().getUserManager();
         try {
             user.setPassword(password);

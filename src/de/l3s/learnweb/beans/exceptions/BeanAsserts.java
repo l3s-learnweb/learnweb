@@ -1,5 +1,7 @@
 package de.l3s.learnweb.beans.exceptions;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * This asserts can be used in `viewAction` to validate data,
  * if failed it will throw an error which prevent further processing and will show an error page.
@@ -10,6 +12,21 @@ package de.l3s.learnweb.beans.exceptions;
 public final class BeanAsserts {
 
     /**
+     * @see BeanAsserts#validateNotEmpty(CharSequence, String)
+     */
+    public static void validateNotEmpty(final CharSequence cs) {
+        validateNotEmpty(cs, null);
+    }
+
+    /**
+     * @param cs If the given char sequence is empty (according to StringUtils.isEmpty) throws an error and displays '400 Bad Request' error page
+     * @param message is shown instead of default error description
+     */
+    public static void validateNotEmpty(final CharSequence cs, final String message) {
+        validate(StringUtils.isNotEmpty(cs), message);
+    }
+
+    /**
      * @see BeanAsserts#validateNotNull(Object, String)
      */
     public static void validateNotNull(final Object object) {
@@ -18,7 +35,7 @@ public final class BeanAsserts {
 
     /**
      * @param object If the given object is {@code null} throws an error and displays '400 Bad Request' error page
-     * @param message an optional message, which shows instead of default error description
+     * @param message is shown instead of default error description
      */
     public static void validateNotNull(final Object object, final String message) {
         validate(object != null, message);
@@ -33,7 +50,7 @@ public final class BeanAsserts {
 
     /**
      * @param isValid if {@code false} throws an error which prevents further processing and displays '400 Bad Request' error page
-     * @param message an optional message, which shows instead of default error description
+     * @param message is shown instead of default error description
      */
     public static void validate(final boolean isValid, final String message) {
         if (!isValid) {
@@ -57,7 +74,7 @@ public final class BeanAsserts {
 
     /**
      * @param object If the given object is {@code null} throws an error and displays '400 Not Found' error page
-     * @param message an optional message, which shows instead of default error description
+     * @param message is shown instead of default error description
      */
     public static void foundNotNull(final Object object, final String message) {
         found(object != null, message);
@@ -74,7 +91,7 @@ public final class BeanAsserts {
      * TODO: better name, maybe: isFound, exists, canBeShown, notFoundIfFalse
      *
      * @param isFound if {@code false} throws an error which prevents further processing and displays '400 Not Found' error page
-     * @param message an optional message, which shows instead of default error description
+     * @param message is shown instead of default error description
      */
     public static void found(final boolean isFound, final String message) {
         if (!isFound) {
@@ -91,7 +108,7 @@ public final class BeanAsserts {
 
     /**
      * @param hasPermission if {@code false} throws an error which prevents further processing and displays '403 Forbidden' error page
-     * @param message an optional message, which shows instead of default error description
+     * @param message is shown instead of default error description
      */
     public static void hasPermission(final boolean hasPermission, final String message) {
         if (!hasPermission) {
@@ -116,9 +133,9 @@ public final class BeanAsserts {
 
     /**
      * @param isAuthorized if {@code false} throws an error which prevents further processing and redirects to login page
-     * @param message an optional message, which not actually shows anywhere because of redirect to login page :/
+     * @param message message, which not actually shows anywhere because of redirect to login page :/
      */
-    public static void authorized(final boolean isAuthorized, final String message) {
+    private static void authorized(final boolean isAuthorized, final String message) { // TODO remove if the message can'T be used?
         if (!isAuthorized) {
             throw new UnauthorizedBeanException(message);
         }
