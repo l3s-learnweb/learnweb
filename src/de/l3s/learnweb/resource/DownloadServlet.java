@@ -106,7 +106,13 @@ public class DownloadServlet extends HttpServlet {
         // remove urlPattern from requestString
         requestString = requestString.substring(requestString.indexOf(urlPattern) + urlPattern.length());
 
-        String requestFileId = requestString.substring(0, requestString.indexOf('/'));
+        int slashIndex = requestString.indexOf('/');
+        if (slashIndex == -1) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        String requestFileId = requestString.substring(0, slashIndex);
         //String requestFileName = requestString.substring(index + 1);
 
         int fileId = NumberUtils.toInt(requestFileId);

@@ -31,8 +31,9 @@ public final class BeanHelper {
         StringJoiner joiner = new StringJoiner("; ", "[", "]");
 
         try {
-            joiner.add("page: " + Servlets.getRequestURLWithQueryString(request));
-            joiner.add("referrer: " + request.getHeader("referer"));
+            // a space after urls is required to avoid adding semicolon to the url by IDEs and mail clients when they parse content
+            joiner.add("page: " + Servlets.getRequestURLWithQueryString(request) + " ");
+            joiner.add("referrer: " + request.getHeader("referer") + " ");
 
             joiner.add("ip: " + request.getRemoteAddr());
             joiner.add("ipHeader: " + request.getHeader("X-FORWARDED-FOR"));
