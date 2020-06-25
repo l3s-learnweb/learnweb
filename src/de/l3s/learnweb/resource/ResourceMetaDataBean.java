@@ -8,17 +8,20 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.model.SelectItem;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Beans;
 
+import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.beans.exceptions.BeanAsserts;
-import de.l3s.learnweb.resource.ted.TedTranscriptBean;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserBean;
+import de.l3s.util.Misc;
 
 /**
  * This class provides auto completion for selected resource metadata fields of the yell course.
@@ -42,23 +45,21 @@ public class ResourceMetaDataBean {
      * Creates a translated list of all available languages.
      */
     public static List<SelectItem> getLanguageList() {
-        // TODO refactor. check if Applicationbean.localesToSelectItems can be used
+        // TODO refactor. check if ApplicationBean.localesToSelectItems can be used
 
-        String locale = UtilBean.getUserBean().getLocaleCode();
-        List<SelectItem> languageList;
-
-        languageList = languageLists.get(locale);
+        Locale locale = Beans.getInstance(UserBean.class).getLocale();
+        List<SelectItem> languageList = languageLists.get(locale.getLanguage());
 
         if (null == languageList) {
             synchronized (languageLists) {
                 languageList = new ArrayList<>(LANGUAGES.length);
 
                 for (String language : LANGUAGES) {
-                    languageList.add(new SelectItem(language, UtilBean.getLocaleMessage("language_" + language)));
+                    languageList.add(new SelectItem(language, LanguageBundle.getLocaleMessage(locale, "language_" + language)));
                 }
-                languageList.sort(TedTranscriptBean.languageComparator());
+                languageList.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
 
-                languageLists.put(locale, languageList);
+                languageLists.put(locale.getLanguage(), languageList);
             }
         }
 
@@ -70,7 +71,7 @@ public class ResourceMetaDataBean {
      * TODO improve
      */
     public static List<String> completeAuthor(String query) {
-        User user = UtilBean.getUserBean().getUser();
+        User user = Beans.getInstance(UserBean.class).getUser();
         BeanAsserts.authorized(user);
 
         int organisationId = user.getOrganisation().getId();

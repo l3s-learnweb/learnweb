@@ -3,7 +3,6 @@ package de.l3s.learnweb.resource.ted;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -36,6 +35,7 @@ import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
 import de.l3s.learnweb.user.Course;
+import de.l3s.util.Misc;
 import de.l3s.util.NlpHelper;
 
 @Named
@@ -309,7 +309,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
                         languageList.add(new SelectItem(entry.getValue(), langFromPropFile));
                     }
-                    languageList.sort(languageComparator());
+                    languageList.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
                 } else {
                     languageList.add(new SelectItem("NA", "No Transcripts Available"));
                 }
@@ -434,10 +434,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     public void setSummaryTextL(String summaryTextL) {
         this.summaryTextL = summaryTextL;
-    }
-
-    public static Comparator<SelectItem> languageComparator() {
-        return Comparator.comparing(SelectItem::getLabel);
     }
 
 }
