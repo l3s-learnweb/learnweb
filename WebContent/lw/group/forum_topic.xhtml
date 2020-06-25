@@ -32,9 +32,9 @@
         </ui:decorate>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item link="group/forum_post.jsf?topic_id=#{forumEditBean.topic.id}" title="#{forumTopicBean.topic.title}">
+    <lw:breadcrumb-item link="group/forum_topic.jsf?topic_id=#{forumEditBean.topic.id}" title="#{forumTopicBean.topic.title}">
         <ui:repeat value="#{forumTopicBean.topics}" var="topic">
-            <li><a href="group/forum_post.jsf?topic_id=#{topic.id}">#{topic.title}</a></li>
+            <li><a href="group/forum_topic.jsf?topic_id=#{topic.id}">#{topic.title}</a></li>
         </ui:repeat>
     </lw:breadcrumb-item>
 </ui:define>

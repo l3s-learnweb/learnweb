@@ -45,7 +45,7 @@
             </f:facet>
 
             <p:column headerText="#{msg.forum_thread}">
-                <a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}" title="visit your post"><h:outputText value="#{yourPostsBean.postThreadTopics[post.topicId]}"/></a>
+                <a href="#{request.contextPath}/lw/group/forum_topic.jsf?topic_id=#{post.topicId}" title="visit your post"><h:outputText value="#{yourPostsBean.postThreadTopics[post.topicId]}"/></a>
             </p:column>
 
             <p:column exportFunction="#{post.getText()}" headerText="#{msg.message}">
@@ -53,7 +53,7 @@
             </p:column>
 
             <p:column styleClass="d-none" headerText="#{msg.url}">
-                <h:outputText value="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}"/>
+                <h:outputText value="#{request.contextPath}/lw/group/forum_topic.jsf?topic_id=#{post.topicId}"/>
             </p:column>
 
             <p:column headerText="#{msg.category}">

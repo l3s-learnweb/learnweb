@@ -6,12 +6,12 @@
     <!-- Redirects from one instance to another -->
     <rule>
         <from>/v3/(.*)</from>
-        <to type="redirect" last="true">/$1</to>
+        <to type="permanent-redirect" last="true">/$1</to>
     </rule>
     <rule>
         <name>The Yell documentation still contains links to /new</name>
         <from>/new/(.*)</from>
-        <to type="redirect" last="true">/$1</to>
+        <to type="permanent-redirect" last="true">/$1</to>
     </rule>
     <rule>
         <name>Redirect ArchiveWeb users to archived v2 instance</name>
@@ -45,14 +45,18 @@
     <!-- TODO: remove? // redirect old to new survey and glossary page -->
     <rule>
         <from>/templates/resources/survey.jsf(.*)</from>
-        <to type="redirect">%{context-path}/lw/survey/survey.jsf$1</to>
+        <to type="permanent-redirect">%{context-path}/lw/survey/survey.jsf$1</to>
     </rule>
     <rule>
         <from>/lw/survey/surveyResult.jsf(.*)</from>
-        <to type="redirect">%{context-path}/lw/survey/results.jsf$1</to>
+        <to type="permanent-redirect">%{context-path}/lw/survey/results.jsf$1</to>
     </rule>
     <rule>
         <from>/lw/showGlossary.jsf(.*)</from>
-        <to type="redirect">%{context-path}/lw/glossary/glossary.jsf$1</to>
+        <to type="permanent-redirect">%{context-path}/lw/glossary/glossary.jsf$1</to>
+    </rule>
+    <rule>
+        <from>/lw/group/forum_post.jsf(.*)</from>
+        <to type="permanent-redirect">%{context-path}/lw/group/forum_topic.jsf$1</to>
     </rule>
 </urlrewrite>

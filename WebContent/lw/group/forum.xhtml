@@ -53,7 +53,7 @@
 			</f:facet>
 
 			<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
-				<h:link outcome="/lw/group/forum_post.jsf?topic_id=#{topic.id}">
+				<h:link outcome="/lw/group/forum_topic.jsf?topic_id=#{topic.id}">
 					<ui:fragment rendered="#{userBean.user.lastLoginDate lt topic.lastPostDate.toInstant()}">
 						<i class="fa fa-fw fa-envelope" aria-hidden="true"></i>
 					</ui:fragment>

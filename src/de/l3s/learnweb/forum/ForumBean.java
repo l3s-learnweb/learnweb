@@ -71,7 +71,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
         fm.save(post);
 
         log(Action.forum_topic_added, groupId, topic.getId(), newTopicTitle);
-        return "forum_post.jsf?faces-redirect=true&topic_id=" + topic.getId();
+        return "forum_topic.jsf?faces-redirect=true&topic_id=" + topic.getId();
     }
 
     public void onDeleteTopic(ForumTopic topic) {

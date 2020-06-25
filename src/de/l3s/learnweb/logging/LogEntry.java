@@ -249,11 +249,11 @@ public class LogEntry implements Serializable {
                 description = usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_deleting_link", getGroupLink(locale));
                 break;
             case forum_topic_added:
-                String topicLink = "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
+                String topicLink = "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_topic.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
                 description = usernameLink + "has added " + "<b>" + topicLink + "</b>" + " post";
                 break;
             case forum_post_added:
-                String topic = "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
+                String topic = "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_topic.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
                 description = usernameLink + "has replied to " + "<b>" + topic + "</b>" + " topic";
 
                 // General actions

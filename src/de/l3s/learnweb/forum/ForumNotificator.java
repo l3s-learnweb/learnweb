@@ -134,7 +134,7 @@ public class ForumNotificator implements Runnable, Serializable {
                 content.append("</td>");
 
                 content.append("<td class=\"second-child\">");
-                content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_post.jsf?topic_id=").append(topic.getId()).append("'>")
+                content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_topic.jsf?topic_id=").append(topic.getId()).append("'>")
                     .append(topic.getTitle()).append("</a>");
                 content.append("</td>");
 
@@ -164,7 +164,7 @@ public class ForumNotificator implements Runnable, Serializable {
                 content.append("</td>");
 
                 content.append("<td class=\"second-child\">");
-                content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_post.jsf?topic_id=").append(topic.getId()).append("'>")
+                content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_topic.jsf?topic_id=").append(topic.getId()).append("'>")
                     .append(topic.getTitle()).append("</a>");
                 content.append("</td>");
 
