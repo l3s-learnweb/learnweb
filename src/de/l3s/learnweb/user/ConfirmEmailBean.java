@@ -33,7 +33,6 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
         BeanAsserts.validateNotNull(user, "confirm_token_invalid");
 
         user.setEmailConfirmed(true);
-        user.setEmailConfirmationToken(null);
         user.save();
 
         if (user.equals(getConfirmRequiredBean().getLoggedInUser())) {
