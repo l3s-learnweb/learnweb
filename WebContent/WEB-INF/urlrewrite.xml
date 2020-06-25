@@ -20,7 +20,7 @@
         <to type="permanent-redirect" last="true">http://learnweb.l3s.uni-hannover.de/v2/aw/</to>
     </rule>
     <!-- General redirects -->
-    <!--<rule> TODO: this rule is broken, because of proxy which always uses http protocol
+    <!--<rule> this rule is broken, because of proxy which always uses http protocol
         <name>Redirect to HTTPS</name>
         <condition type="scheme" operator="notequal">https</condition>
         <condition name="host">learnweb.l3s.uni-hannover.de</condition>
@@ -42,7 +42,7 @@
         <from>/archive/(.*)</from>
         <to type="redirect" last="true">http://alexandria-project.eu/archivesearch/$1</to>
     </rule>
-    <!-- TODO: remove? // redirect old to new survey and glossary page -->
+    <!-- Redirects from old pages to new ones -->
     <rule>
         <from>/templates/resources/survey.jsf(.*)</from>
         <to type="permanent-redirect">%{context-path}/lw/survey/survey.jsf$1</to>
@@ -56,6 +56,7 @@
         <to type="permanent-redirect">%{context-path}/lw/glossary/glossary.jsf$1</to>
     </rule>
     <rule>
+        <name>A forum_post.jsf page was renamed on 25.06.2020</name>
         <from>/lw/group/forum_post.jsf(.*)</from>
         <to type="permanent-redirect">%{context-path}/lw/group/forum_topic.jsf$1</to>
     </rule>

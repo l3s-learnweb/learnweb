@@ -67,7 +67,7 @@ public class StringHelper {
     }
 
     /**
-     * The same as StringUtils.remove but is removes a char from an array of strings.
+     * The same as StringUtils.remove, but removes a char from an array of strings.
      */
     public static String[] remove(final String[] values, final char remove) {
         for (int i = 0, len = values.length; i < len; ++i) {
@@ -114,42 +114,6 @@ public class StringHelper {
             log.error("Can't get domain for url: " + url, e);
             return null;
         }
-    }
-
-    public static String implode(Iterable<String> list, String delimiter) {
-        StringBuilder out = new StringBuilder();
-        for (String item : list) {
-            if (out.length() != 0) {
-                out.append(delimiter);
-            }
-            out.append(item);
-        }
-        return out.toString();
-    }
-
-    /**
-     * TODO: should be replaced by StringUtils.join
-     */
-    public static String implodeInt(Collection<Integer> list, String delimiter) {
-        StringBuilder out = new StringBuilder();
-        for (Integer item : list) {
-            if (out.length() != 0) {
-                out.append(delimiter);
-            }
-            out.append(item);
-        }
-        return out.toString();
-    }
-
-    public static String implodeInt(int[] list, String delimiter) {
-        StringBuilder out = new StringBuilder();
-        for (int item : list) {
-            if (out.length() != 0) {
-                out.append(delimiter);
-            }
-            out.append(item);
-        }
-        return out.toString();
     }
 
     public static String join(Collection<Locale> collection) {

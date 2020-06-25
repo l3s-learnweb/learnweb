@@ -52,7 +52,7 @@
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION</param-name>
-        <param-value>50</param-value> <!-- TODO: Why do we have so high numbers? PrimeFaces recommends 15 -->
+        <param-value>50</param-value>
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.NUMBER_OF_SEQUENTIAL_VIEWS_IN_SESSION</param-name>

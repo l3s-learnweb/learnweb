@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -241,7 +242,7 @@ public class FileManager {
         }
 
         Statement stmt = learnweb.getConnection().createStatement();
-        stmt.executeUpdate("UPDATE lw_file SET resource_id = " + resource.getId() + " WHERE file_id IN(" + StringHelper.implodeInt(fileIds, ",") + ")");
+        stmt.executeUpdate("UPDATE lw_file SET resource_id = " + resource.getId() + " WHERE file_id IN(" + StringUtils.join(fileIds, ",") + ")");
         stmt.close();
     }
 

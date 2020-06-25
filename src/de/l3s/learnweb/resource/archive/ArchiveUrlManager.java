@@ -236,7 +236,7 @@ public final class ArchiveUrlManager {
                     prepStmt.executeUpdate();
                     prepStmt.close();
 
-                    resource.addArchiveUrl(null); // TODO
+                    resource.addArchiveUrl(null);
                 } else if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
                     Optional<String> livewebError = response.headers().firstValue("X-Archive-Wayback-Liveweb-Error");
                     if (livewebError.isPresent()) {

@@ -203,7 +203,7 @@ public class TedManager {
     }
 
     public List<TranscriptSummary> getTranscriptSummaries(TreeSet<Integer> selectedUserIds) throws SQLException {
-        String userIdString = StringHelper.implodeInt(selectedUserIds, ",");
+        String userIdString = StringUtils.join(selectedUserIds, ",");
 
         List<TranscriptSummary> transcriptSummaries = new ArrayList<>();
 
@@ -242,7 +242,7 @@ public class TedManager {
     }
 
     public List<TranscriptLog> getTranscriptLogs(TreeSet<Integer> selectedUserIds, boolean showDeleted) throws SQLException {
-        String userIdString = StringHelper.implodeInt(selectedUserIds, ",");
+        String userIdString = StringUtils.join(selectedUserIds, ",");
 
         List<TranscriptLog> transcriptLogs = new ArrayList<>();
 

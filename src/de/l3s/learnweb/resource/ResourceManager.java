@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +30,6 @@ import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
 import de.l3s.util.PropertiesBundle;
-import de.l3s.util.StringHelper;
 import de.l3s.util.database.Sql;
 
 public class ResourceManager {
@@ -376,7 +376,7 @@ public class ResourceManager {
     }
 
     public List<Comment> getCommentsByUserIds(Collection<Integer> userIds) throws SQLException {
-        String userIdString = StringHelper.implodeInt(userIds, ",");
+        String userIdString = StringUtils.join(userIds, ",");
 
         List<Comment> comments = new LinkedList<>();
 

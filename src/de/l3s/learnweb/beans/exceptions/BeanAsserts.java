@@ -118,26 +118,18 @@ public final class BeanAsserts {
 
     /**
      * @param user If the given object (User) is {@code null} throws an error
-     * @see BeanAsserts#authorized(boolean, String)
+     * @see BeanAsserts#authorized(boolean)
      */
     public static void authorized(final Object user) {
-        authorized(user != null, null);
-    }
-
-    /**
-     * @see BeanAsserts#authorized(boolean, String)
-     */
-    public static void authorized(final boolean isAuthorized) {
-        authorized(isAuthorized, null);
+        authorized(user != null);
     }
 
     /**
      * @param isAuthorized if {@code false} throws an error which prevents further processing and redirects to login page
-     * @param message message, which not actually shows anywhere because of redirect to login page :/
      */
-    private static void authorized(final boolean isAuthorized, final String message) { // TODO remove if the message can'T be used?
+    public static void authorized(final boolean isAuthorized) {
         if (!isAuthorized) {
-            throw new UnauthorizedBeanException(message);
+            throw new UnauthorizedBeanException();
         }
     }
 }

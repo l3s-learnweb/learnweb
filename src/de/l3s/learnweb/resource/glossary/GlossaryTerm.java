@@ -9,8 +9,6 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
-import de.l3s.util.StringHelper;
-
 public class GlossaryTerm implements Serializable, Cloneable {
     private static final long serialVersionUID = -8309235925484416943L;
 
@@ -62,13 +60,7 @@ public class GlossaryTerm implements Serializable, Cloneable {
         setPronounciationPasted(oldTerm.pronounciationPasted);
         setAcronymPasted(oldTerm.acronymPasted);
         setPhraseologyPasted(oldTerm.phraseologyPasted);
-
-        setUses(new ArrayList<>(oldTerm.uses.size()));
-        for (int i = 0, len = oldTerm.uses.size(); i < len; i++) {
-            this.uses.add(i, oldTerm.uses.get(i));
-        }
-
-        // TODO since Strings are immutable this should be sufficient do clone the list. please test: setUses(new ArrayList<String>(oldTerm.uses));
+        setUses(new ArrayList<>(oldTerm.uses));
     }
 
     /**
@@ -244,7 +236,7 @@ public class GlossaryTerm implements Serializable, Cloneable {
         if (getUses() == null || getUses().isEmpty()) {
             return "Use";
         } else {
-            return StringHelper.implode(getUses(), ", ");
+            return StringUtils.join(getUses(), ", ");
         }
     }
 

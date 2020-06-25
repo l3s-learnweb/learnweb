@@ -84,8 +84,10 @@
 
 			<div class="form-check">
 				<div class="d-flex">
-					<p:selectBooleanCheckbox id="accept_privacy_policy" value="#{registrationBean.acceptPrivacyPolicy}" required="true" styleClass="form-check-input"
-						label="#{msg.privacy_statement}" validator="requiredCheckboxValidator"/>
+					<p:selectBooleanCheckbox id="accept_privacy_policy" value="#{registrationBean.acceptPrivacyPolicy}" label="#{msg.privacy_statement}"
+											 required="true" requiredMessage="#{msg.privacy_statement}: #{msg['validation.please_confirm']}">
+						<f:validator validatorId="omnifaces.RequiredCheckboxValidator" />
+					</p:selectBooleanCheckbox>
 					<p:outputLabel for="@previous" styleClass="form-check-label pl-1">
 						<h:outputFormat value="#{msg['registration.accept_privacy_policy']}" escape="false">
 							<f:param value="privacy_statement.jsf?organisation_id=#{registrationBean.course.organisationId}"/>

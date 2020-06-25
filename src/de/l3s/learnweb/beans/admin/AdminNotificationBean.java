@@ -20,7 +20,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
-import de.l3s.util.StringHelper;
 import de.l3s.util.email.Mail;
 
 @Named
@@ -117,7 +116,7 @@ public class AdminNotificationBean extends ApplicationBean {
                 addMessage(FacesMessage.SEVERITY_INFO, recipientsArr.length + " emails send");
 
                 if (!usersWithoutMail.isEmpty()) {
-                    addMessage(FacesMessage.SEVERITY_WARN, "Some users haven't defined a valid mail address: <b>" + StringHelper.implode(usersWithoutMail, ", ") + "</b>");
+                    addMessage(FacesMessage.SEVERITY_WARN, "Some users haven't defined a valid mail address: <b>" + StringUtils.join(usersWithoutMail, ", ") + "</b>");
                 }
             } catch (Exception e) {
                 log.error("Could not send notification mail: " + mail, e);

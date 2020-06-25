@@ -147,7 +147,6 @@ public class Message implements Comparable<Message>, Serializable {
         try {
             this.messageRead();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             log.error("unhandled error", e);
         }
         return read;

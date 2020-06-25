@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.l3s.learnweb.Learnweb;
-import de.l3s.util.StringHelper;
 
 public class GlossaryDashboardManager {
     //private static final Logger log = LogManager.getLogger(GlossaryDashboardManager.class);
@@ -31,7 +32,7 @@ public class GlossaryDashboardManager {
                 + "FROM lw_resource r "
                 + "JOIN lw_glossary_entry ge USING(resource_id) "
                 + "WHERE ge.deleted != 1 AND r.deleted != 1 "
-                + "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
+                + "AND r.owner_user_id IN(" + StringUtils.join(userIds, ",") + ") "
                 + "AND ge.timestamp BETWEEN ? AND ?")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -54,7 +55,7 @@ public class GlossaryDashboardManager {
                 + "JOIN lw_glossary_entry ge USING(resource_id) "
                 + "JOIN lw_glossary_term gt USING(entry_id) "
                 + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 "
-                + "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
+                + "AND r.owner_user_id IN(" + StringUtils.join(userIds, ",") + ") "
                 + "AND ge.timestamp BETWEEN ? AND ?")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -77,7 +78,7 @@ public class GlossaryDashboardManager {
                 + "JOIN lw_glossary_entry ge USING(resource_id) "
                 + "JOIN lw_glossary_term gt USING(entry_id) "
                 + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 "
-                + "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
+                + "AND r.owner_user_id IN(" + StringUtils.join(userIds, ",") + ") "
                 + "AND ge.timestamp BETWEEN ? AND ?")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -111,7 +112,7 @@ public class GlossaryDashboardManager {
                 + "JOIN lw_glossary_entry ge USING(resource_id) "
                 + "JOIN lw_glossary_term gt USING(entry_id) "
                 + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 "
-                + "AND ge.user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
+                + "AND ge.user_id IN(" + StringUtils.join(userIds, ",") + ") "
                 + "AND ge.timestamp BETWEEN ? AND ? GROUP BY ge.user_id")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -148,7 +149,7 @@ public class GlossaryDashboardManager {
                 "JOIN lw_user u ON u.user_id = r.owner_user_id " +
                 "JOIN lw_glossary_entry ge USING (resource_id) " +
                 "WHERE ge.deleted != 1 AND r.deleted != 1 " +
-                "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                "AND r.owner_user_id IN(" + StringUtils.join(userIds, ",") + ") " +
                 "AND ge.timestamp BETWEEN ? AND ? GROUP BY u.username ORDER BY username")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -171,7 +172,7 @@ public class GlossaryDashboardManager {
                 + "JOIN lw_glossary_entry ge USING(resource_id) "
                 + "JOIN lw_glossary_term gt USING(entry_id) "
                 + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 "
-                + "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
+                + "AND r.owner_user_id IN(" + StringUtils.join(userIds, ",") + ") "
                 + "AND ge.timestamp BETWEEN ? AND ? GROUP BY refs")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -200,7 +201,7 @@ public class GlossaryDashboardManager {
                 "JOIN lw_glossary_entry ge USING(resource_id) " +
                 "JOIN lw_glossary_term gt USING(entry_id) " +
                 "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 " +
-                "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                "AND r.owner_user_id IN(" + StringUtils.join(userIds, ",") + ") " +
                 "AND ge.timestamp BETWEEN ? AND ? group by username order by username")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -219,7 +220,7 @@ public class GlossaryDashboardManager {
 
         try (PreparedStatement select = learnweb.getConnection().prepareStatement(
             "SELECT action, COUNT(*) AS total_records FROM lw_user_log " +
-                "WHERE user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                "WHERE user_id IN(" + StringUtils.join(userIds, ",") + ") " +
                 "AND timestamp BETWEEN ? AND ? GROUP BY action")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -239,7 +240,7 @@ public class GlossaryDashboardManager {
 
         try (PreparedStatement select = learnweb.getConnection().prepareStatement(
             "SELECT DATE(timestamp) AS day, COUNT(*) AS total_records FROM lw_user_log " +
-                "WHERE user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                "WHERE user_id IN(" + StringUtils.join(userIds, ",") + ") " +
                 "AND timestamp BETWEEN ? AND ? GROUP BY day")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -261,7 +262,7 @@ public class GlossaryDashboardManager {
                 "FROM lw_resource r " +
                 "JOIN lw_glossary_entry ge USING(resource_id) " +
                 "WHERE ge.deleted != 1 AND r.deleted != 1 " +
-                "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                "AND r.owner_user_id IN(" + StringUtils.join(userIds, ",") + ") " +
                 "AND ge.timestamp BETWEEN ? AND ?")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -283,7 +284,7 @@ public class GlossaryDashboardManager {
                 "FROM lw_resource r " +
                 "JOIN lw_glossary_entry ge USING(resource_id) " +
                 "WHERE ge.deleted != 1 AND r.deleted != 1 " +
-                "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                "AND r.owner_user_id IN(" + StringUtils.join(userIds, ",") + ") " +
                 "AND ge.timestamp BETWEEN ? AND ? group by r.owner_user_id")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -302,7 +303,7 @@ public class GlossaryDashboardManager {
                 "JOIN lw_glossary_entry ge USING(resource_id) " +
                 "JOIN lw_glossary_term gt USING(entry_id) " +
                 "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 " +
-                "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                "AND r.owner_user_id IN(" + StringUtils.join(userIds, ",") + ") " +
                 "AND ge.timestamp BETWEEN ? AND ? group by owner_user_id")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -325,7 +326,7 @@ public class GlossaryDashboardManager {
         try (PreparedStatement select = learnweb.getConnection().prepareStatement(
             "SELECT entry_id, resource_id, user_id, description, description_pasted " +
                 "FROM lw_glossary_entry " +
-                "WHERE deleted != 1 AND user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                "WHERE deleted != 1 AND user_id IN(" + StringUtils.join(userIds, ",") + ") " +
                 "AND timestamp BETWEEN ? AND ?")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));

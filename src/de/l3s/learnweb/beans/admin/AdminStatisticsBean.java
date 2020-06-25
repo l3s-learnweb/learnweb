@@ -14,6 +14,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.Learnweb;
@@ -22,7 +23,6 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.util.StringHelper;
 
 @Named
 @RequestScoped
@@ -83,7 +83,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                 + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_tag t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as tags, "
                 + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as no_of_archived_versions, "
                 + "(SELECT count(distinct(t.resource_id)) FROM lw_resource ir JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as no_of_archived_resources "
-                + "FROM `lw_group` g LEFT JOIN lw_resource r USING(group_id) WHERE r.deleted=0 AND group_id IN(" + StringHelper.implodeInt(selectedGroups, ",") + ") " + "GROUP BY group_id";
+                + "FROM `lw_group` g LEFT JOIN lw_resource r USING(group_id) WHERE r.deleted=0 AND group_id IN(" + StringUtils.join(selectedGroups, ",") + ") " + "GROUP BY group_id";
 
             ResultSet rs = Learnweb.getInstance().getConnection().createStatement().executeQuery(query);
 

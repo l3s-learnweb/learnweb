@@ -9,8 +9,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.l3s.learnweb.Learnweb;
-import de.l3s.util.StringHelper;
 
 public class ActivityDashboardManager {
     private final Learnweb learnweb;
@@ -25,7 +26,7 @@ public class ActivityDashboardManager {
 
         try (PreparedStatement select = learnweb.getConnection().prepareStatement(
             "SELECT DATE(timestamp) as day, COUNT(*) AS count FROM lw_user_log " +
-                "WHERE user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                "WHERE user_id IN(" + StringUtils.join(userIds, ",") + ") " +
                 "AND timestamp BETWEEN ? AND ? AND action in(" + actions + ") GROUP BY day")) {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));

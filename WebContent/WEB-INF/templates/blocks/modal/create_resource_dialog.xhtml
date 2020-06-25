@@ -2,7 +2,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui">
 
 <p:dialog id="createResourceDialog" widgetVar="createResourceDialog" header="#{msg.create_resource}"
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
@@ -69,20 +70,18 @@
 
                 <p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
                 <div class="fg-col">
-                    <p:calendar value="#{addResourceBean.resource.start}" id="editDialogOpenDate" binding="#{startDateComponent}"
-                                required="true" locale="#{userBean.locale}" navigator="true" showOn="button">
-                    </p:calendar>
+                    <p:calendar value="#{addResourceBean.resource.start}" id="editDialogOpenDate" pattern="dd.MM.yyyy"
+                                required="true" locale="#{userBean.locale}" navigator="true" showOn="button"/>
                     <p:message for="@previous"/>
                 </div>
 
                 <p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
                 <div class="fg-col">
-                    <p:calendar value="#{addResourceBean.resource.end}" id="editDialogCloseDate" required="true"
-                                locale="#{userBean.locale}" navigator="true" showOn="button">
-                        <f:validator validatorId="dateRangeValidator"/>
-                        <f:attribute name="startDate" value="#{startDateComponent}"/>
-                    </p:calendar>
+                    <p:calendar value="#{addResourceBean.resource.end}" id="editDialogCloseDate" pattern="dd.MM.yyyy"
+                                required="true" locale="#{userBean.locale}" navigator="true" showOn="button"/>
                     <p:message for="@previous"/>
+                    <o:validateOrder type="lte" components="editDialogOpenDate editDialogCloseDate"
+                                     message="Start date may not be after end date." showMessageFor="editDialogOpenDate" />
                 </div>
             </ui:fragment>
         </h:panelGroup>

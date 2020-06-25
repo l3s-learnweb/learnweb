@@ -68,7 +68,6 @@ public class RequestFilter extends HttpFilter {
                 log.error("Suspicious request: {}", BeanHelper.getRequestSummary(request));
 
                 if (ipAddr.contains("JDatabaseDriverMysqli")) { // Joomla Unserialize Vulnerability
-                    // TODO block real ip
                     protectionManager.ban(ipAddr, 200, 1, 1, true);
 
                     throw new ForbiddenBeanException("error_pages.forbidden_blocked_description");

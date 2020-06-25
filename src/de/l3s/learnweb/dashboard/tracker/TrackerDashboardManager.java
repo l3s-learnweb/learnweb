@@ -10,11 +10,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.util.StringHelper;
 
 public class TrackerDashboardManager {
     private static final Logger log = LogManager.getLogger(TrackerDashboardManager.class);
@@ -32,7 +32,7 @@ public class TrackerDashboardManager {
             "SELECT url_domain, COUNT(*) AS total_records "
                 + "FROM tracker.track "
                 + "WHERE status = 'PROCESSED' AND client_id = ? "
-                + "AND external_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
+                + "AND external_user_id IN(" + StringUtils.join(userIds, ",") + ") "
                 + "AND created_at BETWEEN ? AND ? group by url_domain order by total_records desc")) {
             select.setInt(1, trackerClientId);
             select.setTimestamp(2, new Timestamp(startDate.getTime()));
@@ -59,7 +59,7 @@ public class TrackerDashboardManager {
             "SELECT external_user_id AS user_id, sum(total_events) AS total_events, sum(time_stay) AS time_stay, sum(time_active) AS time_active, sum(clicks) AS clicks, sum(keypress) AS keypresses "
                 + "FROM tracker.track "
                 + "WHERE status = 'PROCESSED' AND client_id = ? "
-                + "AND external_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
+                + "AND external_user_id IN(" + StringUtils.join(userIds, ",") + ") "
                 + "AND created_at BETWEEN ? AND ? group by external_user_id")) {
             select.setInt(1, trackerClientId);
             select.setTimestamp(2, new Timestamp(startDate.getTime()));
