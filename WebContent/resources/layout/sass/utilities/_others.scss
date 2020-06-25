@@ -89,17 +89,6 @@ section:target .highlight {
   }
 }
 
-.modal-dialog {
-  max-width: 320px;
-  @include media-breakpoint-up(sm) {
-    max-width: 25rem;
-  }
-
-  @include media-breakpoint-up(md) {
-    max-width: 50rem;
-  }
-}
-
 iframe,
 embed,
 object,

@@ -22,12 +22,35 @@ public class ForumPost implements Serializable {
     private Date lastEditDate;
     private int editUserId;
     private boolean deleted;
-
     private String category;
 
-    // cached value
+    // cached values
     private transient User user;
     private transient User editUser;
+
+    public boolean canEditPost(User user) {
+        if (user == null) {
+            return false;
+        }
+
+        if (user.isAdmin() || user.getId() == userId) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean canDeletePost(User user) {
+        if (user == null) {
+            return false;
+        }
+
+        if (user.isModerator() || user.getId() == userId) {
+            return true;
+        }
+
+        return false;
+    }
 
     public int getId() {
         return id;
@@ -67,7 +90,7 @@ public class ForumPost implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
-        if (lastEditDate == null) {
+        if (this.lastEditDate == null) {
             this.lastEditDate = date;
         }
     }
@@ -128,6 +151,7 @@ public class ForumPost implements Serializable {
 
     @Override
     public String toString() {
-        return "ForumPost [id=" + id + ", userId=" + userId + ", topicId=" + topicId + ", text=" + text + ", date=" + date + ", editCount=" + editCount + ", lastEditDate=" + lastEditDate + ", editUserId=" + editUserId + "]";
+        return "ForumPost [id=" + id + ", userId=" + userId + ", topicId=" + topicId + ", text=" + text + ", date=" + date + ", editCount=" + editCount
+            + ", lastEditDate=" + lastEditDate + ", editUserId=" + editUserId + "]";
     }
 }

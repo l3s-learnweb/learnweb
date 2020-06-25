@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
@@ -54,7 +55,7 @@ public class ApplicationBean {
 
     public UserBean getUserBean() {
         if (null == userBean) {
-            userBean = (UserBean) getManagedBean("userBean");
+            userBean = Beans.getInstance(UserBean.class);
         }
         return userBean;
     }
@@ -269,10 +270,5 @@ public class ApplicationBean {
 
     protected static FacesContext getFacesContext() {
         return FacesContext.getCurrentInstance();
-    }
-
-    private static Object getManagedBean(String beanName) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        return fc.getApplication().getELResolver().getValue(fc.getELContext(), null, beanName);
     }
 }

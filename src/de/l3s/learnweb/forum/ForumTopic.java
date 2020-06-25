@@ -21,7 +21,6 @@ public class ForumTopic implements Serializable {
     private Date lastPostDate;
     private int lastPostUserId;
     private boolean deleted;
-
     // cached values
     private transient User user;
     private transient User lastPostUser;
@@ -130,6 +129,7 @@ public class ForumTopic implements Serializable {
 
     @Override
     public String toString() {
-        return "ForumTopic [id=" + id + ", userId=" + userId + ", groupId=" + groupId + ", title=" + title + ", date=" + date + ", views=" + views + ", replies=" + replies + ", lastPostId=" + lastPostId + ", lastPostDate=" + lastPostDate + "]";
+        return "ForumTopic [id=" + id + ", userId=" + userId + ", groupId=" + groupId + ", title=" + title + ", date=" + date + ", views=" + views
+            + ", replies=" + replies + ", lastPostId=" + lastPostId + ", lastPostDate=" + lastPostDate + "]";
     }
 }
