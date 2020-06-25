@@ -2,7 +2,7 @@
 <Configuration>
     <Properties>
         <Property name="LEARNWEB_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{9}:%line - %msg%n</Property>
-        <Property name="LEARNWEB_LOG_PATH">${sys:catalina.home:-.}/logs/${web:contextPath:-}learnweb.log</Property>
+        <Property name="LEARNWEB_LOG_PATH">${sys:catalina.home:-.}/logs/${web:contextPath:-}learnweb</Property>
         <Property name="LEARNWEB_MAIL_SUBJECT">[Log4J][${web:contextPath:-console}] Error detected on Learnweb</Property>
         <Property name="LEARNWEB_MAIL_LOGLEVEL">OFF</Property>
     </Properties>
@@ -10,9 +10,10 @@
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
         </Console>
-        <RollingFile name="file" append="true" fileName="${env:LEARNWEB_LOG_PATH}" filePattern="${env:LEARNWEB_LOG_PATH}.%i">
+        <RollingFile name="file" fileName="${env:LEARNWEB_LOG_PATH}.log" filePattern="${env:LEARNWEB_LOG_PATH}-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
-            <SizeBasedTriggeringPolicy size="250 MB"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="30"/>
         </RollingFile>
         <SMTP name="email" smtpHost="l3s.de" bufferSize="10" from="no-reply@l3s.de" to="kemkes@l3s.de,astappiev@l3s.de" subject="${env:LEARNWEB_MAIL_SUBJECT}">
             <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
