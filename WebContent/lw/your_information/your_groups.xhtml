@@ -19,7 +19,7 @@
 
 <ui:define name="center_layout">
     <h:form id="yourinformationform">
-        <p:dataTable id="groups_tbl" value="#{yourGroupsBean.userGroups}" var="group" paginator="true" paginatorPosition="bottom" rows="30"
+        <p:dataTable id="groups_tbl" value="#{userBean.user.groups}" var="group" paginator="true" paginatorPosition="bottom" rows="30"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
                 <h:outputText value="#{msg.groupsTitle}"/>

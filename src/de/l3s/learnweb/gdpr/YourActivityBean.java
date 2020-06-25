@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
@@ -32,9 +33,7 @@ public class YourActivityBean extends ApplicationBean implements Serializable {
 
     public YourActivityBean() throws SQLException {
         User user = getUser();
-        if (null == user) { // when not logged in
-            return;
-        }
+        BeanAsserts.authorized(user);
 
         final GroupManager groupManager = this.getLearnweb().getGroupManager();
         groupTitles = new HashMap<>();

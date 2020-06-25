@@ -9,6 +9,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.searchhistory.SearchHistoryManager;
 import de.l3s.learnweb.user.User;
 
@@ -25,9 +26,7 @@ public class YourSearchHistoryBean extends ApplicationBean implements Serializab
 
     public YourSearchHistoryBean() throws SQLException {
         User user = getUser();
-        if (null == user) { // when not logged in
-            return;
-        }
+        BeanAsserts.authorized(user);
 
         List<SearchHistoryManager.Session> userSessions;
         this.userQueries = new LinkedList<>();

@@ -8,6 +8,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.User;
 
@@ -25,9 +26,7 @@ public class YourMessagesBean extends ApplicationBean implements Serializable {
 
     public YourMessagesBean() throws SQLException {
         User user = getUser();
-        if (null == user) { // when not logged in
-            return;
-        }
+        BeanAsserts.authorized(user);
 
         this.receivedMessages = Message.getAllMessagesToUser(user);
         this.sentMessages = Message.getAllMessagesFromUser(user);

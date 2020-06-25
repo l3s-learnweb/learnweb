@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
@@ -38,9 +39,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
 
     public GroupsBean() throws SQLException {
         User user = getUser();
-        if (user == null) {
-            return;
-        }
+        BeanAsserts.authorized(user);
 
         joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
         myGroups = user.getGroups();

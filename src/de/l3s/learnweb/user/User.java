@@ -175,6 +175,13 @@ public class User implements Comparable<User>, Serializable, HasId {
         return courses;
     }
 
+    /**
+     * @return number of courses this user is member of
+     */
+    public int getCoursesCount() throws SQLException {
+        return getCourses().size();
+    }
+
     public boolean isEmailRequired() throws SQLException {
         for (Course course : getCourses()) {
             if (course.getOption(Course.Option.Users_Require_mail_address)) {

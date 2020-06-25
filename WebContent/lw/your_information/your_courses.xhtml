@@ -19,7 +19,7 @@
 
 <ui:define name="center_layout">
 	<h:form>
-		<p:dataTable id="courses_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
+		<p:dataTable id="courses_tbl" value="#{userBean.user.courses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
 					 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
 			<f:facet name="header">
 				<h:outputText value="#{msg['courses']}"/>
