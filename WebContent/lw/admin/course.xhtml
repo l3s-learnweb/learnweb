@@ -32,14 +32,14 @@
 		<div class="row">
 			<div class="col-12">
 				<p:panel header="#{msg.welcome_message}">
-					<!-- a dirty fix. we should check old message and remove tables -->
-					<p:textEditor height="200" value="#{adminCourseBean.course.welcomeMessage}" rendered="${!adminCourseBean.course.welcomeMessage.contains('table')}">
+					<!-- a dirty fix. we should check old message and remove tables. There is only one course now which uses table in welcome message -->
+					<p:textEditor height="200" value="#{adminCourseBean.course.welcomeMessage}" rendered="${adminCourseBean.course.id ne 1250}">
 						<f:facet name="toolbar">
 							<span class="ql-formats">
 								<select class="ql-font"></select>
 								<select class="ql-size"></select>
 							</span>
-								<span class="ql-formats">
+							<span class="ql-formats">
 								<button class="ql-bold"></button>
 								<button class="ql-italic"></button>
 								<button class="ql-underline"></button>
@@ -57,17 +57,13 @@
 						<p:panel header="#{msg.common_settings}:">
 							<div class="form-group">
 								<p:outputLabel for="@next" value="#{msg.title}:"/>
-								<p:inputText id="c_title" value="#{adminCourseBean.course.title}">
-<!--										<p:ajax update="message_c_title"/>-->
-								</p:inputText>
+								<p:inputText id="c_title" value="#{adminCourseBean.course.title}"/>
 								<p:message for="@previous"/>
 							</div>
 
 							<div class="form-group">
 								<p:outputLabel for="@next" value="#{msg.wizard_parameter}:"/>
-								<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}">
-<!--										<p:ajax update="message_c_param"/>-->
-								</p:inputText>
+								<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}"/>
 								<p:message for="@previous"/>
 							</div>
 
@@ -114,9 +110,7 @@
 			</div>
 
 			<div class="d-flex justify-content-center w-100">
-				<p:commandButton actionListener="#{adminCourseBean.save}" styleClass="p-1" value="#{msg.save}" update=":courseoptions">
-					<f:param name="course_id" value="#{adminCourseBean.courseId}"/>
-				</p:commandButton>
+				<p:commandButton actionListener="#{adminCourseBean.save}" styleClass="p-1" value="#{msg.save}" update="@form"/>
 			</div>
 		</div>
 	</h:form>

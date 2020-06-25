@@ -75,10 +75,6 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
     }
 
     public void save(ActionEvent actionEvent) {
-        if (course == null) {
-            return;
-        }
-
         for (OptionWrapperGroup group : optionGroups) {
             for (OptionWrapper optionWrapper : group.getOptions()) {
                 course.setOption(optionWrapper.getOption(), optionWrapper.getValue());
