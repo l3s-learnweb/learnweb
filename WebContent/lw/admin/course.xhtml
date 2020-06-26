@@ -33,7 +33,7 @@
 			<div class="col-12">
 				<p:panel header="#{msg.welcome_message}">
 					<!-- a dirty fix. we should check old message and remove tables. There is only one course now which uses table in welcome message -->
-					<p:textEditor height="200" value="#{adminCourseBean.course.welcomeMessage}" rendered="${adminCourseBean.course.id ne 1250}">
+					<p:textEditor height="200" value="#{adminCourseBean.course.welcomeMessage}">
 						<f:facet name="toolbar">
 							<span class="ql-formats">
 								<select class="ql-font"></select>

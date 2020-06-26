@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,6 +21,7 @@ import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.Organisation;
+import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
@@ -37,12 +39,13 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
         Collections.sort(organisations);
     }
 
-    public void onLoad() {
-        BeanAsserts.authorized(isLoggedIn());
-        BeanAsserts.hasPermission(getUser().isAdmin());
+    public void onLoad() throws SQLException {
+        User user = getUser();
+        BeanAsserts.authorized(user);
 
         course = getLearnweb().getCourseManager().getCourseById(courseId);
         BeanAsserts.validateNotNull(course);
+        BeanAsserts.hasPermission(user.isAdmin() || user.isModerator() && course.isMember(user));
 
         // many string operations to display the options in a proper way
         optionGroups = new LinkedList<>();
