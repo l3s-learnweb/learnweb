@@ -3,6 +3,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
       lang="#{userBean.localeCode}">
 
     <!--@elvariable id="pageTitle" type="java.lang.String"-->
@@ -42,6 +43,12 @@
                 </header>
 
                 <div class="layout-main d-flex flex-column" id="main">
+                    <noscript>
+                        <p:panel header="#{msg['error']}" styleClass="ui-widget-danger mb-0">
+                            <h:outputText styleClass="h5 d-block" value="#{msg['javascript_disabled']}"/>
+                        </p:panel>
+                    </noscript>
+
                     <main class="layout-main-content">
                         <ui:insert name="center_layout">
                             <div class="container my-3">

@@ -77,6 +77,12 @@
                                     </div>
                                 </ui:fragment>
 
+                                <noscript>
+                                    <p:panel header="#{msg['error']}" styleClass="ui-widget-danger">
+                                        <h:outputText styleClass="h5 d-block" value="#{msg['javascript_disabled']}"/>
+                                    </p:panel>
+                                </noscript>
+
                                 <ui:insert name="center_layout"/>
                             </ui:fragment>
                         </main>
