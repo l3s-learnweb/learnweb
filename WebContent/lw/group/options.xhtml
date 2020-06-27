@@ -39,7 +39,8 @@
 <ui:define name="center_layout">
 		<div class="row">
 			<div class="col-md-6">
-				<p:panel header="#{msg.edit_group}" rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}">
+				<p:outputPanel rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}">
+				<p:panel header="#{msg.edit_group}">
 					<h:form id="group_moderator_form">
 						<div class="form-group">
 							<p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -110,7 +111,7 @@
 					</h:form>
 				</p:panel>
 
-				<p:panel header="#{msg.options}" rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}">
+				<p:panel header="#{msg.options}">
 					<h:form id="group_security_form">
 						<div class="form-group">
 							<p:outputLabel for="@next" value="#{msg['policy.title.join']}" styleClass="h5"/>
@@ -189,6 +190,7 @@
 						</div>
 					</h:form>
 				</p:panel>
+				</p:outputPanel>
 
 				<p:panel header="#{msg.options}" rendered="${groupOptionsBean.group.isMember(userBean.user) and !groupOptionsBean.group.course.isModerator(userBean.user)}">
 					<h:form>
@@ -233,7 +235,7 @@
 				</p:panel>
 			</div>
 
-			<p:outputPanel styleClass="col-md-6" layout="block" rendered="#{groupOptionsBean.group.isMember(userBean.user)}">
+			<p:outputPanel styleClass="col-md-6" layout="block" rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user) || groupOptionsBean.group.isMember(userBean.user)}">
 				<p:panel header="#{msg.copy_resources}">
 					<h:form id="group_copy_form">
 						<div class="form-group">
@@ -251,7 +253,7 @@
 					</h:form>
 				</p:panel>
 
-				<p:panel header="#{msg.notifications}">
+				<p:panel header="#{msg.notifications}" rendered="#{groupOptionsBean.group.isMember(userBean.user)}">
 					<h:form>
 						<p:selectOneMenu value="#{groupOptionsBean.groupUser.notificationFrequency}" styleClass="w-100 mb-3">
 							<f:selectItems var="frequency" value="#{profileBean.notificationFrequencies}" itemValue="#{frequency}" itemLabel="#{msg['notification_type.'+=frequency]}"/>
