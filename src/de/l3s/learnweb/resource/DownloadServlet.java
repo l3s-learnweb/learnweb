@@ -33,7 +33,7 @@ import de.l3s.util.bean.BeanHelper;
 /**
  * Servlet for Streaming Files to the Clients Browser.
  */
-@WebServlet(name = "DownloadServlet", urlPatterns = { "/download/*" }, loadOnStartup = 2)
+@WebServlet(name = "DownloadServlet", urlPatterns = {"/download/*"}, loadOnStartup = 2)
 public class DownloadServlet extends HttpServlet {
     private static final long serialVersionUID = 7083477094183456614L;
     private static final Logger log = LogManager.getLogger(DownloadServlet.class);
@@ -363,6 +363,9 @@ public class DownloadServlet extends HttpServlet {
             }
         } catch (ClientAbortException e) {
             // we do not care
+        } catch (IllegalStateException e) {
+            log.error("File {} cannot be downloaded because it isn't present in the file system", fileId);
+            response.setStatus(500);
         } catch (Exception e) {
             log.error("Error while downloading file {}", fileId, e);
             response.setStatus(500);

@@ -148,11 +148,9 @@ public final class Learnweb {
         historyManager = new HistoryManager(this);
         searchHistoryManager = new SearchHistoryManager(this);
 
-        //Managers added by Kate
         requestManager = RequestManager.getInstance(this);
         protectionManager = new ProtectionManager(this);
         bounceManager = new BounceManager(this);
-
     }
 
     private void loadProperties() {
@@ -253,6 +251,12 @@ public final class Learnweb {
         }
     }
 
+    public Connection getConnection() throws SQLException {
+        checkConnection();
+
+        return dbConnection;
+    }
+
     /**
      * Returns an instance of Interweb for the user anonymous.
      */
@@ -280,13 +284,6 @@ public final class Learnweb {
         }
 
         log.info("Shutdown Learnweb completed");
-    }
-
-    //should be used instead of the static method
-    public Connection getConnection() throws SQLException {
-        checkConnection();
-
-        return dbConnection;
     }
 
     /**
@@ -470,5 +467,4 @@ public final class Learnweb {
     private static boolean isForceHttps() {
         return "true".equalsIgnoreCase(System.getenv("LEARNWEB_FORCE_HTTPS"));
     }
-
 }

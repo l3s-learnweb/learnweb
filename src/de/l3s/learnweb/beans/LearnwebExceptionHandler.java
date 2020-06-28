@@ -5,6 +5,8 @@ import javax.faces.context.ExceptionHandler;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.catalina.connector.ClientAbortException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.exceptionhandler.FullAjaxExceptionHandler;
@@ -29,15 +31,13 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
         logException(exception, FacesLocal.getRequest(context));
     }
 
-    static void logException(Throwable rootCause, HttpServletRequest request) {
-        logException(rootCause, BeanHelper.getRequestSummary(request));
-    }
-
-    private static void logException(Throwable rootCause, String requestSummary) {
+    protected static void logException(Throwable rootCause, HttpServletRequest request) {
         // skip these types
         if (Utils.isOneInstanceOf(rootCause.getClass(), NotFoundBeanException.class)) {
             return;
         }
+
+        String requestSummary = BeanHelper.getRequestSummary(request);
 
         // } else if (rootCause instanceof IllegalStateException && rootCause.getMessage().startsWith("Cannot create a session")) {
         //     log.warn(rootCause.getMessage() + "; Happens mostly because of error 404; On " + description);
@@ -49,11 +49,31 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
         } else if (rootCause instanceof ForbiddenBeanException && rootCause.getMessage() == null) {
             log.error("Illegal access {} ", requestSummary, rootCause);
         } else if (rootCause instanceof BadRequestBeanException) {
-            log.error("Bad request {} ", requestSummary, rootCause);
+            if (isBotUserAgent(request)) {
+                log.warn("Bad request {} ", requestSummary);
+            } else {
+                log.error("Bad request {} ", requestSummary, rootCause);
+            }
         } else if (rootCause instanceof ViewExpiredException) {
-            log.error("View expired {}", requestSummary, rootCause);
+            log.debug("View expired {}", requestSummary);
+        } else if (rootCause instanceof ClientAbortException) { // happens when users press the abort button or navigate very fast
+            log.debug("Client aborted a connection {}", requestSummary);
         } else {
             log.fatal("Fatal unhandled error on {}", requestSummary, rootCause);
         }
+    }
+
+    /**
+     * Returns true if this request was created by a crawler or bot
+     */
+    private static boolean isBotUserAgent(HttpServletRequest request) {
+        String userAgent = request.getHeader("User-Agent");
+
+        if (StringUtils.isEmpty(userAgent))
+            return false; // can't be sure
+
+        userAgent = userAgent.toLowerCase();
+
+        return StringUtils.containsAny(userAgent.toLowerCase(), "bot;", "bot/", "bot ", "java", "wget", "spider", "python-requests", "ltx71.com");
     }
 }
