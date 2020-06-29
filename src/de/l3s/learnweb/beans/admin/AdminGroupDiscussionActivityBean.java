@@ -15,10 +15,9 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,12 +25,12 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.resource.office.ConverterService;
 
 /**
  * Used to extract activities from http://hypothes.is.
@@ -51,27 +50,28 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     private int groupId;
     private List<AnnotationEntity> groupAnnotations;
 
-    public void onLoad() {
-        try {
-            Group group = getLearnweb().getGroupManager().getGroupById(groupId);
-            BeanAsserts.groupNotNull(group);
+    public void onLoad() throws SQLException, URISyntaxException {
+        Group group = getLearnweb().getGroupManager().getGroupById(groupId);
+        BeanAsserts.groupNotNull(group);
 
-            String hypothesisLink = group.getHypothesisLink();
-            String hypothesisGroupID;
+        String hypothesisLink = group.getHypothesisLink();
+        String hypothesisGroupID;
 
-            Matcher matcher = GROUP_ID_PATTERN.matcher(hypothesisLink);
-            if (matcher.find()) {
-                hypothesisGroupID = matcher.group(1);
-            } else {
-                return;
-            }
+        Matcher matcher = GROUP_ID_PATTERN.matcher(hypothesisLink);
+        if (matcher.find()) {
+            hypothesisGroupID = matcher.group(1);
+        } else {
+            return;
+        }
 
-            String token = "***REMOVED***"; // hard coded to use token of hypothesis account kemkes@l3s.de; this account must join the hypothesis group
+        // hard coded to use token of hypothesis account kemkes@l3s.de; this account must join the hypothesis group
+        String token = "***REMOVED***";
 
-            URIBuilder builder = new URIBuilder("https://hypothes.is/api/search");
-            builder.setParameter("limit", "200").setParameter("group", hypothesisGroupID);
+        URIBuilder builder = new URIBuilder("https://hypothes.is/api/search");
+        builder.setParameter("limit", "200").setParameter("group", hypothesisGroupID);
 
-            HttpClient httpclient = HttpClientBuilder.create().build();
+        // TODO: if works, needs to be refactored
+        try (CloseableHttpClient httpclient = ConverterService.createUnsafeSSLClient()) {
             HttpGet httpget = new HttpGet(builder.build());
 
             httpget.addHeader("Authorization", "Bearer " + token);
@@ -89,10 +89,9 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
             for (JsonElement row : rows) {
                 groupAnnotations.add(processJson(row.getAsJsonObject()));
             }
-        } catch (IOException | URISyntaxException | JsonParseException | SQLException e) {
+        } catch (IOException e) {
             addErrorMessage(e);
         }
-
     }
 
     private AnnotationEntity processJson(JsonObject row) {

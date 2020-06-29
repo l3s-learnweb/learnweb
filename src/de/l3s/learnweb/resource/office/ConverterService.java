@@ -147,8 +147,8 @@ public class ConverterService {
     /**
      * Creates an HTTP client that ignores most SSL problems.
      */
-    private static CloseableHttpClient createUnsafeSSLClient() {
-        org.apache.http.ssl.SSLContextBuilder sslContextBuilder = SSLContextBuilder.create();
+    public static CloseableHttpClient createUnsafeSSLClient() {
+        SSLContextBuilder sslContextBuilder = SSLContextBuilder.create();
         try {
             sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
 
