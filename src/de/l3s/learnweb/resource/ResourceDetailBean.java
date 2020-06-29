@@ -64,12 +64,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         if (isAjaxRequest()) {
             return;
         }
+        BeanAsserts.authorized(isLoggedIn());
 
         resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
         BeanAsserts.validateNotNull(resource, "The requested resource can't be found.");
         BeanAsserts.found(!resource.isDeleted(), "This resource has been deleted.");
 
-        BeanAsserts.authorized(isLoggedIn() || resource.canViewResource(getUser()));
+        BeanAsserts.authorized(resource.canViewResource(getUser()));
 
         BeanAsserts.hasPermission(resource.canViewResource(getUser()), "group_resources.access_denied");
 
