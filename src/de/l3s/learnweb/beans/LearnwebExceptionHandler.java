@@ -69,9 +69,9 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
     private static boolean isBotUserAgent(HttpServletRequest request) {
         String userAgent = request.getHeader("User-Agent");
 
-        if (StringUtils.isEmpty(userAgent))
+        if (StringUtils.isEmpty(userAgent)) {
             return false; // can't be sure
-
+        }
         userAgent = userAgent.toLowerCase();
 
         return StringUtils.containsAny(userAgent.toLowerCase(), "bot;", "bot/", "bot ", "java", "wget", "spider", "python-requests", "ltx71.com");

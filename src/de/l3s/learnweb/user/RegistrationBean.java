@@ -203,6 +203,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     public void setWizard(String wizard) {
+        if (StringUtils.startsWith(wizard, "yell")) { // there exist many broken links in publications to wizards like: yell'A
+            wizard = "yell";
+        }
         this.wizard = wizard;
     }
 
