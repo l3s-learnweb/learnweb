@@ -3,21 +3,24 @@ package de.l3s.learnweb.beans.exceptions;
 public class UnavailableBeanException extends BeanException {
     private static final long serialVersionUID = -9089144711112002356L;
 
-    private static final int STATUS_CODE = BeanException.UNAVAILABLE;
-
     public UnavailableBeanException() {
-        super(STATUS_CODE);
+        super();
     }
 
-    public UnavailableBeanException(String message) {
-        super(STATUS_CODE, message);
+    public UnavailableBeanException(final String message) {
+        super(message);
     }
 
-    public UnavailableBeanException(Throwable cause) {
-        super(STATUS_CODE, cause);
+    public UnavailableBeanException(final Throwable cause) {
+        super(cause);
     }
 
-    public UnavailableBeanException(String message, Throwable cause) {
-        super(STATUS_CODE, message, cause);
+    public UnavailableBeanException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    @Override
+    public int getStatusCode() {
+        return BeanException.UNAVAILABLE;
     }
 }

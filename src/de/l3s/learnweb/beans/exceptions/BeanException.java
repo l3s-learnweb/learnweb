@@ -10,33 +10,28 @@ public class BeanException extends FacesException {
     public static final int UNAUTHORIZED = HttpServletResponse.SC_UNAUTHORIZED;
     public static final int FORBIDDEN = HttpServletResponse.SC_FORBIDDEN;
     public static final int NOT_FOUND = HttpServletResponse.SC_NOT_FOUND;
+    public static final int GONE = HttpServletResponse.SC_GONE;
     public static final int SESSION_EXPIRED = 419;
     public static final int SERVER_ERROR = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
     public static final int UNAVAILABLE = HttpServletResponse.SC_SERVICE_UNAVAILABLE;
 
-    private final int statusCode;
-
-    public BeanException(int statusCode) {
+    public BeanException() {
         super();
-        this.statusCode = statusCode;
     }
 
-    public BeanException(int statusCode, String message) {
+    public BeanException(final String message) {
         super(message);
-        this.statusCode = statusCode;
     }
 
-    public BeanException(int statusCode, Throwable cause) {
+    public BeanException(final Throwable cause) {
         super(cause);
-        this.statusCode = statusCode;
     }
 
-    public BeanException(int statusCode, String message, Throwable cause) {
+    public BeanException(final String message, final Throwable cause) {
         super(message, cause);
-        this.statusCode = statusCode;
     }
 
     public int getStatusCode() {
-        return statusCode;
+        return SERVER_ERROR;
     }
 }

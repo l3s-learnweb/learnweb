@@ -3,21 +3,24 @@ package de.l3s.learnweb.beans.exceptions;
 public class NotFoundBeanException extends BeanException {
     private static final long serialVersionUID = -7494995783143183959L;
 
-    private static final int STATUS_CODE = BeanException.NOT_FOUND;
-
     public NotFoundBeanException() {
-        super(STATUS_CODE);
+        super();
     }
 
-    public NotFoundBeanException(String message) {
-        super(STATUS_CODE, message);
+    public NotFoundBeanException(final String message) {
+        super(message);
     }
 
-    public NotFoundBeanException(Throwable cause) {
-        super(STATUS_CODE, cause);
+    public NotFoundBeanException(final Throwable cause) {
+        super(cause);
     }
 
-    public NotFoundBeanException(String message, Throwable cause) {
-        super(STATUS_CODE, message, cause);
+    public NotFoundBeanException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    @Override
+    public int getStatusCode() {
+        return BeanException.NOT_FOUND;
     }
 }

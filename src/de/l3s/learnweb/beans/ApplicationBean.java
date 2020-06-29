@@ -17,6 +17,7 @@ import org.omnifaces.util.Beans;
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.exceptions.BadRequestBeanException;
+import de.l3s.learnweb.beans.exceptions.BeanException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
@@ -211,9 +212,9 @@ public class ApplicationBean {
      * @param desc A descriptive message that is shown to the user. If null a default fatal_error message will be shown
      */
     protected void addErrorMessage(String desc, Throwable exception) {
-        addMessage(FacesMessage.SEVERITY_FATAL, (desc != null ? desc : "fatal_error"));
+        log.error((desc != null ? desc : "Fatal lazy error") + "; " + BeanHelper.getRequestSummary(), exception);
 
-        log.error((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
+        throw new BeanException(desc, exception);
     }
 
     // TODO see https://git.l3s.uni-hannover.de/Learnweb/Learnweb/-/wikis/Rules/Use-of-Messages,-Growls-and-Validation

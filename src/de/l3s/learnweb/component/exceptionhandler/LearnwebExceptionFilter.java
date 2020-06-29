@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans;
+package de.l3s.learnweb.component.exceptionhandler;
 
 import static javax.servlet.RequestDispatcher.*;
 

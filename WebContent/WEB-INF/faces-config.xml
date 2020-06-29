@@ -35,7 +35,7 @@
     </lifecycle>
 
     <factory>
-        <exception-handler-factory>de.l3s.learnweb.beans.LearnwebExceptionHandlerFactory</exception-handler-factory>
+        <exception-handler-factory>de.l3s.learnweb.component.exceptionhandler.LearnwebExceptionHandlerFactory</exception-handler-factory>
     </factory>
 
     <!-- Override PrimeFaces components -->
