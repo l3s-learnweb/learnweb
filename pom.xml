@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.00.06</version>
+    <version>3.00.07</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -161,7 +161,7 @@
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>2.6.0</version>
+            <version>2.6.1</version>
         </dependency>
         <!-- Solr client (the library has 10 MB of dependencies :/) -->
         <dependency>
@@ -304,7 +304,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>8.33</version>
+                        <version>8.34</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -320,7 +320,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.0.4</version>
+                        <version>4.0.6</version>
                     </dependency>
                 </dependencies>
             </plugin>

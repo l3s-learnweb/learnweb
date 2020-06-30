@@ -84,7 +84,7 @@
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-psd:3.5" level="project" />
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-icns:3.5" level="project" />
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-pict:3.5" level="project" />
-    <orderEntry type="library" name="Maven: org.mariadb.jdbc:mariadb-java-client:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mariadb.jdbc:mariadb-java-client:2.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.solr:solr-solrj:8.5.1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.29.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.29.Final" level="project" />
@@ -119,6 +119,9 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.13.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.13.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.13.3" level="project" />
+    <orderEntry type="library" name="Maven: io.sentry:sentry-log4j2:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: io.sentry:sentry:1.7.30" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:29.0-jre" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:failureaccess:1.0.1" level="project" />
