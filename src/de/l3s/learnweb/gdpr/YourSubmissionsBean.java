@@ -8,7 +8,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.submission.Submission;
 import de.l3s.learnweb.user.User;
 
@@ -25,7 +25,7 @@ public class YourSubmissionsBean extends ApplicationBean implements Serializable
 
     public YourSubmissionsBean() throws SQLException {
         User user = getUser();
-        BeanAsserts.authorized(user);
+        BeanAssert.authorized(user);
 
         this.userSubmissions = this.getLearnweb().getSubmissionManager().getSubmissionsByUser(user);
     }

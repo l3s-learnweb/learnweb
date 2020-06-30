@@ -28,7 +28,7 @@ import com.google.gson.JsonObject;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
@@ -64,15 +64,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         if (isAjaxRequest()) {
             return;
         }
-        BeanAsserts.authorized(isLoggedIn());
+        BeanAssert.authorized(isLoggedIn());
 
         resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-        BeanAsserts.validateNotNull(resource, "The requested resource can't be found.");
-        BeanAsserts.found(!resource.isDeleted(), "This resource has been deleted.");
+        BeanAssert.validateNotNull(resource, "The requested resource can't be found.");
+        BeanAssert.found(!resource.isDeleted(), "This resource has been deleted.");
 
-        BeanAsserts.authorized(resource.canViewResource(getUser()));
+        BeanAssert.authorized(resource.canViewResource(getUser()));
 
-        BeanAsserts.hasPermission(resource.canViewResource(getUser()), "group_resources.access_denied");
+        BeanAssert.hasPermission(resource.canViewResource(getUser()), "group_resources.access_denied");
 
         log(Action.opening_resource, this.resource.getGroupId(), this.resource.getId());
 
@@ -126,7 +126,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     }
 
     public void saveEdit() throws SQLException {
-        BeanAsserts.hasPermission(resource.canEditResource(getUser()));
+        BeanAssert.hasPermission(resource.canEditResource(getUser()));
 
         try {
             resource.save();

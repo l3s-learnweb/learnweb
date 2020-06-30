@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.Organisation;
@@ -41,11 +41,11 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
 
     public void onLoad() throws SQLException {
         User user = getUser();
-        BeanAsserts.authorized(user);
+        BeanAssert.authorized(user);
 
         course = getLearnweb().getCourseManager().getCourseById(courseId);
-        BeanAsserts.validateNotNull(course);
-        BeanAsserts.hasPermission(user.isAdmin() || user.isModerator() && course.isMember(user));
+        BeanAssert.validateNotNull(course);
+        BeanAssert.hasPermission(user.isAdmin() || user.isModerator() && course.isMember(user));
 
         // many string operations to display the options in a proper way
         optionGroups = new LinkedList<>();

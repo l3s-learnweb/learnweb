@@ -29,7 +29,7 @@ import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
@@ -125,7 +125,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
     public void onLoad() throws SQLException {
         User user = getUser();
-        BeanAsserts.authorized(user);
+        BeanAssert.authorized(user);
 
         if (user.getOrganisation().getId() == 480) {
             view = ResourceView.list;
@@ -133,9 +133,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
         if (groupId > 0) {
             group = getLearnweb().getGroupManager().getGroupById(groupId);
-            BeanAsserts.groupNotNull(group);
+            BeanAssert.groupNotNull(group);
 
-            BeanAsserts.hasPermission(group.canViewResources(getUser()));
+            BeanAssert.hasPermission(group.canViewResources(getUser()));
             group.setLastVisit(user);
         } else {
             group = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());
@@ -143,7 +143,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
         if (folderId > 0) {
             currentFolder = getLearnweb().getGroupManager().getFolder(folderId);
-            BeanAsserts.validateNotNull(currentFolder, "The requested folder can't be found.");
+            BeanAssert.validateNotNull(currentFolder, "The requested folder can't be found.");
         }
     }
 

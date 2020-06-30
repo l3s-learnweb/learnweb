@@ -18,7 +18,7 @@ import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 import de.l3s.util.Misc;
@@ -72,7 +72,7 @@ public class ResourceMetaDataBean {
      */
     public static List<String> completeAuthor(String query) {
         User user = Beans.getInstance(UserBean.class).getUser();
-        BeanAsserts.authorized(user);
+        BeanAssert.authorized(user);
 
         int organisationId = user.getOrganisation().getId();
 

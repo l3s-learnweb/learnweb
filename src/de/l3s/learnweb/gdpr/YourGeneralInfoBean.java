@@ -9,7 +9,7 @@ import javax.inject.Named;
 import org.apache.commons.collections4.CollectionUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.User;
 
@@ -29,7 +29,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
 
     public YourGeneralInfoBean() throws SQLException {
         User user = getUser();
-        BeanAsserts.authorized(user);
+        BeanAssert.authorized(user);
 
         this.receivedMessagesCount = CollectionUtils.size(Message.getAllMessagesToUser(user));
         this.sentMessagesCount = CollectionUtils.size(Message.getAllMessagesFromUser(user));

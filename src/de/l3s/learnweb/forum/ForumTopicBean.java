@@ -11,7 +11,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
@@ -34,15 +34,15 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
     private List<ForumTopic> topics;
 
     public void onLoad() throws SQLException {
-        BeanAsserts.authorized(isLoggedIn());
+        BeanAssert.authorized(isLoggedIn());
 
         ForumManager fm = getLearnweb().getForumManager();
         topic = fm.getTopicById(topicId);
-        BeanAsserts.validateNotNull(topic);
+        BeanAssert.validateNotNull(topic);
 
         group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
-        BeanAsserts.groupNotNull(group);
-        BeanAsserts.hasPermission(group.canViewResources(getUser()));
+        BeanAssert.groupNotNull(group);
+        BeanAssert.hasPermission(group.canViewResources(getUser()));
 
         posts = fm.getPostsBy(topicId);
         fm.incViews(topicId);

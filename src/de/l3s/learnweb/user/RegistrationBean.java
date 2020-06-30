@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Course.Option;
 
@@ -69,8 +69,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         if (StringUtils.isNotEmpty(wizard)) {
             course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
-            BeanAsserts.validateNotNull(course, "register_invalid_wizard_error");
-            BeanAsserts.validate(!course.getOption(Option.Users_Disable_wizard), "registration.wizard_disabled");
+            BeanAssert.validateNotNull(course, "register_invalid_wizard_error");
+            BeanAssert.validate(!course.getOption(Option.Users_Disable_wizard), "registration.wizard_disabled");
 
             // special message for yell
             if (course.getId() == 505) {

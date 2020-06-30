@@ -11,7 +11,7 @@ import javax.inject.Named;
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 
 @Named
@@ -38,7 +38,7 @@ public class EditFolderBean extends ApplicationBean implements Serializable {
     }
 
     public void saveChanges() throws SQLException {
-        BeanAsserts.hasPermission(folder.canEditResource(getUser()));
+        BeanAssert.hasPermission(folder.canEditResource(getUser()));
 
         try {
             folder.unlockResource(getUser());

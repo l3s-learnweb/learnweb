@@ -13,7 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
@@ -49,7 +49,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
 
     public void onLoad() throws SQLException {
         User loggedInUser = getUser(); // the current user
-        BeanAsserts.authorized(loggedInUser);
+        BeanAssert.authorized(loggedInUser);
 
         if (!loggedInUser.isModerator()) { // can see only their own statistic
             singleUser = true;
@@ -57,9 +57,9 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
         } else if (paramUserId != null) { // statistic for one user from parameter
             singleUser = true;
             User user = Learnweb.getInstance().getUserManager().getUser(paramUserId);
-            BeanAsserts.validateNotNull(user);
+            BeanAssert.validateNotNull(user);
             selectedUsersIds = Collections.singletonList(user.getId());
-            BeanAsserts.hasPermission(loggedInUser.canModerateUser(user));
+            BeanAssert.hasPermission(loggedInUser.canModerateUser(user));
         } else {
             singleUser = false;
         }

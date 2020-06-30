@@ -6,7 +6,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
-import de.l3s.learnweb.beans.exceptions.BadRequestBeanException;
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.util.StringHelper;
 
 /**
@@ -21,13 +21,17 @@ public class IdConverter implements Converter<Integer> {
 
     @Override
     public Integer getAsObject(FacesContext context, UIComponent component, String value) throws ConverterException {
-        int valueInt = StringHelper.parseInt(value);
+        try {
+            int valueInt = StringHelper.parseInt(value);
 
-        if (valueInt < 0) {
-            throw new BadRequestBeanException();
+            if (valueInt < 0) {
+                throw new IllegalArgumentException("Negative integer is invalid ID.");
+            }
+
+            return valueInt;
+        } catch (Throwable e) {
+            throw new BadRequestHttpException(null, e);
         }
-
-        return valueInt;
     }
 
     @Override

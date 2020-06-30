@@ -8,7 +8,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 
 @Named
 @ViewScoped
@@ -21,11 +21,11 @@ public class SurveyResultBean extends ApplicationBean implements Serializable {
     private LinkedList<SurveyQuestion> questionColumns; // lists the questions that are shown in the table
 
     public void onLoad() throws SQLException {
-        BeanAsserts.authorized(isLoggedIn());
-        BeanAsserts.hasPermission(getUser().isModerator());
+        BeanAssert.authorized(isLoggedIn());
+        BeanAssert.hasPermission(getUser().isModerator());
 
         resource = getLearnweb().getSurveyManager().getSurveyResource(surveyResourceId);
-        BeanAsserts.validateNotNull(resource);
+        BeanAssert.validateNotNull(resource);
 
         // output only questions that are not readonly
         questionColumns = new LinkedList<>();

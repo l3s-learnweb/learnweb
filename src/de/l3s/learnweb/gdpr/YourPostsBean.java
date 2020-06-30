@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.forum.ForumPost;
 import de.l3s.learnweb.user.User;
@@ -34,7 +34,7 @@ public class YourPostsBean extends ApplicationBean implements Serializable {
 
     public YourPostsBean() throws SQLException {
         User user = getUser();
-        BeanAsserts.authorized(user);
+        BeanAssert.authorized(user);
 
         final ForumManager forumManager = this.getLearnweb().getForumManager();
 

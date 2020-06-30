@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User.Gender;
@@ -62,7 +62,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     public void onLoad() throws SQLException {
         User loggedInUser = getUser();
-        BeanAsserts.authorized(loggedInUser);
+        BeanAssert.authorized(loggedInUser);
 
         if (userId == 0 || loggedInUser.getId() == userId) {
             selectedUser = getUser(); // user edits himself
@@ -71,8 +71,8 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             moderatorAccess = true;
         }
 
-        BeanAsserts.validateNotNull(selectedUser);
-        BeanAsserts.hasPermission(!moderatorAccess || loggedInUser.canModerateUser(selectedUser));
+        BeanAssert.validateNotNull(selectedUser);
+        BeanAssert.hasPermission(!moderatorAccess || loggedInUser.canModerateUser(selectedUser));
 
         email = selectedUser.getEmail();
 
@@ -149,7 +149,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     public String onDeleteAccount() {
         try {
             User user = getUser();
-            BeanAsserts.hasPermission(user.equals(getSelectedUser()) || user.canModerateUser(getSelectedUser()));
+            BeanAssert.hasPermission(user.equals(getSelectedUser()) || user.canModerateUser(getSelectedUser()));
 
             getLearnweb().getUserManager().deleteUserSoft(getSelectedUser());
             log(Action.deleted_user_soft, 0, getSelectedUser().getId());

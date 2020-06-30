@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 
 @Named
@@ -33,12 +33,12 @@ public class SurveyBean extends ApplicationBean implements Serializable {
     private String goBackPageTitle; //  title of the go back link
 
     public void onLoad() throws SQLException {
-        BeanAsserts.authorized(isLoggedIn());
+        BeanAssert.authorized(isLoggedIn());
 
         resource = getLearnweb().getSurveyManager().getSurveyResource(surveyResourceId);
-        BeanAsserts.validateNotNull(resource);
-        BeanAsserts.found(!resource.isDeleted(), "This resource has been deleted");
-        BeanAsserts.hasPermission(resource.canViewResource(getUser()), "group_resources.access_denied");
+        BeanAssert.validateNotNull(resource);
+        BeanAssert.found(!resource.isDeleted(), "This resource has been deleted");
+        BeanAssert.hasPermission(resource.canViewResource(getUser()), "group_resources.access_denied");
 
         // whose answers shall be viewed
         if (surveyUserId <= 0 || surveyUserId == getUser().getId()) {
@@ -46,7 +46,7 @@ public class SurveyBean extends ApplicationBean implements Serializable {
             surveyUserId = getUser().getId();
         } else {
             // if a user wants to see the answers of another user, make sure he is a moderator
-            BeanAsserts.hasPermission(resource.canModerateResource(getUser()), "You are not allowed to view the answers of the given user");
+            BeanAssert.hasPermission(resource.canModerateResource(getUser()), "You are not allowed to view the answers of the given user");
         }
 
         userAnswers = resource.getAnswersOfUser(surveyUserId);

@@ -7,7 +7,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 
 /**
  * @author Philipp
@@ -25,7 +25,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
 
     public void onLoad() throws SQLException {
         submission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
-        BeanAsserts.validateNotNull(submission);
+        BeanAssert.validateNotNull(submission);
     }
 
     public int getSubmissionId() {

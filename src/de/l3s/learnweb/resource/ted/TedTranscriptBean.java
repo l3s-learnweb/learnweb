@@ -29,7 +29,7 @@ import org.primefaces.PrimeFaces;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
@@ -70,7 +70,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     private TreeSet<Integer> selectedUsers;
 
     public TedTranscriptBean() {
-        BeanAsserts.authorized(isLoggedIn());
+        BeanAssert.authorized(isLoggedIn());
 
         locale = getUserBean().getLocaleCode();
 
@@ -83,8 +83,8 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     public void onLoad() throws SQLException {
         Resource resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-        BeanAsserts.foundNotNull(resource);
-        BeanAsserts.found(!resource.isDeleted());
+        BeanAssert.foundNotNull(resource);
+        BeanAssert.found(!resource.isDeleted());
         setTedResource(resource);
     }
 

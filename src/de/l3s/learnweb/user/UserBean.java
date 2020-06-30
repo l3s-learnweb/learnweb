@@ -29,10 +29,10 @@ import org.primefaces.model.menu.MenuModel;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.exceptions.ForbiddenBeanException;
-import de.l3s.learnweb.beans.exceptions.UnauthorizedBeanException;
 import de.l3s.learnweb.component.ActiveSubMenu;
 import de.l3s.learnweb.component.ActiveSubMenu.Builder;
+import de.l3s.learnweb.exceptions.ForbiddenHttpException;
+import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -598,9 +598,9 @@ public class UserBean implements Serializable {
      */
     public void checkAccessPermission(Boolean hasAccess) {
         if (!isLoggedIn() && (hasAccess == null || !hasAccess)) {
-            throw new UnauthorizedBeanException();
+            throw new UnauthorizedHttpException();
         } else if (isLoggedIn() && (hasAccess != null && !hasAccess)) {
-            throw new ForbiddenBeanException();
+            throw new ForbiddenHttpException();
         }
     }
 }

@@ -10,7 +10,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 
 @Named
 @RequestScoped
@@ -26,11 +26,11 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
     private ConfirmRequiredBean confirmRequiredBean;
 
     public String onLoad() throws SQLException {
-        BeanAsserts.validate(!StringUtils.isAnyEmpty(email, token), "error_pages.bad_request_email_link");
-        BeanAsserts.validate(token.length() >= 32, "confirm_token_to_short");
+        BeanAssert.validate(!StringUtils.isAnyEmpty(email, token), "error_pages.bad_request_email_link");
+        BeanAssert.validate(token.length() >= 32, "confirm_token_to_short");
 
         user = getLearnweb().getUserManager().getUserByEmailAndConfirmationToken(email, token);
-        BeanAsserts.validateNotNull(user, "confirm_token_invalid");
+        BeanAssert.validateNotNull(user, "confirm_token_invalid");
 
         user.setEmailConfirmed(true);
         user.save();

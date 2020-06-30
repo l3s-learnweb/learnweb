@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 
@@ -40,11 +40,11 @@ public class ForumBean extends ApplicationBean implements Serializable {
     private String newTopicCategory;
 
     public void onLoad() throws SQLException {
-        BeanAsserts.authorized(isLoggedIn());
+        BeanAssert.authorized(isLoggedIn());
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
-        BeanAsserts.groupNotNull(group);
-        BeanAsserts.hasPermission(group.canViewResources(getUser()));
+        BeanAssert.groupNotNull(group);
+        BeanAssert.hasPermission(group.canViewResources(getUser()));
 
         topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
     }

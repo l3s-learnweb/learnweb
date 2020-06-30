@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.Organisation;
 
 @Named
@@ -24,8 +24,8 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     private List<Organisation> organisations;
 
     public AdminOrganisationsBean() throws SQLException {
-        BeanAsserts.authorized(isLoggedIn());
-        BeanAsserts.hasPermission(getUser().isAdmin());
+        BeanAssert.authorized(isLoggedIn());
+        BeanAssert.hasPermission(getUser().isAdmin());
 
         organisations = new ArrayList<>(getLearnweb().getOrganisationManager().getOrganisationsAll());
     }

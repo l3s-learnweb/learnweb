@@ -16,7 +16,7 @@ import org.omnifaces.util.Servlets;
 import com.google.common.net.InetAddresses;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.exceptions.ForbiddenBeanException;
+import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.util.bean.BeanHelper;
 
@@ -62,7 +62,7 @@ public class RequestFilter extends HttpFilter {
                 requestManager.recordRequest(ipAddr, request.getRequestURL().toString());
 
                 if (protectionManager.isBanned(ipAddr)) {
-                    throw new ForbiddenBeanException("error_pages.forbidden_blocked_description");
+                    throw new ForbiddenHttpException("error_pages.forbidden_blocked_description");
                 }
             } else {
                 log.error("Suspicious request: {}", BeanHelper.getRequestSummary(request));
@@ -70,7 +70,7 @@ public class RequestFilter extends HttpFilter {
                 if (ipAddr.contains("JDatabaseDriverMysqli")) { // Joomla Unserialize Vulnerability
                     protectionManager.ban(ipAddr, 200, 1, 1, true);
 
-                    throw new ForbiddenBeanException("error_pages.forbidden_blocked_description");
+                    throw new ForbiddenHttpException("error_pages.forbidden_blocked_description");
                 }
             }
         }

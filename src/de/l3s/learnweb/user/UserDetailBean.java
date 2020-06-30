@@ -7,7 +7,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.user.Organisation.Option;
@@ -28,10 +28,10 @@ public class UserDetailBean extends ApplicationBean {
     private List<LogEntry> latestLogEntries;
 
     public void onLoad() throws SQLException {
-        BeanAsserts.authorized(isLoggedIn());
+        BeanAssert.authorized(isLoggedIn());
 
         selectedUser = getLearnweb().getUserManager().getUser(userId);
-        BeanAsserts.validateNotNull(selectedUser);
+        BeanAssert.validateNotNull(selectedUser);
 
         if (selectedUser.getOrganisation().getOption(Option.Privacy_Anonymize_usernames)) {
             pageHidden = true;

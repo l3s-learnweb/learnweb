@@ -13,10 +13,10 @@ import org.omnifaces.exceptionhandler.FullAjaxExceptionHandler;
 import org.omnifaces.util.FacesLocal;
 import org.omnifaces.util.Utils;
 
-import de.l3s.learnweb.beans.exceptions.BadRequestBeanException;
-import de.l3s.learnweb.beans.exceptions.ForbiddenBeanException;
-import de.l3s.learnweb.beans.exceptions.NotFoundBeanException;
-import de.l3s.learnweb.beans.exceptions.UnauthorizedBeanException;
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
+import de.l3s.learnweb.exceptions.ForbiddenHttpException;
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
+import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.util.bean.BeanHelper;
 
 public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
@@ -33,7 +33,7 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
 
     protected static void logException(Throwable rootCause, HttpServletRequest request) {
         // skip these types
-        if (Utils.isOneInstanceOf(rootCause.getClass(), NotFoundBeanException.class)) {
+        if (Utils.isOneInstanceOf(rootCause.getClass(), NotFoundHttpException.class)) {
             return;
         }
 
@@ -44,11 +44,11 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
         // } else if (rootCause instanceof IllegalArgumentException && rootCause.getMessage().startsWith("Illegal base64 character -54")) {
         //     log.warn(rootCause.getMessage() + "; This happens often due to ; On " + description);
 
-        if (rootCause instanceof UnauthorizedBeanException) {
+        if (rootCause instanceof UnauthorizedHttpException) {
             log.info("Unauthorized access redirected to login page.");
-        } else if (rootCause instanceof ForbiddenBeanException && rootCause.getMessage() == null) {
+        } else if (rootCause instanceof ForbiddenHttpException && rootCause.getMessage() == null) {
             log.error("Illegal access {} ", requestSummary, rootCause);
-        } else if (rootCause instanceof BadRequestBeanException) {
+        } else if (rootCause instanceof BadRequestHttpException) {
             if (isBotUserAgent(request)) {
                 log.warn("Bad request {} ", requestSummary);
             } else {

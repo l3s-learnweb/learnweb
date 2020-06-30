@@ -1,6 +1,11 @@
-package de.l3s.learnweb.beans.exceptions;
+package de.l3s.learnweb.beans;
 
 import org.apache.commons.lang3.StringUtils;
+
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
+import de.l3s.learnweb.exceptions.ForbiddenHttpException;
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
+import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 
 /**
  * This asserts can be used in `viewAction` to validate data,
@@ -9,10 +14,10 @@ import org.apache.commons.lang3.StringUtils;
  * All methods should accept {@code true} as valid (no error) input and {@code false} as invalid input which triggers exception.
  */
 @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
-public final class BeanAsserts {
+public final class BeanAssert {
 
     /**
-     * @see BeanAsserts#validateNotEmpty(CharSequence, String)
+     * @see BeanAssert#validateNotEmpty(CharSequence, String)
      */
     public static void validateNotEmpty(final CharSequence cs) {
         validateNotEmpty(cs, null);
@@ -27,7 +32,7 @@ public final class BeanAsserts {
     }
 
     /**
-     * @see BeanAsserts#validateNotNull(Object, String)
+     * @see BeanAssert#validateNotNull(Object, String)
      */
     public static void validateNotNull(final Object object) {
         validate(object != null, null);
@@ -42,7 +47,7 @@ public final class BeanAsserts {
     }
 
     /**
-     * @see BeanAsserts#validate(boolean, String)
+     * @see BeanAssert#validate(boolean, String)
      */
     public static void validate(final boolean isValid) {
         validate(isValid, null);
@@ -54,7 +59,7 @@ public final class BeanAsserts {
      */
     public static void validate(final boolean isValid, final String message) {
         if (!isValid) {
-            throw new BadRequestBeanException(message);
+            throw new BadRequestHttpException(message);
         }
     }
 
@@ -66,7 +71,7 @@ public final class BeanAsserts {
     }
 
     /**
-     * @see BeanAsserts#foundNotNull(Object, String)
+     * @see BeanAssert#foundNotNull(Object, String)
      */
     public static void foundNotNull(final Object object) {
         found(object != null, null);
@@ -81,7 +86,7 @@ public final class BeanAsserts {
     }
 
     /**
-     * @see BeanAsserts#found(boolean, String)
+     * @see BeanAssert#found(boolean, String)
      */
     public static void found(final boolean isFound) {
         found(isFound, null);
@@ -95,12 +100,12 @@ public final class BeanAsserts {
      */
     public static void found(final boolean isFound, final String message) {
         if (!isFound) {
-            throw new NotFoundBeanException(message);
+            throw new NotFoundHttpException(message);
         }
     }
 
     /**
-     * @see BeanAsserts#hasPermission(boolean, String)
+     * @see BeanAssert#hasPermission(boolean, String)
      */
     public static void hasPermission(final boolean hasPermission) {
         hasPermission(hasPermission, null);
@@ -112,13 +117,13 @@ public final class BeanAsserts {
      */
     public static void hasPermission(final boolean hasPermission, final String message) {
         if (!hasPermission) {
-            throw new ForbiddenBeanException(message);
+            throw new ForbiddenHttpException(message);
         }
     }
 
     /**
      * @param user If the given object (User) is {@code null} throws an error
-     * @see BeanAsserts#authorized(boolean)
+     * @see BeanAssert#authorized(boolean)
      */
     public static void authorized(final Object user) {
         authorized(user != null);
@@ -129,7 +134,7 @@ public final class BeanAsserts {
      */
     public static void authorized(final boolean isAuthorized) {
         if (!isAuthorized) {
-            throw new UnauthorizedBeanException();
+            throw new UnauthorizedHttpException();
         }
     }
 }

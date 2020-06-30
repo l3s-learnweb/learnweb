@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
@@ -44,10 +44,10 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
 
     public void onLoad() throws SQLException {
         User user = getUser();
-        BeanAsserts.authorized(user);
+        BeanAssert.authorized(user);
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
-        BeanAsserts.groupNotNull(group);
+        BeanAssert.groupNotNull(group);
 
         if (null != group) {
             group.setLastVisit(user);

@@ -8,7 +8,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.forum.ForumNotificator;
 import de.l3s.learnweb.group.Group;
 
@@ -28,10 +28,10 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable {
             // ignore all parsing problems
         }
 
-        BeanAsserts.validateNotNull(user, "Invalid value of 'hash' parameter.");
+        BeanAssert.validateNotNull(user, "Invalid value of 'hash' parameter.");
 
         String correctHash = ForumNotificator.getHash(user);
-        BeanAsserts.validate(correctHash.equals(givenHash), "Invalid value of 'hash' parameter.");
+        BeanAssert.validate(correctHash.equals(givenHash), "Invalid value of 'hash' parameter.");
     }
 
     public String getHash() {

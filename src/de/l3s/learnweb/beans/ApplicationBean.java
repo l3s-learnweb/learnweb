@@ -16,8 +16,8 @@ import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.exceptions.BadRequestBeanException;
-import de.l3s.learnweb.beans.exceptions.BeanException;
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
@@ -190,7 +190,7 @@ public class ApplicationBean {
         fc.addMessage(null, getFacesMessage(severity, msgKey, args));
 
         if (FacesMessage.SEVERITY_FATAL == severity) {
-            throw new BadRequestBeanException(getLocaleMessage(msgKey, args));
+            throw new BadRequestHttpException(getLocaleMessage(msgKey, args));
         }
     }
 
@@ -214,7 +214,7 @@ public class ApplicationBean {
     protected void addErrorMessage(String desc, Throwable exception) {
         log.error((desc != null ? desc : "Fatal lazy error") + "; " + BeanHelper.getRequestSummary(), exception);
 
-        throw new BeanException(desc, exception);
+        throw new HttpException(desc, exception);
     }
 
     // TODO see https://git.l3s.uni-hannover.de/Learnweb/Learnweb/-/wikis/Rules/Use-of-Messages,-Growls-and-Validation

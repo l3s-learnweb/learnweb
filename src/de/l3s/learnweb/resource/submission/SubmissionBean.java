@@ -26,7 +26,7 @@ import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceViewRights;
@@ -68,7 +68,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     private Map<Integer, Integer> userSubmissions; //to store map of user id and total no. of submissions
 
     public void onLoad() throws SQLException {
-        BeanAsserts.authorized(isLoggedIn());
+        BeanAssert.authorized(isLoggedIn());
 
         if (this.userId == 0) { // don't want to view the submission of a specific user then use the current user (usual case)
             this.userId = getUser().getId();
@@ -79,7 +79,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
             submissionOverviewReadOnly = true;
 
             // check if moderator or submission assessor
-            BeanAsserts.hasPermission(getUser().isModerator());
+            BeanAssert.hasPermission(getUser().isModerator());
         }
 
         //When accessing the submission_resources page both these parameters are set

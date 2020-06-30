@@ -17,8 +17,8 @@ import org.omnifaces.util.Exceptions;
 import org.omnifaces.util.Servlets;
 import org.omnifaces.util.Utils;
 
-import de.l3s.learnweb.beans.exceptions.BeanException;
-import de.l3s.learnweb.beans.exceptions.UnauthorizedBeanException;
+import de.l3s.learnweb.exceptions.HttpException;
+import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 
 /**
  * The filter uses the idea of {@link org.omnifaces.filter.FacesExceptionFilter}.
@@ -35,7 +35,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
             chain.doFilter(request, response);
         } catch (FileNotFoundException exception) {
             // Ignoring thrown exception; this is a JSF quirk and it should be interpreted as 404.
-            response.sendError(BeanException.NOT_FOUND, request.getRequestURI());
+            response.sendError(HttpException.NOT_FOUND, request.getRequestURI());
         } catch (ServletException exception) {
             // get unwrapped exception
             Throwable throwable = Exceptions.unwrap(exception.getRootCause());
@@ -45,13 +45,14 @@ public class LearnwebExceptionFilter extends HttpFilter {
             request.setAttribute(ERROR_EXCEPTION, throwable);
 
             if (throwable instanceof ViewExpiredException) {
-                response.sendError(BeanException.SESSION_EXPIRED, request.getRequestURI());
-            } else if (throwable instanceof UnauthorizedBeanException) {
+                response.sendError(HttpException.SESSION_EXPIRED, request.getRequestURI());
+            } else if (throwable instanceof UnauthorizedHttpException) {
                 // In case of unauthorized user, redirect to login page
                 response.sendRedirect(prepareLoginURL(request));
-            } else if (throwable instanceof BeanException) {
+            } else if (throwable instanceof HttpException) {
+                HttpException httpException = (HttpException) throwable;
                 // Show an appropriate error page, these exceptions usually expected
-                response.sendError(((BeanException) throwable).getStatusCode(), throwable.getMessage());
+                response.sendError(httpException.getStatus(), httpException.getReason());
             } else {
                 // An unexpected error, usually something went wrong
                 throw exception;

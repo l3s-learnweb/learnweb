@@ -23,7 +23,7 @@ import org.primefaces.model.file.UploadedFile;
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
@@ -43,14 +43,14 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     private List<SelectItem> availableGlossaryLanguages;
 
     public void onLoad() throws SQLException {
-        BeanAsserts.authorized(isLoggedIn());
+        BeanAssert.authorized(isLoggedIn());
 
         if (organisationId > 0) {
-            BeanAsserts.hasPermission(getUser().isAdmin());
+            BeanAssert.hasPermission(getUser().isAdmin());
 
             setOrganisation(getLearnweb().getOrganisationManager().getOrganisationById(organisationId));
         } else {
-            BeanAsserts.hasPermission(getUser().isModerator());
+            BeanAssert.hasPermission(getUser().isModerator());
 
             setOrganisation(getUser().getOrganisation()); // by default edit the users organization
         }
@@ -123,7 +123,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     }
 
     private void setOrganisation(Organisation selectedOrganisation) {
-        BeanAsserts.foundNotNull(selectedOrganisation);
+        BeanAssert.foundNotNull(selectedOrganisation);
 
         this.organisation = selectedOrganisation;
 

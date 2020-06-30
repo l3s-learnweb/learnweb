@@ -26,7 +26,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.exceptions.BeanAsserts;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
 
 /**
@@ -54,11 +54,11 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     public void onLoad() throws SQLException {
         try {
             Group group = getLearnweb().getGroupManager().getGroupById(groupId);
-            BeanAsserts.groupNotNull(group);
+            BeanAssert.groupNotNull(group);
 
             String hypothesisLink = group.getHypothesisLink();
             Matcher matcher = GROUP_ID_PATTERN.matcher(hypothesisLink);
-            BeanAsserts.found(matcher.find(), "The requested group has incorrect hypothes.is link");
+            BeanAssert.found(matcher.find(), "The requested group has incorrect hypothes.is link");
 
             HttpClient client = HttpClient.newHttpClient();
 
