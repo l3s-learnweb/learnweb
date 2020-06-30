@@ -1,7 +1,5 @@
 package de.l3s.learnweb.user;
 
-import static org.apache.http.HttpHeaders.USER_AGENT;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -51,6 +49,7 @@ import de.l3s.util.Image;
 import de.l3s.util.MD5;
 import de.l3s.util.PBKDF2;
 import de.l3s.util.StringHelper;
+import de.l3s.util.UrlHelper;
 import de.l3s.util.email.Mail;
 
 public class User implements Comparable<User>, Serializable, HasId {
@@ -584,7 +583,7 @@ public class User implements Comparable<User>, Serializable, HasId {
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", USER_AGENT);
+        con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
         int responseCode = con.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
             return con.getInputStream();

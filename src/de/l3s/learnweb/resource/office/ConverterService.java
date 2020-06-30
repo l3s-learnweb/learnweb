@@ -3,23 +3,12 @@ package de.l3s.learnweb.resource.office;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
-import javax.net.ssl.SSLContext;
-
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.DefaultHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,24 +37,27 @@ public class ConverterService {
 
     private ConverterResponse sendRequestToConvertServer(ConverterRequest model) {
         Gson gson = new Gson();
-        String stringResponse;
         ConverterResponse converterResponse = new ConverterResponse();
 
-        try (CloseableHttpClient client = createUnsafeSSLClient()) { //HttpClients.createDefault())
-            HttpPost httpPost = new HttpPost(learnweb.getProperties().getProperty("FILES.DOCSERVICE.URL.CONVERTER"));
-            String json = gson.toJson(model);
-            StringEntity entity = new StringEntity(json);
-            httpPost.setEntity(entity);
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-            CloseableHttpResponse response = client.execute(httpPost);
-            if (response.getEntity() != null) {
-                stringResponse = EntityUtils.toString(response.getEntity());
-                converterResponse = gson.fromJson(stringResponse, ConverterResponse.class);
+        try {
+            // previously we used unsafe ssl client, but now it seems that certificate is valid and all right
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(learnweb.getProperties().getProperty("FILES.DOCSERVICE.URL.CONVERTER")))
+                .header("Content-type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(model)))
+                .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.body() != null) {
+                converterResponse = gson.fromJson(response.body(), ConverterResponse.class);
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             log.catching(e);
         }
+
         return converterResponse;
     }
 
@@ -142,24 +134,6 @@ public class ConverterService {
                 break;
         }
         throw new ConverterException(errorMessage);
-    }
-
-    /**
-     * Creates an HTTP client that ignores most SSL problems.
-     */
-    public static CloseableHttpClient createUnsafeSSLClient() {
-        SSLContextBuilder sslContextBuilder = SSLContextBuilder.create();
-        try {
-            sslContextBuilder.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
-
-            SSLContext sslContext = sslContextBuilder.build();
-            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, new DefaultHostnameVerifier());
-
-            HttpClientBuilder httpClientBuilder = HttpClients.custom().setSSLSocketFactory(sslSocketFactory);
-            return httpClientBuilder.build();
-        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static class ConverterException extends Exception {

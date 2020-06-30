@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 public final class UrlHelper {
     private static final Logger log = LogManager.getLogger(UrlHelper.class);
 
-    private static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0";
+    public static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0";
 
     /**
      * This function checks if a given String is a valid url.

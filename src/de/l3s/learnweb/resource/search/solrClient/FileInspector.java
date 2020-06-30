@@ -24,6 +24,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.util.MimeTypes;
 import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
+import de.l3s.util.UrlHelper;
 
 public class FileInspector {
     private static final Logger log = LogManager.getLogger(FileInspector.class);
@@ -126,7 +127,7 @@ public class FileInspector {
     public static InputStream openStream(String url) throws IOException {
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setInstanceFollowRedirects(true);
-        con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0");
+        con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
         return con.getInputStream();
     }
 

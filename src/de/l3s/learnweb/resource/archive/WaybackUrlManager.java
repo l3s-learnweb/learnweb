@@ -12,8 +12,12 @@ import java.net.ProtocolException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
@@ -45,10 +49,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,6 +59,7 @@ import com.google.common.cache.LoadingCache;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.util.Misc;
 import de.l3s.util.URL;
+import de.l3s.util.UrlHelper;
 
 public final class WaybackUrlManager {
     private static final Logger log = LogManager.getLogger(WaybackUrlManager.class);
@@ -301,7 +302,7 @@ public final class WaybackUrlManager {
                 connection.setInstanceFollowRedirects(false);
                 connection.setConnectTimeout(60000);
                 connection.setReadTimeout(60000);
-                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
+                connection.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
                 connection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
                 connection.setRequestProperty("Accept-Language", "en,en-US;q=0.8,de;q=0.5,de-DE;q=0.3");
                 connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
@@ -479,17 +480,23 @@ public final class WaybackUrlManager {
         return getStatusCode(new UrlRecord(new URL(url)));
     }
 
-    //This method is called only when there is a SSLHandshake failure from the previous method
-    public int getStatusCodeFromHttpClient(UrlRecord urlRecord) throws URISyntaxException {
+    /**
+     * This method is called only when there is a SSLHandshake failure from the previous method.
+     */
+    private int getStatusCodeFromHttpClient(UrlRecord urlRecord) {
         try {
-            HttpClient client = HttpClientBuilder.create().build();
-            HttpGet request = new HttpGet(urlRecord.getUrl().toString());
-            request.addHeader("User-Agent", "Mozilla/5.0");
-            HttpResponse response = client.execute(request);
-            String result = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-            urlRecord.setContent(result.trim());
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlRecord.getUrl().toString()))
+                .header("User-Agent", UrlHelper.USER_AGENT)
+                .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            urlRecord.setContent(response.body().trim());
             return 200;
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             log.warn("HttpClient method: SSLException: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl());
             logUrlInFile(urlRecord.getUrl().toString());
             return 650;
@@ -498,7 +505,6 @@ public final class WaybackUrlManager {
             logUrlInFile(urlRecord.getUrl().toString());
             return 650;
         }
-
     }
 
     public void logUrlInFile(String url) {
