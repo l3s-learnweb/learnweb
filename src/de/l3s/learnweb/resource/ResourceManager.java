@@ -227,7 +227,7 @@ public class ResourceManager {
 
         String[] tables = {"lw_comment", "lw_glossary_entry", "lw_glossary_resource", "lw_resource_archiveurl", "lw_resource_audience",
             "lw_resource_category", "lw_resource_category_tagtheweb", "lw_resource_history", "lw_resource_langlevel", "lw_resource_purpose",
-            "lw_resource_rating", "lw_resource_tag", "lw_submit_resource", "lw_survey_answer", "lw_survey_resource", "lw_survey_resource_user",
+            "lw_resource_rating", "lw_resource_tag", "lw_submission_resource", "lw_survey_answer", "lw_survey_resource", "lw_survey_resource_user",
             "lw_thumb", "lw_transcript_actions", "lw_transcript_final_sel", "lw_transcript_selections", "lw_transcript_summary",
             "ted_transcripts_paragraphs", "lw_resource"};
 

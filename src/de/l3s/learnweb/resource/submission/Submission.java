@@ -28,8 +28,7 @@ public class Submission implements Serializable {
     private int noOfResources = 3; //Default max no. of resources 3
 
     //Fields to handle link display based on survey submitted or not
-    private String surveyURL;
-    private int surveyResourceId = -1;
+    private int surveyResourceId = -1; // TODO the database field should be unsigned, hence -1 can't be used. Use NULL to indicate that the survey isn't required
     private boolean surveyMandatory = false;
     private boolean submitted = false;
     private List<Resource> submittedResources;
@@ -138,18 +137,6 @@ public class Submission implements Serializable {
         this.surveyMandatory = surveyMandatory;
         if (!surveyMandatory) {
             this.surveyResourceId = -1;
-        }
-    }
-
-    public String getSurveyURL() {
-        return surveyURL;
-    }
-
-    public void setSurveyURL(String surveyURL) {
-        this.surveyURL = surveyURL;
-        String[] surveyURLSplit = surveyURL.split("&resource_id=");
-        if (surveyURLSplit.length == 2 && surveyURLSplit[1] != null) {
-            this.surveyResourceId = Integer.parseInt(surveyURLSplit[1]);
         }
     }
 

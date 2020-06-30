@@ -27,7 +27,7 @@ import de.l3s.util.HasId;
 public class SubmissionManager {
     private static final Logger log = LogManager.getLogger(SubmissionManager.class);
 
-    private static final String SUBMIT_RESOURCE_COLUMNS = "`submission_id`, `resource_id`, `user_id`";
+    private static final String SUBMISSION_RESOURCE_COLUMNS = "`submission_id`, `resource_id`, `user_id`";
     public static final int SUBMISSION_ADMIN_USER_ID = 11212;
 
     private final Learnweb learnweb;
@@ -42,7 +42,7 @@ public class SubmissionManager {
     public ArrayList<Submission> getSubmissionsByUser(User user) throws SQLException {
         ArrayList<Submission> submissions = new ArrayList<>();
 
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id IN (" + HasId.implodeIds(user.getCourses()) + ") AND deleted=0 ORDER BY close_datetime")) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submission WHERE course_id IN (" + HasId.implodeIds(user.getCourses()) + ") AND deleted=0 ORDER BY close_datetime")) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Submission s = createSubmission(rs);
@@ -61,7 +61,7 @@ public class SubmissionManager {
     public ArrayList<Submission> getActiveSubmissionsByUser(User user) throws SQLException {
         ArrayList<Submission> submissions = new ArrayList<>(1); // most users will have zero or at most one active submission
 
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id IN (" + HasId.implodeIds(user.getCourses()) + ") AND close_datetime >= NOW() AND open_datetime < NOW() AND deleted=0 ORDER BY close_datetime")) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submission WHERE course_id IN (" + HasId.implodeIds(user.getCourses()) + ") AND close_datetime >= NOW() AND open_datetime < NOW() AND deleted=0 ORDER BY close_datetime")) {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -76,7 +76,7 @@ public class SubmissionManager {
      * Get details of a particular submission: required for submission_resources.jsf.
      */
     public Submission getSubmissionById(int submissionId) throws SQLException {
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE submission_id=?")) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submission WHERE submission_id=?")) {
             ps.setInt(1, submissionId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -91,7 +91,7 @@ public class SubmissionManager {
      * Saving a resource for a particular submission after the user submits.
      */
     public void saveSubmissionResource(int submissionId, int resourceId, int userId) {
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("INSERT INTO lw_submit_resource(" + SUBMIT_RESOURCE_COLUMNS + ") VALUES (?, ?, ?)")) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("INSERT INTO lw_submission_resource(" + SUBMISSION_RESOURCE_COLUMNS + ") VALUES (?, ?, ?)")) {
             ps.setInt(1, submissionId);
             ps.setInt(2, resourceId);
             ps.setInt(3, userId);
@@ -105,7 +105,7 @@ public class SubmissionManager {
      * To be able to remove submitted resource if the submission is re-opened by the moderator.
      */
     public void deleteSubmissionResource(int submissionId, int resourceId, int userId) {
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("DELETE FROM lw_submit_resource WHERE submission_id=? AND resource_id=? AND user_id=?")) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("DELETE FROM lw_submission_resource WHERE submission_id=? AND resource_id=? AND user_id=?")) {
             ps.setInt(1, submissionId);
             ps.setInt(2, resourceId);
             ps.setInt(3, userId);
@@ -116,7 +116,7 @@ public class SubmissionManager {
     }
 
     public void saveSubmission(Submission submission) {
-        try (PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submit(`submission_id`, `course_id`, `title`, `description`, `open_datetime`, `close_datetime`, `number_of_resources`, `survey_resource_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        try (PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submission(`submission_id`, `course_id`, `title`, `description`, `open_datetime`, `close_datetime`, `number_of_resources`, `survey_resource_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             Statement.RETURN_GENERATED_KEYS)) {
             if (submission.getId() < 0) {
                 replace.setNull(1, java.sql.Types.INTEGER);
@@ -137,7 +137,7 @@ public class SubmissionManager {
     }
 
     public void deleteSubmission(int submissionId) {
-        try (PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE lw_submit SET deleted = 1 WHERE submission_id = ?")) {
+        try (PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE lw_submission SET deleted = 1 WHERE submission_id = ?")) {
             update.setInt(1, submissionId);
             update.executeUpdate();
         } catch (SQLException e) {
@@ -151,7 +151,7 @@ public class SubmissionManager {
     public List<Resource> getResourcesByIdAndUserId(int submissionId, int userId) throws SQLException {
         ResourceManager resourceManager = learnweb.getResourceManager();
         List<Resource> submittedResources = new ArrayList<>();
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_submit_resource WHERE submission_id = ? AND user_id = ?")) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_submission_resource WHERE submission_id = ? AND user_id = ?")) {
             ps.setInt(1, submissionId);
             ps.setInt(2, userId);
             ResultSet rs = ps.executeQuery();
@@ -170,7 +170,7 @@ public class SubmissionManager {
     public HashMap<Integer, Integer> getUsersSubmissionsByCourseId(int courseId) {
         HashMap<Integer, Integer> usersSubmissions = new HashMap<>();
         try (PreparedStatement ps = learnweb.getConnection()
-            .prepareStatement("SELECT t1.user_id, COUNT(*) as count FROM (SELECT DISTINCT submission_id, user_id FROM lw_submit_resource) t1 JOIN lw_submit t2 USING(submission_id) WHERE course_id = ? AND deleted=0 GROUP BY user_id")) {
+            .prepareStatement("SELECT t1.user_id, COUNT(*) as count FROM (SELECT DISTINCT submission_id, user_id FROM lw_submission_resource) t1 JOIN lw_submission t2 USING(submission_id) WHERE course_id = ? AND deleted=0 GROUP BY user_id")) {
             ps.setInt(1, courseId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -184,7 +184,7 @@ public class SubmissionManager {
 
     public boolean getSubmitStatusForUser(int submissionId, int userId) throws SQLException {
         boolean submitted = false;
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM lw_submit_status WHERE submission_id = ? AND user_id = ?")) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM lw_submission_status WHERE submission_id = ? AND user_id = ?")) {
             ps.setInt(1, submissionId);
             ps.setInt(2, userId);
             ResultSet rs = ps.executeQuery();
@@ -197,8 +197,8 @@ public class SubmissionManager {
 
     public void saveSubmitStatusForUser(int submissionId, int userId, boolean submitted) {
         //  TODO to keep survey_resource_id use:
-        // INSERT INTO lw_submit_status(submission_id, user_id, submitted) VALUES (?,?,?) ON DUPLICATE KEY UPDATE submitted = ?;
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submit_status(submission_id, user_id, submitted) VALUES (?,?,?)")) {
+        // INSERT INTO lw_submission_status(submission_id, user_id, submitted) VALUES (?,?,?) ON DUPLICATE KEY UPDATE submitted = ?;
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submission_status(submission_id, user_id, submitted) VALUES (?,?,?)")) {
             ps.setInt(1, submissionId);
             ps.setInt(2, userId);
             ps.setInt(3, submitted ? 1 : 0);
@@ -232,7 +232,7 @@ public class SubmissionManager {
         List<SubmittedResources> submittedResourcesPerUser = new ArrayList<>();
         SubmittedResources currentUserSubmission = null;
 
-        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id, user_id FROM lw_submit_resource WHERE submission_id = ? ORDER BY user_id")) {
+        try (PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id, user_id FROM lw_submission_resource WHERE submission_id = ? ORDER BY user_id")) {
             ps.setInt(1, submissionId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

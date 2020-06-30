@@ -45,7 +45,7 @@ public class UserManager {
      * If the User is not yet stored at the database, a new record will be created and the returned User contains the new id.
      */
     private static final String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, "
-        + "image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, "
+        + "image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, student_identifier, is_admin, "
         + "is_moderator, registration_date, password, hashing, preferences, credits, fullname, affiliation, accept_terms_and_conditions, "
         + "deleted, preferred_notification_frequency, time_zone, language";
 
@@ -405,7 +405,7 @@ public class UserManager {
         user.setProfession(rs.getString("profession"));
         user.setAdditionalInformation(rs.getString("additionalinformation"));
         user.setInterest(rs.getString("interest"));
-        user.setStudentId(rs.getString("phone"));
+        user.setStudentId(rs.getString("student_identifier"));
         user.setRegistrationDate(new Date(rs.getTimestamp("registration_date").getTime()));
         user.setCredits(rs.getString("credits"));
         user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
@@ -472,7 +472,7 @@ public class UserManager {
 
         String[] tables = {"lw_group_user", "lw_user_log", "lw_user_course", "lw_comment", "lw_resource_rating", "lw_resource_tag",
             "lw_thumb", "lw_survey_answer", "lw_survey_resource_user", "lw_glossary_entry", "lw_glossary_term", "lw_news",
-            "lw_resource_history", "lw_submit_resource", "lw_submit_status", "lw_transcript_actions", "lw_transcript_summary"};
+            "lw_resource_history", "lw_submission_resource", "lw_submission_status", "lw_transcript_actions", "lw_transcript_summary"};
 
         for (String table : tables) {
             try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM " + table + " WHERE `user_id` = ?")) {
