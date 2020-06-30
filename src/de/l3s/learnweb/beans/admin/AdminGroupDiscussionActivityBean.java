@@ -2,7 +2,10 @@ package de.l3s.learnweb.beans.admin;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URISyntaxException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,24 +16,18 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.exceptions.BeanAsserts;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.resource.office.ConverterService;
 
 /**
  * Used to extract activities from http://hypothes.is.
@@ -43,6 +40,10 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     private static final long serialVersionUID = 6519388228766929819L;
     private static final Logger log = LogManager.getLogger(AdminGroupDiscussionActivityBean.class);
 
+    private static final String REQUEST_URI = "https://hypothes.is/api/search?limit=200&group=";
+    // hard coded to use token of hypothesis account kemkes@l3s.de; this account must join the hypothesis group
+    private static final String REQUEST_AUTH_TOKEN = "***REMOVED***";
+
     private static final Pattern DATE_PATTERN = Pattern.compile("(\\d+\\D\\d+\\D\\d+).(\\d+\\D\\d+\\D\\d+)");
     private static final Pattern USERNAME_PATTERN = Pattern.compile("acct:(.+)@");
     private static final Pattern GROUP_ID_PATTERN = Pattern.compile("hypothes.is/groups/(\\w*)");
@@ -50,46 +51,33 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     private int groupId;
     private List<AnnotationEntity> groupAnnotations;
 
-    public void onLoad() throws SQLException, URISyntaxException {
-        Group group = getLearnweb().getGroupManager().getGroupById(groupId);
-        BeanAsserts.groupNotNull(group);
+    public void onLoad() throws SQLException {
+        try {
+            Group group = getLearnweb().getGroupManager().getGroupById(groupId);
+            BeanAsserts.groupNotNull(group);
 
-        String hypothesisLink = group.getHypothesisLink();
-        String hypothesisGroupID;
+            String hypothesisLink = group.getHypothesisLink();
+            Matcher matcher = GROUP_ID_PATTERN.matcher(hypothesisLink);
+            BeanAsserts.found(matcher.find(), "The requested group has incorrect hypothes.is link");
 
-        Matcher matcher = GROUP_ID_PATTERN.matcher(hypothesisLink);
-        if (matcher.find()) {
-            hypothesisGroupID = matcher.group(1);
-        } else {
-            return;
-        }
+            HttpClient client = HttpClient.newHttpClient();
 
-        // hard coded to use token of hypothesis account kemkes@l3s.de; this account must join the hypothesis group
-        String token = "***REMOVED***";
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(REQUEST_URI + matcher.group(1)))
+                .header("Authorization", "Bearer " + REQUEST_AUTH_TOKEN)
+                .build();
 
-        URIBuilder builder = new URIBuilder("https://hypothes.is/api/search");
-        builder.setParameter("limit", "200").setParameter("group", hypothesisGroupID);
-
-        // TODO: if works, needs to be refactored
-        try (CloseableHttpClient httpclient = ConverterService.createUnsafeSSLClient()) {
-            HttpGet httpget = new HttpGet(builder.build());
-
-            httpget.addHeader("Authorization", "Bearer " + token);
-
-            HttpResponse response = httpclient.execute(httpget);
-
-            HttpEntity entity = response.getEntity();
-            String responseString = EntityUtils.toString(entity, "UTF-8");
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             // Processing
-            JsonObject jsonResponse = JsonParser.parseString(responseString).getAsJsonObject();
+            JsonObject jsonResponse = JsonParser.parseString(response.body()).getAsJsonObject();
             JsonArray rows = jsonResponse.getAsJsonArray("rows");
 
             groupAnnotations = new ArrayList<>();
             for (JsonElement row : rows) {
                 groupAnnotations.add(processJson(row.getAsJsonObject()));
             }
-        } catch (IOException e) {
+        } catch (IOException | JsonParseException | InterruptedException e) {
             addErrorMessage(e);
         }
     }
