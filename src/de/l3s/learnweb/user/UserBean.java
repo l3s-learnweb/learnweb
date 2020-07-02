@@ -409,6 +409,7 @@ public class UserBean implements Serializable {
                     .addElement(DefaultMenuItem.builder().value(msg.getString("text_analysis")).icon("fa fa-fw fa-area-chart").url(su + "/lw/admin/text_analysis.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("statistics")).icon("fa fa-fw fa-line-chart").url(su + "/lw/admin/statistics.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("transcript")).icon("fa fa-fw fa-language").url(su + "/lw/admin/transcript.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("glossary_dashboard")).icon("fa fa-fw fa-bar-chart").url(su + "/lw/dashboard/glossary.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("Activity.dashboard")).icon("fa fa-fw fa-line-chart").url(su + "/lw/dashboard/activity.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("Tracker.dashboard")).icon("fa fa-fw fa-database").url(su + "/lw/dashboard/tracker.jsf").build())
                     .build();
