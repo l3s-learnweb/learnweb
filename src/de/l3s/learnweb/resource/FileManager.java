@@ -32,7 +32,7 @@ import de.l3s.util.database.Sql;
 /**
  * DAO for the File class.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class FileManager {
     private static final Logger log = LogManager.getLogger(FileManager.class);

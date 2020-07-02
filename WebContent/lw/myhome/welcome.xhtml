@@ -138,7 +138,7 @@
                                     <h:outputLink style="width: fit-content;" value="myhome/submission_resources.jsf">
                                         <f:param name="user_id" value="${userBean.user.id}"/>
                                         <f:param name="submission_id" value="${submission.id}"/>
-                                        <!-- TODO Submission_refactoring: translate, format date -->
+                                        <!-- TODO @kemkes: Submission_refactoring: translate, format date -->
                                         <b>${submission.title} (Will expire on #{submission.closeDatetime})</b>
                                     </h:outputLink>
                                     <small class="#{status.last ? '' : 'mb-3 mt-1'}">${submission.description}</small>

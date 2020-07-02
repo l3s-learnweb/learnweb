@@ -209,7 +209,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
             //set last changed by user id for terms
             for (GlossaryTerm term : formEntry.getTerms()) {
-                // TODO check if the term was really modified
+                // TODO @kemkes: check if the term was really modified
 
                 term.setLastChangedByUserId(getUser().getId());
                 //log term edit actions
@@ -397,7 +397,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             throw new IllegalAccessException("This feature isn't enabled for your organization");
         }
 
-        //TODO check if user is moderator
+        //TODO @kemkes: check if user is moderator
         if (overwriteGlossary) {
             log.debug("overrideGlossary is true");
             // delete previous entries, if not a moderator show an error

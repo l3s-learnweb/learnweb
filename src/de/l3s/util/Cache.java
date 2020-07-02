@@ -12,7 +12,7 @@ import com.google.common.cache.CacheBuilder;
 /**
  * A synchronized cache that caches the defined number of most used objects.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class Cache<E extends HasId> implements ICache<E> {
     private final int capacity;

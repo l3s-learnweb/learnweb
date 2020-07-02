@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * A dummy implementation of the ICache Interface, which doesn't cache anything.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class DummyCache<E> implements ICache<E> {
     @Override

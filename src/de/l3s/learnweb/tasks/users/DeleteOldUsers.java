@@ -21,7 +21,7 @@ import de.l3s.learnweb.user.UserManager;
 /**
  * Deletes users that haven't logged in for a long time.
  *
- * @author Kemkes
+ * @author Philipp Kemkes
  */
 @SuppressWarnings("unused")
 public class DeleteOldUsers {

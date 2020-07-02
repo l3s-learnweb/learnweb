@@ -277,23 +277,23 @@ public class LogEntry implements Serializable {
                 description = usernameLink + LanguageBundle.getLocaleMessage(locale, "log_submission_submit");
                 break;
             case glossary_entry_edit:
-                description = usernameLink + " has edited an entry of " + getResourceLink(locale); // TODO incorporate link to entry, translate
+                description = usernameLink + " has edited an entry of " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
                 //LanguageBundle.getLocaleMessage(locale, "log_glossary_entry_edit", getResourceLink(locale));
                 break;
             case glossary_entry_delete:
-                description = usernameLink + "has deleted an entry from " + getResourceLink(locale); // TODO incorporate details of entry, translate
+                description = usernameLink + "has deleted an entry from " + getResourceLink(locale); // TODO @kemkes: incorporate details of entry, translate
                 break;
             case glossary_entry_add:
-                description = usernameLink + "has added an entry to " + getResourceLink(locale); // TODO incorporate link to entry, translate
+                description = usernameLink + "has added an entry to " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
                 break;
             case glossary_term_edit:
-                description = usernameLink + "has edited a term in " + getResourceLink(locale); // TODO incorporate link to entry, translate
+                description = usernameLink + "has edited a term in " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
                 break;
             case glossary_term_add:
-                description = usernameLink + "has added a term to " + getResourceLink(locale); // TODO incorporate link to entry, translate
+                description = usernameLink + "has added a term to " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
                 break;
             case glossary_term_delete:
-                description = usernameLink + "has removed a term from " + getResourceLink(locale); // TODO incorporate link to entry, translate
+                description = usernameLink + "has removed a term from " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
                 break;
 
             default:

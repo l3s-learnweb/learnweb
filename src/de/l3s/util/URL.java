@@ -8,7 +8,7 @@ import org.apache.poi.ss.formula.eval.NotImplementedException;
 /**
  * Stores an URL as ASCII encoded bytes.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class URL {
     private final byte[] url; // the ASCII encoded URL
@@ -40,7 +40,7 @@ public class URL {
      */
     public String toUTF8String() {
         throw new NotImplementedException("");
-        // TODO decode puny and percent-encoding
+        // TODO @astappiev: decode puny and percent-encoding
         //return new String(url, StandardCharsets.US_ASCII);
     }
 

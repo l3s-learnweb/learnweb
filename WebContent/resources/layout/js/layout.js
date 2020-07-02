@@ -313,7 +313,7 @@ PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
 
 /**
  * Update p:linkButton focus styles
- * TODO: remove after PF 9.0 is released
+ * TODO @astappiev: remove after PF 9.0 is released
  * https://github.com/primefaces/primefaces/issues/5698
  */
 PrimeFaces.widget.LinkButton = PrimeFaces.widget.BaseWidget.extend({

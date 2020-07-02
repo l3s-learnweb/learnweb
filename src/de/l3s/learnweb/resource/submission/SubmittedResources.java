@@ -15,7 +15,7 @@ import de.l3s.learnweb.user.User;
 /**
  * This class bundles the submitted resource of one particular user for one submission.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class SubmittedResources implements Serializable {
     private static final long serialVersionUID = -7336342838037456587L;

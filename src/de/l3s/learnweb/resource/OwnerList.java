@@ -7,7 +7,7 @@ import java.util.LinkedList;
 /**
  * This class can be used to store a list of elements. The list also stores who owns the element
  *
- * @author Kemkes
+ * @author Philipp Kemkes
  * @param <E> an element
  * @param <O> the owner of this element
  */

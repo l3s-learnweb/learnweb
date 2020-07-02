@@ -25,10 +25,10 @@ public class Submission implements Serializable {
     private String description;
     private Date openDatetime = new Date();
     private Date closeDatetime = new Date();
-    private int noOfResources = 3; //Default max no. of resources 3
+    private int noOfResources = 3; // Default max no. of resources 3
 
-    //Fields to handle link display based on survey submitted or not
-    private int surveyResourceId = -1; // TODO the database field should be unsigned, hence -1 can't be used. Use NULL to indicate that the survey isn't required
+    // Fields to handle link display based on survey submitted or not
+    private int surveyResourceId = -1; // TODO @astappiev/@hulyi: the database field should be unsigned, hence -1 can't be used. Use NULL to indicate that the survey isn't required
     private boolean surveyMandatory = false;
     private boolean submitted = false;
     private List<Resource> submittedResources;

@@ -6,7 +6,7 @@ import java.util.Collection;
 /**
  * A simple interface that forces to implement a getId() method.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public interface HasId {
 

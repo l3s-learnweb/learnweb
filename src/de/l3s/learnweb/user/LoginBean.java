@@ -172,7 +172,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             return redirect + (redirect.contains("?") ? "&" : "?") + "faces-redirect=true";
         }
 
-        if (userOrganisation.getId() == 1249) { // TODO: EU-MADE4LL user have to be redirect to the backup of Learnweb V2
+        if (userOrganisation.getId() == 1249) { // TODO @astappiev: EU-MADE4LL user have to be redirect to the backup of Learnweb V2
             return "/lw/eumade4all/statistics.xhtml?faces-redirect=true";
         }
 

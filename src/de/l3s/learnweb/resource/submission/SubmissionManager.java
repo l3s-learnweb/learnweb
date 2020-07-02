@@ -196,7 +196,7 @@ public class SubmissionManager {
     }
 
     public void saveSubmitStatusForUser(int submissionId, int userId, boolean submitted) {
-        //  TODO to keep survey_resource_id use:
+        // TODO @astappiev/@hulyi: to keep survey_resource_id use:
         // INSERT INTO lw_submission_status(submission_id, user_id, submitted) VALUES (?,?,?) ON DUPLICATE KEY UPDATE submitted = ?;
         try (PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submission_status(submission_id, user_id, submitted) VALUES (?,?,?)")) {
             ps.setInt(1, submissionId);

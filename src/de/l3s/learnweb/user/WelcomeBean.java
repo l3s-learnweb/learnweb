@@ -52,7 +52,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
 
     private String organisationWelcomeMessage;
 
-    // TODO: this separation is useless, all log entries are already included in the general logs; It needs to be discussed what we shall show here
+    // TODO @kemkes: this separation is useless, all log entries are already included in the general logs; It needs to be discussed what we shall show here
     private List<LogEntry> newsForums;
     private List<LogEntry> newsResources;
     private List<LogEntry> newsGeneral;

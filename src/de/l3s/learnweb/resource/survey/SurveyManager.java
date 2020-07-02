@@ -25,7 +25,7 @@ import de.l3s.util.bean.BeanHelper;
 import de.l3s.util.database.Sql;
 
 /**
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class SurveyManager {
     private static final Logger log = LogManager.getLogger(SurveyManager.class);

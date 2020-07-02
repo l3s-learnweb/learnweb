@@ -217,7 +217,7 @@ public class ApplicationBean {
         throw new HttpException(desc, exception);
     }
 
-    // TODO see https://git.l3s.uni-hannover.de/Learnweb/Learnweb/-/wikis/Rules/Use-of-Messages,-Growls-and-Validation
+    // TODO @astappiev: see https://git.l3s.uni-hannover.de/Learnweb/Learnweb/-/wikis/Rules/Use-of-Messages,-Growls-and-Validation
     @Deprecated
     protected void addErrorGrowl(Throwable exception) {
         addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
@@ -229,7 +229,7 @@ public class ApplicationBean {
 
     /**
      * To overcome browser caching problems force revalidation.
-     * TODO: it is really necessary?
+     * TODO @astappiev: is it really necessary?
      */
     protected void forceRevalidation() {
         HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();

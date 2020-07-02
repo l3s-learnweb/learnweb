@@ -79,7 +79,7 @@ public class GlossaryManager {
             if (entry.getId() < 0) { // new entry
                 insertEntry(entry);
 
-                // TODO philipp: check if this can be moved to glossaryBean
+                // TODO @kemkes: check if this can be moved to glossaryBean
                 try {
                     learnweb.getLogManager()
                         .log(learnweb.getUserManager().getUser(entry.getLastChangedByUserId()), Action.glossary_entry_add, glossaryResource.getGroupId(),

@@ -14,7 +14,7 @@ import de.l3s.learnweb.resource.ResourceManager;
 /**
  * Find resources with not existing folder_id.
  *
- * @author Kemkes
+ * @author Philipp Kemkes
  */
 public class FixInvalidFolders {
     private static final Logger log = LogManager.getLogger(FixInvalidFolders.class);

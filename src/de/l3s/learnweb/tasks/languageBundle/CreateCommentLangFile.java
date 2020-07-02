@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
  * messages_xy.properties is used to store comments about translations
  * But most of the translations don't have any comments yet. Because of this all language entries are marked as incomplete.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class CreateCommentLangFile {
     private static final Logger log = LogManager.getLogger(CreateCommentLangFile.class);

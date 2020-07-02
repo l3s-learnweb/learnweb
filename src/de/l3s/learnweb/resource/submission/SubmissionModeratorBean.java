@@ -10,7 +10,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 
 /**
- * @author Philipp
+ * @author Philipp Kemkes
  */
 @Named
 @ViewScoped

@@ -15,7 +15,7 @@ import de.l3s.learnweb.resource.ResourceManager;
 /**
  * Read all files uploaded by a user, remove if there is no local copy of a file.
  *
- * @author Astappiev
+ * @author Oleh Astappiev
  */
 public class RemoveResourcesWithoutLocalFiles {
     private static final Logger log = LogManager.getLogger(RemoveResourcesWithoutLocalFiles.class);

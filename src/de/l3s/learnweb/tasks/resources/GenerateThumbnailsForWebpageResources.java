@@ -18,7 +18,7 @@ import de.l3s.util.UrlHelper;
 /**
  * Find webpage resources that have no thumbnail and create it.
  *
- * @author Kemkes
+ * @author Philipp Kemkes
  */
 public class GenerateThumbnailsForWebpageResources {
     private static final Logger log = LogManager.getLogger(GenerateThumbnailsForWebpageResources.class);

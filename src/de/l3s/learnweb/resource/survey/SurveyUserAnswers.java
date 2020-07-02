@@ -12,7 +12,7 @@ import de.l3s.util.HasId;
 /**
  * This class represents the answers of a single user for a survey resources.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class SurveyUserAnswers implements Serializable, HasId {
     private static final long serialVersionUID = -1442011853436353323L;

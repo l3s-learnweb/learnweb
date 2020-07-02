@@ -119,7 +119,7 @@ public class ExportManager {
 
             File mainFile = resource.getFile(TYPE.FILE_MAIN);
 
-            // TODO: should we export original files of copied resources?
+            // TODO @astappiev: should we export original files of copied resources?
             if (mainFile == null && resource.getOriginalResourceId() > 0) {
                 Resource originalResource = learnweb.getResourceManager().getResource(resource.getOriginalResourceId());
                 if (originalResource != null) {

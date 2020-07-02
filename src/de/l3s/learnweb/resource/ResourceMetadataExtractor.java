@@ -234,7 +234,7 @@ public class ResourceMetadataExtractor {
                     resource.setMaxImageUrl(mediaPlayer.get("image").getAsString());
                 }
 
-                // TODO Tetiana: remove entity_id from description. Line below can be replaced for extracting it from Speech details
+                // TODO @astappiev: remove entity_id from description. Line below can be replaced for extracting it from Speech details
                 if (mediaPlayer.has("entity_id")) {
                     resource.setIdAtService(mediaPlayer.get("entity_id").getAsString());
                 }

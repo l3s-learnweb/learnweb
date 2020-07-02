@@ -13,7 +13,7 @@ import de.l3s.learnweb.user.UserManager;
 /**
  * Resent the email authentication link for selected users.
  *
- * @author Kemkes
+ * @author Philipp Kemkes
  */
 public class ForceEmailValidation {
     private static final Logger log = LogManager.getLogger(ForceEmailValidation.class);

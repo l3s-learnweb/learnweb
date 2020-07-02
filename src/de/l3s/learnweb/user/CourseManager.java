@@ -24,7 +24,7 @@ import de.l3s.util.database.Sql;
  * DAO for the Course class.
  * Because there are only a few courses we keep them all in memory
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class CourseManager {
     private static final Logger log = LogManager.getLogger(CourseManager.class);
@@ -145,7 +145,7 @@ public class CourseManager {
      */
     protected synchronized Course save(Course course) throws SQLException {
         if (course.getId() < 0) { // the course is not yet stored at the database
-            // TODO this is not necessary any more. Remove it and use auto increment of lw_course.course_id
+            // TODO @astappiev: this is not necessary any more. Remove it and use auto increment of lw_course.course_id
             // we have to get a new id from the group manager
             Group group = new Group();
             group.setTitle(course.getTitle());

@@ -13,7 +13,7 @@ import de.l3s.learnweb.user.Organisation.Option;
  * the users organization. But the information needs to be shown already during the registration
  * process
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 @Named
 @RequestScoped

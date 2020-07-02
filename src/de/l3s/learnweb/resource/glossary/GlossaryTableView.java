@@ -28,7 +28,7 @@ public class GlossaryTableView implements Serializable {
         this.entry = entry;
         this.term = term;
 
-        // TODO this is only an example. Has to be generalized for all fields
+        // TODO @kemkes: this is only an example. Has to be generalized for all fields
         if (!filter.containsKey("topicOne")) {
             topic1 = entry.getTopicOne();
         } else {

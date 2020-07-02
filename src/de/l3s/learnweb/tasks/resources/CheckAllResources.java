@@ -16,7 +16,7 @@ import de.l3s.learnweb.resource.ResourceManager;
 /**
  * Reeds through all undeleted resources and performs arbitrary tests.
  *
- * @author Kemkes
+ * @author Philipp Kemkes
  */
 public class CheckAllResources {
     private static final Logger log = LogManager.getLogger(CheckAllResources.class);
@@ -58,7 +58,7 @@ public class CheckAllResources {
     private static void checkMetadata(Resource resource) throws SQLException {
         for (Entry<String, String> entry : resource.getMetadata().entrySet()) {
             if (entry.getValue() == null) {
-                log.warn("entry has no value: " + entry); // TODO remove entry
+                log.warn("entry has no value: " + entry); // TODO @astappiev: remove entry
                 resource.getMetadata().remove(entry.getKey());
                 resource.save();
                 continue;

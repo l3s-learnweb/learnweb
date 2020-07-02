@@ -26,7 +26,7 @@ import org.omnifaces.util.Faces;
  *
  * Inspired by: http://www2.sys-con.com/ITSG/virtualcd/Java/archives/0612/mair/index.html
  *
- * @author Kemkes
+ * @author Philipp Kemkes
  */
 public class LanguageBundle extends ResourceBundle {
     private static final Logger log = LogManager.getLogger(LanguageBundle.class);

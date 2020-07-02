@@ -166,7 +166,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     /**
      * The method is used from JS in resource_view_archive_timeline.xhtml.
      */
-    public String getArchiveTimelineJsonData() { // TODO move this and all other archive related methods to new WebResourceBean
+    public String getArchiveTimelineJsonData() { // TODO @astappiev: move this and all other archive related methods to new WebResourceBean
         JsonArray highChartsData = new JsonArray();
         try {
             List<TimelineData> timelineMonthlyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByMonth(resource.getId(), resource.getUrl());

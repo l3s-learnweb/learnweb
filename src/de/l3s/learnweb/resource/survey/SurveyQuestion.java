@@ -135,7 +135,7 @@ public class SurveyQuestion implements Serializable, Cloneable {
 
     public List<SelectItem> getOptionsList() {
         if (null == optionsList) {
-            // TODO what is the purpose of this method?
+            // TODO @astappiev/@hulyi: what is the purpose of this method?
             /* maybe Options and Answers were confused
              * answers shall anyway be renamed to Options
              *

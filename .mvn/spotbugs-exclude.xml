@@ -25,7 +25,7 @@
             <Bug pattern="EI_EXPOSE_REP2"/>
         </Or>
     </Match>
-    <!-- TODO: We have hundreds of unclosed ResultSets and Statements -->
+    <!-- TODO @astappiev: We have hundreds of unclosed ResultSets and Statements -->
     <Match>
         <Or>
             <Bug pattern="ODR_OPEN_DATABASE_RESOURCE"/>
@@ -39,15 +39,15 @@
         <Local name="learnweb"/>
         <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
     </Match>
-    <!-- TODO: clone method does not call super.clone() -->
+    <!-- Clone method does not call super.clone() -->
     <Match>
         <Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
     </Match>
-    <!-- TODO: WaybackUrlManager has hardcoded path to log file -->
+    <!-- TODO @astappiev: WaybackUrlManager has hardcoded path to log file -->
     <Match>
         <Bug pattern="DMI_HARDCODED_ABSOLUTE_FILENAME"/>
     </Match>
-    <!-- TODO: Resource castes to GlossaryResource -->
+    <!-- TODO @astappiev: unsafe cast of Resource to GlossaryResource -->
     <Match>
         <Bug pattern="BC_UNCONFIRMED_CAST"/>
     </Match>

@@ -11,7 +11,7 @@ import de.l3s.learnweb.LanguageBundle;
 /**
  * Adds a helper method to the Validator interface.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public abstract class AbstractValidator<T> implements Validator<T> {
 

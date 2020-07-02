@@ -227,7 +227,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             solrSearch.setFilterTags(searchFilters.getFilterValue(FilterType.tags));
         }
 
-        // TODO @Oleh these filters are specific for archiveweb which doesn't exist any more. Couldn't it be generalized for the fields defined per organisation?
+        // TODO @astappiev: these filters are specific for archiveweb which doesn't exist any more. Couldn't it be generalized for the fields defined per organisation?
         if (searchFilters.isFilterActive(FilterType.coverage)) {
             solrSearch.setFilterCoverage(searchFilters.getFilterValue(FilterType.coverage));
         }
@@ -355,7 +355,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         } catch (IllegalArgumentException | IllegalAccessError e) {
             addGrowl(FacesMessage.SEVERITY_ERROR, e.getMessage());
             log.catching(e);
-            // TODO still need to decide if growls can be used to handle errors
+            // TODO @astappiev: still need to decide if growls can be used to handle errors
             // addErrorGrowl(e.getMessage(), e);
         } catch (JsonParseException | SQLException e) {
             addErrorMessage(e);

@@ -38,7 +38,7 @@ import de.l3s.util.ICache;
 /**
  * DAO for the Group class.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class GroupManager {
     // if you change this, you have to change the createGroup and save method too
@@ -451,7 +451,7 @@ public class GroupManager {
     }
 
     public void moveFolder(Folder folder, int newParentFolderId, int newGroupId) throws SQLException {
-        // TODO: throw an error instead of silent ignore
+        // TODO @astappiev: throw an error instead of silent ignore
         if (folder.getId() == newParentFolderId) {
             return; // if move to itself
         }
@@ -490,7 +490,7 @@ public class GroupManager {
     }
 
     public void moveResource(Resource resource, int newGroupId, int newFolderId) throws SQLException {
-        // TODO: throw an error instead of silent ignore
+        // TODO @astappiev: throw an error instead of silent ignore
         if (resource.getGroupId() == newGroupId && resource.getFolderId() == newFolderId) {
             return; // if move to the same folder
         }

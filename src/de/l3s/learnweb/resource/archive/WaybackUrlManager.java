@@ -162,7 +162,7 @@ public final class WaybackUrlManager {
             log.error("can't check url: " + urlRecord.getUrl(), t);
         }
 
-        // TODO insert content and status into wb_url_content
+        // TODO @astappiev: insert content and status into wb_url_content
 
         //urlRecord.setStatusCode((short) statusCode);
         //urlRecord.setStatusCodeDate(new Date());
@@ -599,7 +599,7 @@ public final class WaybackUrlManager {
     }
 
     /**
-     * @author Philipp
+     * @author Philipp Kemkes
      */
     public static class UrlRecord {
         private long id = -1L;

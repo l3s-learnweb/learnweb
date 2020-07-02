@@ -132,7 +132,7 @@ public class ResourcePreviewMaker {
             case text:
             case audio:
             case file:
-                // TODO add default icons
+                // TODO @astappiev: add default icons
                 // Oleh: I think we don't need to store default icon in database,
                 // instead we need to generate it "on the fly" when we load resource from db
                 break;
@@ -246,7 +246,7 @@ public class ResourcePreviewMaker {
             log.error("An error occurs during creating thumbnail for a video: resource_id=" + resource.getId() + "; file=" + resource.getFileUrl(), e);
         }
 
-        // TODO Oleh: move it somewhere in one place with converting documents
+        // TODO @astappiev: move it somewhere in one place with converting documents
         // convert videos that are not in mp4 format
         try {
             if (ffProbeResult == null) {

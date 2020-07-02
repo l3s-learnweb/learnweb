@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
  *
  * The returned list represents translation keys which were not checked.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class LanguageFileComparison {
     private static final Logger log = LogManager.getLogger(LanguageFileComparison.class);

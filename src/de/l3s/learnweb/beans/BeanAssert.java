@@ -93,7 +93,7 @@ public final class BeanAssert {
     }
 
     /**
-     * TODO: better name, maybe: isFound, exists, canBeShown, notFoundIfFalse
+     * TODO @astappiev: better name, maybe: isFound, exists, canBeShown, notFoundIfFalse
      *
      * @param isFound if {@code false} throws an error which prevents further processing and displays '400 Not Found' error page
      * @param message is shown instead of default error description

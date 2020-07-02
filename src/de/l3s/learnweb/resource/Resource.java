@@ -171,7 +171,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         /*
         for(File file :files)
         {
-            // TODO Philipp: copy files too. The DB layout doesn't support this right now
+            // TODO @astappiev: copy files too. The DB layout doesn't support this right now
         }
         */
     }
@@ -188,7 +188,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      */
     public void setDefaultThumbnailIfNull() throws SQLException {
         if (null == thumbnail0 || null == thumbnail1 || null == thumbnail2) {
-            // TODO find better images.
+            // TODO @astappiev: find better images.
             // the glossary icon is loaded in GlossaryResource.save()
             if (type == ResourceType.survey) {
                 Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(204095); // TODO avoid this, load from resource folder
@@ -1304,7 +1304,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
          This method returned a LogEntry for the following query:
          select * FROM lw_user_log WHERE action=45 AND target_id = ? ORDER BY timestamp DESC LIMIT 1
          setInt(1, getResource_id)
-         But the implementation was bad and it was very rarely used. Let's see if someone misses it. Philipp 02.04.2020
+         But the implementation was bad and it was very rarely used. Let's see if someone misses it. - @kemkes 02.04.2020
          */
         return null;
     }
@@ -1419,7 +1419,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     /**
      * A map wrapper to support multi valued input fields.
      *
-     * @author Kemkes
+     * @author Philipp Kemkes
      */
     public static final class MetadataMultiValueMapWrapper implements Map<String, String[]>, Serializable {
         private static final long serialVersionUID = 1514209886446380743L;
@@ -1494,7 +1494,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     /**
      * A map wrapper to add the hard coded metadata fields (title, author, desc and language) to the metadata map.
      *
-     * @author Kemkes
+     * @author Philipp Kemkes
      */
     public class MetadataMapWrapper implements Map<String, String>, Serializable {
         private static final long serialVersionUID = -7357288281713761896L;
@@ -1510,7 +1510,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
         @Override
         public String get(Object key) {
-            // TODO: why the type of key can't be changed to String?
+            // TODO @kemkes: why the type of key can't be changed to String?
             if (!key.getClass().equals(String.class)) {
                 throw new IllegalArgumentException("key must be a string");
             }

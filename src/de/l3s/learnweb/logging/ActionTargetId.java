@@ -3,7 +3,7 @@ package de.l3s.learnweb.logging;
 /**
  * Every LogEntry has a target_id. Its meaning depends on the LogEntry.Action attribute. It can represent one of the listed ids
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public enum ActionTargetId {
     NONE,

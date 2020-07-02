@@ -76,7 +76,7 @@
     <!-- See https://checkstyle.org/config_sizes.html -->
     <!--<module name="FileLength"/> Changed: disable inspection -->
     <module name="LineLength">
-        <property name="severity" value="ignore"/> <!-- Changed: decreased severity TODO: remove ignore -->
+        <property name="severity" value="ignore"/> <!-- Changed: decreased severity TODO @astappiev: fix line length in files -->
         <property name="max" value="160"/> <!-- Changed: default is 80 -->
         <property name="fileExtensions" value="java"/>
         <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/> <!-- Changed: copied from Google -->
@@ -107,33 +107,31 @@
         <!-- Checks for Javadoc comments.                     -->
         <!-- See https://checkstyle.org/config_javadoc.html -->
         <module name="InvalidJavadocPosition"/>
-        <module name="JavadocMethod"> <!-- Changed: copied from Google, require doc only for public, do not require describing each param -->
-            <property name="severity" value="ignore"/> <!-- Changed: decreased severity TODO: remove ignore -->
+        <!--<module name="JavadocMethod"> &lt;!&ndash; Changed: remove rule
+            Changed: copied from Google, require doc only for public, do not require describing each param &ndash;&gt;
             <property name="scope" value="public"/>
             <property name="allowMissingParamTags" value="true"/>
             <property name="allowMissingReturnTag" value="true"/>
             <property name="allowedAnnotations" value="Override, Test"/>
-        </module>
+        </module>-->
         <!--<module name="JavadocType"/> Changed: it looks like mostly this comments makes no sense -->
         <!--<module name="JavadocVariable"/> Changed: we don't require Javadoc for each defined variable-->
         <module name="JavadocStyle">
             <property name="severity" value="warning"/> <!-- Changed: decreased severity -->
             <property name="endOfSentenceFormat" value="([.?!:][ \t\n\r\f])|([.?!:]$)"/>
         </module>
-        <module name="MissingJavadocMethod">
-            <property name="severity" value="ignore"/> <!-- Changed: decreased severity TODO: remove ignore -->
+        <!--<module name="MissingJavadocMethod"> Changed: remove rule
             <property name="scope" value="public"/>
             <property name="minLineCount" value="5"/>
             <property name="allowedAnnotations" value="Override, Test"/>
-            <property name="allowMissingPropertyJavadoc" value="true"/> <!-- Changed: do not require Javadoc for getters/setters -->
-        </module>
+            <property name="allowMissingPropertyJavadoc" value="true"/> &lt;!&ndash; Changed: do not require Javadoc for getters/setters &ndash;&gt;
+        </module>-->
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See https://checkstyle.org/config_naming.html -->
-        <module name="ConstantName">
-            <property name="severity" value="ignore"/> <!-- Changed: decreased severity TODO: remove ignore -->
-            <property name="format" value="^log$|^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/> <!-- Changed: allow log/logger to be static lowercase -->
-        </module>
+        <!--<module name="ConstantName"> Changed: remove rule
+            <property name="format" value="^log$|^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/> &lt;!&ndash; Changed: allow log/logger to be static lowercase &ndash;&gt;
+        </module>-->
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
         <module name="MemberName"/>

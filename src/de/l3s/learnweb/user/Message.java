@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 
-// TODO this class needs to be refactored and split into a dao and pojo class
+// TODO @hulyi: this class needs to be refactored and split into a dao and pojo class
 public class Message implements Comparable<Message>, Serializable {
     private static final long serialVersionUID = -5510804242529450186L;
     private static final Logger log = LogManager.getLogger(Message.class);

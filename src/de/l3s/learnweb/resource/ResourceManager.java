@@ -241,7 +241,7 @@ public class ResourceManager {
             }
         }
 
-        // TODO delete files (lw_file); but it's not possible yet because files are shared when a resource is copied
+        // TODO @astappiev: delete files (lw_file); but it's not possible yet because files are shared when a resource is copied
     }
 
     /**
@@ -252,7 +252,7 @@ public class ResourceManager {
             throw new IllegalArgumentException("Resource has no owner");
         }
 
-        // TODO this has to be moved to the save method of WebResource.class, which has to be created
+        // TODO @astappiev: this has to be moved to the save method of WebResource.class, which has to be created
         if (resource.getId() == -1) { // a new resource which is not stored in the database yet
             try {
                 //To copy archive versions of a resource if it exists

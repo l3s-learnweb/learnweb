@@ -99,7 +99,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                 result.put("no_of_archived_versions", rs.getString("no_of_archived_versions"));
                 result.put("no_of_archived_resources", rs.getString("no_of_archived_resources"));
 
-                // TODO gather statistics for new forum
+                // TODO @astappiev: gather statistics for new forum
 
                 result.put("forum_topics", "-");
                 result.put("forum_posts", "-");

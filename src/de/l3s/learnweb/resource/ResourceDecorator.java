@@ -12,7 +12,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
 /**
- * @author Kemkes
+ * @author Philipp Kemkes
  *
  * This class wraps a resource. It's necessary because a resource can appear in various search results with different search terms.
  * Which lead to different text snippets.

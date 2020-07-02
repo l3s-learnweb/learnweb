@@ -27,7 +27,7 @@ import de.l3s.util.Misc;
  * This class provides auto completion for selected resource metadata fields of the yell course.
  * It is not a real bean
  *
- * @author Kemkes
+ * @author Philipp Kemkes
  */
 public class ResourceMetaDataBean {
     private static final Logger log = LogManager.getLogger(ResourceMetaDataBean.class);
@@ -45,7 +45,7 @@ public class ResourceMetaDataBean {
      * Creates a translated list of all available languages.
      */
     public static List<SelectItem> getLanguageList() {
-        // TODO refactor. check if ApplicationBean.localesToSelectItems can be used
+        // TODO @kemkes: check if ApplicationBean.localesToSelectItems can be used
 
         Locale locale = Beans.getInstance(UserBean.class).getLocale();
         List<SelectItem> languageList = languageLists.get(locale.getLanguage());
@@ -68,7 +68,7 @@ public class ResourceMetaDataBean {
 
     /**
      * Very inefficient implementation.
-     * TODO improve
+     * TODO @kemkes: improve
      */
     public static List<String> completeAuthor(String query) {
         User user = Beans.getInstance(UserBean.class).getUser();

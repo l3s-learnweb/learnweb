@@ -87,7 +87,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
 
             simpleFilters.put(filterField, filterValueStr);
 
-            switch (filterField) { // TODO move fields to an ENUM rename topicOne to topic1 and so on
+            switch (filterField) { // TODO @kemkes: move fields to an ENUM rename topicOne to topic1 and so on
                 case "fulltext":
                 case "description":
                 case "topicOne":

@@ -35,7 +35,7 @@ import de.l3s.util.database.Sql;
 /**
  * DAO for the User class.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class UserManager {
     private static final Logger log = LogManager.getLogger(UserManager.class);
@@ -276,7 +276,7 @@ public class UserManager {
         user.setOrganisationId(course.getOrganisationId());
         user.setRegistrationDate(new Date());
         user.setPreferences(new HashMap<>());
-        // TODO: we should create it by first request, not when we create a user
+        // TODO @astappiev: we should create it by first request, not when we create a user
         user.setImage(user.getDefaultImageIS());
 
         save(user);
@@ -484,10 +484,10 @@ public class UserManager {
             }
         }
 
-        // TODO philipp: how to handle lw_forum_post.post_edit_user_id
+        // TODO @kemkes: how to handle lw_forum_post.post_edit_user_id
 
         /*
-         TODO philipp: how to handle topics. We can not just delete them
+         TODO @kemkes: how to handle topics. We can not just delete them
          * topic_last_post_user_id
         */
 

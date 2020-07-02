@@ -37,7 +37,7 @@ import de.l3s.learnweb.user.User;
 /**
  * Bean for pages myhome/submission_overview.jsf and myhome/submission_resources.jsf
  *
- * TODO: the whole class needs to be refactored. First it has to be splitted into individual beans for the different pages
+ * TODO @astappiev/@hulyi: the whole class needs to be refactored. First it has to be splitted into individual beans for the different pages
  *
  * @author Trevor
  */
@@ -312,7 +312,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     }
 
     /* -------- Methods below are used for the submission overview page ---------*/
-    // TODO use one bean per page
+    // TODO @astappiev/@hulyi: use one bean per page
 
     public void createNewSubmission() {
         getLearnweb().getSubmissionManager().saveSubmission(newSubmission);
@@ -321,7 +321,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
 
         getUser().clearCaches();
-        // TODO call User.clearCaches of all users of the affected course
+        // TODO @astappiev/@hulyi: call User.clearCaches of all users of the affected course
     }
 
     public Submission getNewSubmission() {
@@ -494,7 +494,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     }
 
     /* -------- Methods below are used for the admin users submissions page ---------*/
-    // TODO needs to be refactored. Has to be discussed first. Either move to other bean or integrate into Moderator user list or ....
+    // TODO @astappiev/@hulyi: needs to be refactored. Has to be discussed first. Either move to other bean or integrate into Moderator user list or ....
 
     /**
      * To display the users for a particular course and the corresponding number of submissions.

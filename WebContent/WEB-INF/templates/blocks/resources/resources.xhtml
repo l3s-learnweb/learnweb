@@ -73,7 +73,7 @@
                     </p:commandButton>
 
                     <ui:fragment rendered="#{userBean.admin}">
-                        <!-- TODO: The download dialog and its bean must be improved before it can be shown -->
+                        <!-- TODO @astappiev: The download dialog and its bean must be improved before it can be shown -->
                         <span class="ui-separator"><span class="ui-icon fa fa-ellipsis-v"/></span>
                         <p:commandButton type="button" title="#{msg['group_resources.download_backup']}" icon="fa fa-cloud-download"
                                          onclick="PF('dataExportedDialog').show();"/>

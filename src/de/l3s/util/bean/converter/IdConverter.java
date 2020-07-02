@@ -13,7 +13,7 @@ import de.l3s.util.StringHelper;
  * This converter tries to convert the input to a positive integer.
  * If it fails it throws BadRequestBeanException and prevents loading the main content of the page.
  *
- * TODO: instead of throwing error, possible, we can use o:viewParamValidationFailed
+ * TODO @astappiev: instead of throwing error, possible, we can use o:viewParamValidationFailed
  * http://showcase.omnifaces.org/taghandlers/viewParamValidationFailed
  */
 @FacesConverter("idConverter")

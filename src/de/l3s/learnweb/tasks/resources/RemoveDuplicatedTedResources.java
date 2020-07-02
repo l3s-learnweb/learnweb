@@ -12,7 +12,7 @@ import de.l3s.learnweb.resource.ResourceManager;
 /**
  * Remove duplicated crawled resources from TED group.
  *
- * @author Astappiev
+ * @author Oleh Astappiev
  */
 public final class RemoveDuplicatedTedResources {
     private static final Logger log = LogManager.getLogger(RemoveDuplicatedTedResources.class);

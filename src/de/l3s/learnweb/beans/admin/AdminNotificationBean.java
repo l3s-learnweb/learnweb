@@ -48,7 +48,7 @@ public class AdminNotificationBean extends ApplicationBean {
     }
 
     public void send() throws SQLException {
-        // get selected users, complicated because jsf sucks TODO: check a way to improve
+        // get selected users, complicated because jsf sucks TODO @astappiev: check a way to improve
         String[] tempSelectedUsers = Faces.getRequestParameterValues("selected_users");
 
         if (null == tempSelectedUsers || tempSelectedUsers.length == 0) {

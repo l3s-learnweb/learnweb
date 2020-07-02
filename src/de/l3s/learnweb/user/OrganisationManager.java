@@ -18,7 +18,7 @@ import de.l3s.util.database.Sql;
  * DAO for the Organisation class.
  * Because there are only a few organisations we keep them all in memory
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class OrganisationManager {
     //private static final Logger log = LogManager.getLogger(OrganisationManager.class);
@@ -34,7 +34,7 @@ public class OrganisationManager {
 
     public OrganisationManager(Learnweb learnweb) throws SQLException {
         this.learnweb = learnweb;
-        // TODO Oleh: Cache is not updated when organization changed, also user stores organization which is separated from cache.
+        // TODO @astappiev: Cache is not updated when organization changed, also user stores organization which is separated from cache.
         this.cache = Collections.synchronizedMap(new LinkedHashMap<>(30));
         this.resetCache();
     }

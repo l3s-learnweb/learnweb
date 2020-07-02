@@ -14,7 +14,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @ViewScoped
-public class MessageBean extends ApplicationBean implements Serializable { // TODO refactor complete message system and the update this class
+public class MessageBean extends ApplicationBean implements Serializable { // TODO @hulyi: refactor complete message system and the update this class
     private static final long serialVersionUID = 6231162839099220868L;
     private static final Logger log = LogManager.getLogger(MessageBean.class);
 

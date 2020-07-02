@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * It is used to hash emails, never use it for passwords!
  *
- * @author Astappiev
+ * @author Oleh Astappiev
  */
 public class SHA512 {
     private static final Logger log = LogManager.getLogger(SHA512.class);

@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * It is used to hash emails, never use it for passwords!
  *
- * @author Astappiev
+ * @author Oleh Astappiev
  */
 public class MD5 {
     private static final Logger log = LogManager.getLogger(MD5.class);

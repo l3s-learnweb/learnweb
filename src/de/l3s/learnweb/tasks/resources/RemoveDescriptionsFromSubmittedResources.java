@@ -12,7 +12,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 
 /**
- * @author Kemkes
+ * @author Philipp Kemkes
  */
 public class RemoveDescriptionsFromSubmittedResources {
     private static final Logger log = LogManager.getLogger(RemoveDescriptionsFromSubmittedResources.class);

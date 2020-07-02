@@ -14,7 +14,7 @@ import de.l3s.util.HasId;
  * This class contains only the questions of a survey.
  * An instance of this class may be used by many SurveyResource instances.
  *
- * @author Philipp
+ * @author Philipp Kemkes
  */
 public class Survey implements Serializable, HasId, Cloneable {
     private static final long serialVersionUID = -7478683722354893077L;

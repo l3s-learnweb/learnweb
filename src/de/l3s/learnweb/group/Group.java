@@ -228,7 +228,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         for (Resource resource : getResources()) {
             Resource newResource = resource.clone();
             newResource.setGroupId(groupId);
-            newResource.setFolderId(0); // TODO copy folders structure too
+            newResource.setFolderId(0); // TODO @astappiev: copy folders structure too
             newResource.setUser(user);
             newResource.save();
         }

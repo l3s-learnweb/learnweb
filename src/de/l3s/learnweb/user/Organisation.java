@@ -202,7 +202,7 @@ public class Organisation implements Serializable, Comparable<Organisation> {
 
             metadata = new ResourceMetadataField("language_level", "Language level", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
-            metadata.getOptions().add("C2"); // TODO: retrieve from a database
+            metadata.getOptions().add("C2"); // TODO @astappiev: retrieve from a database
             metadata.getOptions().add("C1");
             metadata.getOptions().add("B2");
             metadata.getOptions().add("B1");
@@ -215,7 +215,7 @@ public class Organisation implements Serializable, Comparable<Organisation> {
 
             metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.AUTOCOMPLETE_MULTIPLE);
             metadata.setInfo("Select all that apply");
-            metadata.getOptions().add("Speaking"); // TODO: retrieve from a database
+            metadata.getOptions().add("Speaking"); // TODO @astappiev: retrieve from a database
             metadata.getOptions().add("Listening");
             metadata.getOptions().add("Reading");
             metadata.getOptions().add("Writing");
@@ -234,7 +234,7 @@ public class Organisation implements Serializable, Comparable<Organisation> {
 
             metadata = new ResourceMetadataField("yell_target", "Target Learner", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
-            metadata.getOptions().add("Teachers"); // TODO: retrieve from a database
+            metadata.getOptions().add("Teachers"); // TODO @astappiev: retrieve from a database
             metadata.getOptions().add("Adult learners");
             metadata.getOptions().add("Teens");
             metadata.getOptions().add("Young learners");

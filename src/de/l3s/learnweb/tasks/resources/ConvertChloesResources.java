@@ -14,7 +14,7 @@ import de.l3s.learnweb.resource.ResourceManager;
 /**
  * Reeds through all undeleted resources and performs arbitrary tests.
  *
- * @author Kemkes
+ * @author Philipp Kemkes
  */
 public final class ConvertChloesResources {
     private static final Logger log = LogManager.getLogger(ConvertChloesResources.class);
