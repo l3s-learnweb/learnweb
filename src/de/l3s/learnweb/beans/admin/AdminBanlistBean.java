@@ -59,7 +59,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
         if (permaban) {
             getLearnweb().getProtectionManager().permaban(name, isIP);
         } else {
-            getLearnweb().getProtectionManager().ban(name, banDays, banHours, banMinutes, isIP);
+            getLearnweb().getProtectionManager().ban(name, banDays, banHours, banMinutes, isIP, null);
         }
 
         load();

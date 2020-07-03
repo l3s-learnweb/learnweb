@@ -14,30 +14,21 @@ import java.util.Date;
 public class AccessData implements Serializable {
     private static final long serialVersionUID = -2074629486516643542L;
 
-    private int attempts;
+    private String type;
     private String name;
     private Date banDate;
     private Date bannedOn;
+    private int attempts;
     private int allowedAttempts;
+    private String reason;
 
     /**
      * Default constructor for new data.
      */
     public AccessData(String name) {
-        attempts = 0;
         this.name = name;
-        allowedAttempts = 50;
-    }
-
-    /**
-     * Used when getting data from ban list.
-     */
-    public AccessData(String name, int attempts, Date bannedUntil, Date bannedOn) {
-        this.attempts = attempts;
-        this.name = name;
-        this.banDate = bannedUntil;
-        this.bannedOn = bannedOn;
-        allowedAttempts = 50;
+        this.attempts = 0;
+        this.allowedAttempts = 50;
     }
 
     /**
@@ -81,28 +72,14 @@ public class AccessData implements Serializable {
 
         banDate = cal.getTime();
         bannedOn = cal.getTime();
-
     }
 
-    public int getAttempts() {
-        return attempts;
+    public String getType() {
+        return type;
     }
 
-    public void setAttempts(int attempts) {
-        this.attempts = Math.max(attempts, 0);
-    }
-
-    public void logAttempt() {
-        attempts++;
-        allowedAttempts--;
-    }
-
-    public Date getBanDate() {
-        return banDate;
-    }
-
-    public void setBanDate(Date banDate) {
-        this.banDate = banDate;
+    public void setType(final String type) {
+        this.type = type;
     }
 
     public String getName() {
@@ -113,6 +90,14 @@ public class AccessData implements Serializable {
         this.name = name;
     }
 
+    public Date getBanDate() {
+        return banDate;
+    }
+
+    public void setBanDate(Date banDate) {
+        this.banDate = banDate;
+    }
+
     public Date getBannedOn() {
         return bannedOn;
     }
@@ -121,11 +106,32 @@ public class AccessData implements Serializable {
         this.bannedOn = bannedOn;
     }
 
+    public int getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(int attempts) {
+        this.attempts = Math.max(attempts, 0);
+    }
+
     public int getAllowedAttempts() {
         return allowedAttempts;
     }
 
     public void setAllowedAttempts(int allowedAttempts) {
         this.allowedAttempts = allowedAttempts;
+    }
+
+    public void logAttempt() {
+        attempts++;
+        allowedAttempts--;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(final String reason) {
+        this.reason = reason;
     }
 }

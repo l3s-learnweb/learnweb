@@ -41,7 +41,7 @@ public class RequestFilter extends HttpFilter {
             requestManager = learnweb.getRequestManager();
             protectionManager = learnweb.getProtectionManager();
         } catch (Exception e) {
-            log.fatal("Request filter not initialized", e);
+            log.error("Request filter not initialized", e);
         }
     }
 
@@ -57,21 +57,31 @@ public class RequestFilter extends HttpFilter {
 
         if (requestManager != null && protectionManager != null) {
             String ipAddr = Servlets.getRemoteAddr(request);
+            String requestUrl = Servlets.getRequestURL(request);
 
-            if (InetAddresses.isInetAddress(ipAddr)) {
-                requestManager.recordRequest(ipAddr, request.getRequestURL().toString());
-
-                if (protectionManager.isBanned(ipAddr)) {
-                    throw new ForbiddenHttpException("error_pages.forbidden_blocked_description");
-                }
-            } else {
+            if (!InetAddresses.isInetAddress(ipAddr)) {
                 log.error("Suspicious request: {}", BeanHelper.getRequestSummary(request));
 
-                if (ipAddr.contains("JDatabaseDriverMysqli")) { // Joomla Unserialize Vulnerability
-                    protectionManager.ban(ipAddr, 200, 1, 1, true);
-
-                    throw new ForbiddenHttpException("error_pages.forbidden_blocked_description");
+                /*
+                 * Joomla Unserialize Vulnerability
+                 * https://blog.cloudflare.com/the-joomla-unserialize-vulnerability/
+                 */
+                if (ipAddr.contains("JDatabaseDriverMysqli")) {
+                    protectionManager.ban(ipAddr, "Suspicious IP address");
                 }
+            }
+
+            /*
+             * Possible SQL injection probation
+             * https://stackoverflow.com/questions/33867813/strange-url-containing-a-0-or-0-a-in-web-server-logs
+             */
+            if (requestUrl.endsWith("'A=0")) {
+                protectionManager.ban(ipAddr, "SQL injection");
+            }
+
+            requestManager.recordRequest(ipAddr, requestUrl);
+            if (protectionManager.isBanned(ipAddr)) {
+                throw new ForbiddenHttpException("error_pages.forbidden_blocked_description");
             }
         }
 
