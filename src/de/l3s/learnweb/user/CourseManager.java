@@ -3,6 +3,8 @@ package de.l3s.learnweb.user;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -144,22 +146,13 @@ public class CourseManager {
      * If the course is not yet stored at the database, a new record will be created and the returned course contains the new id.
      */
     protected synchronized Course save(Course course) throws SQLException {
-        if (course.getId() < 0) { // the course is not yet stored at the database
-            // TODO @astappiev: this is not necessary any more. Remove it and use auto increment of lw_course.course_id
-            // we have to get a new id from the group manager
-            Group group = new Group();
-            group.setTitle(course.getTitle());
-            group.setDescription("Course");
+        try (PreparedStatement save = learnweb.getConnection().prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS)) {
+            if (course.getId() < 0) {
+                save.setNull(1, Types.INTEGER);
+            } else {
+                save.setInt(1, course.getId());
+            }
 
-            learnweb.getGroupManager().save(group);
-            course.setId(group.getId());
-            group.delete();
-
-            cache.put(course.getId(), course);
-        }
-
-        try (PreparedStatement save = learnweb.getConnection().prepareStatement(SAVE)) {
-            save.setInt(1, course.getId());
             save.setString(2, course.getTitle());
             save.setInt(3, course.getOrganisationId());
             save.setInt(4, course.getDefaultGroupId());
@@ -169,6 +162,16 @@ public class CourseManager {
             save.setObject(8, course.getCreationTimestamp());
             save.setLong(9, course.getOptions()[0]);
             save.executeUpdate();
+
+            if (course.getId() < 0) { // get the assigned id
+                ResultSet rs = save.getGeneratedKeys();
+                if (!rs.next()) {
+                    throw new SQLException("database error: no id generated");
+                }
+                course.setId(rs.getInt(1));
+            }
+
+            cache.put(course.getId(), course);
         }
 
         return course;
