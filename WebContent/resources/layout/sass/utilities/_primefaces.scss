@@ -111,6 +111,13 @@
     overflow: auto;
   }
 
+  &.ui-tree-borderless {
+    border: 0;
+    padding: 0;
+    background: none;
+    margin-bottom: 1rem;
+  }
+
   &.ui-tree-responsive {
     border: 0;
     padding: 0;

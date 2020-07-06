@@ -58,7 +58,8 @@ public class CheckAllResources {
     private static void checkMetadata(Resource resource) throws SQLException {
         for (Entry<String, String> entry : resource.getMetadata().entrySet()) {
             if (entry.getValue() == null) {
-                log.warn("entry has no value: " + entry); // TODO @astappiev: remove entry
+                log.warn("entry has no value: {}", entry);
+                // remove entry if value is null
                 resource.getMetadata().remove(entry.getKey());
                 resource.save();
                 continue;

@@ -2,17 +2,19 @@ package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
-import java.util.TreeSet;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 
-import org.omnifaces.util.Faces;
+import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.Comment;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @SessionScoped
@@ -21,8 +23,44 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
 
     private String textBR;
     private String textNL;
+    private int usersCount = 0;
     private int commentCount = 0;
     private List<Comment> comments;
+    private TreeNode treeRoot;
+    private TreeNode[] selectedNodes;
+
+    @PostConstruct
+    public void init() throws SQLException {
+        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
+    }
+
+    public void onAnalyseComments() throws SQLException {
+        Collection<Integer> selectedUsers = BeanHelper.getSelectedUsers(selectedNodes);
+        usersCount = selectedUsers.size();
+
+        if (selectedUsers.isEmpty()) {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "You have to select at least one user.");
+            return;
+        }
+
+        comments = getLearnweb().getResourceManager().getCommentsByUserIds(selectedUsers);
+
+        commentCount = comments.size();
+
+        StringBuilder sbNL = new StringBuilder();
+        StringBuilder sbBR = new StringBuilder();
+        for (Comment comment : comments) {
+            sbNL.append(comment.getText());
+            sbNL.append("\n");
+            //sbNL.append("\n-----\n");
+
+            sbBR.append(comment.getText());
+            sbBR.append("<br/>");
+        }
+
+        textNL = sbNL.toString();
+        textBR = sbBR.toString();
+    }
 
     public String getTextBR() {
         return textBR;
@@ -32,58 +70,27 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
         return textNL;
     }
 
+    public int getUsersCount() {
+        return usersCount;
+    }
+
     public int getCommentCount() {
         return commentCount;
     }
 
+    public TreeNode getTreeRoot() {
+        return treeRoot;
+    }
+
+    public TreeNode[] getSelectedNodes() {
+        return selectedNodes;
+    }
+
+    public void setSelectedNodes(final TreeNode[] selectedNodes) {
+        this.selectedNodes = selectedNodes;
+    }
+
     public List<Comment> getComments() {
         return comments;
-    }
-
-    public TreeSet<Integer> getSelectedUsers() {
-        String[] tempSelectedUsers = Faces.getRequestParameterValues("selected_users");
-
-        if (null == tempSelectedUsers || tempSelectedUsers.length == 0) {
-            addMessage(FacesMessage.SEVERITY_WARN, "select_user");
-            return null;
-        }
-
-        TreeSet<Integer> selectedUsersSet = new TreeSet<>();
-        for (String userId : tempSelectedUsers) {
-            selectedUsersSet.add(Integer.parseInt(userId));
-
-        }
-
-        return selectedUsersSet;
-    }
-
-    public void onAnalyseComments() {
-        try {
-            TreeSet<Integer> selectedUsers = getSelectedUsers();
-
-            if (null == selectedUsers) {
-                return;
-            }
-
-            comments = getLearnweb().getResourceManager().getCommentsByUserIds(selectedUsers);
-
-            commentCount = comments.size();
-
-            StringBuilder sbNL = new StringBuilder();
-            StringBuilder sbBR = new StringBuilder();
-            for (Comment comment : comments) {
-                sbNL.append(comment.getText());
-                sbNL.append("\n");
-                //sbNL.append("\n-----\n");
-
-                sbBR.append(comment.getText());
-                sbBR.append("<br/>");
-            }
-
-            textNL = sbNL.toString();
-            textBR = sbBR.toString();
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
     }
 }

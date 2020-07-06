@@ -48,6 +48,13 @@ public class ApplicationBean {
     }
 
     /**
+     * Returns the currently locale.
+     */
+    protected Locale getLocale() {
+        return getUserBean().getLocale();
+    }
+
+    /**
      * @return true if the user is logged in
      */
     protected boolean isLoggedIn() {

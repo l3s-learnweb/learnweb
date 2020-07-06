@@ -28,9 +28,25 @@
 			<h:outputText value="#{msg.please_wait}"/>
 		</p:blockUI>
 		<p:panel header="#{msg.select_users}">
-			<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
-			<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="#{msg['transcript.gather_logs']}"
-							 process="@form" update=":transcript_table" onstart="PF('transcriptTableOverlay').show()" oncomplete="PF('transcriptTableOverlay').hide()"/>
+			<p:tree value="#{tedTranscriptBean.treeRoot}" var="node" required="true" styleClass="ui-tree-borderless"
+					selectionMode="checkbox" selection="#{tedTranscriptBean.selectedNodes}">
+				<p:treeNode>
+					<h:outputText value="#{node.title}"/>
+				</p:treeNode>
+				<p:treeNode type="course" icon="fa fa-fw fa-graduation-cap">
+					<h:outputText value="#{node.title}" />
+				</p:treeNode>
+				<p:treeNode type="group" icon="fa fa-fw fa-users">
+					<h:outputText value="#{node.title}" />
+				</p:treeNode>
+				<p:treeNode type="user" icon="fa fa-fw fa-user">
+					<h:outputText value="#{node.username}" />
+				</p:treeNode>
+			</p:tree>
+			<p:message for="@previous"/>
+
+			<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="#{msg['transcript.gather_logs']}" process="@form"
+							 update=":transcript_table @form" onstart="PF('transcriptTableOverlay').show()" oncomplete="PF('transcriptTableOverlay').hide()"/>
 		</p:panel>
 	</h:form>
 

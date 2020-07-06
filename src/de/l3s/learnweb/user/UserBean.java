@@ -403,7 +403,7 @@ public class UserBean implements Serializable {
                     .label(msg.getString("moderator"))
                     .url(su + "/lw/moderator.jsf")
                     .addElement(DefaultMenuItem.builder().value(msg.getString("send_notification")).icon("fa fa-fw fa-envelope-open").url(su + "/lw/admin/notification.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("users")).icon("fa fa-fw fa-users").url(su + "/lw/admin/users.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("users")).icon("fa fa-fw fa-user").url(su + "/lw/admin/users.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("courses")).icon("fa fa-fw fa-graduation-cap").url(su + "/lw/admin/courses.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("organisation")).icon("fa fa-fw fa-sitemap").url(su + "/lw/admin/organisation.jsf").build())
                     .addElement(DefaultMenuItem.builder().value(msg.getString("text_analysis")).icon("fa fa-fw fa-area-chart").url(su + "/lw/admin/text_analysis.jsf").build())

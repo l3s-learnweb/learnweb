@@ -9,12 +9,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -202,7 +202,7 @@ public class TedManager {
         return transcript.toString();
     }
 
-    public List<TranscriptSummary> getTranscriptSummaries(TreeSet<Integer> selectedUserIds) throws SQLException {
+    public List<TranscriptSummary> getTranscriptSummaries(Collection<Integer> selectedUserIds) throws SQLException {
         String userIdString = StringUtils.join(selectedUserIds, ",");
 
         List<TranscriptSummary> transcriptSummaries = new ArrayList<>();
@@ -241,7 +241,7 @@ public class TedManager {
 
     }
 
-    public List<TranscriptLog> getTranscriptLogs(TreeSet<Integer> selectedUserIds, boolean showDeleted) throws SQLException {
+    public List<TranscriptLog> getTranscriptLogs(Collection<Integer> selectedUserIds, boolean showDeleted) throws SQLException {
         String userIdString = StringUtils.join(selectedUserIds, ",");
 
         List<TranscriptLog> transcriptLogs = new ArrayList<>();
@@ -272,7 +272,7 @@ public class TedManager {
         return transcriptLogs;
     }
 
-    public List<SimpleTranscriptLog> getSimpleTranscriptLogs(TreeSet<Integer> selectedUserIds, boolean showDeleted) throws SQLException {
+    public List<SimpleTranscriptLog> getSimpleTranscriptLogs(Collection<Integer> selectedUserIds, boolean showDeleted) throws SQLException {
         List<SimpleTranscriptLog> simpleTranscriptLogs = new LinkedList<>();
 
         //PreparedStatement getUsers = learnweb.getConnection().prepareStatement("SELECT t1.user_id FROM `lw_user_course` t1 WHERE t1.course_id = ? AND t1.user_id !=7727");

@@ -36,7 +36,6 @@
     </Match>
     <!-- We need to create Learnweb if internal methods calls to Learnweb.getInstance() -->
     <Match>
-        <Local name="learnweb"/>
         <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
     </Match>
     <!-- Clone method does not call super.clone() -->

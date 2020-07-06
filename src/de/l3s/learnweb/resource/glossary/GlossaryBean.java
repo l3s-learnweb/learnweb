@@ -49,6 +49,7 @@ import com.lowagie.text.PageSize;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDetailBean;
@@ -135,9 +136,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     public void init() {
         try {
             User user = getUser();
-            if (user == null) {
-                return;
-            }
+            BeanAssert.authorized(user);
 
             Instant start = Instant.now();
             Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();

@@ -28,7 +28,8 @@
                         <p:dataExporter type="csv" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
-                    <h:commandButton styleClass="float-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only px-2 mx-2" rendered="#{exportable}" value="#{msg.request_all_data}" action="#{dataExporterBean.requestUserResources()}"/>
+                    <h:commandButton styleClass="float-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only px-2 mx-2"
+                                     value="#{msg.request_all_data}" action="#{dataExporterBean.requestUserResources()}" rendered="#{exportable}"/>
                 </h:panelGroup>
             </f:facet>
 

@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.ted;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,6 +27,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.omnifaces.util.Faces;
 import org.primefaces.PrimeFaces;
+import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -37,6 +39,7 @@ import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
 import de.l3s.learnweb.user.Course;
 import de.l3s.util.Misc;
 import de.l3s.util.NlpHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -67,9 +70,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     private List<TranscriptSummary> transcriptSummaries;
     private boolean showDeletedResources = false;
     //private int selectedCourseId;
-    private TreeSet<Integer> selectedUsers;
+    private Collection<Integer> selectedUsers;
+    private TreeNode treeRoot;
+    private TreeNode[] selectedNodes;
 
-    public TedTranscriptBean() {
+    public TedTranscriptBean() throws SQLException {
         BeanAssert.authorized(isLoggedIn());
 
         locale = getUserBean().getLocaleCode();
@@ -79,6 +84,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         //    showDeletedResources = Boolean.parseBoolean(logPreference);
 
         selectedUsers = new TreeSet<>();
+        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
     }
 
     public void onLoad() throws SQLException {
@@ -336,30 +342,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         return detailedTranscriptLogs;
     }
 
-    public TreeSet<Integer> getSelectedUsers() throws SQLException {
-        String[] tempSelectedUsers = Faces.getRequestParameterValues("selected_users");
-
-        if (null == tempSelectedUsers || tempSelectedUsers.length == 0) {
-            addMessage(FacesMessage.SEVERITY_WARN, "select_user");
-            return null;
-        }
-
-        TreeSet<Integer> selectedUsersSet = new TreeSet<>();
-        for (String userId : tempSelectedUsers) {
-            selectedUsersSet.add(Integer.parseInt(userId));
-        }
-
-        return selectedUsersSet;
-    }
-
     public void onSubmitSelectedUsers() {
-        try {
-            this.selectedUsers = getSelectedUsers();
-            resetTranscriptLogs();
-            resetTranscriptSummaries();
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
+        this.selectedUsers = BeanHelper.getSelectedUsers(selectedNodes);
+
+        resetTranscriptLogs();
+        resetTranscriptSummaries();
     }
 
     /**
@@ -436,4 +423,15 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         this.summaryTextL = summaryTextL;
     }
 
+    public TreeNode getTreeRoot() {
+        return treeRoot;
+    }
+
+    public TreeNode[] getSelectedNodes() {
+        return selectedNodes;
+    }
+
+    public void setSelectedNodes(final TreeNode[] selectedNodes) {
+        this.selectedNodes = selectedNodes;
+    }
 }

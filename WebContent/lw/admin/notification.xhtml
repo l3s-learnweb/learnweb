@@ -54,9 +54,24 @@
 				<p:message for="@previous"/>
 			</div>
 
-
 			<p:outputLabel for="@next" value="#{msg.recipients}:"/>
-			<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
+
+			<p:tree value="#{adminNotificationBean.treeRoot}" var="node" required="true" styleClass="ui-tree-borderless"
+					selectionMode="checkbox" selection="#{adminNotificationBean.selectedNodes}">
+				<p:treeNode>
+					<h:outputText value="#{node.title}"/>
+				</p:treeNode>
+				<p:treeNode type="course" icon="fa fa-fw fa-graduation-cap">
+					<h:outputText value="#{node.title}" />
+				</p:treeNode>
+				<p:treeNode type="group" icon="fa fa-fw fa-users">
+					<h:outputText value="#{node.title}" />
+				</p:treeNode>
+				<p:treeNode type="user" icon="fa fa-fw fa-user">
+					<h:outputText value="#{node.username}" />
+				</p:treeNode>
+			</p:tree>
+			<p:message for="@previous"/>
 
 			<div class="form-group">
 				<p:selectBooleanCheckbox value="#{adminNotificationBean.sendEmail}" itemLabel="#{msg.send_notification_also_per_mail}"
@@ -67,7 +82,7 @@
 				</ui:fragment>
 			</div>
 
-			<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}"/>
+			<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" update="@form"/>
 		</p:panel>
 	</h:form>
 </ui:define>

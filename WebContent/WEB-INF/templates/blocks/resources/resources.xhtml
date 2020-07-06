@@ -2,8 +2,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+                xmlns:p="http://primefaces.org/ui">
 
 <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
 
@@ -52,36 +51,38 @@
         <h:form id="res_toolbar">
             <p:toolbar styleClass="d-flex align-items-center justify-content-between">
                 <f:facet name="left">
-                    <p:commandButton icon="fa fa-folder-open" title="#{msg.show_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();" rendered="#{!groupResourcesBean.showFoldersTree}">
+                    <p:commandButton icon="fa fa-folder-open" title="#{msg.show_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();"
+                                     rendered="#{!groupResourcesBean.showFoldersTree}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.showFoldersTree}" value="true"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-folder" title="#{msg.hide_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.showFoldersTree}">
+                    <p:commandButton icon="fa fa-folder" title="#{msg.hide_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();"
+                                     rendered="#{groupResourcesBean.showFoldersTree}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.showFoldersTree}" value="false"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view == 'table'}">
+                    <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();"
+                                     rendered="#{groupResourcesBean.view == 'table'}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="grid"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-th-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view == 'grid'}">
+                    <p:commandButton icon="fa fa-th-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();"
+                                     rendered="#{groupResourcesBean.view == 'grid'}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="list"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-list" title="#{msg.table_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view == 'list'}">
+                    <p:commandButton icon="fa fa-list" title="#{msg.table_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();"
+                                     rendered="#{groupResourcesBean.view == 'list'}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="table"/>
                     </p:commandButton>
 
-                    <ui:fragment rendered="#{userBean.admin}">
-                        <!-- TODO @astappiev: The download dialog and its bean must be improved before it can be shown -->
-                        <span class="ui-separator"><span class="ui-icon fa fa-ellipsis-v"/></span>
-                        <p:commandButton type="button" title="#{msg['group_resources.download_backup']}" icon="fa fa-cloud-download"
-                                         onclick="PF('dataExportedDialog').show();"/>
-                    </ui:fragment>
+                    <p:commandButton type="button" title="#{msg['group_resources.download_backup']}" icon="fa fa-cloud-download"
+                                     onclick="PF('dataExportedDialog').show();" rendered="#{groupResourcesBean.group.canDeleteGroup(userBean.user)}"/>
                 </f:facet>
 
                 <f:facet name="right">
-                    <p:menuButton styleClass="guide-add-resource" value="#{msg.add}" icon="fa fa-plus" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
+                    <p:menuButton styleClass="guide-add-resource" value="#{msg.add}" icon="fa fa-plus"
+                                  rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
                         <p:menuitem id="menu_create_folder" value="#{msg.create_folder}" icon="fa fa-folder" ajax="true"
                                     oncomplete="PF('createFolderDialog').show();return false;" update=":createFolderDialog"
                                     actionListener="#{addFolderBean.create(groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
@@ -239,7 +240,8 @@
 </p:dialog>
 
 <p:dialog header="#{msg['group_resources.download_backup']}" widgetVar="dataExportedDialog" appendTo="@(body)"
-          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" rendered="#{userBean.admin}">
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true"
+          rendered="#{groupResourcesBean.group.canDeleteGroup(userBean.user)}">
     <h:form>
         <h:outputFormat value="#{msg.export_resources_warning}" styleClass="d-block mb-3">
             <f:param value="#{groupResourcesBean.group.resourcesCount}"/>
