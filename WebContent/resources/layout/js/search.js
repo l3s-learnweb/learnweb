@@ -135,8 +135,8 @@ $(() => {
   });
 
   // To keep track of resource click in the web search or resources_list view
-  $(document).on('mouseup', '.search-item-web a.res-link', (e) => {
-    const tempResourceId = $(e.currentTarget).closest('.search-item').attr('id').substring(9);
+  $(document).on('mouseup', '#searchResults .search-item', (e) => {
+    const tempResourceId = $(e.currentTarget).attr('id').substring(9);
     commandOnResourceClick([{ name: 'resourceId', value: tempResourceId }]);
   });
 });

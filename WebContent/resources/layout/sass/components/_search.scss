@@ -24,6 +24,21 @@
   }
 }
 
+.snippet-clicked {
+  &.search-item-web {
+    background-color: $lightGreen;
+  }
+
+  &.search-item-image,
+  &.search-item-video {
+    border: 3px solid $greenDarker;
+  }
+}
+
+.snippet-filtered {
+  display: none !important;
+}
+
 .search-item-web {
   .item-controls > *:not(.always-visible) {
     opacity: 0;

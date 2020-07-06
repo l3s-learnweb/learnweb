@@ -8,7 +8,7 @@
     <h:outputScript library="vendor" name="justifiedGallery-v3.7.0/jquery.justifiedGallery.min.js" target="body"/>
 
     <ui:repeat var="res" value="#{resources}">
-        <a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-image search-item-lightbox d-inline-block">
+        <a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-image search-item-lightbox d-inline-block ${res.clicked ? 'snippet-clicked' : ''}">
             <img src="#{res.mediumThumbnail.url}" height="#{res.mediumThumbnail.height}" width="#{res.mediumThumbnail.width}" alt="#{res.title}"/>
         </a>
     </ui:repeat>

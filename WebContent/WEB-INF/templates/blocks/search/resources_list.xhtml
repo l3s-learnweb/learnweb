@@ -13,7 +13,7 @@
             </h:outputFormat>
         </h:panelGroup>
 
-        <div class="search-item search-item-web my-3 d-flex" id="resource_#{res.rank}">
+        <div class="search-item search-item-web my-3 d-flex ${res.clicked ? 'snippet-clicked py-2 pr-1' : ''}" id="resource_#{res.rank}">
             <div class="item-controls d-flex flex-column mr-1 mt-1 text-center">
                 <ui:fragment>
                     <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
