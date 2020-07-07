@@ -24,9 +24,6 @@ public class EmailValidator extends AbstractValidator<Object> {
                 }
                 throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, message));
             }
-
-            // TODO @astappiev: connect to bounce manager
-            // addMessage(FacesMessage.SEVERITY_ERROR, "The mail server at " + mailServer + " responds that the address " + email + " doesn't exist. Contact our support team to solve this issue: learnweb-support@l3s.de");
         }
     }
 }

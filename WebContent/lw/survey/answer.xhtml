@@ -72,9 +72,9 @@
 
 					<c:if test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
 						<p:outputLabel value="#{field.label}"/>
-						<p:selectOneMenu id="input_selectone_#{field.id}" value="#{surveyBean.userAnswers.answers[field.id]}"
-										 editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}" class="border-box-100" title="#{field.info}">
-							<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+						<p:selectOneMenu id="input_selectone_#{field.id}" value="#{surveyBean.userAnswers.answers[field.id]}" class="border-box-100"
+										 editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}" title="#{field.info}">
+							<f:selectItems value="#{field.answers}"/>
 						</p:selectOneMenu>
 					</c:if>
 
@@ -82,26 +82,26 @@
 						<p:outputLabel value="#{field.label}"/>
 						<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}" value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
 											  label="" multiple="true" title="#{field.info}" required="#{field.required}"
-											  filter="#{field.optionsList.size() gt 8}" filterMatchMode="startsWith">
-							<f:selectItems value="#{field.optionsList}" var="selectItemOption" itemLabel="#{selectItemOption.label}" itemValue="#{selectItemOption.value}"/>
+											  filter="#{field.options.size() gt 8}" filterMatchMode="startsWith">
+							<f:selectItems value="#{field.options}"/>
 						</p:selectCheckboxMenu>
 					</c:if>
 
 					<c:if test="#{field.type eq 'ONE_RADIO'}">
 						<p:outputLabel value="#{field.label}"/>
 						<p:selectOneRadio id="input_oneradio_#{field.id}" value="#{surveyBean.userAnswers.answers[field.id]}" label=""
-										  multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.optionsList.size() gt 8}"
+										  multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.answers.size() gt 8}"
 										  layout="responsive" columns="10" filterMatchMode="startsWith">
-							<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+							<f:selectItems value="#{field.answers}"/>
 						</p:selectOneRadio>				
 					</c:if>
 
 					<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
 						<p:outputLabel value="#{field.label}"/>
 						<p:selectManyCheckbox id="input_manycheckbox_#{field.id}" value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
-							label="" multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.optionsList.size() gt 8}"
+							label="" multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.answers.size() gt 8}"
 											  filterMatchMode="startsWith" panelStyle="width:250px" layout="pageDirection" columns="1">
-							<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+							<f:selectItems value="#{field.answers}"/>
 						</p:selectManyCheckbox>
 					</c:if>
 				</div>

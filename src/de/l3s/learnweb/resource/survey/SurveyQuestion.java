@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.model.SelectItem;
-
 import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.Learnweb;
@@ -59,12 +57,11 @@ public class SurveyQuestion implements Serializable, Cloneable {
     private QuestionType type;
     private int id; //question id
     private int surveyId;
-    Map<String, Object> options = new HashMap<>(); // default options for some input types like OneMenu
+    private Map<String, Object> options = new HashMap<>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
     private boolean deleted = false;
     private int order;
-    private List<SelectItem> optionsList;
     private List<SurveyQuestionOption> answers = new ArrayList<>(); // predefined answers for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
 
     public SurveyQuestion(QuestionType type) {
@@ -131,23 +128,6 @@ public class SurveyQuestion implements Serializable, Cloneable {
 
     public void setOptions(Map<String, Object> options) {
         this.options = options;
-    }
-
-    public List<SelectItem> getOptionsList() {
-        if (null == optionsList) {
-            // TODO @astappiev/@hulyi: what is the purpose of this method?
-            /* maybe Options and Answers were confused
-             * answers shall anyway be renamed to Options
-             *
-             *
-             */
-
-            optionsList = new ArrayList<>(options.size());
-            for (Map.Entry<String, Object> option : options.entrySet()) {
-                optionsList.add(new SelectItem(option.getValue(), option.getKey()));
-            }
-        }
-        return optionsList;
     }
 
     public List<String> completeText(String query) {
