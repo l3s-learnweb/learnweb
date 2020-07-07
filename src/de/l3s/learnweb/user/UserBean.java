@@ -38,6 +38,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.StringHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @SessionScoped
@@ -352,7 +353,7 @@ public class UserBean implements Serializable {
         try {
             return getNewGroups().size();
         } catch (SQLException e) {
-            log.catching(e);
+            log.error(BeanHelper.getRequestSummary(), e);
         }
 
         return 0;

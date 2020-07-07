@@ -51,4 +51,8 @@ public class ConverterRequest {
         return key;
     }
 
+    @Override
+    public String toString() {
+        return "ConverterRequest [fileType=" + fileType + ", outputType=" + outputType + ", title=" + title + ", url=" + url + ", key=" + key + ", thumbnail=" + thumbnail + "]";
+    }
 }

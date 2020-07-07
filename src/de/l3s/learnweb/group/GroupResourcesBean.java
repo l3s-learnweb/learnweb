@@ -352,11 +352,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             if (items.failed() > 0) {
                 addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.cant_be_processed", items.failed());
             }
-        } catch (IllegalArgumentException | IllegalAccessError e) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, e.getMessage());
-            log.catching(e);
-            // TODO @astappiev: still need to decide if growls can be used to handle errors
-            // addErrorGrowl(e.getMessage(), e);
+        } catch (IllegalArgumentException | IllegalAccessError e) { // these exceptions will have user friendly messages
+            addErrorMessage(e.getMessage(), e);
         } catch (JsonParseException | SQLException e) {
             addErrorMessage(e);
         }

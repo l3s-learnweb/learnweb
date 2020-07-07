@@ -55,7 +55,7 @@ public class ConverterService {
                 converterResponse = gson.fromJson(response.body(), ConverterResponse.class);
             }
         } catch (IOException | InterruptedException e) {
-            log.catching(e);
+            log.error("Can't process request: {}", model, e);
         }
 
         return converterResponse;

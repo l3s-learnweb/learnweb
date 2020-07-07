@@ -143,13 +143,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         return showGroupHistory;
     }
 
-    public User getCurrentUser() {
+    public User getCurrentUser() throws SQLException {
         User user = null;
-        try {
-            user = getLearnweb().getUserManager().getUser(selectedUserId);
-        } catch (SQLException e) {
-            log.catching(e);
-        }
+
+        user = getLearnweb().getUserManager().getUser(selectedUserId);
+
         return user == null ? getUser() : user;
     }
 

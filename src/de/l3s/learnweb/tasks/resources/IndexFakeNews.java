@@ -14,8 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -96,7 +98,7 @@ public class IndexFakeNews {
         }
     }
 
-    private void indexSnopes() {
+    private void indexSnopes() throws JsonIOException, JsonSyntaxException, IOException, SQLException {
         File[] files = new File("./Snopes").listFiles();
         if (files != null) {
             int i = 1;
@@ -107,52 +109,49 @@ public class IndexFakeNews {
         }
     }
 
-    private void indexSnopesFile(File file) {
-        try {
-            Resource resource = new Resource();
-            resource.setType(ResourceType.website);
-            resource.setSource(ResourceService.factcheck);
-            resource.setLocation("FactCheck");
-            resource.setMetadataValue("publisher", "snopes.com");
-            resource.setUserId(7727); // Admin
-            resource.setGroupId(1346); // Admin Fact Check group
+    private void indexSnopesFile(File file) throws JsonIOException, JsonSyntaxException, IOException, SQLException {
+        Resource resource = new Resource();
+        resource.setType(ResourceType.website);
+        resource.setSource(ResourceService.factcheck);
+        resource.setLocation("FactCheck");
+        resource.setMetadataValue("publisher", "snopes.com");
+        resource.setUserId(7727); // Admin
+        resource.setGroupId(1346); // Admin Fact Check group
 
-            JsonObject jsonObject = JsonParser.parseReader(new FileReader(file, StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonObject jsonObject = JsonParser.parseReader(new FileReader(file, StandardCharsets.UTF_8)).getAsJsonObject();
 
-            String title = jsonObject.get("Fact Check").getAsString();
-            if (StringUtils.isEmpty(title)) {
-                title = jsonObject.get("Claim").getAsString();
-            }
-            if (StringUtils.isEmpty(title)) {
-                title = jsonObject.get("Claim_ID").getAsString().replace("-", " ");
-            }
-            resource.setTitle(title);
-
-            String origins = jsonObject.get("Origins").getAsString();
-            String description = jsonObject.get("Description").getAsString();
-            description += "\n" + origins;
-            resource.setDescription(description);
-
-            String machineDescription = jsonObject.get("Example").getAsString();
-            resource.setMachineDescription(machineDescription);
-
-            String url = jsonObject.get("URL").getAsString();
-            if (!url.startsWith("http")) {
-                url = "http://" + url;
-            }
-            resource.setUrl(url);
-
-            resource.save();
-
-            log.debug("Added resource: " + resource);
-            /*
-            String tags = jsonObject.get("Tags").getAsString();
-            for(String tag : tags.split(";"))
-                resource.addTag(tag, user);
-            */
-        } catch (Exception e) {
-            log.catching(e);
+        String title = jsonObject.get("Fact Check").getAsString();
+        if (StringUtils.isEmpty(title)) {
+            title = jsonObject.get("Claim").getAsString();
         }
+        if (StringUtils.isEmpty(title)) {
+            title = jsonObject.get("Claim_ID").getAsString().replace("-", " ");
+        }
+        resource.setTitle(title);
+
+        String origins = jsonObject.get("Origins").getAsString();
+        String description = jsonObject.get("Description").getAsString();
+        description += "\n" + origins;
+        resource.setDescription(description);
+
+        String machineDescription = jsonObject.get("Example").getAsString();
+        resource.setMachineDescription(machineDescription);
+
+        String url = jsonObject.get("URL").getAsString();
+        if (!url.startsWith("http")) {
+            url = "http://" + url;
+        }
+        resource.setUrl(url);
+
+        resource.save();
+
+        log.debug("Added resource: " + resource);
+        /*
+        String tags = jsonObject.get("Tags").getAsString();
+        for(String tag : tags.split(";"))
+            resource.addTag(tag, user);
+        */
+
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException {
