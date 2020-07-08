@@ -2,11 +2,9 @@ package de.l3s.learnweb.group;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
@@ -76,11 +74,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     }
 
     public void onGroupEdit() {
-        if (null == group) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            return;
-        }
-
         try {
             if (!editedGroupDescription.equals(group.getDescription())) {
                 group.setDescription(editedGroupDescription);
@@ -117,19 +110,8 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public void copyGroup() {
-
-        if (null == group) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            return;
-        }
-
-        try {
-            group.copyResourcesToGroupById(selectedResourceTargetGroupId, getUser());
-        } catch (SQLException e) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            log.error("unhandled error", e);
-        }
+    public void copyGroup() throws SQLException {
+        group.copyResources(selectedResourceTargetGroupId, getUser());
         addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
     }
 
@@ -161,21 +143,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
 
     public void setEditedGroupLeaderId(int editedGroupLeaderId) {
         this.editedGroupLeaderId = editedGroupLeaderId;
-    }
-
-    public List<SelectItem> getMembersSelectItemList() throws SQLException {
-        if (null == group) {
-            return new ArrayList<>();
-        }
-
-        List<SelectItem> yourList;
-        yourList = new ArrayList<>();
-
-        for (User member : group.getMembers()) {
-            yourList.add(new SelectItem(member.getId(), member.getUsername()));
-        }
-
-        return yourList;
     }
 
     public boolean isHypothesisEnabled() throws SQLException {

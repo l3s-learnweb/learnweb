@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -825,6 +826,48 @@ public class ResourceManager {
                 return source.toString();
             default:
                 return "Learnweb";
+        }
+    }
+
+    public Resource copyResource(final Resource resource, final int targetGroupId, final int targetFolderId, final User user) throws SQLException {
+        Resource copyResource = resource.clone();
+        copyResource.setGroupId(targetGroupId);
+        copyResource.setFolderId(targetFolderId);
+        copyResource.setUser(user);
+        saveResource(copyResource);
+
+        copyFiles(copyResource, resource.getFiles().values());
+        return resource;
+    }
+
+    private void copyFiles(final Resource resource, final Collection<File> originalFiles) throws SQLException {
+        try {
+            for (File file : originalFiles) {
+                if (List.of(TYPE.THUMBNAIL_VERY_SMALL, TYPE.THUMBNAIL_SMALL, TYPE.THUMBNAIL_SQUARED, TYPE.THUMBNAIL_MEDIUM, TYPE.THUMBNAIL_LARGE,
+                    TYPE.CHANGES, TYPE.HISTORY_FILE).contains(file.getType())) {
+                    continue; // skip them
+                }
+
+                File copyFile = new File(file);
+                copyFile.setResourceId(resource.getId());
+                // TODO @astappiev: improve copy performance by using fs copy
+                learnweb.getFileManager().save(copyFile, file.getInputStream());
+                resource.addFile(copyFile);
+
+                if (file.getType() == TYPE.FILE_MAIN) {
+                    if (resource.getUrl().equals(file.getUrl())) {
+                        resource.setUrl(copyFile.getUrl());
+                    }
+
+                    if (resource.getFileUrl().equals(file.getUrl())) {
+                        resource.setFileUrl(copyFile.getUrl());
+                    }
+
+                    saveResource(resource);
+                }
+            }
+        } catch (IOException e) {
+            log.error("Error during copying resource files {}", resource, e);
         }
     }
 

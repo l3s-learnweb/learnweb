@@ -26,6 +26,8 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
     private static final long serialVersionUID = 6699391944318695838L;
     private static final Logger log = LogManager.getLogger(SelectLocationBean.class);
 
+    private final Group privateGroup;
+
     private Group targetGroup;
     private Folder targetFolder;
 
@@ -35,6 +37,8 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
 
     public SelectLocationBean() {
         //log.debug("Create new SelectLocationBean");
+
+        privateGroup = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());
     }
 
     public Group getTargetGroup() {
@@ -87,12 +91,12 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
             return null;
         }
 
-        if (groupsTree == null || groupsTreeUpdate.isBefore(Instant.now().minus(Duration.ofSeconds(15)))) {
+        if (groupsTree == null || groupsTreeUpdate.isBefore(Instant.now().minus(Duration.ofSeconds(30)))) {
             GroupManager gm = getLearnweb().getGroupManager();
             DefaultTreeNode treeNode = new DefaultTreeNode("WriteAbleGroups");
 
-            Group privateGroup = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());
             TreeNode privateGroupNode = new DefaultTreeNode("group", privateGroup, treeNode);
+            targetGroup = privateGroup;
             privateGroupNode.setSelected(true);
 
             for (Group group : user.getWriteAbleGroups()) {

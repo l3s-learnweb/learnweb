@@ -54,6 +54,12 @@ public class File implements Serializable, HasId {
         this.mimeType = mimeType;
     }
 
+    public File(final File file) {
+        this.type = file.getType();
+        this.name = file.getName();
+        this.mimeType = file.getMimeType();
+    }
+
     @Override
     public int getId() {
         return fileId;

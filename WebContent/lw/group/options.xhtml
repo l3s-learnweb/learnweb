@@ -286,7 +286,7 @@
 	<p:dialog widgetVar="changeLeader" header="#{msg.change_leader}" modal="true" styleClass="overflow-hidden">
 		<h:form>
 			<p:selectOneMenu id="edit_group_leader" value="#{groupOptionsBean.editedGroupLeaderId}" styleClass="mb-3 w-100" immediate="true" required="true">
-				<f:selectItems value="#{groupOptionsBean.membersSelectItemList}"/>
+				<f:selectItems value="#{groupOptionsBean.group.members}" var="user" itemValue="#{user.id}" itemLabel="#{user.username}"/>
 			</p:selectOneMenu>
 			<div class="d-flex justify-content-end">
 				<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" process="@form" oncomplete="PF('changeLeader').hide()" update=":group_moderator_form">

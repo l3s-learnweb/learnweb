@@ -370,19 +370,18 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             throw new IllegalAccessError("Not allowed to add resources to target group!");
         }
 
+        int targetGroupId = HasId.getIdOrDefault(targetGroup, 0);
+        int targetFolderId = HasId.getIdOrDefault(targetFolder, 0);
+
         for (Resource resource : items.getResources()) {
-            Resource newResource = resource.clone();
-            newResource.setGroupId(HasId.getIdOrDefault(targetGroup, 0));
-            newResource.setFolderId(HasId.getIdOrDefault(targetFolder, 0));
-            newResource.setUser(getUser());
-            newResource.save();
+            getLearnweb().getResourceManager().copyResource(resource, targetGroupId, targetFolderId, getUser());
             log(Action.adding_resource, targetGroup.getId(), resource.getId());
         }
 
         for (Folder folder : items.getFolders()) {
             Folder newFolder = new Folder(folder);
-            newFolder.setGroupId(HasId.getIdOrDefault(targetGroup, 0));
-            newFolder.setParentFolderId(HasId.getIdOrDefault(targetFolder, 0));
+            newFolder.setGroupId(targetGroupId);
+            newFolder.setParentFolderId(targetFolderId);
             newFolder.setUserId(getUser().getId());
             newFolder.save();
             log(Action.add_folder, targetGroup.getId(), newFolder.getId());

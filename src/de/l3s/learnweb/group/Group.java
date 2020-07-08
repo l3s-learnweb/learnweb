@@ -224,13 +224,34 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     /**
      * Copy resource from this group to another group referred to by groupId, and by which user.
      */
-    public void copyResourcesToGroupById(int groupId, User user) throws SQLException {
+    public void copyResources(int groupId, User user) throws SQLException {
+        HashMap<Integer, Integer> foldersMap = new HashMap<>();
+        foldersMap.put(0, 0);
+
+        for (Folder folder : getSubFolders()) {
+            copyFolderRecursive(folder, 0, groupId, user, foldersMap);
+        }
+
         for (Resource resource : getResources()) {
-            Resource newResource = resource.clone();
-            newResource.setGroupId(groupId);
-            newResource.setFolderId(0); // TODO @astappiev: copy folders structure too
-            newResource.setUser(user);
-            newResource.save();
+            Learnweb.getInstance().getResourceManager().copyResource(resource, groupId, foldersMap.get(resource.getFolderId()), user);
+        }
+    }
+
+    private void copyFolderRecursive(final Folder folder, final int parentFolderId,
+        final int groupId, final User user, final HashMap<Integer, Integer> foldersMap) throws SQLException {
+
+        Folder newFolder = new Folder(folder);
+        newFolder.setGroupId(groupId);
+        newFolder.setParentFolderId(parentFolderId);
+        newFolder.setUser(user);
+        newFolder.save();
+
+        foldersMap.put(folder.getId(), newFolder.getId());
+
+        if (folder.getSubFolders() != null && !folder.getSubFolders().isEmpty()) {
+            for (Folder subFolder : folder.getSubFolders()) {
+                copyFolderRecursive(subFolder, newFolder.getId(), groupId, user, foldersMap);
+            }
         }
     }
 
@@ -303,7 +324,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     /**
-     * @param actions if actions is null the default filter is used
      * @param limit if limit is -1 all log entries are returned
      */
     public List<LogEntry> getLogs(int limit) throws SQLException {

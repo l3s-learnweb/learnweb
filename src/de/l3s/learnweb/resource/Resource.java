@@ -168,12 +168,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         }
 
         setMetadata(new HashMap<>(old.getMetadata()));
-        /*
-        for(File file :files)
-        {
-            // TODO @astappiev: copy files too. The DB layout doesn't support this right now
-        }
-        */
     }
 
     /**
@@ -842,13 +836,11 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      */
     public void addFile(File file) throws SQLException {
         files.put(file.getType().ordinal(), file);
-        file.setResourceId(id);
 
-        if (id > 0) { // the resource is already stored, the new file needs to be added to the database
-            FileManager fm = Learnweb.getInstance().getFileManager();
-            fm.addFileToResource(file, this);
+        if (id > 0 && file.getResourceId() != id) { // the resource is already stored, the new file needs to be added to the database
+            file.setResourceId(id);
+            Learnweb.getInstance().getFileManager().addFileToResource(file, this);
         }
-
     }
 
     public File getFile(File.TYPE fileType) {
