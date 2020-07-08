@@ -14,8 +14,8 @@
           <element id="module-output" name="Learnweb" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-impl:2.3-next-M3" />
           <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-api:2.3-next-M3" />
+          <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-impl:2.3-next-M3" />
           <element id="library" level="project" name="Maven: org.jboss.weld.servlet:weld-servlet-shaded:3.1.4.Final" />
           <element id="library" level="project" name="Maven: org.hibernate.validator:hibernate-validator:6.1.5.Final" />
           <element id="library" level="project" name="Maven: jakarta.validation:jakarta.validation-api:2.0.2" />
