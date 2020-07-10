@@ -350,7 +350,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             }
 
             if (items.failed() > 0) {
-                addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.cant_be_processed", items.failed());
+                addGrowl(FacesMessage.SEVERITY_WARN, "For some reason, {0, choice, 1#{0} resource|1<{0} of resources} can not be processed.", items.failed());
             }
         } catch (IllegalArgumentException | IllegalAccessError e) { // these exceptions will have user friendly messages
             addErrorMessage(e.getMessage(), e);
@@ -441,7 +441,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (skipped > 0) {
-            addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
+            addGrowl(FacesMessage.SEVERITY_WARN, "For some reasons, {0, choice, 1#{0} resource|1<{0} of resources} were skipped.", skipped);
         }
         if (items.size() - skipped > 0) {
             addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.moved_successfully", items.size() - skipped);
@@ -482,7 +482,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (skipped > 0) {
-            addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
+            addGrowl(FacesMessage.SEVERITY_WARN, "For some reasons, {0, choice, 1#{0} resource|1<{0} of resources} were skipped.", skipped);
         }
     }
 
@@ -504,7 +504,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (skipped > 0) {
-            addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
+            addGrowl(FacesMessage.SEVERITY_WARN, "For some reasons, {0, choice, 1#{0} resource|1<{0} of resources} were skipped.", skipped);
         }
     }
 

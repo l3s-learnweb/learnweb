@@ -72,7 +72,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
         BeanAssert.authorized(resource.canViewResource(getUser()));
 
-        BeanAssert.hasPermission(resource.canViewResource(getUser()), "group_resources.access_denied");
+        BeanAssert.hasPermission(resource.canViewResource(getUser()));
 
         log(Action.opening_resource, this.resource.getGroupId(), this.resource.getId());
 

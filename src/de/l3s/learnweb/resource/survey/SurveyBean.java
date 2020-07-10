@@ -38,7 +38,7 @@ public class SurveyBean extends ApplicationBean implements Serializable {
         resource = getLearnweb().getSurveyManager().getSurveyResource(surveyResourceId);
         BeanAssert.validateNotNull(resource);
         BeanAssert.found(!resource.isDeleted(), "This resource has been deleted");
-        BeanAssert.hasPermission(resource.canViewResource(getUser()), "group_resources.access_denied");
+        BeanAssert.hasPermission(resource.canViewResource(getUser()));
 
         // whose answers shall be viewed
         if (surveyUserId <= 0 || surveyUserId == getUser().getId()) {
