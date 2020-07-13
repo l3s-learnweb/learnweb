@@ -80,7 +80,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     public List<Session> getSessions() throws SQLException {
         if (sessions == null && showGroupHistory && selectedGroupId > 0) {
             sessions = getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId);
-        } else if (sessions == null) {
+        } else if (sessions == null && !showGroupHistory) {
             sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(selectedUserId);
         }
 
