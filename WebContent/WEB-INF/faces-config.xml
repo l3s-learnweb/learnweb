@@ -48,7 +48,6 @@
         <converter-for-class>java.lang.String</converter-for-class>
         <converter-class>org.omnifaces.converter.TrimConverter</converter-class>
     </converter>
-
     <faces-config-extension>
         <facelets-processing>
             <file-extension>.xhtml</file-extension>

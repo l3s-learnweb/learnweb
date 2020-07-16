@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,6 +68,13 @@ public class User implements Comparable<User>, Serializable, HasId {
         MALE,
         FEMALE,
         OTHER
+    }
+
+    public enum Guide {
+        HIDE,
+        ADD_RESOURCE,
+        JOIN_GROUP,
+        ADD_PHOTO,
     }
 
     public enum NotificationFrequency {
@@ -138,6 +146,7 @@ public class User implements Comparable<User>, Serializable, HasId {
     private int forumPostCount = -1;
     private transient Organisation organisation;
     private transient ArrayList<Submission> activeSubmissions;
+    private BitSet guides = new BitSet(Guide.values().length);
 
     public User() {
     }
@@ -807,4 +816,43 @@ public class User implements Comparable<User>, Serializable, HasId {
         }
         return activeSubmissions;
     }
+
+    public boolean getGuide(Guide guide) throws SQLException {
+        boolean value = guides.get(guide.ordinal());
+        if (!value) {
+            value = getComputedGuide(guide);
+            setGuide(guide, value);
+        }
+        return value;
+    }
+
+    private boolean getComputedGuide(Guide guide) throws SQLException {
+        switch (guide) {
+            case ADD_RESOURCE:
+                return getResourceCount() > 0;
+            case JOIN_GROUP:
+                return getGroupCount() > 0;
+            case ADD_PHOTO:
+                return getImageFile() != null;
+            default:
+                return false;
+        }
+    }
+
+    public void setGuide(Guide option, boolean value) {
+        guides.set(option.ordinal(), value);
+    }
+
+    protected long[] getGuides() {
+        long[] array = guides.toLongArray();
+        if (array.length == 0) {
+            array = new long[1];
+        }
+        return array;
+    }
+
+    protected void setGuides(long[] stepValues) {
+        this.guides = BitSet.valueOf(stepValues);
+    }
+
 }

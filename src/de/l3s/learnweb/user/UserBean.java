@@ -63,6 +63,8 @@ public class UserBean implements Serializable {
     private final int activeOrganisationId;
     private transient Organisation activeOrganisation;
 
+    private boolean guided; // indicates that the user has started one of the guides
+
     public UserBean() {
         // get preferred language
         locale = Faces.getLocale();
@@ -604,5 +606,13 @@ public class UserBean implements Serializable {
         } else if (isLoggedIn() && (hasAccess != null && !hasAccess)) {
             throw new ForbiddenHttpException();
         }
+    }
+
+    public boolean isGuided() {
+        return guided;
+    }
+
+    public void setGuided(final boolean guided) {
+        this.guided = guided;
     }
 }

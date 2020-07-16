@@ -13,3 +13,4 @@
 | https://github.com/bgrins/spectrum | v1.8.0 | color picker, used on transcript page |  |
 | https://github.com/iamceege/tooltipster | v3.3.0 | used to create tutorial over website | NEW VERSION AVAILABLE |
 | https://github.com/videojs/video.js | v7.8.1 | A HTML5 video/audio player |  |
+| https://github.com/shipshapecode/shepherd | v8.0.1 | used to create tutorial over website |  |

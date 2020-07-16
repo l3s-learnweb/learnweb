@@ -42,3 +42,56 @@
     max-width: 100%;
   }
 }
+
+.ui-guide {
+  border: none !important;
+
+  ul {
+    li {
+      border-top: none !important;
+    }
+  }
+
+  .ui-steps-item.ui-state-highlight {
+    border-top: none !important;
+
+    ~ .ui-steps-item {
+      border-top: none !important;
+    }
+  }
+
+  .completed {
+    background-color: $lightGreen;
+    color: $themePrimaryColor;
+    border-top: 4px solid $themePrimaryColor !important;
+
+    .ui-steps-title {
+      color: $themePrimaryColor !important;
+      font-weight: 400;
+      font-family: sans-serif;
+    }
+
+    &::before {
+      color: $themePrimaryColor !important;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .not-completed {
+    background-color: $lightBlue;
+    color: $blue;
+    border-top: 4px solid $blue !important;
+
+    .ui-steps-title {
+      color: $blue !important;
+      font-weight: 400;
+      font-family: sans-serif;
+    }
+
+    &::before {
+      color: $blue !important;
+      margin-right: 0.5rem;
+    }
+  }
+}
+

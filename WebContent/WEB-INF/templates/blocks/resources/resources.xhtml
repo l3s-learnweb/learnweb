@@ -2,7 +2,8 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions">
 
 <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
 
@@ -275,6 +276,17 @@
         createSelectable('resourcesView');
         createDropArea('resourcesView');
         onResourcesUpdated();
+    });
+</h:outputScript>
+
+<h:outputScript type="text/javascript" rendered="#{userBean.guided}">
+    let guide, guideFinish;
+
+    $(() => {
+        document.querySelector('[id^="res_toolbar:"] > ul').classList.add("guide-menu-add-resource");
+        guide = resourcePageInitializeGuide('#{msg['guide.add_your_first_resource']}');
+        guideFinish = guideAfterComplete("#{msg['guide.finish']}", "#{msg['guide.congratulations']}", "#{msg.yes}", "#{msg.no}", '#{of:format1(msg['guide.go_to'], msg.myResourcesTitle)}', '#{of:format1(msg['guide.go_to'], msg.myGroups)}', '#{of:format1(msg['guide.go_to'], msg.myProfileTitle)}', [#{userBean.user.getGuideOption("ADD_RESOURCE")}, #{userBean.user.getGuideOption("JOIN_GROUP")}, #{userBean.user.getGuideOption("ADD_PHOTO")}]);
+        guide.show();
     });
 </h:outputScript>
 

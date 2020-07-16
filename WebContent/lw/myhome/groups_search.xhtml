@@ -33,7 +33,7 @@
 
                 <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.title}"
                           filterMatchMode="contains">
-                    <h:outputLink value="group/overview.jsf">
+                    <h:outputLink value="group/overview.jsf" styleClass="guide-col-title">
                         <f:param name="group_id" value="#{group.id}"/>
                         <h:outputText value="#{group.title}"/>
                     </h:outputLink>
@@ -76,6 +76,15 @@
             </p:dataTable>
         </ui:fragment>
     </h:form>
+
+    <h:outputScript type="text/javascript" rendered="#{userBean.guided}">
+      let guide;
+
+      $(() => {
+        guide = groupsSearchPageInitializeGuide("#{msg['guide.filter_groups']}", "#{msg['guide.explore_group']}", "#{msg.next_step}");
+        guide.start();
+      });
+    </h:outputScript>
 </ui:define>
 
 </ui:composition>

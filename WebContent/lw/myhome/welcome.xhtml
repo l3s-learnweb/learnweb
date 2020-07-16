@@ -3,7 +3,8 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:lw="http://l3s.de/learnweb"
+                xmlns:of="http://omnifaces.org/functions">
 
 <ui:param name="pageTitle" value="#{msg.welcome}"/>
 
@@ -14,8 +15,33 @@
 </ui:define>
 
 <ui:define name="center_layout">
+
     <div class="row">
         <div class="col-12 col-md-6">
+            <p:outputPanel id="guide" styleClass="d-block">
+                <p:panel rendered="#{!userBean.user.getGuide('HIDE')}">
+                    <f:facet name="header">
+                        <div class="d-flex align-items-center justify-content-between">
+                            #{msg['guide.getting_started']}
+                            <p:commandButton styleClass="alt-btn" action="#{userBean.user.setGuide('HIDE', true)}" update=":guide" value="#{msg.hide}"/>
+                        </div>
+                    </f:facet>
+                    <h:form>
+                        <div class="d-flex justify-content-center mb-2">
+                            #{msg['guide.guide_preview']}
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <!--activeIndex is set to the last guide to allow clicks on all blocks.-->
+                            <p:steps activeIndex="3" styleClass="mb-2 ui-guide" readonly="false">
+                                <p:menuitem styleClass="fa #{userBean.user.getGuide('ADD_RESOURCE') ? 'completed fa-check-circle-o' : 'not-completed fa-circle-o'}" actionListener="#{userBean.setGuided(true)}" onclick="guideResource.start();" value="#{msg.addResource}" global="false"/>
+                                <p:menuitem styleClass="fa #{userBean.user.getGuide('JOIN_GROUP') ? 'completed fa-check-circle-o' : 'not-completed fa-circle-o'}" actionListener="#{userBean.setGuided(true)}" onclick="guideGroups.start();" value="#{msg.join_group}" global="false"/>
+                                <p:menuitem styleClass="fa #{userBean.user.getGuide('ADD_PHOTO') ? 'completed fa-check-circle-o' : 'not-completed fa-circle-o'}" actionListener="#{userBean.setGuided(true)}" onclick="guideSettings.start();" value="#{msg['guide.add_photo']}" global="false"/>
+                            </p:steps>
+                        </div>
+                    </h:form>
+                </p:panel>
+            </p:outputPanel>
+
             <p:panel>                
                 <f:facet name="header">
                     #{msg.welcome}
@@ -118,9 +144,6 @@
         </div>
 
         <div class="col-12 col-md-6">
-            <p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
-                <ui:include src="/WEB-INF/templates/blocks/guide.xhtml"/>
-            </p:panel>
 
             <!--Submissions-->
             <p:panel header="#{msg.submissions}" rendered="#{not empty welcomeBean.activeSubmissions}">
@@ -161,7 +184,18 @@
                 </ui:repeat>
             </p:panel>
         </div>
-    </div>
-</ui:define>
 
+    </div>
+
+    <h:outputScript type="text/javascript">
+        let guideResource, guideGroups, guideSettings;
+
+        $(() => {
+            guideResource = welcomePageInitializeGuide('#{of:format1(msg['guide.go_to'], msg.myResourcesTitle)}', '.guide-resources');
+            guideGroups = welcomePageInitializeGuide('#{of:format1(msg['guide.go_to'], msg.myGroups)}', '.guide-groups');
+            guideSettings = welcomePageInitializeGuideSettings('#{of:format1(msg['guide.go_to'], msg.myProfileTitle)}');
+        });
+    </h:outputScript>
+
+</ui:define>
 </ui:composition>

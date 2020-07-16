@@ -48,7 +48,7 @@
 
                     <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
                         <p:menuitem url="#{request.contextPath}/lw/user/detail.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-user" value="#{msg.myProfileTitle}"/>
-                        <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-cog" value="#{msg.settings}"/>
+                        <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-cog" styleClass="guide-profile-page" value="#{msg.settings}"/>
                         <p:menuitem url="#{request.contextPath}/lw/dashboard/index.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}"/>
                         <p:menuitem url="#{request.contextPath}/lw/myhome/search_history.jsf" icon="fa fa-fw fa-history" value="#{msg['search_history.title']}" rendered="#{userBean.admin}"/>
                         <p:menuitem action="#{loginBean.logout}" icon="fa fa-fw fa-sign-out" value="#{msg.logout}"/>
@@ -57,5 +57,6 @@
             </h:form>
         </div>
     </header>
+
 
 </ui:composition>

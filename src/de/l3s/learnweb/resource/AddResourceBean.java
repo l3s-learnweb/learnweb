@@ -24,6 +24,7 @@ import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.survey.Survey;
 import de.l3s.learnweb.resource.survey.SurveyResource;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.UrlHelper;
 
 @Named
@@ -239,6 +240,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             resource.setGroupId(targetGroup.getId());
             resource.setFolderId(targetFolder != null ? targetFolder.getId() : 0);
             resource.save();
+            getUser().setGuide(User.Guide.ADD_RESOURCE, true);
 
             log(Action.adding_resource, resource.getGroupId(), resource.getId());
 

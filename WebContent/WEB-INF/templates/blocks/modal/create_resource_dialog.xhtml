@@ -125,7 +125,7 @@
 
                 <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update="create_resource_form"
                                  onsuccess="resourceAddedHook(); return false;"
-                                 oncomplete="if (!args.validationFailed) {PF('createResourceDialog').hide();}"
+                                 oncomplete="if (!args.validationFailed) {PF('createResourceDialog').hide(); if (#{userBean.guided}) {guideFinish.show();}}"
                                  rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">
                 </p:commandButton>
 

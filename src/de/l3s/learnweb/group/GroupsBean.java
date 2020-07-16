@@ -63,6 +63,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
                 }
             }
             user.joinGroup(selectedGroup);
+            user.setGuide(User.Guide.JOIN_GROUP, true);
             myGroups = getUser().getGroups();
             joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
             log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
@@ -132,16 +133,17 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         }
 
         try {
-            newGroup.setLeader(getUser());
+            User user = getUser();
+            newGroup.setLeader(user);
 
             if (newGroup.getCourseId() == 0) { // this happens when the user is only member of a single course and the course selector isn't shown
-                newGroup.setCourseId(getUser().getCourses().get(0).getId());
+                newGroup.setCourseId(user.getCourses().get(0).getId());
             }
             Group group = getLearnweb().getGroupManager().save(newGroup);
-            getUser().joinGroup(group);
-
+            user.joinGroup(group);
+            user.setGuide(User.Guide.JOIN_GROUP, true);
             // refresh group list
-            myGroups = getUser().getGroups();
+            myGroups = user.getGroups();
 
             // log and show notification
             log(Action.group_creating, group.getId(), group.getId());

@@ -1,0 +1,204 @@
+.shepherd-element {
+  background: $white;
+  opacity: 0;
+  outline: none;
+  transition: opacity .3s,visibility .3s;
+  visibility: hidden;
+  border: 1px solid $themePrimaryColor;
+  box-sizing: border-box;
+  z-index: 9999;
+
+
+  &[data-popper-reference-hidden]:not(.shepherd-centered) {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  *, :after, :before {
+    box-sizing: border-box;
+  }
+
+
+  .shepherd-arrow {
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    z-index: -1;
+  }
+  .shepherd-arrow:before {
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    z-index: -1;
+    content: "";
+    transform: rotate(45deg);
+    background: #fff;
+  }
+
+  .shepherd-arrow-top {
+    .shepherd-arrow:before {
+      border-top: 1px solid $themePrimaryColor;
+      border-left: 1px solid $themePrimaryColor;
+    }
+  }
+  .shepherd-arrow-bottom{
+    .shepherd-arrow:before {
+      border-bottom: 1px solid $themePrimaryColor;
+      border-right: 1px solid $themePrimaryColor;
+    }
+  }
+
+  .shepherd-arrow-right{
+    .shepherd-arrow:before {
+      border-top: 1px solid $themePrimaryColor;
+      border-right: 1px solid $themePrimaryColor;
+    }
+  }
+
+  .shepherd-arrow-left{
+    .shepherd-arrow:before {
+      border-bottom: 1px solid $themePrimaryColor;
+      border-left: 1px solid $themePrimaryColor;
+    }
+  }
+
+  &[data-popper-placement^=top] > .shepherd-arrow {
+    bottom: -8px;
+  }
+
+  &[data-popper-placement^=bottom] > .shepherd-arrow {
+    top: -8px;
+  }
+
+  &[data-popper-placement^=left] > .shepherd-arrow {
+    right: -8px;
+  }
+
+  &[data-popper-placement^=right] > .shepherd-arrow {
+    left: -8px;
+  }
+
+  &.shepherd-centered > .shepherd-arrow {
+    opacity: 0;
+  }
+
+
+  .shepherd-content {
+    border-radius: 5px;
+    outline: none;
+    padding: 0;
+  }
+
+  .shepherd-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 .5rem .5rem;
+
+    .shepherd-button:last-child {
+      margin-right: 0;
+    }
+  }
+
+
+  .shepherd-text {
+    color: $themeDarkBgColor;
+    padding: .75rem .75rem;
+
+    p {
+      margin-top: 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .shepherd-button {
+    background: $themePrimaryColor;
+    border: 0;
+    border-radius: 3px;
+    color: $themeElementTextColor;
+    cursor: pointer;
+
+    &:not(:disabled):hover {
+      background: $themePrimaryDarkerAlt;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  .shepherd-header {
+    height: 1.5rem;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem .5rem;
+    background: $themePrimaryColor;
+
+    .shepherd-title {
+      height: 1rem !important;
+      font-size: 1rem;
+      font-weight: 400;
+      color: $white;
+    }
+  }
+
+  .shepherd-cancel-icon {
+    background: transparent;
+    border: none;
+    color: $white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-weight: 400;
+    padding: 0;
+    transition: color .5s ease;
+    margin-bottom: .5rem;
+    margin-right: 0;
+    margin-left: auto;
+    &:hover {
+      color: $gray;
+    }
+  }
+}
+
+.shepherd-enabled.shepherd-element {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+
+.shepherd-target-click-disabled.shepherd-enabled.shepherd-target {
+  pointer-events: none;
+  * {
+    pointer-events: none;
+  }
+}
+
+.shepherd-modal-overlay-container {
+  -ms-filter: progid:dximagetransform.microsoft.gradient.alpha(Opacity=50);
+  filter: alpha(opacity = 50);
+  height: 0;
+  left: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transition: all .3s ease-out,height 0ms .3s,opacity .3s 0ms;
+  width: 100vw;
+  z-index: 9997;
+
+  &.shepherd-modal-is-visible {
+    height: 100vh;
+    opacity: .5;
+    transition: all .3s ease-out,height 0s 0s,opacity .3s 0s;
+
+    path {
+      pointer-events: all;
+    }
+  }
+}

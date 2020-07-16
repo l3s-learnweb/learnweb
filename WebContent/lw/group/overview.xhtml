@@ -44,7 +44,7 @@
             <p:panel header="#{msg.group_details}" styleClass="text-break">
                 <f:facet name="actions">
                     <h:form>
-                        <p:commandButton action="#{groupsBean.joinGroup}" disabled="#{not groupOverviewBean.group.canJoinGroup(userBean.user)}" styleClass="alt-btn" value="#{msg.join_group}" immediate="true"
+                        <p:commandButton action="#{groupsBean.joinGroup}" disabled="#{not groupOverviewBean.group.canJoinGroup(userBean.user)}" styleClass="alt-btn guide-join-button" value="#{msg.join_group}" immediate="true"
                                          oncomplete="window.location.replace(window.location.href);" rendered="${not groupOverviewBean.group.isMember(userBean.user)}">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
                             <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
@@ -156,5 +156,13 @@
             initGridder();
         });
     </script>
+
+    <h:outputScript type="text/javascript" rendered="#{userBean.guided}">
+      const guide = groupOverviewPageInitializeGuide("#{msg.join_group}.");
+
+      $(() => {
+        guide.start();
+      });
+    </h:outputScript>
 </ui:define>
 </ui:composition>

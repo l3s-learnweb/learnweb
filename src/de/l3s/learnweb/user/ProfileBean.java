@@ -96,8 +96,10 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     public void handleFileUpload(FileUploadEvent event) {
         try {
-            getUser().setImage(event.getFile().getInputStream());
-            getUser().save();
+            User user = getUser();
+            user.setImage(event.getFile().getInputStream());
+            user.setGuide(User.Guide.ADD_PHOTO, true);
+            user.save();
         } catch (IllegalArgumentException e) { // image is smaller than 100px
             log.error("unhandled error", e);
 

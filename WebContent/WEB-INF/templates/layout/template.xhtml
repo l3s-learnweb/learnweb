@@ -25,6 +25,8 @@
 
             <h:outputScript library="primefaces" name="jquery/jquery.js"/>
             <h:outputScript library="layout" name="js/layout.js"/>
+            <h:outputScript library="vendor" name="shepherd-v8.0.1/shepherd.js"/>
+            <h:outputScript library="layout" name="js/guide.js"/>
 
             <ui:fragment rendered="#{userBean.trackingEnabled}">
                 <script>
@@ -43,6 +45,7 @@
         </h:head>
 
         <h:body styleClass="layout-body ui-loading">
+
             <f:facet name="last">
                 <h:outputStylesheet name="layout/css/styles.css"/>
             </f:facet>
@@ -102,6 +105,10 @@
             <h:form styleClass="d-none">
                 <p:remoteCommand name="commandSetPreference" actionListener="#{userBean.commandSetPreference}"
                                  immediate="true" ignoreAutoUpdate="true" process="@this" global="false" />
+                <p:remoteCommand name="commandStartGuide" actionListener="#{userBean.setGuided(true)}"
+                                 immediate="true" ignoreAutoUpdate="true" process="@this" global="false"/>
+                <p:remoteCommand name="commandFinishGuide" actionListener="#{userBean.setGuided(false)}"
+                                 immediate="true" ignoreAutoUpdate="true" process="@this" global="false"/>
             </h:form>
 
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}" icon="ui-icon-alert">

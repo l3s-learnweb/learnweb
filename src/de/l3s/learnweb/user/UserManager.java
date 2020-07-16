@@ -47,7 +47,7 @@ public class UserManager {
     private static final String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, "
         + "image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, student_identifier, is_admin, "
         + "is_moderator, registration_date, password, hashing, preferences, credits, fullname, affiliation, accept_terms_and_conditions, "
-        + "deleted, preferred_notification_frequency, time_zone, language";
+        + "deleted, preferred_notification_frequency, time_zone, language, guides";
 
     // if you change this, you have to change createUser() too
 
@@ -324,7 +324,7 @@ public class UserManager {
             throw new IllegalArgumentException("Username is already taken");
         }
 
-        try (PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
             if (user.getId() < 0) { // the User is not yet stored at the database
                 replace.setNull(1, java.sql.Types.INTEGER);
             } else {
@@ -361,6 +361,7 @@ public class UserManager {
             replace.setString(26, user.getPreferredNotificationFrequency().toString());
             replace.setString(27, user.getTimeZone().getId());
             replace.setString(28, user.getLocale().toString());
+            replace.setLong(29, user.getGuides()[0]);
             replace.executeUpdate();
 
             if (user.getId() < 0) { // get the assigned id
@@ -410,6 +411,7 @@ public class UserManager {
         user.setCredits(rs.getString("credits"));
         user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
         user.setPreferredNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("preferred_notification_frequency")));
+        user.setGuides(new long[] {rs.getLong("guides")});
 
         user.setTimeZone(ZoneId.of(rs.getString("time_zone")));
         user.setLocale(Locale.forLanguageTag(rs.getString("language").replace("_", "-")));
