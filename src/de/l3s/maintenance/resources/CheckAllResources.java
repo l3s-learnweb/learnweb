@@ -6,94 +6,68 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.maintenance.MaintenanceTask;
 
 /**
  * Reeds through all undeleted resources and performs arbitrary tests.
  *
  * @author Philipp Kemkes
  */
-public class CheckAllResources {
-    private static final Logger log = LogManager.getLogger(CheckAllResources.class);
+public class CheckAllResources extends MaintenanceTask {
+    private static final int batchSize = 5000;
+    private static final Map<String, Long> freq = new HashMap<>();
 
-    private static final Map<String, MutableInt> freq = new HashMap<>();
+    private ResourceManager resourceManager;
 
-    public static void main(String[] args) throws Exception {
-        Learnweb learnweb = Learnweb.createInstance();
-
-        final int batchSize = 5000;
-        ResourceManager resourceManager = learnweb.getResourceManager();
+    @Override
+    protected void init() {
+        resourceManager = getLearnweb().getResourceManager();
         resourceManager.setReindexMode(true);
+    }
 
+    @Override
+    protected void run(final boolean dryRun) throws Exception {
         for (int i = 0; true; i++) {
-            log.debug("Load page: " + i);
             List<Resource> resources = resourceManager.getResourcesAll(i, batchSize);
-
             if (resources.isEmpty()) {
-                log.debug("finished: last page");
+                log.debug("finished: no more resources");
                 break;
             }
 
-            log.debug("Process page: " + i);
+            log.debug("Processing page: {}", i);
 
             for (Resource resource : resources) {
-                //log.debug(resource);
-                checkMetadata(resource);
+                checkMetadata(resource, dryRun);
             }
-
         }
-        learnweb.onDestroy();
 
-        log.info("counts");
-        for (Entry<String, MutableInt> entry : freq.entrySet()) {
-            log.info(entry);
-        }
+        log.info("Counts: {}", StringUtils.join(freq));
     }
 
-    private static void checkMetadata(Resource resource) throws SQLException {
+    private void checkMetadata(Resource resource, final boolean dryRun) throws SQLException {
         for (Entry<String, String> entry : resource.getMetadata().entrySet()) {
             if (entry.getValue() == null) {
                 log.warn("entry has no value: {}", entry);
-                // remove entry if value is null
-                resource.getMetadata().remove(entry.getKey());
-                resource.save();
+
+                if (!dryRun) {
+                    // remove entry if value is null
+                    resource.getMetadata().remove(entry.getKey());
+                    resource.save();
+                }
                 continue;
             }
 
             if (entry.getValue().indexOf(Resource.METADATA_SEPARATOR) != -1) {
-                count(entry.getKey());
+                freq.merge(entry.getKey(), 1L, Long::sum);
             }
         }
     }
 
-    private static void count(String word) {
-        MutableInt count = freq.get(word);
-        if (count == null) {
-            freq.put(word, new MutableInt());
-        } else {
-            count.increment();
-        }
-    }
-
-    private static class MutableInt {
-        int value = 1; // note that we start at 1 since we're counting
-
-        public void increment() {
-            ++value;
-        }
-
-        public int get() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return Integer.toString(get());
-        }
+    public static void main(String[] args) {
+        new CheckAllResources().start(args);
     }
 }

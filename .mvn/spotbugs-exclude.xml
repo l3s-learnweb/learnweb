@@ -112,4 +112,9 @@
         <Class name="de.l3s.learnweb.resource.Resource$MetadataMapWrapper"/>
         <Bug pattern="SE_INNER_CLASS"/>
     </Match>
+    <!-- MaintenanceTask should ends with non-zero status code when it fails -->
+    <Match>
+        <Class name="de.l3s.maintenance.MaintenanceTask"/>
+        <Bug pattern="DM_EXIT"/>
+    </Match>
 </FindBugsFilter>

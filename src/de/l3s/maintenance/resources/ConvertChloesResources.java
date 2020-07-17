@@ -12,9 +12,9 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 
 /**
- * Reeds through all undeleted resources and performs arbitrary tests.
+ * Updates old metadata fields to use unified metadata.
  *
- * @author Philipp Kemkes
+ * @author Oleh Astappiev
  */
 public final class ConvertChloesResources {
     private static final Logger log = LogManager.getLogger(ConvertChloesResources.class);
