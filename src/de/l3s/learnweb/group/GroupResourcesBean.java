@@ -318,19 +318,18 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             String action = params.get("action");
             ResourceUpdateBatch items = new ResourceUpdateBatch(params.get("items"));
 
-            SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
-            Group targetGroup = selectLocationBean.getTargetGroup();
-            Folder targetFolder = selectLocationBean.getTargetFolder();
-
             switch (action) {
                 case "copy":
+                    SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
+                    Group targetGroup = selectLocationBean.getTargetGroup();
+                    Folder targetFolder = selectLocationBean.getTargetFolder();
                     this.copyResources(items, targetGroup, targetFolder, false);
                     break;
                 case "move":
                     if (params.containsKey("destination")) {
                         JsonObject dest = JsonParser.parseString(params.get("destination")).getAsJsonObject();
-                        int targetGroupId = dest.has("groupId") ? group.getId() : dest.get("groupId").getAsInt();
-                        int targetFolderId = dest.has("folderId") ? 0 : dest.get("folderId").getAsInt();
+                        int targetGroupId = dest.has("groupId") && dest.get("groupId").isJsonPrimitive() ? dest.get("groupId").getAsInt() : group.getId();
+                        int targetFolderId = dest.has("folderId") && dest.get("folderId").isJsonPrimitive() ? dest.get("folderId").getAsInt() : 0;
                         this.moveResources(items, targetGroupId, targetFolderId);
                         break;
                     }
