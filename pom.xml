@@ -23,7 +23,7 @@
         <maven.dependency.log4j.version>2.13.3</maven.dependency.log4j.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.assembly.mainClass>de.l3s.learnweb.tasks.users.DeleteOldUsers</maven.assembly.mainClass>
+        <maven.assembly.mainClass>de.l3s.maintenance.users.DeleteOldUsers</maven.assembly.mainClass>
     </properties>
 
     <dependencies>

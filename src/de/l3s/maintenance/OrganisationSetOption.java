@@ -1,4 +1,4 @@
-package de.l3s.learnweb.tasks;
+package de.l3s.maintenance;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

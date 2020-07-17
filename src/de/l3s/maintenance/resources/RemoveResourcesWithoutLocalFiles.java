@@ -1,4 +1,4 @@
-package de.l3s.learnweb.tasks.resources;
+package de.l3s.maintenance.resources;
 
 import java.util.HashSet;
 import java.util.List;

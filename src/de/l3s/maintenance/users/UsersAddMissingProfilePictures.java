@@ -1,4 +1,4 @@
-package de.l3s.learnweb.tasks.users;
+package de.l3s.maintenance.users;
 
 import java.io.IOException;
 import java.io.InputStream;

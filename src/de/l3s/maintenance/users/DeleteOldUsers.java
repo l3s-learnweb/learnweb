@@ -1,4 +1,4 @@
-package de.l3s.learnweb.tasks.users;
+package de.l3s.maintenance.users;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

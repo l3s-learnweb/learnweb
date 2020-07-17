@@ -1,4 +1,4 @@
-package de.l3s.learnweb.tasks.users;
+package de.l3s.maintenance.users;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
