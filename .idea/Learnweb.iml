@@ -67,23 +67,23 @@
     <orderEntry type="library" name="Maven: com.zaxxer:SparseBitSet:1.2" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20191001.1" level="project" />
     <orderEntry type="library" name="Maven: org.omnifaces:omnifaces:3.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.10" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.8" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-text:1.8" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.servlet:servlet:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.common:common-lang:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.common:common-io:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.common:common-image:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-bmp:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-core:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-jpeg:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-metadata:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-tiff:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-psd:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-icns:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-pict:3.5" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.servlet:servlet:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.common:common-lang:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.common:common-io:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.common:common-image:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-bmp:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-core:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-jpeg:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-metadata:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-tiff:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-psd:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-icns:3.6" level="project" />
+    <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-pict:3.6" level="project" />
     <orderEntry type="library" name="Maven: org.mariadb.jdbc:mariadb-java-client:2.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.solr:solr-solrj:8.5.1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.29.Final" level="project" />
