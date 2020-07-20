@@ -61,20 +61,19 @@ public class RequestFilter extends HttpFilter {
             String ipAddr = Servlets.getRemoteAddr(request);
             String requestUrl = Servlets.getRequestURLWithQueryString(request);
 
+            /*
+             * This rule should ban threats like:
+             * - Joomla Unserialize Vulnerability (https://blog.cloudflare.com/the-joomla-unserialize-vulnerability/)
+             */
             if (!InetAddresses.isInetAddress(ipAddr)) {
-                log.error("Suspicious request: {}", BeanHelper.getRequestSummary(request));
+                log.error("Suspicious IP address banned: {}", BeanHelper.getRequestSummary(request));
 
-                /*
-                 * Joomla Unserialize Vulnerability
-                 * https://blog.cloudflare.com/the-joomla-unserialize-vulnerability/
-                 */
-                if (ipAddr.contains("JDatabaseDriverMysqli")) {
-                    protectionManager.ban(ipAddr, "Suspicious IP address");
-                }
+                // We can't ban them permanently, because their IP address is not an address, but a string, likely long string...
+                protectionManager.tempBan(ipAddr, "Suspicious IP address");
             }
 
             /*
-             * Possible SQL injection (%27A == ')
+             * This rule should ban possible SQL injection (where `%27A` == `'`)
              * https://stackoverflow.com/questions/33867813/strange-url-containing-a-0-or-0-a-in-web-server-logs
              */
             if (StringUtils.endsWithAny(requestUrl, "%27A", "%27A=0")) {

@@ -65,7 +65,7 @@ class RequestFilterTest {
         when(request.getHeader("Forwarded")).thenReturn("}__test|O:21:\"\"JDatabaseDriverMysqli\"\":3:{s:2:\"\"fc\"\";O:17:");
         requestFilter.doFilter(request, response, chain);
         verify(protectionManager).isBanned(anyString());
-        verify(protectionManager).ban(anyString(), anyString());
+        verify(protectionManager).tempBan(anyString(), anyString());
         verifyNoMoreInteractions(protectionManager);
     }
 

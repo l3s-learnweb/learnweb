@@ -335,6 +335,17 @@ public class ProtectionManager {
         saveAccessData(accessData);
     }
 
+    /**
+     * Same as {@link #ban(String, String)}, but do not save the name to database.
+     */
+    public void tempBan(String ipAddr, String reason) {
+        AccessData accessData = accessMap.computeIfAbsent(ipAddr, AccessData::new);
+
+        accessData.setType("temp");
+        accessData.setBan(365, 0, 0);
+        accessData.setReason(reason);
+    }
+
     public void permaban(String name, boolean isIP) {
         AccessData accessData = accessMap.computeIfAbsent(name, AccessData::new);
 
