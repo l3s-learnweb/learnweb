@@ -253,18 +253,6 @@ public class ResourceManager {
             throw new IllegalArgumentException("Resource has no owner");
         }
 
-        // TODO @astappiev: this has to be moved to the save method of WebResource.class, which has to be created
-        if (resource.getId() == -1) { // a new resource which is not stored in the database yet
-            try {
-                //To copy archive versions of a resource if it exists
-                saveArchiveUrlsByResourceId(resource.getId(), resource.getArchiveUrls());
-            } catch (Exception e) {
-                log.error("Can't save archiveUrls", e);
-            }
-
-            //resource.postConstruct();
-        }
-
         String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted, read_only_transcript) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             if (resource.getId() < 0) { // the Resource is not yet stored at the database
@@ -341,6 +329,16 @@ public class ResourceManager {
 
                 // persist the relation between the resource and its files
                 learnweb.getFileManager().addFilesToResource(resource.getFiles().values(), resource);
+
+                // TODO @astappiev: this has to be moved to the save method of WebResource.class, which has to be created
+                if (CollectionUtils.isNotEmpty(resource.getArchiveUrls())) {
+                    try {
+                        // To copy archive versions of a resource if it exists
+                        saveArchiveUrlsByResourceId(resource.getId(), resource.getArchiveUrls());
+                    } catch (Exception e) {
+                        log.error("Can't save archiveUrls", e);
+                    }
+                }
             } else { // edited resources need to be updated in the cache
                 cache.remove(resource.getId());
                 cache.put(resource);
@@ -612,9 +610,6 @@ public class ResourceManager {
     }
 
     public void saveArchiveUrlsByResourceId(int resourceId, List<ArchiveUrl> archiveUrls) throws SQLException {
-        if (CollectionUtils.isEmpty(archiveUrls)) {
-            return;
-        }
         try (PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)")) {
             for (ArchiveUrl version : archiveUrls) {
                 prepStmt.setInt(1, resourceId);
