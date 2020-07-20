@@ -9,6 +9,7 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Servlets;
@@ -16,16 +17,17 @@ import org.omnifaces.util.Servlets;
 import com.google.common.net.InetAddresses;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.exceptions.ForbiddenHttpException;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.util.bean.BeanHelper;
 
 /**
- * Logs incoming requests by IPs. Records IP, time and URL, then at the end of the day stores it into a log file.
+ * Logs incoming requests by IPs.
+ * Records IP, time and URL, then at the end of the day stores it into a log file.
  *
  * @author Kate
  */
-@WebFilter(filterName = "RequestFilter", urlPatterns = "/*")
+@WebFilter(filterName = "RequestFilter", urlPatterns = "/*", asyncSupported = true)
 public class RequestFilter extends HttpFilter {
     private static final long serialVersionUID = -6484981916986254209L;
     private static final Logger log = LogManager.getLogger(RequestFilter.class);
@@ -57,7 +59,7 @@ public class RequestFilter extends HttpFilter {
 
         if (requestManager != null && protectionManager != null) {
             String ipAddr = Servlets.getRemoteAddr(request);
-            String requestUrl = Servlets.getRequestURL(request);
+            String requestUrl = Servlets.getRequestURLWithQueryString(request);
 
             if (!InetAddresses.isInetAddress(ipAddr)) {
                 log.error("Suspicious request: {}", BeanHelper.getRequestSummary(request));
@@ -72,16 +74,17 @@ public class RequestFilter extends HttpFilter {
             }
 
             /*
-             * Possible SQL injection probation
+             * Possible SQL injection (%27A == ')
              * https://stackoverflow.com/questions/33867813/strange-url-containing-a-0-or-0-a-in-web-server-logs
              */
-            if (requestUrl.endsWith("'A=0")) {
+            if (StringUtils.endsWithAny(requestUrl, "%27A", "%27A=0")) {
                 protectionManager.ban(ipAddr, "SQL injection");
             }
 
             requestManager.recordRequest(ipAddr, requestUrl);
             if (protectionManager.isBanned(ipAddr)) {
-                throw new ForbiddenHttpException("error_pages.forbidden_blocked_description");
+                response.sendError(HttpException.FORBIDDEN, "error_pages.forbidden_blocked_description");
+                return;
             }
         }
 

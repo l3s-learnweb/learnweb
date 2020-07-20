@@ -23,7 +23,7 @@ import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 /**
  * The filter uses the idea of {@link org.omnifaces.filter.FacesExceptionFilter}.
  */
-@WebFilter(filterName = "LearnwebExceptionFilter", urlPatterns = "/*")
+@WebFilter(filterName = "LearnwebExceptionFilter", urlPatterns = "/*", asyncSupported = true)
 public class LearnwebExceptionFilter extends HttpFilter {
     private static final long serialVersionUID = 3190219905269569699L;
 
