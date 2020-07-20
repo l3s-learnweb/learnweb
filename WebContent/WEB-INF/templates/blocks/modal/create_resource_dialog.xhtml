@@ -84,6 +84,10 @@
                                      message="Start date may not be after end date." showMessageFor="editDialogOpenDate" />
                 </div>
             </ui:fragment>
+            <h:outputScript>
+                // this function is required for "drop to upload" function to work. DO NOT REMOVE!
+                if (typeof formLoadedCallback === 'function') formLoadedCallback();
+            </h:outputScript>
         </h:panelGroup>
 
         <h:panelGroup layout="block" styleClass="fg-grid mb-3" rendered="#{addResourceBean.formStep != 1}">
