@@ -148,7 +148,7 @@ public final class Learnweb {
         historyManager = new HistoryManager(this);
         searchHistoryManager = new SearchHistoryManager(this);
 
-        requestManager = RequestManager.getInstance(this);
+        requestManager = new RequestManager(this);
         protectionManager = new ProtectionManager(this);
         bounceManager = new BounceManager(this);
     }

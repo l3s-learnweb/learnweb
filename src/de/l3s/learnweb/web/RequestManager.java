@@ -26,10 +26,9 @@ import de.l3s.learnweb.Learnweb;
  *
  * @author Kate
  */
-public final class RequestManager {
+public class RequestManager {
     private static final Logger log = LogManager.getLogger(RequestManager.class);
 
-    private static RequestManager instance;
     private final Learnweb learnweb;
 
     //Basic maps/list
@@ -40,7 +39,7 @@ public final class RequestManager {
     private List<AggregatedRequestData> aggregatedRequests;
     private Date aggrRequestsUpdated;
 
-    private RequestManager(Learnweb learnweb) {
+    public RequestManager(Learnweb learnweb) {
         this.learnweb = learnweb;
         logins = new ConcurrentHashMap<>();
         requests = new ConcurrentLinkedQueue<>();
@@ -196,13 +195,4 @@ public final class RequestManager {
     public Date getAggrRequestsUpdateTime() {
         return aggrRequestsUpdated;
     }
-
-    public static RequestManager getInstance(Learnweb learnweb) {
-        if (instance == null) {
-            instance = new RequestManager(learnweb);
-        }
-
-        return instance;
-    }
-
 }
