@@ -285,7 +285,7 @@
     $(() => {
         document.querySelector('[id^="res_toolbar:"] > ul').classList.add("guide-menu-add-resource");
         guide = resourcePageInitializeGuide('#{msg['guide.add_your_first_resource']}');
-        guideFinish = guideAfterComplete("#{msg['guide.finish']}", "#{msg['guide.congratulations']}", "#{msg.yes}", "#{msg.no}", '#{of:format1(msg['guide.go_to'], msg.myResourcesTitle)}', '#{of:format1(msg['guide.go_to'], msg.myGroups)}', '#{of:format1(msg['guide.go_to'], msg.myProfileTitle)}', [#{userBean.user.getGuideOption("ADD_RESOURCE")}, #{userBean.user.getGuideOption("JOIN_GROUP")}, #{userBean.user.getGuideOption("ADD_PHOTO")}]);
+        guideFinish = guideAfterComplete("#{msg['guide.finish']}", "#{msg['guide.congratulations']}", "#{msg.yes}", "#{msg.no}", '#{of:format1(msg['guide.go_to'], msg.myResourcesTitle)}', '#{of:format1(msg['guide.go_to'], msg.myGroups)}', '#{of:format1(msg['guide.go_to'], msg.myProfileTitle)}', [#{userBean.user.getGuide("ADD_RESOURCE")}, #{userBean.user.getGuide("JOIN_GROUP")}, #{userBean.user.getGuide("ADD_PHOTO")}]);
         guide.show();
     });
 </h:outputScript>
