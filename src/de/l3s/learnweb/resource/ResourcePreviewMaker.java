@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +19,6 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.office.ConverterService;
-import de.l3s.learnweb.resource.office.converter.model.ConverterRequest;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.util.Image;
 import de.l3s.util.Misc;
@@ -73,7 +73,7 @@ public class ResourcePreviewMaker {
             this.ffprobe = new FFprobe(ffprobePath);
             this.executor = new FFmpegExecutor(ffmpeg, this.ffprobe);
         } catch (IOException e) {
-            log.error("Couldn't find ffmpeg library. " + Misc.getSystemDescription());
+            log.error("Couldn't find ffmpeg library. {}", Misc.getSystemDescription());
         }
     }
 
@@ -105,7 +105,7 @@ public class ResourcePreviewMaker {
                 processFile(resource, inputStream);
             }
         } catch (Throwable e) {
-            log.error("Error in creating thumbnails from " + resource.getFormat() + " (detected type: " + resource.getType() + ") for resource: " + resource.getId(), e);
+            log.error("Error in creating thumbnails from {} (detected type: {}) for resource: {}", resource.getFormat(), resource.getType(), resource.getId(), e);
         } finally {
             if (inputStream != null) {
                 inputStream.close();
@@ -137,22 +137,23 @@ public class ResourcePreviewMaker {
                 // instead we need to generate it "on the fly" when we load resource from db
                 break;
             default:
-                log.error("Can't create thumbnail. Don't know how to handle resource " + resource.getId() + ", type " + resource.getType());
+                log.error("Can't create thumbnail. Don't know how to handle resource {}, type {}", resource.getId(), resource.getType());
         }
     }
 
     private void processOfficeDocument(Resource resource) {
         try {
-            ConverterService converterService = learnweb.getConverterService();
-            ConverterRequest request = converterService.createThumbnailConverterRequest(resource.getFile(TYPE.FILE_MAIN));
-            InputStream thumbnailStream = converterService.convert(request);
-            if (thumbnailStream != null) {
-                Image image = new Image(thumbnailStream);
-                createThumbnails(resource, image, false);
-                thumbnailStream.close();
+            String thumbnailUrl = ConverterService.convert(learnweb, resource.getFile(TYPE.FILE_MAIN));
+            HttpURLConnection connection = (HttpURLConnection) new URL(thumbnailUrl).openConnection();
+            InputStream thumbnailStream = connection.getInputStream();
+            if (thumbnailStream == null) {
+                throw new IllegalStateException("Error during conversion : stream is null");
             }
+
+            createThumbnails(resource, new Image(thumbnailStream), false);
+            thumbnailStream.close();
         } catch (Exception e) {
-            log.error("An error occurs during creating thumbnail for the document: resource_id=" + resource.getId() + "; file=" + resource.getFileUrl(), e);
+            log.error("An error occurs during creating thumbnail for document: resource_id={}; file={}", resource.getId(), resource.getFileUrl(), e);
         }
     }
 
@@ -243,7 +244,7 @@ public class ResourcePreviewMaker {
                 FileUtils.deleteDirectory(tmpDir);
             }
         } catch (Exception e) {
-            log.error("An error occurs during creating thumbnail for a video: resource_id=" + resource.getId() + "; file=" + resource.getFileUrl(), e);
+            log.error("An error occurs during creating thumbnail for a video: resource_id={}; file={}", resource.getId(), resource.getFileUrl(), e);
         }
 
         // TODO @astappiev: move it somewhere in one place with converting documents
@@ -285,7 +286,7 @@ public class ResourcePreviewMaker {
                 resource.setFormat("video/mp4");
             }
         } catch (Exception e) {
-            log.error("An error occurred during video conversion " + resource.getId(), e);
+            log.error("An error occurred during video conversion {}", resource.getId(), e);
         }
     }
 
@@ -326,7 +327,7 @@ public class ResourcePreviewMaker {
                     bestImagePath = outputPath;
                 }
             } catch (Exception e) {
-                log.warn("Couldn't create thumbnail at position " + seconds, e);
+                log.warn("Couldn't create thumbnail at position {}", seconds, e);
             }
         }
 
@@ -362,7 +363,7 @@ public class ResourcePreviewMaker {
                 return; // stop as soon as we got one image
             } catch (IOException e) {
                 // some PDFs with special graphics cause errors
-                log.debug("Skip PDF page with errors; page: " + p + "; resource: " + resource);
+                log.debug("Skip PDF page with errors; page: {}; resource: {}", p, resource);
             }
         }
     }
@@ -432,7 +433,7 @@ public class ResourcePreviewMaker {
         private final Resource resource;
 
         public CreateThumbnailThread(Resource resource) {
-            log.debug("Create CreateThumbnailThread for " + resource);
+            log.debug("Create CreateThumbnailThread for {}", resource);
             this.resource = resource;
         }
 
@@ -445,7 +446,7 @@ public class ResourcePreviewMaker {
                 resource.setOnlineStatus(Resource.OnlineStatus.ONLINE);
                 resource.save();
             } catch (Exception e) {
-                log.error("Error in CreateThumbnailThread " + e);
+                log.error("Error in CreateThumbnailThread", e);
             }
         }
     }

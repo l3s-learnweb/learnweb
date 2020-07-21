@@ -27,7 +27,6 @@ import de.l3s.learnweb.resource.archive.TimelineManager;
 import de.l3s.learnweb.resource.archive.WaybackCapturesLogger;
 import de.l3s.learnweb.resource.archive.WaybackUrlManager;
 import de.l3s.learnweb.resource.glossary.GlossaryManager;
-import de.l3s.learnweb.resource.office.ConverterService;
 import de.l3s.learnweb.resource.office.HistoryManager;
 import de.l3s.learnweb.resource.search.SearchLogManager;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
@@ -80,7 +79,6 @@ public final class Learnweb {
     private final RequestManager requestManager;
     private final ProtectionManager protectionManager;
     private final BounceManager bounceManager;
-    private final ConverterService serviceConverter;
     private final LogManager logManager;
     private final AnnouncementsManager announcementsManager;
     private final ActivityDashboardManager activityDashboardManager;
@@ -128,7 +126,6 @@ public final class Learnweb {
         solrClient = SolrClient.getInstance(this);
         resourcePreviewMaker = new ResourcePreviewMaker(this);
         resourceMetadataExtractor = new ResourceMetadataExtractor(this);
-        serviceConverter = new ConverterService(this);
         tedManager = new TedManager(this);
         archiveUrlManager = ArchiveUrlManager.getInstance(this);
         timelineManager = new TimelineManager(this);
@@ -359,10 +356,6 @@ public final class Learnweb {
 
     public SurveyManager getSurveyManager() {
         return surveyManager;
-    }
-
-    public ConverterService getConverterService() {
-        return serviceConverter;
     }
 
     public SubmissionManager getSubmissionManager() {

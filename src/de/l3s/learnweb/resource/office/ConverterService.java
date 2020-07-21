@@ -1,13 +1,17 @@
 package de.l3s.learnweb.resource.office;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,129 +22,105 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.office.converter.model.ConverterRequest;
 import de.l3s.learnweb.resource.office.converter.model.ConverterResponse;
-import de.l3s.learnweb.resource.office.converter.model.OfficeThumbnailParams;
 
-public class ConverterService {
+public final class ConverterService {
     private static final Logger log = LogManager.getLogger(ConverterService.class);
 
-    private final Learnweb learnweb;
+    private static final TrustManager[] trustAllCerts = {
+        new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
 
-    public ConverterService(Learnweb learnweb) {
-        this.learnweb = learnweb;
+            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+            }
+        }
+    };
+
+    public static String convert(final Learnweb learnweb, final File file) {
+        return convert(learnweb, createConverterRequest(file));
     }
 
-    public ConverterRequest createThumbnailConverterRequest(File file) {
-        String fileExt = file.getName().substring(file.getName().lastIndexOf('.'));
-        String key = FileUtility.generateRevisionId(file);
-        return new ConverterRequest(fileExt, "png", file.getName(), file.getUrl(), key, new OfficeThumbnailParams());
-    }
-
-    private ConverterResponse sendRequestToConvertServer(ConverterRequest model) {
-        Gson gson = new Gson();
-        ConverterResponse converterResponse = new ConverterResponse();
-
+    public static String convert(final Learnweb learnweb, final ConverterRequest converterRequest) {
         try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCerts, new SecureRandom());
+
+            Gson gson = new Gson();
             // previously we used unsafe ssl client, but now it seems that certificate is valid and all right
-            HttpClient client = HttpClient.newHttpClient();
+            HttpClient client = HttpClient.newBuilder().sslContext(sslContext).build();
 
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(learnweb.getProperties().getProperty("FILES.DOCSERVICE.URL.CONVERTER")))
                 .header("Content-type", "application/json")
                 .header("Accept", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(model)))
+                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(converterRequest)))
                 .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.body() != null) {
-                converterResponse = gson.fromJson(response.body(), ConverterResponse.class);
-            }
-        } catch (IOException | InterruptedException e) {
-            log.error("Can't process request: {}", model, e);
+            ConverterResponse converterResponse = gson.fromJson(response.body(), ConverterResponse.class);
+            return getConvertedUrl(converterResponse);
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException | KeyManagementException e) {
+            log.error("Can't process request: {}", converterRequest, e);
+            return null;
         }
-
-        return converterResponse;
     }
 
-    public InputStream convert(ConverterRequest request) throws ConverterException, IOException {
-        String newFileUrl = getConvertedUri(request);
-        URL url = new URL(newFileUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        InputStream stream = connection.getInputStream();
-        if (stream == null) {
-            throw new ConverterException("Error during conversion : stream is null");
-        }
-        return stream;
+    private static ConverterRequest createConverterRequest(final File file) {
+        String fileExt = file.getName().substring(file.getName().lastIndexOf('.'));
+        String key = FileUtility.generateRevisionId(file);
+        return new ConverterRequest(fileExt, "png", file.getName(), file.getUrl(), key);
     }
 
-    public String getConvertedUri(ConverterRequest request) throws ConverterException {
-        ConverterResponse response = sendRequestToConvertServer(request);
-
+    private static String getConvertedUrl(final ConverterResponse response) {
         if (response == null) {
-            throw new ConverterException("Invalid answer format");
+            throw new IllegalStateException("Invalid answer format");
         }
 
         if (response.getError() != null) {
-            processConvertServiceResponseError(response.getError());
+            throw new IllegalStateException("Error occurred in the ConverterService: " + getErrorResponseMessage(response.getError()));
         }
 
         if (response.isEndConvert() == null || !response.isEndConvert()) {
-            throw new ConverterException("Conversion is not finished");
+            throw new IllegalStateException("Conversion is not finished");
         }
 
         if (response.getPercent() == 0) {
-            throw new ConverterException("Percent is null");
+            throw new IllegalStateException("Percent is null");
         }
 
         if (response.getFileUrl() == null || response.getFileUrl().isEmpty()) {
-            throw new ConverterException("FileUrl is null");
+            throw new IllegalStateException("FileUrl is null");
         }
 
         return response.getFileUrl();
     }
 
-    private void processConvertServiceResponseError(int errorCode) throws ConverterException {
-        String errorMessage = "";
-        String errorMessageTemplate = "Error occurred in the ConverterService: ";
-
+    private static String getErrorResponseMessage(final int errorCode) {
         switch (errorCode) {
             case -8:
-                errorMessage = errorMessageTemplate + "Error document VKey";
-                break;
+                return "Error document VKey";
             case -7:
-                errorMessage = errorMessageTemplate + "Error document request";
-                break;
+                return "Error document request";
             case -6:
-                errorMessage = errorMessageTemplate + "Error database";
-                break;
+                return "Error database";
             case -5:
-                errorMessage = errorMessageTemplate + "Error unexpected guid";
-                break;
+                return "Error unexpected guid";
             case -4:
-                errorMessage = errorMessageTemplate + "Error download error";
-                break;
+                return "Error download error";
             case -3:
-                errorMessage = errorMessageTemplate + "Error convertation error";
-                break;
+                return "Error convertation error";
             case -2:
-                errorMessage = errorMessageTemplate + "Error convertation timeout";
-                break;
+                return "Error convertation timeout";
             case -1:
-                errorMessage = errorMessageTemplate + "Error convertation unknown";
-                break;
+                return "Error convertation unknown";
             case 0:
-                break;
+                return null;
             default:
-                errorMessage = "ErrorCode = " + errorCode;
-                break;
-        }
-        throw new ConverterException(errorMessage);
-    }
-
-    public static class ConverterException extends Exception {
-        private static final long serialVersionUID = 8151643724813680762L;
-
-        public ConverterException(String errorMessage) {
-            super(errorMessage);
+                return "ErrorCode = " + errorCode;
         }
     }
 }

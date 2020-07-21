@@ -2,11 +2,8 @@ package de.l3s.learnweb.resource.office.converter.model;
 
 public class ConverterResponse {
     private String fileUrl;
-
     private int percent;
-
     private Boolean endConvert;
-
     private Integer error;
 
     public String getFileUrl() {
@@ -41,4 +38,8 @@ public class ConverterResponse {
         this.error = error;
     }
 
+    @Override
+    public String toString() {
+        return "ConverterResponse [fileUrl=" + fileUrl + ", percent=" + percent + ", endConvert=" + endConvert + ", error=" + error + "]";
+    }
 }
