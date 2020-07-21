@@ -222,7 +222,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     }
 
     public void addResource() {
-        if (this.resource.isOfficeResource()) {
+        if (this.resource.isOfficeResource() && this.resource.getSource() != ResourceService.desktop) {
             this.createDocument();
         }
 

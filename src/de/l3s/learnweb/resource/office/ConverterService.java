@@ -110,9 +110,9 @@ public final class ConverterService {
             case -5:
                 return "Error unexpected guid";
             case -4:
-                return "Error download error";
+                return "Error during download";
             case -3:
-                return "Error convertation error";
+                return "Error during convertation";
             case -2:
                 return "Error convertation timeout";
             case -1:
