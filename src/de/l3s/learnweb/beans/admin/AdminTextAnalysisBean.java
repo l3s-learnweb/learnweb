@@ -13,6 +13,7 @@ import javax.inject.Named;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.util.bean.BeanHelper;
 
@@ -30,8 +31,12 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
     private TreeNode[] selectedNodes;
 
     @PostConstruct
-    public void init() throws SQLException {
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
+    public void init() {
+        try {
+            treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
+        } catch (SQLException e) {
+            throw new HttpException("Unable to fetch tree", e);
+        }
     }
 
     public void onAnalyseComments() throws SQLException {

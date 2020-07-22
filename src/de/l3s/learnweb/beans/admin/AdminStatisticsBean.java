@@ -20,6 +20,7 @@ import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.resource.Comment;
@@ -39,8 +40,12 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
     private List<Map<String, String>> groupStatistics;
 
     @PostConstruct
-    public void init() throws SQLException {
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), false);
+    public void init() {
+        try {
+            treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), false);
+        } catch (SQLException e) {
+            throw new HttpException("Unable to fetch tree", e);
+        }
     }
 
     public void fetchStatistics() throws SQLException {
