@@ -16,15 +16,15 @@
 
             <p:outputPanel id="usersSelectorPanel" styleClass="my-2">
                 <p:selectCheckboxMenu id="selectedUsersIds" value="#{cbean.selectedUsersIds}" var="user" label="#{msg.users}"
-                                      filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 1}">
+                                      filter="true" filterMatchMode="contains" rendered="#{cbean.selectedType == 1}">
                     <p:ajax event="change" update="usersCountPanel submitBtnPanel message"/>
                     <p:ajax event="toggleSelect" update="usersCountPanel submitBtnPanel message"/>
 
-                    <f:selectItems value="#{cbean.allUsers}" var="user" itemValue="#{user.id}" itemLabel="#{user.username}"/>
+                    <f:selectItems value="#{cbean.allUsers}" var="user" itemValue="#{user.id}" itemLabel="#{user.username}#{empty user.fullName? '':' ('.concat(user.fullName).concat(')')}"/>
                 </p:selectCheckboxMenu>
 
                 <p:selectCheckboxMenu id="selectedGroupsIds" value="#{cbean.selectedGroupsIds}" var="group" label="#{msg.groupsTitle}"
-                                      filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 2}">
+                                      filter="true" filterMatchMode="contains" rendered="#{cbean.selectedType == 2}">
                     <p:ajax event="change" update="usersCountPanel submitBtnPanel message"/>
                     <p:ajax event="toggleSelect" update="usersCountPanel submitBtnPanel message"/>
 

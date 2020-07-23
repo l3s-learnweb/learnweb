@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.faces.application.FacesMessage;
 
@@ -104,6 +106,9 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
 
     public void setSelectedType(final int selectedType) {
         this.selectedType = selectedType;
+        // reset selected user / group on type change
+        this.selectedGroupsIds = null;
+        this.selectedUsersIds = null;
     }
 
     public List<Integer> getSelectedUsersIds() {
@@ -135,14 +140,14 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
 
     public void setSelectedGroupsIds(final List<Integer> selectedGroupsIds) throws SQLException {
         this.selectedGroupsIds = selectedGroupsIds;
-        List<Integer> selectedUsers = new ArrayList<>();
+        Set<Integer> selectedUsers = new TreeSet<>();
         for (Integer groupId : selectedGroupsIds) {
             Group group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
             for (User user : group.getMembers()) {
                 selectedUsers.add(user.getId());
             }
         }
-        this.setSelectedUsersIds(selectedUsers);
+        this.setSelectedUsersIds(new ArrayList<Integer>(selectedUsers));
     }
 
     public Date getStartDate() {
