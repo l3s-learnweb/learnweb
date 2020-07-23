@@ -89,8 +89,8 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     public void onLoad() throws SQLException {
         Resource resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-        BeanAssert.foundNotNull(resource);
-        BeanAssert.found(!resource.isDeleted());
+        BeanAssert.isFound(resource);
+        BeanAssert.notDeleted(resource);
         setTedResource(resource);
     }
 

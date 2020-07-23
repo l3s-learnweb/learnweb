@@ -52,7 +52,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
         } else if (paramUserId != null) { // statistic for one user from parameter
             singleUser = true;
             User user = Learnweb.getInstance().getUserManager().getUser(paramUserId);
-            BeanAssert.validateNotNull(user);
+            BeanAssert.isFound(user);
             selectedUsersIds = Collections.singletonList(user.getId());
             BeanAssert.hasPermission(loggedInUser.canModerateUser(user));
         } else {

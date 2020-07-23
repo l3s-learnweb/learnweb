@@ -6,8 +6,9 @@ import java.util.Date;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.Deletable;
 
-public class ForumTopic implements Serializable {
+public class ForumTopic implements Serializable, Deletable {
     private static final long serialVersionUID = 5370327788969640983L;
 
     private int id = -1;
@@ -119,6 +120,7 @@ public class ForumTopic implements Serializable {
         this.lastPostDate = lastPostDate;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

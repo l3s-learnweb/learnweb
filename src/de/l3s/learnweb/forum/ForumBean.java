@@ -43,7 +43,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
         BeanAssert.authorized(isLoggedIn());
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
-        BeanAssert.groupNotNull(group);
+        BeanAssert.isFound(group);
         BeanAssert.hasPermission(group.canViewResources(getUser()));
 
         topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);

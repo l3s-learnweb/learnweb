@@ -7,10 +7,10 @@ public class GoneHttpException extends HttpException {
     }
 
     public GoneHttpException(final String reason) {
-        super(HttpException.GONE, reason);
+        super(HttpException.GONE, reason, null, true);
     }
 
     public GoneHttpException(final String reason, final Throwable cause) {
-        super(HttpException.GONE, reason, cause);
+        super(HttpException.GONE, reason, cause, true);
     }
 }

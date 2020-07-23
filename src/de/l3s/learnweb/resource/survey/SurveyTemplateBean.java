@@ -41,7 +41,8 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
             survey = getLearnweb().getSurveyManager().getSurvey(surveyId);
         }
 
-        BeanAssert.validateNotNull(survey);
+        BeanAssert.isFound(survey);
+        BeanAssert.notDeleted(survey);
         BeanAssert.hasPermission(getUser().isAdmin() || getUser().getId() == survey.getUserId());
     }
 

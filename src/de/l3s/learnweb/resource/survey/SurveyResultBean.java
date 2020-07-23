@@ -25,7 +25,8 @@ public class SurveyResultBean extends ApplicationBean implements Serializable {
         BeanAssert.hasPermission(getUser().isModerator());
 
         resource = getLearnweb().getSurveyManager().getSurveyResource(surveyResourceId);
-        BeanAssert.validateNotNull(resource);
+        BeanAssert.isFound(resource);
+        BeanAssert.notDeleted(resource);
 
         // output only questions that are not readonly
         questionColumns = new LinkedList<>();

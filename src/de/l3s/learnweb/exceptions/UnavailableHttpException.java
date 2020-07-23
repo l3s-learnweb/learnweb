@@ -7,10 +7,10 @@ public class UnavailableHttpException extends HttpException {
     }
 
     public UnavailableHttpException(final String reason) {
-        super(HttpException.UNAVAILABLE, reason);
+        super(HttpException.UNAVAILABLE, reason, null, true);
     }
 
     public UnavailableHttpException(final String reason, final Throwable cause) {
-        super(HttpException.UNAVAILABLE, reason, cause);
+        super(HttpException.UNAVAILABLE, reason, cause, true);
     }
 }

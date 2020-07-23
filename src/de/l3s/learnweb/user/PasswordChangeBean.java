@@ -27,7 +27,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
     private User user;
 
     public void onLoad() throws SQLException {
-        BeanAssert.validateNotEmpty(parameter);
+        BeanAssert.validate(StringUtils.isNotEmpty(parameter));
         String[] splits = parameter.split("_");
         BeanAssert.validate(splits.length == 2 && !StringUtils.isAnyEmpty(splits), "error_pages.bad_request_email_link");
 

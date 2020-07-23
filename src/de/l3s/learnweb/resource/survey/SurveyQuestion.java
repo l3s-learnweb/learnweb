@@ -11,11 +11,12 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.util.Deletable;
 
 /**
  * @author Rishita
  */
-public class SurveyQuestion implements Serializable, Cloneable {
+public class SurveyQuestion implements Deletable, Serializable, Cloneable {
     private static final long serialVersionUID = -7698089608547415349L;
 
     public enum QuestionType { // represents primefaces input types
@@ -182,6 +183,7 @@ public class SurveyQuestion implements Serializable, Cloneable {
         this.id = id;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

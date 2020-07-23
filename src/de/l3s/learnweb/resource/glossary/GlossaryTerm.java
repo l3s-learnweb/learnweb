@@ -9,7 +9,9 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
-public class GlossaryTerm implements Serializable, Cloneable {
+import de.l3s.util.Deletable;
+
+public class GlossaryTerm implements Deletable, Serializable, Cloneable {
     private static final long serialVersionUID = -8309235925484416943L;
 
     private int id = -1;
@@ -216,6 +218,7 @@ public class GlossaryTerm implements Serializable, Cloneable {
         this.entryId = entryId;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

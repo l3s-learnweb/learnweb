@@ -1,0 +1,24 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+<ui:param name="pageTitle" value="#{msg['error_pages.gone']}"/>
+<ui:param name="hasAccessPermission" value="true"/>
+<ui:param name="extraPageClass" value="container"/>
+<ui:param name="hideBreadcrumbs" value="true"/>
+
+<ui:define name="center_layout">
+    <f:view transient="true">
+        <c:set var="message" value="#{requestScope['javax.servlet.error.message']}" scope="request"/>
+
+        <p:panel header="#{msg['error']} 410: #{msg['error_pages.gone']}" styleClass="ui-widget-danger">
+            <h:outputText styleClass="h5 d-block" value="#{msg['error_pages.gone_default_description']}" rendered="#{empty message}"/>
+            <h:outputText styleClass="h5 d-block" value="#{msg[message]}" rendered="#{not empty message}"/>
+        </p:panel>
+    </f:view>
+</ui:define>
+
+</ui:composition>

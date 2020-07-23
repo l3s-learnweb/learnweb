@@ -36,7 +36,7 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
             announcement.setDate(new Date());
         } else {
             announcement = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId);
-            BeanAssert.validateNotNull(announcement);
+            BeanAssert.isFound(announcement);
             pageTitle = announcement.getTitle();
         }
     }

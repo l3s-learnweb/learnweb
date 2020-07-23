@@ -8,8 +8,9 @@ import javax.validation.constraints.NotBlank;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.Deletable;
 
-public class ForumPost implements Serializable {
+public class ForumPost implements Serializable, Deletable {
     private static final long serialVersionUID = 4093915855537221830L;
 
     private int id = -1;
@@ -141,6 +142,7 @@ public class ForumPost implements Serializable {
         this.category = category;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

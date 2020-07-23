@@ -133,7 +133,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
         if (groupId > 0) {
             group = getLearnweb().getGroupManager().getGroupById(groupId);
-            BeanAssert.groupNotNull(group);
+            BeanAssert.isFound(group);
 
             BeanAssert.hasPermission(group.canViewResources(getUser()));
             group.setLastVisit(user);
@@ -143,7 +143,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
         if (folderId > 0) {
             currentFolder = getLearnweb().getGroupManager().getFolder(folderId);
-            BeanAssert.validateNotNull(currentFolder, "The requested folder can't be found.");
+            BeanAssert.validate(currentFolder, "The requested folder can't be found.");
         }
     }
 

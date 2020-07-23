@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.exceptionhandler.FullAjaxExceptionHandler;
@@ -15,7 +16,7 @@ import org.omnifaces.util.Utils;
 
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.exceptions.ForbiddenHttpException;
-import de.l3s.learnweb.exceptions.NotFoundHttpException;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.util.bean.BeanHelper;
 
@@ -32,32 +33,26 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
     }
 
     protected static void logException(Throwable rootCause, HttpServletRequest request) {
-        // skip these types
-        if (Utils.isOneInstanceOf(rootCause.getClass(), NotFoundHttpException.class)) {
+        if (Utils.isOneInstanceOf(rootCause.getClass(),
+            ClientAbortException.class, // happens when users press the abort button or navigate very fast
+            UnauthorizedHttpException.class // Unauthorized access redirected to login page
+        )) {
             return;
         }
 
         String requestSummary = BeanHelper.getRequestSummary(request);
 
-        // } else if (rootCause instanceof IllegalStateException && rootCause.getMessage().startsWith("Cannot create a session")) {
-        //     log.warn(rootCause.getMessage() + "; Happens mostly because of error 404; On " + description);
-        // } else if (rootCause instanceof IllegalArgumentException && rootCause.getMessage().startsWith("Illegal base64 character -54")) {
-        //     log.warn(rootCause.getMessage() + "; This happens often due to ; On " + description);
+        if (rootCause instanceof HttpException && ((HttpException) rootCause).isSilent()) {
+            log.warn("Silent exception {} ", requestSummary, rootCause);
+            return;
+        }
 
-        if (rootCause instanceof UnauthorizedHttpException) {
-            log.info("Unauthorized access redirected to login page.");
-        } else if (rootCause instanceof ForbiddenHttpException && rootCause.getMessage() == null) {
+        if (rootCause instanceof ForbiddenHttpException) {
             log.error("Illegal access {} ", requestSummary, rootCause);
         } else if (rootCause instanceof BadRequestHttpException) {
-            if (isBotUserAgent(request)) {
-                log.warn("Bad request {} ", requestSummary);
-            } else {
-                log.error("Bad request {} ", requestSummary, rootCause);
-            }
+            log.log(isBotUserAgent(request) ? Level.WARN : Level.ERROR, "Bad request {} ", requestSummary, rootCause);
         } else if (rootCause instanceof ViewExpiredException) {
-            log.debug("View expired {}", requestSummary);
-        } else if (rootCause instanceof ClientAbortException) { // happens when users press the abort button or navigate very fast
-            log.debug("Client aborted a connection {}", requestSummary);
+            log.warn("View expired {}", requestSummary);
         } else {
             log.fatal("Fatal unhandled error on {}", requestSummary, rootCause);
         }

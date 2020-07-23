@@ -67,8 +67,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         BeanAssert.authorized(isLoggedIn());
 
         resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-        BeanAssert.validateNotNull(resource, "The requested resource can't be found.");
-        BeanAssert.found(!resource.isDeleted(), "This resource has been deleted.");
+        BeanAssert.validate(resource, "The requested resource can't be found.");
+        BeanAssert.notDeleted(resource);
 
         BeanAssert.authorized(resource.canViewResource(getUser()));
 

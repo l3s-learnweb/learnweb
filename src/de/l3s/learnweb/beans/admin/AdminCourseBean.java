@@ -44,7 +44,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
         BeanAssert.authorized(user);
 
         course = getLearnweb().getCourseManager().getCourseById(courseId);
-        BeanAssert.validateNotNull(course);
+        BeanAssert.isFound(course);
         BeanAssert.hasPermission(user.isAdmin() || user.isModerator() && course.isMember(user));
 
         // many string operations to display the options in a proper way

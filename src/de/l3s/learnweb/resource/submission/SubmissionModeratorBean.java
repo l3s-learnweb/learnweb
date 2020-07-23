@@ -25,7 +25,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
 
     public void onLoad() throws SQLException {
         submission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
-        BeanAssert.validateNotNull(submission);
+        BeanAssert.isFound(submission);
     }
 
     public int getSubmissionId() {

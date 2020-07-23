@@ -123,7 +123,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     }
 
     private void setOrganisation(Organisation selectedOrganisation) {
-        BeanAssert.foundNotNull(selectedOrganisation);
+        BeanAssert.isFound(selectedOrganisation);
 
         this.organisation = selectedOrganisation;
 

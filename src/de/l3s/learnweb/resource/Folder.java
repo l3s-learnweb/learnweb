@@ -157,6 +157,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         this.userId = userId;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

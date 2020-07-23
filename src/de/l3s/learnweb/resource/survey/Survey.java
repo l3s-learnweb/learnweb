@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
 /**
@@ -16,7 +17,7 @@ import de.l3s.util.HasId;
  *
  * @author Philipp Kemkes
  */
-public class Survey implements Serializable, HasId, Cloneable {
+public class Survey implements Deletable, HasId, Serializable, Cloneable {
     private static final long serialVersionUID = -7478683722354893077L;
 
     private int id = -1;
@@ -115,6 +116,7 @@ public class Survey implements Serializable, HasId, Cloneable {
         this.userId = userId;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

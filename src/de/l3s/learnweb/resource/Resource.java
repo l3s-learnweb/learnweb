@@ -1150,6 +1150,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.creationDate = creationDate;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

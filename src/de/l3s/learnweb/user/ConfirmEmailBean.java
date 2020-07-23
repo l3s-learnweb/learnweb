@@ -30,7 +30,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
         BeanAssert.validate(token.length() >= 32, "confirm_token_to_short");
 
         user = getLearnweb().getUserManager().getUserByEmailAndConfirmationToken(email, token);
-        BeanAssert.validateNotNull(user, "confirm_token_invalid");
+        BeanAssert.validate(user, "confirm_token_invalid");
 
         user.setEmailConfirmed(true);
         user.save();

@@ -71,7 +71,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             moderatorAccess = true;
         }
 
-        BeanAssert.validateNotNull(selectedUser);
+        BeanAssert.isFound(selectedUser);
         BeanAssert.hasPermission(!moderatorAccess || loggedInUser.canModerateUser(selectedUser));
 
         email = selectedUser.getEmail();

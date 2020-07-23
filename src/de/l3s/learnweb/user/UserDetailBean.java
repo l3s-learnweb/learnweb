@@ -31,7 +31,7 @@ public class UserDetailBean extends ApplicationBean {
         BeanAssert.authorized(isLoggedIn());
 
         selectedUser = getLearnweb().getUserManager().getUser(userId);
-        BeanAssert.validateNotNull(selectedUser);
+        BeanAssert.isFound(selectedUser);
 
         if (selectedUser.getOrganisation().getOption(Option.Privacy_Anonymize_usernames)) {
             pageHidden = true;

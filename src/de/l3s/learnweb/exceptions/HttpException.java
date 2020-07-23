@@ -43,6 +43,7 @@ public class HttpException extends RuntimeException {
 
     private final int status;
     private final String reason;
+    private final boolean silent;
 
     public HttpException(final int status) {
         this(status, null, null);
@@ -53,9 +54,14 @@ public class HttpException extends RuntimeException {
     }
 
     public HttpException(final int status, final String reason, final Throwable cause) {
+        this(status, reason, cause, false);
+    }
+
+    public HttpException(final int status, final String reason, final Throwable cause, final boolean silent) {
         super(null, cause);
         this.status = status;
         this.reason = reason;
+        this.silent = silent;
     }
 
     public HttpException(final String reason) {
@@ -66,6 +72,7 @@ public class HttpException extends RuntimeException {
         super(null, cause);
         this.status = INTERNAL_SERVER_ERROR;
         this.reason = reason;
+        this.silent = false;
     }
 
     public int getStatus() {
@@ -75,6 +82,10 @@ public class HttpException extends RuntimeException {
     @Nullable
     public String getReason() {
         return reason;
+    }
+
+    public boolean isSilent() {
+        return silent;
     }
 
     @Override

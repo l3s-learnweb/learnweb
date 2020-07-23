@@ -5,13 +5,14 @@ import java.util.Date;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
 /**
  * The abstract class which is extended by Resource and Folder.
  * Groups may contains Resources and Folders (AbstractResource is common for them)
  */
-public abstract class AbstractResource implements HasId {
+public abstract class AbstractResource implements HasId, Deletable {
     private EditLocker editLocker;
 
     public abstract void setId(int id);

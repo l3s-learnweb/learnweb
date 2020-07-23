@@ -7,10 +7,10 @@ public class NotFoundHttpException extends HttpException {
     }
 
     public NotFoundHttpException(final String reason) {
-        super(HttpException.NOT_FOUND, reason);
+        super(HttpException.NOT_FOUND, reason, null, true);
     }
 
     public NotFoundHttpException(final String reason, final Throwable cause) {
-        super(HttpException.NOT_FOUND, reason, cause);
+        super(HttpException.NOT_FOUND, reason, cause, true);
     }
 }

@@ -54,16 +54,17 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     public void onLoad() throws SQLException {
         try {
             Group group = getLearnweb().getGroupManager().getGroupById(groupId);
-            BeanAssert.groupNotNull(group);
+            BeanAssert.isFound(group);
 
             String hypothesisLink = group.getHypothesisLink();
             Matcher matcher = GROUP_ID_PATTERN.matcher(hypothesisLink);
-            BeanAssert.found(matcher.find(), "The requested group has incorrect hypothes.is link");
+            String hypothesisGroup = matcher.group(1);
+            BeanAssert.validate(hypothesisGroup, "The requested group has incorrect hypothes.is link");
 
             HttpClient client = HttpClient.newHttpClient();
 
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(REQUEST_URI + matcher.group(1)))
+                .uri(URI.create(REQUEST_URI + hypothesisGroup))
                 .header("Authorization", "Bearer " + REQUEST_AUTH_TOKEN)
                 .build();
 

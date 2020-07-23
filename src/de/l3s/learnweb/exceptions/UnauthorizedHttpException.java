@@ -7,10 +7,10 @@ public class UnauthorizedHttpException extends HttpException {
     }
 
     public UnauthorizedHttpException(final String reason) {
-        super(HttpException.UNAUTHORIZED, reason);
+        super(HttpException.UNAUTHORIZED, reason, null, true);
     }
 
     public UnauthorizedHttpException(final String reason, final Throwable cause) {
-        super(HttpException.UNAUTHORIZED, reason, cause);
+        super(HttpException.UNAUTHORIZED, reason, cause, true);
     }
 }

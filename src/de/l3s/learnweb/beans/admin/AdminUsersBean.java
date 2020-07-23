@@ -31,7 +31,7 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
 
         if (courseId != 0) {
             Course course = getLearnweb().getCourseManager().getCourseById(courseId);
-            BeanAssert.validateNotNull(course);
+            BeanAssert.isFound(course);
             // make sure that moderators can access only their own courses
             BeanAssert.hasPermission(user.isAdmin() || (user.isModerator() && user.getCourses().contains(course)));
 

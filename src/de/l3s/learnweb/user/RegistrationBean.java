@@ -69,7 +69,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         if (StringUtils.isNotEmpty(wizard)) {
             course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
-            BeanAssert.validateNotNull(course, "register_invalid_wizard_error");
+            BeanAssert.validate(course, "register_invalid_wizard_error");
             BeanAssert.validate(!course.getOption(Option.Users_Disable_wizard), "registration.wizard_disabled");
 
             // special message for yell

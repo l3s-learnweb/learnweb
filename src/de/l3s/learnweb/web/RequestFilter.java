@@ -73,11 +73,14 @@ public class RequestFilter extends HttpFilter {
             }
 
             /*
-             * This rule should ban possible SQL injection (where `%27A` == `'`)
+             * This rule should ban possible SQL injection (where `%27` == `'`)
              * https://stackoverflow.com/questions/33867813/strange-url-containing-a-0-or-0-a-in-web-server-logs
              */
-            if (StringUtils.endsWithAny(requestUrl, "%27A", "%27A=0")) {
+            if (StringUtils.endsWithAny(requestUrl, "%27", "%27A=0")) {
                 protectionManager.ban(ipAddr, "SQL injection");
+            }
+            if (StringUtils.endsWithAny(requestUrl, "'", "'A=0")) {
+                protectionManager.ban(ipAddr, "SQL injection (test)");
             }
 
             requestManager.recordRequest(ipAddr, requestUrl);

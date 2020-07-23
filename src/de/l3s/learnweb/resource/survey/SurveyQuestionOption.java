@@ -2,10 +2,12 @@ package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
 
+import de.l3s.util.Deletable;
+
 /**
  * A predefined answer that a user can select for a SurveyQuestion.
  */
-public class SurveyQuestionOption implements Serializable {
+public class SurveyQuestionOption implements Deletable, Serializable {
     private static final long serialVersionUID = -6330747546265218917L;
 
     private String value;
@@ -41,6 +43,7 @@ public class SurveyQuestionOption implements Serializable {
         return value;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

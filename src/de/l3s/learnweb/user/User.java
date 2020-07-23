@@ -45,6 +45,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
 import de.l3s.learnweb.resource.submission.Submission;
 import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
 import de.l3s.util.MD5;
@@ -53,7 +54,7 @@ import de.l3s.util.StringHelper;
 import de.l3s.util.UrlHelper;
 import de.l3s.util.email.Mail;
 
-public class User implements Comparable<User>, Serializable, HasId {
+public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private static final Logger log = LogManager.getLogger(User.class);
     private static final long serialVersionUID = 2482790243930271009L;
 
@@ -757,6 +758,7 @@ public class User implements Comparable<User>, Serializable, HasId {
         this.acceptTermsAndConditions = acceptTermsAndConditions;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

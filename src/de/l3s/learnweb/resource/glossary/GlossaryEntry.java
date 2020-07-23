@@ -9,7 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
-public class GlossaryEntry implements Serializable, Cloneable {
+import de.l3s.util.Deletable;
+
+public class GlossaryEntry implements Deletable, Serializable, Cloneable {
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id = -1;
@@ -169,6 +171,7 @@ public class GlossaryEntry implements Serializable, Cloneable {
         this.resourceId = resourceId;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }

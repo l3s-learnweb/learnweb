@@ -38,10 +38,11 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
         ForumManager fm = getLearnweb().getForumManager();
         topic = fm.getTopicById(topicId);
-        BeanAssert.validateNotNull(topic);
+        BeanAssert.isFound(topic);
+        BeanAssert.notDeleted(topic);
 
         group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
-        BeanAssert.groupNotNull(group);
+        BeanAssert.isFound(group);
         BeanAssert.hasPermission(group.canViewResources(getUser()));
 
         posts = fm.getPostsBy(topicId);
