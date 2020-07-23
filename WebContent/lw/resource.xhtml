@@ -2,7 +2,8 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui">
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:o="http://omnifaces.org/ui">
 
 <ui:param name="pageTitle" value="#{resourceDetailBean.resource.title}"/>
 
@@ -46,7 +47,7 @@
 			</div>
 			<div class="col-12 col-lg-4 col-xl-3 res-view-details">
 				<div class="res-view-panel">
-					<h:form id="resourceViewForm" prependId="false" styleClass="resource-details">
+					<o:form id="resourceViewForm" prependId="false" styleClass="resource-details">
 						<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
 							<h:outputText value="#{msg.please_wait}"/>
 						</p:blockUI>
@@ -54,7 +55,7 @@
 						<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view.xhtml">
 							<ui:param name="res" value="#{resourceDetailBean.resource}"/>
 						</ui:decorate>
-					</h:form>
+					</o:form>
 				</div>
 			</div>
 		</div>

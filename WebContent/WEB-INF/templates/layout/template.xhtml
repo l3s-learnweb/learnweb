@@ -102,7 +102,7 @@
             <p:ajaxStatus onstart="$('.layout-combined-loader').addClass('loading');" delay="100" widgetVar="ajax-status"
                           oncomplete="$('.layout-combined-loader').removeClass('loading');"/>
 
-            <h:form styleClass="d-none">
+            <h:form id="global_commands" styleClass="d-none">
                 <p:remoteCommand name="commandSetPreference" actionListener="#{userBean.commandSetPreference}"
                                  immediate="true" ignoreAutoUpdate="true" process="@this" global="false" />
                 <p:remoteCommand name="commandStartGuide" actionListener="#{userBean.setGuided(true)}"
