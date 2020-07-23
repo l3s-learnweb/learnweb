@@ -204,7 +204,7 @@ public class DeleteOldUsers {
             }
         }
 
-        // remove references to deleted resources
+        // remove references to deleted groups
         String[] tables = {"lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_user_log"};
 
         for (String table : tables) {

@@ -18,8 +18,6 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
 public abstract class CommonDashboardUserBean extends ApplicationBean {
-    private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
-    private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
     private static final int USERS_LIMIT = 500;
 
     private Integer paramUserId;
@@ -38,13 +36,10 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
 
     public CommonDashboardUserBean() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -6); // load data from last 6 month until now
+        cal.add(Calendar.YEAR, -5); // load data from last 5 years until now
 
-        String savedStartDate = getPreference(PREFERENCE_STARTDATE, Long.toString(cal.getTimeInMillis())); // month ago
-        String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
-
-        startDate = new Date(Long.parseLong(savedStartDate));
-        endDate = new Date(Long.parseLong(savedEndDate));
+        startDate = new Date(cal.getTimeInMillis());
+        endDate = new Date();
     }
 
     public void onLoad() throws SQLException {
@@ -156,7 +151,6 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
-        setPreference(PREFERENCE_STARTDATE, Long.toString(startDate.getTime()));
     }
 
     public Date getEndDate() {
@@ -165,6 +159,5 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-        setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
     }
 }
