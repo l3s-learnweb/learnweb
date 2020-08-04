@@ -10,10 +10,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,10 +62,6 @@ public class ResourceManager {
     public int getResourceCountByGroupId(int groupId) throws SQLException {
         Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource r WHERE group_id = " + groupId + " AND deleted = 0");
         return count.intValue();
-    }
-
-    public List<Resource> getResourcesByTagthewebCategory(String category, int maxResults) throws SQLException {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category_tagtheweb USING ( resource_id ) WHERE category = ? AND deleted = 0 LIMIT ? ", category, maxResults);
     }
 
     public List<Resource> getResourcesByUserId(int userId) throws SQLException {
@@ -226,8 +220,7 @@ public class ResourceManager {
 
         deleteResource(resourceId); // clear cache and remove resource from SOLR
 
-        String[] tables = {"lw_comment", "lw_glossary_entry", "lw_glossary_resource", "lw_resource_archiveurl", "lw_resource_audience",
-            "lw_resource_category", "lw_resource_category_tagtheweb", "lw_resource_history", "lw_resource_langlevel", "lw_resource_purpose",
+        String[] tables = {"lw_comment", "lw_glossary_entry", "lw_glossary_resource", "lw_resource_archiveurl", "lw_resource_history",
             "lw_resource_rating", "lw_resource_tag", "lw_submission_resource", "lw_survey_answer", "lw_survey_resource", "lw_survey_resource_user",
             "lw_thumb", "lw_transcript_actions", "lw_transcript_final_sel", "lw_transcript_selections", "lw_transcript_summary",
             "ted_transcripts_paragraphs", "lw_resource"};
@@ -489,36 +482,6 @@ public class ResourceManager {
             replace.setInt(3, null == user ? 0 : user.getId());
             replace.executeUpdate();
         }
-    }
-
-    public void addCategory(Resource resource, String category, Double precision) throws SQLException {
-        try (PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category_tagtheweb` (`resource_id`, `category`, `precision`) VALUES (?, ?, ?)")) {
-            replace.setInt(1, null == resource ? 0 : resource.getId());
-            replace.setString(2, category);
-            replace.setDouble(3, precision);
-            replace.executeUpdate();
-        }
-    }
-
-    protected void deleteCategory(Resource resource, String category) throws SQLException {
-        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_category_tagtheweb WHERE resource_id = ? AND category = ?")) {
-            delete.setInt(1, resource.getId());
-            delete.setString(2, category);
-            delete.executeUpdate();
-        }
-    }
-
-    public Map<String, Double> getCategoriesByResource(int resourceId) throws SQLException {
-        Map<String, Double> categories = new HashMap<>();
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT category, `precision` FROM lw_resource_category_tagtheweb WHERE `resource_id` = ?")) {
-            select.setInt(1, resourceId);
-            ResultSet rs = select.executeQuery();
-            while (rs.next()) {
-                categories.put(rs.getString("category"), rs.getDouble("precision"));
-            }
-        }
-        return categories;
-
     }
 
     protected Comment commentResource(String text, User user, Resource resource) throws SQLException {

@@ -151,7 +151,7 @@ public class DeleteOldUsers {
         }
 
         // remove references to deleted resources
-        String[] tables = {"lw_resource_history", "lw_resource_langlevel", "lw_resource_purpose", "lw_resource_rating", "lw_resource_tag", "lw_thumb",
+        String[] tables = {"lw_resource_history", "lw_resource_rating", "lw_resource_tag", "lw_thumb",
             "lw_transcript_actions", "lw_glossary_resource", "lw_transcript_selections", "lw_transcript_summary", "ted_transcripts_paragraphs"};
 
         for (String table : tables) {
