@@ -276,3 +276,10 @@ function createGuide() {
     useModalOverlay: true,
   });
 }
+
+function overlayClickCancelGuide(guide) {
+  $(document).on('click', '.shepherd-modal-overlay-container', () => {
+    guide.cancel();
+    commandFinishGuide();
+  });
+}

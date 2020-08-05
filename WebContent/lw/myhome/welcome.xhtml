@@ -193,7 +193,10 @@
         $(() => {
             guideResource = welcomePageInitializeGuide('#{of:format1(msg['guide.go_to'], msg.myResourcesTitle)}', '.guide-resources');
             guideGroups = welcomePageInitializeGuide('#{of:format1(msg['guide.go_to'], msg.myGroups)}', '.guide-groups');
-            guideSettings = welcomePageInitializeGuideSettings('#{of:format1(msg['guide.go_to'], msg.myProfileTitle)}');
+            guideSettings = welcomePageInitializeGuideSettings('#{of:format1(msg['guide.go_to'], msg.settings)}');
+            overlayClickCancelGuide(guideResource);
+            overlayClickCancelGuide(guideGroups);
+            overlayClickCancelGuide(guideSettings)
         });
     </h:outputScript>
 

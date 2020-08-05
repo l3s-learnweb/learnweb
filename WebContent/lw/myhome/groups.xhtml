@@ -124,6 +124,7 @@
             guide = groupsPageInitializeGuide("#{msg['guide.groups_create_or_join']}");
             guideFinish = guideAfterComplete("#{msg['guide.finish']}", "#{msg['guide.congratulations']}", "#{msg.yes}", "#{msg.no}", '#{of:format1(msg['guide.go_to'], msg.myResourcesTitle)}', '#{of:format1(msg['guide.go_to'], msg.myGroups)}', '#{of:format1(msg['guide.go_to'], msg.myProfileTitle)}', [#{userBean.user.getGuide("ADD_RESOURCE")}, #{userBean.user.getGuide("JOIN_GROUP")}, #{userBean.user.getGuide("ADD_PHOTO")}]);
             guide.show();
+            overlayClickCancelGuide(guide);
         });
     </h:outputScript>
 </ui:define>
