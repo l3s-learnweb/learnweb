@@ -145,7 +145,7 @@ public class RequestManager {
             insert.executeBatch();
 
         } catch (SQLException e) {
-            log.error("Recording requests to DB failed. SQLException: ", e);
+            log.error("Recording requests to DB failed. Data: {}. SQLException: ", requestsByIP, e);
         }
 
     }

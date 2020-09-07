@@ -35,6 +35,7 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
     protected static void logException(Throwable rootCause, HttpServletRequest request) {
         if (Utils.isOneInstanceOf(rootCause.getClass(),
             ClientAbortException.class, // happens when users press the abort button or navigate very fast
+            BadRequestHttpException.class, // happens when some part of url is missing, usually should provide a meaningful message to user
             UnauthorizedHttpException.class // Unauthorized access redirected to login page
         )) {
             return;
