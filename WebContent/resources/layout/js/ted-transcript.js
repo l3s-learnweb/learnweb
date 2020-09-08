@@ -207,7 +207,6 @@ function initializeJQueryContextMenu() {
   });
 }
 
-
 function doAction(action, item) {
   switch (action.action) {
     case 'add-annotation':

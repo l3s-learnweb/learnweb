@@ -44,19 +44,19 @@
 }
 
 .ui-guide {
-  border: none !important;
+  border: 0 !important;
 
   ul {
     li {
-      border-top: none !important;
+      border-top: 0 !important;
     }
   }
 
   .ui-steps-item.ui-state-highlight {
-    border-top: none !important;
+    border-top: 0 !important;
 
     ~ .ui-steps-item {
-      border-top: none !important;
+      border-top: 0 !important;
     }
   }
 

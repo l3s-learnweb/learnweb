@@ -34,7 +34,6 @@ $(document).on('click', '.archive-snapshot-list a.set-thumbnail', (e) => {
   e.preventDefault();
 });
 
-
 /* OnlyOffice editor embedded & modal */
 
 const editorFrames = [];
@@ -160,7 +159,6 @@ $(() => {
     });
   }
 });
-
 
 // Edit comments shortcuts
 function startEditComment(el) {

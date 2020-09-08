@@ -266,7 +266,7 @@ ul.res-filters {
 }
 
 .res-selector {
-  border: none;
+  border: 0;
   background: none;
   outline: none;
   margin: 0;
@@ -413,7 +413,7 @@ ul.res-filters {
 
   thead {
     th {
-      border: none !important;
+      border: 0 !important;
 
       &.ui-state-active {
         background: none !important;
@@ -443,17 +443,17 @@ ul.res-filters {
   }
 
   tbody {
-    border: none !important;
+    border: 0 !important;
     text-align: center;
     font-size: larger;
 
     tr {
-      border-right: none !important;
-      border-left: none !important;
+      border-right: 0 !important;
+      border-left: 0 !important;
       cursor: pointer;
 
       td {
-        border: none;
+        border: 0;
       }
 
       &:hover {

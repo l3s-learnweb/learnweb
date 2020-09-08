@@ -1,6 +1,5 @@
 /* global commandStartGuide, commandFinishGuide, Shepherd */
 
-
 /* Welcome Page */
 function welcomePageInitializeGuide(message, elementToAttach) {
   const guide = createGuide();

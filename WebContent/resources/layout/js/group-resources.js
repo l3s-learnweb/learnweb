@@ -1,6 +1,5 @@
 /* global commandEditFolder, commandBatchUpdateResources, commandOpenFolder, openResourceView */
 
-
 class SelectResource {
   constructor() {
     this.items = [];
@@ -129,7 +128,6 @@ class SelectResource {
 
 /** @type {SelectResource} */
 const selected = new SelectResource();
-
 
 /**
  * Context Menu for resources

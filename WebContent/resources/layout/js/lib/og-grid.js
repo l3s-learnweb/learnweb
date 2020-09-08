@@ -92,7 +92,6 @@
         /* REMOVES PREVIOUS BLOC */
         $this.find('.gridder-show').remove();
 
-
         /* ADD CLASS TO THE GRIDDER CONTAINER
          * So you can apply global style when item selected.
          */

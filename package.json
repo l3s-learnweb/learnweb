@@ -21,14 +21,14 @@
     "lint": "npm run scss:lint && npm run js:lint"
   },
   "devDependencies": {
-    "browserslist": "^4.12.0",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.21.1",
-    "eslint-plugin-compat": "^3.7.0",
-    "sass": "^1.26.8",
-    "stylelint": "^13.6.0",
-    "stylelint-config-sass-guidelines": "^7.0.0",
+    "browserslist": "^4.14.1",
+    "eslint": "^7.8.1",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-compat": "^3.8.0",
+    "sass": "^1.26.10",
+    "stylelint": "^13.7.0",
+    "stylelint-config-sass-guidelines": "^7.1.0",
     "stylelint-no-unsupported-browser-features": "^4.0.0"
   },
   "eslintConfig": {
@@ -105,15 +105,15 @@
           ]
         }
       ],
-      "property-blacklist": [
+      "property-disallowed-list": [
         "user-select"
       ],
-      "declaration-property-value-blacklist": {
+      "declaration-property-value-disallowed-list": {
         "position": [
           "sticky"
         ]
       },
-      "selector-pseudo-element-blacklist": [
+      "selector-pseudo-element-disallowed-list": [
         "selection"
       ]
     },
