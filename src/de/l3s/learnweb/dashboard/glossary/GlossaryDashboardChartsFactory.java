@@ -104,7 +104,7 @@ class GlossaryDashboardChartsFactory {
         dataSet.setData(values);
         data.setLabels(labels);
         data.addChartDataSet(dataSet);
-        dataSet.setBackgroundColor(ColorUtils.getColorList(4));
+        dataSet.setBackgroundColor(ColorUtils.getColorList(20));
 
         model.setData(data);
         return model;
