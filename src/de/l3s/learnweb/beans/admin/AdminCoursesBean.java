@@ -64,6 +64,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
 
             course.addUser(user);
             addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
+            newCourseTitle = ""; // reset input value
             load(); // update course list
         } catch (Exception e) {
             addErrorMessage(e);

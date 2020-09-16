@@ -20,7 +20,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <h:form id="courses_form">
+    <h:form id="courses_table">
         <p:blockUI block="courses" widgetVar="coursesOverlay">
             <h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
         </p:blockUI>
@@ -45,6 +45,10 @@
 
             <p:column headerText="#{msg.title}" sortBy="#{course.title}">
                 <h:outputText value="#{course.title}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.wizard_parameter}" sortBy="#{course.wizardParam}">
+                <h:outputText value="#{course.wizardParam}"/>
             </p:column>
 
             <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center d-none d-md-table-cell">
@@ -99,7 +103,7 @@
                 <p:message for="@previous"/>
             </div>
             <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}"
-                             update=":courses_form" process="@form"
+                             update="@form :courses_table" process="@form"
                              onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide(); PF('createCourseWidget').hide();"/>
         </h:form>
     </p:dialog>
