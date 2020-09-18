@@ -13,7 +13,7 @@
         <entry key="property-2.org.checkstyle.sun.suppressionxpathfilter.config" value="" />
         <entry key="scan-before-checkin" value="true" />
         <entry key="scanscope" value="Everything" />
-        <entry key="suppress-errors" value="false" />
+        <entry key="suppress-errors" value="true" />
       </map>
     </option>
   </component>

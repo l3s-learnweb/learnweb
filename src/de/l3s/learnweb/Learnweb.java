@@ -19,6 +19,8 @@ import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardManager;
 import de.l3s.learnweb.dashboard.tracker.TrackerDashboardManager;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
+import de.l3s.learnweb.hserver.AnnotationManager;
+import de.l3s.learnweb.hserver.DocumentManager;
 import de.l3s.learnweb.logging.LogManager;
 import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.ResourceManager;
@@ -76,6 +78,8 @@ public final class Learnweb {
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
     private final GlossaryManager glossaryManager; //new Glossary Manager
+    private final AnnotationManager annotationManager;
+    private final DocumentManager documentManager;
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
     private final RequestManager requestManager;
@@ -144,6 +148,8 @@ public final class Learnweb {
         glossaryDashboardManager = new GlossaryDashboardManager(this);
         trackerDashboardManager = new TrackerDashboardManager(this);
 
+        annotationManager = new AnnotationManager(this);
+        documentManager = new DocumentManager(this);
         historyManager = new HistoryManager(this);
         searchHistoryManager = new SearchHistoryManager(this);
 
@@ -378,6 +384,14 @@ public final class Learnweb {
 
     public SubmissionManager getSubmissionManager() {
         return submissionManager;
+    }
+
+    public AnnotationManager getAnnotationManager() {
+        return annotationManager;
+    }
+
+    public DocumentManager getDocumentManager() {
+        return documentManager;
     }
 
     public HistoryManager getHistoryManager() {

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -54,7 +55,7 @@ import de.l3s.util.StringHelper;
 import de.l3s.util.UrlHelper;
 import de.l3s.util.email.Mail;
 
-public class User implements Comparable<User>, Deletable, HasId, Serializable {
+public class User implements Comparable<User>, Deletable, HasId, Serializable, Principal {
     private static final Logger log = LogManager.getLogger(User.class);
     private static final long serialVersionUID = 2482790243930271009L;
 
@@ -388,6 +389,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String getName() {
+        return getRealUsername();
     }
 
     /**

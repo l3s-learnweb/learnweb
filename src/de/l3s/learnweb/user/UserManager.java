@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
@@ -21,6 +22,8 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.cache.CacheBuilder;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
@@ -53,6 +56,8 @@ public class UserManager {
 
     private final Learnweb learnweb;
     private final ICache<User> cache;
+    // used by proxy and annotations to identify user
+    private final com.google.common.cache.Cache<String, Integer> tokenStorage;
 
     public UserManager(Learnweb learnweb) {
         Properties properties = learnweb.getProperties();
@@ -60,6 +65,7 @@ public class UserManager {
 
         this.learnweb = learnweb;
         this.cache = userCacheSize == 0 ? new DummyCache<>() : new Cache<>(userCacheSize);
+        this.tokenStorage = CacheBuilder.newBuilder().expireAfterAccess(Duration.ofHours(1)).build();
     }
 
     public void resetCache() {
@@ -535,5 +541,13 @@ public class UserManager {
         user.setPasswordRaw("deleted user");
         user.setUsername(user.getRealUsername() + " (Deleted)");
         user.save();
+    }
+
+    public void saveToken(String token, Integer userId) {
+        tokenStorage.put(token, userId);
+    }
+
+    public Integer getUserByToken(String token) {
+        return tokenStorage.getIfPresent(token);
     }
 }

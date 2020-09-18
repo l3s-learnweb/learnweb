@@ -10,6 +10,12 @@
 
 <ui:param name="hideBreadcrumbs" value="true"/>
 
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewAction action="#{loginBean.redirect(userBean.user, null)}" if="#{userBean.loggedIn}"/>
+	</f:metadata>
+</ui:define>
+
 <ui:define name="center_layout">
 	<p:panel header="#{msg.loginTitle}">
 		<ui:fragment rendered="#{!userBean.loggedIn}">

@@ -9,11 +9,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.omnifaces.util.Faces;
 
 import com.google.common.net.InetAddresses;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
@@ -157,7 +159,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
         String redirect = Faces.getRequestParameter("redirect");
         if (StringUtils.isNotEmpty(redirect)) {
-            return redirect + (redirect.contains("?") ? "&" : "?") + "faces-redirect=true";
+            return redirect(user, redirect);
         }
 
         if (userOrganisation.getId() == 1249) { // TODO @astappiev: EU-MADE4LL user have to be redirect to the backup of Learnweb V2
@@ -172,5 +174,24 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
         // otherwise reload his last page
         return viewId + "?faces-redirect=true&includeViewParams=true";
+    }
+
+    public static String redirect(User user, String redirectUrl) {
+        if (StringUtils.isEmpty(redirectUrl)) {
+            redirectUrl = Faces.getRequestParameter("redirect");
+        }
+
+        if (user != null && StringUtils.isNotEmpty(redirectUrl)) {
+            // this `grant` parameter is used by annotation client/waps proxy to receive grant token for user auth
+            String grant = Faces.getRequestParameter("grant");
+            if (StringUtils.isNotEmpty(grant)) {
+                String token = RandomStringUtils.randomAlphanumeric(64);
+                Learnweb.getInstance().getUserManager().saveToken(token, user.getId());
+                Faces.redirect(redirectUrl + "?token=%s", token);
+            }
+
+            return redirectUrl + (redirectUrl.contains("?") ? "&" : "?") + "faces-redirect=true";
+        }
+        return null;
     }
 }

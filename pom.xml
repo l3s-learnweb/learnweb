@@ -174,7 +174,7 @@
         <dependency>
             <groupId>org.jdbi</groupId>
             <artifactId>jdbi3-core</artifactId>
-            <version>3.15.0</version>
+            <version>3.15.1</version>
         </dependency>
         <!-- Solr client (the library has 10 MB of dependencies :/) -->
         <dependency>
@@ -211,6 +211,28 @@
             <groupId>io.sentry</groupId>
             <artifactId>sentry-log4j2</artifactId>
             <version>3.0.0</version>
+        </dependency>
+
+        <!-- ################ Jersey RESTful WebServices  ################ -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>${maven.dependency.jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.ext.cdi</groupId>
+            <artifactId>jersey-cdi1x</artifactId>
+            <version>${maven.dependency.jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${maven.dependency.jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-binding</artifactId>
+            <version>${maven.dependency.jersey.version}</version>
         </dependency>
 
         <!-- ################ Other dependencies (usually your dependencies go to this section) ################ -->
