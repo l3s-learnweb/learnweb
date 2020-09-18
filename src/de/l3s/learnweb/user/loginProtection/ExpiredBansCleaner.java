@@ -16,7 +16,7 @@ public class ExpiredBansCleaner implements Runnable {
     @Override
     public void run() {
         try {
-            Learnweb.getInstance().getProtectionManager().cleanUpOutdatedBans();
+            Learnweb.getInstance().getProtectionManager().clearOutdatedBans();
         } catch (Throwable e) {
             log.error("err", e);
         }

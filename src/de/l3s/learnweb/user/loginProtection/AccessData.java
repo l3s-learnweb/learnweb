@@ -1,12 +1,12 @@
 package de.l3s.learnweb.user.loginProtection;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 /**
  * Small object to hold data about login attempts per IP or username.
- * <br>
  * Contains: number of failed attempts and the time when the ban is lifted (set to 1970 if empty)
  *
  * @author Kate
@@ -16,11 +16,14 @@ public class AccessData implements Serializable {
 
     private String type;
     private String name;
-    private Date banDate;
-    private Date bannedOn;
+    private String reason;
     private int attempts;
     private int allowedAttempts;
-    private String reason;
+    private LocalDateTime bannedUntil;
+    private LocalDateTime bannedOn;
+
+    public AccessData() {
+    }
 
     /**
      * Default constructor for new data.
@@ -39,39 +42,19 @@ public class AccessData implements Serializable {
     }
 
     /**
+     * Bans the user for a given amount of minutes starting from now.
+     */
+    public void ban(int days, int hours, int minutes) {
+        setBannedUntil(LocalDateTime.now().minusDays(days).minusHours(hours).minusMinutes(minutes));
+        setBannedOn(LocalDateTime.now());
+    }
+
+    /**
      * Resets ban time and banned on date.
      */
     public void unban() {
-        banDate = null;
+        bannedUntil = null;
         bannedOn = null;
-    }
-
-    /**
-     * Bans the user for a given amount of minutes starting from now.
-     */
-    public void setBan(int days, int hours, int minutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-
-        bannedOn = cal.getTime();
-
-        cal.add(Calendar.DAY_OF_MONTH, days);
-        cal.add(Calendar.HOUR, hours);
-        cal.add(Calendar.MINUTE, minutes);
-
-        banDate = cal.getTime();
-    }
-
-    /**
-     * Bans user for virtually forever (400 years).
-     */
-    public void permaban() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.YEAR, 400);
-
-        banDate = cal.getTime();
-        bannedOn = cal.getTime();
     }
 
     public String getType() {
@@ -90,20 +73,12 @@ public class AccessData implements Serializable {
         this.name = name;
     }
 
-    public Date getBanDate() {
-        return banDate;
+    public String getReason() {
+        return reason;
     }
 
-    public void setBanDate(Date banDate) {
-        this.banDate = banDate;
-    }
-
-    public Date getBannedOn() {
-        return bannedOn;
-    }
-
-    public void setBannedOn(Date bannedOn) {
-        this.bannedOn = bannedOn;
+    public void setReason(final String reason) {
+        this.reason = reason;
     }
 
     public int getAttempts() {
@@ -127,11 +102,20 @@ public class AccessData implements Serializable {
         allowedAttempts--;
     }
 
-    public String getReason() {
-        return reason;
+    @ColumnName("bandate")
+    public LocalDateTime getBannedUntil() {
+        return bannedUntil;
     }
 
-    public void setReason(final String reason) {
-        this.reason = reason;
+    public void setBannedUntil(LocalDateTime bannedUntil) {
+        this.bannedUntil = bannedUntil;
+    }
+
+    public LocalDateTime getBannedOn() {
+        return bannedOn;
+    }
+
+    public void setBannedOn(LocalDateTime bannedOn) {
+        this.bannedOn = bannedOn;
     }
 }

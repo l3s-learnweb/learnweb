@@ -73,16 +73,20 @@
                 <h:outputText value="#{accessData.name}"/>
             </p:column>
 
-            <p:column headerText="#{msg.bandate}" sortBy="#{accessData.banDate}">
-                <h:outputText value="#{accessData.banDate}">
-                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+            <p:column headerText="#{msg.bannedon}" sortBy="#{accessData.bannedOn}">
+                <h:outputText value="#{accessData.bannedOn}">
+                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="#{msg.bannedon}" sortBy="#{accessData.bannedOn}">
-                <h:outputText value="#{accessData.bannedOn}">
-                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+            <p:column headerText="#{msg.bandate}" sortBy="#{accessData.bannedUntil}">
+                <h:outputText value="#{accessData.bannedUntil}">
+                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
                 </h:outputText>
+            </p:column>
+
+            <p:column headerText="Reason" sortBy="#{accessData.reason}">
+                <h:outputText value="#{accessData.reason}"/>
             </p:column>
 
             <p:column headerText="#{msg.attempts}" sortBy="#{accessData.attempts}">

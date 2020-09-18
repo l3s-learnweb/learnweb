@@ -2,7 +2,6 @@ package de.l3s.learnweb.user;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -16,6 +15,7 @@ import org.omnifaces.util.Faces;
 import com.google.common.net.InetAddresses;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 
@@ -73,24 +73,12 @@ public class LoginBean extends ApplicationBean implements Serializable {
             return LOGIN_PAGE;
         }
 
-        //Gets the ip and username info from protection manager
+        // Gets the ip and username info from protection manager
         ProtectionManager pm = getLearnweb().getProtectionManager();
-        Date now = new Date();
+        BeanAssert.hasPermission(!pm.isBanned(ip), "ip_banned");
+        BeanAssert.hasPermission(!pm.isBanned(username), "username_banned");
 
-        Date ipBan = pm.getBannedUntil(ip);
-        Date userBan = pm.getBannedUntil(username);
-
-        if (ipBan != null && ipBan.after(now)) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned" + ipBan);
-            return LOGIN_PAGE;
-        }
-
-        if (userBan != null && userBan.after(now)) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "username_banned" + userBan);
-            return LOGIN_PAGE;
-        }
-
-        //USER AUTHORIZATION HAPPENS HERE
+        // USER AUTHORIZATION HAPPENS HERE
         final User user = getLearnweb().getUserManager().getUser(username, password);
 
         if (null == user) {
@@ -148,7 +136,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
      */
     public static String loginUser(ApplicationBean bean, User user, int moderatorUserId) throws SQLException {
         bean.getUserBean().setUser(user); // logs the user in
-        //addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
+        // addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 
         user.updateLoginDate(); // the last login date has to be updated before we log a new login event
 

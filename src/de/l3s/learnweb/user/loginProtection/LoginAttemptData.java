@@ -1,6 +1,6 @@
 package de.l3s.learnweb.user.loginProtection;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Holds login attempts by selected ip and username. Used by AnalysingProtectionManager for... analysing... yeah.
@@ -11,13 +11,13 @@ public class LoginAttemptData {
     private String ip;
     private String username;
     private boolean success;
-    private Date timestamp;
+    private LocalDateTime dateTime;
 
-    public LoginAttemptData(String ip, String username, boolean success, Date timestamp) {
+    public LoginAttemptData(String ip, String username, boolean success) {
         this.ip = ip;
         this.username = username;
         this.success = success;
-        this.timestamp = timestamp;
+        this.dateTime = LocalDateTime.now();
     }
 
     public String getIp() {
@@ -44,12 +44,12 @@ public class LoginAttemptData {
         this.success = success;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
 }

@@ -10,6 +10,8 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
 
 import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardManager;
@@ -252,6 +254,22 @@ public final class Learnweb {
         checkConnection();
 
         return dbConnection;
+    }
+
+    private Jdbi getJdbi() {
+        try {
+            // not sure if this is efficient, probably it should be reused
+            // but connection can be closed and what then???
+            // TODO @astappiev: have to be improved if we decide to use it https://jdbi.org/#_jdbi
+            return Jdbi.create(getConnection());
+        } catch (SQLException e) {
+            // here we get rid of SQLException, we will show 500 error page immediately
+            throw new RuntimeException("An error with database connection", e);
+        }
+    }
+
+    public Handle openJdbiHandle() {
+        return getJdbi().open();
     }
 
     /**

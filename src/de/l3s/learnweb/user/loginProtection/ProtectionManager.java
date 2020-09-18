@@ -5,13 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +21,9 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jdbi.v3.core.Handle;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.web.AggregatedRequestData;
@@ -89,37 +84,27 @@ public class ProtectionManager {
      * Loads ban lists from the database. Should be called by every constructor.
      */
     private void loadBanLists() {
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_bans")) {
-            ResultSet rs = select.executeQuery();
-            while (rs.next()) {
-                AccessData accessData = new AccessData(rs.getString("name"));
-                accessData.setType(rs.getString("type"));
-                accessData.setBanDate(rs.getTimestamp("bandate"));
-                accessData.setBannedOn(rs.getTimestamp("bannedon"));
-                accessData.setAttempts(rs.getInt("attempts"));
-                accessData.setReason(rs.getString("reason"));
+        try (Handle handle = learnweb.openJdbiHandle()) {
+            handle.select("SELECT * FROM lw_bans")
+                .mapToBean(AccessData.class)
+                .stream()
+                .forEach(accessData -> accessMap.put(accessData.getName(), accessData));
 
-                accessMap.put(accessData.getName(), accessData);
-            }
-
-        } catch (SQLException e) {
-            log.error("Failed to load ban lists. SQLException: ", e);
+            log.debug("Banlist loaded. Entries: {}", accessMap.size());
         }
-
-        log.debug("Banlist loaded. Entries: {}", accessMap.size());
     }
 
-    public Date getBannedUntil(String name) {
+    public LocalDateTime getBannedUntil(String name) {
         AccessData ad = accessMap.get(name);
         if (ad == null) {
             return null;
         }
-        return ad.getBanDate();
+        return ad.getBannedUntil();
     }
 
-    public boolean isBanned(String ip) {
-        Date ipBan = getBannedUntil(ip);
-        return ipBan != null && ipBan.after(new Date());
+    public boolean isBanned(String name) {
+        LocalDateTime ipBan = getBannedUntil(name);
+        return ipBan != null && ipBan.isAfter(LocalDateTime.now());
     }
 
     public boolean needsCaptcha(String name) {
@@ -131,7 +116,7 @@ public class ProtectionManager {
     }
 
     public void updateFailedAttempts(String ip, String username) {
-        attemptedLogins.add(new LoginAttemptData(ip, username, false, new Date()));
+        attemptedLogins.add(new LoginAttemptData(ip, username, false));
 
         AccessData ipData = accessMap.get(ip);
         AccessData usernameData = accessMap.get(username);
@@ -166,16 +151,17 @@ public class ProtectionManager {
             return;
         }
 
-        Calendar threshold = Calendar.getInstance();
-        threshold.setTime(new Date());
-        threshold.add(Calendar.MINUTE, -MINUTES_ANALYZED);
+        LocalDateTime threshold = LocalDateTime.now().minusMinutes(MINUTES_ANALYZED);
 
         List<LoginAttemptData> list;
-
         if (isIP) {
-            list = attemptedLogins.stream().filter(x -> x.getIp().equals(ad.getName()) && x.getTimestamp().after(threshold.getTime())).collect(Collectors.toList());
+            list = attemptedLogins.stream()
+                .filter(x -> x.getIp().equals(ad.getName()) && x.getDateTime().isAfter(threshold))
+                .collect(Collectors.toList());
         } else {
-            list = attemptedLogins.stream().filter(x -> x.getUsername().equals(ad.getName()) && x.getTimestamp().after(threshold.getTime())).collect(Collectors.toList());
+            list = attemptedLogins.stream()
+                .filter(x -> x.getUsername().equals(ad.getName()) && x.getDateTime().isAfter(threshold))
+                .collect(Collectors.toList());
         }
 
         if (list.size() > BAN_THRESHOLD) {
@@ -183,7 +169,6 @@ public class ProtectionManager {
         }
 
         ad.setAllowedAttempts(ATTEMPTS_STEP);
-
     }
 
     /**
@@ -267,55 +252,42 @@ public class ProtectionManager {
             usernameData.reset();
         }
 
-        attemptedLogins.add(new LoginAttemptData(ip, username, true, new Date()));
+        attemptedLogins.add(new LoginAttemptData(ip, username, true));
     }
 
-    public void unban(String name) {
-        accessMap.remove(name);
+    public void clearBan(String name) {
+        try (Handle handle = learnweb.openJdbiHandle()) {
+            handle.execute("DELETE FROM lw_bans WHERE name = ?", name);
 
-        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE name=?")) {
-            delete.setString(1, name);
-            delete.execute();
-        } catch (SQLException e) {
-            log.error("Ban removal attempt failed. SQLException: ", e);
+            accessMap.remove(name);
+            log.debug("Unbanned {}", name);
         }
-
-        log.debug("Unbanned {}", name);
     }
 
-    public void clearBans() {
-        accessMap.clear();
+    public void clearOutdatedBans() {
+        try (Handle handle = learnweb.openJdbiHandle()) {
+            handle.execute("DELETE FROM lw_bans WHERE bandate <= CURDATE() - INTERVAL 7 DAY");
 
-        //noinspection SqlWithoutWhere
-        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans")) {
-            delete.execute();
-        } catch (SQLException e) {
-            log.error("Ban clearing failed. SQLException: ", e);
+            accessMap.clear();
+            loadBanLists();
+
+            log.debug("Older entries have been cleaned up from ban lists.");
         }
-
-        log.debug("Banlist cleared.");
-    }
-
-    public void cleanUpOutdatedBans() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.DATE, -7);
-
-        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE bandate <= ?")) {
-            delete.setTimestamp(1, new java.sql.Timestamp(cal.getTimeInMillis()));
-            delete.execute();
-        } catch (SQLException e) {
-            log.error("Expired ban cleanup failed. SQLException: ", e);
-        }
-
-        accessMap.clear();
-        loadBanLists();
-
-        log.debug("Older entries have been cleaned up from ban lists.");
     }
 
     public List<AccessData> getBanlist() {
         return new ArrayList<>(accessMap.values());
+    }
+
+    /**
+     * Same as {@link #ban(String, String)}, but do not save the name to database.
+     */
+    public void tempBan(String ipAddr, String reason) {
+        AccessData accessData = accessMap.computeIfAbsent(ipAddr, AccessData::new);
+
+        accessData.setType("temp");
+        accessData.ban(365, 0, 0);
+        accessData.setReason(reason);
     }
 
     /**
@@ -329,50 +301,16 @@ public class ProtectionManager {
         AccessData accessData = accessMap.computeIfAbsent(name, AccessData::new);
 
         accessData.setType(isIP ? "IP" : "user");
-        accessData.setBan(banDays, banHours, banMinutes);
+        accessData.ban(banDays, banHours, banMinutes);
         accessData.setReason(reason);
 
-        saveAccessData(accessData);
-    }
+        try (Handle handle = learnweb.openJdbiHandle()) {
+            handle.createUpdate("INSERT INTO lw_bans (type, name, bandate, bannedon, attempts, reason) "
+                + "VALUES(:type, :name, :bannedUntil, :bannedOn, :attempts, :reason) ON DUPLICATE KEY UPDATE bandate = VALUES(bandate)")
+                .bindBean(accessData)
+                .execute();
 
-    /**
-     * Same as {@link #ban(String, String)}, but do not save the name to database.
-     */
-    public void tempBan(String ipAddr, String reason) {
-        AccessData accessData = accessMap.computeIfAbsent(ipAddr, AccessData::new);
-
-        accessData.setType("temp");
-        accessData.setBan(365, 0, 0);
-        accessData.setReason(reason);
-    }
-
-    public void permaban(String name, boolean isIP) {
-        AccessData accessData = accessMap.computeIfAbsent(name, AccessData::new);
-
-        accessData.setType(isIP ? "IP" : "user");
-        accessData.permaban();
-
-        saveAccessData(accessData);
-    }
-
-    private void saveAccessData(AccessData accessData) {
-        try (PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bans (type, name, bandate, bannedon, attempts, reason)"
-            + "VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)")) {
-            insert.setString(1, accessData.getType());
-            insert.setString(2, accessData.getName());
-            insert.setTimestamp(3, new java.sql.Timestamp(accessData.getBanDate().getTime()));
-            insert.setTimestamp(4, new java.sql.Timestamp(accessData.getBannedOn().getTime()));
-            insert.setInt(5, accessData.getAttempts());
-            if (StringUtils.isEmpty(accessData.getReason())) {
-                insert.setNull(6, Types.VARCHAR);
-            } else {
-                insert.setString(6, accessData.getReason());
-            }
-            insert.execute();
-
-            log.info("Banned {} until {}", accessData.getName(), accessData.getBanDate());
-        } catch (SQLException e) {
-            log.error("Ban attempt failed. SQLException: ", e);
+            log.info("Banned {} until {}", accessData.getName(), accessData.getBannedUntil());
         }
     }
 
