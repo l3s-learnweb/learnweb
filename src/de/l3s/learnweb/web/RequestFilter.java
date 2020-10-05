@@ -66,7 +66,7 @@ public class RequestFilter extends HttpFilter {
              * - Joomla Unserialize Vulnerability (https://blog.cloudflare.com/the-joomla-unserialize-vulnerability/)
              */
             if (!InetAddresses.isInetAddress(ipAddr)) {
-                log.error("Suspicious IP address banned: {}", BeanHelper.getRequestSummary(request));
+                log.error("Suspicious IP address banned: {}. Request summary: {}", ipAddr, BeanHelper.getRequestSummary(request));
 
                 // We can't ban them permanently, because their IP address is not an address, but a string, likely long string...
                 protectionManager.tempBan(ipAddr, "Suspicious IP address");

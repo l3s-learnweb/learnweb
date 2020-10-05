@@ -157,9 +157,9 @@
         <module name="MethodLength">
             <property name="severity" value="warning"/> <!-- Changed: decreased severity -->
         </module>
-        <module name="ParameterNumber">
-            <property name="severity" value="warning"/> <!-- Changed: decreased severity -->
-        </module>
+        <!--<module name="ParameterNumber">
+            <property name="severity" value="warning"/> &lt;!&ndash; Changed: decreased severity &ndash;&gt;
+        </module>-->
 
         <!-- Checks for whitespace                               -->
         <!-- See https://checkstyle.org/config_whitespace.html -->
