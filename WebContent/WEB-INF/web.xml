@@ -170,7 +170,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Jersey Web Application</servlet-name>
-        <url-pattern>/hserver/*</url-pattern>
+        <url-pattern>/annotations/*</url-pattern>
     </servlet-mapping>
 
     <filter>

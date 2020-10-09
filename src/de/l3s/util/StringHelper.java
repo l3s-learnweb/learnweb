@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -93,12 +94,12 @@ public class StringHelper {
         return parseInt(number, -1);
     }
 
+    /**
+     * @deprecated Use #{@link NumberUtils#toInt(String, int)} instead
+     */
+    @Deprecated
     public static int parseInt(String number, int defaultValue) {
-        try {
-            return Integer.parseInt(number);
-        } catch (NumberFormatException expected) {
-            return defaultValue;
-        }
+        return NumberUtils.toInt(number, defaultValue);
     }
 
     public static String getDomainName(String url) {
