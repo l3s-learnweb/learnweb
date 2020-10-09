@@ -59,7 +59,7 @@ public class ProfileController {
 
             JsonObjectBuilder userInfo = Json.createObjectBuilder();
             userInfo.add("user_id", user.getId());
-            if (user.getUsername() != null) {
+            if (user.getFullName() != null) {
                 userInfo.add("display_name", user.getFullName());
             } else {
                 userInfo.add("display_name", JsonValue.NULL);
