@@ -25,7 +25,7 @@ public class ApiController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject getIt() {
-        String serverUrl = Learnweb.getInstance().getServerUrl() + "/hserver";
+        String serverUrl = Learnweb.getInstance().getServerUrl() + "/annotations";
 
         JsonObjectBuilder response = Json.createObjectBuilder();
         JsonObjectBuilder links = Json.createObjectBuilder();

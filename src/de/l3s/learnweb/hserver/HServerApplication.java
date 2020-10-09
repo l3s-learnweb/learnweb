@@ -8,7 +8,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import de.l3s.learnweb.hserver.filters.CorsFilter;
 import de.l3s.learnweb.hserver.filters.DummyAuthFilter;
 
-@ApplicationPath("/hserver")
+@ApplicationPath("/annotations")
 public class HServerApplication extends ResourceConfig {
     public HServerApplication() {
         property(ServerProperties.WADL_FEATURE_DISABLE, true);
