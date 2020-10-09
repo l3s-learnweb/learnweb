@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import de.l3s.learnweb.hserver.HUtils;
 import de.l3s.learnweb.hserver.entities.Annotation;
 import de.l3s.learnweb.hserver.entities.Document;
-import de.l3s.util.StringHelper;
 
 public class AnnotationAdapter implements JsonbAdapter<Annotation, JsonObject> {
 
@@ -89,7 +88,7 @@ public class AnnotationAdapter implements JsonbAdapter<Annotation, JsonObject> {
     public Annotation adaptFromJson(JsonObject jsonObject) throws Exception {
         Annotation annotation = new Annotation();
         if (jsonObject.containsKey("group")) {
-            annotation.setGroupId(StringHelper.parseInt(jsonObject.getString("group"), 0));
+            annotation.setGroupId(HUtils.getIntFromJsonString(jsonObject, "group"));
         }
         if (jsonObject.containsKey("permissions")) {
             JsonObject permissions = jsonObject.getJsonObject("permissions");

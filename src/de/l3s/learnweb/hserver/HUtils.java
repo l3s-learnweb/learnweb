@@ -6,7 +6,10 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.json.JsonObject;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import de.l3s.util.StringHelper;
 
@@ -15,6 +18,14 @@ public final class HUtils {
     private static final String[] PROXY_PREFIXS = {"https://via.hypothes.is/", "http://localhost:8080/my-web/record/",
         "http://waps.io/my-web/record/", "https://waps.io/my-web/record/"};
     private static final String[] URL_SCHEMES = {"http", "https"};
+
+    public static int getIntFromJsonString(JsonObject jsonObject, String key) {
+        try {
+            return jsonObject.getInt(key);
+        } catch (Exception e) {
+            return NumberUtils.toInt(jsonObject.getString(key), 0);
+        }
+    }
 
     public static Integer getUserIdFromUser(String user) {
         if (StringUtils.isNotBlank(user)) {
