@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.omnifaces.util.Faces;
 
@@ -176,7 +175,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 
-    public static String redirect(User user, String redirectUrl) {
+    public static String redirect(User user, String redirectUrl) throws SQLException {
         if (StringUtils.isEmpty(redirectUrl)) {
             redirectUrl = Faces.getRequestParameter("redirect");
         }
@@ -185,8 +184,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             // this `grant` parameter is used by annotation client/waps proxy to receive grant token for user auth
             String grant = Faces.getRequestParameter("grant");
             if (StringUtils.isNotEmpty(grant)) {
-                String token = RandomStringUtils.randomAlphanumeric(64);
-                Learnweb.getInstance().getUserManager().saveToken(token, user.getId());
+                String token = Learnweb.getInstance().getUserManager().getGrantToken(user.getId());
                 Faces.redirect(redirectUrl + "?token=%s", token);
             }
 

@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
@@ -20,10 +19,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.google.common.cache.CacheBuilder;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
@@ -56,8 +54,6 @@ public class UserManager {
 
     private final Learnweb learnweb;
     private final ICache<User> cache;
-    // used by proxy and annotations to identify user
-    private final com.google.common.cache.Cache<String, Integer> tokenStorage;
 
     public UserManager(Learnweb learnweb) {
         Properties properties = learnweb.getProperties();
@@ -65,7 +61,6 @@ public class UserManager {
 
         this.learnweb = learnweb;
         this.cache = userCacheSize == 0 ? new DummyCache<>() : new Cache<>(userCacheSize);
-        this.tokenStorage = CacheBuilder.newBuilder().expireAfterAccess(Duration.ofHours(1)).build();
     }
 
     public void resetCache() {
@@ -543,11 +538,38 @@ public class UserManager {
         user.save();
     }
 
-    public void saveToken(String token, Integer userId) {
-        tokenStorage.put(token, userId);
+    public String getGrantToken(Integer userId) throws SQLException {
+        // retrieve existing token
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT token FROM lw_user_token WHERE type = 'grant' AND user_id = ?")) {
+            select.setInt(1, userId);
+            try (ResultSet rs = select.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("token");
+                }
+            }
+        }
+
+        // OR, save new token
+        String token = RandomStringUtils.randomAlphanumeric(128);
+        try (PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO lw_user_token (`user_id`, `type`, `token`) VALUES(?, ?, ?)")) {
+            replace.setInt(1, userId);
+            replace.setString(2, "grant");
+            replace.setString(3, token);
+            replace.executeUpdate();
+            return token;
+        }
     }
 
-    public Integer getUserByToken(String token) {
-        return tokenStorage.getIfPresent(token);
+    public User getUserByGrantToken(String token) throws SQLException {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT user_id FROM lw_user_token WHERE type = 'grant' AND token = ?")) {
+            select.setString(1, token);
+            try (ResultSet rs = select.executeQuery()) {
+                if (rs.next()) {
+                    return getUser(rs.getInt("user_id"));
+                }
+            }
+        }
+
+        return null;
     }
 }

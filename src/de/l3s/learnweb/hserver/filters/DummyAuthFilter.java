@@ -31,10 +31,8 @@ public class DummyAuthFilter implements ContainerRequestFilter {
         try {
             if (authorization != null) {
                 String token = authorization.replace("Bearer ", "");
-                Integer userId = userManager.getUserByToken(token);
-                if (userId != null) {
-                    User user = Learnweb.getInstance().getUserManager().getUser(userId);
-
+                User user = userManager.getUserByGrantToken(token);
+                if (user != null) {
                     requestContext.setSecurityContext(new SecurityContext() {
                         @Override
                         public Principal getUserPrincipal() {
