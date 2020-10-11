@@ -1,6 +1,8 @@
 package de.l3s.learnweb.user;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.UncheckedIOException;
 import java.sql.SQLException;
 
 import javax.enterprise.context.RequestScoped;
@@ -186,9 +188,13 @@ public class LoginBean extends ApplicationBean implements Serializable {
             // this `grant` parameter is used by annotation client/waps proxy to receive grant token for user auth
             String grant = Faces.getRequestParameter("grant");
             if (StringUtils.isNotEmpty(grant)) {
-                String token = Learnweb.getInstance().getUserManager().getGrantToken(user.getId());
-                log.debug("Grant token [{}] requested for user [{}], redirect to {}", token, user.getId(), redirectUrl);
-                Faces.redirect(redirectUrl + "?token=%s", token);
+                try {
+                    String token = Learnweb.getInstance().getUserManager().getGrantToken(user.getId());
+                    log.debug("Grant token [{}] requested for user [{}], redirect to {}", token, user.getId(), redirectUrl);
+                    Faces.getExternalContext().redirect(redirectUrl + "?token=" + token);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
             }
 
             return redirectUrl + (redirectUrl.contains("?") ? "&" : "?") + "faces-redirect=true";
