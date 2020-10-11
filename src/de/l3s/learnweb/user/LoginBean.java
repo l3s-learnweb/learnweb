@@ -191,7 +191,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
                 try {
                     String token = Learnweb.getInstance().getUserManager().getGrantToken(user.getId());
                     log.debug("Grant token [{}] requested for user [{}], redirect to {}", token, user.getId(), redirectUrl);
-                    Faces.getResponse().sendRedirect(redirectUrl + "?token=" + token);
+                    Faces.getExternalContext().redirect(redirectUrl + "?token=" + token);
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
                 }
