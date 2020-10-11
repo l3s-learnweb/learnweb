@@ -10,6 +10,8 @@ import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 
 import com.google.common.net.InetAddresses;
@@ -23,9 +25,9 @@ import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 @Named
 @RequestScoped
 public class LoginBean extends ApplicationBean implements Serializable {
-    // private static final Logger log = LogManager.getLogger(LoginBean.class);
     private static final long serialVersionUID = 7980062591522267111L;
 
+    private static final Logger log = LogManager.getLogger(LoginBean.class);
     private static final String LOGIN_PAGE = "/lw/user/login.xhtml";
 
     @NotBlank
@@ -185,6 +187,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             String grant = Faces.getRequestParameter("grant");
             if (StringUtils.isNotEmpty(grant)) {
                 String token = Learnweb.getInstance().getUserManager().getGrantToken(user.getId());
+                log.debug("Grant token [{}] requested for user [{}], redirect to {}", token, user.getId(), redirectUrl);
                 Faces.redirect(redirectUrl + "?token=%s", token);
             }
 
