@@ -5,7 +5,7 @@
 
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-    <h:outputScript library="vendor" name="justifiedGallery-v3.7.0/jquery.justifiedGallery.min.js" target="body"/>
+    <h:outputScript library="vendor" name="justifiedGallery-v3.8.1/jquery.justifiedGallery.min.js" target="body"/>
 
     <ui:repeat var="res" value="#{resources}">
         <a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-image search-item-lightbox d-inline-block ${res.clicked ? 'snippet-clicked' : ''}">

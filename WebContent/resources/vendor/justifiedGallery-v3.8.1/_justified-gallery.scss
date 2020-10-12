@@ -16,7 +16,9 @@
     padding: 0;
 
     > img,
-    > a > img {
+    > a > img,
+    > svg,
+    > a > svg {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -26,7 +28,7 @@
       opacity: 0;
     }
 
-    > .caption {
+    > .jg-caption {
       display: none;
       position: absolute;
       bottom: 0;
@@ -40,7 +42,7 @@
       font-weight: 300;
       font-family: sans-serif;
 
-      &.caption-visible {
+      &.jg-caption-visible {
         display: initial;
         opacity: 0.7;
         transition: opacity 500ms ease-in;
@@ -48,12 +50,14 @@
     }
   }
 
-  > .entry-visible {
+  > .jg-entry-visible {
     opacity: 1;
     background: none;
 
     > img,
-    > a > img {
+    > a > img,
+    > svg,
+    > a > svg{
       opacity: 1;
       transition: opacity 500ms ease-in;
     }
@@ -63,7 +67,7 @@
     display: none;
   }
 
-  > .spinner {
+  > .jg-spinner {
     position: absolute;
     bottom: 0;
     margin-left: -24px;

@@ -34,5 +34,6 @@ logs
 node_modules
 # it is not actually used, so makes no sense to keep it
 package-lock.json
+yarn.lock
 learnweb_local.properties
 WebContent/resources/layout/css/*
