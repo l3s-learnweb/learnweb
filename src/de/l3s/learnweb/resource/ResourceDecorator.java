@@ -2,12 +2,14 @@ package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
+import de.l3s.learnweb.searchhistory.SearchHistoryManager;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
@@ -29,6 +31,7 @@ public class ResourceDecorator implements Serializable {
     // used for search history
     private boolean clicked;
     private boolean saved;
+    private List<SearchHistoryManager.Annotation> annotations;
 
     public ResourceDecorator(Resource resource) {
         this.resource = resource;
@@ -198,6 +201,14 @@ public class ResourceDecorator implements Serializable {
 
     public void setSaved(final boolean saved) {
         this.saved = saved;
+    }
+
+    public List<SearchHistoryManager.Annotation> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(final List<SearchHistoryManager.Annotation> annotations) {
+        this.annotations = annotations;
     }
 
     @Override

@@ -29,9 +29,9 @@ public class SearchHistoryManager {
     }
 
     /**
-     * Returns queries for given session id.
+     * Returns queries for given session.
      */
-    public LinkedList<Query> getQueriesForSessionId(String sessionId) {
+    public LinkedList<Query> getQueries(Session session) {
         LinkedList<Query> queries = new LinkedList<>();
 
         try {
@@ -40,10 +40,10 @@ public class SearchHistoryManager {
                     "FROM learnweb_large.sl_query q join learnweb_main.lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id " +
                     "WHERE l.action = 5 AND l.session_id = ? " +
                     "ORDER BY q.timestamp ASC");
-            pstmt.setString(1, sessionId);
+            pstmt.setString(1, session.getSessionId());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                Query query = new Query(
+                Query query = new Query(session,
                     rs.getInt("search_id"),
                     rs.getString("query"),
                     rs.getString("mode"),
@@ -54,13 +54,13 @@ public class SearchHistoryManager {
             }
             pstmt.close();
         } catch (SQLException e) {
-            log.error("Error while fetching queries for a specific session: " + sessionId, e);
+            log.error("Error while fetching queries for a specific session: {}", session.getSessionId(), e);
         }
 
         return queries;
     }
 
-    public List<ResourceDecorator> getSearchResultsForSearchId(int searchId, int limit) {
+    public List<ResourceDecorator> getSearchResults(Query query, int limit) {
         List<ResourceDecorator> searchResults = new ArrayList<>();
 
         try {
@@ -68,7 +68,7 @@ public class SearchHistoryManager {
                 "SELECT r.resource_id, r.rank, r.url, r.title, r.description, r.thumbnail_url, r.thumbnail_width, r.thumbnail_height, COUNT(a.action = 'resource_clicked') AS clicked, COUNT(a.action = 'resource_saved') AS saved " +
                     "FROM learnweb_large.sl_resource r LEFT JOIN learnweb_large.sl_action a ON r.search_id = a.search_id AND r.rank = a.rank " +
                     "WHERE r.search_id = ? GROUP BY r.resource_id, r.rank, r.url, r.title, r.description ORDER BY r.rank ASC LIMIT ?");
-            pStmt.setInt(1, searchId);
+            pStmt.setInt(1, query.getSearchId());
             pStmt.setInt(2, limit);
 
             ResultSet rs = pStmt.executeQuery();
@@ -79,6 +79,7 @@ public class SearchHistoryManager {
                     res = learnweb.getResourceManager().getResource(resourceId);
                 } else {
                     res = new Resource();
+                    res.setUserId(query.getSession().getUserId());
                     res.setUrl(rs.getString("url"));
                     res.setTitle(rs.getString("title"));
                     res.setDescription(rs.getString("description"));
@@ -91,50 +92,27 @@ public class SearchHistoryManager {
                 rd.setSnippet(rs.getString("description"));
                 rd.setClicked(rs.getInt("clicked") > 0);
                 rd.setSaved(rs.getInt("saved") > 0);
+
+                // quick fix to not show annotations for each result of same url
+                if (rd.getClicked()) {
+                    rd.setAnnotations(getAnnotations(res.getUserId(), res.getUrl()));
+                }
+
                 searchResults.add(rd);
             }
             pStmt.close();
         } catch (SQLException e) {
-            log.error("Error while fetching search results for search id: " + searchId, e);
+            log.error("Error while fetching search results for search id: " + query.getSearchId(), e);
         }
 
         return searchResults;
     }
 
-    public List<Query> getQueriesForSessionFromCache(int userId, String sessionId) {
-        List<Query> queries = new ArrayList<>();
-
-        if (SessionCache.instance().existsUserId(userId)) {
-
-            List<Session> sessions = SessionCache.instance().getByUserId(userId);
-
-            for (Session session : sessions) {
-                if (session.getSessionId().equals(sessionId)) {
-                    queries.addAll(session.getQueries());
-                }
-            }
-        }
-
-        return queries;
-    }
-
-    public List<Query> getQueriesForSessionFromGroupCache(int groupId, String sessionId) {
-        List<Query> queries = new ArrayList<>();
-
-        if (SessionCache.instance().existsGroupId(groupId)) {
-            List<Session> sessions = SessionCache.instance().getByGroupId(groupId);
-
-            for (Session session : sessions) {
-                if (session.getSessionId().equals(sessionId)) {
-                    queries.addAll(session.getQueries());
-                }
-            }
-        }
-
-        return queries;
-    }
-
     public List<Session> getSessionsForUser(int userId) throws SQLException {
+        if (SessionCache.instance().existsUserId(userId)) {
+            return SessionCache.instance().getByUserId(userId);
+        }
+
         List<Session> sessions = new ArrayList<>();
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
             "SELECT DISTINCT l.session_id " +
@@ -147,13 +125,12 @@ public class SearchHistoryManager {
 
         while (rs.next()) {
             String sessionId = rs.getString("session_id");
-            Session session = new Session(sessionId, userId, getQueriesForSessionId(sessionId));
-
+            Session session = new Session(sessionId, userId);
+            session.setQueries(getQueries(session));
             sessions.add(session);
         }
 
         SessionCache.instance().cacheByUserId(userId, sessions);
-
         return sessions;
     }
 
@@ -180,7 +157,8 @@ public class SearchHistoryManager {
             String sessionId = rs.getString("session_id");
             int userId = rs.getInt("user_id");
             if (!sessionIds.contains(sessionId)) {
-                Session session = new Session(sessionId, userId, getQueriesForSessionId(sessionId));
+                Session session = new Session(sessionId, userId);
+                session.setQueries(getQueries(session));
                 sessions.add(session);
                 sessionIds.add(sessionId);
             }
@@ -191,17 +169,41 @@ public class SearchHistoryManager {
         return sessions;
     }
 
+    public List<Annotation> getAnnotations(int userId, String url) throws SQLException {
+        List<Annotation> annotations = new ArrayList<>();
+        try (PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
+            "SELECT a.user_id, a.text, a.quote, a.target_uri " +
+                "FROM learnweb_annotations.annotation a " +
+                "WHERE a.user_id = ? AND a.target_uri_normalized = ? " +
+                "ORDER BY a.created")) {
+
+            pStmt.setInt(1, userId);
+            pStmt.setString(2, url);
+            try (ResultSet rs = pStmt.executeQuery()) {
+                while (rs.next()) {
+                    Annotation annotation = new Annotation();
+                    annotation.setUserId(rs.getInt("user_id"));
+                    annotation.setText(rs.getString("text"));
+                    annotation.setQuote(rs.getString("quote"));
+                    annotation.setTargetUrl(rs.getString("target_uri"));
+                    annotations.add(annotation);
+                }
+
+                return annotations;
+            }
+        }
+    }
+
     public static class Session implements Serializable {
         private static final long serialVersionUID = 6139247221701183553L;
 
         private final int userId;
         private final String sessionId;
-        private final LinkedList<Query> queries;
+        private LinkedList<Query> queries;
 
-        public Session(String sessionId, int userId, LinkedList<Query> queries) {
+        public Session(String sessionId, int userId) {
             this.sessionId = sessionId;
             this.userId = userId;
-            this.queries = queries;
         }
 
         public String getSessionId() {
@@ -215,6 +217,10 @@ public class SearchHistoryManager {
                 log.error("Can't get user name of user {}", userId, e);
                 return "unknown";
             }
+        }
+
+        public void setQueries(final LinkedList<Query> queries) {
+            this.queries = queries;
         }
 
         public List<Query> getQueries() {
@@ -241,18 +247,25 @@ public class SearchHistoryManager {
     public static class Query implements Serializable {
         private static final long serialVersionUID = 4391998336381044255L;
 
-        private int searchId;
-        private String query;
-        private String mode;
-        private Date timestamp;
-        private String service;
+        private final Session session;
 
-        public Query(int searchId, String query, String mode, Date timestamp, String service) {
+        private final int searchId;
+        private final String query;
+        private final String mode;
+        private final Date timestamp;
+        private final String service;
+
+        public Query(Session session, int searchId, String query, String mode, Date timestamp, String service) {
+            this.session = session;
             this.searchId = searchId;
             this.query = query;
             this.mode = mode;
             this.timestamp = timestamp;
             this.service = service;
+        }
+
+        public Session getSession() {
+            return session;
         }
 
         public int getSearchId() {
@@ -276,57 +289,44 @@ public class SearchHistoryManager {
         }
     }
 
-    public static class SearchResult implements Serializable {
-        private static final long serialVersionUID = 2951387044534205707L;
+    public static class Annotation implements Serializable {
+        private static final long serialVersionUID = 1311485147202161998L;
 
-        private int searchId;
-        private int rank;
-        private String url;
-        private String title;
-        private String description;
+        private int userId;
+        private String text;
+        private String quote;
+        private String targetUrl;
 
-        public SearchResult(int searchId) {
-            this.searchId = searchId;
+        public int getUserId() {
+            return userId;
         }
 
-        public int getSearchId() {
-            return searchId;
+        public void setUserId(final int userId) {
+            this.userId = userId;
         }
 
-        public void setSearchId(int searchId) {
-            this.searchId = searchId;
+        public String getText() {
+            return text;
         }
 
-        public int getRank() {
-            return rank;
+        public void setText(final String text) {
+            this.text = text;
         }
 
-        public void setRank(int rank) {
-            this.rank = rank;
+        public String getQuote() {
+            return quote;
         }
 
-        public String getUrl() {
-            return url;
+        public void setQuote(final String quote) {
+            this.quote = quote;
         }
 
-        public void setUrl(String url) {
-            this.url = url;
+        public String getTargetUrl() {
+            return targetUrl;
         }
 
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
+        public void setTargetUrl(final String targetUrl) {
+            this.targetUrl = targetUrl;
         }
     }
 }

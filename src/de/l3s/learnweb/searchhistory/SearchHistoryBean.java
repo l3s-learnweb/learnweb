@@ -26,20 +26,17 @@ import de.l3s.learnweb.user.User;
 @Named
 @ViewScoped
 public class SearchHistoryBean extends ApplicationBean implements Serializable {
-    private static final Logger log = LogManager.getLogger(SearchHistoryBean.class);
     private static final long serialVersionUID = -7682314831788865416L;
+    private static final Logger log = LogManager.getLogger(SearchHistoryBean.class);
 
     private int selectedUserId;
     private int selectedGroupId;
 
     private String searchQuery;
     private boolean showGroupHistory;
-
-    private Session selectedSession;
     private Query selectedQuery;
 
     private List<Session> sessions;
-    private List<Query> queries = new ArrayList<>();
     private final Map<Integer, List<ResourceDecorator>> snippets = new HashMap<>();
 
     /**
@@ -57,16 +54,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
         }
-    }
-
-    public Session getSelectedSession() {
-        return selectedSession;
-    }
-
-    public void setSelectedSession(final Session selectedSession) {
-        this.selectedSession = selectedSession;
-
-        queries = null;
     }
 
     public Query getSelectedQuery() {
@@ -87,17 +74,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         return sessions;
     }
 
-    public List<Query> getQueries() {
-        if (queries == null && selectedSession != null) {
-            if (!showGroupHistory) {
-                queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(selectedSession.getUserId(), selectedSession.getSessionId());
-            } else {
-                queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromGroupCache(selectedSession.getUserId(), selectedSession.getSessionId());
-            }
-        }
-        return queries;
-    }
-
     public String getSearchResultsView() {
         if ("text".equals(selectedQuery.getMode())) {
             return "list";
@@ -114,7 +90,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         List<ResourceDecorator> searchResults = new ArrayList<>();
         if (selectedQuery != null) {
             if (!snippets.containsKey(selectedQuery.getSearchId())) {
-                snippets.put(selectedQuery.getSearchId(), getLearnweb().getSearchHistoryManager().getSearchResultsForSearchId(selectedQuery.getSearchId(), 100));
+                snippets.put(selectedQuery.getSearchId(), getLearnweb().getSearchHistoryManager().getSearchResults(selectedQuery, 100));
             }
 
             searchResults.addAll(snippets.get(selectedQuery.getSearchId()));

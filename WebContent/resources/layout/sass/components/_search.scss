@@ -1,5 +1,9 @@
 .search-list {
   max-width: 40rem; // 640px
+
+  .sh-snippets-list & {
+    max-width: initial;
+  }
 }
 
 .search-grid {
@@ -32,6 +36,12 @@
   &.search-item-image,
   &.search-item-video {
     border: 3px solid $greenDarker;
+  }
+}
+
+.snippet-annotations {
+  .annotation-text {
+    border-left: 3px solid #dbdbdb;
   }
 }
 

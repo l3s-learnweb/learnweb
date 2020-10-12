@@ -78,6 +78,23 @@
                         <i class="fa fa-angle-double-right" aria-hidden="true"></i> #{msg.stored_in} #{res.groupId == 0? msg.myPrivateResources : res.group.title}
                     </h:outputLink>
                 </div>
+
+                <ui:fragment rendered="#{not empty res.annotations}">
+                    <div class="row mt-2 pr-2 snippet-annotations">
+                        <ui:repeat value="#{res.annotations}" var="annotation">
+                            <div class="col-3 p-1">
+                                <div class="annotation py-3 px-2 bg-white">
+                                    <div class="annotation-text font-italic ml-1 pl-2">
+                                        <h:outputText value="#{annotation.text}"/>
+                                    </div>
+                                    <div class="annotation-comment mt-2">
+                                        <h:outputText value="#{annotation.quote}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </ui:repeat>
+                    </div>
+                </ui:fragment>
             </div>
         </div>
     </ui:repeat>
