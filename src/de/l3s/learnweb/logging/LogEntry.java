@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -184,7 +185,7 @@ public class LogEntry implements Serializable {
                 break;
             case commenting_resource:
                 description = usernameLink + LanguageBundle.getLocaleMessage(locale, "log_commenting_resource", getResourceLink(locale));
-                Comment comment = Learnweb.getInstance().getResourceManager().getComment(StringHelper.parseInt(getParams()));
+                Comment comment = Learnweb.getInstance().getResourceManager().getComment(NumberUtils.toInt(getParams()));
                 if (comment != null) {
                     description += " " + LanguageBundle.getLocaleMessage(locale, "with") + " " + "<b>" + StringHelper.shortnString(comment.getText(), 100) + "</b>";
                 }

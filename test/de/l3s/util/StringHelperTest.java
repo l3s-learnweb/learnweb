@@ -25,15 +25,6 @@ class StringHelperTest {
     }
 
     @Test
-    void testParseInt() {
-        assertEquals(123, StringHelper.parseInt("123"));
-        assertEquals(-123, StringHelper.parseInt("-123"));
-
-        assertEquals(-1, StringHelper.parseInt("hello"));
-        assertEquals(0, StringHelper.parseInt("world", 0));
-    }
-
-    @Test
     void testGetDomainName() {
         assertEquals(
             "learnweb.l3s.uni-hannover.de",

@@ -17,14 +17,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
-public class StringHelper {
+public final class StringHelper {
     private static final Logger log = LogManager.getLogger(StringHelper.class);
 
     private static final Pattern NEW_LINE_PATTERN = Pattern.compile("\n");
@@ -82,24 +81,6 @@ public class StringHelper {
             values.set(i, StringUtils.remove(values.get(i), remove));
         }
         return values;
-    }
-
-    /**
-     * Uses Integer.parseInt but instead of an exception it returns -1 if the input can not be parsed.
-     *
-     * @param number string input
-     * @return int value or -1 if can't be parsed
-     */
-    public static int parseInt(String number) {
-        return parseInt(number, -1);
-    }
-
-    /**
-     * @deprecated Use #{@link NumberUtils#toInt(String, int)} instead
-     */
-    @Deprecated
-    public static int parseInt(String number, int defaultValue) {
-        return NumberUtils.toInt(number, defaultValue);
     }
 
     public static String getDomainName(String url) {
