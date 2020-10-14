@@ -1,6 +1,6 @@
 | Source | Version | Description | Note |
 |----------------------------------------------|---------|--------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| https://github.com/twbs/bootstrap | v4.5.2 | Grid, scss framework |  |
+| https://github.com/twbs/bootstrap | v4.5.3 | Grid, scss framework |  |
 | https://github.com/swisnl/jQuery-contextMenu | v2.9.2 | Used to create context menu |  |
 | https://github.com/fancyapps/fancybox | v3.5.7 | lightbox script for displaying images, videos and more |  |
 | https://github.com/FortAwesome/Font-Awesome/tree/fa-4 | v4.7.0 | icons |  |
