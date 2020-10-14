@@ -149,9 +149,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
             return;
         }
 
+        Resource newResource = null;
         try {
-            Resource newResource;
-
             if (selectedResource.getId() == -1) { // resource is not yet stored at the database
                 newResource = selectedResource.getResource();
                 if (newResource.getSource() == ResourceService.bing) { // resource which is already saved in database already has wayback captures stored
@@ -173,7 +172,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             newResource.setFolder(selectLocationBean.getTargetFolder());
             newResource.setUser(user);
 
-            log.debug("Add resource; group: " + newResource.getGroupId() + "; folder: " + newResource.getFolderId());
+            log.debug("Add resource; group: {}; folder: {}", newResource.getGroupId(), newResource.getFolderId());
 
             // we need to check whether a Bing result is a PDF, Word or other document
             if (newResource.getOriginalResourceId() == 0 && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text) && newResource.getSource() == ResourceService.bing) {
@@ -194,7 +193,11 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
         } catch (RuntimeException | IOException | SQLException e) {
-            addErrorMessage(e);
+            String details = "resource: " + newResource;
+            if (newResource != null) {
+                details += "; thumbnail0:" + newResource.getThumbnail0();
+            }
+            addErrorMessage(details, e);
         }
     }
 
