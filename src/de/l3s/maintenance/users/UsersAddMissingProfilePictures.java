@@ -1,7 +1,6 @@
 package de.l3s.maintenance.users;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -36,14 +35,10 @@ public class UsersAddMissingProfilePictures {
         for (User user : users) {
             File file = user.getImageFile();
             if (null == file || !file.exists()) {
-                log.debug("Update user: " + user);
+                log.debug("Update user: {}", user);
 
-                InputStream is = user.getDefaultImageIS();
-                if (is != null) {
-                    user.setImage(is);
-                    user.save();
-                }
-
+                user.setDefaultProfilePicture();
+                user.save();
             }
         }
     }

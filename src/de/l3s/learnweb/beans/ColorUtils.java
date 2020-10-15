@@ -36,7 +36,7 @@ public class ColorUtils {
      * Returns the color with the given index. If the index is greater than color list then the method will use the modulo if the given index.
      */
     public static String getColor(int index) {
-        return COLORS.get(index % COLORS.size());
+        return COLORS.get(Math.abs(index % COLORS.size()));
     }
 
     public static List<String> getColorList(int size) {

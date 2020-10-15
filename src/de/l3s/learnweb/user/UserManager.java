@@ -277,13 +277,7 @@ public class UserManager {
         user.setOrganisationId(course.getOrganisationId());
         user.setRegistrationDate(new Date());
         user.setPreferences(new HashMap<>());
-
-        try {
-            // TODO @astappiev: we should create it by first request, not when we create a user
-            user.setImage(user.getDefaultImageIS());
-        } catch (Exception e) {
-            log.error("Unable to create default avatar for user {}", user, e);
-        }
+        user.setDefaultProfilePicture();
 
         save(user);
 

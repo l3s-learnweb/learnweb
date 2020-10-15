@@ -34,7 +34,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.ColorUtils;
 import de.l3s.learnweb.forum.ForumPost;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupUser;
@@ -50,6 +49,7 @@ import de.l3s.util.HasId;
 import de.l3s.util.Image;
 import de.l3s.util.MD5;
 import de.l3s.util.PBKDF2;
+import de.l3s.util.ProfileImageHelper;
 import de.l3s.util.StringHelper;
 import de.l3s.util.UrlHelper;
 import de.l3s.util.email.Mail;
@@ -494,10 +494,15 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     public String getImage() throws SQLException {
         if (imageUrl == null) {
             File imageFile = getImageFile();
-            imageUrl = imageFile != null ? imageFile.getUrl() : getDefaultImage();
+            imageUrl = imageFile != null ? imageFile.getUrl() : getDefaultImageUrl();
         }
 
         return imageUrl;
+    }
+
+    private String getDefaultImageUrl() {
+        final String profilePicture = ProfileImageHelper.getProfilePicture(StringUtils.isNotBlank(fullName) ? fullName : username);
+        return "data:image/svg+xml;base64," + StringHelper.encodeBase64(profilePicture);
     }
 
     public void setImage(InputStream inputStream) throws SQLException, IOException {
@@ -505,11 +510,8 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         Image img = new Image(inputStream);
 
         // save image file
-        File file = new File();
-        file.setType(TYPE.PROFILE_PICTURE);
-        file.setName("user_icon.png");
-        file.setMimeType("image/png");
-
+        // TODO: what if it is not png?
+        File file = new File(TYPE.PROFILE_PICTURE, "user_icon.png", "image/png");
         Image thumbnail = img.getResizedToSquare2(200, 0.0);
         file = Learnweb.getInstance().getFileManager().save(file, thumbnail.getInputStream());
         thumbnail.dispose();
@@ -517,6 +519,24 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
         setImageFileId(file.getId());
         imageUrl = file.getUrl();
+    }
+
+    public void setDefaultProfilePicture() {
+        try {
+            // try Gravatar, fallback to simple initials avatar
+            if (email != null) {
+                URL url = new URL("https://www.gravatar.com/avatar/" + MD5.hash(email));
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
+                int responseCode = con.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    setImage(con.getInputStream());
+                }
+            }
+        } catch (Exception e) {
+            log.error("Unable to create default profile picture for user {}", this, e);
+        }
     }
 
     /**
@@ -531,89 +551,20 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         return null;
     }
 
-    /**
-     * get default avatar for user.
-     */
-    private String getDefaultImage() {
-        String name = StringUtils.isNotBlank(fullName) ? fullName : username;
-        StringBuilder initials = new StringBuilder();
-
-        if (StringUtils.isNumeric(name)) { // happens when users use their student id as name
-            initials = new StringBuilder(name.substring(name.length() - 2));
-        } else if (name.contains(" ") || name.contains(".")) { // name consists of multiple terms separated by whitespaces or dots
-            for (String part : name.split("[\\s.]+")) {
-                if (part.isEmpty()) {
-                    continue;
-                }
-                int index = StringUtils.isNumeric(part) ? (part.length() - 1) : 0; // if is number use last digit as initial
-                initials.append(part.charAt(index));
-            }
-        } else if (!name.equals(name.toLowerCase())) {
-            initials.append(name.charAt(0)); // always at first char
-
-            for (int i = 1, len = name.length() - 1; i < len; i++) {
-                if (Character.isUpperCase(name.charAt(i))) {
-                    initials.append(name.charAt(i));
-                }
-            }
-        }
-
-        if (StringUtils.isBlank(initials.toString())) {
-            initials = new StringBuilder(name.substring(0, 1));
-        }
-
-        if (initials.toString().startsWith(".")) { // ui-avatars can't handle dots in the beginning
-            initials = new StringBuilder(initials.toString().replace(".", "X"));
-        }
-
-        String defaultAvatarUrl = "https://ui-avatars.com/api/" + initials + "/200/" + getDefaultColor() + "/ffffff";
-
-        if (email != null) {
-            return "https://www.gravatar.com/avatar/" + MD5.hash(email) + "?d=" + StringHelper.urlEncode(defaultAvatarUrl);
-        } else {
-            return defaultAvatarUrl;
-        }
-    }
-
-    /**
-     * Returns a color for the user.
-     * If the user is registered this method will return always the same color otherwise a "random" color is returned.
-     *
-     * @return color code without hash mark
-     */
-    private String getDefaultColor() {
-        return ColorUtils.getColor(HasId.getIdOrDefault(this, (int) (System.currentTimeMillis() / 1000))).substring(1);
-    }
-
-    /**
-     * get default avatar for user.
-     */
-    public InputStream getDefaultImageIS() throws IOException {
-        URL url = new URL(getDefaultImage());
-
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
-        int responseCode = con.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            return con.getInputStream();
-        } else {
-            return null;
-        }
-    }
-
     public int getImageFileId() {
         return imageFileId;
     }
 
     public void setImageFileId(int imageFileId) {
-        if (this.imageFileId != 0 && imageFileId != this.imageFileId) { // delete existing image
+        // delete existing image
+        if (this.imageFileId != 0 && imageFileId != this.imageFileId) {
             try {
                 Learnweb.getInstance().getFileManager().delete(this.imageFileId);
             } catch (Exception e) {
-                log.error("Can't delete profile image of user " + this);
+                log.error("Can't delete profile image of user {}", this);
             }
         }
+
         this.imageFileId = imageFileId;
     }
 
