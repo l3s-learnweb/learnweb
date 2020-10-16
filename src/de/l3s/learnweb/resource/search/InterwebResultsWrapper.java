@@ -53,13 +53,15 @@ public class InterwebResultsWrapper implements Serializable {
             Resource resource = createResource(searchResult);
 
             if (resource.getType() != ResourceType.website && null == resource.getMediumThumbnail()) { // no thumbnail set
-                log.error("Found no thumbnail: {}", searchResult);
+                log.warn("Found no thumbnail: {}", searchResult);
                 counter++;
 
                 if (counter > 5) {
                     log.error("To many missing thumbnails", new Exception());
                     return;
                 }
+
+                totalResults -= 1;
                 continue;
             }
 
