@@ -20,7 +20,17 @@
             <div class="row align-items-center">
                 <div class="col-md-6 col-lg-4 mb-4 mb-md-0 highlight">
                     <div class="bg-white-90 p-3 pb-4">
-                        <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
+                        <ui:fragment rendered="#{!userBean.loggedIn}">
+                            <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{userBean.loggedIn}">
+                            <h:outputText value="#{msg.greeting} #{userBean.user.username},"/><br/>
+                            <h:outputText value="#{msg.you_are_already_logged_in}" styleClass="font-weight-bold"/>
+
+                            <h:outputLink styleClass="ui-button ui-button-text-only mt-3" value="#{userBean.bannerLink}">
+                                <h:outputText value="#{msg.return_to_welcome_page}" styleClass="ui-button-text"/>
+                            </h:outputLink>
+                        </ui:fragment>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-8">

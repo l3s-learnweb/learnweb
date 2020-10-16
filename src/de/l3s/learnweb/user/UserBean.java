@@ -46,6 +46,8 @@ public class UserBean implements Serializable {
     private static final long serialVersionUID = -8577036953815676943L;
     private static final Logger log = LogManager.getLogger(UserBean.class);
 
+    private static final int PUBLIC_ORGANISATION_ID = 478;
+
     private int userId = 0;
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
     private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on an other account
@@ -60,7 +62,6 @@ public class UserBean implements Serializable {
     private transient Instant sidebarMenuModelUpdate;
     private final HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
-    private final int activeOrganisationId;
     private transient Organisation activeOrganisation;
 
     private boolean guided; // indicates that the user has started one of the guides
@@ -68,13 +69,6 @@ public class UserBean implements Serializable {
     public UserBean() {
         // get preferred language
         locale = Faces.getLocale();
-
-        activeOrganisationId = 478; // public
-
-        refreshLocale();
-        String clientInfo = storeMetadataInSession();
-
-        log.debug("Session started: {}", clientInfo);
     }
 
     public String getSearchQuery() {
@@ -131,7 +125,7 @@ public class UserBean implements Serializable {
             try {
                 user = Learnweb.getInstance().getUserManager().getUser(userId);
             } catch (SQLException e) {
-                log.fatal("Can't retrieve user " + userId, e);
+                log.fatal("Can't retrieve user {}", userId, e);
             }
         }
         return user;
@@ -152,7 +146,8 @@ public class UserBean implements Serializable {
         this.cacheShowMessageAddResource = true;
 
         refreshLocale();
-        storeMetadataInSession();
+        String clientInfo = storeMetadataInSession();
+        log.debug("Session started: {}", clientInfo);
     }
 
     @PreDestroy
@@ -591,7 +586,7 @@ public class UserBean implements Serializable {
 
     private Organisation getActiveOrganisation() {
         if (null == activeOrganisation) {
-            activeOrganisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(activeOrganisationId);
+            activeOrganisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(PUBLIC_ORGANISATION_ID);
         }
         return activeOrganisation;
     }

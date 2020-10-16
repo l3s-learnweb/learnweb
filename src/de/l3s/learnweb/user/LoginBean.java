@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,11 +31,14 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
     private static final Logger log = LogManager.getLogger(LoginBean.class);
     private static final String LOGIN_PAGE = "/lw/user/login.xhtml";
+    public static final String AUTH_COOKIE_NAME = "auth_uuid";
+    private static final int AUTH_COOKIE_AGE = 30 * 24 * 60 * 60;
 
     @NotBlank
     private String username;
     @NotBlank
     private String password;
+    private boolean remember;
     private final boolean captchaRequired;
 
     @Inject
@@ -63,6 +68,14 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isRemember() {
+        return remember;
+    }
+
+    public void setRemember(final boolean remember) {
+        this.remember = remember;
     }
 
     public boolean isCaptchaRequired() {
@@ -98,6 +111,16 @@ public class LoginBean extends ApplicationBean implements Serializable {
             return "/lw/user/confirm_required.xhtml?faces-redirect=true";
         }
 
+        if (remember) {
+            long authId = RandomUtils.nextLong();
+            String token = RandomStringUtils.randomAlphanumeric(128);
+
+            Faces.addResponseCookie(AUTH_COOKIE_NAME, authId + ":" + token, "/", AUTH_COOKIE_AGE);
+            getLearnweb().getUserManager().saveAuth(user, authId, token, AUTH_COOKIE_AGE);
+        } else {
+            Faces.removeResponseCookie(AUTH_COOKIE_NAME, "/");
+        }
+
         return loginUser(this, user);
     }
 
@@ -118,6 +141,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             log(Action.logout, 0, 0);
             user.onDestroy();
             Faces.invalidateSession();
+            Faces.removeResponseCookie(AUTH_COOKIE_NAME, "/");
             return logoutPage + "?faces-redirect=true";
         }
     }
@@ -131,20 +155,21 @@ public class LoginBean extends ApplicationBean implements Serializable {
     }
 
     public static String loginUser(ApplicationBean bean, User user) throws SQLException {
-        return loginUser(bean, user, -1);
+        return loginUser(bean, user, null);
     }
 
     /**
-     * @param moderatorUserId larger zero if a moderator logs into a user account through the admin interface
+     * @param moderatorUserId not null if a moderator logs into a user account through the admin interface
      */
-    public static String loginUser(ApplicationBean bean, User user, int moderatorUserId) throws SQLException {
-        bean.getUserBean().setUser(user); // logs the user in
+    public static String loginUser(ApplicationBean bean, User user, Integer moderatorUserId) throws SQLException {
+        UserBean userBean = bean.getUserBean();
+        userBean.setUser(user); // logs the user in
         // addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 
         user.updateLoginDate(); // the last login date has to be updated before we log a new login event
 
-        if (moderatorUserId > 0) {
-            bean.log(Action.moderator_login, 0, 0);
+        if (moderatorUserId != null) {
+            bean.log(Action.moderator_login, 0, moderatorUserId);
         } else {
             bean.log(Action.login, 0, 0, Faces.getRequestURI());
         }
@@ -152,10 +177,13 @@ public class LoginBean extends ApplicationBean implements Serializable {
         Organisation userOrganisation = user.getOrganisation();
 
         // set default search service if not already selected
-        if (bean.getPreference("SEARCH_SERVICE_TEXT") == null || bean.getPreference("SEARCH_SERVICE_IMAGE") == null || bean.getPreference("SEARCH_SERVICE_VIDEO") == null) {
-            bean.setPreference("SEARCH_SERVICE_TEXT", userOrganisation.getDefaultSearchServiceText().name());
-            bean.setPreference("SEARCH_SERVICE_IMAGE", userOrganisation.getDefaultSearchServiceImage().name());
-            bean.setPreference("SEARCH_SERVICE_VIDEO", userOrganisation.getDefaultSearchServiceVideo().name());
+        if (userBean.getPreference("SEARCH_SERVICE_TEXT") == null
+            || userBean.getPreference("SEARCH_SERVICE_IMAGE") == null
+            || userBean.getPreference("SEARCH_SERVICE_VIDEO") == null) {
+
+            userBean.setPreference("SEARCH_SERVICE_TEXT", userOrganisation.getDefaultSearchServiceText().name());
+            userBean.setPreference("SEARCH_SERVICE_IMAGE", userOrganisation.getDefaultSearchServiceImage().name());
+            userBean.setPreference("SEARCH_SERVICE_VIDEO", userOrganisation.getDefaultSearchServiceVideo().name());
         }
 
         String redirect = Faces.getRequestParameter("redirect");

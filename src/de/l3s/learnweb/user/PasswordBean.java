@@ -11,7 +11,7 @@ import javax.mail.internet.InternetAddress;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.util.MD5;
+import de.l3s.util.HashHelper;
 import de.l3s.util.email.Mail;
 
 @Named
@@ -61,7 +61,8 @@ public class PasswordBean extends ApplicationBean implements Serializable {
         this.email = email;
     }
 
+    // TODO: I think it's not best practice to use generated hash to restore password, we should generate a token and store it in database (Oleh)
     public static String createPasswordChangeHash(User user) {
-        return MD5.hash(Learnweb.SALT_1 + user.getId() + user.getPassword() + Learnweb.SALT_2);
+        return HashHelper.sha256(Learnweb.SALT_1 + user.getId() + user.getPassword() + Learnweb.SALT_2);
     }
 }

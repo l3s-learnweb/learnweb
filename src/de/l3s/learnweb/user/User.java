@@ -46,8 +46,8 @@ import de.l3s.learnweb.resource.submission.Submission;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
+import de.l3s.util.HashHelper;
 import de.l3s.util.Image;
-import de.l3s.util.MD5;
 import de.l3s.util.PBKDF2;
 import de.l3s.util.ProfileImageHelper;
 import de.l3s.util.StringHelper;
@@ -247,7 +247,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         if (StringUtils.isNotBlank(email) && !StringUtils.equalsIgnoreCase(email, this.email)) {
             this.email = email;
             this.emailConfirmed = false;
-            this.emailConfirmationToken = MD5.hash(RandomStringUtils.randomAlphanumeric(26) + this.id + email);
+            this.emailConfirmationToken = RandomStringUtils.randomAlphanumeric(32);
         } else {
             this.email = StringUtils.isNotBlank(email) ? email : null;
         }
@@ -525,7 +525,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         try {
             // try Gravatar, fallback to simple initials avatar
             if (email != null) {
-                URL url = new URL("https://www.gravatar.com/avatar/" + MD5.hash(email));
+                URL url = new URL("https://www.gravatar.com/avatar/" + HashHelper.md5(email));
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
@@ -603,7 +603,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     public boolean validatePassword(String password) {
         if (hashing == PasswordHashing.MD5) {
-            return this.password.equals(MD5.hash(password));
+            return this.password.equals(HashHelper.md5(password));
         } else if (hashing == PasswordHashing.PBKDF2) {
             return PBKDF2.validatePassword(password, this.password);
         }

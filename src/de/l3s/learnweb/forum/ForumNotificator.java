@@ -19,7 +19,7 @@ import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.User.NotificationFrequency;
-import de.l3s.util.SHA512;
+import de.l3s.util.HashHelper;
 import de.l3s.util.email.Mail;
 
 public class ForumNotificator implements Runnable, Serializable {
@@ -194,6 +194,6 @@ public class ForumNotificator implements Runnable, Serializable {
     }
 
     public static String getHash(User user) {
-        return user.getId() + ":" + SHA512.hash(Learnweb.SALT_1 + user.getId() + Learnweb.SALT_2 + "notification");
+        return user.getId() + ":" + HashHelper.sha512(Learnweb.SALT_1 + user.getId() + Learnweb.SALT_2 + "notification");
     }
 }

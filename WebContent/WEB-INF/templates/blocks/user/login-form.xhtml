@@ -18,6 +18,11 @@
 		<p:message for="@previous"/>
     </div>
 
+    <div class="form-group">
+        <p:selectBooleanCheckbox id="remember" value="#{loginBean.remember}" itemLabel="#{msg.remember_me}" label="#{msg.remember_me}"/>
+        <p:message for="@previous"/>
+    </div>
+
     <h:panelGroup layout="block" styleClass="form-group" rendered="#{loginBean.captchaRequired}">
         <p:outputLabel for="@next" value="#{msg.captcha}:" styleClass="d-none"/>
         <p:captcha id="captcha" label="#{msg.captcha}" language="#{userBean.locale}" required="true"/>

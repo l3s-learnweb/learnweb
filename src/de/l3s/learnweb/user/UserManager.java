@@ -29,8 +29,8 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User.Gender;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
+import de.l3s.util.HashHelper;
 import de.l3s.util.ICache;
-import de.l3s.util.SHA512;
 import de.l3s.util.database.Sql;
 
 /**
@@ -459,7 +459,7 @@ public class UserManager {
         user.setProfession("");
         user.setStudentId("");
         user.setUsername("Anonym " + user.getId());
-        user.setEmailRaw(SHA512.hash(user.getEmail()));
+        user.setEmailRaw(HashHelper.sha512(user.getEmail()));
 
         user.save();
     }
@@ -531,10 +531,50 @@ public class UserManager {
         }
 
         user.setDeleted(true);
-        user.setEmailRaw(SHA512.hash(user.getEmail()));
+        user.setEmailRaw(HashHelper.sha512(user.getEmail()));
         user.setPasswordRaw("deleted user");
         user.setUsername(user.getRealUsername() + " (Deleted)");
         user.save();
+    }
+
+    public void saveAuth(User user, long authId, String token, int expiresIn) throws SQLException {
+        try (PreparedStatement replace = learnweb.getConnection().prepareStatement(
+            "INSERT INTO lw_user_auth (`user_id`, `auth_id`, `token_hash`, `expires`) VALUES(?, ?, ?, ?)")) {
+            replace.setInt(1, user.getId());
+            replace.setLong(2, authId);
+            replace.setString(3, HashHelper.sha256(token));
+            replace.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis() + (expiresIn * 1000L)));
+            replace.executeUpdate();
+        }
+    }
+
+    public User getUserByAuth(long authId, String token) throws SQLException {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT user_id, token_hash, expires FROM lw_user_auth WHERE auth_id = ?")) {
+            select.setLong(1, authId);
+
+            try (ResultSet rs = select.executeQuery()) {
+                if (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    String tokenHash = rs.getString("token_hash");
+                    boolean expired = rs.getTimestamp("expires").before(new Date());
+
+                    if (!expired && HashHelper.isValidSha256(token, tokenHash)) {
+                        return getUser(userId);
+                    } else {
+                        deleteAuth(authId); // it is expired, or someone trying to hijack it
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public void deleteAuth(long authId) throws SQLException {
+        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user_auth WHERE `auth_id` = ?")) {
+            delete.setLong(1, authId);
+            delete.executeUpdate();
+        }
     }
 
     public String getGrantToken(Integer userId) throws SQLException {
