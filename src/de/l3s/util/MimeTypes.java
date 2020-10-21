@@ -74,6 +74,8 @@ public final class MimeTypes {
     public static final String MIME_IMAGE_JPEG = "image/jpeg";
     public static final String MIME_IMAGE_TIFF = "image/tiff";
     public static final String MIME_IMAGE_PNG = "image/png";
+    public static final String MIME_IMAGE_APNG = "image/apng";
+    public static final String MIME_IMAGE_WEBP = "image/webp";
     public static final String MIME_IMAGE_SVG_XML = "image/svg+xml";
     public static final String MIME_IMAGE_VND_DJVU = "image/vnd.djvu";
     public static final String MIME_IMAGE_WAP_WBMP = "image/vnd.wap.wbmp";
@@ -266,6 +268,8 @@ public final class MimeTypes {
         Map.entry("tiff", MIME_IMAGE_TIFF),
         Map.entry("tif", MIME_IMAGE_TIFF),
         Map.entry("png", MIME_IMAGE_PNG),
+        Map.entry("apng", MIME_IMAGE_APNG),
+        Map.entry("webp", MIME_IMAGE_WEBP),
         Map.entry("au", MIME_AUDIO_BASIC),
         Map.entry("snd", MIME_AUDIO_BASIC),
         Map.entry("wav", MIME_AUDIO_X_WAV),
