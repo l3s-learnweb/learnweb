@@ -19,16 +19,21 @@
                 </nav>
                 <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-5" value="5 Rollen und Zugriffsrechte"></h:link>
                 <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-6" value="6 Zeitspanne der Speicherung personenbezogener Daten"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7" value="7 Einbindung von fremden Inhalten"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8" value="8 Rechte der betroffenen Person"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7" value="7 Cookies"></h:link>
                 <nav class="flex-column pl-3">
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-1" value="8.1 Widerruflichkeit der Einwilligung"></h:link>
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-2" value="8.2 Weitere Rechte"></h:link>
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-3" value="8.3 Recht auf Widerspruch"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7-1" value="7.1 Session-Cookies"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7-2" value="7.2 Login-Cookies"></h:link>
+                </nav>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8" value="8 Einbindung von fremden Inhalten"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9" value="9 Rechte der betroffenen Person"></h:link>
+                <nav class="flex-column pl-3">
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9-1" value="9.1 Widerruflichkeit der Einwilligung"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9-2" value="9.2 Weitere Rechte"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9-3" value="9.3 Recht auf Widerspruch"></h:link>
                 </nav>
             </nav>
         </div>
-
+      
         <div class="col-md-8">
             <div id="item-1" class="mb-4">
                 <h3>1 Name und Anschrift des Verantwortlichen</h3>
@@ -193,7 +198,34 @@
             </div>
 
             <div id="item-7" class="mb-4">
-                <h3>7 Einbindung von fremden Inhalten</h3>
+                <h3>7 Cookies</h3>
+                <div class="c-section-text">
+                    <p>Wir verwenden auf unserer Webseite sogenannte Cookies. Dies sind kleine Textdateien, die bei Aufrufen unserer Webseite von unserem Webserver an Ihren Browser gesandt und von
+                        diesem auf Ihrem Gerät für einen späteren Abruf bereitgehalten werden. Unser Webserver setzt ausschließlich technisch erforderliche Cookies die keine persönlichen Daten
+                        enthalten.</p>
+                </div>
+
+                <div id="item-7-1" class="mb-3">
+                    <h5 class="my-2">7.1 Session-Cookies</h5>
+
+                    <div class="c-section-text">
+                        <p>Session-Cookies werden ausschließlich für die Dauer Ihrer Nutzung unserer Webseite gespeichert. Die von uns eingesetzten Session-Cookies dienen ausschließlich dazu, Sie
+                            zu identifizieren, solange Sie auf unserer Webseite eingeloggt sind. Nach Beendigung jeder Sitzung werden die Session-Cookies gelöscht.</p>
+                    </div>
+                </div>
+
+                <div id="item-7-2" class="mb-3">
+                    <h5 class="my-2">7.2 Login-Cookies</h5>
+
+                    <div class="c-section-text">
+                        <p>Diese Cookies werden nur gesetzt wenn sie während der Anmeldung die Option "#{msg.remember_me}" wählen. Login-Cookies ermöglichen es uns, Ihren Browser beim nächsten
+                            Besuch wiederzuerkennen und Sie automatisch anzumelden. Diese Cookies werden automatisch nach 30 Tagen gelöscht.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="item-8" class="mb-4">
+                <h3>8 Einbindung von fremden Inhalten</h3>
 
                 <div class="c-section-text">
                     <p>Wir betten Bilder und Videos von Drittanbietern (Youtube, Vimeo, Flickr, GIPHY, Ipernity, Bing, TED) in #{msg['application.name']} ein. Dabei erhält der Drittanbieter mindestens
@@ -224,15 +256,15 @@
                 </div>
             </div>
 
-            <div id="item-8" class="mb-4">
-                <h3>8 Rechte der betroffenen Person</h3>
+            <div id="item-9" class="mb-4">
+                <h3>9 Rechte der betroffenen Person</h3>
 
                 <div class="c-section-text">
                     <p>Werden personenbezogene Daten von Ihnen verarbeitet, sind Sie Betroffener i.S.d. DSGVO und es stehen Ihnen folgende Rechte gegenüber dem Verantwortlichen zu:</p>
                 </div>
 
-                <div id="item-8-1" class="mb-3">
-                    <h5 class="my-2">8.1 Widerruflichkeit der Einwilligung</h5>
+                <div id="item-9-1" class="mb-3">
+                    <h5 class="my-2">9.1 Widerruflichkeit der Einwilligung</h5>
 
                     <div class="c-section-text">
                         <p>Die Einwilligung in die Datenverarbeitung können Sie jederzeit mit Wirkung für die Zukunft widerrufen. In diesem Fall werden wir diese Daten nicht mehr weiterverarbeiten
@@ -241,8 +273,8 @@
                     </div>
                 </div>
 
-                <div id="item-8-2" class="mb-3">
-                    <h5 class="my-2">8.2 Weitere Rechte</h5>
+                <div id="item-9-2" class="mb-3">
+                    <h5 class="my-2">9.2 Weitere Rechte</h5>
 
                     <div class="c-section-text">
                         <p>Sie haben ggfs. folgende Rechte hinsichtlich Ihrer personenbezogenen Daten (entsprechend Art. 15 bis 21 DSGVO):</p>
@@ -257,8 +289,8 @@
                     </div>
                 </div>
 
-                <div id="item-8-3" class="mb-3">
-                    <h5 class="my-2">8.3 Recht auf Widerspruch</h5>
+                <div id="item-9-3" class="mb-3">
+                    <h5 class="my-2">9.3 Recht auf Widerspruch</h5>
 
                     <div class="c-section-text">
                         <p>Zudem haben Sie das Recht der Datenverarbeitung jederzeit zu widersprechen. Wir werden Ihre Daten dann nicht mehr verarbeiten, außer es bestehen zwingende schutzwürdige

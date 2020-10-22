@@ -19,12 +19,17 @@
                 </nav>
                 <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-5" value="5 Roles and access rights"></h:link>
                 <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-6" value="6 Period of storage of personal data"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7" value="7 Integration of external content"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8" value="8 Rights of the data subject"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7" value="7 Cookies"></h:link>
                 <nav class="flex-column pl-3">
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-1" value="8.1 Revocability of consent"></h:link>
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-2" value="8.2 Further rights"></h:link>
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-3" value="8.3 Right of opposition"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7-1" value="7.1 Session-Cookies"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7-2" value="7.2 Login-Cookies"></h:link>
+                </nav>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8" value="8 Integration of external content"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9" value="9 Rights of the data subject"></h:link>
+                <nav class="flex-column pl-3">
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9-1" value="9.1 Revocability of consent"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9-2" value="9.2 Further rights"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9-3" value="9.3 Right of opposition"></h:link>
                 </nav>
             </nav>
         </div>
@@ -189,9 +194,35 @@
                         user. The data in the #{msg['application.name']} system is backed up at regular intervals (usually daily) and remains there for a period of 60 days.</p>
                 </div>
             </div>
-
+            
             <div id="item-7" class="mb-4">
-                <h3>7 Integration of external content</h3>
+                <h3>7 Cookies</h3>
+                <div class="c-section-text">
+                    <p>We use so-called cookies on our website. These are small text files that are sent to your browser by our web server when you open our website. They are stored on your device for later retrieval. Our web server only sets technically required cookies which do not contain any personal data.
+                        </p>
+                </div>
+
+                <div id="item-7-1" class="mb-3">
+                    <h5 class="my-2">7.1 Session-Cookies</h5>
+
+                    <div class="c-section-text">
+                        <p>Session cookies are stored exclusively for the duration of your use of our website. The session cookies used by us serve the sole purpose of
+                           identifying you as long as you are logged on to our website. At the end of each session the session cookies are deleted.</p>
+                    </div>
+                </div>
+
+                <div id="item-7-2" class="mb-3">
+                    <h5 class="my-2">7.2 Login-Cookies</h5>
+
+                    <div class="c-section-text">
+                        <p>These cookies are only set if you select the option "#{msg.remember_me}" during the login. Login-Cookies enable us to recognize your browser at the next
+                             visit and log you in automatically. These cookies are automatically deleted after 30 days.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="item-8" class="mb-4">
+                <h3>8 Integration of external content</h3>
 
                 <div class="c-section-text">
                     <p>We embed third-party images and videos (Youtube, Vimeo, Flickr, GIPHY, Ipernity, Bing, TED) into #{msg['application.name']}. The third party provider receives at least the
@@ -221,15 +252,15 @@
                 </div>
             </div>
 
-            <div id="item-8" class="mb-4">
-                <h3>8 Rights of the data subject</h3>
+            <div id="item-9" class="mb-4">
+                <h3>9 Rights of the data subject</h3>
 
                 <div class="c-section-text">
                     <p>If personal data is processed by you, you are the data subject within the meaning of the GDPR and you are entitled to the following rights vis-à-vis the person responsible:</p>
                 </div>
 
-                <div id="item-8-1" class="mb-3">
-                    <h5 class="my-2">8.1 Revocability of consent</h5>
+                <div id="item-9-1" class="mb-3">
+                    <h5 class="my-2">9.1 Revocability of consent</h5>
 
                     <div class="c-section-text">
                         <p>You can revoke your consent to data processing at any time with effect for the future. In this case we will no longer process this data and delete it. The legality of
@@ -238,8 +269,8 @@
                     </div>
                 </div>
 
-                <div id="item-8-2" class="mb-3">
-                    <h5 class="my-2">8.2 Further rights</h5>
+                <div id="item-9-2" class="mb-3">
+                    <h5 class="my-2">9.2 Further rights</h5>
 
                     <div class="c-section-text">
                         <p>You may have the following rights with regard to your personal data (according to Article 15 to 21 GDPR):</p>
@@ -254,8 +285,8 @@
                     </div>
                 </div>
 
-                <div id="item-8-3" class="mb-3">
-                    <h5 class="my-2">8.3 Right of opposition</h5>
+                <div id="item-9-3" class="mb-3">
+                    <h5 class="my-2">9.3 Right of opposition</h5>
 
                     <div class="c-section-text">
                         <p>You also have the right to object to data processing at any time. We will then no longer process your data unless there are compelling reasons worthy of protection for
