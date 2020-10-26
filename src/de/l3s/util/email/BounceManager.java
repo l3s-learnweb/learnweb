@@ -13,7 +13,6 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.mail.Authenticator;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -37,11 +36,6 @@ import de.l3s.learnweb.Learnweb;
 public class BounceManager {
     private static final Logger log = LogManager.getLogger(BounceManager.class);
 
-    private static final String STORE_LOGIN = "learnweb";
-    private static final String STORE_PASS = "5-FN!@QENtrXh6V][C}*h8-S=yju";
-    private static final String STORE_HOST = "imap.kbs.uni-hannover.de";
-    private static final String STORE_PROVIDER = "imap";
-    private static final Authenticator AUTHENTICATOR = new PasswordAuthenticator(STORE_LOGIN, STORE_PASS);
     private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("(?<=Status: )\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
     private static final Pattern ORIGINAL_RECIPIENT_PATTERN = Pattern.compile("(?<=Original-Recipient:)(\\s.+;)(.+)\\s");
 
@@ -52,6 +46,19 @@ public class BounceManager {
         learnweb = lw;
     }
 
+    private Store getStore() throws MessagingException {
+        Properties props = new Properties();
+        props.setProperty("mail.imap.host", "mail.kbs.uni-hannover.de");
+        props.setProperty("mail.imap.port", "143");
+        props.setProperty("mail.imap.socketFactory.port", "143");
+        props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.imap.auth", "true");
+        props.setProperty("mail.imap.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, Mail.AUTHENTICATOR);
+        return session.getStore("imap");
+    }
+
     public void parseInbox() throws MessagingException, IOException {
         Date currentCheck = new Date();
 
@@ -59,13 +66,10 @@ public class BounceManager {
             lastBounceCheck = getLastBounceDate();
         }
 
-        Properties props = new Properties();
-        Session session = Session.getInstance(props, AUTHENTICATOR);
-
         SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT, lastBounceCheck);
 
-        Store store = session.getStore(STORE_PROVIDER);
-        store.connect(STORE_HOST, STORE_LOGIN, STORE_PASS);
+        Store store = getStore();
+        store.connect();
 
         Folder inbox = store.getFolder("INBOX");
         inbox.open(Folder.READ_WRITE);
@@ -352,10 +356,8 @@ public class BounceManager {
      */
     @SuppressWarnings("unused")
     private void checkBounceFolder() throws MessagingException {
-        Properties props = new Properties();
-        Session session = Session.getInstance(props, AUTHENTICATOR);
-        Store store = session.getStore(STORE_PROVIDER);
-        store.connect(STORE_HOST, STORE_LOGIN, STORE_PASS);
+        Store store = getStore();
+        store.connect();
 
         Folder bounceFolder = store.getFolder("INBOX").getFolder("BOUNCES");
         if (!bounceFolder.exists()) {

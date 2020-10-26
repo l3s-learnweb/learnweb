@@ -11,7 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class Mail {
-    private static final Authenticator AUTHENTICATOR = new PasswordAuthenticator("learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
+    static final Authenticator AUTHENTICATOR = new PasswordAuthenticator("learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
 
     private final Session session;
     private final MimeMessage message;
@@ -20,10 +20,11 @@ public class Mail {
         System.setProperty("mail.mime.charset", "UTF-8");
         Properties props = new Properties();
         props.setProperty("mail.smtp.host", "mail.kbs.uni-hannover.de");
+        props.setProperty("mail.smtp.port", "465");
         props.setProperty("mail.smtp.socketFactory.port", "465");
         props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.setProperty("mail.smtp.auth", "true");
-        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.starttls.enable", "true");
         //props.setProperty("mail.debug", "true");
 
         session = Session.getInstance(props, AUTHENTICATOR);
