@@ -2,6 +2,8 @@ package de.l3s.learnweb.exceptions;
 
 public class UnavailableHttpException extends HttpException {
 
+    private static final long serialVersionUID = -7948413557549460098L;
+
     public UnavailableHttpException() {
         super(HttpException.UNAVAILABLE);
     }

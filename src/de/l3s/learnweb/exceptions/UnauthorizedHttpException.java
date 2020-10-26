@@ -2,6 +2,8 @@ package de.l3s.learnweb.exceptions;
 
 public class UnauthorizedHttpException extends HttpException {
 
+    private static final long serialVersionUID = 4327049922463494760L;
+
     public UnauthorizedHttpException() {
         super(HttpException.UNAUTHORIZED);
     }

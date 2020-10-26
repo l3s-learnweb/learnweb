@@ -14,8 +14,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -27,7 +25,7 @@ import de.l3s.learnweb.user.User;
 @ViewScoped
 public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -7682314831788865416L;
-    private static final Logger log = LogManager.getLogger(SearchHistoryBean.class);
+    //private static final Logger log = LogManager.getLogger(SearchHistoryBean.class);
 
     private int selectedUserId;
     private int selectedGroupId;

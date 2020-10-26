@@ -2,6 +2,8 @@ package de.l3s.learnweb.exceptions;
 
 public class ForbiddenHttpException extends HttpException {
 
+    private static final long serialVersionUID = 7232890889955648341L;
+
     public ForbiddenHttpException() {
         super(HttpException.FORBIDDEN, null, null, false);
     }

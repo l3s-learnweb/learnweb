@@ -37,7 +37,7 @@ public final class BeanHelper {
 
                 if (includeUsers) {
                     for (User member : group.getMembers()) {
-                        TreeNode userNode = new CheckboxTreeNode("user", member, groupNode);
+                        new CheckboxTreeNode("user", member, groupNode); // create userNode
                     }
                 }
             }

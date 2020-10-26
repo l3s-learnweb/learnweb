@@ -2,6 +2,8 @@ package de.l3s.learnweb.exceptions;
 
 public class BadRequestHttpException extends HttpException {
 
+    private static final long serialVersionUID = -7635181511259505180L;
+
     public BadRequestHttpException() {
         super(HttpException.BAD_REQUEST);
     }
