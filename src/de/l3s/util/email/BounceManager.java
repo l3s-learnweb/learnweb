@@ -46,7 +46,7 @@ public class BounceManager {
         learnweb = lw;
     }
 
-    private Store getStore() throws MessagingException {
+    protected Store getStore() throws MessagingException {
         Properties props = new Properties();
         props.setProperty("mail.imap.host", "mail.kbs.uni-hannover.de");
         props.setProperty("mail.imap.port", "143");
@@ -122,7 +122,7 @@ public class BounceManager {
             }
         }
 
-        log.debug("BOUNCE: " + msg.getSubject() + " " + msg.getReceivedDate());
+        log.debug("BOUNCE: {} {}", msg.getSubject(), msg.getReceivedDate());
 
         //Checks the status code
         String text = getText(msg);
@@ -163,9 +163,9 @@ public class BounceManager {
         String[] codes = errCode.split("\\.", 2);
 
         //Transient or permanent
-        if (codes[0].equals("4")) {
+        if ("4".equals(codes[0])) {
             description = "Transient Persistent Failure: ";
-        } else if (codes[0].equals("5")) {
+        } else if ("5".equals(codes[0])) {
             description = "Permanent Failure: ";
         }
 
@@ -349,36 +349,6 @@ public class BounceManager {
         inbox.copyMessages(messages, bounceFolder);
 
         bounceFolder.close(false);
-    }
-
-    /**
-     * Debug/analysis function that checks contents of bounce folder.
-     */
-    @SuppressWarnings("unused")
-    private void checkBounceFolder() throws MessagingException {
-        Store store = getStore();
-        store.connect();
-
-        Folder bounceFolder = store.getFolder("INBOX").getFolder("BOUNCES");
-        if (!bounceFolder.exists()) {
-            log.debug("Folder doesn't exist.");
-
-        } else {
-            bounceFolder.open(Folder.READ_ONLY);
-            Message[] bounces = bounceFolder.getMessages();
-
-            if (bounces.length > 0) {
-                log.debug("Bounced emails folder contains " + bounceFolder.getMessageCount() + " messages. Oldest and newest messages printed below:");
-                log.debug(bounces[0].getSubject() + " " + bounces[0].getReceivedDate());
-                log.debug(bounces[bounces.length - 1].getSubject() + " " + bounces[bounces.length - 1].getReceivedDate());
-            } else {
-                log.debug("Bounced emails folder is empty.");
-            }
-
-            bounceFolder.close(false);
-        }
-
-        store.close();
     }
 
     /**
