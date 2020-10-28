@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class MailTest {
 
     @Test
