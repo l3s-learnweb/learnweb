@@ -18,6 +18,7 @@ public class Mail {
 
     public Mail() throws MessagingException {
         System.setProperty("mail.mime.charset", "UTF-8");
+        System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
         Properties props = new Properties();
         props.setProperty("mail.smtp.host", "mail.kbs.uni-hannover.de");
         props.setProperty("mail.smtp.port", "465");
