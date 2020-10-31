@@ -49,7 +49,7 @@ public class AuthFilter extends HttpFilter {
                     User user = learnweb.get().getUserManager().getUserByAuth(Long.parseLong(auth[0]), auth[1]);
 
                     if (user != null) {
-                        userBean.setUser(user);
+                        userBean.setUser(user, request);
                     }
                 }
             }

@@ -12,8 +12,7 @@ import java.util.ResourceBundle;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -89,23 +88,15 @@ public class UserBean implements Serializable {
      *
      * @return userName | ipAddress | userAgent for the current request;
      */
-    private String storeMetadataInSession() {
-        User user = getUser();
-        ExternalContext context = Faces.getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) context.getRequest();
-
-        String ipAddress = Servlets.getRemoteAddr(request);
-        String userAgent = request.getHeader("User-Agent");
+    public String storeMetadataInSession(HttpServletRequest request) {
         String userName = user == null ? "logged_out" : user.getRealUsername();
-
-        String info = userName + " | " + ipAddress + " | " + userAgent;
+        String info = userName + " | " + Servlets.getRemoteAddr(request) + " | " + request.getHeader("User-Agent");
 
         // store the user also in the session so that it is accessible by DownloadServlet and TomcatManager
-        HttpSession session = (HttpSession) context.getSession(true);
+        HttpSession session = request.getSession(true);
         session.setAttribute("userName", info); // set only to display it in Tomcat manager app
         session.setAttribute("Locale", locale); // set only to display it in Tomcat manager app
         session.setAttribute("learnweb_user_id", userId); // required by DownloadServlet
-
         return info;
     }
 
@@ -135,18 +126,25 @@ public class UserBean implements Serializable {
      * Use this function to log in a user.
      */
     public void setUser(User user) {
+        setUser(user, Faces.getRequest());
+    }
+
+    /**
+     * Use this function to log in a user.
+     */
+    public void setUser(User user, HttpServletRequest request) {
         this.userId = user.getId();
         this.user = user;
         this.activeOrganisation = user.getOrganisation();
 
-        //clear caches
+        // clear caches
         this.sidebarMenuModel = null;
         this.newGroups = null;
         this.cacheShowMessageJoinGroup = true;
         this.cacheShowMessageAddResource = true;
 
         refreshLocale();
-        String clientInfo = storeMetadataInSession();
+        String clientInfo = storeMetadataInSession(request);
         log.debug("Session started: {}", clientInfo);
     }
 
@@ -240,15 +238,16 @@ public class UserBean implements Serializable {
                 break;
             default:
                 locale = new Locale("en", "UK");
-                log.error("Unsupported language: " + localeCode);
+                log.error("Unsupported language: {}", localeCode);
                 break;
         }
 
-        UIViewRoot viewRoot = Faces.getViewRoot();
-        if (viewRoot == null) {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if (fc == null || fc.getViewRoot() == null) {
             return null;
         }
-        return viewRoot.getViewId() + "?faces-redirect=true&includeViewParams=true";
+
+        return fc.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
     }
 
     public boolean isAdmin() {
