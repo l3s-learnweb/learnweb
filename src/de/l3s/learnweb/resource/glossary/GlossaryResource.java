@@ -110,4 +110,9 @@ public class GlossaryResource extends Resource {
         }
         return tableView;
     }
+
+    @Override
+    public String getUrl() {
+        return Learnweb.getInstance().getServerUrl() + "/lw/resource.jsf?resource_id=" + getId();
+    }
 }
