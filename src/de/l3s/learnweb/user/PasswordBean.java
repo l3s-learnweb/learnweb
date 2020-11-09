@@ -19,6 +19,7 @@ import de.l3s.util.email.Mail;
 public class PasswordBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 2237249691336567548L;
     //private static final Logger log = LogManager.getLogger(PasswordBean.class);
+    public static int PASSWORD_CHANGE_HASH_LENGTH = 40;
 
     private String email;
 
@@ -63,6 +64,6 @@ public class PasswordBean extends ApplicationBean implements Serializable {
 
     // TODO: I think it's not best practice to use generated hash to restore password, we should generate a token and store it in database (Oleh)
     public static String createPasswordChangeHash(User user) {
-        return HashHelper.sha256(Learnweb.SALT_1 + user.getId() + user.getPassword() + Learnweb.SALT_2);
+        return HashHelper.sha256(Learnweb.SALT_1 + user.getId() + user.getPassword() + Learnweb.SALT_2).substring(0, PASSWORD_CHANGE_HASH_LENGTH);
     }
 }

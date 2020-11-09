@@ -35,7 +35,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
         String hash = splits[1];
 
         user = getLearnweb().getUserManager().getUser(userId);
-        BeanAssert.validate(user != null && hash.length() == 32, "error_pages.bad_request_email_link");
+        BeanAssert.validate(user != null && hash.length() == PasswordBean.PASSWORD_CHANGE_HASH_LENGTH, "error_pages.bad_request_email_link");
         BeanAssert.validate(hash.equals(PasswordBean.createPasswordChangeHash(user)), "Your request seams to be invalid. Maybe you have already changed the password?");
     }
 
