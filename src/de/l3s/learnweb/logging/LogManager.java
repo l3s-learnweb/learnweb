@@ -106,7 +106,6 @@ public final class LogManager {
      * @param includePrivateEntries set to true if user accesses his own logs. Or for moderators.
      * @param query The query shall use the usual prepared statement placeholder ?
      * @param parameter parameters to replace the placeholders in the query
-     * @return
      */
     private List<LogEntry> getLogs(boolean includePrivateEntries, String query, Object... parameter) {
         LinkedList<LogEntry> logEntries = new LinkedList<>();
@@ -144,7 +143,7 @@ public final class LogManager {
     /**
      * Get logs for the given group. All actions that match the default filter will be returned
      *
-     * @param actions if actions is null the default filter is used
+     * @param groupId a group to search in
      * @param limit if limit is -1 all log entries are returned
      */
     public List<LogEntry> getLogsByGroup(int groupId, int limit) throws SQLException {
