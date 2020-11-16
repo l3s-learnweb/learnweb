@@ -185,23 +185,28 @@ public class Learnweb
      */
     private static String getPropertiesFileName()
     {
-        String propertiesFileName = "lw_local_other";
+        // FIXME: previous code stopped working after user astappiev was added to the server
+        // After I removed config associated with /home/astappiev directory, it still didn't work because workingDirectory was set to /home/astappiev (IDK why)
+        // Looks like AMA instance is not used now, so I just hardcoded what I need. Shame on me, but I hope no one will read this
 
-        String workingDirectory = new File(".").getAbsolutePath();
-        log.debug("workingDirectory: " + workingDirectory);
+        // String propertiesFileName = "lw_local_other";
+
+        // String workingDirectory = new File(".").getAbsolutePath();
+        // log.debug("workingDirectory: " + workingDirectory);
 
         // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
-        if(workingDirectory.startsWith("/home/learnweb_user"))
-        {
-            propertiesFileName = "learnweb";
-            developmentMode = false;
-        }
-        else if(workingDirectory.startsWith("/home/ama_user"))
-        {
-            propertiesFileName = "ama";
-            developmentMode = false;
-        }
-        else if((new File("C:\\programmieren\\philipp.ama")).exists())
+        // if(workingDirectory.startsWith("/home/learnweb_user"))
+        // {
+        String propertiesFileName = "learnweb";
+        developmentMode = true; // For prod, it should be set to false in else condition below
+        // }
+        // else if(workingDirectory.startsWith("/home/ama_user"))
+        // {
+        //     propertiesFileName = "ama";
+        //     developmentMode = false;
+        // }
+        //else \
+        if((new File("C:\\programmieren\\philipp.ama")).exists())
             propertiesFileName = "ama_local_philipp";
         else if((new File("C:\\programmieren\\philipp.lw")).exists())
             propertiesFileName = "lw_local_philipp";
