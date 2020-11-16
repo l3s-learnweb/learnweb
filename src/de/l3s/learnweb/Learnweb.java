@@ -135,6 +135,7 @@ public class Learnweb
             }
             catch(Exception e)
             {
+                log.warn(e);
                 throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)");
             }
         }

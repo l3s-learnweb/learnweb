@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
+  <component name="CheckStyle-IDEA-Module">
+    <option name="configuration">
+      <map />
+    </option>
+  </component>
   <component name="FacetManager">
     <facet type="web" name="Web">
       <configuration>
@@ -9,28 +14,18 @@
         <webroots>
           <root url="file://$MODULE_DIR$/WebContent" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src" />
-          <root url="file://$MODULE_DIR$/Resources" />
-        </sourceRoots>
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/WebContent/resources/learnweb-layout/sass/common/themes" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="localLibs" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="tomcatLibs" level="project" />
-    <orderEntry type="library" name="@types/jquery" level="application" />
-    <orderEntry type="library" name="@types/jqueryui" level="application" />
-    <orderEntry type="library" name="@types/jquery.contextmenu" level="application" />
   </component>
 </module>
