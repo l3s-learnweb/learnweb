@@ -47,9 +47,7 @@
 }
 
 .text-truncate-multiline {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  @include text-truncate();
 
   // if this feature is supported, it would show two lines, if not, just single line
   @supports (display: -webkit-box) {
@@ -165,3 +163,16 @@ blockquote {
   }
 }
 
+// Utilities for common `display` values. Similar to existing .d-#{} utils, but using max-width (down) instead of min-width
+// For example, instead of .d-none.d-md-block, you can use .dd-sm-none class.
+@each $breakpoint in map-keys($grid-breakpoints) {
+  $max: breakpoint-max($breakpoint, $grid-breakpoints);
+
+  @if ($max) {
+    @media (max-width: $max) {
+      @each $value in $displays {
+        .dd-#{$breakpoint}-#{$value} { display: $value !important; }
+      }
+    }
+  }
+}

@@ -30,14 +30,14 @@
 				</div>
 			</f:facet>
 
-			<p:column headerText="#{msg['title']}" styleClass="d-none d-sm-table-cell">
+			<p:column headerText="#{msg['title']}" styleClass="dd-xs-none">
 				<h:outputLink value="#{request.contextPath}/lw/survey/template_readonly.jsf">
 					<f:param name="survey_id" value="#{survey.id}"/>
 					<h:outputText value="#{survey.title}" escape="false"/>
 				</h:outputLink>
 			</p:column>
 
-			<p:column headerText="#{msg['description']}" styleClass="d-none d-md-table-cell">
+			<p:column headerText="#{msg['description']}" styleClass="dd-sm-none">
 				<h:outputText value="#{survey.description}" escape="false"/>
 			</p:column>
 

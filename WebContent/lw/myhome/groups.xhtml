@@ -35,19 +35,19 @@
                 </h:outputLink>
             </p:column>
 
-            <p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="d-none d-sm-table-cell text-break mw-r25">
+            <p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="dd-xs-none text-break mw-r25">
                 <h:outputText value="#{group.description}" escape="false"/>
             </p:column>
 
-            <p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}" styleClass="d-none d-md-table-cell">
+            <p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}" styleClass="dd-sm-none">
                 <h:outputText value="#{group.leader.username}"/>
             </p:column>
 
-            <p:column headerText="#{msg.course}" sortBy="#{group.course.title}" styleClass="d-none d-sm-table-cell">
+            <p:column headerText="#{msg.course}" sortBy="#{group.course.title}" styleClass="dd-xs-none">
                 <h:outputText value="#{group.course.title}"/>
             </p:column>
 
-            <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="d-none d-md-table-cell">
+            <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="dd-sm-none">
                 <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
                 <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
             </p:column>

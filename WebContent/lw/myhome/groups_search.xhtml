@@ -41,7 +41,7 @@
                     <h:outputText value=" (#{msg.new_word})" rendered="${userBean.newGroups.contains(group)}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell text-break mw-r30">
+                <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="dd-xs-none text-break mw-r30">
                     <h:outputText value="#{group.description}" escape="false"/>
                 </p:column>
 
@@ -49,11 +49,11 @@
                     <h:outputText value="#{group.language}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.course}" filterBy="#{group.course.title}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
+                <p:column headerText="#{msg.course}" filterBy="#{group.course.title}" filterMatchMode="contains" styleClass="dd-xs-none">
                     <h:outputText value="#{group.course.title}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="d-none d-md-table-cell">
+                <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="dd-sm-none">
                     <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
                     <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
                 </p:column>

@@ -618,11 +618,9 @@ ul.res-filters {
       .res-bl-title,
       .res-bl-author {
         display: block;
-        @include user-select(none);
         line-height: 1.25;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @include user-select(none);
+        @include text-truncate();
       }
 
       .res-bl-author {

@@ -39,7 +39,7 @@
                 </div>
             </f:facet>
 
-            <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="td-text-center d-none d-md-table-cell">
+            <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none">
                 <h:outputText value="#{course.id}"/>
             </p:column>
 
@@ -51,7 +51,7 @@
                 <h:outputText value="#{course.wizardParam}"/>
             </p:column>
 
-            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center d-none d-md-table-cell">
+            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none">
                 <h:outputText value="#{course.creationTimestamp}">
                     <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
@@ -61,7 +61,7 @@
                 <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
             </p:column>
 
-            <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}" styleClass="td-text-center d-none d-sm-table-cell">
+            <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}" styleClass="td-text-center dd-xs-none">
                 <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
             </p:column>
 
