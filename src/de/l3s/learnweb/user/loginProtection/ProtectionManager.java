@@ -196,7 +196,7 @@ public class ProtectionManager {
             message.setSubject("[Learnweb] Suspicious activity alert");
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(adminEmail));
 
-            StringBuilder content = new StringBuilder("Multiple accounts have been flagged as suspicious by Learnweb protection system. Please look at them closer at http://learnweb.l3s.uni-hannover.de/lw/admin/banlist.jsf.\n"
+            StringBuilder content = new StringBuilder("Multiple accounts have been flagged as suspicious by Learnweb protection system. Please look at them closer at https://learnweb.l3s.uni-hannover.de/lw/admin/banlist.jsf.\n"
                 + "Here are the ten most recent entries in the suspicious list: "
                 + "\n\n");
 

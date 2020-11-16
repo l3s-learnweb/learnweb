@@ -96,7 +96,7 @@ public final class Learnweb {
     private long lastCheck = 0L;
 
     /**
-     * @param serverUrl The servername + contextPath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
+     * @param serverUrl The servername + contextPath. For the default installation this is: https://learnweb.l3s.uni-hannover.de
      */
     private Learnweb(String serverUrl) throws ClassNotFoundException, SQLException {
         loadProperties();
