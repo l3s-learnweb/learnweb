@@ -205,6 +205,10 @@
         <location>/lw/error/404.jsf</location>
     </error-page>
     <error-page>
+        <error-code>410</error-code>
+        <location>/lw/error/410.jsf</location>
+    </error-page>
+    <error-page>
         <exception-type>javax.faces.application.ViewExpiredException</exception-type>
         <location>/lw/error/419.jsf</location>
     </error-page>

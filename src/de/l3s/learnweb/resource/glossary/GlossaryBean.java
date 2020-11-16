@@ -141,6 +141,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             Instant start = Instant.now();
             Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
             glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resource);
+            BeanAssert.isFound(glossaryResource);
 
             long duration = Duration.between(start, Instant.now()).toMillis();
             if (duration > 500) {
