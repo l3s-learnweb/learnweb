@@ -3,6 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.users}"/>
@@ -26,32 +27,79 @@
 
 <ui:define name="center_layout">
     <h:form>
-        <p:dataTable var="user" value="#{adminUsersBean.users}" rows="50" paginator="true" paginatorPosition="bottom"
+        <p:dataTable var="user" value="#{adminUsersBean.users}" rows="50" paginator="true" paginatorPosition="bottom" id="users_table"
                      rowsPerPageTemplate="50,100,250,500,1000,1500,2500" rendered="#{adminUsersBean.users ne null}"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-            <f:facet name="header">#{msg.users_info}</f:facet>
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
+
+            <f:facet name="header">
+                <div class="d-flex">
+                    <div class="mr-auto">#{msg.users_info}</div>
+                    <div>
+                        <p:commandButton id="toggler" type="button" value="#{msg.columns}" icon="fa fa-bars"/>
+                        <p:columnToggler datasource="users_table" trigger="@previous"/>
+                    </div>
+                </div>
+            </f:facet>
+
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink styleClass="text-danger p-1">
+                        <i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
+                        <p:dataExporter type="pdf" target="users_table" fileName="users"/>
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="text-success p-1">
+                        <i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
+                        <p:dataExporter type="xls" target="users_table" fileName="users"/>
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="text-gray p-1">
+                        <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+                        <p:dataExporter type="csv" target="users_table" fileName="users"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
 
             <p:column filterBy="#{user.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{user.realUsername}">
-                <p:link outcome="/lw/myhome/profile" value="#{user.realUsername}">
+                <p:link outcome="/lw/myhome/profile" value="#{user.realUsername}" id="username">
                     <f:param name="user_id" value="#{user.id}"/>
                 </p:link>
+                <p:tooltip for="@previous" value="#{user.realUsername}" position="top"/>
             </p:column>
 
             <p:column headerText="#{msg.email_address}" sortBy="#{user.email}" filterBy="#{user.email}" filterMatchMode="contains">
-                <h:outputText value="#{user.email}"/>
+                <h:outputText value="#{user.email}" id="email"/>
+                <p:tooltip for="@previous" value="#{user.email}" position="top"/>
             </p:column>
 
-        <p:column headerText="Last login" sortBy="#{user.lastLoginDate}" styleClass="td-text-center d-none d-md-table-cell">
-            <h:outputText value="#{user.lastLoginDate.atZone(user.timeZone)}">
-                <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" />
-            </h:outputText>
-        </p:column>
-
-            <p:column headerText="#{msg.organization}" sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" filterMatchMode="contains" rendered="#{adminUsersBean.courseId == 0}">
-                <h:outputText value="#{user.organisation.title}"/>
+            <p:column headerText="Last login" sortBy="#{user.lastLoginDate}" styleClass="td-text-center">
+                <h:outputText value="#{user.lastLoginDate.atZone(user.timeZone)}" id="last_login">
+                    <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime"/>
+                </h:outputText>
+                <p:tooltip for="@previous" value="#{of:formatDateWithTimezone(user.lastLoginDate, 'yyyy-MM-dd HH:mm', user.timeZone)}" position="top"/>
             </p:column>
 
-            <p:column headerText="#{msg.moderator}" sortBy="#{user.moderator}">
+            <p:column headerText="#{msg.student_id}" sortBy="#{user.id}" filterBy="#{user.id}" filterMatchMode="contains" visible="false">
+                <h:outputText value="#{user.id}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.groupsTitle}" sortBy="#{user.groups}" filterBy="#{user.groups}" filterMatchMode="contains" visible="false" styleClass="text-truncate mw-r10">
+                <h:outputText value="#{of:joinCollection(user.groups, ', ')}" id="group"/>
+                <p:tooltip for="@previous" value="#{of:joinCollection(user.groups, ', ')}" position="top"/>
+            </p:column>
+
+            <p:column headerText="#{msg.courses}" sortBy="#{user.courses}" filterBy="#{user.courses}" filterMatchMode="contains" visible="false" styleClass="text-truncate mw-r10">
+                <h:outputText value="#{user.courses}" id="course"/>
+                <p:tooltip for="@previous" value="#{user.courses}" position="top"/>
+            </p:column>
+
+            <p:column headerText="#{msg.organization}" sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" filterMatchMode="contains"
+                      visible="false" styleClass="text-truncate mw-r10" rendered="#{adminUsersBean.courseId == 0}">
+                <h:outputText value="#{user.organisation.title}" id="organisation"/>
+                <p:tooltip for="@previous" value="#{user.organisation.title}" position="top"/>
+            </p:column>
+
+            <p:column headerText="#{msg.moderator}" sortBy="#{user.moderator}" visible="#{userBean.user.admin}">
                 <p:selectBooleanCheckbox value="#{user.moderator}">
                     <p:ajax listener="#{adminUsersBean.updateUser(user)}"/>
                 </p:selectBooleanCheckbox>
