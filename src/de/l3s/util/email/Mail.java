@@ -19,12 +19,14 @@ public class Mail
     public Mail() throws MessagingException
     {
         System.setProperty("mail.mime.charset", "UTF-8");
+        System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
         Properties props = new Properties();
         props.put("mail.smtp.host", "mail.kbs.uni-hannover.de");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");
 
         session = Session.getInstance(props, authenticator);
