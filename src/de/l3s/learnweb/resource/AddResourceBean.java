@@ -103,12 +103,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     }
 
     private void setResourceTypeSurvey() {
-
         Survey survey = new Survey();
         survey.setOrganizationId(getUser().getOrganisationId());
         survey.setUserId(getUser().getId());
-        survey.setTitle("Title");
-        survey.setDescription("Description");
+        survey.setTitle("Title placeholder"); // this values are overridden in addResource method
+        survey.setDescription("Description placeholder");
 
         SurveyResource surveyResource = new SurveyResource();
         surveyResource.setSurvey(survey);
@@ -230,6 +229,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             if (!targetGroup.canAddResources(getUser())) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
                 return;
+            }
+
+            if (resource.getType() == ResourceType.survey && resource instanceof SurveyResource) {
+                SurveyResource surveyResource = (SurveyResource) resource;
+                surveyResource.getSurvey().setTitle(resource.getTitle());
+                surveyResource.getSurvey().setDescription(resource.getDescription());
             }
 
             log.debug("addResource; res={}", resource);

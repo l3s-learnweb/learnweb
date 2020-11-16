@@ -101,7 +101,7 @@ public class SurveyManager {
         }
 
         if (resource.getType() != ResourceType.survey) {
-            log.error("Survey resource requested but the resource is of type " + resource.getType() + "; " + BeanHelper.getRequestSummary());
+            log.error("Survey resource requested but the resource is of type {}; {}", resource.getType(), BeanHelper.getRequestSummary());
             return null;
         }
 
@@ -145,8 +145,8 @@ public class SurveyManager {
 
         // load survey questions
         try (PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted` = 0 ORDER BY `order`")) {
-            int expectedOrder = 0; // used to check the integrity of order attribute
-            boolean orderProblemAlreadyLogged = false;
+            int previousQuestionOrder = -1; // used to check the integrity of order attribute
+            boolean isOrderContinuous = true; // when false, ignore following errors for this survey
 
             preparedStatement.setInt(1, surveyId);
             ResultSet rs = preparedStatement.executeQuery();
@@ -157,11 +157,11 @@ public class SurveyManager {
                 question.setLabel(rs.getString("question"));
                 question.setInfo(rs.getString("info"));
                 question.setRequired(rs.getBoolean("required"));
-                question.setOrder(expectedOrder++);
+                question.setOrder(rs.getInt("order"));
 
-                if (rs.getInt("order") != question.getOrder() && !orderProblemAlreadyLogged) {
-                    log.error("Survey questions aren't ordered continuously. Survey_id: " + surveyId + "; Expected order: " + expectedOrder + "; Found order: " + question.getOrder());
-                    orderProblemAlreadyLogged = true; // ignore following errors for this survey
+                if (previousQuestionOrder >= question.getOrder() && isOrderContinuous) {
+                    log.error("Survey questions aren't ordered correctly. Survey_id: {}; Previous order: {}; Found order: {}", surveyId, previousQuestionOrder, question.getOrder());
+                    isOrderContinuous = false;
                 }
 
                 String options = rs.getString("option");

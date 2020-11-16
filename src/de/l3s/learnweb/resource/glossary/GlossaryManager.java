@@ -94,6 +94,7 @@ public class GlossaryManager {
             entry.getTerms().removeIf(GlossaryTerm::isDeleted);
 
             // the glossary edit form uses a working copy (clone) therefore we have to replace the original entry
+            // FIXME: this line produces ConcurrentModificationException
             glossaryResource.getEntries().removeIf(e -> e.getId() == entry.getId());
             glossaryResource.getEntries().add(entry);
         }
