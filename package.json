@@ -4,11 +4,8 @@
   "version": "1.0.0",
   "browserslist": [
     "> 0.5% in DE",
-    "not edge < 79",
-    "not firefox < 54",
-    "not chrome < 58",
-    "not safari < 10.1",
-    "not opera < 44",
+    "not safari < 10.3",
+    "not ios_saf < 10.3",
     "not ie >= 0",
     "not dead"
   ],
@@ -100,7 +97,6 @@
         {
           "ignore": [
             "css-gradients",
-            "object-fit",
             "multicolumn"
           ]
         }
