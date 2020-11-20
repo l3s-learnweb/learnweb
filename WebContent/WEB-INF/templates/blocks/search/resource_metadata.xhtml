@@ -34,9 +34,10 @@
             <h:outputText value="#{res.source.label}" escape="false"/>
         </div>
 
-        <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.description and not empty res.resource.author}">
+        <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.resource.author}">
             <h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
-            <h:outputText value="#{res.resource.author}"/>
+            <h:outputText value="#{res.resource.author}" rendered="#{empty res.authorUrl}"/>
+            <h:outputLink value="#{res.authorUrl}"  rendered="#{not empty res.authorUrl}" target="_blank">#{res.resource.author} <i class="fa fa-external-link" aria-hidden="true"></i></h:outputLink>
         </h:panelGroup>
 
         <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.group}">

@@ -79,6 +79,7 @@ public class InterwebResultsWrapper implements Serializable {
         // resource.setViews(searchResult.getNumberOfViews());
         resource.setIdAtService(searchResult.getIdAtService());
         resource.setDescription(searchResult.getDescription());
+        resource.setAuthor(searchResult.getAuthor());
 
         if (resource.getTitle().equals(resource.getDescription())) { // delete description when equal to title
             resource.setDescription("");
@@ -138,6 +139,7 @@ public class InterwebResultsWrapper implements Serializable {
         decoratedResource.setRank(searchResult.getRankAtService());
         decoratedResource.setTitle(searchResult.getTitle());
         decoratedResource.setSnippet(searchResult.getSnippet());
+        decoratedResource.setAuthorUrl(searchResult.getAuthorUrl());
 
         // bing description contains snippet with term highlighting
         if (resource.getSource() == ResourceService.bing && decoratedResource.getSnippet() == null) {

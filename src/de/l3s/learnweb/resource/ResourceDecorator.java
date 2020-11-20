@@ -27,6 +27,7 @@ public class ResourceDecorator implements Serializable {
     private String snippet;
     // the rank which the resource has in the current search result
     private String title;
+    private String authorUrl;
 
     // used for search history
     private boolean clicked;
@@ -83,6 +84,14 @@ public class ResourceDecorator implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getAuthorUrl() {
+        return authorUrl;
+    }
+
+    public void setAuthorUrl(final String authorUrl) {
+        this.authorUrl = authorUrl;
     }
 
     public String getMetadataValue(String key) {
