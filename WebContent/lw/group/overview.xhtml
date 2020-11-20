@@ -37,7 +37,6 @@
 <ui:define name="center_layout">
     <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
     <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
-    <h:outputScript library="layout" name="js/lib/og-grid.js" target="body"/>
 
     <div class="row">
         <div class="col-md-6">
@@ -77,39 +76,15 @@
 
             <p:panel header="#{msg.members}" id="members">
                 <h:form>
-                    <ul class="gridder clearfix member-grid">
-                        <ui:repeat var="user" value="#{groupOverviewBean.members}">
-                            <li class="gridder-list member-item" data-griddercontent="#user${user.id}">
-                                <p:commandLink onclick="return false;" styleClass="member-block">
-                                    <div class="member-picture">
-                                        <img src="#{user.image}" alt="#{user.fullName}"/>
-                                    </div>
-
-                                    <ui:fragment rendered="#{not empty user.credits}">
-                                        <div class="member-star"></div>
-                                    </ui:fragment>
-
-                                    <div class="member-username text-center text-truncate p-1">#{user.username}</div>
-                                </p:commandLink>
-                            </li>
-
-                            <div id="user${user.id}" class="gridder-content">
-                                <ui:fragment rendered="#{groupOverviewBean.userDetailsHidden}">
-                                    <h:outputText value="This information is hidden due to the privacy settings of your organization." styleClass="m-2 d-block"/>
-                                </ui:fragment>
-
-                                <ui:fragment rendered="#{not groupOverviewBean.userDetailsHidden}">
-                                    <ui:decorate template="/WEB-INF/templates/blocks/user/member-details.xhtml">
-                                        <ui:param name="user" value="#{user}"/>
-                                    </ui:decorate>
-                                </ui:fragment>
-                            </div>
-                        </ui:repeat>
-                    </ul>
+                    <ui:decorate template="/WEB-INF/templates/blocks/members/members_grid_view.xhtml">
+                        <ui:param name="members" value="#{groupOverviewBean.members}"/>
+                        <ui:param name="userDetailsHidden" value="#{groupOverviewBean.userDetailsHidden}"/>
+                    </ui:decorate>
 
                     <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllMembers}" layout="block">
-                        <p:commandButton id="loadAllMembers" value="#{msg.all_members}" styleClass="secondary-btn" onstart="PF('membersOverlay').show()" oncomplete="initGridder();PF('membersOverlay').hide()"
-                                         update="@form" actionListener="#{groupOverviewBean.fetchAllMembers()}"/>
+                        <p:commandButton id="loadAllMembers" value="#{msg.all_members}" styleClass="secondary-btn" update="@form"
+                                         onstart="PF('membersOverlay').show()" oncomplete="PF('membersOverlay').hide()"
+                                         actionListener="#{groupOverviewBean.fetchAllMembers()}"/>
                     </h:panelGroup>
 
                     <p:blockUI block="members" widgetVar="membersOverlay"/>
@@ -142,25 +117,10 @@
         </div>
     </div>
 
-    <script>
-        function initGridder() {
-            $('.gridder').gridderExpander({
-                scroll: false,
-                showNav: false,
-                animationSpeed: 400,
-                animationEasing: 'easeInOutExpo'
-            });
-        }
-
-        $(function() {
-            initGridder();
-        });
-    </script>
-
     <h:outputScript type="text/javascript" rendered="#{userBean.guided}">
       const guide = groupOverviewPageInitializeGuide("#{msg.join_group}.");
 
-      $(() => {
+      $(function() {
         guide.start();
       });
     </h:outputScript>

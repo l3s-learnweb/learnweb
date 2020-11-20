@@ -1,0 +1,72 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="pageTitle" value="#{groupMembersBean.group.title}"/>
+<ui:param name="helpText" value="#{msg.groupMembersHelp}"/>
+
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="group_id" value="#{groupMembersBean.groupId}" converter="idConverter"/>
+        <f:viewAction action="#{groupMembersBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
+
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="group/resources.jsf?group_id=#{groupMembersBean.groupId}" title="#{groupMembersBean.group.title}" >
+        <ui:repeat var="groups" value="#{userBean.user.groups}">
+            <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
+        </ui:repeat>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="group/members.jsf?group_id=#{groupMembersBean.groupId}" title="#{msg.members}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml">
+            <ui:param name="groupId" value="#{groupMembersBean.groupId}"/>
+        </ui:decorate>
+    </lw:breadcrumb-item>
+</ui:define>
+
+<ui:define name="center_layout">
+    <h:form>
+        <p:panel id="members">
+            <f:facet name="header">
+                <div class="d-flex">
+                    <div class="mr-auto">#{msg.members}</div>
+                    <div>
+                        <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update="@form" rendered="#{groupMembersBean.view == 'list'}">
+                            <f:setPropertyActionListener target="#{groupMembersBean.view}" value="grid"/>
+                        </p:commandButton>
+
+                        <p:commandButton icon="fa fa-list" title="#{msg.table_view}" update="@form" rendered="#{groupMembersBean.view == 'grid'}">
+                            <f:setPropertyActionListener target="#{groupMembersBean.view}" value="list"/>
+                        </p:commandButton>
+                    </div>
+                </div>
+            </f:facet>
+
+            <ui:fragment rendered="#{groupMembersBean.view == 'grid'}">
+                <ui:decorate template="/WEB-INF/templates/blocks/members/members_grid_view.xhtml">
+                    <ui:param name="members" value="#{groupMembersBean.members}"/>
+                    <ui:param name="userDetailsHidden" value="#{groupMembersBean.userDetailsHidden}"/>
+                    <ui:param name="showMembersBeanCounts" value="true"/>
+                </ui:decorate>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{groupMembersBean.view == 'list'}">
+                <ui:decorate template="/WEB-INF/templates/blocks/members/members_list_view.xhtml">
+                    <ui:param name="members" value="#{groupMembersBean.members}"/>
+                    <ui:param name="userDetailsHidden" value="#{groupMembersBean.userDetailsHidden}"/>
+                    <ui:param name="showMembersBeanCounts" value="true"/>
+                </ui:decorate>
+            </ui:fragment>
+        </p:panel>
+    </h:form>
+</ui:define>
+</ui:composition>

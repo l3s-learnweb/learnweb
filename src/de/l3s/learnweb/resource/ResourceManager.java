@@ -10,8 +10,10 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +64,23 @@ public class ResourceManager {
     public int getResourceCountByGroupId(int groupId) throws SQLException {
         Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource r WHERE group_id = " + groupId + " AND deleted = 0");
         return count.intValue();
+    }
+
+    public Map<Integer, Integer> getResourceCountPerUserByGroup(int groupId) throws SQLException {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT owner_user_id, COUNT(*) as res_count "
+            + "FROM lw_resource r WHERE group_id = ? AND deleted = 0 GROUP BY owner_user_id")) {
+            select.setInt(1, groupId);
+
+            try (ResultSet rs = select.executeQuery()) {
+                Map<Integer, Integer> resourceCounts = new HashMap<>();
+                while (rs.next()) {
+                    int userId = rs.getInt("owner_user_id");
+                    int resourceCount = rs.getInt("res_count");
+                    resourceCounts.put(userId, resourceCount);
+                }
+                return resourceCounts;
+            }
+        }
     }
 
     public List<Resource> getResourcesByUserId(int userId) throws SQLException {

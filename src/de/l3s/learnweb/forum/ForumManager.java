@@ -6,8 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User.NotificationFrequency;
@@ -69,6 +71,26 @@ public class ForumManager {
             }
         }
         return topics;
+    }
+
+    /**
+     * @return number of posts per users of defined group
+     */
+    public Map<Integer, Integer> getPostCountPerUserByGroup(int groupId) throws SQLException {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT p.user_id, COUNT(*) as post_count "
+            + "FROM lw_forum_post p JOIN lw_forum_topic t USING (topic_id) WHERE group_id = ? GROUP BY p.user_id")) {
+            select.setInt(1, groupId);
+
+            try (ResultSet rs = select.executeQuery()) {
+                Map<Integer, Integer> postCounts = new HashMap<>();
+                while (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    int postCount = rs.getInt("post_count");
+                    postCounts.put(userId, postCount);
+                }
+                return postCounts;
+            }
+        }
     }
 
     /**

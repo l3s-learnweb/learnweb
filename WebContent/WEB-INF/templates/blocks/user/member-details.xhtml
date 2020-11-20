@@ -4,6 +4,7 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <!--@elvariable id="user" type="de.l3s.learnweb.user.User"-->
+<!--@elvariable id="showMembersBeanCounts" type="java.lang.Boolean"-->
 
 <div class="d-flex member-details">
 	<div class="pt-1">
@@ -80,6 +81,18 @@
 						</h:outputLink>
 					</span>
 				</ui:repeat>
+			</p>
+		</ui:fragment>
+
+		<ui:fragment rendered="#{showMembersBeanCounts}">
+			<p class="text-muted small mb-0">
+				<b>#{msg.forum_posts}: </b>
+				<h:outputText value="#{groupMembersBean.getForumPostCounts(user.id)}"/>
+			</p>
+
+			<p class="text-muted small mb-0">
+				<b>#{msg.resources}: </b>
+				<h:outputText value="#{groupMembersBean.getResourcesCount(user.id)}"/>
 			</p>
 		</ui:fragment>
 	</div>
