@@ -43,38 +43,12 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public String login(User user) throws SQLException {
-        if (!canLoginToAccount(user)) {
-            addErrorMessage(new IllegalAccessError(getUser() + " tried to hijack account"));
-            return "";
-        }
-        getUserBean().setModeratorUser(getUser()); // store moderator account while logged in as user
-
-        return LoginBean.loginUser(this, user, getUser().getId());
+    public String rootLogin(User targetUser) throws SQLException {
+        return LoginBean.rootLogin(this, targetUser);
     }
 
     public List<User> getUsers() {
         return users;
-    }
-
-    /**
-     * Make sure that only admins login to moderator accounts.
-     */
-    public boolean canLoginToAccount(User targetUser) {
-        User user = getUser();
-        if (user.isAdmin()) {
-            return true;
-        }
-
-        if (targetUser.isModerator()) {
-            return false;
-        }
-
-        if (user.isModerator()) {
-            return true;
-        }
-
-        return false;
     }
 
     public void updateUser(User targetUser) throws SQLException {

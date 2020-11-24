@@ -219,9 +219,12 @@
 
             <p:panel header="#{msg.miscellaneous}" styleClass="mb-3">
                 <h:form id="deleteform">
-                    <p:commandButton action="#{profileBean.onDeleteAccount}" value="#{msg['user.account.deleteSoft.button']}">
+                    <p:commandButton action="#{profileBean.onDeleteAccount}" value="#{msg['user.account.deleteSoft.button']}" styleClass="orange-btn">
                         <p:confirm message="#{msg['user.account.deleteSoft.confirmDescription']}" escape="false"/>
                     </p:commandButton>
+
+                    <p:commandButton action="#{profileBean.rootLogin}" value="#{msg.loginLabel}" styleClass="moderator-btn"
+                                     rendered="#{userBean.canLoginToAccount(profileBean.selectedUser)}"/>
                 </h:form>
             </p:panel>
         </div>

@@ -331,4 +331,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         return User.NotificationFrequency.values();
     }
 
+    public String rootLogin() throws SQLException {
+        return LoginBean.rootLogin(this, selectedUser);
+    }
 }

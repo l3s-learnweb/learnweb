@@ -106,7 +106,7 @@
             </p:column>
 
             <p:column headerText="#{msg.options}">
-                <h:commandLink action="#{adminUsersBean.login(user)}" rendered="#{adminUsersBean.canLoginToAccount(user)}">
+                <h:commandLink action="#{adminUsersBean.rootLogin(user)}" rendered="#{userBean.canLoginToAccount(user)}">
                     #{msg.loginLabel}
                 </h:commandLink>
             </p:column>

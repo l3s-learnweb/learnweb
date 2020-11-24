@@ -154,22 +154,25 @@ public class LoginBean extends ApplicationBean implements Serializable {
         this.confirmRequiredBean = confirmRequiredBean;
     }
 
-    public static String loginUser(ApplicationBean bean, User user) throws SQLException {
-        return loginUser(bean, user, null);
+    public static String rootLogin(ApplicationBean bean, User targetUser) throws SQLException {
+        UserBean userBean = bean.getUserBean();
+        // validate permission
+        BeanAssert.hasPermission(userBean.canLoginToAccount(targetUser), userBean.getUser() + " tried to hijack account");
+        // store moderator account while logged in as user
+        userBean.setModeratorUser(userBean.getUser());
+        // login
+        return loginUser(bean, targetUser);
     }
 
-    /**
-     * @param moderatorUserId not null if a moderator logs into a user account through the admin interface
-     */
-    public static String loginUser(ApplicationBean bean, User user, Integer moderatorUserId) throws SQLException {
+    public static String loginUser(ApplicationBean bean, User user) throws SQLException {
         UserBean userBean = bean.getUserBean();
         userBean.setUser(user); // logs the user in
         // addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 
         user.updateLoginDate(); // the last login date has to be updated before we log a new login event
 
-        if (moderatorUserId != null) {
-            bean.log(Action.moderator_login, 0, moderatorUserId);
+        if (userBean.getModeratorUser() != null) {
+            bean.log(Action.moderator_login, 0, userBean.getModeratorUser().getId());
         } else {
             bean.log(Action.login, 0, 0, Faces.getRequestURI());
         }
