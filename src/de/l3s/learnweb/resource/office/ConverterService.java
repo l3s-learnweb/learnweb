@@ -70,9 +70,10 @@ public final class ConverterService {
     }
 
     private static ConverterRequest createConverterRequest(final File file) {
-        String fileExt = file.getName().substring(file.getName().lastIndexOf('.'));
+        String fileName = file.getName();
+        String fileExt = fileName.substring(fileName.lastIndexOf('.'));
         String key = FileUtility.generateRevisionId(file);
-        return new ConverterRequest(fileExt, "png", file.getName(), file.getUrl(), key);
+        return new ConverterRequest(fileExt, "png", fileName, file.getUrl(), key);
     }
 
     private static String getConvertedUrl(final ConverterResponse response) {
