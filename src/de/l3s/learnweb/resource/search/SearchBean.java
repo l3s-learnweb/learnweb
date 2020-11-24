@@ -188,8 +188,10 @@ public class SearchBean extends ApplicationBean implements Serializable {
             Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(newResource);
             createThumbnailThread.start();
 
-            search.logResourceSaved(selectedResource.getRank(), getUser(), newResource.getId());
-            log(Action.adding_resource, newResource.getGroupId(), newResource.getId(), search.getId() + " - " + selectedResource.getRank());
+            if (search != null) {
+                search.logResourceSaved(selectedResource.getRank(), getUser(), newResource.getId());
+                log(Action.adding_resource, newResource.getGroupId(), newResource.getId(), search.getId() + " - " + selectedResource.getRank());
+            }
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
         } catch (RuntimeException | IOException | SQLException e) {
