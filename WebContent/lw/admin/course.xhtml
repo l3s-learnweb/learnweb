@@ -63,8 +63,10 @@
 
 							<div class="form-group">
 								<p:outputLabel for="@next" value="#{msg.wizard_parameter}:"/>
-								<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}"/>
+								<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}" disabled="#{adminCourseBean.course.wizardDisabled}"/>
 								<p:message for="@previous"/>
+								<p:staticMessage severity="info" detail="#{learnwebBean.learnweb.serverUrl}/wizard=#{adminCourseBean.course.wizardParam}"
+												 rendered="#{not adminCourseBean.course.wizardDisabled}"/>
 							</div>
 
 							<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">

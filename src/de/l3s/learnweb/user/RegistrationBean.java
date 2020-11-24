@@ -26,7 +26,6 @@ import org.omnifaces.util.Faces;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.user.Course.Option;
 
 @Named
 @ViewScoped
@@ -70,7 +69,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         if (StringUtils.isNotEmpty(wizard)) {
             course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
             BeanAssert.validate(course, "register_invalid_wizard_error");
-            BeanAssert.validate(!course.getOption(Option.Users_Disable_wizard), "registration.wizard_disabled");
+            BeanAssert.validate(!course.isWizardDisabled(), "registration.wizard_disabled");
 
             // special message for yell
             if (course.getId() == 505) {

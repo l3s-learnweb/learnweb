@@ -41,7 +41,6 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     private String title;
     private int organisationId;
     private int defaultGroupId; // all users who join this course, automatically join this group
-    @NotBlank
     @Length(min = 2, max = 90)
     private String wizardParam;
     private int nextXUsersBecomeModerator;
@@ -109,6 +108,10 @@ public class Course implements Serializable, Comparable<Course>, HasId {
 
     protected void setOptions(long[] optionValues) {
         this.options = BitSet.valueOf(optionValues);
+    }
+
+    public boolean isWizardDisabled() {
+        return getOption(Option.Users_Disable_wizard);
     }
 
     public int getOrganisationId() {

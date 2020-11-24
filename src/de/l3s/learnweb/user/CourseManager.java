@@ -156,7 +156,11 @@ public class CourseManager {
             save.setString(2, course.getTitle());
             save.setInt(3, course.getOrganisationId());
             save.setInt(4, course.getDefaultGroupId());
-            save.setString(5, course.getWizardParam());
+            if (course.getWizardParam() != null) {
+                save.setString(5, course.getWizardParam());
+            } else {
+                save.setNull(5, Types.VARCHAR);
+            }
             save.setInt(6, course.getNextXUsersBecomeModerator());
             save.setString(7, course.getWelcomeMessage());
             save.setObject(8, course.getCreationTimestamp());
