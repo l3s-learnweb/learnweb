@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.ResourceService;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.Thumbnail;
 import de.l3s.learnweb.user.User;
 
@@ -79,6 +81,8 @@ public class SearchHistoryManager {
                     res = learnweb.getResourceManager().getResource(resourceId);
                 } else {
                     res = new Resource();
+                    res.setType(ResourceType.website);
+                    res.setSource(ResourceService.learnweb);
                     res.setUserId(query.getSession().getUserId());
                     res.setUrl(rs.getString("url"));
                     res.setTitle(rs.getString("title"));
@@ -102,7 +106,7 @@ public class SearchHistoryManager {
             }
             pStmt.close();
         } catch (SQLException e) {
-            log.error("Error while fetching search results for search id: " + query.getSearchId(), e);
+            log.error("Error while fetching search results for search id: {}", query.getSearchId(), e);
         }
 
         return searchResults;
@@ -148,7 +152,7 @@ public class SearchHistoryManager {
                 "JOIN learnweb_main.lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id " +
                 "JOIN learnweb_main.lw_group_user ug ON ug.user_id =  l.user_id " +
                 "WHERE l.action = 5 AND ug.group_id = ? " +
-                "GROUP BY l.user_id, l.session_id " +
+                "GROUP BY l.user_id, l.session_id, q.timestamp " +
                 "ORDER BY q.timestamp DESC LIMIT 30");
 
         pstmt.setInt(1, groupId);
