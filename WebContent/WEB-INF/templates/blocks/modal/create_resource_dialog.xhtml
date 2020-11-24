@@ -8,6 +8,10 @@
 <p:dialog id="createResourceDialog" widgetVar="createResourceDialog" header="#{msg.create_resource}"
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
     <h:form id="create_resource_form">
+        <p:blockUI block="create_resource_form" widgetVar="createResourceOverlay">
+            <h:outputText value="#{msg.please_wait}"/>
+        </p:blockUI>
+
         <h:panelGroup layout="block" styleClass="fg-grid mb-3" rendered="#{addResourceBean.formStep == 1}">
             <h:outputText value="#{msg.type}:" styleClass="ui-outputlabel"/>
             <h:outputText value="#{addResourceBean.resource.type}" styleClass="fg-col text-capitalize"/>
@@ -26,7 +30,8 @@
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'website'}">
                 <p:outputLabel for="@next" value="#{msg.url}:"/>
                 <div class="fg-col">
-                    <p:inputText value="#{addResourceBean.resource.url}" required="true" requiredmessage="#{msg.mandatory_field}" validator="urlValidator"/>
+                    <p:inputText id="website_url" value="#{addResourceBean.resource.url}" validator="urlValidator"
+                                 required="true" requiredmessage="#{msg.mandatory_field}"/>
                     <p:message for="@previous"/>
                 </div>
             </ui:fragment>
@@ -122,14 +127,14 @@
                 <h:outputText value="* #{msg.mandatory_field}"/>
             </div>
             <div class="d-flex flex-row-reverse">
-                <p:commandButton value="#{msg.next_step}" action="#{addResourceBean.handleUrlInput}" update="@form"
-                                 oncomplete="PF('createResourceDialog').resetPosition();"
+                <p:commandButton id="next_step_btn" value="#{msg.next_step}" action="#{addResourceBean.handleUrlInput}" update="@form"
+                                 onstart="PF('createResourceOverlay').show();" oncomplete="PF('createResourceOverlay').hide();PF('createResourceDialog').resetPosition();"
                                  rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}">
                 </p:commandButton>
 
                 <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update="create_resource_form"
-                                 onsuccess="resourceAddedHook(); return false;"
-                                 oncomplete="if (!args.validationFailed) {PF('createResourceDialog').hide(); if (#{userBean.guided}) {guideFinish.show();}}"
+                                 onstart="PF('createResourceOverlay').show();"
+                                 oncomplete="PF('createResourceOverlay').hide();if (!args.validationFailed) {PF('createResourceDialog').hide();resourceAddedHook(); if (#{userBean.guided}) {guideFinish.show();}}"
                                  rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">
                 </p:commandButton>
 

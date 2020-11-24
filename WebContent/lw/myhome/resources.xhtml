@@ -31,6 +31,12 @@
     <h:outputScript library="layout" name="js/group-resources.js" target="body"/>
 
     <ui:decorate template="/WEB-INF/templates/blocks/resources/resources.xhtml"/>
+    <h:outputScript>
+        $(() => {
+            const saveUrl = new URLSearchParams(window.location.search).get('save_url');
+            if (saveUrl &amp;&amp; typeof addWebsiteShortcode === 'function') addWebsiteShortcode(saveUrl);
+        });
+    </h:outputScript>
 </ui:define>
 
 </ui:composition>

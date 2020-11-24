@@ -222,6 +222,15 @@ function createDropArea(resContainerId) {
   });
 }
 
+function addWebsiteShortcode(url) {
+  $('#res_toolbar\\:menu_upload_url').trigger('click');
+
+  window.formLoadedCallback = () => {
+    $('#create_resource_form\\:website_url').val(url);
+    $('#create_resource_form\\:next_step_btn').trigger('click');
+  };
+}
+
 function createSelectable(resContainerId) {
   const $resContainer = $(document.getElementById(resContainerId));
   // check if container is selectable
