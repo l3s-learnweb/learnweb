@@ -38,6 +38,7 @@ public class AuthFilter extends HttpFilter {
     protected void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
         throws IOException, ServletException {
 
+        // Inject user into session
         try {
             Optional<Learnweb> learnweb = Learnweb.getInstanceOptional();
 
@@ -55,6 +56,15 @@ public class AuthFilter extends HttpFilter {
             }
         } catch (Exception e) {
             log.error("Unable to finish auth verification", e);
+        }
+
+        // Validate if session is not expired
+        try {
+            if (request.getRequestedSessionId() != null && !request.isRequestedSessionIdValid()) {
+                log.warn("Request attempt with invalid session {}", request.getRequestURI());
+            }
+        } catch (Exception e) {
+            log.error("Unable detect session status", e);
         }
 
         chain.doFilter(request, response);
