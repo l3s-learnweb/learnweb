@@ -510,7 +510,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         Image img = new Image(inputStream);
 
         // save image file
-        // TODO: what if it is not png?
         File file = new File(TYPE.PROFILE_PICTURE, "user_icon.png", "image/png");
         Image thumbnail = img.getResizedToSquare2(200, 0.0);
         file = Learnweb.getInstance().getFileManager().save(file, thumbnail.getInputStream());

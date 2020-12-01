@@ -27,8 +27,8 @@
 
 <ui:define name="center_layout">
     <h:form>
-        <p:dataTable var="user" value="#{adminUsersBean.users}" rows="50" paginator="true" paginatorPosition="bottom" id="users_table"
-                     rowsPerPageTemplate="50,100,250,500,1000,1500,2500" rendered="#{adminUsersBean.users ne null}"
+        <p:dataTable var="userView" value="#{adminUsersBean.userViews}" rows="50" paginator="true" paginatorPosition="bottom" id="users_table"
+                     rowsPerPageTemplate="50,100,250,500,1000,1500,2500" rendered="#{adminUsersBean.userViews ne null}"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
 
             <f:facet name="header">
@@ -60,59 +60,59 @@
                 </h:panelGroup>
             </f:facet>
 
-            <p:column filterBy="#{user.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{user.realUsername}">
-                <p:link outcome="/lw/myhome/profile" value="#{user.realUsername}" id="username">
-                    <f:param name="user_id" value="#{user.id}"/>
+            <p:column filterBy="#{userView.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{userView.realUsername}">
+                <p:link outcome="/lw/myhome/profile" value="#{userView.realUsername}" id="username">
+                    <f:param name="user_id" value="#{userView.id}"/>
                 </p:link>
-                <p:tooltip for="@previous" value="#{user.realUsername}" position="top"/>
+                <p:tooltip for="@previous" value="#{userView.realUsername}" position="top"/>
             </p:column>
 
-            <p:column headerText="#{msg.email_address}" sortBy="#{user.email}" filterBy="#{user.email}" filterMatchMode="contains">
-                <h:outputText value="#{user.email}" id="email"/>
-                <p:tooltip for="@previous" value="#{user.email}" position="top"/>
+            <p:column headerText="#{msg.email_address}" sortBy="#{userView.email}" filterBy="#{userView.email}" filterMatchMode="contains">
+                <h:outputText value="#{userView.email}" id="email"/>
+                <p:tooltip for="@previous" value="#{userView.email}" position="top"/>
             </p:column>
 
-            <p:column headerText="Last login" sortBy="#{user.lastLoginDate}" styleClass="td-text-center">
-                <h:outputText value="#{user.lastLoginDate.atZone(user.timeZone)}" id="last_login">
+            <p:column headerText="Last login" sortBy="#{userView.lastLoginDate}" styleClass="td-text-center">
+                <h:outputText value="#{userView.lastLoginDate.atZone(userView.timeZone)}" id="last_login">
                     <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime"/>
                 </h:outputText>
-                <p:tooltip for="@previous" value="#{of:formatDateWithTimezone(user.lastLoginDate, 'yyyy-MM-dd HH:mm', user.timeZone)}" position="top"/>
+                <p:tooltip for="@previous" value="#{of:formatDateWithTimezone(userView.lastLoginDate, 'yyyy-MM-dd HH:mm', userView.timeZone)}" position="top"/>
             </p:column>
 
-            <p:column headerText="#{msg.student_id}" sortBy="#{user.id}" filterBy="#{user.id}" filterMatchMode="contains" visible="false">
-                <h:outputText value="#{user.id}"/>
+            <p:column headerText="#{msg.student_id}" sortBy="#{userView.studentId}" filterBy="#{userView.studentId}" filterMatchMode="contains" visible="false">
+                <h:outputText value="#{userView.studentId}"/>
             </p:column>
 
-            <p:column headerText="#{msg.groupsTitle}" sortBy="#{user.groups}" filterBy="#{user.groups}" filterMatchMode="contains" visible="false" styleClass="text-truncate mw-r10">
-                <h:outputText value="#{of:joinCollection(user.groups, ', ')}" id="group"/>
-                <p:tooltip for="@previous" value="#{of:joinCollection(user.groups, ', ')}" position="top"/>
+            <p:column headerText="#{msg.groupsTitle}" sortBy="#{userView.groupsTitles}" filterBy="#{userView.groupsTitles}" filterMatchMode="contains" visible="false" styleClass="text-truncate mw-r10">
+                <h:outputText value="#{userView.groupsTitles}" id="group"/>
+                <p:tooltip for="@previous" value="#{userView.groupsTitles}" position="top"/>
             </p:column>
 
-            <p:column headerText="#{msg.courses}" sortBy="#{user.courses}" filterBy="#{user.courses}" filterMatchMode="contains" visible="false" styleClass="text-truncate mw-r10">
-                <h:outputText value="#{user.courses}" id="course"/>
-                <p:tooltip for="@previous" value="#{user.courses}" position="top"/>
+            <p:column headerText="#{msg.courses}" sortBy="#{userView.coursesTitles}" filterBy="#{userView.coursesTitles}" filterMatchMode="contains" visible="false" styleClass="text-truncate mw-r10">
+                <h:outputText value="#{userView.coursesTitles}" id="course"/>
+                <p:tooltip for="@previous" value="#{userView.coursesTitles}" position="top"/>
             </p:column>
 
-            <p:column headerText="#{msg.organization}" sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" filterMatchMode="contains"
+            <p:column headerText="#{msg.organization}" sortBy="#{userView.organisation.title}" filterBy="#{userView.organisation.title}" filterMatchMode="contains"
                       visible="false" styleClass="text-truncate mw-r10" rendered="#{adminUsersBean.courseId == 0}">
-                <h:outputText value="#{user.organisation.title}" id="organisation"/>
-                <p:tooltip for="@previous" value="#{user.organisation.title}" position="top"/>
+                <h:outputText value="#{userView.organisation.title}" id="organisation"/>
+                <p:tooltip for="@previous" value="#{userView.organisation.title}" position="top"/>
             </p:column>
 
-            <p:column headerText="#{msg.moderator}" sortBy="#{user.moderator}" visible="#{userBean.user.admin}">
-                <p:selectBooleanCheckbox value="#{user.moderator}">
-                    <p:ajax listener="#{adminUsersBean.updateUser(user)}"/>
+            <p:column headerText="#{msg.moderator}" sortBy="#{userView.moderator}" visible="#{userViewBean.admin}">
+                <p:selectBooleanCheckbox value="#{userView.user.moderator}">
+                    <p:ajax listener="#{adminUsersBean.updateUser(userView.user)}"/>
                 </p:selectBooleanCheckbox>
             </p:column>
 
-            <p:column headerText="#{msg.options}">
-                <h:commandLink action="#{adminUsersBean.rootLogin(user)}" rendered="#{userBean.canLoginToAccount(user)}">
+            <p:column headerText="#{msg.options}"> 
+                <h:commandLink action="#{adminUsersBean.rootLogin(userView.user)}" rendered="#{userBean.canLoginToAccount(userView.user)}">
                     #{msg.loginLabel}
                 </h:commandLink>
             </p:column>
 
             <p:column headerText="#{msg.logs}">
-                <h:outputLink value="https://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{user.id}" target="_blank">#{msg.mouse_tracker}</h:outputLink>
+                <h:outputLink value="https://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{userView.id}" target="_blank">#{msg.mouse_tracker}</h:outputLink>
             </p:column>
         </p:dataTable>
     </h:form>
