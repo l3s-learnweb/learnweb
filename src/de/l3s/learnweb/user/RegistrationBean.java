@@ -26,6 +26,7 @@ import org.omnifaces.util.Faces;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -65,6 +66,11 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
     public String onLoad() throws IOException, SQLException {
         locale = Faces.getLocale();
+
+        if (null == locale) {
+            log.warn("locale is null; request: {}", BeanHelper.getRequestSummary());
+            locale = Locale.ENGLISH;
+        }
 
         if (StringUtils.isNotEmpty(wizard)) {
             course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
