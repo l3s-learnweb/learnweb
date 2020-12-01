@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -342,5 +343,12 @@ public class GlossaryManager {
         }
 
         return (GlossaryResource) resource;
+    }
+
+    public List<GlossaryResource> getGlossaryResourcesByUserId(List<Integer> userIds) throws SQLException {
+        List<Resource> resources = learnweb.getResourceManager().getResourcesByUserIdAndType(userIds, ResourceType.glossary2);
+
+        // convert to glossary resource but filter resources that could not be converted
+        return resources.stream().map(r -> getGlossaryResource(r)).filter(r -> r != null).collect(Collectors.toList());
     }
 }

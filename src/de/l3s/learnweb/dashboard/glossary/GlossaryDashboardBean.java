@@ -15,7 +15,7 @@ import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.pie.PieChartModel;
 
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
-import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.glossary.GlossaryResource;
 
 @Named
 @ViewScoped
@@ -40,7 +40,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
     private transient BarChartModel usersGlossaryChart;
     private transient PieChartModel usersSourcesChart;
 
-    private List<Resource> glossaryResources;
+    private List<GlossaryResource> glossaryResources;
 
     @Override
     public void onLoad() throws SQLException {
@@ -88,11 +88,11 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
             actionsCountPerDay = dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate);
             glossaryStatisticPerUser = dashboardManager.getGlossaryStatisticPerUser(selectedUsersIds, startDate, endDate);
 
-            glossaryResources = getLearnweb().getResourceManager().getGlossaryResourcesByUserId(selectedUsersIds.get(0));
+            glossaryResources = getLearnweb().getGlossaryManager().getGlossaryResourcesByUserId(selectedUsersIds);
         }
     }
 
-    public List<Resource> getGlossaryResources() {
+    public List<GlossaryResource> getGlossaryResources() {
         return glossaryResources;
     }
 

@@ -7,7 +7,6 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -16,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.group.Group;
+import de.l3s.util.Misc;
 
 /**
  * This class shall be used to cache computationally intensive attributes of a user.<br/>
@@ -24,7 +24,7 @@ import de.l3s.learnweb.group.Group;
  * @author Kemkes
  *
  */
-public class UserView implements Serializable {
+public final class UserView implements Serializable {
 
     private static final long serialVersionUID = 5664039620488069850L;
     private static final Logger log = LogManager.getLogger(UserView.class);
@@ -126,9 +126,7 @@ public class UserView implements Serializable {
     /**
      * Converts the given user list to a list of user views.
      *
-     * @param users
      * @param preloadFields These methods will be called once asynchronously. This can be used to preload values if the methods cache them internally
-     * @return
      */
     @SafeVarargs
     public static List<UserView> of(List<User> users, Function<UserView, ?>... preloadFields) {
@@ -139,12 +137,9 @@ public class UserView implements Serializable {
         if (preloadFields.length > 0 && users.size() > 0) { // preload specified fields
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.submit(() -> {
-                try {
-                    TimeUnit.SECONDS.sleep(2); // sleep so that the page gets loaded asap
-                } catch (InterruptedException e) {
-                }
+                Misc.sleep(2000); // sleep so that the page gets loaded asap
+
                 for (UserView uv : userViews) {
-                    log.debug("preload: " + uv.getUsername());
                     for (Function<UserView, ?> field : preloadFields) {
                         field.apply(uv);
                     }

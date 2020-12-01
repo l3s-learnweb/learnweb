@@ -116,7 +116,11 @@
                 </div>
                 <div class="col-md-8 mb-3">
                     <h:form>
-                        <p:dataTable var="glossary" value="#{glossaryDashboardBean.glossaryResources}">
+                        <p:dataTable var="glossary" value="#{glossaryDashboardBean.glossaryResources}" rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                             rowsPerPageTemplate="10,25,50">
                             <f:facet name="header">
                                 <div class="d-flex">
                                     <div class="mr-auto">#{msg['Glossary.location']}</div>
@@ -127,10 +131,14 @@
                                 </div>
                             </f:facet>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.title}" sortBy="#{glossary.title}">
+                            <p:column styleClass="ui-column-title" headerText="#{msg.title}" sortBy="#{glossary.title}" filterBy="#{glossary.title}" filterMatchMode="contains">
                                 <h:outputLink value="#{glossary.url}">
                                     <h:outputText value="#{glossary.title}"/>
                                 </h:outputLink>
+                            </p:column>                          
+
+                            <p:column styleClass="ui-column-title" headerText="#{msg.user}" sortBy="#{glossary.user.username}">
+                                <h:outputText value="#{glossary.user.username}"/>
                             </p:column>
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.location}">
@@ -142,7 +150,7 @@
                                     <f:param name="resource_id" value="#{glossary.id}"/>
                                     <h:outputText value="#{glossary.group.title}"/>
                                 </h:outputLink>
-                            </p:column>
+                            </p:column>   
                         </p:dataTable>
                     </h:form>
                 </div>
