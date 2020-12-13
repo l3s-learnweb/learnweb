@@ -39,31 +39,55 @@
                 </div>
             </f:facet>
 
-            <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none">
+            <f:facet name="footer">
+                <h:panelGroup>
+                    <h:commandLink styleClass="text-danger p-1">
+                        <i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
+                        <p:dataExporter type="pdf" target="courses" fileName="users"/>
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="text-success p-1">
+                        <i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
+                        <p:dataExporter type="xls" target="courses" fileName="users"/>
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="text-gray p-1">
+                        <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+                        <p:dataExporter type="csv" target="courses" fileName="users"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+            
+            <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none" filterBy="#{course.id}">
                 <h:outputText value="#{course.id}"/>
             </p:column>
 
-            <p:column headerText="#{msg.title}" sortBy="#{course.title}">
+            <p:column headerText="#{msg.title}" sortBy="#{course.title}" filterBy="#{course.title}" filterMatchMode="contains">
                 <h:outputText value="#{course.title}"/>
             </p:column>
 
-            <p:column headerText="#{msg.wizard_parameter}" sortBy="#{course.wizardParam}">
-                <h:outputText value="#{course.wizardParam}"/>
-            </p:column>
+            <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.wizardParam}" filterBy="#{course.wizardParam}" filterMatchMode="contains">
+                <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.wizardDisabled}"/>  
+                
+                <h:outputLink value="#{learnwebBean.learnweb.serverUrl}/wizard=#{course.wizardParam}"
+                                                 rendered="#{not course.wizardDisabled}">
+                    <h:outputText value="#{course.wizardParam}"/>        
+                </h:outputLink>                         
+	        </p:column>
 
-            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none">
+            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none" sortBy="#{course.creationTimestamp}">
                 <h:outputText value="#{course.creationTimestamp}">
                     <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
+            <p:column headerText="#{msg.organization}"  rendered="#{userBean.admin}" sortBy="#{course.organisation.title}" filterBy="#{course.organisation.title}" filterMatchMode="contains">
                 <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
-            </p:column>
+            </p:column>    
 
             <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}" styleClass="td-text-center dd-xs-none">
                 <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
-            </p:column>
+            </p:column>         
 
             <p:column headerText="#{msg.options}" styleClass="td-text-right mw-r15" >
                 <h:outputLink styleClass="icon-link" value="admin/course.jsf?course_id=#{course.id}">
