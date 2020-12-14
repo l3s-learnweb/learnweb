@@ -79,7 +79,7 @@
 								<p:message for="@previous"/>
 							</h:panelGroup>
 
-							<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">
+							<h:panelGroup layout="block" styleClass="form-group">
 								<p:outputLabel for="@next" value="#{msg.default_group}:"/>
 								<p:selectOneMenu id="c_group" value="#{adminCourseBean.course.defaultGroupId}">
 									<f:selectItem itemLabel="#{msg.no_default_group}" itemValue="0"/>
