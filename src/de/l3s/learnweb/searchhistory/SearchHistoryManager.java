@@ -113,9 +113,9 @@ public class SearchHistoryManager {
     }
 
     public List<Session> getSessionsForUser(int userId) throws SQLException {
-        if (SessionCache.instance().existsUserId(userId)) {
-            return SessionCache.instance().getByUserId(userId);
-        }
+        // if (SessionCache.instance().existsUserId(userId)) {
+        //     return SessionCache.instance().getByUserId(userId);
+        // }
 
         List<Session> sessions = new ArrayList<>();
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
@@ -134,14 +134,14 @@ public class SearchHistoryManager {
             sessions.add(session);
         }
 
-        SessionCache.instance().cacheByUserId(userId, sessions);
+        // SessionCache.instance().cacheByUserId(userId, sessions);
         return sessions;
     }
 
     public List<Session> getSessionsForGroupId(int groupId) throws SQLException {
-        if (SessionCache.instance().existsGroupId(groupId)) {
-            return SessionCache.instance().getByGroupId(groupId);
-        }
+        // if (SessionCache.instance().existsGroupId(groupId)) {
+        //     return SessionCache.instance().getByGroupId(groupId);
+        // }
 
         List<Session> sessions = new ArrayList<>();
         Set<String> sessionIds = new HashSet<>();
@@ -168,8 +168,7 @@ public class SearchHistoryManager {
             }
         }
 
-        SessionCache.instance().cacheByGroupId(groupId, sessions);
-
+        // SessionCache.instance().cacheByGroupId(groupId, sessions);
         return sessions;
     }
 

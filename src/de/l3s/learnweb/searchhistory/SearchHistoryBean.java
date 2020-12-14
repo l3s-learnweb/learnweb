@@ -34,8 +34,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private boolean showGroupHistory;
     private Query selectedQuery;
 
-    private List<Session> sessions;
-    private final Map<Integer, List<ResourceDecorator>> snippets = new HashMap<>();
+    private transient List<Session> sessions;
+    private transient Map<Integer, List<ResourceDecorator>> snippets = new HashMap<>();
 
     /**
      * Load the variables that needs values before the view is rendered.
