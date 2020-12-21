@@ -17,11 +17,10 @@
         <javax.faces.project_stage>Development</javax.faces.project_stage>
 
         <maven.compiler.release>11</maven.compiler.release>
-        <maven.dependency.tomcat.version>9.0.40</maven.dependency.tomcat.version>
+        <maven.dependency.tomcat.version>9.0.41</maven.dependency.tomcat.version>
         <maven.dependency.myfaces.version>2.3-next-M4</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.6.1</maven.dependency.imageio.version>
         <maven.dependency.log4j.version>2.14.0</maven.dependency.log4j.version>
-        <maven.dependency.jersey.version>2.32</maven.dependency.jersey.version>
         <maven.dependency.mockito.version>3.6.28</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -96,7 +95,7 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>3.8.1</version>
+            <version>3.9</version>
         </dependency>
 
         <!-- ################ Apache commons ################ -->
@@ -174,7 +173,7 @@
         <dependency>
             <groupId>org.jdbi</groupId>
             <artifactId>jdbi3-core</artifactId>
-            <version>3.17.0</version>
+            <version>3.18.0</version>
         </dependency>
         <!-- Solr client (the library has 10 MB of dependencies :/) -->
         <dependency>
@@ -224,7 +223,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.0-jre</version>
+            <version>30.1-jre</version>
         </dependency>
         <!-- HTML parsed. Used in crawlers, resources, removing html from strings -->
         <dependency>
@@ -248,13 +247,13 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>4.0.6.Final</version>
+            <version>5.0.0.Final</version>
         </dependency>
         <!-- Used to make a thumbnail of PDF in ResourcePreviewMaker -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.21</version>
+            <version>2.0.22</version>
         </dependency>
         <!-- RiTa WordNet (used to retrieve Definitions for TedTranscript) -->
         <!-- We are using an unofficial package from https://github.com/shibme/diction, the original repository
