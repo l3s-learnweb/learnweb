@@ -742,12 +742,13 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     /**
      * returns true when this user is allowed to moderate the given user.
      */
-    public boolean canModerateUser(User user) throws SQLException {
+    public boolean canModerateUser(User userToBeModerated) throws SQLException {
         if (isAdmin()) {
             return true;
         }
 
-        if (isModerator() && user.getOrganisation().equals(this.getOrganisation())) { // check whether the user is moderator of the given users organisation
+        // check whether the user is moderator of the given users organisation
+        if (isModerator() && getOrganisation().equals(userToBeModerated.getOrganisation())) {
             return true;
         }
 
