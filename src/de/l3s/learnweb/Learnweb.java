@@ -47,7 +47,6 @@ import de.l3s.searchHistoryTest.SearchHistoryManager;
 import de.l3s.searchHistoryTest.SearchSessionEdgeComputator;
 import de.l3s.util.Misc;
 import de.l3s.util.PropertiesBundle;
-import de.l3s.util.email.BounceManager;
 
 public class Learnweb
 {
@@ -99,7 +98,6 @@ public class Learnweb
     private final SearchSessionEdgeComputator searchSessionEdgeComputator;
     private final RequestManager requestManager;
     private final ProtectionManager protectionManager;
-    private final BounceManager bounceManager;
     private final ConverterService serviceConverter;
     private final LogManager logManager;
     private final PeerAssessmentManager peerAssessmentManager;
@@ -327,8 +325,6 @@ public class Learnweb
         //Managers added by Kate
         requestManager = RequestManager.getInstance(this);
         protectionManager = new ProtectionManager(this);
-        bounceManager = new BounceManager(this);
-
     }
 
     /**
@@ -653,11 +649,6 @@ public class Learnweb
     public RequestManager getRequestManager()
     {
         return requestManager;
-    }
-
-    public BounceManager getBounceManager()
-    {
-        return bounceManager;
     }
 
     /**
