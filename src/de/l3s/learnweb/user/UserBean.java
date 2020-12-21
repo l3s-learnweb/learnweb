@@ -33,8 +33,6 @@ import de.l3s.learnweb.component.ActiveSubMenu.Builder;
 import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
@@ -518,20 +516,6 @@ public class UserBean implements Serializable {
      */
     public void setModeratorUser(User moderatorUser) {
         this.moderatorUser = moderatorUser;
-    }
-
-    /**
-     * @return the resources url proxied through WAPS.io if enabled for the current organization
-     */
-    public String getUrlProxied(Resource resource) {
-        return getUrlProxied(resource.getUrl());
-    }
-
-    /**
-     * @return the resources url proxied through WAPS.io if enabled for the current organization
-     */
-    public String getUrlProxied(ResourceDecorator resource) {
-        return getUrlProxied(resource.getUrl());
     }
 
     /**

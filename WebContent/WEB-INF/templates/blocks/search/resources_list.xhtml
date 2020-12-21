@@ -62,7 +62,7 @@
             </div>
 
             <div class="item-description">
-                <h:outputLink styleClass="res-link" target="_blank" value="#{userBean.getUrlProxied(res)}">
+                <h:outputLink styleClass="res-link" target="_blank" value="#{userBean.getUrlProxied(res.url)}">
                     <h:outputText value="#{res.title}" escape="false" styleClass="item-title h5 mb-0"/>
                     <h:outputText value="#{res.url}" escape="false" styleClass="item-origin"/>
                 </h:outputLink>

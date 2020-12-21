@@ -30,7 +30,7 @@
 					</div>
 					<h4 class="text-white mr-auto m-0">#{resourceDetailBean.resource.title}</h4>
 					<div class="res-buttons-right pl-3">
-						<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource)}" icon="fa fa-external-link" styleClass="transparent-btn"
+						<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource.url)}" icon="fa fa-external-link" styleClass="transparent-btn"
 									  title="#{resourceDetailBean.resource.url}" target="_blank" rendered="#{resourceDetailBean.resource.type eq 'text'
 									  or resourceDetailBean.resource.type eq 'website' or resourceDetailBean.resource.type eq 'pdf'}"/>
 

@@ -44,7 +44,7 @@
 	<ui:fragment rendered="${empty res.fileName and res.type == 'file' }">
 		<dt class="col-sm-4">#{msg.resource}:</dt>
 		<dd class="col-sm-8">
-			<a href="#{userBean.getUrlProxied(res)}" target="_blank">#{res.url}</a>
+			<a href="#{res.url}" target="_blank">#{res.url}</a>
 		</dd>
 	</ui:fragment>
 
@@ -103,7 +103,7 @@
 
 	<dt class="col-sm-4">#{msg.source}:</dt>
 	<dd class="col-sm-8">
-		<a href="#{userBean.getUrlProxied(res)}" target="_top"><h:outputText value="#{res.source.label}"/></a>
+		<a href="#{userBean.getUrlProxied(res.url)}" target="_top"><h:outputText value="#{res.source.label}"/></a>
 	</dd>
 
 	<ui:fragment rendered="${not empty res.group}">
