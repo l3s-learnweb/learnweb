@@ -2,7 +2,6 @@
 # Useful tool to download package and all dependencies https://jar-download.com/
 # file name                                     description
 
-activation-1.1.1.jar                            Dependencies missing in Java 11 (for backward compatibility)
 boilerpipe-1.1.0.jar
 cdi-api-2.0.jar                                 required for myfaces-bundle-2.3.1
 classmate-1.1.0.jar					            required by Hibernate validator, added by Philipp
@@ -41,8 +40,9 @@ httpcore-4.4.11.jar					            Dependency of solr-solrj, Google API, crawle
 httpmime-4.5.9.jar					            Dependency of solr-solrj
 itext-2.1.7.jar						            Dependency for PDF exporter
 jackson-core-2.1.3.jar				            Dependency of Google API
+jakarta.activation-1.2.1.jar                    Dependencies missing in Java 11 (for backward compatibility)
+jakarta.mail-1.6.5.jar                          Mail
 java-image-scaling-0.8.5.jar		            Thumbnails
-javax.mail.jar									Mail
 javax.servlet.jsp.jstl-1.2.1.jar	            JSF Base
 javax.servlet.jsp.jstl-api-1.2.1.jar            JSF Base
 jaxb-api-2.3.1.jar                              Dependencies missing in Java 11 (for backward compatibility)

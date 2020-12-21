@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 public class Mail
 {
-    private static Authenticator authenticator = new PasswordAuthenticator("learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
+    private static final Authenticator authenticator = new PasswordAuthenticator("learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
     private Session session;
     private MimeMessage message;
 
@@ -21,13 +21,13 @@ public class Mail
         System.setProperty("mail.mime.charset", "UTF-8");
         System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
         Properties props = new Properties();
-        props.put("mail.smtp.host", "mail.kbs.uni-hannover.de");
-        props.put("mail.smtp.socketFactory.port", "465");
-        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "465");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
+        props.setProperty("mail.smtp.host", "mail.kbs.uni-hannover.de");
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.socketFactory.port", "465");
+        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.starttls.enable", "true");
+        // props.setProperty("mail.debug", "true");
 
         session = Session.getInstance(props, authenticator);
 
