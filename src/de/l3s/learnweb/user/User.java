@@ -13,9 +13,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.mail.MessagingException;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import jakarta.mail.MessagingException;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;

@@ -31,9 +31,10 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLException;
+
+import jakarta.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;

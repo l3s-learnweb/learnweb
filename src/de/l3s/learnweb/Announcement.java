@@ -3,7 +3,7 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public final class Announcement implements Serializable {
     private static final long serialVersionUID = 4219676681480459859L;

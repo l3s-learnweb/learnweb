@@ -14,15 +14,15 @@
     <description>Learnweb is a collaborative search and sharing system.</description>
 
     <properties>
-        <javax.faces.project_stage>Development</javax.faces.project_stage>
+        <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
         <maven.compiler.release>11</maven.compiler.release>
-        <maven.dependency.myfaces.version>2.3-next-M6</maven.dependency.myfaces.version>
+        <maven.dependency.myfaces.version>3.0.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.7.0</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.22.0</maven.dependency.jdbi3.version>
+        <maven.dependency.jdbi3.version>3.23.0</maven.dependency.jdbi3.version>
         <maven.dependency.log4j.version>2.14.1</maven.dependency.log4j.version>
-        <maven.dependency.junit.version>5.8.0</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>3.12.4</maven.dependency.mockito.version>
+        <maven.dependency.junit.version>5.8.1</maven.dependency.junit.version>
+        <maven.dependency.mockito.version>4.0.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.npm.install.phase>prepare-package</project.npm.install.phase>
@@ -46,18 +46,18 @@
             <version>3.5.0</version>
         </dependency>
 
-        <!-- ################ Java EE ################ -->
+        <!-- ################ Jakarta Packages ################ -->
         <!-- APIs provided by Tomcat -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>4.0.4</version>
+            <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
-            <version>3.0.3</version>
+            <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
         <!-- JSF API & Impl -->
@@ -75,19 +75,19 @@
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-shaded</artifactId>
-            <version>3.1.7.SP1</version>
+            <version>4.0.2.Final</version>
         </dependency>
         <!-- Validator API & Impl -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.2.0.Final</version>
+            <version>7.0.1.Final</version>
         </dependency>
-        <!-- Mail API & Impl -->
+        <!-- Mail API -->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
-            <version>1.6.5</version>
+            <version>2.0.1</version>
         </dependency>
 
         <!-- ################ JSF Libraries ################ -->
@@ -95,13 +95,14 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>3.11.1</version>
+            <version>4.0-M9</version>
         </dependency>
         <!-- PrimeFaces -->
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>10.0.0</version>
+            <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
         <dependency>
@@ -205,7 +206,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>7.13.0</version>
+            <version>8.0.1</version>
         </dependency>
         <!-- Solr client (the library has 10 MB of dependencies :/) -->
         <dependency>
@@ -252,7 +253,7 @@
         <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry-log4j2</artifactId>
-            <version>5.0.1</version>
+            <version>5.2.2</version>
         </dependency>
 
         <!-- ################ Other dependencies (usually your dependencies go to this section) ################ -->
@@ -272,13 +273,13 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.1.1-jre</version>
+            <version>31.0.1-jre</version>
         </dependency>
         <!-- HTML parsed. Used in crawlers, resources, removing html from strings -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.14.2</version>
+            <version>1.14.3</version>
         </dependency>
         <!-- Converting video files, extracting thumbnails (only a wrapper for ffmpeg) -->
         <dependency>
@@ -296,7 +297,7 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>5.0.1.Final</version>
+            <version>5.0.2.Final</version>
         </dependency>
         <!-- Used to make a thumbnail of PDF in ResourcePreviewMaker -->
         <dependency>
@@ -407,7 +408,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.3.0</version>
+                <version>4.4.2</version>
                 <configuration>
                     <excludeFilterFile>.mvn/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -415,7 +416,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.4.1</version>
+                        <version>4.4.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -427,7 +428,7 @@
             <!-- Specifies WebARchive configuration -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.3.2</version>
                 <configuration>
                     <warSourceDirectory>WebContent</warSourceDirectory>
                     <webResources>
@@ -536,7 +537,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -582,7 +583,7 @@
         <profile>
             <id>prod</id>
             <properties>
-                <javax.faces.project_stage>Production</javax.faces.project_stage>
+                <jakarta.faces.project_stage>Production</jakarta.faces.project_stage>
                 <project.npm.install.phase>none</project.npm.install.phase>
             </properties>
         </profile>

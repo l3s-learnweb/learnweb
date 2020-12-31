@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.model.SelectItem;
-import javax.faces.model.SelectItemGroup;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.constraints.NotBlank;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.model.SelectItem;
+import jakarta.faces.model.SelectItemGroup;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 

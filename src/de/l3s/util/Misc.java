@@ -3,7 +3,7 @@ package de.l3s.util;
 import java.net.InetAddress;
 import java.util.Comparator;
 
-import javax.faces.model.SelectItem;
+import jakarta.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 

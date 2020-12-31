@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1"
-         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+<web-app version="5.0"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
 
     <display-name>${project.name} WebApp</display-name>
     <description>${project.description}</description>
@@ -17,10 +17,10 @@
         <param-value>${project.version}</param-value>
     </context-param>
     <context-param>
-        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-name>jakarta.faces.PROJECT_STAGE</param-name>
         <!--<param-value>Development</param-value>-->
         <!--<param-value>Production</param-value>-->
-        <param-value>${javax.faces.project_stage}</param-value>
+        <param-value>${jakarta.faces.project_stage}</param-value>
     </context-param>
 
     <!-- PrimeFaces https://primefaces.github.io/primefaces/8_0/#/gettingstarted/configuration -->
@@ -113,45 +113,45 @@
     </context-param>
     <context-param>
         <description>Helps to show en error if it is occurred during RENDER_RESPONSE phase</description>
-        <param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name>
+        <param-name>jakarta.faces.FACELETS_BUFFER_SIZE</param-name>
         <param-value>65535</param-value>
     </context-param>
     <context-param>
         <description>Removes HTML comments from the output like <!--@elvariable id="pageTitle" type="java.lang.String"--></description>
-        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-name>jakarta.faces.FACELETS_SKIP_COMMENTS</param-name>
         <param-value>true</param-value>
     </context-param>
     <context-param>
-        <param-name>javax.faces.validator.ENABLE_VALIDATE_WHOLE_BEAN</param-name>
+        <param-name>jakarta.faces.validator.ENABLE_VALIDATE_WHOLE_BEAN</param-name>
         <param-value>false</param-value> <!-- Enable if you want to use f:validateWholeBean -->
     </context-param>
     <context-param>
-        <param-name>javax.faces.ENABLE_CDI_RESOLVER_CHAIN</param-name>
+        <param-name>jakarta.faces.ENABLE_CDI_RESOLVER_CHAIN</param-name>
         <param-value>true</param-value>
     </context-param>
     <context-param>
-        <param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
+        <param-name>jakarta.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
         <param-value>true</param-value>
     </context-param>
     <context-param>
-        <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+        <param-name>jakarta.faces.DEFAULT_SUFFIX</param-name>
         <param-value>.xhtml</param-value>
     </context-param>
     <context-param>
-        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+        <param-name>jakarta.faces.FACELETS_LIBRARIES</param-name>
         <param-value>/WEB-INF/learnweb-lw.taglib.xml</param-value>
     </context-param>
 
     <servlet>
         <display-name>Faces Servlet</display-name>
         <servlet-name>facesServlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>facesServlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
-        <url-pattern>/javax.faces.resource/*</url-pattern>
+        <url-pattern>/jakarta.faces.resource/*</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -204,7 +204,7 @@
         <location>/lw/error/410.jsf</location>
     </error-page>
     <error-page>
-        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <exception-type>jakarta.faces.application.ViewExpiredException</exception-type>
         <location>/lw/error/419.jsf</location>
     </error-page>
     <error-page>

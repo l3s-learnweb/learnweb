@@ -2,7 +2,7 @@ package de.l3s.mail;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

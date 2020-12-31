@@ -4,9 +4,9 @@ import java.net.HttpURLConnection;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
 
 import org.jdbi.v3.core.Handle;
 import org.omnifaces.util.Faces;

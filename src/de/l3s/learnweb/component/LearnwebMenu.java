@@ -1,6 +1,6 @@
 package de.l3s.learnweb.component;
 
-import javax.faces.component.FacesComponent;
+import jakarta.faces.component.FacesComponent;
 
 import org.primefaces.component.api.Widget;
 import org.primefaces.component.menu.AbstractMenu;

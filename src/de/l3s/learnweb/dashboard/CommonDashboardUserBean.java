@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.faces.application.FacesMessage;
-import javax.inject.Inject;
+import jakarta.faces.application.FacesMessage;
+import jakarta.inject.Inject;
 
 import org.apache.commons.collections4.CollectionUtils;
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<facelet-taglib xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+<facelet-taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facelettaglibrary_2_2.xsd"
-                version="2.2">
+                xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibrary_3_0.xsd"
+                version="3.0">
 
     <namespace>http://l3s.de/learnweb</namespace>
     <short-name>lw</short-name>
@@ -31,7 +31,7 @@
             <description><![CDATA[An el expression referring to a server side UIComponent instance in a backing bean.]]></description>
             <name>binding</name>
             <required>false</required>
-            <type>javax.faces.component.UIComponent</type>
+            <type>jakarta.faces.component.UIComponent</type>
         </attribute>
         <attribute>
             <description><![CDATA[Name of the client side widget.]]></description>

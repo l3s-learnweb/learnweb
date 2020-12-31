@@ -6,10 +6,10 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.mail.MessagingException;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.mail.MessagingException;
 
 import org.omnifaces.util.Beans;
 

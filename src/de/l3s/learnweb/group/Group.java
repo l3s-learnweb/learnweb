@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.validator.constraints.Length;

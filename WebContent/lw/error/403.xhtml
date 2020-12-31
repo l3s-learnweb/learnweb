@@ -8,7 +8,7 @@
 <ui:param name="pageTitle" value="#{msg['error_pages.forbidden']}"/>
 
 <ui:define name="center_layout">
-	<c:set var="message" value="#{requestScope['javax.servlet.error.message']}" scope="request"/>
+	<c:set var="message" value="#{requestScope['jakarta.servlet.error.message']}" scope="request"/>
 
 	<p:panel header="#{msg['error']} 403: #{msg['error_pages.forbidden']}" styleClass="ui-widget-danger">
 		<h:outputText styleClass="h5 d-block" value="#{msg['error_pages.forbidden_default_description']}" rendered="#{empty message}"/>

@@ -1,9 +1,9 @@
 package de.l3s.learnweb.component.exceptionhandler;
 
-import javax.faces.application.ViewExpiredException;
-import javax.faces.context.ExceptionHandler;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.faces.application.ViewExpiredException;
+import jakarta.faces.context.ExceptionHandler;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;

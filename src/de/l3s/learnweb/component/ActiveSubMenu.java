@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.component.UIComponent;
+import jakarta.faces.component.UIComponent;
 
 import org.primefaces.component.api.UIOutcomeTarget;
 import org.primefaces.model.menu.MenuElement;

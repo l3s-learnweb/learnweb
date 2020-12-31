@@ -1,20 +1,20 @@
 package de.l3s.learnweb.component.exceptionhandler;
 
-import static javax.servlet.RequestDispatcher.*;
+import static jakarta.servlet.RequestDispatcher.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import javax.el.ELException;
-import javax.faces.FacesException;
-import javax.faces.application.ViewExpiredException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.el.ELException;
+import jakarta.faces.FacesException;
+import jakarta.faces.application.ViewExpiredException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpFilter;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.jboss.weld.exceptions.WeldException;
 import org.omnifaces.util.Exceptions;

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 import org.apache.solr.common.StringUtils;
 

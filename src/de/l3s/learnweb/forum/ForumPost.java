@@ -3,7 +3,7 @@ package de.l3s.learnweb.forum;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;

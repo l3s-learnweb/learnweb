@@ -8,12 +8,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.DeploymentException;
-import javax.inject.Named;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.spi.DeploymentException;
+import jakarta.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +51,7 @@ public class ConfigProvider implements Serializable {
     private final boolean servlet;
 
     /**
-     * Indicates whether the application is started in development mode according to javax.faces.PROJECT_STAGE in web.xml.
+     * Indicates whether the application is started in development mode according to jakarta.faces.PROJECT_STAGE in web.xml.
      * It is managed by Maven, {@code false} on build in `prod` profile, {@code true} otherwise. Always {@code false} when {@link #servlet} is {@code false}.
      */
     private Boolean development;

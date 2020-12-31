@@ -2,10 +2,10 @@ package de.l3s.learnweb.web;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Store;
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Store;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

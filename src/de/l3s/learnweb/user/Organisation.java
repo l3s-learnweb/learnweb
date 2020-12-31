@@ -10,8 +10,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.faces.model.SelectItem;
-import javax.validation.constraints.NotBlank;
+import jakarta.faces.model.SelectItem;
+import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
