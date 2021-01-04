@@ -43,14 +43,6 @@
             <version>3.1.0</version>
         </dependency>
 
-        <!-- ################ APIs provided by Tomcat ################ -->
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-catalina</artifactId>
-            <version>${maven.dependency.tomcat.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- ################ Java EE & JSF ################ -->
         <!-- JSF API & Impl -->
         <dependency>

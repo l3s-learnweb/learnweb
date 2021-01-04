@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
@@ -361,7 +360,7 @@ public class DownloadServlet extends HttpServlet {
                     sos.println("--" + MULTIPART_BOUNDARY + "--");
                 }
             }
-        } catch (ClientAbortException e) {
+        } catch (IOException e) { // when client abort connection
             // we do not care
         } catch (IllegalStateException e) {
             log.error("File {} cannot be downloaded because it isn't present in the file system", fileId);

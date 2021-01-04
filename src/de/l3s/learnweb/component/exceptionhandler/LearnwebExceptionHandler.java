@@ -5,7 +5,6 @@ import javax.faces.context.ExceptionHandler;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +33,6 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
 
     protected static void logException(Throwable rootCause, HttpServletRequest request) {
         if (Utils.isOneInstanceOf(rootCause.getClass(),
-            ClientAbortException.class, // happens when users press the abort button or navigate very fast
             BadRequestHttpException.class, // happens when some part of url is missing, usually should provide a meaningful message to user
             UnauthorizedHttpException.class // Unauthorized access redirected to login page
         )) {
