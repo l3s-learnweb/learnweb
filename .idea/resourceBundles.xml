@@ -3,10 +3,6 @@
   <component name="ResourceBundleManager">
     <file url="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages.properties" />
     <file url="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_de.properties" />
-    <file url="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_de_DE_AMA.properties" />
-    <file url="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_de_DE_Archive.properties" />
-    <file url="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_en.properties" />
-    <file url="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_en_UK_Archive.properties" />
     <file url="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_es.properties" />
     <file url="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_it.properties" />
     <file url="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_pt.properties" />
@@ -14,10 +10,6 @@
     <custom-resource-bundle>
       <file value="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages.properties" />
       <file value="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_de.properties" />
-      <file value="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_de_DE_AMA.properties" />
-      <file value="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_de_DE_Archive.properties" />
-      <file value="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_en.properties" />
-      <file value="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_en_UK_Archive.properties" />
       <file value="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_es.properties" />
       <file value="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_it.properties" />
       <file value="file://$PROJECT_DIR$/Resources/de/l3s/learnweb/lang/messages_pt.properties" />
