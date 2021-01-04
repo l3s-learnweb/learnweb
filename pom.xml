@@ -27,7 +27,22 @@
         <maven.assembly.mainClass>de.l3s.maintenance.resources.CopyFilesOfCopiedResources</maven.assembly.mainClass>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>astappiev-maven</id>
+            <name>Private Maven Repository (to host our dependencies and dependencies build from sources)</name>
+            <url>https://git.l3s.uni-hannover.de/astappiev/maven-repo/-/raw/master/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <!-- Learnweb modules -->
+        <dependency>
+            <groupId>de.l3s.interweb</groupId>
+            <artifactId>interwebj-client</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
         <!-- ################ APIs provided by Tomcat ################ -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
