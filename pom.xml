@@ -44,6 +44,19 @@
         </dependency>
 
         <!-- ################ Java EE & JSF ################ -->
+        <!-- APIs provided by Tomcat -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>4.0.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <version>3.0.3</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- JSF API & Impl -->
         <dependency>
             <groupId>org.apache.myfaces.core</groupId>

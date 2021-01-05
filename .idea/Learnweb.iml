@@ -34,6 +34,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: de.l3s.interweb:interwebj-client:3.1.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.servlet:jakarta.servlet-api:4.0.4" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.el:jakarta.el-api:3.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.myfaces.core:myfaces-api:2.3-next-M4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.myfaces.core:myfaces-impl:2.3-next-M4" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.weld.servlet:weld-servlet-shaded:3.1.5.SP1" level="project" />
