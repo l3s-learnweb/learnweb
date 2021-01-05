@@ -49,7 +49,6 @@ public class UserBean implements Serializable {
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
     private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on an other account
 
-    private String searchQuery;
     private Locale locale;
     private transient List<Group> newGroups;
     private boolean cacheShowMessageJoinGroup = true;
@@ -66,18 +65,6 @@ public class UserBean implements Serializable {
     public UserBean() {
         // get preferred language
         locale = Faces.getLocale();
-    }
-
-    public String getSearchQuery() {
-        return searchQuery;
-    }
-
-    public void setSearchQuery(final String searchQuery) {
-        this.searchQuery = searchQuery;
-    }
-
-    public String search() {
-        return "/lw/search.xhtml?query=" + searchQuery + "&action=" + getPreference("SEARCH_ACTION", "text") + "&faces-redirect=true";
     }
 
     /**

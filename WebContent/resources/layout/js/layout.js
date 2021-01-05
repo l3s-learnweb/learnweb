@@ -21,9 +21,18 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
   },
 
   _autoComplete() {
+    const searchField = this.header.find('#searchfield');
+
+    if (typeof URLSearchParams === 'function') {
+      const reqQuery = new URLSearchParams(window.location.search).get('query');
+      if (reqQuery) {
+        searchField.val(reqQuery);
+      }
+    }
+
     let currentRequest;
     const myMarket = PrimeFaces.settings.locale;
-    this.header.find('#header_left\\:searchfield').autoComplete({
+    searchField.autoComplete({
       source(term, response) {
         currentRequest = $.ajax({
           url: 'https://api.bing.com/osjson.aspx?JsonType=callback&JsonCallback=?',

@@ -22,17 +22,21 @@
                 </a>
             </div>
 
-            <h:form id="header_left" styleClass="d-flex order-1 order-md-0 search-wrapper flex-grow-1" rendered="#{userBean.loggedIn}">
+            <h:panelGroup layout="block" styleClass="d-flex order-1 order-md-0 search-wrapper flex-grow-1" rendered="#{userBean.loggedIn}">
                 <h:outputScript library="vendor" name="jquery.auto-complete-v1.0.7/jquery.auto-complete.min.js" target="body"/>
 
-                <div class="header-element no-hover-bg search-form w-100">
-                    <p:outputLabel for="@next" styleClass="d-none" value="#{msg.searchLabel}"/>
-                    <p:inputText id="searchfield" value="#{userBean.searchQuery}" pt:placeholder="#{msg.searchLabel}" pt:type="search"/>
-                    <p:commandButton action="#{userBean.search}" title="#{msg.searchLabel}" icon="fa fa-search" ajax="false"/>
-                </div>
+                <form class="header-element no-hover-bg search-form w-100" action="#{request.contextPath}/lw/search.jsf" method="get">
+                    <label for="searchfield" class="d-none">#{msg.searchLabel}</label>
+                    <input type="search" id="searchfield" name="query" placeholder="#{msg.searchLabel}"/>
 
-                <p:lifecycle rendered="#{learnwebBean.developmentMode}"/>
-            </h:form>
+                    <p:button title="#{msg.searchLabel}" icon="fa fa-search" onclick="$(this).parent('form').submit();return false;"/>
+                </form>
+
+                <h:form rendered="#{learnwebBean.developmentMode}">
+                    <p:lifecycle/>
+                </h:form>
+            </h:panelGroup>
+
 
             <h:form id="header_right" styleClass="d-flex ml-auto">
                 <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="header-element" rendered="#{userBean.loggedIn}">

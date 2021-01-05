@@ -127,13 +127,13 @@
                                 </span>
                                 <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
                                     <li class="#{!filter.active ? 'active' : null}">
-                                        <p:commandLink value="#{msg['search_filters.all']}" action="#{groupResourcesBean.changeFilter(filter.type, null)}"
+                                        <p:commandLink id="filter_reset" value="#{msg['search_filters.all']}" action="#{groupResourcesBean.changeFilter(filter.type, null)}"
                                                        update=":resourcesWrapper" onstart="PF('resourcesOverlay').show();"
                                                        oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
                                     </li>
                                     <ui:repeat value="#{filter.options}" var="item">
                                         <li class="#{item.active ? 'active' : null}">
-                                            <p:commandLink action="#{groupResourcesBean.changeFilter(filter.type, item.value)}"
+                                            <p:commandLink id="filter_value" action="#{groupResourcesBean.changeFilter(filter.type, item.value)}"
                                                            update=":resourcesWrapper" onstart="PF('resourcesOverlay').show();"
                                                            oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();">
                                                 <span class="text-truncate">#{item.title != null ? item.title : msg['search_filters.' += item.value]}</span>
@@ -157,7 +157,7 @@
                             <div id="search_filter_form" class="res-search-form">
                                 <p:inputText value="#{groupResourcesBean.searchQuery}"/>
 
-                                <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" process="@form"
+                                <p:commandButton id="filter_query" actionListener="${groupResourcesBean.onQueryChange()}" process="@form"
                                                  styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"
                                                  oncomplete="onResourcesUpdated();"/>
                             </div>
