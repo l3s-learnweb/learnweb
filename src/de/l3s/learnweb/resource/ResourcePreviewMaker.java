@@ -86,9 +86,10 @@ public class ResourcePreviewMaker {
                 file.setType(TYPE.FILE_MAIN);
                 file.setName(resource.getFileName());
                 file.setMimeType(resource.getFormat());
+                file.setResourceId(resource.getId());
                 fileManager.save(file, FileInspector.openStream(resource.getUrl()));
-                resource.addFile(file);
 
+                resource.addFile(file);
                 resource.setFileUrl(file.getUrl());
             }
 
@@ -167,6 +168,7 @@ public class ResourcePreviewMaker {
             file.setType(TYPE.THUMBNAIL_LARGE);
             file.setName("thumbnail4.png");
             file.setMimeType("image/png");
+            file.setResourceId(resource.getId());
             fileManager.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
 
@@ -187,6 +189,7 @@ public class ResourcePreviewMaker {
         file.setType(TYPE.THUMBNAIL_LARGE);
         file.setName("website.png");
         file.setMimeType("image/png");
+        file.setResourceId(resource.getId());
         fileManager.save(file, img.getInputStream());
 
         resource.addFile(file);
@@ -205,6 +208,7 @@ public class ResourcePreviewMaker {
         file.setType(TYPE.THUMBNAIL_LARGE);
         file.setName("wayback_thumbnail.png");
         file.setMimeType("image/png");
+        file.setResourceId(resource.getId());
         file = fileManager.save(file, img.getInputStream());
 
         if (file.getId() > 0) {
@@ -275,6 +279,7 @@ public class ResourcePreviewMaker {
                 convertedFile.setType(TYPE.FILE_MAIN);
                 convertedFile.setName(StringHelper.filenameChangeExt(originalFile.getName(), "mp4"));
                 convertedFile.setMimeType("video/mp4");
+                convertedFile.setResourceId(resource.getId());
                 fileManager.save(convertedFile, new FileInputStream(outputPath));
                 tempVideoFile.delete();
 
@@ -379,6 +384,7 @@ public class ResourcePreviewMaker {
             file.setType(TYPE.THUMBNAIL_VERY_SMALL);
             file.setName("thumbnail0.png");
             file.setMimeType("image/png");
+            file.setResourceId(resource.getId());
             fileManager.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail0(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
@@ -392,6 +398,7 @@ public class ResourcePreviewMaker {
             file.setType(TYPE.THUMBNAIL_SQUARED);
             file.setName("thumbnail1.png");
             file.setMimeType("image/png");
+            file.setResourceId(resource.getId());
             fileManager.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail1(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
@@ -405,6 +412,7 @@ public class ResourcePreviewMaker {
             file.setType(TYPE.THUMBNAIL_SMALL);
             file.setName("thumbnail2.png");
             file.setMimeType("image/png");
+            file.setResourceId(resource.getId());
             fileManager.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail2(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
@@ -418,6 +426,7 @@ public class ResourcePreviewMaker {
             file.setType(TYPE.THUMBNAIL_MEDIUM);
             file.setName("thumbnail3.png");
             file.setMimeType("image/png");
+            file.setResourceId(resource.getId());
             fileManager.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail3(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));

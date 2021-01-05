@@ -606,7 +606,17 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      */
     @Override
     public Resource save() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().saveResource(this);
+        Learnweb.getInstance().getResourceManager().saveResource(this);
+
+        // ensure we store resource_id in lw_file table
+        for (File file : getFiles().values()) {
+            if (file.getResourceId() != id) {
+                file.setResourceId(id);
+                Learnweb.getInstance().getFileManager().addFileToResource(file, this);
+            }
+        }
+
+        return this;
     }
 
     public void setTypeFromFormat(String format) {
