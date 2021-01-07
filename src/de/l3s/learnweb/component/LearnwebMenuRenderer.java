@@ -175,7 +175,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         String linkClass = (hasIcon) ? LearnwebMenu.MENUITEM_LINK_WITH_ICON_CLASS : LearnwebMenu.MENUITEM_LINK_CLASS;
 
         writer.startElement("li", null);
-        writer.writeAttribute("id", submenu.getClientId(), null);
+        // writer.writeAttribute("id", submenu.getClientId(), null);
         writer.writeAttribute("class", styleClass, null);
         if (style != null) {
             writer.writeAttribute("style", style, null);
