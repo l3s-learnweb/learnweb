@@ -1,0 +1,102 @@
+// Load colors
+@import 'colors';
+// change this if you want to use different color schema (see `themes` folder for all alternatives)
+@import 'themes/emerald';
+//@import 'themes/noir';
+
+/**
+* Theme color schema (This is NOT bootstrap colors)
+* These colors are defined by a California theme imported above.
+* !default means that if the variable already defined, it would not be overridden. Also these variables used by IDE to show colors of elements.
+* Not all themes includes all these variables (for example only 4 color themes use different value of $themeSidebarDividerColor), do not remove them!
+*
+* DO NOT USE $green, $greenDarker, $greenDarkerAlt, etc use these (like $themePrimaryColor) variables instead!
+*/
+$themeSidebarDividerColor: $gray-400 !default; // $sidebarMenuitemDividerColor, #e4e2e0
+$themeSidebarHoverBgColor: $gray-500 !default; // $sidebarMenuitemHoverBgColor, #f1f1f1
+$themeElementTextColor: $white !default; // $primaryTextColor, #ffffff
+
+$themeDarkBgColor: #242725 !default; // $gradientSidebarTopBgColor
+$themeLightBgColor: #446a51 !default; // $gradientSidebarBottomBgColor
+
+$themePrimaryColor: $green !default; // $primaryColor
+$themePrimaryColorDarker: $greenDarker !default; // $primaryColorDarker
+$themePrimaryDarkerAlt: $greenDarkerAlt !default; // $primaryDarkerAlt
+$themePrimaryDarkest: $greenDarkest !default; // $primaryDarkest
+
+$themePrimaryAltColor: $yellow !default; // $primaryAltButtonBgColor
+$themePrimaryAltColorDarker: $yellowDarker !default; // $primaryAltButtonHoverBgColor
+$themePrimaryAltDarkerAlt: $yellowDarkerAlt !default; // $primaryAltButtonActiveBgColor
+
+// layout variables
+$min-width: 320px;
+$grid-gutter-width: 1rem;
+$transition-duration: 0.2s;
+
+$topbar-height: 3.125rem;
+$topbar-two-row-display: sm;
+
+$sidebar-width: 15rem;
+$sidebar-hide-display: lg; // Do not forget to change the JS according
+
+/*
+* Bootstrap variables
+* Check variables in original `bootstrap/variables.scss` file and override if you need
+*/
+$body-bg: $lightGray;
+$body-color: $gray-900;
+$border-color: $gray-400;
+$emphasized-link-hover-darken-percentage: 7.5%;
+
+$primary: $themePrimaryColor;
+$secondary: $themePrimaryAltColor;
+$success: $greenDarkest;
+$info: $cyan;
+$warning: $yellowDarker;
+$danger: $red;
+$light: $gray-200;
+$dark: $themeDarkBgColor;
+
+$font-size-sm: 0.75rem; // 12px
+$font-size-base: 0.875rem; // Assuming the browser's default (typically `16px`), then base font size is `14px`.
+$font-size-lg: 1rem; // 16px
+
+$box-shadow-sm: 0 0 1px rgba($black, 0.15);
+$box-shadow: 0 0.125rem 0.5rem rgba($black, 0.2);
+$box-shadow-lg: 0 0.5rem 1rem rgba($black, 0.25);
+
+$border-radius: 0;
+$btn-border-radius: 0.2rem;
+
+$nav-link-padding-y: 0.2rem;
+$nav-link-padding-x: 0.5rem;
+$input-padding-y: 0.25rem;
+$input-padding-x: 0.25rem;
+$input-btn-padding-y: 0.265rem;
+$input-btn-padding-x: $input-btn-padding-y * 3;
+
+$table-cell-padding: 0.25rem 0.5rem;
+
+// Tooltips
+
+$tooltip-font-size: $font-size-base;
+$tooltip-color: $white;
+$tooltip-bg: $themePrimaryColor;
+$tooltip-border-radius: $btn-border-radius;
+$tooltip-opacity: 1;
+
+// Popovers
+
+$popover-font-size: $font-size-base;
+$popover-bg: $themePrimaryColor;
+$popover-border-width: 1px;
+$popover-border-color: $black;
+$popover-border-radius: $btn-border-radius * 2;
+$popover-inner-border-radius: $btn-border-radius;
+$popover-box-shadow: $box-shadow;
+$popover-header-color: $white;
+$popover-body-color: $white;
+
+// Font Awesome
+
+$fa-font-path: './fonts';

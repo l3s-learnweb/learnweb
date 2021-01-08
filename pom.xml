@@ -24,6 +24,8 @@
         <maven.dependency.mockito.version>3.6.28</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.npm.install.phase>prepare-package</project.npm.install.phase>
+        <project.npm.build.phase>prepare-package</project.npm.build.phase>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.CopyFilesOfCopiedResources</maven.assembly.mainClass>
     </properties>
 
@@ -411,7 +413,7 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
-                        <phase>prepare-package</phase>
+                        <phase>${project.npm.install.phase}</phase>
                         <configuration>
                             <executable>npm</executable>
                             <arguments>
@@ -425,7 +427,7 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
-                        <phase>prepare-package</phase>
+                        <phase>${project.npm.build.phase}</phase>
                         <configuration>
                             <executable>npm</executable>
                             <arguments>
@@ -534,6 +536,7 @@
             <id>prod</id>
             <properties>
                 <javax.faces.project_stage>Production</javax.faces.project_stage>
+                <project.npm.install.phase>none</project.npm.install.phase>
             </properties>
         </profile>
     </profiles>

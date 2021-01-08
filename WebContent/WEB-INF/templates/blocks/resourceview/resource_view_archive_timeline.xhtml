@@ -3,11 +3,9 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-    <h:outputStylesheet library="vendor" name="tooltipster-v3.3.0/tooltipster.min.css"/>
-    <h:outputScript library="vendor" name="highcharts-v4.2.7/highcharts.js" target="body"/>
-    <h:outputScript library="vendor" name="responsive-calendar-v0.9.0/responsive-calendar.min.js" target="body"/>
-    <h:outputScript library="vendor" name="tooltipster-v3.3.0/jquery.tooltipster.min.js" target="body"/>
-    <h:outputScript library="layout" name="js/archive-timeline.js" target="body"/>
+    <h:outputScript library="bundle" name="highcharts.js" target="body"/>
+    <h:outputScript library="learnweb" name="js/vendor/responsive-calendar.js" target="body"/>
+    <h:outputScript library="learnweb" name="js/archive-timeline.js" target="body"/>
 
     <h:outputScript>
         const msg_timelineNumVersions = '#{msg.no_of_versions}';

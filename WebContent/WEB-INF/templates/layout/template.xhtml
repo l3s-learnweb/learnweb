@@ -24,9 +24,10 @@
             <base href="#{request.contextPath}/lw/"/>
 
             <h:outputScript library="primefaces" name="jquery/jquery.js"/>
-            <h:outputScript library="layout" name="js/layout.js"/>
-            <h:outputScript library="vendor" name="shepherd-v8.1.0/shepherd.min.js"/>
-            <h:outputScript library="layout" name="js/guide.js"/>
+            <h:outputScript library="bundle" name="shepherd.min.js"/>
+            <h:outputScript library="bundle" name="learnweb.main.js"/>
+            <h:outputScript library="learnweb" name="js/layout.js"/>
+            <h:outputScript library="learnweb" name="js/guide.js"/>
 
             <ui:fragment rendered="#{userBean.trackingEnabled}">
                 <script>
@@ -45,9 +46,8 @@
         </h:head>
 
         <h:body styleClass="layout-body ui-loading">
-
             <f:facet name="last">
-                <h:outputStylesheet name="layout/css/styles.css"/>
+                <h:outputStylesheet name="bundle/learnweb.main.css"/>
             </f:facet>
 
             <ui:insert name="body_content">
@@ -69,7 +69,7 @@
                                 </p:messages>
 
                                 <ui:fragment rendered="#{not hideBreadcrumbs}">
-                                    <h:outputScript library="layout" name="js/breadcrumb.js" target="body"/>
+                                    <h:outputScript library="learnweb" name="js/breadcrumb.js" target="body"/>
 
                                     <div class="breadcrumb mb-3">
                                         <ui:insert name="breadcrumb"/>

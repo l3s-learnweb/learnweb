@@ -10,20 +10,36 @@
     "not dead"
   ],
   "scripts": {
-    "scss:watch": "sass WebContent/resources/layout/sass:WebContent/resources/layout/css --style=compressed --watch",
-    "scss:build": "sass WebContent/resources/layout/sass:WebContent/resources/layout/css --style=compressed",
-    "scss:lint": "stylelint WebContent/resources/layout/sass",
-    "js:lint": "eslint WebContent/resources/layout/js/**",
-    "build": "npm run scss:build",
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "scss:lint": "stylelint WebContent/resources/learnweb/sass",
+    "js:lint": "eslint WebContent/resources/learnweb/js/**",
     "lint": "npm run scss:lint && npm run js:lint"
   },
+  "dependencies": {
+    "@fancyapps/fancybox": "^3.5.7",
+    "@simonwep/pickr": "^1.8.0",
+    "bootstrap": "^4.5.3",
+    "font-awesome": "^4.7.0",
+    "highcharts": "^8.2.2",
+    "jquery-contextmenu": "^2.9.2",
+    "justifiedGallery": "^3.8.1",
+    "popper.js": "^1.16.1",
+    "shepherd.js": "^8.1.0",
+    "video.js": "^7.10.2"
+  },
   "devDependencies": {
-    "browserslist": "^4.16.0",
-    "eslint": "^7.16.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "browserslist": "^4.16.1",
+    "eslint": "^7.17.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-compat": "^3.9.0",
     "eslint-plugin-import": "^2.22.1",
-    "sass": "^1.32.0",
+    "rollup": "^2.36.1",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-scss": "github:astappiev/rollup-plugin-scss",
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "^1.32.2",
     "stylelint": "^13.8.0",
     "stylelint-config-sass-guidelines": "^7.1.0",
     "stylelint-no-unsupported-browser-features": "^4.1.4"
@@ -35,11 +51,11 @@
     ],
     "parserOptions": {
       "ecmaVersion": 6,
-      "sourceType": "script"
+      "sourceType": "module"
     },
     "env": {
       "browser": true,
-      "node": false,
+      "node": true,
       "jquery": true
     },
     "globals": {

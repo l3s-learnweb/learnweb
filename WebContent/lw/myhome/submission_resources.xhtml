@@ -30,9 +30,9 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
-    <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
-    <h:outputScript library="layout" name="js/group-resources.js" target="body"/>
+    <h:outputStylesheet library="bundle" name="jquery.fancybox.min.css"/>
+    <h:outputScript library="bundle" name="jquery.fancybox.min.js" target="body"/>
+    <h:outputScript library="learnweb" name="js/group-resources.js" target="body"/>
 
     <h:form styleClass="d-none">
         <p:remoteCommand name="commandUpdateSelectedItems" actionListener="#{submissionBean.commandUpdateSelectedItems}"

@@ -2,46 +2,41 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-<h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
-<h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js"/>
-
 <h:outputScript type="text/javascript">
   function createTooltip(target, content, position) {
-    const tooltip = $(target).tooltipster({
-      animation: 'grow',
+    const tooltip = $(target).popover({
+      trigger: 'manual',
       delay: 600,
-      theme: 'tooltipster-default',
-      touchDevices: false,
-      trigger: 'hover',
       content: content,
-      position: position,
+      placement: position,
+      boundary: 'viewport'
     });
 
     setTimeout(function () {
-      tooltip.tooltipster('show');
+      tooltip.popover('show');
     }, 1000);
 
     $(window).on('mousedown', function () {
-      tooltip.tooltipster('hide');
+      tooltip.popover('hide');
     });
   }
 </h:outputScript>
 
 <h:outputScript rendered="#{userBean.showMessageJoinGroupInHeader}" type="text/javascript">
-    $(function() { createTooltip('.guide-my-groups', "#{msg['TooltipMessage.join_group']}", 'left'); });
+    createTooltip('.guide-my-groups', "#{msg['TooltipMessage.join_group']}", 'right');
 </h:outputScript>
 
 <h:outputScript rendered="#{userBean.showMessageAddResourceInHeader}" type="text/javascript">
-    $(function() { createTooltip('.guide-my-resources', "#{msg['TooltipMessage.add_resource']}", 'left'); });
+    createTooltip('.guide-my-resources', "#{msg['TooltipMessage.add_resource']}", 'right');
 </h:outputScript>
 
 <h:outputScript rendered="#{userBean.showMessageJoinGroup}" type="text/javascript">
-    $(function() { createTooltip('.guide-create-group', "#{msg['TooltipMessage.create_group']}", 'bottom'); });
-    $(function() { createTooltip('.guide-join-group', "#{msg['TooltipMessage.join_group']}", 'top'); });
+    createTooltip('.guide-create-group', "#{msg['TooltipMessage.create_group']}", 'bottom');
+    createTooltip('.guide-join-group', "#{msg['TooltipMessage.join_group']}", 'top');
 </h:outputScript>
 
 <h:outputScript rendered="#{userBean.showMessageAddResource}" type="text/javascript">
-    $(function() { createTooltip('.guide-add-resource', "#{msg['TooltipMessage.resources']}", 'top'); });
+    createTooltip('.guide-add-resource', "#{msg['TooltipMessage.resources']}", 'top');
 </h:outputScript>
 
 </ui:composition>

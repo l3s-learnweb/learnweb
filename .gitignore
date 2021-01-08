@@ -26,14 +26,18 @@
 .idea/**/gradle.xml
 .idea/**/libraries
 
+# Project files/folders
 
-# Output folders and local files
+## Output folders
 target
 build
 logs
 node_modules
-# it is not actually used, so makes no sense to keep it
+
+## Local files
+learnweb_local.properties
+WebContent/resources/bundle
+
+## lock files not actually used in production, so makes no sense to keep them
 package-lock.json
 yarn.lock
-learnweb_local.properties
-WebContent/resources/layout/css/*

@@ -23,8 +23,6 @@
             </div>
 
             <h:panelGroup layout="block" styleClass="d-flex order-1 order-md-0 search-wrapper flex-grow-1" rendered="#{userBean.loggedIn}">
-                <h:outputScript library="vendor" name="jquery.auto-complete-v1.0.7/jquery.auto-complete.min.js" target="body"/>
-
                 <form class="header-element no-hover-bg search-form w-100" action="#{request.contextPath}/lw/search.jsf" method="get">
                     <label for="searchfield" class="d-none">#{msg.searchLabel}</label>
                     <input type="search" id="searchfield" name="query" placeholder="#{msg.searchLabel}"/>
