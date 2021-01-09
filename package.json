@@ -29,6 +29,7 @@
     "video.js": "^7.10.2"
   },
   "devDependencies": {
+    "@astappiev/rollup-plugin-scss": "^3.0.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
     "browserslist": "^4.16.1",
     "eslint": "^7.17.0",
@@ -37,7 +38,6 @@
     "eslint-plugin-import": "^2.22.1",
     "rollup": "^2.36.1",
     "rollup-plugin-copy": "^3.3.0",
-    "@astappiev/rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.32.2",
     "stylelint": "^13.8.0",

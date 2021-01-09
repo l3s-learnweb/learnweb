@@ -1,25 +1,3 @@
-/*
- SCSS should be compiled before use
-
- First, you need to install SASS
-  - Install nodejs and npm (https://nodejs.org/en/)
-  - Install scss using npm `npm i -g sass` (https://sass-lang.com/install)
-
- Now you can build all scss files to css files
-  - `sass WebContent/resources/layout/sass:WebContent/resources/layout/css --style=compressed`
-
- Or you can setup to watch for changes in your files and build automatically (during active development phase)
-  - `sass --watch WebContent/resources/layout/sass:WebContent/resources/layout/css --style=compressed`
-
- Good to know:
-  - File names starting with underscore (_) mean that they should not be compiled, they are intended to be imported by other files
-  - All other files will be compiled from scss to css
-
- Good to read:
-  - Sass documentation https://sass-lang.com/documentation
-  - Bootstrap documentation (see Layout, Content, Utilities sections) https://getbootstrap.com/docs/
-*/
-
 // Load variables
 @import 'common/mixins';
 @import 'common/variables';

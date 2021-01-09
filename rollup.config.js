@@ -1,6 +1,6 @@
 import path from 'path';
 import copy from 'rollup-plugin-copy';
-import scss from 'rollup-plugin-scss';
+import scss from '@astappiev/rollup-plugin-scss';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
@@ -10,7 +10,7 @@ const production = !process.env.ROLLUP_WATCH;
 
 export default [
   {
-    input: 'WebContent/resources/layout/main.js',
+    input: 'WebContent/resources/learnweb/main.js',
     output: {
       file: 'WebContent/resources/bundle/learnweb.main.js',
       format: 'iife',
@@ -21,7 +21,7 @@ export default [
       },
     },
     watch: {
-      include: 'WebContent/resources/layout/**',
+      include: 'WebContent/resources/learnweb/**',
     },
     external: ['jquery'],
     plugins: [
@@ -34,9 +34,9 @@ export default [
       scss({
         outputStyle: 'compressed',
         sourceMap: true,
-        watch: path.resolve(__dirname, 'WebContent/resources/layout/sass'),
+        watch: path.resolve(__dirname, 'WebContent/resources/learnweb/sass'),
         importer: [
-          function (url, prev) {
+          function (url) {
             return url.startsWith('~') ? { file: `node_modules/${url.substring(1)}` } : null;
           },
         ],
