@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.03.09</version>
+    <version>3.04.00</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -21,7 +21,7 @@
         <maven.dependency.myfaces.version>2.3-next-M4</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.6.1</maven.dependency.imageio.version>
         <maven.dependency.log4j.version>2.14.0</maven.dependency.log4j.version>
-        <maven.dependency.mockito.version>3.6.28</maven.dependency.mockito.version>
+        <maven.dependency.mockito.version>3.7.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.npm.install.phase>prepare-package</project.npm.install.phase>
