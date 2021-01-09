@@ -25,11 +25,11 @@ public class ReindexAllResources {
         //solr.reIndexResource(learnweb.getResourceManager().getResource(219673));
 
         // Reindex resources of a group
-        learnweb.getGroupManager().getGroupById(1401).getResources().forEach(solr::reIndexResource);
+        // learnweb.getGroupManager().getGroupById(1401).getResources().forEach(solr::reIndexResource);
 
         /* Reindex all resources */
-        // solr.deleteAllResource();
-        //solr.indexAllResources();
+        solr.deleteAllResource();
+        solr.indexAllResources();
 
         learnweb.onDestroy();
 

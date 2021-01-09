@@ -26,7 +26,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.npm.install.phase>prepare-package</project.npm.install.phase>
         <project.npm.build.phase>prepare-package</project.npm.build.phase>
-        <maven.assembly.mainClass>de.l3s.maintenance.resources.CopyFilesOfCopiedResources</maven.assembly.mainClass>
+        <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexAllResources</maven.assembly.mainClass>
     </properties>
 
     <repositories>
