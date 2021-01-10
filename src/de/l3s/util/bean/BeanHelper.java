@@ -90,8 +90,7 @@ public final class BeanHelper {
             joiner.add("page: " + Servlets.getRequestURLWithQueryString(request) + " ");
             joiner.add("referrer: " + request.getHeader("referer") + " ");
 
-            joiner.add("ip: " + request.getRemoteAddr());
-            joiner.add("ipHeader: " + request.getHeader("X-FORWARDED-FOR"));
+            joiner.add("ip: " + Servlets.getRemoteAddr(request));
             joiner.add("userAgent: " + request.getHeader("User-Agent"));
 
             joiner.add("parameters: " + printMap(request.getParameterMap()));

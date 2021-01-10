@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
@@ -39,7 +40,7 @@ public class DownloadServlet extends HttpServlet {
 
     private static final int CACHE_DURATION_IN_SECOND = 60 * 60 * 24 * 365; // 1 year
     private static final long CACHE_DURATION_IN_MS = CACHE_DURATION_IN_SECOND * 1000L;
-    private static final int BUFFER_SIZE = 10240; // = 10KB.
+    private static final int BUFFER_SIZE = 8192; // 8KB
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
     private transient Learnweb learnweb;
@@ -360,8 +361,8 @@ public class DownloadServlet extends HttpServlet {
                     sos.println("--" + MULTIPART_BOUNDARY + "--");
                 }
             }
-        } catch (IOException e) { // when client abort connection
-            // we do not care
+        } catch (IOException ignored) {
+            // Usually thrown when a client aborts connection during copying bytes to output stream
         } catch (IllegalStateException e) {
             log.error("File {} cannot be downloaded because it isn't present in the file system", fileId);
             response.setStatus(500);
@@ -369,12 +370,22 @@ public class DownloadServlet extends HttpServlet {
             log.error("Error while downloading file {}", fileId, e);
             response.setStatus(500);
         } finally {
-            if (input != null) {
-                input.close();
-            }
+            close(input);
+            close(output);
+        }
+    }
 
-            if (output != null) {
-                output.close();
+    /**
+     * Close the given resource.
+     *
+     * @param resource The resource to be closed.
+     */
+    private static void close(Closeable resource) {
+        if (resource != null) {
+            try {
+                resource.close();
+            } catch (IOException ignored) {
+                // Generally only thrown when the client aborts a request
             }
         }
     }
