@@ -2,8 +2,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+                xmlns:p="http://primefaces.org/ui">
 
     <header class="layout-header bg-primary">
         <div class="layout-container d-flex">
@@ -23,12 +22,12 @@
             </div>
 
             <h:panelGroup layout="block" styleClass="d-flex order-1 order-md-0 search-wrapper flex-grow-1" rendered="#{userBean.loggedIn}">
-                <form class="header-element no-hover-bg search-form w-100" action="#{request.contextPath}/lw/search.jsf" method="get">
-                    <label for="searchfield" class="d-none">#{msg.searchLabel}</label>
-                    <input type="search" id="searchfield" name="query" placeholder="#{msg.searchLabel}"/>
-
-                    <p:button title="#{msg.searchLabel}" icon="fa fa-search" onclick="$(this).parent('form').submit();return false;"/>
-                </form>
+                <h:form id="search_form" styleClass="header-element no-hover-bg search-form w-100" prependId="false">
+                    <p:outputLabel for="@next" styleClass="d-none" value="#{msg.searchLabel}"/>
+                    <p:inputText id="searchfield" placeholder="#{msg.searchLabel}" type="search"/>
+                    <p:commandButton title="#{msg.searchLabel}" icon="fa fa-search"
+                                     onclick="window.location.href = 'search.jsf?query=' + $('#searchfield').val();return false;"/>
+                </h:form>
 
                 <h:form rendered="#{learnwebBean.developmentMode}">
                     <p:lifecycle/>
