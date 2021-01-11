@@ -19,9 +19,9 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <h:outputStylesheet library="bundle" name="jquery.fancybox.min.css"/>
-    <h:outputScript library="bundle" name="jquery.fancybox.min.js" target="body"/>
-    <h:outputScript library="learnweb" name="js/search.js" target="body"/>
+    <h:outputStylesheet name="bundle/jquery.fancybox.min.css"/>
+    <h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
+    <h:outputScript name="learnweb/js/search.js" target="body"/>
 
     <h:form class="d-none">
         <p:remoteCommand name="commandLoadNextPage" actionListener="${searchBean.commandLoadNextPage}" update=":searchResultsNext" immediate="true"

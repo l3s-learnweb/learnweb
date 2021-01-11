@@ -10,8 +10,8 @@
 <!--@elvariable id="logEntry" type="de.l3s.learnweb.logging.LogEntry"-->
 
 <div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') }">
-	<h:outputStylesheet library="bundle" name="jquery.fancybox.min.css"/>
-	<h:outputScript library="bundle" name="jquery.fancybox.min.js" target="body"/>
+	<h:outputStylesheet name="bundle/jquery.fancybox.min.css"/>
+	<h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
 
 	<img class="profile-picture align-self-start mr-3 mt-1" src="#{logEntry.user.image}" alt="Profile picture"/>
 
