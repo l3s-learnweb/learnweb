@@ -58,7 +58,7 @@
             <version>3.0.3</version>
             <scope>provided</scope>
         </dependency>
-        <!-- JSF API & Impl -->
+        <!-- JSF API -->
         <dependency>
             <groupId>org.apache.myfaces.core</groupId>
             <artifactId>myfaces-api</artifactId>
@@ -69,19 +69,19 @@
             <artifactId>myfaces-impl</artifactId>
             <version>${maven.dependency.myfaces.version}</version>
         </dependency>
-        <!-- CDI API Impl for Servlet container (Tomcat) -->
+        <!-- CDI Impl for Servlet container (Tomcat) -->
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-shaded</artifactId>
             <version>3.1.5.SP1</version>
         </dependency>
-        <!-- CDI Validator Impl -->
+        <!-- Validation API -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.1.6.Final</version>
         </dependency>
-        <!-- Mail Impl -->
+        <!-- Mail API -->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
@@ -139,12 +139,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.8.0</version>
-        </dependency>
-        <!-- Used for String escape methods -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.9</version>
         </dependency>
 
         <!-- ################ ImageIO (Image processing, Thumbnails) ################ -->
