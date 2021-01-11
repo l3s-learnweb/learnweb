@@ -20,7 +20,7 @@ import de.l3s.learnweb.user.Organisation.Option;
 public class PrivacyStatementBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -6243573356677232210L;
 
-    private boolean isTrackingEnabled = false;
+    private boolean trackingEnabled = false;
     private int organisationId;
 
     public void onLoad() {
@@ -33,7 +33,7 @@ public class PrivacyStatementBean extends ApplicationBean implements Serializabl
         }
 
         if (organisation != null) {
-            isTrackingEnabled = organisation.getOption(Option.Privacy_Tracker_disabled);
+            trackingEnabled = organisation.getOption(Option.Privacy_Tracker_disabled);
         }
     }
 
@@ -42,7 +42,7 @@ public class PrivacyStatementBean extends ApplicationBean implements Serializabl
      * the currently logged in user is returned. If the current user isn't logged in it returns false
      */
     public boolean isTrackingEnabled() {
-        return isTrackingEnabled;
+        return trackingEnabled;
     }
 
     public int getOrganisationId() {

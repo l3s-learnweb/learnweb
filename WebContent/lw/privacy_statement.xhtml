@@ -17,19 +17,6 @@
 </ui:define>
 
 <ui:define name="center_layout">
-	<!--
-	disabled until scroll problems are fixed
-
-	<h:outputScript library="vendor" name="scrollspy-v1.0.0/scrollspy.min.js" target="body"/>
-	<script>
-		function enableScollSpy() {
-			var headerHeight = $('.layout-header').height();
-			$('#content-list').scrollspy({offset: -(headerHeight + 10), animate: true, replaceState: true});
-		};
-		//$(enableScollSpy);
-	</script>
-	 -->
-
 	<p:panel header="#{msg['privacy_statement']}">
 		<ui:fragment rendered="#{userBean.localeCode eq 'de'}">
 			<ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_de.xhtml"/>
@@ -39,6 +26,17 @@
 			<ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_en.xhtml"/>
 		</ui:fragment>
 	</p:panel>
+
+	<h:outputScript>
+		$(() => {
+			$('body').scrollspy({ target: '#content-list', offset: 200 });
+
+			$('#content-list').on('click', 'a', function(e) {
+				e.preventDefault();
+				document.location.hash = e.currentTarget.getAttribute('href');
+			});
+		});
+	</h:outputScript>
 </ui:define>
 
 </ui:composition>

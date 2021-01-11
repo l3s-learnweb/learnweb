@@ -1,35 +1,34 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
->
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <div class="row">
         <div class="col-md-4 sticky-column-md">
             <h5 class="px-2">Inhalte auf dieser Seite</h5>
 
-            <nav id="content-list" class="flex-column">
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-1" value="1 Name und Anschrift des Verantwortlichen"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-2" value="2 Name und Anschrift des technisch Verantwortlichen"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-3" value="3 Name und Anschrift des Datenschutzbeauftragten"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4" value="4 Verarbeitung personenbezogener Daten"></h:link>
-                <nav class="flex-column pl-3">
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4-1" value="4.1 Profilinformationen"></h:link>
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4-2" value="4.2 Inhalte"></h:link>
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4-3" value="4.3 Nutzerverhalten"></h:link>
+            <nav id="content-list" class="nav nav-pills flex-column">
+                <a class="nav-link" href="#item-1">1 Name und Anschrift des Verantwortlichen</a>
+                <a class="nav-link" href="#item-2">2 Name und Anschrift des technisch Verantwortlichen</a>
+                <a class="nav-link" href="#item-3">3 Name und Anschrift des Datenschutzbeauftragten</a>
+                <a class="nav-link" href="#item-4">4 Verarbeitung personenbezogener Daten</a>
+                <nav class="nav nav-pills flex-column ml-3">
+                    <a class="nav-link" href="#item-4-1">4.1 Profilinformationen</a>
+                    <a class="nav-link" href="#item-4-2">4.2 Inhalte</a>
+                    <a class="nav-link" href="#item-4-3">4.3 Nutzerverhalten</a>
                 </nav>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-5" value="5 Rollen und Zugriffsrechte"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-6" value="6 Zeitspanne der Speicherung personenbezogener Daten"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7" value="7 Cookies"></h:link>
-                <nav class="flex-column pl-3">
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7-1" value="7.1 Session-Cookies"></h:link>
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7-2" value="7.2 Login-Cookies"></h:link>
+                <a class="nav-link" href="#item-5">5 Rollen und Zugriffsrechte</a>
+                <a class="nav-link" href="#item-6">6 Zeitspanne der Speicherung personenbezogener Daten</a>
+                <a class="nav-link" href="#item-7">7 Cookies</a>
+                <nav class="nav nav-pills flex-column ml-3">
+                    <a class="nav-link" href="#item-7-1">7.1 Session-Cookies</a>
+                    <a class="nav-link" href="#item-7-2">7.2 Login-Cookies</a>
                 </nav>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8" value="8 Einbindung von fremden Inhalten"></h:link>
-                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9" value="9 Rechte der betroffenen Person"></h:link>
-                <nav class="flex-column pl-3">
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9-1" value="9.1 Widerruflichkeit der Einwilligung"></h:link>
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9-2" value="9.2 Weitere Rechte"></h:link>
-                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-9-3" value="9.3 Recht auf Widerspruch"></h:link>
+                <a class="nav-link" href="#item-8">8 Einbindung von fremden Inhalten</a>
+                <a class="nav-link" href="#item-9">9 Rechte der betroffenen Person</a>
+                <nav class="nav nav-pills flex-column ml-3">
+                    <a class="nav-link" href="#item-9-1">9.1 Widerruflichkeit der Einwilligung</a>
+                    <a class="nav-link" href="#item-9-2">9.2 Weitere Rechte</a>
+                    <a class="nav-link" href="#item-9-3">9.3 Recht auf Widerspruch</a>
                 </nav>
             </nav>
         </div>
