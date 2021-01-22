@@ -39,7 +39,7 @@
 			<h:outputText value="#{msg.please_wait}"/>
 		</p:blockUI>
 
-		<p:dataTable var="topic" value="#{forumBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
+		<p:dataTable var="topic" value="#{forumBean.topics}" rows="20" paginator="true" id="forum_table"
 					 paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					 emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
 			<f:facet name="header">

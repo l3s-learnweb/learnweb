@@ -54,14 +54,14 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
     }*/
 
     @Override
-    public List<GlossaryTableView> load(int first, int pageSize, Map<String, SortMeta> sortMeta, Map<String, FilterMeta> filterMeta) {
+    public List<GlossaryTableView> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
         // create list of predicates for the given filters
         List<Predicate<GlossaryEntry>> allPredicates = new ArrayList<>();
 
         Map<String, String> simpleFilters = new HashMap<>(); // copies all non empty filters for fields of type String
 
-        for (FilterMeta meta : filterMeta.values()) {
-            String filterFieldOriginal = meta.getFilterField();
+        for (FilterMeta meta : filterBy.values()) {
+            String filterFieldOriginal = meta.getField();
             Object filterValue = meta.getFilterValue();
 
             if (null == filterFieldOriginal || filterValue == null) {
@@ -114,12 +114,12 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
             .collect(Collectors.toList());
 
         // single column sort
-        //Collections.sort(data, new LazySorter(sortField, sortOrder));
+        //Collections.sort(data, new LazySorter(field, order));
 
         //multi sort
-        if (sortMeta != null && !sortMeta.isEmpty()) {
-            for (SortMeta meta : sortMeta.values()) {
-                data.sort(new LazySorter(meta.getSortField(), meta.getSortOrder()));
+        if (sortBy != null && !sortBy.isEmpty()) {
+            for (SortMeta meta : sortBy.values()) {
+                data.sort(new LazySorter(meta.getField(), meta.getOrder()));
             }
         }
 
@@ -156,19 +156,19 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
     public static class LazySorter implements Comparator<GlossaryEntry>, Serializable {
         private static final long serialVersionUID = 899131076207451811L;
 
-        private final String sortField;
-        private final SortOrder sortOrder;
+        private final String field;
+        private final SortOrder order;
 
         private transient Method fieldGetMethod;
 
-        public LazySorter(String sortField, SortOrder sortOrder) throws SecurityException {
-            this.sortField = sortField;
-            this.sortOrder = sortOrder;
+        public LazySorter(String field, SortOrder order) throws SecurityException {
+            this.field = field;
+            this.order = order;
         }
 
         private Method getFieldGetMethod() throws NoSuchMethodException {
             if (fieldGetMethod == null) {
-                fieldGetMethod = GlossaryEntry.class.getDeclaredMethod("get" + StringUtils.capitalize(sortField));
+                fieldGetMethod = GlossaryEntry.class.getDeclaredMethod("get" + StringUtils.capitalize(field));
             }
             return fieldGetMethod;
         }
@@ -192,9 +192,9 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
                     value = ((Comparable) value1).compareTo(value2);
                 }
 
-                return SortOrder.ASCENDING == sortOrder ? value : -1 * value;
+                return SortOrder.ASCENDING == order ? value : -1 * value;
             } catch (Exception e) {
-                log.error("Sorting failed for field: {} order: {}", sortField, sortOrder, e);
+                log.error("Sorting failed for field: {} order: {}", field, order, e);
 
                 return 0;
             }

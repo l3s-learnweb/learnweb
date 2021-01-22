@@ -23,7 +23,7 @@
         </p:panel>
 
         <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-            <p:dataTable lazy="false" var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.nothingFound}">
+            <p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.nothingFound}">
                 <f:facet name="header">
                     #{msg.otherGroups}
                 </f:facet>

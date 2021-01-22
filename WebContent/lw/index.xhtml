@@ -37,15 +37,21 @@
                     <div class="header-news-list bg-dark-90 text-white">
                         <h2 class="m-0 bg-dark">#{msg.announcements}</h2>
 
-                        <p:dataList value="#{frontpageBean.announcements}" var="news" type="unordered">
-                            <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>
+                        <div class="news-list">
+                            <ul class="px-3 pt-3 list-unstyled">
+                                <ui:repeat var="news" value="#{frontpageBean.announcements}">
+                                    <li class="news">
+                                        <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>
 
-                            <h:outputText value="#{news.date}" styleClass="news-date mb-1">
-                                <f:convertDateTime type="date" timeZone="#{userBean.timeZone}"/>
-                            </h:outputText>
+                                        <h:outputText value="#{news.date}" styleClass="news-date mb-1">
+                                            <f:convertDateTime type="date" timeZone="#{userBean.timeZone}"/>
+                                        </h:outputText>
 
-                            <h:outputText escape="false" value="#{news.text}" styleClass="news-content"/>
-                        </p:dataList>
+                                        <h:outputText escape="false" value="#{news.text}" styleClass="news-content"/>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

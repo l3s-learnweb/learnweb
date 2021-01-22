@@ -75,15 +75,15 @@
 
                 <p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
                 <div class="fg-col">
-                    <p:calendar value="#{addResourceBean.resource.start}" id="editDialogOpenDate" pattern="dd.MM.yyyy"
-                                required="true" locale="#{userBean.locale}" navigator="true" showOn="button"/>
+                    <p:datePicker id="editDialogOpenDate" value="#{addResourceBean.resource.start}"
+                                  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
                     <p:message for="@previous"/>
                 </div>
 
                 <p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
                 <div class="fg-col">
-                    <p:calendar value="#{addResourceBean.resource.end}" id="editDialogCloseDate" pattern="dd.MM.yyyy"
-                                required="true" locale="#{userBean.locale}" navigator="true" showOn="button"/>
+                    <p:datePicker id="editDialogCloseDate" value="#{addResourceBean.resource.end}"
+                                  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
                     <p:message for="@previous"/>
                     <o:validateOrder type="lte" components="editDialogOpenDate editDialogCloseDate"
                                      message="Start date may not be after end date." showMessageFor="editDialogOpenDate" />

@@ -127,8 +127,8 @@
 
                             <h:panelGroup layout="block" styleClass="form-group" rendered="false">
                                 <p:outputLabel for="@next" value="#{msg.dateofbirth}:"/>
-                                <p:calendar id="userdateofbirth" value="#{profileBean.selectedUser.dateOfBirth}" navigator="true" locale="de"
-                                            maxdate="#{profileBean.maxBirthday}" inputStyleClass="w-100"/>
+                                <p:datePicker id="userdateofbirth" value="#{profileBean.selectedUser.dateOfBirth}" maxdate="#{profileBean.maxBirthday}"
+                                              monthNavigator="true" yearNavigator="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 
@@ -163,9 +163,8 @@
         <div class="col-12 col-lg-6">
             <p:panel header="#{msg['notifications']}" styleClass="mb-3" rendered="#{not empty profileBean.userGroups}">
                 <h:form>
-                    <p:dataTable var="group" styleClass="mb-3" value="#{profileBean.userGroups}" dynamic="false" sortBy="#{group.group.title}">
-
-                        <p:column headerText="#{msg.group}" sortBy="#{group.group.title}">
+                    <p:dataTable var="group" styleClass="mb-3" value="#{profileBean.userGroups}" dynamic="false">
+                        <p:column headerText="#{msg.group}" sortBy="#{group.group.title}" sortPriority="1">
                             <h:outputLink value="group/resources.jsf">
                                 <f:param name="group_id" value="#{group.group.id}"/>
                                 <h:outputText value="#{group.group.title}"/>

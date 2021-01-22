@@ -13,8 +13,8 @@
 
 <h:form id="glossary_table_form" prependId="false">
     <p:dataTable id="glossary_table" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
-                 styleClass="glossary-table" sortBy="#{item.timestamp}" sortOrder="descending"
-                 lazy="true" paginator="true" rows="200" rowsPerPageTemplate="100,200,400,1000"
+                 styleClass="glossary-table"
+                 paginator="true" rows="200" rowsPerPageTemplate="100,200,400,1000"
                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
 
         <p:ajax event="filter" oncomplete="groupRow()"/>
@@ -44,11 +44,11 @@
                     </p:commandLink>
 
                     Export to:
-                    <p:commandLink ajax="false" styleClass="text-success">
+                    <p:commandLink styleClass="text-success">
                         <i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="glossary_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}"/>
                     </p:commandLink>
-                    <p:commandLink ajax="false" styleClass="text-danger">
+                    <p:commandLink styleClass="text-danger">
                         <i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
                         <p:dataExporter type="pdf" fileName="glossary" target="glossary_table" preProcessor="#{glossaryBean.rotatePDF}"/>
                     </p:commandLink>

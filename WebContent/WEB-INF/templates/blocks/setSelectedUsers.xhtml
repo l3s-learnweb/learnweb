@@ -43,7 +43,7 @@
                     <p:outputLabel for="dateStart" value="#{msg.start_date}" styleClass="mr-2"/>
                 </div>
                 <div class="col-md-8">
-                    <p:calendar id="dateStart" var="date" value="#{cbean.startDate}" showOn="button"/>
+                    <p:datePicker id="dateStart" value="#{cbean.startDate}" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
                 </div>
             </div>
             <div class="row">
@@ -51,7 +51,7 @@
                     <p:outputLabel for="dateEnd" value="#{msg.end_date}" styleClass="mr-2"/>
                 </div>
                 <div class="col-md-8">
-                    <p:calendar id="dateEnd" var="date" value="#{cbean.endDate}" showOn="button"/>
+                    <p:datePicker id="dateEnd" value="#{cbean.endDate}" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
                 </div>
             </div>
         </p:outputPanel>
