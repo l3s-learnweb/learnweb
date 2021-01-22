@@ -41,18 +41,20 @@
           width: that.outerWidth(),
         });
         if (!resize) {
-          that.sc.show();
-          if (!that.sc.maxHeight) that.sc.maxHeight = parseInt(that.sc.css('max-height'), 10);
-          if (!that.sc.suggestionHeight) that.sc.suggestionHeight = $('.autocomplete-suggestion', that.sc).first().outerHeight();
-          if (that.sc.suggestionHeight) {
-            if (!next) that.sc.scrollTop(0);
-            else {
-              const scrTop = that.sc.scrollTop();
-              const selTop = next.offset().top - that.sc.offset().top;
-              if (selTop + that.sc.suggestionHeight - that.sc.maxHeight > 0) {
-                that.sc.scrollTop(selTop + that.sc.suggestionHeight + scrTop - that.sc.maxHeight);
-              } else if (selTop < 0) {
-                that.sc.scrollTop(selTop + scrTop);
+          if (that.is(':focus')) {
+            that.sc.show();
+            if (!that.sc.maxHeight) that.sc.maxHeight = parseInt(that.sc.css('max-height'), 10);
+            if (!that.sc.suggestionHeight) that.sc.suggestionHeight = $('.autocomplete-suggestion', that.sc).first().outerHeight();
+            if (that.sc.suggestionHeight) {
+              if (!next) that.sc.scrollTop(0);
+              else {
+                const scrTop = that.sc.scrollTop();
+                const selTop = next.offset().top - that.sc.offset().top;
+                if (selTop + that.sc.suggestionHeight - that.sc.maxHeight > 0) {
+                  that.sc.scrollTop(selTop + that.sc.suggestionHeight + scrTop - that.sc.maxHeight);
+                } else if (selTop < 0) {
+                  that.sc.scrollTop(selTop + scrTop);
+                }
               }
             }
           }
@@ -60,7 +62,7 @@
       };
       $(window).on('resize.autocomplete', that.updateSC);
 
-      that.sc.appendTo('body');
+      that.sc.appendTo(document.body);
 
       that.sc.on('mouseleave', '.autocomplete-suggestion', () => {
         $('.autocomplete-suggestion.selected').removeClass('selected');
@@ -72,8 +74,7 @@
       });
 
       that.sc.on('mousedown click', '.autocomplete-suggestion', function (e) {
-        const item = $(this); const
-          v = item.data('val');
+        const item = $(this); const v = item.attr('data-val');
         if (v || item.hasClass('autocomplete-suggestion')) { // else outside click
           that.val(v);
           o.onSelect(e, v, item);
@@ -93,8 +94,7 @@
 
       if (!o.minChars) that.on('focus.autocomplete', () => { that.last_val = '\n'; that.trigger('keyup.autocomplete'); });
 
-      function suggest(data) {
-        const val = that.val();
+      function suggest(val, data) {
         that.cache[val] = data;
         if (data.length && val.length >= o.minChars) {
           let s = '';
@@ -111,12 +111,12 @@
           const sel = $('.autocomplete-suggestion.selected', that.sc);
           if (!sel.length) {
             next = (e.which === 40) ? $('.autocomplete-suggestion', that.sc).first() : $('.autocomplete-suggestion', that.sc).last();
-            that.val(next.addClass('selected').data('val'));
+            that.val(next.addClass('selected').attr('data-val'));
           } else {
             next = (e.which === 40) ? sel.next('.autocomplete-suggestion') : sel.prev('.autocomplete-suggestion');
             if (next.length) {
               sel.removeClass('selected');
-              that.val(next.addClass('selected').data('val'));
+              that.val(next.addClass('selected').attr('data-val'));
             } else {
               sel.removeClass('selected');
               that.val(that.last_val);
@@ -127,11 +127,21 @@
           return false;
         }
         // esc
-        if (e.which === 27) that.val(that.last_val).sc.hide();
-        // enter or tab
-        else if (e.which === 13 || e.which === 9) {
+        if (e.which === 27) {
           const sel = $('.autocomplete-suggestion.selected', that.sc);
-          if (sel.length && that.sc.is(':visible')) { o.onSelect(e, sel.data('val'), sel); setTimeout(() => { that.sc.hide(); }, 20); }
+          if (that.sc.is(':visible')) {
+            if (sel.length) that.val(that.last_val);
+            that.sc.hide();
+            return false;
+          }
+        }
+        // enter or tab
+        if (e.which === 13 || e.which === 9) {
+          const sel = $('.autocomplete-suggestion.selected', that.sc);
+          if (that.sc.is(':visible')) {
+            if (sel.length) { o.onSelect(e, sel.attr('data-val'), sel); }
+            that.sc.hide();
+          }
         }
       });
 
@@ -143,14 +153,14 @@
               that.last_val = val;
               clearTimeout(that.timer);
               if (o.cache) {
-                if (val in that.cache) { suggest(that.cache[val]); return; }
+                if (val in that.cache) { suggest(val, that.cache[val]); return; }
                 // no requests if previous suggestions were empty
                 for (let i = 1; i < val.length - o.minChars; i++) {
                   const part = val.slice(0, val.length - i);
-                  if (part in that.cache && !that.cache[part].length) { suggest([]); return; }
+                  if (part in that.cache && !that.cache[part].length) { suggest(val, []); return; }
                 }
               }
-              that.timer = setTimeout(() => { o.source(val, suggest); }, o.delay);
+              that.timer = setTimeout(() => { o.source(val, suggest.bind(that, val)); }, o.delay);
             }
           } else {
             that.last_val = val;

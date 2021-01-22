@@ -5,6 +5,7 @@
  * Copyright 2010, Percy Wegmann
  * Licensed under the GNU LGPLv3 license
  * http://www.opensource.org/licenses/lgpl-3.0.html
+ * https://code.google.com/archive/p/jspos/
  */
 
 function LexerNode(string, regex, regexs){

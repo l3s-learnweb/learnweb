@@ -4,6 +4,8 @@
  *
  * Copyright 2010, Percy Wegmann
  * Licensed under the LGPLv3 license
+ * http://www.opensource.org/licenses/lgpl-3.0.html
+ * https://code.google.com/archive/p/jspos/
  *
  * Enhanced by Toby Rahilly to use a compressed lexicon format as of version 0.2.
  */

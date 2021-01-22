@@ -7,5 +7,5 @@ import 'bootstrap/js/src/popover';
 import 'bootstrap/js/src/scrollspy';
 
 // Learnweb modules
-import './js/vendor/jquery.auto-complete';
+import './js/modules/jquery.auto-complete';
 // import './js/modules/*';
