@@ -1,8 +1,12 @@
 package de.l3s.util;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.io.ByteArrayInputStream;
@@ -316,6 +320,40 @@ public class Image {
      */
     public void dispose() {
         img.flush();
+    }
+
+    /**
+     * Used for creating Watermarks in Glossary.
+     */
+    public static Image fromText(final String text) {
+        // create the font you wish to use
+        Font font = new Font("Tahoma", Font.PLAIN, 18);
+
+        // create the FontRenderContext object which helps us to measure the text
+        FontRenderContext frc = new FontRenderContext(null, true, true);
+
+        // get the height and width of the text
+        Rectangle2D bounds = font.getStringBounds(text, frc);
+        int width = (int) bounds.getWidth();
+        int height = (int) bounds.getHeight();
+
+        // create a BufferedImage object
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        // calling createGraphics() to get the Graphics2D
+        Graphics2D graphic = bufferedImage.createGraphics();
+        graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
+        graphic.fillRect(0, 0, width, height);
+        graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+        Color textColor = new Color(0, 0, 0, 0.5f);
+        graphic.setColor(textColor);
+        graphic.setFont(font);
+        graphic.drawString(text, (float) bounds.getX(), (float) -bounds.getY());
+
+        // releasing resources
+        graphic.dispose();
+
+        return new Image(bufferedImage);
     }
 
     public static void main(String[] args) throws IOException {

@@ -1,7 +1,5 @@
 package de.l3s.learnweb.exceptions;
 
-import javax.annotation.Nullable;
-
 public class HttpException extends RuntimeException {
     private static final long serialVersionUID = 8490079026477441484L;
 
@@ -79,7 +77,6 @@ public class HttpException extends RuntimeException {
         return status;
     }
 
-    @Nullable
     public String getReason() {
         return reason;
     }
@@ -107,7 +104,6 @@ public class HttpException extends RuntimeException {
      *
      * @return the innermost exception, or {@code null} if none
      */
-    @Nullable
     public Throwable getRootCause() {
         Throwable rootCause = null;
         Throwable cause = getCause();

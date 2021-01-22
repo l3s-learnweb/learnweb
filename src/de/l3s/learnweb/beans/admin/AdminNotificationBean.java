@@ -8,6 +8,7 @@ import java.util.Date;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
+import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.NotBlank;
 
@@ -108,9 +109,9 @@ public class AdminNotificationBean extends ApplicationBean {
             }
 
             mail = new Mail();
-            mail.setRecipients(javax.mail.Message.RecipientType.BCC, recipientsArr);
+            mail.setRecipients(RecipientType.BCC, recipientsArr);
             mail.setReplyTo(new InternetAddress(user.getEmail()));
-            mail.setRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+            mail.setRecipient(RecipientType.TO, new InternetAddress(user.getEmail()));
             mail.setHTML(text + "<br/>\n<br/>\n___________________________<br/>\n" + getLocaleMessage("mail_notification_footer", user.getUsername()));
             mail.setSubject("Learnweb: " + title);
             mail.sendMail();

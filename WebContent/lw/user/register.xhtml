@@ -101,8 +101,8 @@
 				<h:outputText value="* #{msg.mandatory_field}"/>
 			</div>
 
+			<h:inputHidden id="timeZone" value="#{registrationBean.timeZone}"/>
 			<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
-                <h:inputHidden id="timeZone" value="#{registrationBean.timeZone}"/>
 		</h:form>
 
 		<h:panelGroup rendered="#{not empty registrationBean.wizard}">

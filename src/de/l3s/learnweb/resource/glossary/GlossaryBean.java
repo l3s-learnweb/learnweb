@@ -1,14 +1,5 @@
 package de.l3s.learnweb.resource.glossary;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -26,7 +17,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
-import javax.imageio.ImageIO;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
@@ -55,6 +45,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.Image;
 
 @Named
 @ViewScoped
@@ -446,9 +437,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
                 HSSFCell cell0 = row0.getCell(0);
 
-                File watermark = text2Image(glossaryResource.getUser().getUsername());
-
-                InputStream is = new FileInputStream(watermark);
+                Image watermark = Image.fromText(glossaryResource.getUser().getUsername());
+                InputStream is = watermark.getInputStream();
 
                 byte[] bytes = IOUtils.toByteArray(is);
                 int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
@@ -493,50 +483,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 HSSFCellStyle copyrightStyle = wb.createCellStyle();
                 copyrightStyle.setLocked(true);
                 sheet.protectSheet("learnweb");
-                watermark.delete();
             }
         } catch (RuntimeException | IOException | SQLException e) {
             log.error("Error in postprocessing Glossary xls for resource: " + glossaryResource.getId(), e);
             addErrorGrowl(e);
         }
-    }
-
-    public File text2Image(String textString) throws IOException {
-        //create a File Object
-
-        File file = File.createTempFile(textString, ".png");
-        //File file = new File("./uploaded_files/tmp/" + textString + ".png");
-        //create the font you wish to use
-        Font font = new Font("Tahoma", Font.PLAIN, 18);
-
-        //create the FontRenderContext object which helps us to measure the text
-        FontRenderContext frc = new FontRenderContext(null, true, true);
-
-        //get the height and width of the text
-        Rectangle2D bounds = font.getStringBounds(textString, frc);
-        int width = (int) bounds.getWidth();
-        int height = (int) bounds.getHeight();
-
-        //create a BufferedImage object
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-        //calling createGraphics() to get the Graphics2D
-        Graphics2D graphic = image.createGraphics();
-        graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
-        graphic.fillRect(0, 0, width, height);
-        graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-        Color textColor = new Color(0, 0, 0, 0.5f);
-        graphic.setColor(textColor);
-        graphic.setFont(font);
-        graphic.drawString(textString, (float) bounds.getX(), (float) -bounds.getY());
-
-        //releasing resources
-        graphic.dispose();
-
-        //creating the file
-        ImageIO.write(image, "png", file);
-
-        return file;
     }
 
     public void rotatePDF(Object document) {
