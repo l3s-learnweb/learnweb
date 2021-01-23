@@ -29,29 +29,29 @@
   }
 
   .ui-paginator-first {
-    @include icon-override("\f048");
+    @include ui-icon-override($fa-var-step-backward);
   }
 
   .ui-paginator-prev {
-    @include icon-override("\f04a");
+    @include ui-icon-override($fa-var-backward);
   }
 
   .ui-paginator-next {
-    @include icon-override("\f04e");
+    @include ui-icon-override($fa-var-forward);
   }
 
   .ui-paginator-last {
-    @include icon-override("\f051");
+    @include ui-icon-override($fa-var-step-forward);
   }
 
   .ui-paginator-pages {
-    padding: 0 0 4px 0;
+    padding: 0 0 4px;
 
     .ui-paginator-page {
       color: $headerLightTextColor;
       padding-right: 10px;
       padding-left: 10px;
-      @include transition(color .3s);
+      @include transition(color 0.3s);
 
       &.ui-state-hover {
         color: $primaryColor;
@@ -91,7 +91,7 @@
   .ui-datatable-header {
     border-bottom: 0;
 
-    & + .ui-paginator-top {
+    + .ui-paginator-top {
       border-top: 0 none;
     }
   }
@@ -111,7 +111,7 @@
       padding-top: 0;
 
       .ui-paginator-pages {
-        padding: 4px 0 0 0;
+        padding: 4px 0 0;
       }
     }
   }
@@ -137,7 +137,8 @@
           color: $primaryColor;
         }
 
-        .ui-column-title, .ui-sortable-column-icon {
+        .ui-column-title,
+        .ui-sortable-column-icon {
           color: $primaryTextColor;
         }
       }
@@ -227,7 +228,7 @@
     font-size: $font-size-base;
     padding-top: 0;
 
-    &:before {
+    &::before {
       margin-left: 2px;
     }
   }
@@ -237,7 +238,7 @@
     font-size: $font-size-base;
     padding-top: 10px;
 
-    &:before {
+    &::before {
       margin-left: 2px;
     }
   }
@@ -271,7 +272,7 @@
     font-size: $font-size-lg;
     text-align: left;
 
-    & + .ui-paginator-top {
+    + .ui-paginator-top {
       border-top: 0 none;
     }
 
@@ -293,7 +294,7 @@
       padding-top: 0;
 
       .ui-paginator-pages {
-        padding: 4px 0 0 0;
+        padding: 4px 0 0;
       }
     }
   }
@@ -302,35 +303,35 @@
 .ui-picklist {
   .ui-picklist-buttons {
     .ui-icon-arrow-1-n {
-      @include icon-override("\f106");
+      @include ui-icon-override($fa-var-angle-up);
     }
 
     .ui-icon-arrowstop-1-n {
-      @include icon-override("\f102");
+      @include ui-icon-override($fa-var-angle-double-up);
     }
 
     .ui-icon-arrow-1-s {
-      @include icon-override("\f107");
+      @include ui-icon-override($fa-var-angle-down);
     }
 
     .ui-icon-arrowstop-1-s {
-      @include icon-override("\f103");
+      @include ui-icon-override($fa-var-angle-double-down);
     }
 
     .ui-icon-arrow-1-e {
-      @include icon-override("\f105");
+      @include ui-icon-override($fa-var-angle-right);
     }
 
     .ui-icon-arrowstop-1-e {
-      @include icon-override("\f101");
+      @include ui-icon-override($fa-var-angle-double-right);
     }
 
     .ui-icon-arrow-1-w {
-      @include icon-override("\f104");
+      @include ui-icon-override($fa-var-angle-left);
     }
 
     .ui-icon-arrowstop-1-w {
-      @include icon-override("\f100");
+      @include ui-icon-override($fa-var-angle-double-left);
     }
   }
 
@@ -341,7 +342,7 @@
   }
 
   .ui-picklist-filter-container {
-    padding: .5em;
+    padding: 0.5em;
   }
 
   .ui-picklist-list {
@@ -370,19 +371,19 @@
       }
 
       .ui-icon-arrow-1-e {
-        @include icon-override("\f107");
+        @include ui-icon-override($fa-var-angle-down);
       }
 
       .ui-icon-arrowstop-1-e {
-        @include icon-override("\f103");
+        @include ui-icon-override($fa-var-angle-double-down);
       }
 
       .ui-icon-arrow-1-w {
-        @include icon-override("\f106");
+        @include ui-icon-override($fa-var-angle-up);
       }
 
       .ui-icon-arrowstop-1-w {
-        @include icon-override("\f102");
+        @include ui-icon-override($fa-var-angle-double-up);
       }
     }
   }
@@ -391,19 +392,19 @@
 .ui-orderlist {
   .ui-orderlist-controls {
     .ui-icon-arrow-1-n {
-      @include icon-override("\f106");
+      @include ui-icon-override($fa-var-angle-up);
     }
 
     .ui-icon-arrowstop-1-n {
-      @include icon-override("\f102");
+      @include ui-icon-override($fa-var-angle-double-up);
     }
 
     .ui-icon-arrow-1-s {
-      @include icon-override("\f107");
+      @include ui-icon-override($fa-var-angle-down);
     }
 
     .ui-icon-arrowstop-1-s {
-      @include icon-override("\f103");
+      @include ui-icon-override($fa-var-angle-double-down);
     }
   }
 
@@ -468,7 +469,8 @@
       padding: 0;
     }
 
-    .ui-carousel-dropdown, .ui-carousel-mobile-dropdown {
+    .ui-carousel-dropdown,
+    .ui-carousel-mobile-dropdown {
       margin-top: 2px;
     }
   }
@@ -484,15 +486,15 @@
 
   .ui-carousel-button {
     margin: 4px 2px 0;
-    @include transition(color .3s);
+    @include transition(color 0.3s);
 
     &.ui-carousel-next-button {
-      @include icon-override("\f101");
+      @include ui-icon-override($fa-var-angle-double-right);
       margin-left: 4px;
     }
 
     &.ui-carousel-prev-button {
-      @include icon-override("\f100");
+      @include ui-icon-override($fa-var-angle-double-left);
       margin-left: 4px;
     }
 
@@ -512,7 +514,7 @@
       padding-right: 3px;
       color: $carouselTextColor;
       font-size: 12px;
-      @include icon-override("\f111");
+      @include ui-icon-override($fa-var-circle);
 
       &:hover {
         color: $carouselButtonHoverColor;
@@ -633,7 +635,7 @@
             color: $primaryColor;
 
             &.ui-icon-minus {
-              @include icon-override("\f00c");
+              @include ui-icon-override($fa-var-check);
               color: $gray-400;
             }
           }
@@ -673,14 +675,14 @@
         float: none;
         margin: 0 4px 0 0;
         height: auto;
-        @include icon-override("\f067");
+        @include ui-icon-override($fa-var-plus);
 
         &.ui-icon-triangle-1-s {
-          @include icon-override("\f068");
+          @include ui-icon-override($fa-var-minus);
         }
 
         &.ui-icon-minus {
-          @include icon-override("\f068");
+          @include ui-icon-override($fa-var-minus);
         }
       }
 
@@ -726,18 +728,18 @@
         margin: 0 8px 0 0;
 
         .ui-icon-minus {
-          @include icon-override("\f00c");
+          @include ui-icon-override($fa-var-check);
           color: $gray-400;
         }
       }
 
-      &[aria-selected="true"] {
-        :before {
-          @include icon-override("\f1b1");
+      &[aria-selected='true'] {
+        ::before {
+          @include ui-icon-override($fa-var-utensil-spoon);
         }
 
-        :after {
-          @include icon-override("\f1b1");
+        ::after {
+          @include ui-icon-override($fa-var-utensil-spoon);
         }
 
         > .ui-tree-selectable {
@@ -875,7 +877,7 @@
     background-color: $primaryColor;
     color: $primaryTextColor;
     font-size: $font-size-lg;
-    padding: 12px 12px 0 12px;
+    padding: 12px 12px 0;
     margin: 0;
 
     .fc-left {
@@ -892,13 +894,13 @@
         }
 
         .ui-icon-circle-triangle-w {
-          @include icon-override("\f100");
+          @include ui-icon-override($fa-var-angle-double-left);
           position: relative;
           top: 2px;
         }
 
         .ui-icon-circle-triangle-e {
-          @include icon-override("\f101");
+          @include ui-icon-override($fa-var-angle-double-right);
           position: relative;
           top: 2px;
         }
@@ -924,7 +926,7 @@
           font-weight: 400;
           background-color: $primaryColor;
           border: 0;
-          padding: 12px 10px 35px 10px;
+          padding: 12px 10px 35px;
 
           &.ui-state-hover {
             border-bottom: 4px solid $buttonHoverBorderColor;
@@ -972,7 +974,7 @@
     background-color: $primaryColor;
     color: $primaryTextColor;
     font-size: $font-size-lg;
-    padding: 6px 12px 0 12px;
+    padding: 6px 12px 0;
     margin: 0;
 
     h2 {
@@ -993,7 +995,7 @@
           background-color: $primaryColor;
           border: 0 none;
           border-radius: 0;
-          padding: 16px 10px 20px 10px;
+          padding: 16px 10px 20px;
           border-bottom: 4px solid transparent;
 
           &:not(:disabled):hover {

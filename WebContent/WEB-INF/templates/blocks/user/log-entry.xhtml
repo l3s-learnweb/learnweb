@@ -13,7 +13,7 @@
 	<h:outputStylesheet name="bundle/jquery.fancybox.min.css"/>
 	<h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
 
-	<img class="profile-picture align-self-start mr-3 mt-1" src="#{logEntry.user.image}" alt="Profile picture"/>
+	<img class="profile-picture align-self-start me-3 mt-1" src="#{logEntry.user.image}" alt="Profile picture"/>
 
 	<div class="overflow-hidden">
 		<p class="mb-0 log-title">
@@ -28,12 +28,13 @@
 				<h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"/>
 			</h:panelGroup>
 		</p>
-		<p class="small font-weight-light mb-0 log-date">
+		<p class="small fw-light mb-0 log-date">
 			<lw:timeAgo date="#{logEntry.date}" timeZone="#{userBean.timeZone}"/>
 		</p>
 
 		<h:panelGroup rendered="#{showPreview and logEntry.resource != null}" layout="block" styleClass="resource-log-snippet mt-2">
-			<h:outputLink styleClass="resource-preview text-decoration-none mx-auto" style="min-width:10rem;" value="resource.jsf" pt:data-resview="default" rendered="#{not empty logEntry.resource.smallThumbnail}">
+			<h:outputLink styleClass="resource-preview text-decoration-none mx-auto mw-r10" value="resource.jsf" pt:data-resview="default"
+						  rendered="#{not empty logEntry.resource.smallThumbnail}">
 				<f:param name="resource_id" value="#{logEntry.resource.id}"/>
 
 				<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
@@ -42,7 +43,7 @@
 				</ui:decorate>
 			</h:outputLink>
 
-			<div class="resource-details pl-3">
+			<div class="resource-details ps-3">
 				<h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>
 			</div>
 		</h:panelGroup>

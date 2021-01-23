@@ -4,6 +4,7 @@ $topbar-button-padding: 1rem;
 
 .layout-wrapper {
   .layout-header {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
@@ -98,17 +99,14 @@ $topbar-button-padding: 1rem;
 
     @include media-breakpoint-down($topbar-two-row-display) {
       height: auto;
+      flex-wrap: wrap;
 
-      .layout-container {
-        flex-wrap: wrap;
+      > *:not(.search-wrapper) {
+        max-width: 50%;
+      }
 
-        > *:not(.search-wrapper) {
-          max-width: 50%;
-        }
-
-        .search-wrapper {
-          width: 100%;
-        }
+      .search-wrapper {
+        width: 100%;
       }
 
       .search-form {

@@ -33,9 +33,9 @@
                         <div class="d-flex justify-content-center">
                             <!--activeIndex is set to the last guide to allow clicks on all blocks.-->
                             <p:steps activeIndex="3" styleClass="mb-2 ui-guide" readonly="false">
-                                <p:menuitem styleClass="fa #{userBean.user.getGuide('ADD_RESOURCE') ? 'completed fa-check-circle-o' : 'not-completed fa-circle-o'}" actionListener="#{userBean.setGuided(true)}" onclick="guideResource.start();" value="#{msg.addResource}" global="false"/>
-                                <p:menuitem styleClass="fa #{userBean.user.getGuide('JOIN_GROUP') ? 'completed fa-check-circle-o' : 'not-completed fa-circle-o'}" actionListener="#{userBean.setGuided(true)}" onclick="guideGroups.start();" value="#{msg.join_group}" global="false"/>
-                                <p:menuitem styleClass="fa #{userBean.user.getGuide('ADD_PHOTO') ? 'completed fa-check-circle-o' : 'not-completed fa-circle-o'}" actionListener="#{userBean.setGuided(true)}" onclick="guideSettings.start();" value="#{msg['guide.add_photo']}" global="false"/>
+                                <p:menuitem styleClass="fas #{userBean.user.getGuide('ADD_RESOURCE') ? 'completed fa-check-circle-o' : 'not-completed fa-circle-o'}" actionListener="#{userBean.setGuided(true)}" onclick="guideResource.start();" value="#{msg.addResource}" global="false"/>
+                                <p:menuitem styleClass="fas #{userBean.user.getGuide('JOIN_GROUP') ? 'completed fa-check-circle-o' : 'not-completed fa-circle-o'}" actionListener="#{userBean.setGuided(true)}" onclick="guideGroups.start();" value="#{msg.join_group}" global="false"/>
+                                <p:menuitem styleClass="fas #{userBean.user.getGuide('ADD_PHOTO') ? 'completed fa-check-circle-o' : 'not-completed fa-circle-o'}" actionListener="#{userBean.setGuided(true)}" onclick="guideSettings.start();" value="#{msg['guide.add_photo']}" global="false"/>
                             </p:steps>
                         </div>
                     </h:form>
@@ -47,13 +47,13 @@
                     #{msg.welcome}
                     <ui:fragment rendered="#{userBean.moderator}">
                         <h:link outcome="/lw/admin/organisation.jsf">
-                            <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                            <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
                         </h:link>
                     </ui:fragment>
                 </f:facet>
                 
                 <div class="d-flex align-items-center">
-                    <img class="d-block profile-picture mr-3" src="${userBean.user.image}" alt="Profile image"/>
+                    <img class="d-block profile-picture me-3" src="${userBean.user.image}" alt="Profile image"/>
                     <div>
                         <p class="mb-0">
                             <h:outputText value="#{msg.greeting} #{userBean.user.username},"/><br/>
@@ -79,7 +79,7 @@
                     <h3>
                         <h:outputText value="#{course.title}"/>
                         <h:link rendered="#{userBean.user.moderator}" outcome="/lw/admin/course.jsf?course_id=#{course.id}">
-                            <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                            <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
                         </h:link>
                     </h3>
                     <h:outputText value="#{course.welcomeMessage}" escape="false"/>
@@ -89,7 +89,7 @@
             <p:tabView styleClass="ui-tabs-transparent" rendered="#{not welcomeBean.hideNewsPanel}" dynamic="true">
                 <p:tab rendered="#{not empty welcomeBean.newsForums}">
                     <f:facet name="title">
-                        <i class="fa fa-fw fa-commenting-o" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-comment-dots" aria-hidden="true"></i>
                         #{msg.forum}
                     </f:facet>
                     <ui:repeat var="entry" value="#{welcomeBean.newsForums}" varStatus="status">
@@ -101,7 +101,7 @@
                 </p:tab>           
                 <p:tab rendered="#{not empty welcomeBean.newsResources}">
                     <f:facet name="title">
-                        <i class="fa fa-fw fa-file-o" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-file" aria-hidden="true"></i>
                         #{msg.resources}
                     </f:facet>
                     <ui:repeat var="entry" value="#{welcomeBean.newsResources}" varStatus="status">
@@ -113,12 +113,12 @@
                 </p:tab>
                 <p:tab rendered="#{not empty welcomeBean.receivedMessages}">
                     <f:facet name="title">
-                        <i class="fa fa-fw fa-bell-o" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-bell" aria-hidden="true"></i>
                         #{msg.notifications}
                     </f:facet>
                     <ui:repeat var="message" value="#{welcomeBean.receivedMessages}" varStatus="status">
                         <div class="d-flex #{status.first ? '' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
-                            <img class="profile-picture mr-3" src="#{message.fromUser.image}" alt="Profile picture"/>
+                            <img class="profile-picture me-3" src="#{message.fromUser.image}" alt="Profile picture"/>
 
                             <div class="text-break">
                                 <p class="h5">
@@ -128,10 +128,10 @@
                                 <div class="message-container m-1">
                                     <h:outputText value="#{message.text}" escape="false"/>
                                 </div>
-                                <span class="small font-weight-light">
+                                <span class="small fw-light">
                                     <h:outputText value="#{msg.from_user} "/>
-                                    <h:outputText value="#{message.fromUser.username} " styleClass="font-weight-bold"/>
-                                    <h:outputText value="#{msg.on_date} " styleClass="font-weight-light"/>
+                                    <h:outputText value="#{message.fromUser.username} " styleClass="fw-bold"/>
+                                    <h:outputText value="#{msg.on_date} " styleClass="fw-light"/>
                                     <h:outputText value="#{message.time}">
                                         <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                     </h:outputText>
@@ -154,7 +154,7 @@
                         </h:outputFormat>
                     </a>
 
-                    <ul class="list-unstyled pl-3">
+                    <ul class="list-unstyled ps-3">
                         <ui:repeat var="submission" value="#{welcomeBean.activeSubmissions}" varStatus="status">
                             <ui:fragment rendered="#{submission.isSurveySubmitted(userBean.user.id)}">
                                 <li class="#{status.last ? '' : 'border-bottom'} mt-3 d-flex flex-column">

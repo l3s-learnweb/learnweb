@@ -5,7 +5,7 @@
     background-color: $primaryColor;
     color: $overlayIconColor;
     padding: 2px;
-    @include transition(color .3s);
+    @include transition(color 0.3s);
 
     &.ui-state-hover {
       color: $primaryColor;
@@ -37,7 +37,7 @@
       text-decoration: none;
       color: $overlayIconColor;
       border: 0 none;
-      @include transition(color .3s);
+      @include transition(color 0.3s);
       padding: 3px 0;
       margin-left: 4px;
 
@@ -156,7 +156,7 @@
     .ui-lightbox-close {
       padding: 0;
       color: $primaryTextColor;
-      @include transition(color .3s);
+      @include transition(color 0.3s);
 
       &.ui-state-hover {
         color: $dialogTitlebarIconHover;
@@ -168,8 +168,8 @@
     overflow: hidden;
 
     .ui-lightbox-nav-left {
-      @include icon-override("\f053");
-      @include transition(all .3s);
+      @include ui-icon-override($fa-var-chevron-left);
+      @include transition(all 0.3s);
       font-size: 24px;
       margin-left: 4px;
       color: $overlayIconColor;
@@ -185,8 +185,8 @@
     }
 
     .ui-lightbox-nav-right {
-      @include icon-override("\f054");
-      @include transition(all .3s);
+      @include ui-icon-override($fa-var-chevron-right);
+      @include transition(all 0.3s);
       font-size: 24px;
       margin-right: 4px;
       color: $overlayIconColor;

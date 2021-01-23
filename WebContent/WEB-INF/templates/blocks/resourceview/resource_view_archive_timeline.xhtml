@@ -38,14 +38,14 @@
         <div id="archive_timeline_calendar" class="collapse">
             <div class="responsive-calendar">
                 <div class="controls d-flex pb-2 mb-2 border-bottom">
-                    <a class="mr-auto" data-go="prev">
+                    <a class="me-auto" data-go="prev">
                         <h:outputText value="#{msg.previous_page}" styleClass="p-1 text-white bg-primary border rounded-sm"/>
                     </a>
                     <h5 class="mb-0">
                         <span id="year" data-head-year="data-head-year"></span>
                         <span id="month" data-head-month="data-head-month"></span>
                     </h5>
-                    <a class="ml-auto" data-go="next">
+                    <a class="ms-auto" data-go="next">
                         <h:outputText value="#{msg.next_page}" styleClass="p-1 text-white bg-primary border rounded-sm"/>
                     </a>
                 </div>
@@ -58,7 +58,7 @@
                     <!-- the place where days will be generated -->
                 </div>
             </div>
-            <div class="text-right">
+            <div class="text-end">
                 <h:outputLink onclick="return returnToTimeline();">#{msg.back_to_timeline_view}</h:outputLink>
             </div>
         </div>

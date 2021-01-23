@@ -13,13 +13,13 @@
         <p:accordionPanel styleClass="last-activity-overview ui-widget-content-pt-0" multiple="true">
             <p:tab rendered="#{not empty summary.addedResources}">
                 <f:facet name="title">
-                    <i class="fa fa-fw fa-plus text-success pr-1" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-plus text-success pe-1" aria-hidden="true"></i>
                     <h:outputFormat value="#{msg['added_resources']}"><f:param value="#{summary.addedResources.size()}"/></h:outputFormat>
                 </f:facet>
 
                 <div class="activity-feed-slider activity-feed-added-resources">
                     <p:carousel value="#{summary.addedResources}" var="item" styleClass="ui-carousel-light" responsive="true" circular="true" breakpoint="-1">
-                        <h:outputLink styleClass="mx-auto text-decoration-none" style="min-width:10rem;" value="resource.jsf" pt:data-resview="default">
+                        <h:outputLink styleClass="mx-auto text-decoration-none mw-r10" value="resource.jsf" pt:data-resview="default">
                             <f:param name="resource_id" value="#{item.resource.id}"/>
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
@@ -33,7 +33,7 @@
 
             <p:tab rendered="#{not empty summary.deletedResources}">
                 <f:facet name="title">
-                    <i class="fa fa-fw fa-times text-danger pr-1" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-times text-danger pe-1" aria-hidden="true"></i>
                     <h:outputFormat value="#{msg['deleted_resources']}"><f:param value="#{summary.deletedResources.size()}"/></h:outputFormat>
                 </f:facet>
 
@@ -48,14 +48,14 @@
 
             <p:tab rendered="#{not empty summary.updatedResources}">
                 <f:facet name="title">
-                    <i class="fa fa-fw fa-pencil text-warning pr-1" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-pencil-alt text-warning pe-1" aria-hidden="true"></i>
                     <h:outputFormat value="#{msg['updated_resources']}"><f:param value="#{summary.updatedResources.size()}"/></h:outputFormat>
                 </f:facet>
 
                 <div class="activity-feed-slider activity-feed-updated-resources">
                     <p:carousel value="#{summary.updatedResources.keySet()}" var="res" styleClass="ui-carousel-light" responsive="true"
                                 circular="true" breakpoint="-1">
-                        <h:outputLink styleClass="mx-auto text-decoration-none" style="min-width:10rem;" value="resource.jsf" pt:data-resview="default">
+                        <h:outputLink styleClass="mx-auto text-decoration-none mw-r10" value="resource.jsf" pt:data-resview="default">
                             <f:param name="resource_id" value="#{res.id}"/>
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
@@ -69,7 +69,7 @@
 
             <p:tab rendered="#{not empty summary.forumsInfo}">
                 <f:facet name="title">
-                    <i class="fa fa-fw fa-commenting-o text-info pr-1" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-comment-dots text-info pe-1" aria-hidden="true"></i>
                     <h:outputText value="#{msg.forum}"/>
                 </f:facet>
 
@@ -84,7 +84,7 @@
 
             <p:tab rendered="#{not empty summary.membersInfo}">
                 <f:facet name="title">
-                    <i class="fa fa-fw fa-users text-info pr-1" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-users text-info pe-1" aria-hidden="true"></i>
                     <h:outputText value="#{msg.members}"/>
                 </f:facet>
 

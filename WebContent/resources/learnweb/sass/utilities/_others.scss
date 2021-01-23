@@ -59,11 +59,7 @@
 }
 
 .select-none {
-  @include user-select(none);
-}
-
-.line-height-sm {
-  line-height: 1.25;
+  user-select: none;
 }
 
 .modal-dialog-select {
@@ -87,22 +83,6 @@ section:target .highlight {
   }
 }
 
-iframe,
-embed,
-object,
-video {
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-blockquote {
-  border-left: 4px solid $gray-500;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  padding-left: 16px;
-}
-
 .message-container {
   p {
     margin-bottom: 0;
@@ -118,11 +98,6 @@ blockquote {
 
 .white-space-normal {
   white-space: normal !important;
-}
-
-blockquote {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
 }
 
 .links-list {
@@ -163,16 +138,22 @@ blockquote {
   }
 }
 
-// Utilities for common `display` values. Similar to existing .d-#{} utils, but using max-width (down) instead of min-width
+.text-blue {
+  color: $blue;
+}
+
+.pre-scrollable {
+  max-height: 340px;
+  overflow-y: scroll;
+}
+
+// Utilities for hiding content on smaller displays. Similar to existing .d-#{}-none utils, but using max-width (down) instead of min-width
 // For example, instead of .d-none.d-md-block, you can use .dd-sm-none class.
 @each $breakpoint in map-keys($grid-breakpoints) {
-  $max: breakpoint-max($breakpoint, $grid-breakpoints);
-
-  @if ($max) {
-    @media (max-width: $max) {
-      @each $value in $displays {
-        .dd-#{$breakpoint}-#{$value} { display: $value !important; }
-      }
+  @include media-breakpoint-down($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+    .dd#{$infix}-none {
+      display: none !important;
     }
   }
 }

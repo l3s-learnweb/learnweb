@@ -10,14 +10,14 @@
     font-weight: 700;
     font-size: $headerFontSize;
     @include border-top-radius($border-radius);
-    @include border-bottom-radius(0px);
+    @include border-bottom-radius(0);
 
     .ui-panel-titlebar-icon {
       position: relative;
       top: 7px;
       color: $headerTextColor;
       margin: 0 0 0 4px;
-      @include transition(color .3s);
+      @include transition(color 0.3s);
 
       &.ui-state-hover {
         color: $dialogTitlebarIconHover;
@@ -59,7 +59,7 @@
     background-color: $headerLightBgColor;
     margin-left: -1px;
     font-weight: 700;
-    @include transition(background-color .3s);
+    @include transition(background-color 0.3s);
 
     .ui-fieldset-toggler {
       float: none;
@@ -70,9 +70,6 @@
 
     &.ui-state-hover {
       background-color: $headerLightHoverBgColor;
-    }
-
-    &.ui-state-focus {
     }
   }
 
@@ -110,10 +107,10 @@
       right: $font-size-base;
       left: auto;
       @include transition(color $transition-duration);
-      @include icon-override("\f067");
+      @include ui-icon-override($fa-var-plus);
 
       &.ui-icon-triangle-1-s {
-        @include icon-override("\f068");
+        @include ui-icon-override($fa-var-minus);
       }
     }
   }
@@ -174,7 +171,7 @@
 
         &.ui-state-active {
           background-color: $headerTabBgColor;
-          border-bottom: none;
+          border-bottom: 0;
           border-top: 4px solid $primaryColor;
 
           a {
@@ -322,12 +319,12 @@
       @include border-radius(0);
 
       &:first-child {
-        @include border-left-radius($border-radius);
+        @include border-start-radius($border-radius);
         border-right: 1px solid $contentBorderColor;
       }
 
       &:last-child {
-        @include border-right-radius($border-radius);
+        @include border-end-radius($border-radius);
         border-right: 1px solid $contentBorderColor;
       }
 

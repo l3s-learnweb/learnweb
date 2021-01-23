@@ -58,7 +58,7 @@
 
                 <p:column headerText="#{msg.author}" styleClass="py-2 text-center align-baseline w-15">
                     <h:link outcome="/lw/user/detail.jsf?user_id=#{post.userId}">
-                        <h:outputText styleClass="d-block mb-1 font-weight-bold" value="#{post.user.username}"/>
+                        <h:outputText styleClass="d-block mb-1 fw-bold" value="#{post.user.username}"/>
                         <img class="img-fluid profile-picture square fluent" src="${learnwebBean.getProfileImage(post.user)}" alt="#{post.user.fullName}"/>
                     </h:link>
 
@@ -83,7 +83,7 @@
                                     #{msg.category}: #{post.category}
                                 </div>
                             </ui:fragment>
-                            <div class="col text-right">
+                            <div class="col text-end">
                                 #{msg['ForumIndex.postedOn']}
                                 <h:outputText value="#{post.date}">
                                     <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
@@ -109,7 +109,7 @@
                                 </div>
                             </ui:fragment>
 
-                            <div class="col text-right">
+                            <div class="col text-end">
                                 <p:commandLink value="#{msg.delete}" update=":forum_posts_table" styleClass="mx-2" immediate="true"
                                                action="#{forumTopicBean.deletePost(post)}" rendered="#{post.canDeletePost(userBean.user)}">
                                     <p:confirm message="#{msg.delete_message_forum_post}"/>

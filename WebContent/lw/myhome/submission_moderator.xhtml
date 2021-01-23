@@ -34,32 +34,32 @@
 
     <p:panel header="#{submissionModeratorBean.submission.title}">
         <div class="form-group d-flex flex-column">
-            <span class="font-weight-lighter">#{msg['Submission.open_date']}:
-                <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.openDatetime}">
+            <span class="fw-lighter">#{msg['Submission.open_date']}:
+                <h:outputText styleClass="fw-light" value="#{submissionModeratorBean.submission.openDatetime}">
                     <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </span>
 
-            <span class="font-weight-lighter">#{msg['Submission.close_date']}:
-                <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.closeDatetime}">
+            <span class="fw-lighter">#{msg['Submission.close_date']}:
+                <h:outputText styleClass="fw-light" value="#{submissionModeratorBean.submission.closeDatetime}">
                     <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </span>
 
-            <span class="font-weight-lighter">#{msg.course}:
-                <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.course.title}"/>
+            <span class="fw-lighter">#{msg.course}:
+                <h:outputText styleClass="fw-light" value="#{submissionModeratorBean.submission.course.title}"/>
             </span>
         </div>
 
-        <p class="font-weight-lighter">#{submissionModeratorBean.submission.description}</p>
+        <p class="fw-lighter">#{submissionModeratorBean.submission.description}</p>
 
         <h:panelGroup layout="block" id="user_submissions" pt:data-canSelectResources="true">
             <ui:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
                 <div class="#{status.last ? '' : 'mb-4 border-bottom'}">
                     <div class="d-flex align-items-center p-2 bg-light">
-                        <img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.user)}" alt="Profile picture"/>
+                        <img class="profile-picture me-4 me-md-2" src="${learnwebBean.getProfileImage(userSubmission.user)}" alt="Profile picture"/>
                         <div class="d-flex align-items-center justify-content-between w-100">
-                            <h4 class="mr-1 mb-0">#{userSubmission.user.username}</h4>
+                            <h4 class="me-1 mb-0">#{userSubmission.user.username}</h4>
                             <h:form prependId="false">
                                 <p:commandButton  value="locked" styleClass="moderator-btn" rendered="#{userSubmission.submitStatus}"
                                                 process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">

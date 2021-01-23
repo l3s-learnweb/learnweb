@@ -16,12 +16,12 @@
     <div class="#{status.last ? '' : 'mb-4' }">
         <div class="d-flex align-items-center justify-content-between p-2 bg-light flex-md-row flex-column">
             <div class="d-flex align-items-center">
-                <h4 class="mb-0 mr-1">
+                <h4 class="mb-0 me-1">
                     #{submission.title}
                 </h4>
             </div>
 
-            <div class="d-flex text-md-right flex-md-row flex-column">
+            <div class="d-flex text-md-end flex-md-row flex-column">
                 <h:form>
                     <p:commandButton value="locked" styleClass="moderator-btn" rendered="#{(userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and submission.submitted}"
                                      process="@this" update=":current_submissions" action="#{submissionBean.unlockSubmission}" oncomplete="addSubmissionHeaderClickHandler();">
@@ -71,24 +71,24 @@
 
         <div class="p-1 #{status.last ? '' : 'border-bottom' }">
             <div class="form-group mt-3 d-flex flex-column">
-                    <span class="font-weight-lighter">#{msg['Submission.open_date']}:
-                        <h:outputText styleClass="font-weight-light" value="#{submission.openDatetime}">
+                    <span class="fw-lighter">#{msg['Submission.open_date']}:
+                        <h:outputText styleClass="fw-light" value="#{submission.openDatetime}">
                             <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
                         </h:outputText>
                     </span>
 
-                <span class="font-weight-lighter">#{msg['Submission.close_date']}:
-                        <h:outputText styleClass="font-weight-light" value="#{submission.closeDatetime}">
+                <span class="fw-lighter">#{msg['Submission.close_date']}:
+                        <h:outputText styleClass="fw-light" value="#{submission.closeDatetime}">
                             <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
                         </h:outputText>
                     </span>
 
-                <span class="font-weight-lighter">#{msg.course}:
-                        <h:outputText styleClass="font-weight-light" value="#{submission.course.title}"/>
+                <span class="fw-lighter">#{msg.course}:
+                        <h:outputText styleClass="fw-light" value="#{submission.course.title}"/>
                     </span>
             </div>
 
-            <p class="font-weight-lighter mb-3">#{submission.description}</p>
+            <p class="fw-lighter mb-3">#{submission.description}</p>
 
             <h:panelGroup id="resourceGrid" styleClass="res-grid mt-5" layout="block" rendered="#{not empty submission.submittedResources}">
                 <ui:repeat value="#{submission.submittedResources}" var="res">

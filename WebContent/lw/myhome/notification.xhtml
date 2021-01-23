@@ -30,7 +30,7 @@
 
 		<ui:repeat var="message" value="#{messageBean.receivedMessages}" varStatus="status">
 			<div class="d-flex #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
-				<img class="profile-picture mr-3" src="#{message.fromUser.image}" alt="Profile picture"/>
+				<img class="profile-picture me-3" src="#{message.fromUser.image}" alt="Profile picture"/>
 
 				<div class="text-break">
 					<p class="h5">
@@ -40,10 +40,10 @@
 					<div class="message-container m-1">
 						<h:outputText value="#{message.text}" escape="false"/>
 					</div>
-					<span class="small font-weight-light">
+					<span class="small fw-light">
 						<h:outputText value="#{msg.from_user} " escape="false"/>
-						<h:outputText value="#{message.fromUser.username} " styleClass="font-weight-bold" escape="false"/>
-						<h:outputText value="#{msg.on_date} " escape="false" styleClass="font-weight-light"/>
+						<h:outputText value="#{message.fromUser.username} " styleClass="fw-bold" escape="false"/>
+						<h:outputText value="#{msg.on_date} " escape="false" styleClass="fw-light"/>
 						<h:outputText value="#{message.time}">
 							<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 						</h:outputText>

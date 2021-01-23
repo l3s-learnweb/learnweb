@@ -5,7 +5,7 @@
     color: $infoMessageTextColor;
 
     .ui-messages-info-icon {
-      @include icon-override("\f05a");
+      @include ui-icon-override($fa-var-info-circle);
       font-size: 24px;
       margin-top: -2px;
     }
@@ -17,7 +17,7 @@
     color: $warnMessageTextColor;
 
     .ui-messages-warn-icon {
-      @include icon-override("\f071");
+      @include ui-icon-override($fa-var-exclamation-triangle);
       font-size: 24px;
       margin-top: -2px;
     }
@@ -29,7 +29,7 @@
     color: $errorMessageTextColor;
 
     .ui-messages-error-icon {
-      @include icon-override("\f06a");
+      @include ui-icon-override($fa-var-exclamation-circle);
       font-size: 24px;
       //margin-top: -2px;
     }
@@ -41,7 +41,7 @@
     color: $fatalMessageTextColor;
 
     .ui-messages-fatal-icon {
-      @include icon-override("\f06a");
+      @include ui-icon-override($fa-var-exclamation-circle);
       font-size: 24px;
       margin-top: -2px;
     }
@@ -75,7 +75,7 @@
     color: $infoMessageTextColor;
 
     .ui-message-info-icon {
-      @include icon-override("\f05a");
+      @include ui-icon-override($fa-var-info-circle);
       font-size: $font-size-base;
       margin-top: 2px;
     }
@@ -87,7 +87,7 @@
     color: $warnMessageTextColor;
 
     .ui-message-warn-icon {
-      @include icon-override("\f071");
+      @include ui-icon-override($fa-var-exclamation-triangle);
       font-size: $font-size-base;
       margin-top: 2px;
     }
@@ -99,7 +99,7 @@
     color: $errorMessageTextColor;
 
     .ui-message-error-icon {
-      @include icon-override("\f06a");
+      @include ui-icon-override($fa-var-exclamation-circle);
       font-size: $font-size-base;
       margin-top: 2px;
     }
@@ -111,7 +111,7 @@
     color: $fatalMessageTextColor;
 
     .ui-message-fatal-icon {
-      @include icon-override("\f06a");
+      @include ui-icon-override($fa-var-exclamation-circle);
       font-size: $font-size-base;
       margin-top: 2px;
     }
@@ -122,7 +122,7 @@
   top: 85px;
 
   .ui-growl-item-container {
-    opacity: .95;
+    opacity: 0.95;
     @include overlay-shadow();
 
     &.ui-growl-info {
@@ -131,7 +131,7 @@
       color: $infoMessageTextColor;
 
       .ui-growl-image {
-        @include icon-override("\f06a");
+        @include ui-icon-override($fa-var-exclamation-circle);
         font-size: 36px;
       }
     }
@@ -142,7 +142,7 @@
       color: $warnMessageTextColor;
 
       .ui-growl-image {
-        @include icon-override("\f06a");
+        @include ui-icon-override($fa-var-exclamation-circle);
         font-size: 36px;
       }
     }
@@ -153,7 +153,7 @@
       color: $errorMessageTextColor;
 
       .ui-growl-image {
-        @include icon-override("\f06a");
+        @include ui-icon-override($fa-var-exclamation-circle);
         font-size: 36px;
       }
     }
@@ -164,7 +164,7 @@
       color: $fatalMessageTextColor;
 
       .ui-growl-image {
-        @include icon-override("\f06a");
+        @include ui-icon-override($fa-var-exclamation-circle);
         font-size: 36px;
       }
     }

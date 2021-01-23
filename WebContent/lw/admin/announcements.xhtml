@@ -29,7 +29,7 @@
         <p:dataTable var="news" value="#{adminAnnouncementsBean.announcements}">
 			<f:facet name="header">
 				<div class="d-flex">
-					<div class="mr-auto">#{msg.announcements}</div>
+					<div class="me-auto">#{msg.announcements}</div>
 					<div class="d-md-block d-flex flex-column">
 						<h:outputLink value="admin/announcement.jsf?" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only alt-btn mt-2 mt-md-0 px-2">
                     		<f:param name="announcement_id" value="0"/>
@@ -56,9 +56,9 @@
                 </p:selectBooleanCheckbox>
             </p:column>
 
-            <p:column headerText="#{msg.options}" styleClass="td-text-right">
+            <p:column headerText="#{msg.options}" styleClass="td-text-end">
                 <h:outputLink value="admin/announcement.jsf" styleClass="icon-link" title="#{msg.edit}">
-                    <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
                     <h:outputText value="#{msg.edit}"/>
                     <f:param name="announcement_id" value="#{news.id}"/>
                 </h:outputLink>
@@ -66,7 +66,7 @@
                 <p:commandLink actionListener="#{adminAnnouncementsBean.onDelete(news)}" styleClass="icon-link" process="@this"
                                update="@form" title="#{msg.delete}"
                                onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()">
-                    <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.delete}"/>
                     <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, news.title)}"/>
                 </p:commandLink>

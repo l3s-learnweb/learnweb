@@ -101,7 +101,7 @@
 
 				<div class="d-flex mt-3">
 					<p:defaultCommand target="saveBtn"/>
-					<div class="mr-auto">
+					<div class="me-auto">
 						<p:commandButton value="#{msg.delete}" update=":submissions" process="@this" actionListener="#{submissionBean.deleteSubmission()}"
 										 onclick="return confirmSubmissionDelete('#{of:escapeJS(submissionBean.selectedSubmission.title)}');"
 										 oncomplete="addSubmissionHeaderClickHandler();"/>
@@ -178,7 +178,7 @@
 				<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon"/>
 			</div>
 
-			<div class="text-right mt-3">
+			<div class="text-end mt-3">
 				<p:commandButton value="#{msg.save}" id="create-dialog-sumbit-button" update=":submissions @form"
 								 actionListener="#{submissionBean.createNewSubmission()}"/>
 			</div>

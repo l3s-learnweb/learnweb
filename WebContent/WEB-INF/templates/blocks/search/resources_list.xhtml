@@ -8,31 +8,31 @@
 
     <ui:repeat value="#{resources}" var="res">
         <h:panelGroup layout="block" styleClass="search-page-sep m-3" rendered="#{res.rank gt 1 and res.rank % 10 eq 1}">
-            <h:outputFormat value="#{msg.page_number}" styleClass="text-muted font-weight-bold">
+            <h:outputFormat value="#{msg.page_number}" styleClass="text-muted fw-bold">
                 <f:param value="#{(res.rank + 9) / 10}"/>
             </h:outputFormat>
         </h:panelGroup>
 
-        <div class="search-item search-item-web my-3 d-flex ${res.clicked ? 'snippet-clicked py-2 pr-1' : ''}" id="resource_#{res.rank}">
-            <div class="item-controls d-flex flex-column mr-1 mt-1 text-center">
+        <div class="search-item search-item-web my-3 d-flex ${res.clicked ? 'snippet-clicked py-2 pe-1' : ''}" id="resource_#{res.rank}">
+            <div class="item-controls d-flex flex-column me-1 mt-1 text-center">
                 <ui:fragment>
                     <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
                                    update=":copy_resource_dialog" process="@this" oncomplete="PF('copyResourceDialog').show();"
-                                   styleClass="fa fa-fw fa-files-o mb-1 text-decoration-none text-secondary"/>
+                                   styleClass="fas fa-fw fa-copy mb-1 text-decoration-none text-secondary"/>
                     <p:tooltip for="@previous" value="#{msg.addToMyResources}" position="right"  hideEffect="clip"/>
                 </ui:fragment>
 
                 <ui:fragment rendered="${res.clicked}">
-                    <h:outputText styleClass="fa fa-hand-pointer-o mb-1 always-visible" value=""/>
+                    <h:outputText styleClass="fas fa-hand-pointer mb-1 always-visible" value=""/>
                 </ui:fragment>
 
                 <!--<ui:fragment rendered="${res.saved}">
-                    <h:outputText styleClass="fa fa-floppy-o mb-1 always-visible" value=""/>
+                    <h:outputText styleClass="fas fa-save mb-1 always-visible" value=""/>
                 </ui:fragment>-->
 
                 <ui:fragment rendered="${res.archived}">
                     <h:outputLink id="archive" value="#{res.firstArchivedObject.archiveUrl}">
-                        <h:outputText styleClass="fa fa-floppy-o mb-1" value=""/>
+                        <h:outputText styleClass="fas fa-save mb-1" value=""/>
                     </h:outputLink>
                     <p:tooltip for="archive" position="right" hideEffect="clip">
                         <h:outputFormat value="#{msg['Archive.captured_between']}">
@@ -44,19 +44,19 @@
 
                 <ui:fragment rendered="#{not empty res.group}">
                     <h:outputLink id="group" value="group/overview.jsf">
-                        <h:outputText styleClass="fa fa-users mb-1" value=""/>
+                        <h:outputText styleClass="fas fa-users mb-1" value=""/>
                         <f:param name="group_id" value="#{res.group.id}"/>
                     </h:outputLink>
                     <p:tooltip for="group" value="#{msg.group}: #{res.group.title}" position="right" hideEffect="clip"/>
                 </ui:fragment>
 
                 <ui:fragment rendered="#{not empty res.getMetadataValue('collector')}">
-                    <p:outputLabel id="collector" class="fa fa-user-plus mb-1"/>
+                    <p:outputLabel id="collector" class="fas fa-user-plus mb-1"/>
                     <p:tooltip for="collector" value="#{msg.collector}: #{res.getMetadataValue('collector')}" position="right" hideEffect="clip"/>
                 </ui:fragment>
 
                 <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}">
-                    <p:outputLabel id="collector-fullname" class="fa fa-user-plus mb-1"/>
+                    <p:outputLabel id="collector-fullname" class="fas fa-user-plus mb-1"/>
                     <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.fullName}" position="right" hideEffect="clip"/>
                 </ui:fragment>
             </div>
@@ -67,7 +67,7 @@
                     <h:outputText value="#{res.url}" escape="false" styleClass="item-origin"/>
                 </h:outputLink>
 
-                <div class="text-truncate-multiline line-height-sm pt-1">
+                <div class="text-truncate-multiline lh-sm pt-1">
                     <h:outputText value="#{res.snippet}" escape="false"/>
                 </div>
 
@@ -75,16 +75,16 @@
                     <h:outputLink rendered="#{res.id != -1}" value="group/resources.jsf?=">
                         <f:param name="group_id" value="#{res.resource.groupId}"/>
                         <f:param name="folder_id" value="#{res.resource.folderId}"/>
-                        <i class="fa fa-angle-double-right" aria-hidden="true"></i> #{msg.stored_in} #{res.groupId == 0? msg.myPrivateResources : res.group.title}
+                        <i class="fas fa-angle-double-right" aria-hidden="true"></i> #{msg.stored_in} #{res.groupId == 0? msg.myPrivateResources : res.group.title}
                     </h:outputLink>
                 </div>
 
                 <ui:fragment rendered="#{not empty res.annotations}">
-                    <div class="row mt-2 pr-2 snippet-annotations">
+                    <div class="row mt-2 pe-2 snippet-annotations">
                         <ui:repeat value="#{res.annotations}" var="annotation">
                             <div class="col-3 p-1">
                                 <div class="annotation py-3 px-2 bg-white">
-                                    <div class="annotation-text font-italic ml-1 pl-2">
+                                    <div class="annotation-text font-italic ms-1 ps-2">
                                         <h:outputText value="#{annotation.text}"/>
                                     </div>
                                     <div class="annotation-comment mt-2">

@@ -46,7 +46,7 @@
 <ui:define name="center_layout">
 	<p:panel header="Survey answer" rendered="#{surveyBean.resource != null}">
 		<h:form id="survey_data">
-			<div class="form-group font-weight-bold">
+			<div class="form-group fw-bold">
 				<h:outputText value="Student ID: #{surveyBean.userAnswers.user.studentId}"
 							  rendered="#{userBean.moderator or userBean.user.id eq surveyBean.surveyUserId}"/>
 			</div>
@@ -100,7 +100,7 @@
 						<p:outputLabel value="#{field.label}"/>
 						<p:selectManyCheckbox id="input_manycheckbox_#{field.id}" value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
 							label="" multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.answers.size() gt 8}"
-											  filterMatchMode="startsWith" panelStyle="width:250px" layout="pageDirection" columns="1">
+											  filterMatchMode="startsWith" layout="pageDirection" columns="1">
 							<f:selectItems value="#{field.answers}"/>
 						</p:selectManyCheckbox>
 					</c:if>
@@ -109,12 +109,12 @@
 		</h:form>
 
 		<div class="d-flex mt-3">
-			<div class="mr-auto">
+			<div class="me-auto">
 				<h:outputLink value="survey/survey.jsf" rendered="#{!not surveyBean.submitted}">
 					<f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
 					<f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
 
-					<i class="fa fa-fw fa-pencil" aria-hidden="true"></i>
+					<i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i>
 					<h:outputText value="#{msg.edit}"/>
 				</h:outputLink>
 			</div>

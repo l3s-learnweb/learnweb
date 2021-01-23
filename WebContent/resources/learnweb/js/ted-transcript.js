@@ -60,9 +60,9 @@ $(() => {
     // Initializing toggle only on the elements which has a data-title or data-content
     if (selectedElement.attr('data-content')) {
       selectedElement.attr('data-content', selectedElement.attr('data-content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>'));
-      selectedElement.attr('data-toggle', 'popover');
+      selectedElement.attr('data-bs-toggle', 'popover');
     } else if (selectedElement.attr('data-title')) {
-      selectedElement.attr('data-toggle', 'tooltip');
+      selectedElement.attr('data-bs-toggle', 'tooltip');
     }
   });
 
@@ -87,7 +87,7 @@ $(() => {
   });
 
   // To prevent selection when the mouse leaves the transcript HTML element
-  $('.embed-responsive').on('mousedown', () => false);
+  $('#ted_embedded').on('mousedown', () => false);
 
   $('.transcript-container').on('mouseleave', () => {
     deleteSelection();
@@ -117,7 +117,7 @@ $(() => {
   $('#ted_transcript').tooltip({
     html: true,
     trigger: 'hover',
-    selector: '[data-toggle="tooltip"]',
+    selector: '[data-bs-toggle="tooltip"]',
     // eslint-disable-next-line
     title: function () {
       return $(this).attr('data-title');
@@ -125,7 +125,7 @@ $(() => {
   }).popover({
     html: true,
     trigger: 'hover',
-    selector: '[data-toggle="popover"]',
+    selector: '[data-bs-toggle="popover"]',
     // eslint-disable-next-line
     title: function () {
       return $(this).attr('data-title') || '';
@@ -247,7 +247,7 @@ function doAction(action, item) {
       item.removeAttr('data-title');
 
       if (!item.attr('data-content')) {
-        item.removeAttr('data-toggle');
+        item.removeAttr('data-bs-toggle');
       }
       delete tags[selectedNodeId];
       updateTagList();
@@ -289,7 +289,7 @@ function setSynonyms(xhr, status, args) {
   const selectedNode = $(`span#${selectedNodeId}`);
   if (synonyms.toLowerCase() !== 'multiple') {
     selectedNode.attr('data-content', synonyms.replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>'));
-    selectedNode.attr('data-toggle', 'popover');
+    selectedNode.attr('data-bs-toggle', 'popover');
 
     saveTranscriptAction(selectedNode.text(), '', 'display definition');
   }
@@ -448,9 +448,9 @@ function getUserText(buttonClicked) {
     selectedNode.attr('data-title', userText);
 
     if (selectedNode.attr('data-content')) {
-      selectedNode.attr('data-toggle', 'popover');
+      selectedNode.attr('data-bs-toggle', 'popover');
     } else {
-      selectedNode.attr('data-toggle', 'tooltip');
+      selectedNode.attr('data-bs-toggle', 'tooltip');
     }
 
     tags[selectedNodeId] = userText;

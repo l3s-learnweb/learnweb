@@ -39,11 +39,11 @@
                         <p:outputLabel for="@next" value="#{msg.ban_for}:"/>
                         <div class="row mb-3">
                             <div class="col-12 col-md-4">
-                                <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
+                                <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="me-3 mb-3 mb-sm-0"/>
                                 <p:message for="@previous"/>
                             </div>
                             <div class="col-12 col-md-4">
-                                <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
+                                <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="me-3 mb-3 mb-sm-0"/>
                                 <p:message for="@previous"/>
                             </div>
                             <div class="col-12 col-md-4">
@@ -93,11 +93,11 @@
                 <h:outputText value="#{accessData.attempts}"/>
             </p:column>
 
-            <p:column headerText="#{msg.options}" styleClass="td-text-right">
+            <p:column headerText="#{msg.options}" styleClass="td-text-end">
                 <p:commandLink onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()"
                                actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this" update=":banlist"
                                styleClass="icon-link" title="#{msg.unban}">
-                    <i class="fa fa-fw fa-ban text-danger" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-ban text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.unban}"/>
                     <p:confirm message="#{msg.unban} #{accessData.name}?"/>
                 </p:commandLink>
@@ -125,11 +125,11 @@
                     <p:outputLabel for="@next" value="#{msg.ban_for}:"/>
                     <div class="row mb-3">
                         <div class="col-12 col-md-4">
-                            <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
+                            <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="me-3 mb-3 mb-sm-0"/>
                             <p:message for="@previous"/>
                         </div>
                         <div class="col-12 col-md-4">
-                            <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
+                            <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="me-3 mb-3 mb-sm-0"/>
                             <p:message for="@previous"/>
                         </div>
                         <div class="col-12 col-md-4">
@@ -169,17 +169,17 @@
                     </h:outputText>
                 </p:column>
 
-                <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                <p:column headerText="#{msg.options}" styleClass="td-text-end">
                     <p:commandLink onclick="PF('banDialog').show(); updateFormValues('#{entry.IP}');" process="@this"
                                    update=":suspiciouslistform" styleClass="icon-link">
-                        <i class="fa fa-fw fa-ban text-danger" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-ban text-danger" aria-hidden="true"></i>
                         <h:outputText value="#{msg.ban}"/>
                     </p:commandLink>
 
                     <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.ip)}"
                                    update=":suspiciouslistform" styleClass="icon-link">
                         <p:confirm message="#{msg.remove} #{aggrReqData.ip}?"/>
-                        <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                         <h:outputText value="#{msg.remove}"/>
                     </p:commandLink>
                 </p:column>

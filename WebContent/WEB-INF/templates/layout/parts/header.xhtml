@@ -5,58 +5,56 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <header class="layout-header bg-primary">
-        <div class="layout-container d-flex">
-            <div class="d-flex layout-combined-loader">
-                <ui:fragment rendered="#{userBean.loggedIn}">
-                    <a href="#{userBean.bannerLink}" id="menu-button" class="header-element menu-button">
-                        <i class="fa fa-bars mx-auto content-element" aria-hidden="true"></i>
-                        <div class="la-ball-clip-rotate-pulse mx-auto loader-element collapse">
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </a>
-                </ui:fragment>
-                <a href="#{userBean.bannerLink}" class="header-element header-logo no-hover-bg">
-                    <h:graphicImage library="images" name="#{userBean.bannerImage}" alt="#{msg['application.name']} logo" styleClass="w-100"/>
+        <div class="d-flex layout-combined-loader">
+            <ui:fragment rendered="#{userBean.loggedIn}">
+                <a href="#{userBean.bannerLink}" id="menu-button" class="header-element menu-button">
+                    <i class="fas fa-bars mx-auto content-element" aria-hidden="true"></i>
+                    <div class="la-ball-clip-rotate-pulse mx-auto loader-element collapse">
+                        <div></div>
+                        <div></div>
+                    </div>
                 </a>
-            </div>
+            </ui:fragment>
+            <a href="#{userBean.bannerLink}" class="header-element header-logo no-hover-bg">
+                <h:graphicImage library="images" name="#{userBean.bannerImage}" alt="#{msg['application.name']} logo" styleClass="w-100"/>
+            </a>
+        </div>
 
-            <h:panelGroup layout="block" styleClass="d-flex order-1 order-md-0 search-wrapper flex-grow-1" rendered="#{userBean.loggedIn}">
-                <h:form id="search_form" styleClass="header-element no-hover-bg search-form w-100" prependId="false">
-                    <p:outputLabel for="@next" styleClass="d-none" value="#{msg.searchLabel}"/>
-                    <p:inputText id="searchfield" placeholder="#{msg.searchLabel}" type="search"/>
-                    <p:commandButton title="#{msg.searchLabel}" icon="fa fa-search"
-                                     onclick="window.location.href = 'search.jsf?query=' + $('#searchfield').val();return false;"/>
-                </h:form>
+        <h:panelGroup layout="block" styleClass="d-flex order-1 order-md-0 search-wrapper flex-grow-1" rendered="#{userBean.loggedIn}">
+            <h:form id="search_form" styleClass="header-element no-hover-bg search-form w-100" prependId="false">
+                <p:outputLabel for="@next" styleClass="d-none" value="#{msg.searchLabel}"/>
+                <p:inputText id="searchfield" placeholder="#{msg.searchLabel}" type="search"/>
+                <p:commandButton title="#{msg.searchLabel}" icon="fas fa-search"
+                                 onclick="window.location.href = 'search.jsf?query=' + $('#searchfield').val();return false;"/>
+            </h:form>
 
-                <h:form rendered="#{learnwebBean.developmentMode}">
-                    <p:lifecycle/>
-                </h:form>
-            </h:panelGroup>
+            <h:form rendered="#{learnwebBean.developmentMode}" styleClass="dd-xl-none">
+                <p:lifecycle/>
+            </h:form>
+        </h:panelGroup>
 
 
-            <h:form id="header_right" styleClass="d-flex ml-auto">
-                <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="header-element" rendered="#{userBean.loggedIn}">
-                    <i class="fa fa-envelope-o #{messageBean.howManyNewMessages gt 0 ? ' has-badge' : null}" data-count="#{messageBean.howManyNewMessages}" aria-hidden="true"></i>
+        <h:form id="header_right" styleClass="d-flex ms-auto">
+            <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="header-element" rendered="#{userBean.loggedIn}">
+                <i class="fas fa-envelope #{messageBean.howManyNewMessages gt 0 ? ' has-badge' : null}" data-count="#{messageBean.howManyNewMessages}" aria-hidden="true"></i>
+            </h:outputLink>
+
+            <ui:include src="language_switch.xhtml"/>
+
+            <ui:fragment rendered="#{userBean.loggedIn}">
+                <h:outputLink value="#{userBean.bannerLink}" id="userMenuButton" styleClass="header-element usermenu-button" ariaLabel="Profile" onclick="return false;">
+                    <img src="${learnwebBean.getProfileImage(userBean.user)}" class="profile-picture" alt="" title="#{userBean.user.fullName}"/>
                 </h:outputLink>
 
-				<ui:include src="language_switch.xhtml"/>
-
-                <ui:fragment rendered="#{userBean.loggedIn}">
-                    <h:outputLink value="#{userBean.bannerLink}" id="userMenuButton" styleClass="header-element usermenu-button" ariaLabel="Profile" onclick="return false;">
-                        <img src="${learnwebBean.getProfileImage(userBean.user)}" class="profile-picture" alt="" title="#{userBean.user.fullName}"/>
-                    </h:outputLink>
-
-                    <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
-                        <p:menuitem url="#{request.contextPath}/lw/user/detail.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-user" value="#{msg.myProfileTitle}"/>
-                        <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-cog" styleClass="guide-profile-page" value="#{msg.settings}"/>
-                        <p:menuitem url="#{request.contextPath}/lw/dashboard/index.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}"/>
-                        <p:menuitem url="#{request.contextPath}/lw/myhome/search_history.jsf" icon="fa fa-fw fa-history" value="#{msg['search_history.title']}"/>
-                        <p:menuitem action="#{loginBean.logout}" icon="fa fa-fw fa-sign-out" value="#{msg.logout}"/>
-                    </p:menu>
-                </ui:fragment>
-            </h:form>
-        </div>
+                <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
+                    <p:menuitem url="#{request.contextPath}/lw/user/detail.jsf?user_id=#{userBean.user.id}" icon="fas fa-fw fa-portrait" value="#{msg.myProfileTitle}"/>
+                    <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fas fa-fw fa-user-cog" styleClass="guide-profile-page" value="#{msg.settings}"/>
+                    <p:menuitem url="#{request.contextPath}/lw/dashboard/index.jsf" icon="fas fa-fw fa-tachometer-alt" value="#{msg.myDashboardTitle}"/>
+                    <p:menuitem url="#{request.contextPath}/lw/myhome/search_history.jsf" icon="fas fa-fw fa-history" value="#{msg['search_history.title']}"/>
+                    <p:menuitem action="#{loginBean.logout}" icon="fas fa-fw fa-sign-out-alt" value="#{msg.logout}"/>
+                </p:menu>
+            </ui:fragment>
+        </h:form>
     </header>
 
 

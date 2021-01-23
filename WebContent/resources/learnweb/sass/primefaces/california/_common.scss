@@ -24,29 +24,29 @@
 }
 
 .ui-state-disabled {
-  opacity: .35;
+  opacity: 0.35;
   filter: Alpha(Opacity=35);
   background-image: none;
 }
 
 .ui-corner-all {
-  @include border-radius($border-radius);
+  @include border-radius();
 }
 
 .ui-corner-top {
-  @include border-top-radius($border-radius);
+  @include border-top-radius();
 }
 
 .ui-corner-bottom {
-  @include border-bottom-radius($border-radius);
+  @include border-bottom-radius(radius);
 }
 
 .ui-corner-left {
-  @include border-left-radius($border-radius);
+  @include border-start-radius();
 }
 
 .ui-corner-right {
-  @include border-right-radius($border-radius);
+  @include border-start-radius();
 }
 
 .ui-widget-overlay {
@@ -68,11 +68,6 @@
 .ui-blockui-content {
   color: $white;
   top: 7rem !important;
-}
-
-.ui-icon {
-  min-width: $font-size-base;
-  height: $font-size-base;
 }
 
 //a {

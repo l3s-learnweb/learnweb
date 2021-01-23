@@ -185,7 +185,7 @@
     }
 
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
       .ui-tabs-header {
         width: 100%;
         border-right: 1px solid $headerLightBorderColor !important;
@@ -226,12 +226,12 @@
     margin-left: 0.25rem;
   }
 
-  @include media-breakpoint-down(md) {
+  @include media-breakpoint-down(lg) {
     font-size: 0;
 
-    .fa {
-      font-size: initial;
-    }
+    //.fas {
+    //  font-size: initial;
+    //}
   }
 }
 

@@ -7,41 +7,41 @@
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
 
-    <h:panelGroup layout="block" styleClass="metadata text-left" rendered="#{res ne null}">
+    <h:panelGroup layout="block" styleClass="metadata text-start" rendered="#{res ne null}">
         <h:form styleClass="mb-2">
-            <p:linkButton href="${userBean.getUrlProxied(res.url)}" value="Visit Website" styleClass="secondary-btn mr-2" target="_blank"/>
+            <p:linkButton href="${userBean.getUrlProxied(res.url)}" value="Visit Website" styleClass="secondary-btn me-2" target="_blank"/>
 
-            <p:linkButton href="${res.largestThumbnail.url}" value="Full-size image" styleClass="secondary-btn mr-2" target="_blank"
+            <p:linkButton href="${res.largestThumbnail.url}" value="Full-size image" styleClass="secondary-btn me-2" target="_blank"
                           rendered="#{res.type == 'image' and res.largestThumbnail ne null}"/>
 
-            <p:commandButton styleClass="mr-2" value="#{msg.save}"
+            <p:commandButton styleClass="me-2" value="#{msg.save}"
                              onclick="commandOnResourceSelect([{ name: 'resourceRank', value: this.dataset.resourcerank }]);" pt:data-resourceRank="#{res.rank}"/>
         </h:form>
 
         <div class="form-group">
-            <h:outputText value="#{msg.title}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{msg.title}: " styleClass="fw-bold"/>
             <h:outputText value="${res.title}" escape="false"/>
         </div>
 
         <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.description}">
-            <h:outputText value="#{msg.description}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{msg.description}: " styleClass="fw-bold"/>
             <h:outputText value="${res.descriptionHTML}" escape="false"/>
             <br/>
         </h:panelGroup>
 
         <div class="form-group">
-            <h:outputText value="#{msg.source}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{msg.source}: " styleClass="fw-bold"/>
             <h:outputText value="#{res.source.label}" escape="false"/>
         </div>
 
         <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.resource.author}">
-            <h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{msg.author}: " styleClass="fw-bold"/>
             <h:outputText value="#{res.resource.author}" rendered="#{empty res.authorUrl}"/>
-            <h:outputLink value="#{res.authorUrl}"  rendered="#{not empty res.authorUrl}" target="_blank">#{res.resource.author} <i class="fa fa-external-link" aria-hidden="true"></i></h:outputLink>
+            <h:outputLink value="#{res.authorUrl}"  rendered="#{not empty res.authorUrl}" target="_blank">#{res.resource.author} <i class="fas fa-external-link-alt" aria-hidden="true"></i></h:outputLink>
         </h:panelGroup>
 
         <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.group}">
-            <h:outputText value="#{msg.group}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{msg.group}: " styleClass="fw-bold"/>
             <h:outputLink value="group/resources.jsf">
                 <f:param name="group_id" value="#{res.group.id}"/>
                 <f:param name="resource_id" value="#{res.id}"/>
@@ -51,7 +51,7 @@
         </h:panelGroup>
 
         <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.resource.tags}">
-            <h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{msg.tags}: " styleClass="fw-bold"/>
             <ui:repeat var="tag" value="#{res.resource.tags}">
                 <span class="text-nowrap d-inline-block">
                     <span class="bg-highlight">
@@ -62,7 +62,7 @@
         </h:panelGroup>
 
         <h:panelGroup layout="block" styleClass="form-group" rendered="#{(not empty res.snippet) and false}">
-            <h:outputText value="#{msg.snippet}: " styleClass="font-weight-bold d-block"/>
+            <h:outputText value="#{msg.snippet}: " styleClass="fw-bold d-block"/>
             <h:outputText value="${res.snippet}" escape="false"/>
         </h:panelGroup>
     </h:panelGroup>

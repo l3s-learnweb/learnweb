@@ -14,61 +14,61 @@
 
 .res-t-icon {
   color: $ash;
-  @include icon-simple('\f15b');
+  @include ui-icon-content($fa-var-file);
 
   &.t-text {
     color: $blueDarker;
-    @include icon-simple('\f0f6');
+    @include ui-icon-content($fa-var-file-alt);
   }
 
   &.t-video {
     color: $red;
-    @include icon-simple('\f1c8');
+    @include ui-icon-content($fa-var-file-video);
   }
 
   &.t-image {
     color: $red;
-    @include icon-simple('\f1c5');
+    @include ui-icon-content($fa-var-file-image);
   }
 
   &.t-audio {
     color: $red;
-    @include icon-simple('\f1c7');
+    @include ui-icon-content($fa-var-file-audio);
   }
 
   &.t-pdf {
     color: $red;
-    @include icon-simple('\f1c1');
+    @include ui-icon-content($fa-var-file-pdf);
   }
 
   &.t-website {
     color: $cyanDarker;
-    @include icon-simple('\f0ac');
+    @include ui-icon-content($fa-var-link);
   }
 
   &.t-spreadsheet {
     color: $greenDarker;
-    @include icon-simple('\f1c3');
+    @include ui-icon-content($fa-var-file-excel);
   }
 
   &.t-presentation {
     color: $yellowDarkest;
-    @include icon-simple('\f1c4');
+    @include ui-icon-content($fa-var-file-powerpoint);
   }
 
   &.t-document {
     color: $blue;
-    @include icon-simple('\f1c2');
+    @include ui-icon-content($fa-var-file-word);
   }
 
   &.t-survey {
     color: $cappuccino;
-    @include icon-simple('\f19d');
+    @include ui-icon-content($fa-var-poll-h);
   }
 
   &.t-glossary2 {
     color: $purple;
-    @include icon-simple('\f02d');
+    @include ui-icon-content($fa-var-book);
   }
 }
 
@@ -130,12 +130,12 @@ ul.res-breadcrumbs {
       margin-right: 1rem;
 
       &::after {
-        @include fa-icon();
-        content: '\f105';
+        @extend .fas;
+
+        content: fa-content($fa-var-chevron-right);
         position: absolute;
-        font-size: 1.5em;
-        top: 0.1em;
-        right: -0.75em;
+        top: 0.5em;
+        right: -1em;
       }
     }
   }
@@ -268,7 +268,7 @@ ul.res-filters {
 .res-selector {
   border: 0;
   background: none;
-  outline: none;
+  outline: none !important;
   margin: 0;
   z-index: 1;
   position: absolute;
@@ -281,12 +281,13 @@ ul.res-filters {
   opacity: 0;
 
   &::before {
-    @include fa-icon();
-    content: '\f05d';
+    @extend .fas;
 
+    content: fa-content($fa-var-check-circle);
     width: 2.5rem;
     height: 2.5rem;
-    font-size: 2.5rem;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
     opacity: 0.6;
     color: rgba(0, 0, 0, 0.4);
     text-align: center;
@@ -302,10 +303,6 @@ ul.res-filters {
 
   .res-highlight-select & { // when one of the resources selected, highlight all buttons
     opacity: 1;
-
-    &::before {
-      transform: scale(0.8);
-    }
   }
 
   .ui-draggable-helper &, // When dragging an element which was not selected before
@@ -313,9 +310,9 @@ ul.res-filters {
   .ui-selected & { // after a successful selection
     &::before {
       opacity: 1;
-      content: '\f058';
       transform: scale(0.7);
       color: $themePrimaryColor;
+      //font-weight: 900 !important;
     }
   }
 }
@@ -405,7 +402,7 @@ ul.res-filters {
     }
   }
 
-  @include media-breakpoint-down(md) {
+  @include media-breakpoint-down(lg) {
     .res-row-date {
       display: none !important;
     }
@@ -429,15 +426,15 @@ ul.res-filters {
       }
 
       .ui-icon-carat-2-n-s::before {
-        content: '\f07d';
+        content: fa-content($fa-var-arrows-alt-v);
       }
 
       .ui-icon-triangle-1-n::before {
-        content: '\f175';
+        content: fa-content($fa-var-long-arrow-alt-down);
       }
 
       .ui-icon-triangle-1-s::before {
-        content: '\f176';
+        content: fa-content($fa-var-long-arrow-alt-up);
       }
     }
   }
@@ -499,8 +496,9 @@ ul.res-filters {
     }
 
     &::after {
-      @include fa-icon();
-      content: '\f0ee';
+      @extend .fas;
+
+      content: fa-content($fa-var-cloud-upload-alt);
       z-index: 10;
       color: $themePrimaryColor;
       position: absolute;
@@ -525,7 +523,7 @@ ul.res-filters {
     margin: $grid-gutter-width / 2;
   }
 
-  @include media-breakpoint-down(xs) {
+  @include media-breakpoint-down(sm) {
     grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
   }
 }
@@ -573,7 +571,7 @@ ul.res-filters {
         //noinspection Stylelint
         object-fit: cover;
         pointer-events: none;
-        @include user-select(none);
+        user-select: none;
       }
     }
   }
@@ -619,7 +617,7 @@ ul.res-filters {
       .res-bl-author {
         display: block;
         line-height: 1.25;
-        @include user-select(none);
+        user-select: none;
         @include text-truncate();
       }
 

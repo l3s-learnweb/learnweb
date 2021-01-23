@@ -48,12 +48,12 @@
 						</h:form>
 					</div>
 					<div class="col-6">
-						<h:form id="search_in_history" styleClass="ml-auto">
+						<h:form id="search_in_history" styleClass="ms-auto">
 							<div class="ui-inputgroup">
 								<p:inputText placeholder="#{msg['search_history.query']}" id="sh-query" title="#{msg['search_history.query_tooltip']}" styleClass="w-100" value="#{searchHistoryBean.searchQuery}"/>
 								<p:tooltip id="toolTipFocus" for="sh-query" showEvent="focus" hideEvent="blur" position="top" />
-								<p:commandButton icon="fa fa-search" id="sh-search" ajax="true" update=":sessionsList" actionListener="#{searchHistoryBean.search}"/>
-								<p:commandButton icon="fa fa-times" id="sh-reset" ajax="true" update=":sessionsList @form" actionListener="#{searchHistoryBean.reset}"/>
+								<p:commandButton icon="fas fa-search" id="sh-search" ajax="true" update=":sessionsList" actionListener="#{searchHistoryBean.search}"/>
+								<p:commandButton icon="fas fa-times" id="sh-reset" ajax="true" update=":sessionsList @form" actionListener="#{searchHistoryBean.reset}"/>
 							</div>
 						</h:form>
 					</div>
@@ -65,7 +65,7 @@
 							<div id="select-groups">
 								<h:form rendered="#{searchHistoryBean.showGroupHistory}" id="select_group_form">
 									<h:outputText value="#{msg['search_history.show_history_for_group']}"/>
-									<p:selectOneMenu id="select-group-menu" styleClass="ml-2" value="#{searchHistoryBean.selectedGroupId}">
+									<p:selectOneMenu id="select-group-menu" styleClass="ms-2" value="#{searchHistoryBean.selectedGroupId}">
 										<f:selectItem itemLabel="---------------" itemValue="-1"/>
 										<f:selectItems var="group" value="#{searchHistoryBean.currentUser.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 										<p:ajax listener="#{searchHistoryBean.onChangeGroup}" update=":sessionsList @form"/>
@@ -102,7 +102,7 @@
 												<f:param value="#{ss.endTimestamp}"/>
 											</h:outputFormat>
 										</div>
-										<h:outputText value="#{msg.by}: #{ss.username}" rendered="#{searchHistoryBean.showGroupHistory}" styleClass="font-weight-bold"/>
+										<h:outputText value="#{msg.by}: #{ss.username}" rendered="#{searchHistoryBean.showGroupHistory}" styleClass="fw-bold"/>
 									</h:panelGroup>
 								</li>
 							</ui:repeat>
@@ -112,14 +112,14 @@
 			</div>
 
 			<h:panelGroup id="snippetsList" styleClass="col-12 col-xl-8 mt-5 mt-xl-0 my-3" layout="block">
-				<h:panelGroup styleClass="sh-snippets-list overflow-auto pr-3 vh-100 w-100" rendered="#{searchHistoryBean.selectedQuery ne null}" layout="block">
+				<h:panelGroup styleClass="sh-snippets-list overflow-auto pe-3 vh-100 w-100" rendered="#{searchHistoryBean.selectedQuery ne null}" layout="block">
 					<div>
 						<h:outputFormat value="#{msg['search_history.results_for_query']}" escape="false">
 							<f:param value="#{searchHistoryBean.selectedQuery.query}"/>
 							<f:param value="#{searchHistoryBean.selectedQuery.timestamp}"/>
 						</h:outputFormat>
 
-						<h:outputText id="snippetsDescription" styleClass="fa fa-question-circle text-primary ml-2"></h:outputText>
+						<h:outputText id="snippetsDescription" styleClass="fas fa-question-circle text-primary ms-2"></h:outputText>
 						<p:tooltip id="toolTipSnippetsDescription" for="snippetsDescription" value="#{msg['search_history.results_for_query_tooltip']}" position="left"/>
 					</div>
 					<div class="d-flex justify-content-start">
@@ -156,7 +156,7 @@
 								</div>
 							</div>
 
-							<div class="text-right mt-3">
+							<div class="text-end mt-3">
 								<p:defaultCommand target="addSelectedResourceButton"/>
 								<p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('copyResourceDialog').hide()"/>
 								<p:commandButton id="addSelectedResourceButton" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"

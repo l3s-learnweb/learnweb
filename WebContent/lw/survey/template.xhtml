@@ -34,35 +34,35 @@
 		<p:panel>
 <!--			<f:facet name="#{userBean.admin ? 'header' : ''}">
 				<p:outputPanel layout="block" class="d-flex">
-					<div class="mr-auto">#{msg['survey']}</div>
+					<div class="me-auto">#{msg['survey']}</div>
 					<div>
-						<p:commandButton value="#{msg.show}" onclick="PF('allSurveys').show(); return false;" styleClass="alt-btn ml-2"/>
+						<p:commandButton value="#{msg.show}" onclick="PF('allSurveys').show(); return false;" styleClass="alt-btn ms-2"/>
 					</div>
 				</p:outputPanel>
 			</f:facet>-->
 			<h:panelGroup id="questions">
 				<div class="d-flex flex-nowrap mb-2">
-					<p:commandLink  styleClass="bg-transparent border-0 text-dark fa fa-pencil align-self-center mr-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
+					<p:commandLink  styleClass="bg-transparent border-0 text-dark fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
 					<h1><h:outputText value="#{surveyTemplateBean.survey.title}" escape="false"/></h1>
 				</div>
 				<div class="d-flex flex-nowrap mb-2">
-					<p:commandLink  styleClass="bg-transparent border-0 text-dark fa fa-pencil align-self-center mr-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
+					<p:commandLink  styleClass="bg-transparent border-0 text-dark fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
 					<h:outputText value="#{surveyTemplateBean.survey.description}" escape="false"/>
 				</div>
 				<h:panelGroup layout="block" rendered="#{userBean.moderator}" class="d-flex flex-column mb-3">
-					<p:outputLabel for="@next" value="#{msg['public']}:" styleClass="font-weight-bold"/>
+					<p:outputLabel for="@next" value="#{msg['public']}:" styleClass="fw-bold"/>
 					<p:tooltip for="@next" value="#{msg['survey.public_explanation']}." position="right"/>
 					<p:toggleSwitch id="copy" value="#{surveyTemplateBean.survey.publicTemplate}"/>
 				</h:panelGroup>
 				<c:forEach var="question" varStatus="questionStatus" items="#{surveyTemplateBean.questions}">
 					<p:outputPanel class="form-group" rendered="#{!question.deleted}">
 						<div class="d-flex flex-nowrap">
-							<p:outputPanel class="d-flex flex-column justify-content-center mr-2" rendered="#{userBean.admin}">
-								<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-dark fa fa-angle-up align-self-center"
+							<p:outputPanel class="d-flex flex-column justify-content-center me-2" rendered="#{userBean.admin}">
+								<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-dark fas fa-angle-up align-self-center"
 											   title="#{msg['survey.up']}" update="surveyForm" process="@this"/>
-								<p:commandLink action="#{surveyTemplateBean.setCurrentQuestion(question)}" styleClass="text-dark fa fa-pencil align-self-center"
+								<p:commandLink action="#{surveyTemplateBean.setCurrentQuestion(question)}" styleClass="text-dark fas fa-pencil-alt align-self-center"
 											   title="#{msg['edit']}" onsuccess="PF('updateSurvey').show();" update="updateForm" process="@this"/>
-								<p:commandLink action="#{surveyTemplateBean.onMoveQuestionDown(question)}" rendered="#{!questionStatus.last}" styleClass="text-dark fa fa-angle-down align-self-center"
+								<p:commandLink action="#{surveyTemplateBean.onMoveQuestionDown(question)}" rendered="#{!questionStatus.last}" styleClass="text-dark fas fa-angle-down align-self-center"
 											   title="#{msg['survey.down']}" update="surveyForm" process="@this"/>
 							</p:outputPanel>
 							<ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
@@ -94,12 +94,12 @@
 		<h:form id="createSurvey">
 			<div class="d-flex flex-column mb-3">
 				<div class="form-group">
-					<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="font-weight-bold"/>
+					<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="fw-bold"/>
 					<p:inputText value="#{surveyTemplateBean.survey.title}" />
 					<p:message for="@previous"/>
 				</div>
 				<div class="form-group">
-					<p:outputLabel for="@next" value="#{msg['description']}:" styleClass="font-weight-bold"/>
+					<p:outputLabel for="@next" value="#{msg['description']}:" styleClass="fw-bold"/>
 					<p:textEditor value="#{surveyTemplateBean.survey.description}" height="100">
 						<f:facet name="toolbar">
 						<span class="ql-formats">
@@ -116,12 +116,12 @@
 					<p:message for="@previous"/>
 				</div>
 				<p:outputPanel layout="block" styleClass="d-flex flex-column">
-					<p:outputLabel for="@next" value="#{msg['public']}:" styleClass="font-weight-bold"/>
+					<p:outputLabel for="@next" value="#{msg['public']}:" styleClass="fw-bold"/>
 					<p:tooltip for="@next" value="#{msg['survey.public_explanation']}." position="right"/>
 					<p:toggleSwitch value="#{surveyTemplateBean.survey.publicTemplate}"/>
 				</p:outputPanel>
 			</div>
-			<p:commandButton value="#{msg['save']}" styleClass="float-right" onclick="PF('updateSurveyMetadata').hide();" update="surveyForm" process="@form"/>
+			<p:commandButton value="#{msg['save']}" styleClass="float-end" onclick="PF('updateSurveyMetadata').hide();" update="surveyForm" process="@form"/>
 		</h:form>
 	</p:dialog>
 

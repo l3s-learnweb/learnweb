@@ -2,7 +2,7 @@
   background: $white;
   opacity: 0;
   outline: none;
-  transition: opacity .3s, visibility .3s;
+  transition: opacity 0.3s, visibility 0.3s;
   visibility: hidden;
   border: 1px solid $themePrimaryColor;
   box-sizing: border-box;
@@ -15,7 +15,9 @@
     visibility: hidden;
   }
 
-  *, :after, :before {
+  *,
+  ::after,
+  ::before {
     box-sizing: border-box;
   }
 
@@ -26,39 +28,39 @@
     z-index: -1;
   }
 
-  .shepherd-arrow:before {
+  .shepherd-arrow::before {
     position: absolute;
     width: 1em;
     height: 1em;
     z-index: -1;
-    content: "";
+    content: '';
     transform: rotate(45deg);
     background: #fff;
   }
 
   .shepherd-arrow-top {
-    .shepherd-arrow:before {
+    .shepherd-arrow::before {
       border-top: 1px solid $themePrimaryColor;
       border-left: 1px solid $themePrimaryColor;
     }
   }
 
   .shepherd-arrow-bottom {
-    .shepherd-arrow:before {
+    .shepherd-arrow::before {
       border-bottom: 1px solid $themePrimaryColor;
       border-right: 1px solid $themePrimaryColor;
     }
   }
 
   .shepherd-arrow-right {
-    .shepherd-arrow:before {
+    .shepherd-arrow::before {
       border-top: 1px solid $themePrimaryColor;
       border-right: 1px solid $themePrimaryColor;
     }
   }
 
   .shepherd-arrow-left {
-    .shepherd-arrow:before {
+    .shepherd-arrow::before {
       border-bottom: 1px solid $themePrimaryColor;
       border-left: 1px solid $themePrimaryColor;
     }
@@ -94,7 +96,7 @@
   .shepherd-footer {
     display: flex;
     justify-content: space-between;
-    padding: 0 .5rem .5rem;
+    padding: 0 0.5rem 0.5rem;
 
     .shepherd-button:last-child {
       margin-right: 0;
@@ -104,7 +106,7 @@
 
   .shepherd-text {
     color: $themeDarkBgColor;
-    padding: .75rem .75rem;
+    padding: 0.75rem;
 
     p {
       margin-top: 0;
@@ -127,7 +129,7 @@
     }
 
     &:disabled {
-      cursor: not-allowed;
+      pointer-events: none;
     }
   }
 
@@ -136,7 +138,7 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding: .5rem .5rem;
+    padding: 0.5rem;
     background: $themePrimaryColor;
 
     .shepherd-title {
@@ -149,14 +151,14 @@
 
   .shepherd-cancel-icon {
     background: transparent;
-    border: none;
+    border: 0;
     color: $white;
     font-size: 1.5rem;
     cursor: pointer;
     font-weight: 400;
     padding: 0;
-    transition: color .5s ease;
-    margin-bottom: .5rem;
+    transition: color 0.5s ease;
+    margin-bottom: 0.5rem;
     margin-right: 0;
     margin-left: auto;
 
@@ -189,14 +191,14 @@
   pointer-events: none;
   position: fixed;
   top: 0;
-  transition: all .3s ease-out, height 0ms .3s, opacity .3s 0ms;
+  transition: all 0.3s ease-out, height 0ms 0.3s, opacity 0.3s 0ms;
   width: 100vw;
   z-index: 9997;
 
   &.shepherd-modal-is-visible {
     height: 100vh;
-    opacity: .5;
-    transition: all .3s ease-out, height 0s 0s, opacity .3s 0s;
+    opacity: 0.5;
+    transition: all 0.3s ease-out, height 0s 0s, opacity 0.3s 0s;
 
     path {
       pointer-events: all;

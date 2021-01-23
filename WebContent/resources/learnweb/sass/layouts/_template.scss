@@ -7,8 +7,7 @@ body {
   height: 100%;
 }
 
-body,
-.layout-container {
+body {
   min-width: $min-width;
 }
 
@@ -26,6 +25,10 @@ body,
 
     @include media-breakpoint-down($topbar-two-row-display) {
       padding-top: $topbar-height * 2;
+
+      .template-page & {
+        padding-top: $topbar-height;
+      }
     }
 
     .layout-main-content {

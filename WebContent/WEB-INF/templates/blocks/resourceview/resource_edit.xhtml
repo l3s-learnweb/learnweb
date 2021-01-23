@@ -17,7 +17,7 @@
 
 <div class="d-flex">
     <p:defaultCommand target="saveResourceButton"/>
-    <div class="mr-auto">
+    <div class="me-auto">
         <p:commandButton styleClass="alt-btn" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
                          update=":resourceDetails" immediate="true" rendered="#{userBean.admin}"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>

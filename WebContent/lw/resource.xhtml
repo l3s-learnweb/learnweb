@@ -19,23 +19,23 @@
 	<h:outputScript name="learnweb/js/resource-view.js" target="body"/>
 
 	<div class="res-view">
-		<div class="row no-gutters">
+		<div class="row g-0">
 			<div class="col res-view-embedded d-flex flex-column">
 				<div class="res-view-navbar d-flex flex-row align-items-center w-100 p-2">
-					<div class="res-buttons-left pr-3">
-						<p:linkButton icon="fa fa-arrow-left" styleClass="transparent-btn navbar-back" title="#{msg.close}" outcome="group/resources.jsf">
+					<div class="res-buttons-left pe-3">
+						<p:linkButton icon="fas fa-arrow-left" styleClass="transparent-btn navbar-back" title="#{msg.close}" outcome="group/resources.jsf">
 							<f:param name="group_id" value="#{resourceDetailBean.resource.groupId}"/>
 							<f:param name="folder_id" value="#{resourceDetailBean.resource.folderId}"/>
 						</p:linkButton>
 					</div>
-					<h4 class="text-white mr-auto m-0">#{resourceDetailBean.resource.title}</h4>
-					<div class="res-buttons-right pl-3">
-						<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource.url)}" icon="fa fa-external-link" styleClass="transparent-btn"
+					<h4 class="text-white me-auto m-0">#{resourceDetailBean.resource.title}</h4>
+					<div class="res-buttons-right ps-3">
+						<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource.url)}" icon="fas fa-external-link-alt" styleClass="transparent-btn"
 									  title="#{resourceDetailBean.resource.url}" target="_blank" rendered="#{resourceDetailBean.resource.type eq 'text'
 									  or resourceDetailBean.resource.type eq 'website' or resourceDetailBean.resource.type eq 'pdf'}"/>
 
-						<p:button icon="fa fa-toggle-on" styleClass="transparent-btn" title="#{msg.toggle_details}"
-								  onclick="$('.res-view-details').toggleClass('collapse');$('.ui-icon', this).toggleClass('fa fa-toggle-off fa fa-toggle-on');return false;"/>
+						<p:button icon="fas fa-toggle-on" styleClass="transparent-btn" title="#{msg.toggle_details}"
+								  onclick="$('.res-view-details').toggleClass('collapse');$('.ui-icon', this).toggleClass('fas fa-toggle-off fas fa-toggle-on');return false;"/>
 					</div>
 				</div>
 

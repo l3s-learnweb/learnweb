@@ -38,7 +38,7 @@
     <h:panelGroup id="content" layout="block">
         <ui:fragment rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
             <div class="row">
-                <div class="col-6 col-md-3 pr-2">
+                <div class="col-6 col-md-3 pe-2">
                     <p:panel header="#{msg['Glossary.total_concepts']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
@@ -47,7 +47,7 @@
                         <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
                     </p:panel>
                 </div>
-                <div class="col-6 col-md-3 pl-2 px-md-2">
+                <div class="col-6 col-md-3 ps-2 px-md-2">
                     <p:panel header="#{msg['Glossary.total_terms']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
@@ -56,7 +56,7 @@
                         <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
                     </p:panel>
                 </div>
-                <div class="col-6 col-md-3 pr-2 px-md-2">
+                <div class="col-6 col-md-3 pe-2 px-md-2">
                     <p:panel header="#{msg['Glossary.total_sources']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
@@ -65,7 +65,7 @@
                         <h:outputText value="#{glossaryDashboardBean.totalSources}"/>
                     </p:panel>
                 </div>
-                <div class="col-6 col-md-3 pl-2">
+                <div class="col-6 col-md-3 ps-2">
                     <p:panel header="#{msg['Glossary.ratio']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
@@ -77,7 +77,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-6 pr-2">
+                <div class="col-md-6 pe-2">
                     <p:outputPanel id="activityTypesPanel"
                                    rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                         <p:panel id="chart_barModel" header="#{msg.activities}">
@@ -89,7 +89,7 @@
                         </p:panel>
                     </p:outputPanel>
                 </div>
-                <div class="col-md-6 pl-2">
+                <div class="col-md-6 ps-2">
                     <p:outputPanel id="sourcePanel"
                                    rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                         <p:panel id="chart_barModel_stSources" header="#{msg['Glossary.sources']}">
@@ -123,7 +123,7 @@
                              rowsPerPageTemplate="10,25,50">
                             <f:facet name="header">
                                 <div class="d-flex">
-                                    <div class="mr-auto">#{msg['Glossary.location']}</div>
+                                    <div class="me-auto">#{msg['Glossary.location']}</div>
                                     <div>
                                         <p:button icon="ui-icon-help" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.location_description']}"/>
@@ -176,7 +176,7 @@
 
                             <f:facet name="header">
                                 <div class="d-flex">
-                                    <div class="mr-auto">#{msg['Glossary.fields']}</div>
+                                    <div class="me-auto">#{msg['Glossary.fields']}</div>
                                     <div>
                                         <p:button icon="ui-icon-help" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.fields_description']}"/>
@@ -285,7 +285,7 @@
 
                             <f:facet name="header">
                                 <div class="d-flex">
-                                    <div class="mr-auto">#{msg['Glossary.Definitions']}</div>
+                                    <div class="me-auto">#{msg['Glossary.Definitions']}</div>
                                     <div>
                                         <p:button icon="ui-icon-help" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.definitions_description']}"/>

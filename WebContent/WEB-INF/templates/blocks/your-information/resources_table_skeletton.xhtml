@@ -8,28 +8,31 @@
         <p:dataTable id="resources_tbl" value="#{resources}" var="item" rows="30" paginator="true" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
-                <ui:insert name="header">#{msg.resources}</ui:insert>
+                <div class="d-flex">
+                    <div class="me-auto">#{msg.resources}</div>
+                    <div class="d-md-block d-flex flex-column">
+                        <p:commandButton value="#{msg.request_all_data}" action="#{dataExporterBean.requestUserResources()}"
+                                         styleClass="alt-btn" rendered="#{exportable}"/>
+                    </div>
+                </div>
             </f:facet>
 
             <f:facet name="{Exporters}">
-                <h:panelGroup styleClass="d-flex float-right" style="margin-top: 2px">
-                    <h:commandLink styleClass="text-danger float-right p-1">
-                        <i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
+                <h:panelGroup styleClass="d-flex float-end">
+                    <h:commandLink styleClass="text-danger float-end p-1">
+                        <i class="fas fa-fw fa-file-pdf" aria-hidden="true"></i>
                         <p:dataExporter type="pdf" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-right p-1">
-                        <i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
+                    <h:commandLink styleClass="text-gray float-end p-1">
+                        <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-right p-1">
-                        <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+                    <h:commandLink styleClass="text-gray float-end p-1">
+                        <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
-
-                    <h:commandButton styleClass="float-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only px-2 mx-2"
-                                     value="#{msg.request_all_data}" action="#{dataExporterBean.requestUserResources()}" rendered="#{exportable}"/>
                 </h:panelGroup>
             </f:facet>
 

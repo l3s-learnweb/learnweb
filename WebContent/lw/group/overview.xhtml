@@ -61,15 +61,15 @@
                 <h5>#{groupOverviewBean.group.title}</h5>
                 <p><h:outputText value="#{groupOverviewBean.group.description}" escape="false"/></p>
                 <p class="mb-1">
-                    <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
+                    <h:outputText value="#{msg.resources}: " styleClass="fw-bold"/>
                     <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
                 </p>
                 <p class="mb-1">
-                    <h:outputText value="#{msg.members}: " styleClass="font-weight-bold"/>
+                    <h:outputText value="#{msg.members}: " styleClass="fw-bold"/>
                     <h:outputText value="#{groupOverviewBean.group.memberCount}"/>
                 </p>
                 <p class="mb-1">
-                    <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
+                    <h:outputText value="#{msg.created_by}: " styleClass="fw-bold"/>
                     <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
                 </p>
             </p:panel>

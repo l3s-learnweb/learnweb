@@ -7,7 +7,7 @@
 <ui:param name="pageTitle" value="#{msg['application.name']}"/>
 
 <ui:define name="header_right">
-    <ul class="header-menu row justify-content-end px-0">
+    <ul class="header-menu d-flex justify-content-end px-0">
         <li><a href="#login"><span>#{msg.loginLabel}</span></a></li>
         <li><a href="#about"><span>#{msg['frontpage.about_learnweb']}</span></a></li>
         <li><a href="#courses"><span>#{msg.registerLabel}</span></a></li>
@@ -25,11 +25,9 @@
                         </ui:fragment>
                         <ui:fragment rendered="#{userBean.loggedIn}">
                             <h:outputText value="#{msg.greeting} #{userBean.user.username},"/><br/>
-                            <h:outputText value="#{msg.you_are_already_logged_in}" styleClass="font-weight-bold"/>
+                            <h:outputText value="#{msg.you_are_already_logged_in}" styleClass="fw-bold"/><br/>
 
-                            <h:outputLink styleClass="ui-button ui-button-text-only mt-3" value="#{userBean.bannerLink}">
-                                <h:outputText value="#{msg.return_to_welcome_page}" styleClass="ui-button-text"/>
-                            </h:outputLink>
+                            <p:linkButton href="#{userBean.bannerLink}" value="#{msg.return_to_welcome_page}" styleClass="mt-3"/>
                         </ui:fragment>
                     </div>
                 </div>
@@ -89,7 +87,7 @@
                             <div class="col-4 col-lg-3">
                                 <h:graphicImage library="frontpage" name="course_playground.png" alt="Playground Logo"/>
                             </div>
-                            <div class="col-8 col-lg-9 text-left">
+                            <div class="col-8 col-lg-9 text-start">
                                 ​<h:outputText value="Use our playground to take a quick look at the features Learnweb offers. You don't need to register and can directly explore all functionalities"/>
                             </div>
                         </div>
@@ -105,7 +103,7 @@
                             <div class="col-4 col-lg-3">
                                 <h:graphicImage library="frontpage" name="course_public.png" alt="​#{msg['frontpage.public_environment']} logo"/>
                             </div>
-                            <div class="col-8 col-lg-9 text-left">
+                            <div class="col-8 col-lg-9 text-start">
                                 ​<h:outputText value="#{msg['frontpage.public_env_description']}"/>
                             </div>
                         </div>
@@ -124,7 +122,7 @@
                             <div class="col-4 col-lg-3">
                                 <h:graphicImage library="frontpage" name="course_yell.png" alt="YELL Logo"/>
                             </div>
-                            <div class="col-8 col-lg-9 text-left">
+                            <div class="col-8 col-lg-9 text-start">
                                 ​<h:outputText value="#{msg.yell_description}"/>
                             </div>
                         </div>
@@ -140,7 +138,7 @@
                             <div class="col-4 col-lg-3">
                                 <h:graphicImage library="frontpage" name="course_other.png" alt="Other courses Logo"/>
                             </div>
-                            <div class="col-8 col-lg-9 text-left">
+                            <div class="col-8 col-lg-9 text-start">
                                 ​<h:outputText value="#{msg['frontpage.other_courses_description']}"/>
                             </div>
                         </div>

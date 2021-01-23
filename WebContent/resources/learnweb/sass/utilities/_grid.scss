@@ -1,28 +1,3 @@
-.sticky-column {
-  @include position-sticky();
-  top: $topbar-height;
-  height: 100%;
-  overflow-y: auto;
-}
-
-@include media-breakpoint-up(md) {
-  .sticky-column-md {
-    @include position-sticky();
-    top: $topbar-height;
-    height: 100%;
-    overflow-y: auto;
-  }
-}
-
-.col-xs-auto {
-  @include media-breakpoint-down(xs) {
-    flex: 0 0 auto;
-    width: auto;
-    max-width: 100%;
-  }
-}
-
-
 .mw-r10 {
   max-width: 10rem;
 }
@@ -49,4 +24,11 @@
 
 .w-15 {
   width: 15%;
+}
+
+// fix position of sticky-md-top, considering height of our navbar
+@include media-breakpoint-up(md) {
+  .sticky-md-top {
+    top: $topbar-height + $spacer;
+  }
 }

@@ -1,6 +1,6 @@
 // TODO @astappiev: to be replaced with .fg-grid at some point
 .form-group {
-  margin-bottom: $form-group-margin-bottom;
+  margin-bottom: $spacer;
 
   > p {
     display: inline-block;
@@ -18,7 +18,7 @@
 // In case we need backward compatibility for browsers without CSS Grid https://codepen.io/SitePoint/pen/bxVaKK
 .fg-grid {
   display: grid;
-  grid-gap: $form-group-margin-bottom;
+  grid-gap: $spacer;
 
   > *:not(.fg-row) {
     min-width: 0;
@@ -26,7 +26,7 @@
   }
 
   > .ui-outputlabel {
-    margin-bottom: -$form-group-margin-bottom;
+    margin-bottom: -$spacer;
   }
 
   .fg-col,

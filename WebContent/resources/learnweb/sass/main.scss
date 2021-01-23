@@ -1,19 +1,22 @@
 // Load variables
-@import 'common/mixins';
 @import 'common/variables';
+@import 'common/global';
+
+// Libraries loaded from node_modules
+@import 'external/bootstrap'; // Bootstrap grid and utils (No other components!)
+@import 'external/fontawesome'; // Icons
+
+// PrimeFaces components styles
+@import 'primefaces/theme';
 
 // Styles from 3rd-part developers
 // WARNING! Some of them is modified, you can update them if you need to tune styles, but be careful and never change class names.
-@import '~font-awesome/scss/font-awesome'; // Icons
-@import 'vendor/bootstrap'; // Bootstrap grid and utils (No other components!)
-@import 'vendor/california-theme/theme'; // California theme (v2.0.0) for PrimeFaces components
 @import 'vendor/contextmenu';
 @import 'vendor/justified-gallery';
 @import 'vendor/shepherd';
 
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
 @import 'layouts/template';
-@import 'layouts/template_page';
 
 // Load utilities and helpers
 @import 'utilities/background';

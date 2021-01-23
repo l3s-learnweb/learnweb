@@ -25,7 +25,7 @@
     <h:outputText value="#{msg.please_wait}"/>
 </p:blockUI>
 
-<h:panelGroup id="resourcesPanel" styleClass="row no-gutters resources-panel mb-n3" layout="block">
+<h:panelGroup id="resourcesPanel" styleClass="row g-0 resources-panel" layout="block">
     <h:panelGroup styleClass="col-12 col-folders ui-panel ui-widget flex-column d-none d-md-flex" layout="block" rendered="#{groupResourcesBean.showFoldersTree}">
         <div class="ui-panel-titlebar ui-widget-header">
             <span class="ui-panel-title">#{msg.folders}</span>
@@ -52,62 +52,62 @@
         <h:form id="res_toolbar">
             <p:toolbar styleClass="d-flex align-items-center justify-content-between">
                 <f:facet name="left">
-                    <p:commandButton icon="fa fa-folder-open" title="#{msg.show_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();"
+                    <p:commandButton icon="fas fa-folder-open" title="#{msg.show_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();"
                                      rendered="#{!groupResourcesBean.showFoldersTree}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.showFoldersTree}" value="true"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-folder" title="#{msg.hide_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();"
+                    <p:commandButton icon="fas fa-folder" title="#{msg.hide_folders_tree}" update=":resourcesPanel" oncomplete="onResourcesUpdated();"
                                      rendered="#{groupResourcesBean.showFoldersTree}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.showFoldersTree}" value="false"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();"
+                    <p:commandButton icon="fas fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();"
                                      rendered="#{groupResourcesBean.view == 'table'}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="grid"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-th-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();"
+                    <p:commandButton icon="fas fa-th-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();"
                                      rendered="#{groupResourcesBean.view == 'grid'}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="list"/>
                     </p:commandButton>
 
-                    <p:commandButton icon="fa fa-list" title="#{msg.table_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();"
+                    <p:commandButton icon="fas fa-list" title="#{msg.table_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();"
                                      rendered="#{groupResourcesBean.view == 'list'}">
                         <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="table"/>
                     </p:commandButton>
 
-                    <p:commandButton type="button" title="#{msg['group_resources.download_backup']}" icon="fa fa-cloud-download"
+                    <p:commandButton type="button" title="#{msg['group_resources.download_backup']}" icon="fas fa-cloud-download-alt"
                                      onclick="PF('dataExportedDialog').show();" rendered="#{groupResourcesBean.group.canDeleteGroup(userBean.user)}"/>
                 </f:facet>
 
                 <f:facet name="right">
-                    <p:menuButton styleClass="guide-add-resource" value="#{msg.add}" icon="fa fa-plus"
+                    <p:menuButton styleClass="guide-add-resource" value="#{msg.add}" icon="fas fa-plus"
                                   rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
-                        <p:menuitem id="menu_create_folder" value="#{msg.create_folder}" icon="fa fa-folder" ajax="true"
+                        <p:menuitem id="menu_create_folder" value="#{msg.create_folder}" icon="fas fa-folder" ajax="true"
                                     oncomplete="PF('createFolderDialog').show();return false;" update=":createFolderDialog"
                                     actionListener="#{addFolderBean.create(groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:separator/>
-                        <p:menuitem id="menu_upload_file" value="#{msg.upload_file}" icon="fa fa-cloud-upload" ajax="true"
+                        <p:menuitem id="menu_upload_file" value="#{msg.upload_file}" icon="fas fa-cloud-upload-alt" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('file', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
-                        <p:menuitem id="menu_upload_url" value="#{msg.upload_url}" icon="fa fa-link" ajax="true"
+                        <p:menuitem id="menu_upload_url" value="#{msg.upload_url}" icon="fas fa-link" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('url', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:separator/>
-                        <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" ajax="true"
+                        <p:menuitem value="#{msg.office_document}" icon="fas fa-file-word" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('document', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
-                        <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" ajax="true"
+                        <p:menuitem value="#{msg.office_spreadsheet}" icon="fas fa-file-excel" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('spreadsheet', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
-                        <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" ajax="true"
+                        <p:menuitem value="#{msg.office_presentation}" icon="fas fa-file-powerpoint" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('presentation', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
-                        <p:menuitem value="#{msg['Glossary.glossary']}" icon="fa fa-book" ajax="true"
+                        <p:menuitem value="#{msg['Glossary.glossary']}" icon="fas fa-book" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('glossary', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
-                        <p:menuitem value="#{msg.survey}" icon="fa fa-graduation-cap" ajax="true" rendered="#{userBean.admin}"
+                        <p:menuitem value="#{msg.survey}" icon="fas fa-poll-h" ajax="true" rendered="#{userBean.admin}"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('survey', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                     </p:menuButton>
@@ -123,7 +123,7 @@
                             <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
                                 <span class="filter-title">
                                     <span class="text-truncate">#{filter.active ? (filter.title != null ? filter.title : msg['search_filters.' += filter.activeValue]) : msg[filter.type]}</span>
-                                    <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
+                                    <i class="fas fa-fw fa-caret-down" aria-hidden="true"></i>
                                 </span>
                                 <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
                                     <li class="#{!filter.active ? 'active' : null}">
@@ -151,14 +151,14 @@
                         <li class="search-box#{groupResourcesBean.searchQuery != null ? ' active' : null}">
                             <p:commandLink id="search_filter_icon" styleClass="filter-title text-body"
                                            onclick="$('#search_filter_form').show().find('input').trigger('focus');$(this).hide();return false;">
-                                <i class="fa fa-fw fa-search-plus" aria-hidden="true"></i>
+                                <i class="fas fa-fw fa-search-plus" aria-hidden="true"></i>
                             </p:commandLink>
 
                             <div id="search_filter_form" class="res-search-form">
                                 <p:inputText value="#{groupResourcesBean.searchQuery}"/>
 
                                 <p:commandButton id="filter_query" actionListener="${groupResourcesBean.onQueryChange()}" process="@form"
-                                                 styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"
+                                                 styleClass="text-body" update=":resourcesWrapper" icon="fas fa-fw fa-search-plus"
                                                  oncomplete="onResourcesUpdated();"/>
                             </div>
                         </li>
@@ -208,7 +208,7 @@
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
     <h:outputText value="#{msg.delete_confirm_dialog_content}"/>
 
-    <h:panelGroup layout="block" styleClass="text-right">
+    <h:panelGroup layout="block" styleClass="text-end">
         <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('deleteConfirm').hide(); return false;"/>
         <p:button value="#{msg.delete}" styleClass="confirm" onclick="return false;"/>
     </h:panelGroup>
@@ -234,7 +234,7 @@
         </p:tree>
     </h:form>
 
-    <div class="text-right mt-3">
+    <div class="text-end mt-3">
         <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('selectDestination').hide();return false;"/>
         <p:button value="#{msg.save}" styleClass="confirm" onclick="return false;"/>
     </div>

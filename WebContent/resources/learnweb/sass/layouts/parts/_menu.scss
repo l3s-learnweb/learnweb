@@ -86,7 +86,7 @@
 
     &.ui-state-expand {
       > .ui-menuitem-link > .ui-menuitem-icon-expand::before {
-        content: '\f107';
+        content: fa-content($fa-var-angle-down);
       }
 
       > .ui-menu-list {

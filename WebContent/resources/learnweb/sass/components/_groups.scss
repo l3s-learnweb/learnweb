@@ -37,7 +37,7 @@
   }
 
   .member-star {
-    @include icon-override('\f091'); // \f091, \f005
+    @include ui-icon-override($fa-var-trophy);
     position: absolute;
     right: 3px;
     top: 3px;

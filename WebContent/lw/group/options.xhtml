@@ -70,7 +70,7 @@
 							<p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.username}">
 								<f:param name="user_id" value="#{groupOptionsBean.group.leader.id}"/>
 							</p:link>
-							<p:commandLink title="#{msg.change_leader}" styleClass="fa fa-fw fa-pencil text-decoration-none text-secondary ml-2" onclick="PF('changeLeader').show(); return false;" style="cursor: pointer; width: 0;" aria-hidden="true"/>
+							<p:commandLink title="#{msg.change_leader}" styleClass="fas fa-fw fa-pencil-alt text-decoration-none text-secondary ms-2" onclick="PF('changeLeader').show(); return false;" style="cursor: pointer; width: 0;" aria-hidden="true"/>
 						</div>
 						<ui:fragment rendered="#{groupOptionsBean.hypothesisEnabled}">
 							<div class="form-group">

@@ -28,13 +28,13 @@
         <p:dataTable id="courses" var="course" value="#{adminCoursesBean.courses}">
             <f:facet name="header">
                 <div class="d-flex">
-                    <div class="mr-auto">
+                    <div class="me-auto">
                         #{msg.courses}
                         <p:button icon="ui-icon-help" onclick="return false;"/>
                         <p:tooltip for="@previous" value="On this page you can add, delete and edit courses as well as view user submissions."/>
                     </div>
                     <div class="d-md-block d-flex flex-column">
-                        <p:commandButton value="#{msg.create}" styleClass="float-right alt-btn" onclick="PF('createCourseWidget').show();"/>
+                        <p:commandButton value="#{msg.create}" styleClass="float-end alt-btn" onclick="PF('createCourseWidget').show();"/>
                     </div>
                 </div>
             </f:facet>
@@ -42,22 +42,22 @@
             <f:facet name="footer">
                 <h:panelGroup>
                     <h:commandLink styleClass="text-danger p-1">
-                        <i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-file-pdf" aria-hidden="true"></i>
                         <p:dataExporter type="pdf" target="courses" fileName="users"/>
                     </h:commandLink>
 
                     <h:commandLink styleClass="text-success p-1">
-                        <i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="courses" fileName="users"/>
                     </h:commandLink>
 
                     <h:commandLink styleClass="text-gray p-1">
-                        <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="courses" fileName="users"/>
                     </h:commandLink>
                 </h:panelGroup>
             </f:facet>
-            
+
             <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none" filterBy="#{course.id}">
                 <h:outputText value="#{course.id}"/>
             </p:column>
@@ -89,16 +89,16 @@
                 <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
             </p:column>         
 
-            <p:column headerText="#{msg.options}" styleClass="td-text-right mw-r15" >
+            <p:column headerText="#{msg.options}" styleClass="td-text-end mw-r15" >
                 <h:outputLink styleClass="icon-link" value="admin/course.jsf?course_id=#{course.id}">
-                    <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
                     <h:outputText value="#{msg.edit}"/>
                 </h:outputLink>
 
                 <p:commandLink styleClass="icon-link" actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this"
                                update="@form" rendered="#{course.memberCount == 0 || userBean.admin}" title="#{msg.delete}"
                                onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
-                    <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.delete}"/>
                     <p:confirm message="#{of:format1(msg.courses_delete_question, course.title)}"/>
                 </p:commandLink>
@@ -106,13 +106,13 @@
                 <p:commandLink styleClass="icon-link" actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
                                update="@form" rendered="#{userBean.admin}"
                                onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
-                    <i class="fa fa-fw fa-eye-slash text-muted" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-eye-slash text-muted" aria-hidden="true"></i>
                     <h:outputText value="#{msg.anonymise}"/>
                     <p:confirm message="#{of:format1(msg.courses_anonymise_question, course.title)}"/>
                 </p:commandLink>
 
                 <h:outputLink styleClass="icon-link" value="admin/users_submissions.jsf?course_id=#{course.id}">
-                    <i class="fa fa-fw fa-check-circle-o text-success" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-check-circle text-success" aria-hidden="true"></i>
                     <h:outputText value="#{msg['Submission.view_user_submissions']}"/>
                 </h:outputLink>
             </p:column>

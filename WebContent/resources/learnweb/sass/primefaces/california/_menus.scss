@@ -17,7 +17,7 @@
 
       &.ui-breadcrumb-chevron {
         margin: 0 0.5rem;
-        @include icon-simple("\f105");
+        @include ui-icon-content($fa-var-angle-right);
       }
 
       &:first-child span {
@@ -83,7 +83,7 @@
       }
     }
 
-    a:-webkit-any-link {
+    a:any-link {
       color: unset;
     }
   }
@@ -107,7 +107,7 @@
       float: none;
       background-color: $primaryColor;
       @include border-radius(0);
-      @include transition(background-color .3s);
+      @include transition(background-color 0.3s);
 
       h3 {
         float: none;
@@ -117,13 +117,13 @@
         .ui-icon-triangle-1-s {
           margin-top: -6px;
           margin-left: 2px;
-          @include icon-override("\f107");
+          @include ui-icon-override($fa-var-angle-down);
         }
 
         .ui-icon-triangle-1-e {
           margin-top: -6px;
           margin-left: 2px;
-          @include icon-override("\f105");
+          @include ui-icon-override($fa-var-angle-up);
         }
       }
     }
@@ -182,11 +182,11 @@
         }
 
         .ui-icon-triangle-1-e {
-          @include icon-override("\f105");
+          @include ui-icon-override($fa-var-angle-up);
         }
 
         .ui-icon-triangle-1-s {
-          @include icon-override("\f107");
+          @include ui-icon-override($fa-var-angle-down);
         }
       }
     }
@@ -289,11 +289,8 @@
       box-sizing: border-box;
       @include border-radius(0);
 
-      &:hover {
-      }
-
       .ui-icon-triangle-1-w {
-        @include icon-override("\f104");
+        @include ui-icon-override($fa-var-angle-left);
         position: relative;
         top: 2px;
         padding-right: 3px;
@@ -365,7 +362,7 @@
     font-weight: 700;
     color: $primaryTextColor;
     margin-top: 4px;
-    @include transition(background-color .3s);
+    @include transition(background-color 0.3s);
 
     > span,
     > a {
@@ -375,13 +372,13 @@
     .ui-icon-triangle-1-s {
       margin-top: -6px;
       margin-left: 2px;
-      @include icon-override("\f107");
+      @include ui-icon-override($fa-var-angle-down);
     }
 
     .ui-icon-triangle-1-e {
       margin-top: -7px;
       margin-left: 2px;
-      @include icon-override("\f105");
+      @include ui-icon-override($fa-var-angle-up);
     }
 
     a {

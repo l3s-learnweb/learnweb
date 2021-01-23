@@ -237,15 +237,17 @@
   }
 
   &.mode-image::before {
-    font-family: FontAwesome;
+    @extend .fas;
+
+    content: fa-content($fa-var-image);
     margin-right: 5px;
-    content: '\f03e';
   }
 
   &.mode-video::before {
-    font-family: FontAwesome;
+    @extend .fas;
+
+    content: fa-content($fa-var-video);
     margin-right: 5px;
-    content: '\f03d';
   }
 }
 
@@ -392,7 +394,7 @@
   }
 
   /*remove padding on mobile devices */
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     .fancybox-caption {
       position: relative;
       top: 100 - $search-lightbox-mobile-preview-height;

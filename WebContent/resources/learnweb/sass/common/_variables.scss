@@ -4,6 +4,9 @@
 @import 'themes/emerald';
 //@import 'themes/noir';
 
+// remove 'bs-' prefix from variables
+$variable-prefix: '';
+
 /**
 * Theme color schema (This is NOT bootstrap colors)
 * These colors are defined by a California theme imported above.
@@ -34,10 +37,10 @@ $grid-gutter-width: 1rem;
 $transition-duration: 0.2s;
 
 $topbar-height: 3.125rem;
-$topbar-two-row-display: sm;
+$topbar-two-row-display: md;
 
 $sidebar-width: 15rem;
-$sidebar-hide-display: lg; // Do not forget to change the JS according
+$sidebar-hide-display: xl; // Do not forget to change the JS according
 
 /*
 * Bootstrap variables
@@ -56,6 +59,8 @@ $warning: $yellowDarker;
 $danger: $red;
 $light: $gray-200;
 $dark: $themeDarkBgColor;
+
+$link-decoration: none;
 
 $font-size-sm: 0.75rem; // 12px
 $font-size-base: 0.875rem; // Assuming the browser's default (typically `16px`), then base font size is `14px`.
@@ -99,4 +104,4 @@ $popover-body-color: $white;
 
 // Font Awesome
 
-$fa-font-path: './fonts';
+$fa-font-path: './webfonts';

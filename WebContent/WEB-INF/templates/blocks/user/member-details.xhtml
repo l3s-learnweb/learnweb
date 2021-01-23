@@ -11,14 +11,14 @@
 		<img class="profile-picture fluent" src="#{user.image}" alt="#{user.fullName}"/>
 	</div>
 
-	<div class="pl-3 flex-grow-1 overflow-auto">
+	<div class="ps-3 flex-grow-1 overflow-auto">
 		<div class="d-flex">
 			<div class="flex-fill">
 				<h5>#{user.username}</h5>
 			</div>
 
-			<h:panelGroup styleClass="text-right" layout="block" rendered="#{userBean.user.canModerateUser(user)}">
-				<h:outputLink value="myhome/profile.jsf" styleClass="pr-1">
+			<h:panelGroup styleClass="text-end" layout="block" rendered="#{userBean.user.canModerateUser(user)}">
+				<h:outputLink value="myhome/profile.jsf" styleClass="pe-1">
 					<f:param name="user_id" value="#{user.id}"/>
 					<h:outputText value="#{msg.edit_profile}"/>
 				</h:outputLink>
@@ -31,7 +31,7 @@
 
 		<ui:fragment rendered="#{not empty user.credits}">
 			<div class="text-primary mb-1 border border-primary p-1">
-				<i class="fa fa-trophy text-warning pr-1" aria-hidden="true"></i>
+				<i class="fas fa-trophy text-warning pe-1" aria-hidden="true"></i>
 				<h:outputText value="#{user.credits}" escape="false"/>
 			</div>
 		</ui:fragment>

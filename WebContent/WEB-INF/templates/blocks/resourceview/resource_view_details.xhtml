@@ -12,25 +12,25 @@
 
 <div class="d-flex res-details-title mt-0 justify-content-between align-items-end">
 	<h5 class="mb-0">#{msg.info}</h5>
-	<p:commandButton icon="fa fa-pencil" styleClass="secondary-btn" title="#{msg.edit_resource}"
+	<p:commandButton icon="fas fa-pencil-alt" styleClass="secondary-btn" title="#{msg.edit_resource}"
 					 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceDetails" form="resourceViewForm"
 					 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"
 					 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
 </div>
 
-<dl class="row mb-n2">
+<dl class="row">
 	<ui:fragment rendered="${not empty res.fileName and res.source ne 'loro'}">
 		<dt class="col-sm-4">#{msg.file}:</dt>
 		<dd class="col-sm-8">
 			<a href="#{res.fileUrl}" target="_top">
-				<i class="fa fa-fw fa-download" aria-hidden="true"></i>
+				<i class="fas fa-fw fa-download" aria-hidden="true"></i>
 				#{res.fileName}
 			</a>
 
 			<ui:fragment rendered="${not empty res.originalFile}">
 				<div>
 					<a href="#{res.originalFile.url}" target="_top">
-						<i class="fa fa-fw fa-download" aria-hidden="true"></i>
+						<i class="fas fa-fw fa-download" aria-hidden="true"></i>
 						#{res.originalFile.name}
 					</a>
 					(Backup <h:outputText value="#{res.originalFile.lastModified}">
@@ -83,11 +83,11 @@
 			<h:panelGrid id="reliability" columns="4">
 				<h:outputText value="+#{res.thumbUp}"/>
 				<p:commandLink action="#{resourceDetailBean.onThumbUp}" update=":reliability" ariaLabel="Rate thump up" process="@this">
-					<i class="fa fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
+					<i class="fas fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
 				</p:commandLink>
 
 				<p:commandLink action="#{resourceDetailBean.onThumbDown}" update=":reliability" ariaLabel="Rate thump down" process="@this">
-					<i class="fa fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
+					<i class="fas fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
 				</p:commandLink>
 				<h:outputText value="-#{res.thumbDown}"/>
 			</h:panelGrid>
@@ -152,16 +152,16 @@
 				<ui:fragment rendered="#{entry.key eq 'yell_target'}">
 					<ui:repeat value="#{res.metadataMultiValue[entry.key]}" var="target">
 						<ui:fragment rendered="#{target == 'Pre-school'}">
-							<i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
+							<i class="fas fa-fw fa-circle text-success" aria-hidden="true"></i>
 						</ui:fragment>
 						<ui:fragment rendered="#{target == 'Young learners'}">
-							<i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
+							<i class="fas fa-fw fa-circle text-info" aria-hidden="true"></i>
 						</ui:fragment>
 						<ui:fragment rendered="#{target == 'Teens'}">
-							<i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
+							<i class="fas fa-fw fa-circle text-warning" aria-hidden="true"></i>
 						</ui:fragment>
 						<ui:fragment rendered="#{target == 'Teachers' or target == 'Adult learners'}">
-							<i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+							<i class="fas fa-fw fa-circle text-danger" aria-hidden="true"></i>
 						</ui:fragment>
 
 						<h:outputText value="#{target}"/>
@@ -173,16 +173,16 @@
 						<span class="text-nowrap d-inline-block">
 							<span class="bg-highlight">
 								<ui:fragment rendered="#{purpose == 'Speaking'}">
-									 <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
+									 <i class="fas fa-fw fa-volume-up" aria-hidden="true"></i>
 								</ui:fragment>
 								<ui:fragment rendered="#{purpose == 'Listening'}">
-									 <i class="fa fa-fw fa-headphones" aria-hidden="true"></i>
+									 <i class="fas fa-fw fa-headphones" aria-hidden="true"></i>
 								</ui:fragment>
 								<ui:fragment rendered="#{purpose == 'Writing'}">
-									 <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
+									 <i class="fas fa-fw fa-edit" aria-hidden="true"></i>
 								</ui:fragment>
 								<ui:fragment rendered="#{purpose == 'Reading'}">
-									<i class="fa fa-fw fa-book" aria-hidden="true"></i>
+									<i class="fas fa-fw fa-book" aria-hidden="true"></i>
 								</ui:fragment>
 
 								<h:outputText value="#{purpose}"/>
@@ -242,12 +242,12 @@
 	<h:panelGroup id="tags_list" layout="block">
 		<ul class="list-inline list-unstyled mb-1">
 			<ui:repeat var="tag" value="#{res.tags}">
-				<li class="list-inline-item mr-0 mb-1">
-					<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="secondary-btn mr-0 rounded-0">
+				<li class="list-inline-item me-0 mb-1">
+					<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="secondary-btn me-0 rounded-0">
 						<f:param name="action" value="image"/>
 						<f:param name="query" value="#{tag.name}"/>
 					</p:linkButton>
-					<p:commandButton action="#{resourceDetailBean.onDeleteTag(tag)}" icon="fa fa-times" styleClass="secondary-btn rounded-0"
+					<p:commandButton action="#{resourceDetailBean.onDeleteTag(tag)}" icon="fas fa-times" styleClass="secondary-btn rounded-0"
 									 update=":tags_list" process="@this"
 									 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
 									 rendered="#{res.canEditResource(userBean.user)}"/>
@@ -262,7 +262,7 @@
 			<p:message for="@previous"/>
 		</div>
 
-		<div class="pl-1">
+		<div class="ps-1">
 			<p:commandButton id="tag_text_btn" action="#{resourceDetailBean.addTag}" value="#{msg.add_tag}" process=":tag_text_input"
 							 update=":tag_text_input :tags_list" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 			</p:commandButton>
@@ -289,12 +289,12 @@
 	<h:panelGroup layout="block" id="comments_list">
 		<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
 			<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
-				<img class="profile-picture mr-3 mt-1" src="#{comment.user.image}" alt="Profile picture"/>
+				<img class="profile-picture me-3 mt-1" src="#{comment.user.image}" alt="Profile picture"/>
 
 				<div class="comment-details flex-grow-1">
 					<p class="mb-0">
-						<h:link value="#{comment.user.username}" outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="font-weight-bold comment-author mr-3"/>
-						<lw:timeAgo date="#{comment.date}" timeZone="#{userBean.timeZone}" styleClass="small font-weight-light mb-0 comment-date" />
+						<h:link value="#{comment.user.username}" outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="fw-bold comment-author me-3"/>
+						<lw:timeAgo date="#{comment.date}" timeZone="#{userBean.timeZone}" styleClass="small fw-light mb-0 comment-date" />
 					</p>
 					<p:inplace id="editCommentInplace" toggleable="false" editor="true" saveLabel="#{msg.save}" cancelLabel="#{msg.cancel}"
 							   disabled="#{!resourceDetailBean.canEditComment(comment)}">
@@ -303,7 +303,7 @@
 						<p:ajax event="cancel" oncomplete="showEditCommentControls(this.source);"/>
 					</p:inplace>
 					<h:panelGroup id="editCommentControls" styleClass="small" layout="block" rendered="#{resourceDetailBean.canEditComment(comment)}">
-						<p:commandLink id="editComment" value="#{msg.edit}" styleClass="text-success mr-2" onclick="startEditComment(this);return false;"/>
+						<p:commandLink id="editComment" value="#{msg.edit}" styleClass="text-success me-2" onclick="startEditComment(this);return false;"/>
 						<p:commandLink id="deleteComment" value="#{msg.delete}" styleClass="text-danger" ajax="true" action="#{resourceDetailBean.onDeleteComment(comment)}"
 									   update=":comments_list" process="@this" onstart="PF('detailsOverlay').show();"
 									   oncomplete="PF('detailsOverlay').hide();">

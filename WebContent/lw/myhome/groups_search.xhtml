@@ -58,10 +58,10 @@
                     <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                <p:column headerText="#{msg.options}" styleClass="td-text-end">
                     <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{userBean.moderator}">
                         <f:param name="group_id" value="#{group.id}"/>
-                        <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
                         <h:outputText value="#{msg.edit}"/>
                     </h:outputLink>
 
@@ -69,7 +69,7 @@
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                         <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
 
-                        <i class="fa fa-fw fa-sign-in text-success" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-sign-in-alt text-success" aria-hidden="true"></i>
                         <h:outputText value="#{msg.join_group}"/>
                     </p:commandLink>
                 </p:column>

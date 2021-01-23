@@ -11,7 +11,7 @@
     <div class="form-group">
         <div class="d-flex justify-content-between flex-nowrap mb-3">
             <div class="d-flex flex-column">
-                <p:outputLabel for="selectTypeWrapper" value="#{msg['survey.question_type']}:" styleClass="font-weight-bold"/>
+                <p:outputLabel for="selectTypeWrapper" value="#{msg['survey.question_type']}:" styleClass="fw-bold"/>
                 <p:tooltip for="selectTypeWrapper" value="#{msg['survey.tooltip_select_type']}" rendered="#{question.id !=0 and associated}" position="left"/>
                 <h:panelGroup id="selectTypeWrapper" layout="block">
                 <p:selectOneMenu  value="#{question.type}" disabled="#{associated and question.id != 0}">
@@ -21,7 +21,7 @@
                 </h:panelGroup>
             </div>
             <div class="d-flex flex-column">
-                <p:outputLabel for="@next" value="#{msg['survey.required']}:" styleClass="font-weight-bold"/>
+                <p:outputLabel for="@next" value="#{msg['survey.required']}:" styleClass="fw-bold"/>
                 <p:tooltip for="@next" value="#{msg['survey.tooltip_required']}" rendered="#{!associated}" position="right"/>
                 <p:toggleSwitch value="#{question.required}"/>
             </div>
@@ -29,7 +29,7 @@
 
         <div class="d-flex flex-column mb-3">
             <div class="form-group">
-                <p:outputLabel for="@next" value="#{msg['survey.question_text']}:" styleClass="font-weight-bold"/>
+                <p:outputLabel for="@next" value="#{msg['survey.question_text']}:" styleClass="fw-bold"/>
                 <p:textEditor id="post_message" value="#{question.label}" required="true">
                     <f:facet name="toolbar">
 							<span class="ql-formats">
@@ -46,14 +46,14 @@
         <p:outputPanel id="answers">
             <p:outputPanel rendered="#{fn:startsWith(question.type,'INPUT_')}" styleClass="mb-3">
                 <div class="d-flex flex-nowrap justify-content-between mb-3">
-                    <div class="d-flex flex-column mr-1">
-                        <p:outputLabel for="@next" value="#{msg['survey.min_length']}:" styleClass="font-weight-bold"/>
+                    <div class="d-flex flex-column me-1">
+                        <p:outputLabel for="@next" value="#{msg['survey.min_length']}:" styleClass="fw-bold"/>
                         <p:tooltip for="@next" value="#{msg['survey.tooltip_min_length']}" position="left"/>
                         <p:inputNumber value="#{question.options['minLength']}" decimalPlaces="0" leadingZero="deny" minValue="0" maxValue="6000" thousandSeparator="" required="true"/>
                         <p:message for="@previous"/>
                     </div>
-                    <div class="d-flex flex-column ml-1">
-                        <p:outputLabel for="@next" value="#{msg['survey.max_length']}:" styleClass="font-weight-bold"/>
+                    <div class="d-flex flex-column ms-1">
+                        <p:outputLabel for="@next" value="#{msg['survey.max_length']}:" styleClass="fw-bold"/>
                         <p:tooltip for="@next" value="#{msg['survey.tooltip_max_length']}" position="right"/>
                         <p:inputNumber value="#{question.options['maxLength']}" decimalPlaces="0" leadingZero="deny" minValue="0" maxValue="6000" thousandSeparator="" required="true"/>
                         <p:message for="@previous"/>
@@ -62,29 +62,29 @@
             </p:outputPanel>
             <p:outputPanel rendered="#{!fn:startsWith(question.type,'FULLWIDTH_') and !fn:startsWith(question.type,'INPUT_')}">
                 <div class="d-flex flex-column">
-                    <p:outputLabel for="@next" value="#{msg['survey.answers']}:" styleClass="font-weight-bold"/>
+                    <p:outputLabel for="@next" value="#{msg['survey.answers']}:" styleClass="fw-bold"/>
                     <ui:repeat value="#{question.answers}" var="answer">
                         <h:panelGroup layout="block" styleClass="d-flex flex-row flex-nowrap my-1" rendered="#{!answer.deleted}">
                             <p:outputPanel rendered="#{question.type eq 'MULTIPLE_MENU' or question.type eq 'MANY_CHECKBOX' or question.type eq 'ONE_RADIO'}">
-                                <i class="mx-1 fa #{question.type eq 'ONE_RADIO' ? 'fa-circle-thin' : 'fa-square-o'}" style="vertical-align: sub;"/>
+                                <i class="mx-1 fas #{question.type eq 'ONE_RADIO' ? 'fa-circle-thin' : 'fa-square-o'}" style="vertical-align: sub;"/>
                             </p:outputPanel>
                             <p:inputText value="#{answer.value}" placeholder="#{question.type eq 'AUTOCOMPLETE' ? msg['survey.auto_complete'] : msg['survey.option']}"/>
                             <p:tooltip for="@next" value="#{msg['survey.delete_answer']}" position="right"/>
                             <p:outputPanel>
-                                <p:commandButton styleClass="bg-transparent border-0 text-dark fa fa-minus align-self-center" style="vertical-align: sub;"
+                                <p:commandButton styleClass="bg-transparent border-0 text-dark fas fa-minus align-self-center" style="vertical-align: sub;"
                                                  action="#{surveyTemplateBean.onDeleteAnswer(answer)}" update="updateForm:answers" value="" process="@form"/>
                             </p:outputPanel>
                         </h:panelGroup>
                     </ui:repeat>
                     <p:tooltip for="@next" value="#{msg['survey.add_answer']}" position="left"/>
-                    <p:commandButton styleClass="bg-transparent border-0 text-dark fa fa-plus align-self-center mt-2"
+                    <p:commandButton styleClass="bg-transparent border-0 text-dark fas fa-plus align-self-center mt-2"
                                      action="#{surveyTemplateBean.onAddEmptyAnswer}" update="@form" value="" process="@form"/>
                 </div>
             </p:outputPanel>
         </p:outputPanel>
     </div>
     <div class="d-flex flex-nowrap justify-content-between">
-        <p:commandButton value="#{msg['delete']}" actionListener="#{surveyTemplateBean.onDeleteQuestion(question)}" update="surveyForm" oncomplete="PF('updateSurvey').hide();" styleClass="float-left">
+        <p:commandButton value="#{msg['delete']}" actionListener="#{surveyTemplateBean.onDeleteQuestion(question)}" update="surveyForm" oncomplete="PF('updateSurvey').hide();" styleClass="float-start">
             <p:confirm message="#{msg['survey.are_you_sure']}"/>
         </p:commandButton>
         <p:commandButton id="saveBtn" value="#{msg['save']}" actionListener="#{surveyTemplateBean.onAddQuestion}" oncomplete="handleDialogSubmit(xhr, status, args)" update="surveyForm @form" process="@form"/>

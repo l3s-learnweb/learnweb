@@ -20,12 +20,12 @@
 
 .ui-galleria {
   .ui-galleria-nav-prev {
-    @include icon-override("\f053");
+    @include ui-icon-override($fa-var-chevron-left);
     font-size: 18px;
   }
 
   .ui-galleria-nav-next {
-    @include icon-override("\f054");
+    @include ui-icon-override($fa-var-chevron-right);
     font-size: 18px;
   }
 }

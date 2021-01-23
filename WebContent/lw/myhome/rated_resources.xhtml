@@ -45,10 +45,10 @@
 
 					<p:column headerText="#{msg.thumb_ratings}" rendered="#{userBean.thumbRatingEnabled}">
 						<h:outputText rendered="#{res.getThumbRateByUser(userBean.user.id) eq 1}">
-							<i class="fa fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
+							<i class="fas fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
 						</h:outputText>
 						<h:outputText rendered="#{res.getThumbRateByUser(userBean.user.id) eq -1}">
-							<i class="fa fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
+							<i class="fas fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
 						</h:outputText>
 					</p:column>
 				</p:dataTable>

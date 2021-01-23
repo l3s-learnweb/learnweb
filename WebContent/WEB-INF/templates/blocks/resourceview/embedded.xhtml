@@ -44,18 +44,18 @@
         <!-- quick and dirty solution to link to surveys need complete refactoring -->
         <div style=" position: absolute; top: 50%; transform: translateY(-50%);text-align: center;width: 100%;" >
             <ui:fragment rendered="#{userBean.admin}">
-                <p:linkButton outcome="/lw/survey/template" icon="fa fa-window-maximize" styleClass="secondary-btn" value="Edit Template"
+                <p:linkButton outcome="/lw/survey/template" icon="fas fa-window-maximize" styleClass="secondary-btn" value="Edit Template"
                               target="_top" rendered="#{res.type eq 'survey'}">
                     <f:param name="resource_id" value="#{res.id}"/>
                 </p:linkButton>
 
-                <p:linkButton outcome="/lw/survey/results" icon="fa fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open_results']}"
+                <p:linkButton outcome="/lw/survey/results" icon="fas fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open_results']}"
                               target="_top" rendered="#{res.type eq 'survey' and userBean.user.moderator}">
                     <f:param name="resource_id" value="#{res.id}"/>
                 </p:linkButton>
             </ui:fragment>
 
-            <p:linkButton outcome="/lw/survey/survey" icon="fa fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open']}" target="_top" >
+            <p:linkButton outcome="/lw/survey/survey" icon="fas fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open']}" target="_top" >
                 <f:param name="resource_id" value="#{res.id}"/>
             </p:linkButton>
         </div>

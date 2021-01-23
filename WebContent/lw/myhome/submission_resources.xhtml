@@ -66,7 +66,7 @@
     </p:dialog>
 
     <p:panel id="submissionsWrapper" header="#{submissionBean.submitted ? msg['submission.submitted_resources'] : msg['submission.your_selected_resources_displayed_here']}">
-        <div class="res-grid res-container mx-n3 mt-n3">
+        <div class="res-grid res-container">
             <ui:repeat var="res" value="#{submissionBean.selectedResources}">
                 <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
                               pt:data-resview="grid"

@@ -6,8 +6,9 @@
     position: relative;
 
     &::before {
-      @include fa-icon();
-      content: '\f013';
+      @extend .fas;
+
+      content: fa-content($fa-var-cog);
       padding-right: 0.5rem;
       color: $themePrimaryAltColor;
     }

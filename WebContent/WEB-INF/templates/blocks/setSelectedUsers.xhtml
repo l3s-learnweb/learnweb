@@ -7,7 +7,7 @@
 <!--@elvariable id="cbean" type="de.l3s.learnweb.dashboard.CommonDashboardUserBean"-->
 <h:form>
     <div class="row">
-        <p:outputPanel styleClass="col-md-4 align-items-end border-right" rendered="#{!cbean.singleUser}">
+        <p:outputPanel styleClass="col-md-4 align-items-end border-end" rendered="#{!cbean.singleUser}">
             <p:selectOneButton value="#{cbean.selectedType}" unselectable="false">
                 <p:ajax event="change" update="usersSelectorPanel usersCountPanel"/>
                 <f:selectItem itemLabel="#{msg.users}" itemValue="1"/>
@@ -37,10 +37,10 @@
             </p:outputPanel>
         </p:outputPanel>
 
-        <p:outputPanel styleClass="col-md-4 my-2 border-right justify-content-center align-items-center">
+        <p:outputPanel styleClass="col-md-4 my-2 border-end justify-content-center align-items-center">
             <div class="row my-2">
                 <div class="col-md-4">
-                    <p:outputLabel for="dateStart" value="#{msg.start_date}" styleClass="mr-2"/>
+                    <p:outputLabel for="dateStart" value="#{msg.start_date}" styleClass="me-2"/>
                 </div>
                 <div class="col-md-8">
                     <p:datePicker id="dateStart" value="#{cbean.startDate}" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
@@ -48,7 +48,7 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <p:outputLabel for="dateEnd" value="#{msg.end_date}" styleClass="mr-2"/>
+                    <p:outputLabel for="dateEnd" value="#{msg.end_date}" styleClass="me-2"/>
                 </div>
                 <div class="col-md-8">
                     <p:datePicker id="dateEnd" value="#{cbean.endDate}" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>

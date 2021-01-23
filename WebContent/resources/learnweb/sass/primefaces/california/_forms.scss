@@ -3,7 +3,7 @@
   padding: $input-padding-y $input-padding-x;
   border: 1px solid $inputBorderColor;
   @include transition(border-color $transition-duration, box-shadow $transition-duration);
-  @include border-radius($border-radius);
+  @include border-radius();
   font-size: $font-size-base;
   line-height: normal;
 
@@ -37,7 +37,9 @@
     outline: 0 none;
   }
 
-  &:hover, &.ui-state-hover, &.ui-state-focus {
+  &:hover,
+  &.ui-state-hover,
+  &.ui-state-focus {
     background-color: $primaryButtonHoverBgColor;
     border-color: $primaryButtonHoverBgColor;
   }
@@ -98,7 +100,9 @@
     background-color: $primaryAltButtonBgColor;
     border: 1px solid $primaryAltButtonBgColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $primaryAltButtonHoverBgColor;
       border-color: $primaryAltButtonHoverBgColor;
     }
@@ -113,7 +117,9 @@
     background-color: $secondaryButtonBgColor;
     border: 1px solid $secondaryButtonBgColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $secondaryButtonHoverBgColor;
       border-color: $secondaryButtonHoverBgColor;
     }
@@ -129,7 +135,9 @@
     border: 1px solid $outlineButtonBorderColor;
     color: $outlineButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $outlineButtonHoverBgColor;
       border-color: $outlineButtonHoverBorderColor;
       color: $outlineButtonHoverTextColor;
@@ -147,7 +155,9 @@
     border: 1px solid $blueButtonBgColor;
     color: $blueButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $blueButtonHoverBgColor;
       border-color: $blueButtonHoverBgColor;
     }
@@ -163,12 +173,15 @@
     border: 1px solid $cyanButtonBgColor;
     color: $cyanButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $cyanButtonHoverBgColor;
       border-color: $cyanButtonHoverBgColor;
     }
 
-    &.ui-state-active, &.ui-state-focus {
+    &.ui-state-active,
+    &.ui-state-focus {
       background-color: $cyanButtonActiveBgColor;
       border-color: $cyanButtonActiveBgColor;
     }
@@ -179,7 +192,9 @@
     border: 1px solid $greenButtonBgColor;
     color: $greenButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $greenButtonHoverBgColor;
       border-color: $greenButtonHoverBgColor;
     }
@@ -195,7 +210,9 @@
     border: 1px solid $yellowButtonBgColor;
     color: $yellowButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $yellowButtonHoverBgColor;
       border-color: $yellowButtonHoverBgColor;
     }
@@ -211,7 +228,9 @@
     border: 1px solid $purpleButtonBgColor;
     color: $purpleButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $purpleButtonHoverBgColor;
       border-color: $purpleButtonHoverBgColor;
     }
@@ -227,7 +246,9 @@
     border: 1px solid $pinkButtonBgColor;
     color: $pinkButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $pinkButtonHoverBgColor;
       border-color: $pinkButtonHoverBgColor;
     }
@@ -243,7 +264,9 @@
     border: 1px solid $bluegrayButtonBgColor;
     color: $bluegrayButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $bluegrayButtonHoverBgColor;
       border-color: $bluegrayButtonHoverBgColor;
     }
@@ -259,7 +282,9 @@
     border: 1px solid $tealButtonBgColor;
     color: $tealButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $tealButtonHoverBgColor;
       border-color: $tealButtonHoverBgColor;
     }
@@ -275,7 +300,9 @@
     border: 1px solid $orangeButtonBgColor;
     color: $orangeButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $orangeButtonHoverBgColor;
       border-color: $orangeButtonHoverBgColor;
     }
@@ -291,7 +318,9 @@
     border: 1px solid $grayButtonBgColor;
     color: $grayButtonTextColor;
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $grayButtonHoverBgColor;
       border-color: $grayButtonHoverBgColor;
     }
@@ -313,7 +342,7 @@
     background-color: $inputBgColor;
     width: 20px;
     height: 20px;
-    line-height: 18px;
+    line-height: 17px;
     text-align: center;
     @include transition(border-color $transition-duration, background-color $transition-duration);
 
@@ -365,7 +394,7 @@
     background-color: $inputBgColor;
     width: 20px;
     height: 20px;
-    line-height: 18px;
+    line-height: 17px;
     text-align: center;
     @include border-radius(50%);
     @include transition(border-color $transition-duration);
@@ -392,7 +421,7 @@
       min-width: 10px;
       @include border-radius(50%);
 
-      &:before {
+      &::before {
         display: none;
       }
     }
@@ -465,12 +494,12 @@
   @include border-radius(30px);
 
   .ui-toggleswitch-slider {
-    @include transition(background-color .3s);
+    @include transition(background-color 0.3s);
     background-color: $gray-500;
     color: $white;
 
-    &:before {
-      @include transition(.3s);
+    &::before {
+      @include transition(0.3s);
       @include border-radius(50%);
       background-color: $inputBgColor;
       border: 1px solid transparent;
@@ -487,7 +516,7 @@
       background-color: $primaryColor;
       color: $primaryTextColor;
 
-      &:before {
+      &::before {
         transform: translateX(26px);
       }
     }
@@ -495,7 +524,7 @@
 
   &.ui-toggleswitch-focus {
     .ui-toggleswitch-slider {
-      &:before {
+      &::before {
         border: 1px solid $primaryColor;
         @include border-shadow();
       }
@@ -505,10 +534,9 @@
 
 .ui-autocomplete {
   .ui-autocomplete-dropdown {
-
     .ui-icon-triangle-1-s {
       margin-top: -6px;
-      @include icon-override("\f0dc");
+      @include ui-icon-override($fa-var-sort);
     }
 
     &.ui-button {
@@ -570,7 +598,7 @@
 
     .ui-icon-triangle-1-s {
       margin-top: 6px;
-      @include icon-override("\f0dc");
+      @include ui-icon-override($fa-var-sort);
       font-size: $font-size-base;
     }
   }
@@ -657,7 +685,7 @@
       .ui-icon-triangle-1-s {
         position: relative;
         margin-top: 7px;
-        @include icon-override("\f0dc");
+        @include ui-icon-override($fa-var-sort);
       }
     }
 
@@ -687,7 +715,7 @@
     .ui-icon-triangle-1-s {
       position: relative;
       margin-top: 6px;
-      @include icon-override("\f0dc");
+      @include ui-icon-override($fa-var-sort);
       font-size: $font-size-base;
     }
   }
@@ -754,7 +782,7 @@
 
     .ui-chkbox {
       position: relative;
-      top: 3px
+      top: 3px;
     }
 
     .ui-selectcheckboxmenu-close {
@@ -765,7 +793,7 @@
       padding: 0;
       margin: 0 0 0 10px;
       right: 4px;
-      @include icon-override("\f00d");
+      @include ui-icon-override($fa-var-times);
 
       &.ui-state-active {
         color: $primaryButtonActiveBgColor;
@@ -888,9 +916,9 @@
     display: inline-block;
 
     a {
-      @include icon-override("\f05e");
+      @include ui-icon-override($fa-var-ban);
       display: block;
-      @include transition(color .3s);
+      @include transition(color 0.3s);
       font-size: 20px;
       height: 20px;
       width: 20px;
@@ -907,7 +935,7 @@
     display: inline-block;
 
     a {
-      @include icon-override("\f006");
+      @include ui-icon-override($fa-var-star);
       display: block;
       font-size: 20px;
       height: 20px;
@@ -923,7 +951,7 @@
   .ui-rating-star-on {
     a {
       color: $primaryColor;
-      @include icon-override("\f005");
+      @include ui-icon-override($fa-var-star);
       display: block;
       font-size: 20px;
       height: 20px;
@@ -979,20 +1007,20 @@
 
   &.ui-slider-horizontal {
     .ui-slider-handle {
-      top: -.2em;
+      top: -0.2em;
     }
   }
 
   &.ui-slider-vertical {
     .ui-slider-handle {
-      left: -.2em;
+      left: -0.2em;
     }
   }
 
   .ui-slider-handle {
     background-color: $primaryColor;
     @include border-radius(50%);
-    @include transition(background-color .3s);
+    @include transition(background-color 0.3s);
 
     &:hover {
       background-color: darken($primaryColor, 5%);
@@ -1031,9 +1059,11 @@
     background-color: $primaryButtonBgColor;
     color: $primaryButtonTextColor;
     border: 1px solid $primaryButtonBgColor;
-    @include border-radius(0px);
+    @include border-radius(0);
 
-    &:hover, &.ui-state-hover, &.ui-state-focus {
+    &:hover,
+    &.ui-state-hover,
+    &.ui-state-focus {
       background-color: $primaryButtonHoverBgColor;
       border-color: $primaryButtonHoverBgColor;
     }
@@ -1050,11 +1080,11 @@
     }
 
     &:first-child {
-      @include border-left-radius($buttonBorderRadius);
+      @include border-start-radius($buttonBorderRadius);
     }
 
     &:last-child {
-      @include border-right-radius($buttonBorderRadius);
+      @include border-start-radius($buttonBorderRadius);
     }
   }
 }
@@ -1063,7 +1093,7 @@
   .ui-buttonset {
     .ui-button {
       margin-bottom: 1px;
-      @include border-radius($border-radius);
+      @include border-radius();
     }
   }
 }
@@ -1076,7 +1106,7 @@
 
     .ui-icon-triangle-1-s {
       margin-top: -8px;
-      @include icon-override("\f078");
+      @include ui-icon-override($fa-var-chevron-down);
     }
 
     &.ui-state-hover {
@@ -1110,8 +1140,8 @@
       cursor: pointer;
       top: 12px;
       color: $datepickerButtonTextColor;
-      @include icon-override("\f100");
-      @include transition(color .3s);
+      @include ui-icon-override($fa-var-angle-double-left);
+      @include transition(color 0.3s);
       font-size: 20px;
 
       span {
@@ -1128,8 +1158,8 @@
       cursor: pointer;
       top: 12px;
       color: $datepickerButtonTextColor;
-      @include icon-override("\f101");
-      @include transition(color .3s);
+      @include ui-icon-override($fa-var-angle-double-right);
+      @include transition(color 0.3s);
       font-size: 20px;
 
       span {
@@ -1151,7 +1181,7 @@
         text-align: center;
         color: $body-color;
         padding: 5px;
-        @include border-radius($border-radius);
+        @include border-radius();
 
         &.ui-state-hover {
           background-color: $listItemHoverBgColor;
@@ -1177,7 +1207,7 @@
 
 .ui-trigger-calendar {
   .ui-inputfield {
-    @include border-right-radius(0);
+    @include border-end-radius(0);
     border-right: 0 none;
   }
 
@@ -1246,7 +1276,8 @@
         }
       }
 
-      a, span {
+      a,
+      span {
         width: 100%;
         box-sizing: border-box;
       }
@@ -1275,7 +1306,7 @@
       }
 
       .ui-datepicker-calendar-container {
-        padding: 0 .4em;
+        padding: 0 0.4em;
       }
     }
   }
@@ -1304,9 +1335,9 @@
 
     .ui-picker-up {
       color: $datepickerButtonTextColor;
-      @include icon-override("\f077");
+      @include ui-icon-override($fa-var-chevron-up);
       display: block;
-      margin-bottom: .2em;
+      margin-bottom: 0.2em;
 
       span {
         display: none;
@@ -1319,9 +1350,9 @@
 
     .ui-picker-down {
       color: $datepickerButtonTextColor;
-      @include icon-override("\f078");
+      @include ui-icon-override($fa-var-chevron-down);
       display: block;
-      margin-top: .2em;
+      margin-top: 0.2em;
 
       span {
         display: none;
@@ -1356,7 +1387,7 @@
 .ui-inplace {
   .ui-inplace-display {
     padding: $input-padding-y $input-padding-x;
-    @include border-radius($border-radius);
+    @include border-radius();
   }
 }
 
@@ -1369,7 +1400,7 @@
 
       &.ui-fileupload-upload {
         .ui-icon {
-          @include icon-override("\f093");
+          @include ui-icon-override($fa-var-upload);
         }
       }
     }
@@ -1430,11 +1461,11 @@
     min-width: $inputGroupAddonMinWidth;
 
     &:first-child {
-      @include border-left-radius($border-radius);
+      @include border-start-radius($border-radius);
     }
 
     &:last-child {
-      @include border-left-radius($border-radius);
+      @include border-start-radius($border-radius);
     }
   }
 

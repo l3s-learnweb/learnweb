@@ -15,7 +15,7 @@ function returnToTimeline() {
 
 // Creation of list of links to the archived versions in the calendar
 function archiveVersionsList(events) {
-  let list = '<ul class=\'pl-2 mb-0\'>';
+  let list = '<ul class=\'ps-2 mb-0\'>';
   for (let i = 0, l = events.length; i < l; i++) {
     list += `<li><a href='${events[i].url}' class='text-white' target='_blank'>${events[i].time}</a></li>`;
   }

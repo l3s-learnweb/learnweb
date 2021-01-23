@@ -17,11 +17,11 @@
     <p:dataTable styleClass="mt-3" var="stat" value="#{statisticsBean.generalStatistics}">
         <f:facet name="header">#{msg.general_statistics}</f:facet>
 
-        <p:column headerText="#{msg.description}" styleClass="text-left">
+        <p:column headerText="#{msg.description}" styleClass="text-start">
             <h:outputText value="#{msg[stat.key]}"/>
         </p:column>
 
-        <p:column headerText="#{msg.value}" styleClass="text-right">
+        <p:column headerText="#{msg.value}" styleClass="text-end">
             <h:outputText value="#{stat.value}">
                 <f:convertNumber groupingUsed="true" maxFractionDigits="1"/>
             </h:outputText>
@@ -31,13 +31,13 @@
     <p:dataTable styleClass="mt-3" var="month" value="#{statisticsBean.activeUsersPerMonth}">
         <f:facet name="header">#{msg.active_users_per_month}</f:facet>
 
-        <p:column headerText="#{msg.month}" styleClass="text-left">
+        <p:column headerText="#{msg.month}" styleClass="text-start">
             <h:outputText value="#{month.key}">
                 <f:convertDateTime type="localDate" pattern="MMMM y"/>
             </h:outputText>
         </p:column>
 
-        <p:column headerText="#{msg.active_users}" styleClass="text-right">
+        <p:column headerText="#{msg.active_users}" styleClass="text-end">
             <h:outputText value="#{month.value}">
                 <f:convertNumber groupingUsed="true"/>
             </h:outputText>
@@ -47,11 +47,11 @@
     <p:dataTable styleClass="mt-3" var="row" value="#{statisticsBean.resourcesPerSource}">
         <f:facet name="header">#{msg.resource_count_per_source}</f:facet>
 
-        <p:column headerText="#{msg.source}" styleClass="text-left">
+        <p:column headerText="#{msg.source}" styleClass="text-start">
             <h:outputText value="#{row.key}"/>
         </p:column>
 
-        <p:column headerText="#{msg.resources}" styleClass="text-right">
+        <p:column headerText="#{msg.resources}" styleClass="text-end">
             <h:outputText value="#{row.value}">
                 <f:convertNumber groupingUsed="true"/>
             </h:outputText>

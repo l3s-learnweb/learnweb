@@ -8,7 +8,7 @@
 <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
 
 <o:form id="pagingButtons" rendered="#{paginator.totalPages > 1}" styleClass="mb-3 mx-3 paginator">
-    <p:commandButton value="#{msg.previous_page}" icon="fa fa-angle-left" disabled="#{paginator.pageIndex == 0}" update=":resourcesView :pagingButtons">
+    <p:commandButton value="#{msg.previous_page}" icon="fas fa-angle-left" disabled="#{paginator.pageIndex == 0}" update=":resourcesView :pagingButtons">
         <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex - 1}"/>
     </p:commandButton>
 
@@ -40,7 +40,7 @@
         </p:commandButton>
     </ui:fragment>
 
-    <p:commandButton value="#{msg.next_page}" icon="fa fa-angle-right" iconPos="right" disabled="#{paginator.pageIndex == paginator.totalPages - 1}" update=":resourcesView :pagingButtons">
+    <p:commandButton value="#{msg.next_page}" icon="fas fa-angle-right" iconPos="right" disabled="#{paginator.pageIndex == paginator.totalPages - 1}" update=":resourcesView :pagingButtons">
         <f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex + 1}"/>
     </p:commandButton>
 </o:form>

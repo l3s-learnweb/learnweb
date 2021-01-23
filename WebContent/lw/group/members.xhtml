@@ -38,13 +38,13 @@
         <p:panel id="members">
             <f:facet name="header">
                 <div class="d-flex">
-                    <div class="mr-auto">#{msg.members}</div>
+                    <div class="me-auto">#{msg.members}</div>
                     <div>
-                        <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update="@form" rendered="#{groupMembersBean.view == 'list'}">
+                        <p:commandButton icon="fas fa-th" title="#{msg.grid_view}" update="@form" rendered="#{groupMembersBean.view == 'list'}">
                             <f:setPropertyActionListener target="#{groupMembersBean.view}" value="grid"/>
                         </p:commandButton>
 
-                        <p:commandButton icon="fa fa-list" title="#{msg.table_view}" update="@form" rendered="#{groupMembersBean.view == 'grid'}">
+                        <p:commandButton icon="fas fa-list" title="#{msg.table_view}" update="@form" rendered="#{groupMembersBean.view == 'grid'}">
                             <f:setPropertyActionListener target="#{groupMembersBean.view}" value="list"/>
                         </p:commandButton>
                     </div>

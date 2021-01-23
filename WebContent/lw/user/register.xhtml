@@ -88,7 +88,7 @@
 											 required="true" requiredMessage="#{msg.privacy_statement}: #{msg['validation.please_confirm']}">
 						<f:validator validatorId="omnifaces.RequiredCheckboxValidator" />
 					</p:selectBooleanCheckbox>
-					<p:outputLabel for="@previous" styleClass="form-check-label pl-1">
+					<p:outputLabel for="@previous" styleClass="form-check-label ps-1">
 						<h:outputFormat value="#{msg['registration.accept_privacy_policy']}" escape="false">
 							<f:param value="privacy_statement.jsf?organisation_id=#{registrationBean.course.organisationId}"/>
 						</h:outputFormat>
@@ -110,7 +110,7 @@
 			<h5>
 				<h:outputText value="#{msg.instructions}"/>
 			</h5>
-			<ul class="pl-3">
+			<ul class="ps-3">
 				<li>#{msg.register_first_time_access}</li>
 				<li><h:outputFormat value="#{msg.register_account_already_wizard}" escape="false">
 						<f:param value="user/login.jsf"/>

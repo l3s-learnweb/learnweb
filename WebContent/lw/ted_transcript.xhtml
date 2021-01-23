@@ -29,36 +29,35 @@
 		<p:remoteCommand name="commandSaveLog" actionListener="${tedTranscriptBean.commandSaveLog()}" immediate="true" process="@this" update="@none"/>
 	</h:form>
 
-	<div class="mt-3 row">
-		<h:outputStylesheet name="bundle/pickr.min.css"/>
-		<h:outputScript name="bundle/pickr.min.js" target="body"/>
-		<h:outputScript name="bundle/jquery.contextMenu.min.js" target="body"/>
-		<h:outputScript name="learnweb/js/ted-transcript.js" target="body"/>
+	<h:outputStylesheet name="bundle/pickr.min.css"/>
+	<h:outputScript name="bundle/pickr.min.js" target="body"/>
+	<h:outputScript name="bundle/jquery.contextMenu.min.js" target="body"/>
+	<h:outputScript name="learnweb/js/ted-transcript.js" target="body"/>
 
-		<script type="text/javascript">
-			let noteId = #{tedTranscriptBean.noteId};
-			let readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
-		</script>
-		<div class="col-md px-0 d-flex">
-            <div id="ted_content" class="col position-sticky">
-                <div class="embed-responsive embed-responsive-1by1 sticky-top" style="top: 5rem;" id="ted_embedded">
-                    <h:outputText value="${tedTranscriptBean.tedResource.embedded}" escape="false"/>
-                </div>
-            </div>
+	<script type="text/javascript">
+		let noteId = #{tedTranscriptBean.noteId};
+		let readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
+	</script>
+
+	<div class="row">
+		<div class="col-md">
+			<div class="ratio ratio-4x3 sticky-md-top" id="ted_embedded">
+				<h:outputText value="${tedTranscriptBean.tedResource.embedded}" escape="false"/>
+			</div>
 		</div>
 		<div class="col-md">
 			<h:panelGroup layout="block" id="transcript_column" styleClass="right_bar">
 				<p:outputPanel id="transcript_options">
 					<div class="p-2 bg-gray200">
 						<h:form>
-							<p:outputLabel for="@next" styleClass="mr-2" value="#{msg.select_transcript_lang}:"/>
-							<p:selectOneMenu id="select_lang" styleClass="mr-2" value="#{tedTranscriptBean.transcriptLanguage}">
+							<p:outputLabel for="@next" styleClass="me-2" value="#{msg.select_transcript_lang}:"/>
+							<p:selectOneMenu id="select_lang" styleClass="me-2" value="#{tedTranscriptBean.transcriptLanguage}">
 								<f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
 								<p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
 							</p:selectOneMenu>
-							<p:commandButton id="save" styleClass="mr-2" value="#{msg.save}" onclick="saveEditing();" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
+							<p:commandButton id="save" styleClass="me-2" value="#{msg.save}" onclick="saveEditing();" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 							<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
-							<p:commandButton id="submit" value="#{msg.submit}" styleClass="mr-2" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
+							<p:commandButton id="submit" value="#{msg.submit}" styleClass="me-2" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
 							<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
 
 							<p:menuButton value="#{msg.options}" iconPos="right" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}">
@@ -83,10 +82,10 @@
 					</div>
 				</p:outputPanel>
 				<h:panelGroup layout="block" id="transcript">
-					<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" styleClass="transcript-container text-justify tran-selection my-3 p-3 border border-dark" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
+					<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" styleClass="transcript-container tran-selection my-3 p-3 border border-dark" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 					</h:panelGroup>
-					<h:panelGroup layout="block" styleClass="my-3 p-3 border border-dark transcript-container text-justify" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
+					<h:panelGroup layout="block" styleClass="my-3 p-3 border border-dark transcript-container" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 					</h:panelGroup>
 				</h:panelGroup>
@@ -94,7 +93,7 @@
 			<p:outputPanel styleClass="bg-light tran-tabs-overlay">
                 <div class="d-flex justify-content-end my-1">
                     <a onclick="closeTagsDiv(); return false;" href="">
-                        <i class="fa fa-times mr-1" aria-hidden="true"></i>
+                        <i class="fas fa-times me-1" aria-hidden="true"></i>
                     </a>
                 </div>
                 <h:form>
@@ -128,28 +127,29 @@
                 </h:form>
 			</p:outputPanel>
 		</div>
-
-		<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" resizable="false" closable="false" appendTo="@(body)">
-			<h:form id="userinput_form" prependId="false" styleClass="d-flex flex-column">
-				<p:outputLabel for="@next" value="#{msg.justify_selection}:"/>
-				<p:inputText id="text" />
-				<div class="mt-2 d-flex justify-content-between">
-					<p:defaultCommand target="userinput_ok"/>
-					<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel'); return false;"></p:commandButton>
-					<p:commandButton id="userinput_ok" value="#{msg['ted_transcript.Ok']}" onclick="getUserText('ok'); return false;"></p:commandButton>
-				</div>
-			</h:form>
-		</p:dialog>
 	</div>
 
+	<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" resizable="false" closable="false" appendTo="@(body)">
+		<h:form id="userinput_form" prependId="false" styleClass="d-flex flex-column">
+			<p:outputLabel for="@next" value="#{msg.justify_selection}:"/>
+			<p:inputText id="text" />
+			<div class="mt-2 d-flex justify-content-between">
+				<p:defaultCommand target="userinput_ok"/>
+				<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel'); return false;"></p:commandButton>
+				<p:commandButton id="userinput_ok" value="#{msg['ted_transcript.Ok']}" onclick="getUserText('ok'); return false;"></p:commandButton>
+			</div>
+		</h:form>
+	</p:dialog>
+
 	<ul class="d-none" id="contextmenu_items">
-		<li data-action="add-annotation" data-class="" data-icon="fa-icon fa-plus">#{msg.add_annotation}</li>
-		<li data-action="edit-annotation" data-class="" data-icon="fa-icon fa-pencil">#{msg.edit_annotation}</li>
-		<li data-action="delete-annotation" data-class="" data-icon="fa-icon fa-minus">#{msg.delete_annotation}</li>
-		<li data-action="add-wordnet-definition" data-class="" data-icon="fa-icon fa-language">#{msg.add_wordnet_definition}</li>
-		<li data-action="delete-selection" data-class="" data-icon="fa-icon fa-trash">#{msg.delete_selection}</li>
-		<li data-action="colorpicker" data-class="color-picker-field" data-icon="fa-icon fa-folder">#{msg.color}</li>
+		<li data-action="add-annotation" data-icon="fa-plus">#{msg.add_annotation}</li>
+		<li data-action="edit-annotation" data-icon="fa-pencil-alt">#{msg.edit_annotation}</li>
+		<li data-action="delete-annotation" data-icon="fa-minus">#{msg.delete_annotation}</li>
+		<li data-action="add-wordnet-definition" data-icon="fa-language">#{msg.add_wordnet_definition}</li>
+		<li data-action="delete-selection" data-icon="fa-trash">#{msg.delete_selection}</li>
+		<li data-action="colorpicker" data-icon="fa-folder">#{msg.color}</li>
 	</ul>
+
 	<div class="d-none">
 		<p id="delete_selection">#{msg.delete_selection}</p>
 	</div>

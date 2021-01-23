@@ -24,7 +24,7 @@
         <f:facet name="header">
             <div class="row p-1">
                 <p:outputPanel styleClass="col">
-                    <h:outputText value="#{msg.searchLabel}" styleClass="font-weight-light mr-2"/>
+                    <h:outputText value="#{msg.searchLabel}" styleClass="fw-light me-2"/>
                     <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['Glossary.search_filter_placeholder']}"/>
                 </p:outputPanel>
                 <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="alt-btn" process="@this"
@@ -37,19 +37,19 @@
                 <div class="col">
                     <h:outputText value="#{msg['Glossary.total_entries']} = #{glossaryBean.entryCount}"></h:outputText>
                 </div>
-                <div class="col text-right">
-                    <p:commandLink styleClass="text-warning mr-2" onclick="PF('excel_import_dialog').show();return false;"
+                <div class="col text-end">
+                    <p:commandLink styleClass="text-warning me-2" onclick="PF('excel_import_dialog').show();return false;"
                                    rendered="#{glossaryBean.optionImportEnabled}">
-                        Import <i class="fa fa-fw fa-upload" aria-hidden="true"></i>
+                        Import <i class="fas fa-fw fa-upload" aria-hidden="true"></i>
                     </p:commandLink>
 
                     Export to:
                     <p:commandLink styleClass="text-success">
-                        <i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="glossary_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}"/>
                     </p:commandLink>
                     <p:commandLink styleClass="text-danger">
-                        <i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
+                        <i class="fas fa-fw fa-file-pdf" aria-hidden="true"></i>
                         <p:dataExporter type="pdf" fileName="glossary" target="glossary_table" preProcessor="#{glossaryBean.rotatePDF}"/>
                     </p:commandLink>
                 </div>
@@ -57,16 +57,16 @@
         </f:facet>
 
         <p:column style="width: 57px;" exportable="false">
-            <div class="text-right">
+            <div class="text-end">
                 <p:commandLink action="#{glossaryBean.deleteEntry(item)}" title="#{msg.delete}"
                                process="@this" update=":glossary_table_form " oncomplete="groupRow()">
-                    <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                     <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, item.topics)}"/>
                 </p:commandLink>
 
                 <p:commandLink action="#{glossaryBean.setGlossaryForm(item)}" title="#{msg.edit_entry}"
                                process="@this" update=":glossary_add" oncomplete="openGlossForm();">
-                    <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
                 </p:commandLink>
             </div>
         </p:column>
@@ -101,7 +101,7 @@
         <p:column headerText="#{msg['Glossary.pronounciation']}">
             <p:commandLink type="button" rendered="#{item.term ne null and glossaryBean.getPronounciationVoice(item.language) ne null}"
                            onclick="responsiveVoice.speak('#{of:escapeJS(item.term)}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
-                <i class="fa fa-fw fa-volume-up"></i>
+                <i class="fas fa-fw fa-volume-up"></i>
             </p:commandLink>
             <h:outputText value="#{item.pronounciation}"/>
         </p:column>
@@ -157,14 +157,14 @@
 <p:panel header="#{msg['Glossary.edit_glossary']}" id="glossaryForm" styleClass="collapse mt-1">
     <h:form id="glossary_add" prependId="false">
         <p:panelGrid id="grid" styleClass="my-0 mb-3 mx-auto" columns="3">
-            <p:outputLabel for="@next" styleClass="font-weight-bold" value="#{msg['Glossary.topic']} 1"/>
+            <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['Glossary.topic']} 1"/>
             <p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" editable="true">
                 <f:selectItems value="#{glossaryBean.availableTopicOne}"/>
                 <p:ajax listener="#{glossaryBean.onChangeTopicOne}" update="topic_2 topic_3" process="topic_1"/>
             </p:selectOneMenu>
             <p:message for="@previous"/>
 
-            <p:outputLabel for="@next" styleClass="font-weight-bold" value="#{msg['Glossary.topic']} 2"/>
+            <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['Glossary.topic']} 2"/>
             <h:panelGroup id="topic_2">
                 <p:selectOneMenu value="#{glossaryBean.formEntry.topicTwo}" editable="true" rendered="#{not empty glossaryBean.availableTopicTwo}">
                     <f:selectItems value="#{glossaryBean.availableTopicTwo}"/>
@@ -174,7 +174,7 @@
             </h:panelGroup>
             <p:message for="@previous"/>
 
-            <p:outputLabel for="@next" styleClass="font-weight-bold" value="#{msg['Glossary.topic']} 3"/>
+            <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['Glossary.topic']} 3"/>
             <h:panelGroup id="topic_3">
                 <p:selectOneMenu value="#{glossaryBean.formEntry.topicThree}" editable="true" rendered="#{not empty glossaryBean.availableTopicThree}">
                     <f:selectItems value="#{glossaryBean.availableTopicThree}"/>
@@ -183,7 +183,7 @@
             </h:panelGroup>
             <p:message for="@previous"/>
 
-            <p:outputLabel for="description" styleClass="font-weight-bold" value="#{msg['Glossary.Definition']}"/>
+            <p:outputLabel for="description" styleClass="fw-bold" value="#{msg['Glossary.Definition']}"/>
             <h:panelGroup>
                 <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description" />
                 <p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="w-100"
@@ -246,13 +246,13 @@
             <p:column width="20" rendered="#{not term.deleted}">
                 <p:commandLink id="delete_term" actionListener="#{glossaryBean.onDeleteTerm(term)}" update=":lang_terms " title="#{msg.delete}">
                     <f:ajax execute="@this lang_terms"/>
-                    <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                 </p:commandLink>
             </p:column>
         </p:dataTable>
 
         <div class="d-flex mt-3">
-            <div class="mr-auto">
+            <div class="me-auto">
                 <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}"
                                  update=":glossary_add :lang_terms" process="@this lang_terms" styleClass="alt-btn">
                 </p:commandButton>

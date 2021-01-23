@@ -3,17 +3,16 @@
     display: list-item;
     font-family: inherit;
     line-height: inherit;
+    font-weight: inherit;
 
     &::before {
+      @extend .fas;
+
       position: absolute;
       top: 50%;
       left: 0;
       width: 2em;
-      font-family: FontAwesome, sans-serif;
       font-size: 1em;
-      font-style: normal;
-      font-weight: normal;
-      line-height: 1;
       color: #2980b9;
       text-align: center;
       transform: translateY(-50%);
@@ -56,16 +55,16 @@
   box-sizing: content-box;
   padding: 0.2em 2em;
   color: #2f2f2f;
-  @include user-select(none);
+  user-select: none;
   background-color: #fff;
 
   > label {
     > input {
-      @include user-select(text);
+      user-select: text;
     }
 
     > textarea {
-      @include user-select(text);
+      user-select: text;
     }
   }
 

@@ -28,7 +28,7 @@
 
 		<p:column headerText="#{msg.resource}">
 			<ui:repeat var="res" value="#{tag.resources}">
-				<h:outputLink value="resource.jsf" styleClass="mr-1">
+				<h:outputLink value="resource.jsf" styleClass="me-1">
 					<f:param name="resource_id" value="#{res.id}"/>
 					<h:outputText value="#{res.title}" escape="false"/>
 				</h:outputLink>

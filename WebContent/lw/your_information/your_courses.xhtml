@@ -27,18 +27,18 @@
 
 			<f:facet name="{Exporters}">
 				<h:panelGroup>
-					<h:commandLink styleClass="text-danger float-right p-1">
-						<i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
+					<h:commandLink styleClass="text-danger float-end p-1">
+						<i class="fas fa-fw fa-file-pdf" aria-hidden="true"></i>
 						<p:dataExporter type="pdf" target="courses_tbl" fileName="courses"/>
 					</h:commandLink>
 
-					<h:commandLink styleClass="text-gray float-right p-1">
-						<i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
+					<h:commandLink styleClass="text-gray float-end p-1">
+						<i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
 						<p:dataExporter type="xls" target="courses_tbl" fileName="courses"/>
 					</h:commandLink>
 
-					<h:commandLink styleClass="text-gray float-right p-1">
-						<i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+					<h:commandLink styleClass="text-gray float-end p-1">
+						<i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
 						<p:dataExporter type="csv" target="courses_tbl" fileName="courses"/>
 					</h:commandLink>
 				</h:panelGroup>

@@ -14,7 +14,7 @@ function welcomePageInitializeGuide(message, elementToAttach) {
         show: commandStartGuide,
         cancel: commandFinishGuide,
       },
-      classes: 'shepherd-arrow-left ml-2',
+      classes: 'shepherd-arrow-left ms-2',
       advanceOn: { selector: '.breadcrumb-toggle', event: 'click' },
     },
     {
@@ -23,7 +23,7 @@ function welcomePageInitializeGuide(message, elementToAttach) {
         element: elementToAttach,
         on: 'right',
       },
-      classes: 'shepherd-arrow-left ml-2',
+      classes: 'shepherd-arrow-left ms-2',
     },
   ]);
   return guide;
@@ -51,7 +51,7 @@ function welcomePageInitializeGuideSettings(message) {
         element: '.guide-profile-page',
         on: 'left',
       },
-      classes: 'shepherd-arrow-right mr-2',
+      classes: 'shepherd-arrow-right me-2',
     },
   ]);
   return guide;
@@ -76,7 +76,7 @@ function resourcePageInitializeGuide(message) {
         on: 'left',
       },
       advanceOn: { selector: '.guide-menu-add-resource', event: 'click' },
-      classes: 'shepherd-arrow-right mr-2',
+      classes: 'shepherd-arrow-right me-2',
     },
   ]);
   return guide;
@@ -126,7 +126,7 @@ function groupsSearchPageInitializeGuide(filterGroups, exploreGroups, next) {
       {
         text: next,
         action: guide.next,
-        classes: 'mr-0 ml-auto',
+        classes: 'me-0 ms-auto',
       },
     ],
     classes: 'shepherd-arrow-bottom mb-2',
@@ -205,7 +205,7 @@ function guideAfterComplete(finish, congratulations, yes, no, goToResource, goTo
           element: '.breadcrumb-toggle',
           on: 'right',
         },
-        classes: 'shepherd-arrow-left ml-2',
+        classes: 'shepherd-arrow-left ms-2',
         advanceOn: { selector: '.breadcrumb-toggle', event: 'click' },
       },
       {
@@ -214,7 +214,7 @@ function guideAfterComplete(finish, congratulations, yes, no, goToResource, goTo
           element: '.guide-resources',
           on: 'right',
         },
-        classes: 'shepherd-arrow-left ml-2',
+        classes: 'shepherd-arrow-left ms-2',
       },
     ]);
   }
@@ -226,7 +226,7 @@ function guideAfterComplete(finish, congratulations, yes, no, goToResource, goTo
           element: '.breadcrumb-toggle',
           on: 'right',
         },
-        classes: 'shepherd-arrow-left ml-2',
+        classes: 'shepherd-arrow-left ms-2',
         advanceOn: { selector: '.breadcrumb-toggle', event: 'click' },
       },
       {
@@ -235,7 +235,7 @@ function guideAfterComplete(finish, congratulations, yes, no, goToResource, goTo
           element: '.guide-resources',
           on: 'right',
         },
-        classes: 'shepherd-arrow-left ml-2',
+        classes: 'shepherd-arrow-left ms-2',
       },
     ]);
   }
@@ -256,7 +256,7 @@ function guideAfterComplete(finish, congratulations, yes, no, goToResource, goTo
           element: '.guide-profile-page',
           on: 'left',
         },
-        classes: 'shepherd-arrow-right mr-2',
+        classes: 'shepherd-arrow-right me-2',
       }]);
   }
 

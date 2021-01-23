@@ -13,8 +13,9 @@
   }
 
   &::after {
-    content: '\f01d';
-    @include fa-icon;
+    @extend .fas;
+
+    content: fa-content($fa-var-play-circle);
     position: absolute;
     top: calc(50% - 3rem);
     left: calc(50% - 3rem);

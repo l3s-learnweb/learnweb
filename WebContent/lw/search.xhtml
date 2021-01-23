@@ -81,21 +81,21 @@
 
                     <div class="d-flex border-bottom">
                         <div class="search-source-icon source-#{gr.groupAlias}"></div>
-                        <div class="group-menu-title font-weight-bold">
-                            <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
+                        <div class="group-menu-title fw-bold">
+                            <h:outputFormat value="#{msg.search_groups_title}" styleClass="small" escape="false">
                                 <f:param value="#{gr.groupName}"/>
                                 <f:param value="#{gr.totalResources}"/>
                             </h:outputFormat>
                         </div>
                     </div>
 
-                    <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column" style="max-width: 15em;" rendered="#{searchBean.searchMode == 'text'}">
+                    <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column mw-r15" rendered="#{searchBean.searchMode == 'text'}">
                         <ui:repeat value="#{gr.resources}" var="res">
-                            <span class="text-truncate d-block w-100 p-1">
-                            <h:outputText value="#{res.title}" style=" color: #4b6cb7;" styleClass="mr-1 w-50 small" escape="false"/>
-                            <h:outputText value="#{res.url}" style="color: #006621;" styleClass="text-truncate overflow-hidden w-50 small" escape="false"/>
-                            <br/>
-                            <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-dark small" escape="false"/>
+                            <span class="text-truncate d-block w-100 p-1 small">
+                                <h:outputText value="#{res.title}" styleClass="me-1 text-primary" escape="false"/>
+                                <h:outputText value="#{res.url}" styleClass="text-blue" escape="false"/>
+                                <br/>
+                                <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-dark" escape="false"/>
                             </span>
                         </ui:repeat>
                     </h:panelGroup>
@@ -116,7 +116,7 @@
                     <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
                         <span class="filter-title">
                             <span class="text-truncate">#{filter.active ? (filter.title != null ? filter.title : msg['search_filters.' += filter.activeValue]) : msg[filter.type]}</span>
-                            <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
+                            <i class="fas fa-fw fa-caret-down" aria-hidden="true"></i>
                         </span>
                         <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
                             <li class="#{!filter.active ? 'active' : null}">
@@ -180,8 +180,8 @@
             </h:panelGroup>
         </h:form>
 
-        <div class="text-center font-weight-bold pb-2">
-            <span id="search_loading_more_results" class="collapse">#{msg.loading_more_results} <i aria-hidden="true" class="fa fa-fw fa-cog fa-spin fa-fw"></i></span>
+        <div class="text-center fw-bold pb-2">
+            <span id="search_loading_more_results" class="collapse">#{msg.loading_more_results} <i aria-hidden="true" class="fas fa-fw fa-cog fa-spin fa-fw"></i></span>
             <span id="search_no_more_results" class="collapse">#{msg.no_more_results}</span>
             <span id="search_nothing_found" class="collapse">#{msg.nothingFound}</span>
         </div>
@@ -217,7 +217,7 @@
                     </div>
                 </div>
 
-                <div class="text-right mt-3">
+                <div class="text-end mt-3">
                     <p:defaultCommand target="addSelectedResourceButton"/>
                     <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('copyResourceDialog').hide()"/>
                     <p:commandButton id="addSelectedResourceButton" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"

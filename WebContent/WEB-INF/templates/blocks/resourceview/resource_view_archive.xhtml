@@ -6,13 +6,13 @@
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-<dl class="row mb-n2">
+<dl class="row">
 	<ui:fragment rendered="${res.storageType == 2 and res.canEditResource(userBean.user)}">
 		<div>
 			<p:button onclick="loadArchiveUrlsModal();return false;" styleClass="secondary-btn" value="#{msg['Archive.change_thumbnail']}"/>
 
 			<p:commandButton id="archive_now_btn" process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
-							 icon="fa fa fa-camera-retro" value="#{msg['Archive.now']}" update="archive_view_options"/>
+							 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" update="archive_view_options"/>
 		</div>
 
 		<h:outputStylesheet name="bundle/jquery.fancybox.min.css"/>
@@ -23,7 +23,7 @@
 				<h:outputText value="#{res.title}" escape="false" styleClass="h5"/>
 			</div>
 			<div class="d-flex h-100">
-				<div class="mr-3 archive-snapshots-wrapper content-scroll" style="width:14rem;">
+				<div class="me-3 archive-snapshots-wrapper content-scroll" style="width:14rem;">
 					<ui:fragment rendered="${res.archiveUrls.size() le 100}">
 						<ul class="archive-snapshot-list list-unstyled mb-0">
 							<ui:repeat var="au" value="#{res.archiveUrls}">
@@ -42,7 +42,7 @@
 							<ui:repeat var="ay" value="#{res.archiveUrlsAsYears.entrySet().toArray()}">
 								<li>
 									<p:button value="#{ay.key}" styleClass="outline-btn m-0 mb-1" onclick="return false;"/>
-									<ul class="list-unstyled pl-3 collapse">
+									<ul class="list-unstyled ps-3 collapse">
 										<ui:repeat var="au2" value="#{ay.value}">
 											<li style="width:12rem;">
 												<a href="#{au2.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
@@ -76,13 +76,13 @@
     							</span>
     						</h:panelGroup>
                         </ui:remove>
-						<div class="col-md text-right">
+						<div class="col-md text-end">
                             <span>
                                 <h:outputText value="#{msg['Archive.show_version']}: "/>
                                 <h:outputText id="archive_timestamp" value="#{res.lastArchivedObject.timestamp}">
                                     <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
                                 </h:outputText>
-                                <p:commandButton value="#{msg['Archive.set_thumbnail']}" styleClass="ml-2 alt-btn"
+                                <p:commandButton value="#{msg['Archive.set_thumbnail']}" styleClass="ms-2 alt-btn"
 												 action="#{resourceDetailBean.setResourceThumbnail(res.lastArchivedObject.archiveUrl)}"
 												 onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
                             </span>
@@ -100,15 +100,15 @@
 		<hr/>
 		<ul class="archive-snapshot-list list-unstyled mb-0 mt-3 w-100">
 			<ui:repeat var="ay" value="#{res.archiveUrlsAsYears.entrySet().toArray()}">
-				<li class="row no-gutters align-items-baseline">
-					<p:button value="#{ay.key}" style="height: 25px;" styleClass="outline-btn m-0 mb-1 mt-1 mt-sm-0 w-100 col-3 col-md-2 mr-3" onclick="return false;"/>
+				<li class="row g-0 align-items-baseline">
+					<p:button value="#{ay.key}" style="height: 25px;" styleClass="outline-btn m-0 mb-1 mt-1 mt-sm-0 w-100 col-3 col-md-2 me-3" onclick="return false;"/>
 
 					<h:outputFormat value="#{msg.archive_stored}" escape="false">
 						<f:param value="#{ay.value.size()}"/>
 						<f:param value="#{ay.key}"/>
 					</h:outputFormat>
 
-					<div class="ml-0 ml-sm-3 list-unstyled pl-0 pl-sm-3 my-1 collapse col-12">
+					<div class="ms-0 ms-sm-3 list-unstyled ps-0 ps-sm-3 my-1 collapse col-12">
 						<div class="d-flex flex-wrap">
 							<ui:repeat var="au2" value="#{ay.value}">
 								<div style="width:12rem;" class="mx-2">

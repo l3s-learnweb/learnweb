@@ -20,9 +20,9 @@
         <p:dataTable var="group" styleClass="mb-3" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
             <f:facet name="header">
                 <div class="d-flex">
-                    <div class="mr-auto">#{msg.myGroups}</div>
+                    <div class="me-auto">#{msg.myGroups}</div>
                     <div class="d-md-block d-flex flex-column guide-groups-controls">
-                        <p:linkButton outcome="groups_search" value="#{msg.search_group}" styleClass="alt-btn mr-md-2 mr-0" />
+                        <p:linkButton outcome="groups_search" value="#{msg.search_group}" styleClass="alt-btn me-md-2 me-0" />
                         <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="alt-btn mt-2 mt-md-0 guide-create-group"/>
                     </div>
                 </div>
@@ -52,10 +52,10 @@
                 <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
             </p:column>
 
-            <p:column headerText="#{msg.options}" styleClass="td-text-right">
+            <p:column headerText="#{msg.options}" styleClass="td-text-end">
                 <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{groupsBean.canDeleteGroup(group)}">
                     <f:param name="group_id" value="#{group.id}"/>
-                    <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
                     <h:outputText value="#{msg.edit}"/>
                 </h:outputLink>
 
@@ -64,7 +64,7 @@
                     <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                     <p:confirm message="#{of:format1(msg.leave_group_question, group.title)}"/>
 
-                    <i class="fa fa-fw fa-sign-out text-danger" aria-hidden="true"></i>
+                    <i class="fas fa-fw fa-sign-out-alt text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.leave_group}"/>
                 </p:commandLink>
             </p:column>
@@ -109,7 +109,7 @@
                 <div class="col">
                     <h:outputText value="* #{msg.mandatory_field}"/>
                 </div>
-                <div class="col text-right">
+                <div class="col text-end">
                     <p:commandButton value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" process="@form" update="@form :my_groups"
                                      oncomplete="if (!args.validationFailed) { PF('createGroupDialog').hide(); if (#{userBean.guided}) {guideFinish.show();} }"/>
                 </div>

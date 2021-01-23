@@ -1,5 +1,5 @@
 .tran-selection {
-  @include selection() {
+  &::selection {
     background: $yellow;
   }
 }

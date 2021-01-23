@@ -1,12 +1,13 @@
 import path from 'path';
+import postcss from 'postcss';
+import autoprefixer from 'autoprefixer';
 import copy from 'rollup-plugin-copy';
+import replace from 'rollup-plugin-replace';
 import scss from '@astappiev/rollup-plugin-scss';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
-// `npm run build` -> `production` is true
-// `npm run watch` -> `production` is false
-const production = !process.env.ROLLUP_WATCH;
+const production = !process.env.ROLLUP_WATCH && process.env.NODE_ENV !== 'development';
 
 export default [
   {
@@ -26,13 +27,16 @@ export default [
     external: ['jquery'],
     plugins: [
       resolve(),
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      }),
       production && terser({
         output: {
           comments: false,
         },
       }),
       scss({
-        outputStyle: 'compressed',
+        outputStyle: production ? 'compressed' : 'expanded',
         sourceMap: true,
         watch: path.resolve(__dirname, 'WebContent/resources/learnweb/sass'),
         importer: [
@@ -40,11 +44,13 @@ export default [
             return url.startsWith('~') ? { file: `node_modules/${url.substring(1)}` } : null;
           },
         ],
+        processor: () => postcss([autoprefixer]),
       }),
       copy({
         copyOnce: true,
         targets: [
-          { src: 'node_modules/font-awesome/fonts', dest: 'WebContent/resources/bundle' },
+          // { src: 'node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-*', dest: 'WebContent/resources/bundle/webfonts' },
+          { src: 'node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-*', dest: 'WebContent/resources/bundle/webfonts' },
           { src: 'node_modules/video.js/dist/video-js.min.css', dest: 'WebContent/resources/bundle' },
           { src: 'node_modules/video.js/dist/alt/video.core.novtt.min.js', dest: 'WebContent/resources/bundle', rename: 'video-js.min.js' },
           { src: 'node_modules/highcharts/highcharts.js*', dest: 'WebContent/resources/bundle' },
