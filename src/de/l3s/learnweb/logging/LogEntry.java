@@ -153,7 +153,7 @@ public class LogEntry implements Serializable {
     public String getDescription(Locale locale) throws SQLException {
         // create description cache if it doesn't exist yet
         if (null == descriptions) {
-            descriptions = new HashMap<Locale, String>();
+            descriptions = new HashMap<>();
         }
 
         // try to get description from cache

@@ -318,7 +318,7 @@ public class ForumManager {
     }
 
     /**
-     * @return update last_visit time when user open topic
+     * Updates last_visit time when user open topic.
      */
     public void updatePostVisitTime(int topicId, int userId) throws SQLException {
         try (PreparedStatement update = learnweb.getConnection().prepareStatement("INSERT INTO `lw_forum_topic_user`(`topic_id`, `user_id`) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_visit = NOW();")) {

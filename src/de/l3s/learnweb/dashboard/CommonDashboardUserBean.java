@@ -147,7 +147,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
                 selectedUsers.add(user.getId());
             }
         }
-        this.setSelectedUsersIds(new ArrayList<Integer>(selectedUsers));
+        this.setSelectedUsersIds(new ArrayList<>(selectedUsers));
     }
 
     public Date getStartDate() {

@@ -102,7 +102,7 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
     }
 
     /**
-     * @param updateMetadataOnly performance optimization: if true only metadata like title and description will be saved but not changes to questions
+     * @param updateMetaDataOnly performance optimization: if true only metadata like title and description will be saved but not changes to questions
      */
     public void save(boolean updateMetaDataOnly) throws SQLException {
         Learnweb.getInstance().getSurveyManager().save(this, updateMetaDataOnly);

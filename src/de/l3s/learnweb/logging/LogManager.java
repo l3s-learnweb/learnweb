@@ -70,7 +70,7 @@ public final class LogManager {
 
         logsByResourceCache = CacheBuilder.newBuilder()
             .expireAfterAccess(1000, TimeUnit.MILLISECONDS)
-            .build(new CacheLoader<Resource, List<LogEntry>>() {
+            .build(new CacheLoader<>() {
                 @Override
                 public List<LogEntry> load(Resource resource) throws Exception {
                     Instant start = Instant.now();

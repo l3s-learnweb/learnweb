@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -349,6 +350,6 @@ public class GlossaryManager {
         List<Resource> resources = learnweb.getResourceManager().getResourcesByUserIdAndType(userIds, ResourceType.glossary2);
 
         // convert to glossary resource but filter resources that could not be converted
-        return resources.stream().map(r -> getGlossaryResource(r)).filter(r -> r != null).collect(Collectors.toList());
+        return resources.stream().map(this::getGlossaryResource).filter(Objects::nonNull).collect(Collectors.toList());
     }
 }

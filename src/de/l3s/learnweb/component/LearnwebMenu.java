@@ -20,7 +20,7 @@ public class LearnwebMenu extends AbstractMenu implements Widget {
     public static final String MENUITEM_LINK_WITH_ICON_CLASS = MENUITEM_LINK_CLASS + " ui-menuitem-link-hasicon";
 
     public static final String DESCENDANT_SUBMENU_CLASS = MENUITEM_CLASS + " ui-menu-parent";
-    public static final String DESCENDANT_SUBMENU_ICON_CLASS = MENUITEM_ICON_CLASS + " ui-menuitem-icon-expand fa fa-fw fa-angle-right";
+    public static final String DESCENDANT_SUBMENU_ICON_CLASS = MENUITEM_ICON_CLASS + " ui-menuitem-icon-expand ui-icon ui-icon-carat-1-e";
     public static final String DESCENDANT_SUBMENU_LIST_CLASS = "ui-menu-list ui-helper-reset ui-helper-hidden";
 
     public enum PropertyKeys {
