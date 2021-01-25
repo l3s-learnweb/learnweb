@@ -34,10 +34,10 @@
 	<h:outputScript name="bundle/jquery.contextMenu.min.js" target="body"/>
 	<h:outputScript name="learnweb/js/ted-transcript.js" target="body"/>
 
-	<script type="text/javascript">
-		let noteId = #{tedTranscriptBean.noteId};
-		let readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
-	</script>
+	<h:outputScript>
+		let noteId = parseInt('#{tedTranscriptBean.noteId}', 10);
+		let readOnly = '#{tedTranscriptBean.tedResource.readOnlyTranscript}' === 'true';
+	</h:outputScript>
 
 	<div class="row">
 		<div class="col-md">

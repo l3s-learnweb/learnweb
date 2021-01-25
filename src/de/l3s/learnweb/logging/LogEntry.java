@@ -17,13 +17,12 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.user.ProfileBean;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
 public class LogEntry implements Serializable {
     private static final long serialVersionUID = -4239479233091966928L;
-    private static final Logger log = LogManager.getLogger(ProfileBean.class);
+    private static final Logger log = LogManager.getLogger(LogEntry.class);
 
     private final int userId;
     private final Action action;

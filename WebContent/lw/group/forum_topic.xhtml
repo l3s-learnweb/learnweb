@@ -22,7 +22,7 @@
 
     <lw:breadcrumb-item link="group/resources.jsf?group_id=#{forumTopicBean.group.id}" title="#{forumTopicBean.group.title}">
         <ui:repeat var="groups" value="#{userBean.user.groups}">
-            <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
+            <li><a href="#{request.contextPath}/lw/group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
         </ui:repeat>
     </lw:breadcrumb-item>
 
@@ -34,7 +34,7 @@
 
     <lw:breadcrumb-item link="group/forum_topic.jsf?topic_id=#{forumEditBean.topic.id}" title="#{forumTopicBean.topic.title}">
         <ui:repeat value="#{forumTopicBean.topics}" var="topic">
-            <li><a href="group/forum_topic.jsf?topic_id=#{topic.id}">#{topic.title}</a></li>
+            <li><a href="#{request.contextPath}/lw/group/forum_topic.jsf?topic_id=#{topic.id}">#{topic.title}</a></li>
         </ui:repeat>
     </lw:breadcrumb-item>
 </ui:define>

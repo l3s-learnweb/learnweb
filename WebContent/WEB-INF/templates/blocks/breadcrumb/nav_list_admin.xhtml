@@ -4,11 +4,11 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-<li><a href="admin/organisations.jsf">#{msg.organizations}</a></li>
-<li><a href="admin/banlist.jsf">#{msg.banlist}</a></li>
-<li><a href="admin/requests.jsf">#{msg.ip_requests}</a></li>
-<li><a href="admin/systemtools.jsf">#{msg.system_tools}</a></li>
-<li><a href="admin/announcements.jsf">#{msg.announcements}</a></li>
-<li><a href="survey/templates.jsf">#{msg["survey.survey_overview"]}</a></li>
+<li><a href="#{request.contextPath}/lw/admin/organisations.jsf">#{msg.organizations}</a></li>
+<li><a href="#{request.contextPath}/lw/admin/banlist.jsf">#{msg.banlist}</a></li>
+<li><a href="#{request.contextPath}/lw/admin/requests.jsf">#{msg.ip_requests}</a></li>
+<li><a href="#{request.contextPath}/lw/admin/systemtools.jsf">#{msg.system_tools}</a></li>
+<li><a href="#{request.contextPath}/lw/admin/announcements.jsf">#{msg.announcements}</a></li>
+<li><a href="#{request.contextPath}/lw/survey/templates.jsf">#{msg["survey.survey_overview"]}</a></li>
 
 </ui:composition>

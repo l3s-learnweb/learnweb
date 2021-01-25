@@ -167,8 +167,8 @@ public class DeleteOldUsers {
 
         try (PreparedStatement select = learnweb.getConnection().prepareStatement(
             "SELECT g.group_id FROM `lw_group` g LEFT JOIN lw_group_user u USING(group_id) LEFT JOIN lw_resource r USING(group_id) "
-                + "WHERE course_id in (485) and YEAR(creation_time) < year(now())-1 GROUP BY g.group_id HAVING count(u.user_id) <= 2 "
-                + "AND count(r.resource_id) <=2 ORDER BY `g`.`creation_time` DESC ")) {
+                + "WHERE course_id in (485) and YEAR(creation_time) < year(now())-1 GROUP BY g.group_id, g.creation_time HAVING count(u.user_id) <= 2 "
+                + "AND count(r.resource_id) <=2 ORDER BY g.creation_time DESC ")) {
             ResultSet rs = select.executeQuery();
             while (rs.next()) {
                 Group group = gm.getGroupById(rs.getInt(1));

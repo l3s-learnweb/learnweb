@@ -55,7 +55,7 @@
     splitDateString(dateString) {
       const time = dateString.split('-');
       const year = parseInt(time[0], 10);
-      const month = parseInt(time[1] - 1, 10);
+      const month = parseInt(time[1], 10) - 1;
       const day = parseInt(time[2], 10);
 
       return {

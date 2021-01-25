@@ -22,7 +22,7 @@
 
     <lw:breadcrumb-item link="group/resources.jsf?group_id=#{groupMembersBean.groupId}" title="#{groupMembersBean.group.title}" >
         <ui:repeat var="groups" value="#{userBean.user.groups}">
-            <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
+            <li><a href="#{request.contextPath}/lw/group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
         </ui:repeat>
     </lw:breadcrumb-item>
 

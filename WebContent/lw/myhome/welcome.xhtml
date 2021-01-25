@@ -61,11 +61,11 @@
                         </p>
                     </div>
                 </div>
-                
+
                 <ui:fragment rendered="#{userBean.user.organisationId == 480}">
                     <hr/>
                     <p>#{msg.share_yell}</p>
-                    <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Flearnweb.l3s.uni-hannover.de%2Flw%2Fpublic%2Fyell.jsf&amp;width&amp;layout=button&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=80&amp;appId=181712555296062" style="border:none; overflow:hidden; height:25px;"></iframe>
+                    <iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Flearnweb.l3s.uni-hannover.de%2Flw%2Fpublic%2Fyell.jsf&amp;width&amp;layout=button&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=80&amp;appId=181712555296062" style="overflow:hidden; height:25px;"></iframe>
                     <p>Explore the <h:outputLink value="public/yell.jsf">YELL user guide</h:outputLink>.</p>
                 </ui:fragment>
 
@@ -148,7 +148,7 @@
             <!--Submissions-->
             <p:panel header="#{msg.submissions}" rendered="#{not empty welcomeBean.activeSubmissions}">
                 <h:panelGroup layout="block">
-                    <a href="myhome/submission_overview.jsf" target="_blank">
+                    <a href="#{request.contextPath}/lw/myhome/submission_overview.jsf" target="_blank">
                         <h:outputFormat value="#{msg.ongoing_submissions}">
                             <f:param value="#{welcomeBean.activeSubmissions.size()}"/>
                         </h:outputFormat>

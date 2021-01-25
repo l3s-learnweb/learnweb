@@ -13,16 +13,16 @@
         const msg_timelineSeriesName = '#{msg["Archive.timeline_series_name"]}';
         const msg_timelineClickZoom = '#{msg["Archive.timeline_click_zoom"]}';
         const msg_timelineTouchZoom = '#{msg["Archive.timeline_touch_zoom"]}';
-        const translatedMonthsNames = ${resourceDetailBean.monthNames};
-        const translatedShortMonthsNames = ${resourceDetailBean.shortMonthNames};
+        const translatedMonthsNames = JSON.parse('#{resourceDetailBean.monthNames}');
+        const translatedShortMonthsNames = JSON.parse('#{resourceDetailBean.shortMonthNames}');
 
         Highcharts.setOptions({
             lang: {
                 months: translatedMonthsNames,
                 shortMonths: translatedShortMonthsNames,
                 resetZoom: '#{msg.resetZoom}',
-                resetZoomTitle: '#{msg.resetZoomTitle}',
-            },
+                resetZoomTitle: '#{msg.resetZoomTitle}'
+            }
         });
 
         $(function() {
