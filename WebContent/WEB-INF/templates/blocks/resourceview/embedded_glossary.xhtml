@@ -13,7 +13,7 @@
 
 <h:form id="glossary_table_form" prependId="false">
     <p:dataTable id="glossary_table" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
-                 styleClass="glossary-table"
+                 styleClass="glossary-table" allowUnsorting="true"
                  paginator="true" rows="200" rowsPerPageTemplate="100,200,400,1000"
                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
 
@@ -27,7 +27,7 @@
                     <h:outputText value="#{msg.searchLabel}" styleClass="fw-light me-2"/>
                     <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['Glossary.search_filter_placeholder']}"/>
                 </p:outputPanel>
-                <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="alt-btn" process="@this"
+                <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="col-auto alt-btn" process="@this"
                                  update=":glossary_add" oncomplete="openGlossForm();" global="false"/>
             </div>
         </f:facet>

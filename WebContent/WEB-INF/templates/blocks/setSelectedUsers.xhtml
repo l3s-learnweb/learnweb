@@ -56,11 +56,9 @@
             </div>
         </p:outputPanel>
         <p:outputPanel id="submitBtnPanel" styleClass="col-md-4 d-flex justify-content-center align-items-center">
-            <div class="row">
-                <p:commandButton value="#{msg.select}" icon="ui-icon-check" update=":content" action="#{cbean.cleanAndUpdateStoredData}"
-                                         disabled="#{empty cbean.selectedUsersIds or cbean.usersLimitReached}">
-                </p:commandButton>
-            </div>
+            <p:commandButton value="#{msg.select}" icon="ui-icon-check" update=":content" action="#{cbean.cleanAndUpdateStoredData}"
+                                     disabled="#{empty cbean.selectedUsersIds or cbean.usersLimitReached}">
+            </p:commandButton>
         </p:outputPanel>
     </div>
 </h:form>

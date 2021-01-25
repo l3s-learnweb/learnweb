@@ -19,7 +19,7 @@ function loadArchiveUrlsModal() {
 
 $(document).on('click', '.archive-snapshot-list button', (e) => {
   $(e.currentTarget).toggleClass('outline-btn');
-  $(e.currentTarget).next().slideToggle();
+  $(e.currentTarget).nextAll('div').slideToggle();
 });
 
 $(document).on('click', '.archive-snapshot-list a.set-thumbnail', (e) => {

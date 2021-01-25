@@ -121,6 +121,9 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
             for (SortMeta meta : sortBy.values()) {
                 data.sort(new LazySorter(meta.getField(), meta.getOrder()));
             }
+        } else {
+            // default sort
+            data.sort(new LazySorter("timestamp", SortOrder.DESCENDING));
         }
 
         //paginate

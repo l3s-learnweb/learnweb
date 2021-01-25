@@ -46,7 +46,7 @@
 }
 
 .ui-corner-right {
-  @include border-start-radius();
+  @include border-end-radius();
 }
 
 .ui-widget-overlay {

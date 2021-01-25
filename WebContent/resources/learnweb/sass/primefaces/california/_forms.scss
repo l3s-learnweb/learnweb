@@ -1084,7 +1084,7 @@
     }
 
     &:last-child {
-      @include border-start-radius($buttonBorderRadius);
+      @include border-end-radius($buttonBorderRadius);
     }
   }
 }
@@ -1465,7 +1465,7 @@
     }
 
     &:last-child {
-      @include border-start-radius($border-radius);
+      @include border-end-radius($border-radius);
     }
   }
 
