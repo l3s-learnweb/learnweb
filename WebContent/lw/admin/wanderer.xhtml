@@ -661,20 +661,10 @@ input[type="checkbox"], input[type="submit"] {
 		<input checked="checked" id="lowercase" type="checkbox"/> <label for="lowercase">turn text to lower case</label><br/>
 		<input class="" name="wander" value="wander" id="wander" type="submit"/>
 	<span class="" id="loading">&#xA0;</span></p>
-
-<!--[if lte IE 9]>
-<script>
-$("#textwrap").remove();				
-$("#wanderp").html("WordWanderer supports only Internet Explorer 10 and newer.<br/><br/>Please get the <a href='http://microsoft.com/ie'>latest version</a> or download <a href='http://www.google.com/chrome'>Chrome</a>, <a href='http://www.mozilla.org/firefox'>Firefox</a> or <a href='www.apple.com/safari'>Safari</a>.").css({'background-color': "#fff", margin: "10px 200px 10px 200px" , width: "500px", xheight: "100px", padding: "50px"});			
-</script>
-<![endif]-->
-	
-
 	
 	<p id="contact">
 		An experiment by <a href="http://mariandoerk.de/">Marian Dörk</a> and <a href="http://www.ncl.ac.uk/ecls/staff/profile/dawn.knight">Dawn Knight</a> at Newcastle University<br/>
-		funded by the RCUK Digital Economy programme’s <a href="http://www.patina.ac.uk/">PATINA project</a>.<br/>
-		The animated GIF was made with the wonderful <a href="http://visgif.it/">VisGIF</a> extension.</p>
+		funded by the RCUK Digital Economy programme’s <a href="http://www.patina.ac.uk/">PATINA project</a>.</p>
 
 </div>
 
@@ -955,15 +945,16 @@ function events() {
 
 	$("#help_button").unbind().on('click', function(e){help();});
 
-	
+
 }
 
 function log(action, value) {
-	$.post(baseurl+"log.php", {
-		action: action,
-		value: value,
-		time: Math.round(new Date().getTime()/1000)
-	});		
+	console.log(action, value);
+	// $.post(baseurl+"log.php", {
+	// 	action: action,
+	// 	value: value,
+	// 	time: Math.round(new Date().getTime()/1000)
+	// });
 }
 
 function options(show) {
