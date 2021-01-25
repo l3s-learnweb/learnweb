@@ -1,3 +1,3 @@
 <component name="DependencyValidationManager">
-  <scope name="Inspector" pattern="(file[Learnweb]:WebContent//*||file[Learnweb]:src//*||file[Learnweb]:test//*||file[Learnweb]:SQL updates//*||file[Learnweb]:Resources//*||file:pom.xml||file:package.json||file:.gitlab-ci.yml||file:.gitignore)&amp;&amp;!file[Learnweb]:WebContent/resources/vendor//*&amp;&amp;!file:*.svg" />
+  <scope name="Inspector" pattern="((file[Learnweb]:WebContent//*||file[Learnweb]:src//*||file[Learnweb]:test//*||file[Learnweb]:SQL updates//*||file[Learnweb]:Resources//*||file:pom.xml||file:package.json||file:.gitlab-ci.yml||file:.gitignore)&amp;&amp;!file:*.svg&amp;&amp;!file[Learnweb]:WebContent/resources/bundle//*||file:rollup.config.js)&amp;&amp;!file[Learnweb]:Resources/de/l3s/learnweb/facesMessages//*" />
 </component>
