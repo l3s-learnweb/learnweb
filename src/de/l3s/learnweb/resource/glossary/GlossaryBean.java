@@ -28,8 +28,10 @@ import org.apache.poi.hssf.usermodel.HSSFPatriarch;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
@@ -115,8 +117,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     private boolean optionImportEnabled;
 
     private List<Locale> tableLanguageFilter;
-
-    private boolean overwriteGlossary;
 
     private GlossaryParserResponse importResponse;
     private LazyGlossaryTableView lazyTableItems;
@@ -233,7 +233,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         onAddTerm();
     }
 
-    public void deleteEntry(GlossaryTableView row) {
+    public void onDeleteEntry(GlossaryTableView row) {
         try {
             row.getTopics();
             log(Action.glossary_entry_delete, glossaryResource, row.getEntryId());
@@ -388,14 +388,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             throw new IllegalAccessException("This feature isn't enabled for your organization");
         }
 
-        //TODO @kemkes: check if user is moderator
-        if (overwriteGlossary) {
-            log.debug("overrideGlossary is true");
-            // delete previous entries, if not a moderator show an error
-        } else {
-            log.debug("overrideGlossary is false");
-        }
-
         GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());
 
         importResponse = parser.parseGlossaryEntries();
@@ -424,16 +416,23 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
 
         try {
+            HSSFWorkbook wb = (HSSFWorkbook) document;
+            HSSFSheet sheet = wb.getSheetAt(0);
+            HSSFRow row0 = sheet.getRow(1);
+
+            if (row0 == null) {
+                return;
+            }
+
+            HSSFCellStyle cellStyle = wb.createCellStyle();
+
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+            cellStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+
+            row0.setRowStyle(cellStyle);
+
             if (user.getOrganisation().getOption(Option.Glossary_Add_Watermark)) {
                 log.debug("post processing glossary xls");
-
-                HSSFWorkbook wb = (HSSFWorkbook) document;
-                HSSFSheet sheet = wb.getSheetAt(0);
-                HSSFRow row0 = sheet.getRow(1);
-
-                if (row0 == null) {
-                    return;
-                }
 
                 HSSFCell cell0 = row0.getCell(0);
 
@@ -488,6 +487,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             log.error("Error in postprocessing Glossary xls for resource: " + glossaryResource.getId(), e);
             addErrorGrowl(e);
         }
+
     }
 
     public void rotatePDF(Object document) {
@@ -552,15 +552,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public boolean isOptionMandatoryDescription() {
         return optionMandatoryDescription;
-    }
-
-    public boolean isOverwriteGlossary() {
-        return overwriteGlossary;
-    }
-
-    public void setOverwriteGlossary(final boolean overwriteGlossary) {
-        log.debug("setter");
-        this.overwriteGlossary = overwriteGlossary;
     }
 
     public GlossaryParserResponse getImportResponse() {

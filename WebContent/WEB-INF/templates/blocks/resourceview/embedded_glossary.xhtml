@@ -58,7 +58,7 @@
 
         <p:column style="width: 57px;" exportable="false">
             <div class="text-end">
-                <p:commandLink action="#{glossaryBean.deleteEntry(item)}" title="#{msg.delete}"
+                <p:commandLink action="#{glossaryBean.onDeleteEntry(item)}" title="#{msg.delete}"
                                process="@this" update=":glossary_table_form " oncomplete="groupRow()">
                     <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                     <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, item.topics)}"/>
@@ -121,14 +121,6 @@
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
     <div class="p-grid">
         <h:form id="import_form" prependId="false">
-            <h:panelGroup layout="block" rendered="#{userBean.admin}" styleClass="mb-3">
-                <!-- disabled until completed -->
-                <h:outputFormat value="#{msg['Glossary.overwrite_question']}" styleClass="d-block"/>
-                <h:outputText value="#{msg['Glossary.overwrite_description']}" styleClass="d-block mb-2"/>
-
-                <p:selectBooleanButton value="#{glossaryBean.overwriteGlossary}" onLabel="#{msg['yes']}" offLabel="#{msg['no']}" />
-            </h:panelGroup>
-
             <p:fileUpload mode="advanced" skinSimple="true" listener="#{glossaryBean.onImportXls}" styleClass="fileupload-minimal"
                           allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update=":glossary_dialog :glossary_table_form"
                           oncomplete="PF('excel_import_dialog').hide(); PF('glossaryDlg').show(); groupRow();"/>

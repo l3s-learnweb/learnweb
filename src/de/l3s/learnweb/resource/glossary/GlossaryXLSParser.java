@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.model.file.UploadedFile;
@@ -39,8 +40,8 @@ public class GlossaryXLSParser {
     }
 
     public GlossaryParserResponse parseGlossaryEntries() throws IOException {
-        POIFSFileSystem fs = new POIFSFileSystem(uploadedFile.getInputStream());
-        try (HSSFWorkbook wb = new HSSFWorkbook(fs)) {
+
+        try (POIFSFileSystem fs = new POIFSFileSystem(uploadedFile.getInputStream()); HSSFWorkbook wb = new HSSFWorkbook(fs)) {
             HSSFSheet sheet = wb.getSheetAt(0);
             GlossaryRowBuilder glossaryRowBuilder = null;
 
@@ -69,6 +70,12 @@ public class GlossaryXLSParser {
             }
 
             return new GlossaryParserResponse(joinEntries(glossaryEntries), glossaryRowBuilder.getErrors());
+        } catch (OfficeXmlFileException e) {
+            if (uploadedFile.getFileName().endsWith(".xlsx")) {// wrong file format
+                return new GlossaryParserResponse(null, Collections.singletonList(new ParsingError(-1, "", "Please save the file in *.xls format, also called Excel 97-2003, and try again.")));
+            } else {
+                throw e;
+            }
         }
     }
 
