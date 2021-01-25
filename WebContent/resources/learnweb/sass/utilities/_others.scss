@@ -58,10 +58,6 @@
   }
 }
 
-.select-none {
-  user-select: none;
-}
-
 .modal-dialog-select {
   max-width: 365px;
   width: 100% !important;
@@ -140,11 +136,6 @@ section:target .highlight {
 
 .text-blue {
   color: $blue;
-}
-
-.pre-scrollable {
-  max-height: 340px;
-  overflow-y: scroll;
 }
 
 // Utilities for hiding content on smaller displays. Similar to existing .d-#{}-none utils, but using max-width (down) instead of min-width

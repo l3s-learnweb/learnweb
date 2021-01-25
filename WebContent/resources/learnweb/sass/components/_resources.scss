@@ -536,43 +536,16 @@ ul.res-filters {
   box-shadow: $box-shadow-sm;
 
   .res-bl-preview {
-    padding-top: 75%; // 4:3 Aspect Ratio
-    position: relative;
-
-    &::after {
-      content: '';
-      opacity: 0;
-      pointer-events: none;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background: #232f40;
-      transition: opacity 333ms ease;
+    &::before {
+      background: $gray-900;
     }
 
-    .res-bl-preview-wrap {
+    img {
       transition: opacity $transition-duration ease-in-out;
       background-color: $white;
-      overflow: hidden;
-      position: absolute;
-      text-align: center;
-      height: 100%;
-      width: 100%;
-      left: 0;
-      top: 0;
-
-      .res-bl-preview-image {
-        display: inline-block;
-        height: 100%;
-        width: 100%;
-        vertical-align: middle;
-        //noinspection Stylelint
-        object-fit: cover;
-        pointer-events: none;
-        user-select: none;
-      }
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
     }
   }
 
@@ -641,8 +614,8 @@ ul.res-filters {
     }
 
     .res-bl-preview {
-      &::after {
-        opacity: 0.25;
+      img {
+        opacity: 0.75;
       }
     }
 
@@ -663,9 +636,12 @@ ul.res-filters {
     background: $themePrimaryDarkerAlt;
 
     .res-bl-preview {
-      &::after {
-        opacity: 0.25;
+      &::before {
         background: $themePrimaryColor;
+      }
+
+      img {
+        opacity: 0.75;
       }
     }
 
@@ -699,7 +675,7 @@ ul.res-filters {
     background: $themePrimaryAltColorDarker;
     border-color: $themePrimaryAltColorDarker;
 
-    .res-bl-preview {
+    .res-bl-preview { // actually not used, folders don't have preview
       border-color: $themePrimaryAltColorDarker;
     }
 

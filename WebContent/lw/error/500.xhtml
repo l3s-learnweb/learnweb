@@ -12,8 +12,8 @@
 		<h:outputText styleClass="h5 d-block" value="#{msg['error_pages.server_error_default_description']} #{msg['error_pages.automatic_report']}"/>
 		<h:outputText styleClass="text-muted" value="#{msg['error_pages.contact_administrator']}"/>
         <a href="#{request.contextPath}/lw/contact.jsf">#{msg['contact']}</a>
-        
-		<pre class="mt-3 mb-0 pre-scrollable collapse">
+
+		<pre class="mt-3 mb-0 collapse overflow-scroll" style="max-height: 340px;">
 			<h:outputText value="Message: #{requestScope['javax.servlet.error.message']}"/><br/>
 			<h:outputText value="Stack trace: #{of:printStackTrace(requestScope['javax.servlet.error.exception'])}" escape="false"/>
 		</pre>

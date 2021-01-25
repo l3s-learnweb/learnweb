@@ -294,3 +294,26 @@
 .ui-panel-content + .ui-panel-footer {
   border-top: 0; /* hide top border if panel has a footer */
 }
+
+.ui-datatable {
+  table {
+    table-layout: auto !important;
+
+    .ui-datatable-data tr td {
+      word-break: break-all;
+    }
+  }
+
+  /* set background color for even/odd table cells */
+  .ui-datatable-data {
+    td {
+      &.ui-datatable-even {
+        background-color: $datatableEvenColor;
+      }
+
+      &.ui-datatable-odd {
+        background-color: $contentBgColor;
+      }
+    }
+  }
+}

@@ -11,10 +11,8 @@
         <button class="res-selector"></button>
     </ui:fragment>
 
-    <div class="res-bl-preview">
-        <div class="res-bl-preview-wrap">
-            <img class="res-bl-preview-image" src="#{res.smallThumbnail.url}" alt="#{res.title}" title="#{res.title}" loading="lazy"/>
-        </div>
+    <div class="res-bl-preview ratio ratio-4x3">
+        <img src="#{res.smallThumbnail.url}" alt="#{res.title}" title="#{res.title}" loading="lazy"/>
     </div>
 
     <div class="res-bl-details">

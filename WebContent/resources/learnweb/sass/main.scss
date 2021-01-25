@@ -8,6 +8,7 @@
 
 // PrimeFaces components styles
 @import 'primefaces/theme';
+@import 'primefaces/components';
 
 // Styles from 3rd-part developers
 // WARNING! Some of them is modified, you can update them if you need to tune styles, but be careful and never change class names.
@@ -25,7 +26,6 @@
 @import 'utilities/forms';
 @import 'utilities/grid';
 @import 'utilities/others';
-@import 'utilities/primefaces';
 @import 'utilities/tables';
 
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
