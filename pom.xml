@@ -113,6 +113,12 @@
             <artifactId>poi</artifactId>
             <version>5.0.0</version>
         </dependency>
+        <!-- poi XLSX support used for Glossary exporter -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.0.0</version>
+        </dependency>
         <!-- Optional dependency of PrimeFaces (required for TextEditor) -->
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>

@@ -5,8 +5,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.util.Deletable;
@@ -103,7 +105,8 @@ public class GlossaryTerm implements Deletable, Serializable, Cloneable {
     }
 
     public void setUses(List<String> uses) {
-        this.uses = uses;
+        Validate.notNull(uses);
+        this.uses = uses.stream().map(String::trim).collect(Collectors.toList());;
     }
 
     public String getPronounciation() {

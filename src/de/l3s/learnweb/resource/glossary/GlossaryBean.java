@@ -28,10 +28,8 @@ import org.apache.poi.hssf.usermodel.HSSFPatriarch;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
@@ -424,13 +422,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 return;
             }
 
-            HSSFCellStyle cellStyle = wb.createCellStyle();
-
-            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
-            cellStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-
-            row0.setRowStyle(cellStyle);
-
             if (user.getOrganisation().getOption(Option.Glossary_Add_Watermark)) {
                 log.debug("post processing glossary xls");
 
@@ -463,7 +454,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                             }
                         }
                     }
-
                 }
 
                 //Set owner details

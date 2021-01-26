@@ -442,6 +442,13 @@ public final class Learnweb {
         return Optional.ofNullable(learnweb);
     }
 
+    /**
+     * This method will use https://learnweb.l3s.uni-hannover.de as server URL if no other URL is specified in the properties file
+     *
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     public static Learnweb createInstance() throws ClassNotFoundException, SQLException {
         return createInstance(null);
     }

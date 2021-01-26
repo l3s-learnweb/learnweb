@@ -71,7 +71,7 @@ public class GlossaryXLSParser {
 
             return new GlossaryParserResponse(joinEntries(glossaryEntries), glossaryRowBuilder.getErrors());
         } catch (OfficeXmlFileException e) {
-            if (uploadedFile.getFileName().endsWith(".xlsx")) {// wrong file format
+            if (uploadedFile.getFileName().endsWith(".xlsx")) { // wrong file format
                 return new GlossaryParserResponse(null, Collections.singletonList(new ParsingError(-1, "", "Please save the file in *.xls format, also called Excel 97-2003, and try again.")));
             } else {
                 throw e;
