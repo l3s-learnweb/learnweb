@@ -15,7 +15,7 @@ public enum Column {
 
     private final String localeName;
 
-    private Column(String localeName) {
+    Column(String localeName) {
         this.localeName = localeName;
     }
 

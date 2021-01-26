@@ -65,8 +65,9 @@ public final class GlossaryXLSXExporter {
     private void test(Workbook wb) throws IOException {
         // Write the output to a file
         String file = "glossary.xls";
-        if (wb instanceof XSSFWorkbook)
+        if (wb instanceof XSSFWorkbook) {
             file += "x";
+        }
         try (FileOutputStream out = new FileOutputStream(file);) {
             wb.write(out);
         }
@@ -101,8 +102,9 @@ public final class GlossaryXLSXExporter {
 
         int columnIndex = 0;
         for (Column column : Column.values()) {
-            if (column.equals(Column.pronounciation))
+            if (column.equals(Column.pronounciation)) { // don't show in Excel file
                 continue;
+            }
 
             Cell cell = headerRow.createCell(columnIndex++);
             cell.setCellValue(LanguageBundle.getLocaleMessage(language, column.getLocaleName()));
@@ -115,7 +117,8 @@ public final class GlossaryXLSXExporter {
         Row row;
         Cell cell;
 
-        int rowIndex = 1, entryIndex = 0;
+        int rowIndex = 1;
+        int entryIndex = 0;
 
         for (GlossaryEntry entry : glossaryResource.getEntries()) {
             row = sheet.createRow(rowIndex);

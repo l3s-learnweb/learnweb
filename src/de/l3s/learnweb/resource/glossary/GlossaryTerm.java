@@ -106,7 +106,7 @@ public class GlossaryTerm implements Deletable, Serializable, Cloneable {
 
     public void setUses(List<String> uses) {
         Validate.notNull(uses);
-        this.uses = uses.stream().map(String::trim).collect(Collectors.toList());;
+        this.uses = uses.stream().map(String::trim).collect(Collectors.toList());
     }
 
     public String getPronounciation() {
