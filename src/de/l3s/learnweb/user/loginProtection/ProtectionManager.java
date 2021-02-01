@@ -45,11 +45,11 @@ public class ProtectionManager {
 
     private final Learnweb learnweb;
 
-    private final Map<String, AccessData> accessMap;
+    private final Map<String, Ban> banlist;
     private final Set<String> whitelist;
     private final Queue<LoginAttemptData> attemptedLogins;
     private final List<AggregatedRequestData> suspiciousActivityList;
-    private final AccessDataDao accessDataDao;
+    private final BanDao banDao;
 
     private final String adminEmail;
     private int suspiciousAlertsCounter = 0;
@@ -57,14 +57,14 @@ public class ProtectionManager {
     public ProtectionManager(Learnweb learnweb) {
         this.learnweb = learnweb;
         adminEmail = learnweb.getProperties().getProperty("ADMIN_MAIL");
-        accessMap = new ConcurrentHashMap<>();
+        banlist = new ConcurrentHashMap<>();
         attemptedLogins = new ConcurrentLinkedQueue<>();
         suspiciousActivityList = new ArrayList<>();
         whitelist = new HashSet<>();
         loadBanLists();
         loadWhitelist();
 
-        accessDataDao = learnweb.getJdbi().onDemand(AccessDataDao.class);
+        banDao = learnweb.getJdbi().onDemand(BanDao.class);
     }
 
     private void loadWhitelist() {
@@ -85,18 +85,17 @@ public class ProtectionManager {
      * Loads ban lists from the database. Should be called by every constructor.
      */
     private void loadBanLists() {
-        accessDataDao.findAll()
-            .forEach(accessData -> accessMap.put(accessData.getName(), accessData));
+        banDao.getBans().forEach(ban -> banlist.put(ban.getName(), ban));
 
-        log.debug("Banlist loaded. Entries: {}", accessMap.size());
+        log.debug("Banlist loaded. Entries: {}", banlist.size());
     }
 
     public LocalDateTime getBannedUntil(String name) {
-        AccessData ad = accessMap.get(name);
-        if (ad == null) {
+        Ban ban = banlist.get(name);
+        if (ban == null) {
             return null;
         }
-        return ad.getBannedUntil();
+        return ban.getBannedUntil();
     }
 
     public boolean isBanned(String name) {
@@ -105,27 +104,27 @@ public class ProtectionManager {
     }
 
     public boolean needsCaptcha(String name) {
-        AccessData ad = accessMap.get(name);
-        if (ad == null) {
+        Ban ban = banlist.get(name);
+        if (ban == null) {
             return false;
         }
-        return ad.getAttempts() > CAPTCHA_THRESHOLD;
+        return ban.getAttempts() > CAPTCHA_THRESHOLD;
     }
 
     public void updateFailedAttempts(String ip, String username) {
         attemptedLogins.add(new LoginAttemptData(ip, username, false));
 
-        AccessData ipData = accessMap.get(ip);
-        AccessData usernameData = accessMap.get(username);
+        Ban ipData = banlist.get(ip);
+        Ban usernameData = banlist.get(username);
 
         if (ipData == null) {
-            ipData = new AccessData(ip);
-            accessMap.put(ip, ipData);
+            ipData = new Ban(ip);
+            banlist.put(ip, ipData);
         }
 
         if (usernameData == null) {
-            usernameData = new AccessData(username);
-            accessMap.put(username, usernameData);
+            usernameData = new Ban(username);
+            banlist.put(username, usernameData);
         }
 
         ipData.logAttempt();
@@ -142,9 +141,9 @@ public class ProtectionManager {
     /**
      * Checks whether the currently accessing IP either has a high request rate (over 300).
      */
-    private void analyzeAccess(AccessData ad, boolean isIP) {
-        if (isIP && whitelist.contains(ad.getName()) && ad.getAttempts() < 300) {
-            ad.setAllowedAttempts(ATTEMPTS_STEP);
+    private void analyzeAccess(Ban ban, boolean isIP) {
+        if (isIP && whitelist.contains(ban.getName()) && ban.getAttempts() < 300) {
+            ban.setAllowedAttempts(ATTEMPTS_STEP);
             return;
         }
 
@@ -153,27 +152,27 @@ public class ProtectionManager {
         List<LoginAttemptData> list;
         if (isIP) {
             list = attemptedLogins.stream()
-                .filter(x -> x.getIp().equals(ad.getName()) && x.getDateTime().isAfter(threshold))
+                .filter(x -> x.getIp().equals(ban.getName()) && x.getDateTime().isAfter(threshold))
                 .collect(Collectors.toList());
         } else {
             list = attemptedLogins.stream()
-                .filter(x -> x.getUsername().equals(ad.getName()) && x.getDateTime().isAfter(threshold))
+                .filter(x -> x.getUsername().equals(ban.getName()) && x.getDateTime().isAfter(threshold))
                 .collect(Collectors.toList());
         }
 
         if (list.size() > BAN_THRESHOLD) {
-            flagSuspicious(ad, list);
+            flagSuspicious(ban, list);
         }
 
-        ad.setAllowedAttempts(ATTEMPTS_STEP);
+        ban.setAllowedAttempts(ATTEMPTS_STEP);
     }
 
     /**
      * Adds the suspicious acc data to the suspicious list and sends admin an email every 30 entries.
      */
-    private void flagSuspicious(AccessData ad, List<LoginAttemptData> list) {
+    private void flagSuspicious(Ban ban, List<LoginAttemptData> list) {
         RequestManager rm = learnweb.getRequestManager();
-        suspiciousActivityList.addAll(rm.getRequestsByIP(ad.getName()));
+        suspiciousActivityList.addAll(rm.getRequestsByIP(ban.getName()));
 
         if (suspiciousActivityList.size() > 30) {
             sendMail();
@@ -238,8 +237,8 @@ public class ProtectionManager {
     }
 
     public void updateSuccessfulAttempts(String ip, String username) {
-        AccessData ipData = accessMap.get(ip);
-        AccessData usernameData = accessMap.get(username);
+        Ban ipData = banlist.get(ip);
+        Ban usernameData = banlist.get(username);
 
         if (ipData != null) {
             ipData.reset();
@@ -253,34 +252,34 @@ public class ProtectionManager {
     }
 
     public void clearBan(String name) {
-        accessDataDao.delete(name);
+        banDao.deleteBanByName(name);
 
-        accessMap.remove(name);
+        banlist.remove(name);
         log.debug("Unbanned {}", name);
     }
 
     public void clearOutdatedBans() {
-        accessDataDao.deleteOutdated();
+        banDao.deleteOutdatedBans();
 
-        accessMap.clear();
+        banlist.clear();
         loadBanLists();
 
         log.debug("Older entries have been cleaned up from ban lists.");
     }
 
-    public List<AccessData> getBanlist() {
-        return new ArrayList<>(accessMap.values());
+    public List<Ban> getBanlist() {
+        return new ArrayList<>(banlist.values());
     }
 
     /**
      * Same as {@link #ban(String, String)}, but do not save the name to database.
      */
     public void tempBan(String ipAddr, String reason) {
-        AccessData accessData = accessMap.computeIfAbsent(ipAddr, AccessData::new);
+        Ban ban = banlist.computeIfAbsent(ipAddr, Ban::new);
 
-        accessData.setType("temp");
-        accessData.ban(365, 0, 0);
-        accessData.setReason(reason);
+        ban.setType("temp");
+        ban.ban(365, 0, 0);
+        ban.setReason(reason);
     }
 
     /**
@@ -291,14 +290,14 @@ public class ProtectionManager {
     }
 
     public void ban(String name, int banDays, int banHours, int banMinutes, boolean isIP, String reason) {
-        AccessData accessData = accessMap.computeIfAbsent(name, AccessData::new);
+        Ban ban = banlist.computeIfAbsent(name, Ban::new);
 
-        accessData.setType(isIP ? "IP" : "user");
-        accessData.ban(banDays, banHours, banMinutes);
-        accessData.setReason(reason);
+        ban.setType(isIP ? "IP" : "user");
+        ban.ban(banDays, banHours, banMinutes);
+        ban.setReason(reason);
 
-        accessDataDao.create(accessData);
-        log.info("Banned {} until {}", accessData.getName(), accessData.getBannedUntil());
+        banDao.save(ban);
+        log.info("Banned {} until {}", ban.getName(), ban.getBannedUntil());
     }
 
     public void removeSuspicious(String name) {

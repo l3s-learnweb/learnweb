@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
@@ -117,6 +118,7 @@ public final class Learnweb {
 
         dataSource = createDataSource();
         dbConnection = dataSource.getConnection(); // TODO: remove old connection methods
+        // migrateDatabase();
 
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
@@ -186,6 +188,15 @@ public final class Learnweb {
         ds.setMaximumPoolSize(3);
         ds.setConnectionTimeout(60000); // 1 min
         return ds;
+    }
+
+    private void migrateDatabase() {
+        Flyway flyway = Flyway.configure()
+            .dataSource(dataSource)
+            .locations("db/migration")
+            .load();
+
+        flyway.migrate();
     }
 
     /**
@@ -266,9 +277,9 @@ public final class Learnweb {
 
     public Jdbi getJdbi() {
         if (jdbi == null) {
-            jdbi = Jdbi.create(dataSource);
             // add configuration and register mappers if needed http://jdbi.org/
-            jdbi.installPlugin(new SqlObjectPlugin());
+            jdbi = Jdbi.create(dataSource)
+                .installPlugin(new SqlObjectPlugin());
         }
         return jdbi;
     }

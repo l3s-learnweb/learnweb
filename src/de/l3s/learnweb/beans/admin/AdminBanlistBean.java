@@ -11,7 +11,7 @@ import javax.mail.MessagingException;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.user.loginProtection.AccessData;
+import de.l3s.learnweb.user.loginProtection.Ban;
 import de.l3s.learnweb.web.AggregatedRequestData;
 import de.l3s.util.email.BounceManager;
 
@@ -27,7 +27,6 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
     private Integer banMinutes;
     private boolean permaban;
 
-    private List<AccessData> banlist;
     private List<AggregatedRequestData> suspiciousActivityList;
 
     public void onManualBan() {
@@ -42,17 +41,14 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
         banMinutes = Optional.ofNullable(banMinutes).orElse(0);
 
         getLearnweb().getProtectionManager().ban(name, banDays, banHours, banMinutes, isIP, null);
-        banlist = null;
     }
 
     public void onUnban(String name) {
         getLearnweb().getProtectionManager().clearBan(name);
-        banlist = null;
     }
 
     public void onDeleteOutdatedBans() {
         getLearnweb().getProtectionManager().clearOutdatedBans();
-        banlist = null;
     }
 
     public void onRemoveSuspicious(String name) {
@@ -60,11 +56,8 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
         suspiciousActivityList = null;
     }
 
-    public List<AccessData> getBanlist() {
-        if (banlist == null) {
-            banlist = getLearnweb().getProtectionManager().getBanlist();
-        }
-        return banlist;
+    public List<Ban> getBanlist() {
+        return getLearnweb().getProtectionManager().getBanlist();
     }
 
     public List<AggregatedRequestData> getSuspiciousActivityList() {

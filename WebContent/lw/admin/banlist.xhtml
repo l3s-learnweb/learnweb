@@ -65,41 +65,41 @@
             <h:outputText value="#{msg.please_wait}"/>
         </p:blockUI>
 
-        <p:dataTable id="banlist" var="accessData" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
+        <p:dataTable id="banlist" var="ban" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
             <f:facet name="header">#{msg.banlist}</f:facet>
 
-            <p:column headerText="#{msg.name}" sortBy="#{accessData.name}">
-                <h:outputText value="#{accessData.name}"/>
+            <p:column headerText="#{msg.name}" sortBy="#{ban.name}">
+                <h:outputText value="#{ban.name}"/>
             </p:column>
 
-            <p:column headerText="#{msg.bannedon}" sortBy="#{accessData.bannedOn}">
-                <h:outputText value="#{accessData.bannedOn}">
+            <p:column headerText="#{msg.bannedon}" sortBy="#{ban.bannedOn}">
+                <h:outputText value="#{ban.bannedOn}">
                     <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="#{msg.bandate}" sortBy="#{accessData.bannedUntil}">
-                <h:outputText value="#{accessData.bannedUntil}">
+            <p:column headerText="#{msg.bandate}" sortBy="#{ban.bannedUntil}">
+                <h:outputText value="#{ban.bannedUntil}">
                     <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="Reason" sortBy="#{accessData.reason}">
-                <h:outputText value="#{accessData.reason}"/>
+            <p:column headerText="Reason" sortBy="#{ban.reason}">
+                <h:outputText value="#{ban.reason}"/>
             </p:column>
 
-            <p:column headerText="#{msg.attempts}" sortBy="#{accessData.attempts}">
-                <h:outputText value="#{accessData.attempts}"/>
+            <p:column headerText="#{msg.attempts}" sortBy="#{ban.attempts}">
+                <h:outputText value="#{ban.attempts}"/>
             </p:column>
 
             <p:column headerText="#{msg.options}" styleClass="td-text-end">
                 <p:commandLink onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()"
-                               actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this" update=":banlist"
+                               actionListener="#{adminBanlistBean.onUnban(ban.name)}" process="@this" update=":banlist"
                                styleClass="icon-link" title="#{msg.unban}">
                     <i class="fas fa-fw fa-ban text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.unban}"/>
-                    <p:confirm message="#{msg.unban} #{accessData.name}?"/>
+                    <p:confirm message="#{msg.unban} #{ban.name}?"/>
                 </p:commandLink>
             </p:column>
         </p:dataTable>
