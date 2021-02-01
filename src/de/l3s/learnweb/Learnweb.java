@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.jpa.JpaPlugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import com.zaxxer.hikari.HikariDataSource;
@@ -20,7 +19,6 @@ import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardManager;
 import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardManager;
 import de.l3s.learnweb.dashboard.tracker.TrackerDashboardManager;
-import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.logging.LogManager;
 import de.l3s.learnweb.resource.FileManager;
@@ -59,7 +57,6 @@ public final class Learnweb {
     private static boolean learnwebIsLoading = false;
 
     // Manager (Data Access Objects):
-    private final ForumManager forumManager;
     private final ResourceManager resourceManager;
     private final OrganisationManager organisationManager;
     private final CourseManager courseManager;
@@ -124,7 +121,6 @@ public final class Learnweb {
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
         resourceManager = new ResourceManager(this);
-        forumManager = new ForumManager(this);
         organisationManager = new OrganisationManager(this);
         courseManager = new CourseManager(this);
         groupManager = new GroupManager(this);
@@ -273,7 +269,6 @@ public final class Learnweb {
             jdbi = Jdbi.create(dataSource);
             // add configuration and register mappers if needed http://jdbi.org/
             jdbi.installPlugin(new SqlObjectPlugin());
-            jdbi.installPlugin(new JpaPlugin());
         }
         return jdbi;
     }
@@ -349,10 +344,6 @@ public final class Learnweb {
 
     public TimelineManager getTimelineManager() {
         return timelineManager;
-    }
-
-    public ForumManager getForumManager() {
-        return forumManager;
     }
 
     /**

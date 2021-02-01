@@ -11,6 +11,7 @@ import javax.inject.Named;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.forum.ForumPostDao;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 
@@ -100,7 +101,7 @@ public class GroupMembersBean extends ApplicationBean implements Serializable {
 
     public int getForumPostCounts(int userId) throws SQLException {
         if (postCounts == null) {
-            postCounts = Learnweb.getInstance().getForumManager().getPostCountPerUserByGroup(groupId);
+            postCounts = Learnweb.getInstance().getJdbi().withExtension(ForumPostDao.class, dao -> dao.getPostsCountPerUserByGroupId(groupId));
         }
         return postCounts.getOrDefault(userId, 0);
     }

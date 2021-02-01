@@ -38,20 +38,24 @@ public class ForumBean extends ApplicationBean implements Serializable {
     @NotBlank
     private String newTopicText;
     private String newTopicCategory;
+    private ForumPostDao forumPostDao;
+    private ForumTopicDao forumTopicDao;
 
     public void onLoad() throws SQLException {
         BeanAssert.authorized(isLoggedIn());
+
+        forumPostDao = getLearnweb().getJdbi().onDemand(ForumPostDao.class);
+        forumTopicDao = getLearnweb().getJdbi().onDemand(ForumTopicDao.class);
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
         BeanAssert.isFound(group);
         BeanAssert.hasPermission(group.canViewResources(getUser()));
 
-        topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
+        topics = forumTopicDao.getTopicsByGroupId(groupId);
     }
 
     public String onSavePost() throws SQLException {
         Date now = new Date();
-        ForumManager fm = getLearnweb().getForumManager();
 
         ForumTopic topic = new ForumTopic();
         topic.setGroupId(groupId);
@@ -60,7 +64,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
         topic.setDate(now);
         topic.setLastPostUserId(getUser().getId());
         topic.setLastPostDate(now);
-        topic = fm.save(topic);
+        forumTopicDao.save(topic);
 
         ForumPost post = new ForumPost();
         post.setUserId(getUser().getId());
@@ -68,7 +72,10 @@ public class ForumBean extends ApplicationBean implements Serializable {
         post.setText(newTopicText);
         post.setCategory(newTopicCategory);
         post.setTopicId(topic.getId());
-        fm.save(post);
+        forumPostDao.save(post);
+
+        forumTopicDao.increaseReplies(post.getTopicId(), post.getId(), post.getUserId(), post.getDate());
+        post.getUser().incForumPostCount();
 
         log(Action.forum_topic_added, groupId, topic.getId(), newTopicTitle);
         return "forum_topic.jsf?faces-redirect=true&topic_id=" + topic.getId();
@@ -76,8 +83,8 @@ public class ForumBean extends ApplicationBean implements Serializable {
 
     public void onDeleteTopic(ForumTopic topic) {
         try {
-            getLearnweb().getForumManager().deleteTopic(topic);
-            topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
+            forumTopicDao.deleteTopicById(topic.getId());
+            topics = forumTopicDao.getTopicsByGroupId(groupId);
             addMessage(FacesMessage.SEVERITY_INFO, "The topic '" + topic.getTitle() + "' has been deleted.");
         } catch (Exception e) {
             addErrorMessage(e);

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -14,10 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
-import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.forum.ForumPost;
+import de.l3s.learnweb.forum.ForumTopic;
+import de.l3s.learnweb.forum.ForumTopicDao;
 import de.l3s.learnweb.user.User;
 
 /**
@@ -36,8 +39,6 @@ public class YourPostsBean extends ApplicationBean implements Serializable {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        final ForumManager forumManager = this.getLearnweb().getForumManager();
-
         postThreadTopics = new HashMap<>();
         userPosts = user.getForumPosts();
 
@@ -52,7 +53,8 @@ public class YourPostsBean extends ApplicationBean implements Serializable {
                 }
                 post.setText(Jsoup.parse(allText.toString()).text());
 
-                postThreadTopics.put(post.getTopicId(), forumManager.getTopicById(post.getTopicId()).getTitle());
+                Optional<ForumTopic> topic = Learnweb.getInstance().getJdbi().withExtension(ForumTopicDao.class, dao -> dao.getTopicById(post.getTopicId()));
+                postThreadTopics.put(post.getTopicId(), topic.get().getTitle());
             } catch (Exception e) {
                 log.error("An error occurred during processing post " + post.getId(), e);
             }

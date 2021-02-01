@@ -35,6 +35,7 @@ import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.forum.ForumPost;
+import de.l3s.learnweb.forum.ForumPostDao;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.resource.Comment;
@@ -650,7 +651,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     public int getForumPostCount() throws SQLException {
         if (forumPostCount == -1) {
-            forumPostCount = Learnweb.getInstance().getForumManager().getPostCountByUser(id);
+            forumPostCount = Learnweb.getInstance().getJdbi().withExtension(ForumPostDao.class, dao -> dao.getPostCountByUserId(id));
         }
         return forumPostCount;
     }
@@ -729,7 +730,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      * @return All forum posts this user created
      */
     public List<ForumPost> getForumPosts() throws SQLException {
-        return Learnweb.getInstance().getForumManager().getPostsByUser(getId());
+        return Learnweb.getInstance().getJdbi().withExtension(ForumPostDao.class, dao -> dao.getPostsByUserId(id));
     }
 
     /**

@@ -32,12 +32,16 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
     // used only by breadcrumbs
     private List<ForumTopic> topics;
+    private ForumPostDao forumPostDao;
+    private ForumTopicDao forumTopicDao;
 
     public void onLoad() throws SQLException {
         BeanAssert.authorized(isLoggedIn());
 
-        ForumManager fm = getLearnweb().getForumManager();
-        topic = fm.getTopicById(topicId);
+        forumPostDao = getLearnweb().getJdbi().onDemand(ForumPostDao.class);
+        forumTopicDao = getLearnweb().getJdbi().onDemand(ForumTopicDao.class);
+
+        topic = forumTopicDao.getTopicById(topicId).orElse(null);
         BeanAssert.isFound(topic);
         BeanAssert.notDeleted(topic);
 
@@ -45,11 +49,11 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
         BeanAssert.isFound(group);
         BeanAssert.hasPermission(group.canViewResources(getUser()));
 
-        posts = fm.getPostsBy(topicId);
-        fm.incViews(topicId);
-        fm.updatePostVisitTime(topicId, getUser().getId());
+        posts = forumPostDao.getPostsByTopicId(topicId);
+        forumTopicDao.increaseViews(topicId);
+        forumTopicDao.registerUserVisit(topicId, getUser().getId());
 
-        topics = getLearnweb().getForumManager().getTopicsByGroup(group.getId());
+        topics = forumTopicDao.getTopicsByGroupId(group.getId());
     }
 
     public boolean isReplyDialog() {
@@ -57,7 +61,6 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
     }
 
     public void saveDialogPost() throws SQLException {
-        ForumManager fm = getLearnweb().getForumManager();
         boolean replyDialog = isReplyDialog();
 
         if (replyDialog) {
@@ -70,10 +73,12 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
             dialogPost.setEditUserId(getUser().getId());
         }
 
-        fm.save(dialogPost);
+        forumPostDao.save(dialogPost);
 
         if (replyDialog) {
             posts.add(dialogPost);
+            forumTopicDao.increaseReplies(dialogPost.getTopicId(), dialogPost.getId(), dialogPost.getUserId(), dialogPost.getDate());
+            dialogPost.getUser().incForumPostCount();
             log(Action.forum_post_added, group.getId(), topicId, topic.getTitle());
         } else {
             addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
@@ -89,8 +94,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
     public void deletePost(ForumPost post) throws SQLException {
         User user = getUser();
         if (user.isModerator() || user.getId() == post.getUserId()) {
-            ForumManager fm = getLearnweb().getForumManager();
-            fm.deletePost(post);
+            forumPostDao.deletePostById(post.getId());
         }
 
         posts.remove(post);

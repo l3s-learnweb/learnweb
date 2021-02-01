@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
@@ -20,16 +19,18 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.user.User;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 public interface ForumTopicDao extends SqlObject {
-    @SqlQuery("SELECT * FROM `lw_forum_topic` WHERE topic_id = ?")
-    @RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
-    Optional<ForumTopic> find(int topicId);
 
-    @SqlQuery("SELECT * FROM `lw_forum_topic` WHERE group_id = ? ORDER BY topic_last_post_time DESC")
+    @SqlQuery("SELECT * FROM lw_forum_topic WHERE topic_id = ?")
     @RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
-    List<ForumTopic> findAll(int groupId);
+    Optional<ForumTopic> getTopicById(int topicId);
+
+    @SqlQuery("SELECT * FROM lw_forum_topic WHERE group_id = ? ORDER BY topic_last_post_time DESC")
+    @RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
+    List<ForumTopic> getTopicsByGroupId(int groupId);
 
     @RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
     default Map<Integer, List<ForumTopic>> findByNotificationFrequencies(List<User.NotificationFrequency> notificationFrequencies) {
@@ -53,13 +54,13 @@ public interface ForumTopicDao extends SqlObject {
     @SqlUpdate("UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = :postId, topic_last_post_time = :time, topic_last_post_user_id = :userId WHERE topic_id = :topicId AND topic_views > 0")
     void increaseReplies(@Bind("topicId") int topicId, @Bind("postId") int postId, @Bind("userId") int userId, @Bind("time") Date date);
 
-    @SqlUpdate("DELETE FROM `lw_forum_topic` WHERE topic_id = ?")
-    void delete(int topicId);
+    @SqlUpdate("DELETE FROM lw_forum_topic WHERE topic_id = ?")
+    void deleteTopicById(int topicId);
 
-    @SqlUpdate("INSERT INTO `lw_forum_topic_user` (`topic_id`, `user_id`) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_visit = NOW();")
+    @SqlUpdate("INSERT INTO lw_forum_topic_user (topic_id, user_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_visit = NOW();")
     void registerUserVisit(int topicId, int userId);
 
-    default void insertOrUpdate(ForumTopic topic) {
+    default void save(ForumTopic topic) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("topic_id", topic.getId() < 0 ? null : topic.getId());
         params.put("group_id", topic.getGroupId());
@@ -73,12 +74,10 @@ public interface ForumTopicDao extends SqlObject {
         params.put("topic_last_post_time", topic.getLastPostDate());
         params.put("topic_last_post_user_id", topic.getLastPostUserId());
 
-        try (Handle handle = getHandle()) {
-            Optional<Integer> topicId = SqlHelper.generateInsertQuery(handle, "lw_forum_topic", params)
-                .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
+        Optional<Integer> topicId = SqlHelper.generateInsertQuery(getHandle(), "lw_forum_topic", params)
+            .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-            topicId.ifPresent(topic::setId);
-        }
+        topicId.ifPresent(topic::setId);
     }
 
     class ForumTopicMapper implements RowMapper<ForumTopic> {
@@ -89,11 +88,11 @@ public interface ForumTopicDao extends SqlObject {
             topic.setUserId(rs.getInt("user_id"));
             topic.setGroupId(rs.getInt("group_id"));
             topic.setTitle(rs.getString("topic_title"));
-            topic.setDate(new Date(rs.getTimestamp("topic_time").getTime()));
+            topic.setDate(RsHelper.getDate(rs.getTimestamp("topic_time")));
             topic.setViews(rs.getInt("topic_views"));
             topic.setReplies(rs.getInt("topic_replies"));
             topic.setLastPostId(rs.getInt("topic_last_post_id"));
-            topic.setLastPostDate(new Date(rs.getTimestamp("topic_last_post_time").getTime()));
+            topic.setLastPostDate(RsHelper.getDate(rs.getTimestamp("topic_last_post_time")));
             topic.setLastPostUserId(rs.getInt("topic_last_post_user_id"));
             return topic;
         }

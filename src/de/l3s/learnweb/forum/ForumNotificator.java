@@ -35,7 +35,6 @@ public class ForumNotificator implements Runnable, Serializable {
         try {
             LocalDate localDate = LocalDate.now();
             UserManager userManager = Learnweb.getInstance().getUserManager();
-            ForumManager forumManager = Learnweb.getInstance().getForumManager();
 
             ArrayList<NotificationFrequency> frequencies = new ArrayList<>(3);
             frequencies.add(NotificationFrequency.DAILY);
@@ -50,7 +49,9 @@ public class ForumNotificator implements Runnable, Serializable {
                 frequencies.add(NotificationFrequency.MONTHLY);
             }
 
-            Map<Integer, List<ForumTopic>> topics = forumManager.getTopicsByNotificationFrequencies(frequencies);
+            Map<Integer, List<ForumTopic>> topics = Learnweb.getInstance().getJdbi().withExtension(ForumTopicDao.class,
+                dao -> dao.findByNotificationFrequencies(frequencies));
+
             for (Map.Entry<Integer, List<ForumTopic>> entry : topics.entrySet()) {
                 User user = userManager.getUser(entry.getKey());
 
