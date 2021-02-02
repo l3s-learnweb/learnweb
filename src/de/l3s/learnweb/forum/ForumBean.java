@@ -11,6 +11,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
@@ -38,14 +39,15 @@ public class ForumBean extends ApplicationBean implements Serializable {
     @NotBlank
     private String newTopicText;
     private String newTopicCategory;
-    private ForumPostDao forumPostDao;
-    private ForumTopicDao forumTopicDao;
+
+    @Inject
+    private transient ForumPostDao forumPostDao;
+
+    @Inject
+    private transient ForumTopicDao forumTopicDao;
 
     public void onLoad() throws SQLException {
         BeanAssert.authorized(isLoggedIn());
-
-        forumPostDao = getLearnweb().getJdbi().onDemand(ForumPostDao.class);
-        forumTopicDao = getLearnweb().getJdbi().onDemand(ForumTopicDao.class);
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
         BeanAssert.isFound(group);

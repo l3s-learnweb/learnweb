@@ -100,7 +100,7 @@ public class LogEntry implements Serializable {
 
     private String getGroupLink(Locale locale) {
         if (getGroupId() == 0) {
-            return "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/myhome/resources.jsf\" >" + LanguageBundle.getLocaleMessage(locale, "myPrivateResources") + "</a> ";
+            return "<a href=\"myhome/resources.jsf\" >" + LanguageBundle.getLocaleMessage(locale, "myPrivateResources") + "</a> ";
         }
 
         try {
@@ -109,7 +109,7 @@ public class LogEntry implements Serializable {
             if (null == group) {
                 return "Deleted group";
             } else {
-                return "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/group/overview.jsf?group_id=" + getGroupId() + "\" target=\"_top\">" + group.getTitle() + "</a> ";
+                return "<a href=\"group/overview.jsf?group_id=" + getGroupId() + "\" target=\"_top\">" + group.getTitle() + "</a> ";
             }
         } catch (SQLException e) {
             log.error("Can't create the group link; groupId: {}", groupId, e);
@@ -122,7 +122,7 @@ public class LogEntry implements Serializable {
             if (getUser() == null || getUser().isDeleted()) {
                 return "Deleted user";
             }
-            return "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getUsername() + "</a>";
+            return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getUsername() + "</a>";
         } catch (SQLException e) {
             log.error("Can't create the user link; userId: {}", userId, e);
             return "a user";
@@ -132,7 +132,7 @@ public class LogEntry implements Serializable {
     private String getResourceLink(Locale locale) {
         try {
             if (getResource() != null) {
-                return "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/resource.jsf?resource_id=" + getResource().getId() + "\" target=\"_top\"><b>" + StringHelper.shortnString(getResource().getTitle(), 40) + "</b></a> ";
+                return "<a href=\"resource.jsf?resource_id=" + getResource().getId() + "\" target=\"_top\"><b>" + StringHelper.shortnString(getResource().getTitle(), 40) + "</b></a> ";
             }
         } catch (SQLException e) {
             log.error("Can't create the resource link; resourceId: {}", targetId, e);
@@ -249,11 +249,11 @@ public class LogEntry implements Serializable {
                 description = usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_deleting_link", getGroupLink(locale));
                 break;
             case forum_topic_added:
-                String topicLink = "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_topic.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
+                String topicLink = "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
                 description = usernameLink + "has added " + "<b>" + topicLink + "</b>" + " post";
                 break;
             case forum_post_added:
-                String topic = "<a href=\"" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_topic.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
+                String topic = "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
                 description = usernameLink + "has replied to " + "<b>" + topic + "</b>" + " topic";
 
                 // General actions

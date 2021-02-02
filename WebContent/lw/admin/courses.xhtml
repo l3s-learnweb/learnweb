@@ -69,8 +69,7 @@
             <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.wizardParam}" filterBy="#{course.wizardParam}" filterMatchMode="contains">
                 <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.wizardDisabled}"/>  
                 
-                <h:outputLink value="#{learnwebBean.learnweb.serverUrl}/wizard=#{course.wizardParam}"
-                                                 rendered="#{not course.wizardDisabled}">
+                <h:outputLink value="#{of:getRequestBaseURL()}wizard=#{course.wizardParam}" rendered="#{not course.wizardDisabled}">
                     <h:outputText value="#{course.wizardParam}"/>        
                 </h:outputLink>                         
 	        </p:column>

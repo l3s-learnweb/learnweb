@@ -1,7 +1,5 @@
 package de.l3s.maintenance;
 
-import java.sql.SQLException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +20,7 @@ public abstract class MaintenanceTask {
     protected MaintenanceTask() {
         try {
             learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de");
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Unable to create Learnweb", e);
         }
     }

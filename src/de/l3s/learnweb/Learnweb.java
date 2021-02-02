@@ -9,7 +9,6 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
-import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
@@ -41,8 +40,6 @@ import de.l3s.learnweb.searchhistory.SearchHistoryManager;
 import de.l3s.learnweb.user.CourseManager;
 import de.l3s.learnweb.user.OrganisationManager;
 import de.l3s.learnweb.user.UserManager;
-import de.l3s.learnweb.user.loginProtection.ProtectionManager;
-import de.l3s.learnweb.web.RequestManager;
 import de.l3s.util.Misc;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.UrlHelper;
@@ -79,8 +76,6 @@ public final class Learnweb {
     private final GlossaryManager glossaryManager;
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
-    private final RequestManager requestManager;
-    private final ProtectionManager protectionManager;
     private final BounceManager bounceManager;
     private final LogManager logManager;
     private final AnnouncementsManager announcementsManager;
@@ -118,7 +113,6 @@ public final class Learnweb {
 
         dataSource = createDataSource();
         dbConnection = dataSource.getConnection(); // TODO: remove old connection methods
-        // migrateDatabase();
 
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
@@ -150,8 +144,6 @@ public final class Learnweb {
         historyManager = new HistoryManager(this);
         searchHistoryManager = new SearchHistoryManager(this);
 
-        requestManager = new RequestManager(this);
-        protectionManager = new ProtectionManager(this);
         bounceManager = new BounceManager(this);
     }
 
@@ -188,15 +180,6 @@ public final class Learnweb {
         ds.setMaximumPoolSize(3);
         ds.setConnectionTimeout(60000); // 1 min
         return ds;
-    }
-
-    private void migrateDatabase() {
-        Flyway flyway = Flyway.configure()
-            .dataSource(dataSource)
-            .locations("db/migration")
-            .load();
-
-        flyway.migrate();
     }
 
     /**
@@ -286,6 +269,10 @@ public final class Learnweb {
 
     public Handle openHandle() {
         return getJdbi().open();
+    }
+
+    public HikariDataSource getDataSource() {
+        return dataSource;
     }
 
     /**
@@ -396,14 +383,6 @@ public final class Learnweb {
         return searchHistoryManager;
     }
 
-    public ProtectionManager getProtectionManager() {
-        return protectionManager;
-    }
-
-    public RequestManager getRequestManager() {
-        return requestManager;
-    }
-
     public BounceManager getBounceManager() {
         return bounceManager;
     }
@@ -453,7 +432,7 @@ public final class Learnweb {
     /**
      * This method will use https://learnweb.l3s.uni-hannover.de as server URL if no other URL is specified in the properties file.
      */
-    public static Learnweb createInstance() throws ClassNotFoundException, SQLException {
+    public static Learnweb createInstance() throws SQLException {
         return createInstance(null);
     }
 
@@ -462,7 +441,7 @@ public final class Learnweb {
      *
      * @param serverUrl https://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
      */
-    public static Learnweb createInstance(String serverUrl) throws ClassNotFoundException, SQLException {
+    public static Learnweb createInstance(String serverUrl) throws SQLException {
         try {
             if (learnweb == null) {
                 if (learnwebIsLoading) {

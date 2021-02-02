@@ -1,4 +1,4 @@
-package de.l3s.learnweb.user.loginProtection;
+package de.l3s.learnweb.web;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,8 +32,7 @@ public interface BanDao extends SqlObject {
             .bind(3, ban.getBannedOn())
             .bind(4, ban.getAttempts())
             .bind(5, ban.getReason())
-            .executeAndReturnGeneratedKeys()
-            .mapTo(Integer.class).findOne();
+            .execute();
     }
 
     class BanMapper implements RowMapper<Ban> {

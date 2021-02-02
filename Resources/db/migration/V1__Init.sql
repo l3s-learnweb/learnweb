@@ -622,11 +622,6 @@ CREATE TABLE IF NOT EXISTS `ted_video` (
     KEY `ted_video_slug` (`slug`)
 );
 
-CREATE TABLE IF NOT EXISTS `tmp_missing_users` (
-    `user_id` int(10) unsigned NOT NULL,
-    `max(timestamp)` timestamp NULL DEFAULT NULL
-);
-
 CREATE TABLE IF NOT EXISTS `wb_url` (
     `url_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `url` varchar(2000) NOT NULL,

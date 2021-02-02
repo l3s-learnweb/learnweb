@@ -1,59 +1,46 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.web.AggregatedRequestData;
-import de.l3s.learnweb.web.RequestData;
+import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.web.Request;
+import de.l3s.learnweb.web.RequestManager;
 
 @Named
 @RequestScoped
 public class AdminRequestListBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -3469152668344315959L;
 
-    private List<RequestData> requests;
+    private List<Request> requests;
     private Map<String, Set<String>> logins;
-    private List<AggregatedRequestData> aggregatedRequests;
+    private List<Request> aggregatedRequests;
 
-    public AdminRequestListBean() {
-        load();
+    @Inject
+    private RequestManager requestManager;
+
+    @PostConstruct
+    public void init() {
+        BeanAssert.authorized(isLoggedIn());
+        BeanAssert.hasPermission(getUser().isAdmin());
+
+        requests = new ArrayList<>(requestManager.getRequests());
+        logins = requestManager.getLogins();
+        aggregatedRequests = requestManager.getAggregatedRequests();
+        onUpdateAggregatedRequests();
     }
 
-    private void load() {
-        try {
-            if (getUser() != null && getUser().isAdmin()) {
-                requests = new ArrayList<>(getLearnweb().getRequestManager().getRequests());
-                logins = getLearnweb().getRequestManager().getLogins();
-                aggregatedRequests = getLearnweb().getRequestManager().getAggregatedRequests();
-                onUpdateAggregatedRequests();
-            }
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
-    }
-
-    public boolean filterByDate(Object value, Object filter, Locale locale) {
-        if (filter != null) {
-            DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-            String strDate = df.format(((Date) value));
-            return strDate.contains((String) filter);
-        }
-
-        return true;
-    }
-
-    public List<RequestData> getRequests() {
+    public List<Request> getRequests() {
         return requests;
     }
 
@@ -61,20 +48,20 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
         return logins;
     }
 
-    public List<AggregatedRequestData> getAggregatedRequests() {
+    public List<Request> getAggregatedRequests() {
         return aggregatedRequests;
     }
 
-    public void setAggregatedRequests(List<AggregatedRequestData> aggregatedRequests) {
+    public void setAggregatedRequests(List<Request> aggregatedRequests) {
         this.aggregatedRequests = aggregatedRequests;
     }
 
-    public Date getAggrRequestsUpdated() {
-        return getLearnweb().getRequestManager().getAggrRequestsUpdateTime();
+    public LocalDateTime getAggrRequestsUpdated() {
+        return requestManager.getAggrRequestsUpdated();
     }
 
     public void onUpdateAggregatedRequests() {
-        getLearnweb().getRequestManager().updateAggregatedRequests();
+        requestManager.updateAggregatedRequests();
     }
 
 }

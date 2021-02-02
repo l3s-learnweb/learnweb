@@ -1,4 +1,4 @@
-package de.l3s.learnweb.user.loginProtection;
+package de.l3s.learnweb.web;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

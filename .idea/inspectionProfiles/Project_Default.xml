@@ -443,7 +443,9 @@
     <inspection_tool class="NonPublicClone" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="NonSerializableFieldInSerializableClass" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignorableAnnotations">
-        <value />
+        <value>
+          <item value="javax.inject.Inject" />
+        </value>
       </option>
       <option name="ignoreAnonymousInnerClasses" value="false" />
       <option name="superClassString" value="java.awt.Component" />

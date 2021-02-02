@@ -28,33 +28,33 @@ class ForumPostDaoTest {
         ForumPost post = new ForumPost();
         post.setTopicId(1);
         post.setText("hello world");
-        post.setUserId(3);
+        post.setUserId(113);
         forumPostDao.save(post);
         assertTrue(post.getId() > 0);
 
         ForumPost post2 = new ForumPost();
         post2.setTopicId(2);
         post2.setText("second world");
-        post2.setUserId(3);
+        post2.setUserId(113);
         forumPostDao.save(post2);
         assertTrue(post2.getId() > 0);
 
         Optional<ForumPost> retrieved = forumPostDao.getPostById(post.getId());
 
         assertTrue(retrieved.isPresent());
-        assertEquals(retrieved.get().getId(), post.getId());
-        assertEquals(retrieved.get().getTopicId(), post.getTopicId());
-        assertEquals(retrieved.get().getText(), post.getText());
-        assertEquals(retrieved.get().getUserId(), post.getUserId());
+        assertEquals(post.getId(), retrieved.get().getId());
+        assertEquals(post.getTopicId(), retrieved.get().getTopicId());
+        assertEquals(post.getText(), retrieved.get().getText());
+        assertEquals(post.getUserId(), retrieved.get().getUserId());
 
         List<ForumPost> postsByTopicId = forumPostDao.getPostsByTopicId(post.getTopicId());
-        assertEquals(postsByTopicId.size(), 1);
+        assertEquals(1, postsByTopicId.size());
 
         List<ForumPost> postsByUserId = forumPostDao.getPostsByUserId(post.getUserId());
-        assertEquals(postsByUserId.size(), 2);
+        assertEquals(2, postsByUserId.size());
 
         int postCountByUserId = forumPostDao.getPostCountByUserId(post.getUserId());
-        assertEquals(postCountByUserId, 2);
+        assertEquals(2, postCountByUserId);
     }
 
     @Test
@@ -67,9 +67,9 @@ class ForumPostDaoTest {
 
         Optional<ForumPost> retrieved = forumPostDao.getPostById(post.getId());
         assertTrue(retrieved.isPresent());
-        assertEquals(retrieved.get().getId(), post.getId());
-        assertEquals(retrieved.get().getText(), post.getText());
-        assertEquals(retrieved.get().getUserId(), post.getUserId());
+        assertEquals(post.getId(), retrieved.get().getId());
+        assertEquals(post.getText(), retrieved.get().getText());
+        assertEquals(post.getUserId(), retrieved.get().getUserId());
 
         post.setText("updated world");
         forumPostDao.save(post);
@@ -77,7 +77,7 @@ class ForumPostDaoTest {
 
         Optional<ForumPost> updated = forumPostDao.getPostById(post.getId());
         assertTrue(updated.isPresent());
-        assertEquals(updated.get().getText(), post.getText());
+        assertEquals(post.getText(), updated.get().getText());
 
         forumPostDao.deletePostById(post.getId());
         Optional<ForumPost> deleted = forumPostDao.getPostById(post.getId());

@@ -312,11 +312,12 @@ public class UserBean implements Serializable {
     }
 
     public String getBannerLink() throws SQLException {
+        String serverUrl = Faces.getRequestBaseURL();
         if (!isLoggedIn()) {
-            return Learnweb.getInstance().getServerUrl();
+            return serverUrl;
         }
 
-        return Learnweb.getInstance().getServerUrl() + getActiveOrganisation().getWelcomePage();
+        return serverUrl + getActiveOrganisation().getWelcomePage();
     }
 
     /**
@@ -347,7 +348,6 @@ public class UserBean implements Serializable {
 
         if (null == sidebarMenuModel || sidebarMenuModelUpdate.isBefore(Instant.now().minus(Duration.ofMinutes(10)))) {
             long start = System.currentTimeMillis();
-            final String su = Learnweb.getInstance().getServerUrl();
             BaseMenuModel model = new BaseMenuModel();
             ResourceBundle msg = LanguageBundle.getLanguageBundle(getLocale());
 
@@ -355,27 +355,27 @@ public class UserBean implements Serializable {
             Builder myResources = ActiveSubMenu.builder()
                 .label(msg.getString("myResourcesTitle"))
                 .styleClass("guide-my-resources")
-                .url(su + "/lw/myhome/resources.jsf")
-                .addElement(DefaultMenuItem.builder().value(msg.getString("myPrivateResources")).icon("fas fa-fw fa-folder-minus").url(su + "/lw/myhome/resources.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("myCommentsTitle")).icon("fas fa-fw fa-comments").url(su + "/lw/myhome/comments.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("myTags")).icon("fas fa-fw fa-tags").url(su + "/lw/myhome/tags.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("myRatedResourcesTitle")).icon("fas fa-fw fa-star-half-alt").url(su + "/lw/myhome/rated_resources.jsf").build());
+                .url("myhome/resources.jsf")
+                .addElement(DefaultMenuItem.builder().value(msg.getString("myPrivateResources")).icon("fas fa-fw fa-folder-minus").url("myhome/resources.jsf").build())
+                .addElement(DefaultMenuItem.builder().value(msg.getString("myCommentsTitle")).icon("fas fa-fw fa-comments").url("myhome/comments.jsf").build())
+                .addElement(DefaultMenuItem.builder().value(msg.getString("myTags")).icon("fas fa-fw fa-tags").url("myhome/tags.jsf").build())
+                .addElement(DefaultMenuItem.builder().value(msg.getString("myRatedResourcesTitle")).icon("fas fa-fw fa-star-half-alt").url("myhome/rated_resources.jsf").build());
 
             if (!user.getActiveSubmissions().isEmpty()) {
-                myResources.addElement(DefaultMenuItem.builder().value(msg.getString("Submission.my_submissions")).icon("fas fa-fw fa-credit-card").url(su + "/lw/myhome/submission_overview.jsf").build());
+                myResources.addElement(DefaultMenuItem.builder().value(msg.getString("Submission.my_submissions")).icon("fas fa-fw fa-credit-card").url("myhome/submission_overview.jsf").build());
             }
 
             model.getElements().add(myResources.build());
 
             // My groups
-            ActiveSubMenu.Builder groupsBuilder = ActiveSubMenu.builder().label(msg.getString("myGroups")).url(su + "/lw/myhome/groups.jsf").styleClass("guide-my-groups");
+            ActiveSubMenu.Builder groupsBuilder = ActiveSubMenu.builder().label(msg.getString("myGroups")).url("myhome/groups.jsf").styleClass("guide-my-groups");
             for (Group group : getUser().getGroups()) {
-                ActiveSubMenu.Builder groupBuilder = ActiveSubMenu.builder().label(group.getTitle()).url(su + "/lw/group/overview.jsf?group_id=" + group.getId()).styleClass("ui-menuitem-group");
-                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("overview")).icon("fas fa-fw fa-layer-group").url(su + "/lw/group/overview.jsf?group_id=" + group.getId()).build());
-                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("resources")).icon("fas fa-fw fa-folder-open").url(su + "/lw/group/resources.jsf?group_id=" + group.getId()).build());
-                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("forum")).icon("fas fa-fw fa-comment-dots").url(su + "/lw/group/forum.jsf?group_id=" + group.getId()).build());
-                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("members")).icon("fas fa-fw fa-users").url(su + "/lw/group/members.jsf?group_id=" + group.getId()).build());
-                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("options")).icon("fas fa-fw fa-sliders-h").url(su + "/lw/group/options.jsf?group_id=" + group.getId()).build());
+                ActiveSubMenu.Builder groupBuilder = ActiveSubMenu.builder().label(group.getTitle()).url("group/overview.jsf?group_id=" + group.getId()).styleClass("ui-menuitem-group");
+                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("overview")).icon("fas fa-fw fa-layer-group").url("group/overview.jsf?group_id=" + group.getId()).build());
+                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("resources")).icon("fas fa-fw fa-folder-open").url("group/resources.jsf?group_id=" + group.getId()).build());
+                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("forum")).icon("fas fa-fw fa-comment-dots").url("group/forum.jsf?group_id=" + group.getId()).build());
+                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("members")).icon("fas fa-fw fa-users").url("group/members.jsf?group_id=" + group.getId()).build());
+                groupBuilder.addElement(DefaultMenuItem.builder().value(msg.getString("options")).icon("fas fa-fw fa-sliders-h").url("group/options.jsf?group_id=" + group.getId()).build());
                 groupsBuilder.addElement(groupBuilder.build());
             }
             model.getElements().add(groupsBuilder.build());
@@ -384,17 +384,17 @@ public class UserBean implements Serializable {
             if (getUser().isModerator()) {
                 ActiveSubMenu moderatorSubmenu = ActiveSubMenu.builder()
                     .label(msg.getString("moderator"))
-                    .url(su + "/lw/moderator.jsf")
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("send_notification")).icon("fas fa-fw fa-envelope-open-text").url(su + "/lw/admin/notification.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("users")).icon("fas fa-fw fa-user-friends").url(su + "/lw/admin/users.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("courses")).icon("fas fa-fw fa-graduation-cap").url(su + "/lw/admin/courses.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("organisation")).icon("fas fa-fw fa-university").url(su + "/lw/admin/organisation.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("text_analysis")).icon("fas fa-fw fa-spell-check").url(su + "/lw/admin/text_analysis.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("statistics")).icon("fas fa-fw fa-chart-line").url(su + "/lw/admin/statistics.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("transcript")).icon("fas fa-fw fa-language").url(su + "/lw/admin/transcript.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("glossary_dashboard")).icon("fas fa-fw fa-chart-bar").url(su + "/lw/dashboard/glossary.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("Activity.dashboard")).icon("fas fa-fw fa-chart-line").url(su + "/lw/dashboard/activity.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("Tracker.dashboard")).icon("fas fa-fw fa-mouse-pointer").url(su + "/lw/dashboard/tracker.jsf").build())
+                    .url("moderator.jsf")
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("send_notification")).icon("fas fa-fw fa-envelope-open-text").url("admin/notification.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("users")).icon("fas fa-fw fa-user-friends").url("admin/users.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("courses")).icon("fas fa-fw fa-graduation-cap").url("admin/courses.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("organisation")).icon("fas fa-fw fa-university").url("admin/organisation.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("text_analysis")).icon("fas fa-fw fa-spell-check").url("admin/text_analysis.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("statistics")).icon("fas fa-fw fa-chart-line").url("admin/statistics.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("transcript")).icon("fas fa-fw fa-language").url("admin/transcript.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("glossary_dashboard")).icon("fas fa-fw fa-chart-bar").url("dashboard/glossary.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("Activity.dashboard")).icon("fas fa-fw fa-chart-line").url("dashboard/activity.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("Tracker.dashboard")).icon("fas fa-fw fa-mouse-pointer").url("dashboard/tracker.jsf").build())
                     .build();
                 model.getElements().add(moderatorSubmenu);
             }
@@ -403,13 +403,13 @@ public class UserBean implements Serializable {
             if (getUser().isAdmin()) {
                 ActiveSubMenu adminSubmenu = ActiveSubMenu.builder()
                     .label(msg.getString("admin"))
-                    .url(su + "/lw/admin/index.jsf")
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("organisations")).icon("fas fa-fw fa-sitemap").url(su + "/lw/admin/organisations.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("banlist")).icon("fas fa-fw fa-ban").url(su + "/lw/admin/banlist.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("ip_requests")).icon("fas fa-fw fa-chart-area").url(su + "/lw/admin/requests.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("system_tools")).icon("fas fa-fw fa-tools").url(su + "/lw/admin/systemtools.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("announcements")).icon("fas fa-fw fa-bullhorn").url(su + "/lw/admin/announcements.jsf").build())
-                    .addElement(DefaultMenuItem.builder().value(msg.getString("survey.survey_overview")).icon("fas fa-fw fa-poll-h").url(su + "/lw/survey/surveys.jsf").build())
+                    .url("admin/index.jsf")
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("organisations")).icon("fas fa-fw fa-sitemap").url("admin/organisations.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("banlist")).icon("fas fa-fw fa-ban").url("admin/banlist.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("ip_requests")).icon("fas fa-fw fa-chart-area").url("admin/requests.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("system_tools")).icon("fas fa-fw fa-tools").url("admin/systemtools.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("announcements")).icon("fas fa-fw fa-bullhorn").url("admin/announcements.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(msg.getString("survey.survey_overview")).icon("fas fa-fw fa-poll-h").url("survey/surveys.jsf").build())
                     .build();
                 model.getElements().add(adminSubmenu);
             }

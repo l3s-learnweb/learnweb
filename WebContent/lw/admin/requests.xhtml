@@ -23,22 +23,21 @@
 	<p:tabView styleClass="ui-tabs-transparent">
 		<p:tab title="#{msg.requests}">
 			<h:form id="requestform">
-				<p:dataTable paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}" rows="100" paginator="true"
-					   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-					   currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
-					<p:column headerText="IP" sortBy="#{reqData.ip}" filterBy="#{reqData.ip}" filterMatchMode="contains">
-						<h:outputText value="#{reqData.ip}"/>
-					</p:column>
+				<p:dataTable id="requestsTable" widgetVar="requestsTable" paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}"
+							 rows="100" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+							 currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
+					<p:column field="ip" headerText="IP" filterMatchMode="contains"/>
 
-					<p:column headerText="#{msg.time}" sortBy="#{reqData.time}" filterBy="#{reqData.time}" filterFunction="#{adminRequestListBean.filterByDate}">
+					<p:column field="time" headerText="#{msg.time}">
+						<f:facet name="filter">
+							<p:datePicker onchange="PF('requestsTable').filter()"/>
+						</f:facet>
 						<h:outputText value="#{reqData.time}">
-							<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+							<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="URL" sortBy="#{reqData.url}" filterBy="#{reqData.url}" filterMatchMode="contains">
-						<h:outputText value="#{reqData.url}"/>
-					</p:column>
+					<p:column field="url" headerText="URL" filterMatchMode="contains"/>
 				</p:dataTable>
 			</h:form>
 		</p:tab>
@@ -65,36 +64,32 @@
 
 		<p:tab title="#{msg.aggr_requests}">
 			<h:form id="aggrrequestform">
-				<p:blockUI block="requestsTable" widgetVar="requestsTableOverlay">
+				<p:blockUI block="aggrRequestsTable" widgetVar="requestsTableOverlay">
 					<h:outputText value="#{msg.please_wait}"/>
 				</p:blockUI>
 				<span>
-					#{msg.aggr_request_updated}:   <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
-													<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
-													</h:outputText>
+					#{msg.aggr_request_updated}: <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
+													<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
+												 </h:outputText>
 					<p:commandButton onstart="PF('requestsTableOverlay').show()" oncomplete="PF('requestsTableOverlay').hide()" action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="ms-3" immediate="true"/>
 				</span>
-				<p:dataTable id="requestsTable" tableStyleClass="mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}" rows="50" paginator="true"
-					  paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-					<p:column headerText="IP" sortBy="#{aRequest.ip}" filterBy="#{aRequest.ip}" filterMatchMode="contains">
-						<h:outputText value="#{aRequest.ip}"/>
-					</p:column>
 
-					<p:column headerText="#{msg.requests_count}" sortBy="#{aRequest.requests}" filterBy="#{aRequest.requests}" filterMatchMode="contains">
-						<h:outputText value="#{aRequest.requests}"/>
-					</p:column>
+				<p:dataTable id="aggrRequestsTable" widgetVar="aggrRequestsTable" tableStyleClass="mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}"
+							 rows="50" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+					<p:column field="ip" headerText="IP" filterMatchMode="contains"/>
 
-					<p:column headerText="#{msg.logins_amount}" sortBy="#{aRequest.loginCount}" filterBy="#{aRequest.loginCount}" filterMatchMode="contains">
-						<h:outputText value="#{aRequest.loginCount}"/>
-					</p:column>
+					<p:column field="requests" headerText="#{msg.requests_count}" filterMatchMode="contains"/>
 
-					<p:column headerText="#{msg.request_usernames}" sortBy="#{aRequest.usernames}" filterBy="#{aRequest.usernames}" filterMatchMode="contains">
-						<h:outputText value="#{aRequest.usernames}"/>
-					</p:column>
+					<p:column field="loginCount" headerText="#{msg.logins_amount}" filterMatchMode="contains"/>
 
-					<p:column headerText="#{msg.time_stamp}" sortBy="#{aRequest.time}" filterBy="#{aRequest.time}" filterFunction="#{adminRequestListBean.filterByDate}">
+					<p:column field="usernames" headerText="#{msg.request_usernames}" filterMatchMode="contains"/>
+
+					<p:column field="time" headerText="#{msg.time_stamp}">
+						<f:facet name="filter">
+							<p:datePicker onchange="PF('aggrRequestsTable').filter()"/>
+						</f:facet>
 						<h:outputText value="#{aRequest.time}">
-							<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+							<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 						</h:outputText>
 					</p:column>
 				</p:dataTable>

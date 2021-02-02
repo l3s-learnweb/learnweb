@@ -19,9 +19,9 @@ class DatabaseResource implements ExtensionContext.Store.CloseableResource {
 
     @Override
     public void close() throws Throwable {
-        if (flyway != null) {
-            flyway.clean();
-        }
+        // if (flyway != null) {
+        //     flyway.clean();
+        // }
 
         if (dataSource != null) {
             dataSource.dispose();

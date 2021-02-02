@@ -43,7 +43,7 @@
         <Logger name="org.jboss.weld" level="WARN"/>
         <Logger name="net.bramp.ffmpeg" level="INFO"/>
         <Logger name="com.zaxxer.hikari" level="INFO"/>
-        <Logger name="org.flywaydb.core.internal.sqlscript" level="INFO"/>
+        <Logger name="org.flywaydb.core" level="INFO"/>
 
         <Root level="DEBUG">
             <appender-ref ref="console"/>

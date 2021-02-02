@@ -29,12 +29,12 @@ class ForumTopicDaoTest {
     @Test
     void getters() {
         ForumPost post = new ForumPost();
-        post.setText("hello world");
+        post.setText("dog");
         post.setUserId(3);
         forumPostDao.save(post);
 
         ForumPost post2 = new ForumPost();
-        post2.setText("second world");
+        post2.setText("zebra");
         post2.setUserId(3);
         forumPostDao.save(post2);
 
@@ -59,20 +59,20 @@ class ForumTopicDaoTest {
         Optional<ForumTopic> retrieved = forumTopicDao.getTopicById(topic.getId());
 
         assertTrue(retrieved.isPresent());
-        assertEquals(retrieved.get().getId(), topic.getId());
-        assertEquals(retrieved.get().getUserId(), topic.getUserId());
-        assertEquals(retrieved.get().getGroupId(), topic.getGroupId());
-        assertEquals(retrieved.get().getTitle(), topic.getTitle());
+        assertEquals(topic.getId(), retrieved.get().getId());
+        assertEquals(topic.getUserId(), retrieved.get().getUserId());
+        assertEquals(topic.getGroupId(), retrieved.get().getGroupId());
+        assertEquals(topic.getTitle(), retrieved.get().getTitle());
 
         List<ForumTopic> topicsByGroupId = forumTopicDao.getTopicsByGroupId(topic2.getGroupId());
-        assertEquals(topicsByGroupId.size(), 2);
-        assertEquals(topicsByGroupId.get(0).getTitle(), topic2.getTitle());
+        assertEquals(2, topicsByGroupId.size());
+        assertEquals(topic2.getTitle(), topicsByGroupId.get(0).getTitle());
     }
 
     @Test
     void save() {
         ForumPost post = new ForumPost();
-        post.setText("hello world");
+        post.setText("parrot");
         post.setUserId(3);
         forumPostDao.save(post);
         assertTrue(post.getId() > 0);
@@ -90,10 +90,10 @@ class ForumTopicDaoTest {
         Optional<ForumTopic> retrieved = forumTopicDao.getTopicById(topic.getId());
 
         assertTrue(retrieved.isPresent());
-        assertEquals(retrieved.get().getId(), topic.getId());
-        assertEquals(retrieved.get().getUserId(), topic.getUserId());
-        assertEquals(retrieved.get().getGroupId(), topic.getGroupId());
-        assertEquals(retrieved.get().getTitle(), topic.getTitle());
+        assertEquals(topic.getId(), retrieved.get().getId());
+        assertEquals(topic.getUserId(), retrieved.get().getUserId());
+        assertEquals(topic.getGroupId(), retrieved.get().getGroupId());
+        assertEquals(topic.getTitle(), retrieved.get().getTitle());
 
         forumTopicDao.deleteTopicById(topic.getId());
         Optional<ForumTopic> deleted = forumTopicDao.getTopicById(topic.getId());

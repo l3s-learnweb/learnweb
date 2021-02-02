@@ -21,8 +21,6 @@
             <ui:include src="parts/head.xhtml"/>
             <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{not empty pageTitle}"/>#{msg['application.name']}</title>
 
-            <base href="#{request.contextPath}/lw/"/>
-
             <h:outputScript library="primefaces" name="jquery/jquery.js"/>
             <h:outputScript name="bundle/shepherd.min.js"/>
             <h:outputScript name="bundle/learnweb.main.js"/>

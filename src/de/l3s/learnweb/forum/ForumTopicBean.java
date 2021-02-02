@@ -8,6 +8,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -32,14 +33,15 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
     // used only by breadcrumbs
     private List<ForumTopic> topics;
-    private ForumPostDao forumPostDao;
-    private ForumTopicDao forumTopicDao;
+
+    @Inject
+    private transient ForumPostDao forumPostDao;
+
+    @Inject
+    private transient ForumTopicDao forumTopicDao;
 
     public void onLoad() throws SQLException {
         BeanAssert.authorized(isLoggedIn());
-
-        forumPostDao = getLearnweb().getJdbi().onDemand(ForumPostDao.class);
-        forumTopicDao = getLearnweb().getJdbi().onDemand(ForumTopicDao.class);
 
         topic = forumTopicDao.getTopicById(topicId).orElse(null);
         BeanAssert.isFound(topic);

@@ -113,6 +113,6 @@ public class GlossaryResource extends Resource {
 
     @Override
     public String getUrl() {
-        return Learnweb.getInstance().getServerUrl() + "/lw/resource.jsf?resource_id=" + getId();
+        return "resource.jsf?resource_id=" + getId();
     }
 }

@@ -1,4 +1,4 @@
-package de.l3s.learnweb.web;
+package de.l3s.learnweb.user;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -17,9 +17,6 @@ import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Servlets;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.user.LoginBean;
-import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserBean;
 
 /**
  * Checks if user is logged in or auth cookie is present and restores auth for new session.

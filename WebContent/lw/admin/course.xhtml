@@ -4,6 +4,7 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 				xmlns:p="http://primefaces.org/ui"
+				xmlns:of="http://omnifaces.org/functions"
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{adminCourseBean.course.title}"/>
@@ -65,7 +66,7 @@
 								<p:outputLabel for="@next" value="#{msg.registration_wizard}:"/>
 								<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}" disabled="#{adminCourseBean.course.wizardDisabled}"/>
 								<p:message for="@previous"/>
-								<p:staticMessage severity="info" detail="#{learnwebBean.learnweb.serverUrl}/wizard=#{adminCourseBean.course.wizardParam}"
+								<p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{adminCourseBean.course.wizardParam}"
 												 rendered="#{not adminCourseBean.course.wizardDisabled}"/>
 							</div>
 

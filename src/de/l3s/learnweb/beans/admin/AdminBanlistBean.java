@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.MessagingException;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.user.loginProtection.Ban;
-import de.l3s.learnweb.web.AggregatedRequestData;
+import de.l3s.learnweb.web.Ban;
+import de.l3s.learnweb.web.Request;
+import de.l3s.learnweb.web.RequestManager;
 import de.l3s.util.email.BounceManager;
 
 @Named
@@ -27,7 +29,10 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
     private Integer banMinutes;
     private boolean permaban;
 
-    private List<AggregatedRequestData> suspiciousActivityList;
+    private List<Request> suspiciousActivityList;
+
+    @Inject
+    private RequestManager requestManager;
 
     public void onManualBan() {
         boolean isIP = "ip".equalsIgnoreCase(type);
@@ -40,27 +45,27 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
         banHours = Optional.ofNullable(banHours).orElse(0);
         banMinutes = Optional.ofNullable(banMinutes).orElse(0);
 
-        getLearnweb().getProtectionManager().ban(name, banDays, banHours, banMinutes, isIP, null);
+        requestManager.ban(name, banDays, banHours, banMinutes, isIP, null);
     }
 
     public void onUnban(String name) {
-        getLearnweb().getProtectionManager().clearBan(name);
+        requestManager.clearBan(name);
     }
 
     public void onDeleteOutdatedBans() {
-        getLearnweb().getProtectionManager().clearOutdatedBans();
+        requestManager.clearOutdatedBans();
     }
 
     public void onRemoveSuspicious(String name) {
-        getLearnweb().getProtectionManager().removeSuspicious(name);
+        requestManager.getSuspiciousRequests().removeIf(requestData -> name.equals(requestData.getIp()));
         suspiciousActivityList = null;
     }
 
     public List<Ban> getBanlist() {
-        return getLearnweb().getProtectionManager().getBanlist();
+        return requestManager.getBanlist();
     }
 
-    public List<AggregatedRequestData> getSuspiciousActivityList() {
+    public List<Request> getSuspiciousActivityList() {
         if (suspiciousActivityList == null) {
             try {
                 new BounceManager(Learnweb.getInstance()).parseInbox();
@@ -68,8 +73,8 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
                 addErrorMessage(e);
             }
 
-            getLearnweb().getRequestManager().updateAggregatedRequests();
-            suspiciousActivityList = getLearnweb().getProtectionManager().getSuspiciousActivityList();
+            requestManager.updateAggregatedRequests();
+            suspiciousActivityList = requestManager.getSuspiciousRequests();
         }
         return suspiciousActivityList;
 

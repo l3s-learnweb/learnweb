@@ -3,6 +3,7 @@ package de.l3s.learnweb.user;
 import java.io.Serializable;
 import java.sql.SQLException;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
@@ -22,7 +23,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.user.loginProtection.ProtectionManager;
+import de.l3s.learnweb.web.RequestManager;
 
 @Named
 @RequestScoped
@@ -39,18 +40,23 @@ public class LoginBean extends ApplicationBean implements Serializable {
     @NotBlank
     private String password;
     private boolean remember;
-    private final boolean captchaRequired;
+    private boolean captchaRequired;
+
+    @Inject
+    private RequestManager requestManager;
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
-    public LoginBean() {
+    @PostConstruct
+    public void init() {
         String ip = Faces.getRemoteAddr();
 
+        //noinspection UnstableApiUsage
         if (!InetAddresses.isInetAddress(ip)) {
             captchaRequired = true;
         } else {
-            captchaRequired = getLearnweb().getProtectionManager().needsCaptcha(ip);
+            captchaRequired = requestManager.isCaptchaRequired(ip);
         }
     }
 
@@ -85,26 +91,26 @@ public class LoginBean extends ApplicationBean implements Serializable {
     public String login() throws SQLException {
         String ip = Faces.getRemoteAddr();
 
+        //noinspection UnstableApiUsage
         if (!InetAddresses.isInetAddress(ip)) {
             return LOGIN_PAGE;
         }
 
         // Gets the ip and username info from protection manager
-        ProtectionManager pm = getLearnweb().getProtectionManager();
-        BeanAssert.hasPermission(!pm.isBanned(ip), "ip_banned");
-        BeanAssert.hasPermission(!pm.isBanned(username), "username_banned");
+        BeanAssert.hasPermission(!requestManager.isBanned(ip), "ip_banned");
+        BeanAssert.hasPermission(!requestManager.isBanned(username), "username_banned");
 
         // USER AUTHORIZATION HAPPENS HERE
         final User user = getLearnweb().getUserManager().getUser(username, password);
 
         if (null == user) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
-            pm.updateFailedAttempts(ip, username);
+            requestManager.updateFailedAttempts(ip, username);
             return LOGIN_PAGE;
         }
 
-        pm.updateSuccessfulAttempts(ip, username);
-        getLearnweb().getRequestManager().recordLogin(ip, username);
+        requestManager.updateSuccessfulAttempts(ip, username);
+        requestManager.recordLogin(ip, username);
 
         if (!user.isEmailConfirmed() && user.isEmailRequired()) {
             confirmRequiredBean.setLoggedInUser(user);

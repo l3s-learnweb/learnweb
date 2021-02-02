@@ -2,6 +2,7 @@ package de.l3s.learnweb.web;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebFilter;
@@ -16,9 +17,7 @@ import org.omnifaces.util.Servlets;
 
 import com.google.common.net.InetAddresses;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.exceptions.HttpException;
-import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.util.bean.BeanHelper;
 
 /**
@@ -32,32 +31,15 @@ public class RequestFilter extends HttpFilter {
     private static final long serialVersionUID = -6484981916986254209L;
     private static final Logger log = LogManager.getLogger(RequestFilter.class);
 
-    private transient RequestManager requestManager;
-    private transient ProtectionManager protectionManager;
-
-    public void init(HttpServletRequest request) {
-        try {
-            String serverUrl = Servlets.getRequestBaseURL(request);
-            Learnweb learnweb = Learnweb.createInstance(serverUrl);
-
-            requestManager = learnweb.getRequestManager();
-            protectionManager = learnweb.getProtectionManager();
-        } catch (Exception e) {
-            log.error("Request filter not initialized", e);
-        }
-    }
+    @Inject
+    private RequestManager requestManager;
 
     @Override
     protected void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
         throws IOException, ServletException {
-
         request.setCharacterEncoding("UTF-8");
 
-        if (requestManager == null) {
-            init(request);
-        }
-
-        if (requestManager != null && protectionManager != null) {
+        if (requestManager != null) {
             String ipAddr = Servlets.getRemoteAddr(request);
             String requestUrl = Servlets.getRequestURLWithQueryString(request);
 
@@ -65,11 +47,12 @@ public class RequestFilter extends HttpFilter {
              * This rule should ban threats like:
              * - Joomla Unserialize Vulnerability (https://blog.cloudflare.com/the-joomla-unserialize-vulnerability/)
              */
+            //noinspection UnstableApiUsage
             if (!InetAddresses.isInetAddress(ipAddr)) {
                 log.error("Suspicious IP address banned: {}. Request summary: {}", ipAddr, BeanHelper.getRequestSummary(request));
 
                 // We can't ban them permanently, because their IP address is not an address, but a string, likely long string...
-                protectionManager.tempBan(ipAddr, "Suspicious IP address");
+                requestManager.tempBan(ipAddr, "Suspicious IP address");
             }
 
             /*
@@ -77,14 +60,14 @@ public class RequestFilter extends HttpFilter {
              * https://stackoverflow.com/questions/33867813/strange-url-containing-a-0-or-0-a-in-web-server-logs
              */
             if (StringUtils.endsWithAny(requestUrl, "%27", "%27A=0")) {
-                protectionManager.ban(ipAddr, "SQL injection");
+                requestManager.ban(ipAddr, "SQL injection");
             }
             if (StringUtils.endsWithAny(requestUrl, "'", "'A=0")) {
-                protectionManager.ban(ipAddr, "SQL injection (test)");
+                requestManager.ban(ipAddr, "SQL injection (test)");
             }
 
             requestManager.recordRequest(ipAddr, requestUrl);
-            if (protectionManager.isBanned(ipAddr)) {
+            if (requestManager.isBanned(ipAddr)) {
                 response.sendError(HttpException.FORBIDDEN, "error_pages.forbidden_blocked_description");
                 return;
             }

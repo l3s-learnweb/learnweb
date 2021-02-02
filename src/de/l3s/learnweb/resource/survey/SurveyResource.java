@@ -14,7 +14,7 @@ import de.l3s.util.Cache;
 public class SurveyResource extends Resource {
     private static final long serialVersionUID = 3431955030925189235L;
 
-    private static final String PATH = "/lw/survey/answer.jsf?resource_id=";
+    private static final String PATH = "survey/answer.jsf?resource_id=";
 
     private int surveyId = -1;
     private Date start;
@@ -194,7 +194,7 @@ public class SurveyResource extends Resource {
 
     @Override
     public String getUrl() {
-        return Learnweb.getInstance().getServerUrl() + PATH + this.getId();
+        return PATH + this.getId();
     }
 
 }
