@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -13,6 +14,16 @@ import org.junit.jupiter.api.Test;
 import de.l3s.util.MessagesHelper;
 
 public class ValidateMessagesTest {
+
+    /**
+     * You can use this test to check messages syntax, if needed.
+     */
+    @Test
+    void validateMessage() {
+        String result = MessageFormat.format("On {1, date}, there was {2} on planet {0, number, integer}.",
+            7, new Date(1564660800000L), "a disturbance in the Force");
+        assertEquals("On 1 Aug 2019, there was a disturbance in the Force on planet 7.", result);
+    }
 
     @Test
     void validateAllMessages() throws IOException {
