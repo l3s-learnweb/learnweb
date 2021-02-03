@@ -135,7 +135,7 @@ public class TedCrawlerSimple implements Runnable {
                 visit(tedTalkURL);
                 TimeUnit.SECONDS.sleep(5);
             }
-        } catch (IOException e) {
+        } catch (IOException | IllegalStateException e) {
             log.error("Error while fetching ted talks page: " + tedTalksPageUrl, e);
         } catch (InterruptedException e) {
             log.error("Interrupted execution while visiting ted talks page: " + tedTalksPageUrl, e);
@@ -298,10 +298,10 @@ public class TedCrawlerSimple implements Runnable {
             int duration = (int) Float.parseFloat(durationEl.attr("content"));
             log.info("Duration: " + duration);
 
-            Element releaseDateEl = doc.select("meta[property=og:video:release_date").first();
+            Element releaseDateEl = doc.select("meta[property=og:video:release_date]").first();
             Date publishedAt = new Date(Integer.parseInt(releaseDateEl.attr("content")) * 1000L);
 
-            Elements tags = doc.select("meta[property=og:video:tag");
+            Elements tags = doc.select("meta[property=og:video:tag]");
             for (Element tag : tags) {
                 keywords.append(tag.attr("content")).append(",");
             }
