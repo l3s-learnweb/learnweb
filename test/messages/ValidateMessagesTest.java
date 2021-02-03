@@ -1,6 +1,5 @@
 package messages;
 
-import static messages.MessagesTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
@@ -11,14 +10,16 @@ import java.util.ResourceBundle;
 
 import org.junit.jupiter.api.Test;
 
+import de.l3s.util.MessagesHelper;
+
 public class ValidateMessagesTest {
 
     @Test
     void validateAllMessages() throws IOException {
-        for (String locale : getLocales()) {
-            ResourceBundle bundle = ResourceBundle.getBundle(MESSAGES_BUNDLE, Locale.forLanguageTag(locale));
+        for (String locale : MessagesHelper.getLocales()) {
+            ResourceBundle bundle = ResourceBundle.getBundle(MessagesHelper.MESSAGES_BUNDLE, Locale.forLanguageTag(locale));
 
-            Map<String, String> messages = getMessagesFromBundle(bundle);
+            Map<String, String> messages = MessagesHelper.getMessagesFromBundle(bundle);
             validateMessages(locale, messages);
             assertTrue(true);
         }

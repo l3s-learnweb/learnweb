@@ -71,7 +71,7 @@ public class ApplicationBean {
     // i18n ------------------------------------------------------------------------------------------------------------
 
     /**
-     * Get a message from the /Resources/de/l3s/learnweb/lang/messages bundle depending on the currently used local.
+     * Get a message from the messages bundle depending on the currently used local.
      * If the msgKey doesn't exist the msgKey itself will be returned.
      */
     public String getLocaleMessage(String msgKey, Object... args) {

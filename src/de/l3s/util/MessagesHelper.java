@@ -1,4 +1,4 @@
-package messages;
+package de.l3s.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,18 +14,23 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-public final class MessagesTestUtils {
+/**
+ * This methods primarily used by maintenance utils and tests to read bundle files one by one.
+ *
+ * @author Oleh Astappiev
+ */
+public final class MessagesHelper {
     static final String MESSAGES_DIR = "de/l3s/learnweb/lang";
     static final String MESSAGES_PREFIX = "messages";
-    static final String MESSAGES_BUNDLE = MESSAGES_DIR + "/" + MESSAGES_PREFIX;
+    public static final String MESSAGES_BUNDLE = MESSAGES_DIR + "/" + MESSAGES_PREFIX;
 
-    static Map<String, String> getMessagesFromBundle(final ResourceBundle bundle) {
+    public static Map<String, String> getMessagesFromBundle(final ResourceBundle bundle) {
         final Map<String, String> messages = new HashMap<>();
         Collections.list(bundle.getKeys()).forEach(key -> messages.put(key, bundle.getString(key)));
         return messages;
     }
 
-    static Properties getMessagesForLocale(String locale) throws IOException {
+    public static Properties getMessagesForLocale(String locale) throws IOException {
         if (locale == null) {
             locale = "";
         }
@@ -40,7 +45,7 @@ public final class MessagesTestUtils {
         return properties;
     }
 
-    static List<String> getLocales() throws IOException {
+    public static List<String> getLocales() throws IOException {
         List<String> locales = new ArrayList<>();
 
         try (InputStream in = getResourceAsStream(MESSAGES_DIR)) {
@@ -56,14 +61,15 @@ public final class MessagesTestUtils {
         return locales;
     }
 
-    static List<String> getLocales(Collection<String> except) throws IOException {
+    public static List<String> getLocales(Collection<String> except) throws IOException {
         List<String> locales = getLocales();
         locales.removeAll(except);
         return locales;
     }
 
-    static InputStream getResourceAsStream(String resource) {
+    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
+    private static InputStream getResourceAsStream(String resource) {
         final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-        return in == null ? MessagesTestUtils.class.getResourceAsStream(resource) : in;
+        return in == null ? MessagesHelper.class.getResourceAsStream(resource) : in;
     }
 }

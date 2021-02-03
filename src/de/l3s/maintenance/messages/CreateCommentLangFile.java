@@ -1,12 +1,10 @@
 package de.l3s.maintenance.messages;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.Enumeration;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import de.l3s.maintenance.MaintenanceTask;
+import de.l3s.util.MessagesHelper;
 
 /**
  * This script creates a placeholder so that we can identify language entries that have missing translations.
@@ -20,25 +18,18 @@ public class CreateCommentLangFile extends MaintenanceTask {
 
     @Override
     protected void run(final boolean dryRun) throws Exception {
-        ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages");
-        Enumeration<String> keys = bundle.getKeys();
+        Properties baseMessages = MessagesHelper.getMessagesForLocale(null);
+        Properties xyMessages = MessagesHelper.getMessagesForLocale("xy");
 
-        Properties comments = new Properties();
-        comments.load(new FileInputStream("Resources/de/l3s/learnweb/lang/messages_xy.properties"));
-
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement();
-            if (comments.getProperty(key) == null) {
-                comments.setProperty(key, "TODO");
-                //log.debug(key);
-            } else {
-                log.debug(key);
+        for (Object key : baseMessages.keySet()) {
+            if (!xyMessages.containsKey(key)) {
+                xyMessages.setProperty(String.valueOf(key), "TODO");
             }
         }
 
-        FileOutputStream out = new FileOutputStream("Resources/de/l3s/learnweb/lang/messages_xy.properties");
-        comments.store(out, null);
-        out.close();
+        try (FileOutputStream out = new FileOutputStream("Resources/" + MessagesHelper.MESSAGES_BUNDLE + "_xy.properties")) {
+            xyMessages.store(out, null);
+        }
     }
 
     public static void main(String[] args) {

@@ -1,56 +1,60 @@
 package messages;
 
-import static messages.MessagesTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import de.l3s.util.MessagesHelper;
 
 @Disabled
 public class LocalizeMessagesTest {
 
     @Test
     void testLocalesToHaveAllBaseKeys() throws IOException {
-        Properties baseMessages = getMessagesForLocale(null);
+        List<String> locales = MessagesHelper.getLocales(Collections.singleton("en"));
+        Properties baseMessages = MessagesHelper.getMessagesForLocale(null);
 
-        assertAll(getLocales(Collections.singletonList("en")).stream().map(locale -> () -> {
-            HashSet<String> missingMessages = new HashSet<>();
-            Properties localeMessages = getMessagesForLocale(locale);
+        for (String locale : locales) {
+            HashSet<String> missing = new HashSet<>();
+            Properties localeMessages = MessagesHelper.getMessagesForLocale(locale);
 
             baseMessages.forEach((key, value) -> {
                 if (!localeMessages.containsKey(key)) {
-                    missingMessages.add(key.toString());
+                    missing.add(key.toString());
                 }
             });
 
-            if (!missingMessages.isEmpty()) {
-                fail("Locale '" + locale + "' missing " + missingMessages.size() + " keys: " + missingMessages);
+            if (!missing.isEmpty()) {
+                fail("Locale '" + locale + "' missing " + missing.size() + " keys: " + missing);
             }
-        }));
+        }
     }
 
     @Test
     void testLocalesToHaveOnlyKeysDeclaredInBaseLocale() throws IOException {
-        Properties baseMessages = getMessagesForLocale(null);
+        List<String> locales = MessagesHelper.getLocales(Collections.singleton("en"));
+        Properties baseMessages = MessagesHelper.getMessagesForLocale(null);
 
-        assertAll(getLocales(Collections.singleton("en")).stream().map(locale -> () -> {
-            HashSet<String> extraMessages = new HashSet<>();
-            Properties localeMessages = getMessagesForLocale(locale);
+        for (String locale : locales) {
+            HashSet<String> obsolete = new HashSet<>();
+            Properties localeMessages = MessagesHelper.getMessagesForLocale(locale);
 
             localeMessages.keySet().forEach(key -> {
                 if (!baseMessages.containsKey(key)) {
-                    extraMessages.add(key.toString());
+                    obsolete.add(key.toString());
                 }
             });
 
-            if (!extraMessages.isEmpty()) {
-                fail("Locale '" + locale + "' contains " + extraMessages.size() + " keys that not exist in default: " + extraMessages);
+            if (!obsolete.isEmpty()) {
+                fail("Locale '" + locale + "' contains " + obsolete.size() + " keys that no more exist (in default messages file): " + obsolete);
             }
-        }));
+        }
     }
 }

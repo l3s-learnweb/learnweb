@@ -4,19 +4,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.Locale;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 public class MessageFormatTest {
     @Test
-    void testFormatDate() {
-        MessageFormat dateAndTime = new MessageFormat("{0,date,medium} {0,time,short}");
-        MessageFormat customFormat = new MessageFormat("{0,date,MMM d, yyyy h:mm a}");
+    void formatDate() {
+        MessageFormat messageFormat = new MessageFormat("{0,date,medium} {0,time,short}", Locale.ENGLISH);
+        assertEquals("Aug 1, 2019 2:00 PM", messageFormat.format(new Object[] {new Date(1564660800000L)}));
+    }
 
-        Object[] testArgs = {new Date(1564660800000L)};
-        assertEquals("Aug 1, 2019 2:00 PM", dateAndTime.format(testArgs));
-        assertEquals("Aug 1, 2019 2:00 PM", customFormat.format(testArgs));
+    @Test
+    void formatDatePattern() {
+        MessageFormat messageFormat = new MessageFormat("{0,date,MMM d, yyyy h:mm a}", Locale.ENGLISH);
+        assertEquals("Aug 1, 2019 2:00 PM", messageFormat.format(new Object[] {new Date(1564660800000L)}));
     }
 }
