@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -15,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,7 +77,7 @@ public final class StringHelper {
     }
 
     public static List<String> remove(final List<String> values, final char remove) {
-        for (int i = 0, l = values.size(); i < l; ++i) {
+        for (int i = 0, len = values.size(); i < len; ++i) {
             values.set(i, StringUtils.remove(values.get(i), remove));
         }
         return values;
@@ -167,17 +167,11 @@ public final class StringHelper {
     }
 
     public static String decodeBase64(String encoded) {
-        //decode byte array
-        byte[] decoded = Base64.decodeBase64(encoded.getBytes(StandardCharsets.UTF_8));
-        //byte to string and return it
-        return new String(decoded, StandardCharsets.UTF_8);
+        return new String(Base64.getDecoder().decode(encoded), StandardCharsets.UTF_8);
     }
 
     public static String encodeBase64(String str) {
-        //decode byte array
-        byte[] encoded = Base64.encodeBase64(str.getBytes(StandardCharsets.UTF_8));
-        //byte to string and return it
-        return new String(encoded, StandardCharsets.UTF_8);
+        return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
