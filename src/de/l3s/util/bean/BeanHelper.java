@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.TreeSet;
 
@@ -97,11 +98,11 @@ public final class BeanHelper {
 
             HttpSession session = request.getSession(false);
             if (session != null) {
-                Learnweb learnweb = Learnweb.getInstance();
+                Optional<Learnweb> learnweb = Learnweb.getInstanceOptional();
                 Integer userId = (Integer) session.getAttribute("learnweb_user_id");
 
-                if (learnweb != null && userId != null && userId != 0) {
-                    User user = learnweb.getUserManager().getUser(userId);
+                if (learnweb.isPresent() && userId != null && userId != 0) {
+                    User user = learnweb.get().getUserManager().getUser(userId);
                     if (user != null) {
                         joiner.add("user: " + user);
                     }
