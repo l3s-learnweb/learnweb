@@ -191,7 +191,18 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>8.7.0</version>
+            <version>8.8.0</version>
+            <exclusions>
+                <!-- conflicts with poi-ooxml dependencies -->
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>stax2-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>woodstox-core-asl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- URL rewrite -->
         <dependency>
@@ -489,6 +500,7 @@
                         </goals>
                         <configuration>
                             <rules>
+                                <!--<dependencyConvergence/>-->
                                 <requireMavenVersion>
                                     <version>[3.6,)</version>
                                 </requireMavenVersion>
