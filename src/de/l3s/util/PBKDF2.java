@@ -11,7 +11,7 @@ import javax.crypto.spec.PBEKeySpec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class PBKDF2 {
+public final class PBKDF2 {
     private static final Logger log = LogManager.getLogger(PBKDF2.class);
 
     // The following constants may be changed without breaking existing hashes.

@@ -17,7 +17,7 @@ import de.l3s.maintenance.MaintenanceTask;
  *
  * @author Philipp Kemkes
  */
-public class CheckAllResources extends MaintenanceTask {
+public class ValidateResources extends MaintenanceTask {
     private static final int batchSize = 5000;
     private static final Map<String, Long> freq = new HashMap<>();
 
@@ -27,6 +27,7 @@ public class CheckAllResources extends MaintenanceTask {
     protected void init() {
         resourceManager = getLearnweb().getResourceManager();
         resourceManager.setReindexMode(true);
+        requireConfirmation = true;
     }
 
     @Override
@@ -68,6 +69,6 @@ public class CheckAllResources extends MaintenanceTask {
     }
 
     public static void main(String[] args) {
-        new CheckAllResources().start(args);
+        new ValidateResources().start(args);
     }
 }

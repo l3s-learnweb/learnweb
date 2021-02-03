@@ -3,34 +3,29 @@ package de.l3s.maintenance.resources;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.maintenance.MaintenanceTask;
 
 /**
  * Read all files uploaded by a user, remove if there is no local copy of a file.
  *
  * @author Oleh Astappiev
  */
-public class RemoveResourcesWithoutLocalFiles {
-    private static final Logger log = LogManager.getLogger(RemoveResourcesWithoutLocalFiles.class);
+public class RemoveResourcesWithoutLocalFiles extends MaintenanceTask {
 
-    public static void main(String[] args) throws Exception {
-        Learnweb learnweb = Learnweb.createInstance();
-
-        ResourceManager resourceManager = learnweb.getResourceManager();
-        FileManager fileManager = learnweb.getFileManager();
+    @Override
+    protected void run(final boolean dryRun) throws Exception {
+        ResourceManager resourceManager = getLearnweb().getResourceManager();
+        FileManager fileManager = getLearnweb().getFileManager();
         resourceManager.setReindexMode(true);
 
         HashSet<Resource> brokenResources = new HashSet<>();
         List<Resource> resources = resourceManager.getResourcesByUserId(9289);
 
-        log.debug("Process resources: " + resources.size());
+        log.debug("Process resources: {}", resources.size());
 
         long totalSize = 0;
         for (Resource resource : resources) {
@@ -44,14 +39,15 @@ public class RemoveResourcesWithoutLocalFiles {
             }
         }
 
-        log.debug("Total using space: " + (totalSize / 1_000_000) + " MB.");
-        log.debug("Total broken: " + brokenResources.size());
+        log.debug("Total using space: {} MB.", totalSize / 1_000_000);
+        log.debug("Total broken: {}", brokenResources.size());
         for (Resource resource : brokenResources) {
             log.debug(resource.getTitle());
             // resource.delete();
         }
-
-        learnweb.onDestroy();
     }
 
+    public static void main(String[] args) {
+        new RemoveResourcesWithoutLocalFiles().start(args);
+    }
 }

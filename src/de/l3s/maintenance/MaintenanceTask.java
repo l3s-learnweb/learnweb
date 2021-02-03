@@ -8,11 +8,16 @@ import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 
-@SuppressWarnings({"CallToSystemExit", "RedundantThrows", "ProhibitedExceptionDeclared"})
+@SuppressWarnings({"CallToSystemExit", "ProhibitedExceptionDeclared"})
 public abstract class MaintenanceTask {
     protected final Logger log = LogManager.getLogger(getClass());
 
     private final Learnweb learnweb;
+
+    /**
+     * If set to true, then will run in dry-run mode (dryRun=true) when no argument given, and no dry-run (dryRun=false) when `--confirm` argument given.
+     */
+    protected boolean requireConfirmation = false;
 
     protected MaintenanceTask() {
         try {
@@ -22,7 +27,7 @@ public abstract class MaintenanceTask {
         }
     }
 
-    public final Learnweb getLearnweb() {
+    protected final Learnweb getLearnweb() {
         return learnweb;
     }
 
@@ -37,7 +42,7 @@ public abstract class MaintenanceTask {
         try {
             init();
 
-            if (StringUtils.equalsAnyIgnoreCase("--confirm", args)) {
+            if (!requireConfirmation || StringUtils.equalsAnyIgnoreCase("--confirm", args)) {
                 run(false);
             } else {
                 log.warn("You are running the command in \"Dry run\" mode (without actual changes)!");
@@ -48,7 +53,7 @@ public abstract class MaintenanceTask {
             log.error("An unhandled error occurred", e);
             System.exit(-1);
         } finally {
-            getLearnweb().onDestroy();
+            learnweb.onDestroy();
         }
     }
 }

@@ -1,6 +1,5 @@
 package de.l3s.maintenance.resources;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,6 +28,7 @@ public final class CopyFilesOfCopiedResources extends MaintenanceTask {
         fileManager = getLearnweb().getFileManager();
         resourceManager = getLearnweb().getResourceManager();
         resourceManager.setReindexMode(true);
+        requireConfirmation = true;
     }
 
     @Override
@@ -51,7 +51,7 @@ public final class CopyFilesOfCopiedResources extends MaintenanceTask {
         log.info("Total {} files fount, estimated size {}", filesCount, FileUtils.byteCountToDisplaySize(sizeBytes));
     }
 
-    private void copyFiles(final Resource resource, final Collection<File> originalFiles, final boolean dryRun) throws SQLException {
+    private void copyFiles(final Resource resource, final Collection<File> originalFiles, final boolean dryRun) {
         try {
             for (File file : originalFiles) {
                 if (List.of(File.TYPE.THUMBNAIL_VERY_SMALL, File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_SQUARED,

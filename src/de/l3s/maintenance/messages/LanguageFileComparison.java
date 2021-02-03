@@ -1,12 +1,11 @@
-package de.l3s.maintenance.languageBundle;
+package de.l3s.maintenance.messages;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import de.l3s.maintenance.MaintenanceTask;
 
 /**
  * Uses the list of corrected translations provided by Marco to check which translations were not yet checked.
@@ -15,10 +14,10 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Philipp Kemkes
  */
-public class LanguageFileComparison {
-    private static final Logger log = LogManager.getLogger(LanguageFileComparison.class);
+public class LanguageFileComparison extends MaintenanceTask {
 
-    public static void main(String[] args) throws Exception {
+    @Override
+    protected void run(final boolean dryRun) throws Exception {
         Properties languageProperties = new Properties();
         languageProperties.load(LanguageFileComparison.class.getClassLoader().getResourceAsStream("de/l3s/learnweb/lang/messages.properties"));
 
@@ -29,7 +28,7 @@ public class LanguageFileComparison {
         while ((line = buffer.readLine()) != null) {
 
             if (!line.startsWith("#") && line.endsWith("#")) {
-                log.error("Corrupted file at line: " + line);
+                log.error("Corrupted file at line: {}", line);
                 continue;
             }
 
@@ -40,7 +39,7 @@ public class LanguageFileComparison {
             log.debug(line);
 
             if (translation == null) {
-                log.error("Illegal key: " + line);
+                log.error("Illegal key: {}", line);
                 continue;
             }
 
@@ -58,5 +57,9 @@ public class LanguageFileComparison {
         }
 
         buffer.close();
+    }
+
+    public static void main(String[] args) {
+        new LanguageFileComparison().start(args);
     }
 }

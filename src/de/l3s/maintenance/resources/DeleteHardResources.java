@@ -17,6 +17,7 @@ public final class DeleteHardResources extends MaintenanceTask {
     public void init() {
         resourceManager = getLearnweb().getResourceManager();
         resourceManager.setReindexMode(true);
+        requireConfirmation = true;
     }
 
     @Override

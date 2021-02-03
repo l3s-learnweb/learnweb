@@ -1,37 +1,31 @@
 package de.l3s.maintenance.users;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
+import de.l3s.maintenance.MaintenanceTask;
 
-public class UsersAddMissingProfilePictures {
-    private static final Logger log = LogManager.getLogger(UsersAddMissingProfilePictures.class);
+public class UsersAddMissingProfilePictures extends MaintenanceTask {
 
-    private final Learnweb learnweb;
-    private final UserManager um;
+    private UserManager userManager;
 
-    public UsersAddMissingProfilePictures() throws Exception {
+    @Override
+    protected void init() throws Exception {
+        userManager = getLearnweb().getUserManager();
+    }
 
-        learnweb = Learnweb.createInstance();
-        um = learnweb.getUserManager();
-
+    @Override
+    protected void run(final boolean dryRun) throws Exception {
         deleteMissingAvatars();
         //setDefaultAvatars();
-
-        learnweb.onDestroy();
     }
 
     @SuppressWarnings("unused")
-    private void setDefaultAvatars() throws SQLException, IOException {
-        List<User> users = um.getUsers();
+    private void setDefaultAvatars() throws SQLException {
+        List<User> users = userManager.getUsers();
         for (User user : users) {
             File file = user.getImageFile();
             if (null == file || !file.exists()) {
@@ -46,12 +40,12 @@ public class UsersAddMissingProfilePictures {
     /**
      * deletes avatars that were created on elsewhere and aren't present on the server.
      */
-    private void deleteMissingAvatars() throws SQLException, IOException {
-        List<User> users = um.getUsers();
+    private void deleteMissingAvatars() throws SQLException {
+        List<User> users = userManager.getUsers();
         for (User user : users) {
             File file = user.getImageFile();
             if (null != file && !file.exists()) {
-                log.debug("Update user: " + user);
+                log.debug("Update user: {}", user);
 
                 user.setImageFileId(0);
                 user.save();
@@ -59,10 +53,7 @@ public class UsersAddMissingProfilePictures {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        //   System.exit(-1);
-
-        new UsersAddMissingProfilePictures();
+    public static void main(String[] args) {
+        new UsersAddMissingProfilePictures().start(args);
     }
-
 }

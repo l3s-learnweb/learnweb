@@ -45,9 +45,9 @@ public final class UrlHelper {
                 return location;
             }
         } catch (UnknownHostException e) {
-            log.warn("unknown host: " + url, e);
+            log.warn("unknown host: {}", url, e);
         } catch (Exception e) {
-            log.error("invalid url: " + url, e);
+            log.error("invalid url: {}", url, e);
         }
 
         return null;

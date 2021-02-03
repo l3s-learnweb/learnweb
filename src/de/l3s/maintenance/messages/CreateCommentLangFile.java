@@ -1,14 +1,12 @@
-package de.l3s.maintenance.languageBundle;
+package de.l3s.maintenance.messages;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import de.l3s.maintenance.MaintenanceTask;
 
 /**
  * This script creates a placeholder so that we can identify language entries that have missing translations.
@@ -18,10 +16,10 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Philipp Kemkes
  */
-public class CreateCommentLangFile {
-    private static final Logger log = LogManager.getLogger(CreateCommentLangFile.class);
+public class CreateCommentLangFile extends MaintenanceTask {
 
-    public static void main(String[] args) throws IOException {
+    @Override
+    protected void run(final boolean dryRun) throws Exception {
         ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages");
         Enumeration<String> keys = bundle.getKeys();
 
@@ -41,7 +39,9 @@ public class CreateCommentLangFile {
         FileOutputStream out = new FileOutputStream("Resources/de/l3s/learnweb/lang/messages_xy.properties");
         comments.store(out, null);
         out.close();
-
     }
 
+    public static void main(String[] args) {
+        new CreateCommentLangFile().start(args);
+    }
 }

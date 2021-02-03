@@ -19,6 +19,7 @@ public class FixInvalidFolders extends MaintenanceTask {
     protected void init() {
         resourceManager = getLearnweb().getResourceManager();
         resourceManager.setReindexMode(true);
+        requireConfirmation = true;
     }
 
     @Override
