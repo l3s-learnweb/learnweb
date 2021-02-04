@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Test;
 
 import de.l3s.util.MessagesHelper;
 
-@Disabled
 public class LocalizeMessagesTest {
 
     @Test
+    @Disabled("Right now many languages missing translations")
     void testLocalesToHaveAllBaseKeys() throws IOException {
         List<String> locales = MessagesHelper.getLocales(Collections.singleton("en"));
         Properties baseMessages = MessagesHelper.getMessagesForLocale(null);

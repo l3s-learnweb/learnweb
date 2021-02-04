@@ -7,10 +7,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 class TedManagerTest {
     private static final Logger log = LogManager.getLogger(TedManagerTest.class);
     private static final String VIDEO_ID = "7TXEZ4tP06c";

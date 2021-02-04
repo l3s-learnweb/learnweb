@@ -11,12 +11,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.l3s.learnweb.Learnweb;
 
-@Disabled
 class ActivityDashboardManagerTest {
     private final ActivityDashboardManager dashboardManager = Learnweb.createInstance().getActivityDashboardManager();
 

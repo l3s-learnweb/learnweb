@@ -5,13 +5,11 @@ import java.sql.SQLException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.office.converter.model.ConverterRequest;
 
-@Disabled
 class ConverterServiceTest {
     private static final Logger log = LogManager.getLogger(ConverterServiceTest.class);
 

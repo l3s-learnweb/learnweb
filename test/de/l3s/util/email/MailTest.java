@@ -9,10 +9,10 @@ import javax.mail.internet.InternetAddress;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 class MailTest {
 
     @Test
+    @Disabled("If enabled, it will send an actual email, I don't want to receive the email every time tests is running")
     void sendMail() throws MessagingException {
         Mail mail = new Mail();
         mail.setRecipient(RecipientType.TO, new InternetAddress("astappiev@l3s.de"));
