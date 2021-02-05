@@ -22,6 +22,17 @@ import org.jdbi.v3.core.statement.Update;
 public final class SqlHelper {
     private static final Logger log = LogManager.getLogger(SqlHelper.class);
 
+    public static byte[] serializeObject(Serializable object) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (ObjectOutputStream oos = new ObjectOutputStream(outputStream)) {
+            oos.writeObject(object);
+            return outputStream.toByteArray();
+        } catch (Exception e) {
+            log.error("Couldn't serialize object: {}", object, e);
+            return null;
+        }
+    }
+
     public static void setSerializedObject(PreparedStatement stmt, int parameterIndex, Serializable obj) throws SQLException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 

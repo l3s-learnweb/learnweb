@@ -1,14 +1,19 @@
 package de.l3s.util;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.jdbi.v3.core.argument.Argument;
+import org.jdbi.v3.core.statement.StatementContext;
 
 /**
  * A simple interface that forces to implement a getId() method.
  *
  * @author Philipp Kemkes
  */
-public interface HasId {
+public interface HasId extends Argument {
 
     int getId();
 
@@ -40,5 +45,10 @@ public interface HasId {
             return def;
         }
         return object.getId();
+    }
+
+    @Override
+    default void apply(final int position, final PreparedStatement statement, final StatementContext ctx) throws SQLException {
+        statement.setInt(position, getId());
     }
 }

@@ -7,7 +7,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Caffeine;
+
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.resource.Folder;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.Course;
+import de.l3s.learnweb.user.User;
 
 /**
  * A synchronized cache that caches the defined number of most used objects.
@@ -16,12 +23,34 @@ import com.google.common.cache.CacheBuilder;
  */
 public class Cache<E extends HasId> implements ICache<E> {
     private final int capacity;
-    private final com.google.common.cache.Cache<Integer, E> weakValues; // cached values which are removed when they are not referenced else where
+    private final com.github.benmanes.caffeine.cache.Cache<Integer, E> weakValues; // cached values which are removed when they are not referenced else where
     private final Map<Integer, E> values; // makes sure to keep a reference to the X most recently added values, as defined by capacity
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
+
+    public static <E extends HasId> ICache<E> of(Class<E> clazz) {
+        Learnweb learnweb = Learnweb.getInstance();
+        int resourceCacheSize = learnweb.getProperties().getPropertyIntValue("RESOURCE_CACHE");
+        int groupCacheSize = learnweb.getProperties().getPropertyIntValue("GROUP_CACHE");
+        int folderCacheSize = learnweb.getProperties().getPropertyIntValue("FOLDER_CACHE");
+        int userCacheSize = learnweb.getProperties().getPropertyIntValue("USER_CACHE");
+
+        if (clazz.equals(Group.class)) {
+            return new Cache<>(groupCacheSize);
+        } else if (clazz.equals(Folder.class)) {
+            return new Cache<>(folderCacheSize);
+        } else if (clazz.equals(User.class)) {
+            return new Cache<>(userCacheSize);
+        } else if (clazz.equals(Resource.class)) {
+            return new Cache<>(resourceCacheSize);
+        } else if (clazz.equals(Course.class)) {
+            return new Cache<>(100);
+        } else {
+            return new DummyCache<>();
+        }
+    }
 
     /**
      * @param capacity Number of objects this cache will store
@@ -38,7 +67,7 @@ public class Cache<E extends HasId> implements ICache<E> {
             }
         };
 
-        weakValues = CacheBuilder.newBuilder().weakValues().build();
+        weakValues = Caffeine.newBuilder().weakValues().build();
     }
 
     @Override
@@ -102,7 +131,7 @@ public class Cache<E extends HasId> implements ICache<E> {
     }
 
     public long sizeSecondaryCache() {
-        return weakValues.size();
+        return weakValues.estimatedSize();
     }
 
     @Override
