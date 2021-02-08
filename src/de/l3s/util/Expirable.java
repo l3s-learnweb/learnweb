@@ -1,22 +1,23 @@
 package de.l3s.util;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public final class Expirable<T> {
-
-    private T value;
-    private Instant expireAfter;
+/**
+ * A wrapper which holds value for a duration and gets a new one if the value is expired.
+ * If serialized and then deserialized, always gets a new value.
+ */
+public final class Expirable<T> implements Serializable {
+    private static final long serialVersionUID = 6877022635730725601L;
 
     private final TemporalAmount duration;
-    private Supplier<T> supplier;
+    private final Supplier<T> supplier;
 
-    public Expirable(T value, TemporalAmount duration) {
-        this.duration = duration;
-        updateValue(value);
-    }
+    private transient T value;
+    private transient Instant expireAfter;
 
     public Expirable(TemporalAmount duration, Supplier<T> supplier) {
         this.duration = duration;
@@ -25,10 +26,7 @@ public final class Expirable<T> {
 
     public T get() {
         if (isExpired()) {
-            if (supplier != null) {
-                return updateValue(supplier.get());
-            }
-            return null;
+            return updateValue(supplier.get());
         }
 
         return value;
@@ -53,11 +51,11 @@ public final class Expirable<T> {
             return false;
         }
         final Expirable<?> expirable = (Expirable<?>) o;
-        return Objects.equals(value, expirable.value) && Objects.equals(expireAfter, expirable.expireAfter);
+        return Objects.equals(duration, expirable.duration) && Objects.equals(supplier, expirable.supplier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value, expireAfter);
+        return Objects.hash(duration, supplier);
     }
 }

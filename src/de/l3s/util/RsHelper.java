@@ -10,6 +10,10 @@ public final class RsHelper {
         return timestamp == null ? null : new Date(timestamp.getTime());
     }
 
+    public static Date getDate(java.sql.Date date) {
+        return date == null ? null : new Date(date.getTime());
+    }
+
     public static LocalDateTime getLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }
