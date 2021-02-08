@@ -23,8 +23,14 @@ import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.resource.CommentDao;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.TagDao;
+import de.l3s.learnweb.resource.archive.ArchiveUrlDao;
+import de.l3s.learnweb.resource.archive.WaybackUrlDao;
+import de.l3s.learnweb.resource.office.ResourceHistoryDao;
+import de.l3s.learnweb.resource.submission.SubmissionDao;
+import de.l3s.learnweb.resource.survey.SurveyDao;
 import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.MessageDao;
+import de.l3s.learnweb.user.OrganisationDao;
 import de.l3s.learnweb.user.UserDao;
 import de.l3s.learnweb.web.BanDao;
 import de.l3s.learnweb.web.RequestDao;
@@ -72,6 +78,12 @@ public class BeanProvider {
     private CommentDao commentDao;
     private TagDao tagDao;
     private LogDao logDao;
+    private OrganisationDao organisationDao;
+    private ResourceHistoryDao resourceHistoryDao;
+    private SubmissionDao submissionDao;
+    private SurveyDao surveyDao;
+    private ArchiveUrlDao archiveUrlDao;
+    private WaybackUrlDao waybackUrlDao;
 
     @Inject
     private ServletContext servletContext;
@@ -111,6 +123,12 @@ public class BeanProvider {
         commentDao = jdbi.onDemand(CommentDao.class);
         tagDao = jdbi.onDemand(TagDao.class);
         logDao = jdbi.onDemand(LogDao.class);
+        organisationDao = jdbi.onDemand(OrganisationDao.class);
+        resourceHistoryDao = jdbi.onDemand(ResourceHistoryDao.class);
+        submissionDao = jdbi.onDemand(SubmissionDao.class);
+        surveyDao = jdbi.onDemand(SurveyDao.class);
+        archiveUrlDao = jdbi.onDemand(ArchiveUrlDao.class);
+        waybackUrlDao = jdbi.onDemand(WaybackUrlDao.class);
     }
 
     private void migrateDatabase(DataSource dataSource) {
@@ -194,7 +212,37 @@ public class BeanProvider {
     }
 
     @Produces
-    public LogDao getUserLogDao() {
+    public LogDao getLogDao() {
         return logDao;
+    }
+
+    @Produces
+    public OrganisationDao getOrganisationDao() {
+        return organisationDao;
+    }
+
+    @Produces
+    public ResourceHistoryDao getResourceHistoryDao() {
+        return resourceHistoryDao;
+    }
+
+    @Produces
+    public SubmissionDao getSubmissionDao() {
+        return submissionDao;
+    }
+
+    @Produces
+    public SurveyDao getSurveyDao() {
+        return surveyDao;
+    }
+
+    @Produces
+    public ArchiveUrlDao getArchiveUrlDao() {
+        return archiveUrlDao;
+    }
+
+    @Produces
+    public WaybackUrlDao getWaybackUrlDao() {
+        return waybackUrlDao;
     }
 }

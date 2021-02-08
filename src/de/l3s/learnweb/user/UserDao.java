@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
@@ -40,7 +41,7 @@ public interface UserDao extends SqlObject {
             return user;
         }
 
-        return getHandle().select("SELECT * FROM `lw_user` WHERE user_id = ?", userId)
+        return getHandle().select("SELECT * FROM lw_user WHERE user_id = ?", userId)
             .map(new UserMapper()).findOne().orElse(null);
     }
 
@@ -68,22 +69,31 @@ public interface UserDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_user WHERE email = ?")
     List<User> findByEmail(String email);
 
-    @SqlQuery("SELECT * FROM `lw_user` WHERE deleted = 0 ORDER BY username")
+    @SqlQuery("SELECT * FROM lw_user WHERE deleted = 0 ORDER BY username")
     List<User> findAll();
 
-    @SqlQuery("SELECT * FROM `lw_user` WHERE organisation_id = ? AND deleted = 0 ORDER BY username")
+    @SqlQuery("SELECT * FROM lw_user WHERE organisation_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByOrganisationId(int organisationId);
 
-    @SqlQuery("SELECT u.* FROM `lw_user` u JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username")
+    @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByCourseId(int courseId);
 
-    @SqlQuery("SELECT u.* FROM `lw_user` u JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username")
+    @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByGroupId(int groupId);
 
-    @SqlQuery("SELECT * FROM `lw_user` JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY join_time LIMIT ?")
+    @SqlQuery("SELECT * FROM lw_user JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY join_time LIMIT ?")
     List<User> findByGroupIdLastJoined(int groupId, int limit);
 
-    @SqlQuery("SELECT timestamp FROM `lw_user_log` WHERE `user_id` = ? AND action = ? ORDER BY `timestamp` DESC LIMIT 1")
+    /**
+     * @return All users who have saved the survey at least once
+     */
+    @SqlQuery("SELECT * FROM lw_user WHERE user_id IN (SELECT DISTINCT user_id FROM lw_survey_answer WHERE resource_id = ?)")
+    List<User> findBySavedSurveyResourceId(int surveyResourceId);
+
+    @SqlQuery("SELECT * FROM lw_user WHERE user_id IN (SELECT user_id FROM lw_survey_resource_user WHERE resource_id = ? AND submitted = 1)")
+    List<User> findBySubmittedSurveyResourceId(int surveyResourceId);
+
+    @SqlQuery("SELECT timestamp FROM lw_user_log WHERE user_id = ? AND action = ? ORDER BY timestamp DESC LIMIT 1")
     Optional<Instant> findLastDateOfAction(int userId, int actionOrdinal);
 
     /**
@@ -93,16 +103,16 @@ public interface UserDao extends SqlObject {
         return findLastDateOfAction(userId, Action.login.ordinal());
     }
 
-    @SqlQuery("SELECT COUNT(*) FROM `lw_user` u JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0")
+    @SqlQuery("SELECT COUNT(*) FROM lw_user u JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0")
     int countByCourseId(int courseId);
 
     @SqlQuery("SELECT COUNT(*) FROM lw_user_course WHERE user_id = ?")
     int countCoursesByUserId(int userId);
 
-    @SqlUpdate("INSERT INTO lw_user_auth (`user_id`, `auth_id`, `token_hash`, `expires`) VALUES(?, ?, ?, ?)")
+    @SqlUpdate("INSERT INTO lw_user_auth (user_id, auth_id, token_hash, expires) VALUES(?, ?, ?, ?)")
     void insertAuth(User user, long authId, String token, long expiresIn);
 
-    @SqlUpdate("DELETE FROM lw_user_auth WHERE `auth_id` = ?")
+    @SqlUpdate("DELETE FROM lw_user_auth WHERE auth_id = ?")
     void deleteAuth(long authId);
 
     default Optional<User> findByAuthToken(long authId, String token) {
@@ -127,7 +137,7 @@ public interface UserDao extends SqlObject {
     @SqlQuery("SELECT token FROM lw_user_token WHERE type = 'grant' AND user_id = ?")
     Optional<String> findGrantToken(int userId);
 
-    @SqlUpdate("INSERT INTO lw_user_token (`user_id`, `type`, `token`) VALUES(?, 'grant', ?)")
+    @SqlUpdate("INSERT INTO lw_user_token (user_id, type, token) VALUES(?, 'grant', ?)")
     void insertGrantToken(int userId, String token);
 
     default String getGrantToken(Integer userId) throws SQLException {
@@ -156,7 +166,7 @@ public interface UserDao extends SqlObject {
             }
         }
 
-        getHandle().execute("DELETE FROM lw_group_user WHERE `user_id` = ?", user.getId());
+        getHandle().execute("DELETE FROM lw_group_user WHERE user_id = ?", user.getId());
 
         user.setDeleted(true);
         user.setEmailRaw(HashHelper.sha512(user.getEmail()));
@@ -176,7 +186,7 @@ public interface UserDao extends SqlObject {
             "lw_resource_history", "lw_submission_resource", "lw_submission_status", "lw_transcript_actions", "lw_transcript_summary"};
 
         for (String table : tables) {
-            int numRowsAffected = getHandle().execute("DELETE FROM " + table + " WHERE `user_id` = ?", user.getId());
+            int numRowsAffected = getHandle().execute("DELETE FROM " + table + " WHERE user_id = ?", user.getId());
             // if (numRowsAffected > 0) {
             //     log.debug("Deleted " + numRowsAffected + " rows from " + table);
             // }
@@ -193,8 +203,8 @@ public interface UserDao extends SqlObject {
             resource.deleteHard();
         }
 
-        getHandle().execute("DELETE FROM message WHERE `from_user` = ? OR `to_user` = ?", user.getId(), user.getId());
-        getHandle().execute("DELETE FROM lw_user WHERE `user_id` = ?", user.getId());
+        getHandle().execute("DELETE FROM message WHERE from_user = ? OR to_user = ?", user.getId(), user.getId());
+        getHandle().execute("DELETE FROM lw_user WHERE user_id = ?", user.getId());
     }
 
     default void save(User user) {
@@ -309,7 +319,7 @@ public interface UserDao extends SqlObject {
                         // re-create the object
                         preferences = (HashMap<String, String>) preferencesStream.readObject();
                     } catch (Exception e) {
-                        //log.error("Couldn't load preferences for user " + user.getId(), e);
+                        LogManager.getLogger(UserMapper.class).error("Couldn't load preferences for user {}", user.getId(), e);
                     }
                 }
                 if (preferences == null) {

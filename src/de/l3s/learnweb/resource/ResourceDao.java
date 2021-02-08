@@ -22,10 +22,12 @@ import org.jdbi.v3.sqlobject.config.ValueColumn;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
@@ -66,6 +68,9 @@ public interface ResourceDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_resource WHERE owner_user_id = ? AND deleted = 0")
     List<Resource> findByOwnerId(int userId);
 
+    @SqlQuery("SELECT * FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0")
+    List<Resource> findByTagId(int tagId);
+
     @SqlQuery("SELECT * FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0 LIMIT ?")
     List<Resource> findByTagId(int tagId, int limit);
 
@@ -73,7 +78,13 @@ public interface ResourceDao extends SqlObject {
     List<Resource> findRatedByUsedId(int userId);
 
     @SqlQuery("SELECT * FROM lw_resource r  WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?")
-    List<Resource> findByGroupIdAndFolderIdAndUserId(int groupId, int folderId, int userId, int limit);
+    List<Resource> findByGroupIdAndFolderIdAndOwnerId(int groupId, int folderId, int userId, int limit);
+
+    /**
+     * Retrieves submitted resources of a user for a particular submission.
+     */
+    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_submission_resource sr USING (resource_id) WHERE sr.submission_id = ? AND sr.user_id = ?")
+    List<Resource> findBySubmissionIdAndUserId(int submissionId, int userId);
 
     /**
      * Returns all survey resources that exists in the groups of the given course.
@@ -82,7 +93,7 @@ public interface ResourceDao extends SqlObject {
     List<Resource> findSurveysByCourseId(int courseId);
 
     @SqlQuery("SELECT * FROM lw_resource r WHERE owner_user_id IN (<userIds>) AND deleted = 0 AND type = :type")
-    List<Resource> findByUserIdAndType(@BindList("userIds") Collection<Integer> userIds, @Bind("type") ResourceType type);
+    List<Resource> findByOwnerIdsAndType(@BindList("userIds") Collection<Integer> userIds, @Bind("type") ResourceType type);
 
     @SqlQuery("SELECT COUNT(*) FROM lw_resource WHERE deleted = 0")
     int countUndeleted();
@@ -108,6 +119,18 @@ public interface ResourceDao extends SqlObject {
         getHandle().execute("INSERT INTO lw_resource_rating (`resource_id`, `user_id`, `rating`) VALUES(?, ?, ?)", resourceId, userId, value);
         getHandle().execute("UPDATE lw_resource SET rating = rating + ?, rate_number = rate_number + 1 WHERE resource_id = ?", value, resourceId);
     }
+
+    @SqlUpdate("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?) ON DUPLICATE KEY UPDATE allowed_languages = VALUES(allowed_languages)")
+    void insertGlossaryResource(int resourceId, String allowedLanguages);
+
+    @SqlUpdate("SELECT allowed_languages FROM `lw_glossary_resource` WHERE `resource_id` = ?")
+    Optional<String> findGlossaryResourceAllowedLanguages(int resourceId);
+
+    @SqlUpdate("INSERT INTO `lw_resource_tag` (`resource_id`, `tag_id`, `user_id`) VALUES (?, ?, ?)")
+    void insertTag(Resource resource, Tag tag, User user);
+
+    @SqlUpdate("DELETE FROM lw_resource_tag WHERE resource_id = ? AND tag_id = ?")
+    void deleteTag(Resource resource, Tag tag);
 
     default void save(Resource resource) throws SQLException {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
@@ -338,7 +361,7 @@ public interface ResourceDao extends SqlObject {
                             resource.setMetadata(metadata);
                         }
                     } catch (Exception e) {
-                        // log.error("Couldn't load metadata for resource " + resource.getId(), e);
+                        LogManager.getLogger(ResourceMapper.class).error("Couldn't load metadata for resource {}", resource.getId(), e);
                     }
                 }
 

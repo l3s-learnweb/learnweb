@@ -13,9 +13,9 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.util.RsHelper;
 
+@RegisterRowMapper(BanDao.BanMapper.class)
 public interface BanDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_bans")
-    @RegisterRowMapper(BanMapper.class)
     List<Ban> getBans();
 
     @SqlUpdate("DELETE FROM lw_bans WHERE name = ?")

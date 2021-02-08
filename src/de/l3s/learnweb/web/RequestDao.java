@@ -15,17 +15,15 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.util.RsHelper;
 
+@RegisterRowMapper(RequestDao.RequestMapper.class)
 public interface RequestDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_requests WHERE IP = ?")
-    @RegisterRowMapper(RequestMapper.class)
     List<Request> getRequests();
 
     @SqlQuery("SELECT * FROM lw_requests WHERE ip = ?")
-    @RegisterRowMapper(RequestMapper.class)
     List<Request> getRequestsByIp(String ip);
 
     @SqlQuery("SELECT * FROM lw_requests WHERE time >= ?")
-    @RegisterRowMapper(RequestMapper.class)
     List<Request> getRequestsAfterDate(LocalDateTime date);
 
     @SuppressWarnings("SqlWithoutWhere")
