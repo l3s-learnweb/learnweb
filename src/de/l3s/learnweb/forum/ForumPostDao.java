@@ -19,34 +19,32 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
+@RegisterRowMapper(ForumPostDao.ForumPostMapper.class)
 public interface ForumPostDao extends SqlObject {
 
     @SqlQuery("SELECT * FROM lw_forum_post WHERE post_id = ?")
-    @RegisterRowMapper(ForumPostDao.ForumPostMapper.class)
-    Optional<ForumPost> getPostById(int postId);
+    Optional<ForumPost> findById(int postId);
 
     @SqlQuery("SELECT * FROM lw_forum_post WHERE topic_id = ? ORDER BY post_time")
-    @RegisterRowMapper(ForumPostDao.ForumPostMapper.class)
-    List<ForumPost> getPostsByTopicId(int topicId);
+    List<ForumPost> findByTopicId(int topicId);
 
     @SqlQuery("SELECT * FROM lw_forum_post WHERE user_id = ? ORDER BY post_time DESC")
-    @RegisterRowMapper(ForumPostDao.ForumPostMapper.class)
-    List<ForumPost> getPostsByUserId(int userId);
+    List<ForumPost> findByUserId(int userId);
 
     @SqlQuery("SELECT COUNT(*) FROM lw_forum_post WHERE user_id = ?")
-    int getPostCountByUserId(int userId);
+    int countByUserId(int userId);
 
     @SqlQuery("SELECT p.user_id, COUNT(*) as count FROM lw_forum_post p JOIN lw_forum_topic t USING (topic_id) WHERE group_id = ? GROUP BY p.user_id")
     @KeyColumn("user_id")
     @ValueColumn("count")
-    Map<Integer, Integer> getPostsCountPerUserByGroupId(int groupId);
+    Map<Integer, Integer> countPerUserByGroupId(int groupId);
 
     @SqlUpdate("DELETE FROM lw_forum_post WHERE post_id = ?")
-    void deletePostById(int postId);
+    void delete(int postId);
 
     default void save(ForumPost post) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("post_id", post.getId() < 0 ? null : post.getId());
+        params.put("post_id", post.getId() < 1 ? null : post.getId());
         params.put("deleted", post.isDeleted());
         params.put("topic_id", post.getTopicId());
         params.put("user_id", post.getUserId());

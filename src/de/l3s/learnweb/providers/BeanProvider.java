@@ -17,6 +17,15 @@ import org.omnifaces.cdi.Eager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.forum.ForumPostDao;
 import de.l3s.learnweb.forum.ForumTopicDao;
+import de.l3s.learnweb.group.FolderDao;
+import de.l3s.learnweb.group.GroupDao;
+import de.l3s.learnweb.logging.LogDao;
+import de.l3s.learnweb.resource.CommentDao;
+import de.l3s.learnweb.resource.ResourceDao;
+import de.l3s.learnweb.resource.TagDao;
+import de.l3s.learnweb.user.CourseDao;
+import de.l3s.learnweb.user.MessageDao;
+import de.l3s.learnweb.user.UserDao;
 import de.l3s.learnweb.web.BanDao;
 import de.l3s.learnweb.web.RequestDao;
 
@@ -54,6 +63,15 @@ public class BeanProvider {
     private ForumTopicDao forumTopicDao;
     private RequestDao requestDao;
     private BanDao banDao;
+    private GroupDao groupDao;
+    private FolderDao folderDao;
+    private CourseDao courseDao;
+    private UserDao userDao;
+    private MessageDao messageDao;
+    private ResourceDao resourceDao;
+    private CommentDao commentDao;
+    private TagDao tagDao;
+    private LogDao logDao;
 
     @Inject
     private ServletContext servletContext;
@@ -72,6 +90,7 @@ public class BeanProvider {
             var servletContextName = servletContext.getServletContextName();
 
             learnweb = Learnweb.createInstance();
+            learnweb.setBeanProvider(this);
             migrateDatabase(learnweb.getDataSource());
         } catch (Exception e) {
             log.error("Application can't start", e);
@@ -83,6 +102,15 @@ public class BeanProvider {
         forumTopicDao = jdbi.onDemand(ForumTopicDao.class);
         requestDao = jdbi.onDemand(RequestDao.class);
         banDao = jdbi.onDemand(BanDao.class);
+        groupDao = jdbi.onDemand(GroupDao.class);
+        folderDao = jdbi.onDemand(FolderDao.class);
+        courseDao = jdbi.onDemand(CourseDao.class);
+        userDao = jdbi.onDemand(UserDao.class);
+        messageDao = jdbi.onDemand(MessageDao.class);
+        resourceDao = jdbi.onDemand(ResourceDao.class);
+        commentDao = jdbi.onDemand(CommentDao.class);
+        tagDao = jdbi.onDemand(TagDao.class);
+        logDao = jdbi.onDemand(LogDao.class);
     }
 
     private void migrateDatabase(DataSource dataSource) {
@@ -123,5 +151,50 @@ public class BeanProvider {
     @Produces
     public BanDao getBanDao() {
         return banDao;
+    }
+
+    @Produces
+    public GroupDao getGroupDao() {
+        return groupDao;
+    }
+
+    @Produces
+    public FolderDao getFolderDao() {
+        return folderDao;
+    }
+
+    @Produces
+    public CourseDao getCourseDao() {
+        return courseDao;
+    }
+
+    @Produces
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    @Produces
+    public MessageDao getMessageDao() {
+        return messageDao;
+    }
+
+    @Produces
+    public ResourceDao getResourceDao() {
+        return resourceDao;
+    }
+
+    @Produces
+    public CommentDao getCommentDao() {
+        return commentDao;
+    }
+
+    @Produces
+    public TagDao getTagDao() {
+        return tagDao;
+    }
+
+    @Produces
+    public LogDao getUserLogDao() {
+        return logDao;
     }
 }

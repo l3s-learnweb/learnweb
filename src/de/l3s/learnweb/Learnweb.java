@@ -84,6 +84,7 @@ public final class Learnweb {
     private final TrackerDashboardManager trackerDashboardManager;
 
     private final InterWeb interweb;
+    private BeanProvider beanProvider;
 
     private PropertiesBundle properties;
     private Connection dbConnection;
@@ -282,6 +283,14 @@ public final class Learnweb {
         return interweb;
     }
 
+    public BeanProvider getBeanProvider() {
+        return beanProvider;
+    }
+
+    public void setBeanProvider(final BeanProvider beanProvider) {
+        this.beanProvider = beanProvider;
+    }
+
     public PropertiesBundle getProperties() {
         return properties;
     }
@@ -427,6 +436,10 @@ public final class Learnweb {
      */
     public static Optional<Learnweb> getInstanceOptional() {
         return Optional.ofNullable(learnweb);
+    }
+
+    public static BeanProvider dao() {
+        return getInstance().getBeanProvider();
     }
 
     /**

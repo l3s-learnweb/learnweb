@@ -29,6 +29,7 @@ import de.l3s.util.HashHelper;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
 
+@RegisterRowMapper(UserDao.UserMapper.class)
 public interface UserDao extends SqlObject {
     int FIELDS = 1; // number of options_fieldX fields, increase if User.Options has more than 64 values
     ICache<User> cache = Cache.of(User.class);
@@ -44,11 +45,9 @@ public interface UserDao extends SqlObject {
     }
 
     @SqlQuery("SELECT * FROM lw_user WHERE username = ?")
-    @RegisterRowMapper(UserMapper.class)
     Optional<User> findByUsername(String username);
 
     @SqlQuery("SELECT * FROM lw_user WHERE email = ? AND email_confirmation_token = ?")
-    @RegisterRowMapper(UserMapper.class)
     Optional<User> findByEmailConfirmationToken(String email, String confirmationToken);
 
     default Optional<User> findByUsernameAndPassword(String username, String password) {
@@ -67,27 +66,21 @@ public interface UserDao extends SqlObject {
     }
 
     @SqlQuery("SELECT * FROM lw_user WHERE email = ?")
-    @RegisterRowMapper(UserMapper.class)
     List<User> findByEmail(String email);
 
     @SqlQuery("SELECT * FROM `lw_user` WHERE deleted = 0 ORDER BY username")
-    @RegisterRowMapper(UserMapper.class)
     List<User> findAll();
 
     @SqlQuery("SELECT * FROM `lw_user` WHERE organisation_id = ? AND deleted = 0 ORDER BY username")
-    @RegisterRowMapper(UserMapper.class)
     List<User> findByOrganisationId(int organisationId);
 
     @SqlQuery("SELECT u.* FROM `lw_user` u JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username")
-    @RegisterRowMapper(UserMapper.class)
     List<User> findByCourseId(int courseId);
 
     @SqlQuery("SELECT u.* FROM `lw_user` u JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username")
-    @RegisterRowMapper(UserMapper.class)
     List<User> findByGroupId(int groupId);
 
     @SqlQuery("SELECT * FROM `lw_user` JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY join_time LIMIT ?")
-    @RegisterRowMapper(UserMapper.class)
     List<User> findByGroupIdLastJoined(int groupId, int limit);
 
     @SqlQuery("SELECT timestamp FROM `lw_user_log` WHERE `user_id` = ? AND action = ? ORDER BY `timestamp` DESC LIMIT 1")
@@ -129,7 +122,6 @@ public interface UserDao extends SqlObject {
     }
 
     @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_user_token t USING(user_id) WHERE t.type = 'grant' AND t.token = ?")
-    @RegisterRowMapper(UserMapper.class)
     Optional<User> findByGrantToken(String token);
 
     @SqlQuery("SELECT token FROM lw_user_token WHERE type = 'grant' AND user_id = ?")
@@ -215,7 +207,7 @@ public interface UserDao extends SqlObject {
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("user_id", user.getId() < 0 ? null : user.getId());
+        params.put("user_id", user.getId() < 1 ? null : user.getId());
         params.put("username", user.getUsername());
         params.put("email", user.getEmail());
         params.put("email_confirmation_token", user.getEmailConfirmationToken());

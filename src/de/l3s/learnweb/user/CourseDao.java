@@ -21,6 +21,7 @@ import de.l3s.util.Cache;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
 
+@RegisterRowMapper(CourseDao.CourseMapper.class)
 public interface CourseDao extends SqlObject {
     int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
     ICache<Course> cache = Cache.of(Course.class);
@@ -39,19 +40,15 @@ public interface CourseDao extends SqlObject {
      * Returns the course with the specified wizard parameter.
      */
     @SqlQuery("SELECT * FROM lw_course WHERE wizard_param = ? ORDER BY title")
-    @RegisterRowMapper(CourseMapper.class)
     Optional<Course> findByWizard(String wizard);
 
     @SqlQuery("SELECT * FROM lw_course ORDER BY title")
-    @RegisterRowMapper(CourseMapper.class)
     List<Course> findAll();
 
     @SqlQuery("SELECT * FROM lw_course WHERE organisation_id = ? ORDER BY title")
-    @RegisterRowMapper(CourseMapper.class)
     List<Course> findByOrganisationId(int organisationId);
 
     @SqlQuery("SELECT c.* FROM lw_course c JOIN lw_user_course uc USING (course_id) WHERE uc.user_id = ? ORDER BY c.title")
-    @RegisterRowMapper(CourseMapper.class)
     List<Course> findByUserId(int userId);
 
     /**
@@ -65,7 +62,7 @@ public interface CourseDao extends SqlObject {
 
     default void save(Course course) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("course_id", course.getId() < 0 ? null : course.getId());
+        params.put("course_id", course.getId() < 1 ? null : course.getId());
         params.put("title", course.getTitle());
         params.put("organisation_id", course.getOrganisationId());
         params.put("default_group_id", course.getDefaultGroupId());

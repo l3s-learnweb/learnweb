@@ -3,6 +3,9 @@ package de.l3s.learnweb.resource;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,6 +33,8 @@ import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserDao;
+import de.l3s.util.Expirable;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
@@ -113,6 +118,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private transient String prettyPath;
     private transient MetadataMapWrapper metadataWrapper; // includes static fields like title, description and author into the map
     private transient MetadataMultiValueMapWrapper metadataMultiValue;
+    private transient Expirable<List<LogEntry>> logs;
 
     /**
      * Do nothing constructor.
@@ -1382,7 +1388,20 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public List<LogEntry> getLogs() throws SQLException {
-        return Learnweb.getInstance().getLogManager().getLogsByResource(this);
+        if (logs == null) {
+            logs = new Expirable<>(Duration.of(10, ChronoUnit.SECONDS), () -> {
+                Instant start = Instant.now();
+                List<LogEntry> logs = Learnweb.dao().getUserLogDao().findByGroupIdAndTargetId(this.getGroupId(), this.getId(), Action.collectOrdinals(Action.LOGS_RESOURCE_FILTER));
+
+                long duration = Duration.between(start, Instant.now()).toMillis();
+                if (duration > 100) {
+                    log.warn("getLogs took {}ms; resourceId: {};", duration, id);
+                }
+                return logs;
+            });
+        }
+
+        return logs.get();
     }
 
     /**

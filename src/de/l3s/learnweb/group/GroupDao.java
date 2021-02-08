@@ -27,6 +27,8 @@ import de.l3s.util.ICache;
 import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
+@RegisterRowMapper(GroupDao.GroupMapper.class)
+@RegisterRowMapper(GroupDao.GroupUserMapper.class)
 public interface GroupDao extends SqlObject {
     ICache<Group> cache = Cache.of(Group.class);
 
@@ -40,54 +42,46 @@ public interface GroupDao extends SqlObject {
     }
 
     @SqlQuery("SELECT * FROM lw_group")
-    @RegisterRowMapper(GroupMapper.class)
     List<Group> findAll();
 
     /**
      * Returns a list of all Groups a user belongs to.
      */
-    @SqlQuery("SELECT * FROM `lw_group` g JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title")
-    @RegisterRowMapper(GroupMapper.class)
+    @SqlQuery("SELECT g.* FROM `lw_group` g JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title")
     List<Group> findByUserId(int userid);
 
     /**
      * Returns a list of all Groups which belong to the defined course.
      */
     @SqlQuery("SELECT * FROM `lw_group` g  WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title")
-    @RegisterRowMapper(GroupMapper.class)
     List<Group> findByCourseId(int courseId);
 
     /**
      * Returns a list of all Groups a user belongs to and which groups are also part of the defined course.
      */
-    @SqlQuery("SELECT * FROM `lw_group` g JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title")
-    @RegisterRowMapper(GroupMapper.class)
+    @SqlQuery("SELECT g.* FROM `lw_group` g JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title")
     List<Group> findByUserIdAndCourseId(int userid, int courseId);
 
     /**
      * Returns a list of Groups which belong to the defined courses and were created after the specified date.
      */
     @SqlQuery("SELECT * FROM `lw_group` g WHERE g.course_id IN(<courseIds>) AND g.deleted = 0 AND `creation_time` > :time ORDER BY title")
-    @RegisterRowMapper(GroupMapper.class)
     List<Group> findByCourseIds(@BindList("courseIds") Collection<Integer> courseIds, @Bind("time") Instant newerThan);
 
 
-    @SqlQuery("SELECT * FROM `lw_group` g JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0")
-    @RegisterRowMapper(GroupMapper.class)
+    @SqlQuery("SELECT g.* FROM `lw_group` g JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0")
     Optional<Group> findByTitleAndOrganisationId(String title, int organisationId);
 
     /**
      * Returns a group by user with notification frequency.
      */
     @SqlQuery("SELECT group_id, notification_frequency FROM lw_group_user WHERE group_id = ? AND user_id = ?")
-    @RegisterRowMapper(GroupUserMapper.class)
     Optional<GroupUser> findGroupUserRelation(Group group, User user);
 
     /**
      * Returns a list of all Groups a user belongs to with associated metadata like notification frequency.
      */
     @SqlQuery("SELECT group_id, notification_frequency FROM lw_group_user WHERE user_id = ?")
-    @RegisterRowMapper(GroupUserMapper.class)
     List<GroupUser> findGroupUserRelations(int userId);
 
     /**
@@ -181,7 +175,7 @@ public interface GroupDao extends SqlObject {
 
     default void save(Group group) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("group_id", group.getId() < 0 ? null : group.getId());
+        params.put("group_id", group.getId() < 1 ? null : group.getId());
         params.put("title", group.getTitle());
         params.put("description", group.getDescription());
         params.put("course_id", group.getCourseId());

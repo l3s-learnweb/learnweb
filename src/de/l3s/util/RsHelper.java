@@ -14,6 +14,10 @@ public final class RsHelper {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }
 
+    public static LocalDate getLocalDate(Timestamp timestamp) {
+        return timestamp == null ? null : timestamp.toLocalDateTime().toLocalDate();
+    }
+
     public static LocalDate getLocalDate(java.sql.Date date) {
         return date == null ? null : date.toLocalDate();
     }

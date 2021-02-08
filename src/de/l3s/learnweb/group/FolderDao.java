@@ -18,6 +18,7 @@ import de.l3s.util.Cache;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
 
+@RegisterRowMapper(FolderDao.FolderMapper.class)
 public interface FolderDao extends SqlObject {
     ICache<Folder> cache = Cache.of(Folder.class);
 
@@ -32,11 +33,9 @@ public interface FolderDao extends SqlObject {
     }
 
     @SqlQuery("SELECT * FROM lw_group_folder f WHERE deleted = 0 AND group_id = ? AND parent_folder_id = ?")
-    @RegisterRowMapper(FolderMapper.class)
     List<Folder> findByGroupIdAndParentFolderId(int groupId, int folderId);
 
     @SqlQuery("SELECT * FROM lw_group_folder f WHERE deleted = 0 AND group_id = ? AND parent_folder_id = ? AND user_id = ?")
-    @RegisterRowMapper(FolderMapper.class)
     List<Folder> findByGroupIdAndParentFolderIdAndUserId(int groupId, int folderId, int userId);
 
     @SqlUpdate("UPDATE lw_group_folder SET deleted = 1 WHERE folder_id = ?")
@@ -44,7 +43,7 @@ public interface FolderDao extends SqlObject {
 
     default void save(Folder folder) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("folder_id", folder.getId() < 0 ? null : folder.getId());
+        params.put("folder_id", folder.getId() < 1 ? null : folder.getId());
         params.put("group_id", folder.getGroupId());
         params.put("parent_folder_id", folder.getParentFolderId());
         params.put("name", folder.getTitle());

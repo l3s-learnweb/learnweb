@@ -16,25 +16,23 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
+@RegisterRowMapper(AnnouncementDao.AnnouncementMapper.class)
 public interface AnnouncementDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_news WHERE news_id = ?")
-    @RegisterRowMapper(AnnouncementMapper.class)
     Optional<Announcement> findById(int newsId);
 
     @SqlQuery("SELECT * FROM lw_news ORDER BY created_at DESC")
-    @RegisterRowMapper(AnnouncementMapper.class)
-    List<Announcement> listAll();
+    List<Announcement> findAll();
 
     @SqlQuery("SELECT * FROM lw_news WHERE hidden = false ORDER BY created_at DESC LIMIT ?")
-    @RegisterRowMapper(AnnouncementMapper.class)
-    List<Announcement> listLast(int limit);
+    List<Announcement> findLastCreated(int limit);
 
     @SqlUpdate("DELETE FROM `lw_news` WHERE news_id = ?")
     void delete(int newsId);
 
     default void save(Announcement announcement) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("news_id", announcement.getId() < 0 ? null : announcement.getId());
+        params.put("news_id", announcement.getId() < 1 ? null : announcement.getId());
         params.put("title", announcement.getTitle());
         params.put("message", announcement.getText());
         params.put("user_id", announcement.getUserId());

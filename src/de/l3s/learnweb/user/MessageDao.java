@@ -16,21 +16,18 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
+@RegisterRowMapper(MessageDao.MessageMapper.class)
 public interface MessageDao extends SqlObject {
     @SqlQuery("SELECT * FROM `message` g WHERE message_id = ?")
-    @RegisterRowMapper(MessageMapper.class)
     Message findById(int messageId);
 
     @SqlQuery("SELECT * FROM `message` WHERE from_user = ? order by m_time desc")
-    @RegisterRowMapper(MessageMapper.class)
     List<Message> findOutgoing(User user);
 
     @SqlQuery("SELECT * FROM `message` WHERE to_user = ? order by m_time desc")
-    @RegisterRowMapper(MessageMapper.class)
     List<Message> findIncoming(User user);
 
     @SqlQuery("SELECT * FROM `message` WHERE to_user = ? order by m_time desc limit ?")
-    @RegisterRowMapper(MessageMapper.class)
     List<Message> findIncoming(User user, int limit);
 
     @SqlUpdate("UPDATE message SET m_seen = 1 where message_id = ?")
@@ -50,7 +47,7 @@ public interface MessageDao extends SqlObject {
 
     default void save(Message message) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("message_id", message.getId() < 0 ? null : message.getId());
+        params.put("message_id", message.getId() < 1 ? null : message.getId());
         params.put("from_user", message.getFromUserId());
         params.put("to_user", message.getToUserId());
         params.put("m_title", message.getTitle());

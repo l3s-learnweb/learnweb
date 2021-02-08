@@ -22,17 +22,15 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
+@RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
 public interface ForumTopicDao extends SqlObject {
 
     @SqlQuery("SELECT * FROM lw_forum_topic WHERE topic_id = ?")
-    @RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
-    Optional<ForumTopic> getTopicById(int topicId);
+    Optional<ForumTopic> findById(int topicId);
 
     @SqlQuery("SELECT * FROM lw_forum_topic WHERE group_id = ? ORDER BY topic_last_post_time DESC")
-    @RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
-    List<ForumTopic> getTopicsByGroupId(int groupId);
+    List<ForumTopic> findByGroupId(int groupId);
 
-    @RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
     default Map<Integer, List<ForumTopic>> findByNotificationFrequencies(List<User.NotificationFrequency> notificationFrequencies) {
         return getHandle().createQuery("SELECT gu.user_id as notification_user_id, ft.* "
             + "FROM lw_group_user gu JOIN lw_forum_topic ft USING(group_id) LEFT JOIN lw_forum_topic_user ftu ON gu.user_id = ftu.user_id AND ft.topic_id = ftu.topic_id "
@@ -49,20 +47,20 @@ public interface ForumTopicDao extends SqlObject {
     }
 
     @SqlUpdate("UPDATE lw_forum_topic SET topic_views = topic_views + 1 WHERE topic_id = ?")
-    void increaseViews(int topicId);
+    void updateIncreaseViews(int topicId);
 
     @SqlUpdate("UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = :postId, topic_last_post_time = :time, topic_last_post_user_id = :userId WHERE topic_id = :topicId AND topic_views > 0")
-    void increaseReplies(@Bind("topicId") int topicId, @Bind("postId") int postId, @Bind("userId") int userId, @Bind("time") Date date);
+    void updateIncreaseReplies(@Bind("topicId") int topicId, @Bind("postId") int postId, @Bind("userId") int userId, @Bind("time") Date date);
 
     @SqlUpdate("DELETE FROM lw_forum_topic WHERE topic_id = ?")
-    void deleteTopicById(int topicId);
+    void delete(int topicId);
 
     @SqlUpdate("INSERT INTO lw_forum_topic_user (topic_id, user_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_visit = NOW();")
-    void registerUserVisit(int topicId, int userId);
+    void insertUserVisit(int topicId, int userId);
 
     default void save(ForumTopic topic) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("topic_id", topic.getId() < 0 ? null : topic.getId());
+        params.put("topic_id", topic.getId() < 1 ? null : topic.getId());
         params.put("group_id", topic.getGroupId());
         params.put("deleted", topic.isDeleted());
         params.put("topic_title", topic.getTitle());
