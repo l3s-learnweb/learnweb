@@ -3,14 +3,19 @@ package de.l3s.learnweb.logging;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
+import org.jdbi.v3.sqlobject.config.KeyColumn;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.config.ValueColumn;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.customizer.BindMethods;
 import org.jdbi.v3.sqlobject.customizer.DefineList;
 import org.jdbi.v3.sqlobject.statement.SqlBatch;
@@ -55,6 +60,16 @@ public interface LogDao extends SqlObject {
      */
     @SqlQuery("SELECT * FROM lw_user_log WHERE group_id IN(<groupIds>) AND action IN(<actionIds>) AND user_id != 0 AND user_id != :userId ORDER BY timestamp DESC LIMIT :limit")
     List<LogEntry> findByUsersGroupIds(@Bind("userId") int userId, @DefineList("groupId") List<Integer> groupIds, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
+
+    @SqlQuery("SELECT action, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN ? AND ? GROUP BY action")
+    @KeyColumn("action")
+    @ValueColumn("count")
+    Map<Integer, Integer> countUsagePerAction(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+
+    @SqlQuery("SELECT DATE(timestamp) AS day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN ? AND ? GROUP BY day")
+    @KeyColumn("day")
+    @ValueColumn("count")
+    Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
 
     /**
      * Logs a user action. The parameters "targetId" and "params" depend on the logged action.

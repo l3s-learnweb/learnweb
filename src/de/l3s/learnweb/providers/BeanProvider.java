@@ -14,6 +14,7 @@ import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
 import org.omnifaces.cdi.Eager;
 
+import de.l3s.learnweb.AnnouncementDao;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.forum.ForumPostDao;
 import de.l3s.learnweb.forum.ForumTopicDao;
@@ -21,13 +22,18 @@ import de.l3s.learnweb.group.FolderDao;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.resource.CommentDao;
+import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.TagDao;
 import de.l3s.learnweb.resource.archive.ArchiveUrlDao;
 import de.l3s.learnweb.resource.archive.WaybackUrlDao;
+import de.l3s.learnweb.resource.glossary.GlossaryEntryDao;
+import de.l3s.learnweb.resource.glossary.GlossaryTermDao;
 import de.l3s.learnweb.resource.office.ResourceHistoryDao;
 import de.l3s.learnweb.resource.submission.SubmissionDao;
 import de.l3s.learnweb.resource.survey.SurveyDao;
+import de.l3s.learnweb.resource.ted.TedTranscriptDao;
+import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.MessageDao;
 import de.l3s.learnweb.user.OrganisationDao;
@@ -65,24 +71,30 @@ public class BeanProvider {
     private Learnweb learnweb;
     private Jdbi jdbi;
 
+    private AnnouncementDao announcementDao;
+    private ArchiveUrlDao archiveUrlDao;
+    private BanDao banDao;
+    private CommentDao commentDao;
+    private CourseDao courseDao;
+    private FileDao fileDao;
+    private FolderDao folderDao;
     private ForumPostDao forumPostDao;
     private ForumTopicDao forumTopicDao;
-    private RequestDao requestDao;
-    private BanDao banDao;
+    private GlossaryEntryDao glossaryEntryDao;
+    private GlossaryTermDao glossaryTermDao;
     private GroupDao groupDao;
-    private FolderDao folderDao;
-    private CourseDao courseDao;
-    private UserDao userDao;
-    private MessageDao messageDao;
-    private ResourceDao resourceDao;
-    private CommentDao commentDao;
-    private TagDao tagDao;
     private LogDao logDao;
+    private MessageDao messageDao;
     private OrganisationDao organisationDao;
+    private RequestDao requestDao;
+    private ResourceDao resourceDao;
     private ResourceHistoryDao resourceHistoryDao;
+    private SearchHistoryDao searchHistoryDao;
     private SubmissionDao submissionDao;
     private SurveyDao surveyDao;
-    private ArchiveUrlDao archiveUrlDao;
+    private TagDao tagDao;
+    private TedTranscriptDao tedTranscriptDao;
+    private UserDao userDao;
     private WaybackUrlDao waybackUrlDao;
 
     @Inject
@@ -110,24 +122,30 @@ public class BeanProvider {
         }
 
         jdbi = learnweb.getJdbi();
+        announcementDao = jdbi.onDemand(AnnouncementDao.class);
+        archiveUrlDao = jdbi.onDemand(ArchiveUrlDao.class);
+        banDao = jdbi.onDemand(BanDao.class);
+        commentDao = jdbi.onDemand(CommentDao.class);
+        courseDao = jdbi.onDemand(CourseDao.class);
+        fileDao = jdbi.onDemand(FileDao.class);
+        folderDao = jdbi.onDemand(FolderDao.class);
         forumPostDao = jdbi.onDemand(ForumPostDao.class);
         forumTopicDao = jdbi.onDemand(ForumTopicDao.class);
-        requestDao = jdbi.onDemand(RequestDao.class);
-        banDao = jdbi.onDemand(BanDao.class);
+        glossaryEntryDao = jdbi.onDemand(GlossaryEntryDao.class);
+        glossaryTermDao = jdbi.onDemand(GlossaryTermDao.class);
         groupDao = jdbi.onDemand(GroupDao.class);
-        folderDao = jdbi.onDemand(FolderDao.class);
-        courseDao = jdbi.onDemand(CourseDao.class);
-        userDao = jdbi.onDemand(UserDao.class);
-        messageDao = jdbi.onDemand(MessageDao.class);
-        resourceDao = jdbi.onDemand(ResourceDao.class);
-        commentDao = jdbi.onDemand(CommentDao.class);
-        tagDao = jdbi.onDemand(TagDao.class);
         logDao = jdbi.onDemand(LogDao.class);
+        messageDao = jdbi.onDemand(MessageDao.class);
         organisationDao = jdbi.onDemand(OrganisationDao.class);
+        requestDao = jdbi.onDemand(RequestDao.class);
+        resourceDao = jdbi.onDemand(ResourceDao.class);
         resourceHistoryDao = jdbi.onDemand(ResourceHistoryDao.class);
+        searchHistoryDao = jdbi.onDemand(SearchHistoryDao.class);
         submissionDao = jdbi.onDemand(SubmissionDao.class);
         surveyDao = jdbi.onDemand(SurveyDao.class);
-        archiveUrlDao = jdbi.onDemand(ArchiveUrlDao.class);
+        tagDao = jdbi.onDemand(TagDao.class);
+        tedTranscriptDao = jdbi.onDemand(TedTranscriptDao.class);
+        userDao = jdbi.onDemand(UserDao.class);
         waybackUrlDao = jdbi.onDemand(WaybackUrlDao.class);
     }
 
@@ -142,13 +160,38 @@ public class BeanProvider {
     }
 
     @Produces
-    public Learnweb getLearnweb() {
-        return learnweb;
+    public AnnouncementDao getAnnouncementDao() {
+        return announcementDao;
     }
 
     @Produces
-    public Jdbi getJdbi() {
-        return jdbi;
+    public ArchiveUrlDao getArchiveUrlDao() {
+        return archiveUrlDao;
+    }
+
+    @Produces
+    public BanDao getBanDao() {
+        return banDao;
+    }
+
+    @Produces
+    public CommentDao getCommentDao() {
+        return commentDao;
+    }
+
+    @Produces
+    public CourseDao getCourseDao() {
+        return courseDao;
+    }
+
+    @Produces
+    public FileDao getFileDao() {
+        return fileDao;
+    }
+
+    @Produces
+    public FolderDao getFolderDao() {
+        return folderDao;
     }
 
     @Produces
@@ -162,13 +205,13 @@ public class BeanProvider {
     }
 
     @Produces
-    public RequestDao getRequestDao() {
-        return requestDao;
+    public GlossaryEntryDao getGlossaryEntryDao() {
+        return glossaryEntryDao;
     }
 
     @Produces
-    public BanDao getBanDao() {
-        return banDao;
+    public GlossaryTermDao getGlossaryTermDao() {
+        return glossaryTermDao;
     }
 
     @Produces
@@ -177,38 +220,13 @@ public class BeanProvider {
     }
 
     @Produces
-    public FolderDao getFolderDao() {
-        return folderDao;
+    public Jdbi getJdbi() {
+        return jdbi;
     }
 
     @Produces
-    public CourseDao getCourseDao() {
-        return courseDao;
-    }
-
-    @Produces
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    @Produces
-    public MessageDao getMessageDao() {
-        return messageDao;
-    }
-
-    @Produces
-    public ResourceDao getResourceDao() {
-        return resourceDao;
-    }
-
-    @Produces
-    public CommentDao getCommentDao() {
-        return commentDao;
-    }
-
-    @Produces
-    public TagDao getTagDao() {
-        return tagDao;
+    public Learnweb getLearnweb() {
+        return learnweb;
     }
 
     @Produces
@@ -217,13 +235,33 @@ public class BeanProvider {
     }
 
     @Produces
+    public MessageDao getMessageDao() {
+        return messageDao;
+    }
+
+    @Produces
     public OrganisationDao getOrganisationDao() {
         return organisationDao;
     }
 
     @Produces
+    public RequestDao getRequestDao() {
+        return requestDao;
+    }
+
+    @Produces
+    public ResourceDao getResourceDao() {
+        return resourceDao;
+    }
+
+    @Produces
     public ResourceHistoryDao getResourceHistoryDao() {
         return resourceHistoryDao;
+    }
+
+    @Produces
+    public SearchHistoryDao getSearchHistoryDao() {
+        return searchHistoryDao;
     }
 
     @Produces
@@ -237,8 +275,18 @@ public class BeanProvider {
     }
 
     @Produces
-    public ArchiveUrlDao getArchiveUrlDao() {
-        return archiveUrlDao;
+    public TagDao getTagDao() {
+        return tagDao;
+    }
+
+    @Produces
+    public TedTranscriptDao getTedTranscriptDao() {
+        return tedTranscriptDao;
+    }
+
+    @Produces
+    public UserDao getUserDao() {
+        return userDao;
     }
 
     @Produces

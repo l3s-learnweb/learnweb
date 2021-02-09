@@ -162,11 +162,8 @@ public interface GroupDao extends SqlObject {
         }
 
         List<User> members = group.getMembers();
-        String[] tables = {"lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_user_log", "lw_group"};
-        for (String table : tables) {
-            int numRowsAffected = getHandle().execute("DELETE FROM " + table + " WHERE `group_id` = ?", group.getId());
-            // log.debug("Deleted " + numRowsAffected + " rows from " + table);
-        }
+
+        getHandle().execute("DELETE FROM lw_group WHERE `group_id` = ?", group.getId());
         getHandle().execute("UPDATE lw_course SET default_group_id = 0 WHERE default_group_id = ?", group.getId());
 
         members.forEach(User::clearCaches);

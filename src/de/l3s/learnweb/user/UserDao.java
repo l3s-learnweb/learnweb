@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -181,29 +182,13 @@ public interface UserDao extends SqlObject {
         //     log.info("Delete user ");
         // }
 
-        String[] tables = {"lw_group_user", "lw_user_log", "lw_user_course", "lw_comment", "lw_resource_rating", "lw_resource_tag",
-            "lw_thumb", "lw_survey_answer", "lw_survey_resource_user", "lw_glossary_entry", "lw_glossary_term", "lw_news",
-            "lw_resource_history", "lw_submission_resource", "lw_submission_status", "lw_transcript_actions", "lw_transcript_summary"};
-
-        for (String table : tables) {
-            int numRowsAffected = getHandle().execute("DELETE FROM " + table + " WHERE user_id = ?", user.getId());
-            // if (numRowsAffected > 0) {
-            //     log.debug("Deleted " + numRowsAffected + " rows from " + table);
-            // }
-        }
-
         // TODO @kemkes: how to handle lw_forum_post.post_edit_user_id
-
-        /*
-         TODO @kemkes: how to handle topics. We can not just delete them
-         * topic_last_post_user_id
-        */
+        // TODO @kemkes: how to handle topics. We can not just delete them topic_last_post_user_id
 
         for (Resource resource : user.getResources()) {
             resource.deleteHard();
         }
 
-        getHandle().execute("DELETE FROM message WHERE from_user = ? OR to_user = ?", user.getId(), user.getId());
         getHandle().execute("DELETE FROM lw_user WHERE user_id = ?", user.getId());
     }
 
@@ -236,7 +221,7 @@ public interface UserDao extends SqlObject {
         params.put("registration_date", user.getRegistrationDate());
         params.put("password", user.getPassword());
         params.put("hashing", user.getHashing().name());
-        params.put("preferences", SqlHelper.serializeObject(user.getPreferences()));
+        params.put("preferences", SerializationUtils.serialize(user.getPreferences()));
         params.put("credits", user.getCredits());
         params.put("fullname", user.getFullName());
         params.put("affiliation", user.getAffiliation());

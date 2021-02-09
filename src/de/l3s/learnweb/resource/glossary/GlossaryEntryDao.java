@@ -2,6 +2,8 @@ package de.l3s.learnweb.resource.glossary;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +14,14 @@ import org.jdbi.v3.core.result.LinkedHashMapRowReducer;
 import org.jdbi.v3.core.result.RowView;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
+import org.jdbi.v3.sqlobject.config.KeyColumn;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.config.ValueColumn;
+import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.UseRowReducer;
 
+import de.l3s.learnweb.dashboard.glossary.GlossaryDescriptionSummary;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(GlossaryEntryDao.GlossaryEntryMapper.class)
@@ -33,7 +39,25 @@ public interface GlossaryEntryDao extends SqlObject {
         getHandle().execute("UPDATE lw_glossary_term SET deleted = 1, last_changed_by_user_id = ? WHERE entry_id = ?", deletedByUserId, entryId);
     }
 
+    @SqlQuery("SELECT COUNT(distinct ge.entry_id) FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) "
+        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ?")
+    int countTotalEntries(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+
+    @SqlQuery("SELECT u.username, count(*) AS count FROM lw_resource r JOIN lw_user u ON u.user_id = r.owner_user_id JOIN lw_glossary_entry ge USING (resource_id) "
+        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ? GROUP BY u.username ORDER BY username")
+    @KeyColumn("username")
+    @ValueColumn("count")
+    Map<String, Integer> countEntriesPerUser(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+
+    @RegisterRowMapper(GlossaryDescriptionSummaryMapper.class)
+    @SqlQuery("SELECT entry_id, resource_id, user_id, description, description_pasted FROM lw_glossary_entry WHERE deleted != 1 AND user_id IN(<userIds>) AND timestamp BETWEEN ? AND ?")
+    List<GlossaryDescriptionSummary> countGlossaryDescriptionSummary(Collection<Integer> userIds, Date startDate, Date endDate);
+
     default void save(GlossaryEntry entry) {
+        if (entry.getUserId() <= 0) {
+            entry.setUserId(entry.getLastChangedByUserId()); // last change by userID == original user ID in insert
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("entry_id", entry.getId() < 1 ? null : entry.getId());
         params.put("resource_id", entry.getResourceId());
@@ -80,6 +104,19 @@ public interface GlossaryEntryDao extends SqlObject {
             if (rowView.getColumn("term_id", Integer.class) != null) {
                 entry.getTerms().add(rowView.getRow(GlossaryTerm.class));
             }
+        }
+    }
+
+    class GlossaryDescriptionSummaryMapper implements RowMapper<GlossaryDescriptionSummary> {
+        @Override
+        public GlossaryDescriptionSummary map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            GlossaryDescriptionSummary result = new GlossaryDescriptionSummary();
+            result.setEntryId(rs.getInt("entry_id"));
+            result.setResourceId(rs.getInt("resource_id"));
+            result.setUserId(rs.getInt("user_id"));
+            result.setDescription(rs.getString("description"));
+            result.setDescriptionPasted(rs.getBoolean("description_pasted"));
+            return result;
         }
     }
 }

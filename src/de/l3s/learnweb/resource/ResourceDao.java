@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +13,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
+import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.KeyColumn;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
@@ -36,6 +40,9 @@ import de.l3s.util.SqlHelper;
 public interface ResourceDao extends SqlObject {
     boolean reindexMode = false; // if this flag is true some performance optimizations for reindexing all resources are enabled
     ICache<Resource> cache = Cache.of(Resource.class);
+
+    @CreateSqlObject
+    FileDao getFileDao();
 
     default Resource findById(int resourceId) {
         Resource resource = cache.get(resourceId);
@@ -73,6 +80,9 @@ public interface ResourceDao extends SqlObject {
 
     @SqlQuery("SELECT * FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0 LIMIT ?")
     List<Resource> findByTagId(int tagId, int limit);
+
+    @SqlQuery("SELECT * FROM lw_resource WHERE url = ? AND deleted = 0 LIMIT 1")
+    Optional<Resource> findByUrl(String url);
 
     @SqlQuery("SELECT * FROM lw_resource r JOIN lw_resource_rating USING ( resource_id ) WHERE user_id = ? AND deleted = 0")
     List<Resource> findRatedByUsedId(int userId);
@@ -120,17 +130,70 @@ public interface ResourceDao extends SqlObject {
         getHandle().execute("UPDATE lw_resource SET rating = rating + ?, rate_number = rate_number + 1 WHERE resource_id = ?", value, resourceId);
     }
 
+    @SqlUpdate("INSERT INTO `lw_thumb` (`resource_id` ,`user_id` ,`direction`) VALUES (?, ?, ?)")
+    void insertThumbRate(Resource resource, User user, int direction);
+
+    /**
+     * @return number of total thumb ups (left) and thumb downs (right).
+     */
+    default Optional<ImmutablePair<Integer, Integer>> findThumbRatings(Resource resource) {
+        return getHandle().select("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM `lw_thumb` WHERE `resource_id` = ?", resource)
+            .map((rs, ctx) -> new ImmutablePair<>(rs.getInt(1), rs.getInt(2))).findOne();
+    }
+
+    @SqlQuery("SELECT direction FROM lw_thumb WHERE resource_id = ? AND user_id = ?")
+    Optional<Integer> findThumbRate(Resource resource, User user);
+
     @SqlUpdate("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?) ON DUPLICATE KEY UPDATE allowed_languages = VALUES(allowed_languages)")
     void insertGlossaryResource(int resourceId, String allowedLanguages);
 
     @SqlUpdate("SELECT allowed_languages FROM `lw_glossary_resource` WHERE `resource_id` = ?")
     Optional<String> findGlossaryResourceAllowedLanguages(int resourceId);
 
-    @SqlUpdate("INSERT INTO `lw_resource_tag` (`resource_id`, `tag_id`, `user_id`) VALUES (?, ?, ?)")
-    void insertTag(Resource resource, Tag tag, User user);
+    @SqlUpdate("INSERT INTO `lw_resource_tag` (`resource_id`, `user_id`, `tag_id`) VALUES (?, ?, ?)")
+    void insertTag(Resource resource, User user, Tag tag);
 
     @SqlUpdate("DELETE FROM lw_resource_tag WHERE resource_id = ? AND tag_id = ?")
     void deleteTag(Resource resource, Tag tag);
+
+    default Resource copy(final Resource sourceResource, final int targetGroupId, final int targetFolderId, final User user) throws SQLException {
+        Resource resource = sourceResource.clone();
+        resource.setGroupId(targetGroupId);
+        resource.setFolderId(targetFolderId);
+        resource.setUser(user);
+        save(resource);
+
+        try {
+            for (File file : sourceResource.getFiles().values()) {
+                if (List.of(File.TYPE.THUMBNAIL_VERY_SMALL, File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_SQUARED, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_LARGE,
+                    File.TYPE.CHANGES, File.TYPE.HISTORY_FILE).contains(file.getType())) {
+                    continue; // skip them
+                }
+
+                File copyFile = new File(file);
+                copyFile.setResourceId(resource.getId());
+                // TODO @astappiev: improve copy performance by using fs copy
+                getFileDao().save(copyFile, file.getInputStream());
+                resource.addFile(copyFile);
+
+                if (file.getType() == File.TYPE.FILE_MAIN) {
+                    if (resource.getUrl().equals(file.getUrl())) {
+                        resource.setUrl(copyFile.getUrl());
+                    }
+
+                    if (resource.getFileUrl().equals(file.getUrl())) {
+                        resource.setFileUrl(copyFile.getUrl());
+                    }
+
+                    Learnweb.dao().getResourceDao().save(resource);
+                }
+            }
+        } catch (IOException e) {
+            LogManager.getLogger(ResourceDao.class).error("Error during copying resource files {}", resource, e);
+        }
+
+        return resource;
+    }
 
     default void save(Resource resource) throws SQLException {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
@@ -161,7 +224,7 @@ public interface ResourceDao extends SqlObject {
         params.put("restricted", resource.isRestricted());
         params.put("language", resource.getLanguage());
         params.put("creation_date", resource.getCreationDate());
-        params.put("metadata", SqlHelper.serializeObject(resource.getMetadata()));
+        params.put("metadata", SerializationUtils.serialize(resource.getMetadata()));
         params.put("group_id", resource.getGroupId());
         params.put("folder_id", resource.getFolderId());
         params.put("deleted", resource.isDeleted());
@@ -224,17 +287,7 @@ public interface ResourceDao extends SqlObject {
         // resource.setLocation(getLocation(resource));
 
         // persist the relation between the resource and its files
-        Learnweb.getInstance().getFileManager().addFilesToResource(resource.getFiles().values(), resource);
-
-        // TODO @astappiev: this has to be moved to the save method of WebResource.class, which has to be created
-        // if (CollectionUtils.isNotEmpty(resource.getArchiveUrls())) {
-        //     try {
-        //         To copy archive versions of a resource if it exists
-        //         TODO: saveArchiveUrlsByResourceId(resource.getId(), resource.getArchiveUrls());
-        //     } catch (Exception e) {
-        //         log.error("Can't save archiveUrls", e);
-        //     }
-        // }
+        getFileDao().updateResource(resource, resource.getFiles().values());
 
         Learnweb.getInstance().getSolrClient().reIndexResource(resource);
     }
@@ -256,24 +309,13 @@ public interface ResourceDao extends SqlObject {
 
     /**
      * Don't use this function.
-     * Usually you have to call deleteResource()
+     * Usually you have to call deleteSoft()
      */
     default void deleteHard(int resourceId) throws SQLException {
         // log.debug("Hard delete resource: " + resourceId);
 
         deleteSoft(resourceId); // clear cache and remove resource from SOLR
-
-        String[] tables = {"lw_comment", "lw_glossary_entry", "lw_glossary_resource", "lw_resource_archiveurl", "lw_resource_history",
-            "lw_resource_rating", "lw_resource_tag", "lw_submission_resource", "lw_survey_answer", "lw_survey_resource", "lw_survey_resource_user",
-            "lw_thumb", "lw_transcript_actions", "lw_transcript_final_sel", "lw_transcript_selections", "lw_transcript_summary",
-            "ted_transcripts_paragraphs", "lw_resource"};
-
-        for (String table : tables) {
-            int numRowsAffected = getHandle().execute("DELETE FROM " + table + " WHERE `resource_id` = ?", resourceId);
-            // if (numRowsAffected > 0) {
-            //     log.debug("Deleted " + numRowsAffected + " rows from " + table);
-            // }
-        }
+        getHandle().execute("DELETE FROM lw_resource WHERE `resource_id` = ?", resourceId);
 
         // TODO @astappiev: delete files (lw_file); but it's not possible yet because files are shared when a resource is copied
     }
@@ -330,7 +372,7 @@ public interface ResourceDao extends SqlObject {
                 if (resource.isDeleted()) {
                     LogManager.getLogger(ResourceMapper.class).debug("resource {} was requested but is deleted", resource.getId());
                 } else if (!reindexMode) {
-                    List<File> files = Learnweb.getInstance().getFileManager().getFilesByResource(resource.getId());
+                    List<File> files = Learnweb.dao().getFileDao().findByResourceId(resource.getId());
 
                     for (File file : files) {
                         resource.addFile(file);
@@ -392,7 +434,7 @@ public interface ResourceDao extends SqlObject {
             int fileId = rs.getInt(prefix + "_file_id");
 
             if (fileId != 0) {
-                url = Learnweb.getInstance().getFileManager().getThumbnailUrl(fileId, thumbnailSize);
+                url = "/download/" + fileId + "/thumbnail" + thumbnailSize + ".png";
             } else if (url == null) {
                 return null;
             }
