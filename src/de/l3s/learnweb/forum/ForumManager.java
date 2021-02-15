@@ -300,14 +300,13 @@ public class ForumManager {
         List<ForumTopic> topics = new LinkedList<>();
 
         try (PreparedStatement select = learnweb.getConnection().prepareStatement(
-            "SELECT * FROM `lw_forum_topic` f JOIN `lw_group_user` g USING(`group_id`) LEFT JOIN `lw_forum_topic_user` ft ON g.`user_id` = ft.`user_id` "
-                + "AND f.`topic_id` = ft.`topic_id` WHERE TIMESTAMPDIFF(DAY, topic_last_post_time, CURRENT_TIMESTAMP) < ? AND g.`user_id` = ? "
-                + "AND g.`notification_frequency` = ? AND (TIMESTAMPDIFF(DAY, ft.`last_visit`, CURRENT_TIMESTAMP) IS NULL "
-                + "OR TIMESTAMPDIFF(DAY, ft.`last_visit`, CURRENT_TIMESTAMP)>=?) GROUP BY f.`topic_id`")) {
+            "SELECT ft.*, gu.notification_frequency, ftu.last_visit "
+                + "FROM lw_forum_topic ft LEFT JOIN lw_group_user gu USING(group_id) LEFT JOIN lw_forum_topic_user ftu ON gu.user_id = ftu.user_id AND ft.topic_id = ftu.topic_id "
+                + "WHERE ft.topic_last_post_time BETWEEN DATE_SUB(NOW(), INTERVAL ? DAY) AND NOW() AND g.user_id = ? AND g.notification_frequency = ? "
+                + "AND (ftu.last_visit IS NULL OR ftu.last_visit < ft.topic_last_post_time) GROUP BY f.topic_id")) {
             select.setInt(1, notificationFrequency.getDays());
             select.setInt(2, userId);
             select.setString(3, notificationFrequency.toString());
-            select.setInt(4, notificationFrequency.getDays());
             ResultSet rs = select.executeQuery();
 
             while (rs.next()) {
