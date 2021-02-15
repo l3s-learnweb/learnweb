@@ -1,11 +1,13 @@
 package de.l3s.learnweb.logging;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.statement.PreparedBatch;
 
 import de.l3s.learnweb.Learnweb;
 
@@ -127,17 +129,19 @@ public enum Action {
      */
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Learnweb learnweb = Learnweb.createInstance();
-        learnweb.getConnection().createStatement().execute("TRUNCATE TABLE `lw_user_log_action`");
 
-        try (PreparedStatement insert = learnweb.getConnection().prepareStatement(
-            "INSERT INTO `lw_user_log_action` (`action`, `name`, `target`, `category`) VALUES (?,?,?,?)")) {
+        try (Handle handle = learnweb.openHandle()) {
+            handle.execute("TRUNCATE TABLE lw_user_log_action");
+
+            PreparedBatch batch = handle.prepareBatch("INSERT INTO `lw_user_log_action` (`action`, `name`, `target`, `category`) VALUES (:action, :name, :target, :category)");
             for (Action action : values()) {
-                insert.setInt(1, action.ordinal());
-                insert.setString(2, action.name());
-                insert.setString(3, action.getTargetId().name());
-                insert.setString(4, action.getCategory().name());
-                insert.executeUpdate();
+                batch.bind("action", action.ordinal())
+                    .bind("name", action.name())
+                    .bind("target", action.getTargetId())
+                    .bind("category", action.getCategory())
+                    .add();
             }
+            batch.execute();
         }
 
         learnweb.onDestroy();

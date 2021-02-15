@@ -1,13 +1,14 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
+
+import org.jdbi.v3.core.Handle;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -19,8 +20,9 @@ import de.l3s.learnweb.user.User;
 public class AdminSystemBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 1354024417928664741L;
     //private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
-    private LinkedList<Object> databaseProcessList;
+
     private String memoryInfo;
+    private List<DatabaseProcessStatistic> databaseProcessList;
 
     public AdminSystemBean() throws SQLException {
         User user = getUser();
@@ -46,23 +48,21 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         getLearnweb().resetCaches();
     }
 
-    private void loadDatabaseProcessList() throws SQLException {
-        databaseProcessList = new LinkedList<>();
-        ResultSet rs = getLearnweb().getConnection().createStatement().executeQuery("SHOW FULL PROCESSLIST");
-
-        while (rs.next()) {
-            DatabaseProcessStatistic ps = new DatabaseProcessStatistic();
-            ps.setId(rs.getInt("Id"));
-            ps.setUser(rs.getString("User"));
-            ps.setHost(rs.getString("Host"));
-            ps.setDb(rs.getString("db"));
-            ps.setCommand(rs.getString("Command"));
-            ps.setTime(rs.getString("Time"));
-            ps.setState(rs.getString("State"));
-            ps.setInfo(rs.getString("Info"));
-            ps.setProgress(rs.getString("Progress"));
-
-            databaseProcessList.add(ps);
+    private void loadDatabaseProcessList() {
+        try (Handle handle = getLearnweb().openHandle()) {
+            databaseProcessList = handle.select("SHOW FULL PROCESSLIST").map((rs, ctx) -> {
+                DatabaseProcessStatistic ps = new DatabaseProcessStatistic();
+                ps.setId(rs.getInt("Id"));
+                ps.setUser(rs.getString("User"));
+                ps.setHost(rs.getString("Host"));
+                ps.setDb(rs.getString("db"));
+                ps.setCommand(rs.getString("Command"));
+                ps.setTime(rs.getString("Time"));
+                ps.setState(rs.getString("State"));
+                ps.setInfo(rs.getString("Info"));
+                ps.setProgress(rs.getString("Progress"));
+                return ps;
+            }).list();
         }
     }
 
@@ -70,15 +70,16 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         return memoryInfo;
     }
 
-    public LinkedList<Object> getDatabaseProcessList() {
+    public List<DatabaseProcessStatistic> getDatabaseProcessList() {
         return databaseProcessList;
     }
 
     public void onKillDatabaseProcess(int processId) throws SQLException {
-        getLearnweb().getConnection().createStatement().executeUpdate("KILL " + processId);
+        try (Handle handle = getLearnweb().openHandle()) {
+            handle.execute("KILL ?", processId);
+        }
 
         addMessage(FacesMessage.SEVERITY_INFO, "Killed process " + processId);
-
         loadDatabaseProcessList(); // update list
     }
 

@@ -1,7 +1,5 @@
 package de.l3s.learnweb.beans.publicPages;
 
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
+import org.jdbi.v3.core.Handle;
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.Learnweb;
@@ -40,11 +39,10 @@ public class StatusBean extends ApplicationBean {
 
         // test learnweb database
         Service lwDb = new Service("Learnweb Database", "ok", learnweb.getProperties().getProperty("mysql_url"), "");
-        try {
-            Statement stmt = learnweb.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT count(*) FROM lw_user");
+        try (Handle handle = learnweb.openHandle()) {
+            Integer dbUsers = handle.select("SELECT count(*) FROM lw_user").mapTo(Integer.class).one();
 
-            if (!rs.next() || rs.getInt(1) < 400) {
+            if (dbUsers == null || dbUsers < 400) {
                 lwDb.setStatus("error", "unexpected result from database");
             }
         } catch (Exception e) {

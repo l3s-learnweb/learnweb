@@ -1,7 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Comparator;
@@ -15,10 +14,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
+import org.jdbi.v3.core.Handle;
 import org.primefaces.model.TreeNode;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.Group;
@@ -64,34 +62,34 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
             + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_tag t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as tags, "
             + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as no_of_archived_versions, "
             + "(SELECT count(distinct(t.resource_id)) FROM lw_resource ir JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as no_of_archived_resources "
-            + "FROM `lw_group` g LEFT JOIN lw_resource r USING(group_id) WHERE r.deleted=0 AND group_id IN(" + StringUtils.join(selectedGroups, ",") + ") " + "GROUP BY group_id";
+            + "FROM `lw_group` g LEFT JOIN lw_resource r USING(group_id) WHERE r.deleted=0 AND group_id IN(<selectedGroups>) GROUP BY group_id";
 
-        ResultSet rs = Learnweb.getInstance().getConnection().createStatement().executeQuery(query);
+        try (Handle handle = getLearnweb().openHandle()) {
+            groupStatistics = handle.createQuery(query).bindList("selectedGroups", selectedGroups).map((rs, ctx) -> {
+                Map<String, String> result = new HashMap<>();
 
-        while (rs.next()) {
-            Map<String, String> result = new HashMap<>();
+                int groupId = rs.getInt("group_id");
+                result.put("title", rs.getString("title"));
+                result.put("resources", rs.getString("resources"));
+                result.put("star_ratings", rs.getString("ratings"));
+                result.put("thumb_ratings", rs.getString("thumb_ratings"));
+                result.put("comments", rs.getString("comments"));
+                result.put("tags", rs.getString("tags"));
+                result.put("no_of_archived_versions", rs.getString("no_of_archived_versions"));
+                result.put("no_of_archived_resources", rs.getString("no_of_archived_resources"));
 
-            int groupId = rs.getInt("group_id");
-            result.put("title", rs.getString("title"));
-            result.put("resources", rs.getString("resources"));
-            result.put("star_ratings", rs.getString("ratings"));
-            result.put("thumb_ratings", rs.getString("thumb_ratings"));
-            result.put("comments", rs.getString("comments"));
-            result.put("tags", rs.getString("tags"));
-            result.put("no_of_archived_versions", rs.getString("no_of_archived_versions"));
-            result.put("no_of_archived_resources", rs.getString("no_of_archived_resources"));
+                String forumQuery = "SELECT COUNT(DISTINCT t.topic_id) AS topics, COUNT(*) AS posts "
+                    + "FROM lw_forum_post p INNER JOIN lw_forum_topic t ON t.topic_id = p.topic_id "
+                    + "WHERE t.group_id = ?";
 
-            String forumQuery = "SELECT COUNT(DISTINCT t.topic_id) AS topics, COUNT(*) AS posts "
-                + "FROM lw_forum_post p INNER JOIN lw_forum_topic t ON t.topic_id = p.topic_id "
-                + "WHERE t.group_id = " + groupId;
+                handle.select(forumQuery, groupId).map((rs1, ctx1) -> {
+                    result.put("forum_topics", rs1.getString("topics"));
+                    result.put("forum_posts", rs1.getString("posts"));
+                    return null;
+                });
 
-            ResultSet forumResults = Learnweb.getInstance().getConnection().createStatement().executeQuery(forumQuery);
-            if (forumResults.next()) {
-                result.put("forum_topics", forumResults.getString("topics"));
-                result.put("forum_posts", forumResults.getString("posts"));
-            }
-
-            groupStatistics.add(result);
+                return result;
+            }).list();
         }
 
         if (showDetails) {

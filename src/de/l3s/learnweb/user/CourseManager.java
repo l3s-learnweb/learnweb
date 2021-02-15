@@ -1,10 +1,7 @@
 package de.l3s.learnweb.user;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,15 +9,19 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.Course.Option;
-import de.l3s.util.database.Sql;
+import de.l3s.util.SqlHelper;
 
 /**
  * DAO for the Course class.
@@ -32,10 +33,6 @@ public class CourseManager {
     private static final Logger log = LogManager.getLogger(CourseManager.class);
 
     protected static final int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
-    private static final String[] COLUMNS = {"course_id", "title", "organisation_id", "default_group_id", "wizard_param", "next_x_users_become_moderator",
-        "welcome_message", "timestamp_creation", "options_field1"};
-    private static final String SELECT = String.join(", ", COLUMNS);
-    private static final String SAVE = Sql.getCreateStatement("lw_course", COLUMNS);
     private final Learnweb learnweb;
     private final Map<Integer, Course> cache;
 
@@ -49,32 +46,11 @@ public class CourseManager {
         cache.clear();
 
         // load all courses into cache
-        try (ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT " + SELECT + " FROM lw_course ORDER BY title")) {
-            while (rs.next()) {
-                Course course = createCourse(rs);
+        try (Handle handle = learnweb.openHandle()) {
+            handle.select("SELECT * FROM lw_course ORDER BY title").map(new CourseMapper()).forEach(course -> {
                 cache.put(course.getId(), course);
-            }
+            });
         }
-    }
-
-    private Course createCourse(ResultSet rs) throws SQLException {
-        Course course = new Course();
-        course.setId(rs.getInt("course_id"));
-        course.setOrganisationId(rs.getInt("organisation_id"));
-        course.setTitle(rs.getString("title"));
-        course.setDefaultGroupId(rs.getInt("default_group_id"));
-        course.setWizardParam(rs.getString("wizard_param"));
-        course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
-        course.setWelcomeMessage(rs.getString("welcome_message"));
-        course.setCreationTimestamp(rs.getObject("timestamp_creation", LocalDateTime.class));
-
-        long[] options = new long[FIELDS];
-        for (int i = 0; i < FIELDS; i++) {
-            options[i] = rs.getLong("options_field" + (i + 1));
-        }
-        course.setOptions(options);
-
-        return course;
     }
 
     /**
@@ -126,18 +102,13 @@ public class CourseManager {
 
     /**
      * @return The list is empty (but not null) if no courses were found
+     * TODO: inefficient method, can be used joint query for better performance
      */
     public List<Course> getCoursesByUserId(int userId) throws SQLException {
-        List<Course> courses = new CoursesList();
-
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT course_id FROM lw_user_course WHERE user_id = ?")) {
-            select.setInt(1, userId);
-            ResultSet rs = select.executeQuery();
-            while (rs.next()) {
-                courses.add(getCourseById(rs.getInt(1)));
-            }
-
-            return courses;
+        try (Handle handle = learnweb.openHandle()) {
+            return handle.select("SELECT course_id FROM lw_user_course WHERE user_id = ?", userId)
+                .map((rs, ctx) -> getCourseById(rs.getInt(1)))
+                .list();
         }
     }
 
@@ -146,39 +117,30 @@ public class CourseManager {
      * If the course is not yet stored at the database, a new record will be created and the returned course contains the new id.
      */
     protected synchronized Course save(Course course) throws SQLException {
-        try (PreparedStatement save = learnweb.getConnection().prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS)) {
-            if (course.getId() < 0) {
-                save.setNull(1, Types.INTEGER);
-            } else {
-                save.setInt(1, course.getId());
-            }
+        try (Handle handle = learnweb.openHandle()) {
+            LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+            params.put("course_id", course.getId() < 0 ? null : course.getId());
+            params.put("title", course.getTitle());
+            params.put("organisation_id", course.getOrganisationId());
+            params.put("default_group_id", course.getDefaultGroupId());
+            params.put("wizard_param", course.getWizardParam());
+            params.put("next_x_users_become_moderator", course.getNextXUsersBecomeModerator());
+            params.put("welcome_message", course.getWelcomeMessage());
+            params.put("timestamp_creation", course.getCreationTimestamp());
+            params.put("options_field1", course.getOptions()[0]);
 
-            save.setString(2, course.getTitle());
-            save.setInt(3, course.getOrganisationId());
-            save.setInt(4, course.getDefaultGroupId());
-            if (course.getWizardParam() != null) {
-                save.setString(5, course.getWizardParam());
-            } else {
-                save.setNull(5, Types.VARCHAR);
-            }
-            save.setInt(6, course.getNextXUsersBecomeModerator());
-            save.setString(7, course.getWelcomeMessage());
-            save.setObject(8, course.getCreationTimestamp());
-            save.setLong(9, course.getOptions()[0]);
-            save.executeUpdate();
+            Optional<Integer> courseId = SqlHelper.generateInsertQuery(handle, "lw_course", params)
+                .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-            if (course.getId() < 0) { // get the assigned id
-                ResultSet rs = save.getGeneratedKeys();
-                if (!rs.next()) {
-                    throw new SQLException("database error: no id generated");
-                }
-                course.setId(rs.getInt(1));
+            if (courseId.isPresent()) {
+                course.setId(courseId.get());
+            } else if (course.getId() < 0) {
+                throw new SQLException("database error: no id generated");
             }
 
             cache.put(course.getId(), course);
+            return course;
         }
-
-        return course;
     }
 
     /**
@@ -238,13 +200,9 @@ public class CourseManager {
             group.deleteHard();
         }
 
-        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE course_id = ?")) {
-            delete.setInt(1, course.getId());
-            delete.executeUpdate();
-        }
-        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?")) {
-            delete.setInt(1, course.getId());
-            delete.executeUpdate();
+        try (Handle handle = learnweb.openHandle()) {
+            handle.execute("DELETE FROM `lw_user_course` WHERE course_id = ?", course.getId());
+            handle.execute("DELETE FROM `lw_course` WHERE course_id = ?", course.getId());
         }
 
         cache.remove(course.getId());
@@ -256,18 +214,14 @@ public class CourseManager {
      * Add a user to a course.
      */
     public void addUser(Course course, User user) throws SQLException {
-        try (PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_user_course` (`user_id` ,`course_id`) VALUES (?, ?)")) {
-            insert.setInt(1, user.getId());
-            insert.setInt(2, course.getId());
-            insert.executeUpdate();
+        try (Handle handle = learnweb.openHandle()) {
+            handle.execute("INSERT INTO `lw_user_course` (`user_id` ,`course_id`) VALUES (?, ?)", user.getId(), course.getId());
         }
     }
 
     public void removeUser(Course course, User user) throws SQLException {
-        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE `user_id` = ? AND `course_id` = ?")) {
-            delete.setInt(1, user.getId());
-            delete.setInt(2, course.getId());
-            delete.executeUpdate();
+        try (Handle handle = learnweb.openHandle()) {
+            handle.execute("DELETE FROM `lw_user_course` WHERE `user_id` = ? AND `course_id` = ?", user.getId(), course.getId());
         }
     }
 
@@ -297,4 +251,26 @@ public class CourseManager {
         }
     }
 
+    private static class CourseMapper implements RowMapper<Course> {
+        @Override
+        public Course map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            Course course = new Course();
+            course.setId(rs.getInt("course_id"));
+            course.setOrganisationId(rs.getInt("organisation_id"));
+            course.setTitle(rs.getString("title"));
+            course.setDefaultGroupId(rs.getInt("default_group_id"));
+            course.setWizardParam(rs.getString("wizard_param"));
+            course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
+            course.setWelcomeMessage(rs.getString("welcome_message"));
+            course.setCreationTimestamp(rs.getObject("timestamp_creation", LocalDateTime.class));
+
+            long[] options = new long[FIELDS];
+            for (int i = 0; i < FIELDS; i++) {
+                options[i] = rs.getLong("options_field" + (i + 1));
+            }
+            course.setOptions(options);
+
+            return course;
+        }
+    }
 }

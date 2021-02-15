@@ -3,8 +3,6 @@ package de.l3s.learnweb.user.loginProtection;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import org.jdbi.v3.core.mapper.reflect.ColumnName;
-
 /**
  * Small object to hold data about login attempts per IP or username.
  * Contains: number of failed attempts and the time when the ban is lifted (set to 1970 if empty)
@@ -19,7 +17,7 @@ public class AccessData implements Serializable {
     private String reason;
     private int attempts;
     private int allowedAttempts;
-    private LocalDateTime bannedUntil;
+    private LocalDateTime bannedUntil; // TODO rename: bandate
     private LocalDateTime bannedOn;
 
     public AccessData() {
@@ -102,7 +100,6 @@ public class AccessData implements Serializable {
         allowedAttempts--;
     }
 
-    @ColumnName("bandate")
     public LocalDateTime getBannedUntil() {
         return bannedUntil;
     }

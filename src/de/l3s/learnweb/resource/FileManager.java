@@ -27,7 +27,7 @@ import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
 import de.l3s.util.StringHelper;
-import de.l3s.util.database.Sql;
+import de.l3s.util.SqlHelper;
 
 /**
  * DAO for the File class.
@@ -196,7 +196,7 @@ public class FileManager {
         replace.setString(4, file.getName());
         replace.setString(5, file.getMimeType());
         replace.setInt(6, file.isDownloadLogActivated() ? 1 : 0);
-        replace.setTimestamp(7, Sql.convertDateTime(file.getLastModified()));
+        replace.setTimestamp(7, SqlHelper.convertDateTime(file.getLastModified()));
         replace.executeUpdate();
 
         if (file.getId() < 0) { // it's a new file -> get the assigned id

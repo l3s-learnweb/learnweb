@@ -31,7 +31,7 @@ import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.HashHelper;
 import de.l3s.util.ICache;
-import de.l3s.util.database.Sql;
+import de.l3s.util.SqlHelper;
 
 /**
  * DAO for the User class.
@@ -364,7 +364,7 @@ public class UserManager {
             replace.setString(18, user.getPassword());
             replace.setString(19, user.getHashing().name());
 
-            Sql.setSerializedObject(replace, 20, user.getPreferences());
+            SqlHelper.setSerializedObject(replace, 20, user.getPreferences());
 
             replace.setString(21, user.getCredits());
             replace.setString(22, user.getFullName());

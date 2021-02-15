@@ -42,6 +42,7 @@
         <Logger name="solr.client" level="FATAL"/>
         <Logger name="org.jboss.weld" level="WARN"/>
         <Logger name="net.bramp.ffmpeg" level="INFO"/>
+        <Logger name="com.zaxxer.hikari" level="INFO"/>
 
         <Root level="DEBUG">
             <appender-ref ref="console"/>

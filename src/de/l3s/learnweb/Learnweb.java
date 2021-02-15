@@ -3,7 +3,6 @@ package de.l3s.learnweb;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Properties;
@@ -12,6 +11,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.jpa.JpaPlugin;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
+
+import com.zaxxer.hikari.HikariDataSource;
 
 import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardManager;
@@ -75,7 +78,7 @@ public final class Learnweb {
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
-    private final GlossaryManager glossaryManager; //new Glossary Manager
+    private final GlossaryManager glossaryManager;
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
     private final RequestManager requestManager;
@@ -88,9 +91,11 @@ public final class Learnweb {
     private final TrackerDashboardManager trackerDashboardManager;
 
     private final InterWeb interweb;
-    private Connection dbConnection;
 
     private PropertiesBundle properties;
+    private Connection dbConnection;
+    private HikariDataSource dataSource;
+    private Jdbi jdbi;
     private String serverUrl;
 
     private long lastCheck = 0L;
@@ -98,7 +103,7 @@ public final class Learnweb {
     /**
      * @param serverUrl The servername + contextPath. For the default installation this is: https://learnweb.l3s.uni-hannover.de
      */
-    private Learnweb(String serverUrl) throws ClassNotFoundException, SQLException {
+    private Learnweb(String serverUrl) throws SQLException {
         loadProperties();
 
         // load server URL from config file or guess it
@@ -113,8 +118,16 @@ public final class Learnweb {
             log.error("We could not guess the server name. Will use by default: " + this.serverUrl + "; on Machine: " + Misc.getSystemDescription());
         }
 
-        Class.forName("org.mariadb.jdbc.Driver");
-        connect();
+        HikariDataSource ds = new HikariDataSource();
+        // Configuration docs https://github.com/brettwooldridge/HikariCP
+        ds.setDriverClassName("org.mariadb.jdbc.Driver");
+        ds.setJdbcUrl(properties.getProperty("mysql_url") + "?log=false");
+        ds.setUsername(properties.getProperty("mysql_user"));
+        ds.setPassword(properties.getProperty("mysql_password"));
+        ds.setMaximumPoolSize(3);
+        ds.setConnectionTimeout(60000); // 1 min
+        dataSource = ds;
+        dbConnection = dataSource.getConnection(); // TODO: remove old connection methods
 
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
@@ -162,13 +175,13 @@ public final class Learnweb {
             InputStream testProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_test.properties");
             if (testProperties != null) {
                 properties.load(testProperties);
-                log.debug("Test properties loaded.");
+                log.warn("Test properties loaded.");
             }
 
             InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties");
             if (localProperties != null) {
                 properties.load(localProperties);
-                log.debug("Local properties loaded.");
+                log.warn("Local properties loaded.");
             }
         } catch (IOException e) {
             log.error("Property error", e);
@@ -223,11 +236,6 @@ public final class Learnweb {
         return resourceMetadataExtractor;
     }
 
-    private void connect() throws SQLException {
-        dbConnection = DriverManager.getConnection(properties.getProperty("mysql_url") + "?log=false", properties.getProperty("mysql_user"), properties.getProperty("mysql_password"));
-        dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");
-    }
-
     private void checkConnection() throws SQLException {
         synchronized (dbConnection) {
             // exit if last check was one or less seconds ago
@@ -243,7 +251,7 @@ public final class Learnweb {
                 } catch (SQLException ignored) {
                 }
 
-                connect();
+                dbConnection = dataSource.getConnection();
             }
 
             lastCheck = System.currentTimeMillis();
@@ -256,19 +264,17 @@ public final class Learnweb {
         return dbConnection;
     }
 
-    private Jdbi getJdbi() {
-        try {
-            // not sure if this is efficient, probably it should be reused
-            // but connection can be closed and what then???
-            // TODO @astappiev: have to be improved if we decide to use it https://jdbi.org/#_jdbi
-            return Jdbi.create(getConnection());
-        } catch (SQLException e) {
-            // here we get rid of SQLException, we will show 500 error page immediately
-            throw new RuntimeException("An error with database connection", e);
+    public Jdbi getJdbi() {
+        if (jdbi == null) {
+            jdbi = Jdbi.create(dataSource);
+            // add configuration and register mappers if needed http://jdbi.org/
+            jdbi.installPlugin(new SqlObjectPlugin());
+            jdbi.installPlugin(new JpaPlugin());
         }
+        return jdbi;
     }
 
-    public Handle openJdbiHandle() {
+    public Handle openHandle() {
         return getJdbi().open();
     }
 

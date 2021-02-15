@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.l3s.util.database.Sql;
+import de.l3s.util.SqlHelper;
 
 public class AnnouncementsManager {
     // private static final Logger log = LogManager.getLogger(AnnouncementsManager.class);
@@ -76,7 +76,7 @@ public class AnnouncementsManager {
             stmt.setString(1, announcement.getTitle());
             stmt.setString(2, announcement.getText());
             stmt.setInt(3, announcement.getUserId());
-            stmt.setTimestamp(4, Sql.convertDateTime(announcement.getDate()));
+            stmt.setTimestamp(4, SqlHelper.convertDateTime(announcement.getDate()));
             stmt.setBoolean(5, announcement.isHidden());
             stmt.executeUpdate();
 
@@ -89,7 +89,7 @@ public class AnnouncementsManager {
             "UPDATE lw_news SET title = ?, message = ?, created_at = ?, hidden = ?  WHERE news_id = ?")) {
             stmt.setString(1, announcement.getTitle());
             stmt.setString(2, announcement.getText());
-            stmt.setTimestamp(3, Sql.convertDateTime(announcement.getDate()));
+            stmt.setTimestamp(3, SqlHelper.convertDateTime(announcement.getDate()));
             stmt.setBoolean(4, announcement.isHidden());
             stmt.setInt(5, announcement.getId());
             stmt.executeUpdate();

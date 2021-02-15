@@ -22,7 +22,7 @@ import de.l3s.learnweb.resource.survey.SurveyQuestion.QuestionType;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.bean.BeanHelper;
-import de.l3s.util.database.Sql;
+import de.l3s.util.SqlHelper;
 
 /**
  * @author Philipp Kemkes
@@ -269,8 +269,8 @@ public class SurveyManager {
         try (PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_survey_resource` (`resource_id`, `survey_id`, `open_date`, `close_date`, `editable`) VALUES (?,?,?,?,?)")) {
             replace.setInt(1, surveyResource.getId());
             replace.setInt(2, surveyResource.getSurveyId());
-            replace.setTimestamp(3, Sql.convertDateTime(surveyResource.getStart()));
-            replace.setTimestamp(4, Sql.convertDateTime(surveyResource.getEnd()));
+            replace.setTimestamp(3, SqlHelper.convertDateTime(surveyResource.getStart()));
+            replace.setTimestamp(4, SqlHelper.convertDateTime(surveyResource.getEnd()));
             replace.setBoolean(5, surveyResource.isSaveable());
             replace.executeUpdate();
         }

@@ -1,34 +1,31 @@
-package de.l3s.util.database;
+package de.l3s.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.statement.Update;
 
-import de.l3s.learnweb.Learnweb;
+public final class SqlHelper {
+    private static final Logger log = LogManager.getLogger(SqlHelper.class);
 
-public class Sql {
-    private static final Logger log = LogManager.getLogger(Sql.class);
-
-    public static Object getSingleResult(String query) throws SQLException {
-        Connection connection = Learnweb.getInstance().getConnection();
-        ResultSet rs = connection.createStatement().executeQuery(query);
-        if (!rs.next()) {
-            throw new IllegalArgumentException("Query doesn't return a result");
-        }
-        return rs.getObject(1);
-    }
+    private static final Pattern COLUMNS_PATTERN = Pattern.compile("[\\s,]+");
 
     public static void setSerializedObject(PreparedStatement stmt, int parameterIndex, Object obj) throws SQLException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -46,7 +43,7 @@ public class Sql {
             log.error("Couldn't serialize preferences: " + obj, e);
         }
 
-        stmt.setNull(parameterIndex, java.sql.Types.BLOB);
+        stmt.setNull(parameterIndex, Types.BLOB);
     }
 
     public static Object getSerializedObject(ResultSet rs, String field) throws SQLException {
@@ -76,14 +73,37 @@ public class Sql {
             return null;
         }
 
-        return new java.sql.Timestamp(date.getTime());
+        return new Timestamp(date.getTime());
     }
 
     /**
      * Creates INSERT INTO tableName ON DUPLICATE KEY UPDATE statement.
      * Assumes that the first column is the primary key of this table.
      */
-    public static String getCreateStatement(final String tableName, final String[] columns) {
+    public static Update generateInsertQuery(final Handle handle, final String tableName, final LinkedHashMap<String, Object> params) {
+        String[] keys = params.keySet().toArray(new String[0]);
+        Update update = handle.createUpdate(generateInsertQuery(tableName, keys));
+
+        for (int i = 0, len = keys.length; i < len; ++i) {
+            update.bind(i, params.get(keys[i]));
+        }
+
+        return update;
+    }
+
+    /**
+     * Creates INSERT INTO tableName ON DUPLICATE KEY UPDATE statement.
+     * Assumes that the first column is the primary key of this table.
+     */
+    public static String generateInsertQuery(final String tableName, final String columns) {
+        return generateInsertQuery(tableName, COLUMNS_PATTERN.split(columns));
+    }
+
+    /**
+     * Creates INSERT INTO tableName ON DUPLICATE KEY UPDATE statement.
+     * Assumes that the first column is the primary key of this table.
+     */
+    public static String generateInsertQuery(final String tableName, final String[] columns) {
         StringBuilder sb = new StringBuilder("INSERT INTO ");
         sb.append(tableName).append(" (");
 
@@ -103,44 +123,4 @@ public class Sql {
 
         return sb.toString();
     }
-
-    /**
-     * Creates INSERT INTO tableName ON DUPLICATE KEY UPDATE statement.
-     * Assumes that the first column is the primary key of this table.
-     */
-    public static String getCreateStatement(final String tableName, final IColumn[] columns) {
-        StringBuilder sb = new StringBuilder("INSERT INTO ");
-        sb.append(tableName).append(" (");
-
-        for (IColumn column : columns) {
-            sb.append(column).append(',');
-        }
-        sb.setLength(sb.length() - 1); // remove last comma
-
-        String questionMarks = StringUtils.repeat(",?", columns.length).substring(1);
-        sb.append(") VALUES (").append(questionMarks).append(") ON DUPLICATE KEY UPDATE ");
-
-        for (int i = 1; i < columns.length; i++) { // skip first column
-            IColumn column = columns[i];
-            sb.append(column).append("=VALUES(").append(column).append("),");
-        }
-        sb.setLength(sb.length() - 1); // remove last comma
-
-        return sb.toString();
-    }
-
-    public static String columns(IColumn[] values) {
-        if (ArrayUtils.isEmpty(values)) {
-            return "";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (IColumn column : values) {
-            sb.append(column.toString());
-            sb.append(',');
-        }
-        sb.setLength(sb.length() - 1); // delete last ","
-        return sb.toString();
-    }
-
 }

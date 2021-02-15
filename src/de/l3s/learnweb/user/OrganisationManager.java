@@ -12,7 +12,7 @@ import java.util.Map;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.util.StringHelper;
-import de.l3s.util.database.Sql;
+import de.l3s.util.SqlHelper;
 
 /**
  * DAO for the Organisation class.
@@ -26,8 +26,7 @@ public class OrganisationManager {
     private static final String[] COLUMNS = {"organisation_id", "title", "logout_page", "welcome_page", "welcome_message",
         "options_field1", "default_search_text", "default_search_image", "default_search_video", "default_language",
         "language_variant", "banner_image_file_id", "glossary_languages", "css_file"};
-    private static final String SELECT = String.join(", ", COLUMNS);
-    private static final String SAVE = Sql.getCreateStatement("lw_organisation", COLUMNS);
+    private static final String SAVE = SqlHelper.generateInsertQuery("lw_organisation", COLUMNS);
 
     private final Learnweb learnweb;
     private final Map<Integer, Organisation> cache;
@@ -44,7 +43,7 @@ public class OrganisationManager {
 
         // load all organizations into cache
         try (Statement select = learnweb.getConnection().createStatement()) {
-            ResultSet rs = select.executeQuery("SELECT " + SELECT + " FROM lw_organisation ORDER BY title");
+            ResultSet rs = select.executeQuery("SELECT * FROM lw_organisation ORDER BY title");
             while (rs.next()) {
                 Organisation organisation = createOrganisation(rs);
                 cache.put(rs.getInt("organisation_id"), organisation);

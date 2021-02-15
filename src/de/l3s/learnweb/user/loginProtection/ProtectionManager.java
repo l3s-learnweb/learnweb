@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,6 +26,8 @@ import javax.mail.internet.InternetAddress;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.web.AggregatedRequestData;
@@ -84,10 +88,9 @@ public class ProtectionManager {
      * Loads ban lists from the database. Should be called by every constructor.
      */
     private void loadBanLists() {
-        try (Handle handle = learnweb.openJdbiHandle()) {
+        try (Handle handle = learnweb.openHandle()) {
             handle.select("SELECT * FROM lw_bans")
-                .mapToBean(AccessData.class)
-                .stream()
+                .map(new AccessDataMapper())
                 .forEach(accessData -> accessMap.put(accessData.getName(), accessData));
 
             log.debug("Banlist loaded. Entries: {}", accessMap.size());
@@ -256,7 +259,7 @@ public class ProtectionManager {
     }
 
     public void clearBan(String name) {
-        try (Handle handle = learnweb.openJdbiHandle()) {
+        try (Handle handle = learnweb.openHandle()) {
             handle.execute("DELETE FROM lw_bans WHERE name = ?", name);
 
             accessMap.remove(name);
@@ -265,7 +268,7 @@ public class ProtectionManager {
     }
 
     public void clearOutdatedBans() {
-        try (Handle handle = learnweb.openJdbiHandle()) {
+        try (Handle handle = learnweb.openHandle()) {
             handle.execute("DELETE FROM lw_bans WHERE bandate <= CURDATE() - INTERVAL 7 DAY");
 
             accessMap.clear();
@@ -304,7 +307,7 @@ public class ProtectionManager {
         accessData.ban(banDays, banHours, banMinutes);
         accessData.setReason(reason);
 
-        try (Handle handle = learnweb.openJdbiHandle()) {
+        try (Handle handle = learnweb.openHandle()) {
             handle.createUpdate("INSERT INTO lw_bans (type, name, bandate, bannedon, attempts, reason) "
                 + "VALUES(:type, :name, :bannedUntil, :bannedOn, :attempts, :reason) ON DUPLICATE KEY UPDATE bandate = VALUES(bandate)")
                 .bindBean(accessData)
@@ -320,5 +323,19 @@ public class ProtectionManager {
 
     public List<AggregatedRequestData> getSuspiciousActivityList() {
         return suspiciousActivityList;
+    }
+
+    private static class AccessDataMapper implements RowMapper<AccessData> {
+        @Override
+        public AccessData map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            AccessData accessData = new AccessData();
+            accessData.setType(rs.getString("type"));
+            accessData.setName(rs.getString("name"));
+            accessData.setBannedUntil(rs.getTimestamp("bandate").toLocalDateTime());
+            accessData.setBannedOn(rs.getTimestamp("bannedon").toLocalDateTime());
+            accessData.setAttempts(rs.getInt("attempts"));
+            accessData.setReason(rs.getString("reason"));
+            return accessData;
+        }
     }
 }

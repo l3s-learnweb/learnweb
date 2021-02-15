@@ -1,15 +1,12 @@
 package de.l3s.learnweb.dashboard.activity;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.StringUtils;
+import org.jdbi.v3.core.Handle;
 
 import de.l3s.learnweb.Learnweb;
 
@@ -21,21 +18,16 @@ public class ActivityDashboardManager {
     }
 
     public Map<String, Integer> getActionsCountPerDay(Collection<Integer> userIds, Date startDate, Date endDate, String actions) throws SQLException {
-        // action name, count
         Map<String, Integer> actionsPerDay = new TreeMap<>();
 
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement(
-            "SELECT DATE(timestamp) as day, COUNT(*) AS count FROM lw_user_log " +
-                "WHERE user_id IN(" + StringUtils.join(userIds, ",") + ") " +
-                "AND timestamp BETWEEN ? AND ? AND action in(" + actions + ") GROUP BY day")) {
-            select.setTimestamp(1, new Timestamp(startDate.getTime()));
-            select.setTimestamp(2, new Timestamp(endDate.getTime()));
-
-            ResultSet rs = select.executeQuery();
-
-            while (rs.next()) {
-                actionsPerDay.put(rs.getString("day"), rs.getInt("count"));
-            }
+        try (Handle handle = learnweb.openHandle()) {
+            handle.select("SELECT DATE(timestamp) as day, COUNT(*) AS count FROM lw_user_log "
+                + "WHERE user_id IN(<userIds>) AND timestamp BETWEEN :start AND :end AND action in (:actions) GROUP BY day;")
+                .bind("start", startDate)
+                .bind("end", endDate)
+                .bind("actions", actions)
+                .bindList("userIds", userIds)
+                .map((rs, ctx) -> actionsPerDay.put(rs.getString("day"), rs.getInt("count")));
         }
 
         return actionsPerDay;

@@ -19,6 +19,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jdbi.v3.core.Handle;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
@@ -31,7 +32,7 @@ import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
 import de.l3s.util.PropertiesBundle;
-import de.l3s.util.database.Sql;
+import de.l3s.util.SqlHelper;
 
 public class ResourceManager {
     private static final Logger log = LogManager.getLogger(ResourceManager.class);
@@ -52,18 +53,21 @@ public class ResourceManager {
     }
 
     public int getResourceCount() throws SQLException {
-        Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource WHERE deleted = 0");
-        return count.intValue();
+        try (Handle handle = learnweb.openHandle()) {
+            return handle.select("SELECT COUNT(*) FROM lw_resource WHERE deleted = 0").mapTo(Integer.class).one();
+        }
     }
 
     public int getResourceCountByUserId(int userId) throws SQLException {
-        Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource r WHERE owner_user_id = " + userId + " AND deleted = 0");
-        return count.intValue();
+        try (Handle handle = learnweb.openHandle()) {
+            return handle.select("SELECT COUNT(*) FROM lw_resource r WHERE owner_user_id = " + userId + " AND deleted = 0").mapTo(Integer.class).one();
+        }
     }
 
     public int getResourceCountByGroupId(int groupId) throws SQLException {
-        Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource r WHERE group_id = " + groupId + " AND deleted = 0");
-        return count.intValue();
+        try (Handle handle = learnweb.openHandle()) {
+            return handle.select("SELECT COUNT(*) FROM lw_resource r WHERE group_id = " + groupId + " AND deleted = 0").mapTo(Integer.class).one();
+        }
     }
 
     public Map<Integer, Integer> getResourceCountPerUserByGroup(int groupId) throws SQLException {
@@ -321,8 +325,8 @@ public class ResourceManager {
             replace.setInt(44, resource.getDuration());
             replace.setInt(45, resource.isRestricted() ? 1 : 0);
             replace.setString(46, resource.getLanguage());
-            replace.setTimestamp(47, Sql.convertDateTime(resource.getCreationDate()));
-            Sql.setSerializedObject(replace, 48, resource.getMetadata());
+            replace.setTimestamp(47, SqlHelper.convertDateTime(resource.getCreationDate()));
+            SqlHelper.setSerializedObject(replace, 48, resource.getMetadata());
             replace.setInt(49, resource.getGroupId());
             replace.setInt(50, resource.getFolderId());
             replace.setInt(51, resource.isDeleted() ? 1 : 0);
@@ -540,7 +544,7 @@ public class ResourceManager {
             replace.setInt(2, comment.getResourceId());
             replace.setInt(3, comment.getUserId());
             replace.setString(4, comment.getText());
-            replace.setTimestamp(5, Sql.convertDateTime(comment.getDate()));
+            replace.setTimestamp(5, SqlHelper.convertDateTime(comment.getDate()));
             replace.executeUpdate();
 
             if (comment.getId() < 0) { // get the assigned id
@@ -596,7 +600,7 @@ public class ResourceManager {
             for (ArchiveUrl version : archiveUrls) {
                 prepStmt.setInt(1, resourceId);
                 prepStmt.setString(2, version.getArchiveUrl());
-                prepStmt.setTimestamp(3, Sql.convertDateTime(version.getTimestamp()));
+                prepStmt.setTimestamp(3, SqlHelper.convertDateTime(version.getTimestamp()));
                 prepStmt.executeUpdate();
             }
         }
