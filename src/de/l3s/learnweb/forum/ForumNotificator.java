@@ -3,7 +3,8 @@ package de.l3s.learnweb.forum;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.MessageFormat;
-import java.util.Calendar;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -26,33 +27,28 @@ public class ForumNotificator implements Runnable, Serializable {
     private static final long serialVersionUID = -7141107765791779330L;
     private static final Logger log = LogManager.getLogger(ForumNotificator.class);
 
-    public ForumNotificator() {
-    }
-
     @Override
     public void run() {
         try {
-            Calendar cal = Calendar.getInstance();
+            LocalDate localDate = LocalDate.now();
             ForumManager forumManager = Learnweb.getInstance().getForumManager();
-            List<User> users = Learnweb.getInstance().getUserManager().getUsers();
+            List<User> users = Learnweb.getInstance().getUserManager().getUsersWithEnabledForumNotifications();
             for (User user : users) {
-                if (!user.getPreferredNotificationFrequency().equals(NotificationFrequency.NEVER)) {
-                    // get changes of all groups for which the user has selected daily notifications
-                    List<ForumTopic> topicsPerPeriod = forumManager.getTopicByPeriod(user.getId(), NotificationFrequency.DAILY);
+                // get changes of all groups for which the user has selected daily notifications
+                List<ForumTopic> topicsPerPeriod = forumManager.getTopicByPeriod(user.getId(), NotificationFrequency.DAILY);
 
-                    // On every Sunday: get changes of all groups for which the user has selected weekly notifications
-                    if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                        topicsPerPeriod.addAll(forumManager.getTopicByPeriod(user.getId(), NotificationFrequency.WEEKLY));
-                    }
+                // On every Sunday: get changes of all groups for which the user has selected weekly notifications
+                if (localDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                    topicsPerPeriod.addAll(forumManager.getTopicByPeriod(user.getId(), NotificationFrequency.WEEKLY));
+                }
 
-                    // On first day of every month: get changes of all groups for which the user has selected monthly notifications
-                    if (cal.get(Calendar.DAY_OF_MONTH) == 1) {
-                        topicsPerPeriod.addAll(forumManager.getTopicByPeriod(user.getId(), NotificationFrequency.MONTHLY));
-                    }
+                // On first day of every month: get changes of all groups for which the user has selected monthly notifications
+                if (localDate.getDayOfMonth() == 1) {
+                    topicsPerPeriod.addAll(forumManager.getTopicByPeriod(user.getId(), NotificationFrequency.MONTHLY));
+                }
 
-                    if (!topicsPerPeriod.isEmpty()) {
-                        sendMailWithNewTopics(user, topicsPerPeriod);
-                    }
+                if (!topicsPerPeriod.isEmpty()) {
+                    sendMailWithNewTopics(user, topicsPerPeriod);
                 }
             }
         } catch (Throwable e) {

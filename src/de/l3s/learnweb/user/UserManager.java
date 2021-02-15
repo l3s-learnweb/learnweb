@@ -108,6 +108,19 @@ public class UserManager {
         return users;
     }
 
+    public List<User> getUsersWithEnabledForumNotifications() throws SQLException {
+        List<User> users = new LinkedList<>();
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE deleted = 0 AND preferred_notification_frequency != 'NEVER'")) {
+            try (ResultSet rs = select.executeQuery()) {
+                while (rs.next()) {
+                    users.add(createUser(rs));
+                }
+            }
+        }
+
+        return users;
+    }
+
     public List<User> getUsersByOrganisationId(int organisationId) throws SQLException {
         List<User> users = new LinkedList<>();
         try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE organisation_id = ? AND deleted = 0 ORDER BY username")) {
