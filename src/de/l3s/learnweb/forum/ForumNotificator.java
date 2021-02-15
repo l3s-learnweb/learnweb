@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,7 @@ import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.User.NotificationFrequency;
+import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.HashHelper;
 import de.l3s.util.email.Mail;
 
@@ -31,25 +34,27 @@ public class ForumNotificator implements Runnable, Serializable {
     public void run() {
         try {
             LocalDate localDate = LocalDate.now();
+            UserManager userManager = Learnweb.getInstance().getUserManager();
             ForumManager forumManager = Learnweb.getInstance().getForumManager();
-            List<User> users = Learnweb.getInstance().getUserManager().getUsersWithEnabledForumNotifications();
-            for (User user : users) {
-                // get changes of all groups for which the user has selected daily notifications
-                List<ForumTopic> topicsPerPeriod = forumManager.getTopicByPeriod(user.getId(), NotificationFrequency.DAILY);
 
-                // On every Sunday: get changes of all groups for which the user has selected weekly notifications
-                if (localDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                    topicsPerPeriod.addAll(forumManager.getTopicByPeriod(user.getId(), NotificationFrequency.WEEKLY));
-                }
+            ArrayList<NotificationFrequency> frequencies = new ArrayList<>(3);
+            frequencies.add(NotificationFrequency.DAILY);
 
-                // On first day of every month: get changes of all groups for which the user has selected monthly notifications
-                if (localDate.getDayOfMonth() == 1) {
-                    topicsPerPeriod.addAll(forumManager.getTopicByPeriod(user.getId(), NotificationFrequency.MONTHLY));
-                }
+            // On every Sunday: get changes of all groups for which the user has selected weekly notifications
+            if (localDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                frequencies.add(NotificationFrequency.WEEKLY);
+            }
 
-                if (!topicsPerPeriod.isEmpty()) {
-                    sendMailWithNewTopics(user, topicsPerPeriod);
-                }
+            // On first day of every month: get changes of all groups for which the user has selected monthly notifications
+            if (localDate.getDayOfMonth() == 1) {
+                frequencies.add(NotificationFrequency.MONTHLY);
+            }
+
+            Map<Integer, List<ForumTopic>> topics = forumManager.getTopicsByNotificationFrequencies(frequencies);
+            for (Map.Entry<Integer, List<ForumTopic>> entry : topics.entrySet()) {
+                User user = userManager.getUser(entry.getKey());
+
+                sendMailWithNewTopics(user, entry.getValue());
             }
         } catch (Throwable e) {
             log.error("Error while creating forum notifications", e);
@@ -62,6 +67,7 @@ public class ForumNotificator implements Runnable, Serializable {
 
         // load translations for users preferred language
         ResourceBundle msg = LanguageBundle.getLanguageBundle(user.getLocale());
+        String serverUrl = Learnweb.getInstance().getServerUrl();
 
         Mail mail = new Mail();
         mail.setSubject(msg.getString("email_forum_notifications.email_subject"));
@@ -125,13 +131,13 @@ public class ForumNotificator implements Runnable, Serializable {
                 content.append("<tr>");
 
                 content.append("<td class=\"first-child\">");
-                content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/group/overview.jsf?group_id=").append(topic.getGroupId())
-                    .append("'>").append(Learnweb.getInstance().getGroupManager().getGroupById(topic.getGroupId()).getTitle()).append("</a>");
+                content.append("<a href='" + serverUrl + "/lw/group/overview.jsf?group_id=").append(topic.getGroupId())
+                    .append("'>").append(topic.getGroup().getTitle()).append("</a>");
                 content.append("</td>");
 
                 content.append("<td class=\"second-child\">");
-                content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_topic.jsf?topic_id=").append(topic.getId()).append("'>")
-                    .append(topic.getTitle()).append("</a>");
+                content.append("<a href='" + serverUrl + "/lw/group/forum_topic.jsf?topic_id=").append(topic.getId())
+                    .append("'>").append(topic.getTitle()).append("</a>");
                 content.append("</td>");
 
                 content.append("<td class=\"third-child\">");
@@ -155,13 +161,13 @@ public class ForumNotificator implements Runnable, Serializable {
                 content.append("<tr>");
 
                 content.append("<td class=\"first-child\">");
-                content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/group/overview.jsf?group_id=").append(topic.getGroupId())
-                    .append("'>").append(Learnweb.getInstance().getGroupManager().getGroupById(topic.getGroupId()).getTitle()).append("</a>");
+                content.append("<a href='" + serverUrl + "/lw/group/overview.jsf?group_id=").append(topic.getGroupId())
+                    .append("'>").append(topic.getGroup().getTitle()).append("</a>");
                 content.append("</td>");
 
                 content.append("<td class=\"second-child\">");
-                content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/group/forum_topic.jsf?topic_id=").append(topic.getId()).append("'>")
-                    .append(topic.getTitle()).append("</a>");
+                content.append("<a href='" + serverUrl + "/lw/group/forum_topic.jsf?topic_id=").append(topic.getId())
+                    .append("'>").append(topic.getTitle()).append("</a>");
                 content.append("</td>");
 
                 content.append("<td class=\"third-child\">");
@@ -175,11 +181,11 @@ public class ForumNotificator implements Runnable, Serializable {
 
         content.append("<ul>");
         content.append("<li>");
-        content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/myhome/profile.jsf?user_id=").append(user.getId()).append("'>")
+        content.append("<a href='" + serverUrl + "/lw/myhome/profile.jsf?user_id=").append(user.getId()).append("'>")
             .append(msg.getString("email_forum_notifications.change_how_often_we_send_mails")).append("</a>.");
         content.append("</li>");
         content.append("<li>");
-        content.append("<a href='" + Learnweb.getInstance().getServerUrl() + "/lw/user/unsubscribe.jsf?hash=").append(getHash(user)).append("'>")
+        content.append("<a href='" + serverUrl + "/lw/user/unsubscribe.jsf?hash=").append(getHash(user)).append("'>")
             .append(msg.getString("notification_settings.unsubscribe_from_all")).append("</a>.");
         content.append("</li>");
         content.append("</ul>");

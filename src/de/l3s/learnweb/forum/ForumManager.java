@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -290,27 +291,29 @@ public class ForumManager {
     }
 
     /**
-     * @return list of topics, that were created in date interval
+     * @return list of topics, that users should be notified about
      */
-    public List<ForumTopic> getTopicByPeriod(int userId, NotificationFrequency notificationFrequency) throws SQLException {
-        if (notificationFrequency.equals(NotificationFrequency.NEVER)) {
-            throw new IllegalArgumentException();
+    public Map<Integer, List<ForumTopic>> getTopicsByNotificationFrequencies(List<NotificationFrequency> notificationFrequencies) throws SQLException {
+        StringBuilder frequencies = new StringBuilder();
+        for (NotificationFrequency frequency : notificationFrequencies) {
+            frequencies.append("'").append(frequency).append("'").append(",");
         }
+        frequencies.setLength(frequencies.length() - 1);
 
-        List<ForumTopic> topics = new LinkedList<>();
-
+        Map<Integer, List<ForumTopic>> topics = new HashMap<>();
         try (PreparedStatement select = learnweb.getConnection().prepareStatement(
-            "SELECT ft.*, gu.notification_frequency, ftu.last_visit "
-                + "FROM lw_forum_topic ft LEFT JOIN lw_group_user gu USING(group_id) LEFT JOIN lw_forum_topic_user ftu ON gu.user_id = ftu.user_id AND ft.topic_id = ftu.topic_id "
-                + "WHERE ft.topic_last_post_time BETWEEN DATE_SUB(NOW(), INTERVAL ? DAY) AND NOW() AND g.user_id = ? AND g.notification_frequency = ? "
-                + "AND (ftu.last_visit IS NULL OR ftu.last_visit < ft.topic_last_post_time) GROUP BY f.topic_id")) {
-            select.setInt(1, notificationFrequency.getDays());
-            select.setInt(2, userId);
-            select.setString(3, notificationFrequency.toString());
+            "SELECT gu.user_id as notification_user_id, ft.* "
+                + "FROM lw_group_user gu JOIN lw_forum_topic ft USING(group_id) LEFT JOIN lw_forum_topic_user ftu ON gu.user_id = ftu.user_id AND ft.topic_id = ftu.topic_id "
+                + "WHERE notification_frequency IN (" + frequencies + ") AND (ftu.last_visit IS NULL OR ftu.last_visit < topic_last_post_time) "
+                + "AND ft.topic_last_post_time BETWEEN DATE_SUB(NOW(), INTERVAL CASE WHEN notification_frequency = 'MONTHLY' THEN 30 WHEN notification_frequency = 'WEEKLY' THEN 7 ELSE 1 END day) AND NOW() "
+                + "ORDER BY notification_user_id")) {
             ResultSet rs = select.executeQuery();
 
             while (rs.next()) {
-                topics.add(createTopic(rs));
+                int userId = rs.getInt("notification_user_id");
+                ForumTopic forumTopic = createTopic(rs);
+                List<ForumTopic> usersTopics = topics.computeIfAbsent(userId, id -> new ArrayList<>());
+                usersTopics.add(forumTopic);
             }
         }
         return topics;

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Deletable;
 
@@ -22,7 +23,9 @@ public class ForumTopic implements Serializable, Deletable {
     private Date lastPostDate;
     private int lastPostUserId;
     private boolean deleted;
+
     // cached values
+    private transient Group group;
     private transient User user;
     private transient User lastPostUser;
 
@@ -39,6 +42,13 @@ public class ForumTopic implements Serializable, Deletable {
             user = Learnweb.getInstance().getUserManager().getUser(userId);
         }
         return user;
+    }
+
+    public Group getGroup() throws SQLException {
+        if (group == null) {
+            group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+        }
+        return group;
     }
 
     public User getLastPostUser() throws SQLException {
