@@ -1,20 +1,20 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.resource.Comment;
+import de.l3s.learnweb.resource.CommentDao;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
@@ -30,16 +30,15 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
     private TreeNode treeRoot;
     private TreeNode[] selectedNodes;
 
+    @Inject
+    private CommentDao commentDao;
+
     @PostConstruct
     public void init() {
-        try {
-            treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
-        } catch (SQLException e) {
-            throw new HttpException("Unable to fetch tree", e);
-        }
+        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
     }
 
-    public void onAnalyseComments() throws SQLException {
+    public void onAnalyseComments() {
         Collection<Integer> selectedUsers = BeanHelper.getSelectedUsers(selectedNodes);
         usersCount = selectedUsers.size();
 
@@ -48,7 +47,7 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
             return;
         }
 
-        comments = getLearnweb().getResourceManager().getCommentsByUserIds(selectedUsers);
+        comments = commentDao.findByUserIds(selectedUsers);
 
         commentCount = comments.size();
 

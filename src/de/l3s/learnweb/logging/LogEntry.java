@@ -1,8 +1,7 @@
 package de.l3s.learnweb.logging;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -13,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.Resource;
@@ -26,7 +25,7 @@ public class LogEntry implements Serializable {
 
     private final int userId;
     private final Action action;
-    private final Date date;
+    private final LocalDateTime date;
     private final String params;
     private final int groupId;
     private final int targetId;
@@ -37,8 +36,7 @@ public class LogEntry implements Serializable {
     private transient Group group;
     private Map<Locale, String> descriptions; // stores a description of this entry for different locales
 
-    LogEntry(int userId, Action action, Date date, String params, int groupId, int targetId) {
-        super();
+    public LogEntry(int userId, Action action, LocalDateTime date, String params, int groupId, int targetId) {
         this.userId = userId;
         this.action = action;
         this.date = date;
@@ -47,16 +45,16 @@ public class LogEntry implements Serializable {
         this.targetId = targetId;
     }
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (null == user) {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }
 
-    public Group getGroup() throws SQLException {
+    public Group getGroup() {
         if (null == group) {
-            group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+            group = Learnweb.dao().getGroupDao().findById(groupId);
         }
         return group;
     }
@@ -73,7 +71,7 @@ public class LogEntry implements Serializable {
         return groupId;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -81,10 +79,10 @@ public class LogEntry implements Serializable {
         return params;
     }
 
-    public Resource getResource() throws SQLException {
+    public Resource getResource() {
         if (resource == null) {
-            if (action.getTargetId().equals(ActionTargetId.RESOURCE_ID) && targetId > 0) {
-                Resource r = Learnweb.getInstance().getResourceManager().getResource(targetId);
+            if (action.getTargetId() == ActionTargetId.RESOURCE_ID && targetId > 0) {
+                Resource r = Learnweb.dao().getResourceDao().findById(targetId);
 
                 resource = (r == null || r.isDeleted()) ? Optional.empty() : Optional.of(r);
             } else {
@@ -94,7 +92,7 @@ public class LogEntry implements Serializable {
         return resource.orElse(null);
     }
 
-    public boolean isQueryNeeded() throws SQLException {
+    public boolean isQueryNeeded() {
         return action == Action.adding_resource && getResource() != null && !getResource().getQuery().equalsIgnoreCase("none");
     }
 
@@ -103,39 +101,25 @@ public class LogEntry implements Serializable {
             return "<a href=\"myhome/resources.jsf\" >" + LanguageBundle.getLocaleMessage(locale, "myPrivateResources") + "</a> ";
         }
 
-        try {
-            Group group = getGroup();
+        Group group = getGroup();
 
-            if (null == group) {
-                return "Deleted group";
-            } else {
-                return "<a href=\"group/overview.jsf?group_id=" + getGroupId() + "\" target=\"_top\">" + group.getTitle() + "</a> ";
-            }
-        } catch (SQLException e) {
-            log.error("Can't create the group link; groupId: {}", groupId, e);
-            return "a group ";
+        if (null == group) {
+            return "Deleted group";
+        } else {
+            return "<a href=\"group/overview.jsf?group_id=" + getGroupId() + "\" target=\"_top\">" + group.getTitle() + "</a> ";
         }
     }
 
     private String getUsernameLink(Locale locale) {
-        try {
-            if (getUser() == null || getUser().isDeleted()) {
-                return "Deleted user";
-            }
-            return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getUsername() + "</a>";
-        } catch (SQLException e) {
-            log.error("Can't create the user link; userId: {}", userId, e);
-            return "a user";
+        if (getUser() == null || getUser().isDeleted()) {
+            return "Deleted user";
         }
+        return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getUsername() + "</a>";
     }
 
     private String getResourceLink(Locale locale) {
-        try {
-            if (getResource() != null) {
-                return "<a href=\"resource.jsf?resource_id=" + getResource().getId() + "\" target=\"_top\"><b>" + StringHelper.shortnString(getResource().getTitle(), 40) + "</b></a> ";
-            }
-        } catch (SQLException e) {
-            log.error("Can't create the resource link; resourceId: {}", targetId, e);
+        if (getResource() != null) {
+            return "<a href=\"resource.jsf?resource_id=" + getResource().getId() + "\" target=\"_top\"><b>" + StringHelper.shortnString(getResource().getTitle(), 40) + "</b></a> ";
         }
         return LanguageBundle.getLocaleMessage(locale, "log_a_resource");
     }
@@ -149,7 +133,7 @@ public class LogEntry implements Serializable {
         }
     }
 
-    public String getDescription(Locale locale) throws SQLException {
+    public String getDescription(Locale locale) {
         // create description cache if it doesn't exist yet
         if (null == descriptions) {
             descriptions = new HashMap<>();
@@ -184,9 +168,9 @@ public class LogEntry implements Serializable {
                 break;
             case commenting_resource:
                 description = usernameLink + LanguageBundle.getLocaleMessage(locale, "log_commenting_resource", getResourceLink(locale));
-                Comment comment = Learnweb.getInstance().getResourceManager().getComment(NumberUtils.toInt(getParams()));
-                if (comment != null) {
-                    description += " " + LanguageBundle.getLocaleMessage(locale, "with") + " " + "<b>" + StringHelper.shortnString(comment.getText(), 100) + "</b>";
+                Optional<Comment> comment = Learnweb.dao().getCommentDao().findById(NumberUtils.toInt(getParams()));
+                if (comment.isPresent()) {
+                    description += " " + LanguageBundle.getLocaleMessage(locale, "with") + " " + "<b>" + StringHelper.shortnString(comment.get().getText(), 100) + "</b>";
                 }
                 break;
             case deleting_comment:
@@ -297,7 +281,7 @@ public class LogEntry implements Serializable {
                 break;
 
             default:
-                if (getAction().getTargetId().equals(ActionTargetId.RESOURCE_ID)) {
+                if (getAction().getTargetId() == ActionTargetId.RESOURCE_ID) {
                     description = usernameLink + " has executed action <i>" + getAction().name() + "</i> on " + getResourceLink(locale);
                 } else {
                     description = "Performed action <i>" + getAction().name() + "</i>"; // should never happen;

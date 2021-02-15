@@ -4,32 +4,28 @@ import java.net.URL;
 import java.util.List;
 
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceManager;
-import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.maintenance.MaintenanceTask;
 import de.l3s.util.UrlHelper;
 
 public class GenerateMissingThumbnails extends MaintenanceTask {
 
-    private ResourceManager resourceManager;
-    private ResourcePreviewMaker resourcePreviewMaker;
-
     @Override
-    protected void init() throws Exception {
-        resourceManager = getLearnweb().getResourceManager();
-        resourcePreviewMaker = getLearnweb().getResourcePreviewMaker();
+    protected void init() {
         requireConfirmation = true;
     }
 
     @Override
     protected void run(final boolean dryRun) throws Exception {
-        String queryMedia = "SELECT *  FROM `lw_resource` WHERE `deleted` = 0 AND `max_image_url` IS NOT NULL AND `max_image_url` != -1 AND thumbnail1_file_id = 0 AND storage_type=2 and type in('video', 'image') limit 10";
-        List<Resource> imagesWithoutThumbnail = resourceManager.getResources(queryMedia, null);
+        List<Resource> imagesWithoutThumbnail = getLearnweb().getDaoProvider().getJdbi().withHandle(handle -> handle
+            .select("SELECT *  FROM lw_resource WHERE deleted = 0 AND max_image_url IS NOT NULL AND max_image_url != -1 AND thumbnail1_file_id = 0 AND storage_type=2 and type in('video', 'image') limit 10")
+            .map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} image/video resources without thumbnails", imagesWithoutThumbnail.size());
 
-        String queryWebsites = "SELECT * FROM `lw_resource` WHERE `storage_type` =2 AND `type` LIKE 'website' AND deleted =0 AND url NOT LIKE '%learnweb%' AND online_status = 'UNKNOWN' and thumbnail0_file_id = 0 ORDER BY resource_id DESC";
-        List<Resource> websitesWithoutThumbnail = resourceManager.getResources(queryWebsites, null);
+        List<Resource> websitesWithoutThumbnail = getLearnweb().getDaoProvider().getJdbi().withHandle(handle -> handle
+            .select("SELECT * FROM lw_resource WHERE storage_type =2 AND type LIKE 'website' AND deleted =0 AND url NOT LIKE '%learnweb%' AND online_status = 'UNKNOWN' and thumbnail0_file_id = 0 ORDER BY resource_id DESC")
+            .map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} web resources without thumbnails", websitesWithoutThumbnail.size());
 
         if (!dryRun) {
@@ -43,7 +39,7 @@ public class GenerateMissingThumbnails extends MaintenanceTask {
         }
     }
 
-    protected void generateThumbnailsForWebsite(Resource resource) throws Exception {
+    protected void generateThumbnailsForWebsite(Resource resource) {
         resource.setType(ResourceType.website);
 
         String url = resource.getUrl();
@@ -64,7 +60,7 @@ public class GenerateMissingThumbnails extends MaintenanceTask {
         if (resource.getSmallThumbnail().getFileId() == 0) {
             log.debug("create thumbnail");
             try {
-                resourcePreviewMaker.processWebsite(resource);
+                getLearnweb().getResourcePreviewMaker().processWebsite(resource);
                 resource.setFormat("text/html");
             } catch (Throwable t) {
                 log.warn("Can't create thumbnail for url: {}", url, t);
@@ -85,7 +81,7 @@ public class GenerateMissingThumbnails extends MaintenanceTask {
             return;
         }
 
-        resourcePreviewMaker.processImage(resource, new URL(url).openStream());
+        getLearnweb().getResourcePreviewMaker().processImage(resource, new URL(url).openStream());
         resource.save();
     }
 

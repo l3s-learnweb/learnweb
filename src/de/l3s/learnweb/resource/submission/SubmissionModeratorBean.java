@@ -1,9 +1,9 @@
 package de.l3s.learnweb.resource.submission;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -23,8 +23,11 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     private Submission submission;
     private SubmittedResources selectedUserSubmission;
 
-    public void onLoad() throws SQLException {
-        submission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
+    @Inject
+    private SubmissionDao submissionDao;
+
+    public void onLoad() {
+        submission = submissionDao.findById(submissionId).orElse(null);
         BeanAssert.isFound(submission);
     }
 
@@ -51,14 +54,14 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     public void unlockSubmission(int userId) {
         if (selectedUserSubmission != null) {
             selectedUserSubmission.setSubmitStatus(false);
-            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(submission.getId(), userId, false);
+            submissionDao.insertSubmissionStatus(submission.getId(), userId, false);
         }
     }
 
     public void lockSubmission(int userId) {
         if (selectedUserSubmission != null) {
             selectedUserSubmission.setSubmitStatus(true);
-            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(submission.getId(), userId, true);
+            submissionDao.insertSubmissionStatus(submission.getId(), userId, true);
         }
     }
 

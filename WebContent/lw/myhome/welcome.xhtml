@@ -133,7 +133,7 @@
                                     <h:outputText value="#{message.fromUser.username} " styleClass="fw-bold"/>
                                     <h:outputText value="#{msg.on_date} " styleClass="fw-light"/>
                                     <h:outputText value="#{message.time}">
-                                        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+                                        <f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                     </h:outputText>
                                 </span>
                             </div>

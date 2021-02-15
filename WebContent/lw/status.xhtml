@@ -9,14 +9,12 @@
         <version>#{statusBean.version}</version>
         <project_stage>#{statusBean.projectStage}</project_stage>
     </app>
-    <env>
-        <ui:repeat var="entry" value="#{statusBean.variables}">
-            <var>
-                <name>#{entry.key}</name>
-                <value>#{entry.value}</value>
-            </var>
-        </ui:repeat>
-    </env>
+    <config>
+        <property key="server_url" value="#{config.serverUrl}"/>
+        <property key="development" value="#{config.developmentMode}"/>
+        <property key="maintenance" value="#{config.maintenanceMode}"/>
+        <property key="root" value="#{config.rootEnvironment}"/>
+    </config>
     <services>
         <ui:repeat var="service" value="#{statusBean.services}">
             <service>

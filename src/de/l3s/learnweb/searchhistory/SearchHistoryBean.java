@@ -1,7 +1,6 @@
 package de.l3s.learnweb.searchhistory;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,15 +10,16 @@ import java.util.stream.Collectors;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.searchhistory.SearchHistoryManager.Query;
-import de.l3s.learnweb.searchhistory.SearchHistoryManager.Session;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserDao;
 
 @Named
 @ViewScoped
@@ -32,41 +32,41 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
     private String searchQuery;
     private boolean showGroupHistory;
-    private Query selectedQuery;
+    private SearchQuery selectedQuery;
 
-    private transient List<Session> sessions;
+    private transient List<SearchSession> sessions;
     private transient Map<Integer, List<ResourceDecorator>> snippets = new HashMap<>();
+
+    @Inject
+    private UserDao userDao;
+
+    @Inject
+    private SearchHistoryDao searchHistoryDao;
 
     /**
      * Load the variables that needs values before the view is rendered.
      */
     public void onLoad() {
-        if (isAjaxRequest()) {
-            return;
-        }
-
-        if (getUser() == null) {
-            return;
-        }
+        BeanAssert.authorized(isLoggedIn());
 
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
         }
     }
 
-    public Query getSelectedQuery() {
+    public SearchQuery getSelectedQuery() {
         return selectedQuery;
     }
 
-    public void setSelectedQuery(final Query selectedQuery) {
+    public void setSelectedQuery(final SearchQuery selectedQuery) {
         this.selectedQuery = selectedQuery;
     }
 
-    public List<Session> getSessions() throws SQLException {
+    public List<SearchSession> getSessions() {
         if (sessions == null && showGroupHistory && selectedGroupId > 0) {
-            sessions = getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId);
+            sessions = searchHistoryDao.findSessionsByGroupId(selectedGroupId);
         } else if (sessions == null && !showGroupHistory) {
-            sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(selectedUserId);
+            sessions = searchHistoryDao.findSessionsByUserId(selectedUserId);
         }
 
         return sessions;
@@ -88,7 +88,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         List<ResourceDecorator> searchResults = new ArrayList<>();
         if (selectedQuery != null) {
             if (!snippets.containsKey(selectedQuery.getSearchId())) {
-                snippets.put(selectedQuery.getSearchId(), getLearnweb().getSearchHistoryManager().getSearchResults(selectedQuery, 100));
+                snippets.put(selectedQuery.getSearchId(), dao().getSearchHistoryDao().findSearchResultsByQuery(selectedQuery, 100));
             }
 
             searchResults.addAll(snippets.get(selectedQuery.getSearchId()));
@@ -96,7 +96,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         return searchResults;
     }
 
-    public void onChangeGroup(AjaxBehaviorEvent event) throws SQLException {
+    public void onChangeGroup(AjaxBehaviorEvent event) {
         reset();
     }
 
@@ -117,11 +117,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         return showGroupHistory;
     }
 
-    public User getCurrentUser() throws SQLException {
-        User user = null;
-
-        user = getLearnweb().getUserManager().getUser(selectedUserId);
-
+    public User getCurrentUser() {
+        User user = userDao.findById(selectedUserId);
         return user == null ? getUser() : user;
     }
 
@@ -148,17 +145,17 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         this.selectedGroupId = selectedGroupId;
     }
 
-    public void search() throws SQLException {
+    public void search() {
         sessions = null;
         filterSessionsByQuery(searchQuery);
     }
 
-    public void reset() throws SQLException {
+    public void reset() {
         sessions = null;
         searchQuery = null;
     }
 
-    private void filterSessionsByQuery(String filterQuery) throws SQLException {
+    private void filterSessionsByQuery(String filterQuery) {
         if (StringUtils.isEmpty(filterQuery)) {
             return;
         }
@@ -172,13 +169,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         final boolean finalIsSearchUser = isSearchUser;
         final String finalQuery = filterQuery;
 
-        List<Session> allSessions = getSessions();
+        List<SearchSession> allSessions = getSessions();
         if (allSessions == null || allSessions.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "Sessions list is empty.");
         } else {
             sessions = allSessions.stream().filter(session -> {
                 if (finalIsSearchUser) {
-                    return StringUtils.containsIgnoreCase(session.getUsername(), finalQuery);
+                    return StringUtils.containsIgnoreCase(session.getUser().getUsername(), finalQuery);
                 }
 
                 return session.getQueries().stream().anyMatch(query -> StringUtils.containsIgnoreCase(query.getQuery(), finalQuery));

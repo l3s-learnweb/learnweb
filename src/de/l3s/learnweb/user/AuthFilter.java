@@ -16,17 +16,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Servlets;
 
-import de.l3s.learnweb.Learnweb;
-
 /**
  * Checks if user is logged in or auth cookie is present and restores auth for new session.
  *
  * @author Oleh Astappiev
  */
-@WebFilter(filterName = "AuthFilter", urlPatterns = "/*")
+@WebFilter(filterName = "AuthFilter", urlPatterns = "/*", asyncSupported = true)
 public class AuthFilter extends HttpFilter {
     private static final long serialVersionUID = 5223280572456365126L;
     private static final Logger log = LogManager.getLogger(AuthFilter.class);
+
+    @Inject
+    private UserDao userDao;
 
     @Inject
     private UserBean userBean;
@@ -37,18 +38,13 @@ public class AuthFilter extends HttpFilter {
 
         // Inject user into session
         try {
-            Optional<Learnweb> learnweb = Learnweb.getInstanceOptional();
-
-            if (learnweb.isPresent() && !userBean.isLoggedIn()) {
+            if (!userBean.isLoggedIn()) {
                 String authValue = Servlets.getRequestCookie(request, LoginBean.AUTH_COOKIE_NAME);
 
                 if (StringUtils.isNotEmpty(authValue)) {
                     String[] auth = authValue.split(":", 2);
-                    User user = learnweb.get().getUserManager().getUserByAuth(Long.parseLong(auth[0]), auth[1]);
-
-                    if (user != null) {
-                        userBean.setUser(user, request);
-                    }
+                    Optional<User> user = userDao.findByAuthToken(Long.parseLong(auth[0]), auth[1]);
+                    user.ifPresent(value -> userBean.setUser(value, request));
                 }
             }
         } catch (Exception e) {

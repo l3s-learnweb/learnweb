@@ -3,7 +3,6 @@ package de.l3s.maintenance.forum;
 import java.util.List;
 
 import de.l3s.learnweb.forum.ForumTopic;
-import de.l3s.learnweb.forum.ForumTopicDao;
 import de.l3s.maintenance.MaintenanceTask;
 
 /**
@@ -14,9 +13,8 @@ import de.l3s.maintenance.MaintenanceTask;
 public class ListAllTopics extends MaintenanceTask {
 
     @Override
-    protected void run(final boolean dryRun) throws Exception {
-        List<ForumTopic> topics = getLearnweb().getJdbi()
-            .withExtension(ForumTopicDao.class, dao -> dao.getTopicsByGroupId(1158));
+    protected void run(final boolean dryRun) {
+        List<ForumTopic> topics = getLearnweb().getDaoProvider().getForumTopicDao().findByGroupId(1158);
 
         for (ForumTopic topic : topics) {
             log.debug(topic);

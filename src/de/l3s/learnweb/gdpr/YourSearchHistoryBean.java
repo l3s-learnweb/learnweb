@@ -1,16 +1,17 @@
 package de.l3s.learnweb.gdpr;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
-import de.l3s.learnweb.searchhistory.SearchHistoryManager;
+import de.l3s.learnweb.searchhistory.SearchQuery;
+import de.l3s.learnweb.searchhistory.SearchSession;
 import de.l3s.learnweb.user.User;
 
 /**
@@ -22,22 +23,22 @@ public class YourSearchHistoryBean extends ApplicationBean implements Serializab
     private static final long serialVersionUID = 8515265854401597437L;
     //private static final Logger log = LogManager.getLogger(YourSearchHistoryBean.class);
 
-    private List<SearchHistoryManager.Query> userQueries;
+    private List<SearchQuery> userQueries;
 
-    public YourSearchHistoryBean() throws SQLException {
+    @PostConstruct
+    public void init() {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        List<SearchHistoryManager.Session> userSessions;
-        this.userQueries = new LinkedList<>();
-        userSessions = this.getLearnweb().getSearchHistoryManager().getSessionsForUser(user.getId());
+        userQueries = new LinkedList<>();
+        List<SearchSession> userSessions = dao().getSearchHistoryDao().findSessionsByUserId(user.getId());
 
-        for (SearchHistoryManager.Session session : userSessions) {
+        for (SearchSession session : userSessions) {
             userQueries.addAll(session.getQueries());
         }
     }
 
-    public List<SearchHistoryManager.Query> getUserQueries() {
+    public List<SearchQuery> getUserQueries() {
         return userQueries;
     }
 }

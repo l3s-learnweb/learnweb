@@ -4,9 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import de.l3s.learnweb.resource.File;
-import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.maintenance.MaintenanceTask;
 
 /**
@@ -17,20 +15,16 @@ import de.l3s.maintenance.MaintenanceTask;
 public class RemoveResourcesWithoutLocalFiles extends MaintenanceTask {
 
     @Override
-    protected void run(final boolean dryRun) throws Exception {
-        ResourceManager resourceManager = getLearnweb().getResourceManager();
-        FileManager fileManager = getLearnweb().getFileManager();
-        resourceManager.setReindexMode(true);
-
+    protected void run(final boolean dryRun) {
         HashSet<Resource> brokenResources = new HashSet<>();
-        List<Resource> resources = resourceManager.getResourcesByUserId(9289);
+        List<Resource> resources = getLearnweb().getDaoProvider().getResourceDao().findByOwnerId(9289);
 
         log.debug("Process resources: {}", resources.size());
 
         long totalSize = 0;
         for (Resource resource : resources) {
             try {
-                List<File> files = fileManager.getFilesByResource(resource.getId());
+                List<File> files = getLearnweb().getDaoProvider().getFileDao().findByResourceId(resource.getId());
                 for (File file : files) {
                     totalSize += file.getLength();
                 }

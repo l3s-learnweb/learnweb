@@ -1,10 +1,9 @@
 package de.l3s.learnweb.resource.ted;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.Instant;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
@@ -16,7 +15,7 @@ public class TranscriptLog implements Serializable {
     private String wordsSelected;
     private String userAnnotation;
     private String action;
-    private Date timestamp;
+    private Instant timestamp;
 
     // cached values
     private transient User user;
@@ -26,7 +25,7 @@ public class TranscriptLog implements Serializable {
 
     }
 
-    public TranscriptLog(int userId, int resourceId, String wordsSelected, String userAnnotation, String action, Date timestamp) {
+    public TranscriptLog(int userId, int resourceId, String wordsSelected, String userAnnotation, String action, Instant timestamp) {
         this.userId = userId;
         this.resourceId = resourceId;
         this.wordsSelected = wordsSelected;
@@ -75,26 +74,26 @@ public class TranscriptLog implements Serializable {
         this.action = action;
     }
 
-    public Date getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 
     // ------------ convenience functions -----------------
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (null == user) {
-            user = Learnweb.getInstance().getUserManager().getUser(getUserId());
+            user = Learnweb.dao().getUserDao().findById(getUserId());
         }
         return user;
     }
 
-    public Resource getResource() throws SQLException {
+    public Resource getResource() {
         if (null == resource) {
-            resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+            resource = Learnweb.dao().getResourceDao().findById(resourceId);
         }
         return resource;
     }

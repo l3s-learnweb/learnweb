@@ -1,10 +1,10 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +26,10 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
 
     private User user;
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private UserDao userDao;
+
+    public void onLoad() {
         BeanAssert.validate(StringUtils.isNotEmpty(parameter));
         String[] splits = parameter.split("_");
         BeanAssert.validate(splits.length == 2 && !StringUtils.isAnyEmpty(splits), "error_pages.bad_request_email_link");
@@ -34,24 +37,18 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
         int userId = NumberUtils.toInt(splits[0]);
         String hash = splits[1];
 
-        user = getLearnweb().getUserManager().getUser(userId);
+        user = userDao.findById(userId);
         BeanAssert.validate(user != null && hash.length() == PasswordBean.PASSWORD_CHANGE_HASH_LENGTH, "error_pages.bad_request_email_link");
         BeanAssert.validate(hash.equals(PasswordBean.createPasswordChangeHash(user)), "Your request seams to be invalid. Maybe you have already changed the password?");
     }
 
     public String changePassword() {
-        UserManager um = getLearnweb().getUserManager();
-        try {
-            user.setPassword(password);
-            um.save(user);
+        user.setPassword(password);
+        userDao.save(user);
 
-            setKeepMessages();
-            addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
-            return "/lw/user/login.xhtml?faces-redirect=true";
-        } catch (SQLException e) {
-            addErrorMessage(e);
-            return null;
-        }
+        setKeepMessages();
+        addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
+        return "/lw/user/login.xhtml?faces-redirect=true";
     }
 
     public String getParameter() {

@@ -1,19 +1,25 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 
 import org.jdbi.v3.core.Handle;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.group.FolderDao;
+import de.l3s.learnweb.group.GroupDao;
+import de.l3s.learnweb.resource.FileDao;
+import de.l3s.learnweb.resource.ResourceDao;
+import de.l3s.learnweb.user.CourseDao;
+import de.l3s.learnweb.user.OrganisationDao;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserDao;
 
 @Named
 @RequestScoped
@@ -24,7 +30,8 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
     private String memoryInfo;
     private List<DatabaseProcessStatistic> databaseProcessList;
 
-    public AdminSystemBean() throws SQLException {
+    @PostConstruct
+    public void init() {
         User user = getUser();
         BeanAssert.authorized(user);
         BeanAssert.hasPermission(user.isAdmin());
@@ -44,12 +51,8 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         // cacheSize.add(new CacheStatistic("Organisations", lw.getOrganisationManager().getCacheSize()));
     }
 
-    public void onResetCaches() throws SQLException {
-        getLearnweb().resetCaches();
-    }
-
     private void loadDatabaseProcessList() {
-        try (Handle handle = getLearnweb().openHandle()) {
+        try (Handle handle = getLearnweb().openJdbiHandle()) {
             databaseProcessList = handle.select("SHOW FULL PROCESSLIST").map((rs, ctx) -> {
                 DatabaseProcessStatistic ps = new DatabaseProcessStatistic();
                 ps.setId(rs.getInt("Id"));
@@ -74,8 +77,8 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         return databaseProcessList;
     }
 
-    public void onKillDatabaseProcess(int processId) throws SQLException {
-        try (Handle handle = getLearnweb().openHandle()) {
+    public void onKillDatabaseProcess(int processId) {
+        try (Handle handle = getLearnweb().openJdbiHandle()) {
             handle.execute("KILL ?", processId);
         }
 
@@ -84,17 +87,13 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
     }
 
     public void onClearCaches() {
-        try {
-            Learnweb learnweb = getLearnweb();
-            learnweb.getOrganisationManager().resetCache();
-            learnweb.getCourseManager().resetCache();
-            learnweb.getResourceManager().resetCache();
-            learnweb.getGroupManager().resetCache();
-            learnweb.getUserManager().resetCache();
-            learnweb.getFileManager().resetCache();
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
+        OrganisationDao.cache.clear();
+        UserDao.cache.clear();
+        CourseDao.cache.clear();
+        GroupDao.cache.clear();
+        FolderDao.cache.clear();
+        ResourceDao.cache.clear();
+        FileDao.cache.clear();
 
         addMessage(FacesMessage.SEVERITY_INFO, "Caches cleared");
     }

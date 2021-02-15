@@ -3,7 +3,6 @@ package de.l3s.learnweb.resource.glossary;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -38,6 +37,7 @@ import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 
 import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
@@ -123,103 +123,92 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        try {
-            User user = getUser();
-            BeanAssert.authorized(user);
+        User user = getUser();
+        BeanAssert.authorized(user);
 
-            Instant start = Instant.now();
-            Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
-            glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resource);
-            BeanAssert.isFound(glossaryResource);
+        Instant start = Instant.now();
+        Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
+        glossaryResource = dao().getGlossaryDao().convertToGlossaryResource(resource).orElse(null);
+        BeanAssert.isFound(glossaryResource);
 
-            long duration = Duration.between(start, Instant.now()).toMillis();
-            if (duration > 500) {
-                log.warn("Glossary loading time: {}", duration);
-            }
-            log(Action.glossary_open, glossaryResource);
-
-            // for labint francesca.bianchi@unisalento.it
-            availableTopicOne.add(new SelectItem("Environment"));
-            availableTopicOne.add(new SelectItem("European Politics"));
-            availableTopicOne.add(new SelectItem("Medicine"));
-            availableTopicOne.add(new SelectItem("Tourism"));
-
-            // for iryna.shylnikova@unisalento.it
-            availableTopicOne.add(new SelectItem("Business"));
-            availableTopicOne.add(new SelectItem("Migration"));
-            availableTopicOne.add(new SelectItem("Energy resources"));
-            availableTopicOne.add(new SelectItem("International relations"));
-            availableTopicOne.add(new SelectItem("Globalization"));
-            availableTopicOne.add(new SelectItem("Ecology"));
-
-            // convert tree like glossary structure to flat table
-            repaintTable();
-
-            onClearEntryForm();
-
-            tableLanguageFilter = new ArrayList<>(glossaryResource.getAllowedLanguages());
-
-            optionMandatoryDescription = user.getOrganisation().getOption(Option.Glossary_Mandatory_Description);
-            optionImportEnabled = user.getOrganisation().getOption(Option.Glossary_Enable_Import);
-        } catch (Exception e) {
-            addErrorGrowl(e);
+        long duration = Duration.between(start, Instant.now()).toMillis();
+        if (duration > 500) {
+            log.warn("Glossary loading time: {}", duration);
         }
+        log(Action.glossary_open, glossaryResource);
+
+        // for labint francesca.bianchi@unisalento.it
+        availableTopicOne.add(new SelectItem("Environment"));
+        availableTopicOne.add(new SelectItem("European Politics"));
+        availableTopicOne.add(new SelectItem("Medicine"));
+        availableTopicOne.add(new SelectItem("Tourism"));
+
+        // for iryna.shylnikova@unisalento.it
+        availableTopicOne.add(new SelectItem("Business"));
+        availableTopicOne.add(new SelectItem("Migration"));
+        availableTopicOne.add(new SelectItem("Energy resources"));
+        availableTopicOne.add(new SelectItem("International relations"));
+        availableTopicOne.add(new SelectItem("Globalization"));
+        availableTopicOne.add(new SelectItem("Ecology"));
+
+        // convert tree like glossary structure to flat table
+        repaintTable();
+
+        onClearEntryForm();
+
+        tableLanguageFilter = new ArrayList<>(glossaryResource.getAllowedLanguages());
+
+        optionMandatoryDescription = user.getOrganisation().getOption(Option.Glossary_Mandatory_Description);
+        optionImportEnabled = user.getOrganisation().getOption(Option.Glossary_Enable_Import);
     }
 
     public void setGlossaryForm(GlossaryTableView tableItem) {
-        try {
-            //set form entry
-            formEntry = tableItem.getEntry().clone();
-            //Reset ID to old entry ID as it is not copy action
-            formEntry.setId(tableItem.getEntryId()); //entry ID
-            //Reset original entry ID as it is not a copy action
-            formEntry.setOriginalEntryId(tableItem.getEntry().getOriginalEntryId());
-            //Reset old term ID and original term id as it is not a copy action
-            for (GlossaryTerm term : formEntry.getTerms()) {
-                term.setId(term.getOriginalTermId());
-                term.setOriginalTermId(tableItem.getEntry().getTerm(term.getId()).getOriginalTermId());
-            }
-        } catch (Exception e) {
-            addErrorGrowl(e);
+        //set form entry
+        formEntry = tableItem.getEntry().clone();
+        //Reset ID to old entry ID as it is not copy action
+        formEntry.setId(tableItem.getEntryId()); //entry ID
+        //Reset original entry ID as it is not a copy action
+        formEntry.setOriginalEntryId(tableItem.getEntry().getOriginalEntryId());
+        //Reset old term ID and original term id as it is not a copy action
+        for (GlossaryTerm term : formEntry.getTerms()) {
+            term.setId(term.getOriginalTermId());
+            term.setOriginalTermId(tableItem.getEntry().getTerm(term.getId()).getOriginalTermId());
         }
     }
 
     public void onSave() {
-        try {
-            //logging
-            if (formEntry.getId() > 1) {
-                log(Action.glossary_entry_edit, glossaryResource, formEntry.getId());
-            }
-
-            formEntry.setLastChangedByUserId(getUser().getId());
-
-            //to reset fulltext search
-            formEntry.setFulltext(null);
-
-            //set last changed by user id for terms
-            for (GlossaryTerm term : formEntry.getTerms()) {
-                // TODO @kemkes: check if the term was really modified
-
-                term.setLastChangedByUserId(getUser().getId());
-                //log term edit actions
-                if (term.getId() > 0) {
-                    log(Action.glossary_term_edit, glossaryResource, term.getId());
-                }
-            }
-
-            if (!containsUndeletedTerms(formEntry)) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "Glossary.entry_validation");
-                return;
-            }
-
-            getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
-            addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
-
-            onClearEntryForm();
-        } catch (SQLException e) {
-            log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
-            addErrorGrowl(e);
+        //logging
+        if (formEntry.getId() > 1) {
+            log(Action.glossary_entry_edit, glossaryResource, formEntry.getId());
+        } else {
+            log(Action.glossary_entry_add, glossaryResource, formEntry.getId());
         }
+
+        formEntry.setLastChangedByUserId(getUser().getId());
+
+        //to reset fulltext search
+        formEntry.setFulltext(null);
+
+        //set last changed by user id for terms
+        for (GlossaryTerm term : formEntry.getTerms()) {
+            // TODO @kemkes: check if the term was really modified
+
+            term.setLastChangedByUserId(getUser().getId());
+            //log term edit actions
+            if (term.getId() > 0) {
+                log(Action.glossary_term_edit, glossaryResource, term.getId());
+            }
+        }
+
+        if (!containsUndeletedTerms(formEntry)) {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Glossary.entry_validation");
+            return;
+        }
+
+        Learnweb.dao().getGlossaryDao().saveEntry(formEntry, glossaryResource);
+        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+
+        onClearEntryForm();
     }
 
     public void onClearEntryForm() {
@@ -232,42 +221,31 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public void onDeleteEntry(GlossaryTableView row) {
-        try {
-            row.getTopics();
-            log(Action.glossary_entry_delete, glossaryResource, row.getEntryId());
-            row.getEntry().setDeleted(true);
-            row.getEntry().setLastChangedByUserId(getUser().getId());
+        Learnweb.dao().getGlossaryEntryDao().deleteSoft(row.getEntry(), getUser().getId());
 
-            getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), glossaryResource);
-            //Remove entry from resource
-            glossaryResource.getEntries().remove(row.getEntry());
-            addGrowl(FacesMessage.SEVERITY_INFO, "entry_deleted");
-        } catch (SQLException e) {
-            log.error("Unable to delete entry for resource " + row.getEntry().getResourceId() + ", entry ID: " + row.getEntry().getId(), e);
-            addErrorGrowl(e);
-        }
+        //Remove entry from resource
+        glossaryResource.getEntries().remove(row.getEntry());
+
+        log(Action.glossary_entry_delete, glossaryResource, row.getEntryId());
+        addGrowl(FacesMessage.SEVERITY_INFO, "entry_deleted");
     }
 
     public void onDeleteTerm(GlossaryTerm term) {
-        try {
-            if (!containsUndeletedTerms(formEntry)) {
-                addGrowl(FacesMessage.SEVERITY_INFO, "Glossary.term_validation");
-                return;
-            }
-
-            term.setDeleted(true);
-
-            if (term.getId() <= 0) { //Its a new term. Safe to remove here.
-                formEntry.getTerms().remove(term);
-            }
-            formEntry.setFulltext(null); // reset full text index
-
-            addGrowl(FacesMessage.SEVERITY_INFO, getLocaleMessage("entry_deleted") + ": " + term.getTerm());
-
-            log(Action.glossary_term_delete, glossaryResource, term.getId());
-        } catch (Exception e) {
-            addErrorGrowl(e);
+        if (!containsUndeletedTerms(formEntry)) {
+            addGrowl(FacesMessage.SEVERITY_INFO, "Glossary.term_validation");
+            return;
         }
+
+        term.setDeleted(true);
+
+        if (term.getId() <= 0) { //Its a new term. Safe to remove here.
+            formEntry.getTerms().remove(term);
+        }
+        formEntry.setFulltext(null); // reset full text index
+
+        addGrowl(FacesMessage.SEVERITY_INFO, getLocaleMessage("entry_deleted") + ": " + term.getTerm());
+
+        log(Action.glossary_term_delete, glossaryResource, term.getId());
     }
 
     private boolean containsUndeletedTerms(GlossaryEntry entry) {
@@ -282,23 +260,21 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public void onAddTerm() {
-        try {
-            GlossaryTerm newTerm = new GlossaryTerm();
+        GlossaryTerm newTerm = new GlossaryTerm();
 
-            // find a language that is not used yet in this entry
-            List<Locale> unusedLanguages = new ArrayList<>(glossaryResource.getAllowedLanguages());
-            for (GlossaryTerm term : formEntry.getTerms()) {
-                unusedLanguages.remove(term.getLanguage());
-            }
-            if (unusedLanguages.isEmpty()) { // all languages have been used in this glossary
-                unusedLanguages = glossaryResource.getAllowedLanguages();
-            }
-
-            newTerm.setLanguage(unusedLanguages.get(0));
-            formEntry.addTerm(newTerm);
-        } catch (Exception e) {
-            addErrorGrowl(e);
+        // find a language that is not used yet in this entry
+        List<Locale> unusedLanguages = new ArrayList<>(glossaryResource.getAllowedLanguages());
+        for (GlossaryTerm term : formEntry.getTerms()) {
+            unusedLanguages.remove(term.getLanguage());
         }
+        if (unusedLanguages.isEmpty()) { // all languages have been used in this glossary
+            unusedLanguages = glossaryResource.getAllowedLanguages();
+        }
+
+        newTerm.setLanguage(unusedLanguages.get(0));
+        formEntry.addTerm(newTerm);
+
+        log(Action.glossary_term_add, glossaryResource, formEntry.getId());
     }
 
     public void onChangeTopicOne(AjaxBehaviorEvent event) {
@@ -374,7 +350,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         return languageMap;
     }
 
-    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException, IOException, IllegalAccessException {
+    public void onImportXls(FileUploadEvent fileUploadEvent) throws IOException, IllegalAccessException {
         log.debug("parseXls");
 
         User user = getUser();
@@ -399,7 +375,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 entry.getTerms().forEach(term -> term.setUserId(userId));
                 entry.setOriginalEntryId(-1); // to indicate that it was imported from a file
 
-                getLearnweb().getGlossaryManager().saveEntry(entry, glossaryResource);
+                Learnweb.dao().getGlossaryDao().saveEntry(entry, glossaryResource);
+                log(Action.glossary_entry_add, glossaryResource, entry.getId());
+
+                entry.getTerms().forEach(term -> log(Action.glossary_term_add, glossaryResource, formEntry.getId()));
             }
 
             repaintTable();
@@ -473,9 +452,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 copyrightStyle.setLocked(true);
                 sheet.protectSheet("learnweb");
             }
-        } catch (RuntimeException | IOException | SQLException e) {
-            log.error("Error in postprocessing Glossary xls for resource: " + glossaryResource.getId(), e);
-            addErrorGrowl(e);
+        } catch (RuntimeException | IOException e) {
+            log.error("Error in postprocessing Glossary xls for resource: {}", glossaryResource.getId(), e);
+            addErrorMessage(e);
         }
 
     }

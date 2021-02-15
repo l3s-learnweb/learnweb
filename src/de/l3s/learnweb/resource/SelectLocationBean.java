@@ -1,10 +1,10 @@
 package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -16,7 +16,6 @@ import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.group.PrivateGroup;
 import de.l3s.learnweb.user.User;
 
@@ -26,7 +25,7 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
     private static final long serialVersionUID = 6699391944318695838L;
     private static final Logger log = LogManager.getLogger(SelectLocationBean.class);
 
-    private final Group privateGroup;
+    private Group privateGroup;
 
     private Group targetGroup;
     private Folder targetFolder;
@@ -35,7 +34,8 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
     private transient DefaultTreeNode groupsTree;
     private Instant groupsTreeUpdate;
 
-    public SelectLocationBean() {
+    @PostConstruct
+    public void init() {
         //log.debug("Create new SelectLocationBean");
 
         privateGroup = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());
@@ -43,11 +43,7 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
 
     public Group getTargetGroup() {
         if (targetGroup == null && targetFolder != null) {
-            try {
-                targetGroup = targetFolder.getGroup();
-            } catch (SQLException e) {
-                log.error("Can't find group by folder's group_id", e);
-            }
+            targetGroup = targetFolder.getGroup();
         }
 
         return targetGroup;
@@ -85,14 +81,13 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
         }
     }
 
-    public TreeNode getGroupsAndFoldersTree() throws SQLException {
+    public TreeNode getGroupsAndFoldersTree() {
         User user = getUser();
         if (user == null) {
             return null;
         }
 
         if (groupsTree == null || groupsTreeUpdate.isBefore(Instant.now().minus(Duration.ofSeconds(30)))) {
-            GroupManager gm = getLearnweb().getGroupManager();
             DefaultTreeNode treeNode = new DefaultTreeNode("WriteAbleGroups");
 
             TreeNode privateGroupNode = new DefaultTreeNode("group", privateGroup, treeNode);
@@ -101,7 +96,7 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
 
             for (Group group : user.getWriteAbleGroups()) {
                 TreeNode groupNode = new DefaultTreeNode("group", group, treeNode);
-                gm.getChildNodesRecursively(groupNode, group, 0);
+                Group.getChildNodesRecursively(groupNode, group, 0);
             }
 
             groupsTree = treeNode;

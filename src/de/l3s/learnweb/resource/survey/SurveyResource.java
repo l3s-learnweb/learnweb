@@ -1,12 +1,11 @@
 package de.l3s.learnweb.resource.survey;
 
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
@@ -17,8 +16,8 @@ public class SurveyResource extends Resource {
     private static final String PATH = "survey/answer.jsf?resource_id=";
 
     private int surveyId = -1;
-    private Date start;
-    private Date end;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private boolean saveable; // if true users can save their answers before finally submitting them
 
     private Survey survey;
@@ -51,15 +50,15 @@ public class SurveyResource extends Resource {
     }
 
     @Override
-    protected void postConstruct() throws SQLException {
+    protected void postConstruct() {
         super.postConstruct();
 
-        Learnweb.getInstance().getSurveyManager().loadSurveyResource(this);
+        Learnweb.dao().getSurveyDao().loadSurveyResource(this);
     }
 
-    public Survey getSurvey() throws SQLException {
+    public Survey getSurvey() {
         if (null == survey) {
-            survey = Learnweb.getInstance().getSurveyManager().getSurvey(surveyId);
+            survey = Learnweb.dao().getSurveyDao().findById(surveyId).orElseThrow();
         }
         return survey;
     }
@@ -69,7 +68,7 @@ public class SurveyResource extends Resource {
         this.surveyId = survey.getId();
     }
 
-    public Collection<SurveyQuestion> getQuestions() throws SQLException {
+    public Collection<SurveyQuestion> getQuestions() {
         return getSurvey().getQuestions();
     }
 
@@ -83,32 +82,30 @@ public class SurveyResource extends Resource {
     /**
      * @return true if this user has submitted this survey
      */
-    public boolean isSubmitted(int userId) throws SQLException {
-        return Learnweb.getInstance().getSurveyManager().getSurveyResourceSubmitStatus(this.getId(), userId);
+    public boolean isSubmitted(int userId) {
+        return Learnweb.dao().getSurveyDao().findSubmittedStatus(this.getId(), userId).orElse(false);
     }
 
     /**
      * Returns all answers of user even when they are incomplete or not final.
      */
-    public List<SurveyUserAnswers> getAnswersOfAllUsers() throws SQLException {
+    public List<SurveyUserAnswers> getAnswersOfAllUsers() {
         return getAnswers(false);
     }
 
     /**
      * Returns only answers that were finally submitted.
      */
-    public List<SurveyUserAnswers> getSubmittedAnswersOfAllUsers() throws SQLException {
+    public List<SurveyUserAnswers> getSubmittedAnswersOfAllUsers() {
         return getAnswers(true);
     }
 
-    private List<SurveyUserAnswers> getAnswers(boolean returnOnlySubmittedAnswers) throws SQLException {
+    private List<SurveyUserAnswers> getAnswers(boolean returnOnlySubmittedAnswers) {
         List<SurveyUserAnswers> answers = new LinkedList<>();
 
-        SurveyManager surveyManager = Learnweb.getInstance().getSurveyManager();
+        List<User> users = returnOnlySubmittedAnswers ? Learnweb.dao().getUserDao().findBySubmittedSurveyResourceId(getId())
+            : Learnweb.dao().getUserDao().findBySavedSurveyResourceId(getId());
 
-        List<User> users = returnOnlySubmittedAnswers
-            ? surveyManager.getUsersWhoSubmittedSurveyResource(getId())
-            : surveyManager.getUsersWhoSavedSurveyResource(getId());
         for (User user : users) {
             answers.add(getAnswersOfUser(user.getId()));
         }
@@ -116,25 +113,25 @@ public class SurveyResource extends Resource {
         return answers;
     }
 
-    public SurveyUserAnswers getAnswersOfUser(int userId) throws SQLException {
+    public SurveyUserAnswers getAnswersOfUser(int userId) {
         SurveyUserAnswers answers = getAnswerCache().get(userId);
         if (null == answers) {
-            answers = Learnweb.getInstance().getSurveyManager().getAnswersOfUser(this, userId);
+            answers = Learnweb.dao().getSurveyDao().findAnswersByResourceAndUserId(this, userId);
             getAnswerCache().put(answers);
         }
         return answers;
     }
 
-    public List<User> getUsersWhoSaved() throws SQLException {
-        return Learnweb.getInstance().getSurveyManager().getUsersWhoSavedSurveyResource(getId());
+    public List<User> getUsersWhoSaved() {
+        return Learnweb.dao().getUserDao().findBySavedSurveyResourceId(getId());
     }
 
-    public List<User> getUsersWhoSubmitted() throws SQLException {
-        return Learnweb.getInstance().getSurveyManager().getUsersWhoSubmittedSurveyResource(getId());
+    public List<User> getUsersWhoSubmitted() {
+        return Learnweb.dao().getUserDao().findBySubmittedSurveyResourceId(getId());
     }
 
     @Override
-    public Resource save() throws SQLException {
+    public Resource save() {
         // save normal resource fields
         super.save();
         // save SurveyResource fields
@@ -142,8 +139,8 @@ public class SurveyResource extends Resource {
             survey.save(true);
             surveyId = survey.getId();
         }
-        Learnweb.getInstance().getSurveyManager().saveSurveyResource(this);
 
+        Learnweb.dao().getSurveyDao().saveSurveyResource(this);
         return this;
     }
 
@@ -165,19 +162,19 @@ public class SurveyResource extends Resource {
         this.surveyId = surveyId;
     }
 
-    public Date getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 

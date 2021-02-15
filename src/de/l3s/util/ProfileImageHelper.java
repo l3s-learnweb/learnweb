@@ -4,8 +4,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.l3s.learnweb.beans.ColorUtils;
-
 public final class ProfileImageHelper {
     // private static final Logger log = LogManager.getLogger(ImageHelper.class);
 
@@ -31,7 +29,7 @@ public final class ProfileImageHelper {
      * @return RGB color code without hash prefix
      */
     public static String getColorForProfilePicture(String name) {
-        return ColorUtils.getColor(name.hashCode());
+        return ColorHelper.getColor(name.hashCode());
     }
 
     /**

@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.Objects;
-import java.util.function.Supplier;
+
+import org.primefaces.util.SerializableSupplier;
 
 /**
  * A wrapper which holds value for a duration and gets a new one if the value is expired.
@@ -14,12 +15,12 @@ public final class Expirable<T> implements Serializable {
     private static final long serialVersionUID = 6877022635730725601L;
 
     private final TemporalAmount duration;
-    private final Supplier<T> supplier;
+    private final SerializableSupplier<T> supplier;
 
     private transient T value;
     private transient Instant expireAfter;
 
-    public Expirable(TemporalAmount duration, Supplier<T> supplier) {
+    public Expirable(TemporalAmount duration, SerializableSupplier<T> supplier) {
         this.duration = duration;
         this.supplier = supplier;
     }

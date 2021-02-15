@@ -102,7 +102,7 @@
 												<f:param value="#{ss.endTimestamp}"/>
 											</h:outputFormat>
 										</div>
-										<h:outputText value="#{msg.by}: #{ss.username}" rendered="#{searchHistoryBean.showGroupHistory}" styleClass="fw-bold"/>
+										<h:outputText value="#{msg.by}: #{ss.user.username}" rendered="#{searchHistoryBean.showGroupHistory}" styleClass="fw-bold"/>
 									</h:panelGroup>
 								</li>
 							</ui:repeat>

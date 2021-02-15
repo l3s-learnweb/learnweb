@@ -1,6 +1,5 @@
 package de.l3s.learnweb.resource;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +10,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.group.GroupManager;
+import de.l3s.learnweb.group.FolderDao;
 
 public class ResourceUpdateBatch {
     private static final Logger log = LogManager.getLogger(ResourceUpdateBatch.class);
@@ -36,12 +34,9 @@ public class ResourceUpdateBatch {
         }
     }
 
-    public ResourceUpdateBatch(String json) throws SQLException {
+    public ResourceUpdateBatch(String json, final FolderDao folderDao, final ResourceDao resourceDao) {
         resources = new ArrayList<>();
         folders = new ArrayList<>();
-
-        GroupManager groupManager = Learnweb.getInstance().getGroupManager();
-        ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
 
         JsonArray items = JsonParser.parseString(json).getAsJsonArray();
         for (int i = 0, len = items.size(); i < len; ++i) {
@@ -50,7 +45,7 @@ public class ResourceUpdateBatch {
             int itemId = object.get("itemId").getAsInt();
 
             if ("resource".equals(itemType)) {
-                Resource resource = resourceManager.getResource(itemId);
+                Resource resource = resourceDao.findById(itemId);
                 if (resource != null) {
                     resources.add(resource);
                 } else {
@@ -58,7 +53,7 @@ public class ResourceUpdateBatch {
                     failed++;
                 }
             } else if ("folder".equals(itemType)) {
-                Folder folder = groupManager.getFolder(itemId);
+                Folder folder = folderDao.findById(itemId);
                 if (folder != null) {
                     folders.add(folder);
                 } else {
@@ -66,7 +61,7 @@ public class ResourceUpdateBatch {
                     failed++;
                 }
             } else {
-                log.error("Unsupported itemType: " + itemType);
+                log.error("Unsupported itemType: {}", itemType);
                 failed++;
             }
         }

@@ -1,17 +1,17 @@
 package de.l3s.learnweb.group;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.forum.ForumPostDao;
+import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 
@@ -35,11 +35,20 @@ public class GroupMembersBean extends ApplicationBean implements Serializable {
     private transient Map<Integer, Integer> postCounts;
     private transient Map<Integer, Integer> resourceCounts;
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private GroupDao groupDao;
+
+    @Inject
+    private ResourceDao resourceDao;
+
+    @Inject
+    private ForumPostDao forumPostDao;
+
+    public void onLoad() {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        group = getLearnweb().getGroupManager().getGroupById(groupId);
+        group = groupDao.findById(groupId);
         BeanAssert.isFound(group);
 
         if (null != group) {
@@ -59,7 +68,7 @@ public class GroupMembersBean extends ApplicationBean implements Serializable {
         return group;
     }
 
-    public boolean isMember() throws SQLException {
+    public boolean isMember() {
         User user = getUser();
 
         if (null == user) {
@@ -73,7 +82,7 @@ public class GroupMembersBean extends ApplicationBean implements Serializable {
         return group.isMember(user);
     }
 
-    public List<User> getMembers() throws SQLException {
+    public List<User> getMembers() {
         if (null == members && group != null) {
             members = group.getMembers();
         }
@@ -99,16 +108,16 @@ public class GroupMembersBean extends ApplicationBean implements Serializable {
         this.view = view;
     }
 
-    public int getForumPostCounts(int userId) throws SQLException {
+    public int getForumPostCounts(int userId) {
         if (postCounts == null) {
-            postCounts = Learnweb.getInstance().getJdbi().withExtension(ForumPostDao.class, dao -> dao.getPostsCountPerUserByGroupId(groupId));
+            postCounts = forumPostDao.countPerUserByGroupId(groupId);
         }
         return postCounts.getOrDefault(userId, 0);
     }
 
-    public int getResourcesCount(int userId) throws SQLException {
+    public int getResourcesCount(int userId) {
         if (resourceCounts == null) {
-            resourceCounts = Learnweb.getInstance().getResourceManager().getResourceCountPerUserByGroup(groupId);
+            resourceCounts = resourceDao.countPerUserByGroupId(groupId);
         }
         return resourceCounts.getOrDefault(userId, 0);
     }

@@ -2,7 +2,6 @@ package de.l3s.learnweb.gdpr;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -20,13 +19,13 @@ import de.l3s.learnweb.resource.ExportManager;
 public class DataExporterBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -505457925640299810L;
 
-    public void requestUserResources() throws IOException, SQLException {
+    public void requestUserResources() throws IOException {
         BeanAssert.hasPermission(isLoggedIn());
 
         new ExportManager(getLearnweb()).handleResponse(getUser());
     }
 
-    public void requestGroupResources(final Group group) throws IOException, SQLException {
+    public void requestGroupResources(final Group group) throws IOException {
         BeanAssert.hasPermission(group.canDeleteGroup(getUser()));
 
         new ExportManager(getLearnweb()).handleResponse(group);

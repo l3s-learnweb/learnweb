@@ -1,5 +1,6 @@
 package de.l3s.learnweb.web;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -14,7 +15,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.util.RsHelper;
 
 @RegisterRowMapper(BanDao.BanMapper.class)
-public interface BanDao extends SqlObject {
+public interface BanDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_bans")
     List<Ban> getBans();
 

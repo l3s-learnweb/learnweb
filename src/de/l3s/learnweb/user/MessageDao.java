@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -17,17 +18,18 @@ import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(MessageDao.MessageMapper.class)
-public interface MessageDao extends SqlObject {
-    @SqlQuery("SELECT * FROM `message` g WHERE message_id = ?")
+public interface MessageDao extends SqlObject, Serializable {
+
+    @SqlQuery("SELECT * FROM message g WHERE message_id = ?")
     Message findById(int messageId);
 
-    @SqlQuery("SELECT * FROM `message` WHERE from_user = ? order by m_time desc")
+    @SqlQuery("SELECT * FROM message WHERE from_user = ? order by m_time desc")
     List<Message> findOutgoing(User user);
 
-    @SqlQuery("SELECT * FROM `message` WHERE to_user = ? order by m_time desc")
+    @SqlQuery("SELECT * FROM message WHERE to_user = ? order by m_time desc")
     List<Message> findIncoming(User user);
 
-    @SqlQuery("SELECT * FROM `message` WHERE to_user = ? order by m_time desc limit ?")
+    @SqlQuery("SELECT * FROM message WHERE to_user = ? order by m_time desc limit ?")
     List<Message> findIncoming(User user, int limit);
 
     @SqlUpdate("UPDATE message SET m_seen = 1 where message_id = ?")
@@ -42,7 +44,7 @@ public interface MessageDao extends SqlObject {
     @SqlUpdate("UPDATE message SET m_read = 1 where to_user = ?")
     void updateMarkReadAll(User user);
 
-    @SqlQuery("SELECT count(*) FROM `message` WHERE to_user = ? and m_seen = 0")
+    @SqlQuery("SELECT count(*) FROM message WHERE to_user = ? and m_seen = 0")
     int countNotSeen(User user);
 
     default void save(Message message) {
@@ -56,7 +58,7 @@ public interface MessageDao extends SqlObject {
         params.put("m_read", message.isRead());
         params.put("m_time", message.getTime());
 
-        Optional<Integer> messageId = SqlHelper.generateInsertQuery(getHandle(), "message", params)
+        Optional<Integer> messageId = SqlHelper.handleSave(getHandle(), "message", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         messageId.ifPresent(message::setId);

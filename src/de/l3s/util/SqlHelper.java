@@ -1,85 +1,20 @@
 package de.l3s.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.Date;
 import java.util.LinkedHashMap;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.statement.Update;
 
 public final class SqlHelper {
-    private static final Logger log = LogManager.getLogger(SqlHelper.class);
-
-    public static byte[] serializeObject(Serializable object) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try (ObjectOutputStream oos = new ObjectOutputStream(outputStream)) {
-            oos.writeObject(object);
-            return outputStream.toByteArray();
-        } catch (Exception e) {
-            log.error("Couldn't serialize object: {}", object, e);
-            return null;
-        }
-    }
-
-    public static void setSerializedObject(PreparedStatement stmt, int parameterIndex, Serializable obj) throws SQLException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        try (ObjectOutputStream oos = new ObjectOutputStream(outputStream)) {
-            oos.writeObject(obj);
-
-            byte[] employeeAsBytes = outputStream.toByteArray();
-            stmt.setBinaryStream(parameterIndex, new ByteArrayInputStream(employeeAsBytes), employeeAsBytes.length);
-        } catch (Exception e) {
-            log.error("Couldn't serialize object: {}", obj, e);
-            stmt.setNull(parameterIndex, Types.BLOB);
-        }
-    }
-
-    public static Object getSerializedObject(ResultSet rs, String field) throws SQLException {
-        byte[] columnBytes = rs.getBytes(field);
-
-        if (columnBytes != null && columnBytes.length > 0) {
-            ByteArrayInputStream columnBAIS = new ByteArrayInputStream(columnBytes);
-
-            try (ObjectInputStream ois = new ObjectInputStream(columnBAIS)) {
-                // re-create the object
-                Object column = ois.readObject();
-
-                return column;
-            } catch (Exception e) {
-                log.error("Couldn't load column {}", field, e);
-            }
-        }
-        return null;
-    }
-
-    public static Timestamp convertDateTime(Date date) {
-        if (date == null) {
-            return null;
-        }
-
-        return new Timestamp(date.getTime());
-    }
 
     /**
      * Creates {@link Update} statement with `INSERT INTO tableName ON DUPLICATE KEY UPDATE ...` query and bound given parameters.
      * Assumes that the first column is the primary key of this table.
      */
-    public static Update generateInsertQuery(final Handle handle, final String tableName, final LinkedHashMap<String, Object> params) {
+    public static Update handleSave(final Handle handle, final String tableName, final LinkedHashMap<String, Object> params) {
         String[] keys = params.keySet().toArray(new String[0]);
-        Update update = handle.createUpdate(generateInsertQuery(tableName, keys));
+        Update update = handle.createUpdate(generateInsertReplaceQuery(tableName, keys));
 
         for (int i = 0, len = keys.length; i < len; ++i) {
             update.bind(i, params.get(keys[i]));
@@ -89,10 +24,10 @@ public final class SqlHelper {
     }
 
     /**
-     * Creates INSERT INTO tableName ON DUPLICATE KEY UPDATE statement.
+     * Creates `INSERT INTO tableName ON DUPLICATE KEY UPDATE` query.
      * Assumes that the first column is the primary key of this table.
      */
-    public static String generateInsertQuery(final String tableName, final String[] columns) {
+    public static String generateInsertReplaceQuery(final String tableName, final String[] columns) {
         StringBuilder sb = new StringBuilder("INSERT INTO ");
         sb.append(tableName).append(" (");
 
@@ -110,6 +45,39 @@ public final class SqlHelper {
         }
         sb.setLength(sb.length() - 1); // remove last comma
 
+        return sb.toString();
+    }
+
+    /**
+     * Creates `INSERT INTO tableName (column1,column2,column3) VALUES (?,?,?)` query.
+     */
+    public static String generateInsertQuery(final String tableName, final String[] columns) {
+        StringBuilder sb = new StringBuilder("INSERT INTO ");
+        sb.append(tableName).append(" (");
+
+        for (String column : columns) {
+            sb.append(column).append(',');
+        }
+        sb.setLength(sb.length() - 1); // remove last comma
+
+        String questionMarks = StringUtils.repeat(",?", columns.length).substring(1);
+        sb.append(") VALUES (").append(questionMarks).append(")");
+        return sb.toString();
+    }
+
+    /**
+     * Creates `UPDATE tableName SET column1=?,column2=?,column3=? WHERE primaryKey = ?` query.
+     */
+    public static String generateUpdateQuery(final String tableName, final String primaryKey, final String[] columns) {
+        StringBuilder sb = new StringBuilder("UPDATE ");
+        sb.append(tableName).append(" SET ");
+
+        for (final String column : columns) {
+            sb.append(column).append("=?,");
+        }
+        sb.setLength(sb.length() - 1); // remove last comma
+
+        sb.append(" WHERE ").append(primaryKey).append("=?");
         return sb.toString();
     }
 }

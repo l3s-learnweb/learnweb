@@ -10,12 +10,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.MessagingException;
 
-import de.l3s.learnweb.Learnweb;
+import org.omnifaces.util.Beans;
+
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.web.Ban;
+import de.l3s.learnweb.web.BounceManager;
 import de.l3s.learnweb.web.Request;
 import de.l3s.learnweb.web.RequestManager;
-import de.l3s.util.email.BounceManager;
 
 @Named
 @ViewScoped
@@ -68,7 +69,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
     public List<Request> getSuspiciousActivityList() {
         if (suspiciousActivityList == null) {
             try {
-                new BounceManager(Learnweb.getInstance()).parseInbox();
+                Beans.getInstance(BounceManager.class).parseInbox();
             } catch (MessagingException | IOException e) {
                 addErrorMessage(e);
             }

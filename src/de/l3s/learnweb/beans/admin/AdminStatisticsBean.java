@@ -1,7 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,15 +11,15 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jdbi.v3.core.Handle;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.group.GroupManager;
+import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.util.bean.BeanHelper;
@@ -37,18 +36,16 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
     private TreeNode treeRoot;
     private List<Map<String, String>> groupStatistics;
 
+    @Inject
+    private GroupDao groupDao;
+
     @PostConstruct
     public void init() {
-        try {
-            treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), false);
-        } catch (SQLException e) {
-            throw new HttpException("Unable to fetch tree", e);
-        }
+        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), false);
     }
 
-    public void fetchStatistics() throws SQLException {
+    public void fetchStatistics() {
         groupStatistics = new LinkedList<>();
-        GroupManager gm = getLearnweb().getGroupManager();
 
         Collection<Integer> selectedGroups = BeanHelper.getSelectedGroups(selectedNodes);
         if (selectedGroups.isEmpty()) {
@@ -62,9 +59,9 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
             + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_tag t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as tags, "
             + "(SELECT count(*) FROM lw_resource ir JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as no_of_archived_versions, "
             + "(SELECT count(distinct(t.resource_id)) FROM lw_resource ir JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE ir.deleted=0 AND ir.group_id = g.group_id) as no_of_archived_resources "
-            + "FROM `lw_group` g LEFT JOIN lw_resource r USING(group_id) WHERE r.deleted=0 AND group_id IN(<selectedGroups>) GROUP BY group_id";
+            + "FROM lw_group g LEFT JOIN lw_resource r USING(group_id) WHERE r.deleted=0 AND group_id IN(<selectedGroups>) GROUP BY group_id";
 
-        try (Handle handle = getLearnweb().openHandle()) {
+        try (Handle handle = getLearnweb().openJdbiHandle()) {
             groupStatistics = handle.createQuery(query).bindList("selectedGroups", selectedGroups).map((rs, ctx) -> {
                 Map<String, String> result = new HashMap<>();
 
@@ -100,7 +97,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
             sb.append("<ul>");
 
             for (Integer groupId : selectedGroups) {
-                Group group = gm.getGroupById(groupId);
+                Group group = groupDao.findById(groupId);
 
                 sb.append("<li><div style=\"color:red\">Group: ");
                 sb.append(group.getTitle());

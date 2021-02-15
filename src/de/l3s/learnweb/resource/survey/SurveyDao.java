@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,21 +23,26 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 import de.l3s.util.bean.BeanHelper;
 
 @RegisterRowMapper(SurveyDao.SurveyMapper.class)
-public interface SurveyDao extends SqlObject {
+public interface SurveyDao extends SqlObject, Serializable {
 
     default Optional<SurveyResource> findResourceById(int surveyResourceId) {
         Resource resource = getHandle().attach(ResourceDao.class).findById(surveyResourceId);
+        return convertToSurveyResource(resource);
+    }
 
+    default Optional<SurveyResource> convertToSurveyResource(Resource resource) {
         if (resource == null) {
             return Optional.empty();
         }
 
         if (resource.getType() != ResourceType.survey) {
-            LogManager.getLogger(SurveyDao.class).error("Survey resource requested but the resource is of type {}; {}", resource.getType(), BeanHelper.getRequestSummary());
+            LogManager.getLogger(SurveyDao.class)
+                .error("Survey resource requested but the resource is of type {}; {}", resource.getType(), BeanHelper.getRequestSummary());
             return Optional.empty();
         }
 
@@ -52,25 +58,25 @@ public interface SurveyDao extends SqlObject {
     /**
      * @return true if the given survey was submitted by the user
      */
-    @SqlQuery("SELECT submitted FROM `lw_survey_resource_user` WHERE resource_id = ? AND user_id = ?")
+    @SqlQuery("SELECT submitted FROM lw_survey_resource_user WHERE resource_id = ? AND user_id = ?")
     Optional<Boolean> findSubmittedStatus(int resourceId, int userId);
 
-    @SqlUpdate("INSERT INTO lw_survey_resource_user (`resource_id`, `user_id`, `submitted`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE submitted = VALUES(submitted)")
+    @SqlUpdate("INSERT INTO lw_survey_resource_user (resource_id, user_id, submitted) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE submitted = VALUES(submitted)")
     void insertSubmittedStatus(int resourceId, int userId, boolean submitted);
 
-    @SqlUpdate("UPDATE `lw_survey` SET `deleted` = 1 WHERE `survey_id` = ?")
+    @SqlUpdate("UPDATE lw_survey SET deleted = 1 WHERE survey_id = ?")
     void deleteSoft(Survey survey);
 
     /**
      * Returns all answers a user has given for a particular survey resource.
      */
-    default SurveyUserAnswers findAnswersByResourceAndUserId(final SurveyResource resource, int userId) throws SQLException {
+    default SurveyUserAnswers findAnswersByResourceAndUserId(final SurveyResource resource, int userId) {
         Validate.notNull(resource);
         Validate.isTrue(userId > 0, "The value must be greater than zero: ", userId);
         Validate.isTrue(resource.getId() > 0, "The value must be greater than zero: ", resource.getId());
 
         // Get survey data
-        SurveyUserAnswers surveyAnswer = getHandle().select("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?", resource.getId(), userId)
+        SurveyUserAnswers surveyAnswer = getHandle().select("SELECT * FROM lw_survey_answer WHERE resource_id = ? AND user_id = ?", resource.getId(), userId)
             .reduceResultSet(new SurveyUserAnswers(userId, resource.getId()), (previous, rs, ctx) -> {
                 previous.setSaved(true);
 
@@ -99,14 +105,14 @@ public interface SurveyDao extends SqlObject {
     }
 
     @RegisterRowMapper(SurveyQuestionOptionMapper.class)
-    @SqlQuery("SELECT * FROM `lw_survey_question_option` WHERE `question_id` = ? and `deleted` = 0")
+    @SqlQuery("SELECT * FROM lw_survey_question_option WHERE question_id = ? and deleted = 0")
     List<SurveyQuestionOption> findAnswersByQuestionId(int questionId);
 
     @RegisterRowMapper(SurveyQuestionMapper.class)
-    @SqlQuery("SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted` = 0 ORDER BY `order`")
+    @SqlQuery("SELECT * FROM lw_survey_question WHERE survey_id = ? and deleted = 0 ORDER BY `order`")
     List<SurveyQuestion> findQuestionsBySurveyId(int surveyId);
 
-    default List<SurveyQuestion> findQuestionsAndAnswersById(int surveyId) throws SQLException {
+    default List<SurveyQuestion> findQuestionsAndAnswersById(int surveyId) {
         List<SurveyQuestion> questions = new ArrayList<>();
 
         if (surveyId <= 0) {
@@ -122,9 +128,9 @@ public interface SurveyDao extends SqlObject {
      * Loads the survey metadata into the given SurveyResource.
      */
     default void loadSurveyResource(SurveyResource resource) {
-        getHandle().select("SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?", resource.getId()).map((rs, ctx) -> {
-            resource.setEnd(rs.getDate("close_date"));
-            resource.setStart(rs.getDate("open_date"));
+        getHandle().select("SELECT * FROM lw_survey_resource WHERE resource_id = ?", resource.getId()).map((rs, ctx) -> {
+            resource.setEnd(RsHelper.getLocalDateTime(rs.getTimestamp("close_date")));
+            resource.setStart(RsHelper.getLocalDateTime(rs.getTimestamp("open_date")));
             resource.setSurveyId(rs.getInt("survey_id"));
             resource.setSaveable(rs.getBoolean("editable"));
             return resource;
@@ -136,7 +142,7 @@ public interface SurveyDao extends SqlObject {
      *
      * @param updateMetadataOnly performance optimization: if true only metadata like title and description will be saved but not changes to questions
      */
-    default void save(Survey survey, boolean updateMetadataOnly) throws SQLException {
+    default void save(Survey survey, boolean updateMetadataOnly) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("survey_id", survey.getId() < 1 ? null : survey.getId());
         params.put("organization_id", survey.getOrganizationId());
@@ -145,7 +151,7 @@ public interface SurveyDao extends SqlObject {
         params.put("user_id", survey.getUserId());
         params.put("public_template", survey.isPublicTemplate());
 
-        Optional<Integer> surveyId = SqlHelper.generateInsertQuery(getHandle(), "lw_survey", params)
+        Optional<Integer> surveyId = SqlHelper.handleSave(getHandle(), "lw_survey", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         surveyId.ifPresent(survey::setId);
@@ -170,7 +176,7 @@ public interface SurveyDao extends SqlObject {
         params.put("info", question.getInfo());
         params.put("required", question.isRequired());
 
-        Optional<Integer> questionId = SqlHelper.generateInsertQuery(getHandle(), "lw_survey_question", params)
+        Optional<Integer> questionId = SqlHelper.handleSave(getHandle(), "lw_survey_question", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         questionId.ifPresent(question::setId);
@@ -187,7 +193,7 @@ public interface SurveyDao extends SqlObject {
         params.put("question_id", questionId);
         params.put("value", option.getValue());
 
-        Optional<Integer> optionId = SqlHelper.generateInsertQuery(getHandle(), "lw_survey_question_option", params)
+        Optional<Integer> optionId = SqlHelper.handleSave(getHandle(), "lw_survey_question_option", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         optionId.ifPresent(option::setId);
@@ -201,22 +207,20 @@ public interface SurveyDao extends SqlObject {
         params.put("close_date", surveyResource.getEnd());
         params.put("editable", surveyResource.isSaveable());
 
-        SqlHelper.generateInsertQuery(getHandle(), "lw_survey_resource", params).execute();
+        SqlHelper.handleSave(getHandle(), "lw_survey_resource", params).execute();
     }
 
     /**
      * @param finalSubmit true if this is the final submit
      */
     default void saveAnswers(SurveyUserAnswers surveyAnswer, final boolean finalSubmit) {
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO `lw_survey_answer` (`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE answer = VALUES(answer)");
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_survey_answer (resource_id, user_id, question_id, answer) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE answer = VALUES(answer)");
 
-        surveyAnswer.getAnswers().forEach((questionId, answer) -> {
-            batch.add(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), questionId, answer);
-        });
+        surveyAnswer.getAnswers().forEach((questionId, answer) ->
+            batch.add(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), questionId, answer));
 
-        surveyAnswer.getMultipleAnswers().forEach((questionId, answer) -> {
-            batch.add(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), questionId, SurveyUserAnswers.joinMultipleAnswers(answer));
-        });
+        surveyAnswer.getMultipleAnswers().forEach((questionId, answer) ->
+            batch.add(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), questionId, SurveyUserAnswers.joinMultipleAnswers(answer)));
 
         batch.execute();
         surveyAnswer.setSaved(true);

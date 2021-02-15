@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
@@ -16,7 +15,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
@@ -24,27 +23,27 @@ import de.l3s.maintenance.MaintenanceTask;
 
 public class IndexFakeNews extends MaintenanceTask {
 
-    private ResourceManager resourceManager;
+    private ResourceDao resourceDao;
 
     private Resource logoResource;
 
     @Override
-    protected void init() throws Exception {
-        resourceManager = getLearnweb().getResourceManager();
+    protected void init() {
+        resourceDao = getLearnweb().getDaoProvider().getResourceDao();
         requireConfirmation = true;
     }
 
     @Override
-    protected void run(final boolean dryRun) throws Exception {
+    protected void run(final boolean dryRun) {
         //indexFullfactFile("d:\\full_fact.csv");
         //reindexAllFakeNewsResources();
         //indexSnopes();
     }
 
-    private void indexFullfactFile(String file) throws IOException, SQLException {
+    private void indexFullfactFile(String file) throws IOException {
         CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.withHeader());
 
-        logoResource = resourceManager.getResource(217749);
+        logoResource = resourceDao.findById(217749);
 
         for (CSVRecord csvRecord : parser) {
             String title = csvRecord.get("title").trim();
@@ -77,10 +76,12 @@ public class IndexFakeNews extends MaintenanceTask {
         }
     }
 
-    public void reindexAllFakeNewsResources() throws SQLException {
+    public void reindexAllFakeNewsResources() {
+        List<Resource> resources = getLearnweb().getDaoProvider().getJdbi().withHandle(handle -> handle
+            .select("SELECT * FROM lw_resource r WHERE deleted = 0 AND group_id = 1346 AND source = 'FactCheck' and url like 'http://fullfa%'")
+            .map(new ResourceDao.ResourceMapper()).list());
+
         int counter = 0;
-        List<Resource> resources = resourceManager.getResources("SELECT * FROM lw_resource r WHERE deleted = 0 AND group_id = 1346 AND source = ? and url like 'http://fullfa%'", "FactCheck");
-        resourceManager.setReindexMode(true);
         SolrClient solrClient = getLearnweb().getSolrClient();
         for (Resource resource : resources) {
             log.debug("Process: {} - {}", counter++, resource);
@@ -89,7 +90,7 @@ public class IndexFakeNews extends MaintenanceTask {
         }
     }
 
-    private void indexSnopes() throws IOException, SQLException {
+    private void indexSnopes() throws IOException {
         File[] files = new File("./Snopes").listFiles();
         if (files != null) {
             int i = 1;
@@ -100,7 +101,7 @@ public class IndexFakeNews extends MaintenanceTask {
         }
     }
 
-    private void indexSnopesFile(File file) throws IOException, SQLException {
+    private void indexSnopesFile(File file) throws IOException {
         Resource resource = new Resource();
         resource.setType(ResourceType.website);
         resource.setSource(ResourceService.factcheck);

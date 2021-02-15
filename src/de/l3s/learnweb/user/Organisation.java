@@ -1,7 +1,6 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
@@ -19,15 +18,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.ResourceMetaDataBean;
 import de.l3s.learnweb.resource.ResourceMetadataField;
 import de.l3s.learnweb.resource.ResourceMetadataField.MetadataType;
 import de.l3s.learnweb.resource.ResourceService;
+import de.l3s.util.HasId;
 
-public class Organisation implements Serializable, Comparable<Organisation> {
+public class Organisation implements HasId, Serializable, Comparable<Organisation> {
     private static final long serialVersionUID = -5187205229505825818L;
     private static final Logger log = LogManager.getLogger(Organisation.class);
 
@@ -89,15 +89,11 @@ public class Organisation implements Serializable, Comparable<Organisation> {
         setGlossaryLanguages(null);
     }
 
-    public List<User> getMembers() throws SQLException {
-        return Learnweb.getInstance().getUserManager().getUsersByOrganisationId(id);
-    }
-
     /**
      * @return The userIds of all organization members
      */
-    public List<Integer> getUserIds() throws SQLException {
-        List<User> users = getMembers();
+    public List<Integer> getUserIds() {
+        List<User> users = getUsers();
         List<Integer> userIds = new ArrayList<>(users.size());
 
         for (User user : users) {
@@ -136,8 +132,8 @@ public class Organisation implements Serializable, Comparable<Organisation> {
         this.metadataFields = metadataFields;
     }
 
-    public List<Course> getCourses() throws SQLException {
-        return Learnweb.getInstance().getCourseManager().getCoursesByOrganisationId(id);
+    public List<Course> getCourses() {
+        return Learnweb.dao().getCourseDao().findByOrganisationId(id);
     }
 
     @Override
@@ -348,7 +344,7 @@ public class Organisation implements Serializable, Comparable<Organisation> {
         this.defaultSearchServiceVideo = defaultSearchServiceVideo;
     }
 
-    public String getBannerImage() throws SQLException {
+    public String getBannerImage() {
         if (id == 1249) {
             return "logos/logo_eumade4all.png";
         } else if (id == 1210) {
@@ -362,7 +358,7 @@ public class Organisation implements Serializable, Comparable<Organisation> {
                 return null;
             }
 
-            File file = Learnweb.getInstance().getFileManager().getFileById(bannerImageFileId);
+            File file = Learnweb.dao().getFileDao().findById(bannerImageFileId);
 
             if (file != null) {
                 bannerImage = file.getUrl();
@@ -429,7 +425,7 @@ public class Organisation implements Serializable, Comparable<Organisation> {
     /**
      * @return All groups belonging to courses of this organization (sorted by title)
      */
-    public List<Group> getGroups() throws SQLException {
+    public List<Group> getGroups() {
         List<Group> groups = new LinkedList<>();
         for (Course course : getCourses()) {
             groups.addAll(course.getGroups());
@@ -442,8 +438,8 @@ public class Organisation implements Serializable, Comparable<Organisation> {
     /**
      * @return all users that are registered to this organization
      */
-    public List<User> getUsers() throws SQLException {
-        return Learnweb.getInstance().getUserManager().getUsersByOrganisationId(getId());
+    public List<User> getUsers() {
+        return Learnweb.dao().getUserDao().findByOrganisationId(id);
     }
 
     @Override
@@ -467,7 +463,7 @@ public class Organisation implements Serializable, Comparable<Organisation> {
         try {
             return ResourceService.valueOf(name);
         } catch (Exception e) {
-            log.fatal("Can't get service for " + name, e);
+            log.fatal("Can't get service for {}", name, e);
         }
         return null;
     }

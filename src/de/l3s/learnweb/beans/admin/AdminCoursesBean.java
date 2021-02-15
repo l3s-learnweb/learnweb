@@ -1,13 +1,14 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
@@ -16,10 +17,12 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Course;
+import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.Organisation;
-import de.l3s.learnweb.user.OrganisationManager;
+import de.l3s.learnweb.user.OrganisationDao;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -37,79 +40,69 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
     @Length(min = 2, max = 50)
     private String newOrganisationTitle;
 
-    public AdminCoursesBean() throws SQLException {
-        load();
-    }
+    @Inject
+    private OrganisationDao organisationDao;
 
-    private void load() throws SQLException {
+    @Inject
+    private CourseDao courseDao;
+
+    @PostConstruct
+    public void init() {
         if (getUser().isAdmin()) {
-            courses = new ArrayList<>(getLearnweb().getCourseManager().getCoursesAll());
+            courses = courseDao.findAll();
         } else if (getUser().isModerator()) {
             courses = new ArrayList<>(getUser().getOrganisation().getCourses());
         } else {
-            return;
+            BeanAssert.authorized(false);
         }
 
         Collections.sort(courses);
     }
 
     public void onCreateCourse() {
-        try {
-            User user = getUser();
+        User user = getUser();
 
-            Course course = new Course();
-            course.setTitle(newCourseTitle);
-            course.setOrganisationId(user.getOrganisationId());
-            course.save();
+        Course course = new Course();
+        course.setTitle(newCourseTitle);
+        course.setOrganisationId(user.getOrganisationId());
+        course.save();
 
-            course.addUser(user);
-            addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
-            newCourseTitle = ""; // reset input value
-            load(); // update course list
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
+        course.addUser(user);
+        addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
+        newCourseTitle = ""; // reset input value
+        init(); // update course list
     }
 
     public void onDeleteCourse(Course course) {
-        try {
-            List<User> undeletedUsers = getLearnweb().getCourseManager().deleteHard(course, getUser().isAdmin());
+        List<User> undeletedUsers = courseDao.deleteHard(course, getUser().isAdmin());
 
-            log.info("Deleted course " + course);
-            log(Action.course_delete, 0, course.getId());
-            addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been deleted. " + (undeletedUsers.isEmpty() ? "" : "But " + undeletedUsers.size() + " were not deleted because they are member of other courses."));
+        log.info("Deleted course {}", course);
+        log(Action.course_delete, 0, course.getId());
+        addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been deleted. " + (undeletedUsers.isEmpty() ? "" : "But " + undeletedUsers.size() + " were not deleted because they are member of other courses."));
 
-            load(); // update course list
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
+        init(); // update course list
     }
 
     public void onAnonymiseCourse(Course course) {
-        try {
-            getLearnweb().getCourseManager().anonymize(course);
+        courseDao.anonymize(course);
 
-            log.info("Anonymized course " + course);
-            log(Action.course_anonymize, 0, course.getId());
-            addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been anonymized.");
+        log.info("Anonymized course {}", course);
+        log(Action.course_anonymize, 0, course.getId());
+        addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been anonymized.");
 
-            load(); // update course list
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
+        init(); // update course list
     }
 
-    public void onCreateOrganisation() throws SQLException {
-        OrganisationManager om = getLearnweb().getOrganisationManager();
-
-        if (om.getOrganisationByTitle(newOrganisationTitle) != null) {
+    public void onCreateOrganisation() {
+        if (organisationDao.findByTitle(newOrganisationTitle).isPresent()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
             return;
         }
+
         Organisation org = new Organisation(newOrganisationTitle);
-        om.save(org);
+        organisationDao.save(org);
         addMessage(FacesMessage.SEVERITY_INFO, "A new organisation has been created. Now you can assign courses to it.");
-        load(); // update course list
+        init(); // update course list
     }
 
     public List<Course> getCourses() {

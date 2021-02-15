@@ -1,12 +1,15 @@
 package de.l3s.learnweb.logging;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -28,7 +31,7 @@ import de.l3s.util.RsHelper;
 import de.l3s.util.StringHelper;
 
 @RegisterRowMapper(LogDao.LogEntryMapper.class)
-public interface LogDao extends SqlObject {
+public interface LogDao extends SqlObject, Serializable {
 
     @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND target_id = :targetId AND action IN(<actionIds>) ORDER BY timestamp DESC")
     List<LogEntry> findByGroupIdAndTargetId(@Bind("groupId") int groupId, @Bind("targetId") int targetId, @DefineList("actionIds") List<Integer> actionIds);
@@ -59,17 +62,25 @@ public interface LogDao extends SqlObject {
      * This doesn't include the user's own actions.
      */
     @SqlQuery("SELECT * FROM lw_user_log WHERE group_id IN(<groupIds>) AND action IN(<actionIds>) AND user_id != 0 AND user_id != :userId ORDER BY timestamp DESC LIMIT :limit")
-    List<LogEntry> findByUsersGroupIds(@Bind("userId") int userId, @DefineList("groupId") List<Integer> groupIds, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
+    List<LogEntry> findByUsersGroupIds(@Bind("userId") int userId, @DefineList("groupIds") List<Integer> groupIds, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
+
+    @SqlQuery("SELECT timestamp FROM lw_user_log WHERE user_id = ? AND action = ? ORDER BY timestamp DESC LIMIT 1")
+    Optional<Instant> findDateOfLastByUserIdAndAction(int userId, int actionOrdinal);
 
     @SqlQuery("SELECT action, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN ? AND ? GROUP BY action")
     @KeyColumn("action")
     @ValueColumn("count")
-    Map<Integer, Integer> countUsagePerAction(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+    Map<Integer, Integer> countUsagePerAction(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     @SqlQuery("SELECT DATE(timestamp) AS day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN ? AND ? GROUP BY day")
     @KeyColumn("day")
     @ValueColumn("count")
-    Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+    Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
+
+    @SqlQuery("SELECT DATE(timestamp) as day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN ? AND ? AND action in (?) GROUP BY day")
+    @KeyColumn("day")
+    @ValueColumn("count")
+    Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate, String actions);
 
     /**
      * Logs a user action. The parameters "targetId" and "params" depend on the logged action.
@@ -98,18 +109,17 @@ public interface LogDao extends SqlObject {
             groupId = 0;
         }
 
-        getHandle().createUpdate("INSERT INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)")
+        getHandle().createUpdate("INSERT INTO lw_user_log (user_id, session_id, action, target_id, params, group_id, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)")
             .bind(0, userId)
             .bind(1, sessionId)
             .bind(2, action)
             .bind(3, targetId)
             .bind(4, params)
             .bind(5, groupId)
-            .bind(6, new Date())
             .execute();
     }
 
-    @SqlBatch("INSERT INTO `lw_user_log_action` (`action`, `name`, `target`, `category`) VALUES (:ordinal, :name, :getTargetId, :getCategory)")
+    @SqlBatch("INSERT INTO lw_user_log_action (action, name, target, category) VALUES (:ordinal, :name, :getTargetId, :getCategory)")
     void insertUserLogAction(@BindMethods Action... actions);
 
     @SqlUpdate("TRUNCATE TABLE lw_user_log_action")
@@ -118,15 +128,15 @@ public interface LogDao extends SqlObject {
     class LogEntryMapper implements RowMapper<LogEntry> {
         @Override
         public LogEntry map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            int logEntryId = rs.getInt("log_entry_id");
+            // int logEntryId = rs.getInt("log_entry_id");
             int userId = rs.getInt("user_id");
-            int sessionId = rs.getInt("session_id");
+            // String sessionId = rs.getString("session_id");
             Action action = Action.values()[rs.getInt("action")];
-            Date date = RsHelper.getDate(rs.getTimestamp("timestamp"));
+            LocalDateTime dateTime = RsHelper.getLocalDateTime(rs.getTimestamp("timestamp"));
             String params = rs.getString("params");
             int groupId = rs.getInt("group_id");
             int targetId = rs.getInt("target_id");
-            return new LogEntry(userId, action, date, params, groupId, targetId);
+            return new LogEntry(userId, action, dateTime, params, groupId, targetId);
         }
     }
 }

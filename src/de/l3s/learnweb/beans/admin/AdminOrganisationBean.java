@@ -1,7 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -21,7 +20,6 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.File;
@@ -42,13 +40,13 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     private LinkedList<OptionWrapperGroup> optionGroups;
     private List<SelectItem> availableGlossaryLanguages;
 
-    public void onLoad() throws SQLException {
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
         if (organisationId > 0) {
             BeanAssert.hasPermission(getUser().isAdmin());
 
-            setOrganisation(getLearnweb().getOrganisationManager().getOrganisationById(organisationId));
+            setOrganisation(dao().getOrganisationDao().findById(organisationId));
         } else {
             BeanAssert.hasPermission(getUser().isModerator());
 
@@ -67,10 +65,10 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             file.setName(fileInfo.getFileName());
             file.setMimeType(fileInfo.getMimeType());
 
-            file = getLearnweb().getFileManager().save(file, uploadedFile.getInputStream());
+            dao().getFileDao().save(file, uploadedFile.getInputStream());
 
             if (organisation.getBannerImageFileId() > 0) { // delete old image first
-                Learnweb.getInstance().getFileManager().delete(organisation.getBannerImageFileId());
+                dao().getFileDao().deleteSoft(organisation.getBannerImageFileId());
             }
 
             organisation.setBannerImageFileId(file.getId());
@@ -105,13 +103,8 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             }
         }
 
-        try {
-            getLearnweb().getOrganisationManager().save(organisation);
-
-            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
+        dao().getOrganisationDao().save(organisation);
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public Organisation getSelectedOrganisation() {
@@ -133,9 +126,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         String oldOptionGroupName = null;
 
         Option[] optionsEnum = Option.values();
-
-        EnumComparator c = new EnumComparator();
-        java.util.Arrays.sort(optionsEnum, c);
+        Arrays.sort(optionsEnum, new EnumComparator());
 
         for (Option option : optionsEnum) {
             // example: this gets "Services" from "Services_Allow_logout_from_Interweb"

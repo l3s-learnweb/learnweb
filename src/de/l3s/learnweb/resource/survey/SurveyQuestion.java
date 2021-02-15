@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,7 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.Deletable;
 
 /**
@@ -103,9 +102,9 @@ public class SurveyQuestion implements Deletable, Serializable, Cloneable {
 
     public List<QuestionType> getQuestionTypes() {
         List<QuestionType> types = new ArrayList<>();
-        Arrays.asList(QuestionType.values()).forEach(type -> {
-            if (type != QuestionType.AUTOCOMPLETE && type != QuestionType.FULLWIDTH_HEADER) {
-                types.add(type);
+        Arrays.asList(QuestionType.values()).forEach(qType -> {
+            if (qType != QuestionType.AUTOCOMPLETE && qType != QuestionType.FULLWIDTH_HEADER) {
+                types.add(qType);
             }
         });
         return types;
@@ -192,8 +191,8 @@ public class SurveyQuestion implements Deletable, Serializable, Cloneable {
         this.deleted = deleted;
     }
 
-    public void save() throws SQLException {
-        Learnweb.getInstance().getSurveyManager().saveQuestion(this);
+    public void save() {
+        Learnweb.dao().getSurveyDao().saveQuestion(this);
     }
 
     public int getSurveyId() {
@@ -220,4 +219,8 @@ public class SurveyQuestion implements Deletable, Serializable, Cloneable {
         return new SurveyQuestion(this);
     }
 
+    public static String joinOptions(Map<String, Object> options) {
+        String str = options.values().toString();
+        return str.substring(1, str.length() - 1).replace(",", "|||").replaceAll("\\s", "");
+    }
 }

@@ -20,7 +20,7 @@ public class LocaleConverter implements Converter<Locale> {
     @Override
     public Locale getAsObject(FacesContext arg0, UIComponent arg1, String value) throws ConverterException {
         if (null == value) {
-            log.warn("value is null: " + BeanHelper.getRequestSummary());
+            log.warn("value is null: {}", BeanHelper.getRequestSummary());
             return Locale.ENGLISH;
         }
         return Locale.forLanguageTag(value);
@@ -29,7 +29,7 @@ public class LocaleConverter implements Converter<Locale> {
     @Override
     public String getAsString(FacesContext arg0, UIComponent arg1, Locale value) throws ConverterException {
         if (null == value) {
-            log.warn("Locale is null: " + BeanHelper.getRequestSummary());
+            log.warn("Locale is null: {}", BeanHelper.getRequestSummary());
             return null;
         }
 

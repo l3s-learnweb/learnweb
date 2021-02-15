@@ -1,23 +1,23 @@
 package de.l3s.learnweb.dashboard;
 
-import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.faces.application.FacesMessage;
+import javax.inject.Inject;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserDao;
 
 public abstract class CommonDashboardUserBean extends ApplicationBean {
     private static final int USERS_LIMIT = 500;
@@ -29,22 +29,25 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
     private boolean usersLimitReached = false;
     private List<Integer> selectedUsersIds;
     private List<Integer> selectedGroupsIds;
-    protected Date startDate;
-    protected Date endDate;
+    protected LocalDate startDate;
+    protected LocalDate endDate;
 
     // caches:
     private transient List<Group> allGroups;
     private transient List<User> allUsers;
 
-    public CommonDashboardUserBean() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -5); // load data from last 5 years until now
+    @Inject
+    private GroupDao groupDao;
 
-        startDate = new Date(cal.getTimeInMillis());
-        endDate = new Date();
+    @Inject
+    private UserDao userDao;
+
+    public CommonDashboardUserBean() {
+        startDate = LocalDate.now().minusYears(1);
+        endDate = LocalDate.now();
     }
 
-    public void onLoad() throws SQLException {
+    public void onLoad() {
         User loggedInUser = getUser(); // the current user
         BeanAssert.authorized(loggedInUser);
 
@@ -53,7 +56,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
             selectedUsersIds = Collections.singletonList(loggedInUser.getId());
         } else if (paramUserId != null) { // statistic for one user from parameter
             singleUser = true;
-            User user = Learnweb.getInstance().getUserManager().getUser(paramUserId);
+            User user = userDao.findById(paramUserId);
             BeanAssert.isFound(user);
             selectedUsersIds = Collections.singletonList(user.getId());
             BeanAssert.hasPermission(loggedInUser.canModerateUser(user));
@@ -62,12 +65,12 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
         }
     }
 
-    public abstract void cleanAndUpdateStoredData() throws SQLException;
+    public abstract void cleanAndUpdateStoredData();
 
     /**
      * @return all groups the current user can moderate
      */
-    public List<Group> getAllGroups() throws SQLException {
+    public List<Group> getAllGroups() {
         if (null == allGroups) {
             allGroups = getUser().getOrganisation().getGroups();
         }
@@ -77,7 +80,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
     /**
      * @return all users the current user can moderate
      */
-    public List<User> getAllUsers() throws SQLException {
+    public List<User> getAllUsers() {
         if (null == allUsers) {
             allUsers = getUser().getOrganisation().getUsers();
         }
@@ -126,23 +129,23 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
         this.selectedUsersIds = selectedUsersIds;
     }
 
-    public User getFirstSelectedUser() throws SQLException {
+    public User getFirstSelectedUser() {
         if (CollectionUtils.isEmpty(selectedUsersIds)) {
             return null;
         }
 
-        return Learnweb.getInstance().getUserManager().getUser(selectedUsersIds.get(0));
+        return userDao.findById(selectedUsersIds.get(0));
     }
 
     public List<Integer> getSelectedGroupsIds() {
         return selectedGroupsIds;
     }
 
-    public void setSelectedGroupsIds(final List<Integer> selectedGroupsIds) throws SQLException {
+    public void setSelectedGroupsIds(final List<Integer> selectedGroupsIds) {
         this.selectedGroupsIds = selectedGroupsIds;
         Set<Integer> selectedUsers = new TreeSet<>();
         for (Integer groupId : selectedGroupsIds) {
-            Group group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+            Group group = groupDao.findById(groupId);
             for (User user : group.getMembers()) {
                 selectedUsers.add(user.getId());
             }
@@ -150,19 +153,19 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
         this.setSelectedUsersIds(new ArrayList<>(selectedUsers));
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 }

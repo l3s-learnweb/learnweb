@@ -1,5 +1,6 @@
 package de.l3s.learnweb.group;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -19,8 +20,8 @@ import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(FolderDao.FolderMapper.class)
-public interface FolderDao extends SqlObject {
-    ICache<Folder> cache = Cache.of(Folder.class);
+public interface FolderDao extends SqlObject, Serializable {
+    ICache<Folder> cache = new Cache<>(10000);
 
     default Folder findById(int folderId) {
         Folder folder = cache.get(folderId);
@@ -51,7 +52,7 @@ public interface FolderDao extends SqlObject {
         params.put("user_id", folder.getUserId());
         params.put("deleted", folder.isDeleted());
 
-        Optional<Integer> folderId = SqlHelper.generateInsertQuery(getHandle(), "lw_group_folder", params)
+        Optional<Integer> folderId = SqlHelper.handleSave(getHandle(), "lw_group_folder", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         folderId.ifPresent(id -> {

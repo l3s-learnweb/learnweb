@@ -1,9 +1,9 @@
 package de.l3s.learnweb.gdpr;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -23,11 +23,12 @@ public class YourSubmissionsBean extends ApplicationBean implements Serializable
 
     private List<Submission> userSubmissions;
 
-    public YourSubmissionsBean() throws SQLException {
+    @PostConstruct
+    public void init() {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        this.userSubmissions = this.getLearnweb().getSubmissionManager().getSubmissionsByUser(user);
+        this.userSubmissions = dao().getSubmissionDao().findByUser(user);
     }
 
     public List<Submission> getUserSubmissions() {

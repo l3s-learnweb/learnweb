@@ -1,9 +1,8 @@
 package de.l3s.learnweb.forum;
 
 import java.io.Serializable;
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -21,6 +20,7 @@ import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
 
 @Named
@@ -41,23 +41,26 @@ public class ForumBean extends ApplicationBean implements Serializable {
     private String newTopicCategory;
 
     @Inject
-    private transient ForumPostDao forumPostDao;
+    private GroupDao groupDao;
 
     @Inject
-    private transient ForumTopicDao forumTopicDao;
+    private ForumPostDao forumPostDao;
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private ForumTopicDao forumTopicDao;
+
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        group = getLearnweb().getGroupManager().getGroupById(groupId);
+        group = groupDao.findById(groupId);
         BeanAssert.isFound(group);
         BeanAssert.hasPermission(group.canViewResources(getUser()));
 
-        topics = forumTopicDao.getTopicsByGroupId(groupId);
+        topics = forumTopicDao.findByGroupId(groupId);
     }
 
-    public String onSavePost() throws SQLException {
-        Date now = new Date();
+    public String onSavePost() {
+        LocalDateTime now = LocalDateTime.now();
 
         ForumTopic topic = new ForumTopic();
         topic.setGroupId(groupId);
@@ -76,7 +79,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
         post.setTopicId(topic.getId());
         forumPostDao.save(post);
 
-        forumTopicDao.increaseReplies(post.getTopicId(), post.getId(), post.getUserId(), post.getDate());
+        forumTopicDao.updateIncreaseReplies(post.getTopicId(), post.getId(), post.getUserId(), post.getDate());
         post.getUser().incForumPostCount();
 
         log(Action.forum_topic_added, groupId, topic.getId(), newTopicTitle);
@@ -84,13 +87,9 @@ public class ForumBean extends ApplicationBean implements Serializable {
     }
 
     public void onDeleteTopic(ForumTopic topic) {
-        try {
-            forumTopicDao.deleteTopicById(topic.getId());
-            topics = forumTopicDao.getTopicsByGroupId(groupId);
-            addMessage(FacesMessage.SEVERITY_INFO, "The topic '" + topic.getTitle() + "' has been deleted.");
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
+        forumTopicDao.delete(topic.getId());
+        topics = forumTopicDao.findByGroupId(groupId);
+        addMessage(FacesMessage.SEVERITY_INFO, "The topic '" + topic.getTitle() + "' has been deleted.");
     }
 
     public List<SelectItem> getCategories() {

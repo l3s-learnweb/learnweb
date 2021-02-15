@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -23,14 +22,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.util.StringHelper;
-import de.l3s.util.UrlHelper;
 
 /**
  * Helper for extract metadata from a Resource.
@@ -57,17 +55,17 @@ public class ResourceMetadataExtractor {
 
     private final FileInspector fileInspector;
 
-    public ResourceMetadataExtractor(Learnweb learnweb) {
-        this.fileInspector = new FileInspector(learnweb);
+    public ResourceMetadataExtractor(final SolrClient solrClient) {
+        this.fileInspector = new FileInspector(solrClient);
     }
 
-    public void processResource(Resource resource) throws IOException, SQLException {
+    public void processResource(Resource resource) {
         if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE) {
             this.processFileResource(resource);
         } else if (resource.getStorageType() == Resource.WEB_RESOURCE) {
             this.processWebResource(resource);
         } else {
-            log.error("Unknown resource's storage type: " + resource.getStorageType());
+            log.error("Unknown resource's storage type: {}", resource.getStorageType());
         }
     }
 
@@ -169,11 +167,11 @@ public class ResourceMetadataExtractor {
             }
         } catch (JsonParseException | IOException e) {
             resource.setOnlineStatus(OnlineStatus.UNKNOWN); // most probably offline
-            log.error("Can't get more details about resource (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
+            log.error("Can't get more details about resource (id: {}, url: {}) from {} source.", resource.getId(), resource.getUrl(), resource.getSource(), e);
         }
     }
 
-    private void processSpeechRepositoryResource(Resource resource) throws IOException, JsonParseException {
+    private void processSpeechRepositoryResource(Resource resource) throws IOException {
         Document document = Jsoup.connect(resource.getUrl()).get();
         Element content = document.select("#content > .content-inner").first();
 
@@ -240,7 +238,7 @@ public class ResourceMetadataExtractor {
                 }
 
                 JsonArray sourcesJsonArray = mediaPlayer.getAsJsonArray("sources");
-                for (int i = 0, l = sourcesJsonArray.size(); i < l; ++i) {
+                for (int i = 0, len = sourcesJsonArray.size(); i < len; ++i) {
                     JsonObject objectSource = sourcesJsonArray.get(i).getAsJsonObject();
                     if (!"auto".equals(objectSource.get("label").getAsString())) {
                         resource.setFileUrl(objectSource.get("file").getAsString());
@@ -251,7 +249,7 @@ public class ResourceMetadataExtractor {
         }
     }
 
-    private void processYoutubeResource(Resource resource) throws IOException, JsonParseException {
+    private void processYoutubeResource(Resource resource) throws IOException {
         JsonObject json = readJsonObjectFromUrl(YOUTUBE_API_REQUEST + resource.getIdAtService());
         JsonArray items = json.getAsJsonArray("items");
         if (items.size() > 0) {
@@ -272,7 +270,7 @@ public class ResourceMetadataExtractor {
         }
     }
 
-    private void processVimeoResource(Resource resource) throws IOException, JsonParseException {
+    private void processVimeoResource(Resource resource) throws IOException {
         JsonObject json = readJsonArrayFromUrl(VIMEO_API_REQUEST + resource.getIdAtService() + ".json").get(0).getAsJsonObject();
         if (json != null) {
             if (resource.getTitle() == null || resource.getTitle().isEmpty()) {
@@ -293,7 +291,7 @@ public class ResourceMetadataExtractor {
         }
     }
 
-    private void processFlickrResource(Resource resource) throws IOException, JsonParseException {
+    private void processFlickrResource(Resource resource) throws IOException {
         JsonObject json = readJsonObjectFromUrl(FLICKR_API_REQUEST + resource.getIdAtService()).getAsJsonObject("photo");
         if (json != null) {
             if (StringUtils.isEmpty(resource.getTitle())) {
@@ -314,7 +312,7 @@ public class ResourceMetadataExtractor {
         }
     }
 
-    private void processIpernityResource(Resource resource) throws IOException, JsonParseException {
+    private void processIpernityResource(Resource resource) throws IOException {
         JsonObject json = readJsonObjectFromUrl(IPERNITY_API_REQUEST + resource.getIdAtService()).getAsJsonObject("doc");
         if (json != null) {
             if (StringUtils.isEmpty(resource.getTitle())) {
@@ -330,12 +328,13 @@ public class ResourceMetadataExtractor {
             JsonArray thumbnails = json.getAsJsonObject("thumbs").getAsJsonArray("thumb");
             if (thumbnails != null && thumbnails.size() > 0) {
                 String thumbnailUrl = null;
-                for (int i = 0, len = thumbnails.size(), weight = 0; i < len; i++) {
+                int width = 0;
+                for (int i = 0, len = thumbnails.size(); i < len; i++) {
                     JsonObject th = thumbnails.get(i).getAsJsonObject();
-                    int newWeight = Integer.parseInt(th.get("w").getAsString());
+                    int newWidth = Integer.parseInt(th.get("w").getAsString());
 
-                    if (newWeight > weight) {
-                        weight = newWeight;
+                    if (newWidth > width) {
+                        width = newWidth;
                         thumbnailUrl = th.get("url").getAsString();
                     }
                 }
@@ -347,7 +346,7 @@ public class ResourceMetadataExtractor {
         }
     }
 
-    public void processFileResource(Resource resource) throws IOException, SQLException {
+    public void processFileResource(Resource resource) {
         File mainFile = resource.getFile(TYPE.FILE_MAIN);
         FileInfo fileInfo = this.getFileInfo(mainFile.getInputStream(), mainFile.getName());
         processFileResource(resource, fileInfo);
@@ -400,7 +399,7 @@ public class ResourceMetadataExtractor {
      * DANGER! This method will close inputStream :/
      * ^ Add + if you get an error because of this.
      */
-    public FileInfo getFileInfo(InputStream inputStream, String fileName) throws IOException {
+    public FileInfo getFileInfo(InputStream inputStream, String fileName) {
         return fileInspector.inspect(inputStream, fileName);
     }
 
@@ -410,32 +409,11 @@ public class ResourceMetadataExtractor {
         return fileInspector.inspect(inputStream, fileName);
     }
 
-    private static JsonObject readJsonObjectFromUrl(String url) throws IOException, JsonParseException {
+    private static JsonObject readJsonObjectFromUrl(String url) throws IOException {
         return JsonParser.parseString(IOUtils.toString(new URL(url), StandardCharsets.UTF_8)).getAsJsonObject();
     }
 
-    private static JsonArray readJsonArrayFromUrl(String url) throws IOException, JsonParseException {
+    private static JsonArray readJsonArrayFromUrl(String url) throws IOException {
         return JsonParser.parseString(IOUtils.toString(new URL(url), StandardCharsets.UTF_8)).getAsJsonArray();
-    }
-
-    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
-        String url = "https://flic.kr/p/tcT8oi";
-        url = UrlHelper.validateUrl(url);
-
-        Resource resource = new Resource();
-        resource.setStorageType(Resource.WEB_RESOURCE);
-        resource.setUrl(url);
-
-        ResourceMetadataExtractor rme = new ResourceMetadataExtractor(Learnweb.getInstance());
-        rme.processResource(resource);
-
-        log.debug(resource.getType());
-        log.debug(resource.getSource());
-        log.debug(resource.getIdAtService());
-        log.debug(resource.getTitle());
-        log.debug(resource.getDescription());
-        log.debug(resource.getAuthor());
-        log.debug(resource.getMaxImageUrl());
-        System.exit(0);
     }
 }

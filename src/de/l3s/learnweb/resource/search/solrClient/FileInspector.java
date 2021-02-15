@@ -20,7 +20,6 @@ import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.NamedList;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.util.MimeTypes;
 import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
@@ -33,8 +32,8 @@ public class FileInspector {
 
     private final SolrClient solrClient;
 
-    public FileInspector(Learnweb learnweb) {
-        solrClient = learnweb.getSolrClient();
+    public FileInspector(final SolrClient solrClient) {
+        this.solrClient = solrClient;
     }
 
     public FileInfo inspect(InputStream inputStream, String fileName) {
@@ -44,18 +43,18 @@ public class FileInspector {
             return fileInfo;
         }
 
-        try {
+        try (inputStream) {
             NamedList<Object> result = requestSolrExtract(new MyContentStream(fileInfo.getFileName(), fileInfo.getMimeType(), inputStream));
             saveSolrMetadata(result, fileInfo);
         } catch (SolrServerException | IOException e) {
-            log.error("FileInspector: Can't extract Text from File; " + Misc.getSystemDescription(), e);
+            log.error("FileInspector: Can't extract Text from File; {}", Misc.getSystemDescription(), e);
         }
 
         return fileInfo;
     }
 
     private NamedList<Object> requestSolrExtract(MyContentStream contentStream) throws IOException, SolrServerException {
-        HttpSolrClient server = solrClient.getSolrServer();
+        HttpSolrClient server = solrClient.getHttpSolrClient();
 
         ContentStreamUpdateRequest up = new ContentStreamUpdateRequest("/update/extract");
         up.addContentStream(contentStream);
@@ -84,7 +83,7 @@ public class FileInspector {
     }
 
     private static void saveSolrMetadata(NamedList<Object> result, FileInfo fileInfo) {
-        NamedList<Object> metadata = (NamedList<Object>) result.get("null_metadata");
+        NamedList<?> metadata = (NamedList<?>) result.get("null_metadata");
 
         if (metadata.indexOf("title", 0) > -1) {
             String title = metadata2String(metadata.get("title"));
@@ -129,20 +128,6 @@ public class FileInspector {
         con.setInstanceFollowRedirects(true);
         con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
         return con.getInputStream();
-    }
-
-    // tests
-    public static void main(String[] args) throws Exception {
-        /*
-        Learnweb learnweb = Learnweb.getInstance();
-        List<Resource> resources = learnweb.getResourceManager().getResources("SELECT * FROM `lw_resource` WHERE `source` LIKE 'flickr' AND `max_image_url` LIKE '%z.jpg' ORDER BY `resource_id` ASC ", null); // loads all resources (very slow)
-
-        for(Resource resource : resources)
-        {
-            getBestImage(resource);
-
-        }
-        */
     }
 
     public static class FileInfo {
@@ -231,7 +216,7 @@ public class FileInspector {
         }
 
         @Override
-        public InputStream getStream() throws IOException {
+        public InputStream getStream() {
             return stream;
         }
     }

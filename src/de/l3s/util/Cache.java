@@ -9,13 +9,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.resource.Folder;
-import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.user.Course;
-import de.l3s.learnweb.user.User;
-
 /**
  * A synchronized cache that caches the defined number of most used objects.
  *
@@ -30,35 +23,13 @@ public class Cache<E extends HasId> implements ICache<E> {
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
 
-    public static <E extends HasId> ICache<E> of(Class<E> clazz) {
-        Learnweb learnweb = Learnweb.getInstance();
-        int resourceCacheSize = learnweb.getProperties().getPropertyIntValue("RESOURCE_CACHE");
-        int groupCacheSize = learnweb.getProperties().getPropertyIntValue("GROUP_CACHE");
-        int folderCacheSize = learnweb.getProperties().getPropertyIntValue("FOLDER_CACHE");
-        int userCacheSize = learnweb.getProperties().getPropertyIntValue("USER_CACHE");
-
-        if (clazz.equals(Group.class)) {
-            return new Cache<>(groupCacheSize);
-        } else if (clazz.equals(Folder.class)) {
-            return new Cache<>(folderCacheSize);
-        } else if (clazz.equals(User.class)) {
-            return new Cache<>(userCacheSize);
-        } else if (clazz.equals(Resource.class)) {
-            return new Cache<>(resourceCacheSize);
-        } else if (clazz.equals(Course.class)) {
-            return new Cache<>(100);
-        } else {
-            return new DummyCache<>();
-        }
-    }
-
     /**
      * @param capacity Number of objects this cache will store
      */
     public Cache(int capacity) {
         this.capacity = capacity;
 
-        values = new LinkedHashMap<>(Cache.this.capacity + 1, 0.75F, true) {
+        values = new LinkedHashMap<>(this.capacity + 1, 0.75F, true) {
             private static final long serialVersionUID = -7231532816950321903L;
 
             @Override

@@ -1,7 +1,6 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -37,19 +36,15 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
 
     public void onSubmitNewEmail() {
         User user = getUser();
-        try {
-            if (StringUtils.isNotEmpty(email) && !StringUtils.equals(user.getEmail(), email)) {
-                user.setEmail(email);
-                user.save();
-            }
+        if (StringUtils.isNotEmpty(email) && !StringUtils.equals(user.getEmail(), email)) {
+            user.setEmail(email);
+            user.save();
+        }
 
-            if (user.sendEmailConfirmation()) {
-                addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
-            } else {
-                addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
-            }
-        } catch (SQLException e) {
-            addErrorMessage(e);
+        if (user.sendEmailConfirmation()) {
+            addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
+        } else {
+            addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
         }
     }
 

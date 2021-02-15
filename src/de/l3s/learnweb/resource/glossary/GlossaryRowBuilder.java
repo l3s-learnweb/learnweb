@@ -124,12 +124,12 @@ public class GlossaryRowBuilder {
         GlossaryTerm term = new GlossaryTerm();
 
         term.setTerm(getStringValueForCell(row.getCell(termHeaderPosition)));
-        if (!languageMap.containsKey(getStringValueForCell(row.getCell(languageHeaderPosition)))) {
+        if (languageMap.containsKey(getStringValueForCell(row.getCell(languageHeaderPosition)))) {
+            term.setLanguage(languageMap.get(getStringValueForCell(row.getCell(languageHeaderPosition))));
+        } else {
             errors.add(new ParsingError(row.getRowNum(), row.getCell(languageHeaderPosition),
                 "Invalid language '" + getStringValueForCell(row.getCell(languageHeaderPosition)) +
                     "' This glossary is limited to " + languageMap.keySet() + " entries."));
-        } else {
-            term.setLanguage(languageMap.get(getStringValueForCell(row.getCell(languageHeaderPosition))));
         }
         String usesString = getStringValueForCell(row.getCell(usesHeaderPosition));
         List<String> uses = Arrays.asList(usesString.split(","));

@@ -2,7 +2,6 @@ package de.l3s.maintenance.resources;
 
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserManager;
 import de.l3s.maintenance.MaintenanceTask;
 
 /**
@@ -10,18 +9,15 @@ import de.l3s.maintenance.MaintenanceTask;
  */
 public class RemoveDescriptionsFromSubmittedResources extends MaintenanceTask {
 
-    private UserManager userManager;
-
     @Override
-    protected void init() throws Exception {
-        userManager = getLearnweb().getUserManager();
+    protected void init() {
         requireConfirmation = true;
     }
 
     @Override
-    protected void run(final boolean dryRun) throws Exception {
+    protected void run(final boolean dryRun) {
         if (!dryRun) {
-            User submitAdmin = userManager.getUser(11212);
+            User submitAdmin = getLearnweb().getDaoProvider().getUserDao().findById(11212);
 
             log.debug(submitAdmin);
             for (Resource resource : submitAdmin.getResources()) {

@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,19 +25,16 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
     private List<Survey> surveys;
     private Survey selectedSurvey;
 
-    public SurveyTemplateBean() {
-    }
-
-    public void onLoad() throws SQLException {
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
         if (resourceId != 0) {
-            SurveyResource surveyResource = getLearnweb().getSurveyManager().getSurveyResource(resourceId);
+            SurveyResource surveyResource = dao().getSurveyDao().findResourceById(resourceId).orElse(null);
             surveyId = surveyResource.getSurveyId();
         }
 
         if (surveyId != 0) { // edit an existing survey
-            survey = getLearnweb().getSurveyManager().getSurvey(surveyId);
+            survey = dao().getSurveyDao().findById(surveyId).orElseThrow();
         }
 
         BeanAssert.isFound(survey);
@@ -46,7 +42,7 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
         BeanAssert.hasPermission(getUser().isAdmin() || getUser().getId() == survey.getUserId());
     }
 
-    public void onSave() throws SQLException {
+    public void onSave() {
         survey.save(false);
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
@@ -87,29 +83,29 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
         this.resourceId = resourceId;
     }
 
-    public void onAddEmptyQuestion() throws SQLException {
+    public void onAddEmptyQuestion() {
         List<SurveyQuestion> questions = getSurvey().getQuestions();
         SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.INPUT_TEXT, surveyId);
         question.setOrder(questions.size());
         setCurrentQuestion(question);
     }
 
-    public void onAddQuestion() throws SQLException {
+    public void onAddQuestion() {
         getSurvey().getQuestions().add(currentQuestion);
     }
 
-    public void onMoveQuestionUp(SurveyQuestion question) throws SQLException {
+    public void onMoveQuestionUp(SurveyQuestion question) {
         onMoveQuestion(question, -1);
     }
 
-    public void onMoveQuestionDown(SurveyQuestion question) throws SQLException {
+    public void onMoveQuestionDown(SurveyQuestion question) {
         onMoveQuestion(question, 1);
     }
 
     /**
      * @param direction set 1 to move upward or -1 to move down
      */
-    private void onMoveQuestion(SurveyQuestion question, int direction) throws SQLException {
+    private void onMoveQuestion(SurveyQuestion question, int direction) {
         int oldOrder = question.getOrder();
         question.setOrder(oldOrder + direction); // move selected question
 
@@ -122,7 +118,7 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
         question.setDeleted(true);
     }
 
-    public List<SurveyQuestion> getQuestions() throws SQLException {
+    public List<SurveyQuestion> getQuestions() {
         return survey.getQuestions().stream().filter(question -> !question.isDeleted()).collect(Collectors.toList());
     }
 
@@ -134,10 +130,10 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
         this.selectedSurvey = selectedSurvey;
     }
 
-    public List<Survey> getSurveys() throws SQLException {
+    public List<Survey> getSurveys() {
         if (surveys == null) {
             surveys = new ArrayList<>();
-            List<Survey> allSurveysPerOrganisation = getLearnweb().getSurveyManager().getPublicSurveysByOrganisationOrUser(getUser());
+            List<Survey> allSurveysPerOrganisation = dao().getSurveyDao().findByOrganisationIdOrUserId(getUser().getOrganisationId(), getUser().getId());
             for (Survey survey : allSurveysPerOrganisation) {
                 if (survey.isPublicTemplate() || getUser().getId() == survey.getUserId() && survey.getId() != this.survey.getId()) {
                     surveys.add(survey);
@@ -147,7 +143,7 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
         return surveys;
     }
 
-    public void onCopyQuestions() throws SQLException {
+    public void onCopyQuestions() {
         for (SurveyQuestion question : selectedSurvey.getQuestions()) {
             survey.getQuestions().add(question.clone());
         }

@@ -34,7 +34,7 @@
 
             <p:column headerText="#{msg.creation_date}" styleClass="res-row-date" sortBy="#{res.resource.creationDate}">
                 <h:outputText  value="#{res.resource.creationDate}">
-                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
                 </h:outputText>
             </p:column>
         </p:dataTable>

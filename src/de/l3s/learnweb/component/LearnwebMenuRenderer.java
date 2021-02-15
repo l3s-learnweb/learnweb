@@ -21,9 +21,9 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
     @Override
     protected void encodeScript(FacesContext context, AbstractMenu abstractMenu) throws IOException {
         LearnwebMenu menu = (LearnwebMenu) abstractMenu;
-        String clientId = menu.getClientId(context);
+
         WidgetBuilder wb = getWidgetBuilder(context);
-        wb.init("LearnwebMenu", menu.resolveWidgetVar(context), clientId);
+        wb.init("LearnwebMenu", menu);
         wb.finish();
     }
 
@@ -205,7 +205,6 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         writer.writeAttribute("class", LearnwebMenu.MENUITEM_TEXT_CLASS, null);
         writer.writeText(submenu.getLabel(), null);
         writer.endElement("span");
-
         writer.endElement("a");
 
         //submenu children

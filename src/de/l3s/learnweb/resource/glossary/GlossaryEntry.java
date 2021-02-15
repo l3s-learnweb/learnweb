@@ -10,8 +10,9 @@ import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
 import de.l3s.util.Deletable;
+import de.l3s.util.HasId;
 
-public class GlossaryEntry implements Deletable, Serializable, Cloneable {
+public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable {
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id = -1;

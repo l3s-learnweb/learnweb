@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
+import org.omnifaces.util.Faces;
+import org.omnifaces.util.Messages;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.DaoProvider;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
@@ -25,15 +25,13 @@ import de.l3s.learnweb.user.UserBean;
 import de.l3s.util.Misc;
 import de.l3s.util.bean.BeanHelper;
 
-public class ApplicationBean {
+@SuppressWarnings("AbstractClassWithoutAbstractMethods")
+public abstract class ApplicationBean {
     private static final Logger log = LogManager.getLogger(ApplicationBean.class);
 
     private transient Learnweb learnweb;
     private transient String sessionId;
     private transient UserBean userBean;
-
-    public ApplicationBean() {
-    }
 
     // User ------------------------------------------------------------------------------------------------------------
 
@@ -78,7 +76,7 @@ public class ApplicationBean {
         // get locale or load default
         Locale locale;
         try {
-            locale = getUserBean().getLocale();
+            locale = getLocale();
         } catch (Exception e) {
             locale = Locale.ENGLISH;
         }
@@ -103,17 +101,11 @@ public class ApplicationBean {
     // Preferences -----------------------------------------------------------------------------------------------------
 
     /**
-     * retrieves an object that was previously set by setPreference().
-     */
-    public String getPreference(String key) {
-        return getUserBean().getPreference(key);
-    }
-
-    /**
-     * returns defaultValue if no corresponding value is found for the key.
+     * Retrieves an object that was previously set by setPreference().
+     * @return defaultValue if no corresponding value is found for the key.
      */
     public String getPreference(String key, String defaultValue) {
-        String obj = getPreference(key);
+        String obj = getUserBean().getPreference(key);
         return obj == null ? defaultValue : obj;
     }
 
@@ -128,8 +120,8 @@ public class ApplicationBean {
 
     /**
      * Logs a user action for the currently active user.
-     * The parameters "targetId" and "params" depend on the logged action.
-     * Look at the code of LogEntry.Action for explanation.
+     *
+     * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
      */
     public void log(Action action, int groupId, int targetId, int params) {
         log(action, groupId, targetId, Integer.toString(params), getUser());
@@ -137,8 +129,8 @@ public class ApplicationBean {
 
     /**
      * Logs a user action for the currently active user.
-     * The parameters "targetId" and "params" depend on the logged action.
-     * Look at the code of LogEntry.Action for explanation.
+     *
+     * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
      */
     public void log(Action action, int groupId, int targetId, String params) {
         log(action, groupId, targetId, params, getUser());
@@ -146,8 +138,8 @@ public class ApplicationBean {
 
     /**
      * Logs a user action for the currently active user.
-     * The parameters "targetId" depend on the logged action.
-     * Look at the code of LogEntry.Action for explanation.
+     *
+     * @param targetId depend on the logged action, look at the code of LogEntry.Action for explanation.
      */
     public void log(Action action, int groupId, int targetId) {
         log(action, groupId, targetId, null, getUser());
@@ -171,7 +163,7 @@ public class ApplicationBean {
      * Look at the code of LogEntry.Action for explanation.
      */
     protected void log(Action action, int groupId, int targetId, String params, User user) {
-        getLearnweb().getLogManager().log(user, action, groupId, targetId, params, getSessionId());
+        dao().getLogDao().insert(user, action, groupId, targetId, params, getSessionId());
     }
 
     // Messaging -------------------------------------------------------------------------------------------------------
@@ -186,15 +178,14 @@ public class ApplicationBean {
      * the next traversal of the lifecycle on this session, regardless of the request being a redirect after post, or a normal postback.
      */
     public void setKeepMessages() {
-        getFacesContext().getExternalContext().getFlash().setKeepMessages(true);
+        Faces.getFlash().setKeepMessages(true);
     }
 
     /**
      * adds a global message to the jsf context. this will be displayed by the p:messages component
      */
     protected void addMessage(FacesMessage.Severity severity, String msgKey, Object... args) {
-        FacesContext fc = getFacesContext();
-        fc.addMessage(null, getFacesMessage(severity, msgKey, args));
+        Messages.add(null, getFacesMessage(severity, msgKey, args));
 
         if (FacesMessage.SEVERITY_FATAL == severity) {
             throw new BadRequestHttpException(getLocaleMessage(msgKey, args));
@@ -205,7 +196,7 @@ public class ApplicationBean {
      * adds a global message to the jsf context. this will be displayed for a minute by the p:growl component.
      */
     protected void addGrowl(FacesMessage.Severity severity, String msgKey, Object... args) {
-        getFacesContext().addMessage("growl", getFacesMessage(severity, msgKey, args));
+        Messages.add("growl", getFacesMessage(severity, msgKey, args));
     }
 
     /**
@@ -219,54 +210,21 @@ public class ApplicationBean {
      * @param desc A descriptive message that is shown to the user. If null a default fatal_error message will be shown
      */
     protected void addErrorMessage(String desc, Throwable exception) {
-        log.error((desc != null ? desc : "Fatal lazy error") + "; " + BeanHelper.getRequestSummary(), exception);
+        log.error("{}; {}", desc != null ? desc : "Fatal lazy error", BeanHelper.getRequestSummary(), exception);
 
         throw new HttpException(desc, exception);
     }
 
-    // TODO @astappiev: see https://git.l3s.uni-hannover.de/Learnweb/Learnweb/-/wikis/Rules/Use-of-Messages,-Growls-and-Validation
-    @Deprecated
-    protected void addErrorGrowl(Throwable exception) {
-        addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
-
-        log.error("Fatal unhandled error" + "; " + BeanHelper.getRequestSummary(), exception);
-    }
-
     // Helper ----------------------------------------------------------------------------------------------------------
-
-    /**
-     * To overcome browser caching problems force revalidation.
-     * TODO @astappiev: is it really necessary?
-     */
-    protected void forceRevalidation() {
-        HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
-
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-        response.setDateHeader("Expires", 0); // Proxies.
-    }
 
     public String getSessionId() {
         if (null == sessionId) {
-            FacesContext facesContext = getFacesContext();
-            if (facesContext != null) {
-                HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
-                if (session != null) {
-                    sessionId = session.getId();
-                }
-            } else {
+            sessionId = Faces.getSessionId();
+            if (sessionId == null) {
                 log.warn("Couldn't create session");
             }
         }
         return sessionId;
-    }
-
-    protected boolean isAjaxRequest() {
-        FacesContext context = getFacesContext();
-        if (null == context) {
-            return false;
-        }
-        return context.isPostback() || context.getPartialViewContext().isAjaxRequest();
     }
 
     protected Learnweb getLearnweb() {
@@ -276,7 +234,7 @@ public class ApplicationBean {
         return learnweb;
     }
 
-    protected static FacesContext getFacesContext() {
-        return FacesContext.getCurrentInstance();
+    protected DaoProvider dao() {
+        return getLearnweb().getDaoProvider();
     }
 }

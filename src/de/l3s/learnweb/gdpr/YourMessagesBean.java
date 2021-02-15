@@ -1,15 +1,17 @@
 package de.l3s.learnweb.gdpr;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.Message;
+import de.l3s.learnweb.user.MessageDao;
 import de.l3s.learnweb.user.User;
 
 /**
@@ -24,12 +26,16 @@ public class YourMessagesBean extends ApplicationBean implements Serializable {
     private List<Message> receivedMessages;
     private List<Message> sentMessages;
 
-    public YourMessagesBean() throws SQLException {
+    @Inject
+    private MessageDao messageDao;
+
+    @PostConstruct
+    public void init() {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        this.receivedMessages = Message.getAllMessagesToUser(user);
-        this.sentMessages = Message.getAllMessagesFromUser(user);
+        this.receivedMessages = messageDao.findIncoming(user);
+        this.sentMessages = messageDao.findOutgoing(user);
     }
 
     public List<Message> getMessagesToUser() {

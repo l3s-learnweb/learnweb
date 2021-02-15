@@ -1,15 +1,16 @@
 package de.l3s.learnweb.group;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -35,13 +36,15 @@ public class GroupsBean extends ApplicationBean implements Serializable {
     private Group newGroup;
     private List<Course> editAbleCourses; // courses to which the user can add groups to
 
-    private final boolean optionGroupLanguageEnabled = false; // not used in any course at the moment
+    @Inject
+    private GroupDao groupDao;
 
-    public GroupsBean() throws SQLException {
+    @PostConstruct
+    public void init() {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
+        joinAbleGroups = groupDao.findJoinAble(getUser());
         myGroups = user.getGroups();
         newGroup = new Group();
 
@@ -49,77 +52,64 @@ public class GroupsBean extends ApplicationBean implements Serializable {
     }
 
     public void joinGroup() {
-        try {
-            User user = getUser();
+        User user = getUser();
 
-            if (null == user || null == selectedGroup) {
+        if (null == user || null == selectedGroup) {
+            return;
+        }
+
+        if (selectedGroup.isMemberCountLimited()) {
+            if (selectedGroup.getMemberCount() >= selectedGroup.getMaxMemberCount()) {
+                addMessage(FacesMessage.SEVERITY_ERROR, "group_full");
                 return;
             }
-
-            if (selectedGroup.isMemberCountLimited()) {
-                if (selectedGroup.getMemberCount() >= selectedGroup.getMaxMemberCount()) {
-                    addMessage(FacesMessage.SEVERITY_ERROR, "group_full");
-                    return;
-                }
-            }
-            user.joinGroup(selectedGroup);
-            user.setGuide(User.Guide.JOIN_GROUP, true);
-            myGroups = getUser().getGroups();
-            joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-            log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
-            addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
-
-        } catch (Exception e) {
-            addErrorMessage(e);
         }
+
+        user.joinGroup(selectedGroup);
+        user.setGuide(User.Guide.JOIN_GROUP, true);
+        myGroups = getUser().getGroups();
+        joinAbleGroups = groupDao.findJoinAble(getUser());
+        log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
+        addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
     }
 
     public void leaveGroup() {
-        try {
-            if (null == getUser() || null == selectedGroup) {
-                return;
-            }
-
-            log(Action.group_leaving, selectedGroup.getId(), selectedGroup.getId());
-
-            getUser().leaveGroup(selectedGroup);
-            myGroups = getUser().getGroups();
-            joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-
-            addGrowl(FacesMessage.SEVERITY_INFO, "groupLeft", selectedGroup.getTitle());
-        } catch (Exception e) {
-            addErrorMessage(e);
+        if (null == getUser() || null == selectedGroup) {
+            return;
         }
+
+        log(Action.group_leaving, selectedGroup.getId(), selectedGroup.getId());
+
+        getUser().leaveGroup(selectedGroup);
+        myGroups = getUser().getGroups();
+        joinAbleGroups = groupDao.findJoinAble(getUser());
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "groupLeft", selectedGroup.getTitle());
     }
 
     public String deleteGroup() {
-        try {
-            if (selectedGroup == null) {
-                log.error("selectedGroup is null");
-                return null;
-            }
-
-            if (!canDeleteGroup(selectedGroup)) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to delete this group");
-                return null;
-            }
-
-            log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getId(), selectedGroup.getTitle());
-
-            selectedGroup.delete();
-            myGroups = getUser().getGroups();
-            joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-
-            addMessage(FacesMessage.SEVERITY_INFO, "group_deleted", selectedGroup.getTitle());
-
-            return "/lw/myhome/groups.xhtml";
-        } catch (Exception e) {
-            addErrorMessage(e);
+        if (selectedGroup == null) {
+            log.error("selectedGroup is null");
+            return null;
         }
-        return null;
+
+        if (!canDeleteGroup(selectedGroup)) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to delete this group");
+            return null;
+        }
+
+        log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getId(), selectedGroup.getTitle());
+
+        selectedGroup.delete();
+        myGroups = getUser().getGroups();
+        joinAbleGroups = groupDao.findJoinAble(getUser());
+
+        addMessage(FacesMessage.SEVERITY_INFO, "group_deleted", selectedGroup.getTitle());
+
+        return "/lw/myhome/groups.xhtml";
     }
 
-    public boolean canDeleteGroup(Group group) throws SQLException {
+    public boolean canDeleteGroup(Group group) {
         if (null == group) {
             return false;
         }
@@ -127,40 +117,31 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         return group.canDeleteGroup(getUser());
     }
 
-    public String onCreateGroup() {
-        if (null == getUser()) {
-            return null;
+    public void onCreateGroup() {
+        User user = getUser();
+        newGroup.setLeader(user);
+
+        if (newGroup.getCourseId() == 0) { // this happens when the user is only member of a single course and the course selector isn't shown
+            newGroup.setCourseId(user.getCourses().get(0).getId());
         }
+        groupDao.save(newGroup);
+        user.joinGroup(newGroup);
+        user.setGuide(User.Guide.JOIN_GROUP, true);
+        // refresh group list
+        myGroups = user.getGroups();
 
-        try {
-            User user = getUser();
-            newGroup.setLeader(user);
+        // log and show notification
+        log(Action.group_creating, newGroup.getId(), newGroup.getId());
+        addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
 
-            if (newGroup.getCourseId() == 0) { // this happens when the user is only member of a single course and the course selector isn't shown
-                newGroup.setCourseId(user.getCourses().get(0).getId());
-            }
-            Group group = getLearnweb().getGroupManager().save(newGroup);
-            user.joinGroup(group);
-            user.setGuide(User.Guide.JOIN_GROUP, true);
-            // refresh group list
-            myGroups = user.getGroups();
-
-            // log and show notification
-            log(Action.group_creating, group.getId(), group.getId());
-            addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
-
-            // reset new group var
-            newGroup = new Group();
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
-        return null;
+        // reset new group var
+        newGroup = new Group();
     }
 
-    public void validateGroupTitle(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException {
+    public void validateGroupTitle(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         String title = (String) value;
 
-        if (getLearnweb().getGroupManager().getGroupByTitleFilteredByOrganisation(title, getUser().getOrganisationId()) != null) {
+        if (groupDao.findByTitleAndOrganisationId(title, getUser().getOrganisationId()).isPresent()) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "title_already_taken"));
         }
     }
@@ -181,15 +162,11 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         return selectedGroup;
     }
 
-    public void setSelectedGroup(Group selectedGroup) throws SQLException {
+    public void setSelectedGroup(Group selectedGroup) {
         this.selectedGroup = selectedGroup;
     }
 
     public List<Course> getEditAbleCourses() {
         return editAbleCourses;
-    }
-
-    public boolean isOptionGroupLanguageEnabled() {
-        return optionGroupLanguageEnabled;
     }
 }

@@ -1,11 +1,13 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.StringJoiner;
 
-import de.l3s.learnweb.Learnweb;
+import org.apache.commons.lang3.ArrayUtils;
+
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
@@ -52,9 +54,9 @@ public class SurveyUserAnswers implements Serializable, HasId {
         return userId;
     }
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (null == user) {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }
@@ -91,4 +93,15 @@ public class SurveyUserAnswers implements Serializable, HasId {
         return getUserId();
     }
 
+    public static String joinMultipleAnswers(String[] answers) {
+        if (ArrayUtils.isEmpty(answers)) {
+            return "";
+        }
+
+        StringJoiner joiner = new StringJoiner("|||");
+        for (String s : answers) {
+            joiner.add(s.replace("|||", "|I|"));
+        }
+        return joiner.toString();
+    }
 }

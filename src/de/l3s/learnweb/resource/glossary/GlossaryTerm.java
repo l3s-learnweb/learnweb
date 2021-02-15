@@ -12,8 +12,9 @@ import org.apache.commons.lang3.Validate;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.util.Deletable;
+import de.l3s.util.HasId;
 
-public class GlossaryTerm implements Deletable, Serializable, Cloneable {
+public class GlossaryTerm implements HasId, Deletable, Serializable, Cloneable {
     private static final long serialVersionUID = -8309235925484416943L;
 
     private int id = -1;

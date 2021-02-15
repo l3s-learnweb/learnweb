@@ -28,7 +28,7 @@ import javax.mail.internet.InternetAddress;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.email.Mail;
 
 /**
@@ -72,7 +72,7 @@ public class RequestManager implements Serializable {
 
     @PostConstruct
     public void init() {
-        adminEmail = Learnweb.getInstance().getProperties().getProperty("ADMIN_MAIL");
+        adminEmail = Learnweb.config().getProperty("admin_mail");
 
         loadBanLists();
         loadWhitelist();
@@ -112,7 +112,7 @@ public class RequestManager implements Serializable {
      * Records successful login into a Map(IP, Set(username)), thus matching every IP to usernames that were logged into from it.
      */
     public void recordLogin(String ip, String username) {
-        Set<String> names = logins.computeIfAbsent(ip, k -> new HashSet<>());
+        Set<String> names = logins.computeIfAbsent(ip, key -> new HashSet<>());
         names.add(username);
     }
 
@@ -122,7 +122,7 @@ public class RequestManager implements Serializable {
      * @return All of the request info on certain IP.
      */
     public List<Request> getRequestsByIp(String ip) {
-        List<Request> requests = requestDao.getRequestsByIp(ip);
+        List<Request> requests = requestDao.findByIp(ip);
 
         long recentRequests = this.requests.stream().filter(r -> ip.equals(r.getIp())).count();
         Set<String> logins = this.logins.get(ip);
@@ -171,7 +171,7 @@ public class RequestManager implements Serializable {
         }
 
         if (!requestsToSave.isEmpty()) {
-            requestDao.saveAll(requestsToSave);
+            requestDao.save(requestsToSave);
         }
     }
 
@@ -195,7 +195,7 @@ public class RequestManager implements Serializable {
      * Loads the aggregated requests that happened after the last update.
      */
     public void updateAggregatedRequests() {
-        aggregatedRequests.addAll(requestDao.getRequestsAfterDate(aggrRequestsUpdated));
+        aggregatedRequests.addAll(requestDao.findAfterDate(aggrRequestsUpdated));
         aggrRequestsUpdated = LocalDateTime.now();
     }
 
@@ -203,7 +203,7 @@ public class RequestManager implements Serializable {
      * Clears the requests DB. Dev purposes only.
      */
     public void clearRequests() {
-        requestDao.deleteAllRequests();
+        requestDao.deleteAll();
         aggregatedRequests = new ArrayList<>();
     }
 

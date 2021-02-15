@@ -5,40 +5,31 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Beans;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
 
 public class CDXClient {
     private static final Logger log = LogManager.getLogger(CDXClient.class);
+    private final DateTimeFormatter waybackDateFormat = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-    private final SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-
-    private int waybackAPIerrors = 0;
-    private int waybackAPIrequests = 0;
-
-    //private ArchiveSearchManager archiveSearchManager;
-
-    public CDXClient() {
-
-    }
+    private int waybackApiErrors = 0;
+    private int waybackApiRequests = 0;
 
     /**
      * This method checks whether a URL is archived. If yes it updates the first_timestamp and last_timestamp fields of the resource's meta data
      */
-    public boolean isArchived(ResourceDecorator resource) throws NumberFormatException, SQLException, ParseException, IOException {
+    public boolean isArchived(ResourceDecorator resource) throws NumberFormatException, IOException {
         //int crawlTime = 0, captures = 0;
 
         /*if(resource.getMetadataValue("url_captures") != null) { // the capture dates have been crawled before
@@ -46,16 +37,16 @@ public class CDXClient {
             captures = Integer.parseInt(resource.getMetadataValue("url_captures"));
         }
 
-        if(crawlTime < minCrawlTime) //&& waybackAPIerrors < MAX_API_ERRORS) {*/
+        if(crawlTime < minCrawlTime) //&& waybackApiErrors < MAX_API_ERRORS) {*/
         //log.debug("Execute Wayback query for: " + resource.getUrl());
         //log.debug("Getting first and last capture info for: " + resource.getUrl());
         int captures = 0;
-        waybackAPIrequests++;
-        //int oldwaybackAPIerrors = waybackAPIerrors;
+        waybackApiRequests++;
+        //int oldWaybackApiErrors = waybackApiErrors;
         String url = resource.getUrl().substring(resource.getUrl().indexOf("//") + 2); // remove leading http(s)://
 
-        Date lastCapture;
-        Date firstCapture = getFirstCaptureDate(url);
+        LocalDateTime lastCapture;
+        LocalDateTime firstCapture = getFirstCaptureDate(url);
 
         if (firstCapture != null) {
             lastCapture = getLastCaptureDate(url);
@@ -64,28 +55,28 @@ public class CDXClient {
                 resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(firstCapture));
                 resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(lastCapture));
                 captures = 1; // one capture date -> at least one capture
-                Learnweb.getInstance().getWaybackCapturesLogger().logWaybackUrl(resource.getUrl(), firstCapture.getTime(), lastCapture.getTime());
+                Beans.getInstance(WaybackCapturesLogger.class).logWaybackUrl(resource.getUrl(), firstCapture, lastCapture);
                 // log.debug("URL:" + url + "; First Capture:" + firstCapture + "; Last Capture:" + lastCapture);
             }
         }
 
         /*
-        if(oldwaybackAPIerrors == waybackAPIerrors)
+        if(oldWaybackApiErrors == waybackApiErrors)
         archiveSearchManager.cacheCaptureCount(Integer.parseInt(resource.getMetadataValue("query_id")), resource.getRankAtService(), firstCapture, lastCapture, captures);
         }
         */
         return captures > 0;
     }
 
-    public Date getFirstCaptureDate(String url) throws ParseException, IOException {
+    public LocalDateTime getFirstCaptureDate(String url) throws IOException {
         return getCaptureDate(url, 1);
     }
 
-    public Date getLastCaptureDate(String url) throws ParseException, IOException {
+    public LocalDateTime getLastCaptureDate(String url) throws IOException {
         return getCaptureDate(url, -1);
     }
 
-    private Date getCaptureDate(String url, int limit) throws ParseException, IOException {
+    private LocalDateTime getCaptureDate(String url, int limit) throws IOException {
         for (int retry = 2; retry >= 0; retry--) { // retry 2 times if we get retrieve "Unexpected end of file from server"
             try {
                 URLConnection connection = new java.net.URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp&limit=" + limit).openConnection();
@@ -96,13 +87,11 @@ public class CDXClient {
                     return null;
                 }
 
-                synchronized (this) {
-                    return waybackDateFormat.parse(response);
-                }
+                return LocalDateTime.parse(response, waybackDateFormat);
             } catch (MalformedURLException e) {
-                log.error("Can't check records of URL: " + url + "; Limit: " + limit, e);
+                log.error("Can't check records of URL: {}; Limit: {}", url, limit, e);
                 return null;
-            } catch (ParseException | IOException e) {
+            } catch (IOException e) {
                 String msg = e.getMessage();
                 if (msg.contains("HTTP response code: 403")) { // blocked by robots
                     return null;
@@ -154,53 +143,53 @@ public class CDXClient {
     }
     */
 
-    public List<Long> getCaptures(String url) {
+    public List<LocalDateTime> getCaptures(String url) {
         List<String> response;
         try {
 
             url = url.substring(url.indexOf("//") + 2); // remove leading http(s)://
-            log.debug("Getting wayback captures for: " + url);
+            log.debug("Getting wayback captures for: {}", url);
             response = IOUtils.readLines(new URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp").openStream(), StandardCharsets.UTF_8);
 
-            if (response == null || response.isEmpty()) {
-                log.debug("No Captures for: " + url);
+            if (response.isEmpty()) {
+                log.debug("No Captures for: {}", url);
                 return null;
             }
 
-            List<Long> timestamps = new LinkedList<>();
+            List<LocalDateTime> timestamps = new LinkedList<>();
             for (String s : response) {
-                timestamps.add(waybackDateFormat.parse(s).getTime());
+                timestamps.add(LocalDateTime.parse(s, waybackDateFormat));
             }
-            log.debug("Fetched " + timestamps.size() + " captures for: " + url);
+            log.debug("Fetched {} captures for: {}", timestamps.size(), url);
             return timestamps;
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (ParseException | IOException e) {
+            throw new IllegalArgumentException(e);
+        } catch (IOException e) {
             if (e.getMessage().contains("HTTP response code: 403")) { // blocked by robots
-                log.error("wayback api error:" + e.getMessage());
+                log.error("wayback api error:{}", e.getMessage());
                 return null;
             }
-            log.error("wayback api error: " + e.getMessage());
-            waybackAPIerrors++;
+            log.error("wayback api error: {}", e.getMessage());
+            waybackApiErrors++;
         }
 
         return null;
     }
 
-    public int getWaybackAPIrequests() {
-        return waybackAPIrequests;
+    public int getWaybackApiRequests() {
+        return waybackApiRequests;
     }
 
     /**
      * Set the request and error counter to 0.
      */
     public void resetAPICounters() {
-        this.waybackAPIrequests = 0;
-        this.waybackAPIerrors = 0;
+        this.waybackApiRequests = 0;
+        this.waybackApiErrors = 0;
     }
 
-    public int getWaybackAPIerrors() {
-        return waybackAPIerrors;
+    public int getWaybackApiErrors() {
+        return waybackApiErrors;
     }
 
 }

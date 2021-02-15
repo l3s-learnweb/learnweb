@@ -5,13 +5,13 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
+import java.time.ZoneOffset;
 import java.util.BitSet;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,11 +33,9 @@ import org.hibernate.validator.constraints.Length;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.forum.ForumPost;
-import de.l3s.learnweb.forum.ForumPostDao;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
@@ -117,7 +115,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private Locale locale = Locale.forLanguageTag("en-US"); // preferred interface language
 
     private Gender gender = Gender.UNASSIGNED;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     @Length(max = 250)
     private String address;
     @Length(max = 100)
@@ -128,7 +126,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private String interest;
     @Length(max = 50)
     private String studentId;
-    private Date registrationDate;
+    private LocalDateTime registrationDate;
     @Length(max = 250)
     private String credits;
     private boolean acceptTermsAndConditions = false;
@@ -136,7 +134,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private boolean admin;
     private boolean moderator;
 
-    private HashMap<String, String> preferences;
+    private HashMap<String, String> preferences = new HashMap<>();
     private ZoneId timeZone;
 
     // caches
@@ -147,11 +145,8 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private transient Instant lastLoginDate;
     private int forumPostCount = -1;
     private transient Organisation organisation;
-    private transient ArrayList<Submission> activeSubmissions;
+    private transient List<Submission> activeSubmissions;
     private BitSet guides = new BitSet(Guide.values().length);
-
-    public User() {
-    }
 
     public void clearCaches() {
         courses = null;
@@ -163,20 +158,16 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     public void onDestroy() {
-        try {
-            this.save();
-        } catch (SQLException e) {
-            log.error("Couldn't save user onDestroy", e);
-        }
+        this.save();
     }
 
-    public void save() throws SQLException {
-        Learnweb.getInstance().getUserManager().save(this);
+    public void save() {
+        Learnweb.dao().getUserDao().save(this);
     }
 
-    public List<Course> getCourses() throws SQLException {
+    public List<Course> getCourses() {
         if (courses == null) {
-            courses = Learnweb.getInstance().getCourseManager().getCoursesByUserId(id);
+            courses = Learnweb.dao().getCourseDao().findByUserId(id);
             if (!courses.isEmpty()) {
                 Collections.sort(courses);
             }
@@ -188,11 +179,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     /**
      * @return number of courses this user is member of
      */
-    public int getCoursesCount() throws SQLException {
+    public int getCoursesCount() {
         return getCourses().size();
     }
 
-    public boolean isEmailRequired() throws SQLException {
+    public boolean isEmailRequired() {
         for (Course course : getCourses()) {
             if (course.getOption(Course.Option.Users_Require_mail_address)) {
                 return true;
@@ -202,7 +193,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         return false;
     }
 
-    public boolean isMemberOfCourse(int courseId) throws SQLException {
+    public boolean isMemberOfCourse(int courseId) {
         for (Course course : getCourses()) {
             if (courseId == course.getId()) {
                 return true;
@@ -228,15 +219,15 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         this.address = address;
     }
 
-    public List<Comment> getComments() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().getCommentsByUserId(this.getId());
+    public List<Comment> getComments() {
+        return Learnweb.dao().getCommentDao().findByUserId(id);
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -303,20 +294,20 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         this.profession = profession;
     }
 
-    public List<Resource> getResources() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
+    public List<Resource> getResources() {
+        return Learnweb.dao().getResourceDao().findByOwnerId(id);
     }
 
-    public int getResourceCount() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().getResourceCountByUserId(this.getId());
+    public int getResourceCount() {
+        return Learnweb.dao().getResourceDao().countByOwnerId(id);
     }
 
-    public List<Resource> getRatedResources() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().getRatedResourcesByUserId(this.getId());
+    public List<Resource> getRatedResources() {
+        return Learnweb.dao().getResourceDao().findRatedByUsedId(id);
     }
 
-    public List<Tag> getTags() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().getTagsByUserId(this.getId());
+    public List<Tag> getTags() {
+        return Learnweb.dao().getTagDao().findByUserId(id);
     }
 
     public String getUsername() {
@@ -369,7 +360,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     public Organisation getOrganisation() {
         if (organisation == null) {
-            organisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
+            organisation = Learnweb.dao().getOrganisationDao().findById(organisationId);
         }
         return organisation;
     }
@@ -394,9 +385,9 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     /**
      * Returns the groups the user is member off.
      */
-    public List<Group> getGroups() throws SQLException {
+    public List<Group> getGroups() {
         if (null == groups || groupsCacheTime + 3000L < System.currentTimeMillis()) {
-            groups = Learnweb.getInstance().getGroupManager().getGroupsByUserId(id);
+            groups = Learnweb.dao().getGroupDao().findByUserId(id);
             groupsCacheTime = System.currentTimeMillis();
         }
         return groups;
@@ -405,14 +396,14 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     /**
      * @return number of groups this user is member of
      */
-    public int getGroupCount() throws SQLException {
+    public int getGroupCount() {
         return getGroups().size();
     }
 
     /**
      * Returns the groups the user can add resources to.
      */
-    public List<Group> getWriteAbleGroups() throws SQLException {
+    public List<Group> getWriteAbleGroups() {
         LinkedList<Group> writeAbleGroups = new LinkedList<>();
         for (Group group : getGroups()) {
             if (group.canAddResources(this)) {
@@ -422,23 +413,18 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         return writeAbleGroups;
     }
 
-    public void joinGroup(int groupId) throws SQLException {
-        joinGroup(Learnweb.getInstance().getGroupManager().getGroupById(groupId));
+    public void joinGroup(int groupId) {
+        Learnweb.dao().getGroupDao().insertUser(groupId, this, getPreferredNotificationFrequency());
+        groups = null; // force reload
     }
 
-    public void joinGroup(Group group) throws SQLException {
-        Learnweb.getInstance().getGroupManager().addUserToGroup(this, group);
-
-        groups = null; // force reload
-
-        group.clearCaches();
+    public void joinGroup(Group group) {
+        joinGroup(group.getId());
     }
 
-    public void leaveGroup(Group group) throws SQLException {
-        Learnweb.getInstance().getGroupManager().removeUserFromGroup(this, group);
-
+    public void leaveGroup(Group group) {
+        Learnweb.dao().getGroupDao().deleteUser(group.getId(), this);
         groups = null; // force reload
-
         group.clearCaches();
     }
 
@@ -452,7 +438,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      */
     public boolean sendEmailConfirmation() {
         try {
-            String confirmEmailUrl = Learnweb.getInstance().getServerUrl() + "/lw/user/confirm_email.jsf?" +
+            String confirmEmailUrl = Learnweb.config().getServerUrl() + "/lw/user/confirm_email.jsf?" +
                 "email=" + StringHelper.urlEncode(getEmail()) +
                 "&token=" + getEmailConfirmationToken();
 
@@ -468,7 +454,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
             return true;
         } catch (MessagingException e) {
-            log.error("Can't send confirmation mail to " + this, e);
+            log.error("Can't send confirmation mail to {}", this, e);
         }
         return false;
     }
@@ -492,7 +478,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     /**
      * @return the url of the users image or a default image if no image has been added
      */
-    public String getImage() throws SQLException {
+    public String getImage() {
         if (imageUrl == null) {
             File imageFile = getImageFile();
             imageUrl = imageFile != null ? imageFile.getUrl() : getDefaultImageUrl();
@@ -506,14 +492,14 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         return "data:image/svg+xml;base64," + StringHelper.encodeBase64(profilePicture);
     }
 
-    public void setImage(InputStream inputStream) throws SQLException, IOException {
+    public void setImage(InputStream inputStream) throws IOException {
         // process image
         Image img = new Image(inputStream);
 
         // save image file
         File file = new File(TYPE.PROFILE_PICTURE, "user_icon.png", "image/png");
         Image thumbnail = img.getResizedToSquare2(200, 0.0);
-        file = Learnweb.getInstance().getFileManager().save(file, thumbnail.getInputStream());
+        Learnweb.dao().getFileDao().save(file, thumbnail.getInputStream());
         thumbnail.dispose();
         inputStream.close();
 
@@ -544,9 +530,9 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      *
      * @return Null if not present
      */
-    public File getImageFile() throws SQLException {
+    public File getImageFile() {
         if (imageFileId > 0) {
-            return Learnweb.getInstance().getFileManager().getFileById(imageFileId);
+            return Learnweb.dao().getFileDao().findById(imageFileId);
         }
         return null;
     }
@@ -559,7 +545,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         // delete existing image
         if (this.imageFileId != 0 && imageFileId != this.imageFileId) {
             try {
-                Learnweb.getInstance().getFileManager().delete(this.imageFileId);
+                Learnweb.dao().getFileDao().deleteSoft(this.imageFileId);
             } catch (Exception e) {
                 log.error("Can't delete profile image of user {}", this);
             }
@@ -568,11 +554,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         this.imageFileId = imageFileId;
     }
 
-    public Date getRegistrationDate() {
+    public LocalDateTime getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
+    public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
     }
 
@@ -633,15 +619,15 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      * Note that this value is cached. Call {@link #updateLoginDate() updateLoginDate} to update it. This is useful to control whether the
      * current or the penultimate login time is returned.
      */
-    public Instant getLastLoginDate() throws SQLException {
+    public Instant getLastLoginDate() {
         if (null == lastLoginDate) {
             updateLoginDate();
         }
         return lastLoginDate;
     }
 
-    public void updateLoginDate() throws SQLException {
-        this.lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(getId()).orElse(registrationDate.toInstant());
+    public void updateLoginDate() {
+        this.lastLoginDate = Learnweb.dao().getUserDao().findLastLoginDate(getId()).orElse(registrationDate.toInstant(ZoneOffset.UTC));
     }
 
     @Override
@@ -649,9 +635,9 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         return "[userId: " + getId() + " name: " + getRealUsername() + "]";
     }
 
-    public int getForumPostCount() throws SQLException {
+    public int getForumPostCount() {
         if (forumPostCount == -1) {
-            forumPostCount = Learnweb.getInstance().getJdbi().withExtension(ForumPostDao.class, dao -> dao.getPostCountByUserId(id));
+            forumPostCount = Learnweb.dao().getForumPostDao().countByUserId(id);
         }
         return forumPostCount;
     }
@@ -729,21 +715,14 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     /**
      * @return All forum posts this user created
      */
-    public List<ForumPost> getForumPosts() throws SQLException {
-        return Learnweb.getInstance().getJdbi().withExtension(ForumPostDao.class, dao -> dao.getPostsByUserId(id));
-    }
-
-    /**
-     * Returns a list of all Groups this user belongs to with associated metadata like notification frequency.
-     */
-    public List<GroupUser> getGroupsRelations() throws SQLException {
-        return Learnweb.getInstance().getGroupManager().getGroupsRelations(getId());
+    public List<ForumPost> getForumPosts() {
+        return Learnweb.dao().getForumPostDao().findByUserId(id);
     }
 
     /**
      * returns true when this user is allowed to moderate the given user.
      */
-    public boolean canModerateUser(User userToBeModerated) throws SQLException {
+    public boolean canModerateUser(User userToBeModerated) {
         if (isAdmin()) {
             return true;
         }
@@ -764,14 +743,17 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         this.locale = locale;
     }
 
-    public ArrayList<Submission> getActiveSubmissions() throws SQLException {
+    /**
+     * Retrieves current submissions for a user to be displayed in the homepage.
+     */
+    public List<Submission> getActiveSubmissions() {
         if (null == activeSubmissions) {
-            activeSubmissions = Learnweb.getInstance().getSubmissionManager().getActiveSubmissionsByUser(this);
+            activeSubmissions = Learnweb.dao().getSubmissionDao().findActiveByCourseIds(HasId.collectIds(getCourses()));
         }
         return activeSubmissions;
     }
 
-    public boolean getGuide(Guide guide) throws SQLException {
+    public boolean getGuide(Guide guide) {
         boolean value = guides.get(guide.ordinal());
         if (!value) {
             value = getComputedGuide(guide);
@@ -780,7 +762,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         return value;
     }
 
-    private boolean getComputedGuide(Guide guide) throws SQLException {
+    private boolean getComputedGuide(Guide guide) {
         switch (guide) {
             case ADD_RESOURCE:
                 return getResourceCount() > 0;

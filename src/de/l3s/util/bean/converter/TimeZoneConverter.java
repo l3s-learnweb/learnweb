@@ -10,9 +10,6 @@ import javax.faces.convert.FacesConverter;
 @FacesConverter("timeZoneConverter")
 public class TimeZoneConverter implements Converter<ZoneId> {
 
-    public TimeZoneConverter() {
-    }
-
     @Override
     public ZoneId getAsObject(FacesContext context, UIComponent component, String value) {
         return ZoneId.of(value);

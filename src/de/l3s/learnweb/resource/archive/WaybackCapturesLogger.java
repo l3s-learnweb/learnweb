@@ -1,47 +1,54 @@
 package de.l3s.learnweb.resource.archive;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 
+@Singleton
 public class WaybackCapturesLogger {
     private static final Logger log = LogManager.getLogger(WaybackCapturesLogger.class);
+    private static final Container LAST_ENTRY = new Container("", null, null); // this element indicates that the consumer thread should stop
 
-    private static final Container LAST_ENTRY = new Container("", 0L, 0L); // this element indicates that the consumer thread should stop
-    private final Learnweb learnweb;
+    private final WaybackUrlDao waybackUrlDao;
+
     private final LinkedBlockingQueue<Container> queue;
     private final Thread consumerThread;
     private final ExecutorService cdxExecutorService;
 
-    public WaybackCapturesLogger(Learnweb learnweb) {
-        this.learnweb = learnweb;
+    @Inject
+    public WaybackCapturesLogger(final WaybackUrlDao waybackUrlDao) {
+        this.waybackUrlDao = waybackUrlDao;
+
         this.queue = new LinkedBlockingQueue<>();
         this.consumerThread = new Thread(new Consumer());
         this.cdxExecutorService = Executors.newSingleThreadExecutor();
     }
 
+    @PostConstruct
     public void start() {
         this.consumerThread.start();
     }
 
-    public void logWaybackUrl(String url, long firstCapture, long lastCapture) {
+    public void logWaybackUrl(String url, LocalDateTime firstCapture, LocalDateTime lastCapture) {
         try {
-            Container c = new Container(url, firstCapture, lastCapture);
-            if (!queue.contains(c)) {
-                queue.put(c);
+            Container container = new Container(url, firstCapture, lastCapture);
+            if (!queue.contains(container)) {
+                queue.put(container);
             }
         } catch (InterruptedException e) {
             log.fatal("Couldn't log wayback url capture", e);
@@ -50,13 +57,14 @@ public class WaybackCapturesLogger {
 
     public void logWaybackCaptures(Resource resource) {
         if (resource == null) {
-            throw new NullPointerException();
+            throw new IllegalStateException();
         }
 
         cdxExecutorService.submit(new CDXWorker(resource));
     }
 
-    public void stop() {
+    @PreDestroy
+    public void onDestroy() {
         try {
             queue.put(LAST_ENTRY);
             consumerThread.join();
@@ -78,11 +86,11 @@ public class WaybackCapturesLogger {
     }
 
     private static class Container {
-        String url;
-        long firstCapture;
-        long lastCapture;
+        final String url;
+        final LocalDateTime firstCapture;
+        final LocalDateTime lastCapture;
 
-        Container(String url, long firstCapture, long lastCapture) {
+        Container(String url, LocalDateTime firstCapture, LocalDateTime lastCapture) {
             this.url = url;
             this.firstCapture = firstCapture;
             this.lastCapture = lastCapture;
@@ -106,17 +114,8 @@ public class WaybackCapturesLogger {
                         break;
                     }
 
-                    try {
-                        PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `wb_url` (`url`, `first_capture`, `last_capture`) VALUES (?, ?, ?)");
-                        insert.setString(1, container.url);
-                        insert.setTimestamp(2, new Timestamp(container.firstCapture));
-                        insert.setTimestamp(3, new Timestamp(container.lastCapture));
-                        insert.executeUpdate();
-
-                        //log.debug("Logged suggestion: " + container);
-                    } catch (SQLException e) {
-                        log.fatal("Couldn't log wayback url capture: " + container, e);
-                    }
+                    waybackUrlDao.insert(container.url, container.firstCapture, container.lastCapture);
+                    //log.debug("Logged suggestion: " + container);
                 }
 
                 log.debug("Wayback Captures logger thread was stopped");
@@ -127,36 +126,21 @@ public class WaybackCapturesLogger {
     }
 
     private class CDXWorker implements Callable<String> {
-        Resource resource;
+        final Resource resource;
 
         CDXWorker(Resource resource) {
             this.resource = resource;
         }
 
         @Override
-        public String call() throws NumberFormatException, SQLException {
+        public String call() {
             CDXClient cdxClient = new CDXClient();
-            List<Long> timestamps = cdxClient.getCaptures(resource.getUrl());
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT url_id FROM wb_url WHERE url = ?");
-            pStmt.setString(1, resource.getUrl());
-            ResultSet rs = pStmt.executeQuery();
-            if (rs.next()) {
-                int urlId = rs.getInt(1);
-                PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("UPDATE wb_url SET all_captures_fetched = 1 WHERE url_id = ?");
-                PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("INSERT INTO `wb_url_capture`(`url_id`,`timestamp`) VALUES(?,?)");
-                pStmt2.setInt(1, urlId);
-                int batchCount = 0;
-                for (long timestamp : timestamps) {
-                    batchCount++;
-                    pStmt2.setTimestamp(2, new Timestamp(timestamp));
-                    pStmt2.addBatch();
-                    if (batchCount % 1000 == 0 || batchCount == timestamps.size()) {
-                        pStmt2.executeBatch();
-                    }
-                }
-                pStmt3.setInt(1, urlId);
-                pStmt3.executeUpdate();
-                log.debug("Logged the wayback captures in the database for: " + resource.getUrl());
+            List<LocalDateTime> timestamps = cdxClient.getCaptures(resource.getUrl());
+            Optional<Integer> urlId = waybackUrlDao.findIdByUrl(resource.getUrl());
+            if (urlId.isPresent()) {
+                waybackUrlDao.updateMarkAllCapturesFetched(urlId.get());
+                waybackUrlDao.insertCapture(urlId.get(), timestamps);
+                log.debug("Logged the wayback captures in the database for: {}", resource.getUrl());
             }
             resource.addArchiveUrl(null);
             return null;

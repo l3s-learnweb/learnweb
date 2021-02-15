@@ -3,16 +3,16 @@
 
 # Decide where you want to locally store files uploaded to Learnweb (primarily needed for Group's resources)
 # On Windows the path should looks like the following L:\\learnweb\uploaded_files
-FILE_MANAGER_FOLDER=/mnt/learnweb/uploaded_files
+file_manager_folder=/mnt/learnweb/uploaded_files
 
 # If you work from the University or using LUIS VPN this settings should be enough
-INTERWEBJ_API_URL=http://learnweb.l3s.uni-hannover.de:8080/interweb/api/
-SOLR_SERVER_URL=http://***REMOVED***/solr/learnweb
+interwebj_api_url=http://learnweb.l3s.uni-hannover.de:8080/interweb/api/
+solr_server_url=http://***REMOVED***/solr/learnweb
 mysql_url=jdbc:mysql://***REMOVED***/learnweb_main
 
 # If you work from home, using SSH port forwarding, use the following values
-#INTERWEBJ_API_URL=https://learnweb.l3s.uni-hannover.de/interweb/api/
-#SOLR_SERVER_URL=http://localhost:8982/solr/learnweb
+#interwebj_api_url=https://learnweb.l3s.uni-hannover.de/interweb/api/
+#solr_server_url=http://localhost:8982/solr/learnweb
 #mysql_url=jdbc:mysql://localhost:3307/learnweb_main
 
 # If you want to use local database, you need to override user and password
@@ -21,5 +21,5 @@ mysql_url=jdbc:mysql://***REMOVED***/learnweb_main
 #mysql_password=123456
 
 # If you need to work with videos, install FFmpeg on your system and update these paths
-#FFMPEG_PATH=/usr/bin/ffmpeg
-#FFPROBE_PATH=/usr/bin/ffprobe
+#ffmpeg_path=/usr/bin/ffmpeg
+#ffprobe_path=/usr/bin/ffprobe

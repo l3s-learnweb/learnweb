@@ -1,6 +1,6 @@
 package de.l3s.learnweb.resource;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -15,7 +15,7 @@ public class OwnerList<E, O> extends LinkedList<E> {
     private static final long serialVersionUID = -2264077519939704399L;
 
     private HashMap<E, O> elementOwner = new HashMap<>();
-    private HashMap<E, Date> elementTimestamp = new HashMap<>();
+    private HashMap<E, LocalDateTime> elementTimestamp = new HashMap<>();
 
     /**
      * Copy constructor.
@@ -29,7 +29,7 @@ public class OwnerList<E, O> extends LinkedList<E> {
     public OwnerList() {
     }
 
-    public boolean add(E e, O owner, Date date) {
+    public boolean add(E e, O owner, LocalDateTime date) {
         elementOwner.put(e, owner);
         elementTimestamp.put(e, date);
         return add(e);

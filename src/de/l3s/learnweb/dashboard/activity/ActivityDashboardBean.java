@@ -1,7 +1,6 @@
 package de.l3s.learnweb.dashboard.activity;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -23,6 +23,7 @@ import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardChartsFactory.ActivityGraphData;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
+import de.l3s.learnweb.logging.LogDao;
 
 @Named
 @ViewScoped
@@ -36,6 +37,9 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
     private transient LineChartModel interactionsChart;
     private transient List<Map<String, Object>> interactionsTable;
+
+    @Inject
+    private LogDao logDao;
 
     @PostConstruct
     public void init() {
@@ -67,7 +71,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     }
 
     @Override
-    public void onLoad() throws SQLException {
+    public void onLoad() {
         super.onLoad();
 
         selectedActionItems = new ArrayList<>(actions.keySet());
@@ -76,14 +80,14 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     }
 
     @Override
-    public void cleanAndUpdateStoredData() throws SQLException {
+    public void cleanAndUpdateStoredData() {
         interactionsChart = null;
         interactionsTable = null;
 
         fetchDataFromManager();
     }
 
-    private void fetchDataFromManager() throws SQLException {
+    private void fetchDataFromManager() {
         if (!CollectionUtils.isEmpty(getSelectedUsersIds())) {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             if (selectedActionItems != null) {
@@ -91,7 +95,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 for (String activityGroupName : selectedActionItems) {
                     ActivityGraphData activityData = new ActivityGraphData();
                     activityData.setName(activityGroupName);
-                    activityData.setActionsPerDay(getLearnweb().getActivityDashboardManager().getActionsCountPerDay(selectedUsersIds, startDate, endDate, actions.get(activityGroupName)));
+                    activityData.setActionsPerDay(logDao.countActionsPerDay(selectedUsersIds, startDate, endDate, actions.get(activityGroupName)));
                     data.add(activityData);
                 }
                 interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
@@ -101,7 +105,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 for (Integer activityGroupName : selectedGroupedActions) {
                     ActivityGraphData activityData = new ActivityGraphData();
                     activityData.setName(Action.values()[activityGroupName].name());
-                    activityData.setActionsPerDay(getLearnweb().getActivityDashboardManager().getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
+                    activityData.setActionsPerDay(logDao.countActionsPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
                     data.add(activityData);
                 }
                 interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
@@ -110,7 +114,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         }
     }
 
-    public LineChartModel getInteractionsChart() throws SQLException {
+    public LineChartModel getInteractionsChart() {
         if (null == interactionsChart) {
             fetchDataFromManager();
         }
@@ -118,7 +122,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         return interactionsChart;
     }
 
-    public List<Map<String, Object>> getInteractionsTable() throws SQLException {
+    public List<Map<String, Object>> getInteractionsTable() {
         if (null == interactionsTable) {
             fetchDataFromManager();
         }
@@ -126,7 +130,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         return interactionsTable;
     }
 
-    public Set<String> getInteractionsTableColumnNames() throws SQLException {
+    public Set<String> getInteractionsTableColumnNames() {
         if (getInteractionsTable() == null) {
             return null;
         }

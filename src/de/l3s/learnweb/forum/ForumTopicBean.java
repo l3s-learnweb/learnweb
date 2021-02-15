@@ -1,8 +1,7 @@
 package de.l3s.learnweb.forum;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -14,6 +13,7 @@ import javax.inject.Named;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 
@@ -35,42 +35,45 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
     private List<ForumTopic> topics;
 
     @Inject
-    private transient ForumPostDao forumPostDao;
+    private GroupDao groupDao;
 
     @Inject
-    private transient ForumTopicDao forumTopicDao;
+    private ForumPostDao forumPostDao;
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private ForumTopicDao forumTopicDao;
+
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        topic = forumTopicDao.getTopicById(topicId).orElse(null);
+        topic = forumTopicDao.findById(topicId).orElse(null);
         BeanAssert.isFound(topic);
         BeanAssert.notDeleted(topic);
 
-        group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
+        group = groupDao.findById(topic.getGroupId());
         BeanAssert.isFound(group);
         BeanAssert.hasPermission(group.canViewResources(getUser()));
 
-        posts = forumPostDao.getPostsByTopicId(topicId);
-        forumTopicDao.increaseViews(topicId);
-        forumTopicDao.registerUserVisit(topicId, getUser().getId());
+        posts = forumPostDao.findByTopicId(topicId);
+        forumTopicDao.updateIncreaseViews(topicId);
+        forumTopicDao.insertUserVisit(topicId, getUser().getId());
 
-        topics = forumTopicDao.getTopicsByGroupId(group.getId());
+        topics = forumTopicDao.findByGroupId(group.getId());
     }
 
     public boolean isReplyDialog() {
         return dialogPost.getId() == -1;
     }
 
-    public void saveDialogPost() throws SQLException {
+    public void saveDialogPost() {
         boolean replyDialog = isReplyDialog();
 
         if (replyDialog) {
             dialogPost.setUserId(getUser().getId());
-            dialogPost.setDate(new Date());
+            dialogPost.setDate(LocalDateTime.now());
             dialogPost.setTopicId(topicId);
         } else {
-            dialogPost.setLastEditDate(new Date());
+            dialogPost.setLastEditDate(LocalDateTime.now());
             dialogPost.setEditCount(dialogPost.getEditCount() + 1);
             dialogPost.setEditUserId(getUser().getId());
         }
@@ -79,7 +82,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
         if (replyDialog) {
             posts.add(dialogPost);
-            forumTopicDao.increaseReplies(dialogPost.getTopicId(), dialogPost.getId(), dialogPost.getUserId(), dialogPost.getDate());
+            forumTopicDao.updateIncreaseReplies(dialogPost.getTopicId(), dialogPost.getId(), dialogPost.getUserId(), dialogPost.getDate());
             dialogPost.getUser().incForumPostCount();
             log(Action.forum_post_added, group.getId(), topicId, topic.getTitle());
         } else {
@@ -93,10 +96,10 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
         return ForumBean.getCategoriesByCourse(group.getCourseId(), getUserBean().getLocale());
     }
 
-    public void deletePost(ForumPost post) throws SQLException {
+    public void deletePost(ForumPost post) {
         User user = getUser();
         if (user.isModerator() || user.getId() == post.getUserId()) {
-            forumPostDao.deletePostById(post.getId());
+            forumPostDao.delete(post.getId());
         }
 
         posts.remove(post);
@@ -112,7 +115,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
         dialogPost = post;
     }
 
-    public void quotePost(ForumPost post) throws SQLException {
+    public void quotePost(ForumPost post) {
         dialogPost = new ForumPost();
         String username = post.getUser() != null ? post.getUser().getUsername() : "Anonymous"; // can happen for old imported posts
         String newStr = post.getText().replaceAll("<blockquote>", "<blockquote>&#160;&#160;&#160;&#160;");

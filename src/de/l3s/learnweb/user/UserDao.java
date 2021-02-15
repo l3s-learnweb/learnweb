@@ -1,13 +1,11 @@
 package de.l3s.learnweb.user;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -25,16 +23,18 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.util.Cache;
 import de.l3s.util.HashHelper;
 import de.l3s.util.ICache;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(UserDao.UserMapper.class)
-public interface UserDao extends SqlObject {
+public interface UserDao extends SqlObject, Serializable {
     int FIELDS = 1; // number of options_fieldX fields, increase if User.Options has more than 64 values
-    ICache<User> cache = Cache.of(User.class);
+    ICache<User> cache = new Cache<>(500);
 
     default User findById(int userId) {
         User user = cache.get(userId);
@@ -73,6 +73,9 @@ public interface UserDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_user WHERE deleted = 0 ORDER BY username")
     List<User> findAll();
 
+    @SqlQuery("SELECT * FROM lw_user WHERE deleted = 0 AND preferred_notification_frequency != 'NEVER'")
+    List<User> findWithEnabledForumNotifications();
+
     @SqlQuery("SELECT * FROM lw_user WHERE organisation_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByOrganisationId(int organisationId);
 
@@ -94,14 +97,11 @@ public interface UserDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_user WHERE user_id IN (SELECT user_id FROM lw_survey_resource_user WHERE resource_id = ? AND submitted = 1)")
     List<User> findBySubmittedSurveyResourceId(int surveyResourceId);
 
-    @SqlQuery("SELECT timestamp FROM lw_user_log WHERE user_id = ? AND action = ? ORDER BY timestamp DESC LIMIT 1")
-    Optional<Instant> findLastDateOfAction(int userId, int actionOrdinal);
-
     /**
-     * @return The dateTime of the last recorded login event of the given user. Empty if the user has never logged in
+     * @return the Instant of the last recorded login event of the given user. Empty if the user has never logged in
      */
     default Optional<Instant> findLastLoginDate(int userId) {
-        return findLastDateOfAction(userId, Action.login.ordinal());
+        return getHandle().attach(LogDao.class).findDateOfLastByUserIdAndAction(userId, Action.login.ordinal());
     }
 
     @SqlQuery("SELECT COUNT(*) FROM lw_user u JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0")
@@ -111,7 +111,7 @@ public interface UserDao extends SqlObject {
     int countCoursesByUserId(int userId);
 
     @SqlUpdate("INSERT INTO lw_user_auth (user_id, auth_id, token_hash, expires) VALUES(?, ?, ?, ?)")
-    void insertAuth(User user, long authId, String token, long expiresIn);
+    void insertAuth(User user, long authId, String token, LocalDateTime expires);
 
     @SqlUpdate("DELETE FROM lw_user_auth WHERE auth_id = ?")
     void deleteAuth(long authId);
@@ -120,7 +120,7 @@ public interface UserDao extends SqlObject {
         return getHandle().select("SELECT user_id, token_hash, expires FROM lw_user_auth WHERE auth_id = ?", authId).map((rs, ctx) -> {
             int userId = rs.getInt("user_id");
             String tokenHash = rs.getString("token_hash");
-            boolean expired = rs.getTimestamp("expires").before(new Date());
+            boolean expired = rs.getTimestamp("expires").toInstant().isBefore(Instant.now());
 
             if (!expired && HashHelper.isValidSha256(token, tokenHash)) {
                 return findById(userId);
@@ -141,7 +141,7 @@ public interface UserDao extends SqlObject {
     @SqlUpdate("INSERT INTO lw_user_token (user_id, type, token) VALUES(?, 'grant', ?)")
     void insertGrantToken(int userId, String token);
 
-    default String getGrantToken(Integer userId) throws SQLException {
+    default String getGrantToken(Integer userId) {
         Optional<String> tokenOpt = findGrantToken(userId);
 
         if (tokenOpt.isEmpty()) {
@@ -160,7 +160,7 @@ public interface UserDao extends SqlObject {
      * <li>His name and password are changed so that he can't login
      * </ul>
      */
-    default void deleteSoft(User user) throws SQLException {
+    default void deleteSoft(User user) {
         for (Resource resource : user.getResources()) {
             if (resource.getGroupId() == 0) { // delete only private resources
                 resource.delete();
@@ -176,9 +176,9 @@ public interface UserDao extends SqlObject {
         user.save();
     }
 
-    default void deleteHard(User user) throws SQLException {
+    default void deleteHard(User user) {
         // if (user.getResources().size() > 10) {
-        //     log.warn("delete user: " + user + " and his " + user.getResources().size() + " resorces?");
+        //     log.warn("delete user: " + user + " and his " + user.getResources().size() + " resources?");
         //     log.info("Delete user ");
         // }
 
@@ -232,7 +232,7 @@ public interface UserDao extends SqlObject {
         params.put("language", user.getLocale().toString());
         params.put("guides", user.getGuides()[0]);
 
-        Optional<Integer> userId = SqlHelper.generateInsertQuery(getHandle(), "lw_user", params)
+        Optional<Integer> userId = SqlHelper.handleSave(getHandle(), "lw_user", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         userId.ifPresent(id -> {
@@ -241,11 +241,11 @@ public interface UserDao extends SqlObject {
         });
     }
 
-    default void anonymize(User user) throws SQLException {
+    default void anonymize(User user) {
         user.setAdditionalInformation("");
         user.setAddress("");
         user.setAffiliation("");
-        user.setDateOfBirth(new Date(0));
+        user.setDateOfBirth(null);
         user.setFullName("");
         user.setImageFileId(0);
         user.setInterest("");
@@ -274,7 +274,7 @@ public interface UserDao extends SqlObject {
                 user.setOrganisationId(rs.getInt("organisation_id"));
                 user.setImageFileId(rs.getInt("image_file_id"));
                 user.setGender(User.Gender.values()[rs.getInt("gender")]);
-                user.setDateOfBirth(rs.getDate("dateofbirth"));
+                user.setDateOfBirth(RsHelper.getLocalDate(rs.getDate("dateofbirth")));
                 user.setFullName(rs.getString("fullname"));
                 user.setAffiliation(rs.getString("affiliation"));
                 user.setAddress(rs.getString("address"));
@@ -282,7 +282,7 @@ public interface UserDao extends SqlObject {
                 user.setAdditionalInformation(rs.getString("additionalinformation"));
                 user.setInterest(rs.getString("interest"));
                 user.setStudentId(rs.getString("student_identifier"));
-                user.setRegistrationDate(new Date(rs.getTimestamp("registration_date").getTime()));
+                user.setRegistrationDate(RsHelper.getLocalDateTime(rs.getTimestamp("registration_date")));
                 user.setCredits(rs.getString("credits"));
                 user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
                 user.setPreferredNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("preferred_notification_frequency")));
@@ -295,23 +295,15 @@ public interface UserDao extends SqlObject {
                 user.setModerator(rs.getInt("is_moderator") == 1);
 
                 // deserialize preferences
-                HashMap<String, String> preferences = null;
                 byte[] preferenceBytes = rs.getBytes("preferences");
                 if (preferenceBytes != null && preferenceBytes.length > 0) {
                     try {
-                        ObjectInputStream preferencesStream = new ObjectInputStream(new ByteArrayInputStream(preferenceBytes));
-
-                        // re-create the object
-                        preferences = (HashMap<String, String>) preferencesStream.readObject();
+                        user.setPreferences(SerializationUtils.deserialize(preferenceBytes));
                     } catch (Exception e) {
                         LogManager.getLogger(UserMapper.class).error("Couldn't load preferences for user {}", user.getId(), e);
                     }
                 }
-                if (preferences == null) {
-                    preferences = new HashMap<>();
-                }
 
-                user.setPreferences(preferences);
                 cache.put(user);
             }
             return user;

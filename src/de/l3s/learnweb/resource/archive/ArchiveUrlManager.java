@@ -6,14 +6,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -24,75 +18,52 @@ import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 
+@Singleton
 public final class ArchiveUrlManager {
     private static final Logger log = LogManager.getLogger(ArchiveUrlManager.class);
 
-    private static ArchiveUrlManager instance;
-    private final Learnweb learnweb;
-
     private final String archiveSaveURL;
+    private final ArchiveUrlDao archiveUrlDao;
+    private final WaybackUrlDao waybackUrlDao;
 
     private final ExecutorService executorService;
     private final ExecutorService cdxExecutorService;
 
-    private ArchiveUrlManager(Learnweb learnweb) {
-        this.learnweb = learnweb;
-        archiveSaveURL = learnweb.getProperties().getProperty("INTERNET_ARCHIVE_SAVE_URL");
-        /*try
-        {
-            serviceUrlObj = new URL(archiveSaveURL);
-        }
-        catch(MalformedURLException e)
-        {
-            log.error("The archive today service URL is malformed:", e);
-        }*/
+    @Inject
+    public ArchiveUrlManager(ConfigProvider configProvider, final ArchiveUrlDao archiveUrlDao, final WaybackUrlDao waybackUrlDao) {
+        this.archiveSaveURL = configProvider.getProperty("internet_archive_save_url");
+        this.archiveUrlDao = archiveUrlDao;
+        this.waybackUrlDao = waybackUrlDao;
 
         executorService = Executors.newCachedThreadPool(); // new ThreadPoolExecutor(maxThreads, maxThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(maxThreads * 1000, true), new ThreadPoolExecutor.CallerRunsPolicy());
         cdxExecutorService = Executors.newSingleThreadExecutor(); // In order to sequentially poll the CDX server and not overload it
     }
 
-    public void updateArchiveUrl(int fileId, int resourceId, String archiveUrl) throws SQLException {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement(
-            "UPDATE `lw_resource_archiveurl` SET `file_id` = ?  WHERE `resource_id`=? and `archive_url`=?");
-        replace.setInt(1, fileId);
-        replace.setInt(2, resourceId);
-        replace.setString(3, archiveUrl);
-        replace.executeUpdate();
-        replace.close();
-
-        log.info("Processed archiveUrl: " + archiveUrl);
-    }
-
     public void checkWaybackCaptures(ResourceDecorator resource) {
         try {
             if (resource.getResource().getMetadataValue("first_timestamp") == null) {
-                PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT first_capture, last_capture FROM wb_url WHERE url = ?");
-                pStmt.setString(1, resource.getUrl());
-                ResultSet rs = pStmt.executeQuery();
-                if (rs.next()) {
-                    Timestamp first = rs.getTimestamp(1);
-                    Timestamp last = rs.getTimestamp(2);
-                    if (first != null && last != null) { // url was checked and has captures
-                        SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-
-                        resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(new Date(first.getTime())));
-                        resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(new Date(last.getTime())));
-                    }
+                Optional<ImmutablePair<String, String>> firstAndLastCapture = waybackUrlDao.findFirstAndLastCapture(resource.getUrl());
+                if (firstAndLastCapture.isPresent()) {
+                    resource.getResource().setMetadataValue("first_timestamp", firstAndLastCapture.get().left);
+                    resource.getResource().setMetadataValue("last_timestamp", firstAndLastCapture.get().right);
                 } else {
                     cdxExecutorService.submit(new CDXWorker(resource));
                 }
             }
-        } catch (SQLException e) {
-            log.error("Error while fetching wayback url capture info: ", e);
         } catch (RejectedExecutionException e) {
-            log.error("Checking if executor was shutdown: " + cdxExecutorService.isShutdown());
+            log.error("Checking if executor was shutdown: {}", cdxExecutorService.isShutdown());
             log.error("Executor exception while submitting new wayback capture request", e);
         }
     }
@@ -106,14 +77,15 @@ public final class ArchiveUrlManager {
                 response = executorResponse.get();
                 //log.debug(response);
             } catch (InterruptedException e) {
-                log.error("Execution of the thread was interrupted on a task for resource: " + resource.getId(), e);
+                log.error("Execution of the thread was interrupted on a task for resource: {}", resource.getId(), e);
             } catch (ExecutionException e) {
-                log.error("Error while retrieving response from a task that was interrupted by an exception for resource: " + resource.getId(), e);
+                log.error("Error while retrieving response from a task that was interrupted by an exception for resource: {}", resource.getId(), e);
             }
         }
         return response;
     }
 
+    @PreDestroy
     public void onDestroy() {
         executorService.shutdown();
         cdxExecutorService.shutdown();
@@ -142,14 +114,6 @@ public final class ArchiveUrlManager {
 
     }
 
-    // there should exist only one instance of this class because of the executor services
-    public static ArchiveUrlManager getInstance(Learnweb learnweb) {
-        if (instance == null) {
-            instance = new ArchiveUrlManager(learnweb);
-        }
-        return instance;
-    }
-
     private static final class CDXWorker implements Callable<String> {
         private final ResourceDecorator resource;
 
@@ -158,7 +122,7 @@ public final class ArchiveUrlManager {
         }
 
         @Override
-        public String call() throws NumberFormatException, SQLException, ParseException, IOException {
+        public String call() throws IOException {
             CDXClient cdxClient = new CDXClient();
             cdxClient.isArchived(resource);
             return null;
@@ -166,7 +130,9 @@ public final class ArchiveUrlManager {
     }
 
     class ArchiveNowWorker implements Callable<String> {
-        Resource resource;
+        private final DateTimeFormatter responseDate = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+
+        final Resource resource;
 
         ArchiveNowWorker(Resource resource) {
             this.resource = resource;
@@ -174,19 +140,15 @@ public final class ArchiveUrlManager {
 
         @Override
         public String call() throws Exception {
-            DateFormat responseDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-
             if (resource == null) {
                 return "resource was NULL";
             }
 
-            //resource = learnweb.getResourceManager().getResource(resource.getId());
-
             if (resource.getArchiveUrls() != null) {
                 int versions = resource.getArchiveUrls().size();
                 if (versions > 0) {
-                    long timeDifference = (new Date().getTime() - resource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
-                    if (timeDifference < 300) {
+                    boolean isArchivedRecently = resource.getArchiveUrls().getLast().getTimestamp().isAfter(LocalDateTime.now().minusMinutes(5));
+                    if (isArchivedRecently) {
                         return "resource was last archived less than 5 minutes ago";
                     }
                 }
@@ -194,66 +156,47 @@ public final class ArchiveUrlManager {
 
             String archiveURL = null;
             String mementoDateString = null;
-            try {
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(archiveSaveURL + resource.getUrl()))
-                    .header("Accept", "application/xml")
-                    .build();
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(archiveSaveURL + resource.getUrl()))
+                .header("Accept", "application/xml")
+                .build();
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-                if (response.statusCode() == HttpURLConnection.HTTP_OK) {
-                    Optional<String> contentLocation = response.headers().firstValue("Content-Location");
-                    if (contentLocation.isPresent()) {
-                        archiveURL = "http://web.archive.org" + contentLocation.get();
-                    } else {
-                        log.debug("Content Location not found");
-                    }
-
-                    Optional<String> archiveOrigDate = response.headers().firstValue("X-Archive-Orig-Date");
-                    if (archiveOrigDate.isPresent()) {
-                        mementoDateString = archiveOrigDate.get();
-                    } else {
-                        log.debug("X-Archive-Orig-Date not found");
-                    }
-
-                    Date archiveUrlDate = null;
-                    if (mementoDateString != null) {
-                        archiveUrlDate = responseDate.parse(mementoDateString);
-                    }
-
-                    log.debug("Archived URL:" + archiveURL + " Memento DateTime:" + mementoDateString);
-                    PreparedStatement prepStmt = learnweb.getConnection().prepareStatement(
-                        "INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
-                    prepStmt.setInt(1, resource.getId());
-                    prepStmt.setString(2, archiveURL);
-                    if (archiveUrlDate == null) {
-                        prepStmt.setNull(3, java.sql.Types.TIMESTAMP);
-                    } else {
-                        prepStmt.setTimestamp(3, new java.sql.Timestamp(archiveUrlDate.getTime()));
-                    }
-                    prepStmt.executeUpdate();
-                    prepStmt.close();
-
-                    resource.addArchiveUrl(null);
-                } else if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
-                    Optional<String> livewebError = response.headers().firstValue("X-Archive-Wayback-Liveweb-Error");
-                    if (livewebError.isPresent()) {
-                        if (livewebError.get().equalsIgnoreCase("RobotAccessControlException: Blocked By Robots")) {
-                            return "ROBOTS_ERROR";
-                        }
-                    }
-
-                    log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId() + "; Response: " + response.body());
-                    return "GENERIC_ERROR";
+            if (response.statusCode() == HttpURLConnection.HTTP_OK) {
+                Optional<String> contentLocation = response.headers().firstValue("Content-Location");
+                if (contentLocation.isPresent()) {
+                    archiveURL = "http://web.archive.org" + contentLocation.get();
+                } else {
+                    log.debug("Content Location not found");
                 }
-            } catch (SQLException e) {
-                log.error("Error while trying to save the archived URL for resource: " + resource.getId(), e);
-                return "SQL_SAVE_ERROR";
-            } catch (ParseException e) {
-                log.error("Error while trying to parse the response date from archive URL service for resource: " + resource.getId() + "; Date trying to parse: " + mementoDateString, e);
-                return "PARSE_DATE_ERROR";
+
+                Optional<String> archiveOrigDate = response.headers().firstValue("X-Archive-Orig-Date");
+                if (archiveOrigDate.isPresent()) {
+                    mementoDateString = archiveOrigDate.get();
+                } else {
+                    log.debug("X-Archive-Orig-Date not found");
+                }
+
+                LocalDateTime archiveUrlDate = null;
+                if (mementoDateString != null) {
+                    archiveUrlDate = LocalDateTime.parse(mementoDateString, responseDate);
+                }
+
+                log.debug("Archived URL:{} Memento DateTime:{}", archiveURL, mementoDateString);
+                archiveUrlDao.insertArchiveUrl(resource.getId(), archiveURL, archiveUrlDate);
+                resource.addArchiveUrl(null);
+            } else if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+                Optional<String> livewebError = response.headers().firstValue("X-Archive-Wayback-Liveweb-Error");
+                if (livewebError.isPresent()) {
+                    if (livewebError.get().equalsIgnoreCase("RobotAccessControlException: Blocked By Robots")) {
+                        return "ROBOTS_ERROR";
+                    }
+                }
+
+                log.error("Cannot archive URL because of an error other than robots.txt for resource: {}; Response: {}", resource.getId(), response.body());
+                return "GENERIC_ERROR";
             }
 
             return "ARCHIVE_SUCCESS";

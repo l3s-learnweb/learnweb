@@ -1,10 +1,10 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -18,12 +18,13 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
     private Survey selectedSurvey;
     private List<Survey> surveys = new ArrayList<>();
 
-    public SurveyTemplatesBean() throws SQLException {
+    @PostConstruct
+    public void init() {
         if (!isLoggedIn()) {
             return;
         }
 
-        this.surveys = getLearnweb().getSurveyManager().getPublicSurveysByOrganisationOrUser(getUser());
+        this.surveys = dao().getSurveyDao().findByOrganisationIdOrUserId(getUser().getOrganisationId(), getUser().getId());
     }
 
     public Survey getSelectedSurvey() {
@@ -41,8 +42,8 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
         return surveys;
     }
 
-    public void onCopySurvey(int surveyId) throws SQLException {
-        selectedSurvey = getLearnweb().getSurveyManager().getSurvey(surveyId).clone();
+    public void onCopySurvey(int surveyId) {
+        selectedSurvey = dao().getSurveyDao().findById(surveyId).orElseThrow().clone();
         selectedSurvey.setUserId(getUser().getId());
     }
 
@@ -56,7 +57,7 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
     /**
      * Saves the selectedSurvey and redirects to edit page.
      */
-    public String onSave() throws SQLException {
+    public String onSave() {
         selectedSurvey.save(false);
         return "/lw/survey/template.xhtml?survey_id=" + selectedSurvey.getId() + "&faces-redirect=true";
     }
@@ -65,8 +66,8 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
         return "/lw/survey/template.xhtml?survey_id=" + surveyId + "&faces-redirect=true";
     }
 
-    public void onDeleteSurvey(Survey surveyToDelete) throws SQLException {
-        getLearnweb().getSurveyManager().deleteSurvey(surveyToDelete.getId());
+    public void onDeleteSurvey(Survey surveyToDelete) {
+        dao().getSurveyDao().deleteSoft(surveyToDelete);
         surveys.removeIf(survey -> survey.getId() == surveyToDelete.getId());
     }
 

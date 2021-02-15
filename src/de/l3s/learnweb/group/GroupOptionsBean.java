@@ -1,11 +1,11 @@
 package de.l3s.learnweb.group;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
@@ -40,11 +40,14 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private String editedHypothesisToken;
     private GroupUser groupUser;
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private GroupDao groupDao;
+
+    public void onLoad() {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        group = getLearnweb().getGroupManager().getGroupById(groupId);
+        group = groupDao.findById(groupId);
         BeanAssert.isFound(group);
 
         if (null != group) {
@@ -57,7 +60,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
             editedGroupTitle = group.getTitle();
             editedHypothesisLink = group.getHypothesisLink();
             editedHypothesisToken = group.getHypothesisToken();
-            groupUser = getLearnweb().getGroupManager().getGroupUserRelation(user.getId(), group.getId());
+            groupUser = groupDao.findGroupUserRelation(group, user).orElse(null);
         }
     }
 
@@ -74,48 +77,42 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     }
 
     public void onGroupEdit() {
-        try {
-            if (!editedGroupDescription.equals(group.getDescription())) {
-                group.setDescription(editedGroupDescription);
-                log(Action.group_changing_description, group.getId(), group.getId());
-            }
-            if (!editedGroupTitle.equals(group.getTitle())) {
-                log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
-                group.setTitle(editedGroupTitle);
-            }
-            if (editedGroupLeaderId != group.getLeaderUserId()) {
-                if (group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId()) {
-                    getUserBean().setSidebarMenuModel(null);
-                }
-
-                group.setLeaderUserId(editedGroupLeaderId);
-                log(Action.group_changing_leader, group.getId(), group.getId());
-            }
-            if (!StringUtils.equals(editedHypothesisLink, group.getHypothesisLink())) {
-                log(Action.group_changing_hypothesis_link, group.getId(), group.getId(), group.getHypothesisLink());
-                group.setHypothesisLink(editedHypothesisLink);
-            }
-            if (!StringUtils.equals(editedHypothesisToken, group.getHypothesisToken())) {
-                group.setHypothesisToken(editedHypothesisToken);
-            }
-            getLearnweb().getGroupManager().save(group);
-            //getLearnweb().getGroupManager().resetCache();
-            getUser().clearCaches();
-
-        } catch (SQLException e) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            log.error("unhandled error", e);
+        if (!editedGroupDescription.equals(group.getDescription())) {
+            group.setDescription(editedGroupDescription);
+            log(Action.group_changing_description, group.getId(), group.getId());
         }
+        if (!editedGroupTitle.equals(group.getTitle())) {
+            log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
+            group.setTitle(editedGroupTitle);
+        }
+        if (editedGroupLeaderId != group.getLeaderUserId()) {
+            if (group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId()) {
+                getUserBean().setSidebarMenuModel(null);
+            }
+
+            group.setLeaderUserId(editedGroupLeaderId);
+            log(Action.group_changing_leader, group.getId(), group.getId());
+        }
+        if (!StringUtils.equals(editedHypothesisLink, group.getHypothesisLink())) {
+            log(Action.group_changing_hypothesis_link, group.getId(), group.getId(), group.getHypothesisLink());
+            group.setHypothesisLink(editedHypothesisLink);
+        }
+        if (!StringUtils.equals(editedHypothesisToken, group.getHypothesisToken())) {
+            group.setHypothesisToken(editedHypothesisToken);
+        }
+        groupDao.save(group);
+        //getLearnweb().getGroupManager().resetCache();
+        getUser().clearCaches();
 
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public void copyGroup() throws SQLException {
+    public void copyGroup() {
         group.copyResources(selectedResourceTargetGroupId, getUser());
         addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
     }
 
-    public List<Group> getUserCopyableGroups() throws SQLException {
+    public List<Group> getUserCopyableGroups() {
         List<Group> copyableGroups = getUser().getWriteAbleGroups();
         copyableGroups.remove(group);
         return copyableGroups;
@@ -145,7 +142,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         this.editedGroupLeaderId = editedGroupLeaderId;
     }
 
-    public boolean isHypothesisEnabled() throws SQLException {
+    public boolean isHypothesisEnabled() {
         return getGroup().getCourse().getOption(Option.Groups_Hypothesis_enabled);
     }
 

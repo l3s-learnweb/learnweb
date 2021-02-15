@@ -21,13 +21,13 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable, Cloneable
         this.fileId = fileId;
 
         if (width < 0) {
-            log.warn("Ignore negative width: " + width);
+            log.warn("Ignore negative width: {}", width);
         } else {
             this.width = width;
         }
 
         if (height < 0) {
-            log.warn("Ignore negative height: " + height);
+            log.warn("Ignore negative height: {}", height);
         } else {
             this.height = height;
         }

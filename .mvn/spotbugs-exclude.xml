@@ -3,20 +3,13 @@
         xmlns="https://github.com/spotbugs/filter/3.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
-    <!-- Ignore false positive NP checks in try-with-resources: https://github.com/spotbugs/spotbugs/issues/259 -->
-    <Match>
-        <Or>
-            <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
-            <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
-        </Or>
-    </Match>
-    <!-- Singleton pattern used by Learnweb class and others are considered as anti-pattern nowadays -->
-    <Match>
-        <Bug pattern="LI_LAZY_INIT_STATIC"/>
-    </Match>
     <!-- We ignore return value of many executeQuery() calls -->
     <Match>
         <Bug pattern="RV_RETURN_VALUE_IGNORED"/>
+    </Match>
+    <!-- We do not preform check if file was deleted -->
+    <Match>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
     </Match>
     <!-- Date is mutable object value of which can be changed by untrusted source -->
     <Match>
@@ -24,19 +17,6 @@
             <Bug pattern="EI_EXPOSE_REP"/>
             <Bug pattern="EI_EXPOSE_REP2"/>
         </Or>
-    </Match>
-    <!-- TODO @astappiev: We have hundreds of unclosed ResultSets and Statements -->
-    <Match>
-        <Or>
-            <Bug pattern="ODR_OPEN_DATABASE_RESOURCE"/>
-            <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
-            <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
-            <Bug pattern="ODR_OPEN_DATABASE_RESOURCE_EXCEPTION_PATH"/>
-        </Or>
-    </Match>
-    <!-- We need to create Learnweb if internal methods calls to Learnweb.getInstance() -->
-    <Match>
-        <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
     </Match>
     <!-- Clone method does not call super.clone() -->
     <Match>
@@ -50,17 +30,6 @@
     <Match>
         <Bug pattern="BC_UNCONFIRMED_CAST"/>
     </Match>
-    <!-- We do not preform check if file was deleted -->
-    <Match>
-        <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
-    </Match>
-    <!-- We do not care about dynamic strings in SQL queries -->
-    <Match>
-        <Or>
-            <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
-            <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
-        </Or>
-    </Match>
     <!-- We do not want to put locale to each .toLowerCase, .toUpperCase methods -->
     <Match>
         <Bug pattern="DM_CONVERT_CASE"/>
@@ -69,7 +38,7 @@
     <Match>
         <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
     </Match>
-    <!-- Allow return null from methods returning array -->
+    <!-- FIXME: Allow return null from methods returning array -->
     <Match>
         <Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS"/>
     </Match>
@@ -81,31 +50,16 @@
     <Match>
         <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
     </Match>
-    <!-- Capture of runtime exception -->
+    <!-- FIXME: Capture of runtime exception -->
     <Match>
         <Bug pattern="REC_CATCH_EXCEPTION"/>
     </Match>
-    <!-- Serialized inner class -->
-    <Match>
-        <Bug pattern="SE_INNER_CLASS"/>
-    </Match>
-    <!-- Equals of parent class -->
     <Match>
         <Or>
             <Class name="de.l3s.learnweb.resource.glossary.GlossaryResource"/>
             <Class name="de.l3s.learnweb.resource.survey.SurveyResource"/>
         </Or>
         <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
-    </Match>
-    <!-- It simplifies how it looks -->
-    <Match>
-        <Class name="de.l3s.learnweb.user.Organisation"/>
-        <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
-    </Match>
-    <!-- It simplifies how it looks -->
-    <Match>
-        <Class name="de.l3s.learnweb.resource.survey.SurveyManager"/>
-        <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
     </Match>
     <!-- This class use methods from parent class and can be static -->
     <Match>
@@ -117,9 +71,16 @@
         <Class name="de.l3s.maintenance.MaintenanceTask"/>
         <Bug pattern="DM_EXIT"/>
     </Match>
-    <!-- The old connection should be removed later -->
+    <!-- Suggests to refactor lambdas to inner static classes -->
     <Match>
-        <Class name="de.l3s.learnweb.Learnweb"/>
-        <Bug pattern="ML_SYNC_ON_FIELD_TO_GUARD_CHANGING_THAT_FIELD"/>
+        <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
+    </Match>
+    <!-- Gives false positive results -->
+    <Match>
+        <Or>
+            <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+            <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
+            <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
+        </Or>
     </Match>
 </FindBugsFilter>

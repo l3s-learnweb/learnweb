@@ -5,11 +5,13 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.util.HashHelper;
 import de.l3s.util.email.Mail;
@@ -23,9 +25,12 @@ public class PasswordBean extends ApplicationBean implements Serializable {
 
     private String email;
 
+    @Inject
+    private UserDao userDao;
+
     public void onGetPassword() {
         try {
-            List<User> users = getLearnweb().getUserManager().getUser(email);
+            List<User> users = userDao.findByEmail(email);
 
             if (users.isEmpty()) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "unknown_email");
@@ -35,7 +40,7 @@ public class PasswordBean extends ApplicationBean implements Serializable {
             Mail message = new Mail();
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
 
-            String url = getLearnweb().getServerUrl() + "/lw/user/change_password.jsf?u=";
+            String url = getLearnweb().getConfigProvider().getServerUrl() + "/lw/user/change_password.jsf?u=";
 
             for (User user : users) {
                 String link = url + user.getId() + "_" + createPasswordChangeHash(user);
@@ -49,7 +54,7 @@ public class PasswordBean extends ApplicationBean implements Serializable {
             //sendMail(user);
 
             addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
-        } catch (Exception e) {
+        } catch (MessagingException e) {
             addErrorMessage(e);
         }
     }

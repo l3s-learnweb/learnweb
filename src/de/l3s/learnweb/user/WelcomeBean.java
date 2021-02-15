@@ -1,12 +1,13 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -14,6 +15,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.submission.Submission;
+import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
 @Named
@@ -22,18 +24,18 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -4337683111157393180L;
 
     // Filter for forum
-    private static final Action[] FORUM_FILTER = {
+    private static final EnumSet<Action> FORUM_FILTER = EnumSet.of(
         Action.forum_post_added,
         Action.forum_topic_added
-    };
+    );
 
     // Filter for resources
-    private static final Action[] RESOURCES_FILTER = {
+    private static final EnumSet<Action> RESOURCES_FILTER = EnumSet.of(
         Action.adding_resource,
-        Action.edit_resource,
-    };
+        Action.edit_resource
+    );
 
-    private static final Action[] GENERAL_FILTER = {
+    private static final EnumSet<Action> GENERAL_FILTER = EnumSet.of(
         Action.adding_resource,
         Action.commenting_resource,
         Action.edit_resource,
@@ -48,7 +50,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
         Action.forum_topic_added,
         Action.changing_office_resource,
         Action.forum_post_added
-    };
+    );
 
     private String organisationWelcomeMessage;
 
@@ -56,42 +58,49 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
     private List<LogEntry> newsForums;
     private List<LogEntry> newsResources;
     private List<LogEntry> newsGeneral;
-    private ArrayList<Message> receivedMessages;
+    private List<Message> receivedMessages;
     private boolean hideNewsPanel; // true when there is nothing to show in the news tabs
 
     private List<Course> coursesWithWelcomeMessage;
 
-    private ArrayList<Submission> activeSubmissions;
+    private List<Submission> activeSubmissions;
 
-    public WelcomeBean() {
+    @Inject
+    private MessageDao messageDao;
+
+    @PostConstruct
+    public void init() {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        try {
+        if (getUser().getGroupCount() == 0) {
+            hideNewsPanel = true;
+        } else {
             newsGeneral = getLogs(GENERAL_FILTER, 20);
-
             newsResources = getLogs(RESOURCES_FILTER, 5);
             newsForums = getLogs(FORUM_FILTER, 5);
-            receivedMessages = Message.getAllMessagesToUser(getUser(), 5);
 
             hideNewsPanel = newsResources.isEmpty() && newsForums.isEmpty() && receivedMessages.isEmpty();
-
-            if (!StringHelper.isBlankDisregardingHTML(user.getOrganisation().getWelcomeMessage())) {
-                organisationWelcomeMessage = user.getOrganisation().getWelcomeMessage();
-            }
-
-            // retrieve all the users courses whose welcome message isn't blank
-            coursesWithWelcomeMessage = user.getCourses().stream().filter(c -> !StringHelper.isBlankDisregardingHTML(c.getWelcomeMessage())).collect(Collectors.toList());
-
-            activeSubmissions = user.getActiveSubmissions();
-
-        } catch (SQLException e) {
-            addErrorMessage("An error occurred while loading the content for this page", e);
         }
+
+        receivedMessages = messageDao.findIncoming(getUser(), 5);
+        if (!StringHelper.isBlankDisregardingHTML(user.getOrganisation().getWelcomeMessage())) {
+            organisationWelcomeMessage = user.getOrganisation().getWelcomeMessage();
+        }
+
+        // retrieve all the users courses whose welcome message isn't blank
+        coursesWithWelcomeMessage = user.getCourses().stream()
+            .filter(course -> !StringHelper.isBlankDisregardingHTML(course.getWelcomeMessage()))
+            .collect(Collectors.toList());
+
+        activeSubmissions = user.getActiveSubmissions();
+
     }
 
-    private List<LogEntry> getLogs(Action[] filter, int limit) throws SQLException {
-        return getLearnweb().getLogManager().getActivityLogOfUserGroups(getUser(), filter, limit);
+    private List<LogEntry> getLogs(EnumSet<Action> filter, int limit) {
+        // ids of all groups the user is member of
+        List<Integer> groupIds = HasId.collectIds(getUser().getGroups());
+        return dao().getLogDao().findByUsersGroupIds(getUser().getId(), groupIds, Action.collectOrdinals(filter), limit);
     }
 
     public List<LogEntry> getNewsResources() {
@@ -114,11 +123,11 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
         return coursesWithWelcomeMessage;
     }
 
-    public ArrayList<Submission> getActiveSubmissions() {
+    public List<Submission> getActiveSubmissions() {
         return activeSubmissions;
     }
 
-    public ArrayList<Message> getReceivedMessages() {
+    public List<Message> getReceivedMessages() {
         return receivedMessages;
     }
 

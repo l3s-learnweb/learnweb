@@ -1,5 +1,6 @@
 package de.l3s.learnweb.web;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -16,22 +17,20 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.util.RsHelper;
 
 @RegisterRowMapper(RequestDao.RequestMapper.class)
-public interface RequestDao extends SqlObject {
-    @SqlQuery("SELECT * FROM lw_requests WHERE IP = ?")
-    List<Request> getRequests();
+public interface RequestDao extends SqlObject, Serializable {
 
     @SqlQuery("SELECT * FROM lw_requests WHERE ip = ?")
-    List<Request> getRequestsByIp(String ip);
+    List<Request> findByIp(String ip);
 
     @SqlQuery("SELECT * FROM lw_requests WHERE time >= ?")
-    List<Request> getRequestsAfterDate(LocalDateTime date);
+    List<Request> findAfterDate(LocalDateTime date);
 
     @SuppressWarnings("SqlWithoutWhere")
     @SqlUpdate("DELETE FROM lw_requests")
-    void deleteAllRequests();
+    void deleteAll();
 
     default void save(Request request) {
-        getHandle().createUpdate("INSERT INTO lw_requests (IP, requests, logins, usernames, time) VALUES(?, ?, ?, ?, ?);")
+        getHandle().createUpdate("INSERT INTO lw_requests (IP, requests, logins, usernames, time) VALUES(?, ?, ?, ?, ?)")
             .bind(0, request.getIp())
             .bind(1, request.getRequests())
             .bind(2, request.getLoginCount())
@@ -40,7 +39,7 @@ public interface RequestDao extends SqlObject {
             .execute();
     }
 
-    default void saveAll(Iterable<Request> requests) {
+    default void save(Iterable<Request> requests) {
         PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_requests (IP, requests, logins, usernames, time) VALUES(?, ?, ?, ?, ?)");
         for (Request request : requests) {
             batch.bind(0, request.getIp())

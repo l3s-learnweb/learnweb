@@ -5,6 +5,7 @@ package de.l3s.util;
  *
  * @author Oleh Astappiev
  */
+@FunctionalInterface
 public interface Deletable {
     boolean isDeleted();
 }

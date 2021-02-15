@@ -93,7 +93,7 @@ public final class StringHelper {
             URL uri = new URL(url);
             return uri.getHost();
         } catch (MalformedURLException e) {
-            log.error("Can't get domain for url: " + url, e);
+            log.error("Can't get domain for url: {}", url, e);
             return null;
         }
     }
@@ -212,19 +212,19 @@ public final class StringHelper {
      */
     public static String getDurationInMinutes(int duration) {
         int rest = duration % 60;
-        StringBuilder str = new StringBuilder();
-        str.append((duration - rest) / 60);
-        str.append(':');
-        str.append(rest);
+        StringBuilder sb = new StringBuilder();
+        sb.append((duration - rest) / 60);
+        sb.append(':');
+        sb.append(rest);
         if (rest < 10) {
-            str.append('0');
+            sb.append('0');
         }
-        return str.toString();
+        return sb.toString();
     }
 
-    public static String formatDuration(Duration d) {
-        long hours = d.toHours();
-        long minutes = d.minusHours(hours).toMinutes();
+    public static String formatDuration(Duration duration) {
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
 
         StringBuilder output = new StringBuilder();
         if (hours > 0) {

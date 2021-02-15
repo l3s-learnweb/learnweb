@@ -2,23 +2,28 @@ package de.l3s.learnweb.resource;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Beans;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.RateEvent;
 
@@ -26,13 +31,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
-import de.l3s.learnweb.resource.archive.TimelineData;
+import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
 
@@ -60,13 +64,16 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     private ViewAction viewAction = ViewAction.viewResource;
     private List<LogEntry> logs;
 
-    public void onLoad() throws SQLException {
-        if (isAjaxRequest()) {
-            return;
-        }
+    @Inject
+    private ResourceDao resourceDao;
+
+    @Inject
+    private CommentDao commentDao;
+
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+        resource = resourceDao.findById(resourceId);
         BeanAssert.validate(resource, "The requested resource can't be found.");
         BeanAssert.notDeleted(resource);
 
@@ -125,20 +132,16 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         viewAction = ViewAction.editResource;
     }
 
-    public void saveEdit() throws SQLException {
+    public void saveEdit() {
         BeanAssert.hasPermission(resource.canEditResource(getUser()));
 
-        try {
-            resource.save();
+        resource.save();
 
-            log(Action.edit_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
-            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        log(Action.edit_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
 
-            resource.unlockResource(getUser());
-            viewAction = ViewAction.viewResource;
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
+        resource.unlockResource(getUser());
+        viewAction = ViewAction.viewResource;
     }
 
     public void cancelEdit() {
@@ -167,20 +170,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
      * The method is used from JS in resource_view_archive_timeline.xhtml.
      */
     public String getArchiveTimelineJsonData() { // TODO @astappiev: move this and all other archive related methods to new WebResourceBean
-        JsonArray highChartsData = new JsonArray();
-        try {
-            List<TimelineData> timelineMonthlyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByMonth(resource.getId(), resource.getUrl());
+        TreeMap<LocalDate, Integer> monthlySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByMonths(resource.getId(), resource.getUrl());
 
-            for (TimelineData timelineData : timelineMonthlyData) {
-                JsonArray innerArray = new JsonArray();
-                innerArray.add(timelineData.getTimestamp().getTime());
-                innerArray.add(timelineData.getNumberOfVersions());
-                highChartsData.add(innerArray);
-            }
-        } catch (SQLException e) {
-            log.error("Error while fetching the archive data aggregated by month for a resource", e);
-            addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
-        }
+        JsonArray highChartsData = new JsonArray();
+        monthlySeriesData.forEach((key, value) -> {
+            JsonArray innerArray = new JsonArray();
+            innerArray.add(key.toEpochDay());
+            innerArray.add(value);
+            highChartsData.add(innerArray);
+        });
         return new Gson().toJson(highChartsData);
     }
 
@@ -189,27 +187,26 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
      */
     public String getArchiveCalendarJsonData() {
         JsonObject archiveDates = new JsonObject();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            List<TimelineData> timelineDailyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByDay(resource.getId(), resource.getUrl());
-            for (TimelineData timelineData : timelineDailyData) {
-                JsonObject archiveDay = new JsonObject();
-                archiveDay.addProperty("number", timelineData.getNumberOfVersions());
-                archiveDay.addProperty("badgeClass", "badge-warning");
-                List<ArchiveUrl> archiveUrlsData = getLearnweb().getTimelineManager().getArchiveUrlsByResourceIdAndTimestamp(resource.getId(), timelineData.getTimestamp(), resource.getUrl());
-                JsonArray archiveVersions = new JsonArray();
-                for (ArchiveUrl archiveUrl : archiveUrlsData) {
-                    JsonObject archiveVersion = new JsonObject();
-                    archiveVersion.addProperty("url", archiveUrl.getArchiveUrl());
-                    archiveVersion.addProperty("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
-                    archiveVersions.add(archiveVersion);
-                }
-                archiveDay.add("dayEvents", archiveVersions);
-                archiveDates.add(dateFormat.format(timelineData.getTimestamp()), archiveDay);
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+
+        TreeMap<LocalDate, Integer> dailySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByDays(resource.getId(), resource.getUrl());
+        for (final Map.Entry<LocalDate, Integer> entry : dailySeriesData.entrySet()) {
+            JsonObject archiveDay = new JsonObject();
+            archiveDay.addProperty("number", entry.getValue());
+            archiveDay.addProperty("badgeClass", "badge-warning");
+
+            List<ArchiveUrl> archiveUrlsData = dao().getArchiveUrlDao().findByResourceId(resource.getId(), entry.getKey());
+            archiveUrlsData.addAll(dao().getWaybackUrlDao().findByUrl(resource.getUrl(), entry.getKey()));
+
+            JsonArray archiveVersions = new JsonArray();
+            for (ArchiveUrl archiveUrl : archiveUrlsData) {
+                JsonObject archiveVersion = new JsonObject();
+                archiveVersion.addProperty("url", archiveUrl.getArchiveUrl());
+                archiveVersion.addProperty("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
+                archiveVersions.add(archiveVersion);
             }
-        } catch (SQLException e) {
-            log.error("Error while fetching the archive data aggregated by day for a resource", e);
-            addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
+            archiveDay.add("dayEvents", archiveVersions);
+            archiveDates.add(dateFormat.format(entry.getKey()), archiveDay);
         }
         return new Gson().toJson(archiveDates);
     }
@@ -254,20 +251,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         return new Gson().toJson(monthNames);
     }
 
-    @SuppressWarnings("unused")
-    public void setStarRatingRounded(int value) {
-        // dummy method, is required by p:rating
-    }
-
     public void archiveCurrentVersion() {
         boolean addToQueue = true;
         if (!resource.getArchiveUrls().isEmpty()) {
-            long timeDifference = (new Date().getTime() - resource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
-            addToQueue = timeDifference > 300;
+            // captured more than 5 minutes ago
+            addToQueue = resource.getArchiveUrls().getLast().getTimestamp().isBefore(LocalDateTime.now().minusMinutes(5));
         }
 
         if (addToQueue) {
-            String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(resource);
+            String response = Beans.getInstance(ArchiveUrlManager.class).addResourceToArchive(resource);
             if (response.equalsIgnoreCase("archive_success")) {
                 addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
             } else if (response.equalsIgnoreCase("robots_error")) {
@@ -282,46 +274,36 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     }
 
     public void onDeleteTag(Tag tag) {
-        try {
-            resource.deleteTag(tag);
-            addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
+        resource.deleteTag(tag);
+        addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
     }
 
-    public String addTag() {
+    public void addTag() {
         if (null == getUser()) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-            return null;
+            return;
         }
 
         if (StringUtils.isBlank(newTag)) {
-            return null;
+            return;
         }
 
         //Limit number of spaces in a tag = 3
         if ((StringUtils.countMatches(newTag, " ") > 3) || newTag.contains(",") || newTag.contains("#") || (newTag.length() > 50)) {
             showTagWarningMessage();
-
-            return null;
+            return;
         }
 
-        try {
-            resource.addTag(newTag, getUser());
-            addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-            log(Action.tagging_resource, resource.getGroupId(), resource.getId(), newTag);
-            newTag = ""; // clear tag input field
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
-        return null;
+        resource.addTag(newTag, getUser());
+        addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
+        log(Action.tagging_resource, resource.getGroupId(), resource.getId(), newTag);
+        newTag = ""; // clear tag input field
     }
 
     /**
      * Recreates the thumbnails of the selected resource.
      */
-    public void onUpdateThumbnail() throws SQLException {
+    public void onUpdateThumbnail() {
         try {
             User user = getUser();
             if (user == null || !user.isAdmin()) {
@@ -329,22 +311,20 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             }
 
             // first delete old thumbnails
-            FileManager fileManager = getLearnweb().getFileManager();
             Collection<File> files = resource.getFiles().values();
             for (File file : files) {
                 if (file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) { // number 4 is reserved for the source file
-                    log.debug("Delete " + file.getName());
-                    fileManager.delete(file);
+                    log.debug("Delete {}", file.getName());
+                    dao().getFileDao().deleteSoft(file);
                 }
             }
 
-            ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
-            rpm.processResource(resource);
+            getLearnweb().getResourcePreviewMaker().processResource(resource);
 
             resource.save();
             releaseResourceIfLocked();
             viewAction = ViewAction.viewResource;
-        } catch (Exception e) {
+        } catch (IOException e) {
             addErrorMessage(e);
         }
     }
@@ -367,7 +347,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         PrimeFaces.current().dialog().showMessageDynamic(message);
     }
 
-    public boolean canEditComment(Object commentO) throws SQLException {
+    public boolean canEditComment(Object commentO) {
         if (!(commentO instanceof Comment)) {
             return false;
         }
@@ -385,7 +365,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         return user.equals(owner);
     }
 
-    public boolean canDeleteTag(Object tagO) throws SQLException {
+    public boolean canDeleteTag(Object tagO) {
         if (!(tagO instanceof Tag)) {
             return false;
         }
@@ -404,66 +384,50 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     }
 
     public void onEditComment(Comment comment) {
-        try {
-            getLearnweb().getResourceManager().saveComment(comment);
-            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
+        commentDao.save(comment);
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public void onDeleteComment(Comment comment) {
-        try {
-            resource.deleteComment(comment);
-            addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-            log(Action.deleting_comment, resource.getGroupId(), comment.getResourceId(), comment.getId());
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
+        resource.deleteComment(comment);
+        addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
+        log(Action.deleting_comment, resource.getGroupId(), comment.getResourceId(), comment.getId());
     }
 
     public void addComment() {
-        try {
-            Comment comment = resource.addComment(newComment, getUser());
-            log(Action.commenting_resource, resource.getGroupId(), resource.getId(), comment.getId());
-            addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
-            newComment = "";
-        } catch (Exception e) {
-            addErrorMessage(e);
-        }
+        Comment comment = resource.addComment(newComment, getUser());
+        log(Action.commenting_resource, resource.getGroupId(), resource.getId(), comment.getId());
+        addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
+        newComment = "";
     }
 
     public void setResourceThumbnail(String archiveUrl) {
         try {
-            ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
-            ResourceMetadataExtractor rme = Learnweb.getInstance().getResourceMetadataExtractor();
-
-            FileManager fileManager = getLearnweb().getFileManager();
             Collection<File> files = resource.getFiles().values();
             for (File file : files) {
                 if (file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) { // number 4 is reserved for the source file
-                    log.debug("Delete " + file.getName());
-                    fileManager.delete(file);
+                    log.debug("Delete {}", file.getName());
+                    dao().getFileDao().deleteSoft(file);
                 }
             }
 
             //Getting mime type
-            FileInspector.FileInfo info = rme.getFileInfo(FileInspector.openStream(archiveUrl), resource.getFileName());
+            FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(FileInspector.openStream(archiveUrl), resource.getFileName());
             String type = info.getMimeType().substring(0, info.getMimeType().indexOf('/'));
             if (type.equals("application")) {
                 type = info.getMimeType().substring(info.getMimeType().indexOf('/') + 1);
             }
 
             if (type.equalsIgnoreCase("pdf")) {
-                rpm.processPdf(resource, FileInspector.openStream(archiveUrl));
+                getLearnweb().getResourcePreviewMaker().processPdf(resource, FileInspector.openStream(archiveUrl));
             } else {
-                rpm.processArchivedVersion(resource, archiveUrl);
+                getLearnweb().getResourcePreviewMaker().processArchivedVersion(resource, archiveUrl);
             }
 
             resource.save();
             log(Action.resource_thumbnail_update, resource.getGroupId(), resource.getId(), "");
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
-        } catch (RuntimeException | IOException | SQLException e) {
+        } catch (RuntimeException | IOException e) {
             addErrorMessage(e);
         }
     }
@@ -486,7 +450,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         this.newComment = newComment;
     }
 
-    public boolean isStarRatedByUser() throws SQLException {
+    public boolean isStarRatedByUser() {
         if (getUser() == null || null == resource) {
             return false;
         }
@@ -494,12 +458,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         return resource.isRatedByUser(getUser().getId());
     }
 
-    public boolean isThumbRatedByUser() throws SQLException {
+    public boolean isThumbRatedByUser() {
         if (getUser() == null || null == resource) {
             return false;
         }
 
-        return resource.isThumbRatedByUser(getUser().getId());
+        return resource.isThumbRatedByUser(getUser());
     }
 
     public void handleRate(RateEvent<Integer> rateEvent) {
@@ -562,7 +526,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         return HYPOTHESIS_PROXY + resource.getUrl();
     }
 
-    public List<LogEntry> getLogs() throws SQLException {
+    public List<LogEntry> getLogs() {
         if (null == logs) {
             logs = getResource().getLogs();
         }

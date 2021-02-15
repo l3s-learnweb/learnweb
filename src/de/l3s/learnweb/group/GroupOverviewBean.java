@@ -1,11 +1,14 @@
 package de.l3s.learnweb.group;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,9 +16,12 @@ import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserDao;
 
 @Named
 @ViewScoped
@@ -25,6 +31,9 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
 
     private static final int MEMBERS_LIST_LIMIT = 12;
     private static final int ACTIVITY_LIST_LIMIT = 10;
+
+    private static final EnumSet<Action> OVERVIEW_ACTIONS = EnumSet.of(Action.forum_topic_added, Action.deleting_resource, Action.adding_resource,
+        Action.group_joining, Action.group_leaving, Action.forum_post_added, Action.changing_office_resource);
 
     private int groupId;
     private Group group;
@@ -38,11 +47,17 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
     private boolean showAllLogs = false;
     private List<LogEntry> logMessages;
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private GroupDao groupDao;
+
+    @Inject
+    private UserDao userDao;
+
+    public void onLoad() {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        group = getLearnweb().getGroupManager().getGroupById(groupId);
+        group = groupDao.findById(groupId);
         BeanAssert.isFound(group);
 
         if (null != group) {
@@ -50,34 +65,34 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void fetchAllMembers() throws SQLException {
+    public void fetchAllMembers() {
         showAllMembers = true;
-        members = getLearnweb().getUserManager().getUsersByGroupId(group.getId());
+        members = userDao.findByGroupId(group.getId());
     }
 
-    public boolean isShowAllMembers() throws SQLException {
+    public boolean isShowAllMembers() {
         return showAllMembers || MEMBERS_LIST_LIMIT >= group.getMemberCount();
     }
 
-    public List<User> getMembers() throws SQLException {
+    public List<User> getMembers() {
         if (null == members && group != null) {
-            members = getLearnweb().getUserManager().getUsersByGroupId(group.getId(), MEMBERS_LIST_LIMIT);
+            members = userDao.findByGroupIdLastJoined(group.getId(), MEMBERS_LIST_LIMIT);
         }
         return members;
     }
 
-    public void fetchAllLogs() throws SQLException {
+    public void fetchAllLogs() {
         showAllLogs = true;
-        logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, -1);
+        logMessages = dao().getLogDao().findByGroupId(groupId, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER));
     }
 
     public boolean isShowAllLogs() {
         return showAllLogs;
     }
 
-    public List<LogEntry> getLogMessages() throws SQLException {
+    public List<LogEntry> getLogMessages() {
         if (null == logMessages) {
-            logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, ACTIVITY_LIST_LIMIT);
+            logMessages = dao().getLogDao().findByGroupId(groupId, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER), ACTIVITY_LIST_LIMIT);
         }
         return logMessages;
     }
@@ -89,15 +104,15 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
     public SummaryOverview getSummaryOverview() {
         try {
             if (groupSummary == null || groupSummary.isEmpty()) {
-                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
+                groupSummary = createSummaryOverview(LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
                 summaryTitle = getLocaleMessage("last_week_changes");
             }
             if (groupSummary == null || groupSummary.isEmpty()) {
-                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
+                groupSummary = createSummaryOverview(LocalDateTime.now().minusMonths(1), LocalDateTime.now());
                 summaryTitle = getLocaleMessage("last_month_overview_changes");
             }
             if (groupSummary == null || groupSummary.isEmpty()) {
-                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
+                groupSummary = createSummaryOverview(LocalDateTime.now().minusMonths(6), LocalDateTime.now());
                 summaryTitle = getLocaleMessage("last_six_month_changes");
             }
             return groupSummary;
@@ -105,6 +120,51 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
             log.error("Can't create group summery", e);
             return null;
         }
+    }
+
+    private SummaryOverview createSummaryOverview(LocalDateTime from, LocalDateTime to) {
+        List<LogEntry> logs = dao().getLogDao().findByGroupIdBetweenTime(groupId, Action.collectOrdinals(OVERVIEW_ACTIONS), from, to);
+
+        if (logs.isEmpty()) {
+            return null;
+        }
+
+        SummaryOverview summary = new SummaryOverview();
+
+        for (LogEntry logEntry : logs) {
+            switch (logEntry.getAction()) {
+                case deleting_resource:
+                    summary.getDeletedResources().add(logEntry);
+                    break;
+                case adding_resource:
+                    if (logEntry.getResource() != null) {
+                        summary.getAddedResources().add(logEntry);
+                    }
+                    break;
+                case forum_topic_added:
+                case forum_post_added:
+                    summary.getForumsInfo().add(logEntry);
+                    break;
+                case group_joining:
+                case group_leaving:
+                    summary.getMembersInfo().add(logEntry);
+                    break;
+                case changing_office_resource:
+                    if (logEntry.getResource() != null) {
+                        Resource logEntryResource = logEntry.getResource();
+
+                        if (summary.getUpdatedResources().containsKey(logEntryResource)) {
+                            summary.getUpdatedResources().get(logEntryResource).add(logEntry);
+                        } else {
+                            summary.getUpdatedResources().put(logEntryResource, new ArrayList<>(Collections.singletonList(logEntry)));
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return summary;
     }
 
     public int getGroupId() {
@@ -119,7 +179,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
         return group;
     }
 
-    public boolean isMember() throws SQLException {
+    public boolean isMember() {
         User user = getUser();
 
         if (null == user) {

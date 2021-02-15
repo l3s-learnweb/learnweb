@@ -1,16 +1,17 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.forum.ForumNotificator;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupDao;
 
 @Named
 @ViewScoped
@@ -20,11 +21,17 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable {
     private String givenHash;
     private User user;
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private GroupDao groupDao;
+
+    @Inject
+    private UserDao userDao;
+
+    public void onLoad() {
         try {
             int userId = Integer.parseInt(givenHash.substring(0, givenHash.indexOf(':')));
-            user = getLearnweb().getUserManager().getUser(userId);
-        } catch (RuntimeException | SQLException ignored) {
+            user = userDao.findById(userId);
+        } catch (RuntimeException ignored) {
             // ignore all parsing problems
         }
 
@@ -42,12 +49,12 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable {
         this.givenHash = hash;
     }
 
-    public void onUnsubscribe() throws SQLException {
+    public void onUnsubscribe() {
         user.setPreferredNotificationFrequency(User.NotificationFrequency.NEVER);
         user.save();
 
         for (Group group : user.getGroups()) {
-            getLearnweb().getGroupManager().updateNotificationFrequency(group.getId(), user.getId(), User.NotificationFrequency.NEVER);
+            groupDao.updateNotificationFrequency(User.NotificationFrequency.NEVER, group.getId(), user.getId());
         }
         addMessage(FacesMessage.SEVERITY_INFO, "notification_settings.unsubscribed");
     }

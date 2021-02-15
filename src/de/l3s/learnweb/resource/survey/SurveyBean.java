@@ -1,8 +1,7 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
@@ -32,10 +31,10 @@ public class SurveyBean extends ApplicationBean implements Serializable {
     private String goBackPageLink; // link to the go back page derived from goBackPage name
     private String goBackPageTitle; //  title of the go back link
 
-    public void onLoad() throws SQLException {
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        resource = getLearnweb().getSurveyManager().getSurveyResource(surveyResourceId);
+        resource = dao().getSurveyDao().findResourceById(surveyResourceId).orElse(null);
         BeanAssert.isFound(resource);
         BeanAssert.notDeleted(resource);
         BeanAssert.hasPermission(resource.canViewResource(getUser()));
@@ -94,13 +93,8 @@ public class SurveyBean extends ApplicationBean implements Serializable {
             return false;
         }
 
-        try {
-            getLearnweb().getSurveyManager().saveAnswers(userAnswers, submit);
-            return true;
-        } catch (SQLException e) {
-            addErrorMessage("Can't save answers", e);
-        }
-        return false;
+        dao().getSurveyDao().saveAnswers(userAnswers, submit);
+        return true;
     }
 
     public void onSubmit() {
@@ -172,12 +166,12 @@ public class SurveyBean extends ApplicationBean implements Serializable {
     }
 
     private static boolean isValidSubmissionDate(SurveyResource surveyResource) {
-        long currentDate = new Date().getTime();
+        LocalDateTime currentDate = LocalDateTime.now();
 
-        if (surveyResource.getStart() != null && surveyResource.getStart().getTime() > currentDate) {
+        if (surveyResource.getStart() != null && surveyResource.getStart().isAfter(currentDate)) {
             return false;
         }
-        if (surveyResource.getEnd() != null && surveyResource.getEnd().getTime() < currentDate) {
+        if (surveyResource.getEnd() != null && surveyResource.getEnd().isBefore(currentDate)) {
             return false;
         }
         return true;

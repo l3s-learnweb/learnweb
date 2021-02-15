@@ -1,12 +1,12 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -22,10 +23,12 @@ import javax.validation.constraints.NotBlank;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User.Gender;
@@ -60,14 +63,20 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     private transient List<SelectItem> timeZoneIds; // A list of all available time zone ids
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private UserDao userDao;
+
+    @Inject
+    private GroupDao groupDao;
+
+    public void onLoad() {
         User loggedInUser = getUser();
         BeanAssert.authorized(loggedInUser);
 
         if (userId == 0 || loggedInUser.getId() == userId) {
             selectedUser = getUser(); // user edits himself
         } else {
-            selectedUser = getLearnweb().getUserManager().getUser(userId); // an admin edits an user
+            selectedUser = userDao.findById(userId); // an admin edits an user
             moderatorAccess = true;
         }
 
@@ -91,7 +100,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         }
 
         anonymizeUsername = selectedUser.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames);
-        userGroups = selectedUser.getGroupsRelations();
+        userGroups = groupDao.findGroupUserRelations(selectedUser.getId());
     }
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -114,7 +123,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void onSaveProfile() throws SQLException {
+    public void onSaveProfile() {
         // send confirmation mail if mail has been changed
         if (StringUtils.isNotEmpty(email) && !StringUtils.equals(selectedUser.getEmail(), email)) {
             selectedUser.setEmail(email);
@@ -126,71 +135,61 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             }
         }
 
-        getLearnweb().getUserManager().save(selectedUser);
+        userDao.save(selectedUser);
 
         log(Action.changing_profile, 0, selectedUser.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public void onChangePassword() {
-        UserManager um = getLearnweb().getUserManager();
-        try {
-            getSelectedUser().setPassword(password);
-            um.save(getSelectedUser());
+        getSelectedUser().setPassword(password);
+        userDao.save(getSelectedUser());
 
-            addGrowl(FacesMessage.SEVERITY_INFO, "password_changed");
+        addGrowl(FacesMessage.SEVERITY_INFO, "password_changed");
 
-            password = "";
-            confirmPassword = "";
-            currentPassword = "";
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
+        password = "";
+        confirmPassword = "";
+        currentPassword = "";
     }
 
     public String onDeleteAccount() {
-        try {
-            User user = getUser();
-            BeanAssert.hasPermission(user.equals(getSelectedUser()) || user.canModerateUser(getSelectedUser()));
+        User user = getUser();
+        BeanAssert.hasPermission(user.equals(getSelectedUser()) || user.canModerateUser(getSelectedUser()));
 
-            getLearnweb().getUserManager().deleteUserSoft(getSelectedUser());
-            log(Action.deleted_user_soft, 0, getSelectedUser().getId());
+        userDao.deleteSoft(getSelectedUser());
+        log(Action.deleted_user_soft, 0, getSelectedUser().getId());
 
-            addMessage(FacesMessage.SEVERITY_INFO, "user.account.deleted");
-            setKeepMessages();
+        addMessage(FacesMessage.SEVERITY_INFO, "user.account.deleted");
+        setKeepMessages();
 
-            // perform logout if necessary
-            UserBean userBean = getUserBean();
-            if (userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) { // a moderator was logged into another user's account
-                userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
-                userBean.setModeratorUser(null);
-                return "/lw/admin/users.xhtml?faces-redirect=true";
-            } else if (user.isModerator() && !user.equals(getSelectedUser())) { // a moderator deletes another user through his profile page
-                return "/lw/admin/users.xhtml?faces-redirect=true";
-            }
-
-            // a user deletes himself
-            getFacesContext().getExternalContext().invalidateSession(); // end session
-            return "/lw/user/login.xhtml?faces-redirect=true";
-        } catch (Exception e) {
-            addErrorMessage(e);
+        // perform logout if necessary
+        UserBean userBean = getUserBean();
+        if (userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) { // a moderator was logged into another user's account
+            userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
+            userBean.setModeratorUser(null);
+            return "/lw/admin/users.xhtml?faces-redirect=true";
+        } else if (user.isModerator() && !user.equals(getSelectedUser())) { // a moderator deletes another user through his profile page
+            return "/lw/admin/users.xhtml?faces-redirect=true";
         }
-        return null;
+
+        // a user deletes himself
+        Faces.invalidateSession();
+        return "/lw/user/login.xhtml?faces-redirect=true";
     }
 
-    public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException {
+    public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         String newName = ((String) value).trim();
         if (getSelectedUser().getRealUsername().equals(newName)) { // username not changed
             return;
         }
 
-        if (getLearnweb().getUserManager().isUsernameAlreadyTaken(newName)) {
+        if (userDao.findByUsername(newName).isPresent()) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
         }
     }
 
-    public Date getMaxBirthday() {
-        return new Date();
+    public LocalDate getMaxBirthday() {
+        return LocalDate.now();
     }
 
     public String getEmail() {
@@ -241,20 +240,19 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         this.userGroups = userGroups;
     }
 
-    public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException {
+    public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         if (getUser().isAdmin()) { // admins can change the password of all users
             return;
         }
 
-        UserManager um = getLearnweb().getUserManager();
         User user = getSelectedUser(); // the current user
 
         String password = (String) value;
 
         // returns the same user, if the password is correct
-        User checkUser = um.getUser(user.getRealUsername(), password);
+        Optional<User> checkUser = userDao.findByUsernameAndPassword(user.getRealUsername(), password);
 
-        if (!user.equals(checkUser)) {
+        if (checkUser.isEmpty() || !user.equals(checkUser.get())) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "password_incorrect"));
         }
     }
@@ -275,7 +273,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         return anonymizeUsername;
     }
 
-    public void validateConsent(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException {
+    public void validateConsent(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         if (value.equals(Boolean.FALSE)) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "consent_is_required"));
         }
@@ -296,19 +294,18 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     /**
      * Sets users preferredNotificationFrequency and the frequency of all his groups.
      */
-    public void onSaveAllNotificationFrequencies() throws SQLException {
+    public void onSaveAllNotificationFrequencies() {
         selectedUser.save();
         for (GroupUser groupUser : userGroups) {
             groupUser.setNotificationFrequency(selectedUser.getPreferredNotificationFrequency());
-            getLearnweb().getGroupManager().updateNotificationFrequency(groupUser.getGroup().getId(), selectedUser.getId(), groupUser.getNotificationFrequency());
+            groupDao.updateNotificationFrequency(groupUser.getNotificationFrequency(), groupUser.getGroupId(), selectedUser.getId());
         }
 
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
-    public void onSaveNotificationFrequency(GroupUser group, int userId) throws SQLException {
-        getLearnweb().getGroupManager().updateNotificationFrequency(group.getGroup().getId(), userId, group.getNotificationFrequency());
-
+    public void onSaveNotificationFrequency(GroupUser group, int userId) {
+        groupDao.updateNotificationFrequency(group.getNotificationFrequency(), group.getGroupId(), userId);
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
@@ -331,7 +328,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         return User.NotificationFrequency.values();
     }
 
-    public String rootLogin() throws SQLException {
+    public String rootLogin() {
         return LoginBean.rootLogin(this, selectedUser);
     }
 }

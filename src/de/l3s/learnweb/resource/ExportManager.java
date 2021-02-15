@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +32,7 @@ import com.hp.gagawa.java.elements.Td;
 import com.hp.gagawa.java.elements.Thead;
 import com.hp.gagawa.java.elements.Tr;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.user.User;
@@ -49,11 +48,11 @@ public class ExportManager {
         this.learnweb = learnweb;
     }
 
-    public void handleResponse(User user) throws IOException, SQLException {
+    public void handleResponse(User user) throws IOException {
         handleResponse(packResources(null, user.getResources()), user.getUsername().toLowerCase());
     }
 
-    public void handleResponse(final Group group) throws IOException, SQLException {
+    public void handleResponse(final Group group) throws IOException {
         handleResponse(packResources(group.getTitle(), group.getResources()), "group_" + group.getId());
     }
 
@@ -88,7 +87,7 @@ public class ExportManager {
         facesContext.responseComplete();
     }
 
-    private Map<String, InputStream> packResources(final String groupTitle, final List<Resource> resources) throws IOException, SQLException {
+    private Map<String, InputStream> packResources(final String groupTitle, final List<Resource> resources) throws IOException {
         List<Resource> learnwebResources = new ArrayList<>();
         List<Resource> webResources = new ArrayList<>();
 
@@ -110,18 +109,18 @@ public class ExportManager {
         return filesToPack;
     }
 
-    private Map<String, InputStream> getLearnwebResources(List<Resource> resources, String groupRootFolder) throws IOException, SQLException {
+    private Map<String, InputStream> getLearnwebResources(List<Resource> resources, String groupRootFolder) throws IOException {
         Map<String, InputStream> files = new HashMap<>();
 
         for (Resource resource : resources) {
-            Folder folder = learnweb.getGroupManager().getFolder(resource.getFolderId());
+            Folder folder = learnweb.getDaoProvider().getFolderDao().findById(resource.getFolderId());
             String folderName = createFolderPath(folder, groupRootFolder);
 
             File mainFile = resource.getFile(TYPE.FILE_MAIN);
 
             // TODO @astappiev: remove when all files copied from originals
             if (mainFile == null && resource.getOriginalResourceId() > 0) {
-                Resource originalResource = learnweb.getResourceManager().getResource(resource.getOriginalResourceId());
+                Resource originalResource = learnweb.getDaoProvider().getResourceDao().findById(resource.getOriginalResourceId());
                 if (originalResource != null) {
                     mainFile = originalResource.getFile(TYPE.FILE_MAIN);
                 }
@@ -137,7 +136,7 @@ public class ExportManager {
         return files;
     }
 
-    private String createFolderPath(Folder folder, String groupRootFolder) throws SQLException {
+    private String createFolderPath(Folder folder, String groupRootFolder) {
         StringBuilder folderPath = new StringBuilder();
 
         Folder currentFolder = folder;
@@ -157,7 +156,7 @@ public class ExportManager {
         return folderPath.toString();
     }
 
-    private InputStream getWebResourcesAsHtml(List<Resource> webResources) throws SQLException {
+    private InputStream getWebResourcesAsHtml(List<Resource> webResources) {
         Document indexFile = new Document(DocumentType.HTMLStrict);
         indexFile.head.appendChild(new Meta("text/html;charset=UTF-8"));
 

@@ -54,7 +54,7 @@
 
             <p:column headerText="#{msg.date}">
                 <h:outputText value="#{query.timestamp}">
-                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
         </p:dataTable>

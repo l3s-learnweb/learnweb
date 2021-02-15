@@ -1,15 +1,18 @@
 package de.l3s.learnweb.resource.glossary;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
-import de.l3s.learnweb.Learnweb;
+import org.apache.logging.log4j.LogManager;
+
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.util.StringHelper;
 
 /**
  * @author Rishita
@@ -36,10 +39,7 @@ public class GlossaryResource extends Resource {
         setAllowedLanguages(new ArrayList<>(other.allowedLanguages));
         setClonedButNotPersisted(true);
 
-        setEntries(new ArrayList<>(other.entries.size()));
-        for (int i = 0, len = other.entries.size(); i < len; i++) {
-            this.entries.add(i, other.entries.get(i).clone());
-        }
+        other.getEntries().forEach(entry -> this.entries.add(entry.clone()));
     }
 
     public List<Locale> getAllowedLanguages() {
@@ -56,14 +56,26 @@ public class GlossaryResource extends Resource {
     }
 
     @Override
-    protected void postConstruct() throws SQLException {
+    protected void postConstruct() {
         super.postConstruct();
-        Learnweb.getInstance().getGlossaryManager().loadGlossaryResource(this);
+
+        Optional<String> allowedLanguages = Learnweb.dao().getGlossaryDao().findGlossaryResourceAllowedLanguages(getId());
+
+        if (allowedLanguages.isPresent()) {
+            setAllowedLanguages(StringHelper.splitLocales(allowedLanguages.get()));
+        } else {
+            LogManager.getLogger(GlossaryResource.class).error("Error loading glossary languages from database: {}", getId(), new Exception());
+            return;
+        }
+
+        // Glossary Entries details
+        List<GlossaryEntry> entries = Learnweb.dao().getGlossaryEntryDao().findByResourceId(getId());
+        this.entries.addAll(entries);
     }
 
     @Override
-    public Resource save() throws SQLException {
-        Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(200233); // TODO @astappiev: find a better image, load it from resource folder
+    public Resource save() {
+        Resource iconResource = Learnweb.dao().getResourceDao().findById(200233); // TODO @astappiev: find a better image, load it from resource folder
         this.setThumbnail0(iconResource.getThumbnail0());
         this.setThumbnail1(iconResource.getThumbnail1());
         this.setThumbnail2(iconResource.getThumbnail2());
@@ -76,7 +88,7 @@ public class GlossaryResource extends Resource {
         super.save();
 
         // save GlossaryResource fields
-        Learnweb.getInstance().getGlossaryManager().saveGlossaryResource(this);
+        Learnweb.dao().getGlossaryDao().save(this);
 
         return this;
     }

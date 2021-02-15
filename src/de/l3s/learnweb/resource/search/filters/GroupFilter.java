@@ -1,10 +1,8 @@
 package de.l3s.learnweb.resource.search.filters;
 
-import java.sql.SQLException;
-
 import org.apache.solr.client.solrj.response.FacetField;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 
 public class GroupFilter extends Filter {
@@ -22,9 +20,9 @@ public class GroupFilter extends Filter {
 
     private static String getOptionTitle(String groupId) {
         try {
-            Group group = Learnweb.getInstance().getGroupManager().getGroupById(Integer.parseInt(groupId));
+            Group group = Learnweb.dao().getGroupDao().findById(Integer.parseInt(groupId));
             return null == group ? "deleted" : group.getTitle();
-        } catch (NumberFormatException | SQLException e) {
+        } catch (NumberFormatException e) {
             return groupId;
         }
     }

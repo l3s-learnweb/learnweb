@@ -1,7 +1,9 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +19,7 @@ import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(AnnouncementDao.AnnouncementMapper.class)
-public interface AnnouncementDao extends SqlObject {
+public interface AnnouncementDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_news WHERE news_id = ?")
     Optional<Announcement> findById(int newsId);
 
@@ -27,7 +29,7 @@ public interface AnnouncementDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_news WHERE hidden = false ORDER BY created_at DESC LIMIT ?")
     List<Announcement> findLastCreated(int limit);
 
-    @SqlUpdate("DELETE FROM `lw_news` WHERE news_id = ?")
+    @SqlUpdate("DELETE FROM lw_news WHERE news_id = ?")
     void delete(int newsId);
 
     default void save(Announcement announcement) {
@@ -37,12 +39,13 @@ public interface AnnouncementDao extends SqlObject {
         params.put("message", announcement.getText());
         params.put("user_id", announcement.getUserId());
         params.put("hidden", announcement.isHidden());
-        params.put("created_at", announcement.getDate());
 
-        Optional<Integer> newsId = SqlHelper.generateInsertQuery(getHandle(), "lw_news", params)
-            .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
-
-        newsId.ifPresent(announcement::setId);
+        SqlHelper.handleSave(getHandle(), "lw_news", params).executeAndReturnGeneratedKeys("news_id", "created_at")
+            .map(rowView -> {
+                announcement.setId(rowView.getColumn("news_id", Integer.class));
+                announcement.setDate(rowView.getColumn("created_at", LocalDateTime.class));
+                return announcement;
+            }).findOne();
     }
 
     class AnnouncementMapper implements RowMapper<Announcement> {

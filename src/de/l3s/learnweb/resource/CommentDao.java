@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -19,7 +20,7 @@ import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(CommentDao.CommentMapper.class)
-public interface CommentDao extends SqlObject {
+public interface CommentDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_comment WHERE comment_id = ?")
     Optional<Comment> findById(int commentId);
 
@@ -43,7 +44,7 @@ public interface CommentDao extends SqlObject {
         params.put("text", comment.getText());
         params.put("date", comment.getDate());
 
-        Optional<Integer> commentId = SqlHelper.generateInsertQuery(getHandle(), "lw_comment", params)
+        Optional<Integer> commentId = SqlHelper.handleSave(getHandle(), "lw_comment", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         commentId.ifPresent(comment::setId);
@@ -57,7 +58,7 @@ public interface CommentDao extends SqlObject {
             comment.setResourceId(rs.getInt("resource_id"));
             comment.setUserId(rs.getInt("user_id"));
             comment.setText(rs.getString("text"));
-            comment.setDate(RsHelper.getDate(rs.getTimestamp("date")));
+            comment.setDate(RsHelper.getLocalDateTime(rs.getTimestamp("date")));
             return comment;
         }
     }

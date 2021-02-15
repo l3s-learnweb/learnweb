@@ -2,7 +2,7 @@ package de.l3s.maintenance.resources;
 
 import java.util.List;
 
-import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.maintenance.MaintenanceTask;
 
 /**
@@ -11,23 +11,22 @@ import de.l3s.maintenance.MaintenanceTask;
  * @author Oleh Astappiev
  */
 public final class DeleteHardResources extends MaintenanceTask {
-    private ResourceManager resourceManager;
+    private ResourceDao resourceDao;
 
     @Override
     public void init() {
-        resourceManager = getLearnweb().getResourceManager();
-        resourceManager.setReindexMode(true);
+        resourceDao = getLearnweb().getDaoProvider().getResourceDao();
         requireConfirmation = true;
     }
 
     @Override
-    public void run(boolean dryRun) throws Exception {
+    public void run(boolean dryRun) {
         List<Integer> resourceIds = List.of(229236);
         log.info("Total resources to remove {}", resourceIds.size());
 
         if (!dryRun) {
             for (Integer resourceId : resourceIds) {
-                resourceManager.deleteResourceHard(resourceId);
+                resourceDao.deleteHard(resourceId);
                 log.info("Resource {} removed!", resourceId);
             }
         }

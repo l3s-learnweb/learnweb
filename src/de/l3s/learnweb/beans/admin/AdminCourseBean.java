@@ -1,16 +1,17 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +21,9 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
+import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.Organisation;
+import de.l3s.learnweb.user.OrganisationDao;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -32,18 +35,25 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
     private Course course;
     private List<OptionWrapperGroup> optionGroups;
     private int courseId;
-    private final List<Organisation> organisations;
+    private List<Organisation> organisations;
 
-    public AdminCourseBean() {
-        organisations = new ArrayList<>(getLearnweb().getOrganisationManager().getOrganisationsAll());
+    @Inject
+    private OrganisationDao organisationDao;
+
+    @Inject
+    private CourseDao courseDao;
+
+    @PostConstruct
+    public void init() {
+        organisations = organisationDao.findAll();
         Collections.sort(organisations);
     }
 
-    public void onLoad() throws SQLException {
+    public void onLoad() {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        course = getLearnweb().getCourseManager().getCourseById(courseId);
+        course = courseDao.findById(courseId);
         BeanAssert.isFound(course);
         BeanAssert.hasPermission(user.isAdmin() || user.isModerator() && course.isMember(user));
 
@@ -53,9 +63,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
         String oldOptionGroupName = null;
 
         Option[] optionsEnum = Option.values();
-
-        EnumComparator c = new EnumComparator();
-        java.util.Arrays.sort(optionsEnum, c);
+        Arrays.sort(optionsEnum, new EnumComparator());
 
         for (Option option : optionsEnum) {
             // example: this gets "Services" from "Services_Allow_logout_from_Interweb"
@@ -83,13 +91,9 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
                 course.setOption(optionWrapper.getOption(), optionWrapper.getValue());
             }
         }
-        try {
-            course.save();
-            addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
-        } catch (Exception e) {
-            log.error("unhandled error", e);
-            addErrorGrowl(e);
-        }
+
+        course.save();
+        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public List<OptionWrapperGroup> getOptionGroups() {

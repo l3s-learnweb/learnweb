@@ -1,7 +1,6 @@
 package de.l3s.learnweb.forum;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -11,6 +10,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -19,10 +19,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.User.NotificationFrequency;
-import de.l3s.learnweb.user.UserManager;
+import de.l3s.learnweb.user.UserDao;
 import de.l3s.util.HashHelper;
 import de.l3s.util.email.Mail;
 
@@ -30,11 +30,16 @@ public class ForumNotificator implements Runnable, Serializable {
     private static final long serialVersionUID = -7141107765791779330L;
     private static final Logger log = LogManager.getLogger(ForumNotificator.class);
 
+    @Inject
+    private UserDao userDao;
+
+    @Inject
+    private ForumTopicDao forumTopicDao;
+
     @Override
     public void run() {
         try {
             LocalDate localDate = LocalDate.now();
-            UserManager userManager = Learnweb.getInstance().getUserManager();
 
             ArrayList<NotificationFrequency> frequencies = new ArrayList<>(3);
             frequencies.add(NotificationFrequency.DAILY);
@@ -49,11 +54,10 @@ public class ForumNotificator implements Runnable, Serializable {
                 frequencies.add(NotificationFrequency.MONTHLY);
             }
 
-            Map<Integer, List<ForumTopic>> topics = Learnweb.getInstance().getJdbi().withExtension(ForumTopicDao.class,
-                dao -> dao.findByNotificationFrequencies(frequencies));
+            Map<Integer, List<ForumTopic>> topics = forumTopicDao.findByNotificationFrequencies(frequencies);
 
             for (Map.Entry<Integer, List<ForumTopic>> entry : topics.entrySet()) {
-                User user = userManager.getUser(entry.getKey());
+                User user = userDao.findById(entry.getKey());
 
                 sendMailWithNewTopics(user, entry.getValue());
             }
@@ -62,13 +66,13 @@ public class ForumNotificator implements Runnable, Serializable {
         }
     }
 
-    private void sendMailWithNewTopics(User user, List<ForumTopic> topics) throws MessagingException, SQLException {
+    private void sendMailWithNewTopics(User user, List<ForumTopic> topics) throws MessagingException {
         List<ForumTopic> userTopics = topics.stream().filter(topic -> topic.getUserId() == user.getId()).collect(Collectors.toList());
         List<ForumTopic> otherTopics = topics.stream().filter(topic -> topic.getUserId() != user.getId()).collect(Collectors.toList());
 
         // load translations for users preferred language
         ResourceBundle msg = LanguageBundle.getLanguageBundle(user.getLocale());
-        String serverUrl = Learnweb.getInstance().getServerUrl();
+        String serverUrl = Learnweb.config().getServerUrl();
 
         Mail mail = new Mail();
         mail.setSubject(msg.getString("email_forum_notifications.email_subject"));

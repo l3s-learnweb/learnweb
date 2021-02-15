@@ -1,7 +1,6 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
@@ -10,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -27,15 +27,15 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.MenuModel;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.component.ActiveSubMenu;
 import de.l3s.learnweb.component.ActiveSubMenu.Builder;
 import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @SessionScoped
@@ -62,7 +62,8 @@ public class UserBean implements Serializable {
 
     private boolean guided; // indicates that the user has started one of the guides
 
-    public UserBean() {
+    @PostConstruct
+    public void init() {
         // get preferred language
         locale = Faces.getLocale();
     }
@@ -98,11 +99,7 @@ public class UserBean implements Serializable {
         }
 
         if (user == null) {
-            try {
-                user = Learnweb.getInstance().getUserManager().getUser(userId);
-            } catch (SQLException e) {
-                log.fatal("Can't retrieve user {}", userId, e);
-            }
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }
@@ -260,14 +257,10 @@ public class UserBean implements Serializable {
             return false;
         }
 
-        try {
-            for (Course course : user.getCourses()) {
-                if (courseId == course.getId()) {
-                    return true;
-                }
+        for (Course course : user.getCourses()) {
+            if (courseId == course.getId()) {
+                return true;
             }
-        } catch (SQLException e) {
-            log.error("sql error", e);
         }
 
         return false;
@@ -297,7 +290,7 @@ public class UserBean implements Serializable {
     /**
      * Returns the css code for the banner image of the active organization or an empty string if no image is defined.
      */
-    public String getBannerImage() throws SQLException {
+    public String getBannerImage() {
         String bannerImage = null;
 
         if (isLoggedIn()) {
@@ -311,7 +304,7 @@ public class UserBean implements Serializable {
         return "logos/logo_learnweb.png";
     }
 
-    public String getBannerLink() throws SQLException {
+    public String getBannerLink() {
         String serverUrl = Faces.getRequestBaseURL();
         if (!isLoggedIn()) {
             return serverUrl;
@@ -323,25 +316,19 @@ public class UserBean implements Serializable {
     /**
      * Returns a list of groups that have been created since the last login of this user.
      */
-    public List<Group> getNewGroups() throws SQLException {
+    public List<Group> getNewGroups() {
         if (null == newGroups && getUser() != null) {
-            newGroups = Learnweb.getInstance().getGroupManager().getGroupsByCourseId(getUser().getCourses(), getUser().getLastLoginDate());
+            newGroups = Learnweb.dao().getGroupDao().findByCourseIds(HasId.collectIds(getUser().getCourses()), getUser().getLastLoginDate());
         }
 
         return newGroups;
     }
 
     public int getNewGroupsCount() {
-        try {
-            return getNewGroups().size();
-        } catch (SQLException e) {
-            log.error(BeanHelper.getRequestSummary(), e);
-        }
-
-        return 0;
+        return getNewGroups().size();
     }
 
-    public MenuModel getSidebarMenuModel() throws SQLException {
+    public MenuModel getSidebarMenuModel() {
         if (!isLoggedIn()) {
             return null;
         }
@@ -433,7 +420,7 @@ public class UserBean implements Serializable {
     /**
      * Returns true when there is any tooltip message to show.
      */
-    public boolean isShowMessageAny() throws SQLException {
+    public boolean isShowMessageAny() {
         if (!isLoggedIn()) {
             return false;
         }
@@ -446,7 +433,7 @@ public class UserBean implements Serializable {
         return isShowMessageJoinGroup() || isShowMessageAddResource();
     }
 
-    public boolean isShowMessageJoinGroup() throws SQLException {
+    public boolean isShowMessageJoinGroup() {
         if (cacheShowMessageJoinGroup) { // check until the user has joined a group
             User user = getUser();
             if (null == user) {
@@ -457,7 +444,7 @@ public class UserBean implements Serializable {
         return cacheShowMessageJoinGroup;
     }
 
-    public boolean isShowMessageJoinGroupInHeader() throws SQLException {
+    public boolean isShowMessageJoinGroupInHeader() {
         String viewId = Faces.getViewId();
         if (viewId.contains("groups.xhtml")) {
             return false;
@@ -466,7 +453,7 @@ public class UserBean implements Serializable {
         return isShowMessageJoinGroup();
     }
 
-    public boolean isShowMessageAddResourceInHeader() throws SQLException {
+    public boolean isShowMessageAddResourceInHeader() {
         String viewId = Faces.getViewId();
         if (viewId.contains("overview.xhtml") || viewId.contains("resources.xhtml") || viewId.contains("welcome.xhtml")) {
             return false;
@@ -475,7 +462,7 @@ public class UserBean implements Serializable {
         return isShowMessageAddResource();
     }
 
-    public boolean isShowMessageAddResource() throws SQLException {
+    public boolean isShowMessageAddResource() {
         if (cacheShowMessageAddResource) { // check until the user has added a resource
             if (isShowMessageJoinGroup()) {
                 return false;
@@ -526,9 +513,12 @@ public class UserBean implements Serializable {
             return "https://waps.io/open?c=2" +
                 "&u=" + StringHelper.urlEncode(url) +
                 "&i=" + user.getId() +
-                "&t=" + Learnweb.getInstance().getProperties().getProperty("TRACKER_API_KEY");
+                "&t=" + getTrackerApiKey();
         }
+    }
 
+    public String getTrackerApiKey() {
+        return Learnweb.config().getProperty("tracker_api_key");
     }
 
     public boolean isStarRatingEnabled() {
@@ -557,7 +547,7 @@ public class UserBean implements Serializable {
 
     private Organisation getActiveOrganisation() {
         if (null == activeOrganisation) {
-            activeOrganisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(PUBLIC_ORGANISATION_ID);
+            activeOrganisation = Learnweb.dao().getOrganisationDao().findById(PUBLIC_ORGANISATION_ID);
         }
         return activeOrganisation;
     }

@@ -105,7 +105,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
                     allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> t.get(filterField).toLowerCase().contains(filterValueStr)));
                     break;
                 default:
-                    log.error("unsupported filter:" + filterField);
+                    log.error("unsupported filter:{}", filterField);
             }
         }
 

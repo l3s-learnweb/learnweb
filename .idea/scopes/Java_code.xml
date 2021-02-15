@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Java code" pattern="file[Learnweb]:src//*||file[Learnweb]:test//*" />
+</component>

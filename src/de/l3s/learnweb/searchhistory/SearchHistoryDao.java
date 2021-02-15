@@ -1,5 +1,6 @@
 package de.l3s.learnweb.searchhistory;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -24,7 +25,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.RsHelper;
 import de.l3s.util.StringHelper;
 
-public interface SearchHistoryDao extends SqlObject {
+public interface SearchHistoryDao extends SqlObject, Serializable {
     enum SearchAction {
         resource_clicked,
         resource_saved
@@ -89,7 +90,7 @@ public interface SearchHistoryDao extends SqlObject {
     }
 
     default List<SearchSession> findSessionsByGroupId(int groupId) {
-        return getHandle().select("SELECT DISTINCT l.user_id, l.session_id FROM learnweb_large.`sl_query` q JOIN learnweb_main.lw_user_log l ON q.search_id = l.target_id "
+        return getHandle().select("SELECT DISTINCT l.user_id, l.session_id FROM learnweb_large.sl_query q JOIN learnweb_main.lw_user_log l ON q.search_id = l.target_id "
             + "AND q.user_id = l.user_id JOIN learnweb_main.lw_group_user ug ON ug.user_id =  l.user_id "
             + "WHERE l.action = 5 AND ug.group_id = ? GROUP BY l.user_id, l.session_id, q.timestamp ORDER BY q.timestamp DESC LIMIT 30", groupId)
             .map((rs, ctx) -> {
@@ -99,15 +100,15 @@ public interface SearchHistoryDao extends SqlObject {
             }).list();
     }
 
-    @SqlUpdate("INSERT INTO `learnweb_large`.`sl_query` (`query`, `mode`, `service`, `language`, `filters`, `user_id`, `timestamp`, learnweb_version) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3)")
+    @SqlUpdate("INSERT INTO learnweb_large.sl_query (query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3)")
     @GetGeneratedKeys("search_id")
     int insertQuery(String query, SearchMode searchMode, ResourceService searchService, String language, String searchFilters, User user);
 
-    @SqlUpdate("INSERT INTO `learnweb_large`.`sl_query` (`group_id`, `query`, `mode`, `service`, `language`, `filters`, `user_id`, `timestamp`, learnweb_version) VALUES (?, ?, 'group', 'learnweb', ?, ?, ?, CURRENT_TIMESTAMP, 3)")
+    @SqlUpdate("INSERT INTO learnweb_large.sl_query (group_id, query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, 'group', 'learnweb', ?, ?, ?, CURRENT_TIMESTAMP, 3)")
     @GetGeneratedKeys("search_id")
     int insertGroupQuery(int groupId, String query, String language, String searchFilters, int userId);
 
-    @SqlUpdate("INSERT INTO `learnweb_large`.`sl_action` (`search_id`, `rank`, `user_id`, `action`, `timestamp`) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)")
+    @SqlUpdate("INSERT INTO learnweb_large.sl_action (search_id, rank, user_id, action, timestamp) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)")
     void insertAction(int searchId, int rank, User user, SearchAction action);
 
     default void insertResources(int searchId, List<ResourceDecorator> resources) {
@@ -115,7 +116,7 @@ public interface SearchHistoryDao extends SqlObject {
             return;
         }
 
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO `learnweb_large`.`sl_resource` (`search_id`, `rank`, `resource_id`, `url`, `title`, `description`, `thumbnail_url`, `thumbnail_height`, `thumbnail_width`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO learnweb_large.sl_resource (search_id, rank, resource_id, url, title, description, thumbnail_url, thumbnail_height, thumbnail_width) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         for (ResourceDecorator decoratedResource : resources) {
             batch.bind(0, searchId);
@@ -148,7 +149,7 @@ public interface SearchHistoryDao extends SqlObject {
                 rs.getInt("search_id"),
                 rs.getString("query"),
                 rs.getString("mode"),
-                RsHelper.getDate(rs.getTimestamp("timestamp")),
+                RsHelper.getLocalDateTime(rs.getTimestamp("timestamp")),
                 rs.getString("service")
             );
         }

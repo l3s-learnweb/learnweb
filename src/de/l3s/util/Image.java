@@ -91,7 +91,7 @@ public class Image {
     public Image getResizedToWidth(int width) {
         if (width > getWidth()) {
             //throw new IllegalArgumentException("Width " + width + " exceeds width of image, which is " + getWidth());
-            log.warn("Width " + width + " exceeds width of image, which is " + getWidth());
+            log.warn("Width {} exceeds width of image, which is {}", width, getWidth());
             return this;
         }
         int newHeight = width * img.getHeight() / img.getWidth();
@@ -356,10 +356,10 @@ public class Image {
         return new Image(bufferedImage);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("SVG");
         while (readers.hasNext()) {
-            log.debug("reader: " + readers.next());
+            log.debug("reader: {}", readers.next());
         }
     }
 }

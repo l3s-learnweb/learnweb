@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -22,9 +23,9 @@ import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(CourseDao.CourseMapper.class)
-public interface CourseDao extends SqlObject {
+public interface CourseDao extends SqlObject, Serializable {
     int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
-    ICache<Course> cache = Cache.of(Course.class);
+    ICache<Course> cache = new Cache<>(10000);
 
     default Course findById(int courseId) {
         Course course = cache.get(courseId);
@@ -32,7 +33,7 @@ public interface CourseDao extends SqlObject {
             return course;
         }
 
-        return getHandle().select("SELECT * FROM `lw_course` g WHERE course_id = ?", courseId)
+        return getHandle().select("SELECT * FROM lw_course g WHERE course_id = ?", courseId)
             .map(new CourseMapper()).findOne().orElse(null);
     }
 
@@ -54,10 +55,10 @@ public interface CourseDao extends SqlObject {
     /**
      * Add a user to a course.
      */
-    @SqlUpdate("INSERT INTO `lw_user_course` (`course_id`, `user_id`) VALUES (?, ?)")
+    @SqlUpdate("INSERT INTO lw_user_course (course_id, user_id) VALUES (?, ?)")
     void insertUser(Course course, User user);
 
-    @SqlUpdate("DELETE FROM `lw_user_course` WHERE `course_id` = ? AND `user_id` = ?")
+    @SqlUpdate("DELETE FROM lw_user_course WHERE course_id = ? AND user_id = ?")
     void deleteUser(Course course, User user);
 
     default void save(Course course) {
@@ -72,7 +73,7 @@ public interface CourseDao extends SqlObject {
         params.put("timestamp_creation", course.getCreationTimestamp());
         params.put("options_field1", course.getOptions()[0]);
 
-        Optional<Integer> courseId = SqlHelper.generateInsertQuery(getHandle(), "lw_course", params)
+        Optional<Integer> courseId = SqlHelper.handleSave(getHandle(), "lw_course", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         courseId.ifPresent(id -> {
@@ -81,7 +82,7 @@ public interface CourseDao extends SqlObject {
         });
     }
 
-    default List<User> deleteHard(Course course, boolean force) throws SQLException {
+    default List<User> deleteHard(Course course, boolean force) {
         UserDao userDao = getHandle().attach(UserDao.class);
         if (!force && userDao.countByCourseId(course.getId()) > 0) {
             throw new IllegalArgumentException("course can't be deleted, remove all members first");
@@ -104,8 +105,8 @@ public interface CourseDao extends SqlObject {
             groupDao.deleteHard(group);
         }
 
-        getHandle().execute("DELETE FROM `lw_user_course` WHERE course_id = ?", course.getId());
-        getHandle().execute("DELETE FROM `lw_course` WHERE course_id = ?", course.getId());
+        getHandle().execute("DELETE FROM lw_user_course WHERE course_id = ?", course.getId());
+        getHandle().execute("DELETE FROM lw_course WHERE course_id = ?", course.getId());
 
         cache.remove(course.getId());
         return undeletedUsers;
@@ -117,7 +118,7 @@ public interface CourseDao extends SqlObject {
      *
      * @return The users who where not anonymize because they are member of other courses.
      */
-    default List<User> anonymize(Course course) throws SQLException {
+    default List<User> anonymize(Course course) {
         // disable registration wizard
         course.setOption(Course.Option.Users_Disable_wizard, true);
         save(course);

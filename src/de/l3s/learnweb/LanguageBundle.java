@@ -63,7 +63,7 @@ public class LanguageBundle extends ResourceBundle {
         this(Faces.getViewRoot().getLocale());
     }
 
-    private LanguageBundle(Locale locale) {
+    public LanguageBundle(Locale locale) {
         setParent(getLanguageBundle(locale));
     }
 
@@ -179,44 +179,11 @@ public class LanguageBundle extends ResourceBundle {
             //      log.warn("Missing translation for key: " + msgKey);
             msg = msgKey;
         } catch (IllegalArgumentException e) {
-            log.error("Can't translate msgKey=" + msgKey + " with msg=" + msg + "; May happen if the msg contains unexpected curly brackets.", e);
+            log.error("Can't translate msgKey={} with msg={}; May happen if the msg contains unexpected curly brackets.", msgKey, msg, e);
 
             msg = msgKey;
         }
         return msg;
-    }
-
-    public static void main(String[] args) {
-
-        Locale locale = new Locale("en", "US", "");
-
-        log.debug(locale + "; " + locale.toLanguageTag());
-
-        ResourceBundle bundle = new LanguageBundle(locale);
-        log.debug(bundle.getString("homepageTitle"));
-        //bundle = new LanguageBundle(locale);
-        log.debug(bundle.getString("register_account_already_wizard"));
-        log.debug(bundle.getString("register_lw_account_wizard"));
-
-        log.debug("locale = yy -----------------");
-        locale = new Locale("yy");
-        bundle = new LanguageBundle(locale);
-        log.debug(bundle.getString("homepageTitle"));
-        log.debug(bundle.getString("validation.please_confirm"));
-
-        log.debug("locale = de -----------------");
-        locale = new Locale("de");
-        bundle = new LanguageBundle(locale);
-        log.debug(bundle.getString("homepageTitle"));
-        log.debug(bundle.getString("validation.please_confirm"));
-
-        log.debug("locale = pt -----------------");
-        locale = new Locale("pt");
-        bundle = new LanguageBundle(locale);
-        log.debug(bundle.getString("homepageTitle"));
-        log.debug(bundle.getString("validation.please_confirm"));
-        //log.debug(bundle.getString("does not exist"));
-
     }
 
     /**

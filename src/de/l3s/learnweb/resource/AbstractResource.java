@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource;
 
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.Instant;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
@@ -25,29 +24,29 @@ public abstract class AbstractResource implements HasId, Deletable {
 
     public abstract void setGroupId(int groupId);
 
-    public abstract Group getGroup() throws SQLException;
+    public abstract Group getGroup();
 
     public abstract int getUserId();
 
     public abstract void setUserId(int userId);
 
-    public abstract User getUser() throws SQLException;
+    public abstract User getUser();
 
     public abstract void setUser(User user);
 
-    public abstract AbstractResource save() throws SQLException;
+    public abstract AbstractResource save();
 
-    public abstract void delete() throws SQLException;
+    public abstract void delete();
 
-    public abstract String getPath() throws SQLException;
+    public abstract String getPath();
 
-    public abstract String getPrettyPath() throws SQLException;
+    public abstract String getPrettyPath();
 
-    public abstract boolean canViewResource(User user) throws SQLException;
+    public abstract boolean canViewResource(User user);
 
-    public abstract void moveTo(int newGroupId, int newFolderId) throws SQLException;
+    public abstract void moveTo(int newGroupId, int newFolderId);
 
-    public boolean canEditResource(User user) throws SQLException {
+    public boolean canEditResource(User user) {
         if (user == null) {
             return false; // not logged in
         }
@@ -58,7 +57,7 @@ public abstract class AbstractResource implements HasId, Deletable {
         return user.isAdmin() || getUserId() == user.getId();
     }
 
-    public boolean canDeleteResource(User user) throws SQLException {
+    public boolean canDeleteResource(User user) {
         if (user == null) {
             return false; // not logged in
         }
@@ -90,7 +89,7 @@ public abstract class AbstractResource implements HasId, Deletable {
 
     public boolean lockerUpdate(User user) {
         if (editLocker != null && editLocker.getUser().equals(user)) {
-            editLocker.setLastActivity(new Date());
+            editLocker.setLastActivity(Instant.now());
             return true;
         }
 

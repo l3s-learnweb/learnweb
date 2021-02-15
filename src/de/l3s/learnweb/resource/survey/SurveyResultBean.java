@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.LinkedList;
 
 import javax.faces.view.ViewScoped;
@@ -20,11 +19,11 @@ public class SurveyResultBean extends ApplicationBean implements Serializable {
     private SurveyResource resource;
     private LinkedList<SurveyQuestion> questionColumns; // lists the questions that are shown in the table
 
-    public void onLoad() throws SQLException {
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
         BeanAssert.hasPermission(getUser().isModerator());
 
-        resource = getLearnweb().getSurveyManager().getSurveyResource(surveyResourceId);
+        resource = dao().getSurveyDao().findResourceById(surveyResourceId).orElse(null);
         BeanAssert.isFound(resource);
         BeanAssert.notDeleted(resource);
 

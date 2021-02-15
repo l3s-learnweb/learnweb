@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource.search.solrClient;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -20,15 +19,15 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -76,7 +75,9 @@ public class SolrSearch implements Serializable {
     private int groupResultsLimit = DEFAULT_GROUP_RESULTS_LIMIT;
 
     // results
-    private transient QueryResponse queryResponse;
+    private long resultsFound;
+    private List<FacetField> resultsFacetFields;
+    private Map<String, Integer> resultsFacetQuery;
 
     public SolrSearch(String query, User user) {
         this.userId = user == null ? 0 : user.getId();
@@ -85,12 +86,8 @@ public class SolrSearch implements Serializable {
         String newQuery = removeMyGroupQuery(query);
         if (!query.equals(newQuery)) {
             this.query = newQuery;
-            try {
-                if (user != null && user.getGroups() != null) {
-                    this.filterGroupIds = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
-                }
-            } catch (SQLException e) {
-                log.error("Could not retrieve users group", e);
+            if (user != null && user.getGroups() != null) {
+                this.filterGroupIds = user.getGroups().stream().map(Group::getId).collect(Collectors.toList());
             }
         }
     }
@@ -279,7 +276,7 @@ public class SolrSearch implements Serializable {
 
         // log.debug("solr query: " + solrQuery);
 
-        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
+        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getHttpSolrClient();
         return server.query(solrQuery);
     }
 
@@ -300,10 +297,10 @@ public class SolrSearch implements Serializable {
         }
 
         if (!filterDateFrom.isEmpty()) {
-            if (!filterDateTo.isEmpty()) {
-                solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO " + filterDateTo + "]");
-            } else {
+            if (filterDateTo.isEmpty()) {
                 solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO NOW]");
+            } else {
+                solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO " + filterDateTo + "]");
             }
         } else if (!filterDateTo.isEmpty()) {
             solrQuery.addFilterQuery("timestamp : [* TO " + filterDateTo + "]");
@@ -346,23 +343,21 @@ public class SolrSearch implements Serializable {
         }
     }
 
-    public List<ResourceDecorator> getResourcesByPage(int page) throws SQLException, IOException, SolrServerException {
+    public List<ResourceDecorator> getResourcesByPage(int page) throws IOException, SolrServerException {
         List<ResourceDecorator> resources = new LinkedList<>();
 
-        this.queryResponse = getQueryResourcesByPage(page);
+        QueryResponse queryResponse = getQueryResourcesByPage(page);
         if (queryResponse != null) {
             List<ResourceDocument> resourceDocuments = queryResponse.getBeans(ResourceDocument.class);
-
-            ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
 
             int resourceRank = (page - 1) * resultsPerPage;
             int skippedResources = 0;
             for (ResourceDocument resourceDocument : resourceDocuments) {
                 int resourceId = extractResourceId(resourceDocument.getId());
-                Resource resource = resourceManager.getResource(resourceId);
+                Resource resource = Learnweb.dao().getResourceDao().findById(resourceId);
 
                 if (resource == null) {
-                    log.warn("could not find resource with id:" + resourceDocument.getId());
+                    log.warn("could not find resource with id:{}", resourceDocument.getId());
                     continue;
                 }
 
@@ -377,17 +372,27 @@ public class SolrSearch implements Serializable {
             }
 
             if (skippedResources > 0) {
-                log.error(skippedResources + " video/image resources have no thumbnails and were skipped");
+                log.error("{} video/image resources have no thumbnails and were skipped", skippedResources);
             }
+
+            resultsFound = queryResponse.getResults().getNumFound();
+            resultsFacetFields = queryResponse.getFacetFields();
+            resultsFacetQuery = queryResponse.getFacetQuery();
         }
 
         return resources;
     }
 
-    @Deprecated
-    public QueryResponse getQueryResponse() {
-        // TODO @astappiev: I think the public use of this transient field is very problematic. the needed fields of Queryresposne should be copied to this class on the first request
-        return queryResponse;
+    public long getResultsFound() {
+        return resultsFound;
+    }
+
+    public List<FacetField> getResultsFacetFields() {
+        return resultsFacetFields;
+    }
+
+    public Map<String, Integer> getResultsFacetQuery() {
+        return resultsFacetQuery;
     }
 
     private static String removeMyGroupQuery(final String query) {
@@ -477,7 +482,7 @@ public class SolrSearch implements Serializable {
         try {
             return Integer.parseInt(id.substring(2));
         } catch (NumberFormatException e) {
-            log.error("SolrSearch, NumberFormatException: " + e.getMessage());
+            log.error("SolrSearch, NumberFormatException: {}", e.getMessage());
             return -1;
         }
     }

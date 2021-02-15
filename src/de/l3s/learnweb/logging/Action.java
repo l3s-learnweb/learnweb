@@ -1,17 +1,18 @@
 package de.l3s.learnweb.logging;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.jdbi.v3.core.Handle;
-import org.jdbi.v3.core.statement.PreparedBatch;
+import org.jdbi.v3.core.argument.Argument;
+import org.jdbi.v3.core.statement.StatementContext;
 
-import de.l3s.learnweb.Learnweb;
-
-public enum Action {
+public enum Action implements Argument {
     // add new values add the BOTTOM !!!
     tagging_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = the tag
     rating_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = rate
@@ -83,10 +84,16 @@ public enum Action {
 
     private static final ArrayList<Set<Action>> ACTIONS_BY_CATEGORY = new ArrayList<>(ActionCategory.values().length);
 
+    public static final EnumSet<Action> LOGS_DEFAULT_FILTER = EnumSet.of(adding_resource, commenting_resource, edit_resource, deleting_resource,
+        group_changing_description, group_changing_leader, group_changing_title, group_creating, group_deleting, group_joining, group_leaving,
+        rating_resource, tagging_resource, thumb_rating_resource, changing_office_resource, forum_topic_added, forum_post_added, deleting_folder, add_folder);
+
+    public static final EnumSet<Action> LOGS_RESOURCE_FILTER;
+
     static {
-        // init one hashset per category
+        // init one EnumSet per category
         for (int i = 0, len = ActionCategory.values().length; i < len; i++) {
-            ACTIONS_BY_CATEGORY.add(new HashSet<>());
+            ACTIONS_BY_CATEGORY.add(EnumSet.noneOf(Action.class));
         }
 
         // add actions to category hashsets
@@ -98,6 +105,15 @@ public enum Action {
         for (int i = 0, len = ActionCategory.values().length; i < len; i++) {
             ACTIONS_BY_CATEGORY.set(i, Collections.unmodifiableSet(ACTIONS_BY_CATEGORY.get(i)));
         }
+
+        EnumSet<Action> resourceActions = EnumSet.copyOf(getActionsByCategory(ActionCategory.RESOURCE));
+        // remove actions we don't want to show
+        resourceActions.remove(opening_resource);
+        resourceActions.remove(glossary_open);
+        resourceActions.remove(lock_interrupted_returned_resource);
+        resourceActions.remove(lock_rejected_edit_resource);
+        resourceActions.remove(downloading);
+        LOGS_RESOURCE_FILTER = resourceActions;
     }
 
     private final ActionTargetId targetId;
@@ -120,30 +136,16 @@ public enum Action {
         return category;
     }
 
-    public static Set<Action> getActionsByCategory(ActionCategory category) {
-        return ACTIONS_BY_CATEGORY.get(category.ordinal());
+    @Override
+    public void apply(final int position, final PreparedStatement statement, final StatementContext ctx) throws SQLException {
+        statement.setInt(position, ordinal());
     }
 
-    /**
-     * Updates the lw_user_log_action table.
-     */
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        Learnweb learnweb = Learnweb.createInstance();
+    public static List<Integer> collectOrdinals(EnumSet<Action> actions) {
+        return actions.stream().map(Enum::ordinal).collect(Collectors.toList());
+    }
 
-        try (Handle handle = learnweb.openHandle()) {
-            handle.execute("TRUNCATE TABLE lw_user_log_action");
-
-            PreparedBatch batch = handle.prepareBatch("INSERT INTO `lw_user_log_action` (`action`, `name`, `target`, `category`) VALUES (:action, :name, :target, :category)");
-            for (Action action : values()) {
-                batch.bind("action", action.ordinal())
-                    .bind("name", action.name())
-                    .bind("target", action.getTargetId())
-                    .bind("category", action.getCategory())
-                    .add();
-            }
-            batch.execute();
-        }
-
-        learnweb.onDestroy();
+    public static Set<Action> getActionsByCategory(ActionCategory category) {
+        return ACTIONS_BY_CATEGORY.get(category.ordinal());
     }
 }

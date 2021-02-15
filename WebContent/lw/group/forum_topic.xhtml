@@ -59,14 +59,14 @@
                 <p:column headerText="#{msg.author}" styleClass="py-2 text-center align-baseline w-15">
                     <h:link outcome="/lw/user/detail.jsf?user_id=#{post.userId}">
                         <h:outputText styleClass="d-block mb-1 fw-bold" value="#{post.user.username}"/>
-                        <img class="img-fluid profile-picture square fluent" src="${learnwebBean.getProfileImage(post.user)}" alt="#{post.user.fullName}"/>
+                        <img class="img-fluid profile-picture square fluent" src="${post.user.image}" alt="#{post.user.fullName}"/>
                     </h:link>
 
                     <div class="text-muted small">
                         <p class="mb-0">
                             <h:outputText value="#{msg.registered_since}: " styleClass="d-block"/>
                             <h:outputText value="#{post.user.registrationDate}">
-                                <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
+                                <f:convertDateTime dateStyle="default" type="localDate" timeZone="#{userBean.timeZone}"/>
                             </h:outputText>
                         </p>
                         <p class="mb-0">
@@ -86,7 +86,7 @@
                             <div class="col text-end">
                                 #{msg['ForumIndex.postedOn']}
                                 <h:outputText value="#{post.date}">
-                                    <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+                                    <f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                 </h:outputText>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                                         <f:param value="#{post.editCount}"/>
                                         <f:param value="#{post.lastEditDate}"/>
                                         <f:param value="#{post.editUser.username}"/>
-                                        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+                                        <f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                     </h:outputFormat>
                                 </div>
                             </ui:fragment>

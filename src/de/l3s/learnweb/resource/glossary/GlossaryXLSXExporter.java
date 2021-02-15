@@ -1,7 +1,5 @@
 package de.l3s.learnweb.resource.glossary;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -26,56 +24,25 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.Learnweb;
 
 /**
- * Allows to export a glossary into a Excel file
+ * Allows to export a glossary into a Excel file.
  *
  * @author Philipp
  *
  */
 public final class GlossaryXLSXExporter {
-
     private static final Logger log = LogManager.getLogger(GlossaryXLSXExporter.class);
 
-    private GlossaryResource glossaryResource;
-    private Locale language; // language of the exported header fields
+    private final GlossaryResource glossaryResource;
+    private final Locale language; // language of the exported header fields
 
     public GlossaryXLSXExporter(GlossaryResource resource, Locale language) {
         this.glossaryResource = resource;
         this.language = language;
     }
 
-    public static void main(String[] args) {
-        try {
-            Learnweb lw = Learnweb.createInstance();
-            GlossaryResource resource = lw.getGlossaryManager().getGlossaryResource(231104);
-
-            GlossaryXLSXExporter exporter = new GlossaryXLSXExporter(resource, Locale.ENGLISH);
-            exporter.test(exporter.convertGlossaryToWorkbook(resource));
-
-            log.debug("exported");
-
-            lw.onDestroy();
-        } catch (Exception e) {
-            log.error("fatal error", e);
-        }
-    }
-
-    private void test(Workbook wb) throws IOException {
-        // Write the output to a file
-        String file = "glossary.xls";
-        if (wb instanceof XSSFWorkbook) {
-            file += "x";
-        }
-        try (FileOutputStream out = new FileOutputStream(file);) {
-            wb.write(out);
-        }
-
-        wb.close();
-    }
-
-    private Workbook convertGlossaryToWorkbook(GlossaryResource resource) throws Exception {
+    public Workbook convertGlossaryToWorkbook(GlossaryResource resource) {
         Workbook wb;
 
         wb = new XSSFWorkbook();
@@ -102,7 +69,7 @@ public final class GlossaryXLSXExporter {
 
         int columnIndex = 0;
         for (Column column : Column.values()) {
-            if (column.equals(Column.pronounciation)) { // don't show in Excel file
+            if (column == Column.pronounciation) { // don't show in Excel file
                 continue;
             }
 
@@ -195,7 +162,7 @@ public final class GlossaryXLSXExporter {
     }
 
     /**
-     * create a library of cell styles
+     * create a library of cell styles.
      */
     private static Map<String, CellStyle> createStyles(Workbook wb) {
         Map<String, CellStyle> styles = new HashMap<>();

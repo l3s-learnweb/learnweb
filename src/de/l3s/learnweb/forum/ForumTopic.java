@@ -1,10 +1,9 @@
 package de.l3s.learnweb.forum;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDateTime;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Deletable;
@@ -16,11 +15,11 @@ public class ForumTopic implements Serializable, Deletable {
     private int userId;
     private int groupId;
     private String title;
-    private Date date;
+    private LocalDateTime date;
     private int views;
     private int replies;
     private int lastPostId;
-    private Date lastPostDate;
+    private LocalDateTime lastPostDate;
     private int lastPostUserId;
     private boolean deleted;
 
@@ -37,23 +36,23 @@ public class ForumTopic implements Serializable, Deletable {
         this.userId = userId;
     }
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (user == null) {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }
 
-    public Group getGroup() throws SQLException {
+    public Group getGroup() {
         if (group == null) {
-            group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+            group = Learnweb.dao().getGroupDao().findById(groupId);
         }
         return group;
     }
 
-    public User getLastPostUser() throws SQLException {
+    public User getLastPostUser() {
         if (lastPostUser == null) {
-            lastPostUser = Learnweb.getInstance().getUserManager().getUser(lastPostUserId);
+            lastPostUser = Learnweb.dao().getUserDao().findById(lastPostUserId);
         }
         return lastPostUser;
     }
@@ -74,11 +73,11 @@ public class ForumTopic implements Serializable, Deletable {
         this.groupId = groupId;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -122,11 +121,11 @@ public class ForumTopic implements Serializable, Deletable {
         this.lastPostId = lastPostId;
     }
 
-    public Date getLastPostDate() {
+    public LocalDateTime getLastPostDate() {
         return lastPostDate;
     }
 
-    public void setLastPostDate(Date lastPostDate) {
+    public void setLastPostDate(LocalDateTime lastPostDate) {
         this.lastPostDate = lastPostDate;
     }
 

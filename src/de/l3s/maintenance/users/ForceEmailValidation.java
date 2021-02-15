@@ -1,9 +1,11 @@
 package de.l3s.maintenance.users;
 
-import java.sql.ResultSet;
+import java.util.List;
+
+import org.jdbi.v3.core.Handle;
 
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserManager;
+import de.l3s.learnweb.user.UserDao;
 import de.l3s.maintenance.MaintenanceTask;
 
 /**
@@ -14,24 +16,22 @@ import de.l3s.maintenance.MaintenanceTask;
 public class ForceEmailValidation extends MaintenanceTask {
 
     @Override
-    protected void run(final boolean dryRun) throws Exception {
-        UserManager um = getLearnweb().getUserManager();
+    protected void run(final boolean dryRun) {
+        try (Handle handle = getLearnweb().openJdbiHandle()) {
+            List<User> users = handle.select("SELECT * FROM lw_user WHERE is_email_confirmed = 0 and organisation_id != 478 and email != '' ORDER BY registration_date DESC")
+                .map(new UserDao.UserMapper()).list();
 
-        String query = "SELECT * FROM `lw_user` WHERE `is_email_confirmed` = 0 and organisation_id != 478 and email != '' ORDER BY `lw_user`.`registration_date` DESC ";
+            for (User user : users) {
+                /*
+                // force creation of mail validation token
+                String mailBackup = user.getEmail();
+                user.setEmail("");
+                user.setEmail(mailBackup);
+                */
 
-        ResultSet rs = getLearnweb().getConnection().createStatement().executeQuery(query);
-        while (rs.next()) {
-            User user = um.getUser(rs.getInt(1));
-
-            /*
-            // force creation of mail validation token
-            String mailBackup = user.getEmail();
-            user.setEmail("");
-            user.setEmail(mailBackup);
-            */
-
-            log.debug(user.getEmail());
-            user.sendEmailConfirmation();
+                log.debug(user.getEmail());
+                user.sendEmailConfirmation();
+            }
         }
     }
 

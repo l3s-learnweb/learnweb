@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource.search;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,12 +19,13 @@ import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.interwebj.client.InterWeb;
 import de.l3s.interwebj.client.model.SearchResponse;
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
+import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.User;
 
 public class Search implements Serializable {
@@ -65,9 +65,6 @@ public class Search implements Serializable {
     private int searchId;
     private final User user;
 
-    // cache
-    private transient SearchLogManager searchLogger;
-
     public Search(InterWeb interweb, String query, SearchFilters sf, User user) {
         this.interweb = interweb;
         this.query = query;
@@ -85,7 +82,7 @@ public class Search implements Serializable {
 
         LinkedList<ResourceDecorator> newResources = new LinkedList<>();
 
-        log.debug("Search page " + page + " for: " + query);
+        log.debug("Search page {} for: {}", page, query);
 
         try {
             if (hasMoreResults && !stopped) {
@@ -133,7 +130,7 @@ public class Search implements Serializable {
     /**
      * Load resources from SOLR.
      */
-    private LinkedList<ResourceDecorator> getLearnwebResults(int page) throws SQLException, IOException, SolrServerException {
+    private LinkedList<ResourceDecorator> getLearnwebResults(int page) throws IOException, SolrServerException {
         //long start = System.currentTimeMillis();
 
         // Setup filters
@@ -191,12 +188,12 @@ public class Search implements Serializable {
         }
 
         if (page == 1) {
-            searchFilters.putResourceCounters(solrSearch.getQueryResponse().getFacetFields());
+            searchFilters.putResourceCounters(solrSearch.getResultsFacetFields());
             if (!searchFilters.isInterwebSearchEnabled()) {
-                searchFilters.putResourceCounters(solrSearch.getQueryResponse().getFacetQuery());
+                searchFilters.putResourceCounters(solrSearch.getResultsFacetQuery());
             }
 
-            searchFilters.setTotalResultsLearnweb(solrSearch.getQueryResponse().getResults().getNumFound());
+            searchFilters.setTotalResultsLearnweb(solrSearch.getResultsFound());
         }
 
         if (learnwebResources.isEmpty()) {
@@ -241,13 +238,13 @@ public class Search implements Serializable {
 
         if (notSatisfyFiltersCount > 0 || privateResourceCount > 0 || duplicatedUrlCount > 0) {
             this.removedResourceCount += duplicatedUrlCount + privateResourceCount + notSatisfyFiltersCount;
-            log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + privateResourceCount + " private resources, " + duplicatedUrlCount + " duplicated resources");
+            log.debug("Filtered {} resources and skipped {} private resources, {} duplicated resources", notSatisfyFiltersCount, privateResourceCount, duplicatedUrlCount);
         }
 
         return newResources;
     }
 
-    private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IOException, IllegalArgumentException {
+    private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IllegalArgumentException {
         long start = System.currentTimeMillis();
 
         // Setup filters
@@ -285,7 +282,7 @@ public class Search implements Serializable {
 
         SearchResponse interwebResponse = interweb.search(query, params);
         InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(interwebResponse);
-        log.debug("Interweb returned " + interwebResults.getResources().size() + " results in " + (System.currentTimeMillis() - start) + " ms");
+        log.debug("Interweb returned {} results in {} ms", interwebResults.getResources().size(), System.currentTimeMillis() - start);
 
         if (stopped) {
             return null;
@@ -307,7 +304,7 @@ public class Search implements Serializable {
 
         for (ResourceDecorator decoratedResource : interwebResults.getResources()) {
             if (null == decoratedResource.getUrl()) {
-                log.warn("url is null: " + decoratedResource);
+                log.warn("url is null: {}", decoratedResource);
                 continue;
             }
             // check if an other resource with the same url exists
@@ -326,15 +323,16 @@ public class Search implements Serializable {
             rankIndex.put(temporaryId, decoratedResource);
             temporaryId++;
 
-            if (configMode == SearchMode.text) {
-                Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
-            }
+            // TODO: why do we need this?
+            // if (configMode == SearchMode.text) {
+            //     Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
+            // }
             newResources.add(decoratedResource);
         }
 
         if (notSatisfyFiltersCount > 0 || duplicatedUrlCount > 0) {
             this.removedResourceCount += duplicatedUrlCount + notSatisfyFiltersCount;
-            log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + duplicatedUrlCount + " duplicated resources");
+            log.debug("Filtered {} resources and skipped {} duplicated resources", notSatisfyFiltersCount, duplicatedUrlCount);
         }
 
         return newResources;
@@ -460,15 +458,7 @@ public class Search implements Serializable {
     }
 
     public void logQuery(String query, ResourceService searchService, String language, String queryFilters) {
-        searchId = getSearchLogger().logQuery(query, getMode(), searchService, language, queryFilters, this.user);
-    }
-
-    private SearchLogManager getSearchLogger() {
-        if (searchLogger == null) {
-            searchLogger = Learnweb.getInstance().getSearchLogManager();
-        }
-
-        return searchLogger;
+        searchId = Learnweb.dao().getSearchHistoryDao().insertQuery(query, getMode(), searchService, language, queryFilters, user);
     }
 
     private void logResources(List<ResourceDecorator> resources, int pageId) {
@@ -478,19 +468,19 @@ public class Search implements Serializable {
         //call the method to fetch the html of the logged resources
         //only if search_mode='text' and userId is admin/specificUser
         if (searchId > 0) {
-            getSearchLogger().logResources(searchId, resources, pageId);
+            Learnweb.dao().getSearchHistoryDao().insertResources(searchId, resources);
         }
     }
 
     public void logResourceClicked(int rank, User user) {
-        getSearchLogger().logResourceClicked(searchId, rank, user);
+        Learnweb.dao().getSearchHistoryDao().insertAction(searchId, rank, user, SearchHistoryDao.SearchAction.resource_clicked);
     }
 
     /**
      * @param newResourceId Id of the new stored resource
      */
     public void logResourceSaved(int rank, User user, int newResourceId) {
-        getSearchLogger().logResourceSaved(searchId, rank, user, newResourceId);
+        Learnweb.dao().getSearchHistoryDao().insertAction(searchId, rank, user, SearchHistoryDao.SearchAction.resource_saved);
     }
 
     public static class GroupedResources implements Serializable, Comparable<GroupedResources> {

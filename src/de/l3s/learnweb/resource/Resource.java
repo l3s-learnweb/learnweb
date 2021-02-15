@@ -1,17 +1,15 @@
 package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -20,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,13 +26,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
 import org.jsoup.safety.Whitelist;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserDao;
 import de.l3s.util.Expirable;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
@@ -97,8 +96,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private boolean restricted = false;
-    private Date resourceTimestamp;
-    private Date creationDate = new Date();
+    private LocalDateTime resourceTimestamp;
+    private LocalDateTime creationDate = LocalDateTime.now();
     private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
 
     private boolean deleted = false; // indicates whether this resource has been deleted
@@ -107,7 +106,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private int thumbDown = -1;
     private final HashMap<Integer, Integer> thumbRateByUser = new HashMap<>(); // userId : direction, null if not rated
     private final HashMap<Integer, Integer> rateByUser = new HashMap<>(); // userId : rate, null if not rated
-    private LinkedHashMap<Integer, File> files = new LinkedHashMap<>(); // resource_file_number : file
+    private LinkedHashMap<Integer, File> files; // resource_file_number : file
 
     // caches
     private transient OwnerList<Tag, User> tags;
@@ -161,8 +160,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         setOnlineStatus(old.onlineStatus);
         setIdAtService(old.idAtService);
         setRestricted(old.restricted);
-        setResourceTimestamp(new Date());
-        setCreationDate(new Date());
+        setResourceTimestamp(LocalDateTime.now());
+        setCreationDate(LocalDateTime.now());
         setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
@@ -179,19 +178,19 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     /**
      * Called by the ResourceManager after all setters have been called.
      */
-    protected void postConstruct() throws SQLException {
+    protected void postConstruct() {
         setDefaultThumbnailIfNull();
     }
 
     /**
      * If no thumbnails have been assigned this method will create default thumbnails for the small thumbnails.
      */
-    public void setDefaultThumbnailIfNull() throws SQLException {
+    public void setDefaultThumbnailIfNull() {
         if (null == thumbnail0 || null == thumbnail1 || null == thumbnail2) {
             // TODO @astappiev: find better images.
             // the glossary icon is loaded in GlossaryResource.save()
             if (type == ResourceType.survey) {
-                Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(204095); // TODO avoid this, load from resource folder
+                Resource iconResource = Learnweb.dao().getResourceDao().findById(204095); // TODO avoid this, load from resource folder
                 setThumbnail0(iconResource.getThumbnail0());
                 setThumbnail1(iconResource.getThumbnail1());
                 setThumbnail2(iconResource.getThumbnail2());
@@ -200,7 +199,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
                 return;
             }
 
-            String serverUrl = Learnweb.getInstance().getServerUrl();
+            String serverUrl = Learnweb.config().getServerUrl();
             Thumbnail dummyImage;
 
             switch (type) {
@@ -230,23 +229,23 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         }
     }
 
-    public void addTag(String tagName, User user) throws SQLException {
+    public void addTag(String tagName, User user) {
         if (tagName.length() > 250) {
             throw new IllegalArgumentException("tag is to long");
         }
 
-        ResourceManager rsm = Learnweb.getInstance().getResourceManager();
-        Tag tag = rsm.getTag(tagName);
+        Tag tag = Learnweb.dao().getTagDao().findByName(tagName).orElse(null);
 
         if (tag == null) {
-            tag = rsm.addTag(tagName);
+            tag = new Tag(-1, tagName);
+            Learnweb.dao().getTagDao().save(tag);
         }
 
         if (tags != null && !tags.contains(tag)) {
-            rsm.tagResource(this, tag, user);
+            Learnweb.dao().getResourceDao().insertTag(this, user, tag);
 
             if (null != tags) {
-                tags.add(tag, user, new Date());
+                tags.add(tag, user, LocalDateTime.now());
                 Collections.sort(tags);
             }
 
@@ -254,24 +253,22 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         }
     }
 
-    public void deleteTag(Tag tag) throws SQLException {
-        Learnweb.getInstance().getResourceManager().deleteTag(tag, this);
+    public void deleteTag(Tag tag) {
+        Learnweb.dao().getResourceDao().deleteTag(this, tag);
         tags.remove(tag);
 
         Learnweb.getInstance().getSolrClient().deleteFromIndex(tag, this);
     }
 
-    public void deleteComment(Comment comment) throws Exception {
-        Learnweb.getInstance().getResourceManager().deleteComment(comment);
+    public void deleteComment(Comment comment) {
         comments.remove(comment);
-
+        Learnweb.dao().getCommentDao().delete(comment);
         Learnweb.getInstance().getSolrClient().deleteFromIndex(comment);
     }
 
-    public List<Comment> getComments() throws SQLException {
+    public List<Comment> getComments() {
         if (id != -1 && comments == null) {
-            comments = Learnweb.getInstance().getResourceManager().getCommentsByResourceId(id);
-            //Collections.sort(comments);
+            comments = Learnweb.dao().getCommentDao().findByResourceId(id);
         }
 
         return comments;
@@ -281,8 +278,9 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.comments = comments;
     }
 
-    public Comment addComment(String text, User user) throws SQLException {
-        Comment comment = Learnweb.getInstance().getResourceManager().commentResource(text, user, this);
+    public Comment addComment(String text, User user) {
+        Comment comment = new Comment(text, LocalDateTime.now(), this, user);
+        Learnweb.dao().getCommentDao().save(comment);
 
         getComments(); // make sure comments are loaded before adding a new one
         comments.add(0, comment);
@@ -313,12 +311,12 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     @Override
-    public Group getGroup() throws SQLException {
+    public Group getGroup() {
         if (groupId == 0) {
             return null;
         }
 
-        return Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+        return Learnweb.dao().getGroupDao().findById(groupId);
     }
 
     public void setGroup(Group group) {
@@ -337,9 +335,9 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     @Override
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (null == owner && -1 != ownerUserId) {
-            owner = Learnweb.getInstance().getUserManager().getUser(ownerUserId);
+            owner = Learnweb.dao().getUserDao().findById(ownerUserId);
         }
         return owner;
     }
@@ -350,14 +348,14 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.ownerUserId = owner.getId();
     }
 
-    public Group getOriginalGroup() throws SQLException {
+    public Group getOriginalGroup() {
         if (originalResourceId == 0) {
             return null;
         }
 
-        Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
+        Resource originalResource = Learnweb.dao().getResourceDao().findById(originalResourceId);
         if (originalResource != null) {
-            return Learnweb.getInstance().getGroupManager().getGroupById(originalResource.getGroupId());
+            return Learnweb.dao().getGroupDao().findById(originalResource.getGroupId());
         } else {
             return null;
         }
@@ -371,12 +369,12 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.folderId = folderId;
     }
 
-    public Folder getFolder() throws SQLException {
+    public Folder getFolder() {
         if (folderId == 0) {
             return null;
         }
 
-        return Learnweb.getInstance().getGroupManager().getFolder(folderId);
+        return Learnweb.dao().getFolderDao().findById(folderId);
     }
 
     public void setFolder(Folder folder) {
@@ -512,6 +510,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public void setStarRatingRounded(int value) {
         // dummy method, is required by p:rating
+        log.error("Is it called?");
     }
 
     public int getRateNumber() {
@@ -533,24 +532,24 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     /**
      * @return Returns a comma separated list of tags
      */
-    public String getTagsAsString() throws SQLException {
+    public String getTagsAsString() {
         return getTagsAsString(", ");
     }
 
-    public String getTagsAsString(String delim) throws SQLException {
+    public String getTagsAsString(String delimiter) {
         StringBuilder out = new StringBuilder();
         for (Tag tag : getTags()) {
             if (out.length() != 0) {
-                out.append(delim);
+                out.append(delimiter);
             }
             out.append(tag.getName());
         }
         return out.toString();
     }
 
-    public OwnerList<Tag, User> getTags() throws SQLException {
+    public OwnerList<Tag, User> getTags() {
         if (null == tags || id != -1) {
-            tags = Learnweb.getInstance().getResourceManager().getTagsByResource(id);
+            tags = Learnweb.dao().getTagDao().findByResourceId(id);
         }
         return tags;
     }
@@ -571,7 +570,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     @Override
     public boolean equals(Object o) {
-        if (o != null && o instanceof Resource) {
+        if (o instanceof Resource) {
             return ((Resource) o).getId() == getId();
         }
         return false;
@@ -588,8 +587,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * @param value the rating 1-5
      * @param user the user who rates
      */
-    public void rate(int value, User user) throws SQLException {
-        Learnweb.getInstance().getResourceManager().rateResource(id, user.getId(), value);
+    public void rate(int value, User user) {
+        Learnweb.dao().getResourceDao().insertResourceRating(id, user.getId(), value);
 
         rateNumber++;
         ratingSum += value;
@@ -599,7 +598,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public Integer getRateByUser(int userId) {
         // get value from cache, or query database if absent
-        return rateByUser.computeIfAbsent(userId, key -> Learnweb.getInstance().getResourceManager().getResourceRateByUser(id, key));
+        return rateByUser.computeIfAbsent(userId, key -> Learnweb.dao().getResourceDao().findResourceRating(id, key).orElse(null));
     }
 
     public boolean isRatedByUser(int userId) {
@@ -611,14 +610,16 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * Stores all made changes in the database and reindexes the resource at solr.
      */
     @Override
-    public Resource save() throws SQLException {
-        Learnweb.getInstance().getResourceManager().saveResource(this);
+    public Resource save() {
+        Learnweb.dao().getResourceDao().save(this);
 
-        // ensure we store resource_id in lw_file table
-        for (File file : getFiles().values()) {
-            if (file.getResourceId() != id) {
-                file.setResourceId(id);
-                Learnweb.getInstance().getFileManager().addFileToResource(file, this);
+        // TODO @astappiev: this has to be moved to the save method of WebResource.class, which has to be created
+        if (CollectionUtils.isNotEmpty(getArchiveUrls())) {
+            try {
+                // To copy archive versions of a resource if it exists
+                Learnweb.dao().getArchiveUrlDao().insertArchiveUrl(getId(), getArchiveUrls());
+            } catch (Exception e) {
+                log.error("Can't save archiveUrls", e);
             }
         }
 
@@ -627,7 +628,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public void setTypeFromFormat(String format) {
         if (StringUtils.isEmpty(format)) {
-            log.error("Resource: " + getId() + "; Given format is empty: " + format, new Exception());
+            log.error("Resource: {}; Given format is empty: {}", getId(), format, new Exception());
             return;
         }
 
@@ -655,14 +656,17 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             this.type = ResourceType.file;
         } else {
             // if we do not know the format, then  log it and set it to downloadable
-            log.error("Unknown type for format: " + format + "; resourceId: " + getId(), new Exception());
+            log.error("Unknown type for format: {}; resourceId: {}", format, getId(), new Exception());
             this.type = ResourceType.file;
         }
     }
 
-    public int getThumbUp() throws SQLException {
+    public int getThumbUp() {
         if (thumbUp < 0) {
-            Learnweb.getInstance().getResourceManager().loadThumbRatings(this);
+            Learnweb.dao().getResourceDao().findThumbRatings(this).ifPresent(pair -> {
+                setThumbUp(pair.left);
+                setThumbDown(pair.right);
+            });
         }
         return thumbUp;
     }
@@ -671,9 +675,12 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.thumbUp = thumbUp;
     }
 
-    public int getThumbDown() throws SQLException {
+    public int getThumbDown() {
         if (thumbDown < 0) {
-            Learnweb.getInstance().getResourceManager().loadThumbRatings(this);
+            Learnweb.dao().getResourceDao().findThumbRatings(this).ifPresent(pair -> {
+                setThumbUp(pair.left);
+                setThumbDown(pair.right);
+            });
         }
         return thumbDown;
     }
@@ -682,12 +689,12 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.thumbDown = thumbDown;
     }
 
-    public void thumbRate(User user, int direction) throws IllegalAccessError, SQLException {
+    public void thumbRate(User user, int direction) throws IllegalAccessError {
         if (direction != 1 && direction != -1) {
             throw new IllegalArgumentException("Illegal value [" + direction + "] for direction. Valid values are 1 and -1");
         }
 
-        if (isThumbRatedByUser(user.getId())) {
+        if (isThumbRatedByUser(user)) {
             throw new IllegalAccessError("You have already rated this resource");
         }
 
@@ -697,18 +704,18 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             thumbDown++;
         }
 
-        Learnweb.getInstance().getResourceManager().thumbRateResource(id, user.getId(), direction);
+        Learnweb.dao().getResourceDao().insertThumbRate(this, user, direction);
 
         thumbRateByUser.put(user.getId(), direction);
     }
 
-    public Integer getThumbRateByUser(int userId) {
+    public Integer getThumbRateByUser(User user) {
         // get value from cache, or query database if absent
-        return thumbRateByUser.computeIfAbsent(userId, key -> Learnweb.getInstance().getResourceManager().getResourceThumbRateByUser(id, key));
+        return thumbRateByUser.computeIfAbsent(user.getId(), key -> Learnweb.dao().getResourceDao().findThumbRate(this, user).orElse(null));
     }
 
-    public boolean isThumbRatedByUser(int userId) {
-        Integer value = getThumbRateByUser(userId);
+    public boolean isThumbRatedByUser(User user) {
+        Integer value = getThumbRateByUser(user);
         return value != null;
     }
 
@@ -834,11 +841,32 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         try {
             this.source = ResourceService.valueOf(source.toLowerCase().replace("-", ""));
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid source: " + source + " resource " + this);
+            throw new IllegalArgumentException("Invalid source: " + source + " resource " + this, e);
         }
     }
 
     public LinkedHashMap<Integer, File> getFiles() {
+        if (files == null) {
+            files = new LinkedHashMap<>();
+
+            if (id > 0) {
+                List<File> loadedFiles = Learnweb.dao().getFileDao().findByResourceId(id);
+
+                for (File file : loadedFiles) {
+                    files.put(file.getType().ordinal(), file);
+
+                    if (file.getType() == File.TYPE.FILE_MAIN) {
+                        setFileUrl(file.getUrl());
+                        setFileName(file.getName());
+
+                        if (getStorageType() == LEARNWEB_RESOURCE) {
+                            setUrl(file.getUrl());
+                        }
+                    }
+                }
+            }
+        }
+
         return files;
     }
 
@@ -850,17 +878,17 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * This method does not persist the changes.
      * see: FileManager.addFileToResource(file, resource);
      */
-    public void addFile(File file) throws SQLException {
-        files.put(file.getType().ordinal(), file);
+    public void addFile(File file) {
+        getFiles().put(file.getType().ordinal(), file);
 
         if (id > 0 && file.getResourceId() != id) { // the resource is already stored, the new file needs to be added to the database
             file.setResourceId(id);
-            Learnweb.getInstance().getFileManager().addFileToResource(file, this);
+            Learnweb.dao().getFileDao().updateResource(this, file);
         }
     }
 
     public File getFile(File.TYPE fileType) {
-        return files.get(fileType.ordinal());
+        return getFiles().get(fileType.ordinal());
     }
 
     /**
@@ -1068,13 +1096,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public LinkedList<ArchiveUrl> getArchiveUrls() {
         if (id != -1 && archiveUrls == null) {
-            ResourceManager rm = Learnweb.getInstance().getResourceManager();
-            try {
-                archiveUrls = rm.getArchiveUrlsByResourceId(id);
-                archiveUrls.addAll(rm.getArchiveUrlsByResourceUrl(url));
-            } catch (SQLException e) {
-                log.error("Error while retrieving archive urls for resource: ", e);
-            }
+            archiveUrls = new LinkedList<>(Learnweb.dao().getArchiveUrlDao().findByResourceId(id));
+            archiveUrls.addAll(Learnweb.dao().getWaybackUrlDao().findByUrl(url));
         }
 
         return archiveUrls;
@@ -1084,15 +1107,14 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.archiveUrls = archiveUrls;
     }
 
-    public HashMap<String, List<ArchiveUrl>> getArchiveUrlsAsYears() {
-        HashMap<String, List<ArchiveUrl>> versions = new LinkedHashMap<>();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy");
-        for (ArchiveUrl a : archiveUrls) {
-            String year = df.format(a.getTimestamp());
+    public HashMap<Integer, List<ArchiveUrl>> getArchiveUrlsAsYears() {
+        HashMap<Integer, List<ArchiveUrl>> versions = new LinkedHashMap<>();
+        for (ArchiveUrl url : archiveUrls) {
+            int year = url.getTimestamp().getYear();
             if (!versions.containsKey(year)) {
                 versions.put(year, new ArrayList<>());
             }
-            versions.get(year).add(a);
+            versions.get(year).add(url);
         }
         return versions;
     }
@@ -1150,19 +1172,19 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.language = language;
     }
 
-    public Date getResourceTimestamp() {
+    public LocalDateTime getResourceTimestamp() {
         return resourceTimestamp;
     }
 
-    public void setResourceTimestamp(Date resourceTimestamp) {
+    public void setResourceTimestamp(LocalDateTime resourceTimestamp) {
         this.resourceTimestamp = resourceTimestamp;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -1184,25 +1206,32 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     @Override
-    public void moveTo(int newGroupId, int newFolderId) throws SQLException {
-        Learnweb.getInstance().getGroupManager().moveResource(this, newGroupId, newFolderId);
+    public void moveTo(int newGroupId, int newFolderId) {
+        // TODO @astappiev: throw an error instead of silent ignore
+        if (getGroupId() == newGroupId && getFolderId() == newFolderId) {
+            return; // if move to the same folder
+        }
+
+        setGroupId(newGroupId);
+        setFolderId(newFolderId);
+        save();
     }
 
     @Override
-    public void delete() throws SQLException {
+    public void delete() {
         setDeleted(true);
-        this.save();
+        save();
     }
 
-    public void deleteHard() throws SQLException {
-        Learnweb.getInstance().getResourceManager().deleteResourceHard(getId());
+    public void deleteHard() {
+        Learnweb.dao().getResourceDao().deleteHard(id);
     }
 
     /**
      * returns a string representation of the resources path.
      */
     @Override
-    public String getPath() throws SQLException {
+    public String getPath() {
         if (null == path) {
             Folder folder = getFolder();
             if (folder != null) {
@@ -1216,7 +1245,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * returns a string representation of the resources path.
      */
     @Override
-    public String getPrettyPath() throws SQLException {
+    public String getPrettyPath() {
         if (null == prettyPath) {
             Folder folder = getFolder();
             if (folder != null) {
@@ -1238,7 +1267,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     @Override
-    public boolean canViewResource(User user) throws SQLException {
+    public boolean canViewResource(User user) {
         if (isDeleted()) {
             return false;
         }
@@ -1254,7 +1283,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             case LEARNWEB_READABLE:
                 return user != null;
             case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) can view the resource
-                Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
+                Resource originalResource = Learnweb.dao().getResourceDao().findById(originalResourceId);
                 return originalResource != null && originalResource.getUserId() == user.getId(); // the submitter can view his resource
             case DEFAULT_RIGHTS: // if the resource is part of the group the group permissions are used
                 Group group = getGroup();
@@ -1277,20 +1306,16 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         }
 
         if (user.isModerator()) {
-            try {
-                if (getGroupId() == 0) { // check permission for a private resource
-                    return user.canModerateUser(getUser());
-                } else { // check group access permissions
-                    return getGroup().getCourse().isModerator(user);
-                }
-            } catch (SQLException e) {
-                log.error("user " + user + " can not moderate resource " + this);
+            if (getGroupId() == 0) { // check permission for a private resource
+                return user.canModerateUser(getUser());
+            } else { // check group access permissions
+                return getGroup().getCourse().isModerator(user);
             }
         }
         return false;
     }
 
-    public boolean canAnnotateResource(User user) throws SQLException {
+    public boolean canAnnotateResource(User user) {
         if (user == null || isDeleted()) {
             return false;
         }
@@ -1308,7 +1333,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         return false;
     }
 
-    public LogEntry getThumbnailUpdateInfo() throws SQLException {
+    public LogEntry getThumbnailUpdateInfo() {
         /*
          This method returned a LogEntry for the following query:
          select * FROM lw_user_log WHERE action=45 AND target_id = ? ORDER BY timestamp DESC LIMIT 1
@@ -1324,7 +1349,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      */
     public String setMetadataValue(String key, String value) {
         if (key == null || value == null) {
-            log.warn("Invalid arguments: key=" + key + "; value=" + value + "; Metadata not added");
+            log.warn("Invalid arguments: key={}; value={}; Metadata not added", key, value);
             return null;
         }
         return metadata.put(key, value.replace(METADATA_SEPARATOR, ','));
@@ -1346,15 +1371,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         return metadata;
     }
 
-    public void setMetadata(Object metadataObj) {
-        if (metadataObj instanceof HashMap<?, ?>) {
-            @SuppressWarnings("unchecked")
-            HashMap<String, String> hashMap = (HashMap<String, String>) metadataObj;
-            metadata = hashMap;
-        } else {
-            metadata = new HashMap<>();
-            log.error("resource = " + getId() + " unknown metadata format: " + metadataObj.getClass().getName());
-        }
+    public void setMetadata(HashMap<String, String> metadata) {
+        this.metadata = metadata;
 
         //clear wrapper
         metadataWrapper = null;
@@ -1375,23 +1393,23 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         return metadataMultiValue;
     }
 
-    public void cloneComments(List<Comment> comments) throws SQLException {
+    public void cloneComments(List<Comment> comments) {
         for (Comment comment : comments) {
             addComment(comment.getText(), comment.getUser());
         }
     }
 
-    public void cloneTags(OwnerList<Tag, User> tags) throws SQLException {
+    public void cloneTags(OwnerList<Tag, User> tags) {
         for (Tag tag : tags) {
             addTag(tag.getName(), tags.getElementOwner(tag));
         }
     }
 
-    public List<LogEntry> getLogs() throws SQLException {
+    public List<LogEntry> getLogs() {
         if (logs == null) {
             logs = new Expirable<>(Duration.of(10, ChronoUnit.SECONDS), () -> {
                 Instant start = Instant.now();
-                List<LogEntry> logs = Learnweb.dao().getUserLogDao().findByGroupIdAndTargetId(this.getGroupId(), this.getId(), Action.collectOrdinals(Action.LOGS_RESOURCE_FILTER));
+                List<LogEntry> logs = Learnweb.dao().getLogDao().findByGroupIdAndTargetId(this.getGroupId(), this.getId(), Action.collectOrdinals(Action.LOGS_RESOURCE_FILTER));
 
                 long duration = Duration.between(start, Instant.now()).toMillis();
                 if (duration > 100) {
@@ -1410,17 +1428,15 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * if there exists a cached version of the resource we will return this instance
      */
     protected Object readResolve() {
-        log.debug("Deserialize resource: " + id);
+        log.debug("Deserialize resource: {}", id);
         try {
-            if (Learnweb.getInstanceOptional().isPresent()) {
-                return Learnweb.getInstanceOptional().get().getResourceManager().getResource(id);
-            }
+            return Learnweb.dao().getResourceDao().findById(id);
         } catch (RuntimeException e) {
             if (!e.getMessage().startsWith("Learnweb is not initialized correctly.")) { // ignore this error
-                log.fatal("Can't load resource:  " + id, e);
+                log.fatal("Can't load resource: {}", id, e);
             }
         } catch (Exception e) {
-            log.fatal("Can't load resource:  " + id, e);
+            log.fatal("Can't load resource: {}", id, e);
         }
 
         return this;
@@ -1493,7 +1509,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         }
 
         @Override
-        public void putAll(Map<? extends String, ? extends String[]> m) {
+        public void putAll(Map<? extends String, ? extends String[]> map) {
         }
 
         @Override
@@ -1604,8 +1620,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         }
 
         @Override
-        public void putAll(Map<? extends String, ? extends String> m) {
-            wrappedMap.putAll(m);
+        public void putAll(Map<? extends String, ? extends String> map) {
+            wrappedMap.putAll(map);
         }
 
         @Override

@@ -1,8 +1,9 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,8 @@ import de.l3s.learnweb.user.UserDao;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(TagDao.TagMapper.class)
-public interface TagDao extends SqlObject {
+public interface TagDao extends SqlObject, Serializable {
+
     @SqlQuery("SELECT * FROM lw_tag WHERE tag_id = ?")
     Optional<Tag> findById(int tagId);
 
@@ -36,7 +38,7 @@ public interface TagDao extends SqlObject {
             .reduceRows(new OwnerList<>(), (list, rowView) -> {
                 Tag tag = rowView.getRow(Tag.class);
                 User user = rowView.getRow(User.class);
-                Date timestamp = rowView.getColumn("timestamp", Date.class);
+                LocalDateTime timestamp = rowView.getColumn("timestamp", LocalDateTime.class);
                 list.add(tag, user, timestamp);
                 return list;
             });
@@ -50,7 +52,7 @@ public interface TagDao extends SqlObject {
         params.put("tag_id", tag.getId() < 1 ? null : tag.getId());
         params.put("name", tag.getName());
 
-        Optional<Integer> tagId = SqlHelper.generateInsertQuery(getHandle(), "lw_tag", params)
+        Optional<Integer> tagId = SqlHelper.handleSave(getHandle(), "lw_tag", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         tagId.ifPresent(tag::setId);

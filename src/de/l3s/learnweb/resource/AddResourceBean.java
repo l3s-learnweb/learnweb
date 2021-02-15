@@ -1,8 +1,9 @@
 package de.l3s.learnweb.resource;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -130,15 +131,13 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             UploadedFile uploadedFile = event.getFile();
 
             log.debug("Getting the fileInfo from uploaded file...");
-            ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
-            FileInfo info = rme.getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
+            FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
 
             log.debug("Saving the file...");
             File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
             file.setDownloadLogActivated(true);
 
-            FileManager fileManager = getLearnweb().getFileManager();
-            fileManager.save(file, uploadedFile.getInputStream());
+            dao().getFileDao().save(file, uploadedFile.getInputStream());
 
             resource.addFile(file);
             resource.setUrl(file.getUrl());
@@ -146,7 +145,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             resource.setFileName(info.getFileName());
 
             log.debug("Extracting metadata from the file...");
-            rme.processFileResource(resource, info);
+            getLearnweb().getResourceMetadataExtractor().processFileResource(resource, info);
 
             log.debug("Creating thumbnails from the file...");
             Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(resource);
@@ -155,7 +154,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
             log.debug("Next step");
             formStep++;
-        } catch (Exception e) {
+        } catch (InterruptedException | IOException e) {
             addErrorMessage(e);
         }
     }
@@ -177,7 +176,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
             log.debug("Next step");
             formStep++;
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             addErrorMessage(e);
         }
     }
@@ -189,18 +188,13 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
         try {
             log.debug("Getting the fileInfo from uploaded file...");
-            FileInputStream sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType()));
-            ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
-            FileInfo info = rme.getFileInfo(sampleFile, resource.getFileName());
+            java.io.File sampleFile = FileUtility.getSampleOfficeFile(resource.getType());
+            FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(new FileInputStream(sampleFile), resource.getFileName());
 
             log.debug("Saving file...");
             File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
             file.setDownloadLogActivated(true);
-
-            // yes, we need to load it again, because `getFileInfo` closes stream
-            sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType()));
-            FileManager fileManager = getLearnweb().getFileManager();
-            fileManager.save(file, sampleFile);
+            dao().getFileDao().save(file, new FileInputStream(sampleFile));
 
             resource.setTitle(info.getTitle());
             resource.addFile(file);
@@ -215,7 +209,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             createThumbnailThread.join(1000);
 
             log.debug("Next step");
-        } catch (Exception e) {
+        } catch (InterruptedException | URISyntaxException | IOException e) {
             addErrorMessage(e);
         }
     }
@@ -225,46 +219,42 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             this.createDocument();
         }
 
-        try {
-            if (!targetGroup.canAddResources(getUser())) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
-                return;
-            }
-
-            if (resource.getType() == ResourceType.survey && resource instanceof SurveyResource) {
-                SurveyResource surveyResource = (SurveyResource) resource;
-                surveyResource.getSurvey().setTitle(resource.getTitle());
-                surveyResource.getSurvey().setDescription(resource.getDescription());
-            }
-
-            log.debug("addResource; res={}", resource);
-
-            resource.setDeleted(false);
-
-            // add resource to a group if selected
-            resource.setGroupId(targetGroup.getId());
-            resource.setFolderId(targetFolder != null ? targetFolder.getId() : 0);
-            resource.save();
-            getUser().setGuide(User.Guide.ADD_RESOURCE, true);
-
-            log(Action.adding_resource, resource.getGroupId(), resource.getId());
-
-            // create temporal thumbnails
-            resource.postConstruct();
-
-            // create thumbnails for the resource
-            if (!resource.isProcessing()
-                && (resource.getSmallThumbnail() == null || resource.getSmallThumbnail().getFileId() == 0 || resource.getType() == ResourceType.video)) {
-                new ResourcePreviewMaker.CreateThumbnailThread(resource).start();
-            }
-
-            addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-        } catch (Exception e) {
-            addErrorMessage(e);
+        if (!targetGroup.canAddResources(getUser())) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
+            return;
         }
+
+        if (resource.getType() == ResourceType.survey && resource instanceof SurveyResource) {
+            SurveyResource surveyResource = (SurveyResource) resource;
+            surveyResource.getSurvey().setTitle(resource.getTitle());
+            surveyResource.getSurvey().setDescription(resource.getDescription());
+        }
+
+        log.debug("addResource; res={}", resource);
+
+        resource.setDeleted(false);
+
+        // add resource to a group if selected
+        resource.setGroupId(targetGroup.getId());
+        resource.setFolderId(targetFolder != null ? targetFolder.getId() : 0);
+        resource.save();
+        getUser().setGuide(User.Guide.ADD_RESOURCE, true);
+
+        log(Action.adding_resource, resource.getGroupId(), resource.getId());
+
+        // create temporal thumbnails
+        resource.postConstruct();
+
+        // create thumbnails for the resource
+        if (!resource.isProcessing()
+            && (resource.getSmallThumbnail() == null || resource.getSmallThumbnail().getFileId() == 0 || resource.getType() == ResourceType.video)) {
+            new ResourcePreviewMaker.CreateThumbnailThread(resource).start();
+        }
+
+        addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
     }
 
-    public String getCurrentPath() throws SQLException {
+    public String getCurrentPath() {
         if (targetFolder != null) {
             return targetGroup.getTitle() + " > " + targetFolder.getPrettyPath();
         }

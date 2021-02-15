@@ -1,11 +1,11 @@
 package de.l3s.learnweb.user;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -62,9 +62,15 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private Locale locale;
 
     @Inject
+    private CourseDao courseDao;
+
+    @Inject
+    private UserDao userDao;
+
+    @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
-    public String onLoad() throws IOException, SQLException {
+    public String onLoad() {
         locale = Faces.getLocale();
 
         if (null == locale) {
@@ -73,7 +79,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         }
 
         if (StringUtils.isNotEmpty(wizard)) {
-            course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
+            course = courseDao.findByWizard(wizard).orElse(null);
             BeanAssert.validate(course, "register_invalid_wizard_error");
             BeanAssert.validate(!course.isWizardDisabled(), "registration.wizard_disabled");
 
@@ -98,27 +104,43 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         return null;
     }
 
-    private String fastLogin() throws SQLException, IOException {
-        User user = getLearnweb().getUserManager().getUserByUsername(fastLogin);
+    private String fastLogin() {
+        Optional<User> existingUser = userDao.findByUsername(fastLogin);
 
-        if (user != null) {
-            if (user.getPassword() == null && user.isMemberOfCourse(course.getId())) {
-                return LoginBean.loginUser(this, user);
+        if (existingUser.isPresent()) {
+            if (existingUser.get().getPassword() == null && existingUser.get().isMemberOfCourse(course.getId())) {
+                return LoginBean.loginUser(this, existingUser.get());
             } else {
                 addMessage(FacesMessage.SEVERITY_FATAL, "You should use password to login.");
                 return "/lw/user/login.xhtml?faces-redirect=true";
             }
         } else {
-            user = new User();
+            User user = new User();
             user.setUsername(fastLogin);
             user.setEmail(null);
             user.setPassword(null);
             user.setTimeZone(ZoneId.of("Europe/Berlin"));
             user.setLocale(locale);
 
-            getLearnweb().getUserManager().registerUser(user, course);
+            registerUser(user, course);
             return LoginBean.loginUser(this, user);
         }
+    }
+
+    private User registerUser(final User user, Course course) {
+        if (null == course) {
+            course = courseDao.findByWizard("default").orElse(null);
+        }
+
+        user.setOrganisationId(course.getOrganisationId());
+        user.setRegistrationDate(LocalDateTime.now());
+        user.setPreferences(new HashMap<>());
+        user.setDefaultProfilePicture();
+
+        userDao.save(user);
+
+        course.addUser(user);
+        return user;
     }
 
     /**
@@ -129,14 +151,14 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private ZoneId getZoneId() {
         try {
             return ZoneId.of(getTimeZone());
-        } catch (NullPointerException | DateTimeException e) {
+        } catch (RuntimeException e) {
             log.error("Invalid timezone '{}' given for user '{}' will use default value.", getTimeZone(), getUsername(), e);
         }
 
         return ZoneId.of("GMT");
     }
 
-    public String register() throws IOException, SQLException {
+    public String register() {
         final User user = new User();
         user.setUsername(username);
         user.setEmail(email);
@@ -149,7 +171,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             user.setAffiliation(affiliation);
         }
 
-        getLearnweb().getUserManager().registerUser(user, course);
+        registerUser(user, course);
 
         log(Action.register, 0, 0, null, user);
         if (null != course && course.getDefaultGroupId() != 0) {
@@ -169,12 +191,12 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         return LoginBean.loginUser(this, user);
     }
 
-    public void validateUsername(FacesContext context, UIComponent component, Object value) throws SQLException {
+    public void validateUsername(FacesContext context, UIComponent component, Object value) {
         String newName = ((String) value).trim();
 
         if (newName.length() < 2) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "The username is to short."));
-        } else if (getLearnweb().getUserManager().isUsernameAlreadyTaken(newName)) {
+        } else if (userDao.findByUsername(newName).isPresent()) {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
         }
     }

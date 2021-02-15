@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -9,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
@@ -79,8 +78,8 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     }
 
     @Override
-    public Group getGroup() throws SQLException {
-        return Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+    public Group getGroup() {
+        return Learnweb.dao().getGroupDao().findById(groupId);
     }
 
     public int getParentFolderId() {
@@ -91,20 +90,20 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         this.parentFolderId = parentFolderId;
     }
 
-    public Folder getParentFolder() throws SQLException {
+    public Folder getParentFolder() {
         if (parentFolderId == 0) {
             return null;
         }
 
         if (parentFolderId == id) {
-            log.warn("Folder " + id + " has itself as parent folder.");
+            log.warn("Folder {} has itself as parent folder.", id);
             return null;
         }
 
-        return Learnweb.getInstance().getGroupManager().getFolder(parentFolderId);
+        return Learnweb.dao().getFolderDao().findById(parentFolderId);
     }
 
-    public boolean isChildOf(int folderId) throws SQLException {
+    public boolean isChildOf(int folderId) {
         if (folderId == 0) {
             return true;
         }
@@ -120,12 +119,12 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         return false;
     }
 
-    public boolean isParentOf(int folderId) throws SQLException {
+    public boolean isParentOf(int folderId) {
         if (folderId == 0) {
             return false;
         }
 
-        Folder parentFolder = Learnweb.getInstance().getGroupManager().getFolder(folderId);
+        Folder parentFolder = Learnweb.dao().getFolderDao().findById(folderId);
         return parentFolder.isChildOf(getId());
     }
 
@@ -167,11 +166,11 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     }
 
     @Override
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (userId < 0) {
             return null;
         }
-        return Learnweb.getInstance().getUserManager().getUser(userId);
+        return Learnweb.dao().getUserDao().findById(userId);
     }
 
     @Override
@@ -179,19 +178,19 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         this.userId = user.getId();
     }
 
-    public List<Resource> getResources() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().getResourcesByFolderId(id);
+    public List<Resource> getResources() {
+        return Learnweb.dao().getResourceDao().findByFolderId(id);
     }
 
-    public List<Resource> getResourcesSubset() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().getFolderResourcesByUserId(groupId, parentFolderId, userId, 4);
+    public List<Resource> getResourcesSubset() {
+        return Learnweb.dao().getResourceDao().findByGroupIdAndFolderIdAndOwnerId(groupId, parentFolderId, userId, 4);
     }
 
     /**
      * @return a string representation of the resources path
      */
     @Override
-    public String getPath() throws SQLException {
+    public String getPath() {
         if (null == path) {
             StringBuilder sb = new StringBuilder();
 
@@ -214,7 +213,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
      * @return a string representation of the resources path for views
      */
     @Override
-    public String getPrettyPath() throws SQLException {
+    public String getPrettyPath() {
         if (null == prettyPath) {
             StringBuilder sb = new StringBuilder();
 
@@ -231,26 +230,62 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     }
 
     @Override
-    public List<Folder> getSubFolders() throws SQLException {
+    public List<Folder> getSubFolders() {
         if (subFolders == null) {
-            subFolders = Learnweb.getInstance().getGroupManager().getFolders(groupId, id);
+            subFolders = Learnweb.dao().getFolderDao().findByGroupIdAndParentFolderId(groupId, id);
         }
 
         return subFolders;
     }
 
     @Override
-    public Folder save() throws SQLException {
-        return Learnweb.getInstance().getGroupManager().saveFolder(this);
+    public Folder save() {
+        Learnweb.dao().getFolderDao().save(this);
+        return this;
     }
 
     @Override
-    public void moveTo(int newGroupId, int newParentFolderId) throws SQLException {
-        Learnweb.getInstance().getGroupManager().moveFolder(this, newParentFolderId, newGroupId);
+    public void moveTo(int newGroupId, int newFolderId) {
+        // TODO @astappiev: throw an error instead of silent ignore
+        if (getId() == newFolderId) {
+            return; // if move to itself
+        }
+        if (getGroupId() == newGroupId && isParentOf(newFolderId)) {
+            return; // if move to own sub folder
+        }
+
+        int groupId = getGroupId();
+        int parentFolderId = getParentFolderId();
+        List<Folder> subFolders = getSubFolders();
+
+        setGroupId(newGroupId);
+        setParentFolderId(newFolderId);
+        save();
+
+        for (Folder subFolder : subFolders) {
+            subFolder.moveTo(newGroupId, getId());
+        }
+
+        for (Resource resource : getResources()) {
+            resource.setGroupId(newGroupId);
+            resource.save();
+        }
+
+        if (newFolderId > 0) {
+            Learnweb.dao().getFolderDao().findById(newFolderId).clearCaches();
+        } else if (newGroupId > 0) {
+            Learnweb.dao().getGroupDao().findById(newGroupId).clearCaches();
+        }
+
+        if (parentFolderId > 0) {
+            Learnweb.dao().getFolderDao().findById(parentFolderId).clearCaches();
+        } else if (groupId > 0) {
+            Learnweb.dao().getGroupDao().findById(groupId).clearCaches();
+        }
     }
 
     @Override
-    public void delete() throws SQLException {
+    public void delete() {
         for (Folder folder : this.getSubFolders()) {
             folder.delete();
         }
@@ -259,8 +294,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
             resource.delete();
         }
 
-        setDeleted(true);
-        this.save();
+        Learnweb.dao().getFolderDao().deleteSoft(id);
 
         Folder parentFolder = this.getParentFolder();
 
@@ -277,28 +311,24 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         path = null;
         prettyPath = null;
 
-        try {
-            if (getSubFolders() != null) {
-                if (isClearSubRecurs) {
-                    for (Folder folder : getSubFolders()) {
-                        folder.clearCaches(false, true);
-                    }
+        if (getSubFolders() != null) {
+            if (isClearSubRecurs) {
+                for (Folder folder : getSubFolders()) {
+                    folder.clearCaches(false, true);
                 }
-
-                subFolders = null;
             }
 
-            if (isClearParent && this.getParentFolderId() > 0) {
-                getParentFolder().clearCaches(false, false);
-            }
-
-        } catch (SQLException e) {
-            log.fatal("Couldn't clear folder cache", e);
+            subFolders = null;
         }
+
+        if (isClearParent && this.getParentFolderId() > 0) {
+            getParentFolder().clearCaches(false, false);
+        }
+
     }
 
     @Override
-    public boolean canViewResource(User user) throws SQLException {
+    public boolean canViewResource(User user) {
         Group group = getGroup();
         if (group != null) {
             return group.canViewResources(user);

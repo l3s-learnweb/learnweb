@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -18,9 +19,9 @@ import de.l3s.util.SqlHelper;
 import de.l3s.util.StringHelper;
 
 @RegisterRowMapper(OrganisationDao.OrganisationMapper.class)
-public interface OrganisationDao extends SqlObject {
+public interface OrganisationDao extends SqlObject, Serializable {
     int FIELDS = 1; // number of options_fieldX fields, increase if Organisation.Options has more than 64 values
-    ICache<Organisation> cache = Cache.of(Organisation.class);
+    ICache<Organisation> cache = new Cache<>(10000);
 
     default Organisation findById(int organisationId) {
         Organisation organisation = cache.get(organisationId);
@@ -28,7 +29,7 @@ public interface OrganisationDao extends SqlObject {
             return organisation;
         }
 
-        return getHandle().select("SELECT * FROM `lw_organisation` WHERE organisation_id = ?", organisationId)
+        return getHandle().select("SELECT * FROM lw_organisation WHERE organisation_id = ?", organisationId)
             .map(new OrganisationMapper()).findOne().orElse(null);
     }
 
@@ -38,7 +39,7 @@ public interface OrganisationDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_organisation WHERE title = ?")
     Optional<Organisation> findByTitle(String title);
 
-    @SqlQuery("SELECT DISTINCT author FROM `lw_course` JOIN lw_group USING(course_id) JOIN lw_resource USING(group_id) WHERE `organisation_id` = ?")
+    @SqlQuery("SELECT DISTINCT author FROM lw_course JOIN lw_group USING(course_id) JOIN lw_resource USING(group_id) WHERE organisation_id = ?")
     List<String> findAuthors(int organisationId);
 
     default void save(Organisation organisation) {
@@ -69,7 +70,7 @@ public interface OrganisationDao extends SqlObject {
         params.put("glossary_languages", StringHelper.join(organisation.getGlossaryLanguages()));
         params.put("css_file", organisation.getCssFile());
 
-        Optional<Integer> organisationId = SqlHelper.generateInsertQuery(getHandle(), "lw_organisation", params)
+        Optional<Integer> organisationId = SqlHelper.handleSave(getHandle(), "lw_organisation", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         organisationId.ifPresent(organisation::setId);

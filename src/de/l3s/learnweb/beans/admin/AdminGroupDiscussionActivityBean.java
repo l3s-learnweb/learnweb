@@ -6,13 +6,13 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +28,7 @@ import com.google.gson.JsonParser;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupDao;
 
 /**
  * Used to extract activities from http://hypothes.is.
@@ -51,9 +52,12 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     private int groupId;
     private List<AnnotationEntity> groupAnnotations;
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private GroupDao groupDao;
+
+    public void onLoad() {
         try {
-            Group group = getLearnweb().getGroupManager().getGroupById(groupId);
+            Group group = groupDao.findById(groupId);
             BeanAssert.isFound(group);
 
             String hypothesisLink = group.getHypothesisLink();

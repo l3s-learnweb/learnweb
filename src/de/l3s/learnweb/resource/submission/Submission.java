@@ -1,21 +1,21 @@
 package de.l3s.learnweb.resource.submission;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.survey.SurveyUserAnswers;
 import de.l3s.learnweb.user.Course;
+import de.l3s.util.HasId;
 
-public class Submission implements Serializable {
+public class Submission implements Serializable, HasId {
     private static final long serialVersionUID = -3143872721852606973L;
     private static final Logger log = LogManager.getLogger(Submission.class);
 
@@ -23,8 +23,8 @@ public class Submission implements Serializable {
     private int courseId;
     private String title;
     private String description;
-    private Date openDatetime = new Date();
-    private Date closeDatetime = new Date();
+    private LocalDateTime openDatetime = LocalDateTime.now();
+    private LocalDateTime closeDatetime = LocalDateTime.now();
     private int noOfResources = 3; // Default max no. of resources 3
 
     // Fields to handle link display based on survey submitted or not
@@ -37,10 +37,6 @@ public class Submission implements Serializable {
     private transient Course course;
     private transient List<SubmittedResources> submittedResourcesGroupedByUser;
     private transient SurveyUserAnswers surveyAnswer;
-
-    public Submission() {
-
-    }
 
     public int getId() {
         return id;
@@ -74,30 +70,20 @@ public class Submission implements Serializable {
         this.description = description;
     }
 
-    public Date getOpenDatetime() {
+    public LocalDateTime getOpenDatetime() {
         return openDatetime;
     }
 
-    public void setOpenDatetime(Date openDatetime) {
+    public void setOpenDatetime(LocalDateTime openDatetime) {
         this.openDatetime = openDatetime;
     }
 
-    public Date getCloseDatetime() {
+    public LocalDateTime getCloseDatetime() {
         return closeDatetime;
     }
 
-    public void setCloseDatetime(Date closeDatetime) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(closeDatetime);
-
-        // no time was set use end of day
-        if (c.get(Calendar.HOUR_OF_DAY) == 0 && c.get(Calendar.MINUTE) == 0 && c.get(Calendar.SECOND) == 0) {
-            c.set(Calendar.HOUR_OF_DAY, 23);
-            c.set(Calendar.MINUTE, 59);
-            c.set(Calendar.SECOND, 59);
-            c.set(Calendar.MILLISECOND, 999);
-        }
-        this.closeDatetime = c.getTime();
+    public void setCloseDatetime(LocalDateTime closeDatetime) {
+        this.closeDatetime = closeDatetime.toLocalDate().atTime(LocalTime.MAX);
     }
 
     public int getNoOfResources() {
@@ -115,18 +101,15 @@ public class Submission implements Serializable {
     }
 
     public boolean isPastSubmission() {
-        Date today = new Date();
-        return closeDatetime.before(today);
+        return closeDatetime.isBefore(LocalDateTime.now());
     }
 
     public boolean isCurrentSubmission() {
-        Date today = new Date();
-        return !openDatetime.after(today) && !closeDatetime.before(today);
+        return !openDatetime.isAfter(LocalDateTime.now()) && !closeDatetime.isBefore(LocalDateTime.now());
     }
 
     public boolean isFutureSubmission() {
-        Date today = new Date();
-        return openDatetime.after(today);
+        return openDatetime.isAfter(LocalDateTime.now());
     }
 
     public boolean isSurveyMandatory() {
@@ -158,12 +141,8 @@ public class Submission implements Serializable {
 
         // load surveyAnswer
         if (surveyResourceId > 0 && surveyAnswer == null) {
-            try {
-                SurveyResource surveyResource = Learnweb.getInstance().getSurveyManager().getSurveyResource(surveyResourceId);
-                surveyAnswer = surveyResource.getAnswersOfUser(userId);
-            } catch (SQLException e) {
-                log.error("Error while fetching survey resource " + getSurveyResourceId() + " for submission " + getId(), e);
-            }
+            SurveyResource surveyResource = Learnweb.dao().getSurveyDao().findResourceById(surveyResourceId).orElseThrow();
+            surveyAnswer = surveyResource.getAnswersOfUser(userId);
         }
 
         if (surveyAnswer != null) {
@@ -187,9 +166,9 @@ public class Submission implements Serializable {
     /**
      * Return all resources submitted for this submission form grouped by user.
      */
-    public List<SubmittedResources> getSubmittedResourcesGroupedByUser() throws SQLException {
+    public List<SubmittedResources> getSubmittedResourcesGroupedByUser() {
         if (submittedResourcesGroupedByUser == null) {
-            submittedResourcesGroupedByUser = Learnweb.getInstance().getSubmissionManager().getSubmittedResourcesGroupedByUser(id);
+            submittedResourcesGroupedByUser = Learnweb.dao().getSubmissionDao().findSubmittedResources(id);
         }
         return submittedResourcesGroupedByUser;
     }
@@ -204,7 +183,7 @@ public class Submission implements Serializable {
 
     public Course getCourse() {
         if (course == null && courseId > 0) {
-            course = Learnweb.getInstance().getCourseManager().getCourseById(courseId);
+            course = Learnweb.dao().getCourseDao().findById(courseId);
         }
         return course;
     }

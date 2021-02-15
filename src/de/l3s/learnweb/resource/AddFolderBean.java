@@ -26,23 +26,19 @@ public class AddFolderBean extends ApplicationBean implements Serializable {
     }
 
     public void saveFolder() {
-        try {
-            if (!targetGroup.canAddResources(getUser())) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
-                return;
-            }
-
-            folder.setGroupId(targetGroup.getId());
-            folder.setParentFolderId(targetFolder != null ? targetFolder.getId() : 0);
-            folder.setUser(getUser());
-            folder.save();
-
-            log(Action.add_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
-
-            addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", folder.getTitle());
-        } catch (Exception e) {
-            addErrorMessage(e);
+        if (!targetGroup.canAddResources(getUser())) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
+            return;
         }
+
+        folder.setGroupId(targetGroup.getId());
+        folder.setParentFolderId(targetFolder != null ? targetFolder.getId() : 0);
+        folder.setUser(getUser());
+        folder.save();
+
+        log(Action.add_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
+
+        addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", folder.getTitle());
     }
 
     public Group getTargetGroup() {

@@ -1,7 +1,6 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
@@ -51,12 +50,7 @@ public final class UserView implements Serializable {
      */
     public String getGroupsTitles() {
         if (null == groupsTitles) {
-            try {
-                groupsTitles = user.getGroups().stream().map(Group::getTitle).sorted().collect(Collectors.joining(", "));
-            } catch (SQLException e) {
-                log.error("Can't load groups of user {}", user, e);
-                groupsTitles = "[error]";
-            }
+            groupsTitles = user.getGroups().stream().map(Group::getTitle).sorted().collect(Collectors.joining(", "));
         }
 
         return groupsTitles;
@@ -64,12 +58,7 @@ public final class UserView implements Serializable {
 
     public String getCoursesTitles() {
         if (null == coursesTitles) {
-            try {
-                coursesTitles = user.getCourses().stream().map(Course::getTitle).sorted().collect(Collectors.joining(", "));
-            } catch (SQLException e) {
-                log.error("Can't load courses of user {}", user, e);
-                coursesTitles = "[error]";
-            }
+            coursesTitles = user.getCourses().stream().map(Course::getTitle).sorted().collect(Collectors.joining(", "));
         }
 
         return coursesTitles;
@@ -93,7 +82,7 @@ public final class UserView implements Serializable {
         return user.getEmail();
     }
 
-    public Instant getLastLoginDate() throws SQLException {
+    public Instant getLastLoginDate() {
         return user.getLastLoginDate();
     }
 
@@ -134,7 +123,7 @@ public final class UserView implements Serializable {
 
         List<UserView> userViews = users.stream().map(UserView::of).collect(Collectors.toList());
 
-        if (preloadFields.length > 0 && users.size() > 0) { // preload specified fields
+        if (preloadFields.length > 0 && !users.isEmpty()) { // preload specified fields
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.submit(() -> {
                 Misc.sleep(2000); // sleep so that the page gets loaded asap

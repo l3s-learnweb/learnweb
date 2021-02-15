@@ -1,71 +1,30 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import de.l3s.learnweb.app.Learnweb;
+import de.l3s.util.HasId;
 
-import de.l3s.learnweb.Learnweb;
-
-// TODO @hulyi: this class needs to be refactored and split into a dao and pojo class
-public class Message implements Comparable<Message>, Serializable {
+public class Message implements Comparable<Message>, Serializable, HasId {
     private static final long serialVersionUID = -5510804242529450186L;
-    private static final Logger log = LogManager.getLogger(Message.class);
 
     private int id;
-    private User fromUser;
-    private User toUser;
+    private int fromUserId;
+    private int toUserId;
     private String title;
     private String text;
     private boolean seen = false;
     private boolean read = false;
-    private Date time;
+    private LocalDateTime time;
 
-    public void save() throws SQLException {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement(
-            "INSERT INTO message (from_user, to_user, m_title, m_text, m_seen, m_read, m_time) " + "VALUES (?,?,?,?,?,?,?)");
-        stmt.setInt(1, fromUser.getId());
-        stmt.setInt(2, toUser.getId());
-        stmt.setString(3, title);
-
-        //String convertedText = convertText(text);
-        stmt.setString(4, text);
-        stmt.setBoolean(5, seen);
-        stmt.setBoolean(6, read);
-        stmt.setString(7, format.format(time.getTime()));
-        stmt.executeUpdate();
-        stmt.close();
-    }
-
-    public void seen() throws SQLException {
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where message_id = ?");
-        stmt.setInt(1, this.id);
-
-        stmt.executeUpdate();
-        stmt.close();
-    }
-
-    public void messageRead() throws SQLException {
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_read=1 where message_id = ?");
-        stmt.setInt(1, this.id);
-
-        stmt.executeUpdate();
-        stmt.close();
-    }
+    private transient User fromUser;
+    private transient User toUser;
 
     @Override
     public int compareTo(Message g) {
-        return (this.toString()).compareTo(g.toString());
+        return this.toString().compareTo(g.toString());
     }
 
     @Override
@@ -77,22 +36,18 @@ public class Message implements Comparable<Message>, Serializable {
             return false;
         }
         final Message message = (Message) o;
-        return id == message.id && seen == message.seen && read == message.read
-            && Objects.equals(fromUser, message.fromUser) && Objects.equals(toUser, message.toUser)
-            && Objects.equals(title, message.title) && Objects.equals(text, message.text)
-            && Objects.equals(time, message.time);
+        return id == message.id && fromUserId == message.fromUserId && toUserId == message.toUserId && seen == message.seen && read == message.read
+            && title.equals(message.title) && text.equals(message.text) && time.equals(message.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fromUser, toUser, title, text, seen, read, time);
+        return Objects.hash(id, fromUserId, toUserId, title, text, seen, read, time);
     }
 
     @Override
     public String toString() {
-        String s = fromUser.getUsername() + " -> " + toUser.getUsername() + "\n" + time + ": " + "\n" + title;
-
-        return s;
+        return String.format("%s -> %s%n%s: %n%s", fromUser.getUsername(), toUser.getUsername(), time, title);
     }
 
     public int getId() {
@@ -103,19 +58,43 @@ public class Message implements Comparable<Message>, Serializable {
         this.id = id;
     }
 
+    public int getFromUserId() {
+        return fromUserId;
+    }
+
+    public void setFromUserId(final int fromUserId) {
+        this.fromUserId = fromUserId;
+    }
+
     public User getFromUser() {
+        if (fromUser == null) {
+            fromUser = Learnweb.dao().getUserDao().findById(fromUserId);
+        }
         return fromUser;
     }
 
     public void setFromUser(User fromUser) {
+        this.fromUserId = fromUser.getId();
         this.fromUser = fromUser;
     }
 
+    public int getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(final int toUserId) {
+        this.toUserId = toUserId;
+    }
+
     public User getToUser() {
+        if (toUser == null) {
+            toUser = Learnweb.dao().getUserDao().findById(toUserId);
+        }
         return toUser;
     }
 
     public void setToUser(User toUser) {
+        this.toUserId = toUser.getId();
         this.toUser = toUser;
     }
 
@@ -144,11 +123,6 @@ public class Message implements Comparable<Message>, Serializable {
     }
 
     public boolean isRead() {
-        try {
-            this.messageRead();
-        } catch (SQLException e) {
-            log.error("unhandled error", e);
-        }
         return read;
     }
 
@@ -156,119 +130,11 @@ public class Message implements Comparable<Message>, Serializable {
         this.read = read;
     }
 
-    public Date getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
-
-    public String getFormattedTime() {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String s = format.format(getTime());
-        return s;
-    }
-
-    public static int howManyNotSeenMessages(User user) throws SQLException {
-        int count = 0;
-        PreparedStatement pstmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement(
-            "SELECT count(*) as xCount FROM `message` WHERE to_user = ? and m_seen = 0");
-
-        pstmtGetUsers.setInt(1, user.getId());
-        ResultSet rs = pstmtGetUsers.executeQuery();
-
-        if (rs.next()) {
-            count = rs.getInt("xCount");
-        }
-        return count;
-    }
-
-    public static ArrayList<Message> getAllMessagesToUser(User user) throws SQLException {
-        return getAllMessagesToUser(user, -1);
-
-    }
-
-    public static ArrayList<Message> getAllMessagesToUser(User user, int limit) throws SQLException {
-        ArrayList<Message> messageList = new ArrayList<>();
-        if (user == null) {
-            return messageList;
-        }
-
-        String limitStr = limit <= 0 ? "" : " limit " + limit;
-
-        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc" + limitStr);
-
-        stmtGetUsers.setInt(1, user.getId());
-        ResultSet rs = stmtGetUsers.executeQuery();
-        Message message;
-
-        User toUser = null;
-        while (rs.next()) {
-            message = new Message();
-            message.setId(rs.getInt("message_id"));
-            UserManager um = Learnweb.getInstance().getUserManager();
-            User fromUser = um.getUser(rs.getInt("from_user"));
-            message.setFromUser(fromUser);
-            if (toUser == null) {
-                toUser = um.getUser(rs.getInt("to_user"));
-            }
-            message.setToUser(toUser);
-            message.setTitle(rs.getString("m_title"));
-            message.setText(rs.getString("m_text"));
-            message.setSeen(rs.getBoolean("m_seen"));
-            message.setRead(rs.getBoolean("m_read"));
-            message.setTime(rs.getTimestamp("m_time"));
-
-            messageList.add(message);
-        }
-        stmtGetUsers.close();
-
-        return messageList;
-    }
-
-    public static ArrayList<Message> getAllMessagesFromUser(User user) throws SQLException {
-        ArrayList<Message> messageList = new ArrayList<>();
-        if (user == null) {
-            return messageList;
-        }
-
-        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE from_user = ? order by m_time desc");
-
-        stmtGetUsers.setInt(1, user.getId());
-        ResultSet rs = stmtGetUsers.executeQuery();
-        Message message;
-
-        User toUser = null;
-        while (rs.next()) {
-            message = new Message();
-            message.setId(rs.getInt("message_id"));
-            UserManager um = Learnweb.getInstance().getUserManager();
-            User fromUser = um.getUser(rs.getInt("from_user"));
-            message.setFromUser(fromUser);
-            if (toUser == null) {
-                toUser = um.getUser(rs.getInt("to_user"));
-            }
-            message.setToUser(toUser);
-            message.setTitle(rs.getString("m_title"));
-            message.setText(rs.getString("m_text"));
-            message.setSeen(rs.getBoolean("m_seen"));
-            message.setRead(rs.getBoolean("m_read"));
-            message.setTime(rs.getTimestamp("m_time"));
-
-            messageList.add(message);
-        }
-        stmtGetUsers.close();
-
-        return messageList;
-    }
-
-    public static void setAllMessagesSeen(int userId) throws SQLException {
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where to_user = ?");
-        stmt.setInt(1, userId);
-
-        stmt.executeUpdate();
-        stmt.close();
-    }
-
 }

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.forum;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -20,7 +21,7 @@ import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(ForumPostDao.ForumPostMapper.class)
-public interface ForumPostDao extends SqlObject {
+public interface ForumPostDao extends SqlObject, Serializable {
 
     @SqlQuery("SELECT * FROM lw_forum_post WHERE post_id = ?")
     Optional<ForumPost> findById(int postId);
@@ -55,7 +56,7 @@ public interface ForumPostDao extends SqlObject {
         params.put("post_edit_user_id", post.getEditUserId());
         params.put("category", post.getCategory());
 
-        Optional<Integer> postId = SqlHelper.generateInsertQuery(getHandle(), "lw_forum_post", params)
+        Optional<Integer> postId = SqlHelper.handleSave(getHandle(), "lw_forum_post", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         postId.ifPresent(post::setId);
@@ -69,8 +70,8 @@ public interface ForumPostDao extends SqlObject {
             post.setTopicId(rs.getInt("topic_id"));
             post.setUserId(rs.getInt("user_id"));
             post.setText(rs.getString("text"));
-            post.setDate(RsHelper.getDate(rs.getTimestamp("post_time")));
-            post.setLastEditDate(RsHelper.getDate(rs.getTimestamp("post_edit_time")));
+            post.setDate(RsHelper.getLocalDateTime(rs.getTimestamp("post_time")));
+            post.setLastEditDate(RsHelper.getLocalDateTime(rs.getTimestamp("post_edit_time")));
             post.setEditCount(rs.getInt("post_edit_count"));
             post.setEditUserId(rs.getInt("post_edit_user_id"));
             post.setCategory(rs.getString("category"));

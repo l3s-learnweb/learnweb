@@ -1,11 +1,7 @@
 package de.l3s.learnweb.resource;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -17,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
@@ -96,32 +92,13 @@ public class ResourceMetaDataBean {
 
     private static List<String> loadAuthors(int organisationId) {
         try {
-            HashSet<String> uniqueAuthors = new HashSet<>();
-
-            Connection connection = Learnweb.getInstance().getConnection();
-            PreparedStatement select = connection.prepareStatement("SELECT author FROM `lw_course` JOIN lw_group USING(course_id) JOIN lw_resource USING(group_id) WHERE `organisation_id` = ?");
-            select.setInt(1, 480);
-            ResultSet rs = select.executeQuery();
-            while (rs.next()) {
-                String author = rs.getString(1);
-                if (author == null || author.length() < 2) {
-                    continue;
-                }
-
-                uniqueAuthors.add(author);
-            }
-            rs.close();
-            select.close();
-
-            ArrayList<String> authors = new ArrayList<>(uniqueAuthors);
-
+            List<String> authors = Learnweb.dao().getOrganisationDao().findAuthors(480);
             authorLists.put(organisationId, authors);
 
-            log.debug("Load " + authors.size() + " authors of organisation: " + organisationId);
-
+            log.debug("Load {} authors of organisation: {}", authors.size(), organisationId);
             return authors;
         } catch (Exception e) {
-            log.fatal("Can't complete author; organisation=" + organisationId, e);
+            log.fatal("Can't complete author; organisation={}", organisationId, e);
         }
         return null;
     }

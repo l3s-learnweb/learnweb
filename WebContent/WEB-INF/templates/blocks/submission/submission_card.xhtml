@@ -73,13 +73,13 @@
             <div class="form-group mt-3 d-flex flex-column">
                     <span class="fw-lighter">#{msg['Submission.open_date']}:
                         <h:outputText styleClass="fw-light" value="#{submission.openDatetime}">
-                            <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
+                            <f:convertDateTime dateStyle="long" type="localDateTime" timeZone="#{userBean.timeZone}"/>
                         </h:outputText>
                     </span>
 
                 <span class="fw-lighter">#{msg['Submission.close_date']}:
                         <h:outputText styleClass="fw-light" value="#{submission.closeDatetime}">
-                            <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
+                            <f:convertDateTime dateStyle="long" type="localDateTime" timeZone="#{userBean.timeZone}"/>
                         </h:outputText>
                     </span>
 

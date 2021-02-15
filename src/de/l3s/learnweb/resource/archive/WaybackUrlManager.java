@@ -23,23 +23,18 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
+import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
+import javax.inject.Inject;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -52,104 +47,79 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.util.Misc;
 import de.l3s.util.URL;
 import de.l3s.util.UrlHelper;
 
 public final class WaybackUrlManager {
     private static final Logger log = LogManager.getLogger(WaybackUrlManager.class);
 
-    private static WaybackUrlManager instance;
-    private final Learnweb learnweb;
     private final LoadingCache<URL, UrlRecord> cache;
     private final CDXClient cdxClient;
 
-    private WaybackUrlManager(Learnweb learnweb) {
-        this.learnweb = learnweb;
+    @Inject
+    private WaybackUrlDao waybackUrlDao;
 
+    public WaybackUrlManager() {
         cdxClient = new CDXClient();
 
-        cache = CacheBuilder.newBuilder().maximumSize(3000000).build(new CacheLoader<>() {
-            @Override
-            public UrlRecord load(URL url) throws URISyntaxException, SQLException, RecordNotFoundException {
-                UrlRecord record = getUrlRecordFromDatabase(url);
+        cache = Caffeine.newBuilder().maximumSize(3000000).build(url -> {
+            Optional<UrlRecord> record = waybackUrlDao.findUrlRecordByUrl(url.toString());
 
-                if (null == record) {
-                    throw new RecordNotFoundException();
-                }
-
-                return record;
+            if (record.isEmpty()) {
+                throw new RecordNotFoundException();
             }
+
+            return record.get();
         });
 
         enableRelaxedSSLconnection();
     }
 
-    private Connection getConnection() throws SQLException {
-        return learnweb.getConnection();
-    }
-
     /**
      * @param url UTF8 or ASCII encoded URL
      */
-    public UrlRecord getUrlRecord(String url) throws URISyntaxException, SQLException {
-        URL asciiUrl = new URL(url);
-
-        UrlRecord newRecord;
-        try {
-            newRecord = cache.get(asciiUrl);
-        } catch (ExecutionException e) {
-            if (e.getCause() instanceof RecordNotFoundException) {
-                newRecord = new UrlRecord(asciiUrl); // create a new record for this url
-            } else {
-                log.error("fatal", e);
-                throw new RuntimeException(e);
-            }
-        }
-
-        return newRecord;
-    }
-
-    /**
-     * This method will only return cached records or null if no cached record was found.
-     */
-    public UrlRecord getCachedUrlRecord(String url) throws URISyntaxException {
+    public UrlRecord getUrlRecord(String url) throws URISyntaxException {
         URL asciiUrl = new URL(url);
 
         try {
             return cache.get(asciiUrl);
-        } catch (Throwable e) {
-            return null;
+        } catch (Exception e) {
+            if (e.getCause() instanceof RecordNotFoundException) {
+                // create a new record for this url
+                return new UrlRecord(asciiUrl);
+            } else {
+                log.error("fatal", e);
+                throw new IllegalStateException(e);
+            }
         }
     }
 
-    public boolean hasToBeUpdated(UrlRecord urlRecord, Date minAcceptableCrawlTime, Date minAcceptableStatusTime) throws SQLException {
-        if (minAcceptableCrawlTime != null && urlRecord.getCrawlDate().getTime() < minAcceptableCrawlTime.getTime()) {
+    public boolean hasToBeUpdated(UrlRecord urlRecord, Instant minAcceptableCrawlTime, Instant minAcceptableStatusTime) {
+        if (minAcceptableCrawlTime != null && urlRecord.getCrawlDate().isBefore(minAcceptableCrawlTime)) {
             return true;
         }
-        if (minAcceptableStatusTime != null && urlRecord.getStatusCodeDate().getTime() < minAcceptableStatusTime.getTime()) {
+        if (minAcceptableStatusTime != null && urlRecord.getStatusCodeDate().isBefore(minAcceptableStatusTime)) {
             return true;
         }
         return false;
     }
 
-    public boolean updateRecord(UrlRecord record, Date minAcceptableCrawlTime, Date minAcceptableStatusTime) throws SQLException {
-        boolean capturesUpdated = minAcceptableCrawlTime != null && updateRecordCaptures(record, minAcceptableCrawlTime.getTime());
-        boolean statusUpdated = minAcceptableStatusTime != null && updateStatusCode(record, minAcceptableStatusTime.getTime());
+    public boolean updateRecord(UrlRecord record, Instant minAcceptableCrawlTime, Instant minAcceptableStatusTime) {
+        boolean capturesUpdated = minAcceptableCrawlTime != null && updateRecordCaptures(record, minAcceptableCrawlTime);
+        boolean statusUpdated = minAcceptableStatusTime != null && updateStatusCode(record, minAcceptableStatusTime);
         if (capturesUpdated || statusUpdated) {
-            saveUrlRecord(record);
+            waybackUrlDao.saveUrlRecord(record);
+            cache.put(record.getUrl(), record);
             return true;
         }
         return false;
     }
 
-    private boolean updateStatusCode(UrlRecord urlRecord, long minAcceptableCrawlTime) {
-        if (urlRecord.getStatusCodeDate().getTime() > minAcceptableCrawlTime) {
+    private boolean updateStatusCode(UrlRecord urlRecord, Instant minAcceptableCrawlTime) {
+        if (urlRecord.getStatusCodeDate().isAfter(minAcceptableCrawlTime)) {
             return false; // already up-to-date
         }
 
@@ -159,7 +129,7 @@ public final class WaybackUrlManager {
             //statusCode = getStatusCode(urlRecord.getUrl().toString());
             getStatusCode(urlRecord);
         } catch (Throwable t) {
-            log.error("can't check url: " + urlRecord.getUrl(), t);
+            log.error("can't check url: {}", urlRecord.getUrl(), t);
         }
 
         // TODO @astappiev: insert content and status into wb_url_content
@@ -169,8 +139,8 @@ public final class WaybackUrlManager {
         return true;
     }
 
-    private boolean updateRecordCaptures(UrlRecord urlRecord, long minAcceptableStatusTime) {
-        if (urlRecord.getCrawlDate().getTime() > minAcceptableStatusTime) {
+    private boolean updateRecordCaptures(UrlRecord urlRecord, Instant minAcceptableStatusTime) {
+        if (urlRecord.getCrawlDate().isAfter(minAcceptableStatusTime)) {
             return false; // already up-to-date
         }
 
@@ -178,8 +148,8 @@ public final class WaybackUrlManager {
         url = url.substring(url.indexOf("//") + 2); // remove protocol (http(s)://)
 
         try {
-            Date lastCapture = null;
-            Date firstCapture = cdxClient.getFirstCaptureDate(url);
+            LocalDateTime lastCapture = null;
+            LocalDateTime firstCapture = cdxClient.getFirstCaptureDate(url);
 
             if (firstCapture != null) {
                 lastCapture = cdxClient.getLastCaptureDate(url);
@@ -193,104 +163,24 @@ public final class WaybackUrlManager {
                 urlRecord.setLastCapture(null);
             }
 
-            urlRecord.setCrawlDate(new Date());
+            urlRecord.setCrawlDate(Instant.now());
             return true;
 
-        } catch (ParseException | IOException e) {
-            log.error("Wayback error for: " + urlRecord.getUrl(), e);
+        } catch (IOException e) {
+            log.error("Wayback error for: {}", urlRecord.getUrl(), e);
         }
 
         return false;
     }
 
-    private UrlRecord getUrlRecordFromDatabase(URL asciiUrl) throws SQLException {
-        UrlRecord record = null;
-
-        PreparedStatement urlRecordSelect = getConnection().prepareStatement("SELECT `url_id`, `first_capture`, `last_capture`, `all_captures_fetched`, `crawl_time`, status_code, status_code_date FROM learnweb_large.wb_url WHERE url = ?");
-        urlRecordSelect.setString(1, asciiUrl.toString());
-        ResultSet rs = urlRecordSelect.executeQuery();
-        if (rs.next()) {
-            record = new UrlRecord(asciiUrl);
-            record.setId(rs.getLong(1));
-            record.setFirstCapture(timestampToDate(rs.getTimestamp(2)));
-            record.setLastCapture(timestampToDate(rs.getTimestamp(3)));
-            record.setAllCapturesFetched(rs.getInt(4) == 1);
-            record.setCrawlDate(timestampToDate(rs.getTimestamp(5)));
-            record.setStatusCode(rs.getShort(6));
-            record.setStatusCodeDate(timestampToDate(rs.getTimestamp(7)));
-        }
-        urlRecordSelect.close();
-
-        return record;
-    }
-
-    public UrlRecord saveUrlRecord(UrlRecord record) throws SQLException {
-        //log.debug("save " + record.toString());
-
-        if (record.getId() == -1L) { // record is not stored yet => insert it
-            try (PreparedStatement urlRecordInsert = getConnection().prepareStatement("INSERT INTO learnweb_large.wb_url (`url`, `first_capture`, `last_capture`, `crawl_time`, all_captures_fetched, status_code, status_code_date) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                Statement.RETURN_GENERATED_KEYS)) {
-                urlRecordInsert.setString(1, record.getUrl().toString());
-                urlRecordInsert.setTimestamp(2, record.isArchived() ? new Timestamp(record.getFirstCapture().getTime()) : null);
-                urlRecordInsert.setTimestamp(3, record.isArchived() ? new Timestamp(record.getLastCapture().getTime()) : null);
-                urlRecordInsert.setTimestamp(4, new java.sql.Timestamp(record.getCrawlDate().getTime()));
-                urlRecordInsert.setInt(5, record.isAllCapturesFetched() ? 1 : 0);
-                urlRecordInsert.setInt(6, record.getStatusCode());
-                urlRecordInsert.setTimestamp(7, new java.sql.Timestamp(record.getStatusCodeDate().getTime()));
-                urlRecordInsert.executeUpdate();
-
-                // get generated id
-                ResultSet rs = urlRecordInsert.getGeneratedKeys();
-                if (!rs.next()) {
-                    throw new SQLException("database error: no id generated");
-                }
-                record.setId(rs.getLong(1));
-            } catch (SQLIntegrityConstraintViolationException e) {
-                // if we catch a duplicate URL error we will try to merge the records
-                if (e.getErrorCode() != 1062) {
-                    log.error("error code " + e.getErrorCode());
-                    throw e;
-                }
-                UrlRecord record2 = getUrlRecordFromDatabase(record.getUrl());
-
-                if (record2 == null) {
-                    Misc.sleep(900);
-                    log.error("duplicated entry but record2 is null");
-                    record2 = getUrlRecordFromDatabase(record.getUrl());
-                }
-
-                if (!record2.equals(record)) {
-                    log.error("Duplicate entry error; they don't match; 1:" + record + "; 2: " + record2);
-                    throw e;
-                }
-            }
-        } else {
-            // record is already stored => updated it
-            PreparedStatement urlRecordUpdate = getConnection().prepareStatement("UPDATE learnweb_large.wb_url SET `first_capture` = ?, `last_capture` = ?, `crawl_time` = ?, all_captures_fetched = ?, status_code = ?, status_code_date = ? WHERE `url_id` = ?");
-            urlRecordUpdate.setTimestamp(1, record.isArchived() ? new Timestamp(record.getFirstCapture().getTime()) : null);
-            urlRecordUpdate.setTimestamp(2, record.isArchived() ? new Timestamp(record.getLastCapture().getTime()) : null);
-            urlRecordUpdate.setTimestamp(3, new java.sql.Timestamp(record.getCrawlDate().getTime()));
-            urlRecordUpdate.setInt(4, record.isAllCapturesFetched() ? 1 : 0);
-            urlRecordUpdate.setInt(5, record.getStatusCode());
-            urlRecordUpdate.setTimestamp(6, new java.sql.Timestamp(record.getStatusCodeDate().getTime()));
-            urlRecordUpdate.setLong(7, record.getId());
-            urlRecordUpdate.executeUpdate();
-            urlRecordUpdate.close();
-        }
-
-        cache.put(record.getUrl(), record);
-        return record;
-    }
-
-    public UrlRecord getStatusCode(UrlRecord urlRecord) throws IOException, URISyntaxException {
-
+    public UrlRecord getStatusCode(UrlRecord urlRecord) throws IOException {
         int responseCode = -1;
         String urlStr = urlRecord.getUrl().toString();
 
         urlStr = urlStr.replaceAll(" ", "%20"); //few urls from Bing do not encode space correctly
         String originalUrl = urlStr; // in case we get redirect we need to compare the urls
         int maxRedirects = 20;
-        String cookies = null;
+        StringJoiner cookies = new StringJoiner(";");
         List<String> seenURLs = null;
         ///seenURLs.add(urlStr);
 
@@ -308,9 +198,8 @@ public final class WaybackUrlManager {
                 connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
                 connection.setRequestProperty("Referer", "https://www.bing.com/");
                 connection.setRequestProperty("Connection", "keep-alive");
-                if (null != cookies) {
-                    connection.setRequestProperty("Cookie", cookies);
-                    //cookies = null;
+                if (cookies.length() > 0) {
+                    connection.setRequestProperty("Cookie", cookies.toString());
                 }
 
                 responseCode = connection.getResponseCode();
@@ -329,11 +218,11 @@ public final class WaybackUrlManager {
                 List<String> cookiesHeader = connection.getHeaderFields().get("Set-Cookie");
 
                 if (cookiesHeader != null) {
-                    cookies = "";
+                    cookies = new StringJoiner(";");
 
                     for (String cookie : cookiesHeader) {
                         try {
-                            cookies += HttpCookie.parse(cookie).get(0) + ";";
+                            cookies.add(HttpCookie.parse(cookie).get(0).toString());
                         } catch (IllegalArgumentException e) {
                             //log.debug("Invalid cookie: " + cookie);
                         }
@@ -394,7 +283,7 @@ public final class WaybackUrlManager {
                             //To check webpage character encoding if present in header field: Content-Type
                             String[] contentTypeSplit = contentType.split("charset=");
                             String charsetStr = null;
-                            if (contentTypeSplit != null && contentTypeSplit.length == 2) {
+                            if (contentTypeSplit.length == 2) {
                                 charsetStr = contentTypeSplit[1];
                             }
 
@@ -420,34 +309,34 @@ public final class WaybackUrlManager {
                 responseCode = 600;
                 break;
             } catch (ProtocolException e) {
-                log.warn("ProtocolException: " + e.getMessage() + "; URL: {}" + urlStr);
+                log.warn("ProtocolException: {}; URL: {}", e.getMessage(), urlStr);
                 responseCode = 601;
                 break;
             } catch (SocketException e) {
-                log.warn("SocketException: " + e.getMessage() + "; URL: {}" + urlStr);
+                log.warn("SocketException: {}; URL: {}", e.getMessage(), urlStr);
                 responseCode = 602;
                 logUrlInFile(urlStr);
                 break;
             } catch (SocketTimeoutException e) {
-                log.warn("SocketTimeoutException: " + e.getMessage() + "; URL: {}" + urlStr);
+                log.warn("SocketTimeoutException: {}; URL: {}", e.getMessage(), urlStr);
                 responseCode = 603;
                 break;
             } catch (SSLException e) {
-                log.warn("SSLException: " + e.getMessage() + "; URL: {}" + urlStr);
+                log.warn("SSLException: {}; URL: {}", e.getMessage(), urlStr);
                 responseCode = getStatusCodeFromHttpClient(urlRecord);
                 break;
             } catch (Exception e) {
                 //this exception is thrown but not declared in the try block so we can't easily catch it
                 if (GeneralSecurityException.class.isAssignableFrom(e.getClass())) {
-                    log.warn("GeneralSecurityException: " + e.getMessage() + "; URL: {}" + urlStr);
+                    log.warn("GeneralSecurityException: {}; URL: {}", e.getMessage(), urlStr);
                     responseCode = 651;
                     break;
                 } else if (e.getCause() instanceof IllegalArgumentException) {
-                    log.warn("Invalid redirect: " + e.getCause().getMessage() + "; URL: {}" + urlStr);
+                    log.warn("Invalid redirect: {}; URL: {}", e.getCause().getMessage(), urlStr);
                     responseCode = 608; //redirect to invalid url
                     break;
                 } else {
-                    log.error("Can't check URL: " + urlStr, e);
+                    log.error("Can't check URL: {}", urlStr, e);
                     responseCode = 653;
                     break;
                     //throw e;
@@ -472,7 +361,7 @@ public final class WaybackUrlManager {
         }
 
         urlRecord.setStatusCode((short) responseCode);
-        urlRecord.setStatusCodeDate(new Date());
+        urlRecord.setStatusCodeDate(Instant.now());
         return urlRecord;
     }
 
@@ -497,11 +386,11 @@ public final class WaybackUrlManager {
             urlRecord.setContent(response.body().trim());
             return 200;
         } catch (IOException | InterruptedException e) {
-            log.warn("HttpClient method: SSLException: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl());
+            log.warn("HttpClient method: SSLException: {}; URL: {}", e.getMessage(), urlRecord.getUrl());
             logUrlInFile(urlRecord.getUrl().toString());
             return 650;
         } catch (IllegalArgumentException e) {
-            log.warn("HttpClient method: Invalid url: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl());
+            log.warn("HttpClient method: Invalid url: {}; URL: {}", e.getMessage(), urlRecord.getUrl());
             logUrlInFile(urlRecord.getUrl().toString());
             return 650;
         }
@@ -512,23 +401,8 @@ public final class WaybackUrlManager {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename, StandardCharsets.UTF_8, true)))) {
             out.println(url);
         } catch (IOException e) {
-            log.error("Exception while writing url exception to file " + e.getMessage());
+            log.error("Exception while writing url exception to file {}", e.getMessage());
         }
-    }
-
-    // there should exist only one instance of this class because of the cache
-    public static WaybackUrlManager getInstance(Learnweb learnweb) {
-        if (instance == null) {
-            instance = new WaybackUrlManager(learnweb);
-        }
-        return instance;
-    }
-
-    private static Date timestampToDate(Timestamp timestamp) {
-        if (timestamp == null) {
-            return null;
-        }
-        return new Date(timestamp.getTime());
     }
 
     public static void enableRelaxedSSLconnection() {
@@ -560,7 +434,7 @@ public final class WaybackUrlManager {
             sc = SSLContext.getInstance("SSL");
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
 
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -571,156 +445,6 @@ public final class WaybackUrlManager {
         // Install the all-trusting host verifier
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         /* End of the fix*/
-    }
-
-    public static void main(String[] args) throws SQLException, IOException, URISyntaxException, ClassNotFoundException {
-        /*Calendar minCrawlTime = Calendar.getInstance();
-        minCrawlTime.add(Calendar.DATE, -1);
-        Date MIN_ACCEPTABLE_CRAWL_TIME = minCrawlTime.getTime();
-
-        log.debug("start");
-        WaybackUrlManager manager = Learnweb.createInstance().getWaybackUrlManager();
-        UrlRecord record = manager.getUrlRecord("http://www.google.com/");
-        log.debug(record);
-        manager.updateRecord(record, null, MIN_ACCEPTABLE_CRAWL_TIME);
-        log.debug(record);
-        // check statusCodeDate in the output
-        */
-
-        WaybackUrlManager manager = Learnweb.createInstance().getWaybackUrlManager();
-        String url = "http://www.cs.virginia.edu/~hw5x/Course/IR2017/_site/docs/Inverted Index.pptx";
-        UrlRecord record = manager.getHtmlContent(url);
-        log.debug(record.getStatusCode());
-        log.debug(record.getContent());
-        UrlRecord record2 = new UrlRecord(new URL(url));
-        manager.getStatusCodeFromHttpClient(record2);
-        log.debug(record2.getContent());
-        System.exit(0);
-    }
-
-    /**
-     * @author Philipp Kemkes
-     */
-    public static class UrlRecord {
-        private long id = -1L;
-        private URL url;
-        private Date firstCapture;
-        private Date lastCapture;
-        private Date crawlDate = new Date(3601000L);
-        private boolean allCapturesFetched = false;
-
-        private short statusCode = -3;
-        private Date statusCodeDate = new Date(3601000L);
-        private String content;
-
-        public UrlRecord(URL asciiUrl) {
-            this.url = asciiUrl;
-        }
-
-        public boolean isArchived() {
-            return firstCapture != null && lastCapture != null;
-        }
-
-        public long getId() {
-            return id;
-        }
-
-        private void setId(long id) {
-            this.id = id;
-        }
-
-        public URL getUrl() {
-            return url;
-        }
-
-        public void setUrl(URL url) {
-            this.url = url;
-        }
-
-        public Date getFirstCapture() {
-            return firstCapture;
-        }
-
-        private void setFirstCapture(Date firstCapture) {
-            this.firstCapture = firstCapture;
-        }
-
-        public Date getLastCapture() {
-            return lastCapture;
-        }
-
-        private void setLastCapture(Date lastCapture) {
-            this.lastCapture = lastCapture;
-        }
-
-        public Date getCrawlDate() {
-            return crawlDate;
-        }
-
-        private void setCrawlDate(Date lastUpdate) {
-            this.crawlDate = lastUpdate;
-        }
-
-        public boolean isAllCapturesFetched() {
-            return allCapturesFetched;
-        }
-
-        private void setAllCapturesFetched(boolean allCapturesFetched) {
-            this.allCapturesFetched = allCapturesFetched;
-        }
-
-        public short getStatusCode() {
-            return statusCode;
-        }
-
-        private void setStatusCode(short statusCode) {
-            this.statusCode = statusCode;
-        }
-
-        public Date getStatusCodeDate() {
-            return statusCodeDate;
-        }
-
-        private void setStatusCodeDate(Date statusCodeDate) {
-            this.statusCodeDate = statusCodeDate;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            final UrlRecord urlRecord = (UrlRecord) o;
-            return allCapturesFetched == urlRecord.allCapturesFetched && statusCode == urlRecord.statusCode
-                && Objects.equals(url, urlRecord.url) && Objects.equals(firstCapture, urlRecord.firstCapture)
-                && Objects.equals(lastCapture, urlRecord.lastCapture);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(url, firstCapture, lastCapture, allCapturesFetched, statusCode);
-        }
-
-        public boolean isOffline() {
-            return ((statusCode < 200 || statusCode >= 400) && statusCode != 403 && statusCode != 650 && statusCode != 999 && statusCode != 606 && statusCode != 603 && statusCode != 429 && statusCode != -1);
-        }
-
-        @Override
-        public String toString() {
-            return "UrlRecord [id=" + id + ", url=" + url + ", firstCapture=" + firstCapture + ", lastCapture=" + lastCapture + ", crawlDate=" + crawlDate + ", allCapturesFetched=" + allCapturesFetched + ", statusCode=" + statusCode + ", statusCodeDate=" + statusCodeDate + "]";
-        }
-
     }
 
     private static class RecordNotFoundException extends Exception {
@@ -753,8 +477,8 @@ public final class WaybackUrlManager {
         */
 
         @Override
-        public Socket createSocket(Socket s, String host, int port, boolean autoClose) throws IOException {
-            return factory.createSocket(s, host, port, autoClose);
+        public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException {
+            return factory.createSocket(socket, host, port, autoClose);
         }
 
         @Override

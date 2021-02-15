@@ -2,24 +2,24 @@ package de.l3s.maintenance.organisations;
 
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.Organisation.Option;
-import de.l3s.learnweb.user.OrganisationManager;
+import de.l3s.learnweb.user.OrganisationDao;
 import de.l3s.maintenance.MaintenanceTask;
 
 public class OrganisationSetOption extends MaintenanceTask {
 
     @Override
-    protected void init() throws Exception {
+    protected void init() {
         requireConfirmation = true;
     }
 
     @Override
-    protected void run(final boolean dryRun) throws Exception {
+    protected void run(final boolean dryRun) {
         if (!dryRun) {
-            OrganisationManager organisationManager = getLearnweb().getOrganisationManager();
-            for (Organisation org : organisationManager.getOrganisationsAll()) {
+            OrganisationDao organisationDao = getLearnweb().getDaoProvider().getOrganisationDao();
+            for (Organisation org : organisationDao.findAll()) {
                 org.setOption(Option.Privacy_Proxy_enabled, false);
 
-                organisationManager.save(org);
+                organisationDao.save(org);
             }
         }
     }

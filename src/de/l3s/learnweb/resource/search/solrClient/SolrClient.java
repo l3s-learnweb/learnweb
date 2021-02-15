@@ -1,9 +1,7 @@
 package de.l3s.learnweb.resource.search.solrClient;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,43 +13,33 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocument;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.Tag;
 
 public final class SolrClient {
     private static final Logger log = LogManager.getLogger(SolrClient.class);
 
-    private static SolrClient instance;
+    private final HttpSolrClient httpSolrClient;
 
-    private final String serverUrl;
-    private final HttpSolrClient server;
-
-    private final Learnweb learnweb;
-
-    private SolrClient(Learnweb learnweb) {
-        this.serverUrl = learnweb.getProperties().getProperty("SOLR_SERVER_URL");
-        this.server = new HttpSolrClient.Builder(serverUrl).build();
-        this.learnweb = learnweb;
+    public SolrClient(String solrServerUrl) {
+        this.httpSolrClient = new HttpSolrClient.Builder(solrServerUrl).build();
     }
 
-    public HttpSolrClient getSolrServer() {
-        return server;
+    public HttpSolrClient getHttpSolrClient() {
+        return httpSolrClient;
     }
 
     /**
      * Add a new resource to the Solr index.
      */
-    public void indexResource(Resource resource) throws SQLException, IOException, SolrServerException {
-        log.debug("index resource: " + resource.getId());
+    public void indexResource(Resource resource) throws IOException, SolrServerException {
+        log.debug("index resource: {}", resource.getId());
 
-        server.addBean(new ResourceDocument(resource));
-        server.commit();
+        httpSolrClient.addBean(new ResourceDocument(resource));
+        httpSolrClient.commit();
     }
 
     /**
@@ -65,7 +53,7 @@ public final class SolrClient {
                 indexResource(resource);
             }
         } catch (Throwable t) {
-            throw new RuntimeException("Couldn't reindex resource " + resource.getId(), t);
+            throw new IllegalStateException("Couldn't reindex resource " + resource.getId(), t);
             //log.fatal("Couldn't reindex resource " + resource.toString(), t);
         }
     }
@@ -74,7 +62,7 @@ public final class SolrClient {
      * This method will be called when a comment was added to an existing (and already indexed) resource.
      * This function should be called after the comment has been added to the resource.
      */
-    public void indexComment(Comment comment) throws SQLException {
+    public void indexComment(Comment comment) {
         Resource resource = comment.getResource(); // the resource to which the comment was added
         reIndexResource(resource);
     }
@@ -90,8 +78,8 @@ public final class SolrClient {
     }
 
     public void deleteFromIndex(int resourceId) throws SolrServerException, IOException {
-        server.deleteById("r_" + resourceId);
-        server.commit();
+        httpSolrClient.deleteById("r_" + resourceId);
+        httpSolrClient.commit();
     }
 
     /**
@@ -104,7 +92,7 @@ public final class SolrClient {
     /**
      * This function should be called after the comment has been deleted from the resource.
      */
-    public void deleteFromIndex(Comment comment) throws Exception {
+    public void deleteFromIndex(Comment comment) {
         Resource resource = comment.getResource();
 
         reIndexResource(resource);
@@ -118,7 +106,7 @@ public final class SolrClient {
         solrQuery.setStart(0);
         solrQuery.setRows(Integer.MAX_VALUE);
         solrQuery.setFields("id");
-        QueryResponse result = server.query(solrQuery);
+        QueryResponse result = httpSolrClient.query(solrQuery);
         if (null != result) {
             for (SolrDocument doc : result.getResults()) {
                 ids.add(extractId((String) doc.getFieldValue("id")));
@@ -133,7 +121,7 @@ public final class SolrClient {
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery(query);
         solrQuery.setFields("id");
-        QueryResponse result = server.query(solrQuery);
+        QueryResponse result = httpSolrClient.query(solrQuery);
         if (null != result) {
             return result.getResults().getNumFound();
         } else {
@@ -145,7 +133,7 @@ public final class SolrClient {
         try {
             return Integer.parseInt(id.substring(2));
         } catch (NumberFormatException e) {
-            log.error("SolrSearch, NumberFormatException: " + e.getMessage());
+            log.error("SolrSearch, NumberFormatException: {}", e.getMessage());
             return -1;
         }
     }
@@ -160,7 +148,7 @@ public final class SolrClient {
         solrQuery.setRows(0);
 
         //get response
-        QueryResponse response = getSolrServer().query(solrQuery);
+        QueryResponse response = getHttpSolrClient().query(solrQuery);
         FacetField facetFieldsResult = response.getFacetFields().get(0);
 
         List<String> suggestions = new ArrayList<>(10);
@@ -171,66 +159,4 @@ public final class SolrClient {
 
         return suggestions;
     }
-
-    /**
-     * Drop index.
-     */
-    public void deleteAllResource() throws SQLException, IOException, SolrServerException {
-        server.deleteByQuery("*:*");
-        server.commit();
-    }
-
-    /**
-     * Index all resources.
-     */
-    public void indexAllResources() throws SQLException, IOException, SolrServerException {
-        final int batchSize = 1000;
-        ResourceManager resourceManager = learnweb.getResourceManager();
-        resourceManager.setReindexMode(true);
-
-        Collection<ResourceDocument> resourceDocuments = new ArrayList<>(batchSize);
-        //long sendResources = 0;
-
-        for (int i = 0; true; i++) {
-            log.debug("Load page: " + i);
-            List<Resource> resources = resourceManager.getResourcesAll(i, batchSize);
-
-            if (resources.isEmpty()) {
-                log.debug("finished: last page");
-                break;
-            }
-
-            log.debug("Process page: " + i);
-
-            resourceDocuments.clear();
-
-            for (Resource resource : resources) {
-                resourceDocuments.add(new ResourceDocument(resource));
-                //sendResources++;
-            }
-
-            UpdateResponse response = server.addBeans(resourceDocuments);
-            if (response.getStatus() != 0) {
-                throw new RuntimeException("invalid response code: " + response.getStatus() + "; desc: " + response);
-            }
-
-            server.commit();
-
-            /*
-            long indexedResources = countResources("*:*");
-
-            if(sendResources != indexedResources)
-                throw new RuntimeException(sendResources + " - " + indexedResources);
-            */
-        }
-    }
-
-    public static SolrClient getInstance(Learnweb learnweb) {
-        if (null == instance) {
-            instance = new SolrClient(learnweb);
-        }
-
-        return instance;
-    }
-
 }

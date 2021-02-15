@@ -1,16 +1,17 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.Organisation;
+import de.l3s.learnweb.user.OrganisationDao;
 
 @Named
 @ViewScoped
@@ -20,11 +21,15 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
 
     private List<Organisation> organisations;
 
-    public AdminOrganisationsBean() throws SQLException {
+    @Inject
+    private OrganisationDao organisationDao;
+
+    @PostConstruct
+    public void init() {
         BeanAssert.authorized(isLoggedIn());
         BeanAssert.hasPermission(getUser().isAdmin());
 
-        organisations = new ArrayList<>(getLearnweb().getOrganisationManager().getOrganisationsAll());
+        organisations = organisationDao.findAll();
     }
 
     public List<Organisation> getOrganisations() {

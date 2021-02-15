@@ -31,7 +31,7 @@
                 <script>
                     window.wapsTrackerData = {
                         start: new Date(),
-                        apiKey: '#{learnwebBean.trackerApiKey}',
+                        apiKey: '#{userBean.trackerApiKey}',
                         externalUserId: '#{userBean.getUser().getId()}'
                     };
 
@@ -58,10 +58,10 @@
 
                     <div class="layout-main d-flex flex-column" id="main">
                         <main class="layout-main-content #{extraPageClass}">
-                            <ui:fragment rendered="#{learnwebBean.maintenanceMode}">
+                            <ui:fragment rendered="#{config.maintenanceMode}">
                                 <h2 class="text-danger">#{msg['error_pages.unavailable_default_description']}</h2>
                             </ui:fragment>
-                            <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
+                            <ui:fragment rendered="#{not config.maintenanceMode}">
                                 <p:messages id="message" showDetail="false" showSummary="true" escape="false" globalOnly="true">
                                     <p:autoUpdate />
                                 </p:messages>

@@ -2,9 +2,8 @@ package de.l3s.learnweb.resource.submission;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,27 +11,31 @@ import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
+import org.omnifaces.util.Servlets;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceViewRights;
-import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
+import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserDao;
 
 /**
  * Bean for pages myhome/submission_overview.jsf and myhome/submission_resources.jsf
@@ -46,6 +49,8 @@ import de.l3s.learnweb.user.User;
 public class SubmissionBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -2494290373382483709L;
     private static final Logger log = LogManager.getLogger(SubmissionBean.class);
+
+    public static final int SUBMISSION_ADMIN_USER_ID = 11212;
 
     private int userId; // For checking specific user's submission
     private int courseId; // For retrieving submissions of specific course
@@ -67,7 +72,19 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     private List<User> users; //To fetch list of users for a given course
     private Map<Integer, Integer> userSubmissions; //to store map of user id and total no. of submissions
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private CourseDao courseDao;
+
+    @Inject
+    private UserDao userDao;
+
+    @Inject
+    private SubmissionDao submissionDao;
+
+    @Inject
+    private ResourceDao resourceDao;
+
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
         if (this.userId == 0) { // don't want to view the submission of a specific user then use the current user (usual case)
@@ -84,10 +101,10 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
 
         //When accessing the submission_resources page both these parameters are set
         if (submissionId > 0 && userId > 0) {
-            selectedSubmission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
-            selectedResources = getLearnweb().getSubmissionManager().getResourcesByIdAndUserId(submissionId, userId);
+            selectedSubmission = submissionDao.findById(submissionId).orElseThrow();
+            selectedResources = resourceDao.findBySubmissionIdAndUserId(submissionId, userId);
 
-            submitted = getLearnweb().getSubmissionManager().getSubmitStatusForUser(submissionId, userId);
+            submitted = submissionDao.findStatus(submissionId, userId).orElse(false);
 
             //Past submissions are always considered as submitted
             if (selectedSubmission != null && selectedSubmission.isPastSubmission()) {
@@ -97,13 +114,8 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
             log(Action.submission_view_resources, 0, submissionId, userId);
         }
 
-        getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
         // stop caching (back button problem)
-        HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
-
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-        response.setDateHeader("Expires", 0); // Proxies.
+        Servlets.setNoCacheHeaders(Faces.getResponse());
     }
 
     /**
@@ -111,11 +123,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
      */
     public List<Resource> getResources() {
         if (resources == null) {
-            try {
-                resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, userId, 1000);
-            } catch (SQLException e) {
-                log.error("Error while retrieving my resources in submit resources page:", e);
-            }
+            resources = dao().getResourceDao().findByGroupIdAndFolderIdAndOwnerId(0, 0, userId, 1000);
         }
         return resources;
     }
@@ -155,9 +163,9 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void actionSubmitItems() throws SQLException {
-        selectedSubmission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
-        submitted = getLearnweb().getSubmissionManager().getSubmitStatusForUser(submissionId, userId);
+    public void actionSubmitItems() {
+        selectedSubmission = submissionDao.findById(submissionId).orElseThrow();
+        submitted = submissionDao.findStatus(submissionId, userId).orElse(false);
         if (submitted) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "submission.already_submitted");
             return;
@@ -166,63 +174,58 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
             addGrowl(FacesMessage.SEVERITY_ERROR, "submission.resource_limit_exceeded", selectedSubmission.getNoOfResources());
             return;
         }
-        try {
-            log.info("No. of selected items: " + selectedResources.size());
-            User specialAdmin = getLearnweb().getUserManager().getUser(SubmissionManager.SUBMISSION_ADMIN_USER_ID); //special user id
-            ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
-            Date submissionDate = new Date(); //Date for the resources submitted, so that the moderator can know when they were submitted
+        log.info("No. of selected items: {}", selectedResources.size());
+        User specialAdmin = userDao.findById(SUBMISSION_ADMIN_USER_ID); //special user id
+        LocalDateTime submissionDate = LocalDateTime.now(); //Date for the resources submitted, so that the moderator can know when they were submitted
 
-            List<Resource> clonedSelectedResources = new ArrayList<>();
-            for (Resource r : selectedResources) {
-                log.debug("resource: " + r.getId() + "; submission: " + submissionId + "; user:" + userId);
-                if (r.getUserId() != specialAdmin.getId()) {
-                    Resource clonedResource = r.clone();
+        List<Resource> clonedSelectedResources = new ArrayList<>();
+        for (Resource r : selectedResources) {
+            log.debug("resource: {}; submission: {}; user:{}", r.getId(), submissionId, userId);
+            if (r.getUserId() == specialAdmin.getId()) {
+                clonedSelectedResources.add(r);
+            } else {
+                Resource clonedResource = r.clone();
 
-                    //So that owner of clonedResource can view the resource
-                    clonedResource.setOriginalResourceId(r.getId());
-                    clonedResource.setRights(ResourceViewRights.SUBMISSION_READABLE);
-                    clonedResource.setCreationDate(submissionDate);
-                    clonedResource.setUser(specialAdmin);
-                    clonedResource.save();
+                //So that owner of clonedResource can view the resource
+                clonedResource.setOriginalResourceId(r.getId());
+                clonedResource.setRights(ResourceViewRights.SUBMISSION_READABLE);
+                clonedResource.setCreationDate(submissionDate);
+                clonedResource.setUser(specialAdmin);
+                clonedResource.save();
 
-                    //clone comments/tags of resource if it exists
-                    clonedResource.cloneComments(r.getComments());
-                    clonedResource.cloneTags(r.getTags());
+                //clone comments/tags of resource if it exists
+                clonedResource.cloneComments(r.getComments());
+                clonedResource.cloneTags(r.getTags());
 
-                    if (clonedResource.getType() == ResourceType.website) {
+                if (clonedResource.getType() == ResourceType.website) {
 
-                        String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clonedResource);
-                        if (response.equals("ROBOTS_ERROR") || response.equals("GENERIC_ERROR") || response.equals("PARSE_DATE_ERROR") || response.equals("SQL_SAVE_ERROR")) {
-                            if (clonedResource.getSmallThumbnail() == null) {
-                                try {
-                                    rpm.processResource(clonedResource);
-                                } catch (IOException | SQLException e) {
-                                    log.error("Could not archive the resource during submission because of " + response + " for resource " + clonedResource.getId());
-                                    log.error("Error during submission while processing thumbnails for resource: " + clonedResource.getId(), e);
-                                }
+                    String response = Beans.getInstance(ArchiveUrlManager.class).addResourceToArchive(clonedResource);
+                    if (response.equals("ROBOTS_ERROR") || response.equals("GENERIC_ERROR") || response.equals("PARSE_DATE_ERROR") || response.equals("SQL_SAVE_ERROR")) {
+                        if (clonedResource.getSmallThumbnail() == null) {
+                            try {
+                                getLearnweb().getResourcePreviewMaker().processResource(clonedResource);
+                            } catch (IOException e) {
+                                log.error("Could not archive the resource during submission because of {} for resource {}", response, clonedResource.getId());
+                                log.error("Error during submission while processing thumbnails for resource: {}", clonedResource.getId(), e);
                             }
                         }
                     }
-
-                    getLearnweb().getSubmissionManager().saveSubmissionResource(submissionId, clonedResource.getId(), userId);
-
-                    log(Action.submission_submitted, 0, r.getId()); // this doesn't happen in a group context. Hence group_id = 0
-
-                    clonedSelectedResources.add(clonedResource);
-                } else {
-                    clonedSelectedResources.add(r);
                 }
-            }
-            selectedResources.clear();
-            selectedResources.addAll(clonedSelectedResources);
-            setSubmitted(true);
-            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(submissionId, userId, true);
 
-            addGrowl(FacesMessage.SEVERITY_INFO, "Submission.success_message");
-        } catch (SQLException e) {
-            log.error("Exception while submitting resources", e);
-            addErrorMessage(e);
+                submissionDao.insertSubmissionResource(submissionId, clonedResource.getId(), userId);
+
+                log(Action.submission_submitted, 0, r.getId()); // this doesn't happen in a group context. Hence group_id = 0
+
+                clonedSelectedResources.add(clonedResource);
+            }
         }
+        selectedResources.clear();
+        selectedResources.addAll(clonedSelectedResources);
+        setSubmitted(true);
+
+        submissionDao.insertSubmissionStatus(submissionId, userId, true);
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "Submission.success_message");
     }
 
     private void actionRemoveItems(JsonArray objects) {
@@ -234,21 +237,20 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 int itemId = item.get("itemId").getAsInt();
 
                 if ("resource".equals(itemType) && itemId > 0) {
-                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
+                    Resource resource = dao().getResourceDao().findById(itemId);
                     if (resource != null && selectedResources.contains(resource)) {
                         selectedResources.remove(resource);
-                        if (resource.getUserId() == SubmissionManager.SUBMISSION_ADMIN_USER_ID) {
+                        if (resource.getUserId() == SUBMISSION_ADMIN_USER_ID) {
                             resource.delete();
-                            getLearnweb().getSubmissionManager().deleteSubmissionResource(submissionId, resource.getId(), userId);
+
+                            submissionDao.deleteSubmissionResource(submissionId, resource.getId(), userId);
                         }
                     }
                 }
             }
-
-        } catch (NullPointerException | JsonParseException | SQLException e) {
+        } catch (JsonParseException e) {
             log.error("Exception while parsing selected items in actionRemoveItems", e);
         }
-
     }
 
     private void actionAddSelectedItems(JsonArray objects) {
@@ -259,14 +261,13 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
 
                 int itemId = item.get("itemId").getAsInt();
                 if ("resource".equals(itemType) && itemId > 0) {
-                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
+                    Resource resource = dao().getResourceDao().findById(itemId);
                     if (resource != null && !selectedResources.contains(resource)) {
                         selectedResources.add(resource);
                     }
                 }
             }
-
-        } catch (NullPointerException | JsonParseException | SQLException e) {
+        } catch (JsonParseException e) {
             log.error("Exception while parsing selected items in actionAddSelectedItems", e);
         }
     }
@@ -315,7 +316,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     // TODO @astappiev/@hulyi: use one bean per page
 
     public void createNewSubmission() {
-        getLearnweb().getSubmissionManager().saveSubmission(newSubmission);
+        submissionDao.save(newSubmission);
         clearSubmissionLists();
         this.newSubmission = new Submission();
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
@@ -329,13 +330,13 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     }
 
     public void updateSubmissionDetails() {
-        getLearnweb().getSubmissionManager().saveSubmission(selectedSubmission);
+        submissionDao.save(selectedSubmission);
         clearSubmissionLists();
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public void deleteSubmission() {
-        getLearnweb().getSubmissionManager().deleteSubmission(selectedSubmission.getId());
+        submissionDao.deleteSoft(selectedSubmission);
         clearSubmissionLists();
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
@@ -351,25 +352,21 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
         currentSubmissions = new ArrayList<>();
         futureSubmissions = new ArrayList<>();
 
-        try {
-            User u = Learnweb.getInstance().getUserManager().getUser(userId);
-            //if no user_id parameter is provided in URL
-            if (u == null) {
-                u = getUser();
-            }
+        User u = userDao.findById(userId);
+        //if no user_id parameter is provided in URL
+        if (u == null) {
+            u = getUser();
+        }
 
-            List<Submission> submissions = Learnweb.getInstance().getSubmissionManager().getSubmissionsByUser(u);
-            for (Submission s : submissions) {
-                if (s.isPastSubmission()) {
-                    pastSubmissions.add(s);
-                } else if (s.isCurrentSubmission()) {
-                    currentSubmissions.add(s);
-                } else {
-                    futureSubmissions.add(s);
-                }
+        List<Submission> submissions = submissionDao.findByUser(u);
+        for (Submission submission : submissions) {
+            if (submission.isPastSubmission()) {
+                pastSubmissions.add(submission);
+            } else if (submission.isCurrentSubmission()) {
+                currentSubmissions.add(submission);
+            } else {
+                futureSubmissions.add(submission);
             }
-        } catch (SQLException e) {
-            addErrorMessage(e);
         }
     }
 
@@ -398,12 +395,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     }
 
     public List<Submission> getSubmissions() {
-        try {
-            return Learnweb.getInstance().getSubmissionManager().getSubmissionsByUser(getUser());
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
-        return null;
+        return submissionDao.findByUser(getUser());
     }
 
     public List<SelectItem> getSurveyResourcesList() {
@@ -412,32 +404,26 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
 
     public String getResourcePath(Resource r) {
         StringBuilder sb = new StringBuilder();
-        try {
-            sb.append(r.getGroupId() == 0 ? getLocaleMessage("myPrivateResources") : r.getGroup().getTitle());
+        sb.append(r.getGroupId() == 0 ? getLocaleMessage("myPrivateResources") : r.getGroup().getTitle());
 
-            if (r.getPrettyPath() != null) {
-                sb.append(" > ").append(r.getPrettyPath());
-            }
-
-            sb.append(" > ").append(r.getTitle());
-        } catch (SQLException e) {
-            log.error("Error while retrieving group information for resource: " + r.getId(), e);
+        if (r.getPrettyPath() != null) {
+            sb.append(" > ").append(r.getPrettyPath());
         }
+
+        sb.append(" > ").append(r.getTitle());
         return sb.toString();
     }
 
     public List<SelectItem> getEditSurveyResourcesList() {
         if (editSurveyResourcesList.isEmpty() && this.selectedSubmission.getCourseId() > 0) {
             try {
-                List<Resource> editSurveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(this.selectedSubmission.getCourseId());
+                List<Resource> editSurveyResourcesForCourse = dao().getResourceDao().findSurveysByCourseId(this.selectedSubmission.getCourseId());
                 for (Resource r : editSurveyResourcesForCourse) {
                     String resourcePath = getResourcePath(r);
-                    if (resourcePath != null) {
-                        editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
-                    }
+                    editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
                 }
             } catch (Exception e) {
-                log.error("Error in getting edit survey resources list for user: " + getUserId(), e);
+                log.error("Error in getting edit survey resources list for user: {}", getUserId(), e);
             }
         }
         return editSurveyResourcesList;
@@ -446,12 +432,10 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     public void onCreateSurveyChangeCourse(AjaxBehaviorEvent event) {
         surveyResourcesList.clear();
         try {
-            List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(this.newSubmission.getCourseId());
+            List<Resource> surveyResourcesForCourse = dao().getResourceDao().findSurveysByCourseId(this.newSubmission.getCourseId());
             for (Resource r : surveyResourcesForCourse) {
                 String resourcePath = getResourcePath(r);
-                if (resourcePath != null) {
-                    surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
-                }
+                surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
             }
         } catch (Exception e) {
             log.error("Error in getting survey resources for  course", e);
@@ -461,12 +445,10 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     public void onEditSurveyChangeCourse(AjaxBehaviorEvent event) {
         editSurveyResourcesList.clear();
         try {
-            List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(this.newSubmission.getCourseId());
+            List<Resource> surveyResourcesForCourse = dao().getResourceDao().findSurveysByCourseId(this.newSubmission.getCourseId());
             for (Resource r : surveyResourcesForCourse) {
                 String resourcePath = getResourcePath(r);
-                if (resourcePath != null) {
-                    editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
-                }
+                editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
             }
         } catch (Exception e) {
             log.error("Error in getting survey resources for course ", e);
@@ -480,7 +462,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     public void unlockSubmission() {
         if (selectedSubmission != null) {
             selectedSubmission.setSubmitted(false);
-            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(selectedSubmission.getId(), userId, false);
+            submissionDao.insertSubmissionStatus(selectedSubmission.getId(), userId, false);
             addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
         }
     }
@@ -488,7 +470,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     public void lockSubmission() {
         if (selectedSubmission != null) {
             selectedSubmission.setSubmitted(true);
-            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(selectedSubmission.getId(), userId, true);
+            submissionDao.insertSubmissionStatus(selectedSubmission.getId(), userId, true);
             addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
         }
     }
@@ -500,10 +482,10 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
      * To display the users for a particular course and the corresponding number of submissions.
      * on the admin/users_submissions page
      */
-    public List<User> getUsers() throws SQLException {
+    public List<User> getUsers() {
         if (users == null && courseId > 0) {
-            users = getLearnweb().getCourseManager().getCourseById(courseId).getMembers();
-            userSubmissions = getLearnweb().getSubmissionManager().getUsersSubmissionsByCourseId(courseId);
+            users = courseDao.findById(courseId).getMembers();
+            userSubmissions = submissionDao.countPerUserByCourseId(courseId);
         }
         return users;
     }

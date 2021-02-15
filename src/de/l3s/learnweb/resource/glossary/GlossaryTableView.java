@@ -29,10 +29,10 @@ public class GlossaryTableView implements Serializable {
         this.term = term;
 
         // TODO @kemkes: this is only an example. Has to be generalized for all fields
-        if (!filter.containsKey("topicOne")) {
-            topic1 = entry.getTopicOne();
-        } else {
+        if (filter.containsKey("topicOne")) {
             topic1 = StringHelper.highlightQuery(entry.getTopicOne(), filter.get("topicOne"));
+        } else {
+            topic1 = entry.getTopicOne();
         }
     }
 

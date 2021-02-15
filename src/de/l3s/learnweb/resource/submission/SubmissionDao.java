@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.submission;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -25,10 +26,12 @@ import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 import de.l3s.util.HasId;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(SubmissionDao.SubmissionMapper.class)
-public interface SubmissionDao extends SqlObject {
+public interface SubmissionDao extends SqlObject, Serializable {
+
     @SqlQuery("SELECT * FROM lw_submission WHERE submission_id=?")
     Optional<Submission> findById(int submissionId);
 
@@ -62,7 +65,7 @@ public interface SubmissionDao extends SqlObject {
     /**
      * Saving a resource for a particular submission after the user submits.
      */
-    @SqlUpdate("INSERT INTO lw_submission_resource(`submission_id`, `resource_id`, `user_id`) VALUES (?, ?, ?)")
+    @SqlUpdate("INSERT INTO lw_submission_resource(submission_id, resource_id, user_id) VALUES (?, ?, ?)")
     void insertSubmissionResource(int submissionId, int resourceId, int userId);
 
     @SqlUpdate("UPDATE lw_submission SET deleted = 1 WHERE submission_id = ?")
@@ -119,7 +122,7 @@ public interface SubmissionDao extends SqlObject {
         params.put("number_of_resources", submission.getNoOfResources());
         params.put("survey_resource_id", submission.getSurveyResourceId());
 
-        Optional<Integer> submissionId = SqlHelper.generateInsertQuery(getHandle(), "lw_submission", params)
+        Optional<Integer> submissionId = SqlHelper.handleSave(getHandle(), "lw_submission", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         submissionId.ifPresent(submission::setId);
@@ -133,8 +136,8 @@ public interface SubmissionDao extends SqlObject {
             submission.setCourseId(rs.getInt("course_id"));
             submission.setTitle(rs.getString("title"));
             submission.setDescription(rs.getString("description"));
-            submission.setOpenDatetime(rs.getDate("open_datetime"));
-            submission.setCloseDatetime(rs.getDate("close_datetime"));
+            submission.setOpenDatetime(RsHelper.getLocalDateTime(rs.getTimestamp("open_datetime")));
+            submission.setCloseDatetime(RsHelper.getLocalDateTime(rs.getTimestamp("close_datetime")));
             submission.setNoOfResources(rs.getInt("number_of_resources"));
             submission.setSurveyResourceId(rs.getInt("survey_resource_id"));
             return submission;

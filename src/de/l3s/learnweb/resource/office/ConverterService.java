@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.office.converter.model.ConverterRequest;
 import de.l3s.learnweb.resource.office.converter.model.ConverterResponse;
@@ -40,11 +39,11 @@ public final class ConverterService {
         }
     };
 
-    public static String convert(final Learnweb learnweb, final File file) {
-        return convert(learnweb, createConverterRequest(file));
+    public static String convert(final String converterService, final File file) {
+        return convert(converterService, createConverterRequest(file));
     }
 
-    public static String convert(final Learnweb learnweb, final ConverterRequest converterRequest) {
+    public static String convert(final String converterService, final ConverterRequest converterRequest) {
         try {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, trustAllCerts, new SecureRandom());
@@ -54,7 +53,7 @@ public final class ConverterService {
             HttpClient client = HttpClient.newBuilder().sslContext(sslContext).build();
 
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(learnweb.getProperties().getProperty("FILES.DOCSERVICE.URL.CONVERTER")))
+                .uri(URI.create(converterService))
                 .header("Content-type", "application/json")
                 .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(converterRequest)))

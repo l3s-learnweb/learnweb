@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.archive;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -19,23 +20,23 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.util.RsHelper;
 
-public interface ArchiveUrlDao extends SqlObject {
+public interface ArchiveUrlDao extends SqlObject, Serializable {
     @RegisterRowMapper(ArchiveUrlMapper.class)
-    @SqlQuery("SELECT * FROM `lw_resource_archiveurl` WHERE `resource_id` = ? ORDER BY timestamp")
+    @SqlQuery("SELECT * FROM lw_resource_archiveurl WHERE resource_id = ? ORDER BY timestamp")
     List<ArchiveUrl> findByResourceId(int resourceId);
 
     @RegisterRowMapper(ArchiveUrlMapper.class)
-    @SqlQuery("SELECT * FROM lw_resource_archiveurl WHERE `resource_id` = ? AND DATE(timestamp) = DATE(?)")
+    @SqlQuery("SELECT * FROM lw_resource_archiveurl WHERE resource_id = ? AND DATE(timestamp) = DATE(?)")
     List<ArchiveUrl> findByResourceId(int resourceId, LocalDate timestamp);
 
     // TODO: `file_id` is not existing column
-    @SqlUpdate("UPDATE `lw_resource_archiveurl` SET `file_id` = ?  WHERE `resource_id`=? and `archive_url`=?")
+    @SqlUpdate("UPDATE lw_resource_archiveurl SET file_id = ?  WHERE resource_id=? and archive_url=?")
     void updateFIleId(int fileId, int resourceId, String archiveUrl);
 
-    @SqlUpdate("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?, ?, ?)")
+    @SqlUpdate("INSERT into lw_resource_archiveurl(resource_id,archive_url,timestamp) VALUES (?, ?, ?)")
     void insertArchiveUrl(int resourceId, String archiveUrl, LocalDateTime timestamp);
 
-    @SqlBatch("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (:resourceId, :getArchiveUrl, :getTimestamp)")
+    @SqlBatch("INSERT into lw_resource_archiveurl(resource_id,archive_url,timestamp) VALUES (:resourceId, :getArchiveUrl, :getTimestamp)")
     void insertArchiveUrl(@Bind("resourceId") int resourceId, @BindMethods Collection<ArchiveUrl> archiveUrls);
 
     class ArchiveUrlMapper implements RowMapper<ArchiveUrl> {

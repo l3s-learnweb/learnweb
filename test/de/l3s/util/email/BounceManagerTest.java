@@ -2,8 +2,6 @@ package de.l3s.util.email;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.sql.SQLException;
-
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -11,22 +9,20 @@ import javax.mail.Store;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.web.BounceManager;
 
 class BounceManagerTest {
     private static final Logger log = LogManager.getLogger(BounceManagerTest.class);
-    private final Learnweb learnweb = Learnweb.createInstance();
-
-    BounceManagerTest() throws SQLException, ClassNotFoundException {}
 
     /**
      * Debug/analysis function that checks contents of bounce folder.
      */
     @Test
     void testConnection() throws MessagingException {
-        BounceManager bounceManager = new BounceManager(learnweb);
+        BounceManager bounceManager = new BounceManager();
         Store store = bounceManager.getStore();
         store.connect();
 
@@ -35,19 +31,15 @@ class BounceManagerTest {
         store.close();
     }
 
-    /**
-     * Debug/analysis function that checks contents of bounce folder.
-     */
     @Test
+    @Disabled("Debug/analysis function that checks contents of bounce folder")
     void checkBounceFolder() throws MessagingException {
-        BounceManager bounceManager = new BounceManager(learnweb);
+        BounceManager bounceManager = new BounceManager();
         Store store = bounceManager.getStore();
         store.connect();
 
         Folder bounceFolder = store.getFolder("INBOX").getFolder("BOUNCES");
-        if (!bounceFolder.exists()) {
-            log.debug("Folder doesn't exist.");
-        } else {
+        if (bounceFolder.exists()) {
             bounceFolder.open(Folder.READ_ONLY);
             Message[] bounces = bounceFolder.getMessages();
 
@@ -60,6 +52,8 @@ class BounceManagerTest {
             }
 
             bounceFolder.close(false);
+        } else {
+            log.debug("Folder doesn't exist.");
         }
 
         store.close();

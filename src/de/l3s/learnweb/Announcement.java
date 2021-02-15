@@ -1,11 +1,9 @@
 package de.l3s.learnweb;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public final class Announcement implements Serializable {
     private static final long serialVersionUID = 4219676681480459859L;
@@ -15,8 +13,7 @@ public final class Announcement implements Serializable {
     private String title;
     @NotBlank
     private String text;
-    @NotNull
-    private Date date;
+    private LocalDateTime date;
     private boolean hidden;
     private int userId;
 
@@ -28,11 +25,11 @@ public final class Announcement implements Serializable {
         this.userId = userId;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(final Date date) {
+    public void setDate(final LocalDateTime date) {
         this.date = date;
     }
 
@@ -76,9 +73,5 @@ public final class Announcement implements Serializable {
             ", created_at=" + date +
             ", userId=" + userId +
             ", hidden=" + hidden + "]";
-    }
-
-    public void save() throws SQLException {
-        Learnweb.getInstance().getAnnouncementsManager().save(this);
     }
 }

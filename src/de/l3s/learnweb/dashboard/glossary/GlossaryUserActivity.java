@@ -1,9 +1,8 @@
 package de.l3s.learnweb.dashboard.glossary;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
 
 public class GlossaryUserActivity implements Serializable {
@@ -23,9 +22,9 @@ public class GlossaryUserActivity implements Serializable {
         this.userId = userId;
     }
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (null == user && userId > 0) {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }

@@ -13,6 +13,7 @@ import org.jdbi.v3.core.statement.StatementContext;
  *
  * @author Philipp Kemkes
  */
+@FunctionalInterface
 public interface HasId extends Argument {
 
     int getId();
@@ -20,24 +21,12 @@ public interface HasId extends Argument {
     /**
      * Returns a list of all ids of the given list of objects.
      */
-    static ArrayList<Integer> collectIds(Collection<? extends HasId> list) {
-        ArrayList<Integer> ids = new ArrayList<>(list.size());
-
-        for (HasId obj : list) {
-            ids.add(obj.getId());
+    static ArrayList<Integer> collectIds(Collection<? extends HasId> collection) {
+        ArrayList<Integer> ids = new ArrayList<>(collection.size());
+        for (HasId item : collection) {
+            ids.add(item.getId());
         }
         return ids;
-    }
-
-    static String implodeIds(Collection<? extends HasId> list) {
-        StringBuilder out = new StringBuilder();
-        for (HasId item : list) {
-            if (out.length() != 0) {
-                out.append(',');
-            }
-            out.append(item.getId());
-        }
-        return out.toString();
     }
 
     static int getIdOrDefault(HasId object, Integer def) {

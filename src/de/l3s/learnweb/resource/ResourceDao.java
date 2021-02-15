@@ -1,12 +1,10 @@
 package de.l3s.learnweb.resource;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,18 +26,18 @@ import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(ResourceDao.ResourceMapper.class)
-public interface ResourceDao extends SqlObject {
-    boolean reindexMode = false; // if this flag is true some performance optimizations for reindexing all resources are enabled
-    ICache<Resource> cache = Cache.of(Resource.class);
+public interface ResourceDao extends SqlObject, Serializable {
+    ICache<Resource> cache = new Cache<>(3000);
 
     @CreateSqlObject
     FileDao getFileDao();
@@ -50,23 +48,23 @@ public interface ResourceDao extends SqlObject {
             return resource;
         }
 
-        return getHandle().select("SELECT * FROM `lw_resource` WHERE resource_id = ?", resourceId)
+        return getHandle().select("SELECT * FROM lw_resource WHERE resource_id = ?", resourceId)
             .map(new ResourceMapper()).findOne().orElse(null);
     }
 
     /**
      * Returns all resources (that were not deleted).
      */
-    @SqlQuery("SELECT * FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id")
+    @SqlQuery("SELECT * FROM lw_resource r WHERE deleted = 0 ORDER BY resource_id")
     Stream<Resource> findAll();
 
     /**
      * Returns all resources (that were not deleted) using given limit and offset.
      */
-    @SqlQuery("SELECT * FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id LIMIT ? OFFSET ?")
+    @SqlQuery("SELECT * FROM lw_resource r WHERE deleted = 0 ORDER BY resource_id LIMIT ? OFFSET ?")
     List<Resource> findAll(int limit, int offset);
 
-    @SqlQuery("SELECT * FROM lw_resource r WHERE `group_id` = ? and deleted = 0")
+    @SqlQuery("SELECT * FROM lw_resource r WHERE group_id = ? and deleted = 0")
     List<Resource> findByGroupId(int groupId);
 
     @SqlQuery("SELECT * FROM lw_resource r  WHERE folder_id = ? AND deleted = 0")
@@ -126,37 +124,31 @@ public interface ResourceDao extends SqlObject {
     Optional<Integer> findResourceRating(int resourceId, int userId);
 
     default void insertResourceRating(int resourceId, int userId, int value) {
-        getHandle().execute("INSERT INTO lw_resource_rating (`resource_id`, `user_id`, `rating`) VALUES(?, ?, ?)", resourceId, userId, value);
+        getHandle().execute("INSERT INTO lw_resource_rating (resource_id, user_id, rating) VALUES(?, ?, ?)", resourceId, userId, value);
         getHandle().execute("UPDATE lw_resource SET rating = rating + ?, rate_number = rate_number + 1 WHERE resource_id = ?", value, resourceId);
     }
 
-    @SqlUpdate("INSERT INTO `lw_thumb` (`resource_id` ,`user_id` ,`direction`) VALUES (?, ?, ?)")
+    @SqlUpdate("INSERT INTO lw_thumb (resource_id ,user_id ,direction) VALUES (?, ?, ?)")
     void insertThumbRate(Resource resource, User user, int direction);
 
     /**
      * @return number of total thumb ups (left) and thumb downs (right).
      */
     default Optional<ImmutablePair<Integer, Integer>> findThumbRatings(Resource resource) {
-        return getHandle().select("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM `lw_thumb` WHERE `resource_id` = ?", resource)
+        return getHandle().select("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM lw_thumb WHERE resource_id = ?", resource)
             .map((rs, ctx) -> new ImmutablePair<>(rs.getInt(1), rs.getInt(2))).findOne();
     }
 
     @SqlQuery("SELECT direction FROM lw_thumb WHERE resource_id = ? AND user_id = ?")
     Optional<Integer> findThumbRate(Resource resource, User user);
 
-    @SqlUpdate("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?) ON DUPLICATE KEY UPDATE allowed_languages = VALUES(allowed_languages)")
-    void insertGlossaryResource(int resourceId, String allowedLanguages);
-
-    @SqlUpdate("SELECT allowed_languages FROM `lw_glossary_resource` WHERE `resource_id` = ?")
-    Optional<String> findGlossaryResourceAllowedLanguages(int resourceId);
-
-    @SqlUpdate("INSERT INTO `lw_resource_tag` (`resource_id`, `user_id`, `tag_id`) VALUES (?, ?, ?)")
+    @SqlUpdate("INSERT INTO lw_resource_tag (resource_id, user_id, tag_id) VALUES (?, ?, ?)")
     void insertTag(Resource resource, User user, Tag tag);
 
     @SqlUpdate("DELETE FROM lw_resource_tag WHERE resource_id = ? AND tag_id = ?")
     void deleteTag(Resource resource, Tag tag);
 
-    default Resource copy(final Resource sourceResource, final int targetGroupId, final int targetFolderId, final User user) throws SQLException {
+    default void copy(final Resource sourceResource, final int targetGroupId, final int targetFolderId, final User user) {
         Resource resource = sourceResource.clone();
         resource.setGroupId(targetGroupId);
         resource.setFolderId(targetFolderId);
@@ -191,11 +183,9 @@ public interface ResourceDao extends SqlObject {
         } catch (IOException e) {
             LogManager.getLogger(ResourceDao.class).error("Error during copying resource files {}", resource, e);
         }
-
-        return resource;
     }
 
-    default void save(Resource resource) throws SQLException {
+    default void save(Resource resource) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("resource_id", resource.getId() < 1 ? null : resource.getId());
         params.put("title", resource.getTitle());
@@ -275,7 +265,7 @@ public interface ResourceDao extends SqlObject {
             params.put("thumbnail4_height", resource.getThumbnail4().getHeight());
         }
 
-        Optional<Integer> resourceId = SqlHelper.generateInsertQuery(getHandle(), "lw_resource", params)
+        Optional<Integer> resourceId = SqlHelper.handleSave(getHandle(), "lw_resource", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         resourceId.ifPresent(id -> {
@@ -292,16 +282,16 @@ public interface ResourceDao extends SqlObject {
         Learnweb.getInstance().getSolrClient().reIndexResource(resource);
     }
 
-    default void deleteSoft(int resourceId) throws SQLException {
+    default void deleteSoft(int resourceId) {
         // delete resource from SOLR index
         try {
             Learnweb.getInstance().getSolrClient().deleteFromIndex(resourceId);
         } catch (Exception e) {
-            throw new RuntimeException("Couldn't delete resource " + resourceId + " from SOLR", e);
+            throw new IllegalStateException("Couldn't delete resource " + resourceId + " from SOLR", e);
         }
 
         // flag the resource as deleted
-        getHandle().execute("UPDATE `lw_resource` SET deleted = 1 WHERE `resource_id` = ?", resourceId);
+        getHandle().execute("UPDATE lw_resource SET deleted = 1 WHERE resource_id = ?", resourceId);
 
         // remove resource from cache
         cache.remove(resourceId);
@@ -311,11 +301,11 @@ public interface ResourceDao extends SqlObject {
      * Don't use this function.
      * Usually you have to call deleteSoft()
      */
-    default void deleteHard(int resourceId) throws SQLException {
+    default void deleteHard(int resourceId) {
         // log.debug("Hard delete resource: " + resourceId);
 
         deleteSoft(resourceId); // clear cache and remove resource from SOLR
-        getHandle().execute("DELETE FROM lw_resource WHERE `resource_id` = ?", resourceId);
+        getHandle().execute("DELETE FROM lw_resource WHERE resource_id = ?", resourceId);
 
         // TODO @astappiev: delete files (lw_file); but it's not possible yet because files are shared when a resource is copied
     }
@@ -359,8 +349,8 @@ public interface ResourceDao extends SqlObject {
                 resource.setDuration(rs.getInt("duration"));
                 resource.setLanguage(rs.getString("language"));
                 resource.setRestricted(rs.getInt("restricted") == 1);
-                resource.setResourceTimestamp(rs.getTimestamp("resource_timestamp"));
-                resource.setCreationDate(rs.getTimestamp("creation_date") == null ? null : new Date(rs.getTimestamp("creation_date").getTime()));
+                resource.setResourceTimestamp(RsHelper.getLocalDateTime(rs.getTimestamp("resource_timestamp")));
+                resource.setCreationDate(RsHelper.getLocalDateTime(rs.getTimestamp("creation_date")));
                 resource.setGroupId(rs.getInt("group_id"));
                 resource.setFolderId(rs.getInt("folder_id"));
                 resource.setDeleted(rs.getInt("deleted") == 1);
@@ -371,37 +361,13 @@ public interface ResourceDao extends SqlObject {
 
                 if (resource.isDeleted()) {
                     LogManager.getLogger(ResourceMapper.class).debug("resource {} was requested but is deleted", resource.getId());
-                } else if (!reindexMode) {
-                    List<File> files = Learnweb.dao().getFileDao().findByResourceId(resource.getId());
-
-                    for (File file : files) {
-                        resource.addFile(file);
-                        if (file.getType() == File.TYPE.FILE_MAIN) {
-                            resource.setFileUrl(file.getUrl());
-                            resource.setFileName(file.getName());
-
-                            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE) {
-                                resource.setUrl(file.getUrl());
-                            }
-                        }
-                    }
                 }
 
                 // deserialize metadata
                 byte[] metadataBytes = rs.getBytes("metadata");
-
                 if (metadataBytes != null && metadataBytes.length > 0) {
-                    ByteArrayInputStream metadataBAIS = new ByteArrayInputStream(metadataBytes);
-
                     try {
-                        ObjectInputStream metadataOIS = new ObjectInputStream(metadataBAIS);
-
-                        // re-create the object
-                        Object metadata = metadataOIS.readObject();
-
-                        if (metadata != null) {
-                            resource.setMetadata(metadata);
-                        }
+                        resource.setMetadata(SerializationUtils.deserialize(metadataBytes));
                     } catch (Exception e) {
                         LogManager.getLogger(ResourceMapper.class).error("Couldn't load metadata for resource {}", resource.getId(), e);
                     }

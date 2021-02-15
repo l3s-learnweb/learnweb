@@ -2,6 +2,7 @@ package de.l3s.learnweb.beans.publicPages;
 
 import java.io.Serializable;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
@@ -33,7 +34,8 @@ public class ContactBean extends ApplicationBean implements Serializable {
     @NotBlank
     private String message;
 
-    public ContactBean() {
+    @PostConstruct
+    public void init() {
         User user = getUser();
 
         if (null != user) { // set default value
@@ -43,7 +45,7 @@ public class ContactBean extends ApplicationBean implements Serializable {
     }
 
     public void sendMail() {
-        String adminEmail = getLearnweb().getProperties().getProperty("ADMIN_MAIL");
+        String adminEmail = getLearnweb().getConfigProvider().getProperty("admin_mail");
 
         try {
             Mail message = new Mail();

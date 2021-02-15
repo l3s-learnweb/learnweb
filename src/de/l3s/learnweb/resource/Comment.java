@@ -1,18 +1,18 @@
 package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.HasId;
 
-public class Comment implements Serializable, Comparable<Comment> {
+public class Comment implements Serializable, Comparable<Comment>, HasId {
     private static final long serialVersionUID = -5854582234222584285L;
     private int id = -1;
     private String text;
-    private Date date = new Date();
+    private LocalDateTime date = LocalDateTime.now();
     private int userId = -1;
     private int resourceId = -1;
 
@@ -22,7 +22,7 @@ public class Comment implements Serializable, Comparable<Comment> {
     public Comment() {
     }
 
-    public Comment(String text, Date date, Resource resource, User user) {
+    public Comment(String text, LocalDateTime date, Resource resource, User user) {
         this.text = text;
         this.date = date;
 
@@ -46,17 +46,17 @@ public class Comment implements Serializable, Comparable<Comment> {
         this.text = text;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
-    public Resource getResource() throws SQLException {
+    public Resource getResource() {
         if (null == resource && resourceId != -1) {
-            resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+            resource = Learnweb.dao().getResourceDao().findById(resourceId);
         }
         return resource;
     }
@@ -69,9 +69,9 @@ public class Comment implements Serializable, Comparable<Comment> {
         }
     }
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (null == user && userId != -1) {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }

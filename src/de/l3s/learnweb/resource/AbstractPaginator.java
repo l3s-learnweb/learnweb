@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public abstract class AbstractPaginator implements Serializable {
         this.pageSize = pageSize;
     }
 
-    public abstract List<ResourceDecorator> getCurrentPage() throws SQLException, IOException, SolrServerException;
+    public abstract List<ResourceDecorator> getCurrentPage() throws IOException, SolrServerException;
 
     public int getTotalResults() {
         return totalResults;

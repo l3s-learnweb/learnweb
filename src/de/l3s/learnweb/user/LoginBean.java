@@ -1,7 +1,9 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -19,11 +21,12 @@ import org.omnifaces.util.Faces;
 
 import com.google.common.net.InetAddresses;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.web.RequestManager;
+import de.l3s.util.HashHelper;
 
 @Named
 @RequestScoped
@@ -33,7 +36,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(LoginBean.class);
     private static final String LOGIN_PAGE = "/lw/user/login.xhtml";
     public static final String AUTH_COOKIE_NAME = "auth_uuid";
-    private static final int AUTH_COOKIE_AGE = 30 * 24 * 60 * 60;
+    private static final int AUTH_COOKIE_AGE_DAYS = 30;
 
     @NotBlank
     private String username;
@@ -41,6 +44,9 @@ public class LoginBean extends ApplicationBean implements Serializable {
     private String password;
     private boolean remember;
     private boolean captchaRequired;
+
+    @Inject
+    private UserDao userDao;
 
     @Inject
     private RequestManager requestManager;
@@ -53,10 +59,10 @@ public class LoginBean extends ApplicationBean implements Serializable {
         String ip = Faces.getRemoteAddr();
 
         //noinspection UnstableApiUsage
-        if (!InetAddresses.isInetAddress(ip)) {
-            captchaRequired = true;
-        } else {
+        if (InetAddresses.isInetAddress(ip)) {
             captchaRequired = requestManager.isCaptchaRequired(ip);
+        } else {
+            captchaRequired = true;
         }
     }
 
@@ -88,7 +94,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         return captchaRequired;
     }
 
-    public String login() throws SQLException {
+    public String login() {
         String ip = Faces.getRemoteAddr();
 
         //noinspection UnstableApiUsage
@@ -101,9 +107,9 @@ public class LoginBean extends ApplicationBean implements Serializable {
         BeanAssert.hasPermission(!requestManager.isBanned(username), "username_banned");
 
         // USER AUTHORIZATION HAPPENS HERE
-        final User user = getLearnweb().getUserManager().getUser(username, password);
+        final Optional<User> user = userDao.findByUsernameAndPassword(username, password);
 
-        if (null == user) {
+        if (user.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
             requestManager.updateFailedAttempts(ip, username);
             return LOGIN_PAGE;
@@ -112,8 +118,8 @@ public class LoginBean extends ApplicationBean implements Serializable {
         requestManager.updateSuccessfulAttempts(ip, username);
         requestManager.recordLogin(ip, username);
 
-        if (!user.isEmailConfirmed() && user.isEmailRequired()) {
-            confirmRequiredBean.setLoggedInUser(user);
+        if (!user.get().isEmailConfirmed() && user.get().isEmailRequired()) {
+            confirmRequiredBean.setLoggedInUser(user.get());
             return "/lw/user/confirm_required.xhtml?faces-redirect=true";
         }
 
@@ -121,13 +127,13 @@ public class LoginBean extends ApplicationBean implements Serializable {
             long authId = RandomUtils.nextLong();
             String token = RandomStringUtils.randomAlphanumeric(128);
 
-            Faces.addResponseCookie(AUTH_COOKIE_NAME, authId + ":" + token, "/", AUTH_COOKIE_AGE);
-            getLearnweb().getUserManager().saveAuth(user, authId, token, AUTH_COOKIE_AGE);
+            Faces.addResponseCookie(AUTH_COOKIE_NAME, authId + ":" + token, "/", Math.toIntExact(Duration.ofDays(AUTH_COOKIE_AGE_DAYS).toSeconds()));
+            userDao.insertAuth(user.get(), authId, HashHelper.sha256(token), LocalDateTime.now().plusDays(AUTH_COOKIE_AGE_DAYS));
         } else {
             Faces.removeResponseCookie(AUTH_COOKIE_NAME, "/");
         }
 
-        return loginUser(this, user);
+        return loginUser(this, user.get());
     }
 
     /**
@@ -160,7 +166,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         this.confirmRequiredBean = confirmRequiredBean;
     }
 
-    public static String rootLogin(ApplicationBean bean, User targetUser) throws SQLException {
+    public static String rootLogin(ApplicationBean bean, User targetUser) {
         UserBean userBean = bean.getUserBean();
         // validate permission
         BeanAssert.hasPermission(userBean.canLoginToAccount(targetUser), userBean.getUser() + " tried to hijack account");
@@ -170,7 +176,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         return loginUser(bean, targetUser);
     }
 
-    public static String loginUser(ApplicationBean bean, User user) throws SQLException {
+    public static String loginUser(ApplicationBean bean, User user) {
         UserBean userBean = bean.getUserBean();
         userBean.setUser(user); // logs the user in
         // addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
@@ -214,7 +220,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 
-    public static String redirect(User user, String redirectUrl) throws SQLException {
+    public static String redirect(User user, String redirectUrl) {
         if (StringUtils.isEmpty(redirectUrl)) {
             redirectUrl = Faces.getRequestParameter("redirect");
         }
@@ -223,7 +229,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             // this `grant` parameter is used by annotation client/waps proxy to receive grant token for user auth
             String grant = Faces.getRequestParameter("grant");
             if (StringUtils.isNotEmpty(grant)) {
-                String token = Learnweb.getInstance().getUserManager().getGrantToken(user.getId());
+                String token = Learnweb.dao().getUserDao().getGrantToken(user.getId());
                 log.debug("Grant token [{}] requested for user [{}], redirect to {}", token, user.getId(), redirectUrl);
                 Faces.redirect(redirectUrl + "?token=" + token);
             }

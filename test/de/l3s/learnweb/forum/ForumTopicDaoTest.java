@@ -2,29 +2,21 @@ package de.l3s.learnweb.forum;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import de.l3s.test.DatabaseExtension;
+import de.l3s.test.LearnwebExtension;
 
 class ForumTopicDaoTest {
 
     @RegisterExtension
-    static final DatabaseExtension db = new DatabaseExtension();
-
-    private static ForumPostDao forumPostDao;
-    private static ForumTopicDao forumTopicDao;
-
-    @BeforeAll
-    static void beforeAll() {
-        forumPostDao = db.attach(ForumPostDao.class);
-        forumTopicDao = db.attach(ForumTopicDao.class);
-    }
+    static final LearnwebExtension learnwebExt = new LearnwebExtension();
+    private final ForumPostDao forumPostDao = learnwebExt.attach(ForumPostDao.class);
+    private final ForumTopicDao forumTopicDao = learnwebExt.attach(ForumTopicDao.class);
 
     @Test
     void getters() {
@@ -42,7 +34,7 @@ class ForumTopicDaoTest {
         topic.setUserId(3);
         topic.setGroupId(12);
         topic.setTitle("monkey");
-        topic.setLastPostDate(new Date());
+        topic.setLastPostDate(LocalDateTime.now());
         topic.setLastPostId(post.getId());
         topic.setLastPostUserId(post.getUserId());
         forumTopicDao.save(topic);
@@ -51,12 +43,12 @@ class ForumTopicDaoTest {
         topic2.setUserId(2);
         topic2.setGroupId(12);
         topic2.setTitle("parrot");
-        topic2.setLastPostDate(new Date());
+        topic2.setLastPostDate(LocalDateTime.now());
         topic2.setLastPostId(post2.getId());
         topic2.setLastPostUserId(post2.getUserId());
         forumTopicDao.save(topic2);
 
-        Optional<ForumTopic> retrieved = forumTopicDao.getTopicById(topic.getId());
+        Optional<ForumTopic> retrieved = forumTopicDao.findById(topic.getId());
 
         assertTrue(retrieved.isPresent());
         assertEquals(topic.getId(), retrieved.get().getId());
@@ -64,7 +56,7 @@ class ForumTopicDaoTest {
         assertEquals(topic.getGroupId(), retrieved.get().getGroupId());
         assertEquals(topic.getTitle(), retrieved.get().getTitle());
 
-        List<ForumTopic> topicsByGroupId = forumTopicDao.getTopicsByGroupId(topic2.getGroupId());
+        List<ForumTopic> topicsByGroupId = forumTopicDao.findByGroupId(topic2.getGroupId());
         assertEquals(2, topicsByGroupId.size());
         assertEquals(topic2.getTitle(), topicsByGroupId.get(0).getTitle());
     }
@@ -81,13 +73,13 @@ class ForumTopicDaoTest {
         topic.setUserId(3);
         topic.setGroupId(12);
         topic.setTitle("monkey");
-        topic.setLastPostDate(new Date());
+        topic.setLastPostDate(LocalDateTime.now());
         topic.setLastPostId(post.getId());
         topic.setLastPostUserId(post.getUserId());
         forumTopicDao.save(topic);
         assertTrue(topic.getId() > 0);
 
-        Optional<ForumTopic> retrieved = forumTopicDao.getTopicById(topic.getId());
+        Optional<ForumTopic> retrieved = forumTopicDao.findById(topic.getId());
 
         assertTrue(retrieved.isPresent());
         assertEquals(topic.getId(), retrieved.get().getId());
@@ -95,8 +87,8 @@ class ForumTopicDaoTest {
         assertEquals(topic.getGroupId(), retrieved.get().getGroupId());
         assertEquals(topic.getTitle(), retrieved.get().getTitle());
 
-        forumTopicDao.deleteTopicById(topic.getId());
-        Optional<ForumTopic> deleted = forumTopicDao.getTopicById(topic.getId());
+        forumTopicDao.delete(topic.getId());
+        Optional<ForumTopic> deleted = forumTopicDao.findById(topic.getId());
         assertFalse(deleted.isPresent());
     }
 }

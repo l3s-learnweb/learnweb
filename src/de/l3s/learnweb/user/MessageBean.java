@@ -1,10 +1,10 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,35 +14,30 @@ import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @ViewScoped
-public class MessageBean extends ApplicationBean implements Serializable { // TODO @hulyi: refactor complete message system and the update this class
+public class MessageBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 6231162839099220868L;
     private static final Logger log = LogManager.getLogger(MessageBean.class);
 
-    private ArrayList<Message> receivedMessages;
+    private List<Message> receivedMessages;
     private Integer howManyNewMessages;
 
-    public MessageBean() {
+    @Inject
+    private MessageDao messageDao;
 
+    public void onLoad() {
+        messageDao.updateMarkReadAll(getUser());
     }
 
-    public void onLoad() throws SQLException {
-        Message.setAllMessagesSeen(getUser().getId());
-    }
-
-    public ArrayList<Message> getReceivedMessages() throws SQLException {
+    public List<Message> getReceivedMessages() {
         if (receivedMessages == null) {
-            try {
-                receivedMessages = Message.getAllMessagesToUser(getUser());
-            } catch (Exception e) {
-                log.error("unhandled error", e);
-            }
+            receivedMessages = messageDao.findIncoming(getUser());
         }
         return receivedMessages;
     }
 
-    public Integer getHowManyNewMessages() throws SQLException {
+    public Integer getHowManyNewMessages() {
         if (howManyNewMessages == null) {
-            howManyNewMessages = Message.howManyNotSeenMessages(getUser());
+            howManyNewMessages = messageDao.countNotSeen(getUser());
         }
         return howManyNewMessages;
     }

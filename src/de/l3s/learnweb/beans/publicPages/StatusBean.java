@@ -1,45 +1,31 @@
 package de.l3s.learnweb.beans.publicPages;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import org.jdbi.v3.core.Handle;
 import org.omnifaces.util.Faces;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @RequestScoped
 public class StatusBean extends ApplicationBean {
-    private Map<String, String> variables = new HashMap<>();
     private final List<Service> services = new LinkedList<>();
 
-    public StatusBean() {
-        fetchVariables();
-        fetchServices();
-    }
-
-    private void fetchVariables() {
-        variables = System.getenv().entrySet()
-            .stream()
-            .filter(map -> map.getKey().startsWith("LEARNWEB_"))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    private void fetchServices() {
+    @PostConstruct
+    public void init() {
         Learnweb learnweb = getLearnweb();
-        services.add(new Service("Learnweb Tomcat", "ok", learnweb.getServerUrl(), "Obviously OK, otherwise this page would not be reachable"));
+        services.add(new Service("Learnweb Tomcat", "ok", learnweb.getConfigProvider().getServerUrl(), "Obviously OK, otherwise this page would not be reachable"));
 
         // test learnweb database
-        Service lwDb = new Service("Learnweb Database", "ok", learnweb.getProperties().getProperty("mysql_url"), "");
-        try (Handle handle = learnweb.openHandle()) {
+        Service lwDb = new Service("Learnweb Database", "ok", learnweb.getConfigProvider().getProperty("mysql_url"), "");
+        try (Handle handle = learnweb.openJdbiHandle()) {
             Integer dbUsers = handle.select("SELECT count(*) FROM lw_user").mapTo(Integer.class).one();
 
             if (dbUsers == null || dbUsers < 400) {
@@ -51,9 +37,9 @@ public class StatusBean extends ApplicationBean {
         services.add(lwDb);
 
         // very simple database integrity test
-        Service lwDbIntegrity = new Service("Learnweb Database integrity", "ok", learnweb.getProperties().getProperty("FEDORA_SERVER_URL"), "");
+        Service lwDbIntegrity = new Service("Learnweb Database integrity", "ok", learnweb.getConfigProvider().getProperty("mysql_url"), "");
         try {
-            if (learnweb.getResourceManager().getResourceRateByUser(2811, 1684) == null) {
+            if (learnweb.getDaoProvider().getResourceDao().findResourceRating(2811, 1684).isPresent()) {
                 lwDbIntegrity.setStatus("warning", "unexpected result from database");
             }
         } catch (Exception e) {
@@ -75,10 +61,6 @@ public class StatusBean extends ApplicationBean {
 
     public String getProjectStage() {
         return Faces.getProjectStage().toString();
-    }
-
-    public Map<String, String> getVariables() {
-        return variables;
     }
 
     public List<Service> getServices() {

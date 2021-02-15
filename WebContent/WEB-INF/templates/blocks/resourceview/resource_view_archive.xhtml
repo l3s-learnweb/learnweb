@@ -29,7 +29,7 @@
 							<li style="width:12rem;">
 								<a href="#{au.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
 									<h:outputText value="#{au.timestamp}">
-										<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+										<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 									</h:outputText>
 								</a>
 							</li>
@@ -46,7 +46,7 @@
 										<li style="width:12rem;">
 											<a href="#{au2.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
 												<h:outputText value="#{au2.timestamp}">
-													<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+													<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 												</h:outputText>
 											</a>
 										</li>
@@ -69,7 +69,7 @@
 							<span class="text-muted">
 								<h:outputText value="#{msg['Archive.thumbnail_update_info']}: "/>
 								<h:outputText value="#{res.thumbnailUpdateInfo.date}">
-									<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+									<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 								</h:outputText>
 								<h:outputText value=" (#{msg.by} #{res.thumbnailUpdateInfo.username})"/>
 							</span>
@@ -79,7 +79,7 @@
 						<span>
 							<h:outputText value="#{msg['Archive.show_version']}: "/>
 							<h:outputText id="archive_timestamp" value="#{res.lastArchivedObject.timestamp}">
-								<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+								<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 							</h:outputText>
 							<p:commandButton value="#{msg['Archive.set_thumbnail']}" styleClass="ms-2 alt-btn"
 											 action="#{resourceDetailBean.setResourceThumbnail(res.lastArchivedObject.archiveUrl)}"
@@ -115,7 +115,7 @@
 							<div style="width:12rem;" class="mx-2">
 								<a href="#{au2.archiveUrl}" target="_blank" class="w-100 m-0 mb-1">
 									<h:outputText value="#{au2.timestamp}">
-										<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+										<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 									</h:outputText>
 								</a>
 							</div>

@@ -1,12 +1,11 @@
 package de.l3s.learnweb.forum;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Deletable;
 
@@ -18,9 +17,9 @@ public class ForumPost implements Serializable, Deletable {
     private int topicId;
     @NotBlank
     private String text;
-    private Date date;
+    private LocalDateTime date;
     private int editCount;
-    private Date lastEditDate;
+    private LocalDateTime lastEditDate;
     private int editUserId;
     private boolean deleted;
     private String category;
@@ -85,11 +84,11 @@ public class ForumPost implements Serializable, Deletable {
         this.text = text;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
         if (this.lastEditDate == null) {
             this.lastEditDate = date;
@@ -104,11 +103,11 @@ public class ForumPost implements Serializable, Deletable {
         this.editCount = editCount;
     }
 
-    public Date getLastEditDate() {
+    public LocalDateTime getLastEditDate() {
         return lastEditDate;
     }
 
-    public void setLastEditDate(Date lastEditDate) {
+    public void setLastEditDate(LocalDateTime lastEditDate) {
         this.lastEditDate = lastEditDate;
     }
 
@@ -120,16 +119,16 @@ public class ForumPost implements Serializable, Deletable {
         this.editUserId = editUserId;
     }
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (user == null) {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }
 
-    public User getEditUser() throws SQLException {
+    public User getEditUser() {
         if (editUser == null) {
-            editUser = Learnweb.getInstance().getUserManager().getUser(editUserId);
+            editUser = Learnweb.dao().getUserDao().findById(editUserId);
         }
         return editUser;
     }

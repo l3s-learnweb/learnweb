@@ -1,7 +1,6 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.BitSet;
 import java.util.List;
@@ -13,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.util.HasId;
 
@@ -66,12 +65,12 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         options.set(option.ordinal(), value);
     }
 
-    public List<Group> getGroups() throws SQLException {
-        return Learnweb.getInstance().getGroupManager().getGroupsByCourseId(id);
+    public List<Group> getGroups() {
+        return Learnweb.dao().getGroupDao().findByCourseId(id);
     }
 
-    public List<Group> getGroupsFilteredByUser(User user) throws SQLException {
-        return Learnweb.getInstance().getGroupManager().getGroupsByUserIdFilteredByCourseId(user.getId(), id);
+    public List<Group> getGroupsFilteredByUser(User user) {
+        return Learnweb.dao().getGroupDao().findByUserIdAndCourseId(user.getId(), id);
     }
 
     /**
@@ -122,12 +121,12 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         this.organisationId = organisationId;
     }
 
-    public Organisation getOrganisation() throws SQLException {
+    public Organisation getOrganisation() {
         if (organisationId < 0) {
             return null;
         }
 
-        return Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
+        return Learnweb.dao().getOrganisationDao().findById(organisationId);
     }
 
     public int getDefaultGroupId() {
@@ -154,31 +153,31 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         this.nextXUsersBecomeModerator = nextXUsersBecomeModerator;
     }
 
-    public int getMemberCount() throws SQLException {
+    public int getMemberCount() {
         if (memberCount == -1) {
-            memberCount = Learnweb.getInstance().getUserManager().getUsersByCourseId(id).size();
+            memberCount = Learnweb.dao().getUserDao().countByCourseId(id);
         }
         return memberCount;
     }
 
-    public List<User> getMembers() throws SQLException {
-        return Learnweb.getInstance().getUserManager().getUsersByCourseId(id);
+    public List<User> getMembers() {
+        return Learnweb.dao().getUserDao().findByCourseId(id);
     }
 
     /**
      * @return The userIds of all course members
      */
-    public List<Integer> getUserIds() throws SQLException {
+    public List<Integer> getUserIds() {
         return HasId.collectIds(getMembers());
     }
 
-    public synchronized void addUser(User user) throws SQLException {
+    public synchronized void addUser(User user) {
         if (memberCount != -1) {
             memberCount++;
         }
 
         if (nextXUsersBecomeModerator > 0) {
-            log.debug("User: " + user.getUsername() + " becomes moderator of course: " + getTitle());
+            log.debug("User: {} becomes moderator of course: {}", user.getUsername(), getTitle());
 
             user.setModerator(true);
 
@@ -186,15 +185,15 @@ public class Course implements Serializable, Comparable<Course>, HasId {
             save();
         }
 
-        Learnweb.getInstance().getCourseManager().addUser(this, user);
+        Learnweb.dao().getCourseDao().insertUser(this, user);
         user.clearCaches();
     }
 
-    public void removeUser(User user) throws SQLException {
+    public void removeUser(User user) {
         if (memberCount != -1) {
             memberCount--;
         }
-        Learnweb.getInstance().getCourseManager().removeUser(this, user);
+        Learnweb.dao().getCourseDao().deleteUser(this, user);
         user.clearCaches();
     }
 
@@ -203,7 +202,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
      *
      * @return True if the given user is a moderator of this course
      */
-    public boolean isModerator(User user) throws SQLException {
+    public boolean isModerator(User user) {
         if (user.isAdmin()) {
             return true;
         }
@@ -215,7 +214,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         return isMember(user); // moderators can only moderator her own courses
     }
 
-    public boolean isMember(User user) throws SQLException {
+    public boolean isMember(User user) {
         return user.getCourses().contains(this); // moderators can only moderator her own courses
     }
 
@@ -262,7 +261,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         this.creationTimestamp = creationTimestamp;
     }
 
-    public void save() throws SQLException {
-        Learnweb.getInstance().getCourseManager().save(this);
+    public void save() {
+        Learnweb.dao().getCourseDao().save(this);
     }
 }

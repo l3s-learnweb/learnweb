@@ -1,10 +1,9 @@
 package de.l3s.learnweb.dashboard.tracker;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.time.Duration;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
@@ -25,9 +24,9 @@ public class TrackerUserActivity implements Serializable {
 
     private transient User user;
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (null == user && userId > 0) {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }

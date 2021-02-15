@@ -1,6 +1,6 @@
 package de.l3s.learnweb.resource.search.solrClient;
 
-import java.sql.SQLException;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -71,7 +71,7 @@ public class ResourceDocument {
         // empty constructor necessary for SolrSearch
     }
 
-    public ResourceDocument(Resource resource) throws SQLException {
+    public ResourceDocument(Resource resource) {
         this.id = "r_" + resource.getId();
         this.title = resource.getTitle();
         this.description = resource.getDescription();
@@ -87,7 +87,7 @@ public class ResourceDocument {
         this.groupId = resource.getGroupId();
         this.path = resource.getPath();
         this.ownerUserId = resource.getUserId();
-        this.timestamp = resource.getCreationDate() != null ? resource.getCreationDate() : resource.getResourceTimestamp();
+        this.timestamp = Date.from((resource.getCreationDate() != null ? resource.getCreationDate() : resource.getResourceTimestamp()).toInstant(ZoneOffset.UTC));
 
         if (null != resource.getTags()) {
             this.tags = new LinkedList<>();
@@ -114,15 +114,17 @@ public class ResourceDocument {
         dynamicFieldsStrings = new HashMap<>(resource.getMetadata().size());
         for (Entry<String, String> entry : resource.getMetadata().entrySet()) {
             if (entry.getValue() == null) {
-                log.warn("entry has no value: " + entry);
+                log.warn("entry has no value: {}", entry);
                 continue;
             }
             String[] value;
 
-            if (entry.getValue().indexOf(Resource.METADATA_SEPARATOR) != -1) { // Warning: the presence of the separator char isn't a good indicator for a multi valued field. in the past singe value fields were allowed to contain this separator
-                value = StringUtils.split(entry.getValue(), Resource.METADATA_SEPARATOR);
-            } else {
+            // Warning: the presence of the separator char isn't a good indicator for a multi valued field,
+            // in the past singe value fields were allowed to contain this separator
+            if (entry.getValue().indexOf(Resource.METADATA_SEPARATOR) == -1) {
                 value = new String[] {entry.getValue()};
+            } else {
+                value = StringUtils.split(entry.getValue(), Resource.METADATA_SEPARATOR);
             }
 
             dynamicFieldsStrings.put(entry.getKey() + "_ss", value);

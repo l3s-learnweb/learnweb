@@ -1,10 +1,8 @@
 package de.l3s.learnweb.dashboard.activity;
 
-import java.time.ZoneId;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,15 +11,15 @@ import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.line.LineChartDataSet;
 import org.primefaces.model.charts.line.LineChartModel;
 
-import de.l3s.learnweb.beans.ColorUtils;
+import de.l3s.util.ColorHelper;
 
-public class ActivityDashboardChartsFactory {
+public final class ActivityDashboardChartsFactory {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static LineChartModel createActivitiesChart(List<ActivityGraphData> data, Date startDate, Date endDate) {
+    public static LineChartModel createActivitiesChart(List<ActivityGraphData> data, LocalDate startDate, LocalDate endDate) {
         LineChartModel model = new LineChartModel();
         ChartData chartData = new ChartData();
-        List<String> colors = ColorUtils.getColorList(data.size());
+        List<String> colors = ColorHelper.getColorList(data.size());
 
         for (ActivityGraphData activityData : data) {
             LineChartDataSet dataSet = new LineChartDataSet();
@@ -36,13 +34,8 @@ public class ActivityDashboardChartsFactory {
             dataSet.setLabel(activityData.getName());
             dataSet.setLineTension(0.1);
 
-            Calendar start = Calendar.getInstance();
-            start.setTime(startDate);
-            Calendar end = Calendar.getInstance();
-            end.setTime(endDate);
-
-            for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-                String dateKey = DATE_FORMAT.format(date.toInstant().atZone(ZoneId.systemDefault()));
+            for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+                String dateKey = DATE_FORMAT.format(date);
                 labels.add(dateKey);
                 values.add(activityData.getActionsPerDay().getOrDefault(dateKey, 0));
             }
@@ -55,17 +48,12 @@ public class ActivityDashboardChartsFactory {
         return model;
     }
 
-    public static List<Map<String, Object>> createActivitiesTable(List<ActivityGraphData> data, Date startDate, Date endDate) {
+    public static List<Map<String, Object>> createActivitiesTable(List<ActivityGraphData> data, LocalDate startDate, LocalDate endDate) {
         List<Map<String, Object>> rows = new ArrayList<>();
 
-        Calendar start = Calendar.getInstance();
-        start.setTime(startDate);
-        Calendar end = Calendar.getInstance();
-        end.setTime(endDate);
-
-        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
             Map<String, Object> columns = new LinkedMap<>();
-            String dateKey = DATE_FORMAT.format(date.toInstant().atZone(ZoneId.systemDefault()));
+            String dateKey = DATE_FORMAT.format(date);
             columns.put("Date", dateKey);
 
             for (ActivityGraphData activityData : data) {

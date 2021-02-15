@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.office;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.office.history.model.History;
 import de.l3s.learnweb.resource.office.history.model.HistoryData;
@@ -24,7 +25,7 @@ import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(ResourceHistoryDao.HistoryMapper.class)
 @RegisterRowMapper(ResourceHistoryDao.HistoryDataMapper.class)
-public interface ResourceHistoryDao extends SqlObject {
+public interface ResourceHistoryDao extends SqlObject, Serializable {
     DateTimeFormatter CREATED_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
 
     @SqlQuery("SELECT h.*, u.user_id, u.username FROM lw_resource_history h join lw_user u USING(user_id) WHERE resource_history_id = ?")
@@ -66,7 +67,7 @@ public interface ResourceHistoryDao extends SqlObject {
         params.put("document_version", history.getVersion());
         params.put("document_changes", history.getChanges() != null ? history.getChanges().toString() : null);
 
-        Optional<Integer> commentId = SqlHelper.generateInsertQuery(getHandle(), "lw_resource_history", params)
+        Optional<Integer> commentId = SqlHelper.handleSave(getHandle(), "lw_resource_history", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         commentId.ifPresent(history::setId);

@@ -1,12 +1,13 @@
 package de.l3s.learnweb.beans.admin;
 
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
@@ -20,8 +21,9 @@ import org.primefaces.model.TreeNode;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.Message;
+import de.l3s.learnweb.user.MessageDao;
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserManager;
+import de.l3s.learnweb.user.UserDao;
 import de.l3s.util.bean.BeanHelper;
 import de.l3s.util.email.Mail;
 
@@ -38,10 +40,17 @@ public class AdminNotificationBean extends ApplicationBean {
     private boolean sendEmail = false; // send the message also per mail
     private boolean moderatorCanSendMail = false;
 
-    private final User user;
-    private final TreeNode treeRoot;
+    private User user;
+    private TreeNode treeRoot;
 
-    public AdminNotificationBean() throws SQLException {
+    @Inject
+    private UserDao userDao;
+
+    @Inject
+    private MessageDao messageDao;
+
+    @PostConstruct
+    public void init() {
         user = getUser();
         BeanAssert.authorized(user);
         BeanAssert.hasPermission(user.isModerator());
@@ -53,7 +62,7 @@ public class AdminNotificationBean extends ApplicationBean {
         treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
     }
 
-    public void send() throws SQLException {
+    public void send() {
         Collection<Integer> selectedUsers = BeanHelper.getSelectedUsers(selectedNodes);
         if (selectedUsers.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");
@@ -64,18 +73,17 @@ public class AdminNotificationBean extends ApplicationBean {
         message.setFromUser(getUser());
         message.setTitle(this.title);
         message.setText(this.text);
-        message.setTime(new Date());
+        message.setTime(LocalDateTime.now());
 
-        UserManager um = getLearnweb().getUserManager();
         int counter = 0;
 
         ArrayList<String> recipients = new ArrayList<>(selectedUsers.size());
         ArrayList<String> usersWithoutMail = new ArrayList<>();
 
         for (int userId : selectedUsers) {
-            User user = um.getUser(userId);
+            User user = userDao.findById(userId);
             message.setToUser(user);
-            message.save();
+            messageDao.save(message);
 
             if (StringUtils.isEmpty(user.getEmail()) || !user.isEmailConfirmed()) {
                 usersWithoutMail.add(user.getUsername());

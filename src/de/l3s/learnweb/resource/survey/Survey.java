@@ -1,13 +1,12 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
@@ -24,8 +23,7 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
     @NotBlank
     @Size(min = 5, max = 100)
     private String title;
-
-    @Size(min = 0, max = 1000)
+    @Size(max = 1000)
     private String description;
     private int organizationId; // if <> 0 only the specified organization can use this survey
     private int userId; // user who created this survey
@@ -39,7 +37,7 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
 
     }
 
-    public Survey(Survey old) throws SQLException {
+    public Survey(Survey old) {
         setId(-1);
         setTitle(old.getTitle());
         setDescription(old.getDescription());
@@ -86,9 +84,9 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
         this.organizationId = organizationId;
     }
 
-    public List<SurveyQuestion> getQuestions() throws SQLException {
+    public List<SurveyQuestion> getQuestions() {
         if (null == questions) {
-            questions = Learnweb.getInstance().getSurveyManager().getQuestions(id);
+            questions = Learnweb.dao().getSurveyDao().findQuestionsAndAnswersById(id);
         }
         return questions;
     }
@@ -97,15 +95,15 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
         this.questions = questions;
     }
 
-    public SurveyQuestion getQuestion(int questionId) throws SQLException {
-        return getQuestions().stream().filter(q -> q.getId() == questionId).findFirst().get();
+    public SurveyQuestion getQuestion(int questionId) {
+        return getQuestions().stream().filter(q -> q.getId() == questionId).findFirst().orElseThrow();
     }
 
     /**
      * @param updateMetaDataOnly performance optimization: if true only metadata like title and description will be saved but not changes to questions
      */
-    public void save(boolean updateMetaDataOnly) throws SQLException {
-        Learnweb.getInstance().getSurveyManager().save(this, updateMetaDataOnly);
+    public void save(boolean updateMetaDataOnly) {
+        Learnweb.dao().getSurveyDao().save(this, updateMetaDataOnly);
     }
 
     public int getUserId() {
@@ -138,11 +136,7 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
      */
     @Override
     public Survey clone() {
-        try {
-            return new Survey(this);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return new Survey(this);
     }
 
     public boolean isAssociated() {

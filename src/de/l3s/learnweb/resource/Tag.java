@@ -1,13 +1,13 @@
 package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
+import de.l3s.util.HasId;
 
-public class Tag implements Comparable<Tag>, Serializable {
+public class Tag implements Comparable<Tag>, Serializable, HasId {
     private static final long serialVersionUID = 7542445827379987188L;
 
     private int id;
@@ -30,8 +30,8 @@ public class Tag implements Comparable<Tag>, Serializable {
         this.id = id;
     }
 
-    public List<Resource> getResources() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().getResourcesByTagId(id);
+    public List<Resource> getResources() {
+        return Learnweb.dao().getResourceDao().findByTagId(id);
     }
 
     @Override

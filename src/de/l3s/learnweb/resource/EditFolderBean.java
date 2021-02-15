@@ -1,17 +1,18 @@
 package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.group.FolderDao;
 import de.l3s.learnweb.logging.Action;
 
 @Named
@@ -21,34 +22,33 @@ public class EditFolderBean extends ApplicationBean implements Serializable {
 
     private Folder folder;
 
+    @Inject
+    private FolderDao folderDao;
+
     public void commandEditFolder() {
         try {
             Map<String, String> params = Faces.getRequestParameterMap();
             int itemId = Integer.parseInt(params.get("itemId"));
 
-            Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
+            Folder folder = folderDao.findById(itemId);
             if (folder != null && folder.canEditResource(getUser())) {
                 this.folder = folder;
             } else {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "Target folder doesn't exists or you don't have permission to edit it.");
             }
-        } catch (IllegalArgumentException | SQLException e) {
+        } catch (IllegalArgumentException e) {
             addErrorMessage(e);
         }
     }
 
-    public void saveChanges() throws SQLException {
+    public void saveChanges() {
         BeanAssert.hasPermission(folder.canEditResource(getUser()));
 
-        try {
-            folder.unlockResource(getUser());
-            folder.save();
+        folder.unlockResource(getUser());
+        folder.save();
 
-            log(Action.edit_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
-            addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", folder.getTitle());
-        } catch (SQLException e) {
-            addErrorMessage(e);
-        }
+        log(Action.edit_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
+        addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", folder.getTitle());
     }
 
     public Folder getFolder() {

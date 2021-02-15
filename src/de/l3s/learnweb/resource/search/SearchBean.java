@@ -3,12 +3,12 @@ package de.l3s.learnweb.resource.search;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -18,18 +18,20 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
+import org.omnifaces.util.Servlets;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.resource.ResourceMetadataExtractor;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.SelectLocationBean;
+import de.l3s.learnweb.resource.archive.WaybackCapturesLogger;
 import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
@@ -53,8 +55,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private int page;
 
     private Search search;
-    private final InterWeb interweb;
-    private final SearchFilters searchFilters;
+    private InterWeb interweb;
+    private SearchFilters searchFilters;
 
     private ResourceDecorator selectedResource;
 
@@ -65,17 +67,15 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private int counter = 0;
     private List<GroupedResources> resourcesGroupedBySource;
 
-    public SearchBean() {
+    @PostConstruct
+    public void init() {
         interweb = getLearnweb().getInterweb();
         searchFilters = new SearchFilters(SearchMode.text);
     }
 
     public void onLoad() {
-        log.debug("mode/action: " + queryMode + "; filter: " + queryFilters + " - service: " + queryService + "; query:" + query);
-
-        if (isAjaxRequest() || !isLoggedIn()) {
-            return;
-        }
+        BeanAssert.authorized(isLoggedIn());
+        log.debug("mode/action: {}; filter: {} - service: {}; query:{}", queryMode, queryFilters, queryService, query);
 
         if (null == queryMode) {
             queryMode = getPreference("SEARCH_ACTION", "text");
@@ -94,7 +94,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
         onSearch();
 
-        forceRevalidation();
+        Servlets.setNoCacheHeaders(Faces.getResponse());
     }
 
     // -------------------------------------------------------------------------
@@ -154,7 +154,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             if (selectedResource.getId() == -1) { // resource is not yet stored at the database
                 newResource = selectedResource.getResource();
                 if (newResource.getSource() == ResourceService.bing) { // resource which is already saved in database already has wayback captures stored
-                    getLearnweb().getWaybackCapturesLogger().logWaybackCaptures(newResource);
+                    Beans.getInstance(WaybackCapturesLogger.class).logWaybackCaptures(newResource);
                 }
             } else {
                 // create a copy
@@ -177,9 +177,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
             // we need to check whether a Bing result is a PDF, Word or other document
             if (newResource.getOriginalResourceId() == 0 && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text) && newResource.getSource() == ResourceService.bing) {
                 log.debug("Extracting info from given url...");
-                ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
-                FileInfo fileInfo = rme.getFileInfo(newResource.getUrl());
-                rme.processFileResource(newResource, fileInfo);
+                FileInfo fileInfo = getLearnweb().getResourceMetadataExtractor().getFileInfo(newResource.getUrl());
+                getLearnweb().getResourceMetadataExtractor().processFileResource(newResource, fileInfo);
             }
 
             newResource.save();
@@ -194,7 +193,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             }
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
-        } catch (RuntimeException | IOException | SQLException e) {
+        } catch (RuntimeException | IOException e) {
             String details = "resource: " + newResource + "; selectedResource: " + selectedResource;
             if (newResource != null) {
                 details += "; thumbnail0:" + newResource.getThumbnail0();

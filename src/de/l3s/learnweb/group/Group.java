@@ -1,7 +1,6 @@
 package de.l3s.learnweb.group;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -9,11 +8,12 @@ import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
@@ -26,7 +26,6 @@ import de.l3s.util.HasId;
 
 public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer {
     private static final long serialVersionUID = -6209978709028007958L;
-    private static final Logger log = LogManager.getLogger(Group.class);
 
     /**
      * Who can join this group?
@@ -131,16 +130,16 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.id = id;
     }
 
-    public List<User> getMembers() throws SQLException {
+    public List<User> getMembers() {
         if (null == members) {
-            members = Learnweb.getInstance().getUserManager().getUsersByGroupId(id);
+            members = Learnweb.dao().getUserDao().findByGroupId(id);
         }
         return members;
     }
 
-    public int getMemberCount() throws SQLException {
+    public int getMemberCount() {
         if (-1 == memberCount) {
-            memberCount = Learnweb.getInstance().getGroupManager().getMemberCount(id);
+            memberCount = Learnweb.dao().getGroupDao().countMembers(id);
         }
         return memberCount;
     }
@@ -148,19 +147,19 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     /**
      * @param user Returns TRUE if the user is member of this group
      */
-    public boolean isMember(User user) throws SQLException {
+    public boolean isMember(User user) {
         List<User> members = getMembers();
 
         return members.contains(user);
     }
 
-    public boolean isLeader(User user) throws SQLException {
+    public boolean isLeader(User user) {
         return user.getId() == leaderUserId;
     }
 
-    public User getLeader() throws SQLException {
+    public User getLeader() {
         if (null == leader) {
-            leader = Learnweb.getInstance().getUserManager().getUser(leaderUserId);
+            leader = Learnweb.dao().getUserDao().findById(leaderUserId);
         }
         return leader;
     }
@@ -192,16 +191,15 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return Objects.hash(id);
     }
 
-    public List<Resource> getResources() throws SQLException {
-        return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(id);
-
+    public List<Resource> getResources() {
+        return Learnweb.dao().getResourceDao().findByGroupId(id);
     }
 
-    public int getResourcesCount() throws SQLException {
+    public int getResourcesCount() {
         long now = System.currentTimeMillis();
 
         if (resourceCount == -1 || cacheTime < now - 3000L) {
-            resourceCount = Learnweb.getInstance().getResourceManager().getResourceCountByGroupId(id);
+            resourceCount = Learnweb.dao().getResourceDao().countByGroupId(id);
             cacheTime = now;
         }
         return resourceCount;
@@ -213,9 +211,9 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
      * Only root folders.
      */
     @Override
-    public List<Folder> getSubFolders() throws SQLException {
+    public List<Folder> getSubFolders() {
         if (folders == null) {
-            folders = Learnweb.getInstance().getGroupManager().getFolders(id, 0);
+            folders = Learnweb.dao().getFolderDao().findByGroupIdAndParentFolderId(id, 0);
         }
 
         return folders;
@@ -224,7 +222,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     /**
      * Copy resource from this group to another group referred to by groupId, and by which user.
      */
-    public void copyResources(int groupId, User user) throws SQLException {
+    public void copyResources(int groupId, User user) {
         HashMap<Integer, Integer> foldersMap = new HashMap<>();
         foldersMap.put(0, 0);
 
@@ -233,12 +231,12 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         }
 
         for (Resource resource : getResources()) {
-            Learnweb.getInstance().getResourceManager().copyResource(resource, groupId, foldersMap.get(resource.getFolderId()), user);
+            Learnweb.dao().getResourceDao().copy(resource, groupId, foldersMap.get(resource.getFolderId()), user);
         }
     }
 
     private void copyFolderRecursive(final Folder folder, final int parentFolderId,
-        final int groupId, final User user, final HashMap<Integer, Integer> foldersMap) throws SQLException {
+        final int groupId, final User user, final HashMap<Integer, Integer> foldersMap) {
 
         Folder newFolder = new Folder(folder);
         newFolder.setGroupId(groupId);
@@ -259,7 +257,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return title;
     }
 
-    public void setTitle(String title) throws SQLException {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -267,7 +265,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return description;
     }
 
-    public void setDescription(String description) throws SQLException {
+    public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
     }
 
@@ -286,9 +284,9 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.course = null;
     }
 
-    public Course getCourse() throws SQLException {
+    public Course getCourse() {
         if (null == this.course) {
-            this.course = Learnweb.getInstance().getCourseManager().getCourseById(courseId);
+            this.course = Learnweb.dao().getCourseDao().findById(courseId);
         }
 
         return this.course;
@@ -303,22 +301,22 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.leader = null; // force reload
     }
 
-    public void setLastVisit(User user) throws SQLException {
-        int time = time();
-        Learnweb.getInstance().getGroupManager().setLastVisit(user, this, time);
+    public void setLastVisit(User user) {
+        int time = time(); // TODO: fixme
+        Learnweb.dao().getGroupDao().insertLastVisitTime(time, this, user);
         lastVisitCache.put(user.getId(), time);
     }
 
     /**
      * @return unix timestamp when the user has visited the group the last time; returns -1 if he never viewed the group
      */
-    public int getLastVisit(User user) throws Exception {
+    public int getLastVisit(User user) {
         Integer time = lastVisitCache.get(user.getId());
         if (null != time) {
             return time;
         }
 
-        time = Learnweb.getInstance().getGroupManager().getLastVisit(user, this);
+        time = Learnweb.dao().getGroupDao().findLastVisitTime(this, user).orElse(-1);
         lastVisitCache.put(user.getId(), time);
         return time;
     }
@@ -326,24 +324,19 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     /**
      * @param limit if limit is -1 all log entries are returned
      */
-    public List<LogEntry> getLogs(int limit) throws SQLException {
-        return Learnweb.getInstance().getLogManager().getLogsByGroup(id, limit);
+    public List<LogEntry> getLogs(int limit) {
+        return Learnweb.dao().getLogDao().findByGroupId(id, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER), limit);
     }
 
     /**
      * Returns the 5 newest log entries.
      */
-    public List<LogEntry> getLogs() throws SQLException {
+    public List<LogEntry> getLogs() {
         return getLogs(5);
     }
 
     public boolean isRestrictionForumCategoryEnabled() {
-        try {
-            return getCourse().getOption(Option.Groups_Forum_categories_enabled);
-        } catch (SQLException e) {
-            log.fatal("can't load setting", e);
-            return false;
-        }
+        return getCourse().getOption(Option.Groups_Forum_categories_enabled);
     }
 
     public boolean isRestrictionForumCategoryRequired() {
@@ -419,7 +412,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return Group.PolicyAnnotate.values();
     }
 
-    public boolean canAddResources(User user) throws SQLException {
+    public boolean canAddResources(User user) {
         if (user == null) { // not logged in
             return false;
         }
@@ -438,15 +431,15 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     /**
      * Used for Drag&Drop functionality, using which it is possible to move resource between folders and groups.
      */
-    public boolean canMoveResources(User user) throws SQLException {
+    public boolean canMoveResources(User user) {
         return canAddResources(user);
     }
 
-    public boolean canDeleteResource(User user, AbstractResource resource) throws SQLException {
+    public boolean canDeleteResource(User user, AbstractResource resource) {
         return canEditResource(user, resource); // currently they share the same policy
     }
 
-    public boolean canEditResource(User user, AbstractResource resource) throws SQLException {
+    public boolean canEditResource(User user, AbstractResource resource) {
         if (user == null || resource == null) {
             return false;
         }
@@ -467,7 +460,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         throw new NotImplementedException("this should never happen");
     }
 
-    public boolean canDeleteGroup(User user) throws SQLException {
+    public boolean canDeleteGroup(User user) {
         if (user == null) {
             return false;
         }
@@ -479,7 +472,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return false;
     }
 
-    public boolean canJoinGroup(User user) throws SQLException {
+    public boolean canJoinGroup(User user) {
         if (user == null || isMember(user)) {
             return false;
         }
@@ -502,7 +495,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         throw new NotImplementedException("this should never happen");
     }
 
-    public boolean canViewResources(User user) throws SQLException {
+    public boolean canViewResources(User user) {
         if (user == null) {
             return false;
         }
@@ -525,7 +518,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return false;
     }
 
-    public boolean canAnnotateResources(User user) throws SQLException {
+    public boolean canAnnotateResources(User user) {
         if (user == null) {
             return false;
         }
@@ -584,25 +577,57 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.hypothesisToken = hypothesisToken;
     }
 
-    public boolean isGoogleDocsSignInEnabled() throws SQLException {
+    public boolean isGoogleDocsSignInEnabled() {
         return getCourse().getOption(Course.Option.Groups_Google_Docs_sign_in_enabled);
     }
 
-    /**
-     * @see de.l3s.learnweb.group.GroupManager#deleteGroupHard
-     */
-    public void deleteHard() throws SQLException {
-        Learnweb.getInstance().getGroupManager().deleteGroupHard(this);
+    public void deleteHard() {
+        Learnweb.dao().getGroupDao().deleteHard(this);
     }
 
     /**
      * Flags the group and deleted and removes all users from the group.
      */
-    public void delete() throws SQLException {
-        Learnweb.getInstance().getGroupManager().deleteGroupSoft(this);
+    public void delete() {
+        Learnweb.dao().getGroupDao().deleteSoft(this);
     }
 
     private static int time() {
         return (int) (System.currentTimeMillis() / 1000);
+    }
+
+    public static TreeNode getFoldersTree(Group group, int activeFolder) {
+        if (group == null) {
+            return null;
+        }
+
+        TreeNode treeNode = new DefaultTreeNode("GroupFolders");
+        TreeNode rootNode = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), treeNode);
+        if (activeFolder == 0) {
+            rootNode.setSelected(true);
+            rootNode.setExpanded(true);
+        }
+        getChildNodesRecursively(rootNode, group, activeFolder);
+        return treeNode;
+    }
+
+    public static void getChildNodesRecursively(TreeNode parentNode, ResourceContainer container, int activeFolderId) {
+        List<Folder> folders = container.getSubFolders();
+        for (Folder folder : folders) {
+            TreeNode folderNode = new DefaultTreeNode("folder", folder, parentNode);
+            if (folder.getId() == activeFolderId) {
+                folderNode.setSelected(true);
+                folderNode.setExpanded(true);
+                expandToNode(folderNode);
+            }
+            getChildNodesRecursively(folderNode, folder, activeFolderId);
+        }
+    }
+
+    private static void expandToNode(TreeNode treeNode) {
+        if (treeNode.getParent() != null) {
+            treeNode.getParent().setExpanded(true);
+            expandToNode(treeNode.getParent());
+        }
     }
 }

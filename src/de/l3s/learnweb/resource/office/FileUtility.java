@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.ResourceType;
 
-public class FileUtility {
+public final class FileUtility {
     private static final Logger log = LogManager.getLogger(FileUtility.class);
 
     private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
@@ -53,7 +54,7 @@ public class FileUtility {
     public static String getInfoForKey(File file) {
         String infoForKey = null;
         if (file != null && file.getLastModified() != null) {
-            infoForKey = Long.toString(file.getLastModified().getTime()) + file.getId();
+            infoForKey = Long.toString(file.getLastModified().toEpochSecond(ZoneOffset.UTC)) + file.getId();
         }
         return infoForKey;
     }
@@ -100,7 +101,7 @@ public class FileUtility {
                     return fileName.toString();
                 }
             } catch (Throwable e) {
-                log.error("Can't get filename from URL: " + url, e);
+                log.error("Can't get filename from URL: {}", url, e);
             }
         }
 
@@ -110,6 +111,7 @@ public class FileUtility {
     public static java.io.File getSampleOfficeFile(ResourceType resourceType) throws URISyntaxException {
         String sampleFileName = getSampleFileName(resourceType);
         URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource(OFFICE_FILES_FOLDER + sampleFileName);
+        assert resourceUrl != null;
         return new java.io.File(resourceUrl.toURI());
     }
 

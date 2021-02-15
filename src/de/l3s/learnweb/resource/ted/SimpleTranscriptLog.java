@@ -1,9 +1,8 @@
 package de.l3s.learnweb.resource.ted;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
@@ -31,16 +30,16 @@ public class SimpleTranscriptLog implements Serializable {
         this.userAnnotationCount = userAnnotationCount;
     }
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (null == user) {
-            user = Learnweb.getInstance().getUserManager().getUser(getUserId());
+            user = Learnweb.dao().getUserDao().findById(getUserId());
         }
         return user;
     }
 
-    public Resource getResource() throws SQLException {
+    public Resource getResource() {
         if (null == resource) {
-            resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+            resource = Learnweb.dao().getResourceDao().findById(resourceId);
         }
         return resource;
     }

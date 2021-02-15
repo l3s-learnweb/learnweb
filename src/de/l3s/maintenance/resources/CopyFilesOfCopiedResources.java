@@ -6,9 +6,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import de.l3s.learnweb.resource.File;
-import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.maintenance.MaintenanceTask;
 
 /**
@@ -17,29 +16,26 @@ import de.l3s.maintenance.MaintenanceTask;
  * @author Oleh Astappiev
  */
 public final class CopyFilesOfCopiedResources extends MaintenanceTask {
-    private ResourceManager resourceManager;
-    private FileManager fileManager;
 
     private long filesCount = 0;
     private long sizeBytes = 0;
 
     @Override
     public void init() {
-        fileManager = getLearnweb().getFileManager();
-        resourceManager = getLearnweb().getResourceManager();
-        resourceManager.setReindexMode(true);
         requireConfirmation = true;
     }
 
     @Override
-    public void run(boolean dryRun) throws Exception {
-        List<Resource> resources = resourceManager.getResources("SELECT * FROM lw_resource r WHERE original_resource_id > 0 AND "
-            + "NOT EXISTS(SELECT 1 FROM lw_resource r2 WHERE r.original_resource_id = r2.resource_id AND r.file_url <> r2.file_url)", null);
+    public void run(boolean dryRun) {
+        List<Resource> resources = getLearnweb().getDaoProvider().getJdbi().withHandle(handle -> handle
+            .select("SELECT * FROM lw_resource r WHERE original_resource_id > 0 AND "
+                + "NOT EXISTS(SELECT 1 FROM lw_resource r2 WHERE r.original_resource_id = r2.resource_id AND r.file_url <> r2.file_url)")
+            .map(new ResourceDao.ResourceMapper()).list());
 
         log.info("Total affected {} resources", resources.size());
 
         for (Resource resource : resources) {
-            List<File> originalFiles = fileManager.getFilesByResource(resource.getOriginalResourceId());
+            List<File> originalFiles = getLearnweb().getDaoProvider().getFileDao().findByResourceId(resource.getOriginalResourceId());
 
             if (originalFiles == null || originalFiles.isEmpty()) {
                 log.warn("No files of origin {} for resource {}!", resource.getOriginalResourceId(), resource.getId());
@@ -65,7 +61,7 @@ public final class CopyFilesOfCopiedResources extends MaintenanceTask {
                 if (!dryRun) {
                     File copyFile = new File(file);
                     copyFile.setResourceId(resource.getId());
-                    getLearnweb().getFileManager().save(copyFile, file.getInputStream());
+                    getLearnweb().getDaoProvider().getFileDao().save(copyFile, file.getInputStream());
                     resource.addFile(copyFile);
 
                     if (file.getType() == File.TYPE.FILE_MAIN) {

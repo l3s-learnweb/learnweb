@@ -58,9 +58,7 @@ public class GlossaryXLSParser {
                         }
                     } else { // parse entry
                         GlossaryEntry entry = glossaryRowBuilder.build(sheet.getRow(rowNumber));
-                        if (entry != null) {
-                            glossaryEntries.add(entry);
-                        }
+                        glossaryEntries.add(entry);
                     }
                 }
             }

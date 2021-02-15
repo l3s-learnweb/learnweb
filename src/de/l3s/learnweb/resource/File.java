@@ -6,14 +6,16 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.HasId;
+import de.l3s.util.StringHelper;
 
-public class File implements Serializable, HasId {
+public class File implements Serializable, HasId, Cloneable {
     private static final long serialVersionUID = 6573841175365679674L;
 
     private static final Pattern NAME_FORBIDDEN_CHARACTERS = Pattern.compile("[\\\\/:*?\"<>|]");
@@ -40,7 +42,7 @@ public class File implements Serializable, HasId {
     private TYPE type;
     private String url;
     private boolean downloadLogActivated = false;
-    private Date lastModified;
+    private LocalDateTime lastModified;
 
     private java.io.File actualFile;
     private boolean actualFileExists = true; // when the actual file doesn't exist it is replaced by an error image. For this reason we have to store if the file exists
@@ -94,6 +96,9 @@ public class File implements Serializable, HasId {
     }
 
     public String getUrl() {
+        if (url == null) {
+            url = "/download/" + fileId + "/" + StringHelper.urlEncode(name);
+        }
         return url;
     }
 
@@ -113,7 +118,9 @@ public class File implements Serializable, HasId {
      * @return The actual file in the file system
      */
     public java.io.File getActualFile() {
-        if (null == actualFile) {
+        if (null == actualFile && fileId > 1) {
+            actualFile = new java.io.File(Learnweb.config().getFileManagerFolder(), fileId + ".dat");
+        } else if (null == actualFile) {
             throw new IllegalStateException("Either the file has not been saved yet, use FileManager.save() first. Or the file isn't present on this machine.");
         }
         return actualFile;
@@ -143,7 +150,7 @@ public class File implements Serializable, HasId {
         try {
             return new FileInputStream(getActualFile());
         } catch (FileNotFoundException e) { // the FileManager has to take care that this exception never occurs
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -151,11 +158,11 @@ public class File implements Serializable, HasId {
         return getActualFile().length();
     }
 
-    public Date getLastModified() {
+    public LocalDateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
     }
 
@@ -172,4 +179,24 @@ public class File implements Serializable, HasId {
         this.type = type;
     }
 
+    public File clone() {
+        File destination = new File();
+        if (name != null) {
+            destination.setName(name);
+        }
+        if (url != null) {
+            destination.setUrl(url);
+        }
+        if (type != null) {
+            destination.setType(type);
+        }
+        if (lastModified != null) {
+            destination.setLastModified(lastModified);
+        }
+        if (mimeType != null) {
+            destination.setMimeType(mimeType);
+        }
+        destination.setResourceId(resourceId);
+        return destination;
+    }
 }

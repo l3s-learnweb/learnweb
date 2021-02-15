@@ -1,9 +1,10 @@
 package de.l3s.learnweb.forum;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
-public interface ForumTopicDao extends SqlObject {
+public interface ForumTopicDao extends SqlObject, Serializable {
 
     @SqlQuery("SELECT * FROM lw_forum_topic WHERE topic_id = ?")
     Optional<ForumTopic> findById(int topicId);
@@ -50,12 +51,12 @@ public interface ForumTopicDao extends SqlObject {
     void updateIncreaseViews(int topicId);
 
     @SqlUpdate("UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = :postId, topic_last_post_time = :time, topic_last_post_user_id = :userId WHERE topic_id = :topicId AND topic_views > 0")
-    void updateIncreaseReplies(@Bind("topicId") int topicId, @Bind("postId") int postId, @Bind("userId") int userId, @Bind("time") Date date);
+    void updateIncreaseReplies(@Bind("topicId") int topicId, @Bind("postId") int postId, @Bind("userId") int userId, @Bind("time") LocalDateTime date);
 
     @SqlUpdate("DELETE FROM lw_forum_topic WHERE topic_id = ?")
     void delete(int topicId);
 
-    @SqlUpdate("INSERT INTO lw_forum_topic_user (topic_id, user_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_visit = NOW();")
+    @SqlUpdate("INSERT INTO lw_forum_topic_user (topic_id, user_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_visit = NOW()")
     void insertUserVisit(int topicId, int userId);
 
     default void save(ForumTopic topic) {
@@ -72,7 +73,7 @@ public interface ForumTopicDao extends SqlObject {
         params.put("topic_last_post_time", topic.getLastPostDate());
         params.put("topic_last_post_user_id", topic.getLastPostUserId());
 
-        Optional<Integer> topicId = SqlHelper.generateInsertQuery(getHandle(), "lw_forum_topic", params)
+        Optional<Integer> topicId = SqlHelper.handleSave(getHandle(), "lw_forum_topic", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         topicId.ifPresent(topic::setId);
@@ -86,11 +87,11 @@ public interface ForumTopicDao extends SqlObject {
             topic.setUserId(rs.getInt("user_id"));
             topic.setGroupId(rs.getInt("group_id"));
             topic.setTitle(rs.getString("topic_title"));
-            topic.setDate(RsHelper.getDate(rs.getTimestamp("topic_time")));
+            topic.setDate(RsHelper.getLocalDateTime(rs.getTimestamp("topic_time")));
             topic.setViews(rs.getInt("topic_views"));
             topic.setReplies(rs.getInt("topic_replies"));
             topic.setLastPostId(rs.getInt("topic_last_post_id"));
-            topic.setLastPostDate(RsHelper.getDate(rs.getTimestamp("topic_last_post_time")));
+            topic.setLastPostDate(RsHelper.getLocalDateTime(rs.getTimestamp("topic_last_post_time")));
             topic.setLastPostUserId(rs.getInt("topic_last_post_user_id"));
             return topic;
         }

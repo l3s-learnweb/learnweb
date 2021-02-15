@@ -1,11 +1,12 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -26,7 +27,8 @@ import de.l3s.learnweb.dashboard.glossary.GlossaryUserTermsSummary;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(GlossaryTermDao.GlossaryTermMapper.class)
-public interface GlossaryTermDao extends SqlObject {
+public interface GlossaryTermDao extends SqlObject, Serializable {
+
     @SqlQuery("SELECT * FROM lw_glossary_term WHERE term_id = ?")
     Optional<GlossaryTerm> findById(String termId);
 
@@ -35,23 +37,23 @@ public interface GlossaryTermDao extends SqlObject {
 
     @SqlQuery("SELECT COUNT(*) FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ?")
-    int countTotalTerms(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+    int countTotalTerms(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     @SqlQuery("SELECT u.username, COUNT(distinct gt.term_id) AS count FROM lw_resource r JOIN lw_user u ON u.user_id = r.owner_user_id JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ? group by username order by username")
     @KeyColumn("username")
     @ValueColumn("count")
-    Map<String, Integer> countTermsPerUser(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+    Map<String, Integer> countTermsPerUser(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     @SqlQuery("SELECT COUNT(distinct gt.source) FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ?")
-    int countTotalSources(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+    int countTotalSources(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     @SqlQuery("SELECT gt.source AS refs, COUNT(*) AS count FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ? GROUP BY refs")
     @KeyColumn("refs")
     @ValueColumn("count")
-    Map<String, Integer> countUsagePerSource(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+    Map<String, Integer> countUsagePerSource(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     @RegisterRowMapper(GlossaryUserTermsSummaryMapper.class)
     @SqlQuery("SELECT ge.user_id, COUNT(*) AS total_terms, COUNT(distinct entry_id) AS entries,COUNT( NULLIF( gt.term_pasted, 0 ) ) AS term_pasted, "
@@ -61,13 +63,13 @@ public interface GlossaryTermDao extends SqlObject {
         + "COUNT( NULLIF( gt.uses, '' ) ) AS uses, COUNT( NULLIF( gt.source, '' ) ) AS source "
         + "FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND ge.user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ? GROUP BY ge.user_id")
-    List<GlossaryUserTermsSummary> countGlossaryUserTermsSummary(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+    List<GlossaryUserTermsSummary> countGlossaryUserTermsSummary(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     @RegisterRowMapper(GlossaryUserActivityMapper.class)
     @SqlQuery("SELECT r.owner_user_id, count(distinct ge.entry_id) AS total_entries, count(*) AS total_terms, count(distinct gt.source) AS total_refs "
         + "FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
-        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ? group by owner_user_id;")
-    List<GlossaryUserActivity> countGlossaryUserActivity(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ? group by owner_user_id")
+    List<GlossaryUserActivity> countGlossaryUserActivity(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     default void save(GlossaryTerm term) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
@@ -89,7 +91,7 @@ public interface GlossaryTermDao extends SqlObject {
         params.put("acronym_pasted", term.isAcronymPasted());
         params.put("phraseology_pasted", term.isPhraseologyPasted());
 
-        Optional<Integer> termId = SqlHelper.generateInsertQuery(getHandle(), "lw_glossary_term", params)
+        Optional<Integer> termId = SqlHelper.handleSave(getHandle(), "lw_glossary_term", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         termId.ifPresent(term::setId);

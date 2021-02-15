@@ -4,10 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,12 +18,13 @@ import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.ConfigProvider;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.archive.ArchiveUrlDao;
 import de.l3s.learnweb.resource.office.ConverterService;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.util.Image;
-import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
@@ -36,7 +39,8 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
  *
  * @author Philipp Kemkes, Oleh Astappiev
  */
-public class ResourcePreviewMaker {
+public class ResourcePreviewMaker implements Serializable {
+    private static final long serialVersionUID = -5259988131984139763L;
     private static final Logger log = LogManager.getLogger(ResourcePreviewMaker.class);
 
     private static final int SIZE0_MAX_WIDTH = 150;
@@ -49,35 +53,45 @@ public class ResourcePreviewMaker {
     private static final int SIZE4_MAX_WIDTH = 1280;
     private static final int SIZE4_MAX_HEIGHT = 1024;
 
-    // file numbers. Was part of older Learnweb versions. Maybe it can't be for later use
+    private final FileDao fileDao;
+    private final ArchiveUrlDao archiveUrlDao;
 
-    private final Learnweb learnweb;
-    private final FileManager fileManager;
+    private final String ffmpegPath;
+    private final String ffprobePath;
     private final String websiteThumbnailService;
     private final String archiveThumbnailService;
+    private final String officeConverterService;
 
-    private FFprobe ffprobe;
-    private FFmpegExecutor executor;
+    private transient FFprobe ffprobe;
+    private transient FFmpegExecutor ffmpegExecutor;
 
-    public ResourcePreviewMaker(Learnweb learnweb) {
-        this.learnweb = learnweb;
-        this.fileManager = this.learnweb.getFileManager();
-        this.archiveThumbnailService = learnweb.getProperties().getProperty("ARCHIVE_WEBSITE_THUMBNAIL_SERVICE");
-        this.websiteThumbnailService = learnweb.getProperties().getProperty("WEBSITE_THUMBNAIL_SERVICE");
+    @Inject
+    public ResourcePreviewMaker(final FileDao fileDao, final ArchiveUrlDao archiveUrlDao, final ConfigProvider configProvider) {
+        this.fileDao = fileDao;
+        this.archiveUrlDao = archiveUrlDao;
 
-        try {
-            String ffmpegPath = learnweb.getProperties().getProperty("FFMPEG_PATH");
-            String ffprobePath = learnweb.getProperties().getProperty("FFPROBE_PATH");
-
-            FFmpeg ffmpeg = new FFmpeg(ffmpegPath);
-            this.ffprobe = new FFprobe(ffprobePath);
-            this.executor = new FFmpegExecutor(ffmpeg, this.ffprobe);
-        } catch (IOException e) {
-            log.error("Couldn't find ffmpeg library. {}", Misc.getSystemDescription());
-        }
+        this.ffmpegPath = configProvider.getProperty("ffmpeg_path");
+        this.ffprobePath = configProvider.getProperty("ffprobe_path");
+        this.archiveThumbnailService = configProvider.getProperty("archive_website_thumbnail_service");
+        this.websiteThumbnailService = configProvider.getProperty("website_thumbnail_service");
+        this.officeConverterService = configProvider.getProperty("onlyoffice_converter_service");
     }
 
-    public void processResource(Resource resource) throws IOException, SQLException {
+    private FFprobe getFFprobe() throws IOException {
+        if (ffprobe == null) {
+            ffprobe = new FFprobe(ffprobePath);
+        }
+        return ffprobe;
+    }
+
+    private FFmpegExecutor getFFmpegExecutor() throws IOException {
+        if (ffmpegExecutor == null) {
+            ffmpegExecutor = new FFmpegExecutor(new FFmpeg(ffmpegPath), getFFprobe());
+        }
+        return ffmpegExecutor;
+    }
+
+    public void processResource(Resource resource) throws IOException {
         InputStream inputStream = null;
         try {
             // if a web resource is not a simple website then download it
@@ -87,7 +101,7 @@ public class ResourcePreviewMaker {
                 file.setName(resource.getFileName());
                 file.setMimeType(resource.getFormat());
                 file.setResourceId(resource.getId());
-                fileManager.save(file, FileInspector.openStream(resource.getUrl()));
+                fileDao.save(file, FileInspector.openStream(resource.getUrl()));
 
                 resource.addFile(file);
                 resource.setFileUrl(file.getUrl());
@@ -114,7 +128,7 @@ public class ResourcePreviewMaker {
         }
     }
 
-    private void processFile(Resource resource, InputStream inputStream) throws IOException, SQLException {
+    private void processFile(Resource resource, InputStream inputStream) throws IOException {
         switch (resource.getType()) {
             case image:
                 processImage(resource, inputStream);
@@ -144,7 +158,7 @@ public class ResourcePreviewMaker {
 
     private void processOfficeDocument(Resource resource) {
         try {
-            String thumbnailUrl = ConverterService.convert(learnweb, resource.getFile(TYPE.FILE_MAIN));
+            String thumbnailUrl = ConverterService.convert(officeConverterService, resource.getFile(TYPE.FILE_MAIN));
             HttpURLConnection connection = (HttpURLConnection) new URL(thumbnailUrl).openConnection();
             InputStream thumbnailStream = connection.getInputStream();
             if (thumbnailStream == null) {
@@ -158,7 +172,7 @@ public class ResourcePreviewMaker {
         }
     }
 
-    public void processImage(Resource resource, InputStream inputStream) throws IOException, SQLException {
+    public void processImage(Resource resource, InputStream inputStream) throws IOException {
         // process image
         Image img = new Image(inputStream);
 
@@ -169,7 +183,7 @@ public class ResourcePreviewMaker {
             file.setName("thumbnail4.png");
             file.setMimeType("image/png");
             file.setResourceId(resource.getId());
-            fileManager.save(file, thumbnail.getInputStream());
+            fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
 
             resource.addFile(file);
@@ -179,7 +193,7 @@ public class ResourcePreviewMaker {
         createThumbnails(resource, img, false);
     }
 
-    public void processWebsite(Resource resource) throws IOException, SQLException {
+    public void processWebsite(Resource resource) throws IOException {
         URL thumbnailUrl = new URL(websiteThumbnailService + StringHelper.urlEncode(resource.getUrl()));
 
         // process image
@@ -190,7 +204,7 @@ public class ResourcePreviewMaker {
         file.setName("website.png");
         file.setMimeType("image/png");
         file.setResourceId(resource.getId());
-        fileManager.save(file, img.getInputStream());
+        fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
         resource.setThumbnail4(new Thumbnail(file.getUrl(), img.getWidth(), img.getHeight(), file.getId()));
@@ -198,7 +212,7 @@ public class ResourcePreviewMaker {
         createThumbnails(resource, img, true);
     }
 
-    public void processArchivedVersion(Resource resource, String archiveUrl) throws IOException, SQLException {
+    public void processArchivedVersion(Resource resource, String archiveUrl) throws IOException {
         URL thumbnailUrl = new URL(archiveThumbnailService + StringHelper.urlEncode(archiveUrl));
 
         // process image
@@ -209,10 +223,10 @@ public class ResourcePreviewMaker {
         file.setName("wayback_thumbnail.png");
         file.setMimeType("image/png");
         file.setResourceId(resource.getId());
-        file = fileManager.save(file, img.getInputStream());
+        fileDao.save(file, img.getInputStream());
 
         if (file.getId() > 0) {
-            learnweb.getArchiveUrlManager().updateArchiveUrl(file.getId(), resource.getId(), archiveUrl);
+            archiveUrlDao.updateFIleId(file.getId(), resource.getId(), archiveUrl);
         }
 
         resource.addFile(file);
@@ -235,7 +249,7 @@ public class ResourcePreviewMaker {
                 }
 
                 // get video details
-                ffProbeResult = this.getFFProbe(inputPath);
+                ffProbeResult = this.getFFprobe().probe(inputPath);
 
                 // take multiple frames at different positions from the video and use the largest (highest contrast) as preview image
                 String bestImagePath = createVideoPreviewImage(ffProbeResult, tmpDir);
@@ -271,7 +285,7 @@ public class ResourcePreviewMaker {
 
                 // move original file
                 originalFile.setType(TYPE.FILE_ORIGINAL);
-                fileManager.save(originalFile);
+                fileDao.save(originalFile, null);
                 resource.addFile(originalFile);
 
                 // create new file
@@ -280,7 +294,7 @@ public class ResourcePreviewMaker {
                 convertedFile.setName(StringHelper.filenameChangeExt(originalFile.getName(), "mp4"));
                 convertedFile.setMimeType("video/mp4");
                 convertedFile.setResourceId(resource.getId());
-                fileManager.save(convertedFile, new FileInputStream(outputPath));
+                fileDao.save(convertedFile, new FileInputStream(outputPath));
                 tempVideoFile.delete();
 
                 // update resource files
@@ -295,10 +309,6 @@ public class ResourcePreviewMaker {
         }
     }
 
-    private FFmpegProbeResult getFFProbe(String mediaPath) throws IOException {
-        return ffprobe.probe(mediaPath);
-    }
-
     private void convertVideo(FFmpegProbeResult in, String outputMediaPath) throws IOException {
         FFmpegError error = in.getError();
         if (error != null) {
@@ -310,7 +320,7 @@ public class ResourcePreviewMaker {
 
         FFmpegBuilder builder = new FFmpegBuilder().setInput(in).overrideOutputFiles(true).addOutput(outputMediaPath).setFormat("mp4").setVideoCodec("libx264").setVideoBitRate(format.bit_rate).done();
 
-        this.executor.createJob(builder).run();
+        getFFmpegExecutor().createJob(builder).run();
         log.info("Converting done.");
     }
 
@@ -350,11 +360,11 @@ public class ResourcePreviewMaker {
 
         FFmpegBuilder builder = new FFmpegBuilder().setStartOffset(seconds, TimeUnit.SECONDS).setInput(in).addOutput(outputMediaPath).setFrames(1).done();
 
-        this.executor.createJob(builder).run();
+        getFFmpegExecutor().createJob(builder).run();
         log.info("Creating thumbnail done.");
     }
 
-    public void processPdf(Resource resource, InputStream inputStream) throws IOException, SQLException {
+    public void processPdf(Resource resource, InputStream inputStream) throws IOException {
         PDDocument pdfDocument = PDDocument.load(inputStream);
         PDFRenderer pdfRenderer = new PDFRenderer(pdfDocument);
 
@@ -373,7 +383,7 @@ public class ResourcePreviewMaker {
         }
     }
 
-    private void createThumbnails(Resource resource, Image img, boolean croppedToAspectRatio) throws IOException, SQLException {
+    private void createThumbnails(Resource resource, Image img, boolean croppedToAspectRatio) throws IOException {
         int width = img.getWidth();
         int height = img.getHeight();
         Image thumbnail = null;
@@ -385,7 +395,7 @@ public class ResourcePreviewMaker {
             file.setName("thumbnail0.png");
             file.setMimeType("image/png");
             file.setResourceId(resource.getId());
-            fileManager.save(file, thumbnail.getInputStream());
+            fileDao.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail0(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
 
@@ -399,7 +409,7 @@ public class ResourcePreviewMaker {
             file.setName("thumbnail1.png");
             file.setMimeType("image/png");
             file.setResourceId(resource.getId());
-            fileManager.save(file, thumbnail.getInputStream());
+            fileDao.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail1(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
 
@@ -413,7 +423,7 @@ public class ResourcePreviewMaker {
             file.setName("thumbnail2.png");
             file.setMimeType("image/png");
             file.setResourceId(resource.getId());
-            fileManager.save(file, thumbnail.getInputStream());
+            fileDao.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail2(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
 
@@ -427,7 +437,7 @@ public class ResourcePreviewMaker {
             file.setName("thumbnail3.png");
             file.setMimeType("image/png");
             file.setResourceId(resource.getId());
-            fileManager.save(file, thumbnail.getInputStream());
+            fileDao.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail3(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
         } finally {
@@ -449,9 +459,8 @@ public class ResourcePreviewMaker {
         @Override
         public void run() {
             try {
-                ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
                 resource.setOnlineStatus(Resource.OnlineStatus.PROCESSING);
-                rpm.processResource(resource);
+                Learnweb.getInstance().getResourcePreviewMaker().processResource(resource);
                 resource.setOnlineStatus(Resource.OnlineStatus.ONLINE);
                 resource.save();
             } catch (Exception e) {

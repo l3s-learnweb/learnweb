@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 
 @SuppressWarnings({"CallToSystemExit", "ProhibitedExceptionDeclared"})
 public abstract class MaintenanceTask {
@@ -18,11 +18,8 @@ public abstract class MaintenanceTask {
     protected boolean requireConfirmation = false;
 
     protected MaintenanceTask() {
-        try {
-            learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de");
-        } catch (Exception e) {
-            throw new IllegalStateException("Unable to create Learnweb", e);
-        }
+        learnweb = Learnweb.createStatic();
+        learnweb.init();
     }
 
     protected final Learnweb getLearnweb() {
@@ -30,7 +27,7 @@ public abstract class MaintenanceTask {
     }
 
     @SuppressWarnings("NoopMethodInAbstractClass")
-    protected void init() throws Exception {
+    protected void init() {
         // can be overridden to init managers
     }
 
@@ -51,7 +48,7 @@ public abstract class MaintenanceTask {
             log.error("An unhandled error occurred", e);
             System.exit(-1);
         } finally {
-            learnweb.onDestroy();
+            learnweb.destroy();
         }
     }
 }

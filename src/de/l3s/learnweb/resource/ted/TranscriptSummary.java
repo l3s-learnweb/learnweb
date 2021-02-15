@@ -1,9 +1,8 @@
 package de.l3s.learnweb.resource.ted;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
@@ -12,8 +11,8 @@ public class TranscriptSummary implements Serializable {
 
     private final int userId;
     private final int resourceId;
-    private String summaryType;
-    private String summaryText;
+    private final TedManager.SummaryType summaryType;
+    private final String summaryText;
 
     // cached values
     private transient User user;
@@ -22,37 +21,29 @@ public class TranscriptSummary implements Serializable {
     public TranscriptSummary(int userId, int resourceId, String summaryType, String summaryText) {
         this.userId = userId;
         this.resourceId = resourceId;
-        this.summaryType = summaryType;
+        this.summaryType = TedManager.SummaryType.valueOf(summaryType);
         this.summaryText = summaryText;
     }
 
-    public User getUser() throws SQLException {
+    public User getUser() {
         if (null == user) {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }
 
-    public Resource getResource() throws SQLException {
+    public Resource getResource() {
         if (null == resource) {
-            resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+            resource = Learnweb.dao().getResourceDao().findById(resourceId);
         }
         return resource;
     }
 
-    public String getSummaryType() {
+    public TedManager.SummaryType getSummaryType() {
         return summaryType;
-    }
-
-    public void setSummaryType(String summaryType) {
-        this.summaryType = summaryType;
     }
 
     public String getSummaryText() {
         return summaryText;
-    }
-
-    public void setSummaryText(String summaryText) {
-        this.summaryText = summaryText;
     }
 }

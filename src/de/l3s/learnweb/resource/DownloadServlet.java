@@ -4,13 +4,13 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.net.URL;
-import java.sql.SQLException;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
+import javax.inject.Inject;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,17 +23,17 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Servlets;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.bean.BeanHelper;
 
 /**
  * Servlet for Streaming Files to the Clients Browser.
  */
-@WebServlet(name = "DownloadServlet", urlPatterns = {"/download/*"}, loadOnStartup = 2)
+@WebServlet(name = "DownloadServlet", urlPatterns = "/download/*", loadOnStartup = 2)
 public class DownloadServlet extends HttpServlet {
     private static final long serialVersionUID = 7083477094183456614L;
     private static final Logger log = LogManager.getLogger(DownloadServlet.class);
@@ -42,33 +42,13 @@ public class DownloadServlet extends HttpServlet {
     private static final long CACHE_DURATION_IN_MS = CACHE_DURATION_IN_SECOND * 1000L;
     private static final int BUFFER_SIZE = 8192; // 8KB
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
+    private static final String URL_PATTERN = "/download/";
 
-    private transient Learnweb learnweb;
-    private transient FileManager fileManager;
-    private String urlPattern = "/download/"; // as defined in web.xml
+    @Inject
+    private FileDao fileDao;
 
-    public DownloadServlet() throws ClassNotFoundException, SQLException {
-    }
-
-    public void init(HttpServletRequest request) {
-        try {
-            String serverUrl = Servlets.getRequestBaseURL(request);
-            this.learnweb = Learnweb.createInstance(serverUrl);
-            this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
-            this.fileManager = learnweb.getFileManager();
-
-            // quick and dirty fix
-            URL fileNotFoundResource = getServletContext().getResource("/resources/images/file-not-found.png");
-            //URL fileNotFoundResource = getClass().getResource("/resources/images/file-not-found.png");
-            if (null == fileNotFoundResource) {
-                throw new RuntimeException("Can't find file-not-found.png");
-            } else {
-                fileManager.setFileNotFoundErrorImage(new java.io.File(fileNotFoundResource.toURI()));
-            }
-        } catch (Exception e) {
-            log.fatal("fatal error: ", e);
-        }
-    }
+    @Inject
+    private LogDao logDao;
 
     /**
      * Process HEAD request. This returns the same headers as GET request, but without content.
@@ -97,14 +77,10 @@ public class DownloadServlet extends HttpServlet {
      * @throws IOException If something fails at I/O level.
      */
     private void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content) throws IOException {
-        if (null == learnweb) {
-            init(request);
-        }
-
         // extract the file id from the request string
         String requestString = request.getRequestURI();
         // remove urlPattern from requestString
-        requestString = requestString.substring(requestString.indexOf(urlPattern) + urlPattern.length());
+        requestString = requestString.substring(requestString.indexOf(URL_PATTERN) + URL_PATTERN.length());
 
         int slashIndex = requestString.indexOf('/');
         if (slashIndex == -1) {
@@ -136,14 +112,14 @@ public class DownloadServlet extends HttpServlet {
             response.setHeader("Access-Control-Allow-Origin", "*");
 
             // Check if file actually exists in filesystem.
-            File file = fileManager.getFileById(fileId);
+            File file = fileDao.findById(fileId);
             if (null == file) {
                 log.warn("Requested file {} does not exist or was deleted", fileId);
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
 
-            long lastModified = file.getLastModified().getTime();
+            long lastModified = file.getLastModified().toEpochSecond(ZoneOffset.UTC);
             String eTag = file.getName() + "_" + file.getLength() + "_" + lastModified;
             long expires = System.currentTimeMillis() + CACHE_DURATION_IN_MS;
 
@@ -164,7 +140,7 @@ public class DownloadServlet extends HttpServlet {
             try {
                 ifModifiedSince = request.getDateHeader("If-Modified-Since");
             } catch (IllegalArgumentException e) {
-                log.error("Illegal If-Modified-Since header: " + e.getMessage() + "; " + BeanHelper.getRequestSummary(request));
+                log.error("Illegal If-Modified-Since header: {}; {}", e.getMessage(), BeanHelper.getRequestSummary(request));
             }
 
             if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
@@ -257,11 +233,11 @@ public class DownloadServlet extends HttpServlet {
                 Integer userId = (Integer) session.getAttribute("learnweb_user_id");
 
                 if (userId != null) {
-                    user = learnweb.getUserManager().getUser(userId);
+                    user = Learnweb.dao().getUserDao().findById(userId);
                 }
 
                 if (null != user) {
-                    learnweb.getLogManager().log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId());
+                    logDao.insert(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId());
                 }
             }
 
@@ -471,10 +447,10 @@ public class DownloadServlet extends HttpServlet {
      * This class represents a byte range.
      */
     protected static class Range {
-        long start;
-        long end;
-        long length;
-        long total;
+        final long start;
+        final long end;
+        final long length;
+        final long total;
 
         /**
          * Construct a byte range.

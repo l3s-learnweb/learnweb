@@ -5,23 +5,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import de.l3s.test.DatabaseExtension;
+import de.l3s.test.LearnwebExtension;
 
 class ForumPostDaoTest {
 
     @RegisterExtension
-    static final DatabaseExtension db = new DatabaseExtension();
-
-    private static ForumPostDao forumPostDao;
-
-    @BeforeAll
-    static void beforeAll() {
-        forumPostDao = db.attach(ForumPostDao.class);
-    }
+    static final LearnwebExtension learnwebExt = new LearnwebExtension();
+    private final ForumPostDao forumPostDao = learnwebExt.attach(ForumPostDao.class);
 
     @Test
     void getters() {
@@ -39,7 +32,7 @@ class ForumPostDaoTest {
         forumPostDao.save(post2);
         assertTrue(post2.getId() > 0);
 
-        Optional<ForumPost> retrieved = forumPostDao.getPostById(post.getId());
+        Optional<ForumPost> retrieved = forumPostDao.findById(post.getId());
 
         assertTrue(retrieved.isPresent());
         assertEquals(post.getId(), retrieved.get().getId());
@@ -47,13 +40,13 @@ class ForumPostDaoTest {
         assertEquals(post.getText(), retrieved.get().getText());
         assertEquals(post.getUserId(), retrieved.get().getUserId());
 
-        List<ForumPost> postsByTopicId = forumPostDao.getPostsByTopicId(post.getTopicId());
+        List<ForumPost> postsByTopicId = forumPostDao.findByTopicId(post.getTopicId());
         assertEquals(1, postsByTopicId.size());
 
-        List<ForumPost> postsByUserId = forumPostDao.getPostsByUserId(post.getUserId());
+        List<ForumPost> postsByUserId = forumPostDao.findByUserId(post.getUserId());
         assertEquals(2, postsByUserId.size());
 
-        int postCountByUserId = forumPostDao.getPostCountByUserId(post.getUserId());
+        int postCountByUserId = forumPostDao.countByUserId(post.getUserId());
         assertEquals(2, postCountByUserId);
     }
 
@@ -65,7 +58,7 @@ class ForumPostDaoTest {
         forumPostDao.save(post);
         assertTrue(post.getId() > 0);
 
-        Optional<ForumPost> retrieved = forumPostDao.getPostById(post.getId());
+        Optional<ForumPost> retrieved = forumPostDao.findById(post.getId());
         assertTrue(retrieved.isPresent());
         assertEquals(post.getId(), retrieved.get().getId());
         assertEquals(post.getText(), retrieved.get().getText());
@@ -75,12 +68,12 @@ class ForumPostDaoTest {
         forumPostDao.save(post);
         assertNotEquals(retrieved.get().getText(), post.getText());
 
-        Optional<ForumPost> updated = forumPostDao.getPostById(post.getId());
+        Optional<ForumPost> updated = forumPostDao.findById(post.getId());
         assertTrue(updated.isPresent());
         assertEquals(post.getText(), updated.get().getText());
 
-        forumPostDao.deletePostById(post.getId());
-        Optional<ForumPost> deleted = forumPostDao.getPostById(post.getId());
+        forumPostDao.delete(post.getId());
+        Optional<ForumPost> deleted = forumPostDao.findById(post.getId());
         assertFalse(deleted.isPresent());
     }
 }

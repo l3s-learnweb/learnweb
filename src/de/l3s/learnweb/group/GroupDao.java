@@ -1,5 +1,6 @@
 package de.l3s.learnweb.group;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -29,8 +30,8 @@ import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(GroupDao.GroupMapper.class)
 @RegisterRowMapper(GroupDao.GroupUserMapper.class)
-public interface GroupDao extends SqlObject {
-    ICache<Group> cache = Cache.of(Group.class);
+public interface GroupDao extends SqlObject, Serializable {
+    ICache<Group> cache = new Cache<>(500);
 
     default Group findById(int groupId) {
         Group group = cache.get(groupId);
@@ -38,7 +39,7 @@ public interface GroupDao extends SqlObject {
             return group;
         }
 
-        return getHandle().select("SELECT * FROM `lw_group` g WHERE group_id = ? AND g.deleted = 0", groupId).map(new GroupMapper()).findOne().orElse(null);
+        return getHandle().select("SELECT * FROM lw_group g WHERE group_id = ? AND g.deleted = 0", groupId).map(new GroupMapper()).findOne().orElse(null);
     }
 
     @SqlQuery("SELECT * FROM lw_group")
@@ -47,47 +48,47 @@ public interface GroupDao extends SqlObject {
     /**
      * Returns a list of all Groups a user belongs to.
      */
-    @SqlQuery("SELECT g.* FROM `lw_group` g JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title")
+    @SqlQuery("SELECT g.* FROM lw_group g JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title")
     List<Group> findByUserId(int userid);
 
     /**
      * Returns a list of all Groups which belong to the defined course.
      */
-    @SqlQuery("SELECT * FROM `lw_group` g  WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title")
+    @SqlQuery("SELECT * FROM lw_group g  WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title")
     List<Group> findByCourseId(int courseId);
 
     /**
      * Returns a list of all Groups a user belongs to and which groups are also part of the defined course.
      */
-    @SqlQuery("SELECT g.* FROM `lw_group` g JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title")
+    @SqlQuery("SELECT g.* FROM lw_group g JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title")
     List<Group> findByUserIdAndCourseId(int userid, int courseId);
 
     /**
      * Returns a list of Groups which belong to the defined courses and were created after the specified date.
      */
-    @SqlQuery("SELECT * FROM `lw_group` g WHERE g.course_id IN(<courseIds>) AND g.deleted = 0 AND `creation_time` > :time ORDER BY title")
+    @SqlQuery("SELECT * FROM lw_group g WHERE g.course_id IN(<courseIds>) AND g.deleted = 0 AND creation_time > :time ORDER BY title")
     List<Group> findByCourseIds(@BindList("courseIds") Collection<Integer> courseIds, @Bind("time") Instant newerThan);
 
 
-    @SqlQuery("SELECT g.* FROM `lw_group` g JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0")
+    @SqlQuery("SELECT g.* FROM lw_group g JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0")
     Optional<Group> findByTitleAndOrganisationId(String title, int organisationId);
 
     /**
      * Returns a group by user with notification frequency.
      */
-    @SqlQuery("SELECT group_id, notification_frequency FROM lw_group_user WHERE group_id = ? AND user_id = ?")
+    @SqlQuery("SELECT * FROM lw_group_user WHERE group_id = ? AND user_id = ?")
     Optional<GroupUser> findGroupUserRelation(Group group, User user);
 
     /**
      * Returns a list of all Groups a user belongs to with associated metadata like notification frequency.
      */
-    @SqlQuery("SELECT group_id, notification_frequency FROM lw_group_user WHERE user_id = ?")
+    @SqlQuery("SELECT * FROM lw_group_user WHERE user_id = ?")
     List<GroupUser> findGroupUserRelations(int userId);
 
     /**
      * @return unix timestamp when the user has visited the group the last time; returns -1 if he never view the group.
      */
-    @SqlQuery("SELECT `last_visit` FROM `lw_group_user` WHERE `group_id` = ? AND `user_id` = ?")
+    @SqlQuery("SELECT last_visit FROM lw_group_user WHERE group_id = ? AND user_id = ?")
     Optional<Integer> findLastVisitTime(Group group, User user);
 
     @SqlQuery("SELECT COUNT(*) FROM lw_group_user WHERE group_id = ?")
@@ -97,7 +98,7 @@ public interface GroupDao extends SqlObject {
      * Returns all groups a user can join.
      * This are all groups of his courses except for groups he has already joined + groups that are open to everybody.
      */
-    default List<Group> findJoinAble(User user) throws SQLException {
+    default List<Group> findJoinAble(User user) {
         String publicCourseClause = "";
         if (!user.getOrganisation().getOption(Organisation.Option.Groups_Hide_public_groups)) {
             publicCourseClause = " OR policy_join = 'ALL_LEARNWEB_USERS'";
@@ -110,7 +111,7 @@ public interface GroupDao extends SqlObject {
             return new ArrayList<>();
         }
 
-        return getHandle().createQuery("SELECT g.* FROM `lw_group` g JOIN lw_course USING(course_id) WHERE g.deleted = 0 AND g.group_id NOT IN(<groupsIn>) "
+        return getHandle().createQuery("SELECT g.* FROM lw_group g JOIN lw_course USING(course_id) WHERE g.deleted = 0 AND g.group_id NOT IN(<groupsIn>) "
             + "AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(<coursesIn>) " + publicCourseClause + " OR g.policy_join = 'ORGANISATION_MEMBERS' "
             + "AND organisation_id = :orgId) ORDER BY title")
             .bindList("groupsIn", groupsIn)
@@ -122,32 +123,32 @@ public interface GroupDao extends SqlObject {
     /**
      * Saves the setting that defines how often a user will retrieve notifications for the given group.
      */
-    @SqlUpdate("UPDATE `lw_group_user` SET `notification_frequency`= ? WHERE `group_id`= ? and `user_id`= ?")
+    @SqlUpdate("UPDATE lw_group_user SET notification_frequency= ? WHERE group_id= ? and user_id= ?")
     void updateNotificationFrequency(User.NotificationFrequency notificationFrequency, int groupId, int userId);
 
     /**
      * Define at which timestamp the user has visited the group the last time.
      */
-    @SqlUpdate("UPDATE `lw_group_user` SET `last_visit` = ? WHERE `group_id` = ? AND `user_id` = ?")
+    @SqlUpdate("UPDATE lw_group_user SET last_visit = ? WHERE group_id = ? AND user_id = ?")
     void insertLastVisitTime(int time, Group group, User user);
 
-    @SqlUpdate("INSERT IGNORE INTO `lw_group_user` (`group_id`, `user_id`, `notification_frequency`) VALUES (?,?,?)")
+    @SqlUpdate("INSERT IGNORE INTO lw_group_user (group_id, user_id, notification_frequency) VALUES (?,?,?)")
     void insertUser(int groupId, User user, User.NotificationFrequency notificationFrequency);
 
-    @SqlUpdate("DELETE FROM `lw_group_user` WHERE `group_id` = ? AND `user_id` = ?")
+    @SqlUpdate("DELETE FROM lw_group_user WHERE group_id = ? AND user_id = ?")
     void deleteUser(int groupId, User user);
 
-    @SqlUpdate("DELETE FROM `lw_group_user` WHERE `group_id` = ?")
+    @SqlUpdate("DELETE FROM lw_group_user WHERE group_id = ?")
     void deleteAllUsers(int groupId);
 
-    default void deleteSoft(Group group) throws SQLException {
+    default void deleteSoft(Group group) {
         for (Resource resource : group.getResources()) {
             resource.delete();
         }
 
         List<User> members = group.getMembers();
         deleteAllUsers(group.getId());
-        getHandle().execute("UPDATE `lw_group` SET deleted = 1 WHERE `group_id` = ?", group);
+        getHandle().execute("UPDATE lw_group SET deleted = 1 WHERE group_id = ?", group);
 
         members.forEach(User::clearCaches);
         cache.remove(group.getId());
@@ -156,14 +157,14 @@ public interface GroupDao extends SqlObject {
     /**
      * Deletes the group and all its resources permanently. Don't use this if you don't know exactly what you are doing!
      */
-    default void deleteHard(Group group) throws SQLException {
+    default void deleteHard(Group group) {
         for (Resource resource : group.getResources()) {
             resource.deleteHard();
         }
 
         List<User> members = group.getMembers();
 
-        getHandle().execute("DELETE FROM lw_group WHERE `group_id` = ?", group.getId());
+        getHandle().execute("DELETE FROM lw_group WHERE group_id = ?", group.getId());
         getHandle().execute("UPDATE lw_course SET default_group_id = 0 WHERE default_group_id = ?", group.getId());
 
         members.forEach(User::clearCaches);
@@ -185,7 +186,7 @@ public interface GroupDao extends SqlObject {
         params.put("hypothesis_link", group.getHypothesisLink());
         params.put("hypothesis_token", group.getHypothesisToken());
 
-        Optional<Integer> groupId = SqlHelper.generateInsertQuery(getHandle(), "lw_group", params)
+        Optional<Integer> groupId = SqlHelper.handleSave(getHandle(), "lw_group", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         groupId.ifPresent(id -> {
@@ -230,7 +231,7 @@ public interface GroupDao extends SqlObject {
             group.setGroupId(rs.getInt("group_id"));
             group.setUserId(rs.getInt("user_id"));
             group.setJoinTime(RsHelper.getLocalDateTime(rs.getTimestamp("join_time")));
-            group.setLastVisit(RsHelper.getLocalDateTime(rs.getTimestamp("last_visit")));
+            group.setLastVisit(RsHelper.getLocalDateTime(rs.getInt("last_visit")));
             group.setNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("notification_frequency")));
             return group;
         }

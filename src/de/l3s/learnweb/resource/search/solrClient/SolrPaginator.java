@@ -1,14 +1,13 @@
 package de.l3s.learnweb.resource.search.solrClient;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField;
 
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.ResourceDecorator;
 
@@ -27,7 +26,7 @@ public class SolrPaginator extends AbstractPaginator {
         this.search = search;
 
         if (search.getFilterGroupIds().size() == 1 && search.getQuery() != null && !"*".equals(search.getQuery())) {
-            this.searchLogId = Learnweb.getInstance().getSearchLogManager().logGroupQuery(
+            this.searchLogId = Learnweb.dao().getSearchHistoryDao().insertGroupQuery(
                 search.getFilterGroupIds().get(0),
                 search.getQuery(),
                 null,
@@ -38,24 +37,24 @@ public class SolrPaginator extends AbstractPaginator {
     }
 
     @Override
-    public synchronized List<ResourceDecorator> getCurrentPage() throws SQLException, IOException, SolrServerException {
+    public synchronized List<ResourceDecorator> getCurrentPage() throws IOException, SolrServerException {
         if (getCurrentPageCache() != null) {
             return getCurrentPageCache();
         }
 
         List<ResourceDecorator> results = search.getResourcesByPage(getPageIndex() + 1);
-        setTotalResults((int) search.getQueryResponse().getResults().getNumFound());
-        facetFieldsResults = search.getQueryResponse().getFacetFields();
-        facetQueriesResults = search.getQueryResponse().getFacetQuery();
+        setTotalResults((int) search.getResultsFound());
+        facetFieldsResults = search.getResultsFacetFields();
+        facetQueriesResults = search.getResultsFacetQuery();
 
         setCurrentPageCache(results);
         if (searchLogId > 0) {
-            Learnweb.getInstance().getSearchLogManager().logResources(searchLogId, results, getPageIndex() + 1);
+            Learnweb.dao().getSearchHistoryDao().insertResources(searchLogId, results);
         }
         return results;
     }
 
-    public List<FacetField> getFacetFields() throws SQLException, IOException, SolrServerException {
+    public List<FacetField> getFacetFields() throws IOException, SolrServerException {
         if (facetFieldsResults == null) {
             getCurrentPage();
         }
@@ -63,7 +62,7 @@ public class SolrPaginator extends AbstractPaginator {
         return facetFieldsResults;
     }
 
-    public Map<String, Integer> getFacetQueries() throws SQLException, IOException, SolrServerException {
+    public Map<String, Integer> getFacetQueries() throws IOException, SolrServerException {
         if (facetQueriesResults == null) {
             getCurrentPage();
         }

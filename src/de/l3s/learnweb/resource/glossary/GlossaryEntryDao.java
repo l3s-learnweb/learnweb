@@ -1,9 +1,10 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,8 @@ import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(GlossaryEntryDao.GlossaryEntryMapper.class)
 @RegisterRowMapper(GlossaryTermDao.GlossaryTermMapper.class)
-public interface GlossaryEntryDao extends SqlObject {
+public interface GlossaryEntryDao extends SqlObject, Serializable {
+
     @SqlQuery("SELECT * FROM lw_glossary_entry e JOIN lw_glossary_term t USING (entry_id) WHERE entry_id = ?")
     Optional<GlossaryEntry> findById(String entryId);
 
@@ -34,24 +36,26 @@ public interface GlossaryEntryDao extends SqlObject {
     @UseRowReducer(GlossaryEntryTermReducer.class)
     List<GlossaryEntry> findByResourceId(int resourceId);
 
-    default void deleteSoft(int entryId, int deletedByUserId) {
-        getHandle().execute("UPDATE lw_glossary_entry SET deleted = 1, last_changed_by_user_id = ? WHERE entry_id = ?", deletedByUserId, entryId);
-        getHandle().execute("UPDATE lw_glossary_term SET deleted = 1, last_changed_by_user_id = ? WHERE entry_id = ?", deletedByUserId, entryId);
+    default void deleteSoft(GlossaryEntry entry, int deletedByUserId) {
+        entry.setDeleted(true);
+
+        getHandle().execute("UPDATE lw_glossary_entry SET deleted = 1, last_changed_by_user_id = ? WHERE entry_id = ?", deletedByUserId, entry);
+        getHandle().execute("UPDATE lw_glossary_term SET deleted = 1, last_changed_by_user_id = ? WHERE entry_id = ?", deletedByUserId, entry);
     }
 
     @SqlQuery("SELECT COUNT(distinct ge.entry_id) FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ?")
-    int countTotalEntries(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+    int countTotalEntries(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     @SqlQuery("SELECT u.username, count(*) AS count FROM lw_resource r JOIN lw_user u ON u.user_id = r.owner_user_id JOIN lw_glossary_entry ge USING (resource_id) "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ? GROUP BY u.username ORDER BY username")
     @KeyColumn("username")
     @ValueColumn("count")
-    Map<String, Integer> countEntriesPerUser(@BindList("userIds") Collection<Integer> userIds, Date startDate, Date endDate);
+    Map<String, Integer> countEntriesPerUser(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     @RegisterRowMapper(GlossaryDescriptionSummaryMapper.class)
     @SqlQuery("SELECT entry_id, resource_id, user_id, description, description_pasted FROM lw_glossary_entry WHERE deleted != 1 AND user_id IN(<userIds>) AND timestamp BETWEEN ? AND ?")
-    List<GlossaryDescriptionSummary> countGlossaryDescriptionSummary(Collection<Integer> userIds, Date startDate, Date endDate);
+    List<GlossaryDescriptionSummary> countGlossaryDescriptionSummary(Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
 
     default void save(GlossaryEntry entry) {
         if (entry.getUserId() <= 0) {
@@ -70,7 +74,7 @@ public interface GlossaryEntryDao extends SqlObject {
         params.put("description", entry.getDescription());
         params.put("description_pasted", entry.isDescriptionPasted());
 
-        Optional<Integer> entryId = SqlHelper.generateInsertQuery(getHandle(), "lw_glossary_entry", params)
+        Optional<Integer> entryId = SqlHelper.handleSave(getHandle(), "lw_glossary_entry", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         entryId.ifPresent(entry::setId);
@@ -102,7 +106,7 @@ public interface GlossaryEntryDao extends SqlObject {
             GlossaryEntry entry = map.computeIfAbsent(entryId, id -> rowView.getRow(GlossaryEntry.class));
 
             if (rowView.getColumn("term_id", Integer.class) != null) {
-                entry.getTerms().add(rowView.getRow(GlossaryTerm.class));
+                entry.addTerm(rowView.getRow(GlossaryTerm.class));
             }
         }
     }

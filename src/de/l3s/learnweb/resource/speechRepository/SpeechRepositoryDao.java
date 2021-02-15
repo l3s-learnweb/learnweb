@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.speechRepository;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -16,7 +17,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(SpeechRepositoryDao.SpeechRepositoryEntityMapper.class)
-public interface SpeechRepositoryDao extends SqlObject {
+public interface SpeechRepositoryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM speechrepository_video WHERE id = ?")
     Optional<SpeechRepositoryEntity> findById(int speechId);
 
@@ -52,7 +53,7 @@ public interface SpeechRepositoryDao extends SqlObject {
         params.put("terminology", speech.getTerminology());
         params.put("learnweb_resource_id", speech.getLearnwebResourceId());
 
-        Optional<Integer> speechId = SqlHelper.generateInsertQuery(getHandle(), "speechrepository_video", params)
+        Optional<Integer> speechId = SqlHelper.handleSave(getHandle(), "speechrepository_video", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         speechId.ifPresent(speech::setId);

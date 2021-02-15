@@ -1,11 +1,9 @@
 package de.l3s.learnweb.dashboard.glossary;
 
-import java.time.ZoneId;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,12 +19,12 @@ import org.primefaces.model.charts.pie.PieChartDataSet;
 import org.primefaces.model.charts.pie.PieChartModel;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.beans.ColorUtils;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
+import de.l3s.util.ColorHelper;
 import de.l3s.util.MapHelper;
 
-class GlossaryDashboardChartsFactory {
+final class GlossaryDashboardChartsFactory {
     private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -54,7 +52,7 @@ class GlossaryDashboardChartsFactory {
                     system += entry.getValue();
                 }
             } else {
-                log.error("Unknown actionId: " + actionId);
+                log.error("Unknown actionId: {}", actionId);
             }
         }
 
@@ -74,7 +72,7 @@ class GlossaryDashboardChartsFactory {
         values.add(system);
         values.add(resource);
         barDataSet.setData(values);
-        barDataSet.setBackgroundColor(ColorUtils.getColorList(4));
+        barDataSet.setBackgroundColor(ColorHelper.getColorList(4));
         data.addChartDataSet(barDataSet);
 
         model.setData(data);
@@ -104,13 +102,13 @@ class GlossaryDashboardChartsFactory {
         dataSet.setData(values);
         data.setLabels(labels);
         data.addChartDataSet(dataSet);
-        dataSet.setBackgroundColor(ColorUtils.getColorList(20));
+        dataSet.setBackgroundColor(ColorHelper.getColorList(20));
 
         model.setData(data);
         return model;
     }
 
-    public static LineChartModel createInteractionsChart(Map<String, Integer> actionsCountPerDay, Date startDate, Date endDate) {
+    public static LineChartModel createInteractionsChart(Map<String, Integer> actionsCountPerDay, LocalDate startDate, LocalDate endDate) {
         LineChartModel model = new LineChartModel();
         ChartData data = new ChartData();
         LineChartDataSet dataSet = new LineChartDataSet();
@@ -124,13 +122,8 @@ class GlossaryDashboardChartsFactory {
         dataSet.setLabel("interactions");
         dataSet.setLineTension(0.1);
 
-        Calendar start = Calendar.getInstance();
-        start.setTime(startDate);
-        Calendar end = Calendar.getInstance();
-        end.setTime(endDate);
-
-        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-            String dateKey = DATE_FORMAT.format(date.toInstant().atZone(ZoneId.systemDefault()));
+        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+            String dateKey = DATE_FORMAT.format(date);
             labels.add(dateKey);
             values.add(actionsCountPerDay.getOrDefault(dateKey, 0));
         }
@@ -162,7 +155,7 @@ class GlossaryDashboardChartsFactory {
             }
         }
         concepts.setData(conceptsData);
-        concepts.setBackgroundColor(ColorUtils.getColorList(10));
+        concepts.setBackgroundColor(ColorHelper.getColorList(10));
 
         BarChartDataSet terms = new BarChartDataSet();
         terms.setLabel("Terms");
@@ -176,7 +169,7 @@ class GlossaryDashboardChartsFactory {
             }
         }
         terms.setData(termsData);
-        terms.setBackgroundColor(ColorUtils.getColorList(10));
+        terms.setBackgroundColor(ColorHelper.getColorList(10));
 
         data.setLabels(labels);
         data.addChartDataSet(terms);

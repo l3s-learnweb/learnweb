@@ -1,14 +1,10 @@
 package de.l3s.learnweb.resource.submission;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
@@ -19,7 +15,6 @@ import de.l3s.learnweb.user.User;
  */
 public class SubmittedResources implements Serializable {
     private static final long serialVersionUID = -7336342838037456587L;
-    private static final Logger log = LogManager.getLogger(SubmittedResources.class);
 
     private int userId;
     private final List<Resource> resources = new ArrayList<>(); // the submitted resources
@@ -36,11 +31,7 @@ public class SubmittedResources implements Serializable {
 
     public User getUser() {
         if (null == user) {
-            try {
-                user = Learnweb.getInstance().getUserManager().getUser(userId);
-            } catch (SQLException e) {
-                log.error("Can't get user " + userId, e);
-            }
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
     }

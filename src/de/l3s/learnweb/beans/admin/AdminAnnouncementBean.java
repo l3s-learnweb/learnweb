@@ -1,16 +1,17 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.Announcement;
+import de.l3s.learnweb.AnnouncementDao;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 
@@ -24,7 +25,10 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
     private Announcement announcement;
     private String pageTitle;
 
-    public void onLoad() throws SQLException {
+    @Inject
+    private AnnouncementDao announcementDao;
+
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
         BeanAssert.hasPermission(getUser().isAdmin());
 
@@ -33,28 +37,20 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
 
             announcement = new Announcement();
             announcement.setUserId(getUser().getId());
-            announcement.setDate(new Date());
+            announcement.setDate(LocalDateTime.now());
         } else {
-            announcement = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId);
+            announcement = announcementDao.findById(announcementId).orElse(null);
             BeanAssert.isFound(announcement);
             pageTitle = announcement.getTitle();
         }
     }
 
     public String onSave() {
-        try {
-            announcement.save();
+        announcementDao.save(announcement);
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        setKeepMessages();
 
-            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-
-            setKeepMessages();
-
-            return "/lw/admin/announcements.xhtml?faces-redirect=true";
-        } catch (Exception e) {
-            addErrorMessage(e);
-
-            return null;
-        }
+        return "/lw/admin/announcements.xhtml?faces-redirect=true";
     }
 
     public Announcement getAnnouncement() {

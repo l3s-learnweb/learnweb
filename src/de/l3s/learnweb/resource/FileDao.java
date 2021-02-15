@@ -4,10 +4,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +25,12 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.util.Cache;
 import de.l3s.util.HasId;
 import de.l3s.util.ICache;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(FileDao.FileMapper.class)
-public interface FileDao extends SqlObject {
-    ICache<File> cache = Cache.of(File.class);
+public interface FileDao extends SqlObject, Serializable {
+    ICache<File> cache = new Cache<>(3000);
 
     default File findById(int fileId) {
         File course = cache.get(fileId);
@@ -46,7 +48,7 @@ public interface FileDao extends SqlObject {
     @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER by resource_file_number, timestamp")
     List<File> findByResourceId(int resourceId);
 
-    @SqlUpdate("UPDATE `lw_file` SET `resource_id` = ? WHERE file_id = ?")
+    @SqlUpdate("UPDATE lw_file SET resource_id = ? WHERE file_id = ?")
     void updateResource(Resource resource, File file);
 
     default void updateResource(Resource resource, Collection<File> files) {
@@ -67,7 +69,7 @@ public interface FileDao extends SqlObject {
     }
 
     default void deleteSoft(File file) {
-        getHandle().execute("UPDATE `lw_file` SET deleted = 1 WHERE file_id = ?", file);
+        getHandle().execute("UPDATE lw_file SET deleted = 1 WHERE file_id = ?", file);
         cache.remove(file.getId());
 
         if (file.exists()) {
@@ -85,7 +87,7 @@ public interface FileDao extends SqlObject {
      */
     default void save(File file, InputStream inputStream) throws IOException {
         if (file.getLastModified() == null) {
-            file.setLastModified(new Date());
+            file.setLastModified(LocalDateTime.now());
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
@@ -97,7 +99,7 @@ public interface FileDao extends SqlObject {
         params.put("log_actived", file.isDownloadLogActivated());
         params.put("timestamp", file.getLastModified());
 
-        Optional<Integer> fileId = SqlHelper.generateInsertQuery(getHandle(), "lw_file", params)
+        Optional<Integer> fileId = SqlHelper.handleSave(getHandle(), "lw_file", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         fileId.ifPresent(id -> {
@@ -107,7 +109,7 @@ public interface FileDao extends SqlObject {
 
         if (inputStream != null) {
             // copy the data into the file
-            try (OutputStream outputStream = new FileOutputStream(file.getActualFile())) {
+            try (inputStream; OutputStream outputStream = new FileOutputStream(file.getActualFile())) {
                 IOUtils.copy(inputStream, outputStream);
             }
         }
@@ -125,7 +127,7 @@ public interface FileDao extends SqlObject {
                 file.setName(rs.getString("name"));
                 file.setMimeType(rs.getString("mime_type"));
                 file.setDownloadLogActivated(rs.getBoolean("log_actived"));
-                file.setLastModified(new Date(rs.getTimestamp("timestamp").getTime()));
+                file.setLastModified(RsHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
 
                 if (!file.getActualFile().exists()) {
                     LogManager.getLogger(FileMapper.class).warn("Can't find file '{}' for resource {}", file.getActualFile().getAbsolutePath(), file.getResourceId());
