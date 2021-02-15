@@ -47,7 +47,8 @@
     <orderEntry type="library" name="Maven: com.sun.activation:jakarta.activation:1.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.omnifaces:omnifaces:3.10.1" level="project" />
     <orderEntry type="library" name="Maven: org.primefaces:primefaces:10.0.0-RC1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.librepdf:openpdf:1.3.24" level="project" />
+    <orderEntry type="library" name="Maven: com.github.librepdf:openpdf:1.3.25" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi:5.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.30" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.30" level="project" />
@@ -155,13 +156,12 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.14.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.14.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.14.0" level="project" />
-    <orderEntry type="library" name="Maven: io.sentry:sentry-log4j2:4.0.0" level="project" />
-    <orderEntry type="library" name="Maven: io.sentry:sentry:4.0.0" level="project" />
+    <orderEntry type="library" name="Maven: io.sentry:sentry-log4j2:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: io.sentry:sentry:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:30.1-jre" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:failureaccess:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.checkerframework:checker-qual:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.3.4" level="project" />
     <orderEntry type="library" name="Maven: com.google.j2objc:j2objc-annotations:1.3" level="project" />
