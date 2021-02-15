@@ -21,8 +21,8 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.survey.SurveyQuestion.QuestionType;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
-import de.l3s.util.bean.BeanHelper;
 import de.l3s.util.SqlHelper;
+import de.l3s.util.bean.BeanHelper;
 
 /**
  * @author Philipp Kemkes

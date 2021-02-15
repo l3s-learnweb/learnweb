@@ -118,15 +118,7 @@ public final class Learnweb {
             log.error("We could not guess the server name. Will use by default: " + this.serverUrl + "; on Machine: " + Misc.getSystemDescription());
         }
 
-        HikariDataSource ds = new HikariDataSource();
-        // Configuration docs https://github.com/brettwooldridge/HikariCP
-        ds.setDriverClassName("org.mariadb.jdbc.Driver");
-        ds.setJdbcUrl(properties.getProperty("mysql_url") + "?log=false");
-        ds.setUsername(properties.getProperty("mysql_user"));
-        ds.setPassword(properties.getProperty("mysql_password"));
-        ds.setMaximumPoolSize(3);
-        ds.setConnectionTimeout(60000); // 1 min
-        dataSource = ds;
+        dataSource = createDataSource();
         dbConnection = dataSource.getConnection(); // TODO: remove old connection methods
 
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
@@ -186,6 +178,18 @@ public final class Learnweb {
         } catch (IOException e) {
             log.error("Property error", e);
         }
+    }
+
+    private HikariDataSource createDataSource() {
+        HikariDataSource ds = new HikariDataSource();
+        // Configuration docs https://github.com/brettwooldridge/HikariCP
+        ds.setDriverClassName("org.mariadb.jdbc.Driver");
+        ds.setJdbcUrl(properties.getProperty("mysql_url") + "?log=false");
+        ds.setUsername(properties.getProperty("mysql_user"));
+        ds.setPassword(properties.getProperty("mysql_password"));
+        ds.setMaximumPoolSize(3);
+        ds.setConnectionTimeout(60000); // 1 min
+        return ds;
     }
 
     /**
@@ -298,11 +302,7 @@ public final class Learnweb {
         jobScheduler.stopAllJobs();
         archiveUrlManager.onDestroy();
         waybackCapturesLogger.stop();
-
-        try {
-            dbConnection.close();
-        } catch (SQLException ignored) {
-        }
+        dataSource.close();
 
         log.info("Shutdown Learnweb completed");
     }
@@ -449,7 +449,7 @@ public final class Learnweb {
     }
 
     /**
-     * This method will use https://learnweb.l3s.uni-hannover.de as server URL if no other URL is specified in the properties file
+     * This method will use https://learnweb.l3s.uni-hannover.de as server URL if no other URL is specified in the properties file.
      */
     public static Learnweb createInstance() throws ClassNotFoundException, SQLException {
         return createInstance(null);

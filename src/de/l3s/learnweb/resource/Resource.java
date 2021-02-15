@@ -94,7 +94,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private boolean restricted = false;
     private Date resourceTimestamp;
     private Date creationDate = new Date();
-    private Map<String, String> metadata = new HashMap<>(); // field_name : field_value
+    private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
 
     private boolean deleted = false; // indicates whether this resource has been deleted
 
@@ -1336,7 +1336,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         return metadata.get(key);
     }
 
-    public Map<String, String> getMetadata() {
+    public HashMap<String, String> getMetadata() {
         return metadata;
     }
 

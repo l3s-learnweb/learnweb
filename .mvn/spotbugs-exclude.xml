@@ -117,4 +117,9 @@
         <Class name="de.l3s.maintenance.MaintenanceTask"/>
         <Bug pattern="DM_EXIT"/>
     </Match>
+    <!-- The old connection should be removed later -->
+    <Match>
+        <Class name="de.l3s.learnweb.Learnweb"/>
+        <Bug pattern="ML_SYNC_ON_FIELD_TO_GUARD_CHANGING_THAT_FIELD"/>
+    </Match>
 </FindBugsFilter>

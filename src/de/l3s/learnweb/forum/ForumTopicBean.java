@@ -2,7 +2,6 @@ package de.l3s.learnweb.forum;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
         BeanAssert.isFound(group);
         BeanAssert.hasPermission(group.canViewResources(getUser()));
 
-        posts = new ArrayList<>(fm.getPostsBy(topicId));
+        posts = fm.getPostsBy(topicId);
         fm.incViews(topicId);
         fm.updatePostVisitTime(topicId, getUser().getId());
 

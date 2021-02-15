@@ -99,7 +99,9 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         addMessage(FacesMessage.SEVERITY_INFO, "Caches cleared");
     }
 
-    public static class DatabaseProcessStatistic {
+    public static class DatabaseProcessStatistic implements Serializable {
+        private static final long serialVersionUID = -863069126635587522L;
+
         private int id;
         private String user;
         private String host;
