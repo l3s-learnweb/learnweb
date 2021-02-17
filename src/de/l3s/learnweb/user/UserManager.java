@@ -510,7 +510,7 @@ public class UserManager {
             resource.deleteHard();
         }
 
-        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM message WHERE `from_user` = ? OR `to_user` = ?")) {
+        try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_message WHERE `sender_user_id` = ? OR `recipient_user_id` = ?")) {
             delete.setInt(1, user.getId());
             delete.setInt(2, user.getId());
             delete.executeUpdate();

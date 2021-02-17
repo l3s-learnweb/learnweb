@@ -175,7 +175,7 @@ public class SpeechRepositoryCrawler implements Runnable {
 
     private boolean isPageSaved(final int pageId) throws SQLException {
         // check the database to identify if the video has already been crawled
-        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT id FROM speechrepository_video WHERE id = ?");
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT id FROM learnweb_large.speechrepository_video WHERE id = ?");
         pStmt.setInt(1, pageId);
         ResultSet rs = pStmt.executeQuery();
         return rs.next();
@@ -187,7 +187,7 @@ public class SpeechRepositoryCrawler implements Runnable {
      */
     private void savePage(final SpeechRepositoryEntity speechEntity) throws SQLException {
         PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement(
-            "INSERT INTO speechrepository_video (id, title, url, rights, date, description, notes, image_link, "
+            "INSERT INTO learnweb_large.speechrepository_video (id, title, url, rights, date, description, notes, image_link, "
                 + "video_link, duration, language, level, `use`, type, domains, terminology, learnweb_resource_id)"
                 + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
         preparedStatement.setInt(1, speechEntity.getId());
@@ -281,7 +281,7 @@ public class SpeechRepositoryCrawler implements Runnable {
     }
 
     private void createResourcesForExistingSpeechrepositoryEntities() throws SQLException, IOException {
-        ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM speechrepository_video WHERE learnweb_resource_id = 0");
+        ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM learnweb_large.speechrepository_video WHERE learnweb_resource_id = 0");
         while (rs.next()) {
             SpeechRepositoryEntity speechEntity = createSpeechRepositoryEntity(rs);
             log.debug("process entry id {}", speechEntity.getId());
@@ -290,7 +290,7 @@ public class SpeechRepositoryCrawler implements Runnable {
             createResource(speechEntity);
 
             // save resource_id
-            PreparedStatement updateId = learnweb.getConnection().prepareStatement("UPDATE speechrepository_video SET learnweb_resource_id = ? WHERE id = ?");
+            PreparedStatement updateId = learnweb.getConnection().prepareStatement("UPDATE learnweb_large.speechrepository_video SET learnweb_resource_id = ? WHERE id = ?");
             updateId.setInt(1, speechEntity.getLearnwebResourceId());
             updateId.setInt(2, speechEntity.getId());
             updateId.executeUpdate();

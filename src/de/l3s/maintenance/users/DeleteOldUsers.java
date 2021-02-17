@@ -138,7 +138,7 @@ public class DeleteOldUsers extends MaintenanceTask {
 
         // remove references to deleted resources
         String[] tables = {"lw_resource_history", "lw_resource_rating", "lw_resource_tag", "lw_thumb",
-            "lw_transcript_actions", "lw_glossary_resource", "lw_transcript_selections", "lw_transcript_summary", "ted_transcripts_paragraphs"};
+            "lw_transcript_actions", "lw_glossary_resource", "lw_transcript_selections", "lw_transcript_summary", "learnweb_large.ted_transcripts_paragraphs"};
 
         for (String table : tables) {
             try (PreparedStatement delete = getLearnweb().getConnection().prepareStatement("delete d FROM `" + table + "` d LEFT JOIN lw_resource r USING(resource_id) WHERE r.resource_id is null")) {

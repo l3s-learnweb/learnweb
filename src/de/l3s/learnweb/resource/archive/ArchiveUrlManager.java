@@ -73,7 +73,7 @@ public final class ArchiveUrlManager {
     public void checkWaybackCaptures(ResourceDecorator resource) {
         try {
             if (resource.getResource().getMetadataValue("first_timestamp") == null) {
-                PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT first_capture, last_capture FROM wb_url WHERE url = ?");
+                PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT first_capture, last_capture FROM learnweb_large.wb2_url WHERE url = ?");
                 pStmt.setString(1, resource.getUrl());
                 ResultSet rs = pStmt.executeQuery();
                 if (rs.next()) {

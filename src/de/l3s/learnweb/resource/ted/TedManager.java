@@ -111,8 +111,8 @@ public class TedManager {
 
     public List<Transcript> getTranscripts(int resourceId) throws SQLException {
         List<Transcript> transcripts = new LinkedList<>();
-        String selectTranscripts = "SELECT DISTINCT(language) as language_code FROM ted_transcripts_paragraphs WHERE resource_id = ?";
-        String selectTranscriptParagraphs = "SELECT starttime, paragraph FROM ted_transcripts_paragraphs WHERE resource_id = ? AND language = ?";
+        String selectTranscripts = "SELECT DISTINCT(language) as language_code FROM learnweb_large.ted_transcripts_paragraphs WHERE resource_id = ?";
+        String selectTranscriptParagraphs = "SELECT starttime, paragraph FROM learnweb_large.ted_transcripts_paragraphs WHERE resource_id = ? AND language = ?";
 
         PreparedStatement ipStmt = learnweb.getConnection().prepareStatement(selectTranscriptParagraphs);
 
@@ -146,7 +146,7 @@ public class TedManager {
     public int getTedVideoResourceId(String url) throws SQLException {
         int tedVideoResourceId = 0;
         String slug = url.substring(url.lastIndexOf('/') + 1);
-        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE slug = ?");
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM learnweb_large.ted_video WHERE slug = ?");
         pStmt.setString(1, slug);
         ResultSet rs = pStmt.executeQuery();
         if (rs.next()) {
@@ -170,7 +170,7 @@ public class TedManager {
 
     public Map<String, String> getLangList(int resourceId) throws SQLException {
         Map<String, String> langList = new HashMap<>();
-        PreparedStatement getLangList = learnweb.getConnection().prepareStatement("SELECT DISTINCT(t1.language) as language_code, t2.language FROM `ted_transcripts_paragraphs` t1 JOIN ted_transcripts_lang_mapping t2 ON t1.language=t2.language_code WHERE resource_id=?");
+        PreparedStatement getLangList = learnweb.getConnection().prepareStatement("SELECT DISTINCT(t1.language) as language_code, t2.language FROM learnweb_large.ted_transcripts_paragraphs t1 JOIN learnweb_large.ted_transcripts_lang_mapping t2 ON t1.language=t2.language_code WHERE resource_id=?");
         getLangList.setInt(1, resourceId);
         ResultSet rs = getLangList.executeQuery();
 
@@ -183,7 +183,7 @@ public class TedManager {
     }
 
     public String getTranscript(int resourceId, String language) throws SQLException {
-        String selectTranscript = "SELECT `starttime`, `paragraph` FROM ted_transcripts_paragraphs where resource_id = ? AND `language` = ?";
+        String selectTranscript = "SELECT `starttime`, `paragraph` FROM learnweb_large.ted_transcripts_paragraphs where resource_id = ? AND `language` = ?";
         StringBuilder transcript = new StringBuilder();
 
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(selectTranscript);
@@ -305,9 +305,9 @@ public class TedManager {
         Group tedGroup = learnweb.getGroupManager().getGroupById(862);
         User admin = learnweb.getUserManager().getUser(7727);
 
-        PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE ted_video SET resource_id = ? WHERE ted_id = ?");
+        PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE learnweb_large.ted_video SET resource_id = ? WHERE ted_id = ?");
 
-        PreparedStatement getTedVideos = learnweb.getConnection().prepareStatement("SELECT ted_id, title, description, slug, photo2_url, duration, resource_id, published_at FROM ted_video");
+        PreparedStatement getTedVideos = learnweb.getConnection().prepareStatement("SELECT ted_id, title, description, slug, photo2_url, duration, resource_id, published_at FROM learnweb_large.ted_video");
         getTedVideos.executeQuery();
 
         ResultSet rs = getTedVideos.getResultSet();
@@ -478,7 +478,7 @@ public class TedManager {
     }
 
     public void insertTedXTranscripts(int resourceId, String resourceIdAtService, String langCode, String langName) throws SQLException {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM `ted_transcripts_paragraphs` WHERE `resource_id` = ? AND `language` = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM learnweb_large.ted_transcripts_paragraphs WHERE `resource_id` = ? AND `language` = ?");
         select.setInt(1, resourceId);
         select.setString(2, langCode);
         ResultSet rs = select.executeQuery();
@@ -493,13 +493,13 @@ public class TedManager {
             return; // no transcript available for this language code
         }
 
-        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("REPLACE INTO `ted_transcripts_lang_mapping`(`language_code`,`language`) VALUES (?,?)");
+        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("REPLACE INTO learnweb_large.ted_transcripts_lang_mapping (`language_code`,`language`) VALUES (?,?)");
         pStmt2.setString(1, langCode);
         pStmt2.setString(2, langName);
         pStmt2.executeUpdate();
         pStmt2.close();
 
-        PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("REPLACE INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
+        PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("REPLACE INTO learnweb_large.ted_transcripts_paragraphs (`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
         pStmt3.setInt(1, resourceId);
         pStmt3.setString(2, langCode);
 
@@ -565,7 +565,7 @@ public class TedManager {
         ResultSet rs = pStmt.executeQuery();
         while (rs.next()) {
             int resId = rs.getInt("resource_id");
-            PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("SELECT * FROM ted_video WHERE resource_id = ?");
+            PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.ted_video WHERE resource_id = ?");
             pStmt2.setInt(1, resId);
             ResultSet rs2 = pStmt2.executeQuery();
             boolean existsInTedVideo = false;
@@ -579,7 +579,7 @@ public class TedManager {
 
                 learnweb.getResourceManager().deleteResource(resId);
 
-                PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("DELETE FROM ted_transcripts_paragraphs WHERE resource_id = ?");
+                PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("DELETE FROM learnweb_large.ted_transcripts_paragraphs WHERE resource_id = ?");
                 pStmt3.setInt(1, resId);
                 int deleted = pStmt3.executeUpdate();
                 log.info("Deleted(" + deleted + ") transcripts for duplicate TED video: " + resId);

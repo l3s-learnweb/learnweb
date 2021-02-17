@@ -33,11 +33,11 @@ public class TimelineManager {
             //TimelineData timelineData = new TimelineData(getFirstDayOfMonth(rs.getTimestamp(1)), rs.getInt(2));
             //timelineMonthlyData.add(timelineData);
         }
-        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("SELECT url_id FROM wb_url WHERE url = ?");
+        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("SELECT url_id FROM learnweb_large.wb2_url WHERE url = ?");
         pStmt2.setString(1, url);
         ResultSet rs2 = pStmt2.executeQuery();
         if (rs2.next()) {
-            PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("SELECT timestamp,count(*) FROM `wb_url_capture` WHERE `url_id` = ? group by year(timestamp),month(timestamp) ORDER BY timestamp ASC");
+            PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("SELECT timestamp,count(*) FROM learnweb_large.wb2_url_capture WHERE `url_id` = ? group by year(timestamp),month(timestamp) ORDER BY timestamp ASC");
             pStmt3.setInt(1, rs2.getInt(1));
             ResultSet rs3 = pStmt3.executeQuery();
             while (rs3.next()) {
@@ -67,11 +67,11 @@ public class TimelineManager {
             //TimelineData timelineData = new TimelineData(getMidDayOfDate(rs.getTimestamp(1)), rs.getInt(2));
             //timelineDailyData.add(timelineData);
         }
-        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("SELECT url_id FROM wb_url WHERE url = ?");
+        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("SELECT url_id FROM learnweb_large.wb2_url WHERE url = ?");
         pStmt2.setString(1, url);
         ResultSet rs2 = pStmt2.executeQuery();
         if (rs2.next()) {
-            PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("SELECT timestamp,count(*) FROM `wb_url_capture` WHERE `url_id` = ? group by year(timestamp),month(timestamp),day(timestamp) ORDER BY timestamp ASC");
+            PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("SELECT timestamp,count(*) FROM learnweb_large.wb2_url_capture WHERE `url_id` = ? group by year(timestamp),month(timestamp),day(timestamp) ORDER BY timestamp ASC");
             pStmt3.setInt(1, rs2.getInt(1));
             ResultSet rs3 = pStmt3.executeQuery();
             while (rs3.next()) {
@@ -102,11 +102,11 @@ public class TimelineManager {
             ArchiveUrl archiveUrl = new ArchiveUrl(rs.getString("archive_url"), rs.getTimestamp("timestamp"));
             archiveUrlsData.add(archiveUrl);
         }
-        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("SELECT url_id FROM wb_url WHERE url = ?");
+        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("SELECT url_id FROM learnweb_large.wb2_url WHERE url = ?");
         pStmt2.setString(1, url);
         ResultSet rs2 = pStmt2.executeQuery();
         if (rs2.next()) {
-            PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `wb_url_capture` WHERE `url_id` = ? AND DATE(timestamp) = DATE(?)");
+            PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("SELECT timestamp FROM learnweb_large.wb2_url_capture WHERE `url_id` = ? AND DATE(timestamp) = DATE(?)");
             pStmt3.setInt(1, rs2.getInt(1));
             pStmt3.setTimestamp(2, new Timestamp(timestamp.getTime()));
             ResultSet rs3 = pStmt3.executeQuery();

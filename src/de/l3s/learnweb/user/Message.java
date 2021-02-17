@@ -33,7 +33,7 @@ public class Message implements Comparable<Message>, Serializable {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement(
-            "INSERT INTO message (from_user, to_user, m_title, m_text, m_seen, m_read, m_time) " + "VALUES (?,?,?,?,?,?,?)");
+            "INSERT INTO lw_message (sender_user_id, recipient_user_id, title, text, is_seen, is_read, created_at) " + "VALUES (?,?,?,?,?,?,?)");
         stmt.setInt(1, fromUser.getId());
         stmt.setInt(2, toUser.getId());
         stmt.setString(3, title);
@@ -48,7 +48,7 @@ public class Message implements Comparable<Message>, Serializable {
     }
 
     public void seen() throws SQLException {
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where message_id = ?");
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_message SET is_seen=1 where message_id = ?");
         stmt.setInt(1, this.id);
 
         stmt.executeUpdate();
@@ -56,7 +56,7 @@ public class Message implements Comparable<Message>, Serializable {
     }
 
     public void messageRead() throws SQLException {
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_read=1 where message_id = ?");
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_message SET is_read=1 where message_id = ?");
         stmt.setInt(1, this.id);
 
         stmt.executeUpdate();
@@ -173,7 +173,7 @@ public class Message implements Comparable<Message>, Serializable {
     public static int howManyNotSeenMessages(User user) throws SQLException {
         int count = 0;
         PreparedStatement pstmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement(
-            "SELECT count(*) as xCount FROM `message` WHERE to_user = ? and m_seen = 0");
+            "SELECT count(*) as xCount FROM `lw_message` WHERE recipient_user_id = ? and is_seen = 0");
 
         pstmtGetUsers.setInt(1, user.getId());
         ResultSet rs = pstmtGetUsers.executeQuery();
@@ -197,7 +197,7 @@ public class Message implements Comparable<Message>, Serializable {
 
         String limitStr = limit <= 0 ? "" : " limit " + limit;
 
-        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc" + limitStr);
+        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `lw_message` WHERE recipient_user_id = ? order by created_at desc" + limitStr);
 
         stmtGetUsers.setInt(1, user.getId());
         ResultSet rs = stmtGetUsers.executeQuery();
@@ -208,17 +208,17 @@ public class Message implements Comparable<Message>, Serializable {
             message = new Message();
             message.setId(rs.getInt("message_id"));
             UserManager um = Learnweb.getInstance().getUserManager();
-            User fromUser = um.getUser(rs.getInt("from_user"));
+            User fromUser = um.getUser(rs.getInt("sender_user_id"));
             message.setFromUser(fromUser);
             if (toUser == null) {
-                toUser = um.getUser(rs.getInt("to_user"));
+                toUser = um.getUser(rs.getInt("recipient_user_id"));
             }
             message.setToUser(toUser);
-            message.setTitle(rs.getString("m_title"));
-            message.setText(rs.getString("m_text"));
-            message.setSeen(rs.getBoolean("m_seen"));
-            message.setRead(rs.getBoolean("m_read"));
-            message.setTime(rs.getTimestamp("m_time"));
+            message.setTitle(rs.getString("title"));
+            message.setText(rs.getString("text"));
+            message.setSeen(rs.getBoolean("is_seen"));
+            message.setRead(rs.getBoolean("is_read"));
+            message.setTime(rs.getTimestamp("created_at"));
 
             messageList.add(message);
         }
@@ -233,7 +233,7 @@ public class Message implements Comparable<Message>, Serializable {
             return messageList;
         }
 
-        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE from_user = ? order by m_time desc");
+        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `lw_message` WHERE sender_user_id = ? order by created_at desc");
 
         stmtGetUsers.setInt(1, user.getId());
         ResultSet rs = stmtGetUsers.executeQuery();
@@ -244,17 +244,17 @@ public class Message implements Comparable<Message>, Serializable {
             message = new Message();
             message.setId(rs.getInt("message_id"));
             UserManager um = Learnweb.getInstance().getUserManager();
-            User fromUser = um.getUser(rs.getInt("from_user"));
+            User fromUser = um.getUser(rs.getInt("sender_user_id"));
             message.setFromUser(fromUser);
             if (toUser == null) {
-                toUser = um.getUser(rs.getInt("to_user"));
+                toUser = um.getUser(rs.getInt("recipient_user_id"));
             }
             message.setToUser(toUser);
-            message.setTitle(rs.getString("m_title"));
-            message.setText(rs.getString("m_text"));
-            message.setSeen(rs.getBoolean("m_seen"));
-            message.setRead(rs.getBoolean("m_read"));
-            message.setTime(rs.getTimestamp("m_time"));
+            message.setTitle(rs.getString("title"));
+            message.setText(rs.getString("text"));
+            message.setSeen(rs.getBoolean("is_seen"));
+            message.setRead(rs.getBoolean("is_read"));
+            message.setTime(rs.getTimestamp("created_at"));
 
             messageList.add(message);
         }
@@ -264,7 +264,7 @@ public class Message implements Comparable<Message>, Serializable {
     }
 
     public static void setAllMessagesSeen(int userId) throws SQLException {
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where to_user = ?");
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_message SET is_seen=1 where recipient_user_id = ?");
         stmt.setInt(1, userId);
 
         stmt.executeUpdate();

@@ -66,7 +66,7 @@ public class TedCrawlerSimple implements Runnable {
      */
     public void extractTranscript(String tedId, int resourceId, String language) {
         try {
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("INSERT INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
+            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("INSERT INTO learnweb_large.ted_transcripts_paragraphs (`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
             pStmt.setInt(1, resourceId);
             pStmt.setString(2, language);
 
@@ -145,7 +145,7 @@ public class TedCrawlerSimple implements Runnable {
     public int checkTEDIdExists(int tedId) {
         int resourceId = -1;
         try {
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE ted_id = ?");
+            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM learnweb_large.ted_video WHERE ted_id = ?");
             pStmt.setInt(1, tedId);
             ResultSet rs = pStmt.executeQuery();
             if (rs.next()) {
@@ -168,7 +168,7 @@ public class TedCrawlerSimple implements Runnable {
                 r.setUrl("http://www.ted.com/talks/" + slugFromCrawl);
                 r.save();
 
-                PreparedStatement pStmt = learnweb.getConnection().prepareStatement("UPDATE `ted_video` SET `title` = ?, description = ?, slug = ? WHERE `resource_id` = ?");
+                PreparedStatement pStmt = learnweb.getConnection().prepareStatement("UPDATE learnweb_large.ted_video SET `title` = ?, description = ?, slug = ? WHERE `resource_id` = ?");
                 pStmt.setString(1, title);
                 pStmt.setString(2, description);
                 pStmt.setString(3, slugFromCrawl);
@@ -203,7 +203,7 @@ public class TedCrawlerSimple implements Runnable {
 
         try {
             // check the database to identify if the video has already been crawled or if any new transcripts are added to the video
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT resource_id, language FROM ted_video JOIN ted_transcripts_paragraphs USING(resource_id) WHERE slug = ?");
+            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT resource_id, language FROM learnweb_large.ted_video JOIN learnweb_large.ted_transcripts_paragraphs USING(resource_id) WHERE slug = ?");
             pStmt.setString(1, slug);
             ResultSet rs = pStmt.executeQuery();
 
@@ -332,7 +332,7 @@ public class TedCrawlerSimple implements Runnable {
                 //save new TED resource ID in order to use it later for saving transcripts
                 resourceId = tedResource.getId();
 
-                String insertStmt = "INSERT INTO `ted_video`(`ted_id`,`resource_id`,`slug`, `title`, `description`, `viewed_count`, `published_at`, `photo1_url`, `photo1_width`,`photo1_height`,`tags`,`duration`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+                String insertStmt = "INSERT INTO learnweb_large.ted_video (`ted_id`,`resource_id`,`slug`, `title`, `description`, `viewed_count`, `published_at`, `photo1_url`, `photo1_width`,`photo1_height`,`tags`,`duration`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
                 PreparedStatement pStmt = learnweb.getConnection().prepareStatement(insertStmt);
                 pStmt.setInt(1, Integer.parseInt(tedId));
                 pStmt.setInt(2, tedResource.getId());

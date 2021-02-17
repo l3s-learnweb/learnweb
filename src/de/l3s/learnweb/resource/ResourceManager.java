@@ -242,7 +242,7 @@ public class ResourceManager {
         String[] tables = {"lw_comment", "lw_glossary_entry", "lw_glossary_resource", "lw_resource_archiveurl", "lw_resource_history",
             "lw_resource_rating", "lw_resource_tag", "lw_submission_resource", "lw_survey_answer", "lw_survey_resource", "lw_survey_resource_user",
             "lw_thumb", "lw_transcript_actions", "lw_transcript_final_sel", "lw_transcript_selections", "lw_transcript_summary",
-            "ted_transcripts_paragraphs", "lw_resource"};
+            "learnweb_large.ted_transcripts_paragraphs", "lw_resource"};
 
         for (String table : tables) {
             try (PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM " + table + " WHERE `resource_id` = ?")) {
@@ -569,7 +569,7 @@ public class ResourceManager {
         SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         LinkedList<ArchiveUrl> archiveUrls = new LinkedList<>();
         int urlId;
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT url_id FROM `wb_url` WHERE `url` = ?")) {
+        try (PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT url_id FROM learnweb_large.wb2_url WHERE `url` = ?")) {
             select.setString(1, url);
             ResultSet rs = select.executeQuery();
             if (!rs.next()) {
@@ -580,7 +580,7 @@ public class ResourceManager {
         }
 
         try (PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
-            "SELECT timestamp FROM `wb_url_capture` WHERE `url_id` = ? ORDER BY timestamp")) {
+            "SELECT timestamp FROM learnweb_large.wb2_url_capture WHERE `url_id` = ? ORDER BY timestamp")) {
             pStmt.setInt(1, urlId);
             ResultSet rs2 = pStmt.executeQuery();
             while (rs2.next()) {

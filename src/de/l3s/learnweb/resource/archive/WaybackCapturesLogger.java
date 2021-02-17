@@ -107,7 +107,7 @@ public class WaybackCapturesLogger {
                     }
 
                     try {
-                        PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `wb_url` (`url`, `first_capture`, `last_capture`) VALUES (?, ?, ?)");
+                        PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO learnweb_large.wb2_url (`url`, `first_capture`, `last_capture`) VALUES (?, ?, ?)");
                         insert.setString(1, container.url);
                         insert.setTimestamp(2, new Timestamp(container.firstCapture));
                         insert.setTimestamp(3, new Timestamp(container.lastCapture));
@@ -137,13 +137,13 @@ public class WaybackCapturesLogger {
         public String call() throws NumberFormatException, SQLException {
             CDXClient cdxClient = new CDXClient();
             List<Long> timestamps = cdxClient.getCaptures(resource.getUrl());
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT url_id FROM wb_url WHERE url = ?");
+            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT url_id FROM learnweb_large.wb2_url WHERE url = ?");
             pStmt.setString(1, resource.getUrl());
             ResultSet rs = pStmt.executeQuery();
             if (rs.next()) {
                 int urlId = rs.getInt(1);
-                PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("UPDATE wb_url SET all_captures_fetched = 1 WHERE url_id = ?");
-                PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("INSERT INTO `wb_url_capture`(`url_id`,`timestamp`) VALUES(?,?)");
+                PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("UPDATE learnweb_large.wb2_url SET all_captures_fetched = 1 WHERE url_id = ?");
+                PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("INSERT INTO learnweb_large.wb2_url_capture (`url_id`,`timestamp`) VALUES(?,?)");
                 pStmt2.setInt(1, urlId);
                 int batchCount = 0;
                 for (long timestamp : timestamps) {
