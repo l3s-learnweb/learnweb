@@ -71,6 +71,12 @@
 		</p:dataTable>
 
 		<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()" styleClass="mt-3" value="#{msg.clear_caches}"/>
+
+		<p:commandButton action="#{learnwebBean.setMaintenanceMode(true)}" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()"
+						 styleClass="mt-3" value="Start mainenance" rendered="#{!learnwebBean.maintenanceMode}"/>
+
+		<p:commandButton action="#{learnwebBean.setMaintenanceMode(false)}" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()"
+						 styleClass="mt-3" value="Stop mainenance" rendered="#{learnwebBean.maintenanceMode}"/>
 	</h:form>
 </ui:define>
 

@@ -63,7 +63,7 @@
                             <ui:fragment rendered="#{learnwebBean.maintenanceMode}">
                                 <h2 class="text-danger">#{msg['error_pages.unavailable_default_description']}</h2>
                             </ui:fragment>
-                            <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
+                            <ui:fragment rendered="#{not learnwebBean.maintenanceMode or userBean.admin}">
                                 <p:messages id="message" showDetail="false" showSummary="true" escape="false" globalOnly="true">
                                     <p:autoUpdate />
                                 </p:messages>
