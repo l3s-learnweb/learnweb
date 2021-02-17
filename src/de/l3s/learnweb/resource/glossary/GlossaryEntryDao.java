@@ -18,6 +18,7 @@ import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.KeyColumn;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.config.ValueColumn;
+import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.UseRowReducer;
@@ -44,18 +45,18 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
     }
 
     @SqlQuery("SELECT COUNT(distinct ge.entry_id) FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) "
-        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ?")
-    int countTotalEntries(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
+        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN :start AND :end")
+    int countTotalEntries(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     @SqlQuery("SELECT u.username, count(*) AS count FROM lw_resource r JOIN lw_user u ON u.user_id = r.owner_user_id JOIN lw_glossary_entry ge USING (resource_id) "
-        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN ? AND ? GROUP BY u.username ORDER BY username")
+        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN :start AND :end GROUP BY u.username ORDER BY username")
     @KeyColumn("username")
     @ValueColumn("count")
-    Map<String, Integer> countEntriesPerUser(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
+    Map<String, Integer> countEntriesPerUser(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     @RegisterRowMapper(GlossaryDescriptionSummaryMapper.class)
-    @SqlQuery("SELECT entry_id, resource_id, user_id, description, description_pasted FROM lw_glossary_entry WHERE deleted != 1 AND user_id IN(<userIds>) AND timestamp BETWEEN ? AND ?")
-    List<GlossaryDescriptionSummary> countGlossaryDescriptionSummary(Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
+    @SqlQuery("SELECT entry_id, resource_id, user_id, description, description_pasted FROM lw_glossary_entry WHERE deleted != 1 AND user_id IN(<userIds>) AND timestamp BETWEEN :start AND :end")
+    List<GlossaryDescriptionSummary> countGlossaryDescriptionSummary(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     default void save(GlossaryEntry entry) {
         if (entry.getUserId() <= 0) {

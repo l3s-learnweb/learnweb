@@ -3,7 +3,7 @@ package de.l3s.learnweb.group;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -67,7 +67,7 @@ public interface GroupDao extends SqlObject, Serializable {
      * Returns a list of Groups which belong to the defined courses and were created after the specified date.
      */
     @SqlQuery("SELECT * FROM lw_group g WHERE g.course_id IN(<courseIds>) AND g.deleted = 0 AND creation_time > :time ORDER BY title")
-    List<Group> findByCourseIds(@BindList("courseIds") Collection<Integer> courseIds, @Bind("time") Instant newerThan);
+    List<Group> findByCourseIds(@BindList("courseIds") Collection<Integer> courseIds, @Bind("time") LocalDateTime newerThan);
 
 
     @SqlQuery("SELECT g.* FROM lw_group g JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0")

@@ -100,7 +100,7 @@ public interface UserDao extends SqlObject, Serializable {
     /**
      * @return the Instant of the last recorded login event of the given user. Empty if the user has never logged in
      */
-    default Optional<Instant> findLastLoginDate(int userId) {
+    default Optional<LocalDateTime> findLastLoginDate(int userId) {
         return getHandle().attach(LogDao.class).findDateOfLastByUserIdAndAction(userId, Action.login.ordinal());
     }
 

@@ -23,28 +23,28 @@ public interface MessageDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM message g WHERE message_id = ?")
     Message findById(int messageId);
 
-    @SqlQuery("SELECT * FROM message WHERE from_user = ? order by m_time desc")
+    @SqlQuery("SELECT * FROM message WHERE from_user = ? ORDER BY m_time DESC")
     List<Message> findOutgoing(User user);
 
-    @SqlQuery("SELECT * FROM message WHERE to_user = ? order by m_time desc")
+    @SqlQuery("SELECT * FROM message WHERE to_user = ? ORDER BY m_time DESC")
     List<Message> findIncoming(User user);
 
-    @SqlQuery("SELECT * FROM message WHERE to_user = ? order by m_time desc limit ?")
+    @SqlQuery("SELECT * FROM message WHERE to_user = ? ORDER BY m_time DESC LIMIT ?")
     List<Message> findIncoming(User user, int limit);
 
-    @SqlUpdate("UPDATE message SET m_seen = 1 where message_id = ?")
+    @SqlUpdate("UPDATE message SET m_seen = 1 WHERE message_id = ?")
     void updateMarkSeen(Message message);
 
-    @SqlUpdate("UPDATE message SET m_read = 1 where message_id = ?")
+    @SqlUpdate("UPDATE message SET m_read = 1 WHERE message_id = ?")
     void updateMarkRead(Message message);
 
-    @SqlUpdate("UPDATE message SET m_seen = 1 where to_user = ?")
+    @SqlUpdate("UPDATE message SET m_seen = 1 WHERE to_user = ?")
     void updateMarkSeenAll(User user);
 
-    @SqlUpdate("UPDATE message SET m_read = 1 where to_user = ?")
+    @SqlUpdate("UPDATE message SET m_read = 1 WHERE to_user = ?")
     void updateMarkReadAll(User user);
 
-    @SqlQuery("SELECT count(*) FROM message WHERE to_user = ? and m_seen = 0")
+    @SqlQuery("SELECT count(*) FROM message WHERE to_user = ? AND m_seen = 0")
     int countNotSeen(User user);
 
     default void save(Message message) {

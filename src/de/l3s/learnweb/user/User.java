@@ -5,11 +5,9 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
@@ -142,7 +140,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private long groupsCacheTime = 0L;
     private transient List<Group> groups;
     private String imageUrl;
-    private transient Instant lastLoginDate;
+    private transient LocalDateTime lastLoginDate;
     private int forumPostCount = -1;
     private transient Organisation organisation;
     private transient List<Submission> activeSubmissions;
@@ -619,7 +617,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      * Note that this value is cached. Call {@link #updateLoginDate() updateLoginDate} to update it. This is useful to control whether the
      * current or the penultimate login time is returned.
      */
-    public Instant getLastLoginDate() {
+    public LocalDateTime getLastLoginDate() {
         if (null == lastLoginDate) {
             updateLoginDate();
         }
@@ -627,7 +625,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     public void updateLoginDate() {
-        this.lastLoginDate = Learnweb.dao().getUserDao().findLastLoginDate(getId()).orElse(registrationDate.toInstant(ZoneOffset.UTC));
+        this.lastLoginDate = Learnweb.dao().getUserDao().findLastLoginDate(getId()).orElse(registrationDate);
     }
 
     @Override

@@ -31,7 +31,7 @@ public interface ResourceHistoryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT h.*, u.user_id, u.username FROM lw_resource_history h join lw_user u USING(user_id) WHERE resource_history_id = ?")
     Optional<History> findById(int resourceHistoryId);
 
-    @SqlQuery("SELECT h.*, u.user_id, u.username FROM lw_resource_history h join lw_user u USING(user_id) WHERE resource_id = ? order by document_version")
+    @SqlQuery("SELECT h.*, u.user_id, u.username FROM lw_resource_history h join lw_user u USING(user_id) WHERE resource_id = ? ORDER BY document_version")
     List<History> findByResourceId(int resourceId);
 
     @SqlQuery("SELECT document_version FROM lw_resource_history WHERE resource_id = ? ORDER BY document_version LIMIT 1")

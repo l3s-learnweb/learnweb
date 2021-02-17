@@ -42,7 +42,7 @@ public interface FileDao extends SqlObject, Serializable {
             .map(new FileMapper()).findOne().orElse(null);
     }
 
-    @SqlQuery("SELECT * FROM lw_file WHERE deleted = 0 order by resource_id desc")
+    @SqlQuery("SELECT * FROM lw_file WHERE deleted = 0 ORDER BY resource_id DESC")
     List<File> findAll();
 
     @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER by resource_file_number, timestamp")

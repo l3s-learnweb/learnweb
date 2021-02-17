@@ -3,6 +3,7 @@ package de.l3s.learnweb.app;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -19,7 +20,8 @@ import de.l3s.util.UrlHelper;
 
 @Named("config")
 @ApplicationScoped
-public class ConfigProvider {
+public class ConfigProvider implements Serializable {
+    private static final long serialVersionUID = 8999792363825397979L;
     private static final Logger log = LogManager.getLogger(ConfigProvider.class);
 
     private final Properties properties = new Properties();

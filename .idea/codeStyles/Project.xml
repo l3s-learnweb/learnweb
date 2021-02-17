@@ -53,6 +53,10 @@
       <option name="KEEP_BLANK_LINES" value="true" />
     </Properties>
     <SqlCodeStyleSettings version="5">
+      <option name="KEYWORD_CASE" value="2" />
+      <option name="IDENTIFIER_CASE" value="1" />
+      <option name="ALIAS_CASE" value="4" />
+      <option name="QUOTE_IDENTIFIER" value="1" />
       <option name="TABLE_OPENING" value="1" />
       <option name="TABLE_CONTENT" value="2" />
       <option name="TABLE_CLOSING" value="3" />

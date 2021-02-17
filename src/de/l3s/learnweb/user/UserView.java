@@ -1,7 +1,7 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -82,7 +82,7 @@ public final class UserView implements Serializable {
         return user.getEmail();
     }
 
-    public Instant getLastLoginDate() {
+    public LocalDateTime getLastLoginDate() {
         return user.getLastLoginDate();
     }
 

@@ -63,7 +63,7 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
 
             //averageSessionTime = (BigDecimal) Sql.getSingleResult("SELECT avg(diff) / 60 FROM (SELECT count(*) as t, UNIX_TIMESTAMP(max(timestamp)) -  UNIX_TIMESTAMP(min(timestamp)) AS diff FROM lw_user_log GROUP BY session_id) AS DE");
             activeUsersPerMonth = handle.select("SELECT timestamp, count(distinct user_id) as count FROM lw_user_log "
-                + "WHERE action = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) group by year(timestamp) ,month(timestamp) "
+                + "WHERE action = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) GROUP BY year(timestamp) ,month(timestamp) "
                 + "ORDER BY year(timestamp) DESC,month(timestamp) DESC LIMIT 13")
                 .setMapKeyColumn("timestamp")
                 .setMapValueColumn("count")

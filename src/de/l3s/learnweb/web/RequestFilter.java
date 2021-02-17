@@ -17,6 +17,7 @@ import org.omnifaces.util.Servlets;
 
 import com.google.common.net.InetAddresses;
 
+import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.util.bean.BeanHelper;
 
@@ -32,12 +33,18 @@ public class RequestFilter extends HttpFilter {
     private static final Logger log = LogManager.getLogger(RequestFilter.class);
 
     @Inject
+    private ConfigProvider configProvider;
+
+    @Inject
     private RequestManager requestManager;
 
     @Override
     protected void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
         throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
+
+        String serverUrl = Servlets.getRequestBaseURL(request);
+        configProvider.setServerUrl(serverUrl);
 
         if (requestManager != null) {
             String ipAddr = Servlets.getRemoteAddr(request);

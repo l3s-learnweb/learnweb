@@ -3,7 +3,6 @@ package de.l3s.learnweb.logging;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -20,6 +19,7 @@ import org.jdbi.v3.sqlobject.config.ValueColumn;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.customizer.BindMethods;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.customizer.DefineList;
 import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
@@ -65,22 +65,22 @@ public interface LogDao extends SqlObject, Serializable {
     List<LogEntry> findByUsersGroupIds(@Bind("userId") int userId, @DefineList("groupIds") List<Integer> groupIds, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
 
     @SqlQuery("SELECT timestamp FROM lw_user_log WHERE user_id = ? AND action = ? ORDER BY timestamp DESC LIMIT 1")
-    Optional<Instant> findDateOfLastByUserIdAndAction(int userId, int actionOrdinal);
+    Optional<LocalDateTime> findDateOfLastByUserIdAndAction(int userId, int actionOrdinal);
 
-    @SqlQuery("SELECT action, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN ? AND ? GROUP BY action")
+    @SqlQuery("SELECT action, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN :start AND :end GROUP BY action")
     @KeyColumn("action")
     @ValueColumn("count")
-    Map<Integer, Integer> countUsagePerAction(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
+    Map<Integer, Integer> countUsagePerAction(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
-    @SqlQuery("SELECT DATE(timestamp) AS day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN ? AND ? GROUP BY day")
+    @SqlQuery("SELECT DATE(timestamp) AS day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN :start AND :end GROUP BY day")
     @KeyColumn("day")
     @ValueColumn("count")
-    Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate);
+    Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
-    @SqlQuery("SELECT DATE(timestamp) as day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN ? AND ? AND action in (?) GROUP BY day")
+    @SqlQuery("SELECT DATE(timestamp) as day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN :start AND :end AND action in (<actions>) GROUP BY day")
     @KeyColumn("day")
     @ValueColumn("count")
-    Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, LocalDate startDate, LocalDate endDate, String actions);
+    Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate, @Define("actions") String actions);
 
     /**
      * Logs a user action. The parameters "targetId" and "params" depend on the logged action.

@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,20 +44,15 @@ public class SaverServlet extends HttpServlet {
 
     private static final String RESPONSE_OK = "{\"error\":0}";
 
-    private final LogDao logDao;
-    private final UserDao userDao;
-    private final FileDao fileDao;
-    private final ResourceDao resourceDao;
-    private final ResourceHistoryDao resourceHistoryDao;
-    private final ResourcePreviewMaker resourcePreviewMaker;
+    @Inject private LogDao logDao;
+    @Inject private UserDao userDao;
+    @Inject private FileDao fileDao;
+    @Inject private ResourceDao resourceDao;
+    @Inject private ResourceHistoryDao resourceHistoryDao;
+    private ResourcePreviewMaker resourcePreviewMaker;
 
-    @Inject
-    public SaverServlet(final LogDao logDao, final UserDao userDao, final FileDao fileDao, final ResourceDao resourceDao, final ResourceHistoryDao resourceHistoryDao) {
-        this.logDao = logDao;
-        this.userDao = userDao;
-        this.fileDao = fileDao;
-        this.resourceDao = resourceDao;
-        this.resourceHistoryDao = resourceHistoryDao;
+    @Override
+    public void init() throws ServletException {
         this.resourcePreviewMaker = Learnweb.getInstance().getResourcePreviewMaker();
     }
 

@@ -1,6 +1,6 @@
 package de.l3s.maintenance.users;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -49,14 +49,13 @@ public class DeleteOldUsers extends MaintenanceTask {
     private void deleteUsersWhoHaveBeenSoftDeleted(int configYears) {
         log.info("deleteUsersWhoHaveBeenSoftDeleted() - Start");
 
-        Instant now = Instant.now();
-        Instant deadline = now.minus(configYears * 365L, ChronoUnit.DAYS);
+        LocalDateTime deadline = LocalDateTime.now().minus(configYears * 365L, ChronoUnit.DAYS);
 
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<User> users = handle.select("SELECT * FROM lw_user WHERE deleted = 1").map(new UserDao.UserMapper()).list();
 
             for (User user : users) {
-                Optional<Instant> lastLogin = userDao.findLastLoginDate(user.getId());
+                Optional<LocalDateTime> lastLogin = userDao.findLastLoginDate(user.getId());
 
                 if (user.isModerator() || user.isAdmin()) {
                     log.debug("Ignore moderator user: {}", user);
@@ -86,15 +85,14 @@ public class DeleteOldUsers extends MaintenanceTask {
      */
     private void deleteUsersWhoHaveNotLoggedInForYears(int configYears, int organisationId) {
         log.info("deleteUsersWhoHaveNotLoggedInForYears() - Start");
-        Instant now = Instant.now();
-        Instant deadline = now.minus(configYears * 365L, ChronoUnit.DAYS);
+        LocalDateTime deadline = LocalDateTime.now().minus(configYears * 365L, ChronoUnit.DAYS);
 
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<User> users = handle.select("SELECT * FROM lw_user WHERE (organisation_id = ? AND is_moderator = 0 AND is_admin = 0 AND registration_date < ?) OR deleted = 1", organisationId, deadline)
                 .map(new UserDao.UserMapper()).list();
 
             for (User user : users) {
-                Optional<Instant> lastLogin = userDao.findLastLoginDate(user.getId());
+                Optional<LocalDateTime> lastLogin = userDao.findLastLoginDate(user.getId());
 
                 if (user.isModerator() || user.isAdmin()) {
                     log.debug("Ignore moderator user: {}", user);

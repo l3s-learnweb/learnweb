@@ -12,8 +12,8 @@ public class TrackerUserActivity implements Serializable {
 
     private int userId;
     private int totalEvents;
-    private int timeStay;
-    private int timeActive;
+    private long timeStay;
+    private long timeActive;
     private int clicks;
     private int keyPresses;
 
@@ -47,11 +47,11 @@ public class TrackerUserActivity implements Serializable {
         this.totalEvents = totalEvents;
     }
 
-    public int getTimeStay() {
+    public long getTimeStay() {
         return timeStay;
     }
 
-    public void setTimeStay(int timeStay) {
+    public void setTimeStay(long timeStay) {
         this.timeStay = timeStay;
 
         Duration durationStay = Duration.ofMillis(timeStay);
@@ -59,11 +59,11 @@ public class TrackerUserActivity implements Serializable {
         this.timeStayFormatted = StringHelper.formatDuration(durationStay);
     }
 
-    public int getTimeActive() {
+    public long getTimeActive() {
         return timeActive;
     }
 
-    public void setTimeActive(int timeActive) {
+    public void setTimeActive(long timeActive) {
         this.timeActive = timeActive;
 
         Duration durationActive = Duration.ofMillis(timeActive);

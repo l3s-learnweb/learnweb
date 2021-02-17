@@ -16,8 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import de.l3s.learnweb.app.ConfigProvider;
+
 @ExtendWith(MockitoExtension.class)
 class RequestFilterTest {
+    @Mock
+    private ConfigProvider configProvider;
     @Mock
     private RequestManager requestManager;
     @InjectMocks
