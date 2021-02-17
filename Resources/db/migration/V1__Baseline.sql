@@ -192,8 +192,21 @@ CREATE TABLE IF NOT EXISTS `lw_news` (
     `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 );
 
+CREATE TABLE IF NOT EXISTS `lw_message` (
+    `message_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `sender_user_id` int(11) NOT NULL,
+    `recipient_user_id` int(11) NOT NULL,
+    `title` varchar(2550) NOT NULL,
+    `text` longtext NOT NULL,
+    `is_seen` tinyint(1) NOT NULL DEFAULT '0',
+    `is_read` tinyint(1) NOT NULL DEFAULT '0',
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    KEY `message_to_user` (`sender_user_id`, `is_seen`)
+);
+
 CREATE TABLE IF NOT EXISTS `lw_organisation` (
     `organisation_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `is_default` tinyint(1) NULL DEFAULT NULL,
     `title` varchar(60) NOT NULL,
     `logo` longtext DEFAULT NULL,
     `logout_page` varchar(255) DEFAULT NULL COMMENT 'page to show after logout',
@@ -207,7 +220,8 @@ CREATE TABLE IF NOT EXISTS `lw_organisation` (
     `language_variant` varchar(10) DEFAULT NULL,
     `banner_image_file_id` int(10) unsigned NOT NULL DEFAULT 0,
     `css_file` varchar(100) DEFAULT NULL,
-    `glossary_languages` varchar(1000) DEFAULT NULL
+    `glossary_languages` varchar(1000) DEFAULT NULL,
+    UNIQUE KEY `is_default` (`is_default`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_requests` (
@@ -552,88 +566,4 @@ CREATE TABLE IF NOT EXISTS `lw_user_token` (
     PRIMARY KEY (`token_id`),
     KEY `lw_user_token_FK_lw_user_token_lw_user` (`user_id`),
     CONSTRAINT `FK_lw_user_token_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-);
-
-CREATE TABLE IF NOT EXISTS `message` (
-    `message_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `from_user` int(11) NOT NULL,
-    `to_user` int(11) NOT NULL,
-    `m_title` varchar(2550) NOT NULL,
-    `m_text` longtext NOT NULL,
-    `m_seen` tinyint(1) NOT NULL,
-    `m_read` tinyint(1) NOT NULL,
-    `m_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    KEY `message_to_user` (`to_user`, `m_seen`)
-);
-
-CREATE TABLE IF NOT EXISTS `speechrepository_video` (
-    `id` int(11) NOT NULL,
-    `title` varchar(1000) NOT NULL,
-    `url` varchar(1000) NOT NULL,
-    `rights` varchar(1000) NOT NULL,
-    `date` varchar(1000) NOT NULL,
-    `description` varchar(1000) NOT NULL,
-    `notes` varchar(2000) DEFAULT NULL,
-    `image_link` varchar(1000) NOT NULL,
-    `video_link` varchar(1000) NOT NULL,
-    `duration` int(11) NOT NULL,
-    `language` varchar(1000) NOT NULL,
-    `level` varchar(1000) DEFAULT NULL,
-    `use` varchar(1000) DEFAULT NULL,
-    `type` varchar(1000) DEFAULT NULL,
-    `domains` varchar(1000) DEFAULT NULL,
-    `terminology` text DEFAULT NULL,
-    `learnweb_resource_id` int(10) unsigned NOT NULL DEFAULT 0,
-    KEY `speechrepository_video_learnweb_resource_id` (`learnweb_resource_id`)
-);
-
-CREATE TABLE IF NOT EXISTS `ted_transcripts_lang_mapping` (
-    `language_code` char(10) NOT NULL,
-    `language` char(25) NOT NULL,
-    UNIQUE KEY `ted_transcripts_lang_mapping_language_code` (`language_code`, `language`)
-);
-
-CREATE TABLE IF NOT EXISTS `ted_transcripts_paragraphs` (
-    `resource_id` int(10) unsigned NOT NULL,
-    `language` char(10) NOT NULL,
-    `starttime` int(10) unsigned NOT NULL,
-    `paragraph` longtext NOT NULL,
-    KEY `ted_transcripts_paragraphs_resource_id` (`resource_id`, `language`)
-);
-
-CREATE TABLE IF NOT EXISTS `ted_video` (
-    `ted_id` int(10) unsigned NOT NULL DEFAULT 0 PRIMARY KEY,
-    `resource_id` int(10) unsigned NOT NULL DEFAULT 0,
-    `title` varchar(200) NOT NULL,
-    `description` mediumtext NOT NULL,
-    `slug` varchar(200) NOT NULL,
-    `viewed_count` int(10) unsigned NOT NULL,
-    `published_at` timestamp NULL DEFAULT NULL,
-    `talk_updated_at` timestamp NULL DEFAULT NULL,
-    `photo1_url` varchar(255) DEFAULT NULL,
-    `photo1_width` smallint(6) unsigned NOT NULL DEFAULT 0,
-    `photo1_height` smallint(6) unsigned NOT NULL DEFAULT 0,
-    `photo2_url` varchar(255) DEFAULT NULL,
-    `photo2_width` smallint(6) NOT NULL DEFAULT 0,
-    `photo2_height` smallint(6) NOT NULL DEFAULT 0,
-    `tags` mediumtext NOT NULL,
-    `duration` smallint(6) unsigned NOT NULL DEFAULT 0,
-    `json` mediumtext DEFAULT NULL,
-    KEY `ted_video_slug` (`slug`)
-);
-
-CREATE TABLE IF NOT EXISTS `wb_url` (
-    `url_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `url` varchar(2000) NOT NULL,
-    `first_capture` timestamp NULL DEFAULT NULL,
-    `last_capture` timestamp NULL DEFAULT NULL,
-    `all_captures_fetched` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 when all captures have been loaded into wb_url_capture; 0 else',
-    `update_time` timestamp NOT NULL DEFAULT current_timestamp(),
-    KEY `wb_url_url` (`url`)
-);
-
-CREATE TABLE IF NOT EXISTS `wb_url_capture` (
-    `url_id` bigint(20) NOT NULL,
-    `timestamp` timestamp NULL DEFAULT NULL,
-    KEY `wb_url_capture_url_id` (`url_id`)
 );

@@ -43,8 +43,6 @@ public class UserBean implements Serializable {
     private static final long serialVersionUID = -8577036953815676943L;
     private static final Logger log = LogManager.getLogger(UserBean.class);
 
-    private static final int PUBLIC_ORGANISATION_ID = 478;
-
     private int userId = 0;
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
     private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on an other account
@@ -547,7 +545,7 @@ public class UserBean implements Serializable {
 
     private Organisation getActiveOrganisation() {
         if (null == activeOrganisation) {
-            activeOrganisation = Learnweb.dao().getOrganisationDao().findById(PUBLIC_ORGANISATION_ID);
+            activeOrganisation = Learnweb.dao().getOrganisationDao().findDefault();
         }
         return activeOrganisation;
     }

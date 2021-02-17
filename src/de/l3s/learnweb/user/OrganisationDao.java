@@ -33,6 +33,9 @@ public interface OrganisationDao extends SqlObject, Serializable {
             .map(new OrganisationMapper()).findOne().orElse(null);
     }
 
+    @SqlQuery("SELECT * FROM lw_organisation WHERE is_default = 1")
+    Organisation findDefault();
+
     @SqlQuery("SELECT * FROM lw_organisation ORDER BY title")
     List<Organisation> findAll();
 

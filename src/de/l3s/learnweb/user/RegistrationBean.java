@@ -129,7 +129,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
     private User registerUser(final User user, Course course) {
         if (null == course) {
-            course = courseDao.findByWizard("default").orElse(null);
+            course = courseDao.findByWizard("default").orElseThrow();
         }
 
         user.setOrganisationId(course.getOrganisationId());

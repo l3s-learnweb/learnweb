@@ -32,29 +32,29 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
     DateTimeFormatter waybackDateFormat = DateTimeFormatter.ofPattern("yyyyMMddHHmmss", Locale.US);
 
     default Optional<ImmutablePair<String, String>> findFirstAndLastCapture(String url) {
-        return getHandle().select("SELECT first_capture, last_capture FROM wb_url WHERE url = ?", url).map((rs, ctx) -> {
+        return getHandle().select("SELECT first_capture, last_capture FROM learnweb_large.wb2_url WHERE url = ?", url).map((rs, ctx) -> {
             LocalDateTime first = rs.getTimestamp("first_capture").toLocalDateTime();
             LocalDateTime last = rs.getTimestamp("last_capture").toLocalDateTime();
             return new ImmutablePair<>(waybackDateFormat.format(first), waybackDateFormat.format(last));
         }).findOne();
     }
 
-    @SqlQuery("SELECT url_id FROM wb_url WHERE url = ?")
+    @SqlQuery("SELECT url_id FROM learnweb_large.wb2_url WHERE url = ?")
     Optional<Integer> findIdByUrl(String url);
 
-    @SqlQuery("SELECT timestamp FROM wb_url_capture WHERE url_id = ? ORDER BY timestamp")
+    @SqlQuery("SELECT timestamp FROM learnweb_large.wb2_url_capture WHERE url_id = ? ORDER BY timestamp")
     List<LocalDateTime> findUrlCaptures(int urlId);
 
-    @SqlQuery("SELECT timestamp FROM wb_url_capture WHERE url_id = ? AND DATE(timestamp) = DATE(?) ORDER BY timestamp")
+    @SqlQuery("SELECT timestamp FROM learnweb_large.wb2_url_capture WHERE url_id = ? AND DATE(timestamp) = DATE(?) ORDER BY timestamp")
     List<LocalDateTime> findUrlCaptures(int urlId, LocalDate timestamp);
 
-    @SqlUpdate("UPDATE wb_url SET all_captures_fetched = 1 WHERE url_id = ?")
+    @SqlUpdate("UPDATE learnweb_large.wb2_url SET all_captures_fetched = 1 WHERE url_id = ?")
     void updateMarkAllCapturesFetched(int urlId);
 
-    @SqlUpdate("INSERT INTO wb_url (url, first_capture, last_capture) VALUES (?, ?, ?)")
+    @SqlUpdate("INSERT INTO learnweb_large.wb2_url (url, first_capture, last_capture) VALUES (?, ?, ?)")
     void insert(String url, LocalDateTime firstCapture, LocalDateTime lastCapture);
 
-    @SqlBatch("INSERT INTO wb_url_capture(url_id,timestamp) VALUES(?, ?)")
+    @SqlBatch("INSERT INTO learnweb_large.wb2_url_capture (url_id,timestamp) VALUES(?, ?)")
     void insertCapture(int urlId, Collection<LocalDateTime> timestamp);
 
     @RegisterRowMapper(UrlRecordMapper.class)
@@ -109,7 +109,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
 
         Optional<Integer> urlId = findIdByUrl(url);
         if (urlId.isPresent()) {
-            getHandle().select("SELECT CAST(DATE_FORMAT(timestamp, '%Y-%m-01') as DATE) as date, count(*) as count FROM wb_url_capture WHERE url_id = ? GROUP BY year(timestamp), month(timestamp) ORDER BY timestamp ASC", resourceId)
+            getHandle().select("SELECT CAST(DATE_FORMAT(timestamp, '%Y-%m-01') as DATE) as date, count(*) as count FROM learnweb_large.wb2_url_capture WHERE url_id = ? GROUP BY year(timestamp), month(timestamp) ORDER BY timestamp ASC", resourceId)
                 .map((rs, ctx) -> {
                     LocalDate timestamp = RsHelper.getLocalDate(rs.getDate("date"));
                     if (monthlySeriesData.containsKey(timestamp)) {
@@ -135,7 +135,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
 
         Optional<Integer> urlId = findIdByUrl(url);
         if (urlId.isPresent()) {
-            getHandle().select("SELECT CAST(timestamp as DATE) as date, count(*) as count FROM wb_url_capture WHERE url_id = ? GROUP BY YEAR(timestamp),MONTH(timestamp),DAY(timestamp) ORDER BY timestamp ASC", resourceId)
+            getHandle().select("SELECT CAST(timestamp as DATE) as date, count(*) as count FROM learnweb_large.wb2_url_capture WHERE url_id = ? GROUP BY YEAR(timestamp),MONTH(timestamp),DAY(timestamp) ORDER BY timestamp ASC", resourceId)
                 .map((rs, ctx) -> {
                     LocalDate timestamp = RsHelper.getLocalDate(rs.getDate("date"));
                     if (monthlySeriesData.containsKey(timestamp)) {

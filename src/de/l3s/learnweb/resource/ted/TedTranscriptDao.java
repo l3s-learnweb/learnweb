@@ -29,20 +29,20 @@ import de.l3s.util.SqlHelper;
 
 public interface TedTranscriptDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT resource_id FROM ted_video WHERE ted_id = ?")
+    @SqlQuery("SELECT resource_id FROM learnweb_large.ted_video WHERE ted_id = ?")
     Optional<Integer> findResourceIdByTedId(int tedId);
 
     @RegisterRowMapper(TedVideoMapper.class)
-    @SqlQuery("SELECT * FROM ted_video WHERE resource_id = ?")
+    @SqlQuery("SELECT * FROM learnweb_large.ted_video WHERE resource_id = ?")
     Optional<TedVideo> findTedVideoByResourceId(int resourceId);
 
     @RegisterRowMapper(TedVideoMapper.class)
-    @SqlQuery("SELECT * FROM ted_video ")
+    @SqlQuery("SELECT * FROM learnweb_large.ted_video ")
     List<TedVideo> findAllTedVideos();
 
     default Optional<Integer> findResourceIdBySlug(String url) {
         String slug = url.substring(url.lastIndexOf('/') + 1);
-        return getHandle().select("SELECT resource_id FROM ted_video WHERE slug = ?", slug).mapTo(Integer.class).findOne();
+        return getHandle().select("SELECT resource_id FROM learnweb_large.ted_video WHERE slug = ?", slug).mapTo(Integer.class).findOne();
     }
 
     @SqlQuery("SELECT resource_id FROM lw_resource WHERE url = ? and owner_user_id = 7727")
@@ -59,17 +59,17 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
         + "GROUP BY t1.owner_user_id, t1.resource_id, title")
     List<SimpleTranscriptLog> findSimpleTranscriptLogs(@BindList("userIds") Collection<Integer> userIds);
 
-    @SqlUpdate("DELETE FROM ted_transcripts_paragraphs WHERE resource_id = ?")
+    @SqlUpdate("DELETE FROM learnweb_large.ted_transcripts_paragraphs WHERE resource_id = ?")
     int deleteTranscriptParagraphs(int resourceId);
 
     @RegisterRowMapper(TranscriptSummaryMapper.class)
     @SqlQuery("SELECT * FROM lw_transcript_summary WHERE user_id IN (<userIds>) ORDER BY user_id")
     List<TranscriptSummary> findTranscriptSummariesByUserIds(@BindList("userIds") Collection<Integer> userIds);
 
-    @SqlQuery("SELECT DISTINCT language FROM ted_transcripts_paragraphs WHERE resource_id = ?")
+    @SqlQuery("SELECT DISTINCT language FROM learnweb_large.ted_transcripts_paragraphs WHERE resource_id = ?")
     List<String> findLanguagesByResourceId(int resourceId);
 
-    @SqlQuery("SELECT DISTINCT(t1.language) as language_code, t2.language FROM ted_transcripts_paragraphs t1 JOIN ted_transcripts_lang_mapping t2 ON t1.language=t2.language_code WHERE resource_id = ?")
+    @SqlQuery("SELECT DISTINCT(t1.language) as language_code, t2.language FROM learnweb_large.ted_transcripts_paragraphs t1 JOIN learnweb_large.ted_transcripts_lang_mapping t2 ON t1.language=t2.language_code WHERE resource_id = ?")
     @KeyColumn("language")
     @ValueColumn("language_code")
     Map<String, String> findLanguages(int resourceId);
@@ -79,13 +79,13 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
     List<TranscriptSummary> findTranscriptSummariesByResourceId(int resourceId);
 
     default List<Transcript.Paragraph> findTranscriptsParagraphs(int resourceId, String language) {
-        return getHandle().select("SELECT starttime, paragraph FROM ted_transcripts_paragraphs WHERE resource_id = ? AND language = ?", resourceId, language)
+        return getHandle().select("SELECT starttime, paragraph FROM learnweb_large.ted_transcripts_paragraphs WHERE resource_id = ? AND language = ?", resourceId, language)
             .map((rs, ctx) -> new Transcript.Paragraph(rs.getInt("starttime"), rs.getString("paragraph")))
             .list();
     }
 
     default List<Transcript> findTranscriptsByResourceId(int resourceId) {
-        return getHandle().select("SELECT DISTINCT(language) as language_code FROM ted_transcripts_paragraphs WHERE resource_id = ?", resourceId)
+        return getHandle().select("SELECT DISTINCT(language) as language_code FROM learnweb_large.ted_transcripts_paragraphs WHERE resource_id = ?", resourceId)
             .map((rs, ctx) -> {
                 Transcript transcript = new Transcript();
                 transcript.setLanguageCode(rs.getString("language_code"));
@@ -94,19 +94,19 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
             }).list();
     }
 
-    @SqlUpdate("UPDATE ted_video SET resource_id = ? WHERE ted_id = ?")
+    @SqlUpdate("UPDATE learnweb_large.ted_video SET resource_id = ? WHERE ted_id = ?")
     void updateResourceIdByTedId(int resourceId, int tedId);
 
-    @SqlUpdate("UPDATE ted_video SET title = ?, description = ?, slug = ? WHERE resource_id = ?")
+    @SqlUpdate("UPDATE learnweb_large.ted_video SET title = ?, description = ?, slug = ? WHERE resource_id = ?")
     int updateTedVideo(String title, String description, String slug, int resourceId);
 
     @SqlUpdate("INSERT INTO lw_transcript_summary (user_id, resource_id, summary_type, summary_text) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE summary_text = VALUES(summary_text)")
     void saveTranscriptSummary(int userId, int resourceId, TedManager.SummaryType summaryType, String summaryText);
 
-    @SqlUpdate("INSERT INTO ted_transcripts_paragraphs(resource_id, language, starttime, paragraph) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE starttime = VALUES(starttime), paragraph = VALUES(paragraph)")
+    @SqlUpdate("INSERT INTO learnweb_large.ted_transcripts_paragraphs (resource_id, language, starttime, paragraph) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE starttime = VALUES(starttime), paragraph = VALUES(paragraph)")
     void saveTranscriptParagraphs(int resourceId, String langCode, int starttime, String paragraph);
 
-    @SqlUpdate("INSERT INTO ted_transcripts_lang_mapping(language_code,language) VALUES (?,?) ON DUPLICATE KEY UPDATE language_code = language_code")
+    @SqlUpdate("INSERT INTO learnweb_large.ted_transcripts_lang_mapping (language_code,language) VALUES (?,?) ON DUPLICATE KEY UPDATE language_code = language_code")
     void saveTranscriptLangMapping(String langCode, String language);
 
     default void saveTranscriptLog(TranscriptLog transcriptLog) {
@@ -159,7 +159,7 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
         params.put("tags", video.getTags());
         params.put("duration", video.getDuration());
 
-        Optional<Integer> videoId = SqlHelper.handleSave(getHandle(), "ted_video", params)
+        Optional<Integer> videoId = SqlHelper.handleSave(getHandle(), "learnweb_large.ted_video", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         videoId.ifPresent(video::setTedId);

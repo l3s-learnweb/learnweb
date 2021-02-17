@@ -18,19 +18,19 @@ import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(SpeechRepositoryDao.SpeechRepositoryEntityMapper.class)
 public interface SpeechRepositoryDao extends SqlObject, Serializable {
-    @SqlQuery("SELECT * FROM speechrepository_video WHERE id = ?")
+    @SqlQuery("SELECT * FROM learnweb_large.speechrepository_video WHERE id = ?")
     Optional<SpeechRepositoryEntity> findById(int speechId);
 
-    @SqlQuery("SELECT * FROM speechrepository_video WHERE learnweb_resource_id = ?")
+    @SqlQuery("SELECT * FROM learnweb_large.speechrepository_video WHERE learnweb_resource_id = ?")
     List<SpeechRepositoryEntity> findByResourceId(int resourceId);
 
-    @SqlQuery("SELECT DISTINCT id FROM speechrepository_video WHERE id = ?")
+    @SqlQuery("SELECT DISTINCT id FROM learnweb_large.speechrepository_video WHERE id = ?")
     boolean isExists(int speechId);
 
-    @SqlUpdate("UPDATE speechrepository_video SET learnweb_resource_id = ? WHERE id = ?")
+    @SqlUpdate("UPDATE learnweb_large.speechrepository_video SET learnweb_resource_id = ? WHERE id = ?")
     void updateResourceId(int resourceId, int speechId);
 
-    @SqlUpdate("DELETE FROM speechrepository_video WHERE id = ?")
+    @SqlUpdate("DELETE FROM learnweb_large.speechrepository_video WHERE id = ?")
     void delete(int speechId);
 
     default void save(SpeechRepositoryEntity speech) {
@@ -53,7 +53,7 @@ public interface SpeechRepositoryDao extends SqlObject, Serializable {
         params.put("terminology", speech.getTerminology());
         params.put("learnweb_resource_id", speech.getLearnwebResourceId());
 
-        Optional<Integer> speechId = SqlHelper.handleSave(getHandle(), "speechrepository_video", params)
+        Optional<Integer> speechId = SqlHelper.handleSave(getHandle(), "learnweb_large.speechrepository_video", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
         speechId.ifPresent(speech::setId);

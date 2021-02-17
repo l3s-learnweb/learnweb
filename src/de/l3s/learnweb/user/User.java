@@ -509,7 +509,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         try {
             // try Gravatar, fallback to simple initials avatar
             if (email != null) {
-                URL url = new URL("https://www.gravatar.com/avatar/" + HashHelper.md5(email));
+                URL url = new URL("https://www.gravatar.com/avatar/" + HashHelper.md5(email) + "?d=404");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
