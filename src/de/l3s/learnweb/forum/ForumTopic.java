@@ -18,9 +18,9 @@ public class ForumTopic implements Serializable, Deletable {
     private LocalDateTime date;
     private int views;
     private int replies;
-    private int lastPostId;
+    private Integer lastPostId;
     private LocalDateTime lastPostDate;
-    private int lastPostUserId;
+    private Integer lastPostUserId;
     private boolean deleted;
 
     // cached values
@@ -57,11 +57,11 @@ public class ForumTopic implements Serializable, Deletable {
         return lastPostUser;
     }
 
-    public int getLastPostUserId() {
+    public Integer getLastPostUserId() {
         return lastPostUserId;
     }
 
-    public void setLastPostUserId(int lastPostUserId) {
+    public void setLastPostUserId(Integer lastPostUserId) {
         this.lastPostUserId = lastPostUserId;
     }
 
@@ -113,11 +113,11 @@ public class ForumTopic implements Serializable, Deletable {
         this.replies = replies;
     }
 
-    public int getLastPostId() {
+    public Integer getLastPostId() {
         return lastPostId;
     }
 
-    public void setLastPostId(int lastPostId) {
+    public void setLastPostId(Integer lastPostId) {
         this.lastPostId = lastPostId;
     }
 

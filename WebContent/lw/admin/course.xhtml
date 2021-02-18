@@ -83,7 +83,7 @@
 							<h:panelGroup layout="block" styleClass="form-group">
 								<p:outputLabel for="@next" value="#{msg.default_group}:"/>
 								<p:selectOneMenu id="c_group" value="#{adminCourseBean.course.defaultGroupId}">
-									<f:selectItem itemLabel="#{msg.no_default_group}" itemValue="0"/>
+									<f:selectItem itemLabel="#{msg.no_default_group}" itemValue=""/>
 									<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true"/>
 									<f:selectItems var="group" value="#{adminCourseBean.course.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 								</p:selectOneMenu>

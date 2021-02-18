@@ -94,7 +94,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     private int id = -1;
     private boolean deleted;
-    private int imageFileId; // profile image
+    private Integer imageFileId; // profile image
     private int organisationId;
     @Length(max = 100)
     private String fullName;
@@ -529,19 +529,19 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      * @return Null if not present
      */
     public File getImageFile() {
-        if (imageFileId > 0) {
+        if (imageFileId != null) {
             return Learnweb.dao().getFileDao().findById(imageFileId);
         }
         return null;
     }
 
-    public int getImageFileId() {
+    public Integer getImageFileId() {
         return imageFileId;
     }
 
-    public void setImageFileId(int imageFileId) {
+    public void setImageFileId(Integer imageFileId) {
         // delete existing image
-        if (this.imageFileId != 0 && imageFileId != this.imageFileId) {
+        if (this.imageFileId != null && !this.imageFileId.equals(imageFileId)) {
             try {
                 Learnweb.dao().getFileDao().deleteSoft(this.imageFileId);
             } catch (Exception e) {

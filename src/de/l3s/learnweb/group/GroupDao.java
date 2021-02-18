@@ -165,7 +165,7 @@ public interface GroupDao extends SqlObject, Serializable {
         List<User> members = group.getMembers();
 
         getHandle().execute("DELETE FROM lw_group WHERE group_id = ?", group.getId());
-        getHandle().execute("UPDATE lw_course SET default_group_id = 0 WHERE default_group_id = ?", group.getId());
+        getHandle().execute("UPDATE lw_course SET default_group_id = NULL WHERE default_group_id = ?", group.getId());
 
         members.forEach(User::clearCaches);
         cache.remove(group.getId());
@@ -176,6 +176,7 @@ public interface GroupDao extends SqlObject, Serializable {
         params.put("group_id", group.getId() < 1 ? null : group.getId());
         params.put("title", group.getTitle());
         params.put("description", group.getDescription());
+        params.put("leader_id", group.getLeaderUserId());
         params.put("course_id", group.getCourseId());
         params.put("restriction_forum_category_required", group.isRestrictionForumCategoryRequired());
         params.put("policy_add", group.getPolicyAdd().name());
@@ -207,7 +208,7 @@ public interface GroupDao extends SqlObject, Serializable {
                 group.setDescription(rs.getString("description"));
                 group.setLeaderUserId(rs.getInt("leader_id"));
                 group.setCourseId(rs.getInt("course_id"));
-                group.setRestrictionForumCategoryRequired(rs.getInt("restriction_forum_category_required") == 1);
+                group.setRestrictionForumCategoryRequired(rs.getBoolean("restriction_forum_category_required"));
                 group.setMaxMemberCount(rs.getInt("max_member_count"));
                 group.setHypothesisLink(rs.getString("hypothesis_link"));
                 group.setHypothesisToken(rs.getString("hypothesis_token"));

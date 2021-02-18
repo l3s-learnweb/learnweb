@@ -373,7 +373,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 // set creator of new entries
                 entry.setUserId(userId);
                 entry.getTerms().forEach(term -> term.setUserId(userId));
-                entry.setOriginalEntryId(-1); // to indicate that it was imported from a file
+                // entry.setOriginalEntryId(-1); // to indicate that it was imported from a file FIXME: will fail because of FK
 
                 Learnweb.dao().getGlossaryDao().saveEntry(entry, glossaryResource);
                 log(Action.glossary_entry_add, glossaryResource, entry.getId());

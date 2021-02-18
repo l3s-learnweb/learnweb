@@ -15,6 +15,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 import de.l3s.util.StringHelper;
 
@@ -96,7 +97,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 organisation.setDefaultSearchServiceVideo(rs.getString("default_search_video"));
                 organisation.setDefaultLanguage(rs.getString("default_language"));
                 organisation.setLanguageVariant(rs.getString("language_variant"));
-                organisation.setBannerImageFileId(rs.getInt("banner_image_file_id"));
+                organisation.setBannerImageFileId(RsHelper.getInteger(rs, "banner_image_file_id"));
                 organisation.setGlossaryLanguages(StringHelper.splitLocales(rs.getString("glossary_languages")));
 
                 long[] options = new long[FIELDS];

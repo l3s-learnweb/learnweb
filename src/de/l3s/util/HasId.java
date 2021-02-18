@@ -29,7 +29,7 @@ public interface HasId extends Argument {
         return ids;
     }
 
-    static int getIdOrDefault(HasId object, Integer def) {
+    static Integer getIdOrDefault(HasId object, Integer def) {
         if (object == null || object.getId() <= 0) {
             return def;
         }

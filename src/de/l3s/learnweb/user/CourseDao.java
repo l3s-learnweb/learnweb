@@ -20,6 +20,7 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(CourseDao.CourseMapper.class)
@@ -146,7 +147,7 @@ public interface CourseDao extends SqlObject, Serializable {
                 course.setId(rs.getInt("course_id"));
                 course.setOrganisationId(rs.getInt("organisation_id"));
                 course.setTitle(rs.getString("title"));
-                course.setDefaultGroupId(rs.getInt("default_group_id"));
+                course.setDefaultGroupId(RsHelper.getInteger(rs, "default_group_id"));
                 course.setWizardParam(rs.getString("wizard_param"));
                 course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
                 course.setWelcomeMessage(rs.getString("welcome_message"));

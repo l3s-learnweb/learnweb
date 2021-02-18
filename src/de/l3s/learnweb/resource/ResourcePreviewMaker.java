@@ -100,7 +100,6 @@ public class ResourcePreviewMaker implements Serializable {
                 file.setType(TYPE.FILE_MAIN);
                 file.setName(resource.getFileName());
                 file.setMimeType(resource.getFormat());
-                file.setResourceId(resource.getId());
                 fileDao.save(file, FileInspector.openStream(resource.getUrl()));
 
                 resource.addFile(file);
@@ -182,7 +181,6 @@ public class ResourcePreviewMaker implements Serializable {
             file.setType(TYPE.THUMBNAIL_LARGE);
             file.setName("thumbnail4.png");
             file.setMimeType("image/png");
-            file.setResourceId(resource.getId());
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
 
@@ -203,7 +201,6 @@ public class ResourcePreviewMaker implements Serializable {
         file.setType(TYPE.THUMBNAIL_LARGE);
         file.setName("website.png");
         file.setMimeType("image/png");
-        file.setResourceId(resource.getId());
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
@@ -222,7 +219,6 @@ public class ResourcePreviewMaker implements Serializable {
         file.setType(TYPE.THUMBNAIL_LARGE);
         file.setName("wayback_thumbnail.png");
         file.setMimeType("image/png");
-        file.setResourceId(resource.getId());
         fileDao.save(file, img.getInputStream());
 
         if (file.getId() > 0) {
@@ -239,7 +235,7 @@ public class ResourcePreviewMaker implements Serializable {
         File originalFile;
         FFmpegProbeResult ffProbeResult = null;
         try {
-            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == 0)) {
+            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == null)) {
                 originalFile = resource.getFile(TYPE.FILE_MAIN);
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 
@@ -293,7 +289,6 @@ public class ResourcePreviewMaker implements Serializable {
                 convertedFile.setType(TYPE.FILE_MAIN);
                 convertedFile.setName(StringHelper.filenameChangeExt(originalFile.getName(), "mp4"));
                 convertedFile.setMimeType("video/mp4");
-                convertedFile.setResourceId(resource.getId());
                 fileDao.save(convertedFile, new FileInputStream(outputPath));
                 tempVideoFile.delete();
 
@@ -394,7 +389,6 @@ public class ResourcePreviewMaker implements Serializable {
             file.setType(TYPE.THUMBNAIL_VERY_SMALL);
             file.setName("thumbnail0.png");
             file.setMimeType("image/png");
-            file.setResourceId(resource.getId());
             fileDao.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail0(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
@@ -408,7 +402,6 @@ public class ResourcePreviewMaker implements Serializable {
             file.setType(TYPE.THUMBNAIL_SQUARED);
             file.setName("thumbnail1.png");
             file.setMimeType("image/png");
-            file.setResourceId(resource.getId());
             fileDao.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail1(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
@@ -422,7 +415,6 @@ public class ResourcePreviewMaker implements Serializable {
             file.setType(TYPE.THUMBNAIL_SMALL);
             file.setName("thumbnail2.png");
             file.setMimeType("image/png");
-            file.setResourceId(resource.getId());
             fileDao.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail2(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
@@ -436,7 +428,6 @@ public class ResourcePreviewMaker implements Serializable {
             file.setType(TYPE.THUMBNAIL_MEDIUM);
             file.setName("thumbnail3.png");
             file.setMimeType("image/png");
-            file.setResourceId(resource.getId());
             fileDao.save(file, thumbnail.getInputStream());
             resource.addFile(file);
             resource.setThumbnail3(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));

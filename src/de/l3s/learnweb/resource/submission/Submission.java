@@ -28,7 +28,7 @@ public class Submission implements Serializable, HasId {
     private int noOfResources = 3; // Default max no. of resources 3
 
     // Fields to handle link display based on survey submitted or not
-    private int surveyResourceId = -1; // TODO @astappiev/@hulyi: the database field should be unsigned, hence -1 can't be used. Use NULL to indicate that the survey isn't required
+    private Integer surveyResourceId;
     private boolean surveyMandatory = false;
     private boolean submitted = false;
     private List<Resource> submittedResources;
@@ -119,17 +119,17 @@ public class Submission implements Serializable, HasId {
     public void setSurveyMandatory(boolean surveyMandatory) {
         this.surveyMandatory = surveyMandatory;
         if (!surveyMandatory) {
-            this.surveyResourceId = -1;
+            this.surveyResourceId = null;
         }
     }
 
-    public int getSurveyResourceId() {
+    public Integer getSurveyResourceId() {
         return surveyResourceId;
     }
 
-    public void setSurveyResourceId(int surveyResourceId) {
+    public void setSurveyResourceId(Integer surveyResourceId) {
         this.surveyResourceId = surveyResourceId;
-        if (this.surveyResourceId > 0) {
+        if (this.surveyResourceId != null) {
             this.surveyMandatory = true;
         }
     }
@@ -140,7 +140,7 @@ public class Submission implements Serializable, HasId {
         }
 
         // load surveyAnswer
-        if (surveyResourceId > 0 && surveyAnswer == null) {
+        if (surveyResourceId != null && surveyAnswer == null) {
             SurveyResource surveyResource = Learnweb.dao().getSurveyDao().findResourceById(surveyResourceId).orElseThrow();
             surveyAnswer = surveyResource.getAnswersOfUser(userId);
         }

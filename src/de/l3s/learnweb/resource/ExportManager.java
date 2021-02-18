@@ -119,7 +119,7 @@ public class ExportManager {
             File mainFile = resource.getFile(TYPE.FILE_MAIN);
 
             // TODO @astappiev: remove when all files copied from originals
-            if (mainFile == null && resource.getOriginalResourceId() > 0) {
+            if (mainFile == null && resource.getOriginalResourceId() != null) {
                 Resource originalResource = learnweb.getDaoProvider().getResourceDao().findById(resource.getOriginalResourceId());
                 if (originalResource != null) {
                     mainFile = originalResource.getFile(TYPE.FILE_MAIN);

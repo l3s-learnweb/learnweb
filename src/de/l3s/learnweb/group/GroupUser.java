@@ -3,6 +3,7 @@ package de.l3s.learnweb.group;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
 
 /**
@@ -18,12 +19,21 @@ public class GroupUser implements Serializable {
     private LocalDateTime lastVisit;
     private User.NotificationFrequency notificationFrequency;
 
+    private transient Group group;
+
     public int getGroupId() {
         return groupId;
     }
 
     public void setGroupId(final int groupId) {
         this.groupId = groupId;
+    }
+
+    public Group getGroup() {
+        if (group == null) {
+            group = Learnweb.dao().getGroupDao().findById(groupId);
+        }
+        return group;
     }
 
     public int getUserId() {

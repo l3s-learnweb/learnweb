@@ -240,8 +240,8 @@ public interface SurveyDao extends SqlObject, Serializable {
             survey.setDescription(rs.getString("description"));
             survey.setOrganizationId(rs.getInt("organization_id"));
             survey.setUserId(rs.getInt("user_id"));
-            survey.setDeleted(rs.getInt("deleted") == 1);
-            survey.setPublicTemplate(rs.getInt("public_template") == 1);
+            survey.setDeleted(rs.getBoolean("deleted"));
+            survey.setPublicTemplate(rs.getBoolean("public_template"));
             survey.setAssociated(rs.getInt("res_count") > 0);
             return survey;
         }

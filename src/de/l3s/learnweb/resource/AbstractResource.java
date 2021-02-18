@@ -26,9 +26,9 @@ public abstract class AbstractResource implements HasId, Deletable {
 
     public abstract Group getGroup();
 
-    public abstract int getUserId();
+    public abstract Integer getUserId();
 
-    public abstract void setUserId(int userId);
+    public abstract void setUserId(Integer userId);
 
     public abstract User getUser();
 

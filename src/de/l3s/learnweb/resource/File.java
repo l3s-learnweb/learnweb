@@ -38,7 +38,7 @@ public class File implements Serializable, HasId, Cloneable {
     private int fileId = -1;
     private String name;
     private String mimeType;
-    private int resourceId;
+    private Integer resourceId;
     private TYPE type;
     private String url;
     private boolean downloadLogActivated = false;
@@ -87,11 +87,11 @@ public class File implements Serializable, HasId, Cloneable {
         this.mimeType = mimeType;
     }
 
-    public int getResourceId() {
+    public Integer getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(int resourceId) {
+    public void setResourceId(Integer resourceId) {
         this.resourceId = resourceId;
     }
 

@@ -17,6 +17,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(FolderDao.FolderMapper.class)
@@ -45,8 +46,8 @@ public interface FolderDao extends SqlObject, Serializable {
     default void save(Folder folder) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("folder_id", folder.getId() < 1 ? null : folder.getId());
-        params.put("group_id", folder.getGroupId());
-        params.put("parent_folder_id", folder.getParentFolderId());
+        params.put("group_id", folder.getGroupId() == 0 ? null : folder.getGroupId());
+        params.put("parent_folder_id", folder.getParentFolderId() == 0 ? null : folder.getParentFolderId());
         params.put("name", folder.getTitle());
         params.put("description", folder.getDescription());
         params.put("user_id", folder.getUserId());
@@ -73,8 +74,8 @@ public interface FolderDao extends SqlObject, Serializable {
                 folder.setParentFolderId(rs.getInt("parent_folder_id"));
                 folder.setTitle(rs.getString("name"));
                 folder.setDescription(rs.getString("description"));
-                folder.setUserId(rs.getInt("user_id"));
-                folder.setDeleted(rs.getInt("deleted") == 1);
+                folder.setUserId(RsHelper.getInteger(rs, "user_id"));
+                folder.setDeleted(rs.getBoolean("deleted"));
                 cache.put(folder);
             }
 

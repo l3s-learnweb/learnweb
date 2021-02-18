@@ -39,7 +39,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     @Length(min = 2, max = 40)
     private String title;
     private int organisationId;
-    private int defaultGroupId; // all users who join this course, automatically join this group
+    private Integer defaultGroupId; // all users who join this course, automatically join this group
     @Length(min = 2, max = 90)
     private String wizardParam;
     private int nextXUsersBecomeModerator;
@@ -129,11 +129,11 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         return Learnweb.dao().getOrganisationDao().findById(organisationId);
     }
 
-    public int getDefaultGroupId() {
+    public Integer getDefaultGroupId() {
         return defaultGroupId;
     }
 
-    public void setDefaultGroupId(int defaultGroupId) {
+    public void setDefaultGroupId(Integer defaultGroupId) {
         this.defaultGroupId = defaultGroupId;
     }
 

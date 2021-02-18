@@ -57,7 +57,7 @@ public class GenerateMissingThumbnails extends MaintenanceTask {
         resource.setOnlineStatus(Resource.OnlineStatus.ONLINE);
         log.debug("online");
 
-        if (resource.getSmallThumbnail().getFileId() == 0) {
+        if (resource.getSmallThumbnail().getFileId() == null) {
             log.debug("create thumbnail");
             try {
                 getLearnweb().getResourcePreviewMaker().processWebsite(resource);

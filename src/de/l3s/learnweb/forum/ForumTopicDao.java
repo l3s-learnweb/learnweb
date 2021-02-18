@@ -90,9 +90,9 @@ public interface ForumTopicDao extends SqlObject, Serializable {
             topic.setDate(RsHelper.getLocalDateTime(rs.getTimestamp("topic_time")));
             topic.setViews(rs.getInt("topic_views"));
             topic.setReplies(rs.getInt("topic_replies"));
-            topic.setLastPostId(rs.getInt("topic_last_post_id"));
+            topic.setLastPostId(RsHelper.getInteger(rs, "topic_last_post_id"));
             topic.setLastPostDate(RsHelper.getLocalDateTime(rs.getTimestamp("topic_last_post_time")));
-            topic.setLastPostUserId(rs.getInt("topic_last_post_user_id"));
+            topic.setLastPostUserId(RsHelper.getInteger(rs, "topic_last_post_user_id"));
             return topic;
         }
     }

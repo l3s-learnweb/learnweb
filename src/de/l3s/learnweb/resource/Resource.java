@@ -61,8 +61,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     private int id = -1; // default id, that indicates that this resource is not stored at fedora
-    private int groupId = 0;
-    private int folderId = 0;
+    private int groupId;
+    private int folderId;
     private String title;
     private String description = "";
     private String url;
@@ -75,7 +75,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private ResourceType type;
     private String format = ""; // original mineType of the resource
     private int duration;
-    private int ownerUserId;
+    private Integer ownerUserId;
     private String idAtService = "";
     private int ratingSum;
     private int rateNumber;
@@ -83,7 +83,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private String fileUrl;
     private String maxImageUrl; // an url to the largest image preview of this resource
     private String query; // the query which was used to find this resource
-    private int originalResourceId = 0; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
+    private Integer originalResourceId; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
     private String machineDescription;
     private Thumbnail thumbnail0; // 150 / 120
     private Thumbnail thumbnail1; // 150px
@@ -166,7 +166,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
         // sets the originalResourceId to the id of the source resource
-        if (old.originalResourceId == 0) {
+        if (old.originalResourceId == null) {
             setOriginalResourceId(old.id);
         } else {
             setOriginalResourceId(old.originalResourceId);
@@ -324,12 +324,12 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     @Override
-    public int getUserId() {
+    public Integer getUserId() {
         return ownerUserId;
     }
 
     @Override
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.ownerUserId = userId;
         this.owner = null;
     }
@@ -349,13 +349,13 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public Group getOriginalGroup() {
-        if (originalResourceId == 0) {
+        if (originalResourceId == null) {
             return null;
         }
 
         Resource originalResource = Learnweb.dao().getResourceDao().findById(originalResourceId);
         if (originalResource != null) {
-            return Learnweb.dao().getGroupDao().findById(originalResource.getGroupId());
+            return originalResource.getGroup();
         } else {
             return null;
         }
@@ -801,14 +801,14 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     /**
      * @return if the resource was copied from an older Learnweb resource this returns the id of the original resource <b>0</b> otherwise
      */
-    public int getOriginalResourceId() {
+    public Integer getOriginalResourceId() {
         return originalResourceId;
     }
 
     /**
      * @param originalResourceId if the resource was copied from an older Learnweb resource this stores the id of the original resource
      */
-    public void setOriginalResourceId(int originalResourceId) {
+    public void setOriginalResourceId(Integer originalResourceId) {
         this.originalResourceId = originalResourceId;
     }
 
@@ -881,7 +881,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     public void addFile(File file) {
         getFiles().put(file.getType().ordinal(), file);
 
-        if (id > 0 && file.getResourceId() != id) { // the resource is already stored, the new file needs to be added to the database
+        if (id > 0 && file.getResourceId() == null) { // the resource is already stored, the new file needs to be added to the database
             file.setResourceId(id);
             Learnweb.dao().getFileDao().updateResource(this, file);
         }

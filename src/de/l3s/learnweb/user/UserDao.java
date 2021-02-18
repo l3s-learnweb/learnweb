@@ -272,7 +272,7 @@ public interface UserDao extends SqlObject, Serializable {
                 user.setPasswordRaw(rs.getString("password"));
                 user.setHashing(rs.getString("hashing"));
                 user.setOrganisationId(rs.getInt("organisation_id"));
-                user.setImageFileId(rs.getInt("image_file_id"));
+                user.setImageFileId(RsHelper.getInteger(rs, "image_file_id"));
                 user.setGender(User.Gender.values()[rs.getInt("gender")]);
                 user.setDateOfBirth(RsHelper.getLocalDate(rs.getDate("dateofbirth")));
                 user.setFullName(rs.getString("fullname"));
@@ -291,8 +291,8 @@ public interface UserDao extends SqlObject, Serializable {
                 user.setTimeZone(ZoneId.of(rs.getString("time_zone")));
                 user.setLocale(Locale.forLanguageTag(rs.getString("language").replace("_", "-")));
 
-                user.setAdmin(rs.getInt("is_admin") == 1);
-                user.setModerator(rs.getInt("is_moderator") == 1);
+                user.setAdmin(rs.getBoolean("is_admin"));
+                user.setModerator(rs.getBoolean("is_moderator"));
 
                 // deserialize preferences
                 byte[] preferenceBytes = rs.getBytes("preferences");

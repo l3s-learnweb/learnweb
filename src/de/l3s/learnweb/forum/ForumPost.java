@@ -20,7 +20,7 @@ public class ForumPost implements Serializable, Deletable {
     private LocalDateTime date;
     private int editCount;
     private LocalDateTime lastEditDate;
-    private int editUserId;
+    private Integer editUserId;
     private boolean deleted;
     private String category;
 
@@ -111,11 +111,11 @@ public class ForumPost implements Serializable, Deletable {
         this.lastEditDate = lastEditDate;
     }
 
-    public int getEditUserId() {
+    public Integer getEditUserId() {
         return editUserId;
     }
 
-    public void setEditUserId(int editUserId) {
+    public void setEditUserId(Integer editUserId) {
         this.editUserId = editUserId;
     }
 

@@ -162,7 +162,7 @@ public abstract class ApplicationBean {
      * The parameters "targetId" and "params" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
      */
-    protected void log(Action action, int groupId, int targetId, String params, User user) {
+    protected void log(Action action, Integer groupId, Integer targetId, String params, User user) {
         dao().getLogDao().insert(user, action, groupId, targetId, params, getSessionId());
     }
 

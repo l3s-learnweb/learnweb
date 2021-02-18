@@ -1,5 +1,7 @@
 package de.l3s.util;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -22,5 +24,13 @@ public final class RsHelper {
 
     public static LocalDate getLocalDate(java.sql.Date date) {
         return date == null ? null : date.toLocalDate();
+    }
+
+    public static Integer getInteger(ResultSet rs, String columnLabel) throws SQLException {
+        Integer value = rs.getInt(columnLabel);
+        if (rs.wasNull()) {
+            return null;
+        }
+        return value;
     }
 }

@@ -18,7 +18,7 @@ public class GlossaryTerm implements HasId, Deletable, Serializable, Cloneable {
     private static final long serialVersionUID = -8309235925484416943L;
 
     private int id = -1;
-    private int originalTermId = 0;
+    private Integer originalTermId;
     private boolean deleted;
     private int entryId;
     private int userId; // the user who created this term
@@ -247,11 +247,11 @@ public class GlossaryTerm implements HasId, Deletable, Serializable, Cloneable {
         }
     }
 
-    public int getOriginalTermId() {
+    public Integer getOriginalTermId() {
         return originalTermId;
     }
 
-    public void setOriginalTermId(int originalTermId) {
+    public void setOriginalTermId(Integer originalTermId) {
         this.originalTermId = originalTermId;
     }
 }

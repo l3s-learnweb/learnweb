@@ -24,6 +24,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.UseRowReducer;
 
 import de.l3s.learnweb.dashboard.glossary.GlossaryDescriptionSummary;
+import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(GlossaryEntryDao.GlossaryEntryMapper.class)
@@ -88,7 +89,7 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
             entry.setDeleted(false);
             entry.setResourceId(rs.getInt("resource_id"));
             entry.setId(rs.getInt("entry_id"));
-            entry.setOriginalEntryId(rs.getInt("original_entry_id"));
+            entry.setOriginalEntryId(RsHelper.getInteger(rs, "original_entry_id"));
             entry.setUserId(rs.getInt("user_id"));
             entry.setTopicOne(rs.getString("topic_one"));
             entry.setTopicTwo(rs.getString("topic_two"));

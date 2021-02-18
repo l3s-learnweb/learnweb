@@ -122,7 +122,7 @@ public interface FileDao extends SqlObject, Serializable {
             if (file == null) {
                 file = new File();
                 file.setId(rs.getInt("file_id"));
-                file.setResourceId(rs.getInt("resource_id"));
+                file.setResourceId(RsHelper.getInteger(rs, "resource_id"));
                 file.setType(File.TYPE.values()[rs.getInt("resource_file_number")]);
                 file.setName(rs.getString("name"));
                 file.setMimeType(rs.getString("mime_type"));

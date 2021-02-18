@@ -73,6 +73,8 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
         User user = getUser();
         BeanAssert.authorized(user);
 
+        receivedMessages = messageDao.findIncoming(getUser(), 5);
+
         if (getUser().getGroupCount() == 0) {
             hideNewsPanel = true;
         } else {
@@ -83,7 +85,6 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
             hideNewsPanel = newsResources.isEmpty() && newsForums.isEmpty() && receivedMessages.isEmpty();
         }
 
-        receivedMessages = messageDao.findIncoming(getUser(), 5);
         if (!StringHelper.isBlankDisregardingHTML(user.getOrganisation().getWelcomeMessage())) {
             organisationWelcomeMessage = user.getOrganisation().getWelcomeMessage();
         }

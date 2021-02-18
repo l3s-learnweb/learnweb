@@ -26,6 +26,7 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.survey.Survey;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.HasId;
 import de.l3s.util.UrlHelper;
 
 @Named
@@ -236,7 +237,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
         // add resource to a group if selected
         resource.setGroupId(targetGroup.getId());
-        resource.setFolderId(targetFolder != null ? targetFolder.getId() : 0);
+        resource.setFolderId(HasId.getIdOrDefault(targetFolder, 0));
         resource.save();
         getUser().setGuide(User.Guide.ADD_RESOURCE, true);
 
@@ -247,7 +248,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
         // create thumbnails for the resource
         if (!resource.isProcessing()
-            && (resource.getSmallThumbnail() == null || resource.getSmallThumbnail().getFileId() == 0 || resource.getType() == ResourceType.video)) {
+            && (resource.getSmallThumbnail() == null || resource.getSmallThumbnail().getFileId() == null || resource.getType() == ResourceType.video)) {
             new ResourcePreviewMaker.CreateThumbnailThread(resource).start();
         }
 

@@ -16,11 +16,11 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id = -1;
-    private int originalEntryId = 0; // This value is -1 when the entry has been imported from a file. When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
+    private Integer originalEntryId; // This value is -1 when the entry has been imported from a file. When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
     private int resourceId;
     private boolean deleted;
     private int userId; // the user who created this entry
-    private int lastChangedByUserId;
+    private Integer lastChangedByUserId;
     private Timestamp timestamp;
     @Length(max = 900)
     private String description;
@@ -203,19 +203,19 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
         this.terms.add(term);
     }
 
-    public int getLastChangedByUserId() {
+    public Integer getLastChangedByUserId() {
         return lastChangedByUserId;
     }
 
-    public void setLastChangedByUserId(int lastChangedByUserId) {
+    public void setLastChangedByUserId(Integer lastChangedByUserId) {
         this.lastChangedByUserId = lastChangedByUserId;
     }
 
-    public int getOriginalEntryId() {
+    public Integer getOriginalEntryId() {
         return originalEntryId;
     }
 
-    public void setOriginalEntryId(int originalEntryId) {
+    public void setOriginalEntryId(Integer originalEntryId) {
         this.originalEntryId = originalEntryId;
     }
 

@@ -73,7 +73,7 @@ public interface ForumPostDao extends SqlObject, Serializable {
             post.setDate(RsHelper.getLocalDateTime(rs.getTimestamp("post_time")));
             post.setLastEditDate(RsHelper.getLocalDateTime(rs.getTimestamp("post_edit_time")));
             post.setEditCount(rs.getInt("post_edit_count"));
-            post.setEditUserId(rs.getInt("post_edit_user_id"));
+            post.setEditUserId(RsHelper.getInteger(rs, "post_edit_user_id"));
             post.setCategory(rs.getString("category"));
             return post;
         }

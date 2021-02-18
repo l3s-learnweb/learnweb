@@ -158,7 +158,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
                 record.setId(rs.getLong(1));
                 record.setFirstCapture(RsHelper.getLocalDateTime(rs.getTimestamp(2)));
                 record.setLastCapture(RsHelper.getLocalDateTime(rs.getTimestamp(3)));
-                record.setAllCapturesFetched(rs.getInt(4) == 1);
+                record.setAllCapturesFetched(rs.getBoolean(4));
                 record.setCrawlDate(RsHelper.getInstant(rs.getTimestamp(5)));
                 record.setStatusCode(rs.getShort(6));
                 record.setStatusCodeDate(RsHelper.getInstant(rs.getTimestamp(7)));

@@ -89,7 +89,7 @@ public interface LogDao extends SqlObject, Serializable {
      * @param groupId the group this action belongs to; null if no group
      * @param targetId optional value; should be 0 if not required
      */
-    default void insert(User user, Action action, int groupId, int targetId, String params, String sessionId) {
+    default void insert(User user, Action action, Integer groupId, Integer targetId, String params, String sessionId) {
         int userId = 0;
         if (user != null) {
             userId = user.getId();
@@ -105,8 +105,8 @@ public interface LogDao extends SqlObject, Serializable {
 
         params = StringHelper.shortnString(params, 250);
 
-        if (groupId == -1) {
-            groupId = 0;
+        if (groupId != null && groupId < 1) {
+            groupId = null;
         }
 
         getHandle().createUpdate("INSERT INTO lw_user_log (user_id, session_id, action, target_id, params, group_id, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)")

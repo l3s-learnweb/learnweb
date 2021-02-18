@@ -16,13 +16,13 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     private static final long serialVersionUID = 2147007718176177138L;
     private static final Logger log = LogManager.getLogger(Folder.class);
 
-    private int id = -1;
-    private int groupId = -1;
+    private int id;
+    private int groupId;
     private int parentFolderId;
     @NotBlank
     private String title;
     private String description;
-    private int userId = -1;
+    private Integer userId;
     private boolean deleted = false; // indicates whether this folder has been deleted
 
     // cache
@@ -147,12 +147,12 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     }
 
     @Override
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
     @Override
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -167,7 +167,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     @Override
     public User getUser() {
-        if (userId < 0) {
+        if (userId == null) {
             return null;
         }
         return Learnweb.dao().getUserDao().findById(userId);
