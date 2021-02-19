@@ -22,7 +22,7 @@ public class PrivateGroup extends Group {
     @Override
     public List<Folder> getSubFolders() {
         if (folders == null) {
-            folders = Learnweb.dao().getFolderDao().findByGroupIdAndParentFolderIdAndUserId(getId(), 0, getLeaderUserId());
+            folders = Learnweb.dao().getFolderDao().findByPrivateGroupAndRootFolder(getLeaderUserId());
         }
 
         return folders;

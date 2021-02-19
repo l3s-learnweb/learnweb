@@ -205,7 +205,7 @@
 <ui:decorate template="/WEB-INF/templates/blocks/modal/edit_folder_dialog.xhtml"/>
 
 <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource}" widgetVar="deleteConfirm" appendTo="@(body)"
-          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
     <h:outputText value="#{msg.delete_confirm_dialog_content}"/>
 
     <h:panelGroup layout="block" styleClass="text-end">
@@ -215,7 +215,7 @@
 </p:dialog>
 
 <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)"
-          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
 
     <h:outputText value="#{msg.add_to}:"/>
 
@@ -241,7 +241,7 @@
 </p:dialog>
 
 <p:dialog header="#{msg['group_resources.download_backup']}" widgetVar="dataExportedDialog" appendTo="@(body)"
-          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true"
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true"
           rendered="#{groupResourcesBean.group.canDeleteGroup(userBean.user)}">
     <h:form>
         <h:outputFormat value="#{msg.export_resources_warning}" styleClass="d-block mb-3">

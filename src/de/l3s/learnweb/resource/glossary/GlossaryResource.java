@@ -75,21 +75,10 @@ public class GlossaryResource extends Resource {
 
     @Override
     public Resource save() {
-        Resource iconResource = Learnweb.dao().getResourceDao().findById(200233); // TODO @astappiev: find a better image, load it from resource folder
-        this.setThumbnail0(iconResource.getThumbnail0());
-        this.setThumbnail1(iconResource.getThumbnail1());
-        this.setThumbnail2(iconResource.getThumbnail2());
-        this.setThumbnail3(iconResource.getThumbnail3());
-        this.setThumbnail4(iconResource.getThumbnail4());
-
-        this.setUser(getUser()); // added by Rishita to fix copy bug; does this make sense? TODO @astappiev: test
-
-        // save normal resource fields
         super.save();
 
         // save GlossaryResource fields
         Learnweb.dao().getGlossaryDao().save(this);
-
         return this;
     }
 

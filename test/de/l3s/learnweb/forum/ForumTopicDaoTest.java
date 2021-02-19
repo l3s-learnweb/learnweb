@@ -19,63 +19,83 @@ class ForumTopicDaoTest {
     private final ForumTopicDao forumTopicDao = learnwebExt.attach(ForumTopicDao.class);
 
     @Test
-    void getters() {
-        ForumPost post = new ForumPost();
-        post.setText("dog");
-        post.setUserId(3);
-        forumPostDao.save(post);
+    void findById() {
+        Optional<ForumTopic> topic = forumTopicDao.findById(2);
 
-        ForumPost post2 = new ForumPost();
-        post2.setText("zebra");
-        post2.setUserId(3);
-        forumPostDao.save(post2);
+        assertTrue(topic.isPresent());
+        assertEquals(2, topic.get().getId());
+        assertEquals(4, topic.get().getUserId());
+        assertEquals(1, topic.get().getGroupId());
+        assertEquals(LocalDateTime.of(2021, 2, 19, 18, 34, 2), topic.get().getDate());
+        assertEquals(3, topic.get().getReplies());
+        assertEquals(2, topic.get().getViews());
+        assertFalse(topic.get().isDeleted());
+        assertEquals("How I Live Now", topic.get().getTitle());
+        assertEquals(5, topic.get().getLastPostId());
+        assertEquals(LocalDateTime.of(2021, 2, 19, 18, 34, 43), topic.get().getLastPostDate());
+        assertEquals(1, topic.get().getLastPostUserId());
+    }
 
-        ForumTopic topic = new ForumTopic();
-        topic.setUserId(3);
-        topic.setGroupId(12);
-        topic.setTitle("monkey");
-        topic.setLastPostDate(LocalDateTime.now());
-        topic.setLastPostId(post.getId());
-        topic.setLastPostUserId(post.getUserId());
-        forumTopicDao.save(topic);
+    @Test
+    void findByGroupId() {
+        List<ForumTopic> topics = forumTopicDao.findByGroupId(1);
+        assertFalse(topics.isEmpty());
+        assertArrayEquals(new Integer[] {1, 2, 3, 4}, topics.stream().map(ForumTopic::getId).sorted().toArray(Integer[]::new));
+    }
 
-        ForumTopic topic2 = new ForumTopic();
-        topic2.setUserId(2);
-        topic2.setGroupId(12);
-        topic2.setTitle("parrot");
-        topic2.setLastPostDate(LocalDateTime.now());
-        topic2.setLastPostId(post2.getId());
-        topic2.setLastPostUserId(post2.getUserId());
-        forumTopicDao.save(topic2);
+    @Test
+    void updateIncreaseViews() {
+        assertEquals(1, forumTopicDao.findById(4).orElseThrow().getViews());
+        forumTopicDao.updateIncreaseViews(4);
+        assertEquals(2, forumTopicDao.findById(4).orElseThrow().getViews());
+    }
 
-        Optional<ForumTopic> retrieved = forumTopicDao.findById(topic.getId());
+    @Test
+    void updateIncreaseReplies() {
+        Optional<ForumTopic> topic = forumTopicDao.findById(4);
+        assertTrue(topic.isPresent());
+        assertEquals(3, topic.get().getReplies());
 
-        assertTrue(retrieved.isPresent());
-        assertEquals(topic.getId(), retrieved.get().getId());
-        assertEquals(topic.getUserId(), retrieved.get().getUserId());
-        assertEquals(topic.getGroupId(), retrieved.get().getGroupId());
-        assertEquals(topic.getTitle(), retrieved.get().getTitle());
+        ForumPost newPost = new ForumPost();
+        newPost.setTopicId(4);
+        newPost.setUserId(2);
+        newPost.setText("new post text");
+        forumPostDao.save(newPost);
 
-        List<ForumTopic> topicsByGroupId = forumTopicDao.findByGroupId(topic2.getGroupId());
-        assertEquals(2, topicsByGroupId.size());
-        assertEquals(topic2.getTitle(), topicsByGroupId.get(0).getTitle());
+        forumTopicDao.updateIncreaseReplies(4, newPost.getId(), newPost.getUserId(), newPost.getDate());
+
+        Optional<ForumTopic> updated = forumTopicDao.findById(4);
+        assertTrue(updated.isPresent());
+        assertEquals(4, updated.get().getReplies());
+        assertEquals(newPost.getId(), updated.get().getLastPostId());
+        assertEquals(newPost.getDate(), updated.get().getLastPostDate());
+        assertEquals(newPost.getUserId(), updated.get().getLastPostUserId());
+    }
+
+    @Test
+    void delete() {
+        assertTrue(forumTopicDao.findById(5).isPresent());
+        forumTopicDao.delete(5);
+        assertTrue(forumTopicDao.findById(5).isEmpty());
+    }
+
+    @Test
+    void findByNotificationFrequencies() {
+        // TODO
+        // Map<Integer, List<ForumTopic>> topics = forumTopicDao.findByNotificationFrequencies(Collections.singletonList(User.NotificationFrequency.DAILY));
+    }
+
+    @Test
+    void insertUserVisit() {
+        // TODO
     }
 
     @Test
     void save() {
-        ForumPost post = new ForumPost();
-        post.setText("parrot");
-        post.setUserId(3);
-        forumPostDao.save(post);
-        assertTrue(post.getId() > 0);
-
         ForumTopic topic = new ForumTopic();
-        topic.setUserId(3);
-        topic.setGroupId(12);
-        topic.setTitle("monkey");
-        topic.setLastPostDate(LocalDateTime.now());
-        topic.setLastPostId(post.getId());
-        topic.setLastPostUserId(post.getUserId());
+        topic.setUserId(4);
+        topic.setGroupId(2);
+        topic.setTitle("Phasellus in felis");
         forumTopicDao.save(topic);
         assertTrue(topic.getId() > 0);
 
@@ -85,10 +105,18 @@ class ForumTopicDaoTest {
         assertEquals(topic.getId(), retrieved.get().getId());
         assertEquals(topic.getUserId(), retrieved.get().getUserId());
         assertEquals(topic.getGroupId(), retrieved.get().getGroupId());
+        assertEquals(topic.getDate(), retrieved.get().getDate());
+        assertEquals(topic.getReplies(), retrieved.get().getReplies());
+        assertEquals(topic.getViews(), retrieved.get().getViews());
+        assertEquals(topic.isDeleted(), retrieved.get().isDeleted());
         assertEquals(topic.getTitle(), retrieved.get().getTitle());
 
-        forumTopicDao.delete(topic.getId());
-        Optional<ForumTopic> deleted = forumTopicDao.findById(topic.getId());
-        assertFalse(deleted.isPresent());
+        topic.setTitle("updated text");
+        forumTopicDao.save(topic);
+        assertNotEquals(retrieved.get().getTitle(), topic.getTitle());
+
+        Optional<ForumTopic> updated = forumTopicDao.findById(topic.getId());
+        assertTrue(updated.isPresent());
+        assertEquals(topic.getTitle(), updated.get().getTitle());
     }
 }

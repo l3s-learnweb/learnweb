@@ -175,7 +175,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         log(Action.register, 0, 0, null, user);
         if (null != course && course.getDefaultGroupId() != null) {
-            user.joinGroup(course.getDefaultGroupId());
+            user.joinGroup(dao().getGroupDao().findById(course.getDefaultGroupId()));
             log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId(), null, user);
         }
 

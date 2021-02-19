@@ -19,13 +19,13 @@ class AnnouncementDaoTest {
 
     @Test
     void findById() {
-        Optional<Announcement> retrieved = announcementDao.findById(1);
-        assertTrue(retrieved.isPresent());
-        assertEquals(1, retrieved.get().getId());
-        assertEquals("Dolores eum illum neque.", retrieved.get().getTitle());
-        assertEquals("Omnis tempore et deserunt. Quia qui rerum qui eum commodi sint non. Porro in enim nam quia quo dolores nulla.", retrieved.get().getText());
-        assertEquals(2, retrieved.get().getUserId());
-        assertEquals(LocalDateTime.of(2017, 3, 3, 0, 1, 2), retrieved.get().getDate());
+        Optional<Announcement> announcement = announcementDao.findById(1);
+        assertTrue(announcement.isPresent());
+        assertEquals(1, announcement.get().getId());
+        assertEquals("Dolores eum illum neque.", announcement.get().getTitle());
+        assertEquals("Omnis tempore et deserunt. Quia qui rerum qui eum commodi sint non.", announcement.get().getText());
+        assertEquals(2, announcement.get().getUserId());
+        assertEquals(LocalDateTime.of(2017, 3, 3, 0, 1, 2), announcement.get().getDate());
     }
 
     @Test
@@ -37,13 +37,8 @@ class AnnouncementDaoTest {
     @Test
     void findLastCreated() {
         List<Announcement> announcements = announcementDao.findLastCreated(3);
-        assertEquals(3, announcements.size());
-        assertEquals("Quo qui eos aliquid iure.", announcements.get(0).getTitle());
-        assertEquals(LocalDateTime.of(2015, 9, 9, 12, 7, 19), announcements.get(0).getDate());
-        assertEquals("Facilis quisquam praesentium cum consequatur.", announcements.get(1).getTitle());
-        assertEquals(LocalDateTime.of(2014, 4, 7, 2, 50, 31), announcements.get(1).getDate());
-        assertEquals("Omnis dolorem sit est.", announcements.get(2).getTitle());
-        assertEquals(LocalDateTime.of(2013, 5, 16, 3, 13, 4), announcements.get(2).getDate());
+        assertFalse(announcements.isEmpty());
+        assertArrayEquals(new Integer[] {7, 4, 9}, announcements.stream().map(Announcement::getId).sorted().toArray(Integer[]::new));
     }
 
     @Test
@@ -57,8 +52,8 @@ class AnnouncementDaoTest {
     void save() {
         Announcement announcement = new Announcement();
         announcement.setUserId(1);
-        announcement.setTitle("ICWL conference, Magdeburg, Germany");
-        announcement.setText("MSc. Tetiana Tolmachova presented the full paper...");
+        announcement.setTitle("Quisque porta volutpat erat");
+        announcement.setText("Porro in enim nam quia quo dolores nulla.");
         announcementDao.save(announcement);
         assertTrue(announcement.getId() > 0);
         assertNotNull(announcement.getDate());
@@ -71,5 +66,13 @@ class AnnouncementDaoTest {
         assertEquals(announcement.getText(), retrieved.get().getText());
         assertEquals(announcement.getUserId(), retrieved.get().getUserId());
         assertEquals(announcement.getDate(), retrieved.get().getDate());
+
+        announcement.setText("updated text");
+        announcementDao.save(announcement);
+        assertNotEquals(retrieved.get().getText(), announcement.getText());
+
+        Optional<Announcement> updated = announcementDao.findById(announcement.getId());
+        assertTrue(updated.isPresent());
+        assertEquals(announcement.getText(), updated.get().getText());
     }
 }

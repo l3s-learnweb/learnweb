@@ -213,7 +213,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     @Override
     public List<Folder> getSubFolders() {
         if (folders == null) {
-            folders = Learnweb.dao().getFolderDao().findByGroupIdAndParentFolderId(id, 0);
+            folders = Learnweb.dao().getFolderDao().findByGroupAndRootFolder(id);
         }
 
         return folders;

@@ -30,15 +30,21 @@ public interface FolderDao extends SqlObject, Serializable {
             return folder;
         }
 
-        return getHandle().select("SELECT * FROM lw_group_folder f WHERE deleted = 0 AND folder_id = ?", folderId)
+        return getHandle().select("SELECT * FROM lw_group_folder WHERE deleted = 0 AND folder_id = ?", folderId)
             .map(new FolderMapper()).findOne().orElse(null);
     }
 
-    @SqlQuery("SELECT * FROM lw_group_folder f WHERE deleted = 0 AND group_id = ? AND parent_folder_id = ?")
-    List<Folder> findByGroupIdAndParentFolderId(int groupId, int folderId);
+    @SqlQuery("SELECT * FROM lw_group_folder WHERE deleted = 0 AND group_id = ? AND parent_folder_id IS NULL")
+    List<Folder> findByGroupAndRootFolder(int groupId);
 
-    @SqlQuery("SELECT * FROM lw_group_folder f WHERE deleted = 0 AND group_id = ? AND parent_folder_id = ? AND user_id = ?")
-    List<Folder> findByGroupIdAndParentFolderIdAndUserId(int groupId, int folderId, int userId);
+    @SqlQuery("SELECT * FROM lw_group_folder WHERE deleted = 0 AND group_id = ? AND parent_folder_id = ?")
+    List<Folder> findByGroupAndFolder(int groupId, int folderId);
+
+    @SqlQuery("SELECT * FROM lw_group_folder WHERE deleted = 0 AND group_id IS NULL AND parent_folder_id IS NULL AND user_id = ?")
+    List<Folder> findByPrivateGroupAndRootFolder(int userId);
+
+    @SqlQuery("SELECT * FROM lw_group_folder WHERE deleted = 0 AND group_id IS NULL AND parent_folder_id = ? AND user_id = ?")
+    List<Folder> findByPrivateGroupAndFolder(int folderId, int userId);
 
     @SqlUpdate("UPDATE lw_group_folder SET deleted = 1 WHERE folder_id = ?")
     void deleteSoft(int folderId);
@@ -60,12 +66,14 @@ public interface FolderDao extends SqlObject, Serializable {
             folder.setId(id);
             cache.put(folder);
         });
+
+        folder.clearCaches();
     }
 
     class FolderMapper implements RowMapper<Folder> {
         @Override
         public Folder map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            Folder folder = cache.get(rs.getInt("group_id"));
+            Folder folder = cache.get(rs.getInt("folder_id"));
 
             if (folder == null) {
                 folder = new Folder();

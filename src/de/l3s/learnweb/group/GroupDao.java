@@ -99,23 +99,16 @@ public interface GroupDao extends SqlObject, Serializable {
      * This are all groups of his courses except for groups he has already joined + groups that are open to everybody.
      */
     default List<Group> findJoinAble(User user) {
-        String publicCourseClause = "";
-        if (!user.getOrganisation().getOption(Organisation.Option.Groups_Hide_public_groups)) {
-            publicCourseClause = " OR policy_join = 'ALL_LEARNWEB_USERS'";
-        }
-
         ArrayList<Integer> coursesIn = HasId.collectIds(user.getCourses());
         ArrayList<Integer> groupsIn = HasId.collectIds(user.getGroups());
-
-        if (coursesIn.isEmpty() || groupsIn.isEmpty()) {
-            return new ArrayList<>();
-        }
+        groupsIn.add(0); // make sure that the list is not empty
 
         return getHandle().createQuery("SELECT g.* FROM lw_group g JOIN lw_course USING(course_id) WHERE g.deleted = 0 AND g.group_id NOT IN(<groupsIn>) "
-            + "AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(<coursesIn>) " + publicCourseClause + " OR g.policy_join = 'ORGANISATION_MEMBERS' "
+            + "AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(<coursesIn>) <showPublic> OR g.policy_join = 'ORGANISATION_MEMBERS' "
             + "AND organisation_id = :orgId) ORDER BY title")
-            .bindList("groupsIn", groupsIn)
-            .bindList("coursesIn", coursesIn)
+            .define("showPublic", user.getOrganisation().getOption(Organisation.Option.Groups_Hide_public_groups) ? "" : "OR policy_join = 'ALL_LEARNWEB_USERS'")
+            .defineList("groupsIn", groupsIn)
+            .defineList("coursesIn", coursesIn)
             .bind("orgId", user.getOrganisationId())
             .map(new GroupMapper()).list();
     }

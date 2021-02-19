@@ -2,14 +2,20 @@ package de.l3s.learnweb.app;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.time.temporal.ChronoUnit;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.statement.SqlLogger;
+import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import com.zaxxer.hikari.HikariDataSource;
@@ -59,6 +65,8 @@ import de.l3s.learnweb.web.RequestDao;
 @ApplicationScoped
 @SuppressWarnings({"OverlyCoupledClass", "OverlyCoupledMethod"})
 public class DaoProvider {
+    private static final Logger log = LogManager.getLogger(DaoProvider.class);
+    private static final boolean SQL_LOGGGING = true;
 
     private final DataSource dataSource;
     private final Jdbi jdbi;
@@ -107,6 +115,26 @@ public class DaoProvider {
         // add configuration and register mappers if needed http://jdbi.org/
         jdbi = Jdbi.create(dataSource)
             .installPlugin(new SqlObjectPlugin());
+
+        if (SQL_LOGGGING) {
+            SqlLogger sqlLogger = new SqlLogger() {
+                @Override
+                public void logBeforeExecution(final StatementContext context) {
+                    log.debug("Executing query '{}' with params {}", context.getRenderedSql(), context.getBinding().toString());
+                }
+
+                @Override
+                public void logAfterExecution(final StatementContext context) {
+                    log.debug("Query execution time - {} ms", context.getElapsedTime(ChronoUnit.NANOS) / 1000000.0);
+                }
+
+                @Override
+                public void logException(final StatementContext context, final SQLException ex) {
+                    log.error("An SQL Error in query {}", context.getRenderedSql(), ex);
+                }
+            };
+            jdbi.setSqlLogger(sqlLogger);
+        }
 
         announcementDao = jdbi.onDemand(AnnouncementDao.class);
         archiveUrlDao = jdbi.onDemand(ArchiveUrlDao.class);

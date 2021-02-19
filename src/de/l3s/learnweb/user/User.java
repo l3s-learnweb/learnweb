@@ -411,13 +411,10 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         return writeAbleGroups;
     }
 
-    public void joinGroup(int groupId) {
-        Learnweb.dao().getGroupDao().insertUser(groupId, this, getPreferredNotificationFrequency());
-        groups = null; // force reload
-    }
-
     public void joinGroup(Group group) {
-        joinGroup(group.getId());
+        Learnweb.dao().getGroupDao().insertUser(group.getId(), this, getPreferredNotificationFrequency());
+        group.clearCaches(); // force reload members
+        groups = null; // force reload
     }
 
     public void leaveGroup(Group group) {

@@ -232,7 +232,11 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     @Override
     public List<Folder> getSubFolders() {
         if (subFolders == null) {
-            subFolders = Learnweb.dao().getFolderDao().findByGroupIdAndParentFolderId(groupId, id);
+            if (groupId == 0) {
+                subFolders = Learnweb.dao().getFolderDao().findByPrivateGroupAndFolder(id, userId);
+            } else {
+                subFolders = Learnweb.dao().getFolderDao().findByGroupAndFolder(groupId, id);
+            }
         }
 
         return subFolders;

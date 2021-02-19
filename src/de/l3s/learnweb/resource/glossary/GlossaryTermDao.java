@@ -81,14 +81,13 @@ public interface GlossaryTermDao extends SqlObject, Serializable {
         params.put("user_id", term.getUserId());
         params.put("term", term.getTerm());
         params.put("language", term.getLanguage().toLanguageTag());
-        params.put("uses", term.getUses() == null ? "" : String.join(","));
-        params.put("pronounciation", term.getUses());
-        params.put("acronym", term.getPronounciation());
-        params.put("source", term.getAcronym());
-        params.put("phraseology", term.getSource());
-        params.put("term_pasted", term.getPhraseology());
-        params.put("pronounciation_pasted", term.isTermPasted());
-        params.put("lw_glossary_term", term.isPronounciationPasted());
+        params.put("uses", term.getUses() == null ? "" : String.join(",", term.getUses()));
+        params.put("pronounciation", term.getPronounciation());
+        params.put("acronym", term.getAcronym());
+        params.put("source", term.getSource());
+        params.put("phraseology", term.getPhraseology());
+        params.put("term_pasted", term.isTermPasted());
+        params.put("pronounciation_pasted", term.isPronounciationPasted());
         params.put("acronym_pasted", term.isAcronymPasted());
         params.put("phraseology_pasted", term.isPhraseologyPasted());
 
