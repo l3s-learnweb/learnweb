@@ -38,7 +38,7 @@ class AnnouncementDaoTest {
     void findLastCreated() {
         List<Announcement> announcements = announcementDao.findLastCreated(3);
         assertFalse(announcements.isEmpty());
-        assertArrayEquals(new Integer[] {7, 4, 9}, announcements.stream().map(Announcement::getId).sorted().toArray(Integer[]::new));
+        assertArrayEquals(new Integer[] {7, 4, 9}, announcements.stream().map(Announcement::getId).toArray(Integer[]::new));
     }
 
     @Test
