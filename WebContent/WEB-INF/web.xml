@@ -41,11 +41,18 @@
         <param-value>***REMOVED***</param-value>
     </context-param>
 
+    <!-- OmniFaces VersionedResourceHandler https://showcase.omnifaces.org/resourcehandlers/VersionedResourceHandler -->
+    <context-param>
+        <param-name>org.omnifaces.VERSIONED_RESOURCE_HANDLER_VERSION</param-name>
+        <!-- Version string could be any string here, or taken from @Named bean -->
+        <param-value>${project.version}</param-value>
+    </context-param>
+
     <!-- Check this recommendations https://primefaces.github.io/primefaces/8_0/#/core/performance?id=recommended-configuration -->
-    <!-- Also this page provides description for everything https://myfaces.apache.org/core23/myfaces-impl/webconfig.html -->
+    <!-- Also this page provides description for everything https://myfaces.apache.org/#/core23 -->
     <context-param>
         <param-name>org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES</param-name>
-        <param-value>1209600000</param-value>
+        <param-value>1209600000</param-value> <!-- 14 days -->
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION</param-name>
