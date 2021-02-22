@@ -43,7 +43,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_organisation WHERE title = ?")
     Optional<Organisation> findByTitle(String title);
 
-    @SqlQuery("SELECT DISTINCT author FROM lw_course JOIN lw_group USING(course_id) JOIN lw_resource USING(group_id) WHERE organisation_id = ?")
+    @SqlQuery("SELECT DISTINCT r.author FROM lw_course c JOIN lw_group g USING(course_id) JOIN lw_resource r ON r.group_id = g.group_id WHERE c.organisation_id = ?")
     List<String> findAuthors(int organisationId);
 
     default void save(Organisation organisation) {
