@@ -7,11 +7,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,23 +16,10 @@ import com.google.gson.Gson;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.office.converter.model.ConverterRequest;
 import de.l3s.learnweb.resource.office.converter.model.ConverterResponse;
+import de.l3s.util.UrlHelper;
 
 public final class ConverterService {
     private static final Logger log = LogManager.getLogger(ConverterService.class);
-
-    private static final TrustManager[] trustAllCerts = {
-        new X509TrustManager() {
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-            }
-
-            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-            }
-        }
-    };
 
     public static String convert(final String converterService, final File file) {
         return convert(converterService, createConverterRequest(file));
@@ -45,12 +27,8 @@ public final class ConverterService {
 
     public static String convert(final String converterService, final ConverterRequest converterRequest) {
         try {
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts, new SecureRandom());
-
             Gson gson = new Gson();
-            // previously we used unsafe ssl client, but now it seems that certificate is valid and all right
-            HttpClient client = HttpClient.newBuilder().sslContext(sslContext).build();
+            HttpClient client = HttpClient.newBuilder().sslContext(UrlHelper.getUnsafeSSLContext()).build();
 
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(converterService))

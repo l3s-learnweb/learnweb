@@ -25,13 +25,8 @@
             <p:panel header="#{msg.manual_ban}">
                 <h:form id="banformreg">
                     <div class="form-group">
-                        <p:outputLabel for="@next" value="#{msg.name_or_ip}:"/>
-                        <p:inputText value="#{adminBanlistBean.name}" required="true"/>
-                        <p:message for="@previous"/>
-                        <p:selectOneRadio value="#{adminBanlistBean.type}" styleClass="mt-3" required="true">
-                            <f:selectItem itemValue="user" itemLabel="User"/>
-                            <f:selectItem itemValue="ip" itemLabel="IP"/>
-                        </p:selectOneRadio>
+                        <p:outputLabel for="@next" value="#{msg.ip_addr}:"/>
+                        <p:inputText value="#{adminBanlistBean.addr}" required="true"/>
                         <p:message for="@previous"/>
                     </div>
 
@@ -69,18 +64,12 @@
                      paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
             <f:facet name="header">#{msg.banlist}</f:facet>
 
-            <p:column headerText="#{msg.name}" sortBy="#{ban.name}">
-                <h:outputText value="#{ban.name}"/>
+            <p:column headerText="#{msg.ip_addr}" sortBy="#{ban.addr}">
+                <h:outputText value="#{ban.addr}"/>
             </p:column>
 
-            <p:column headerText="#{msg.bannedon}" sortBy="#{ban.bannedOn}">
-                <h:outputText value="#{ban.bannedOn}">
-                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
-                </h:outputText>
-            </p:column>
-
-            <p:column headerText="#{msg.bandate}" sortBy="#{ban.bannedUntil}">
-                <h:outputText value="#{ban.bannedUntil}">
+            <p:column headerText="#{msg.bandate}" sortBy="#{ban.expires}">
+                <h:outputText value="#{ban.expires}">
                     <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
                 </h:outputText>
             </p:column>
@@ -93,13 +82,19 @@
                 <h:outputText value="#{ban.attempts}"/>
             </p:column>
 
+            <p:column headerText="#{msg.bannedon}" sortBy="#{ban.createdAt}">
+                <h:outputText value="#{ban.createdAt}">
+                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
+                </h:outputText>
+            </p:column>
+
             <p:column headerText="#{msg.options}" styleClass="td-text-end">
                 <p:commandLink onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()"
-                               actionListener="#{adminBanlistBean.onUnban(ban.name)}" process="@this" update=":banlist"
+                               actionListener="#{adminBanlistBean.onUnban(ban.addr)}" process="@this" update=":banlist"
                                styleClass="icon-link" title="#{msg.unban}">
                     <i class="fas fa-fw fa-ban text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.unban}"/>
-                    <p:confirm message="#{msg.unban} #{ban.name}?"/>
+                    <p:confirm message="#{msg.unban} #{ban.addr}?"/>
                 </p:commandLink>
             </p:column>
         </p:dataTable>
@@ -111,13 +106,8 @@
         <p:dialog header="Ban" widgetVar="banDialog" modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
             <h:form class="banform" id="banDialogForm">
                 <div class="form-group">
-                    <p:outputLabel for="@next" value="#{msg.name_or_ip}:"/>
-                    <p:inputText value="#{adminBanlistBean.name}" required="true"/>
-                    <p:message for="@previous"/>
-                    <p:selectOneRadio value="#{adminBanlistBean.type}" styleClass="mt-3" required="true">
-                        <f:selectItem itemValue="user" itemLabel="User"/>
-                        <f:selectItem itemValue="ip" itemLabel="IP"/>
-                    </p:selectOneRadio>
+                    <p:outputLabel for="@next" value="#{msg.ip_addr}:"/>
+                    <p:inputText value="#{adminBanlistBean.addr}" required="true"/>
                     <p:message for="@previous"/>
                 </div>
 

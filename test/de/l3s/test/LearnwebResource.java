@@ -13,10 +13,10 @@ class LearnwebResource implements ExtensionContext.Store.CloseableResource {
     private final Learnweb learnweb;
 
     LearnwebResource(final JdbcConnectionPool dataSource) {
-        ConfigProvider configProvider = new ConfigProvider();
+        ConfigProvider configProvider = new ConfigProvider(false);
         configProvider.setServerUrl("https://learnweb.l3s.uni-hannover.de");
 
-        DaoProvider daoProvider = new DaoProvider(dataSource);
+        DaoProvider daoProvider = new DaoProvider(configProvider, dataSource);
         learnweb = new Learnweb(configProvider, daoProvider);
 
         Flyway flyway = Flyway.configure()

@@ -14,6 +14,7 @@ import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
 import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.DaoProvider;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
@@ -236,5 +237,9 @@ public abstract class ApplicationBean {
 
     protected DaoProvider dao() {
         return getLearnweb().getDaoProvider();
+    }
+
+    protected ConfigProvider config() {
+        return getLearnweb().getConfigProvider();
     }
 }

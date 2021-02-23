@@ -58,34 +58,29 @@
 
                     <div class="layout-main d-flex flex-column" id="main">
                         <main class="layout-main-content #{extraPageClass}">
-                            <ui:fragment rendered="#{config.maintenanceMode}">
-                                <h2 class="text-danger">#{msg['error_pages.unavailable_default_description']}</h2>
-                            </ui:fragment>
-                            <ui:fragment rendered="#{not config.maintenanceMode}">
-                                <p:messages id="message" showDetail="false" showSummary="true" escape="false" globalOnly="true">
-                                    <p:autoUpdate />
-                                </p:messages>
+                            <p:messages id="message" showDetail="false" showSummary="true" escape="false" globalOnly="true">
+                                <p:autoUpdate />
+                            </p:messages>
 
-                                <ui:fragment rendered="#{not hideBreadcrumbs}">
-                                    <h:outputScript name="learnweb/js/breadcrumb.js" target="body"/>
+                            <ui:fragment rendered="#{not hideBreadcrumbs}">
+                                <h:outputScript name="learnweb/js/breadcrumb.js" target="body"/>
 
-                                    <div class="breadcrumb mb-3">
-                                        <ui:insert name="breadcrumb"/>
+                                <div class="breadcrumb mb-3">
+                                    <ui:insert name="breadcrumb"/>
 
-                                        <div class="ms-auto">
-                                            <ui:insert name="breadcrumb_right"/>
-                                        </div>
+                                    <div class="ms-auto">
+                                        <ui:insert name="breadcrumb_right"/>
                                     </div>
-                                </ui:fragment>
-
-                                <noscript>
-                                    <p:panel header="#{msg['error']}" styleClass="ui-widget-danger">
-                                        <h:outputText styleClass="h5 d-block" value="#{msg['javascript_disabled']}" escape="false"/>
-                                    </p:panel>
-                                </noscript>
-
-                                <ui:insert name="center_layout"/>
+                                </div>
                             </ui:fragment>
+
+                            <noscript>
+                                <p:panel header="#{msg['error']}" styleClass="ui-widget-danger">
+                                    <h:outputText styleClass="h5 d-block" value="#{msg['javascript_disabled']}" escape="false"/>
+                                </p:panel>
+                            </noscript>
+
+                            <ui:insert name="center_layout"/>
                         </main>
 
                         <ui:include src="parts/footer.xhtml"/>

@@ -27,7 +27,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
-import de.l3s.learnweb.resource.search.solrClient.FileInspector;
+import de.l3s.util.UrlHelper;
 
 public class SpeechRepositoryCrawler implements Runnable {
     private static final Logger log = LogManager.getLogger(SpeechRepositoryCrawler.class);
@@ -207,7 +207,7 @@ public class SpeechRepositoryCrawler implements Runnable {
         resource.setUserId(7727);
 
         // save preview images
-        Learnweb.getInstance().getResourcePreviewMaker().processImage(resource, FileInspector.openStream(resource.getMaxImageUrl()));
+        Learnweb.getInstance().getResourcePreviewMaker().processImage(resource, UrlHelper.getInputStream(resource.getMaxImageUrl()));
 
         resource.save();
     }

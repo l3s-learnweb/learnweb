@@ -57,7 +57,7 @@ function loadScript(scriptUrl, callback) {
 
 function loadEditorScript(officeServerUrl) {
   if (!editorFrames.loaded) {
-    loadScript(`${officeServerUrl}/apps/api/documents/api.js`, () => {
+    loadScript(`${officeServerUrl}/web-apps/apps/api/documents/api.js`, () => {
       editorFrames.loaded = true;
 
       editorFrames.push = (args) => {

@@ -6,36 +6,36 @@
 
 	<ui:fragment rendered="#{userBean.languageSwitchEnabled}">
 		<h:outputLink id="languageSwitchButton" value="#{userBean.bannerLink}" styleClass="header-element lang-button" onclick="return false;">
-			<img src="#{request.contextPath}/resources/images/flags/flag_#{userBean.localeCode}.png" alt="Language switch"/>
+			<h:graphicImage name="images/flags/flag_#{userBean.localeCode}.png" alt="Language switch"/>
 		</h:outputLink>
 
 		<p:menu overlay="true" trigger="languageSwitchButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
 			<p:menuitem action="#{userBean.setLocaleCode('de')}">
-				<img src="#{request.contextPath}/resources/images/flags/flag_de.png" alt=""/>
+				<h:graphicImage name="images/flags/flag_de.png" alt="#{msg.language_de}"/>
 				<span>Deutsch</span>
 			</p:menuitem>
 			<p:menuitem action="#{userBean.setLocaleCode('en')}">
-				<img src="#{request.contextPath}/resources/images/flags/flag_en.png" alt=""/>
+				<h:graphicImage name="images/flags/flag_en.png" alt="#{msg.language_en}"/>
 				<span>English</span>
 			</p:menuitem>
 			<p:menuitem action="#{userBean.setLocaleCode('es')}">
-				<img src="#{request.contextPath}/resources/images/flags/flag_es.png" alt=""/>
+				<h:graphicImage name="images/flags/flag_es.png" alt="#{msg.language_es}"/>
 				<span>Español</span>
 			</p:menuitem>
 			<p:menuitem action="#{userBean.setLocaleCode('it')}">
-				<img src="#{request.contextPath}/resources/images/flags/flag_it.png" alt=""/>
+				<h:graphicImage name="images/flags/flag_it.png" alt="#{msg.language_it}"/>
 				<span>Italiano</span>
 			</p:menuitem>
 			<p:menuitem action="#{userBean.setLocaleCode('pt')}">
-				<img src="#{request.contextPath}/resources/images/flags/flag_pt.png" alt=""/>
+				<h:graphicImage name="images/flags/flag_pt.png" alt="#{msg.language_pt}"/>
 				<span>Português</span>
 			</p:menuitem>
 			<p:menuitem action="#{userBean.setLocaleCode('uk')}">
-				<img src="#{request.contextPath}/resources/images/flags/flag_uk.png" alt="" />
+				<h:graphicImage name="images/flags/flag_uk.png" alt="#{msg.language_uk}"/>
 				<span>Українська</span>
 			</p:menuitem>
 			<p:menuitem action="#{userBean.setLocaleCode('xx')}" rendered="#{userBean.admin}">
-				<img src="#{request.contextPath}/resources/images/flags/flag_xx.png" alt=""/>
+				<h:graphicImage name="images/flags/flag_xx.png" alt="Show message keys"/>
 				<span>Developer</span>
 			</p:menuitem>
 		</p:menu>

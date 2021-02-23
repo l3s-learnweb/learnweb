@@ -65,9 +65,6 @@ import de.l3s.learnweb.web.RequestDao;
 @ApplicationScoped
 @SuppressWarnings({"OverlyCoupledClass", "OverlyCoupledMethod"})
 public class DaoProvider {
-    private static final Logger log = LogManager.getLogger(DaoProvider.class);
-    private static final boolean SQL_LOGGGING = true;
-
     private final DataSource dataSource;
     private final Jdbi jdbi;
 
@@ -104,36 +101,20 @@ public class DaoProvider {
 
     @Inject
     public DaoProvider(final ConfigProvider configProvider) {
-        this(createDataSource(configProvider));
+        this(configProvider, createDataSource(configProvider));
 
         migrateDatabase();
     }
 
-    public DaoProvider(final DataSource dataSource) {
+    public DaoProvider(final ConfigProvider configProvider, final DataSource dataSource) {
         this.dataSource = dataSource;
 
         // add configuration and register mappers if needed http://jdbi.org/
         jdbi = Jdbi.create(dataSource)
             .installPlugin(new SqlObjectPlugin());
 
-        if (SQL_LOGGGING) {
-            SqlLogger sqlLogger = new SqlLogger() {
-                @Override
-                public void logBeforeExecution(final StatementContext context) {
-                    log.debug("Executing query '{}' with params {}", context.getRenderedSql(), context.getBinding().toString());
-                }
-
-                @Override
-                public void logAfterExecution(final StatementContext context) {
-                    log.debug("Query execution time - {} ms", context.getElapsedTime(ChronoUnit.NANOS) / 1000000.0);
-                }
-
-                @Override
-                public void logException(final StatementContext context, final SQLException ex) {
-                    log.error("An SQL Error in query {}", context.getRenderedSql(), ex);
-                }
-            };
-            jdbi.setSqlLogger(sqlLogger);
+        if (configProvider.getPropertyBoolean("mysql_log_queries")) {
+            jdbi.setSqlLogger(new LearnwebSqlLogger());
         }
 
         announcementDao = jdbi.onDemand(AnnouncementDao.class);
@@ -341,5 +322,24 @@ public class DaoProvider {
     @Produces
     public WaybackUrlDao getWaybackUrlDao() {
         return waybackUrlDao;
+    }
+
+    private static class LearnwebSqlLogger implements SqlLogger {
+        private static final Logger log = LogManager.getLogger(LearnwebSqlLogger.class);
+
+        @Override
+        public void logBeforeExecution(final StatementContext context) {
+            log.debug("Executing query '{}' with params {}", context.getRenderedSql(), context.getBinding().toString());
+        }
+
+        @Override
+        public void logAfterExecution(final StatementContext context) {
+            log.debug("Query execution time - {} ms", context.getElapsedTime(ChronoUnit.NANOS) / 1000000.0);
+        }
+
+        @Override
+        public void logException(final StatementContext context, final SQLException ex) {
+            log.error("An SQL Error in query {}", context.getRenderedSql(), ex);
+        }
     }
 }

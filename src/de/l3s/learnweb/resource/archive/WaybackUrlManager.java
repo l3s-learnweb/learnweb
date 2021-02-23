@@ -7,9 +7,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.ProtocolException;
-import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
@@ -22,7 +20,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -35,13 +32,8 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import javax.inject.Inject;
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -406,100 +398,17 @@ public final class WaybackUrlManager {
     }
 
     public static void enableRelaxedSSLconnection() {
-        /*
-        System.setProperty("javax.net.debug", "all");
-        System.setProperty("jsse.enableSNIExtension", "false");
-        System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,SSLv3");
-        */
-        /* Start of Fix */
-        TrustManager[] trustAllCerts = {
-            new X509TrustManager() {
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-
-                @Override
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }
-        };
-
-        SSLContext sc;
         try {
-            sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            // Install relaxed TrustManager
+            HttpsURLConnection.setDefaultSSLSocketFactory(UrlHelper.getUnsafeSSLContext().getSocketFactory());
+            // Install the all-trusting host verifier
+            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        //HttpsURLConnection.setDefaultSSLSocketFactory(new SSLSocketFactoryWrapper((SSLSocketFactory) SSLSocketFactory.getDefault()));
-
-        // Create all-trusting host name verifier
-        HostnameVerifier allHostsValid = (hostname, session) -> true;
-        // Install the all-trusting host verifier
-        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        /* End of the fix*/
     }
 
     private static class RecordNotFoundException extends Exception {
         private static final long serialVersionUID = -1754500933829531955L;
-    }
-
-    public static class SSLSocketFactoryWrapper extends SSLSocketFactory {
-
-        private final SSLSocketFactory factory;
-
-        public SSLSocketFactoryWrapper(SSLSocketFactory factory) {
-            this.factory = factory;
-        }
-
-        @Override
-        public String[] getDefaultCipherSuites() {
-            return factory.getDefaultCipherSuites();
-        }
-
-        @Override
-        public String[] getSupportedCipherSuites() {
-            return factory.getSupportedCipherSuites();
-        }
-
-        /*
-        @Override
-        public Socket createSocket() throws IOException {
-            return  factory.createSocket();
-        }
-        */
-
-        @Override
-        public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException {
-            return factory.createSocket(socket, host, port, autoClose);
-        }
-
-        @Override
-        public Socket createSocket(String host, int port) throws IOException {
-            return factory.createSocket(host, port);
-        }
-
-        @Override
-        public Socket createSocket(InetAddress host, int port) throws IOException {
-            return factory.createSocket(host, port);
-        }
-
-        @Override
-        public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
-            return factory.createSocket(host, port, localHost, localPort);
-        }
-
-        @Override
-        public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
-            return factory.createSocket(address, port, localAddress, localPort);
-        }
-
     }
 }

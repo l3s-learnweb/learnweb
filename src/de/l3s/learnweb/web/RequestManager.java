@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -80,9 +81,11 @@ public class RequestManager implements Serializable {
 
     private void loadWhitelist() {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("whitelist.txt")) {
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-                try (Stream<String> stream = bufferedReader.lines()) {
-                    stream.forEach(whitelist::add);
+            if (inputStream != null) {
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                    try (Stream<String> stream = bufferedReader.lines()) {
+                        stream.forEach(whitelist::add);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -96,7 +99,7 @@ public class RequestManager implements Serializable {
      * Loads ban lists from the database. Should be called by every constructor.
      */
     private void loadBanLists() {
-        banDao.getBans().forEach(ban -> banlist.put(ban.getName(), ban));
+        banDao.findAll().forEach(ban -> banlist.put(ban.getAddr(), ban));
 
         log.debug("Banlist loaded. Entries: {}", banlist.size());
     }
@@ -211,21 +214,13 @@ public class RequestManager implements Serializable {
         return aggrRequestsUpdated;
     }
 
-    public LocalDateTime getBannedUntil(String name) {
-        Ban ban = banlist.get(name);
-        if (ban == null) {
-            return null;
-        }
-        return ban.getBannedUntil();
+    public boolean isBanned(String addr) {
+        Ban ban = banlist.get(addr);
+        return ban != null && ban.getExpires() != null && ban.getExpires().isAfter(LocalDateTime.now());
     }
 
-    public boolean isBanned(String name) {
-        LocalDateTime ipBan = getBannedUntil(name);
-        return ipBan != null && ipBan.isAfter(LocalDateTime.now());
-    }
-
-    public boolean isCaptchaRequired(String name) {
-        Ban ban = banlist.get(name);
+    public boolean isCaptchaRequired(String addr) {
+        Ban ban = banlist.get(addr);
         if (ban == null) {
             return false;
         }
@@ -263,7 +258,7 @@ public class RequestManager implements Serializable {
      * Checks whether the currently accessing IP either has a high request rate (over 300).
      */
     private void analyzeAccess(Ban ban, boolean isIP) {
-        if (isIP && whitelist.contains(ban.getName()) && ban.getAttempts() < 300) {
+        if (isIP && whitelist.contains(ban.getAddr()) && ban.getAttempts() < 300) {
             ban.setAllowedAttempts(ATTEMPTS_STEP);
             return;
         }
@@ -273,11 +268,11 @@ public class RequestManager implements Serializable {
         List<LoginAttempt> list;
         if (isIP) {
             list = attemptedLogins.stream()
-                .filter(x -> x.getIp().equals(ban.getName()) && x.getDateTime().isAfter(threshold))
+                .filter(x -> x.getIp().equals(ban.getAddr()) && x.getDateTime().isAfter(threshold))
                 .collect(Collectors.toList());
         } else {
             list = attemptedLogins.stream()
-                .filter(x -> x.getUsername().equals(ban.getName()) && x.getDateTime().isAfter(threshold))
+                .filter(x -> x.getUsername().equals(ban.getAddr()) && x.getDateTime().isAfter(threshold))
                 .collect(Collectors.toList());
         }
 
@@ -292,7 +287,7 @@ public class RequestManager implements Serializable {
      * Adds the suspicious acc data to the suspicious list and sends admin an email every 30 entries.
      */
     private void flagSuspicious(Ban ban) {
-        suspiciousRequests.addAll(getRequestsByIp(ban.getName()));
+        suspiciousRequests.addAll(getRequestsByIp(ban.getAddr()));
 
         if (suspiciousRequests.size() > 30) {
             sendMail();
@@ -360,25 +355,25 @@ public class RequestManager implements Serializable {
         Ban usernameData = banlist.get(username);
 
         if (ipData != null) {
-            ipData.reset();
+            ipData.resetAttempts();
         }
 
         if (usernameData != null) {
-            usernameData.reset();
+            usernameData.resetAttempts();
         }
 
         attemptedLogins.add(new LoginAttempt(ip, username, true));
     }
 
-    public void clearBan(String name) {
-        banDao.deleteBanByName(name);
+    public void clearBan(String addr) {
+        banDao.delete(addr);
 
-        banlist.remove(name);
-        log.debug("Unbanned {}", name);
+        banlist.remove(addr);
+        log.debug("Unbanned {}", addr);
     }
 
     public void clearOutdatedBans() {
-        banDao.deleteOutdatedBans();
+        banDao.deleteOutdated();
 
         banlist.clear();
         loadBanLists();
@@ -391,31 +386,19 @@ public class RequestManager implements Serializable {
     }
 
     /**
-     * Same as {@link #ban(String, String)}, but do not save the name to database.
-     */
-    public void tempBan(String ipAddr, String reason) {
-        Ban ban = banlist.computeIfAbsent(ipAddr, Ban::new);
-
-        ban.setType("temp");
-        ban.ban(365, 0, 0);
-        ban.setReason(reason);
-    }
-
-    /**
      * A default ban, to ban the given IP address for half a year.
      */
-    public void ban(String ipAddr, String reason) {
-        ban(ipAddr, 182, 0, 0, true, reason);
+    public void ban(String addr, String reason) {
+        ban(addr, reason, Duration.ofDays(183));
     }
 
-    public void ban(String name, int banDays, int banHours, int banMinutes, boolean isIP, String reason) {
-        Ban ban = banlist.computeIfAbsent(name, Ban::new);
-
-        ban.setType(isIP ? "IP" : "user");
-        ban.ban(banDays, banHours, banMinutes);
+    public void ban(String addr, String reason, Duration amount) {
+        Ban ban = banlist.computeIfAbsent(addr, Ban::new);
         ban.setReason(reason);
+        ban.setExpires(LocalDateTime.now().plus(amount));
+        ban.setCreatedAt(LocalDateTime.now());
 
         banDao.save(ban);
-        log.info("Banned {} until {}", ban.getName(), ban.getBannedUntil());
+        log.info("Banned {} until {}", ban.getAddr(), ban.getExpires());
     }
 }

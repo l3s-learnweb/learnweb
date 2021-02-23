@@ -39,6 +39,7 @@ import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.UrlHelper;
 
 @Named
 @ViewScoped
@@ -412,14 +413,14 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             }
 
             //Getting mime type
-            FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(FileInspector.openStream(archiveUrl), resource.getFileName());
+            FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(UrlHelper.getInputStream(archiveUrl), resource.getFileName());
             String type = info.getMimeType().substring(0, info.getMimeType().indexOf('/'));
             if (type.equals("application")) {
                 type = info.getMimeType().substring(info.getMimeType().indexOf('/') + 1);
             }
 
             if (type.equalsIgnoreCase("pdf")) {
-                getLearnweb().getResourcePreviewMaker().processPdf(resource, FileInspector.openStream(archiveUrl));
+                getLearnweb().getResourcePreviewMaker().processPdf(resource, UrlHelper.getInputStream(archiveUrl));
             } else {
                 getLearnweb().getResourcePreviewMaker().processArchivedVersion(resource, archiveUrl);
             }

@@ -1,12 +1,9 @@
 CREATE TABLE IF NOT EXISTS `lw_bans` (
-    `id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'TODO: rename to ban_id',
-    `type` varchar(10) NOT NULL DEFAULT 'IP' COMMENT 'TODO: change to enum(ip, user) or remove and use only IP',
-    `name` varchar(64) NOT NULL COMMENT 'TODO: change to ip, if needed add user_id column additionally',
-    `bandate` datetime DEFAULT NULL,
-    `bannedon` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'TODO: rename to created_at',
+    `addr` varchar(64) NOT NULL PRIMARY KEY,
+    `expires` datetime DEFAULT NULL,
     `attempts` int(11) DEFAULT NULL,
     `reason` varchar(200) DEFAULT NULL,
-    UNIQUE KEY `lw_bans_name` (`name`)
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_bounces` (

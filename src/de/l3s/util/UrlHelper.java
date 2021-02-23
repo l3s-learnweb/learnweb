@@ -1,11 +1,23 @@
 package de.l3s.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +27,20 @@ public final class UrlHelper {
     private static final Logger log = LogManager.getLogger(UrlHelper.class);
 
     public static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0";
+
+    private static final TrustManager[] trustAllCerts = {
+        new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+            }
+        }
+    };
 
     /**
      * This function checks if a given String is a valid url.
@@ -51,6 +77,31 @@ public final class UrlHelper {
         }
 
         return null;
+    }
+
+    public static SSLContext getUnsafeSSLContext() throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext context = SSLContext.getInstance("TLS");
+        context.init(null, trustAllCerts, new SecureRandom());
+        return context;
+    }
+
+    public static InputStream getInputStream(String url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setInstanceFollowRedirects(true);
+        connection.setRequestProperty("User-Agent", USER_AGENT);
+        return connection.getInputStream();
+    }
+
+    public static boolean isOnline(String url) {
+        try {
+            HttpClient client = HttpClient.newBuilder().sslContext(getUnsafeSSLContext()).build();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.statusCode() == HttpURLConnection.HTTP_OK;
+        } catch (IOException | NoSuchAlgorithmException | KeyManagementException | InterruptedException tout) {
+            return false;
+        }
     }
 
     public static String getOrigin(final String input) {

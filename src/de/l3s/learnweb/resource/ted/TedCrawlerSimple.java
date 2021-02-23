@@ -36,10 +36,10 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
-import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 import de.l3s.util.Misc;
+import de.l3s.util.UrlHelper;
 
 public class TedCrawlerSimple implements Runnable {
     private static final Logger log = LogManager.getLogger(TedCrawlerSimple.class);
@@ -265,7 +265,7 @@ public class TedCrawlerSimple implements Runnable {
             tedResource.setTranscript("");
 
             try {
-                Learnweb.getInstance().getResourcePreviewMaker().processImage(tedResource, FileInspector.openStream(tedResource.getMaxImageUrl()));
+                Learnweb.getInstance().getResourcePreviewMaker().processImage(tedResource, UrlHelper.getInputStream(tedResource.getMaxImageUrl()));
                 tedResource.setGroup(tedGroup);
                 tedResource.setUser(admin);
                 tedResource.save();

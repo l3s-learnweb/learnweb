@@ -12,61 +12,42 @@ import java.time.LocalDateTime;
 public class Ban implements Serializable {
     private static final long serialVersionUID = -2074629486516643542L;
 
-    private String type;
-    private String name;
+    private final String addr;
     private String reason;
     private int attempts;
-    private LocalDateTime bannedUntil; // TODO rename: bandate
-    private LocalDateTime bannedOn;
+    private LocalDateTime expires;
+    private LocalDateTime createdAt;
 
     private int allowedAttempts;
 
     /**
      * Default constructor for new data.
      */
-    public Ban(String name) {
-        this.name = name;
+    public Ban(String addr) {
+        this.addr = addr;
         this.attempts = 0;
         this.allowedAttempts = 50;
     }
 
-    /**
-     * Resets login attempts.
-     */
-    public void reset() {
+    public void logAttempt() {
+        attempts++;
+        allowedAttempts--;
+    }
+
+    public void resetAttempts() {
         attempts = 0;
     }
 
-    /**
-     * Bans the user for a given amount of minutes starting from now.
-     */
-    public void ban(int days, int hours, int minutes) {
-        setBannedUntil(LocalDateTime.now().minusDays(days).minusHours(hours).minusMinutes(minutes));
-        setBannedOn(LocalDateTime.now());
+    public String getAddr() {
+        return addr;
     }
 
-    /**
-     * Resets ban time and banned on date.
-     */
-    public void unban() {
-        bannedUntil = null;
-        bannedOn = null;
+    public LocalDateTime getExpires() {
+        return expires;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(final String type) {
-        this.type = type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setExpires(final LocalDateTime expires) {
+        this.expires = expires;
     }
 
     public String getReason() {
@@ -82,7 +63,15 @@ public class Ban implements Serializable {
     }
 
     public void setAttempts(int attempts) {
-        this.attempts = Math.max(attempts, 0);
+        this.attempts = attempts;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public int getAllowedAttempts() {
@@ -91,26 +80,5 @@ public class Ban implements Serializable {
 
     public void setAllowedAttempts(int allowedAttempts) {
         this.allowedAttempts = allowedAttempts;
-    }
-
-    public void logAttempt() {
-        attempts++;
-        allowedAttempts--;
-    }
-
-    public LocalDateTime getBannedUntil() {
-        return bannedUntil;
-    }
-
-    public void setBannedUntil(LocalDateTime bannedUntil) {
-        this.bannedUntil = bannedUntil;
-    }
-
-    public LocalDateTime getBannedOn() {
-        return bannedOn;
-    }
-
-    public void setBannedOn(LocalDateTime bannedOn) {
-        this.bannedOn = bannedOn;
     }
 }

@@ -134,7 +134,7 @@ public final class Learnweb {
      * This method should be used, if you want to create a Learnweb instance without Servlet context.
      */
     public static Learnweb createStatic() {
-        ConfigProvider configProvider = new ConfigProvider();
+        ConfigProvider configProvider = new ConfigProvider(false);
         configProvider.setServerUrl("https://learnweb.l3s.uni-hannover.de");
 
         DaoProvider daoProvider = new DaoProvider(configProvider);

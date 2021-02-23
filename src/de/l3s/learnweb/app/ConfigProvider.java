@@ -11,6 +11,9 @@ import java.util.Properties;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.DeploymentException;
 import javax.inject.Named;
+import javax.naming.InitialContext;
+import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,22 +27,64 @@ public class ConfigProvider implements Serializable {
     private static final long serialVersionUID = 8999792363825397979L;
     private static final Logger log = LogManager.getLogger(ConfigProvider.class);
 
+    /**
+     * All the application configuration stored here.
+     */
     private final Properties properties = new Properties();
 
-    private final boolean autoServerUrl;
+    /**
+     * An version of the application from pom.xml (extracted from web.xml, maven should put it there on build).
+     */
+    private String version;
+
+    /**
+     * A server url, extracted from configuration, set manually or detected automatically.
+     * In general, it is bad practice to use it inside application, except for generating absolute links, e.g. for emails.
+     */
     private String serverUrl;
 
-    private File fileManagerFolder;
-    private Boolean maintenanceMode = false;
-    private Boolean developmentMode;
+    /**
+     * Indicated whether the application is started in Servlet container with CDI or initialized manually.
+     * E.g. {@code true} on Tomcat and {@code false} in tests or maintenance tasks.
+     */
+    private final boolean servlet;
 
+    /**
+     * Indicates whether the application is started in development mode according to javax.faces.PROJECT_STAGE in web.xml.
+     * It is managed by Maven, {@code false} on build in `prod` profile, {@code true} otherwise. Always {@code false} when {@link #servlet} is {@code false}.
+     */
+    private Boolean development;
+
+    /**
+     * Used to "hide" the application content from customers during maintenance, can be changed via admin panel.
+     */
+    private boolean maintenance = false;
+
+    private File fileManagerFolder;
+
+    /**
+     * @deprecated you should not use this constructor, it is intended to be used by CDI when creating an instance of the class
+     */
+    @Deprecated
     public ConfigProvider() {
+        this(true);
+    }
+
+    public ConfigProvider(final boolean servlet) {
         loadProperties();
         loadEnvironmentVariables();
 
+        this.servlet = servlet;
+        if (servlet) {
+            loadJndiVariables();
+        } else {
+            development = true;
+            version = "dev";
+        }
+
         // load server URL from config file or guess it
         String serverUrl = properties.getProperty("server_url");
-        autoServerUrl = serverUrl == null || "auto".equalsIgnoreCase(serverUrl);
+        boolean autoServerUrl = serverUrl == null || "auto".equalsIgnoreCase(serverUrl);
 
         if (!autoServerUrl) {
             if (serverUrl.startsWith("http")) {
@@ -60,12 +105,6 @@ public class ConfigProvider implements Serializable {
                 properties.load(localProperties);
                 log.warn("Local properties loaded.");
             }
-
-            InputStream testProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_test.properties");
-            if (testProperties != null) {
-                properties.load(testProperties);
-                log.warn("Test properties loaded.");
-            }
         } catch (IOException e) {
             log.error("Unable to load properties file(s)", e);
         }
@@ -74,11 +113,11 @@ public class ConfigProvider implements Serializable {
     private void loadEnvironmentVariables() {
         try {
             Map<String, String> env = System.getenv();
-            env.forEach((key, value) -> {
+            env.forEach((key, propValue) -> {
                 if (key.startsWith("LEARNWEB_")) {
                     String propKey = key.substring(9).toLowerCase(Locale.ROOT);
-                    log.debug("Found environment variable {}({}): {}", key, propKey, value);
-                    properties.setProperty(propKey, value);
+                    log.debug("Found environment variable {}: {} (original name {})", propKey, propValue, key);
+                    properties.setProperty(propKey, propValue);
                 }
             });
         } catch (Exception e) {
@@ -86,16 +125,48 @@ public class ConfigProvider implements Serializable {
         }
     }
 
+    private void loadJndiVariables() {
+        try {
+            String namespace = "java:comp/env/";
+            InitialContext ctx = new InitialContext();
+            NamingEnumeration<NameClassPair> list = ctx.list(namespace);
+
+            while (list.hasMore()) {
+                NameClassPair next = list.next();
+
+                String propKey = next.getName();
+                String key = namespace + propKey;
+                String propValue = ctx.lookup(key).toString();
+
+                log.debug("Found JNDI variable {}: {} (original name {})", propKey, propValue, key);
+                properties.setProperty(propKey, propValue);
+            }
+
+            list.close();
+            ctx.close();
+        } catch (Exception e) {
+            log.error("Unable to load JNDI variables", e);
+        }
+    }
+
     public String getProperty(final String key) {
         return properties.getProperty(key);
     }
 
-    public String getProperty(final String key, final String defaultValue) {
-        return properties.getProperty(key, defaultValue);
+    public boolean getPropertyBoolean(final String key) {
+        return "true".equalsIgnoreCase(properties.getProperty(key));
+    }
+
+    public String getVersion() {
+        if (version == null) {
+            version = Faces.getInitParameterOrDefault("project.version", "dev");
+        }
+        return version;
     }
 
     /**
-     * @return Returns the servername + contextPath. For the default installation this is: https://learnweb.l3s.uni-hannover.de
+     * @return Returns the servername + contextPath without trailing slash.
+     * For the default installation this is: https://learnweb.l3s.uni-hannover.de
      */
     public String getServerUrl() {
         if (serverUrl == null) {
@@ -112,7 +183,7 @@ public class ConfigProvider implements Serializable {
         serverUrl = UrlHelper.removeTrailingSlash(serverUrl);
 
         // enforce HTTPS on the production server
-        if (serverUrl.startsWith("http://") && "true".equalsIgnoreCase(properties.getProperty("force_https", "false"))) {
+        if (serverUrl.startsWith("http://") && getPropertyBoolean("force_https")) {
             log.info("Forcing HTTPS schema.");
             serverUrl = "https://" + serverUrl.substring(7);
         }
@@ -121,8 +192,27 @@ public class ConfigProvider implements Serializable {
         log.info("Server url updated: {}", serverUrl);
     }
 
-    public boolean isRootEnvironment() {
-        return "https://learnweb.l3s.uni-hannover.de".equals(getServerUrl());
+    public boolean isServerUrlMissing() {
+        return serverUrl == null;
+    }
+
+    public boolean isServlet() {
+        return servlet;
+    }
+
+    public boolean isDevelopment() {
+        if (development == null) {
+            development = Faces.isDevelopment();
+        }
+        return development;
+    }
+
+    public boolean isMaintenance() {
+        return maintenance;
+    }
+
+    public void setMaintenance(boolean maintenance) {
+        this.maintenance = maintenance;
     }
 
     public File getFileManagerFolder() {
@@ -131,21 +221,6 @@ public class ConfigProvider implements Serializable {
             validateFolder(fileManagerFolder);
         }
         return fileManagerFolder;
-    }
-
-    public boolean isMaintenanceMode() {
-        return maintenanceMode;
-    }
-
-    public void setMaintenanceMode(boolean maintenanceMode) {
-        this.maintenanceMode = maintenanceMode;
-    }
-
-    public boolean isDevelopmentMode() {
-        if (developmentMode == null) {
-            developmentMode = Faces.isDevelopment();
-        }
-        return developmentMode;
     }
 
     private static void validateFolder(File folder) {

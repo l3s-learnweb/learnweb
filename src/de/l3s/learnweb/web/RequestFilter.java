@@ -19,14 +19,14 @@ import com.google.common.net.InetAddresses;
 
 import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.exceptions.HttpException;
+import de.l3s.learnweb.user.UserBean;
 import de.l3s.util.bean.BeanHelper;
 
 /**
  * Logs incoming requests by IPs.
  * Records IP, time and URL, then at the end of the day stores it into a log file.
- *
- * @author Kate
  */
+@SuppressWarnings("UnstableApiUsage")
 @WebFilter(filterName = "RequestFilter", urlPatterns = "/*", asyncSupported = true)
 public class RequestFilter extends HttpFilter {
     private static final long serialVersionUID = -6484981916986254209L;
@@ -38,48 +38,70 @@ public class RequestFilter extends HttpFilter {
     @Inject
     private RequestManager requestManager;
 
+    @Inject
+    private UserBean userBean;
+
     @Override
     protected void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
         throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
 
-        String serverUrl = Servlets.getRequestBaseURL(request);
-        configProvider.setServerUrl(serverUrl);
+        // try to set server url
+        if (configProvider.isServerUrlMissing()) {
+            configProvider.setServerUrl(Servlets.getRequestBaseURL(request));
+        }
 
-        if (requestManager != null) {
-            String ipAddr = Servlets.getRemoteAddr(request);
-            String requestUrl = Servlets.getRequestURLWithQueryString(request);
-
+        // validate ip address
+        String ipAddr = Servlets.getRemoteAddr(request);
+        if (!InetAddresses.isInetAddress(ipAddr)) {
             /*
              * This rule should ban threats like:
              * - Joomla Unserialize Vulnerability (https://blog.cloudflare.com/the-joomla-unserialize-vulnerability/)
              */
-            //noinspection UnstableApiUsage
-            if (!InetAddresses.isInetAddress(ipAddr)) {
-                log.error("Suspicious IP address banned: {}. Request summary: {}", ipAddr, BeanHelper.getRequestSummary(request));
+            log.error("Suspicious IP address restricted: {}. Request summary: {}", ipAddr, BeanHelper.getRequestSummary(request));
 
-                // We can't ban them permanently, because their IP address is not an address, but a string, likely long string...
-                requestManager.tempBan(ipAddr, "Suspicious IP address");
-            }
+            // We can't ban them, because their IP address is not an address, but a string, likely long string...
+            response.sendError(HttpException.FORBIDDEN, "error_pages.forbidden_blocked_description");
+            return;
+        }
 
-            /*
-             * This rule should ban possible SQL injection (where `%27` == `'`)
-             * https://stackoverflow.com/questions/33867813/strange-url-containing-a-0-or-0-a-in-web-server-logs
-             */
-            if (StringUtils.endsWithAny(requestUrl, "%27", "%27A=0")) {
-                requestManager.ban(ipAddr, "SQL injection");
-            }
-            if (StringUtils.endsWithAny(requestUrl, "'", "'A=0")) {
-                requestManager.ban(ipAddr, "SQL injection (test)");
-            }
-
-            requestManager.recordRequest(ipAddr, requestUrl);
-            if (requestManager.isBanned(ipAddr)) {
-                response.sendError(HttpException.FORBIDDEN, "error_pages.forbidden_blocked_description");
+        // validate request uri
+        String requestUri = Servlets.getRequestURIWithQueryString(request);
+        if (shouldBeValidated(requestUri)) {
+            // check if not maintenance
+            if (configProvider.isMaintenance() && !userBean.isAdmin()) {
+                response.sendError(HttpException.UNAVAILABLE, request.getRequestURI());
                 return;
             }
+
+            if (StringUtils.endsWithAny(requestUri, "'", "'A=0")) {
+                /*
+                 * This rule should ban possible SQL injection
+                 * https://stackoverflow.com/questions/33867813/strange-url-containing-a-0-or-0-a-in-web-server-logs
+                 */
+                requestManager.ban(ipAddr, "SQL injection");
+            }
+
+            requestManager.recordRequest(ipAddr, requestUri);
+        }
+
+        if (requestManager.isBanned(ipAddr)) {
+            response.sendError(HttpException.FORBIDDEN, "error_pages.forbidden_blocked_description");
+            return;
         }
 
         chain.doFilter(request, response);
+    }
+
+    private static boolean shouldBeValidated(final String requestUri) {
+        if (requestUri.contains("/javax.faces.resource/")) {
+            return false;
+        }
+
+        if ("/lw/status.jsf".equals(requestUri)) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -19,8 +19,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 
-import com.google.common.net.InetAddresses;
-
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -38,12 +36,13 @@ public class LoginBean extends ApplicationBean implements Serializable {
     public static final String AUTH_COOKIE_NAME = "auth_uuid";
     private static final int AUTH_COOKIE_AGE_DAYS = 30;
 
+    private String remoteAddr;
+
     @NotBlank
     private String username;
     @NotBlank
     private String password;
     private boolean remember;
-    private boolean captchaRequired;
 
     @Inject
     private UserDao userDao;
@@ -56,14 +55,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        String ip = Faces.getRemoteAddr();
-
-        //noinspection UnstableApiUsage
-        if (InetAddresses.isInetAddress(ip)) {
-            captchaRequired = requestManager.isCaptchaRequired(ip);
-        } else {
-            captchaRequired = true;
-        }
+        remoteAddr = Faces.getRemoteAddr();
     }
 
     public String getUsername() {
@@ -91,19 +83,12 @@ public class LoginBean extends ApplicationBean implements Serializable {
     }
 
     public boolean isCaptchaRequired() {
-        return captchaRequired;
+        return requestManager.isCaptchaRequired(remoteAddr);
     }
 
     public String login() {
-        String ip = Faces.getRemoteAddr();
-
-        //noinspection UnstableApiUsage
-        if (!InetAddresses.isInetAddress(ip)) {
-            return LOGIN_PAGE;
-        }
-
         // Gets the ip and username info from protection manager
-        BeanAssert.hasPermission(!requestManager.isBanned(ip), "ip_banned");
+        BeanAssert.hasPermission(!requestManager.isBanned(remoteAddr), "ip_banned");
         BeanAssert.hasPermission(!requestManager.isBanned(username), "username_banned");
 
         // USER AUTHORIZATION HAPPENS HERE
@@ -111,12 +96,12 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
         if (user.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
-            requestManager.updateFailedAttempts(ip, username);
+            requestManager.updateFailedAttempts(remoteAddr, username);
             return LOGIN_PAGE;
         }
 
-        requestManager.updateSuccessfulAttempts(ip, username);
-        requestManager.recordLogin(ip, username);
+        requestManager.updateSuccessfulAttempts(remoteAddr, username);
+        requestManager.recordLogin(remoteAddr, username);
 
         if (!user.get().isEmailConfirmed() && user.get().isEmailRequired()) {
             confirmRequiredBean.setLoggedInUser(user.get());

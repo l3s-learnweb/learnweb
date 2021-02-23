@@ -8,10 +8,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import org.jdbi.v3.core.Handle;
-import org.omnifaces.util.Faces;
 
-import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.util.UrlHelper;
 
 @Named
 @RequestScoped
@@ -20,47 +19,48 @@ public class StatusBean extends ApplicationBean {
 
     @PostConstruct
     public void init() {
-        Learnweb learnweb = getLearnweb();
-        services.add(new Service("Learnweb Tomcat", "ok", learnweb.getConfigProvider().getServerUrl(), "Obviously OK, otherwise this page would not be reachable"));
+        // obviously OK, otherwise this page would not be reachable
+        services.add(new Service("Tomcat Server", true, null));
 
         // test learnweb database
-        Service lwDb = new Service("Learnweb Database", "ok", learnweb.getConfigProvider().getProperty("mysql_url"), "");
-        try (Handle handle = learnweb.openJdbiHandle()) {
-            Integer dbUsers = handle.select("SELECT count(*) FROM lw_user").mapTo(Integer.class).one();
-
-            if (dbUsers == null || dbUsers < 400) {
-                lwDb.setStatus("error", "unexpected result from database");
-            }
-        } catch (Exception e) {
-            lwDb.setStatus("error", e.getMessage());
-        }
-        services.add(lwDb);
+        services.add(getDatabaseConnection());
 
         // very simple database integrity test
-        Service lwDbIntegrity = new Service("Learnweb Database integrity", "ok", learnweb.getConfigProvider().getProperty("mysql_url"), "");
-        try {
-            if (learnweb.getDaoProvider().getResourceDao().findResourceRating(2811, 1684).isPresent()) {
-                lwDbIntegrity.setStatus("warning", "unexpected result from database");
-            }
+        services.add(getDatabaseIntegrity());
+
+        // test office server
+        services.add(getOnlyOfficeServer());
+    }
+
+    private Service getDatabaseConnection() {
+        try (Handle handle = getLearnweb().openJdbiHandle()) {
+            handle.select("SELECT 1").mapTo(Integer.class).one();
+            return new Service("Database Connection", true, null);
         } catch (Exception e) {
-            lwDbIntegrity.setStatus("error", e.getMessage());
+            return new Service("Database Connection", false, e.getMessage());
         }
-        services.add(lwDbIntegrity);
     }
 
-    public String getVersion() {
-        final String displayName = Faces.getServletContext().getServletContextName();
-
-        int i = displayName.indexOf('-');
-        if (i != -1) {
-            return displayName.substring(i + 1).trim();
+    private Service getDatabaseIntegrity() {
+        try {
+            getLearnweb().getDaoProvider().getOrganisationDao().findDefault(); // will fail if no default
+            return new Service("Database Integrity", true, null);
+        } catch (Exception e) {
+            return new Service("Database Integrity", false, e.getMessage());
         }
-
-        return displayName;
     }
 
-    public String getProjectStage() {
-        return Faces.getProjectStage().toString();
+    private Service getOnlyOfficeServer() {
+        try {
+            String onlyofficeServerUrl = getLearnweb().getConfigProvider().getProperty("onlyoffice_server_url");
+            if (!UrlHelper.isOnline(onlyofficeServerUrl + "/healthcheck")) {
+                throw new IllegalStateException("The OnlyOffice Server is not reachable or down");
+            }
+
+            return new Service("OnlyOffice Server", true, null);
+        } catch (Exception e) {
+            return new Service("OnlyOffice Server", false, e.getMessage());
+        }
     }
 
     public List<Service> getServices() {
@@ -69,36 +69,25 @@ public class StatusBean extends ApplicationBean {
 
     public static class Service {
         private final String name;
-        private String status;
-        private final String url;
-        private String comment;
+        private final boolean healthy;
+        private final String description;
 
-        public Service(String name, String status, String url, String comment) {
+        public Service(String name, boolean healthy, String description) {
             this.name = name;
-            this.status = status;
-            this.url = url;
-            this.comment = comment;
-        }
-
-        public void setStatus(String status, String comment) {
-            this.status = status;
-            this.comment = comment;
+            this.healthy = healthy;
+            this.description = description;
         }
 
         public String getName() {
             return name;
         }
 
-        public String getStatus() {
-            return status;
+        public boolean isHealthy() {
+            return healthy;
         }
 
-        public String getComment() {
-            return comment;
-        }
-
-        public String getUrl() {
-            return url;
+        public String getDescription() {
+            return description;
         }
     }
 }

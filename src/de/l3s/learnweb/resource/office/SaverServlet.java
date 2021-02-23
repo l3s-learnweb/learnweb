@@ -1,9 +1,6 @@
 package de.l3s.learnweb.resource.office;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -33,6 +30,7 @@ import de.l3s.learnweb.resource.office.history.model.CallbackData;
 import de.l3s.learnweb.resource.office.history.model.History;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
+import de.l3s.util.UrlHelper;
 
 @WebServlet(name = "saverServlet", description = "Servlet for saving edited office documents", urlPatterns = "/save", loadOnStartup = 4)
 public class SaverServlet extends HttpServlet {
@@ -107,7 +105,7 @@ public class SaverServlet extends HttpServlet {
         file.setName(resource.getFileName());
         file.setMimeType(resource.getFormat());
         file.setResourceId(resource.getId());
-        fileDao.save(file, getInputStream(data.getUrl()));
+        fileDao.save(file, UrlHelper.getInputStream(data.getUrl()));
 
         resource.addFile(file);
         resource.setUrl(file.getUrl());
@@ -128,7 +126,7 @@ public class SaverServlet extends HttpServlet {
         fileDao.save(previousFile, file.getInputStream());
 
         file.setLastModified(null); // the correct value will be set on save
-        fileDao.save(file, getInputStream(data.getUrl()));
+        fileDao.save(file, UrlHelper.getInputStream(data.getUrl()));
 
         try {
             log.debug("Started history saving for resource {}", file.getResourceId());
@@ -152,18 +150,12 @@ public class SaverServlet extends HttpServlet {
         changesFile.setType(TYPE.CHANGES);
         changesFile.setName("changes.zip");
         changesFile.setMimeType("zip");
-        fileDao.save(changesFile, getInputStream(data.getChangesUrl()));
+        fileDao.save(changesFile, UrlHelper.getInputStream(data.getChangesUrl()));
 
         History history = data.getHistory();
         history.setResourceId(file.getResourceId());
         history.setChangesFileId(changesFile.getId());
         history.setKey(FileUtility.generateRevisionId(file));
         resourceHistoryDao.save(history);
-    }
-
-    private InputStream getInputStream(String strUrl) throws IOException {
-        URL url = new URL(strUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        return connection.getInputStream();
     }
 }

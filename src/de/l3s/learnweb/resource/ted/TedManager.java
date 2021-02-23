@@ -32,10 +32,10 @@ import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.InterwebResultsWrapper;
-import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.ted.Transcript.Paragraph;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
+import de.l3s.util.UrlHelper;
 
 public class TedManager {
     private static final Logger log = LogManager.getLogger(TedManager.class);
@@ -76,7 +76,7 @@ public class TedManager {
             resource.setUser(admin);
 
             if (tedVideo.getResourceId() == 0 || resource.getUserId() == 0) { // not yet stored in Learnweb
-                Learnweb.getInstance().getResourcePreviewMaker().processImage(resource, FileInspector.openStream(resource.getMaxImageUrl()));
+                Learnweb.getInstance().getResourcePreviewMaker().processImage(resource, UrlHelper.getInputStream(resource.getMaxImageUrl()));
                 resource.setGroup(tedGroup);
                 resource.setUser(admin);
                 resource.save();
@@ -192,7 +192,7 @@ public class TedManager {
                     log.debug("Already stored: {}", resource);
 
                 } else {
-                    Learnweb.getInstance().getResourcePreviewMaker().processImage(resource, FileInspector.openStream(resource.getMaxImageUrl().replace("hqdefault", "mqdefault")));
+                    Learnweb.getInstance().getResourcePreviewMaker().processImage(resource, UrlHelper.getInputStream(resource.getMaxImageUrl().replace("hqdefault", "mqdefault")));
                     resource.setGroup(tedEdGroup);
                     resource.setUser(admin);
                     resource.save();

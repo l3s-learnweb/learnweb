@@ -29,6 +29,7 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.util.StringHelper;
+import de.l3s.util.UrlHelper;
 
 /**
  * Helper for extract metadata from a Resource.
@@ -405,7 +406,7 @@ public class ResourceMetadataExtractor {
 
     public FileInfo getFileInfo(String url) throws IOException {
         String fileName = FileUtility.getFileName(url);
-        InputStream inputStream = FileInspector.openStream(url);
+        InputStream inputStream = UrlHelper.getInputStream(url);
         return fileInspector.inspect(inputStream, fileName);
     }
 

@@ -6,22 +6,19 @@
 <f:view contentType="text/xml" transient="true">
     <app>
         <startup>#{startup}</startup>
-        <version>#{statusBean.version}</version>
-        <project_stage>#{statusBean.projectStage}</project_stage>
     </app>
     <config>
+        <property key="version" value="#{config.version}"/>
         <property key="server_url" value="#{config.serverUrl}"/>
-        <property key="development" value="#{config.developmentMode}"/>
-        <property key="maintenance" value="#{config.maintenanceMode}"/>
-        <property key="root" value="#{config.rootEnvironment}"/>
+        <property key="development" value="#{config.development}"/>
+        <property key="maintenance" value="#{config.maintenance}"/>
     </config>
     <services>
         <ui:repeat var="service" value="#{statusBean.services}">
             <service>
                 <name><h:outputText value="#{service.name}" escape="false"/></name>
-                <status><h:outputText value="#{service.status}" escape="false"/></status>
-                <url><h:outputText value="#{service.url}" escape="false"/></url>
-                <comment><h:outputText value="#{service.comment}" escape="false"/></comment>
+                <healthy><h:outputText value="#{service.healthy}" escape="false"/></healthy>
+                <description><h:outputText value="#{service.description}" escape="false"/></description>
             </service>
         </ui:repeat>
     </services>

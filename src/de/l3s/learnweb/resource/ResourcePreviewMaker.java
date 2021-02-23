@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -23,9 +22,9 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.archive.ArchiveUrlDao;
 import de.l3s.learnweb.resource.office.ConverterService;
-import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
+import de.l3s.util.UrlHelper;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.FFprobe;
@@ -74,7 +73,7 @@ public class ResourcePreviewMaker implements Serializable {
         this.ffprobePath = configProvider.getProperty("ffprobe_path");
         this.archiveThumbnailService = configProvider.getProperty("archive_website_thumbnail_service");
         this.websiteThumbnailService = configProvider.getProperty("website_thumbnail_service");
-        this.officeConverterService = configProvider.getProperty("onlyoffice_converter_service");
+        this.officeConverterService = configProvider.getProperty("onlyoffice_server_url") + "/ConvertService.ashx";
     }
 
     private FFprobe getFFprobe() throws IOException {
@@ -100,7 +99,7 @@ public class ResourcePreviewMaker implements Serializable {
                 file.setType(TYPE.FILE_MAIN);
                 file.setName(resource.getFileName());
                 file.setMimeType(resource.getFormat());
-                fileDao.save(file, FileInspector.openStream(resource.getUrl()));
+                fileDao.save(file, UrlHelper.getInputStream(resource.getUrl()));
 
                 resource.addFile(file);
                 resource.setFileUrl(file.getUrl());
@@ -112,10 +111,10 @@ public class ResourcePreviewMaker implements Serializable {
                 inputStream = resource.getFile(TYPE.FILE_MAIN).getInputStream();
                 processFile(resource, inputStream);
             } else if (resource.getStorageType() == Resource.WEB_RESOURCE && StringUtils.isNotEmpty(resource.getMaxImageUrl())) {
-                inputStream = FileInspector.openStream(resource.getMaxImageUrl());
+                inputStream = UrlHelper.getInputStream(resource.getMaxImageUrl());
                 processImage(resource, inputStream);
             } else {
-                inputStream = FileInspector.openStream(resource.getUrl());
+                inputStream = UrlHelper.getInputStream(resource.getUrl());
                 processFile(resource, inputStream);
             }
         } catch (Throwable e) {
@@ -158,8 +157,7 @@ public class ResourcePreviewMaker implements Serializable {
     private void processOfficeDocument(Resource resource) {
         try {
             String thumbnailUrl = ConverterService.convert(officeConverterService, resource.getFile(TYPE.FILE_MAIN));
-            HttpURLConnection connection = (HttpURLConnection) new URL(thumbnailUrl).openConnection();
-            InputStream thumbnailStream = connection.getInputStream();
+            InputStream thumbnailStream = UrlHelper.getInputStream(thumbnailUrl);
             if (thumbnailStream == null) {
                 throw new IllegalStateException("Error during conversion : stream is null");
             }

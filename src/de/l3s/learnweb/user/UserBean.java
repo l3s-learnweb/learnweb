@@ -303,12 +303,11 @@ public class UserBean implements Serializable {
     }
 
     public String getBannerLink() {
-        String serverUrl = Faces.getRequestBaseURL();
         if (!isLoggedIn()) {
-            return serverUrl;
+            return "/";
         }
 
-        return serverUrl + getActiveOrganisation().getWelcomePage();
+        return getActiveOrganisation().getWelcomePage();
     }
 
     /**

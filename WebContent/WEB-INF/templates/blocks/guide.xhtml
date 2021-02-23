@@ -1,17 +1,18 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <div class="guide-slideshow" id="guide">
-    <img src="#{request.contextPath}/resources/frontpage/videoguide.jpg" alt="Start guide slideshow"/>
+    <h:graphicImage name="frontpage/videoguide.jpg" alt="Start guide slideshow"/>
 </div>
 
 <script type="application/javascript">
   $('#guide').on('click', function () {
     $.fancybox.open([
-      { src: '#{request.contextPath}/resources/frontpage/lwGuide/ppt1.svg' },
-      { src: '#{request.contextPath}/resources/frontpage/lwGuide/ppt2.svg' },
-      { src: '#{request.contextPath}/resources/frontpage/lwGuide/ppt3.svg' },
-      { src: '#{request.contextPath}/resources/frontpage/lwGuide/ppt4.svg' },
+      { src: '#{resource["frontpage/lwGuide/ppt1.svg"]}' },
+      { src: '#{resource["frontpage/lwGuide/ppt2.svg"]}' },
+      { src: '#{resource["frontpage/lwGuide/ppt3.svg"]}' },
+      { src: '#{resource["frontpage/lwGuide/ppt4.svg"]}' },
     ], { buttons: ['slideShow', 'close'] });
   });
 </script>

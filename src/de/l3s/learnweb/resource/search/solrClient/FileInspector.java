@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -23,7 +21,6 @@ import org.apache.solr.common.util.NamedList;
 import de.l3s.util.MimeTypes;
 import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
-import de.l3s.util.UrlHelper;
 
 public class FileInspector {
     private static final Logger log = LogManager.getLogger(FileInspector.class);
@@ -121,13 +118,6 @@ public class FileInspector {
         }
 
         return null;
-    }
-
-    public static InputStream openStream(String url) throws IOException {
-        HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
-        con.setInstanceFollowRedirects(true);
-        con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
-        return con.getInputStream();
     }
 
     public static class FileInfo {

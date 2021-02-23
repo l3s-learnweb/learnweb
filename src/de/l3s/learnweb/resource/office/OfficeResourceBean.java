@@ -6,7 +6,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
@@ -34,7 +33,7 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
 
     @PostConstruct
     public void init() {
-        officeServerUrl = StringUtils.removeEnd(getLearnweb().getConfigProvider().getProperty("onlyoffice_server_url"), "/");
+        officeServerUrl = config().getProperty("onlyoffice_server_url");
 
         Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
         fillInFileInfo(resource);
@@ -80,10 +79,10 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
     }
 
     public String getCallbackUrl() {
-        return getLearnweb().getConfigProvider().getServerUrl() + "/save?resourceId=" + documentResourceId + "&fileId=" + documentFileId;
+        return config().getServerUrl() + "/save?resourceId=" + documentResourceId + "&fileId=" + documentFileId;
     }
 
     public String getHistoryUrl() {
-        return getLearnweb().getConfigProvider().getServerUrl() + "/history?resourceId=" + documentResourceId;
+        return config().getServerUrl() + "/history?resourceId=" + documentResourceId;
     }
 }

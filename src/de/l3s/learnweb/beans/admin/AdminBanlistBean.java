@@ -2,6 +2,7 @@ package de.l3s.learnweb.beans.admin;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +24,7 @@ import de.l3s.learnweb.web.RequestManager;
 public class AdminBanlistBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -4469152668344315959L;
 
-    private String type = "user";
-    private String name;
+    private String addr;
     private Integer banDays;
     private Integer banHours;
     private Integer banMinutes;
@@ -36,8 +36,6 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
     private RequestManager requestManager;
 
     public void onManualBan() {
-        boolean isIP = "ip".equalsIgnoreCase(type);
-
         if (permaban) {
             banDays = 36524; // A hundred years should be fair enough
         }
@@ -46,19 +44,19 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
         banHours = Optional.ofNullable(banHours).orElse(0);
         banMinutes = Optional.ofNullable(banMinutes).orElse(0);
 
-        requestManager.ban(name, banDays, banHours, banMinutes, isIP, null);
+        requestManager.ban(addr, "manual ban", Duration.ofDays(banDays).plusHours(banHours).plusMinutes(banMinutes));
     }
 
-    public void onUnban(String name) {
-        requestManager.clearBan(name);
+    public void onUnban(String addr) {
+        requestManager.clearBan(addr);
     }
 
     public void onDeleteOutdatedBans() {
         requestManager.clearOutdatedBans();
     }
 
-    public void onRemoveSuspicious(String name) {
-        requestManager.getSuspiciousRequests().removeIf(requestData -> name.equals(requestData.getIp()));
+    public void onRemoveSuspicious(String addr) {
+        requestManager.getSuspiciousRequests().removeIf(requestData -> addr.equals(requestData.getIp()));
         suspiciousActivityList = null;
     }
 
@@ -78,23 +76,14 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
             suspiciousActivityList = requestManager.getSuspiciousRequests();
         }
         return suspiciousActivityList;
-
     }
 
-    public String getName() {
-        return name;
+    public String getAddr() {
+        return addr;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setAddr(final String addr) {
+        this.addr = addr;
     }
 
     public Integer getBanDays() {
