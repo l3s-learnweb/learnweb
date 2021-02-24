@@ -61,7 +61,6 @@ public interface OrganisationDao extends SqlObject, Serializable {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("organisation_id", organisation.getId() < 1 ? null : organisation.getId());
         params.put("title", organisation.getTitle());
-        params.put("logout_page", organisation.getLogoutPage());
         params.put("welcome_page", organisation.getWelcomePage());
         params.put("welcome_message", organisation.getWelcomeMessage());
         params.put("options_field1", organisation.getOptions()[0]);
@@ -89,7 +88,6 @@ public interface OrganisationDao extends SqlObject, Serializable {
             if (organisation == null) {
                 organisation = new Organisation(rs.getInt("organisation_id"));
                 organisation.setTitle(rs.getString("title"));
-                organisation.setLogoutPage(rs.getString("logout_page"));
                 organisation.setWelcomePage(rs.getString("welcome_page"));
                 organisation.setWelcomeMessage(rs.getString("welcome_message"));
                 organisation.setDefaultSearchServiceText(rs.getString("default_search_text"));

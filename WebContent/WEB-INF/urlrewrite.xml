@@ -19,14 +19,6 @@
         <from>^/(.*)</from>
         <to type="permanent-redirect" last="true">http://learnweb.l3s.uni-hannover.de/v2/aw/</to>
     </rule>
-    <!-- General redirects -->
-    <!--<rule> this rule is broken, because of proxy which always uses http protocol
-        <name>Redirect to HTTPS</name>
-        <condition type="scheme" operator="notequal">https</condition>
-        <condition name="host">learnweb.l3s.uni-hannover.de</condition>
-        <from>^.*$</from>
-        <to type="redirect" last="true">https://%{server-name}%{request-uri}</to>
-    </rule>-->
     <rule>
         <name>Redirect to /lw/</name>
         <from>^/$</from>

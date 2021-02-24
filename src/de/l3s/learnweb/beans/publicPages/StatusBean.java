@@ -52,7 +52,7 @@ public class StatusBean extends ApplicationBean {
 
     private Service getOnlyOfficeServer() {
         try {
-            String onlyofficeServerUrl = getLearnweb().getConfigProvider().getProperty("onlyoffice_server_url");
+            String onlyofficeServerUrl = config().getProperty("onlyoffice_server_url");
             if (!UrlHelper.isOnline(onlyofficeServerUrl + "/healthcheck")) {
                 throw new IllegalStateException("The OnlyOffice Server is not reachable or down");
             }

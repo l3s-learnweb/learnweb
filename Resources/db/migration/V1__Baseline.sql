@@ -197,7 +197,6 @@ CREATE TABLE IF NOT EXISTS `lw_organisation` (
     `is_default` tinyint(1) DEFAULT NULL,
     `title` varchar(60) NOT NULL,
     `logo` longtext DEFAULT NULL,
-    `logout_page` varchar(255) DEFAULT NULL COMMENT 'page to show after logout',
     `welcome_page` varchar(255) DEFAULT NULL,
     `welcome_message` text DEFAULT NULL,
     `options_field1` bigint(20) NOT NULL DEFAULT 0,

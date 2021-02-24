@@ -50,7 +50,7 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
         setKeepMessages();
 
-        return "/lw/admin/announcements.xhtml?faces-redirect=true";
+        return "admin/announcements.xhtml?faces-redirect=true";
     }
 
     public Announcement getAnnouncement() {

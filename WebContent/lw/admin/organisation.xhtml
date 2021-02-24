@@ -73,18 +73,9 @@
                         <div class="form-group">
                             <p:outputLabel for="@next" value="#{msg.welcome_page}:"/>
                             <p:selectOneMenu id="welcomePage" value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
-                                <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf"/>
-                                <f:selectItem itemValue="/lw/myhome/resources.jsf" itemLabel="/lw/myhome/resources.jsf"/>
-                                <f:selectItem itemValue="/lw/myhome/groups.jsf" itemLabel="/lw/myhome/groups.jsf"/>
-                            </p:selectOneMenu>
-                            <p:message for="@previous"/>
-                        </div>
-
-                        <div class="form-group">
-                            <p:outputLabel for="@next" value="#{msg.logout_page}:"/>
-                            <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.logoutPage}" editable="true">
-                                <f:selectItem itemValue="/lw/index.jsf" itemLabel="Learnweb index page"/>
-                                <f:selectItem itemValue="/aw/index.jsf" itemLabel="Archive index page"/>
+                                <f:selectItem itemValue="myhome/welcome.jsf" itemLabel="myhome/welcome.jsf"/>
+                                <f:selectItem itemValue="myhome/resources.jsf" itemLabel="myhome/resources.jsf"/>
+                                <f:selectItem itemValue="myhome/groups.jsf" itemLabel="myhome/groups.jsf"/>
                             </p:selectOneMenu>
                             <p:message for="@previous"/>
                         </div>

@@ -106,7 +106,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
 
         addMessage(FacesMessage.SEVERITY_INFO, "group_deleted", selectedGroup.getTitle());
 
-        return "/lw/myhome/groups.xhtml";
+        return "myhome/groups.xhtml";
     }
 
     public boolean canDeleteGroup(Group group) {

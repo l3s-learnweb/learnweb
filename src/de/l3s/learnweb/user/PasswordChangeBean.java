@@ -48,7 +48,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
 
         setKeepMessages();
         addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
-        return "/lw/user/login.xhtml?faces-redirect=true";
+        return "user/login.xhtml?faces-redirect=true";
     }
 
     public String getParameter() {

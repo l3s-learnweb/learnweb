@@ -53,8 +53,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     @Length(min = 2, max = 60)
     private String title;
     private String welcomeMessage;
-    private String welcomePage = "/lw/myhome/welcome.jsf"; // page to show after login
-    private String logoutPage; // page to show after logout
+    private String welcomePage = "myhome/welcome.jsf"; // page to show after login
     private ResourceService defaultSearchServiceText = ResourceService.bing;
     private ResourceService defaultSearchServiceImage = ResourceService.flickr;
     private ResourceService defaultSearchServiceVideo = ResourceService.youtube;
@@ -85,7 +84,6 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
 
         setTitle(title);
         setLanguageVariant(null);
-        setLogoutPage(null);
         setGlossaryLanguages(null);
     }
 
@@ -384,18 +382,6 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
 
     public void setCssFile(String cssFile) {
         this.cssFile = cssFile;
-    }
-
-    public String getLogoutPage() {
-        return logoutPage;
-    }
-
-    public void setLogoutPage(String logoutPage) {
-        if (StringUtils.isEmpty(logoutPage)) {
-            this.logoutPage = "/lw/index.jsf";
-        } else {
-            this.logoutPage = logoutPage;
-        }
     }
 
     public String getLanguageVariant() {

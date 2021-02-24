@@ -45,7 +45,7 @@ public class ContactBean extends ApplicationBean implements Serializable {
     }
 
     public void sendMail() {
-        String adminEmail = getLearnweb().getConfigProvider().getProperty("admin_mail");
+        String adminEmail = config().getProperty("admin_mail");
 
         try {
             Mail message = new Mail();

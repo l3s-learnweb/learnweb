@@ -32,7 +32,6 @@ public class LoginBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 7980062591522267111L;
 
     private static final Logger log = LogManager.getLogger(LoginBean.class);
-    private static final String LOGIN_PAGE = "/lw/user/login.xhtml";
     public static final String AUTH_COOKIE_NAME = "auth_uuid";
     private static final int AUTH_COOKIE_AGE_DAYS = 30;
 
@@ -97,7 +96,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         if (user.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
             requestManager.updateFailedAttempts(remoteAddr, username);
-            return LOGIN_PAGE;
+            return "user/login.xhtml";
         }
 
         requestManager.updateSuccessfulAttempts(remoteAddr, username);
@@ -105,7 +104,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
         if (!user.get().isEmailConfirmed() && user.get().isEmailRequired()) {
             confirmRequiredBean.setLoggedInUser(user.get());
-            return "/lw/user/confirm_required.xhtml?faces-redirect=true";
+            return "user/confirm_required.xhtml?faces-redirect=true";
         }
 
         if (remember) {
@@ -128,18 +127,17 @@ public class LoginBean extends ApplicationBean implements Serializable {
     public String logout() {
         UserBean userBean = getUserBean();
         User user = userBean.getUser();
-        String logoutPage = user.getOrganisation().getLogoutPage();
 
         if (userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) { // a moderator logs out from a user account
             userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
             userBean.setModeratorUser(null);
-            return "/lw/admin/users.xhtml?faces-redirect=true";
+            return "admin/users.xhtml?faces-redirect=true";
         } else {
             log(Action.logout, 0, 0);
             user.onDestroy();
             Faces.invalidateSession();
             Faces.removeResponseCookie(AUTH_COOKIE_NAME, "/");
-            return logoutPage + "?faces-redirect=true";
+            return "index.jsf?faces-redirect=true";
         }
     }
 
@@ -191,8 +189,8 @@ public class LoginBean extends ApplicationBean implements Serializable {
             return redirect(user, redirect);
         }
 
-        if (userOrganisation.getId() == 1249) { // TODO @astappiev: EU-MADE4LL user have to be redirect to the backup of Learnweb V2
-            return "/lw/eumade4all/statistics.xhtml?faces-redirect=true";
+        if (userOrganisation.getId() == 1249) {
+            return "https://learnweb.l3s.uni-hannover.de/v2/lw/eumade4all/statistics.jsf?faces-redirect=true";
         }
 
         // if the user logs in from the start or the login page, redirect him to the welcome page

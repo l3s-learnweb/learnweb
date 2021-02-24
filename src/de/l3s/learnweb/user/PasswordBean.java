@@ -40,7 +40,7 @@ public class PasswordBean extends ApplicationBean implements Serializable {
             Mail message = new Mail();
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
 
-            String url = getLearnweb().getConfigProvider().getServerUrl() + "/lw/user/change_password.jsf?u=";
+            String url = config().getServerUrl() + "/lw/user/change_password.jsf?u=";
 
             for (User user : users) {
                 String link = url + user.getId() + "_" + createPasswordChangeHash(user);
