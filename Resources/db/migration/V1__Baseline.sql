@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `lw_glossary_entry` (
     `topic_three` varchar(100) DEFAULT NULL,
     `description` varchar(3000) DEFAULT NULL,
     `description_pasted` tinyint(4) NOT NULL DEFAULT 0,
+    `imported` tinyint(1) NOT NULL DEFAULT 0,
     `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     KEY `lw_glossary_entry_resource_id` (`resource_id`, `deleted`)
 );

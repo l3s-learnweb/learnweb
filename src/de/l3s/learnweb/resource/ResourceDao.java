@@ -400,7 +400,7 @@ public interface ResourceDao extends SqlObject, Serializable {
             Integer fileId = RsHelper.getInteger(rs, prefix + "_file_id");
 
             if (fileId != null) {
-                url = "/download/" + fileId + "/thumbnail" + thumbnailSize + ".png";
+                url = "../download/" + fileId + "/thumbnail" + thumbnailSize + ".png";
             } else if (url == null) {
                 return null;
             }

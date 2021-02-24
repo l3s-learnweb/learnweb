@@ -1,7 +1,7 @@
 package de.l3s.learnweb.resource.glossary;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Map;
 
@@ -93,7 +93,7 @@ public class GlossaryTableView implements Serializable {
         return term.getPhraseology();
     }
 
-    public Timestamp getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return entry.getTimestamp();
     }
 

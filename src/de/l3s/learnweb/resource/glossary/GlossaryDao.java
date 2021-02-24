@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource.glossary;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,18 +89,9 @@ public interface GlossaryDao extends SqlObject, Serializable {
         }
     }
 
-    default void saveEntry(GlossaryEntry entry, GlossaryResource resource) {
-        entry.setResourceId(resource.getId());
-        entry.setTimestamp(new Timestamp(System.currentTimeMillis())); // update timestamp
+    default void saveEntry(GlossaryEntry entry) {
         getGlossaryEntryDao().save(entry);
-
         saveTerms(entry);
-        entry.getTerms().removeIf(GlossaryTerm::isDeleted);
-
-        // the glossary edit form uses a working copy (clone) therefore we have to replace the original entry
-        // FIXME: this line produces ConcurrentModificationException
-        resource.getEntries().removeIf(e -> e.getId() == entry.getId());
-        resource.getEntries().add(entry);
     }
 
     default void saveTerms(GlossaryEntry entry) {
@@ -114,5 +104,6 @@ public interface GlossaryDao extends SqlObject, Serializable {
             term.setLastChangedByUserId(entry.getLastChangedByUserId());
             getGlossaryTermDao().save(term);
         }
+        entry.getTerms().removeIf(GlossaryTerm::isDeleted);
     }
 }

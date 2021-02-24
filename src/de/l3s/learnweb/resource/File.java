@@ -97,7 +97,7 @@ public class File implements Serializable, HasId, Cloneable {
 
     public String getUrl() {
         if (url == null) {
-            url = "/download/" + fileId + "/" + StringHelper.urlEncode(name);
+            url = "../download/" + fileId + "/" + StringHelper.urlEncode(name);
         }
         return url;
     }

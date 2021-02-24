@@ -1,7 +1,7 @@
 package de.l3s.learnweb.resource.glossary;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +21,6 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
     private boolean deleted;
     private int userId; // the user who created this entry
     private Integer lastChangedByUserId;
-    private Timestamp timestamp;
     @Length(max = 900)
     private String description;
     private boolean descriptionPasted = false;
@@ -33,6 +32,8 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
     private String topicThree;
     private List<GlossaryTerm> terms = new LinkedList<>();
     private String fulltext; //fulltext search in glossary
+    private boolean imported;
+    private LocalDateTime timestamp;
 
     /**
      * do nothing constructor.
@@ -230,11 +231,19 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
         this.fulltext = fulltext;
     }
 
-    public Timestamp getTimestamp() {
+    public boolean isImported() {
+        return imported;
+    }
+
+    public void setImported(final boolean imported) {
+        this.imported = imported;
+    }
+
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

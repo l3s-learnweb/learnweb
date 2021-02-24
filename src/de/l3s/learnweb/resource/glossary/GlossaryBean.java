@@ -205,9 +205,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             return;
         }
 
-        Learnweb.dao().getGlossaryDao().saveEntry(formEntry, glossaryResource);
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        Learnweb.dao().getGlossaryDao().saveEntry(formEntry);
 
+        // the glossary edit form uses a working copy (clone) therefore we have to replace the original entry
+        glossaryResource.getEntries().removeIf(entry -> entry.getId() == formEntry.getId());
+        glossaryResource.getEntries().add(formEntry);
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
         onClearEntryForm();
     }
 
@@ -371,13 +375,15 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             int userId = getUser().getId();
             for (GlossaryEntry entry : importResponse.getEntries()) {
                 // set creator of new entries
+                entry.setResourceId(glossaryResource.getId());
                 entry.setUserId(userId);
                 entry.getTerms().forEach(term -> term.setUserId(userId));
-                // entry.setOriginalEntryId(-1); // to indicate that it was imported from a file FIXME: will fail because of FK
+                entry.setImported(true);
 
-                Learnweb.dao().getGlossaryDao().saveEntry(entry, glossaryResource);
+                Learnweb.dao().getGlossaryDao().saveEntry(entry);
+                glossaryResource.getEntries().add(entry);
+
                 log(Action.glossary_entry_add, glossaryResource, entry.getId());
-
                 entry.getTerms().forEach(term -> log(Action.glossary_term_add, glossaryResource, formEntry.getId()));
             }
 
