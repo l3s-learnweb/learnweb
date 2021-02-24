@@ -317,3 +317,20 @@
     }
   }
 }
+
+.ui-dashboard {
+  @extend .row;
+
+  .ui-dashboard-column {
+    @extend .col;
+
+    float: initial;
+    padding-bottom: $spacer;
+
+    &.ui-sortable-disabled {
+      .ui-panel-titlebar {
+        cursor: default;
+      }
+    }
+  }
+}

@@ -22,6 +22,10 @@ public abstract class MaintenanceTask {
         learnweb.init();
     }
 
+    protected MaintenanceTask(Learnweb learnweb) {
+        this.learnweb = learnweb;
+    }
+
     protected final Learnweb getLearnweb() {
         return learnweb;
     }

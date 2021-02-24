@@ -117,14 +117,16 @@ public final class SolrClient {
         }
     }
 
-    public long countResources(String query) throws SolrServerException, IOException {
+    public long countResources(String query) {
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery(query);
+        solrQuery.addFilterQuery("id:r_*");
         solrQuery.setFields("id");
-        QueryResponse result = httpSolrClient.query(solrQuery);
-        if (null != result) {
+
+        try {
+            QueryResponse result = httpSolrClient.query(solrQuery);
             return result.getResults().getNumFound();
-        } else {
+        } catch (SolrServerException | IOException e) {
             return -1;
         }
     }

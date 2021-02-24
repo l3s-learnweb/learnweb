@@ -1,92 +1,130 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
+import org.primefaces.model.DashboardColumn;
+import org.primefaces.model.DashboardModel;
+import org.primefaces.model.DefaultDashboardColumn;
+import org.primefaces.model.DefaultDashboardModel;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.FolderDao;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.OrganisationDao;
-import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
+import de.l3s.maintenance.resources.ReindexResources;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class AdminSystemBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 1354024417928664741L;
-    //private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
+    private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
 
-    private String memoryInfo;
-    private List<DatabaseProcessStatistic> databaseProcessList;
+    private final DashboardModel model;
 
-    @PostConstruct
-    public void init() {
-        User user = getUser();
-        BeanAssert.authorized(user);
-        BeanAssert.hasPermission(user.isAdmin());
+    private transient RuntimeInfo runtimeInfo;
+    private transient List<DatabaseProcess> databaseProcesses;
+    private transient List<CacheObject> cacheObjects;
+    private transient Integer totalResources;
+    private transient Integer indexedResources;
+    private transient Integer reindexProgress;
 
-        loadDatabaseProcessList();
+    public AdminSystemBean() {
+        model = new DefaultDashboardModel();
 
-        Runtime rt = Runtime.getRuntime();
-        memoryInfo = "Total: " + (rt.totalMemory() / 1024 / 1024) + "mb - Free:" + (rt.freeMemory() / 1024 / 1024) + "mb - Max:" + (rt.maxMemory() / 1024 / 1024);
+        DashboardColumn column1 = new DefaultDashboardColumn();
+        column1.addWidget("memory");
+        column1.addWidget("cache");
+        model.addColumn(column1);
 
-        // List<CacheStatistic> cacheSize = new ArrayList<>(6);
-        // Learnweb lw = getLearnweb();
-        // cacheSize.add(new CacheStatistic("Resources", lw.getResourceManager().getCacheSize()));
-        // cacheSize.add(new CacheStatistic("Groups", lw.getGroupManager().getGroupCacheSize()));
-        // cacheSize.add(new CacheStatistic("Users", lw.getUserManager().getCacheSize()));
-        // cacheSize.add(new CacheStatistic("Folders", lw.getGroupManager().getFolderCacheSize()));
-        // cacheSize.add(new CacheStatistic("Courses", lw.getCourseManager().getCacheSize()));
-        // cacheSize.add(new CacheStatistic("Organisations", lw.getOrganisationManager().getCacheSize()));
+        DashboardColumn column2 = new DefaultDashboardColumn();
+        column2.addWidget("maintenance");
+        model.addColumn(column2);
+
+        DashboardColumn column3 = new DefaultDashboardColumn();
+        column3.addWidget("solrIndex");
+        model.addColumn(column3);
     }
 
-    private void loadDatabaseProcessList() {
-        try (Handle handle = getLearnweb().openJdbiHandle()) {
-            databaseProcessList = handle.select("SHOW FULL PROCESSLIST").map((rs, ctx) -> {
-                DatabaseProcessStatistic ps = new DatabaseProcessStatistic();
-                ps.setId(rs.getInt("Id"));
-                ps.setUser(rs.getString("User"));
-                ps.setHost(rs.getString("Host"));
-                ps.setDb(rs.getString("db"));
-                ps.setCommand(rs.getString("Command"));
-                ps.setTime(rs.getString("Time"));
-                ps.setState(rs.getString("State"));
-                ps.setInfo(rs.getString("Info"));
-                ps.setProgress(rs.getString("Progress"));
-                return ps;
-            }).list();
+    public DashboardModel getModel() {
+        return model;
+    }
+
+    public Integer getTotalResources() {
+        if (totalResources == null) {
+            totalResources = dao().getResourceDao().countUndeleted();
         }
+        return totalResources;
     }
 
-    public String getMemoryInfo() {
-        return memoryInfo;
+    public Integer getIndexedResources() {
+        if (indexedResources == null) {
+            indexedResources = Math.toIntExact(getLearnweb().getSolrClient().countResources("*:*"));
+        }
+        return indexedResources;
     }
 
-    public List<DatabaseProcessStatistic> getDatabaseProcessList() {
-        return databaseProcessList;
+    public RuntimeInfo getRuntimeInfo() {
+        if (runtimeInfo == null) {
+            runtimeInfo = new RuntimeInfo(Runtime.getRuntime());
+        }
+        return runtimeInfo;
     }
 
-    public void onKillDatabaseProcess(int processId) {
+    public void terminateProcess(DatabaseProcess process) {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
-            handle.execute("KILL ?", processId);
+            handle.execute("KILL ?", process.getId());
         }
 
-        addMessage(FacesMessage.SEVERITY_INFO, "Killed process " + processId);
-        loadDatabaseProcessList(); // update list
+        addGrowl(FacesMessage.SEVERITY_INFO, "Killed process " + process.getId());
+        databaseProcesses = null;
     }
 
-    public void onClearCaches() {
+    public void terminateAllProcesses() {
+        try (Handle handle = getLearnweb().openJdbiHandle()) {
+            for (DatabaseProcess process : databaseProcesses) {
+                handle.execute("KILL ?", process.getId());
+            }
+        }
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "All processes terminated");
+        databaseProcesses = null;
+    }
+
+    public void reindexResources() throws Exception {
+        reindexProgress = 0;
+
+        ReindexResources task = new ReindexResources(getLearnweb(), progress -> {
+            reindexProgress = progress;
+        });
+
+        task.run(false);
+        indexedResources = null;
+        totalResources = null;
+    }
+
+    public void onReindexComplete() {
+        addGrowl(FacesMessage.SEVERITY_INFO, "Reindex completed");
+    }
+
+    public Integer getReindexProgress() {
+        return reindexProgress;
+    }
+
+    public void clearAllCaches() {
         OrganisationDao.cache.clear();
         UserDao.cache.clear();
         CourseDao.cache.clear();
@@ -95,12 +133,54 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         ResourceDao.cache.clear();
         FileDao.cache.clear();
 
-        addMessage(FacesMessage.SEVERITY_INFO, "Caches cleared");
+        addGrowl(FacesMessage.SEVERITY_INFO, "Caches cleared");
+        cacheObjects = null;
     }
 
-    public static class DatabaseProcessStatistic implements Serializable {
-        private static final long serialVersionUID = -863069126635587522L;
+    public void onMaintenanceUpdate() {
+        if (config().isMaintenance()) {
+            addGrowl(FacesMessage.SEVERITY_WARN, "Maintenance enabled");
+        } else {
+            addGrowl(FacesMessage.SEVERITY_INFO, "Maintenance disabled");
+        }
+    }
 
+    public List<DatabaseProcess> getDatabaseProcesses() {
+        if (databaseProcesses == null) {
+            try (Handle handle = getLearnweb().openJdbiHandle()) {
+                databaseProcesses = handle.select("SHOW FULL PROCESSLIST").map((rs, ctx) -> {
+                    DatabaseProcess ps = new DatabaseProcess();
+                    ps.setId(rs.getInt("Id"));
+                    ps.setUser(rs.getString("User"));
+                    ps.setHost(rs.getString("Host"));
+                    ps.setDb(rs.getString("db"));
+                    ps.setCommand(rs.getString("Command"));
+                    ps.setTime(rs.getString("Time"));
+                    ps.setState(rs.getString("State"));
+                    ps.setInfo(rs.getString("Info"));
+                    ps.setProgress(rs.getString("Progress"));
+                    return ps;
+                }).list();
+            }
+        }
+        return databaseProcesses;
+    }
+
+    public List<CacheObject> getCacheObjects() {
+        if (cacheObjects == null) {
+            cacheObjects = new ArrayList<>();
+            cacheObjects.add(new CacheObject("Resources", ResourceDao.cache.size()));
+            cacheObjects.add(new CacheObject("Groups", GroupDao.cache.size()));
+            cacheObjects.add(new CacheObject("Users", UserDao.cache.size()));
+            cacheObjects.add(new CacheObject("Folders", FolderDao.cache.size()));
+            cacheObjects.add(new CacheObject("Courses", CourseDao.cache.size()));
+            cacheObjects.add(new CacheObject("Organisations", OrganisationDao.cache.size()));
+            cacheObjects.add(new CacheObject("Files", FileDao.cache.size()));
+        }
+        return cacheObjects;
+    }
+
+    public static final class DatabaseProcess {
         private int id;
         private String user;
         private String host;
@@ -110,12 +190,6 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         private String state;
         private String info;
         private String progress;
-
-        @Override
-        public String toString() {
-            return "ProcessStatistic [id=" + id + ", user=" + user + ", host=" + host + ", db=" + db + ", command=" + command
-                + ", time=" + time + ", state=" + state + ", info=" + info + ", progress=" + progress + "]";
-        }
 
         public int getId() {
             return id;
@@ -188,23 +262,53 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         public void setProgress(String progress) {
             this.progress = progress;
         }
+
+        @Override
+        public String toString() {
+            return "ProcessStatistic [id=" + id + ", user=" + user + ", host=" + host + ", db=" + db + ", command=" + command
+                + ", time=" + time + ", state=" + state + ", info=" + info + ", progress=" + progress + "]";
+        }
     }
 
-    public static class CacheStatistic {
-        private final String cache;
-        private final int objects;
+    public static final class CacheObject {
+        private final String name;
+        private final int size;
 
-        public CacheStatistic(String cache, int objects) {
-            this.cache = cache;
-            this.objects = objects;
+        private CacheObject(String name, int size) {
+            this.name = name;
+            this.size = size;
         }
 
-        public String getCache() {
-            return cache;
+        public String getName() {
+            return name;
         }
 
-        public int getObjects() {
-            return objects;
+        public int getSize() {
+            return size;
+        }
+    }
+
+    public static final class RuntimeInfo {
+        private final String totalMemory;
+        private final String freeMemory;
+        private final String maxMemory;
+
+        private RuntimeInfo(Runtime runtime) {
+            this.totalMemory = FileUtils.byteCountToDisplaySize(runtime.totalMemory());
+            this.freeMemory = FileUtils.byteCountToDisplaySize(runtime.freeMemory());
+            this.maxMemory = FileUtils.byteCountToDisplaySize(runtime.maxMemory());
+        }
+
+        public String getTotalMemory() {
+            return totalMemory;
+        }
+
+        public String getFreeMemory() {
+            return freeMemory;
+        }
+
+        public String getMaxMemory() {
+            return maxMemory;
         }
     }
 }

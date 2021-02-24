@@ -2,12 +2,13 @@ package de.l3s.maintenance.resources;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.omnifaces.util.Callback;
 
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.search.solrClient.ResourceDocument;
@@ -16,17 +17,26 @@ import de.l3s.maintenance.MaintenanceTask;
 
 public class ReindexResources extends MaintenanceTask {
 
-    private ResourceDao resourceDao;
-    private SolrClient solrClient;
+    private final ResourceDao resourceDao;
+    private final SolrClient solrClient;
+    private final Callback.WithArgument<Integer> progressCallback;
 
-    @Override
-    protected void init() {
+    private ReindexResources() {
+        progressCallback = integer -> {};
+        resourceDao = getLearnweb().getDaoProvider().getResourceDao();
+        solrClient = getLearnweb().getSolrClient();
+    }
+
+    public ReindexResources(Learnweb learnweb, final Callback.WithArgument<Integer> callback) {
+        super(learnweb);
+
+        progressCallback = callback;
         resourceDao = getLearnweb().getDaoProvider().getResourceDao();
         solrClient = getLearnweb().getSolrClient();
     }
 
     @Override
-    protected void run(final boolean dryRun) throws Exception {
+    public void run(final boolean dryRun) throws Exception {
         // Reindex resources of single user
         //final List<Resource> resources = learnweb.getResourceManager().getResourcesByUserId(9289);
 
@@ -38,7 +48,9 @@ public class ReindexResources extends MaintenanceTask {
 
         /* Reindex all resources */
         deleteAllResource();
+        progressCallback.invoke(0);
         indexAllResources();
+        progressCallback.invoke(100);
 
         log.debug("All tasks completed.");
     }
@@ -55,14 +67,16 @@ public class ReindexResources extends MaintenanceTask {
      * Index all resources.
      */
     public void indexAllResources() throws IOException, SolrServerException {
-        final int batchSize = 1000;
+        final int totalResources = resourceDao.countUndeleted();
+        int indexedResources = 0;
 
-        Collection<ResourceDocument> resourceDocuments = new ArrayList<>(batchSize);
-        //long sendResources = 0;
+        final int batchSize = Math.min(1000, totalResources);
+
+        List<ResourceDocument> resourceDocuments = new ArrayList<>(batchSize);
 
         for (int i = 0; true; i++) {
             log.debug("Load page: {}", i);
-            List<Resource> resources = resourceDao.findAll(i, i * batchSize);
+            List<Resource> resources = resourceDao.findAll(batchSize, i * batchSize);
 
             if (resources.isEmpty()) {
                 log.debug("finished: last page");
@@ -71,11 +85,8 @@ public class ReindexResources extends MaintenanceTask {
 
             log.debug("Process page: {}", i);
 
-            resourceDocuments.clear();
-
             for (Resource resource : resources) {
                 resourceDocuments.add(new ResourceDocument(resource));
-                //sendResources++;
             }
 
             UpdateResponse response = solrClient.getHttpSolrClient().addBeans(resourceDocuments);
@@ -84,13 +95,10 @@ public class ReindexResources extends MaintenanceTask {
             }
 
             solrClient.getHttpSolrClient().commit();
+            indexedResources += resourceDocuments.size();
+            progressCallback.invoke((indexedResources * 100) / totalResources);
 
-            /*
-            long indexedResources = countResources("*:*");
-
-            if(sendResources != indexedResources)
-                throw new RuntimeException(sendResources + " - " + indexedResources);
-            */
+            resourceDocuments.clear();
         }
     }
 

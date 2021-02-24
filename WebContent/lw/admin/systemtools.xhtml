@@ -20,12 +20,70 @@
 
 <ui:define name="center_layout">
 	<h:form>
+		<p:dashboard id="board" model="#{adminSystemBean.model}" reordering="false">
+			<p:panel id="memory" header="Memory usage">
+				<p:panelGrid columns="2" styleClass="w-100">
+					<h:outputText value="Free memory:"/>
+					<h:outputText value="#{adminSystemBean.runtimeInfo.freeMemory}"/>
+
+					<h:outputText value="Total memory:"/>
+					<h:outputText value="#{adminSystemBean.runtimeInfo.totalMemory}"/>
+
+					<h:outputText value="Max memory (Java VM):"/>
+					<h:outputText value="#{adminSystemBean.runtimeInfo.maxMemory}"/>
+				</p:panelGrid>
+			</p:panel>
+
+			<p:panel id="cache" header="Objects cache">
+				<p:dataTable var="cache" value="#{adminSystemBean.cacheObjects}" styleClass="mb-3">
+					<p:column headerText="Name"><h:outputText value="#{cache.name}"/></p:column>
+					<p:column headerText="Size"><h:outputText value="#{cache.size}"/></p:column>
+				</p:dataTable>
+
+				<p:commandButton actionListener="#{adminSystemBean.clearAllCaches()}" value="#{msg.clear_caches}" update="cache" styleClass="orange-btn"/>
+			</p:panel>
+
+			<p:panel id="maintenance" header="Maintenance">
+				<p:toggleSwitch value="#{config.maintenance}">
+					<p:ajax listener="#{adminSystemBean.onMaintenanceUpdate}"/>
+				</p:toggleSwitch>
+			</p:panel>
+
+			<p:panel id="solrIndex" header="Solr Index">
+				<p:panelGrid columns="2" styleClass="w-100 mb-3">
+					<h:outputText value="Total resources:"/>
+					<h:outputText value="#{adminSystemBean.totalResources}"/>
+
+					<h:outputText value="Indexed resources:"/>
+					<h:outputText value="#{adminSystemBean.indexedResources}"/>
+				</p:panelGrid>
+
+				<p:commandButton actionListener="#{adminSystemBean.reindexResources()}" widgetVar="reindexBtn" value="Reindex" styleClass="orange-btn mb-2"
+								 update="solrIndex" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
+
+				<p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true"
+							   labelTemplate="{value}%" styleClass="p-mt-3 collapse" global="false" interval="500">
+					<p:ajax event="complete" listener="#{adminSystemBean.onReindexComplete}"
+							oncomplete="PF('reindexBtn').enable();PF('reindexProgress').cancel();" />
+				</p:progressBar>
+			</p:panel>
+		</p:dashboard>
+
+		<div class="clearfix"></div>
+
 		<p:blockUI block="processTable" widgetVar="processTableOverlay">
 			<h:outputText value="#{msg.please_wait}"/>
 		</p:blockUI>
 
-		<p:dataTable id="processTable" var="process" value="#{adminSystemBean.databaseProcessList}" emptyMessage="no open connection">
-			<f:facet name="header">#{msg.database_connections}</f:facet>
+		<p:dataTable id="processTable" var="process" value="#{adminSystemBean.databaseProcesses}" emptyMessage="No open connections">
+			<f:facet name="header">
+				<div class="d-flex">
+					<div class="me-auto">#{msg.database_connections}</div>
+					<div class="d-md-block d-flex flex-column">
+						<p:commandButton value="Terminate all" action="#{adminSystemBean.terminateAllProcesses()}" styleClass="alt-btn"/>
+					</div>
+				</div>
+			</f:facet>
 
 			<p:column headerText="#{msg.id}" sortBy="#{process.id}">
 				<h:outputText value="#{process.id}"/>
@@ -64,19 +122,12 @@
 			</p:column>
 
 			<p:column headerText="#{msg.terminate}">
-				<p:commandButton styleClass="m-auto d-block text-lowercase" value="#{msg.terminate}"
-								 actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()" update="processTable">
+				<p:commandButton styleClass="m-auto d-block" value="#{msg.terminate}" actionListener="#{adminSystemBean.terminateProcess(process)}"
+								 update="processTable" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()">
 				</p:commandButton>
 			</p:column>
 		</p:dataTable>
 
-		<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()" styleClass="mt-3" value="#{msg.clear_caches}"/>
-
-		<p:commandButton action="#{config.setMaintenance(true)}" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()"
-						 styleClass="mt-3" value="Start mainenance" rendered="#{!config.maintenance}" update="@form"/>
-
-		<p:commandButton action="#{config.setMaintenance(false)}" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()"
-						 styleClass="mt-3" value="Stop mainenance" rendered="#{config.maintenance}" update="@form"/>
 	</h:form>
 </ui:define>
 
