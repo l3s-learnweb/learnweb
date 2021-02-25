@@ -6,18 +6,16 @@
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 <!--@elvariable id="showSelectIcon" type="java.lang.Boolean"-->
 
-<div class="res-block">
+<div class="res-block res-t-#{res.type}">
     <ui:fragment rendered="#{showSelectIcon}">
         <button class="res-selector"></button>
     </ui:fragment>
 
-    <div class="res-bl-preview ratio ratio-4x3">
-        <img src="#{res.smallThumbnail.url}" alt="#{res.title}" title="#{res.title}" loading="lazy"/>
-    </div>
+    <div class="res-bl-preview ratio ratio-4x3"><h:graphicImage value="#{res.smallThumbnail.url}" alt="#{res.title}" title="#{res.title}" rendered="#{res.smallThumbnail.url ne null}"/></div>
 
     <div class="res-bl-details">
         <div class="res-bl-icon">
-            <i class="fas res-t-icon t-#{res.type}" aria-hidden="true"></i>
+            <i class="fas res-t-icon" aria-hidden="true"></i>
         </div>
         <div class="res-bl-desc">
             <h:outputText value="#{res.title}" escape="false" styleClass="res-bl-title"/>

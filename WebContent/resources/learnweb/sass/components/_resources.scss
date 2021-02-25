@@ -16,59 +16,110 @@
   color: $ash;
   @include ui-icon-content($fa-var-file);
 
-  &.t-text {
+  .res-t-text & {
     color: $blueDarker;
     @include ui-icon-content($fa-var-file-alt);
   }
 
-  &.t-video {
+  .res-t-video & {
     color: $red;
     @include ui-icon-content($fa-var-file-video);
   }
 
-  &.t-image {
+  .res-t-image & {
     color: $red;
     @include ui-icon-content($fa-var-file-image);
   }
 
-  &.t-audio {
+  .res-t-audio & {
     color: $red;
     @include ui-icon-content($fa-var-file-audio);
   }
 
-  &.t-pdf {
+  .res-t-pdf & {
     color: $red;
     @include ui-icon-content($fa-var-file-pdf);
   }
 
-  &.t-website {
+  .res-t-website & {
     color: $cyanDarker;
     @include ui-icon-content($fa-var-link);
   }
 
-  &.t-spreadsheet {
+  .res-t-spreadsheet & {
     color: $greenDarker;
     @include ui-icon-content($fa-var-file-excel);
   }
 
-  &.t-presentation {
+  .res-t-presentation & {
     color: $yellowDarkest;
     @include ui-icon-content($fa-var-file-powerpoint);
   }
 
-  &.t-document {
+  .res-t-document & {
     color: $blue;
     @include ui-icon-content($fa-var-file-word);
   }
 
-  &.t-survey {
+  .res-t-survey & {
     color: $cappuccino;
     @include ui-icon-content($fa-var-poll-h);
   }
 
-  &.t-glossary2 {
+  .res-t-glossary2 & {
     color: $purple;
     @include ui-icon-content($fa-var-book);
+  }
+}
+
+.res-bl-preview:empty::before {
+  background-image: url('../images/resources/file.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+  .res-t-text & {
+    background-image: url('../images/resources/text.svg');
+  }
+
+  .res-t-video & {
+    background-image: url('../images/resources/video.svg');
+  }
+
+  .res-t-image & {
+    background-image: url('../images/resources/image.svg');
+  }
+
+  .res-t-audio & {
+    background-image: url('../images/resources/audio.svg');
+  }
+
+  .res-t-pdf & {
+    background-image: url('../images/resources/pdf.svg');
+  }
+
+  .res-t-website & {
+    background-image: url('../images/resources/website.svg');
+  }
+
+  .res-t-spreadsheet & {
+    background-image: url('../images/resources/spreadsheet.svg');
+  }
+
+  .res-t-presentation & {
+    background-image: url('../images/resources/presentation.svg');
+  }
+
+  .res-t-document & {
+    background-image: url('../images/resources/document.svg');
+  }
+
+  .res-t-survey & {
+    background-image: url('../images/resources/survey.svg');
+  }
+
+  .res-t-glossary2 & {
+    background-image: url('../images/resources/glossary.svg');
   }
 }
 
@@ -537,7 +588,7 @@ ul.res-filters {
 
   .res-bl-preview {
     &::before {
-      background: $gray-900;
+      background-color: $gray-400;
     }
 
     img {
@@ -637,7 +688,7 @@ ul.res-filters {
 
     .res-bl-preview {
       &::before {
-        background: $themePrimaryColor;
+        background-color: $themePrimaryColor;
       }
 
       img {
