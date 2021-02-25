@@ -21,12 +21,12 @@
         </div>
     </c:if>
     <c:if test="#{question.type eq 'INPUT_TEXT'}">
-        <div class="d-flex flex-column flex-grow-1">
-            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
+        <div class="d-flex flex-column flex-grow-1">        
+            <p:outputLabel value="#{question.label}" escape="false" for="@next"/>
             <p:inputText required="#{question.required and empty param[save.clientId]}" value="#{update ? '' : surveyBean.userAnswers.answers[question.id]}"
                          title="#{question.info}">
 
-                <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}"/>
+                <f:validateLength disabled="#{empty question.options}" minimum="#{question.options.minLength}" maximum="#{question.options.maxLength}" />
             </p:inputText>
             <p:tooltip showEvent="focus"
                        hideEvent="blur" position="left"
@@ -38,7 +38,7 @@
             <p:outputLabel value="${question.label}" escape="false" for="@next"/>
             <p:inputTextarea required="#{question.required and empty param[save.clientId]}" value="#{update ? '' : surveyBean.userAnswers.answers[question.id]}"
                              title="#{question.info}" rows="4">
-                <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}"/>
+                <f:validateLength disabled="#{empty question.options}" minimum="#{question.options.minLength}" maximum="#{question.options.maxLength}" />
             </p:inputTextarea>
             <p:tooltip for="input_area_#{question.id}" showEvent="focus"
                        hideEvent="blur" position="left"

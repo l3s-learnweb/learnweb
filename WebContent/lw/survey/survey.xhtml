@@ -48,7 +48,10 @@
 </ui:define>
 
 <ui:define name="center_layout">
-
+    <p:messages id="survey_message" showDetail="false" showSummary="true" escape="false" globalOnly="false">
+        <p:autoUpdate />
+    </p:messages>
+    
 	<h:form id="form" rendered="#{surveyBean.resource != null}">
 		<p:panel>
 			<h:panelGroup  rendered="#{surveyBean.formEnabled}">
@@ -68,12 +71,12 @@
 
 				<div class="d-flex mt-3">
 					<div class="me-auto">
-						<p:commandButton value="#{msg.submit}" action="#{surveyBean.onSubmit()}" ajax="true" update="@form">
+						<p:commandButton value="#{msg.submit}" action="#{surveyBean.onSubmit}" ajax="true" update="@form :message">
 							<p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}"/>
 						</p:commandButton>
 
 						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" ajax="true" update="@form" process="@form"
-										 actionListener="#{surveyBean.onSave()}"
+										 actionListener="#{surveyBean.onSave}"
 										 rendered="#{surveyBean.resource.saveable}">
 						</p:commandButton>
 					</div>
