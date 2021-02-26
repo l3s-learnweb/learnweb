@@ -169,13 +169,13 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
     public List<CacheObject> getCacheObjects() {
         if (cacheObjects == null) {
             cacheObjects = new ArrayList<>();
-            cacheObjects.add(new CacheObject("Resources", ResourceDao.cache.size()));
-            cacheObjects.add(new CacheObject("Groups", GroupDao.cache.size()));
-            cacheObjects.add(new CacheObject("Users", UserDao.cache.size()));
-            cacheObjects.add(new CacheObject("Folders", FolderDao.cache.size()));
-            cacheObjects.add(new CacheObject("Courses", CourseDao.cache.size()));
-            cacheObjects.add(new CacheObject("Organisations", OrganisationDao.cache.size()));
-            cacheObjects.add(new CacheObject("Files", FileDao.cache.size()));
+            cacheObjects.add(new CacheObject("Resources", ResourceDao.cache.size(), ResourceDao.cache.sizeSecondaryCache()));
+            cacheObjects.add(new CacheObject("Groups", GroupDao.cache.size(), GroupDao.cache.sizeSecondaryCache()));
+            cacheObjects.add(new CacheObject("Users", UserDao.cache.size(), UserDao.cache.sizeSecondaryCache()));
+            cacheObjects.add(new CacheObject("Folders", FolderDao.cache.size(), FolderDao.cache.sizeSecondaryCache()));
+            cacheObjects.add(new CacheObject("Courses", CourseDao.cache.size(), CourseDao.cache.sizeSecondaryCache()));
+            cacheObjects.add(new CacheObject("Organisations", OrganisationDao.cache.size(), OrganisationDao.cache.sizeSecondaryCache()));
+            cacheObjects.add(new CacheObject("Files", FileDao.cache.size(), FileDao.cache.sizeSecondaryCache()));
         }
         return cacheObjects;
     }
@@ -273,10 +273,12 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
     public static final class CacheObject {
         private final String name;
         private final int size;
+        private final long sizeSecondary;
 
-        private CacheObject(String name, int size) {
+        private CacheObject(String name, int size, long sizeSecondary) {
             this.name = name;
             this.size = size;
+            this.sizeSecondary = sizeSecondary;
         }
 
         public String getName() {
@@ -285,6 +287,10 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
 
         public int getSize() {
             return size;
+        }
+
+        public long getSizeSecondary() {
+            return sizeSecondary;
         }
     }
 

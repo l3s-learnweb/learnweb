@@ -50,7 +50,7 @@ public final class ConverterService {
         String fileName = file.getName();
         String fileExt = fileName.substring(fileName.lastIndexOf('.'));
         String key = FileUtility.generateRevisionId(file);
-        return new ConverterRequest(fileExt, "png", fileName, file.getUrl(), key);
+        return new ConverterRequest(fileExt, "png", fileName, file.getAbsoluteUrl(), key);
     }
 
     private static String getConvertedUrl(final ConverterResponse response) {

@@ -353,7 +353,7 @@ public class SolrSearch implements Serializable {
             int resourceRank = (page - 1) * resultsPerPage;
             int skippedResources = 0;
             for (ResourceDocument resourceDocument : resourceDocuments) {
-                int resourceId = extractResourceId(resourceDocument.getId());
+                int resourceId = SolrClient.extractId(resourceDocument.getId());
                 Resource resource = Learnweb.dao().getResourceDao().findById(resourceId);
 
                 if (resource == null) {
@@ -476,14 +476,5 @@ public class SolrSearch implements Serializable {
             decoratedResource.setSnippet(oneLineSnippet);
         }
         return decoratedResource;
-    }
-
-    private static int extractResourceId(String id) {
-        try {
-            return Integer.parseInt(id.substring(2));
-        } catch (NumberFormatException e) {
-            log.error("SolrSearch, NumberFormatException: {}", e.getMessage());
-            return -1;
-        }
     }
 }

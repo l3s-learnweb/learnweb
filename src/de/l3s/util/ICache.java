@@ -24,6 +24,8 @@ public interface ICache<E> {
      */
     int size();
 
+    long sizeSecondaryCache();
+
     /**
      * Return all values of this cache.
      */

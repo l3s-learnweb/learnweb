@@ -102,6 +102,10 @@ public class File implements Serializable, HasId, Cloneable {
         return url;
     }
 
+    public String getAbsoluteUrl() {
+        return Learnweb.config().getServerUrl() + getUrl().substring(2);
+    }
+
     public void setUrl(String url) {
         this.url = url;
     }

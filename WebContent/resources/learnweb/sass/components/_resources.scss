@@ -686,7 +686,13 @@ ul.res-filters {
     color: $themeElementTextColor;
     background: $themePrimaryDarkerAlt;
 
-    .res-bl-preview {
+    .res-bl-preview:empty {
+      &::before {
+        background-color: lighten($themePrimaryColor, 40%);
+      }
+    }
+
+    .res-bl-preview:not(:empty) {
       &::before {
         background-color: $themePrimaryColor;
       }

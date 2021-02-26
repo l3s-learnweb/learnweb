@@ -70,7 +70,7 @@ public final class CopyFilesOfCopiedResources extends MaintenanceTask {
                         }
 
                         if (resource.getFileUrl().equals(file.getUrl())) {
-                            resource.setFileUrl(copyFile.getUrl());
+                            resource.setFileUrl(copyFile.getAbsoluteUrl());
                         }
 
                         resource.save();

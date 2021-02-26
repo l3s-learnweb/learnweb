@@ -102,7 +102,7 @@ public class ResourcePreviewMaker implements Serializable {
                 fileDao.save(file, UrlHelper.getInputStream(resource.getUrl()));
 
                 resource.addFile(file);
-                resource.setFileUrl(file.getUrl());
+                resource.setFileUrl(file.getAbsoluteUrl());
             }
 
             if (resource.getType() == ResourceType.website) {
@@ -293,7 +293,7 @@ public class ResourcePreviewMaker implements Serializable {
                 // update resource files
                 resource.addFile(convertedFile);
                 resource.setFileName(convertedFile.getName());
-                resource.setFileUrl(convertedFile.getUrl());
+                resource.setFileUrl(convertedFile.getAbsoluteUrl());
                 resource.setUrl(convertedFile.getUrl());
                 resource.setFormat("video/mp4");
             }

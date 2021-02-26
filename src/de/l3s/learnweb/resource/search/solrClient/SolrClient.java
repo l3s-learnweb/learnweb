@@ -131,7 +131,7 @@ public final class SolrClient {
         }
     }
 
-    private int extractId(String id) {
+    static int extractId(String id) {
         try {
             return Integer.parseInt(id.substring(2));
         } catch (NumberFormatException e) {

@@ -808,7 +808,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
                     files.put(file.getType().ordinal(), file);
 
                     if (file.getType() == File.TYPE.FILE_MAIN) {
-                        setFileUrl(file.getUrl());
+                        setFileUrl(file.getAbsoluteUrl());
                         setFileName(file.getName());
 
                         if (getStorageType() == LEARNWEB_RESOURCE) {
@@ -961,7 +961,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             if (getType() == ResourceType.video) {
                 if (isProcessing()) {
                     // return immediately, do not cache the temporal warning
-                    return "<h3 style='padding: 2rem; color: red; position: absolute; width: 100%; box-sizing: border-box;'>We are converting this video. If your browser can't display it, try again in a few minutes.</h3>" + embeddedCode;
+                    return "<h3 style='padding: 2rem; color: red; position: absolute; width: 100%; box-sizing: border-box;'>We are converting this video. If your browser can't display it, try again in a few minutes.</h3>";
                 }
 
                 String iframeUrl = null;

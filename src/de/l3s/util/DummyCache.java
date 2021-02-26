@@ -34,6 +34,11 @@ public class DummyCache<E> implements ICache<E> {
     }
 
     @Override
+    public long sizeSecondaryCache() {
+        return -1;
+    }
+
+    @Override
     public Collection<E> getValues() {
         return null;
     }

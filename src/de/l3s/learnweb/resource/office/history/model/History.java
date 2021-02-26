@@ -4,9 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class History {
+import de.l3s.util.HasId;
+
+public class History implements HasId {
     // only used to store and retrieve data from database
-    private Integer id;
+    private int id;
     private Integer resourceId;
     private Integer fileId;
     private Integer prevFileId;
@@ -20,11 +22,11 @@ public class History {
     private JsonObject user;
     private String serverVersion;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(final Integer id) {
+    public void setId(final int id) {
         this.id = id;
     }
 

@@ -174,7 +174,7 @@ public interface ResourceDao extends SqlObject, Serializable {
                     }
 
                     if (resource.getFileUrl().equals(file.getUrl())) {
-                        resource.setFileUrl(copyFile.getUrl());
+                        resource.setFileUrl(copyFile.getAbsoluteUrl());
                     }
 
                     Learnweb.dao().getResourceDao().save(resource);

@@ -142,7 +142,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
             resource.addFile(file);
             resource.setUrl(file.getUrl());
-            resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
+            resource.setFileUrl(file.getAbsoluteUrl()); // for Loro resources the file url is different from the url
             resource.setFileName(info.getFileName());
 
             log.debug("Extracting metadata from the file...");
@@ -200,7 +200,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             resource.setTitle(info.getTitle());
             resource.addFile(file);
             resource.setUrl(file.getUrl());
-            resource.setFileUrl(file.getUrl());
+            resource.setFileUrl(file.getAbsoluteUrl());
             resource.setFileName(info.getFileName());
             resource.setFormat(info.getMimeType());
 

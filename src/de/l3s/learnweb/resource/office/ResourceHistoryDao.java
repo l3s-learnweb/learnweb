@@ -96,13 +96,13 @@ public interface ResourceHistoryDao extends SqlObject, Serializable {
             File changeFile = Learnweb.dao().getFileDao().findById(rs.getInt("changes_file_id"));
 
             HistoryData prevData = new HistoryData();
-            prevData.setUrl(prevFile.getUrl());
+            prevData.setUrl(prevFile.getAbsoluteUrl());
             prevData.setKey(FileUtility.generateRevisionId(prevFile));
 
             HistoryData historyData = new HistoryData();
             historyData.setPrevious(prevData);
-            historyData.setUrl(file.getUrl());
-            historyData.setChangesUrl(changeFile.getUrl());
+            historyData.setUrl(file.getAbsoluteUrl());
+            historyData.setChangesUrl(changeFile.getAbsoluteUrl());
             historyData.setKey(rs.getString("document_key"));
             historyData.setVersion(rs.getInt("document_version"));
             return historyData;

@@ -38,6 +38,7 @@
 				<p:dataTable var="cache" value="#{adminSystemBean.cacheObjects}" styleClass="mb-3">
 					<p:column headerText="Name"><h:outputText value="#{cache.name}"/></p:column>
 					<p:column headerText="Size"><h:outputText value="#{cache.size}"/></p:column>
+					<p:column headerText="Size (sec.)"><h:outputText value="#{cache.sizeSecondary}"/></p:column>
 				</p:dataTable>
 
 				<p:commandButton actionListener="#{adminSystemBean.clearAllCaches()}" value="#{msg.clear_caches}" update="cache" styleClass="orange-btn"/>
