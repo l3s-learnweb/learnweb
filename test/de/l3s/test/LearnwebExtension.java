@@ -1,9 +1,7 @@
 package de.l3s.test;
 
-import java.util.UUID;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.h2.jdbcx.JdbcConnectionPool;
 import org.jdbi.v3.core.Handle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -17,32 +15,22 @@ public final class LearnwebExtension implements BeforeAllCallback, AfterAllCallb
     private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(LearnwebExtension.class);
     private static final ReentrantLock lock = new ReentrantLock();
 
+    private final boolean useRealDatabase;
+
     private Handle handle;
     private LearnwebResource resource;
 
-    private static LearnwebResource getResource(ExtensionContext context) {
-        ExtensionContext.Store store = context.getRoot().getStore(NAMESPACE);
-        LearnwebResource resource = store.get("res", LearnwebResource.class);
-
-        if (resource == null) {
-            lock.lock();
-            try {
-                resource = store.getOrComputeIfAbsent("res", s -> createResource(), LearnwebResource.class);
-            } finally {
-                lock.unlock();
-            }
-        }
-        return resource;
+    public LearnwebExtension() {
+        this(false);
     }
 
-    private static LearnwebResource createResource() {
-        JdbcConnectionPool dataSource = JdbcConnectionPool.create("jdbc:h2:mem:" + UUID.randomUUID() + ";DB_CLOSE_DELAY=-1;MODE=MYSQL", "", "");
-        return new LearnwebResource(dataSource);
+    public LearnwebExtension(boolean useRealDatabase) {
+        this.useRealDatabase = useRealDatabase;
     }
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        resource = getResource(context);
+        resource = getResource(context, useRealDatabase);
 
         handle = resource.getLearnweb().openJdbiHandle();
         handle.begin();
@@ -79,5 +67,20 @@ public final class LearnwebExtension implements BeforeAllCallback, AfterAllCallb
      */
     public <T> T attach(final Class<T> extension) {
         return handle.attach(extension);
+    }
+
+    private static LearnwebResource getResource(ExtensionContext context, boolean useRealDatabase) {
+        ExtensionContext.Store store = context.getRoot().getStore(NAMESPACE);
+        LearnwebResource resource = store.get("res", LearnwebResource.class);
+
+        if (resource == null) {
+            lock.lock();
+            try {
+                resource = store.getOrComputeIfAbsent("res", s -> new LearnwebResource(useRealDatabase), LearnwebResource.class);
+            } finally {
+                lock.unlock();
+            }
+        }
+        return resource;
     }
 }

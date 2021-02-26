@@ -167,7 +167,7 @@ public class DaoProvider {
         }
     }
 
-    private static HikariDataSource createDataSource(final ConfigProvider configProvider) {
+    public static HikariDataSource createDataSource(final ConfigProvider configProvider) {
         HikariDataSource ds = new HikariDataSource();
         // Configuration docs https://github.com/brettwooldridge/HikariCP
         ds.setDriverClassName(configProvider.getProperty("mysql_driver"));

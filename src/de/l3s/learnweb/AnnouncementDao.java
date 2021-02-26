@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -26,26 +27,29 @@ public interface AnnouncementDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_news ORDER BY created_at DESC")
     List<Announcement> findAll();
 
-    @SqlQuery("SELECT * FROM lw_news WHERE hidden = false ORDER BY created_at DESC LIMIT ?")
+    @SqlQuery("SELECT * FROM lw_news WHERE hidden = 0 ORDER BY created_at DESC LIMIT ?")
     List<Announcement> findLastCreated(int limit);
 
     @SqlUpdate("DELETE FROM lw_news WHERE news_id = ?")
     void delete(int newsId);
 
     default void save(Announcement announcement) {
+        if (announcement.getDate() == null) {
+            announcement.setDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("news_id", announcement.getId() < 1 ? null : announcement.getId());
         params.put("title", announcement.getTitle());
         params.put("message", announcement.getText());
         params.put("user_id", announcement.getUserId());
         params.put("hidden", announcement.isHidden());
+        params.put("created_at", announcement.getDate());
 
-        SqlHelper.handleSave(getHandle(), "lw_news", params).executeAndReturnGeneratedKeys("news_id", "created_at")
-            .map(rowView -> {
-                announcement.setId(rowView.getColumn("news_id", Integer.class));
-                announcement.setDate(rowView.getColumn("created_at", LocalDateTime.class));
-                return announcement;
-            }).findOne();
+        Optional<Integer> announcementId = SqlHelper.handleSave(getHandle(), "lw_news", params)
+            .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
+
+        announcementId.ifPresent(announcement::setId);
     }
 
     class AnnouncementMapper implements RowMapper<Announcement> {
