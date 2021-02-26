@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="text-truncate">
-                    <h:outputLink rendered="#{res.id != -1}" value="group/resources.jsf?=">
+                    <h:outputLink rendered="#{res.id != -1}" value="group/resources.jsf">
                         <f:param name="group_id" value="#{res.resource.groupId}"/>
                         <f:param name="folder_id" value="#{res.resource.folderId}"/>
                         <i class="fas fa-angle-double-right" aria-hidden="true"></i> #{msg.stored_in} #{res.groupId == 0? msg.myPrivateResources : res.group.title}

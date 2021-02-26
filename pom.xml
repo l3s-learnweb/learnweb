@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.05.01</version>
+    <version>3.05.07</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -210,7 +210,7 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>8.8.0</version>
+            <version>8.8.1</version>
             <exclusions>
                 <!-- conflicts with poi-ooxml dependencies -->
                 <exclusion>
@@ -251,7 +251,7 @@
         <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry-log4j2</artifactId>
-            <version>4.1.0</version>
+            <version>4.2.0</version>
         </dependency>
 
         <!-- ################ Other dependencies (usually your dependencies go to this section) ################ -->
