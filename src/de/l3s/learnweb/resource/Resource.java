@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -75,7 +74,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private ResourceType type;
     private String format = ""; // original mineType of the resource
     private int duration;
-    private Integer ownerUserId;
+    private int ownerUserId;
     private String idAtService = "";
     private int ratingSum;
     private int rateNumber;
@@ -276,19 +275,19 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     @Override
-    public Integer getUserId() {
+    public int getUserId() {
         return ownerUserId;
     }
 
     @Override
-    public void setUserId(Integer userId) {
+    public void setUserId(int userId) {
         this.ownerUserId = userId;
         this.owner = null;
     }
 
     @Override
     public User getUser() {
-        if (null == owner && -1 != ownerUserId) {
+        if (null == owner && ownerUserId > 0) {
             owner = Learnweb.dao().getUserDao().findById(ownerUserId);
         }
         return owner;
@@ -462,7 +461,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public void setStarRatingRounded(int value) {
         // dummy method, is required by p:rating
-        log.error("Is it called?");
     }
 
     public int getRateNumber() {
@@ -596,14 +594,14 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             this.type = ResourceType.audio;
         } else if (format.equals("application/pdf")) {
             this.type = ResourceType.pdf;
-        } else if (format.contains("ms-excel") || format.contains("spreadsheet")) {
+        } else if (StringUtils.containsAny(format, "ms-excel", "spreadsheet")) {
             this.type = ResourceType.spreadsheet;
-        } else if (format.contains("ms-powerpoint") || format.contains("presentation")) {
+        } else if (StringUtils.containsAny(format, "ms-powerpoint", "presentation")) {
             this.type = ResourceType.presentation;
-        } else if (format.contains("msword") || format.contains("ms-word") || format.contains("wordprocessing") || format.contains("opendocument.text") || format.equals("application/rtf")) {
+        } else if (StringUtils.containsAny(format, "msword", "ms-word", "wordprocessing", "opendocument.text", "application/rtf")) {
             this.type = ResourceType.document;
-        } else if (Arrays.asList("application/x-msdownload", "application/x-ms-dos-executable", "application/octet-stream", "application/x-gzip", "application/gzip", "application/x-rar-compressed", "application/zip", "application/x-shockwave-flash", "message/rfc822")
-            .contains(format)) {
+        } else if (StringUtils.equalsAny(format, "application/x-msdownload", "application/x-ms-dos-executable", "application/octet-stream",
+            "application/x-gzip", "application/gzip", "application/x-rar-compressed", "application/zip", "application/x-shockwave-flash", "message/rfc822")) {
             // handle known types of downloadable resources
             this.type = ResourceType.file;
         } else {
@@ -961,7 +959,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             if (getType() == ResourceType.video) {
                 if (isProcessing()) {
                     // return immediately, do not cache the temporal warning
-                    return "<h3 style='padding: 2rem; color: red; position: absolute; width: 100%; box-sizing: border-box;'>We are converting this video. If your browser can't display it, try again in a few minutes.</h3>";
+                    return "<h3 style='padding: 2rem; color: red; position: absolute; width: 100%; box-sizing: border-box;'>"
+                        + "We are converting this video. If your browser can't display it, try again in a few minutes.</h3>";
                 }
 
                 String iframeUrl = null;
@@ -1019,7 +1018,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     @Override
     public String toString() {
-        return "Resource [id=" + id + ", title=" + title + ", url=" + url + ", storageType=" + storageType + ", source=" + source + ", type=" + type + ", format=" + format + ", date=" + getCreationDate() + "]";
+        return "Resource [id=" + id + ", title=" + title + ", url=" + url + ", storageType=" + storageType +
+            ", source=" + source + ", type=" + type + ", format=" + format + ", date=" + getCreationDate() + "]";
     }
 
     public String getTranscript() {
@@ -1159,7 +1159,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     @Override
     public void moveTo(int newGroupId, int newFolderId) {
-        // TODO @astappiev: throw an error instead of silent ignore
         if (getGroupId() == newGroupId && getFolderId() == newFolderId) {
             return; // if move to the same folder
         }
@@ -1361,7 +1360,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         if (logs == null) {
             logs = new Expirable<>(Duration.of(10, ChronoUnit.SECONDS), () -> {
                 Instant start = Instant.now();
-                List<LogEntry> logs = Learnweb.dao().getLogDao().findByGroupIdAndTargetId(this.getGroupId(), this.getId(), Action.collectOrdinals(Action.LOGS_RESOURCE_FILTER));
+                List<LogEntry> logs = Learnweb.dao().getLogDao()
+                    .findByGroupIdAndTargetId(this.getGroupId(), this.getId(), Action.collectOrdinals(Action.LOGS_RESOURCE_FILTER));
 
                 long duration = Duration.between(start, Instant.now()).toMillis();
                 if (duration > 100) {

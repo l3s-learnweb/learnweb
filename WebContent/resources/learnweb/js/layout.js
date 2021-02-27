@@ -320,34 +320,6 @@ PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
   this.resetPosition();
 })(PrimeFaces.widget.Dialog.prototype.show));
 
-/**
- * Update p:linkButton focus styles
- * TODO @astappiev: remove after PF 9.0 is released
- * https://github.com/primefaces/primefaces/issues/5698
- */
-PrimeFaces.widget.LinkButton = PrimeFaces.widget.BaseWidget.extend({
-  init(cfg) {
-    this._super(cfg);
-    this.button = this.jq;
-    this.link = this.jq.children('a');
-
-    PrimeFaces.skinButton(this.button);
-    this.bindEvents();
-  },
-
-  bindEvents() {
-    const $this = this;
-
-    if (this.link) {
-      this.link.off().on('focus.linkbutton keydown.linkbutton', () => {
-        $this.button.addClass('ui-state-focus ui-state-active');
-      }).on('blur.linkbutton', () => {
-        $this.button.removeClass('ui-state-focus ui-state-active');
-      });
-    }
-  },
-});
-
 // noinspection JSUnusedGlobalSymbols
 /**
  * This is used for adaptive PrimeFaces Carousel.

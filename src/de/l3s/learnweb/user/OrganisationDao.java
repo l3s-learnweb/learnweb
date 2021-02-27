@@ -47,17 +47,6 @@ public interface OrganisationDao extends SqlObject, Serializable {
     List<String> findAuthors(int organisationId);
 
     default void save(Organisation organisation) {
-        // TODO: why do we need this?
-        // if (organisation.getId() < 0) { // the organisation is not yet stored at the database // we have to get a new id from the groupManager
-        //     Group group = new Group();
-        //     group.setTitle(organisation.getTitle());
-        //     group.setDescription("Organisation");
-        //     groupDao.save(group);
-        //
-        //     organisation.setId(group.getId());
-        //     group.delete();
-        // }
-
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("organisation_id", organisation.getId() < 1 ? null : organisation.getId());
         params.put("title", organisation.getTitle());

@@ -32,9 +32,17 @@ public class UserDetailBean extends ApplicationBean {
     private UserDao userDao;
 
     public void onLoad() {
+        User loggedInUser = getUser();
+        BeanAssert.authorized(loggedInUser);
+
+        if (userId == 0 || loggedInUser.getId() == userId) {
+            selectedUser = loggedInUser; // user edits himself
+        } else {
+            selectedUser = userDao.findById(userId); // an admin edits an user
+        }
+
         BeanAssert.authorized(isLoggedIn());
 
-        selectedUser = userDao.findById(userId);
         BeanAssert.isFound(selectedUser);
 
         if (selectedUser.getOrganisation().getOption(Option.Privacy_Anonymize_usernames)) {

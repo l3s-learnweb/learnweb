@@ -22,10 +22,11 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     @NotBlank
     private String title;
     private String description;
-    private Integer userId;
+    private int userId;
     private boolean deleted = false; // indicates whether this folder has been deleted
 
     // cache
+    private transient User user;
     private transient String path;
     private transient String prettyPath;
     private transient List<Folder> subFolders;
@@ -147,12 +148,12 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     }
 
     @Override
-    public Integer getUserId() {
+    public int getUserId() {
         return userId;
     }
 
     @Override
-    public void setUserId(Integer userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -167,10 +168,10 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     @Override
     public User getUser() {
-        if (userId == null) {
-            return null;
+        if (user == null && userId > 0) {
+            user = Learnweb.dao().getUserDao().findById(userId);
         }
-        return Learnweb.dao().getUserDao().findById(userId);
+        return user;
     }
 
     @Override

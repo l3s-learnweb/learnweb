@@ -9,7 +9,7 @@
 
 <ui:define name="metadata">
 	<f:metadata>
-		<f:viewParam name="user_id" value="#{userDetailBean.userId}" required="true" />
+		<f:viewParam name="user_id" value="#{userDetailBean.userId}" converter="idConverter"/>
 		<f:viewAction action="#{userDetailBean.onLoad}"/>
 	</f:metadata>
 </ui:define>

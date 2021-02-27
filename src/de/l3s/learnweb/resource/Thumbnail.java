@@ -14,7 +14,6 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable, Cloneable
     private final Integer fileId;
     private int width = 0;
     private int height = 0;
-    // TODO @astappiev: add flag which indicates when the Thumbnail is a placeholder
 
     public Thumbnail(String url, Integer width, Integer height, Integer fileId) {
         this.url = url;

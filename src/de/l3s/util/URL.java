@@ -37,11 +37,11 @@ public class URL {
 
     /**
      * Returns an UTf8 encoded String.
+     *
+     * TODO @astappiev: decode puny and percent-encoding
      */
     public String toUTF8String() {
         throw new NotImplementedException("");
-        // TODO @astappiev: decode puny and percent-encoding
-        //return new String(url, StandardCharsets.US_ASCII);
     }
 
     public byte[] getBytes() {

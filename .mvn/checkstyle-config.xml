@@ -76,10 +76,10 @@
     <!-- See https://checkstyle.org/config_sizes.html -->
     <!--<module name="FileLength"/> Changed: disable inspection -->
     <module name="LineLength">
-        <property name="severity" value="ignore"/> <!-- Changed: decreased severity TODO @astappiev: fix line length in files -->
+        <property name="severity" value="warning"/>
         <property name="max" value="160"/> <!-- Changed: default is 80 -->
         <property name="fileExtensions" value="java"/>
-        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/> <!-- Changed: copied from Google -->
+        <property name="ignorePattern" value="@SqlQuery|@SqlUpdate|^package.*|^import.*|a href|href|http://|https://|ftp://"/> <!-- Changed: copied from Google -->
     </module>
 
     <!-- Checks for whitespace                               -->

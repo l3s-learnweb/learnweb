@@ -94,7 +94,8 @@ public class ResourcePreviewMaker implements Serializable {
         InputStream inputStream = null;
         try {
             // if a web resource is not a simple website then download it
-            if (resource.getStorageType() == Resource.WEB_RESOURCE && resource.getType() != ResourceType.website && (resource.getSource() == ResourceService.bing || resource.getSource() == ResourceService.internet)) {
+            if (resource.getStorageType() == Resource.WEB_RESOURCE && resource.getType() != ResourceType.website
+                && (resource.getSource() == ResourceService.bing || resource.getSource() == ResourceService.internet)) {
                 File file = new File();
                 file.setType(TYPE.FILE_MAIN);
                 file.setName(resource.getFileName());
@@ -118,7 +119,7 @@ public class ResourcePreviewMaker implements Serializable {
                 processFile(resource, inputStream);
             }
         } catch (Throwable e) {
-            log.error("Error in creating thumbnails from {} (detected type: {}) for resource: {}", resource.getFormat(), resource.getType(), resource.getId(), e);
+            log.error("Error creating thumbnails from {} (type: {}) for resource: {}", resource.getFormat(), resource.getType(), resource.getId(), e);
         } finally {
             if (inputStream != null) {
                 inputStream.close();
@@ -145,9 +146,6 @@ public class ResourcePreviewMaker implements Serializable {
             case text:
             case audio:
             case file:
-                // TODO @astappiev: add default icons
-                // Oleh: I think we don't need to store default icon in database,
-                // instead we need to generate it "on the fly" when we load resource from db
                 break;
             default:
                 log.error("Can't create thumbnail. Don't know how to handle resource {}, type {}", resource.getId(), resource.getType());
@@ -219,10 +217,6 @@ public class ResourcePreviewMaker implements Serializable {
         file.setMimeType("image/png");
         fileDao.save(file, img.getInputStream());
 
-        if (file.getId() > 0) {
-            archiveUrlDao.updateFIleId(file.getId(), resource.getId(), archiveUrl);
-        }
-
         resource.addFile(file);
         resource.setThumbnail4(new Thumbnail(file.getUrl(), img.getWidth(), img.getHeight(), file.getId()));
 
@@ -233,7 +227,8 @@ public class ResourcePreviewMaker implements Serializable {
         File originalFile;
         FFmpegProbeResult ffProbeResult = null;
         try {
-            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == null)) {
+            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video
+                && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == null)) {
                 originalFile = resource.getFile(TYPE.FILE_MAIN);
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 
@@ -311,7 +306,13 @@ public class ResourcePreviewMaker implements Serializable {
         FFmpegFormat format = in.getFormat();
         log.info(String.format("Converting '%s' from format '%s' into mp4 format.", StringHelper.getNameFromPath(format.filename), format.format_long_name));
 
-        FFmpegBuilder builder = new FFmpegBuilder().setInput(in).overrideOutputFiles(true).addOutput(outputMediaPath).setFormat("mp4").setVideoCodec("libx264").setVideoBitRate(format.bit_rate).done();
+        FFmpegBuilder builder = new FFmpegBuilder().setInput(in)
+            .overrideOutputFiles(true)
+            .addOutput(outputMediaPath)
+            .setFormat("mp4")
+            .setVideoCodec("libx264")
+            .setVideoBitRate(format.bit_rate)
+            .done();
 
         getFFmpegExecutor().createJob(builder).run();
         log.info("Converting done.");

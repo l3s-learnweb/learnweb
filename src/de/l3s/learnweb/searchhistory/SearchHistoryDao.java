@@ -3,6 +3,7 @@ package de.l3s.learnweb.searchhistory;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 import org.jdbi.v3.core.mapper.RowMapper;
@@ -33,7 +34,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
 
     @RegisterRowMapper(QueryMapper.class)
     @SqlQuery("SELECT q.search_id, q.query, q.mode, q.timestamp, q.service "
-        + "FROM learnweb_large.sl_query q join learnweb_main.lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id "
+        + "FROM learnweb_large.sl_query q join lw_user_log l ON q.search_id = l.target_id AND q.user_id = l.user_id "
         + "WHERE l.action = 5 AND l.session_id = ? ORDER BY q.timestamp ASC")
     List<SearchQuery> findQueriesBySessionId(String sessionId);
 
@@ -45,7 +46,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     default List<ResourceDecorator> findSearchResultsByQuery(SearchQuery query, int limit) {
         ResourceDao resourceDao = getHandle().attach(ResourceDao.class);
 
-        return getHandle().select("SELECT r.resource_id, r.rank, r.url, r.title, r.description, r.thumbnail_url, r.thumbnail_width, r.thumbnail_height, COUNT(a.action = 'resource_clicked') AS clicked, COUNT(a.action = 'resource_saved') AS saved "
+        return getHandle().select("SELECT r.resource_id, r.rank, r.url, r.title, r.description, r.thumbnail_url, r.thumbnail_width, r.thumbnail_height, "
+            + "COUNT(a.action = 'resource_clicked') AS clicked, COUNT(a.action = 'resource_saved') AS saved "
             + "FROM learnweb_large.sl_resource r LEFT JOIN learnweb_large.sl_action a ON r.search_id = a.search_id AND r.rank = a.rank "
             + "WHERE r.search_id = ? GROUP BY r.resource_id, r.rank, r.url, r.title, r.description ORDER BY r.rank ASC LIMIT ?", query.getSearchId(), limit)
             .map((rs, ctx) -> {
@@ -80,7 +82,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     }
 
     default List<SearchSession> findSessionsByUserId(int userId) {
-        return getHandle().select("SELECT DISTINCT l.session_id FROM learnweb_large.sl_query q JOIN learnweb_main.lw_user_log l ON q.search_id = l.target_id "
+        return getHandle().select("SELECT DISTINCT l.session_id FROM learnweb_large.sl_query q JOIN lw_user_log l ON q.search_id = l.target_id "
             + "AND q.user_id = l.user_id WHERE l.action = 5 AND l.user_id = ? ORDER BY q.timestamp DESC LIMIT 30", userId)
             .map((rs, ctx) -> {
                 SearchSession session = new SearchSession(rs.getString("session_id"), userId);
@@ -90,8 +92,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     }
 
     default List<SearchSession> findSessionsByGroupId(int groupId) {
-        return getHandle().select("SELECT DISTINCT l.user_id, l.session_id FROM learnweb_large.sl_query q JOIN learnweb_main.lw_user_log l ON q.search_id = l.target_id "
-            + "AND q.user_id = l.user_id JOIN learnweb_main.lw_group_user ug ON ug.user_id =  l.user_id "
+        return getHandle().select("SELECT DISTINCT l.user_id, l.session_id FROM learnweb_large.sl_query q JOIN lw_user_log l ON q.search_id = l.target_id "
+            + "AND q.user_id = l.user_id JOIN lw_group_user ug ON ug.user_id =  l.user_id "
             + "WHERE l.action = 5 AND ug.group_id = ? GROUP BY l.user_id, l.session_id, q.timestamp ORDER BY q.timestamp DESC LIMIT 30", groupId)
             .map((rs, ctx) -> {
                 SearchSession session = new SearchSession(rs.getString("session_id"), rs.getInt("user_id"));
@@ -116,7 +118,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             return;
         }
 
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO learnweb_large.sl_resource (search_id, rank, resource_id, url, title, description, thumbnail_url, thumbnail_height, thumbnail_width) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO learnweb_large.sl_resource (search_id, rank, resource_id, url, title, description, "
+            + "thumbnail_url, thumbnail_height, thumbnail_width) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         for (ResourceDecorator decoratedResource : resources) {
             batch.bind(0, searchId);
@@ -124,7 +127,14 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
 
             if (decoratedResource.getResource().getId() > 0) { // resource is stored in Learnweb, we do not need to save the title or description
                 batch.bind(2, decoratedResource.getResource().getId());
+                batch.bindNull(3, Types.VARCHAR);
+                batch.bindNull(4, Types.VARCHAR);
+                batch.bindNull(5, Types.VARCHAR);
+                batch.bindNull(6, Types.VARCHAR);
+                batch.bindNull(7, Types.INTEGER);
+                batch.bindNull(8, Types.INTEGER);
             } else { // no learnweb resource -> store title URL and description
+                batch.bindNull(2, Types.INTEGER);
                 batch.bind(3, decoratedResource.getUrl());
                 batch.bind(4, StringHelper.shortnString(decoratedResource.getTitle(), 250));
                 batch.bind(5, StringHelper.shortnString(decoratedResource.getDescription(), 1000));
@@ -134,6 +144,10 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                     batch.bind(6, thumbnail.getUrl());
                     batch.bind(7, Math.min(thumbnail.getHeight(), 65535));
                     batch.bind(8, Math.min(thumbnail.getWidth(), 65535));
+                } else {
+                    batch.bindNull(6, Types.VARCHAR);
+                    batch.bindNull(7, Types.INTEGER);
+                    batch.bindNull(8, Types.INTEGER);
                 }
             }
             batch.add();

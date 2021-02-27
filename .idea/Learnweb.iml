@@ -33,7 +33,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: de.l3s.interweb:interwebj-client:3.1.0" level="project" />
+    <orderEntry type="library" name="Maven: de.l3s.interweb:interwebj-client:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.14.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.servlet:jakarta.servlet-api:4.0.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.el:jakarta.el-api:3.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.myfaces.core:myfaces-api:2.3-next-M4" level="project" />
@@ -155,7 +156,6 @@
     <orderEntry type="library" name="Maven: org.tuckey:urlrewritefilter:4.0.4" level="project" />
     <orderEntry type="library" name="Maven: it.sauronsoftware.cron4j:cron4j:2.2.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-web:2.14.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.14.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.14.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.14.0" level="project" />
     <orderEntry type="library" name="Maven: io.sentry:sentry-log4j2:4.2.0" level="project" />

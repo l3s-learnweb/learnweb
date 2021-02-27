@@ -24,4 +24,19 @@ class LanguageBundleTest {
         ResourceBundle bundlePt = new LanguageBundle(new Locale("pt"));
         assertEquals("Bem-vindo ao Learnweb", bundlePt.getString("homepageTitle"));
     }
+
+    @Test
+    void userGenderTest() {
+        ResourceBundle bundleEn = new LanguageBundle(new Locale("en", "US", ""));
+        assertEquals("Unassigned", bundleEn.getString("user.gender.UNASSIGNED"));
+        assertEquals("Male", bundleEn.getString("user.gender.MALE"));
+        assertEquals("Female", bundleEn.getString("user.gender.FEMALE"));
+        assertEquals("Other", bundleEn.getString("user.gender.OTHER"));
+
+        ResourceBundle bundleDe = new LanguageBundle(new Locale("de"));
+        assertEquals("Nicht ausgewählt", bundleDe.getString("user.gender.UNASSIGNED"));
+        assertEquals("Männlich", bundleDe.getString("user.gender.MALE"));
+        assertEquals("Weiblich", bundleDe.getString("user.gender.FEMALE"));
+        assertEquals("Divers", bundleDe.getString("user.gender.OTHER"));
+    }
 }

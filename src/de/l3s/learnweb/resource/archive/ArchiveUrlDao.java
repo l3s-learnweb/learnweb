@@ -29,10 +29,6 @@ public interface ArchiveUrlDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_resource_archiveurl WHERE resource_id = ? AND DATE(timestamp) = DATE(?)")
     List<ArchiveUrl> findByResourceId(int resourceId, LocalDate timestamp);
 
-    // TODO: `file_id` is not existing column
-    @SqlUpdate("UPDATE lw_resource_archiveurl SET file_id = ?  WHERE resource_id=? and archive_url=?")
-    void updateFIleId(int fileId, int resourceId, String archiveUrl);
-
     @SqlUpdate("INSERT into lw_resource_archiveurl(resource_id,archive_url,timestamp) VALUES (?, ?, ?)")
     void insertArchiveUrl(int resourceId, String archiveUrl, LocalDateTime timestamp);
 

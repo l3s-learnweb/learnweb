@@ -135,7 +135,8 @@ public interface ResourceDao extends SqlObject, Serializable {
      * @return number of total thumb ups (left) and thumb downs (right).
      */
     default Optional<ImmutablePair<Integer, Integer>> findThumbRatings(Resource resource) {
-        return getHandle().select("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM lw_thumb WHERE resource_id = ?", resource)
+        return getHandle()
+            .select("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM lw_thumb WHERE resource_id = ?", resource)
             .map((rs, ctx) -> new ImmutablePair<>(rs.getInt(1), rs.getInt(2))).findOne();
     }
 
@@ -157,8 +158,8 @@ public interface ResourceDao extends SqlObject, Serializable {
 
         try {
             for (File file : sourceResource.getFiles().values()) {
-                if (List.of(File.TYPE.THUMBNAIL_VERY_SMALL, File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_SQUARED, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_LARGE,
-                    File.TYPE.CHANGES, File.TYPE.HISTORY_FILE).contains(file.getType())) {
+                if (List.of(File.TYPE.THUMBNAIL_VERY_SMALL, File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_SQUARED, File.TYPE.THUMBNAIL_MEDIUM,
+                    File.TYPE.THUMBNAIL_LARGE, File.TYPE.CHANGES, File.TYPE.HISTORY_FILE).contains(file.getType())) {
                     continue; // skip them
                 }
 
@@ -196,7 +197,7 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("source", resource.getSource().name());
         params.put("type", resource.getType().name());
         params.put("format", resource.getFormat());
-        params.put("owner_user_id", resource.getUserId());
+        params.put("owner_user_id", resource.getUserId() < 1 ? null : resource.getUserId());
         params.put("rating", resource.getRatingSum());
         params.put("rate_number", resource.getRateNumber());
         params.put("query", resource.getQuery());

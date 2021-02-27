@@ -238,7 +238,8 @@ public class Search implements Serializable {
 
         if (notSatisfyFiltersCount > 0 || privateResourceCount > 0 || duplicatedUrlCount > 0) {
             this.removedResourceCount += duplicatedUrlCount + privateResourceCount + notSatisfyFiltersCount;
-            log.debug("Filtered {} resources and skipped {} private resources, {} duplicated resources", notSatisfyFiltersCount, privateResourceCount, duplicatedUrlCount);
+            log.debug("Filtered {} resources and skipped {} private resources, {} duplicated resources",
+                notSatisfyFiltersCount, privateResourceCount, duplicatedUrlCount);
         }
 
         return newResources;
@@ -323,10 +324,6 @@ public class Search implements Serializable {
             rankIndex.put(temporaryId, decoratedResource);
             temporaryId++;
 
-            // TODO: why do we need this?
-            // if (configMode == SearchMode.text) {
-            //     Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
-            // }
             newResources.add(decoratedResource);
         }
 
