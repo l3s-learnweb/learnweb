@@ -125,7 +125,8 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
             return;
         }
 
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_transcript_selections(resource_id,words_selected,user_annotation,start_offset,end_offset) VALUES (?,?,?,?,?)");
+        PreparedBatch batch = getHandle()
+            .prepareBatch("INSERT INTO lw_transcript_selections(resource_id,words_selected,user_annotation,start_offset,end_offset) VALUES (?,?,?,?,?)");
 
         Elements elements = Jsoup.parse(transcript).select("span");
         for (Element element : elements) {

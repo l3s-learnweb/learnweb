@@ -130,7 +130,8 @@ public interface FileDao extends SqlObject, Serializable {
                 file.setLastModified(RsHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
 
                 if (!file.getActualFile().exists()) {
-                    LogManager.getLogger(FileMapper.class).warn("Can't find file '{}' for resource {}", file.getActualFile().getAbsolutePath(), file.getResourceId());
+                    LogManager.getLogger(FileMapper.class).warn("Can't find file '{}' for resource {}",
+                        file.getActualFile().getAbsolutePath(), file.getResourceId());
                     file.setExists(false);
                 }
 

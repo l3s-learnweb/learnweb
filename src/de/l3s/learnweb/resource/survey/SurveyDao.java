@@ -214,7 +214,8 @@ public interface SurveyDao extends SqlObject, Serializable {
      * @param finalSubmit true if this is the final submit
      */
     default void saveAnswers(SurveyUserAnswers surveyAnswer, final boolean finalSubmit) {
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_survey_answer (resource_id, user_id, question_id, answer) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE answer = VALUES(answer)");
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_survey_answer (resource_id, user_id, question_id, answer) VALUES (?, ?, ?, ?) "
+            + "ON DUPLICATE KEY UPDATE answer = VALUES(answer)");
 
         surveyAnswer.getAnswers().forEach((questionId, answer) ->
             batch.add(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), questionId, answer));

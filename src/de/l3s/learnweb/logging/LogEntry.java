@@ -124,6 +124,10 @@ public class LogEntry implements Serializable {
         return LanguageBundle.getLocaleMessage(locale, "log_a_resource");
     }
 
+    private String getForumLink(Locale locale) {
+        return "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" target=\"_top\"><b>" + getParams() + "</b></a> ";
+    }
+
     public boolean isPrivate() {
         switch (getAction()) {
             case adding_resource:
@@ -170,7 +174,8 @@ public class LogEntry implements Serializable {
                 description = usernameLink + LanguageBundle.getLocaleMessage(locale, "log_commenting_resource", getResourceLink(locale));
                 Optional<Comment> comment = Learnweb.dao().getCommentDao().findById(NumberUtils.toInt(getParams()));
                 if (comment.isPresent()) {
-                    description += " " + LanguageBundle.getLocaleMessage(locale, "with") + " " + "<b>" + StringHelper.shortnString(comment.get().getText(), 100) + "</b>";
+                    description += " " + LanguageBundle.getLocaleMessage(locale, "with") +
+                        " <b>" + StringHelper.shortnString(comment.get().getText(), 100) + "</b>";
                 }
                 break;
             case deleting_comment:
@@ -233,12 +238,10 @@ public class LogEntry implements Serializable {
                 description = usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_deleting_link", getGroupLink(locale));
                 break;
             case forum_topic_added:
-                String topicLink = "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
-                description = usernameLink + "has added " + "<b>" + topicLink + "</b>" + " post";
+                description = usernameLink + "has added " + "<b>" + getForumLink(locale) + "</b>" + " post";
                 break;
             case forum_post_added:
-                String topic = "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + getParams() + "</a>";
-                description = usernameLink + "has replied to " + "<b>" + topic + "</b>" + " topic";
+                description = usernameLink + "has replied to " + "<b>" + getForumLink(locale) + "</b>" + " topic";
 
                 // General actions
                 break;

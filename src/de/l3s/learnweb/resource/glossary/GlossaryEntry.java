@@ -16,7 +16,7 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id = -1;
-    private Integer originalEntryId; // This value is -1 when the entry has been imported from a file. When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
+    private Integer originalEntryId; // When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
     private int resourceId;
     private boolean deleted;
     private int userId; // the user who created this entry
@@ -31,8 +31,8 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
     @Length(max = 90)
     private String topicThree;
     private List<GlossaryTerm> terms = new LinkedList<>();
-    private String fulltext; //fulltext search in glossary
-    private boolean imported;
+    private String fulltext; // fulltext search in glossary
+    private boolean imported; // This value is `true` when the entry has been imported from a file.
     private LocalDateTime timestamp;
 
     /**

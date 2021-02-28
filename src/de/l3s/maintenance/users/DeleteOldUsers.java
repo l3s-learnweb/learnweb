@@ -66,7 +66,8 @@ public class DeleteOldUsers extends MaintenanceTask {
                     log.debug("Ignore active user: {}; login={}", user, lastLogin);
                     continue;
                 }
-                log.debug("Delete: {}; userId={}; registration={}; login={}; mail={}; {}", user.getRealUsername(), user.getId(), user.getRegistrationDate(), lastLogin, user.getEmail(), user.isModerator());
+                log.debug("Delete: {}; userId={}; registration={}; login={}; mail={}; {}",
+                    user.getRealUsername(), user.getId(), user.getRegistrationDate(), lastLogin, user.getEmail(), user.isModerator());
 
                 userDao.deleteHard(user);
             }
@@ -88,8 +89,8 @@ public class DeleteOldUsers extends MaintenanceTask {
         LocalDateTime deadline = LocalDateTime.now().minus(configYears * 365L, ChronoUnit.DAYS);
 
         try (Handle handle = getLearnweb().openJdbiHandle()) {
-            List<User> users = handle.select("SELECT * FROM lw_user WHERE (organisation_id = ? AND is_moderator = 0 AND is_admin = 0 AND registration_date < ?) OR deleted = 1", organisationId, deadline)
-                .map(new UserDao.UserMapper()).list();
+            List<User> users = handle.select("SELECT * FROM lw_user WHERE (organisation_id = ? AND is_moderator = 0 AND is_admin = 0 AND "
+                + "registration_date < ?) OR deleted = 1", organisationId, deadline).map(new UserDao.UserMapper()).list();
 
             for (User user : users) {
                 Optional<LocalDateTime> lastLogin = userDao.findLastLoginDate(user.getId());
@@ -104,7 +105,8 @@ public class DeleteOldUsers extends MaintenanceTask {
                     continue;
                 }
 
-                log.debug("Delete: {}; registration={}; login={}; mail={}; {}", user.getUsername(), user.getRegistrationDate(), lastLogin, user.getEmail(), user.isModerator());
+                log.debug("Delete: {}; registration={}; login={}; mail={}; {}",
+                    user.getUsername(), user.getRegistrationDate(), lastLogin, user.getEmail(), user.isModerator());
 
                 userDao.deleteHard(user);
             }
@@ -114,8 +116,8 @@ public class DeleteOldUsers extends MaintenanceTask {
 
     private void deleteAbandonedResources() {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
-            List<Integer> resourceIds = handle.select("SELECT resource_id FROM lw_resource r LEFT JOIN lw_group g USING(group_id) WHERE (r.group_id != 0 AND g.group_id IS NULL) OR r.deleted = 1")
-                .mapTo(Integer.class).list();
+            List<Integer> resourceIds = handle.select("SELECT resource_id FROM lw_resource r LEFT JOIN lw_group g USING(group_id) "
+                + "WHERE (r.group_id != 0 AND g.group_id IS NULL) OR r.deleted = 1").mapTo(Integer.class).list();
 
             for (Integer resourceId : resourceIds) {
                 log.debug("Delete abandoned resource: {}", resourceId);
@@ -158,7 +160,7 @@ public class DeleteOldUsers extends MaintenanceTask {
 
     // find problems
     // users who belong to a different organization then their courses
-    //SELECT * FROM lw_course c JOIN lw_user_course USING(course_id) JOIN lw_user u USING(user_id) WHERE c.organisation_id != u.organisation_id ORDER BY course_id DESC
+    // SELECT * FROM lw_course c JOIN lw_user_course USING(course_id) JOIN lw_user u USING(user_id) WHERE c.organisation_id != u.organisation_id
 
     public static void main(String[] args) {
         new DeleteOldUsers().start(args);

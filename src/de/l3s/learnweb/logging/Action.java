@@ -73,8 +73,10 @@ public enum Action implements Argument {
     moderator_login(ActionTargetId.USER_ID, ActionCategory.MODERATOR), // target_id = user_id of the moderator logs into a user account
     course_delete(ActionTargetId.COURSE_ID, ActionCategory.MODERATOR), // target_id = course_id
     course_anonymize(ActionTargetId.COURSE_ID, ActionCategory.MODERATOR), // target_id = course_id
-    lock_rejected_edit_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // when one user editing resource and another one want to edit the same resource, but locker is not allowing it
-    lock_interrupted_returned_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // when first user who edits resource after inactive time returns to editing, but locker is now longer belongs to it
+    // when one user editing resource and another one want to edit the same resource, but locker is not allowing it
+    lock_rejected_edit_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
+    // when first user who edits resource after inactive time returns to editing, but locker is now longer belongs to it
+    lock_interrupted_returned_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
     unused5(ActionTargetId.NONE, ActionCategory.OTHER),
     unused6(ActionTargetId.NONE, ActionCategory.OTHER),
     deleted_user_soft(ActionTargetId.USER_ID, ActionCategory.USER),

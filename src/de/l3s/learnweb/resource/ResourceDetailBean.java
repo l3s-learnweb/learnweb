@@ -314,7 +314,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             // first delete old thumbnails
             Collection<File> files = resource.getFiles().values();
             for (File file : files) {
-                if (file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) { // number 4 is reserved for the source file
+                if (Arrays.asList(File.TYPE.THUMBNAIL_LARGE, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_SMALL,
+                    File.TYPE.THUMBNAIL_SQUARED, File.TYPE.THUMBNAIL_VERY_SMALL).contains(file.getType())) {
                     log.debug("Delete {}", file.getName());
                     dao().getFileDao().deleteSoft(file);
                 }
@@ -406,7 +407,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         try {
             Collection<File> files = resource.getFiles().values();
             for (File file : files) {
-                if (file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) { // number 4 is reserved for the source file
+                if (Arrays.asList(File.TYPE.THUMBNAIL_LARGE, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_SMALL,
+                    File.TYPE.THUMBNAIL_SQUARED, File.TYPE.THUMBNAIL_VERY_SMALL).contains(file.getType())) {
                     log.debug("Delete {}", file.getName());
                     dao().getFileDao().deleteSoft(file);
                 }

@@ -60,11 +60,6 @@ public class CDXClient {
             }
         }
 
-        /*
-        if(oldWaybackApiErrors == waybackApiErrors)
-        archiveSearchManager.cacheCaptureCount(Integer.parseInt(resource.getMetadataValue("query_id")), resource.getRankAtService(), firstCapture, lastCapture, captures);
-        }
-        */
         return captures > 0;
     }
 
@@ -93,10 +88,10 @@ public class CDXClient {
                 return null;
             } catch (IOException e) {
                 String msg = e.getMessage();
-                if (msg.contains("HTTP response code: 403")) { // blocked by robots
-                    return null;
-                } else if ((msg.equals("Unexpected end of file from server") || msg.startsWith("Server returned HTTP response code: 50")) && retry > 0) { // hit request limit
-                    Misc.sleep(600);
+                if (msg.contains("HTTP response code: 403")) {
+                    return null; // blocked by robots
+                } else if (("Unexpected end of file from server".equals(msg) || msg.startsWith("Server returned HTTP response code: 50")) && retry > 0) {
+                    Misc.sleep(600); // hit request limit
                     log.debug("To many api requests => Sleep a while");
                 } else {
                     throw e;

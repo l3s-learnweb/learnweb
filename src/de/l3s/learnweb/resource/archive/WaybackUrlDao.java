@@ -102,7 +102,8 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
     default TreeMap<LocalDate, Integer> countSnapshotsGroupedByMonths(int resourceId, String url) {
         TreeMap<LocalDate, Integer> monthlySeriesData = new TreeMap<>();
 
-        getHandle().select("SELECT CAST(DATE_FORMAT(timestamp, '%Y-%m-01') as DATE) as date, count(*) as count FROM lw_resource_archiveurl WHERE resource_id = ? GROUP BY year(timestamp), month(timestamp) ORDER BY timestamp ASC", resourceId)
+        getHandle().select("SELECT CAST(DATE_FORMAT(timestamp, '%Y-%m-01') as DATE) as date, count(*) as count FROM lw_resource_archiveurl "
+            + "WHERE resource_id = ? GROUP BY year(timestamp), month(timestamp) ORDER BY timestamp ASC", resourceId)
             .map((rs, ctx) -> {
                 monthlySeriesData.put(RsHelper.getLocalDate(rs.getDate("date")), rs.getInt("count"));
                 return null;
@@ -110,7 +111,8 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
 
         Optional<Integer> urlId = findIdByUrl(url);
         if (urlId.isPresent()) {
-            getHandle().select("SELECT CAST(DATE_FORMAT(timestamp, '%Y-%m-01') as DATE) as date, count(*) as count FROM learnweb_large.wb2_url_capture WHERE url_id = ? GROUP BY year(timestamp), month(timestamp) ORDER BY timestamp ASC", resourceId)
+            getHandle().select("SELECT CAST(DATE_FORMAT(timestamp, '%Y-%m-01') as DATE) as date, count(*) as count FROM learnweb_large.wb2_url_capture "
+                + "WHERE url_id = ? GROUP BY year(timestamp), month(timestamp) ORDER BY timestamp ASC", resourceId)
                 .map((rs, ctx) -> {
                     LocalDate timestamp = RsHelper.getLocalDate(rs.getDate("date"));
                     if (monthlySeriesData.containsKey(timestamp)) {
@@ -128,7 +130,8 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
     default TreeMap<LocalDate, Integer> countSnapshotsGroupedByDays(int resourceId, String url) {
         TreeMap<LocalDate, Integer> monthlySeriesData = new TreeMap<>();
 
-        getHandle().select("SELECT CAST(timestamp as DATE) as date, count(*) as count FROM lw_resource_archiveurl WHERE resource_id = ? GROUP BY YEAR(timestamp),MONTH(timestamp),DAY(timestamp) ORDER BY timestamp ASC", resourceId)
+        getHandle().select("SELECT CAST(timestamp as DATE) as date, count(*) as count FROM lw_resource_archiveurl "
+            + "WHERE resource_id = ? GROUP BY YEAR(timestamp),MONTH(timestamp),DAY(timestamp) ORDER BY timestamp ASC", resourceId)
             .map((rs, ctx) -> {
                 monthlySeriesData.put(RsHelper.getLocalDate(rs.getDate("date")), rs.getInt("count"));
                 return null;
@@ -136,7 +139,8 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
 
         Optional<Integer> urlId = findIdByUrl(url);
         if (urlId.isPresent()) {
-            getHandle().select("SELECT CAST(timestamp as DATE) as date, count(*) as count FROM learnweb_large.wb2_url_capture WHERE url_id = ? GROUP BY YEAR(timestamp),MONTH(timestamp),DAY(timestamp) ORDER BY timestamp ASC", resourceId)
+            getHandle().select("SELECT CAST(timestamp as DATE) as date, count(*) as count FROM learnweb_large.wb2_url_capture "
+                + "WHERE url_id = ? GROUP BY YEAR(timestamp),MONTH(timestamp),DAY(timestamp) ORDER BY timestamp ASC", resourceId)
                 .map((rs, ctx) -> {
                     LocalDate timestamp = RsHelper.getLocalDate(rs.getDate("date"));
                     if (monthlySeriesData.containsKey(timestamp)) {

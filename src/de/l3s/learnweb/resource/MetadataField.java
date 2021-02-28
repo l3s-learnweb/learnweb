@@ -10,7 +10,7 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class ResourceMetadataField implements Serializable {
+public class MetadataField implements Serializable {
     private static final long serialVersionUID = -7698089608547415349L;
 
     /**
@@ -39,18 +39,18 @@ public class ResourceMetadataField implements Serializable {
     // cache
     private transient List<SelectItem> optionsList; // options wrapped into select items
 
-    public ResourceMetadataField(final String name, final String label, final MetadataType type) {
+    public MetadataField(final String name, final String label, final MetadataType type) {
         this.name = name;
         this.label = label;
         this.type = type;
     }
 
-    public ResourceMetadataField(final String name, final String label, final MetadataType type, final boolean required) {
+    public MetadataField(final String name, final String label, final MetadataType type, final boolean required) {
         this(name, label, type);
         this.required = required;
     }
 
-    public ResourceMetadataField(final String name, final MetadataType type, final boolean moderatorOnly) {
+    public MetadataField(final String name, final MetadataType type, final boolean moderatorOnly) {
         this(name, name, type);
         this.moderatorOnly = moderatorOnly;
     }

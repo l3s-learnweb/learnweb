@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource.glossary;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -64,13 +63,13 @@ public class GlossaryXLSParser {
             }
 
             if (glossaryRowBuilder == null || glossaryEntries.isEmpty()) {
-                return new GlossaryParserResponse(null, Collections.singletonList(new ParsingError(-1, "", "The file is empty")));
+                return new GlossaryParserResponse(new ParsingError(-1, "", "The file is empty"));
             }
 
             return new GlossaryParserResponse(joinEntries(glossaryEntries), glossaryRowBuilder.getErrors());
         } catch (OfficeXmlFileException e) {
             if (uploadedFile.getFileName().endsWith(".xlsx")) { // wrong file format
-                return new GlossaryParserResponse(null, Collections.singletonList(new ParsingError(-1, "", "Please save the file in *.xls format, also called Excel 97-2003, and try again.")));
+                return new GlossaryParserResponse(new ParsingError(-1, "", "Please save the file in *.xls format, also called Excel 97-2003, and try again."));
             } else {
                 throw e;
             }

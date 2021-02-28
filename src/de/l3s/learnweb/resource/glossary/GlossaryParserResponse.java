@@ -15,6 +15,11 @@ public class GlossaryParserResponse implements Serializable {
         this.errors = Collections.unmodifiableList(errors);
     }
 
+    public GlossaryParserResponse(ParsingError errors) {
+        this.entries = null;
+        this.errors = Collections.singletonList(errors);
+    }
+
     public List<GlossaryEntry> getEntries() {
         return entries;
     }

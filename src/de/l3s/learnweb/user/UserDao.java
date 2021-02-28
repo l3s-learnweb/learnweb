@@ -197,7 +197,8 @@ public interface UserDao extends SqlObject, Serializable {
         Objects.requireNonNull(user.getRealUsername());
         Objects.requireNonNull(user.getRegistrationDate());
 
-        if (user.getId() <= 0 && findByUsername(user.getRealUsername()).isPresent()) { // for new users double check that the username is free. If not the existing user will be overwritten
+        // for new users double check that the username is free. If not the existing user will be overwritten
+        if (user.getId() <= 0 && findByUsername(user.getRealUsername()).isPresent()) {
             throw new IllegalArgumentException("Username is already taken");
         }
 

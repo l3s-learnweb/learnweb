@@ -44,8 +44,8 @@ public class PasswordBean extends ApplicationBean implements Serializable {
 
             for (User user : users) {
                 String link = url + user.getId() + "_" + createPasswordChangeHash(user);
-                String text = "Hi " + user.getRealUsername() + ",\n\nyou can change the password of your learnweb account '" + user.getRealUsername() + "' by clicking on this link:\n" + link
-                    + "\n\nOr just ignore this email, if you haven't requested it.\n\nBest regards,\nLearnweb Team";
+                String text = "Hi " + user.getRealUsername() + ",\n\nyou can change the password of your learnweb account '" + user.getRealUsername() +
+                    "' by clicking on this link:\n" + link + "\n\nOr just ignore this email, if you haven't requested it.\n\nBest regards,\nLearnweb Team";
 
                 message.setText(text);
                 message.setSubject("Retrieve learnweb password: " + user.getRealUsername());

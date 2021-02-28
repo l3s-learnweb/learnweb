@@ -130,7 +130,8 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                     }
 
                     if (!resource.getComments().isEmpty()) {
-                        sb.append("<h4 class=\"admin_comments\" style=\"display:none\">Comments</h4><table class=\"admin_comments\" style=\"display:none\" border='1' cellspacing='0'>");
+                        sb.append("<h4 class=\"admin_comments\" style=\"display:none\">Comments</h4>");
+                        sb.append("<table class=\"admin_comments\" style=\"display:none\" border='1' cellspacing='0'>");
                         for (Comment comment : resource.getComments()) {
                             sb.append("<tr><td>");
                             sb.append(comment.getUser().getUsername());

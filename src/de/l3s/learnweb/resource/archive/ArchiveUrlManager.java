@@ -47,7 +47,7 @@ public final class ArchiveUrlManager {
         this.archiveUrlDao = archiveUrlDao;
         this.waybackUrlDao = waybackUrlDao;
 
-        executorService = Executors.newCachedThreadPool(); // new ThreadPoolExecutor(maxThreads, maxThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(maxThreads * 1000, true), new ThreadPoolExecutor.CallerRunsPolicy());
+        executorService = Executors.newCachedThreadPool();
         cdxExecutorService = Executors.newSingleThreadExecutor(); // In order to sequentially poll the CDX server and not overload it
     }
 

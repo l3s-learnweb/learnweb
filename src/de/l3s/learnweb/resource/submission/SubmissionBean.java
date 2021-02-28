@@ -14,6 +14,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
@@ -200,7 +201,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 if (clonedResource.getType() == ResourceType.website) {
 
                     String response = Beans.getInstance(ArchiveUrlManager.class).addResourceToArchive(clonedResource);
-                    if (response.equals("ROBOTS_ERROR") || response.equals("GENERIC_ERROR") || response.equals("PARSE_DATE_ERROR") || response.equals("SQL_SAVE_ERROR")) {
+                    if (StringUtils.equalsAny(response, "ROBOTS_ERROR", "GENERIC_ERROR", "PARSE_DATE_ERROR", "SQL_SAVE_ERROR")) {
                         if (clonedResource.getSmallThumbnail() == null) {
                             try {
                                 getLearnweb().getResourcePreviewMaker().processResource(clonedResource);

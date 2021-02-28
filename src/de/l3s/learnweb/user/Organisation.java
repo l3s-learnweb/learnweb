@@ -21,9 +21,9 @@ import org.hibernate.validator.constraints.Length;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.MetadataField;
+import de.l3s.learnweb.resource.MetadataField.MetadataType;
 import de.l3s.learnweb.resource.ResourceMetaDataBean;
-import de.l3s.learnweb.resource.ResourceMetadataField;
-import de.l3s.learnweb.resource.ResourceMetadataField.MetadataType;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.util.HasId;
 
@@ -60,7 +60,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private String defaultLanguage; // the language which is used after the user logged in
     private String languageVariant; // optional variant that is added to the selected language
     private BitSet options = new BitSet(Option.values().length);
-    private List<ResourceMetadataField> metadataFields = new LinkedList<>();
+    private List<MetadataField> metadataFields = new LinkedList<>();
     private transient String bannerImage;
     private Integer bannerImageFileId;
     private String cssFile; // optional CSS file to load
@@ -122,11 +122,11 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         this.defaultLanguage = defaultLanguage;
     }
 
-    public List<ResourceMetadataField> getMetadataFields() {
+    public List<MetadataField> getMetadataFields() {
         return metadataFields;
     }
 
-    public void setMetadataFields(List<ResourceMetadataField> metadataFields) {
+    public void setMetadataFields(List<MetadataField> metadataFields) {
         this.metadataFields = metadataFields;
     }
 
@@ -149,21 +149,21 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     }
 
     private void createMetadataFields() {
-        ResourceMetadataField metadata;
+        MetadataField metadata;
 
         // define optional resource fields for some courses
         if (id == 480) { // YELL
-            metadataFields.add(new ResourceMetadataField("noname", "Topical", MetadataType.FULLWIDTH_HEADER));
-            metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the topic of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
+            metadataFields.add(new MetadataField("noname", "Topical", MetadataType.FULLWIDTH_HEADER));
+            metadataFields.add(new MetadataField("noname", "Please tell us about the topic of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
 
-            metadataFields.add(new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT, true));
+            metadataFields.add(new MetadataField("title", "title", MetadataType.INPUT_TEXT, true));
 
-            metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
+            metadataFields.add(new MetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
 
-            metadataFields.add(new ResourceMetadataField("noname", "Attributes", MetadataType.FULLWIDTH_HEADER));
-            metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the characteristics of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
+            metadataFields.add(new MetadataField("noname", "Attributes", MetadataType.FULLWIDTH_HEADER));
+            metadataFields.add(new MetadataField("noname", "Please tell us about the characteristics of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
 
-            metadata = new ResourceMetadataField("author", "author", MetadataType.AUTOCOMPLETE) {
+            metadata = new MetadataField("author", "author", MetadataType.AUTOCOMPLETE) {
                 private static final long serialVersionUID = -2914974737800412242L;
 
                 @Override
@@ -183,7 +183,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadata.setInfo("Please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc.");
             metadataFields.add(metadata);
 
-            metadata = new ResourceMetadataField("language", "language", MetadataType.MULTIPLE_MENU) {
+            metadata = new MetadataField("language", "language", MetadataType.MULTIPLE_MENU) {
                 private static final long serialVersionUID = 1934886927426174254L;
 
                 @Override
@@ -194,7 +194,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadata.setInfo("Select the language of the resource content");
             metadataFields.add(metadata);
 
-            metadata = new ResourceMetadataField("language_level", "Language level", MetadataType.MULTIPLE_MENU);
+            metadata = new MetadataField("language_level", "Language level", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("C2"); // TODO @astappiev: retrieve from a database
             metadata.getOptions().add("C1");
@@ -204,10 +204,10 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadata.getOptions().add("A1");
             metadataFields.add(metadata);
 
-            metadataFields.add(new ResourceMetadataField("noname", "Context", MetadataType.FULLWIDTH_HEADER));
-            metadataFields.add(new ResourceMetadataField("noname", "Please tell us for what purpose you are using this resource.", MetadataType.FULLWIDTH_DESCRIPTION));
+            metadataFields.add(new MetadataField("noname", "Context", MetadataType.FULLWIDTH_HEADER));
+            metadataFields.add(new MetadataField("noname", "Please tell us for what purpose you are using this resource.", MetadataType.FULLWIDTH_DESCRIPTION));
 
-            metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.AUTOCOMPLETE_MULTIPLE);
+            metadata = new MetadataField("yell_purpose", "Purpose of use", MetadataType.AUTOCOMPLETE_MULTIPLE);
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("Speaking"); // TODO @astappiev: retrieve from a database
             metadata.getOptions().add("Listening");
@@ -226,7 +226,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadata.getOptions().add("Bibliographical resources");
             metadataFields.add(metadata);
 
-            metadata = new ResourceMetadataField("yell_target", "Target Learner", MetadataType.MULTIPLE_MENU);
+            metadata = new MetadataField("yell_target", "Target Learner", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("Teachers"); // TODO @astappiev: retrieve from a database
             metadata.getOptions().add("Adult learners");
@@ -235,8 +235,8 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadata.getOptions().add("Pre-school");
             metadataFields.add(metadata);
         } else {
-            metadataFields.add(new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT, true));
-            metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
+            metadataFields.add(new MetadataField("title", "title", MetadataType.INPUT_TEXT, true));
+            metadataFields.add(new MetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
         }
     }
 

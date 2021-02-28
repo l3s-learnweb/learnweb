@@ -35,8 +35,8 @@ public interface ForumTopicDao extends SqlObject, Serializable {
     default Map<Integer, List<ForumTopic>> findByNotificationFrequencies(List<User.NotificationFrequency> notificationFrequencies) {
         return getHandle().createQuery("SELECT gu.user_id as notification_user_id, ft.* "
             + "FROM lw_group_user gu JOIN lw_forum_topic ft USING(group_id) LEFT JOIN lw_forum_topic_user ftu ON gu.user_id = ftu.user_id AND ft.topic_id = ftu.topic_id "
-            + "WHERE notification_frequency IN (<frequencies>) AND (ftu.last_visit IS NULL OR ftu.last_visit < topic_last_post_time) "
-            + "AND ft.topic_last_post_time BETWEEN DATE_SUB(NOW(), INTERVAL CASE WHEN notification_frequency = 'MONTHLY' THEN 30 WHEN notification_frequency = 'WEEKLY' THEN 7 ELSE 1 END day) AND NOW() "
+            + "WHERE notification_frequency IN (<frequencies>) AND (ftu.last_visit IS NULL OR ftu.last_visit < topic_last_post_time) AND ft.topic_last_post_time "
+            + "BETWEEN DATE_SUB(NOW(), INTERVAL CASE WHEN notification_frequency = 'MONTHLY' THEN 30 WHEN notification_frequency = 'WEEKLY' THEN 7 ELSE 1 END day) AND NOW() "
             + "ORDER BY notification_user_id").bindList("frequencies", notificationFrequencies)
             .reduceRows(new HashMap<>(), (results, rowView) -> {
                 int userId = rowView.getColumn("notification_user_id", Integer.class);

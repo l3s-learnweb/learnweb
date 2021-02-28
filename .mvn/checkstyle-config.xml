@@ -77,9 +77,9 @@
     <!--<module name="FileLength"/> Changed: disable inspection -->
     <module name="LineLength">
         <property name="severity" value="warning"/>
-        <property name="max" value="160"/> <!-- Changed: default is 80 -->
+        <property name="max" value="180"/> <!-- Changed: default is 80 -->
         <property name="fileExtensions" value="java"/>
-        <property name="ignorePattern" value="@SqlQuery|@SqlUpdate|^package.*|^import.*|a href|href|http://|https://|ftp://"/> <!-- Changed: copied from Google -->
+        <property name="ignorePattern" value="@SqlQuery|@SqlUpdate|@Bind|SELECT|^package.*|^import.*|href|http|ftp://"/> <!-- Changed: copied from Google -->
     </module>
 
     <!-- Checks for whitespace                               -->

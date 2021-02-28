@@ -45,7 +45,7 @@ public class File implements Serializable, HasId, Cloneable {
     private LocalDateTime lastModified;
 
     private java.io.File actualFile;
-    private boolean actualFileExists = true; // when the actual file doesn't exist it is replaced by an error image. For this reason we have to store if the file exists
+    private boolean actualFileExists = true; // when the actual file doesn't exist it is replaced by an error image
 
     public File() {
     }
@@ -172,7 +172,8 @@ public class File implements Serializable, HasId, Cloneable {
 
     @Override
     public String toString() {
-        return "File [fileId=" + fileId + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId + ", type=" + type + ", url=" + url + ", lastModified=" + lastModified + "]";
+        return "File [fileId=" + fileId + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId +
+            ", type=" + type + ", url=" + url + ", lastModified=" + lastModified + "]";
     }
 
     public TYPE getType() {

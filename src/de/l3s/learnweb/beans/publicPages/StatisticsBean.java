@@ -61,7 +61,6 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
             generalStatistics.put("average_number_of_tags_per_tagged_resource", taggedResourcesAverage);
             generalStatistics.put("average_number_of_comments_per_commented_resource", commentedResourcesAverage);
 
-            //averageSessionTime = (BigDecimal) Sql.getSingleResult("SELECT avg(diff) / 60 FROM (SELECT count(*) as t, UNIX_TIMESTAMP(max(timestamp)) -  UNIX_TIMESTAMP(min(timestamp)) AS diff FROM lw_user_log GROUP BY session_id) AS DE");
             activeUsersPerMonth = handle.select("SELECT timestamp, count(distinct user_id) as count FROM lw_user_log "
                 + "WHERE action = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) GROUP BY year(timestamp) ,month(timestamp) "
                 + "ORDER BY year(timestamp) DESC,month(timestamp) DESC LIMIT 13")
@@ -79,14 +78,15 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
             highlightedEntries.add("FactCheck");
             highlightedEntries.add("speechrepository");
 
-            resourcesPerSource = handle.select("SELECT source, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY source ORDER BY count( * ) DESC").map((rs, ctx) -> {
-                String key = rs.getString(1);
-                if (highlightedEntries.contains(key)) {
-                    key += " *";
-                }
+            resourcesPerSource = handle.select("SELECT source, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY source ORDER BY count( * ) DESC")
+                .map((rs, ctx) -> {
+                    String key = rs.getString(1);
+                    if (highlightedEntries.contains(key)) {
+                        key += " *";
+                    }
 
-                return new AbstractMap.SimpleEntry<>(key, rs.getInt(2));
-            }).list();
+                    return new AbstractMap.SimpleEntry<>(key, rs.getInt(2));
+                }).list();
         }
     }
 

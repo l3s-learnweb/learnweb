@@ -57,7 +57,8 @@ public final class Learnweb {
         this.daoProvider = daoProvider;
 
         solrClient = new SolrClient(configProvider.getProperty("solr_server_url"));
-        interweb = new InterWeb(configProvider.getProperty("interwebj_api_url"), configProvider.getProperty("interwebj_api_key"), configProvider.getProperty("interwebj_api_secret"));
+        interweb = new InterWeb(configProvider.getProperty("interwebj_api_url"), configProvider.getProperty("interwebj_api_key"),
+            configProvider.getProperty("interwebj_api_secret"));
 
         resourcePreviewMaker = new ResourcePreviewMaker(daoProvider.getFileDao(), daoProvider.getArchiveUrlDao(), configProvider);
         resourceMetadataExtractor = new ResourceMetadataExtractor(solrClient);

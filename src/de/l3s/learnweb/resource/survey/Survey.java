@@ -28,7 +28,7 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
     private int organizationId; // if <> 0 only the specified organization can use this survey
     private int userId; // user who created this survey
     private boolean deleted;
-    private boolean publicTemplate = true; // specifies whether the template is public (if "true", other users in the organization see it in the list of templates and can copy it)
+    private boolean publicTemplate = true; // if "true", other users in the organization see it in the list of templates and can copy it
     private boolean associated; //'true' if survey associated with at least one resource
 
     private List<SurveyQuestion> questions;

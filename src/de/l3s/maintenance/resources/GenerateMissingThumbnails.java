@@ -19,13 +19,13 @@ public class GenerateMissingThumbnails extends MaintenanceTask {
     @Override
     protected void run(final boolean dryRun) throws Exception {
         List<Resource> imagesWithoutThumbnail = getLearnweb().getDaoProvider().getJdbi().withHandle(handle -> handle
-            .select("SELECT *  FROM lw_resource WHERE deleted = 0 AND max_image_url IS NOT NULL AND max_image_url != -1 AND thumbnail1_file_id = 0 AND storage_type=2 and type in('video', 'image') limit 10")
-            .map(new ResourceDao.ResourceMapper()).list());
+            .select("SELECT *  FROM lw_resource WHERE deleted = 0 AND max_image_url IS NOT NULL AND max_image_url != -1 AND thumbnail1_file_id = 0 "
+                + "AND storage_type=2 and type in('video', 'image') limit 10").map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} image/video resources without thumbnails", imagesWithoutThumbnail.size());
 
         List<Resource> websitesWithoutThumbnail = getLearnweb().getDaoProvider().getJdbi().withHandle(handle -> handle
-            .select("SELECT * FROM lw_resource WHERE storage_type =2 AND type LIKE 'website' AND deleted =0 AND url NOT LIKE '%learnweb%' AND online_status = 'UNKNOWN' and thumbnail0_file_id = 0 ORDER BY resource_id DESC")
-            .map(new ResourceDao.ResourceMapper()).list());
+            .select("SELECT * FROM lw_resource WHERE storage_type =2 AND type LIKE 'website' AND deleted =0 AND url NOT LIKE '%learnweb%' "
+                + "AND online_status = 'UNKNOWN' and thumbnail0_file_id = 0 ORDER BY resource_id DESC").map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} web resources without thumbnails", websitesWithoutThumbnail.size());
 
         if (!dryRun) {
