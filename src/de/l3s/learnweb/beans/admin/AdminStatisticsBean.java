@@ -83,7 +83,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                     result.put("forum_topics", rs1.getString("topics"));
                     result.put("forum_posts", rs1.getString("posts"));
                     return null;
-                });
+                }).one();
 
                 return result;
             }).list();

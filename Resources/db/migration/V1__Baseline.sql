@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `lw_forum_post` (
 CREATE TABLE IF NOT EXISTS `lw_forum_topic` (
     `topic_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `group_id` int(10) unsigned NOT NULL,
-    `deleted` tinyint(3) unsigned NOT NULL DEFAULT 0,
+    `deleted` tinyint(1) unsigned NOT NULL DEFAULT 0,
     `topic_title` varchar(100) NOT NULL DEFAULT '',
     `user_id` int(10) unsigned NOT NULL,
     `topic_time` timestamp NULL DEFAULT NULL,
@@ -178,8 +178,8 @@ CREATE TABLE IF NOT EXISTS `lw_message` (
     `recipient_user_id` int(10) unsigned NOT NULL,
     `title` varchar(2550) NOT NULL,
     `text` longtext NOT NULL,
-    `is_seen` tinyint(1) NOT NULL,
-    `is_read` tinyint(1) NOT NULL,
+    `is_seen` tinyint(1) NOT NULL DEFAULT 0,
+    `is_read` tinyint(1) NOT NULL DEFAULT 0,
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     KEY `lw_message_recipient_user_id` (`recipient_user_id`, `is_seen`)
 );
@@ -274,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `online_status` enum ('UNKNOWN','ONLINE','OFFLINE','PROCESSING') NOT NULL DEFAULT 'UNKNOWN' COMMENT '0=unknown',
     `restricted` tinyint(1) NOT NULL DEFAULT 0,
     `resource_timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `creation_date` datetime NOT NULL DEFAULT current_timestamp(),
+    `creation_date` datetime DEFAULT current_timestamp(),
     `metadata` blob DEFAULT NULL,
     KEY `lw_resource_type` (`type`),
     KEY `lw_resource_storage_type` (`storage_type`, `deleted`),
@@ -326,7 +326,7 @@ CREATE TABLE IF NOT EXISTS `lw_submission` (
     `open_datetime` datetime DEFAULT NULL,
     `close_datetime` datetime DEFAULT NULL,
     `number_of_resources` int(10) NOT NULL DEFAULT 3,
-    `survey_resource_id` int(10) unsigned NOT NULL,
+    `survey_resource_id` int(10) unsigned DEFAULT NULL,
     KEY `lw_submission_course_id` (`course_id`, `deleted`)
 );
 
@@ -341,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `lw_submission_status` (
     `submission_id` int(10) unsigned NOT NULL,
     `user_id` int(10) unsigned NOT NULL,
     `submitted` tinyint(1) NOT NULL DEFAULT 1,
-    `survey_resource_id` int(10) unsigned NOT NULL,
+    `survey_resource_id` int(10) unsigned DEFAULT NULL,
     PRIMARY KEY (`submission_id`, `user_id`)
 );
 

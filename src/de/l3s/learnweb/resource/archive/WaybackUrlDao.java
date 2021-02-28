@@ -105,7 +105,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
             .map((rs, ctx) -> {
                 monthlySeriesData.put(RsHelper.getLocalDate(rs.getDate("date")), rs.getInt("count"));
                 return null;
-            });
+            }).list();
 
         Optional<Integer> urlId = findIdByUrl(url);
         if (urlId.isPresent()) {
@@ -118,7 +118,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
                         monthlySeriesData.put(timestamp, rs.getInt("count"));
                     }
                     return null;
-                });
+                }).list();
         }
 
         return monthlySeriesData;
@@ -131,7 +131,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
             .map((rs, ctx) -> {
                 monthlySeriesData.put(RsHelper.getLocalDate(rs.getDate("date")), rs.getInt("count"));
                 return null;
-            });
+            }).list();
 
         Optional<Integer> urlId = findIdByUrl(url);
         if (urlId.isPresent()) {
@@ -144,7 +144,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
                         monthlySeriesData.put(timestamp, rs.getInt("count"));
                     }
                     return null;
-                });
+                }).list();
         }
 
         return monthlySeriesData;

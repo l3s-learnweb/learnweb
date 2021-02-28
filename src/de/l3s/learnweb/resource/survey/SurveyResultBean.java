@@ -29,7 +29,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable {
 
         // output only questions that are not readonly
         questionColumns = new LinkedList<>();
-        for (SurveyQuestion question : getResource().getQuestions()) {
+        for (SurveyQuestion question : resource.getQuestions()) {
             if (question.getType().isReadonly()) {
                 continue;
             }

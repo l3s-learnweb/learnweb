@@ -134,7 +134,7 @@ public interface SurveyDao extends SqlObject, Serializable {
             resource.setSurveyId(rs.getInt("survey_id"));
             resource.setSaveable(rs.getBoolean("editable"));
             return resource;
-        });
+        }).one();
     }
 
     /**
