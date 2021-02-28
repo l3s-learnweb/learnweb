@@ -62,9 +62,6 @@ public class ConfigProvider implements Serializable {
 
     private File fileManagerFolder;
 
-    /**
-     * @deprecated you should not use this constructor, it is intended to be used by CDI when creating an instance of the class
-     */
     @Deprecated
     public ConfigProvider() {
         this(true);
@@ -110,13 +107,19 @@ public class ConfigProvider implements Serializable {
         }
     }
 
+
+    /**
+     * Because Tomcat always removes per-application context config file, we have to add context-prefix.
+     * https://stackoverflow.com/questions/4032773/why-does-tomcat-replace-context-xml-on-redeploy
+     */
     private void loadEnvironmentVariables() {
         try {
             Map<String, String> env = System.getenv();
-            env.forEach((key, propValue) -> {
-                if (key.startsWith("LEARNWEB_")) {
-                    String propKey = key.substring(9).toLowerCase(Locale.ROOT);
-                    log.debug("Found environment variable {}: {} (original name {})", propKey, propValue, key);
+            env.forEach((originalKey, propValue) -> {
+                String propKey = originalKey.toLowerCase(Locale.ROOT);
+                if (propKey.startsWith("learnweb_")) {
+                    propKey = propKey.substring(9);
+                    log.debug("Found environment variable {}: {} (original name {})", propKey, propValue, originalKey);
                     properties.setProperty(propKey, propValue);
                 }
             });
@@ -133,13 +136,14 @@ public class ConfigProvider implements Serializable {
 
             while (list.hasMore()) {
                 NameClassPair next = list.next();
-
-                String propKey = next.getName();
-                String key = namespace + propKey;
-                String propValue = ctx.lookup(key).toString();
-
-                log.debug("Found JNDI variable {}: {} (original name {})", propKey, propValue, key);
-                properties.setProperty(propKey, propValue);
+                String namespacedKey = namespace + next.getName();
+                String propKey = next.getName().toLowerCase(Locale.ROOT);
+                if (propKey.startsWith("learnweb_")) {
+                    propKey = propKey.substring(9);
+                    String propValue = ctx.lookup(namespacedKey).toString();
+                    log.debug("Found JNDI variable {}: {} (original name {})", propKey, propValue, namespacedKey);
+                    properties.setProperty(propKey, propValue);
+                }
             }
 
             list.close();
