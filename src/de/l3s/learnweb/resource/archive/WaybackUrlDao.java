@@ -39,8 +39,9 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
         }).findOne();
     }
 
-    @SqlQuery("SELECT url_id FROM learnweb_large.wb2_url WHERE url = ?")
-    Optional<Integer> findIdByUrl(String url);
+    default Optional<Integer> findIdByUrl(String url) {
+        return getHandle().select("SELECT url_id FROM learnweb_large.wb2_url WHERE url = ?", url).mapTo(Integer.class).findFirst();
+    }
 
     @SqlQuery("SELECT timestamp FROM learnweb_large.wb2_url_capture WHERE url_id = ? ORDER BY timestamp")
     List<LocalDateTime> findUrlCaptures(int urlId);
