@@ -25,7 +25,7 @@
         </h:panelGroup>
     </p:tab>
 
-    <p:tab title="#{msg.activity_right_pane}">
+    <p:tab title="#{msg.activity_right_pane}" rendered="#{not empty resourceDetailBean.logs}">
         <ui:repeat value="#{resourceDetailBean.logs}" var="logEntry" varStatus="status">
             <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
                 <ui:param name="showPreview" value="false"/>
@@ -35,8 +35,7 @@
         </ui:repeat>
     </p:tab>
 
-    <p:tab title="#{msg['Archive.versions']} (#{res.archiveUrls.size()})"
-           rendered="#{not empty res.archiveUrls}">
+    <p:tab title="#{msg['Archive.versions']} (#{res.archiveUrls.size()})" rendered="#{not empty res.archiveUrls}">
         <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_archive.xhtml">
             <ui:param name="res" value="#{res}"/>
         </ui:decorate>

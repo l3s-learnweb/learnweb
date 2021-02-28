@@ -124,8 +124,7 @@
                                     <f:selectItem itemValue="ORGANISATION_MEMBERS" itemLabel="#{msg['policy.option.ORGANISATION_MEMBERS']} (#{groupOptionsBean.group.course.organisation.title})" />
                                 </c:if>
                                 <f:selectItem itemValue="COURSE_MEMBERS" itemLabel="#{msg['policy.option.COURSE_MEMBERS']}"/>
-                                <f:selectItem itemValue="NOBODY" itemLabel="#{msg['policy.option.NOBODY']}"/>                               
-           
+                                <f:selectItem itemValue="NOBODY" itemLabel="#{msg['policy.option.NOBODY']}"/>
 							</p:selectOneRadio>
 							<p:message for="@previous"/>
 						</div>
@@ -236,7 +235,9 @@
 				</p:panel>
 			</div>
 
-			<p:outputPanel styleClass="col-md-6" layout="block" rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user) || groupOptionsBean.group.isMember(userBean.user)}">
+			<p:outputPanel styleClass="col-md-6" layout="block"
+						   rendered="${(groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user) ||
+						   				groupOptionsBean.group.isMember(userBean.user)) && not empty groupOptionsBean.userCopyableGroups}">
 				<p:panel header="#{msg.copy_resources}">
 					<h:form id="group_copy_form">
 						<div class="form-group">
