@@ -96,7 +96,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         if (user.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
             requestManager.updateFailedAttempts(remoteAddr, username);
-            return "user/login.xhtml";
+            return "/lw/user/login.xhtml";
         }
 
         requestManager.updateSuccessfulAttempts(remoteAddr, username);
@@ -104,7 +104,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
         if (!user.get().isEmailConfirmed() && user.get().isEmailRequired()) {
             confirmRequiredBean.setLoggedInUser(user.get());
-            return "user/confirm_required.xhtml?faces-redirect=true";
+            return "/lw/user/confirm_required.xhtml?faces-redirect=true";
         }
 
         if (remember) {
@@ -131,13 +131,13 @@ public class LoginBean extends ApplicationBean implements Serializable {
         if (userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) { // a moderator logs out from a user account
             userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
             userBean.setModeratorUser(null);
-            return "admin/users.xhtml?faces-redirect=true";
+            return "/lw/admin/users.xhtml?faces-redirect=true";
         } else {
             log(Action.logout, 0, 0);
             user.onDestroy();
             Faces.invalidateSession();
             Faces.removeResponseCookie(AUTH_COOKIE_NAME, "/");
-            return "index.jsf?faces-redirect=true";
+            return "/lw/index.jsf?faces-redirect=true";
         }
     }
 

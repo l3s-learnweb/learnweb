@@ -59,11 +59,11 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
      */
     public String onSave() {
         selectedSurvey.save(false);
-        return "survey/template.xhtml?survey_id=" + selectedSurvey.getId() + "&faces-redirect=true";
+        return "/lw/survey/template.xhtml?survey_id=" + selectedSurvey.getId() + "&faces-redirect=true";
     }
 
     public String onEditSurvey(int surveyId) {
-        return "survey/template.xhtml?survey_id=" + surveyId + "&faces-redirect=true";
+        return "/lw/survey/template.xhtml?survey_id=" + surveyId + "&faces-redirect=true";
     }
 
     public void onDeleteSurvey(Survey surveyToDelete) {

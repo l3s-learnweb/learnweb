@@ -127,7 +127,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             resourcesGroupedBySource = null;
         }
 
-        return "search.xhtml?faces-redirect=true";
+        return "/lw/search.xhtml?faces-redirect=true";
     }
 
     public List<ResourceDecorator> getNextPage() {

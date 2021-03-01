@@ -131,6 +131,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     public void onLoad() {
         User user = getUser();
         BeanAssert.authorized(user);
+        BeanAssert.validate(groupId > 0);
 
         if (user.getOrganisation().getId() == 480) {
             view = ResourceView.list;

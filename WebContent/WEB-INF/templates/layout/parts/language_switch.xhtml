@@ -10,31 +10,31 @@
 		</h:outputLink>
 
 		<p:menu overlay="true" trigger="languageSwitchButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
-			<p:menuitem action="#{userBean.setLocaleCode('de')}">
+			<p:menuitem action="#{userBean.setLocaleCode('de')}" immediate="true" process="@this">
 				<h:graphicImage name="images/flags/flag_de.png" alt="#{msg.language_de}"/>
 				<span>Deutsch</span>
 			</p:menuitem>
-			<p:menuitem action="#{userBean.setLocaleCode('en')}">
+			<p:menuitem action="#{userBean.setLocaleCode('en')}" immediate="true" process="@this">
 				<h:graphicImage name="images/flags/flag_en.png" alt="#{msg.language_en}"/>
 				<span>English</span>
 			</p:menuitem>
-			<p:menuitem action="#{userBean.setLocaleCode('es')}">
+			<p:menuitem action="#{userBean.setLocaleCode('es')}" immediate="true" process="@this">
 				<h:graphicImage name="images/flags/flag_es.png" alt="#{msg.language_es}"/>
 				<span>Español</span>
 			</p:menuitem>
-			<p:menuitem action="#{userBean.setLocaleCode('it')}">
+			<p:menuitem action="#{userBean.setLocaleCode('it')}" immediate="true" process="@this">
 				<h:graphicImage name="images/flags/flag_it.png" alt="#{msg.language_it}"/>
 				<span>Italiano</span>
 			</p:menuitem>
-			<p:menuitem action="#{userBean.setLocaleCode('pt')}">
+			<p:menuitem action="#{userBean.setLocaleCode('pt')}" immediate="true" process="@this">
 				<h:graphicImage name="images/flags/flag_pt.png" alt="#{msg.language_pt}"/>
 				<span>Português</span>
 			</p:menuitem>
-			<p:menuitem action="#{userBean.setLocaleCode('uk')}">
+			<p:menuitem action="#{userBean.setLocaleCode('uk')}" immediate="true" process="@this">
 				<h:graphicImage name="images/flags/flag_uk.png" alt="#{msg.language_uk}"/>
 				<span>Українська</span>
 			</p:menuitem>
-			<p:menuitem action="#{userBean.setLocaleCode('xx')}" rendered="#{userBean.admin}">
+			<p:menuitem action="#{userBean.setLocaleCode('xx')}" immediate="true" process="@this" rendered="#{userBean.admin}">
 				<h:graphicImage name="images/flags/flag_xx.png" alt="Show message keys"/>
 				<span>Developer</span>
 			</p:menuitem>

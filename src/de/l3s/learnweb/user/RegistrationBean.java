@@ -112,7 +112,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
                 return LoginBean.loginUser(this, existingUser.get());
             } else {
                 addMessage(FacesMessage.SEVERITY_FATAL, "You should use password to login.");
-                return "user/login.xhtml?faces-redirect=true";
+                return "/lw/user/login.xhtml?faces-redirect=true";
             }
         } else {
             User user = new User();
@@ -184,7 +184,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
             if (mailRequired) {
                 confirmRequiredBean.setLoggedInUser(user);
-                return "user/confirm_required.xhtml?faces-redirect=true";
+                return "/lw/user/confirm_required.xhtml?faces-redirect=true";
             }
         }
 

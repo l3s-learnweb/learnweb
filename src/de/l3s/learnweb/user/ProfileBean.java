@@ -167,14 +167,14 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         if (userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) { // a moderator was logged into another user's account
             userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
             userBean.setModeratorUser(null);
-            return "admin/users.xhtml?faces-redirect=true";
+            return "/lw/admin/users.xhtml?faces-redirect=true";
         } else if (user.isModerator() && !user.equals(getSelectedUser())) { // a moderator deletes another user through his profile page
-            return "admin/users.xhtml?faces-redirect=true";
+            return "/lw/admin/users.xhtml?faces-redirect=true";
         }
 
         // a user deletes himself
         Faces.invalidateSession();
-        return "user/login.xhtml?faces-redirect=true";
+        return "/lw/user/login.xhtml?faces-redirect=true";
     }
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException {
