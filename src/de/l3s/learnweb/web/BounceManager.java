@@ -3,8 +3,9 @@ package de.l3s.learnweb.web;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +42,7 @@ public class BounceManager {
     private static final Pattern STATUS_CODE_PATTERN = Pattern.compile("(?<=Status: )\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
     private static final Pattern ORIGINAL_RECIPIENT_PATTERN = Pattern.compile("(?<=Original-Recipient:)(\\s.+;)(.+)\\s");
 
-    private LocalDateTime lastBounceCheck;
+    private Instant lastBounceCheck;
 
     @Inject
     private BounceDao bounceDao;
@@ -60,10 +61,10 @@ public class BounceManager {
     }
 
     public void parseInbox() throws MessagingException, IOException {
-        LocalDateTime currentCheck = LocalDateTime.now();
+        Instant currentCheck = Instant.now();
 
         if (lastBounceCheck == null) {
-            lastBounceCheck = bounceDao.findLastBounceDate().orElse(LocalDateTime.now().minusYears(1));
+            lastBounceCheck = bounceDao.findLastBounceDate().orElse(currentCheck.minus(1, ChronoUnit.YEARS));
         }
 
         SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT, Date.from(lastBounceCheck.atZone(ZoneId.systemDefault()).toInstant()));

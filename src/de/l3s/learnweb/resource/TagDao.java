@@ -28,7 +28,7 @@ public interface TagDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_tag WHERE name LIKE ? ORDER BY tag_id LIMIT 1")
     Optional<Tag> findByName(String name);
 
-    @SqlQuery("SELECT t.*, name FROM lw_resource_tag JOIN lw_tag t USING(tag_id) JOIN lw_resource USING(resource_id) WHERE user_id = ? AND deleted = 0")
+    @SqlQuery("SELECT DISTINCT t.* FROM lw_resource_tag JOIN lw_tag t USING(tag_id) JOIN lw_resource USING(resource_id) WHERE user_id = ? AND deleted = 0")
     List<Tag> findByUserId(int userId);
 
     default OwnerList<Tag, User> findByResourceId(int resourceId) {

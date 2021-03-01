@@ -236,8 +236,8 @@
 			</div>
 
 			<p:outputPanel styleClass="col-md-6" layout="block"
-						   rendered="${(groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user) ||
-						   				groupOptionsBean.group.isMember(userBean.user)) && not empty groupOptionsBean.userCopyableGroups}">
+						   rendered="${(groupOptionsBean.group.course.isModerator(userBean.user) or groupOptionsBean.group.isLeader(userBean.user) or
+						   				groupOptionsBean.group.isMember(userBean.user)) and not empty groupOptionsBean.userCopyableGroups}">
 				<p:panel header="#{msg.copy_resources}">
 					<h:form id="group_copy_form">
 						<div class="form-group">

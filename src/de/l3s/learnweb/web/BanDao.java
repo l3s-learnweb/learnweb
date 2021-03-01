@@ -19,7 +19,7 @@ import de.l3s.util.RsHelper;
 public interface BanDao extends SqlObject, Serializable {
 
     @SqlQuery("SELECT * FROM lw_bans WHERE addr = ?")
-    Optional<Ban> findByAddr();
+    Optional<Ban> findByAddr(String addr);
 
     @SqlQuery("SELECT * FROM lw_bans")
     List<Ban> findAll();
