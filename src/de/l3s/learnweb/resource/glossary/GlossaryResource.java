@@ -28,7 +28,7 @@ public class GlossaryResource extends Resource {
         this.setSource(ResourceService.learnweb);
         this.setLocation("Learnweb");
         this.setStorageType(Resource.LEARNWEB_RESOURCE);
-        this.setType(ResourceType.glossary2);
+        this.setType(ResourceType.glossary);
     }
 
     /**

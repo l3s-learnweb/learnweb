@@ -14,7 +14,7 @@ public enum ResourceType {
 
     // learnweb types
     survey,
-    glossary2;
+    glossary;
 
     @Override
     public String toString() {

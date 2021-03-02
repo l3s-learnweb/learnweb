@@ -388,7 +388,7 @@ public interface ResourceDao extends SqlObject, Serializable {
             switch (type) {
                 case survey:
                     return new SurveyResource();
-                case glossary2:
+                case glossary:
                     return new GlossaryResource();
                 default:
                     return new Resource();

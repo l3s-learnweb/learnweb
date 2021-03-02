@@ -43,7 +43,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
             return Optional.empty();
         }
 
-        if (resource.getType() != ResourceType.glossary2) {
+        if (resource.getType() != ResourceType.glossary) {
             LogManager.getLogger(GlossaryDao.class)
                 .error("Glossary resource requested but the resource is of type {}; {}", resource.getType(), BeanHelper.getRequestSummary());
             return Optional.empty();
@@ -53,7 +53,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
     }
 
     default List<GlossaryResource> findByOwnerIds(List<Integer> userIds) {
-        List<Resource> resources = getResourceDao().findByOwnerIdsAndType(userIds, ResourceType.glossary2);
+        List<Resource> resources = getResourceDao().findByOwnerIdsAndType(userIds, ResourceType.glossary);
 
         // convert to glossary resource but filter resources that could not be converted
         return resources.stream().map(this::convertToGlossaryResource).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());

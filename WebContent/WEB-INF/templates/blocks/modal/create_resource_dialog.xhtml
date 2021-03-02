@@ -48,7 +48,7 @@
                 <h:outputText escape="false" value="#{addResourceBean.resource.smallThumbnail.html}"/>
             </ui:fragment>
 
-            <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary2'}">
+            <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary'}">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
                 <div class="fg-col">
                     <p:inputText value="#{addResourceBean.resource.title}" required="true" />
@@ -135,7 +135,7 @@
                 <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" update="create_resource_form"
                                  onstart="PF('createResourceOverlay').show();"
                                  oncomplete="PF('createResourceOverlay').hide();if (!args.validationFailed) {PF('createResourceDialog').hide();resourceAddedHook(); if (#{userBean.guided}) {guideFinish.show();}}"
-                                 rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">
+                                 rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">
                 </p:commandButton>
 
                 <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" immediate="true" onclick="PF('createResourceDialog').hide();return false;"/>

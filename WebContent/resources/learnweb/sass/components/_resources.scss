@@ -66,7 +66,7 @@
     @include ui-icon-content($fa-var-poll-h);
   }
 
-  .res-t-glossary2 & {
+  .res-t-glossary & {
     color: $purple;
     @include ui-icon-content($fa-var-book);
   }
@@ -118,7 +118,7 @@
     background-image: url('../images/resources/survey.svg');
   }
 
-  .res-t-glossary2 & {
+  .res-t-glossary & {
     background-image: url('../images/resources/glossary.svg');
   }
 }
