@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
@@ -68,7 +69,7 @@ public interface CourseDao extends SqlObject, Serializable {
         params.put("title", course.getTitle());
         params.put("organisation_id", course.getOrganisationId());
         params.put("default_group_id", course.getDefaultGroupId());
-        params.put("wizard_param", course.getWizardParam());
+        params.put("wizard_param", StringUtils.isBlank(course.getWizardParam()) ? null : course.getWizardParam());
         params.put("next_x_users_become_moderator", course.getNextXUsersBecomeModerator());
         params.put("welcome_message", course.getWelcomeMessage());
         params.put("timestamp_creation", course.getCreationTimestamp());

@@ -34,7 +34,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         Users_Require_student_id
     }
 
-    private int id = -1;
+    private int id;
     @NotBlank
     @Length(min = 2, max = 40)
     private String title;

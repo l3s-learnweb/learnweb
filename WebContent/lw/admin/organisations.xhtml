@@ -52,10 +52,10 @@
 		<h:form id="addorganisation">
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg.organization_title}:"/>
-				<p:inputText value="#{adminCoursesBean.newOrganisationTitle}"/>
+				<p:inputText value="#{adminOrganisationsBean.newOrganisationTitle}"/>
 				<p:message for="@previous"/>
 			</div>
-			<p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit"
+			<p:commandButton action="${adminOrganisationsBean.onCreateOrganisation}" value="#{msg.add}" type="submit"
 							 oncomplete="PF('createOrgWidget').hide();" process="@form" update=":organisationform"/>
 		</h:form>
 	</p:dialog>

@@ -120,14 +120,25 @@
 
     <p:dialog widgetVar="createCourseWidget" header="#{msg.add_new_course}" styleClass="overflow-hidden">
         <h:form id="addcourse">
+            <p:blockUI block="addcourse" widgetVar="createCourseOverlay">
+                <h:outputText value="#{msg.please_wait}"/>
+            </p:blockUI>
+
             <div class="form-group">
                 <p:outputLabel for="@next" value="#{msg.course_title}:"/>
-                <p:inputText value="#{adminCoursesBean.newCourseTitle}" required="true"/>
+                <p:inputText value="#{adminCoursesBean.newCourse.title}" required="true"/>
                 <p:message for="@previous"/>
             </div>
-            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}"
-                             update="@form :courses_table" process="@form"
-                             onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide(); PF('createCourseWidget').hide();"/>
+            <div class="form-group">
+                <p:outputLabel for="@next" value="#{msg.registration_wizard}:"/>
+                <p:inputText value="#{adminCoursesBean.newCourse.wizardParam}"/>
+                <p:message for="@previous"/>
+            </div>
+            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" update="@form :courses_table" process="@form"
+                             onstart="PF('createCourseOverlay').show();" oncomplete="PF('createCourseOverlay').hide();if (!args.validationFailed) {PF('createCourseWidget').hide();}"/>
+            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourseAndGroup()}" value="Add course and group" styleClass="alt-btn ms-1"
+                             update="@form :courses_table" process="@form" onstart="PF('createCourseOverlay').show();"
+                             oncomplete="PF('createCourseOverlay').hide();if (!args.validationFailed) {PF('createCourseWidget').hide();}"/>
         </h:form>
     </p:dialog>
 </ui:define>
