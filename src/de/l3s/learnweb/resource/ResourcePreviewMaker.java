@@ -114,7 +114,7 @@ public class ResourcePreviewMaker implements Serializable {
             } else if (resource.getStorageType() == Resource.WEB_RESOURCE && StringUtils.isNotEmpty(resource.getMaxImageUrl())) {
                 inputStream = UrlHelper.getInputStream(resource.getMaxImageUrl());
                 processImage(resource, inputStream);
-            } else {
+            } else if (resource.getType() != ResourceType.glossary && resource.getType() != ResourceType.survey) {
                 inputStream = UrlHelper.getInputStream(resource.getUrl());
                 processFile(resource, inputStream);
             }

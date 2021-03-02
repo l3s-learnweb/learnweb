@@ -627,7 +627,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     @Override
     public String toString() {
-        return "[userId: " + getId() + " name: " + getRealUsername() + "]";
+        return "[userId: " + getId() + ", name: " + getRealUsername() + ", email: " + getEmail() + "]";
     }
 
     public int getForumPostCount() {
