@@ -26,7 +26,12 @@
     </rule>
     <!-- Redirects from one page to another -->
     <rule>
-        <name>Short links to the wizard</name>
+        <name>Short links to the registration wizard (include group join)</name>
+        <from>(?:/lw)?/wizard=(.*)/([\d]+)</from>
+        <to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1&amp;group=$2</to>
+    </rule>
+    <rule>
+        <name>Short links to the registration wizard</name>
         <from>(?:/lw)?/wizard=(.*)</from>
         <to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>
     </rule>

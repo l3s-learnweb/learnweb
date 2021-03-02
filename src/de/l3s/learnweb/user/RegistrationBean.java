@@ -19,12 +19,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.util.bean.BeanHelper;
 
@@ -50,6 +52,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private boolean acceptTracking = false;
 
     private String wizard;
+    private String group;
     private String fastLogin;
 
     private String affiliation;
@@ -79,8 +82,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         }
 
         if (StringUtils.isNotEmpty(wizard)) {
-            course = courseDao.findByWizard(wizard).orElse(null);
-            BeanAssert.validate(course, "register_invalid_wizard_error");
+            course = courseDao.findByWizard(wizard).orElseThrow(() -> new BadRequestHttpException("register_invalid_wizard_error"));
             BeanAssert.validate(!course.isWizardDisabled(), "registration.wizard_disabled");
 
             // special message for yell
@@ -90,17 +92,18 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
                 addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
             }
 
-            mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
-            affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
-            studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
-
             if (StringUtils.isNotEmpty(fastLogin)) {
                 return fastLogin();
             }
         } else {
+            course = courseDao.findByWizard("default").orElseThrow(BeanAssert.NOT_FOUND);
+
             addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
         }
 
+        mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
+        affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
+        studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
         return null;
     }
 
@@ -122,25 +125,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             user.setTimeZone(ZoneId.of("Europe/Berlin"));
             user.setLocale(locale);
 
-            registerUser(user, course);
+            registerUser(user);
             return LoginBean.loginUser(this, user);
         }
-    }
-
-    private User registerUser(final User user, Course course) {
-        if (null == course) {
-            course = courseDao.findByWizard("default").orElseThrow();
-        }
-
-        user.setOrganisationId(course.getOrganisationId());
-        user.setRegistrationDate(LocalDateTime.now());
-        user.setPreferences(new HashMap<>());
-        user.setDefaultProfilePicture();
-
-        userDao.save(user);
-
-        course.addUser(user);
-        return user;
     }
 
     /**
@@ -171,12 +158,10 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             user.setAffiliation(affiliation);
         }
 
-        registerUser(user, course);
+        registerUser(user);
 
-        log(Action.register, 0, 0, null, user);
-        if (null != course && course.getDefaultGroupId() != null) {
-            user.joinGroup(dao().getGroupDao().findById(course.getDefaultGroupId()));
-            log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId(), null, user);
+        if (course.getDefaultGroupId() != null || StringUtils.isNumeric(group)) {
+            joinDefaultGroup(user);
         }
 
         if ((mailRequired || StringUtils.isNotEmpty(email)) && !user.isEmailConfirmed()) {
@@ -189,6 +174,30 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         }
 
         return LoginBean.loginUser(this, user);
+    }
+
+    private void registerUser(final User user) {
+        user.setOrganisationId(course.getOrganisationId());
+        user.setRegistrationDate(LocalDateTime.now());
+        user.setPreferences(new HashMap<>());
+        user.setDefaultProfilePicture();
+
+        userDao.save(user);
+        log(Action.register, null, null, null, user);
+
+        course.addUser(user);
+    }
+
+    private void joinDefaultGroup(final User user) {
+        int groupToJoin = Optional.ofNullable(course.getDefaultGroupId()).orElse(0);
+        if (StringUtils.isNumeric(group)) {
+            groupToJoin = NumberUtils.toInt(group);
+        }
+
+        if (groupToJoin > 0) {
+            user.joinGroup(dao().getGroupDao().findById(groupToJoin));
+            log(Action.group_joining, groupToJoin, groupToJoin, null, user);
+        }
     }
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) {
@@ -234,6 +243,14 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             wizard = "yell";
         }
         this.wizard = wizard;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(final String group) {
+        this.group = group;
     }
 
     public String getFastLogin() {

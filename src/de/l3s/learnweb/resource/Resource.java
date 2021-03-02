@@ -84,7 +84,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private String query; // the query which was used to find this resource
     private Integer originalResourceId; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
     private String machineDescription;
-    private Thumbnail thumbnail0; // 150 / 120
+    private Thumbnail thumbnail0; // 160x120            200x150px smallest thumbnail used on website (actual display size 160x120)
     private Thumbnail thumbnail1; // 150px
     private Thumbnail thumbnail2; // 300 / 220
     private Thumbnail thumbnail3; // 500 / 600

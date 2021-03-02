@@ -1,5 +1,7 @@
 package de.l3s.learnweb.beans;
 
+import java.util.function.Supplier;
+
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.GoneHttpException;
@@ -15,6 +17,9 @@ import de.l3s.util.Deletable;
  * All methods should accept {@code true} as valid (no error) input and {@code false} as invalid input which triggers exception.
  */
 public final class BeanAssert {
+
+    public static final Supplier<NotFoundHttpException> NOT_FOUND = () -> new NotFoundHttpException("error_pages.not_found_object_description");
+    public static final Supplier<NotFoundHttpException> NOT_FOUND_GROUP = () -> new NotFoundHttpException("error_pages.not_found_group_description");
 
     /**
      * @see BeanAssert#validate(Object, String)
