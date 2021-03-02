@@ -87,14 +87,14 @@
                         <p:menuitem id="menu_create_folder" value="#{msg.create_folder}" icon="fas fa-folder" ajax="true"
                                     oncomplete="PF('createFolderDialog').show();return false;" update=":createFolderDialog"
                                     actionListener="#{addFolderBean.create(groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
-                        <p:separator/>
+                        <p:divider/>
                         <p:menuitem id="menu_upload_file" value="#{msg.upload_file}" icon="fas fa-cloud-upload-alt" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('file', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:menuitem id="menu_upload_url" value="#{msg.upload_url}" icon="fas fa-link" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('url', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
-                        <p:separator/>
+                        <p:divider/>
                         <p:menuitem value="#{msg.office_document}" icon="fas fa-file-word" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('document', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
