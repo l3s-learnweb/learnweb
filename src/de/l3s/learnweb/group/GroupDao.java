@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
+import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -21,6 +22,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
@@ -32,6 +34,9 @@ import de.l3s.util.SqlHelper;
 @RegisterRowMapper(GroupDao.GroupUserMapper.class)
 public interface GroupDao extends SqlObject, Serializable {
     ICache<Group> cache = new Cache<>(500);
+
+    @CreateSqlObject
+    ResourceDao getResourceDao();
 
     default Optional<Group> findById(int groupId) {
         return Optional.ofNullable(cache.get(groupId))
@@ -54,7 +59,7 @@ public interface GroupDao extends SqlObject, Serializable {
     /**
      * Returns a list of all Groups which belong to the defined course.
      */
-    @SqlQuery("SELECT * FROM lw_group g  WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title")
+    @SqlQuery("SELECT * FROM lw_group WHERE course_id = ? AND deleted = 0 ORDER BY title")
     List<Group> findByCourseId(int courseId);
 
     /**
@@ -91,7 +96,7 @@ public interface GroupDao extends SqlObject, Serializable {
     @SqlQuery("SELECT last_visit FROM lw_group_user WHERE group_id = ? AND user_id = ?")
     Optional<Integer> findLastVisitTime(Group group, User user);
 
-    @SqlQuery("SELECT COUNT(*) FROM lw_group_user WHERE group_id = ?")
+    @SqlQuery("SELECT count(*) FROM lw_group_user WHERE group_id = ?")
     int countMembers(int groupId);
 
     /**
@@ -116,7 +121,7 @@ public interface GroupDao extends SqlObject, Serializable {
     /**
      * Saves the setting that defines how often a user will retrieve notifications for the given group.
      */
-    @SqlUpdate("UPDATE lw_group_user SET notification_frequency= ? WHERE group_id= ? and user_id= ?")
+    @SqlUpdate("UPDATE lw_group_user SET notification_frequency= ? WHERE group_id= ? AND user_id= ?")
     void updateNotificationFrequency(User.NotificationFrequency notificationFrequency, int groupId, int userId);
 
     /**
@@ -131,17 +136,15 @@ public interface GroupDao extends SqlObject, Serializable {
     @SqlUpdate("DELETE FROM lw_group_user WHERE group_id = ? AND user_id = ?")
     void deleteUser(int groupId, User user);
 
-    @SqlUpdate("DELETE FROM lw_group_user WHERE group_id = ?")
-    void deleteAllUsers(int groupId);
-
     default void deleteSoft(Group group) {
         for (Resource resource : group.getResources()) {
-            resource.delete();
+            getResourceDao().deleteSoft(resource);
         }
 
         List<User> members = group.getMembers();
-        deleteAllUsers(group.getId());
+        getHandle().execute("DELETE FROM lw_group_user WHERE group_id = ?", group);
         getHandle().execute("UPDATE lw_group SET deleted = 1 WHERE group_id = ?", group);
+        group.setDeleted(true);
 
         members.forEach(User::clearCaches);
         cache.remove(group.getId());
@@ -152,13 +155,11 @@ public interface GroupDao extends SqlObject, Serializable {
      */
     default void deleteHard(Group group) {
         for (Resource resource : group.getResources()) {
-            resource.deleteHard();
+            getResourceDao().deleteHard(resource);
         }
 
         List<User> members = group.getMembers();
-
-        getHandle().execute("DELETE FROM lw_group WHERE group_id = ?", group.getId());
-        getHandle().execute("UPDATE lw_course SET default_group_id = NULL WHERE default_group_id = ?", group.getId());
+        getHandle().execute("DELETE FROM lw_group WHERE group_id = ?", group);
 
         members.forEach(User::clearCaches);
         cache.remove(group.getId());
@@ -167,6 +168,7 @@ public interface GroupDao extends SqlObject, Serializable {
     default void save(Group group) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("group_id", SqlHelper.toNullable(group.getId()));
+        params.put("deleted", group.isDeleted());
         params.put("title", group.getTitle());
         params.put("description", SqlHelper.toNullable(group.getDescription()));
         params.put("leader_id", group.getLeaderUserId());
@@ -197,6 +199,7 @@ public interface GroupDao extends SqlObject, Serializable {
             if (group == null) {
                 group = new Group();
                 group.setId(rs.getInt("group_id"));
+                group.setDeleted(rs.getBoolean("deleted"));
                 group.setTitle(rs.getString("title"));
                 group.setDescription(rs.getString("description"));
                 group.setLeaderUserId(rs.getInt("leader_id"));

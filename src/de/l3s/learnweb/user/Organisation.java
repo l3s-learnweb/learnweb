@@ -356,7 +356,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
                 return null;
             }
 
-            File file = Learnweb.dao().getFileDao().findByIdOrElseThrow(bannerImageFileId);
+            File file = getBannerImageFile();
 
             if (file != null) {
                 bannerImage = file.getUrl();
@@ -365,6 +365,10 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             }
         }
         return bannerImage;
+    }
+
+    public File getBannerImageFile() {
+        return Learnweb.dao().getFileDao().findByIdOrElseThrow(bannerImageFileId);
     }
 
     public int getBannerImageFileId() {

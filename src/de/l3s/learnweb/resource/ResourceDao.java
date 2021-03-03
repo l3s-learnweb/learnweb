@@ -282,32 +282,37 @@ public interface ResourceDao extends SqlObject, Serializable {
         Learnweb.getInstance().getSolrClient().reIndexResource(resource);
     }
 
-    default void deleteSoft(int resourceId) {
-        // delete resource from SOLR index
+    default void deleteSoft(Resource resource) {
+        getHandle().execute("UPDATE lw_resource SET deleted = 1 WHERE resource_id = ?", resource);
+        resource.setDeleted(true);
+
         try {
-            Learnweb.getInstance().getSolrClient().deleteFromIndex(resourceId);
+            Learnweb.getInstance().getSolrClient().deleteFromIndex(resource.getId());
         } catch (Exception e) {
-            throw new IllegalStateException("Couldn't delete resource " + resourceId + " from SOLR", e);
+            throw new IllegalStateException("Couldn't delete resource " + resource.getId() + " from Solr", e);
         }
 
-        // flag the resource as deleted
-        getHandle().execute("UPDATE lw_resource SET deleted = 1 WHERE resource_id = ?", resourceId);
-
-        // remove resource from cache
-        cache.remove(resourceId);
+        cache.remove(resource.getId());
     }
 
     /**
      * Don't use this function.
      * Usually you have to call deleteSoft()
      */
-    default void deleteHard(int resourceId) {
-        // log.debug("Hard delete resource: " + resourceId);
+    default void deleteHard(Resource resource) {
+        for (File file : resource.getFiles().values()) {
+            getFileDao().deleteHard(file);
+        }
 
-        deleteSoft(resourceId); // clear cache and remove resource from SOLR
-        getHandle().execute("DELETE FROM lw_resource WHERE resource_id = ?", resourceId);
+        getHandle().execute("DELETE FROM lw_resource WHERE resource_id = ?", resource);
 
-        // TODO @astappiev: delete files (lw_file); but it's not possible yet because files are shared when a resource is copied
+        try {
+            Learnweb.getInstance().getSolrClient().deleteFromIndex(resource.getId());
+        } catch (Exception e) {
+            throw new IllegalStateException("Couldn't delete resource " + resource.getId() + " from Solr", e);
+        }
+
+        cache.remove(resource.getId());
     }
 
     class ResourceMapper implements RowMapper<Resource> {

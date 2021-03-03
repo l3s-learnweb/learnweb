@@ -31,13 +31,13 @@ import de.l3s.util.SqlHelper;
 @RegisterRowMapper(SubmissionDao.SubmissionMapper.class)
 public interface SubmissionDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT * FROM lw_submission WHERE submission_id=?")
+    @SqlQuery("SELECT * FROM lw_submission WHERE submission_id = ? AND deleted = 0")
     Optional<Submission> findById(int submissionId);
 
-    @SqlQuery("SELECT * FROM lw_submission WHERE course_id IN (<courseIds>) AND deleted=0 ORDER BY close_datetime")
+    @SqlQuery("SELECT * FROM lw_submission WHERE course_id IN (<courseIds>) AND deleted = 0 ORDER BY close_datetime")
     List<Submission> findByCourseIds(@BindList("courseIds") List<Integer> courseIds);
 
-    @SqlQuery("SELECT * FROM lw_submission WHERE course_id IN (<courseIds>) AND close_datetime >= NOW() AND open_datetime < NOW() AND deleted=0 ORDER BY close_datetime")
+    @SqlQuery("SELECT * FROM lw_submission WHERE course_id IN (<courseIds>) AND close_datetime >= NOW() AND open_datetime < NOW() AND deleted = 0 ORDER BY close_datetime")
     List<Submission> findActiveByCourseIds(@BindList("courseIds") List<Integer> courseIds);
 
     @SqlQuery("SELECT * FROM lw_submission JOIN lw_resource USING(resource_id) WHERE user_id IN (<userIds>) AND deleted = 0")
@@ -50,15 +50,15 @@ public interface SubmissionDao extends SqlObject, Serializable {
      * Retrieve the number of submissions by the user for a particular course
      * to display it in the admin/users_submissions page.
      */
-    @SqlQuery("SELECT t1.user_id, COUNT(*) as count FROM (SELECT DISTINCT submission_id, user_id FROM lw_submission_resource) t1 JOIN lw_submission USING(submission_id) WHERE course_id = ? AND deleted=0 GROUP BY user_id")
+    @SqlQuery("SELECT t1.user_id, COUNT(*) as count FROM (SELECT DISTINCT submission_id, user_id FROM lw_submission_resource) t1 JOIN lw_submission USING(submission_id) WHERE course_id = ? AND deleted = 0 GROUP BY user_id")
     @KeyColumn("user_id")
     @ValueColumn("count")
     Map<Integer, Integer> countPerUserByCourseId(int courseId);
 
-    @SqlQuery("SELECT COUNT(*) FROM lw_submission WHERE course_id IN (<courseIds>) AND deleted=0 ORDER BY close_datetime")
+    @SqlQuery("SELECT COUNT(*) FROM lw_submission WHERE course_id IN (<courseIds>) AND deleted = 0 ORDER BY close_datetime")
     int countByCourseIds(@BindList("courseIds") List<Integer> courseIds);
 
-    @SqlUpdate("INSERT INTO lw_submission_status(submission_id, user_id, submitted) VALUES (?,?,?) ON DUPLICATE KEY UPDATE submitted = VALUES(submitted)")
+    @SqlUpdate("INSERT INTO lw_submission_status(submission_id, user_id, submitted) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE submitted = VALUES(submitted)")
     void insertSubmissionStatus(int submissionId, int userId, boolean submitted);
 
     /**
@@ -67,13 +67,16 @@ public interface SubmissionDao extends SqlObject, Serializable {
     @SqlUpdate("INSERT INTO lw_submission_resource(submission_id, resource_id, user_id) VALUES (?, ?, ?)")
     void insertSubmissionResource(int submissionId, int resourceId, int userId);
 
-    @SqlUpdate("UPDATE lw_submission SET deleted = 1 WHERE submission_id = ?")
-    void deleteSoft(Submission submission);
+    default void deleteSoft(Submission submission) {
+        getHandle().execute("UPDATE lw_submission SET deleted = 1 WHERE submission_id = ?", submission);
+
+        submission.setDeleted(true);
+    }
 
     /**
      * To be able to remove submitted resource if the submission is re-opened by the moderator.
      */
-    @SqlUpdate("DELETE FROM lw_submission_resource WHERE submission_id=? AND resource_id=? AND user_id=?")
+    @SqlUpdate("DELETE FROM lw_submission_resource WHERE submission_id = ? AND resource_id = ? AND user_id = ?")
     void deleteSubmissionResource(int submissionId, int resourceId, int userId);
 
     default List<Submission> findByUser(User user) {
@@ -113,6 +116,7 @@ public interface SubmissionDao extends SqlObject, Serializable {
     default void save(Submission submission) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("submission_id", SqlHelper.toNullable(submission.getId()));
+        params.put("deleted", submission.isDeleted());
         params.put("course_id", SqlHelper.toNullable(submission.getCourseId()));
         params.put("title", submission.getTitle());
         params.put("description", submission.getDescription());
@@ -132,6 +136,7 @@ public interface SubmissionDao extends SqlObject, Serializable {
         public Submission map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             Submission submission = new Submission();
             submission.setId(rs.getInt("submission_id"));
+            submission.setDeleted(rs.getBoolean("deleted"));
             submission.setCourseId(rs.getInt("course_id"));
             submission.setTitle(rs.getString("title"));
             submission.setDescription(rs.getString("description"));

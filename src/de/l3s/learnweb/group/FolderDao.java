@@ -12,10 +12,11 @@ import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.resource.Folder;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
@@ -45,8 +46,22 @@ public interface FolderDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_group_folder WHERE deleted = 0 AND group_id IS NULL AND parent_folder_id = ? AND user_id = ?")
     List<Folder> findByPrivateGroupAndFolder(int folderId, int userId);
 
-    @SqlUpdate("UPDATE lw_group_folder SET deleted = 1 WHERE folder_id = ?")
-    void deleteSoft(int folderId);
+    default void deleteSoft(Folder folder) {
+        getHandle().execute("UPDATE lw_group_folder SET deleted = 1 WHERE folder_id = ?", folder);
+
+        folder.setDeleted(true);
+        cache.remove(folder.getId());
+    }
+
+    default void deleteHard(Folder folder) {
+        ResourceDao resourceDao = getHandle().attach(ResourceDao.class);
+        for (Resource resource : folder.getResources()) {
+            resourceDao.deleteHard(resource);
+        }
+
+        getHandle().execute("DELETE FROM lw_group_folder WHERE folder_id = ?", folder);
+        cache.remove(folder.getId());
+    }
 
     default void save(Folder folder) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();

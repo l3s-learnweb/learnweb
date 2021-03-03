@@ -1160,12 +1160,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     @Override
     public void delete() {
-        setDeleted(true);
-        save();
-    }
-
-    public void deleteHard() {
-        Learnweb.dao().getResourceDao().deleteHard(id);
+        Learnweb.dao().getResourceDao().deleteSoft(this);
     }
 
     /**

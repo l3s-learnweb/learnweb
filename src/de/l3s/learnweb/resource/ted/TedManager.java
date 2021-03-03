@@ -273,7 +273,7 @@ public class TedManager {
 
             if (!existsInTedVideo) {
                 // log.debug(resource);
-                resourceDao.deleteSoft(resource.getId());
+                resourceDao.deleteSoft(resource);
 
                 int deleted = tedTranscriptDao.deleteTranscriptParagraphs(resource.getId());
                 log.info("Deleted({}) transcripts for duplicate TED video: {}", deleted, resource.getId());
@@ -297,7 +297,7 @@ public class TedManager {
                 resource.setSource(ResourceService.ted);
                 resource.setMaxImageUrl(r2.getMaxImageUrl());
                 for (File file : resource.getFiles().values()) {
-                    fileDao.deleteSoft(file);
+                    fileDao.deleteHard(file);
                 }
                 resource.setThumbnail0(r2.getThumbnail0());
                 resource.setThumbnail1(r2.getThumbnail1());

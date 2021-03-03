@@ -39,10 +39,10 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
     List<GlossaryEntry> findByResourceId(int resourceId);
 
     default void deleteSoft(GlossaryEntry entry, int deletedByUserId) {
-        entry.setDeleted(true);
-
         getHandle().execute("UPDATE lw_glossary_entry SET deleted = 1, last_changed_by_user_id = ? WHERE entry_id = ?", deletedByUserId, entry);
         getHandle().execute("UPDATE lw_glossary_term SET deleted = 1, last_changed_by_user_id = ? WHERE entry_id = ?", deletedByUserId, entry);
+
+        entry.setDeleted(true);
     }
 
     @SqlQuery("SELECT COUNT(distinct ge.entry_id) FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) "

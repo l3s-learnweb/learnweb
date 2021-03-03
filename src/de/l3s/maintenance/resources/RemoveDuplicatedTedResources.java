@@ -25,7 +25,7 @@ public final class RemoveDuplicatedTedResources extends MaintenanceTask {
 
         for (Resource resource : resources) {
             log.debug("Deleting resource {}", resource.getId());
-            resource.deleteHard();
+            getLearnweb().getDaoProvider().getResourceDao().deleteHard(resource);
         }
     }
 

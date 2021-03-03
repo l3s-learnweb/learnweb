@@ -299,7 +299,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
             resource.delete();
         }
 
-        Learnweb.dao().getFolderDao().deleteSoft(id);
+        Learnweb.dao().getFolderDao().deleteSoft(this);
 
         Folder parentFolder = this.getParentFolder();
 

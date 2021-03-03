@@ -63,12 +63,15 @@ public interface FileDao extends SqlObject, Serializable {
             .execute();
     }
 
-    default void deleteSoft(int fileId) {
-        deleteSoft(findByIdOrElseThrow(fileId));
-    }
-
     default void deleteSoft(File file) {
         getHandle().execute("UPDATE lw_file SET deleted = 1 WHERE file_id = ?", file);
+
+        file.setDeleted(true);
+        cache.remove(file.getId());
+    }
+
+    default void deleteHard(File file) {
+        getHandle().execute("DELETE FROM lw_file WHERE file_id = ?", file);
         cache.remove(file.getId());
 
         if (file.exists()) {
@@ -91,6 +94,7 @@ public interface FileDao extends SqlObject, Serializable {
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("file_id", SqlHelper.toNullable(file.getId()));
+        params.put("deleted", file.isDeleted());
         params.put("resource_id", SqlHelper.toNullable(file.getResourceId()));
         params.put("resource_file_number", file.getType().ordinal());
         params.put("name", file.getName());
@@ -121,6 +125,7 @@ public interface FileDao extends SqlObject, Serializable {
             if (file == null) {
                 file = new File();
                 file.setId(rs.getInt("file_id"));
+                file.setDeleted(rs.getBoolean("deleted"));
                 file.setResourceId(rs.getInt("resource_id"));
                 file.setType(File.TYPE.values()[rs.getInt("resource_file_number")]);
                 file.setName(rs.getString("name"));

@@ -36,6 +36,7 @@ public class File implements Serializable, HasId, Cloneable {
     }
 
     private int fileId;
+    private boolean deleted;
     private String name;
     private String mimeType;
     private int resourceId;
@@ -69,6 +70,14 @@ public class File implements Serializable, HasId, Cloneable {
 
     public void setId(int fileId) {
         this.fileId = fileId;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(final boolean deleted) {
+        this.deleted = deleted;
     }
 
     public String getName() {

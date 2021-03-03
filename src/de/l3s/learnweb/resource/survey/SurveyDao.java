@@ -65,8 +65,11 @@ public interface SurveyDao extends SqlObject, Serializable {
     @SqlUpdate("INSERT INTO lw_survey_resource_user (resource_id, user_id, submitted) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE submitted = VALUES(submitted)")
     void insertSubmittedStatus(int resourceId, int userId, boolean submitted);
 
-    @SqlUpdate("UPDATE lw_survey SET deleted = 1 WHERE survey_id = ?")
-    void deleteSoft(Survey survey);
+    default void deleteSoft(Survey survey) {
+        getHandle().execute("UPDATE lw_survey SET deleted = 1 WHERE survey_id = ?", survey);
+
+        survey.setDeleted(true);
+    }
 
     /**
      * Returns all answers a user has given for a particular survey resource.
@@ -77,7 +80,7 @@ public interface SurveyDao extends SqlObject, Serializable {
         Validate.isTrue(resource.getId() != 0, "The value must be greater than zero: ", resource.getId());
 
         // Get survey data
-        SurveyUserAnswers surveyAnswer = getHandle().select("SELECT * FROM lw_survey_answer WHERE resource_id = ? AND user_id = ?", resource.getId(), userId)
+        SurveyUserAnswers surveyAnswer = getHandle().select("SELECT * FROM lw_survey_answer WHERE resource_id = ? AND user_id = ?", resource, userId)
             .reduceResultSet(new SurveyUserAnswers(userId, resource.getId()), (previous, rs, ctx) -> {
                 previous.setSaved(true);
 
@@ -123,7 +126,7 @@ public interface SurveyDao extends SqlObject, Serializable {
      * Loads the survey metadata into the given SurveyResource.
      */
     default void loadSurveyResource(SurveyResource resource) {
-        getHandle().select("SELECT * FROM lw_survey_resource WHERE resource_id = ?", resource.getId()).map((rs, ctx) -> {
+        getHandle().select("SELECT * FROM lw_survey_resource WHERE resource_id = ?", resource).map((rs, ctx) -> {
             resource.setEnd(SqlHelper.getLocalDateTime(rs.getTimestamp("close_date")));
             resource.setStart(SqlHelper.getLocalDateTime(rs.getTimestamp("open_date")));
             resource.setSurveyId(rs.getInt("survey_id"));

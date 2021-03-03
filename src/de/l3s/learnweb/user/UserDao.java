@@ -17,6 +17,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
+import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
@@ -26,6 +27,7 @@ import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.util.Cache;
 import de.l3s.util.HashHelper;
 import de.l3s.util.ICache;
@@ -35,6 +37,9 @@ import de.l3s.util.SqlHelper;
 public interface UserDao extends SqlObject, Serializable {
     int FIELDS = 1; // number of options_fieldX fields, increase if User.Options has more than 64 values
     ICache<User> cache = new Cache<>(500);
+
+    @CreateSqlObject
+    ResourceDao getResourceDao();
 
     default Optional<User> findById(int userId) {
         return Optional.ofNullable(cache.get(userId))
@@ -162,33 +167,30 @@ public interface UserDao extends SqlObject, Serializable {
     default void deleteSoft(User user) {
         for (Resource resource : user.getResources()) {
             if (resource.getGroupId() == 0) { // delete only private resources
-                resource.delete();
+                getResourceDao().deleteSoft(resource);
             }
         }
 
-        getHandle().execute("DELETE FROM lw_group_user WHERE user_id = ?", user.getId());
+        getHandle().execute("DELETE FROM lw_group_user WHERE user_id = ?", user);
 
         user.setDeleted(true);
         user.setEmailRaw(HashHelper.sha512(user.getEmail()));
         user.setPasswordRaw("deleted user");
         user.setUsername(user.getRealUsername() + " (Deleted)");
         user.save();
+
+        cache.remove(user.getId());
     }
 
     default void deleteHard(User user) {
-        // if (user.getResources().size() > 10) {
-        //     log.warn("delete user: " + user + " and his " + user.getResources().size() + " resources?");
-        //     log.info("Delete user ");
-        // }
-
-        // TODO @kemkes: how to handle lw_forum_post.post_edit_user_id
-        // TODO @kemkes: how to handle topics. We can not just delete them topic_last_post_user_id
+        // FIXME: delete restricted if the user used as leader of a group
 
         for (Resource resource : user.getResources()) {
-            resource.deleteHard();
+            getResourceDao().deleteHard(resource);
         }
 
-        getHandle().execute("DELETE FROM lw_user WHERE user_id = ?", user.getId());
+        getHandle().execute("DELETE FROM lw_user WHERE user_id = ?", user);
+        cache.remove(user.getId());
     }
 
     default void save(User user) {

@@ -68,7 +68,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             dao().getFileDao().save(file, uploadedFile.getInputStream());
 
             if (organisation.getBannerImageFileId() != 0) { // delete old image first
-                dao().getFileDao().deleteSoft(organisation.getBannerImageFileId());
+                dao().getFileDao().deleteHard(organisation.getBannerImageFile());
             }
 
             organisation.setBannerImageFileId(file.getId());

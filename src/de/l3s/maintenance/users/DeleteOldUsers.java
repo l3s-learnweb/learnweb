@@ -121,7 +121,7 @@ public class DeleteOldUsers extends MaintenanceTask {
 
             for (Integer resourceId : resourceIds) {
                 log.debug("Delete abandoned resource: {}", resourceId);
-                resourceDao.deleteHard(resourceId);
+                resourceDao.findById(resourceId).ifPresent(resource -> resourceDao.deleteHard(resource));
             }
         }
     }

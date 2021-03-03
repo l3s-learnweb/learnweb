@@ -316,7 +316,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
                 if (Arrays.asList(File.TYPE.THUMBNAIL_LARGE, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_SMALL,
                     File.TYPE.THUMBNAIL_SQUARED, File.TYPE.THUMBNAIL_VERY_SMALL).contains(file.getType())) {
                     log.debug("Delete {}", file.getName());
-                    dao().getFileDao().deleteSoft(file);
+                    dao().getFileDao().deleteHard(file);
                 }
             }
 
@@ -409,7 +409,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
                 if (Arrays.asList(File.TYPE.THUMBNAIL_LARGE, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_SMALL,
                     File.TYPE.THUMBNAIL_SQUARED, File.TYPE.THUMBNAIL_VERY_SMALL).contains(file.getType())) {
                     log.debug("Delete {}", file.getName());
-                    dao().getFileDao().deleteSoft(file);
+                    dao().getFileDao().deleteHard(file);
                 }
             }
 

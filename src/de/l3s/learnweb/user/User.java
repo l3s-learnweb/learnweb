@@ -540,7 +540,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         // delete existing image
         if (this.imageFileId != 0 && this.imageFileId != imageFileId) {
             try {
-                Learnweb.dao().getFileDao().deleteSoft(this.imageFileId);
+                Learnweb.dao().getFileDao().deleteHard(getImageFile());
             } catch (Exception e) {
                 log.error("Can't delete profile image of user {}", this);
             }

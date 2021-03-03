@@ -75,6 +75,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     private int id;
+    private boolean deleted;
     private int leaderUserId;
     private User leader;
     private int courseId;
@@ -127,6 +128,14 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(final boolean deleted) {
+        this.deleted = deleted;
     }
 
     public List<User> getMembers() {

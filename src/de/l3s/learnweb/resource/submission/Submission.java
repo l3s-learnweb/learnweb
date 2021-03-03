@@ -21,6 +21,7 @@ public class Submission implements Serializable, HasId {
     private static final Logger log = LogManager.getLogger(Submission.class);
 
     private int id;
+    private boolean deleted;
     private int courseId;
     private String title;
     private String description;
@@ -45,6 +46,14 @@ public class Submission implements Serializable, HasId {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(final boolean deleted) {
+        this.deleted = deleted;
     }
 
     public int getCourseId() {

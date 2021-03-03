@@ -26,7 +26,7 @@ public final class DeleteHardResources extends MaintenanceTask {
 
         if (!dryRun) {
             for (Integer resourceId : resourceIds) {
-                resourceDao.deleteHard(resourceId);
+                resourceDao.findById(resourceId).ifPresent(resource -> resourceDao.deleteHard(resource));
                 log.info("Resource {} removed!", resourceId);
             }
         }
