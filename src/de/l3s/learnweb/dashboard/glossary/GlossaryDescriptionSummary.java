@@ -19,7 +19,7 @@ public class GlossaryDescriptionSummary implements Serializable {
 
     public User getUser() {
         if (null == user && userId != 0) {
-            user = Learnweb.dao().getUserDao().findById(userId);
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }

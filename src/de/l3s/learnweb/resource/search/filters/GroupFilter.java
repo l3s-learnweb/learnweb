@@ -20,8 +20,7 @@ public class GroupFilter extends Filter {
 
     private static String getOptionTitle(String groupId) {
         try {
-            Group group = Learnweb.dao().getGroupDao().findById(Integer.parseInt(groupId));
-            return null == group ? "deleted" : group.getTitle();
+            return Learnweb.dao().getGroupDao().findById(Integer.parseInt(groupId)).map(Group::getTitle).orElse("deleted");
         } catch (NumberFormatException e) {
             return groupId;
         }

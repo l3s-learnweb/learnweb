@@ -358,7 +358,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     public Organisation getOrganisation() {
         if (organisation == null) {
-            organisation = Learnweb.dao().getOrganisationDao().findById(organisationId);
+            organisation = Learnweb.dao().getOrganisationDao().findByIdOrElseThrow(organisationId);
         }
         return organisation;
     }
@@ -482,11 +482,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         return imageUrl;
     }
 
-    private String getDefaultImageUrl() {
-        final String profilePicture = ProfileImageHelper.getProfilePicture(StringUtils.isNotBlank(fullName) ? fullName : username);
-        return "data:image/svg+xml;base64," + StringHelper.encodeBase64(profilePicture);
-    }
-
     public void setImage(InputStream inputStream) throws IOException {
         // process image
         Image img = new Image(inputStream);
@@ -500,6 +495,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
         setImageFileId(file.getId());
         imageUrl = file.getUrl();
+    }
+
+    private String getDefaultImageUrl() {
+        final String profilePicture = ProfileImageHelper.getProfilePicture(StringUtils.isNotBlank(fullName) ? fullName : username);
+        return "data:image/svg+xml;base64," + StringHelper.encodeBase64(profilePicture);
     }
 
     public void setDefaultProfilePicture() {
@@ -527,7 +527,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      */
     public File getImageFile() {
         if (imageFileId != 0) {
-            return Learnweb.dao().getFileDao().findById(imageFileId);
+            return Learnweb.dao().getFileDao().findByIdOrElseThrow(imageFileId);
         }
         return null;
     }

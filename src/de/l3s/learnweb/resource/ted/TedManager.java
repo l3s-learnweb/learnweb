@@ -63,8 +63,8 @@ public class TedManager {
 
     //For saving crawled ted videos into lw_resource table
     public void saveTedResource() throws IOException {
-        Group tedGroup = groupDao.findById(862);
-        User admin = userDao.findById(7727);
+        Group tedGroup = groupDao.findByIdOrElseThrow(862);
+        User admin = userDao.findByIdOrElseThrow(7727);
 
         List<TedVideo> tedVideos = tedTranscriptDao.findAllTedVideos();
 
@@ -111,7 +111,7 @@ public class TedManager {
         Resource resource = new Resource();
 
         if (tedVideo.getResourceId() != 0) { // the video is already stored and will be updated
-            resource = resourceDao.findById(tedVideo.getResourceId());
+            resource = resourceDao.findByIdOrElseThrow(tedVideo.getResourceId());
         }
 
         resource.setTitle(tedVideo.getTitle());
@@ -131,8 +131,8 @@ public class TedManager {
     public void fetchTedX() throws IOException {
         //Group tedxGroup = learnweb.getGroupManager().getGroupById(921);
         //Group tedxTrentoGroup = learnweb.getGroupManager().getGroupById(922);
-        Group tedEdGroup = groupDao.findById(1291);
-        User admin = userDao.findById(7727);
+        Group tedEdGroup = groupDao.findByIdOrElseThrow(1291);
+        User admin = userDao.findByIdOrElseThrow(7727);
 
         TreeMap<String, String> params = new TreeMap<>();
         params.put("media_types", "video");
@@ -292,7 +292,7 @@ public class TedManager {
             log.info(tedVideoResourceId);
 
             if (tedVideoResourceId.isPresent()) {
-                Resource r2 = resourceDao.findById(tedVideoResourceId.get());
+                Resource r2 = resourceDao.findByIdOrElseThrow(tedVideoResourceId.get());
 
                 resource.setSource(ResourceService.ted);
                 resource.setMaxImageUrl(r2.getMaxImageUrl());

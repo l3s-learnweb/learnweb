@@ -27,14 +27,14 @@ public class TranscriptSummary implements Serializable {
 
     public User getUser() {
         if (null == user) {
-            user = Learnweb.dao().getUserDao().findById(userId);
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }
 
     public Resource getResource() {
         if (null == resource) {
-            resource = Learnweb.dao().getResourceDao().findById(resourceId);
+            resource = Learnweb.dao().getResourceDao().findByIdOrElseThrow(resourceId);
         }
         return resource;
     }

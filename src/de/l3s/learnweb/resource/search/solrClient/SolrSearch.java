@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -354,20 +355,20 @@ public class SolrSearch implements Serializable {
             int skippedResources = 0;
             for (ResourceDocument resourceDocument : resourceDocuments) {
                 int resourceId = SolrClient.extractId(resourceDocument.getId());
-                Resource resource = Learnweb.dao().getResourceDao().findById(resourceId);
+                Optional<Resource> resource = Learnweb.dao().getResourceDao().findById(resourceId);
 
-                if (resource == null) {
+                if (resource.isEmpty()) {
                     log.warn("could not find resource with id:{}", resourceDocument.getId());
                     continue;
                 }
 
-                if (skipResourcesWithoutThumbnails && resource.getMediumThumbnail() == null
-                    && (resource.getType() == ResourceType.image || resource.getType() == ResourceType.video)) {
+                if (skipResourcesWithoutThumbnails && resource.get().getMediumThumbnail() == null
+                    && (resource.get().getType() == ResourceType.image || resource.get().getType() == ResourceType.video)) {
                     skippedResources++;
                     continue;
                 }
 
-                resources.add(createResourceDecorator(resource, resourceRank, queryResponse.getHighlighting().get(resourceDocument.getId())));
+                resources.add(createResourceDecorator(resource.get(), resourceRank, queryResponse.getHighlighting().get(resourceDocument.getId())));
                 resourceRank += 1;
             }
 

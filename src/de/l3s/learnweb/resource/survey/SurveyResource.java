@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.l3s.learnweb.app.Learnweb;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
@@ -58,7 +59,7 @@ public class SurveyResource extends Resource {
 
     public Survey getSurvey() {
         if (null == survey) {
-            survey = Learnweb.dao().getSurveyDao().findById(surveyId).orElseThrow();
+            survey = Learnweb.dao().getSurveyDao().findById(surveyId).orElseThrow(BeanAssert.NOT_FOUND);
         }
         return survey;
     }

@@ -118,8 +118,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public User getCurrentUser() {
-        User user = userDao.findById(selectedUserId);
-        return user == null ? getUser() : user;
+        return userDao.findById(selectedUserId).orElse(getUser());
     }
 
     public int getSelectedUserId() {

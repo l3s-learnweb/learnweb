@@ -13,6 +13,7 @@ import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
@@ -23,14 +24,13 @@ public interface OrganisationDao extends SqlObject, Serializable {
     int FIELDS = 1; // number of options_fieldX fields, increase if Organisation.Options has more than 64 values
     ICache<Organisation> cache = new Cache<>(10000);
 
-    default Organisation findById(int organisationId) {
-        Organisation organisation = cache.get(organisationId);
-        if (organisation != null) {
-            return organisation;
-        }
+    default Optional<Organisation> findById(int organisationId) {
+        return Optional.ofNullable(cache.get(organisationId))
+            .or(() -> getHandle().select("SELECT * FROM lw_organisation WHERE organisation_id = ?", organisationId).mapTo(Organisation.class).findOne());
+    }
 
-        return getHandle().select("SELECT * FROM lw_organisation WHERE organisation_id = ?", organisationId)
-            .map(new OrganisationMapper()).findOne().orElse(null);
+    default Organisation findByIdOrElseThrow(int organisationId) {
+        return findById(organisationId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_group_description"));
     }
 
     @SqlQuery("SELECT * FROM lw_organisation WHERE is_default = 1")

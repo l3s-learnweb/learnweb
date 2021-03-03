@@ -128,8 +128,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
         Instant start = Instant.now();
         Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
-        glossaryResource = dao().getGlossaryDao().convertToGlossaryResource(resource).orElse(null);
-        BeanAssert.isFound(glossaryResource);
+        glossaryResource = dao().getGlossaryDao().convertToGlossaryResource(resource).orElseThrow(BeanAssert.NOT_FOUND);
 
         long duration = Duration.between(start, Instant.now()).toMillis();
         if (duration > 500) {

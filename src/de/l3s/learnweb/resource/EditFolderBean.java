@@ -30,12 +30,8 @@ public class EditFolderBean extends ApplicationBean implements Serializable {
             Map<String, String> params = Faces.getRequestParameterMap();
             int itemId = Integer.parseInt(params.get("itemId"));
 
-            Folder folder = folderDao.findById(itemId);
-            if (folder != null && folder.canEditResource(getUser())) {
-                this.folder = folder;
-            } else {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "Target folder doesn't exists or you don't have permission to edit it.");
-            }
+            Folder folder = folderDao.findByIdOrElseThrow(itemId);
+            BeanAssert.validate(folder.canEditResource(getUser()), "You don't have permission to edit target folder.");
         } catch (IllegalArgumentException e) {
             addErrorMessage(e);
         }

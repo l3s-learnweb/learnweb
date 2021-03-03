@@ -102,7 +102,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
 
         //When accessing the submission_resources page both these parameters are set
         if (submissionId != 0 && userId != 0) {
-            selectedSubmission = submissionDao.findById(submissionId).orElseThrow();
+            selectedSubmission = submissionDao.findById(submissionId).orElseThrow(BeanAssert.NOT_FOUND);
             selectedResources = resourceDao.findBySubmissionIdAndUserId(submissionId, userId);
 
             submitted = submissionDao.findStatus(submissionId, userId).orElse(false);
@@ -124,7 +124,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
      */
     public List<Resource> getResources() {
         if (resources == null) {
-            resources = dao().getResourceDao().findByGroupIdAndFolderIdAndOwnerId(0, 0, userId, 1000);
+            resources = resourceDao.findByGroupIdAndFolderIdAndOwnerId(0, 0, userId, 1000);
         }
         return resources;
     }
@@ -165,7 +165,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     }
 
     public void actionSubmitItems() {
-        selectedSubmission = submissionDao.findById(submissionId).orElseThrow();
+        selectedSubmission = submissionDao.findById(submissionId).orElseThrow(BeanAssert.NOT_FOUND);
         submitted = submissionDao.findStatus(submissionId, userId).orElse(false);
         if (submitted) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "submission.already_submitted");
@@ -176,7 +176,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
             return;
         }
         log.info("No. of selected items: {}", selectedResources.size());
-        User specialAdmin = userDao.findById(SUBMISSION_ADMIN_USER_ID); //special user id
+        User specialAdmin = userDao.findByIdOrElseThrow(SUBMISSION_ADMIN_USER_ID); //special user id
         LocalDateTime submissionDate = LocalDateTime.now(); //Date for the resources submitted, so that the moderator can know when they were submitted
 
         List<Resource> clonedSelectedResources = new ArrayList<>();
@@ -238,15 +238,16 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 int itemId = item.get("itemId").getAsInt();
 
                 if ("resource".equals(itemType) && itemId != 0) {
-                    Resource resource = dao().getResourceDao().findById(itemId);
-                    if (resource != null && selectedResources.contains(resource)) {
-                        selectedResources.remove(resource);
-                        if (resource.getUserId() == SUBMISSION_ADMIN_USER_ID) {
-                            resource.delete();
+                    resourceDao.findById(itemId).ifPresent(resource -> {
+                        if (selectedResources.contains(resource)) {
+                            selectedResources.remove(resource);
+                            if (resource.getUserId() == SUBMISSION_ADMIN_USER_ID) {
+                                resource.delete();
 
-                            submissionDao.deleteSubmissionResource(submissionId, resource.getId(), userId);
+                                submissionDao.deleteSubmissionResource(submissionId, resource.getId(), userId);
+                            }
                         }
-                    }
+                    });
                 }
             }
         } catch (JsonParseException e) {
@@ -262,10 +263,11 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
 
                 int itemId = item.get("itemId").getAsInt();
                 if ("resource".equals(itemType) && itemId != 0) {
-                    Resource resource = dao().getResourceDao().findById(itemId);
-                    if (resource != null && !selectedResources.contains(resource)) {
-                        selectedResources.add(resource);
-                    }
+                    resourceDao.findById(itemId).ifPresent(resource -> {
+                        if (!selectedResources.contains(resource)) {
+                            selectedResources.add(resource);
+                        }
+                    });
                 }
             }
         } catch (JsonParseException e) {
@@ -353,13 +355,10 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
         currentSubmissions = new ArrayList<>();
         futureSubmissions = new ArrayList<>();
 
-        User u = userDao.findById(userId);
         //if no user_id parameter is provided in URL
-        if (u == null) {
-            u = getUser();
-        }
+        User user = userDao.findById(userId).orElse(getUser());
 
-        List<Submission> submissions = submissionDao.findByUser(u);
+        List<Submission> submissions = submissionDao.findByUser(user);
         for (Submission submission : submissions) {
             if (submission.isPastSubmission()) {
                 pastSubmissions.add(submission);
@@ -418,7 +417,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     public List<SelectItem> getEditSurveyResourcesList() {
         if (editSurveyResourcesList.isEmpty() && this.selectedSubmission.getCourseId() != 0) {
             try {
-                List<Resource> editSurveyResourcesForCourse = dao().getResourceDao().findSurveysByCourseId(this.selectedSubmission.getCourseId());
+                List<Resource> editSurveyResourcesForCourse = resourceDao.findSurveysByCourseId(this.selectedSubmission.getCourseId());
                 for (Resource r : editSurveyResourcesForCourse) {
                     String resourcePath = getResourcePath(r);
                     editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
@@ -433,7 +432,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     public void onCreateSurveyChangeCourse(AjaxBehaviorEvent event) {
         surveyResourcesList.clear();
         try {
-            List<Resource> surveyResourcesForCourse = dao().getResourceDao().findSurveysByCourseId(this.newSubmission.getCourseId());
+            List<Resource> surveyResourcesForCourse = resourceDao.findSurveysByCourseId(this.newSubmission.getCourseId());
             for (Resource r : surveyResourcesForCourse) {
                 String resourcePath = getResourcePath(r);
                 surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
@@ -446,7 +445,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     public void onEditSurveyChangeCourse(AjaxBehaviorEvent event) {
         editSurveyResourcesList.clear();
         try {
-            List<Resource> surveyResourcesForCourse = dao().getResourceDao().findSurveysByCourseId(this.newSubmission.getCourseId());
+            List<Resource> surveyResourcesForCourse = resourceDao.findSurveysByCourseId(this.newSubmission.getCourseId());
             for (Resource r : surveyResourcesForCourse) {
                 String resourcePath = getResourcePath(r);
                 editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
@@ -485,7 +484,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
      */
     public List<User> getUsers() {
         if (users == null && courseId != 0) {
-            users = courseDao.findById(courseId).getMembers();
+            users = courseDao.findByIdOrElseThrow(courseId).getMembers();
             userSubmissions = submissionDao.countPerUserByCourseId(courseId);
         }
         return users;

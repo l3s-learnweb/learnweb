@@ -57,7 +57,7 @@ public class ForumNotificator implements Runnable, Serializable {
             Map<Integer, List<ForumTopic>> topics = forumTopicDao.findByNotificationFrequencies(frequencies);
 
             for (Map.Entry<Integer, List<ForumTopic>> entry : topics.entrySet()) {
-                User user = userDao.findById(entry.getKey());
+                User user = userDao.findByIdOrElseThrow(entry.getKey());
 
                 sendMailWithNewTopics(user, entry.getValue());
             }

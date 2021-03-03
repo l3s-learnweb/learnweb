@@ -195,7 +195,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         }
 
         if (groupToJoin != 0) {
-            user.joinGroup(dao().getGroupDao().findById(groupToJoin));
+            user.joinGroup(dao().getGroupDao().findByIdOrElseThrow(groupToJoin));
             log(Action.group_joining, groupToJoin, groupToJoin, null, user);
         }
     }

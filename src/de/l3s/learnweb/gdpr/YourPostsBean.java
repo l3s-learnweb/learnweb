@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -52,8 +51,8 @@ public class YourPostsBean extends ApplicationBean implements Serializable {
                 }
                 post.setText(Jsoup.parse(allText.toString()).text());
 
-                Optional<ForumTopic> topic = dao().getForumTopicDao().findById(post.getTopicId());
-                postThreadTopics.put(post.getTopicId(), topic.orElseThrow().getTitle());
+                ForumTopic topic = dao().getForumTopicDao().findById(post.getTopicId()).orElseThrow(BeanAssert.NOT_FOUND);
+                postThreadTopics.put(post.getTopicId(), topic.getTitle());
             } catch (Exception e) {
                 log.error("An error occurred during processing post {}", post.getId(), e);
             }

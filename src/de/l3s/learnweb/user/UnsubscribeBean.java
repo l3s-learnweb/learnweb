@@ -30,12 +30,12 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable {
     public void onLoad() {
         try {
             int userId = Integer.parseInt(givenHash.substring(0, givenHash.indexOf(':')));
-            user = userDao.findById(userId);
+            user = userDao.findByIdOrElseThrow(userId);
         } catch (RuntimeException ignored) {
             // ignore all parsing problems
         }
 
-        BeanAssert.validate(user, "Invalid value of 'hash' parameter.");
+        BeanAssert.validate(user != null, "Invalid value of 'hash' parameter.");
 
         String correctHash = ForumNotificator.getHash(user);
         BeanAssert.validate(correctHash.equals(givenHash), "Invalid value of 'hash' parameter.");

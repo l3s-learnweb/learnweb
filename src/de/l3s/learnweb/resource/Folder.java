@@ -80,7 +80,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     @Override
     public Group getGroup() {
-        return Learnweb.dao().getGroupDao().findById(groupId);
+        return Learnweb.dao().getGroupDao().findByIdOrElseThrow(groupId);
     }
 
     public int getParentFolderId() {
@@ -101,7 +101,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
             return null;
         }
 
-        return Learnweb.dao().getFolderDao().findById(parentFolderId);
+        return Learnweb.dao().getFolderDao().findByIdOrElseThrow(parentFolderId);
     }
 
     public boolean isChildOf(int folderId) {
@@ -125,7 +125,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
             return false;
         }
 
-        Folder parentFolder = Learnweb.dao().getFolderDao().findById(folderId);
+        Folder parentFolder = Learnweb.dao().getFolderDao().findByIdOrElseThrow(folderId);
         return parentFolder.isChildOf(getId());
     }
 
@@ -169,7 +169,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     @Override
     public User getUser() {
         if (user == null && userId != 0) {
-            user = Learnweb.dao().getUserDao().findById(userId);
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }
@@ -277,15 +277,15 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         }
 
         if (newFolderId != 0) {
-            Learnweb.dao().getFolderDao().findById(newFolderId).clearCaches();
+            Learnweb.dao().getFolderDao().findByIdOrElseThrow(newFolderId).clearCaches();
         } else if (newGroupId != 0) {
-            Learnweb.dao().getGroupDao().findById(newGroupId).clearCaches();
+            Learnweb.dao().getGroupDao().findByIdOrElseThrow(newGroupId).clearCaches();
         }
 
         if (parentFolderId != 0) {
-            Learnweb.dao().getFolderDao().findById(parentFolderId).clearCaches();
+            Learnweb.dao().getFolderDao().findByIdOrElseThrow(parentFolderId).clearCaches();
         } else if (groupId != 0) {
-            Learnweb.dao().getGroupDao().findById(groupId).clearCaches();
+            Learnweb.dao().getGroupDao().findByIdOrElseThrow(groupId).clearCaches();
         }
     }
 

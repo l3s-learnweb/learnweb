@@ -112,7 +112,7 @@ public class DownloadServlet extends HttpServlet {
             response.setHeader("Access-Control-Allow-Origin", "*");
 
             // Check if file actually exists in filesystem.
-            File file = fileDao.findById(fileId);
+            File file = fileDao.findById(fileId).orElse(null);
             if (null == file) {
                 log.warn("Requested file {} does not exist or was deleted", fileId);
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -233,7 +233,7 @@ public class DownloadServlet extends HttpServlet {
                 Integer userId = (Integer) session.getAttribute("learnweb_user_id");
 
                 if (userId != null) {
-                    user = Learnweb.dao().getUserDao().findById(userId);
+                    user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
                 }
 
                 if (null != user) {

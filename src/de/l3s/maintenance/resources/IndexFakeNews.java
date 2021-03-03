@@ -43,7 +43,7 @@ public class IndexFakeNews extends MaintenanceTask {
     private void indexFullfactFile(String file) throws IOException {
         CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.withHeader());
 
-        logoResource = resourceDao.findById(217749);
+        logoResource = resourceDao.findByIdOrElseThrow(217749);
 
         for (CSVRecord csvRecord : parser) {
             String title = csvRecord.get("title").trim();

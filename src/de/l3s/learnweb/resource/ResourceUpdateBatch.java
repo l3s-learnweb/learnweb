@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,17 +46,17 @@ public class ResourceUpdateBatch {
             int itemId = object.get("itemId").getAsInt();
 
             if ("resource".equals(itemType)) {
-                Resource resource = resourceDao.findById(itemId);
-                if (resource != null) {
-                    resources.add(resource);
+                Optional<Resource> resource = resourceDao.findById(itemId);
+                if (resource.isPresent()) {
+                    resources.add(resource.get());
                 } else {
                     log.error("Can't find resource requested in update!");
                     failed++;
                 }
             } else if ("folder".equals(itemType)) {
-                Folder folder = folderDao.findById(itemId);
-                if (folder != null) {
-                    folders.add(folder);
+                Optional<Folder> folder = folderDao.findById(itemId);
+                if (folder.isPresent()) {
+                    folders.add(folder.get());
                 } else {
                     log.error("Can't find folder requested in update!");
                     failed++;

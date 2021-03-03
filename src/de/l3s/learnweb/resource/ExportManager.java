@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -113,16 +114,16 @@ public class ExportManager {
         Map<String, InputStream> files = new HashMap<>();
 
         for (Resource resource : resources) {
-            Folder folder = learnweb.getDaoProvider().getFolderDao().findById(resource.getFolderId());
+            Folder folder = learnweb.getDaoProvider().getFolderDao().findByIdOrElseThrow(resource.getFolderId());
             String folderName = createFolderPath(folder, groupRootFolder);
 
             File mainFile = resource.getFile(TYPE.FILE_MAIN);
 
             // TODO @astappiev: remove when all files copied from originals
             if (mainFile == null && resource.getOriginalResourceId() != 0) {
-                Resource originalResource = learnweb.getDaoProvider().getResourceDao().findById(resource.getOriginalResourceId());
-                if (originalResource != null) {
-                    mainFile = originalResource.getFile(TYPE.FILE_MAIN);
+                Optional<Resource> originalResource = learnweb.getDaoProvider().getResourceDao().findById(resource.getOriginalResourceId());
+                if (originalResource.isPresent()) {
+                    mainFile = originalResource.get().getFile(TYPE.FILE_MAIN);
                 }
             }
 

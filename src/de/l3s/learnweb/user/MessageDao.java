@@ -20,7 +20,7 @@ import de.l3s.util.SqlHelper;
 public interface MessageDao extends SqlObject, Serializable {
 
     @SqlQuery("SELECT * FROM lw_message g WHERE message_id = ?")
-    Message findById(int messageId);
+    Optional<Message> findById(int messageId);
 
     @SqlQuery("SELECT * FROM lw_message WHERE sender_user_id = ? ORDER BY created_at DESC")
     List<Message> findOutgoing(User user);

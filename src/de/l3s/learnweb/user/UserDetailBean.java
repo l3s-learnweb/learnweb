@@ -38,12 +38,10 @@ public class UserDetailBean extends ApplicationBean {
         if (userId == 0 || loggedInUser.getId() == userId) {
             selectedUser = loggedInUser; // user edits himself
         } else {
-            selectedUser = userDao.findById(userId); // an admin edits an user
+            selectedUser = userDao.findByIdOrElseThrow(userId); // an admin edits an user
         }
 
         BeanAssert.authorized(isLoggedIn());
-
-        BeanAssert.isFound(selectedUser);
 
         if (selectedUser.getOrganisation().getOption(Option.Privacy_Anonymize_usernames)) {
             pageHidden = true;

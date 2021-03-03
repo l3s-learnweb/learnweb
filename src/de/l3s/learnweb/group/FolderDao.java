@@ -14,6 +14,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
@@ -23,14 +24,13 @@ import de.l3s.util.SqlHelper;
 public interface FolderDao extends SqlObject, Serializable {
     ICache<Folder> cache = new Cache<>(10000);
 
-    default Folder findById(int folderId) {
-        Folder folder = cache.get(folderId);
-        if (folder != null) {
-            return folder;
-        }
+    default Optional<Folder> findById(int folderId) {
+        return Optional.ofNullable(cache.get(folderId))
+            .or(() -> getHandle().select("SELECT * FROM lw_group_folder WHERE deleted = 0 AND folder_id = ?", folderId).mapTo(Folder.class).findOne());
+    }
 
-        return getHandle().select("SELECT * FROM lw_group_folder WHERE deleted = 0 AND folder_id = ?", folderId)
-            .map(new FolderMapper()).findOne().orElse(null);
+    default Folder findByIdOrElseThrow(int fileId) {
+        return findById(fileId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_object_description"));
     }
 
     @SqlQuery("SELECT * FROM lw_group_folder WHERE deleted = 0 AND group_id = ? AND parent_folder_id IS NULL")

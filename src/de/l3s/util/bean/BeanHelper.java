@@ -102,7 +102,7 @@ public final class BeanHelper {
                 if (userId != null && userId != 0) {
                     joiner.add("userId: " + userId);
                     try {
-                        joiner.add("username: " + Beans.getInstance(UserDao.class).findById(userId).getRealUsername());
+                        joiner.add("username: " + Beans.getInstance(UserDao.class).findById(userId).map(User::getRealUsername).orElse(null));
                     } catch (Exception e) {
                         log.error("Unable to retrieve username", e);
                     }

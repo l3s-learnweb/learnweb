@@ -47,21 +47,15 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        group = groupDao.findById(groupId);
-        BeanAssert.isFound(group);
+        group = groupDao.findByIdOrElseThrow(groupId);
 
-        if (null != group) {
-            group.setLastVisit(user);
-        }
-
-        if (group != null) {
-            editedGroupDescription = group.getDescription();
-            editedGroupLeaderId = group.getLeaderUserId();
-            editedGroupTitle = group.getTitle();
-            editedHypothesisLink = group.getHypothesisLink();
-            editedHypothesisToken = group.getHypothesisToken();
-            groupUser = groupDao.findGroupUserRelation(group, user).orElse(null);
-        }
+        group.setLastVisit(user);
+        editedGroupDescription = group.getDescription();
+        editedGroupLeaderId = group.getLeaderUserId();
+        editedGroupTitle = group.getTitle();
+        editedHypothesisLink = group.getHypothesisLink();
+        editedHypothesisToken = group.getHypothesisToken();
+        groupUser = groupDao.findGroupUserRelation(group, user).orElseThrow(BeanAssert.NOT_FOUND);
     }
 
     public int getGroupId() {

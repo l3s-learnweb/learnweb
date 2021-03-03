@@ -31,7 +31,7 @@ public class GroupUser implements Serializable {
 
     public Group getGroup() {
         if (group == null) {
-            group = Learnweb.dao().getGroupDao().findById(groupId);
+            group = Learnweb.dao().getGroupDao().findByIdOrElseThrow(groupId);
         }
         return group;
     }

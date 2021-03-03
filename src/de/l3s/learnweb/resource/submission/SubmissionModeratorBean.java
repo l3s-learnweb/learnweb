@@ -27,8 +27,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     private SubmissionDao submissionDao;
 
     public void onLoad() {
-        submission = submissionDao.findById(submissionId).orElse(null);
-        BeanAssert.isFound(submission);
+        submission = submissionDao.findById(submissionId).orElseThrow(BeanAssert.NOT_FOUND);
     }
 
     public int getSubmissionId() {

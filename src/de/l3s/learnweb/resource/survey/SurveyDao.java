@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.PreparedBatch;
 import org.jdbi.v3.core.statement.StatementContext;
+import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
@@ -28,9 +29,11 @@ import de.l3s.util.bean.BeanHelper;
 @RegisterRowMapper(SurveyDao.SurveyMapper.class)
 public interface SurveyDao extends SqlObject, Serializable {
 
+    @CreateSqlObject
+    ResourceDao getResourceDao();
+
     default Optional<SurveyResource> findResourceById(int surveyResourceId) {
-        Resource resource = getHandle().attach(ResourceDao.class).findById(surveyResourceId);
-        return convertToSurveyResource(resource);
+        return convertToSurveyResource(getResourceDao().findById(surveyResourceId).orElse(null));
     }
 
     default Optional<SurveyResource> convertToSurveyResource(Resource resource) {

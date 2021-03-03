@@ -91,9 +91,9 @@ public interface ResourceHistoryDao extends SqlObject, Serializable {
     class HistoryDataMapper implements RowMapper<HistoryData> {
         @Override
         public HistoryData map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            File file = Learnweb.dao().getFileDao().findById(rs.getInt("file_id"));
-            File prevFile = Learnweb.dao().getFileDao().findById(rs.getInt("prev_file_id"));
-            File changeFile = Learnweb.dao().getFileDao().findById(rs.getInt("changes_file_id"));
+            File file = Learnweb.dao().getFileDao().findByIdOrElseThrow(rs.getInt("file_id"));
+            File prevFile = Learnweb.dao().getFileDao().findByIdOrElseThrow(rs.getInt("prev_file_id"));
+            File changeFile = Learnweb.dao().getFileDao().findByIdOrElseThrow(rs.getInt("changes_file_id"));
 
             HistoryData prevData = new HistoryData();
             prevData.setUrl(prevFile.getAbsoluteUrl());

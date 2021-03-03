@@ -57,13 +57,11 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
 
     public void onLoad() {
         try {
-            Group group = groupDao.findById(groupId);
-            BeanAssert.isFound(group);
-
+            Group group = groupDao.findByIdOrElseThrow(groupId);
             String hypothesisLink = group.getHypothesisLink();
             Matcher matcher = GROUP_ID_PATTERN.matcher(hypothesisLink);
             String hypothesisGroup = matcher.group(1);
-            BeanAssert.validate(hypothesisGroup, "The requested group has incorrect hypothes.is link");
+            BeanAssert.validate(hypothesisGroup != null, "The requested group has incorrect hypothes.is link");
 
             HttpClient client = HttpClient.newHttpClient();
 

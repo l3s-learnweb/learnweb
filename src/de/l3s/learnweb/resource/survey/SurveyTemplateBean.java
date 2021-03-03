@@ -29,15 +29,11 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
         BeanAssert.authorized(isLoggedIn());
 
         if (resourceId != 0) {
-            SurveyResource surveyResource = dao().getSurveyDao().findResourceById(resourceId).orElse(null);
+            SurveyResource surveyResource = dao().getSurveyDao().findResourceById(resourceId).orElseThrow(BeanAssert.NOT_FOUND);
             surveyId = surveyResource.getSurveyId();
         }
 
-        if (surveyId != 0) { // edit an existing survey
-            survey = dao().getSurveyDao().findById(surveyId).orElseThrow();
-        }
-
-        BeanAssert.isFound(survey);
+        survey = dao().getSurveyDao().findById(surveyId).orElseThrow(BeanAssert.NOT_FOUND);
         BeanAssert.notDeleted(survey);
         BeanAssert.hasPermission(getUser().isAdmin() || getUser().getId() == survey.getUserId());
     }

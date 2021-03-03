@@ -88,7 +88,7 @@ public class SaverServlet extends HttpServlet {
     private void processCallback(CallbackData data, int resourceId, int fileId, String sessionId) throws IOException {
         // get the user who edited the document
         int userId = data.getUsers().get(0);
-        User user = userDao.findById(userId);
+        User user = userDao.findByIdOrElseThrow(userId);
 
         if (fileId == 0) {
             saveNewDocument(data, resourceId, user, sessionId);
@@ -98,7 +98,7 @@ public class SaverServlet extends HttpServlet {
     }
 
     private void saveNewDocument(CallbackData data, int resourceId, User user, String sessionId) throws IOException {
-        Resource resource = resourceDao.findById(resourceId);
+        Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
 
         File file = new File();
         file.setType(TYPE.FILE_MAIN);
@@ -118,7 +118,7 @@ public class SaverServlet extends HttpServlet {
     private void saveEditedDocument(CallbackData data, int fileId, User user, String sessionId) throws IOException {
         // The idea of what is going here: we copy existing file, to a new file and than replace old file with new one
         // I'm not sure why it is necessary, but I guess to have permanent link to latest file (also to avoid reindex resource)
-        File file = fileDao.findById(fileId);
+        File file = fileDao.findByIdOrElseThrow(fileId);
         File previousFile = file.clone();
 
         // save copy of existing file as a history file
@@ -139,7 +139,7 @@ public class SaverServlet extends HttpServlet {
             log.error("Unable to store document history {}", file.getResourceId(), e);
         }
 
-        Resource resource = resourceDao.findById(file.getResourceId());
+        Resource resource = resourceDao.findByIdOrElseThrow(file.getResourceId());
         resourcePreviewMaker.processResource(resource); // create new thumbnails for the resource
         logDao.insert(user, Action.changing_office_resource, resource.getGroupId(), resource.getId(), null, sessionId);
     }

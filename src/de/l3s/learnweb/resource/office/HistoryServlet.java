@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource.office;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.office.history.model.History;
 import de.l3s.learnweb.resource.office.history.model.HistoryData;
 import de.l3s.learnweb.resource.office.history.model.HistoryInfo;
@@ -67,12 +67,12 @@ public class HistoryServlet extends HttpServlet {
             int version = Integer.parseInt(request.getParameter("version"));
 
             Gson gson = new Gson();
-            Optional<HistoryData> data = resourceHistoryDao.findByResourceIdAndVersion(resourceId, version);
+            HistoryData data = resourceHistoryDao.findByResourceIdAndVersion(resourceId, version).orElseThrow(BeanAssert.NOT_FOUND);
 
             response.setHeader("Access-Control-Allow-Origin", "*");
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(gson.toJson(data.orElseThrow()));
+            response.getWriter().write(gson.toJson(data));
         } catch (Exception e) {
             log.error("HistoryData cannot be loaded for resource {}, version {}", request.getParameter("resourceId"), request.getParameter("version"), e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);

@@ -137,8 +137,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (groupId != 0) {
-            group = groupDao.findById(groupId);
-            BeanAssert.isFound(group);
+            group = groupDao.findByIdOrElseThrow(groupId);
 
             BeanAssert.hasPermission(group.canViewResources(getUser()));
             group.setLastVisit(user);
@@ -147,8 +146,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (folderId != 0) {
-            currentFolder = folderDao.findById(folderId);
-            BeanAssert.validate(currentFolder, "The requested folder can't be found.");
+            currentFolder = folderDao.findByIdOrElseThrow(folderId);
         }
     }
 
@@ -297,11 +295,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             if (folderId == 0) {
                 this.currentFolder = null;
             } else {
-                Folder targetFolder = folderDao.findById(folderId);
-                if (targetFolder == null) {
-                    throw new IllegalArgumentException("Target folder does not exists.");
-                }
-
+                Folder targetFolder = folderDao.findByIdOrElseThrow(folderId);
                 log(Action.opening_folder, targetFolder.getGroupId(), targetFolder.getId());
                 this.currentFolder = targetFolder;
             }
@@ -408,10 +402,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         if (targetGroupId != 0) {
-            Group targetGroup = groupDao.findById(targetGroupId);
-            if (!targetGroup.canAddResources(getUser())) {
-                throw new IllegalAccessError("You are not allowed to add resources to target group!");
-            }
+            Group targetGroup = groupDao.findByIdOrElseThrow(targetGroupId);
+            BeanAssert.validate(targetGroup.canAddResources(getUser()), "You are not allowed to add resources to target group!");
         }
 
         for (Folder folder : items.getFolders()) {

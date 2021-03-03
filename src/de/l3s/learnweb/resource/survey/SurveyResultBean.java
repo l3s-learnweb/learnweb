@@ -23,8 +23,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable {
         BeanAssert.authorized(isLoggedIn());
         BeanAssert.hasPermission(getUser().isModerator());
 
-        resource = dao().getSurveyDao().findResourceById(surveyResourceId).orElse(null);
-        BeanAssert.isFound(resource);
+        resource = dao().getSurveyDao().findResourceById(surveyResourceId).orElseThrow(BeanAssert.NOT_FOUND);
         BeanAssert.notDeleted(resource);
 
         // output only questions that are not readonly

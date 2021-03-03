@@ -57,8 +57,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        group = groupDao.findById(groupId);
-        BeanAssert.isFound(group);
+        group = groupDao.findByIdOrElseThrow(groupId);
 
         if (null != group) {
             group.setLastVisit(user);

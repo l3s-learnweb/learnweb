@@ -74,8 +74,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        resource = resourceDao.findById(resourceId);
-        BeanAssert.validate(resource, "The requested resource can't be found.");
+        resource = resourceDao.findByIdOrElseThrow(resourceId);
         BeanAssert.notDeleted(resource);
 
         BeanAssert.authorized(resource.canViewResource(getUser()));

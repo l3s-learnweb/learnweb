@@ -184,12 +184,11 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             throw new IllegalArgumentException("tag is to long");
         }
 
-        Tag tag = Learnweb.dao().getTagDao().findByName(tagName).orElse(null);
-
-        if (tag == null) {
-            tag = new Tag(-1, tagName);
-            Learnweb.dao().getTagDao().save(tag);
-        }
+        Tag tag = Learnweb.dao().getTagDao().findByName(tagName).orElseGet(() -> {
+            Tag newTag = new Tag(0, tagName);
+            Learnweb.dao().getTagDao().save(newTag);
+            return newTag;
+        });
 
         if (tags != null && !tags.contains(tag)) {
             Learnweb.dao().getResourceDao().insertTag(this, user, tag);
@@ -266,7 +265,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             return null;
         }
 
-        return Learnweb.dao().getGroupDao().findById(groupId);
+        return Learnweb.dao().getGroupDao().findByIdOrElseThrow(groupId);
     }
 
     public void setGroup(Group group) {
@@ -287,7 +286,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     @Override
     public User getUser() {
         if (null == owner && ownerUserId != 0) {
-            owner = Learnweb.dao().getUserDao().findById(ownerUserId);
+            owner = Learnweb.dao().getUserDao().findByIdOrElseThrow(ownerUserId);
         }
         return owner;
     }
@@ -303,12 +302,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             return null;
         }
 
-        Resource originalResource = Learnweb.dao().getResourceDao().findById(originalResourceId);
-        if (originalResource != null) {
-            return originalResource.getGroup();
-        } else {
-            return null;
-        }
+        return Learnweb.dao().getResourceDao().findById(originalResourceId).map(Resource::getGroup).orElse(null);
     }
 
     public int getFolderId() {
@@ -324,7 +318,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             return null;
         }
 
-        return Learnweb.dao().getFolderDao().findById(folderId);
+        return Learnweb.dao().getFolderDao().findByIdOrElseThrow(folderId);
     }
 
     public void setFolder(Folder folder) {
@@ -1230,8 +1224,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
             case LEARNWEB_READABLE:
                 return user != null;
             case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) can view the resource
-                Resource originalResource = Learnweb.dao().getResourceDao().findById(originalResourceId);
-                return originalResource != null && originalResource.getUserId() == user.getId(); // the submitter can view his resource
+                return Learnweb.dao().getResourceDao().findById(originalResourceId).map(resource -> resource.getUserId() == user.getId()).orElse(false);
             case DEFAULT_RIGHTS: // if the resource is part of the group the group permissions are used
                 Group group = getGroup();
                 if (group != null) {
@@ -1378,7 +1371,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     protected Object readResolve() {
         log.debug("Deserialize resource: {}", id);
         try {
-            return Learnweb.dao().getResourceDao().findById(id);
+            return Learnweb.dao().getResourceDao().findByIdOrElseThrow(id);
         } catch (RuntimeException e) {
             if (!e.getMessage().startsWith("Learnweb is not initialized correctly.")) { // ignore this error
                 log.fatal("Can't load resource: {}", id, e);

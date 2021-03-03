@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
 
 @Named
 @RequestScoped
@@ -31,9 +32,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
         BeanAssert.validate(!StringUtils.isAnyEmpty(email, token), "error_pages.bad_request_email_link");
         BeanAssert.validate(token.length() >= 32, "confirm_token_to_short");
 
-        user = userDao.findByEmailConfirmationToken(email, token).orElse(null);
-        BeanAssert.validate(user, "confirm_token_invalid");
-
+        user = userDao.findByEmailConfirmationToken(email, token).orElseThrow(() -> new BadRequestHttpException("confirm_token_invalid"));
         user.setEmailConfirmed(true);
         user.save();
 

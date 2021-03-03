@@ -37,7 +37,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
         int userId = NumberUtils.toInt(splits[0]);
         String hash = splits[1];
 
-        user = userDao.findById(userId);
+        user = userDao.findById(userId).orElse(null);
         BeanAssert.validate(user != null && hash.length() == PasswordBean.PASSWORD_CHANGE_HASH_LENGTH, "error_pages.bad_request_email_link");
         BeanAssert.validate(hash.equals(PasswordBean.createPasswordChangeHash(user)), "Your request seams to be invalid. Maybe you have already changed the password?");
     }

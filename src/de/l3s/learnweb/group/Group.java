@@ -158,7 +158,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     public User getLeader() {
         if (null == leader) {
-            leader = Learnweb.dao().getUserDao().findById(leaderUserId);
+            leader = Learnweb.dao().getUserDao().findByIdOrElseThrow(leaderUserId);
         }
         return leader;
     }
@@ -284,11 +284,11 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     public Course getCourse() {
-        if (null == this.course) {
-            this.course = Learnweb.dao().getCourseDao().findById(courseId);
+        if (null == course) {
+            course = Learnweb.dao().getCourseDao().findByIdOrElseThrow(courseId);
         }
 
-        return this.course;
+        return course;
     }
 
     public int getLeaderUserId() {

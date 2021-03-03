@@ -60,8 +60,8 @@ public class TedCrawlerSimple implements Runnable {
     private TedTranscriptDao tedTranscriptDao;
 
     public void initialize() {
-        tedGroup = groupDao.findById(862);
-        admin = userDao.findById(7727);
+        tedGroup = groupDao.findByIdOrElseThrow(862);
+        admin = userDao.findByIdOrElseThrow(7727);
     }
 
     /**
@@ -136,7 +136,7 @@ public class TedCrawlerSimple implements Runnable {
     }
 
     public void updateResourceData(int resourceId, String slugFromCrawl, String title, String description) {
-        Resource resource = resourceDao.findById(resourceId);
+        Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
         String slug = resource.getUrl().split("talks/")[1];
         if (!slug.equals(slugFromCrawl)) {
             resource.setTitle(title);

@@ -127,11 +127,11 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     }
 
     public Organisation getOrganisation() {
-        if (organisationId <= 0) {
+        if (organisationId == 0) {
             return null;
         }
 
-        return Learnweb.dao().getOrganisationDao().findById(organisationId);
+        return Learnweb.dao().getOrganisationDao().findByIdOrElseThrow(organisationId);
     }
 
     public int getDefaultGroupId() {

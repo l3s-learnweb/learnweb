@@ -19,6 +19,7 @@ import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
@@ -32,13 +33,13 @@ import de.l3s.util.SqlHelper;
 public interface GroupDao extends SqlObject, Serializable {
     ICache<Group> cache = new Cache<>(500);
 
-    default Group findById(int groupId) {
-        Group group = cache.get(groupId);
-        if (group != null) {
-            return group;
-        }
+    default Optional<Group> findById(int groupId) {
+        return Optional.ofNullable(cache.get(groupId))
+            .or(() -> getHandle().select("SELECT * FROM lw_group WHERE group_id = ? AND deleted = 0", groupId).mapTo(Group.class).findOne());
+    }
 
-        return getHandle().select("SELECT * FROM lw_group g WHERE group_id = ? AND g.deleted = 0", groupId).map(new GroupMapper()).findOne().orElse(null);
+    default Group findByIdOrElseThrow(int groupId) {
+        return findById(groupId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_group_description"));
     }
 
     @SqlQuery("SELECT * FROM lw_group")

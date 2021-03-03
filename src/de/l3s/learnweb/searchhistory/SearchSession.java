@@ -32,7 +32,7 @@ public class SearchSession implements Serializable {
 
     public User getUser() {
         if (user == null) {
-            user = Learnweb.dao().getUserDao().findById(userId);
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }

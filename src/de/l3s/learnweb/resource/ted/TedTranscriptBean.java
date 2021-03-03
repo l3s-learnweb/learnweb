@@ -85,8 +85,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     }
 
     public void onLoad() {
-        Resource resource = dao().getResourceDao().findById(resourceId);
-        BeanAssert.isFound(resource);
+        Resource resource = dao().getResourceDao().findByIdOrElseThrow(resourceId);
         BeanAssert.notDeleted(resource);
         setTedResource(resource);
     }
@@ -99,9 +98,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         this.tedResource = tedResource;
 
         if (tedResource.getSource() == ResourceService.ted) {
-            this.videoResourceId = tedTranscriptDao.findResourceIdBySlug(tedResource.getUrl()).orElseThrow();
+            this.videoResourceId = tedTranscriptDao.findResourceIdBySlug(tedResource.getUrl()).orElseThrow(BeanAssert.NOT_FOUND);
         } else if (tedResource.getSource() == ResourceService.tedx) {
-            this.videoResourceId = tedTranscriptDao.findResourceIdByTedXUrl(tedResource.getUrl()).orElseThrow();
+            this.videoResourceId = tedTranscriptDao.findResourceIdByTedXUrl(tedResource.getUrl()).orElseThrow(BeanAssert.NOT_FOUND);
         }
 
         if (tedResource.getSource() == ResourceService.tedx) {

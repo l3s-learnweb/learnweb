@@ -56,7 +56,7 @@ public class Comment implements Serializable, Comparable<Comment>, HasId {
 
     public Resource getResource() {
         if (null == resource && resourceId != 0) {
-            resource = Learnweb.dao().getResourceDao().findById(resourceId);
+            resource = Learnweb.dao().getResourceDao().findByIdOrElseThrow(resourceId);
         }
         return resource;
     }
@@ -71,7 +71,7 @@ public class Comment implements Serializable, Comparable<Comment>, HasId {
 
     public User getUser() {
         if (null == user && userId != 0) {
-            user = Learnweb.dao().getUserDao().findById(userId);
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }

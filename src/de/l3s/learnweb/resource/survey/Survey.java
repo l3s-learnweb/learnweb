@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import de.l3s.learnweb.app.Learnweb;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
@@ -101,7 +102,7 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
     }
 
     public SurveyQuestion getQuestion(int questionId) {
-        return getQuestions().stream().filter(q -> q.getId() == questionId).findFirst().orElseThrow();
+        return getQuestions().stream().filter(q -> q.getId() == questionId).findFirst().orElseThrow(BeanAssert.NOT_FOUND);
     }
 
     /**

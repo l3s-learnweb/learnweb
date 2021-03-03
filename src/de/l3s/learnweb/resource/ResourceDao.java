@@ -27,6 +27,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.app.Learnweb;
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.user.User;
@@ -41,14 +42,13 @@ public interface ResourceDao extends SqlObject, Serializable {
     @CreateSqlObject
     FileDao getFileDao();
 
-    default Resource findById(int resourceId) {
-        Resource resource = cache.get(resourceId);
-        if (resource != null) {
-            return resource;
-        }
+    default Optional<Resource> findById(int resourceId) {
+        return Optional.ofNullable(cache.get(resourceId))
+            .or(() -> getHandle().select("SELECT * FROM lw_resource WHERE resource_id = ?", resourceId).mapTo(Resource.class).findOne());
+    }
 
-        return getHandle().select("SELECT * FROM lw_resource WHERE resource_id = ?", resourceId)
-            .map(new ResourceMapper()).findOne().orElse(null);
+    default Resource findByIdOrElseThrow(int resourceId) {
+        return findById(resourceId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_object_description"));
     }
 
     /**

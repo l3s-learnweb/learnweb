@@ -81,7 +81,7 @@ public class AdminNotificationBean extends ApplicationBean {
         ArrayList<String> usersWithoutMail = new ArrayList<>();
 
         for (int userId : selectedUsers) {
-            User user = userDao.findById(userId);
+            User user = userDao.findByIdOrElseThrow(userId);
             message.setToUser(user);
             messageDao.save(message);
 

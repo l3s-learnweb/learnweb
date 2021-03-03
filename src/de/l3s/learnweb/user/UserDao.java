@@ -22,6 +22,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.resource.Resource;
@@ -35,14 +36,13 @@ public interface UserDao extends SqlObject, Serializable {
     int FIELDS = 1; // number of options_fieldX fields, increase if User.Options has more than 64 values
     ICache<User> cache = new Cache<>(500);
 
-    default User findById(int userId) {
-        User user = cache.get(userId);
-        if (user != null) {
-            return user;
-        }
+    default Optional<User> findById(int userId) {
+        return Optional.ofNullable(cache.get(userId))
+            .or(() -> getHandle().select("SELECT * FROM lw_user WHERE user_id = ?", userId).mapTo(User.class).findOne());
+    }
 
-        return getHandle().select("SELECT * FROM lw_user WHERE user_id = ?", userId)
-            .map(new UserMapper()).findOne().orElse(null);
+    default User findByIdOrElseThrow(int userId) {
+        return findById(userId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_object_description"));
     }
 
     @SqlQuery("SELECT * FROM lw_user WHERE username = ?")
@@ -122,7 +122,7 @@ public interface UserDao extends SqlObject, Serializable {
             boolean expired = rs.getTimestamp("expires").toInstant().isBefore(Instant.now());
 
             if (!expired && HashHelper.isValidSha256(token, tokenHash)) {
-                return findById(userId);
+                return findById(userId).orElse(null);
             } else {
                 deleteAuth(authId); // it is expired, or someone trying to hijack it
             }

@@ -22,6 +22,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.util.Cache;
 import de.l3s.util.HasId;
 import de.l3s.util.ICache;
@@ -31,14 +32,13 @@ import de.l3s.util.SqlHelper;
 public interface FileDao extends SqlObject, Serializable {
     ICache<File> cache = new Cache<>(3000);
 
-    default File findById(int fileId) {
-        File course = cache.get(fileId);
-        if (course != null) {
-            return course;
-        }
+    default Optional<File> findById(int fileId) {
+        return Optional.ofNullable(cache.get(fileId))
+            .or(() -> getHandle().select("SELECT * FROM lw_file WHERE file_id = ?", fileId).mapTo(File.class).findOne());
+    }
 
-        return getHandle().select("SELECT * FROM lw_file WHERE file_id = ?", fileId)
-            .map(new FileMapper()).findOne().orElse(null);
+    default File findByIdOrElseThrow(int fileId) {
+        return findById(fileId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_object_description"));
     }
 
     @SqlQuery("SELECT * FROM lw_file WHERE deleted = 0 ORDER BY resource_id DESC")
@@ -64,7 +64,7 @@ public interface FileDao extends SqlObject, Serializable {
     }
 
     default void deleteSoft(int fileId) {
-        deleteSoft(findById(fileId));
+        deleteSoft(findByIdOrElseThrow(fileId));
     }
 
     default void deleteSoft(File file) {

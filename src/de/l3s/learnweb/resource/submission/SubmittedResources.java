@@ -31,7 +31,7 @@ public class SubmittedResources implements Serializable {
 
     public User getUser() {
         if (null == user) {
-            user = Learnweb.dao().getUserDao().findById(userId);
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }

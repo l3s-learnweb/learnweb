@@ -51,7 +51,7 @@ public class YourActivityBean extends ApplicationBean implements Serializable {
                         groupTitles.put(action.getGroupId(), "");
                         break;
                     default:
-                        groupTitles.put(action.getGroupId(), groupDao.findById(action.getGroupId()).getTitle());
+                        groupTitles.put(action.getGroupId(), groupDao.findByIdOrElseThrow(action.getGroupId()).getTitle());
                         break;
                 }
             } catch (Throwable e) {

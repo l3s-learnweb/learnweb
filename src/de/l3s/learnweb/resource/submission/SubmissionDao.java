@@ -104,9 +104,9 @@ public interface SubmissionDao extends SqlObject, Serializable {
                 int userId = rowView.getColumn("user_id", Integer.class);
 
                 SubmittedResources userSubmissions = map.computeIfAbsent(userId, id ->
-                    new SubmittedResources(userDao.findById(userId), -1, findStatus(submissionId, userId).orElse(false)));
+                    new SubmittedResources(userDao.findByIdOrElseThrow(userId), -1, findStatus(submissionId, userId).orElse(false)));
 
-                userSubmissions.addResource(resourceDao.findById(resourceId));
+                userSubmissions.addResource(resourceDao.findByIdOrElseThrow(resourceId));
             }).collect(Collectors.toList());
     }
 

@@ -9,6 +9,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.BeanAssert;
 
 @Named
 @ViewScoped
@@ -43,7 +44,7 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
     }
 
     public void onCopySurvey(int surveyId) {
-        selectedSurvey = dao().getSurveyDao().findById(surveyId).orElseThrow().clone();
+        selectedSurvey = dao().getSurveyDao().findById(surveyId).orElseThrow(BeanAssert.NOT_FOUND).clone();
         selectedSurvey.setUserId(getUser().getId());
     }
 

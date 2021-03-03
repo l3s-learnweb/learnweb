@@ -32,14 +32,14 @@ public class SimpleTranscriptLog implements Serializable {
 
     public User getUser() {
         if (null == user) {
-            user = Learnweb.dao().getUserDao().findById(getUserId());
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(getUserId());
         }
         return user;
     }
 
     public Resource getResource() {
         if (null == resource) {
-            resource = Learnweb.dao().getResourceDao().findById(resourceId);
+            resource = Learnweb.dao().getResourceDao().findByIdOrElseThrow(resourceId);
         }
         return resource;
     }

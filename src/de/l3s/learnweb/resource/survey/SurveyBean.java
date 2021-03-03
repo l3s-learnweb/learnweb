@@ -34,8 +34,7 @@ public class SurveyBean extends ApplicationBean implements Serializable {
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        resource = dao().getSurveyDao().findResourceById(surveyResourceId).orElse(null);
-        BeanAssert.isFound(resource);
+        resource = dao().getSurveyDao().findResourceById(surveyResourceId).orElseThrow(BeanAssert.NOT_FOUND);
         BeanAssert.notDeleted(resource);
         BeanAssert.hasPermission(resource.canViewResource(getUser()));
 

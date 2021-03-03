@@ -56,8 +56,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
             selectedUsersIds = Collections.singletonList(loggedInUser.getId());
         } else if (paramUserId != null) { // statistic for one user from parameter
             singleUser = true;
-            User user = userDao.findById(paramUserId);
-            BeanAssert.isFound(user);
+            User user = userDao.findByIdOrElseThrow(paramUserId);
             selectedUsersIds = Collections.singletonList(user.getId());
             BeanAssert.hasPermission(loggedInUser.canModerateUser(user));
         } else {
@@ -134,7 +133,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
             return null;
         }
 
-        return userDao.findById(selectedUsersIds.get(0));
+        return userDao.findByIdOrElseThrow(selectedUsersIds.get(0));
     }
 
     public List<Integer> getSelectedGroupsIds() {
@@ -145,7 +144,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean {
         this.selectedGroupsIds = selectedGroupsIds;
         Set<Integer> selectedUsers = new TreeSet<>();
         for (Integer groupId : selectedGroupsIds) {
-            Group group = groupDao.findById(groupId);
+            Group group = groupDao.findByIdOrElseThrow(groupId);
             for (User user : group.getMembers()) {
                 selectedUsers.add(user.getId());
             }

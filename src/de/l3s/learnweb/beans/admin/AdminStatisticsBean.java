@@ -97,7 +97,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
             sb.append("<ul>");
 
             for (Integer groupId : selectedGroups) {
-                Group group = groupDao.findById(groupId);
+                Group group = groupDao.findByIdOrElseThrow(groupId);
 
                 sb.append("<li><div style=\"color:red\">Group: ");
                 sb.append(group.getTitle());

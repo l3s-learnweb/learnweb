@@ -17,7 +17,7 @@ public class RemoveDescriptionsFromSubmittedResources extends MaintenanceTask {
     @Override
     protected void run(final boolean dryRun) {
         if (!dryRun) {
-            User submitAdmin = getLearnweb().getDaoProvider().getUserDao().findById(11212);
+            User submitAdmin = getLearnweb().getDaoProvider().getUserDao().findByIdOrElseThrow(11212);
 
             log.debug(submitAdmin);
             for (Resource resource : submitAdmin.getResources()) {

@@ -356,7 +356,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
                 return null;
             }
 
-            File file = Learnweb.dao().getFileDao().findById(bannerImageFileId);
+            File file = Learnweb.dao().getFileDao().findByIdOrElseThrow(bannerImageFileId);
 
             if (file != null) {
                 bannerImage = file.getUrl();

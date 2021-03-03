@@ -46,12 +46,10 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        topic = forumTopicDao.findById(topicId).orElse(null);
-        BeanAssert.isFound(topic);
+        topic = forumTopicDao.findById(topicId).orElseThrow(BeanAssert.NOT_FOUND);
         BeanAssert.notDeleted(topic);
 
-        group = groupDao.findById(topic.getGroupId());
-        BeanAssert.isFound(group);
+        group = groupDao.findByIdOrElseThrow(topic.getGroupId());
         BeanAssert.hasPermission(group.canViewResources(getUser()));
 
         posts = forumPostDao.findByTopicId(topicId);

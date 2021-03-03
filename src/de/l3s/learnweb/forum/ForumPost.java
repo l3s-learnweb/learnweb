@@ -121,14 +121,14 @@ public class ForumPost implements Serializable, Deletable {
 
     public User getUser() {
         if (user == null) {
-            user = Learnweb.dao().getUserDao().findById(userId);
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }
 
     public User getEditUser() {
         if (editUser == null && editUserId != 0) {
-            editUser = Learnweb.dao().getUserDao().findById(editUserId);
+            editUser = Learnweb.dao().getUserDao().findByIdOrElseThrow(editUserId);
         }
         return editUser;
     }

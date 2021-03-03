@@ -16,6 +16,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.util.Cache;
@@ -27,14 +28,13 @@ public interface CourseDao extends SqlObject, Serializable {
     int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
     ICache<Course> cache = new Cache<>(10000);
 
-    default Course findById(int courseId) {
-        Course course = cache.get(courseId);
-        if (course != null) {
-            return course;
-        }
+    default Optional<Course> findById(int courseId) {
+        return Optional.ofNullable(cache.get(courseId))
+            .or(() -> getHandle().select("SELECT * FROM lw_course g WHERE course_id = ?", courseId).mapTo(Course.class).findOne());
+    }
 
-        return getHandle().select("SELECT * FROM lw_course g WHERE course_id = ?", courseId)
-            .map(new CourseMapper()).findOne().orElse(null);
+    default Course findByIdOrElseThrow(int courseId) {
+        return findById(courseId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_group_description"));
     }
 
     /**

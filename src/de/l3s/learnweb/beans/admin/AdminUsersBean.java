@@ -38,8 +38,7 @@ public class AdminUsersBean extends ApplicationBean implements Serializable {
 
         List<User> users;
         if (courseId != 0) {
-            Course course = courseDao.findById(courseId);
-            BeanAssert.isFound(course);
+            Course course = courseDao.findByIdOrElseThrow(courseId);
             // make sure that moderators can access only their own courses
             BeanAssert.hasPermission(user.isAdmin() || (user.isModerator() && user.getCourses().contains(course)));
 

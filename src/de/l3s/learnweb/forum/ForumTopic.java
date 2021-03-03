@@ -38,21 +38,21 @@ public class ForumTopic implements Serializable, Deletable {
 
     public User getUser() {
         if (user == null) {
-            user = Learnweb.dao().getUserDao().findById(userId);
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }
 
     public Group getGroup() {
         if (group == null) {
-            group = Learnweb.dao().getGroupDao().findById(groupId);
+            group = Learnweb.dao().getGroupDao().findByIdOrElseThrow(groupId);
         }
         return group;
     }
 
     public User getLastPostUser() {
         if (lastPostUser == null && lastPostUserId != 0) {
-            lastPostUser = Learnweb.dao().getUserDao().findById(lastPostUserId);
+            lastPostUser = Learnweb.dao().getUserDao().findByIdOrElseThrow(lastPostUserId);
         }
         return lastPostUser;
     }

@@ -33,7 +33,7 @@ public class DeleteOldUsers extends MaintenanceTask {
     @Override
     protected void run(final boolean dryRun) {
         // just to make sure that SOLR is connected reindex a random resource
-        getLearnweb().getSolrClient().reIndexResource(resourceDao.findById(200233));
+        getLearnweb().getSolrClient().reIndexResource(resourceDao.findByIdOrElseThrow(200233));
 
         //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
         /*

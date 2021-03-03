@@ -53,8 +53,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
         User user = getUser();
         BeanAssert.authorized(user);
 
-        course = courseDao.findById(courseId);
-        BeanAssert.isFound(course);
+        course = courseDao.findByIdOrElseThrow(courseId);
         BeanAssert.hasPermission(user.isAdmin() || user.isModerator() && course.isMember(user));
 
         // many string operations to display the options in a proper way

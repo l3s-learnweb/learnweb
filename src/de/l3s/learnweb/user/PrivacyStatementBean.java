@@ -27,7 +27,7 @@ public class PrivacyStatementBean extends ApplicationBean implements Serializabl
         Organisation organisation = null;
 
         if (organisationId != 0) {
-            organisation = dao().getOrganisationDao().findById(organisationId);
+            organisation = dao().getOrganisationDao().findByIdOrElseThrow(organisationId);
         } else if (getUser() != null) {
             organisation = getUser().getOrganisation();
         }

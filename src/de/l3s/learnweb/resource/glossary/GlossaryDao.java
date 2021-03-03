@@ -34,8 +34,8 @@ public interface GlossaryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT allowed_languages FROM lw_glossary_resource WHERE resource_id = ?")
     Optional<String> findGlossaryResourceAllowedLanguages(int resourceId);
 
-    default Optional<GlossaryResource> findById(int resourceId) {
-        return convertToGlossaryResource(getResourceDao().findById(resourceId));
+    default Optional<GlossaryResource> findResourceById(int resourceId) {
+        return convertToGlossaryResource(getResourceDao().findById(resourceId).orElse(null));
     }
 
     default Optional<GlossaryResource> convertToGlossaryResource(Resource resource) {

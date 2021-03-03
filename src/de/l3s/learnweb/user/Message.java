@@ -68,7 +68,7 @@ public class Message implements Comparable<Message>, Serializable, HasId {
 
     public User getFromUser() {
         if (fromUser == null) {
-            fromUser = Learnweb.dao().getUserDao().findById(fromUserId);
+            fromUser = Learnweb.dao().getUserDao().findByIdOrElseThrow(fromUserId);
         }
         return fromUser;
     }
@@ -88,7 +88,7 @@ public class Message implements Comparable<Message>, Serializable, HasId {
 
     public User getToUser() {
         if (toUser == null) {
-            toUser = Learnweb.dao().getUserDao().findById(toUserId);
+            toUser = Learnweb.dao().getUserDao().findByIdOrElseThrow(toUserId);
         }
         return toUser;
     }

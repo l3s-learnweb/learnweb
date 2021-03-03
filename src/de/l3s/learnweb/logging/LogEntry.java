@@ -47,14 +47,14 @@ public class LogEntry implements Serializable {
 
     public User getUser() {
         if (null == user) {
-            user = Learnweb.dao().getUserDao().findById(userId);
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }
 
     public Group getGroup() {
         if (null == group) {
-            group = Learnweb.dao().getGroupDao().findById(groupId);
+            group = Learnweb.dao().getGroupDao().findByIdOrElseThrow(groupId);
         }
         return group;
     }
@@ -82,9 +82,7 @@ public class LogEntry implements Serializable {
     public Resource getResource() {
         if (resource == null) {
             if (action.getTargetId() == ActionTargetId.RESOURCE_ID && targetId != 0) {
-                Resource r = Learnweb.dao().getResourceDao().findById(targetId);
-
-                resource = (r == null || r.isDeleted()) ? Optional.empty() : Optional.of(r);
+                resource = Learnweb.dao().getResourceDao().findById(targetId).filter(res -> !res.isDeleted());
             } else {
                 resource = Optional.empty();
             }

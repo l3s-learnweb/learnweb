@@ -46,7 +46,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         if (organisationId != 0) {
             BeanAssert.hasPermission(getUser().isAdmin());
 
-            setOrganisation(dao().getOrganisationDao().findById(organisationId));
+            setOrganisation(dao().getOrganisationDao().findByIdOrElseThrow(organisationId));
         } else {
             BeanAssert.hasPermission(getUser().isModerator());
 
@@ -116,8 +116,6 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     }
 
     private void setOrganisation(Organisation selectedOrganisation) {
-        BeanAssert.isFound(selectedOrganisation);
-
         this.organisation = selectedOrganisation;
 
         // many string operations to display the options in a proper way

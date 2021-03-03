@@ -76,11 +76,10 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         if (userId == 0 || loggedInUser.getId() == userId) {
             selectedUser = loggedInUser; // user edits himself
         } else {
-            selectedUser = userDao.findById(userId); // an admin edits an user
+            selectedUser = userDao.findByIdOrElseThrow(userId); // an admin edits an user
             moderatorAccess = true;
         }
 
-        BeanAssert.isFound(selectedUser);
         BeanAssert.hasPermission(!moderatorAccess || loggedInUser.canModerateUser(selectedUser));
 
         email = selectedUser.getEmail();

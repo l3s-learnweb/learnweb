@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.app.Learnweb;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.survey.SurveyUserAnswers;
@@ -141,7 +142,7 @@ public class Submission implements Serializable, HasId {
 
         // load surveyAnswer
         if (surveyResourceId != null && surveyAnswer == null) {
-            SurveyResource surveyResource = Learnweb.dao().getSurveyDao().findResourceById(surveyResourceId).orElseThrow();
+            SurveyResource surveyResource = Learnweb.dao().getSurveyDao().findResourceById(surveyResourceId).orElseThrow(BeanAssert.NOT_FOUND);
             surveyAnswer = surveyResource.getAnswersOfUser(userId);
         }
 
@@ -183,7 +184,7 @@ public class Submission implements Serializable, HasId {
 
     public Course getCourse() {
         if (course == null && courseId != 0) {
-            course = Learnweb.dao().getCourseDao().findById(courseId);
+            course = Learnweb.dao().getCourseDao().findByIdOrElseThrow(courseId);
         }
         return course;
     }
