@@ -35,7 +35,7 @@ public interface SpeechRepositoryDao extends SqlObject, Serializable {
 
     default void save(SpeechRepositoryEntity speech) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("id", speech.getId() < 1 ? null : speech.getId());
+        params.put("id", SqlHelper.toNullable(speech.getId()));
         params.put("title", speech.getTitle());
         params.put("url", speech.getUrl());
         params.put("rights", speech.getRights());

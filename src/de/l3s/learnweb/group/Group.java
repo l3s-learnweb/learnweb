@@ -106,7 +106,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private final HashMap<Integer, Integer> lastVisitCache = new HashMap<>();
 
     public Group() {
-        this.id = -1;
     }
 
     public Group(int id, String title) {
@@ -266,7 +265,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
+        this.description = description;
     }
 
     /**
@@ -556,7 +555,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     public void setMemberCountLimited(boolean memberCountLimited) {
         if (!memberCountLimited) { // if no limit > set the member limit infinite
             maxMemberCount = -1;
-        } else if (maxMemberCount <= 0) { // if limit true but not defined yet > set default limit = 1
+        } else if (maxMemberCount < 1) { // if limit true but not defined yet > set default limit = 1
             maxMemberCount = 1;
         }
     }

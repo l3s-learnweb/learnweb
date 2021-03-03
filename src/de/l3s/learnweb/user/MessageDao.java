@@ -14,7 +14,6 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(MessageDao.MessageMapper.class)
@@ -49,7 +48,7 @@ public interface MessageDao extends SqlObject, Serializable {
 
     default void save(Message message) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("message_id", message.getId() < 1 ? null : message.getId());
+        params.put("message_id", SqlHelper.toNullable(message.getId()));
         params.put("sender_user_id", message.getFromUserId());
         params.put("recipient_user_id", message.getToUserId());
         params.put("title", message.getTitle());
@@ -75,7 +74,7 @@ public interface MessageDao extends SqlObject, Serializable {
             message.setText(rs.getString("text"));
             message.setSeen(rs.getBoolean("is_seen"));
             message.setRead(rs.getBoolean("is_read"));
-            message.setTime(RsHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            message.setTime(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return message;
         }
     }

@@ -32,16 +32,16 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
         BeanAssert.authorized(isLoggedIn());
         BeanAssert.hasPermission(getUser().isAdmin());
 
-        if (announcementId == 0) { // create new announcement
+        if (announcementId != 0) {
+            announcement = announcementDao.findById(announcementId).orElse(null);
+            BeanAssert.isFound(announcement);
+            pageTitle = announcement.getTitle();
+        } else { // create new announcement
             pageTitle = StringUtils.capitalize(getLocaleMessage("new_word"));
 
             announcement = new Announcement();
             announcement.setUserId(getUser().getId());
             announcement.setDate(LocalDateTime.now());
-        } else {
-            announcement = announcementDao.findById(announcementId).orElse(null);
-            BeanAssert.isFound(announcement);
-            pageTitle = announcement.getTitle();
         }
     }
 

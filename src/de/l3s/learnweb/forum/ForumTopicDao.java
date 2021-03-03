@@ -20,7 +20,6 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.user.User;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(ForumTopicDao.ForumTopicMapper.class)
@@ -61,17 +60,17 @@ public interface ForumTopicDao extends SqlObject, Serializable {
 
     default void save(ForumTopic topic) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("topic_id", topic.getId() < 1 ? null : topic.getId());
+        params.put("topic_id", SqlHelper.toNullable(topic.getId()));
         params.put("group_id", topic.getGroupId());
         params.put("deleted", topic.isDeleted());
         params.put("topic_title", topic.getTitle());
-        params.put("user_id", topic.getUserId());
+        params.put("user_id", SqlHelper.toNullable(topic.getUserId()));
         params.put("topic_time", topic.getDate());
         params.put("topic_views", topic.getViews());
         params.put("topic_replies", topic.getReplies());
-        params.put("topic_last_post_id", topic.getLastPostId());
+        params.put("topic_last_post_id", SqlHelper.toNullable(topic.getLastPostId()));
         params.put("topic_last_post_time", topic.getLastPostDate());
-        params.put("topic_last_post_user_id", topic.getLastPostUserId());
+        params.put("topic_last_post_user_id", SqlHelper.toNullable(topic.getLastPostUserId()));
 
         Optional<Integer> topicId = SqlHelper.handleSave(getHandle(), "lw_forum_topic", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -87,12 +86,12 @@ public interface ForumTopicDao extends SqlObject, Serializable {
             topic.setUserId(rs.getInt("user_id"));
             topic.setGroupId(rs.getInt("group_id"));
             topic.setTitle(rs.getString("topic_title"));
-            topic.setDate(RsHelper.getLocalDateTime(rs.getTimestamp("topic_time")));
+            topic.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("topic_time")));
             topic.setViews(rs.getInt("topic_views"));
             topic.setReplies(rs.getInt("topic_replies"));
-            topic.setLastPostId(RsHelper.getInteger(rs, "topic_last_post_id"));
-            topic.setLastPostDate(RsHelper.getLocalDateTime(rs.getTimestamp("topic_last_post_time")));
-            topic.setLastPostUserId(RsHelper.getInteger(rs, "topic_last_post_user_id"));
+            topic.setLastPostId(rs.getInt("topic_last_post_id"));
+            topic.setLastPostDate(SqlHelper.getLocalDateTime(rs.getTimestamp("topic_last_post_time")));
+            topic.setLastPostUserId(rs.getInt("topic_last_post_user_id"));
             return topic;
         }
     }

@@ -12,7 +12,7 @@ import de.l3s.util.Deletable;
 public class ForumPost implements Serializable, Deletable {
     private static final long serialVersionUID = 4093915855537221830L;
 
-    private int id = -1;
+    private int id;
     private int userId;
     private int topicId;
     @NotBlank
@@ -20,7 +20,7 @@ public class ForumPost implements Serializable, Deletable {
     private LocalDateTime date;
     private int editCount;
     private LocalDateTime lastEditDate;
-    private Integer editUserId;
+    private int editUserId;
     private boolean deleted;
     private String category;
 
@@ -111,11 +111,11 @@ public class ForumPost implements Serializable, Deletable {
         this.lastEditDate = lastEditDate;
     }
 
-    public Integer getEditUserId() {
+    public int getEditUserId() {
         return editUserId;
     }
 
-    public void setEditUserId(Integer editUserId) {
+    public void setEditUserId(int editUserId) {
         this.editUserId = editUserId;
     }
 
@@ -127,7 +127,7 @@ public class ForumPost implements Serializable, Deletable {
     }
 
     public User getEditUser() {
-        if (editUser == null) {
+        if (editUser == null && editUserId != 0) {
             editUser = Learnweb.dao().getUserDao().findById(editUserId);
         }
         return editUser;

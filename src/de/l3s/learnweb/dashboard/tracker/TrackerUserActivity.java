@@ -25,7 +25,7 @@ public class TrackerUserActivity implements Serializable {
     private transient User user;
 
     public User getUser() {
-        if (null == user && userId > 0) {
+        if (null == user && userId != 0) {
             user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;

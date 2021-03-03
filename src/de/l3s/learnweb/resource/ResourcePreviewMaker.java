@@ -228,7 +228,7 @@ public class ResourcePreviewMaker implements Serializable {
         FFmpegProbeResult ffProbeResult = null;
         try {
             if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video
-                && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == null)) {
+                && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == 0)) {
                 originalFile = resource.getFile(TYPE.FILE_MAIN);
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 

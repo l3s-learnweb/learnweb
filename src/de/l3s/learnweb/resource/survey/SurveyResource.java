@@ -15,7 +15,7 @@ public class SurveyResource extends Resource {
 
     private static final String PATH = "survey/answer.jsf?resource_id=";
 
-    private int surveyId = -1;
+    private int surveyId;
     private LocalDateTime start;
     private LocalDateTime end;
     private boolean saveable; // if true users can save their answers before finally submitting them
@@ -135,7 +135,7 @@ public class SurveyResource extends Resource {
         // save normal resource fields
         super.save();
         // save SurveyResource fields
-        if (surveyId == -1) {
+        if (surveyId == 0) {
             survey.save(true);
             surveyId = survey.getId();
         }

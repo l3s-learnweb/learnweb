@@ -3,7 +3,6 @@ package de.l3s.learnweb.resource.survey;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,6 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceType;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 import de.l3s.util.bean.BeanHelper;
 
@@ -72,8 +70,8 @@ public interface SurveyDao extends SqlObject, Serializable {
      */
     default SurveyUserAnswers findAnswersByResourceAndUserId(final SurveyResource resource, int userId) {
         Validate.notNull(resource);
-        Validate.isTrue(userId > 0, "The value must be greater than zero: ", userId);
-        Validate.isTrue(resource.getId() > 0, "The value must be greater than zero: ", resource.getId());
+        Validate.isTrue(userId != 0, "The value must be greater than zero: ", userId);
+        Validate.isTrue(resource.getId() != 0, "The value must be greater than zero: ", resource.getId());
 
         // Get survey data
         SurveyUserAnswers surveyAnswer = getHandle().select("SELECT * FROM lw_survey_answer WHERE resource_id = ? AND user_id = ?", resource.getId(), userId)
@@ -113,12 +111,6 @@ public interface SurveyDao extends SqlObject, Serializable {
     List<SurveyQuestion> findQuestionsBySurveyId(int surveyId);
 
     default List<SurveyQuestion> findQuestionsAndAnswersById(int surveyId) {
-        List<SurveyQuestion> questions = new ArrayList<>();
-
-        if (surveyId <= 0) {
-            return questions;
-        }
-
         return findQuestionsBySurveyId(surveyId).stream()
             .peek(question -> question.getAnswers().addAll(findAnswersByQuestionId(question.getId())))
             .collect(Collectors.toList());
@@ -129,8 +121,8 @@ public interface SurveyDao extends SqlObject, Serializable {
      */
     default void loadSurveyResource(SurveyResource resource) {
         getHandle().select("SELECT * FROM lw_survey_resource WHERE resource_id = ?", resource.getId()).map((rs, ctx) -> {
-            resource.setEnd(RsHelper.getLocalDateTime(rs.getTimestamp("close_date")));
-            resource.setStart(RsHelper.getLocalDateTime(rs.getTimestamp("open_date")));
+            resource.setEnd(SqlHelper.getLocalDateTime(rs.getTimestamp("close_date")));
+            resource.setStart(SqlHelper.getLocalDateTime(rs.getTimestamp("open_date")));
             resource.setSurveyId(rs.getInt("survey_id"));
             resource.setSaveable(rs.getBoolean("editable"));
             return resource;
@@ -144,11 +136,11 @@ public interface SurveyDao extends SqlObject, Serializable {
      */
     default void save(Survey survey, boolean updateMetadataOnly) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("survey_id", survey.getId() < 1 ? null : survey.getId());
-        params.put("organization_id", survey.getOrganizationId());
+        params.put("survey_id", SqlHelper.toNullable(survey.getId()));
+        params.put("organization_id", SqlHelper.toNullable(survey.getOrganizationId()));
         params.put("title", survey.getTitle());
         params.put("description", survey.getDescription());
-        params.put("user_id", survey.getUserId());
+        params.put("user_id", SqlHelper.toNullable(survey.getUserId()));
         params.put("public_template", survey.isPublicTemplate());
 
         Optional<Integer> surveyId = SqlHelper.handleSave(getHandle(), "lw_survey", params)
@@ -166,8 +158,8 @@ public interface SurveyDao extends SqlObject, Serializable {
 
     default void saveQuestion(SurveyQuestion question) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("question_id", question.getId() < 1 ? null : question.getId());
-        params.put("survey_id", question.getSurveyId());
+        params.put("question_id", SqlHelper.toNullable(question.getId()));
+        params.put("survey_id", SqlHelper.toNullable(question.getSurveyId()));
         params.put("deleted", question.isDeleted());
         params.put("order", question.getOrder());
         params.put("question", question.getLabel());
@@ -188,9 +180,9 @@ public interface SurveyDao extends SqlObject, Serializable {
 
     default void saveQuestionOption(int questionId, SurveyQuestionOption option) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("answer_id", option.getId() < 1 ? null : option.getId());
+        params.put("answer_id", SqlHelper.toNullable(option.getId()));
         params.put("deleted", option.isDeleted());
-        params.put("question_id", questionId);
+        params.put("question_id", SqlHelper.toNullable(questionId));
         params.put("value", option.getValue());
 
         Optional<Integer> optionId = SqlHelper.handleSave(getHandle(), "lw_survey_question_option", params)

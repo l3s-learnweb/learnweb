@@ -32,7 +32,6 @@ import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(ResourceDao.ResourceMapper.class)
@@ -159,7 +158,7 @@ public interface ResourceDao extends SqlObject, Serializable {
         try {
             for (File file : sourceResource.getFiles().values()) {
                 if (List.of(File.TYPE.THUMBNAIL_VERY_SMALL, File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_SQUARED, File.TYPE.THUMBNAIL_MEDIUM,
-                    File.TYPE.THUMBNAIL_LARGE, File.TYPE.CHANGES, File.TYPE.HISTORY_FILE).contains(file.getType())) {
+                    File.TYPE.THUMBNAIL_LARGE, File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY).contains(file.getType())) {
                     continue; // skip them
                 }
 
@@ -188,7 +187,7 @@ public interface ResourceDao extends SqlObject, Serializable {
 
     default void save(Resource resource) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("resource_id", resource.getId() < 1 ? null : resource.getId());
+        params.put("resource_id", SqlHelper.toNullable(resource.getId()));
         params.put("title", resource.getTitle());
         params.put("description", resource.getDescription());
         params.put("url", resource.getUrl());
@@ -197,13 +196,13 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("source", resource.getSource().name());
         params.put("type", resource.getType().name());
         params.put("format", resource.getFormat());
-        params.put("owner_user_id", resource.getUserId() < 1 ? null : resource.getUserId());
+        params.put("owner_user_id", SqlHelper.toNullable(resource.getUserId()));
         params.put("rating", resource.getRatingSum());
         params.put("rate_number", resource.getRateNumber());
         params.put("query", resource.getQuery());
         params.put("filename", resource.getFileName());
         params.put("max_image_url", resource.getMaxImageUrl());
-        params.put("original_resource_id", resource.getOriginalResourceId());
+        params.put("original_resource_id", SqlHelper.toNullable(resource.getOriginalResourceId()));
         params.put("machine_description", resource.getMachineDescription());
         params.put("author", resource.getAuthor());
         params.put("file_url", resource.getFileUrl());
@@ -216,52 +215,52 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("language", resource.getLanguage());
         params.put("creation_date", resource.getCreationDate());
         params.put("metadata", SerializationUtils.serialize(resource.getMetadata()));
-        params.put("group_id", resource.getGroupId() == 0 ? null : resource.getGroupId());
-        params.put("folder_id", resource.getFolderId() == 0 ? null : resource.getFolderId());
+        params.put("group_id", SqlHelper.toNullable(resource.getGroupId()));
+        params.put("folder_id", SqlHelper.toNullable(resource.getFolderId()));
         params.put("deleted", resource.isDeleted());
         params.put("read_only_transcript", resource.isReadOnlyTranscript());
 
         if (resource.getThumbnail0() != null) {
-            if (resource.getThumbnail0().getFileId() == null) {
+            if (resource.getThumbnail0().getFileId() == 0) {
                 params.put("thumbnail0_url", resource.getThumbnail0().getUrl());
             }
-            params.put("thumbnail0_file_id", resource.getThumbnail0().getFileId());
+            params.put("thumbnail0_file_id", SqlHelper.toNullable(resource.getThumbnail0().getFileId()));
             params.put("thumbnail0_width", resource.getThumbnail0().getWidth());
             params.put("thumbnail0_height", resource.getThumbnail0().getHeight());
         }
 
         if (resource.getThumbnail1() != null) {
-            if (resource.getThumbnail1().getFileId() == null) {
+            if (resource.getThumbnail1().getFileId() == 0) {
                 params.put("thumbnail1_url", resource.getThumbnail1().getUrl());
             }
-            params.put("thumbnail1_file_id", resource.getThumbnail1().getFileId());
+            params.put("thumbnail1_file_id", SqlHelper.toNullable(resource.getThumbnail1().getFileId()));
             params.put("thumbnail1_width", resource.getThumbnail1().getWidth());
             params.put("thumbnail1_height", resource.getThumbnail1().getHeight());
         }
 
         if (resource.getThumbnail2() != null) {
-            if (resource.getThumbnail2().getFileId() == null) {
+            if (resource.getThumbnail2().getFileId() == 0) {
                 params.put("thumbnail2_url", resource.getThumbnail2().getUrl());
             }
-            params.put("thumbnail2_file_id", resource.getThumbnail2().getFileId());
+            params.put("thumbnail2_file_id", SqlHelper.toNullable(resource.getThumbnail2().getFileId()));
             params.put("thumbnail2_width", resource.getThumbnail2().getWidth());
             params.put("thumbnail2_height", resource.getThumbnail2().getHeight());
         }
 
         if (resource.getThumbnail3() != null) {
-            if (resource.getThumbnail3().getFileId() == null) {
+            if (resource.getThumbnail3().getFileId() == 0) {
                 params.put("thumbnail3_url", resource.getThumbnail3().getUrl());
             }
-            params.put("thumbnail3_file_id", resource.getThumbnail3().getFileId());
+            params.put("thumbnail3_file_id", SqlHelper.toNullable(resource.getThumbnail3().getFileId()));
             params.put("thumbnail3_width", resource.getThumbnail3().getWidth());
             params.put("thumbnail3_height", resource.getThumbnail3().getHeight());
         }
 
         if (resource.getThumbnail4() != null) {
-            if (resource.getThumbnail4().getFileId() == null) {
+            if (resource.getThumbnail4().getFileId() == 0) {
                 params.put("thumbnail4_url", resource.getThumbnail4().getUrl());
             }
-            params.put("thumbnail4_file_id", resource.getThumbnail4().getFileId());
+            params.put("thumbnail4_file_id", SqlHelper.toNullable(resource.getThumbnail4().getFileId()));
             params.put("thumbnail4_width", resource.getThumbnail4().getWidth());
             params.put("thumbnail4_height", resource.getThumbnail4().getHeight());
         }
@@ -336,7 +335,7 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setFileName(rs.getString("filename"));
                 resource.setMaxImageUrl(rs.getString("max_image_url"));
                 resource.setQuery(rs.getString("query"));
-                resource.setOriginalResourceId(RsHelper.getInteger(rs, "original_resource_id"));
+                resource.setOriginalResourceId(rs.getInt("original_resource_id"));
                 resource.setFileUrl(rs.getString("file_url"));
                 resource.setThumbnail0(createThumbnail(rs, 0));
                 resource.setThumbnail1(createThumbnail(rs, 1));
@@ -350,8 +349,8 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setDuration(rs.getInt("duration"));
                 resource.setLanguage(rs.getString("language"));
                 resource.setRestricted(rs.getBoolean("restricted"));
-                resource.setResourceTimestamp(RsHelper.getLocalDateTime(rs.getTimestamp("resource_timestamp")));
-                resource.setCreationDate(RsHelper.getLocalDateTime(rs.getTimestamp("creation_date")));
+                resource.setResourceTimestamp(SqlHelper.getLocalDateTime(rs.getTimestamp("resource_timestamp")));
+                resource.setCreationDate(SqlHelper.getLocalDateTime(rs.getTimestamp("creation_date")));
                 resource.setGroupId(rs.getInt("group_id"));
                 resource.setFolderId(rs.getInt("folder_id"));
                 resource.setDeleted(rs.getBoolean("deleted"));
@@ -398,9 +397,9 @@ public interface ResourceDao extends SqlObject, Serializable {
         private static Thumbnail createThumbnail(ResultSet rs, int thumbnailSize) throws SQLException {
             String prefix = "thumbnail" + thumbnailSize;
             String url = rs.getString(prefix + "_url");
-            Integer fileId = RsHelper.getInteger(rs, prefix + "_file_id");
+            int fileId = rs.getInt(prefix + "_file_id");
 
-            if (fileId != null) {
+            if (fileId != 0) {
                 url = "../download/" + fileId + "/thumbnail" + thumbnailSize + ".png";
             } else if (url == null) {
                 return null;

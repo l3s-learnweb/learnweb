@@ -15,7 +15,6 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 import de.l3s.util.StringHelper;
 
@@ -48,7 +47,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
 
     default void save(Organisation organisation) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("organisation_id", organisation.getId() < 1 ? null : organisation.getId());
+        params.put("organisation_id", SqlHelper.toNullable(organisation.getId()));
         params.put("title", organisation.getTitle());
         params.put("welcome_page", organisation.getWelcomePage());
         params.put("welcome_message", organisation.getWelcomeMessage());
@@ -58,7 +57,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
         params.put("default_search_video", organisation.getDefaultSearchServiceVideo());
         params.put("default_language", organisation.getDefaultLanguage());
         params.put("language_variant", organisation.getLanguageVariant());
-        params.put("banner_image_file_id", organisation.getBannerImageFileId());
+        params.put("banner_image_file_id", SqlHelper.toNullable(organisation.getBannerImageFileId()));
         params.put("glossary_languages", StringHelper.join(organisation.getGlossaryLanguages()));
         params.put("css_file", organisation.getCssFile());
 
@@ -84,7 +83,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 organisation.setDefaultSearchServiceVideo(rs.getString("default_search_video"));
                 organisation.setDefaultLanguage(rs.getString("default_language"));
                 organisation.setLanguageVariant(rs.getString("language_variant"));
-                organisation.setBannerImageFileId(RsHelper.getInteger(rs, "banner_image_file_id"));
+                organisation.setBannerImageFileId(rs.getInt("banner_image_file_id"));
                 organisation.setGlossaryLanguages(StringHelper.splitLocales(rs.getString("glossary_languages")));
 
                 long[] options = new long[FIELDS];

@@ -49,7 +49,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
      * Copy constructor.
      */
     public Folder(Folder another) {
-        this.id = -1;
+        this.id = 0;
         this.groupId = another.getGroupId();
         this.parentFolderId = another.getParentFolderId();
         this.title = another.getTitle();
@@ -168,7 +168,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     @Override
     public User getUser() {
-        if (user == null && userId > 0) {
+        if (user == null && userId != 0) {
             user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;
@@ -276,15 +276,15 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
             resource.save();
         }
 
-        if (newFolderId > 0) {
+        if (newFolderId != 0) {
             Learnweb.dao().getFolderDao().findById(newFolderId).clearCaches();
-        } else if (newGroupId > 0) {
+        } else if (newGroupId != 0) {
             Learnweb.dao().getGroupDao().findById(newGroupId).clearCaches();
         }
 
-        if (parentFolderId > 0) {
+        if (parentFolderId != 0) {
             Learnweb.dao().getFolderDao().findById(parentFolderId).clearCaches();
-        } else if (groupId > 0) {
+        } else if (groupId != 0) {
             Learnweb.dao().getGroupDao().findById(groupId).clearCaches();
         }
     }
@@ -326,7 +326,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
             subFolders = null;
         }
 
-        if (isClearParent && this.getParentFolderId() > 0) {
+        if (isClearParent && this.getParentFolderId() != 0) {
             getParentFolder().clearCaches(false, false);
         }
 

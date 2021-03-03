@@ -49,7 +49,7 @@ public interface TagDao extends SqlObject, Serializable {
 
     default void save(Tag tag) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("tag_id", tag.getId() < 1 ? null : tag.getId());
+        params.put("tag_id", SqlHelper.toNullable(tag.getId()));
         params.put("name", tag.getName());
 
         Optional<Integer> tagId = SqlHelper.handleSave(getHandle(), "lw_tag", params)

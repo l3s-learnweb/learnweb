@@ -30,7 +30,7 @@ public interface HasId extends Argument {
     }
 
     static Integer getIdOrDefault(HasId object, Integer def) {
-        if (object == null || object.getId() <= 0) {
+        if (object == null || object.getId() == 0) {
             return def;
         }
         return object.getId();

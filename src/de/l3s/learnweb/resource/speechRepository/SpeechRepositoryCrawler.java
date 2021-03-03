@@ -155,7 +155,7 @@ public class SpeechRepositoryCrawler implements Runnable {
     }
 
     private Resource createResource(final SpeechRepositoryEntity speechEntity) throws IOException {
-        if (speechEntity.getLearnwebResourceId() > 0) {
+        if (speechEntity.getLearnwebResourceId() != 0) {
             return resourceDao.findById(speechEntity.getLearnwebResourceId());
         }
 

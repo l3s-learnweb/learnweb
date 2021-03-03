@@ -253,7 +253,7 @@ public class ResourceMetadataExtractor {
     private void processYoutubeResource(Resource resource) throws IOException {
         JsonObject json = readJsonObjectFromUrl(YOUTUBE_API_REQUEST + resource.getIdAtService());
         JsonArray items = json.getAsJsonArray("items");
-        if (items.size() > 0) {
+        if (items.size() != 0) {
             JsonObject snippet = items.get(0).getAsJsonObject().getAsJsonObject("snippet");
             if (StringUtils.isEmpty(resource.getTitle())) {
                 resource.setTitle(snippet.get("title").getAsString());
@@ -327,7 +327,7 @@ public class ResourceMetadataExtractor {
             }
 
             JsonArray thumbnails = json.getAsJsonObject("thumbs").getAsJsonArray("thumb");
-            if (thumbnails != null && thumbnails.size() > 0) {
+            if (thumbnails != null && thumbnails.size() != 0) {
                 String thumbnailUrl = null;
                 int width = 0;
                 for (int i = 0, len = thumbnails.size(); i < len; i++) {

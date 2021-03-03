@@ -14,7 +14,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.util.RsHelper;
+import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(RequestDao.RequestMapper.class)
 public interface RequestDao extends SqlObject, Serializable {
@@ -59,7 +59,7 @@ public interface RequestDao extends SqlObject, Serializable {
             request.setRequests(rs.getInt("requests"));
             request.setLoginCount(rs.getInt("logins"));
             request.setUsernames(rs.getString("usernames"));
-            request.setTime(RsHelper.getLocalDateTime(rs.getTimestamp("time")));
+            request.setTime(SqlHelper.getLocalDateTime(rs.getTimestamp("time")));
             return request;
         }
     }

@@ -11,16 +11,16 @@ import de.l3s.util.Deletable;
 public class ForumTopic implements Serializable, Deletable {
     private static final long serialVersionUID = 5370327788969640983L;
 
-    private int id = -1;
+    private int id;
     private int userId;
     private int groupId;
     private String title;
     private LocalDateTime date;
     private int views;
     private int replies;
-    private Integer lastPostId;
+    private int lastPostId;
     private LocalDateTime lastPostDate;
-    private Integer lastPostUserId;
+    private int lastPostUserId;
     private boolean deleted;
 
     // cached values
@@ -51,17 +51,17 @@ public class ForumTopic implements Serializable, Deletable {
     }
 
     public User getLastPostUser() {
-        if (lastPostUser == null) {
+        if (lastPostUser == null && lastPostUserId != 0) {
             lastPostUser = Learnweb.dao().getUserDao().findById(lastPostUserId);
         }
         return lastPostUser;
     }
 
-    public Integer getLastPostUserId() {
+    public int getLastPostUserId() {
         return lastPostUserId;
     }
 
-    public void setLastPostUserId(Integer lastPostUserId) {
+    public void setLastPostUserId(int lastPostUserId) {
         this.lastPostUserId = lastPostUserId;
     }
 
@@ -113,11 +113,11 @@ public class ForumTopic implements Serializable, Deletable {
         this.replies = replies;
     }
 
-    public Integer getLastPostId() {
+    public int getLastPostId() {
         return lastPostId;
     }
 
-    public void setLastPostId(Integer lastPostId) {
+    public void setLastPostId(int lastPostId) {
         this.lastPostId = lastPostId;
     }
 

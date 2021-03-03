@@ -73,7 +73,7 @@ public final class FileUtility {
     public static String getFileExtension(String fileName) {
         if (fileName != null) {
             int lastIndex = fileName.lastIndexOf('.');
-            if (lastIndex <= 0) {
+            if (lastIndex == -1) {
                 return null;
             }
             String fileExt = fileName.substring(lastIndex + 1);

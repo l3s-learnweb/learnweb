@@ -50,12 +50,12 @@ public interface FolderDao extends SqlObject, Serializable {
 
     default void save(Folder folder) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("folder_id", folder.getId() < 1 ? null : folder.getId());
-        params.put("group_id", folder.getGroupId() == 0 ? null : folder.getGroupId());
-        params.put("parent_folder_id", folder.getParentFolderId() == 0 ? null : folder.getParentFolderId());
+        params.put("folder_id", SqlHelper.toNullable(folder.getId()));
+        params.put("group_id", SqlHelper.toNullable(folder.getGroupId()));
+        params.put("parent_folder_id", SqlHelper.toNullable(folder.getParentFolderId()));
         params.put("name", folder.getTitle());
         params.put("description", folder.getDescription());
-        params.put("user_id", folder.getUserId() < 1 ? null : folder.getUserId());
+        params.put("user_id", SqlHelper.toNullable(folder.getUserId()));
         params.put("deleted", folder.isDeleted());
 
         Optional<Integer> folderId = SqlHelper.handleSave(getHandle(), "lw_group_folder", params)

@@ -19,7 +19,7 @@ public class Submission implements Serializable, HasId {
     private static final long serialVersionUID = -3143872721852606973L;
     private static final Logger log = LogManager.getLogger(Submission.class);
 
-    private int id = -1;
+    private int id;
     private int courseId;
     private String title;
     private String description;
@@ -182,7 +182,7 @@ public class Submission implements Serializable, HasId {
     }
 
     public Course getCourse() {
-        if (course == null && courseId > 0) {
+        if (course == null && courseId != 0) {
             course = Learnweb.dao().getCourseDao().findById(courseId);
         }
         return course;

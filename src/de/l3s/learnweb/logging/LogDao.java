@@ -27,7 +27,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.RsHelper;
+import de.l3s.util.SqlHelper;
 import de.l3s.util.StringHelper;
 
 @RegisterRowMapper(LogDao.LogEntryMapper.class)
@@ -105,7 +105,7 @@ public interface LogDao extends SqlObject, Serializable {
 
         params = StringHelper.shortnString(params, 250);
 
-        if (groupId != null && groupId < 1) {
+        if (groupId != null && groupId == 0) {
             groupId = null;
         }
 
@@ -132,7 +132,7 @@ public interface LogDao extends SqlObject, Serializable {
             int userId = rs.getInt("user_id");
             // String sessionId = rs.getString("session_id");
             Action action = Action.values()[rs.getInt("action")];
-            LocalDateTime dateTime = RsHelper.getLocalDateTime(rs.getTimestamp("timestamp"));
+            LocalDateTime dateTime = SqlHelper.getLocalDateTime(rs.getTimestamp("timestamp"));
             String params = rs.getString("params");
             int groupId = rs.getInt("group_id");
             int targetId = rs.getInt("target_id");

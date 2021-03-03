@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
@@ -21,7 +20,6 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(CourseDao.CourseMapper.class)
@@ -65,11 +63,11 @@ public interface CourseDao extends SqlObject, Serializable {
 
     default void save(Course course) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("course_id", course.getId() < 1 ? null : course.getId());
+        params.put("course_id", SqlHelper.toNullable(course.getId()));
         params.put("title", course.getTitle());
         params.put("organisation_id", course.getOrganisationId());
-        params.put("default_group_id", course.getDefaultGroupId());
-        params.put("wizard_param", StringUtils.isBlank(course.getWizardParam()) ? null : course.getWizardParam());
+        params.put("default_group_id", SqlHelper.toNullable(course.getDefaultGroupId()));
+        params.put("wizard_param", SqlHelper.toNullable(course.getWizardParam()));
         params.put("next_x_users_become_moderator", course.getNextXUsersBecomeModerator());
         params.put("welcome_message", course.getWelcomeMessage());
         params.put("timestamp_creation", course.getCreationTimestamp());
@@ -148,7 +146,7 @@ public interface CourseDao extends SqlObject, Serializable {
                 course.setId(rs.getInt("course_id"));
                 course.setOrganisationId(rs.getInt("organisation_id"));
                 course.setTitle(rs.getString("title"));
-                course.setDefaultGroupId(RsHelper.getInteger(rs, "default_group_id"));
+                course.setDefaultGroupId(rs.getInt("default_group_id"));
                 course.setWizardParam(rs.getString("wizard_param"));
                 course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
                 course.setWelcomeMessage(rs.getString("welcome_message"));

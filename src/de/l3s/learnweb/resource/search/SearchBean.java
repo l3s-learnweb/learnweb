@@ -151,7 +151,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
         Resource newResource = null;
         try {
-            if (selectedResource.getId() == -1) { // resource is not yet stored at the database
+            if (selectedResource.getId() == 0) { // resource is not yet stored at the database
                 newResource = selectedResource.getResource();
                 if (newResource.getSource() == ResourceService.bing) { // resource which is already saved in database already has wayback captures stored
                     Beans.getInstance(WaybackCapturesLogger.class).logWaybackCaptures(newResource);
@@ -175,7 +175,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             log.debug("Add resource; group: {}; folder: {}", newResource.getGroupId(), newResource.getFolderId());
 
             // we need to check whether a Bing result is a PDF, Word or other document
-            if (newResource.getOriginalResourceId() == null && newResource.getSource() == ResourceService.bing
+            if (newResource.getOriginalResourceId() == 0 && newResource.getSource() == ResourceService.bing
                 && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text)) {
                 log.debug("Extracting info from given url...");
                 FileInfo fileInfo = getLearnweb().getResourceMetadataExtractor().getFileInfo(newResource.getUrl());
@@ -311,7 +311,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         }
 
         if (StringUtils.isNotBlank(value)) {
-            if (sb.length() > 0) {
+            if (sb.length() != 0) {
                 sb.append(':');
             }
             sb.append(filterType.name()).append(':').append(filterType.isEncodeBase64() ? StringHelper.encodeBase64(value) : value);

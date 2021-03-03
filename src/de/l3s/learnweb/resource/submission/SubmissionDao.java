@@ -26,7 +26,6 @@ import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 import de.l3s.util.HasId;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(SubmissionDao.SubmissionMapper.class)
@@ -113,14 +112,14 @@ public interface SubmissionDao extends SqlObject, Serializable {
 
     default void save(Submission submission) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("submission_id", submission.getId() < 1 ? null : submission.getId());
-        params.put("course_id", submission.getCourseId());
+        params.put("submission_id", SqlHelper.toNullable(submission.getId()));
+        params.put("course_id", SqlHelper.toNullable(submission.getCourseId()));
         params.put("title", submission.getTitle());
         params.put("description", submission.getDescription());
         params.put("open_datetime", submission.getOpenDatetime());
         params.put("close_datetime", submission.getCloseDatetime());
         params.put("number_of_resources", submission.getNoOfResources());
-        params.put("survey_resource_id", submission.getSurveyResourceId());
+        params.put("survey_resource_id", SqlHelper.toNullable(submission.getSurveyResourceId()));
 
         Optional<Integer> submissionId = SqlHelper.handleSave(getHandle(), "lw_submission", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -136,8 +135,8 @@ public interface SubmissionDao extends SqlObject, Serializable {
             submission.setCourseId(rs.getInt("course_id"));
             submission.setTitle(rs.getString("title"));
             submission.setDescription(rs.getString("description"));
-            submission.setOpenDatetime(RsHelper.getLocalDateTime(rs.getTimestamp("open_datetime")));
-            submission.setCloseDatetime(RsHelper.getLocalDateTime(rs.getTimestamp("close_datetime")));
+            submission.setOpenDatetime(SqlHelper.getLocalDateTime(rs.getTimestamp("open_datetime")));
+            submission.setCloseDatetime(SqlHelper.getLocalDateTime(rs.getTimestamp("close_datetime")));
             submission.setNoOfResources(rs.getInt("number_of_resources"));
             submission.setSurveyResourceId(rs.getInt("survey_resource_id"));
             return submission;

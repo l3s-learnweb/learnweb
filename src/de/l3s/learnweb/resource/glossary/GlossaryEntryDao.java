@@ -25,7 +25,6 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.UseRowReducer;
 
 import de.l3s.learnweb.dashboard.glossary.GlossaryDescriptionSummary;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(GlossaryEntryDao.GlossaryEntryMapper.class)
@@ -61,18 +60,18 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
     List<GlossaryDescriptionSummary> countGlossaryDescriptionSummary(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     default void save(GlossaryEntry entry) {
-        if (entry.getUserId() <= 0) {
+        if (entry.getUserId() == 0) {
             entry.setUserId(entry.getLastChangedByUserId()); // last change by userID == original user ID in insert
         }
 
         entry.setTimestamp(LocalDateTime.now());
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("entry_id", entry.getId() < 1 ? null : entry.getId());
+        params.put("entry_id", SqlHelper.toNullable(entry.getId()));
         params.put("resource_id", entry.getResourceId());
-        params.put("original_entry_id", entry.getOriginalEntryId());
-        params.put("last_changed_by_user_id", entry.getLastChangedByUserId());
-        params.put("user_id", entry.getUserId());
+        params.put("original_entry_id", SqlHelper.toNullable(entry.getOriginalEntryId()));
+        params.put("last_changed_by_user_id", SqlHelper.toNullable(entry.getLastChangedByUserId()));
+        params.put("user_id", SqlHelper.toNullable(entry.getUserId()));
         params.put("topic_one", entry.getTopicOne());
         params.put("topic_two", entry.getTopicTwo());
         params.put("topic_three", entry.getTopicThree());
@@ -94,7 +93,7 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
             entry.setDeleted(false);
             entry.setResourceId(rs.getInt("resource_id"));
             entry.setId(rs.getInt("entry_id"));
-            entry.setOriginalEntryId(RsHelper.getInteger(rs, "original_entry_id"));
+            entry.setOriginalEntryId(rs.getInt("original_entry_id"));
             entry.setUserId(rs.getInt("user_id"));
             entry.setTopicOne(rs.getString("topic_one"));
             entry.setTopicTwo(rs.getString("topic_two"));
@@ -102,7 +101,7 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
             entry.setDescription(rs.getString("description"));
             entry.setDescriptionPasted(rs.getBoolean("description_pasted"));
             entry.setImported(rs.getBoolean("imported"));
-            entry.setTimestamp(RsHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
+            entry.setTimestamp(SqlHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
             return entry;
         }
     }

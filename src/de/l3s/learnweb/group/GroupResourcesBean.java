@@ -136,7 +136,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             view = ResourceView.list;
         }
 
-        if (groupId > 0) {
+        if (groupId != 0) {
             group = groupDao.findById(groupId);
             BeanAssert.isFound(group);
 
@@ -146,7 +146,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             group = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());
         }
 
-        if (folderId > 0) {
+        if (folderId != 0) {
             currentFolder = folderDao.findById(folderId);
             BeanAssert.validate(currentFolder, "The requested folder can't be found.");
         }
@@ -280,7 +280,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         if (breadcrumbs == null && currentFolder != null) {
             breadcrumbs = new ArrayList<>();
             Folder folder = currentFolder;
-            while (folder != null && folder.getId() > 0) {
+            while (folder != null && folder.getId() != 0) {
                 breadcrumbs.add(0, folder);
                 folder = folder.getParentFolder();
             }
@@ -348,7 +348,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
                     break;
             }
 
-            if (items.failed() > 0) {
+            if (items.failed() != 0) {
                 addGrowl(FacesMessage.SEVERITY_WARN, "For some reason, {0, choice, 1#{0} resource|1<{0} of resources} can not be processed.", items.failed());
             }
         } catch (IllegalArgumentException | IllegalAccessError | JsonParseException e) { // these exceptions will have user friendly messages
@@ -390,7 +390,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             items.addTotalFailed(copyChild.failed());
         }
 
-        if (!isRecursion && items.getTotalSize() > 0) {
+        if (!isRecursion && items.getTotalSize() != 0) {
             addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.copied_successfully", items.getTotalSize());
         }
     }
@@ -436,7 +436,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             log(Action.move_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
         }
 
-        if (skipped > 0) {
+        if (skipped != 0) {
             addGrowl(FacesMessage.SEVERITY_WARN, "For some reasons, {0, choice, 1#{0} resource|1<{0} of resources} were skipped.", skipped);
         }
         if (items.size() - skipped > 0) {
@@ -477,7 +477,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             clearCaches();
         }
 
-        if (skipped > 0) {
+        if (skipped != 0) {
             addGrowl(FacesMessage.SEVERITY_WARN, "For some reasons, {0, choice, 1#{0} resource|1<{0} of resources} were skipped.", skipped);
         }
     }
@@ -499,7 +499,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.annotated_successfully", items.getResources().size());
         }
 
-        if (skipped > 0) {
+        if (skipped != 0) {
             addGrowl(FacesMessage.SEVERITY_WARN, "For some reasons, {0, choice, 1#{0} resource|1<{0} of resources} were skipped.", skipped);
         }
     }

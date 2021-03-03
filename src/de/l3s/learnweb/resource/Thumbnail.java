@@ -11,11 +11,11 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable, Cloneable
     private static final Logger log = LogManager.getLogger(Thumbnail.class);
 
     private final String url;
-    private final Integer fileId;
+    private final int fileId;
     private int width = 0;
     private int height = 0;
 
-    public Thumbnail(String url, Integer width, Integer height, Integer fileId) {
+    public Thumbnail(String url, Integer width, Integer height, int fileId) {
         this.url = url;
         this.fileId = fileId;
 
@@ -33,7 +33,7 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable, Cloneable
     }
 
     public Thumbnail(String url, int width, int height) {
-        this(url, width, height, null);
+        this(url, width, height, 0);
     }
 
     /**
@@ -87,7 +87,7 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable, Cloneable
             return false;
         }
         final Thumbnail thumbnail = (Thumbnail) o;
-        return width == thumbnail.width && height == thumbnail.height && fileId.equals(thumbnail.fileId) && Objects.equals(url, thumbnail.url);
+        return width == thumbnail.width && height == thumbnail.height && fileId == thumbnail.fileId && Objects.equals(url, thumbnail.url);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable, Cloneable
     /**
      * The file id is null if the thumbnail is not stored in learnweb.
      */
-    public Integer getFileId() {
+    public int getFileId() {
         return fileId;
     }
 

@@ -63,7 +63,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public List<SearchSession> getSessions() {
-        if (sessions == null && showGroupHistory && selectedGroupId > 0) {
+        if (sessions == null && showGroupHistory && selectedGroupId != 0) {
             sessions = searchHistoryDao.findSessionsByGroupId(selectedGroupId);
         } else if (sessions == null && !showGroupHistory) {
             sessions = searchHistoryDao.findSessionsByUserId(selectedUserId);

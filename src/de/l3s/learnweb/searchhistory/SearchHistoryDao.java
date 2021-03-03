@@ -23,7 +23,7 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.Thumbnail;
 import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.RsHelper;
+import de.l3s.util.SqlHelper;
 import de.l3s.util.StringHelper;
 
 public interface SearchHistoryDao extends SqlObject, Serializable {
@@ -54,7 +54,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 int resourceId = rs.getInt("resource_id");
 
                 Resource res;
-                if (resourceId > 0) {
+                if (resourceId != 0) {
                     res = resourceDao.findById(resourceId);
                 } else {
                     res = new Resource();
@@ -114,7 +114,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     void insertAction(int searchId, int rank, User user, SearchAction action);
 
     default void insertResources(int searchId, List<ResourceDecorator> resources) {
-        if (resources.isEmpty() || searchId < 0) { // failed to log query, no need to log resources
+        if (resources.isEmpty() || searchId == 0) { // failed to log query, no need to log resources
             return;
         }
 
@@ -125,7 +125,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             batch.bind(0, searchId);
             batch.bind(1, decoratedResource.getRank());
 
-            if (decoratedResource.getResource().getId() > 0) { // resource is stored in Learnweb, we do not need to save the title or description
+            if (decoratedResource.getResource().getId() != 0) {
+                // resource is stored in Learnweb, we do not need to save the title or description
                 batch.bind(2, decoratedResource.getResource().getId());
                 batch.bindNull(3, Types.VARCHAR);
                 batch.bindNull(4, Types.VARCHAR);
@@ -133,7 +134,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 batch.bindNull(6, Types.VARCHAR);
                 batch.bindNull(7, Types.INTEGER);
                 batch.bindNull(8, Types.INTEGER);
-            } else { // no learnweb resource -> store title URL and description
+            } else {
+                // no learnweb resource -> store title URL and description
                 batch.bindNull(2, Types.INTEGER);
                 batch.bind(3, decoratedResource.getUrl());
                 batch.bind(4, StringHelper.shortnString(decoratedResource.getTitle(), 250));
@@ -163,7 +165,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 rs.getInt("search_id"),
                 rs.getString("query"),
                 rs.getString("mode"),
-                RsHelper.getLocalDateTime(rs.getTimestamp("timestamp")),
+                SqlHelper.getLocalDateTime(rs.getTimestamp("timestamp")),
                 rs.getString("service")
             );
         }

@@ -8,7 +8,7 @@ import de.l3s.learnweb.user.User;
 public class GlossaryUserActivity implements Serializable {
     private static final long serialVersionUID = 7241101860157505330L;
 
-    private int userId = -1;
+    private int userId;
     private int totalGlossaries = 0;
     private int totalTerms = 0;
     private int totalReferences = 0;
@@ -23,7 +23,7 @@ public class GlossaryUserActivity implements Serializable {
     }
 
     public User getUser() {
-        if (null == user && userId > 0) {
+        if (null == user && userId != 0) {
             user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;

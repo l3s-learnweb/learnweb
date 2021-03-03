@@ -15,7 +15,7 @@ public class SolrPaginator extends AbstractPaginator {
     private static final long serialVersionUID = 3823389610985272265L;
 
     private final SolrSearch search;
-    private int searchLogId = -1;
+    private int searchLogId;
 
     private List<FacetField> facetFieldsResults;
     private Map<String, Integer> facetQueriesResults;
@@ -48,7 +48,7 @@ public class SolrPaginator extends AbstractPaginator {
         facetQueriesResults = search.getResultsFacetQuery();
 
         setCurrentPageCache(results);
-        if (searchLogId > 0) {
+        if (searchLogId != 0) {
             Learnweb.dao().getSearchHistoryDao().insertResources(searchLogId, results);
         }
         return results;

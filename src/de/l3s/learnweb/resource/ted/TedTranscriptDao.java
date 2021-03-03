@@ -24,7 +24,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 public interface TedTranscriptDao extends SqlObject, Serializable {
@@ -147,8 +146,8 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
 
     default void saveTedVideo(TedVideo video) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("ted_id", video.getTedId() < 1 ? null : video.getTedId());
-        params.put("resource_id", video.getResourceId());
+        params.put("ted_id", SqlHelper.toNullable(video.getTedId()));
+        params.put("resource_id", SqlHelper.toNullable(video.getResourceId()));
         params.put("slug", video.getSlug());
         params.put("title", video.getTitle());
         params.put("description", video.getDescription());
@@ -176,7 +175,7 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
             video.setTitle(rs.getString("title"));
             video.setDescription(rs.getString("description"));
             video.setViewedCount(rs.getInt("viewed_count"));
-            video.setPublishedAt(RsHelper.getLocalDateTime(rs.getTimestamp("published_at")));
+            video.setPublishedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("published_at")));
             video.setPhotoUrl(rs.getString("photo1_url"));
             video.setPhotoWidth(rs.getInt("photo1_width"));
             video.setPhotoHeight(rs.getInt("photo1_height"));

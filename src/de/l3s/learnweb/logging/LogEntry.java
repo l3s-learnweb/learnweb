@@ -81,7 +81,7 @@ public class LogEntry implements Serializable {
 
     public Resource getResource() {
         if (resource == null) {
-            if (action.getTargetId() == ActionTargetId.RESOURCE_ID && targetId > 0) {
+            if (action.getTargetId() == ActionTargetId.RESOURCE_ID && targetId != 0) {
                 Resource r = Learnweb.dao().getResourceDao().findById(targetId);
 
                 resource = (r == null || r.isDeleted()) ? Optional.empty() : Optional.of(r);
@@ -93,7 +93,7 @@ public class LogEntry implements Serializable {
     }
 
     public boolean isQueryNeeded() {
-        return action == Action.adding_resource && getResource() != null && !getResource().getQuery().equalsIgnoreCase("none");
+        return action == Action.adding_resource && getResource() != null && getResource().getQuery() != null;
     }
 
     private String getGroupLink(Locale locale) {

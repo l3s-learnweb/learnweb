@@ -122,7 +122,7 @@ public class SaverServlet extends HttpServlet {
         File previousFile = file.clone();
 
         // save copy of existing file as a history file
-        previousFile.setType(TYPE.HISTORY_FILE);
+        previousFile.setType(TYPE.DOC_HISTORY);
         fileDao.save(previousFile, file.getInputStream());
 
         file.setLastModified(null); // the correct value will be set on save
@@ -147,7 +147,7 @@ public class SaverServlet extends HttpServlet {
     private void saveDocumentHistory(CallbackData data, File file) throws IOException {
         File changesFile = new File();
         changesFile.setResourceId(file.getResourceId());
-        changesFile.setType(TYPE.CHANGES);
+        changesFile.setType(TYPE.DOC_CHANGES);
         changesFile.setName("changes.zip");
         changesFile.setMimeType("zip");
         fileDao.save(changesFile, UrlHelper.getInputStream(data.getChangesUrl()));

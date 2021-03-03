@@ -17,7 +17,6 @@ import org.jdbi.v3.sqlobject.config.ValueColumn;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(ForumPostDao.ForumPostMapper.class)
@@ -45,15 +44,15 @@ public interface ForumPostDao extends SqlObject, Serializable {
 
     default void save(ForumPost post) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("post_id", post.getId() < 1 ? null : post.getId());
+        params.put("post_id", SqlHelper.toNullable(post.getId()));
         params.put("deleted", post.isDeleted());
         params.put("topic_id", post.getTopicId());
-        params.put("user_id", post.getUserId());
+        params.put("user_id", SqlHelper.toNullable(post.getUserId()));
         params.put("text", post.getText());
         params.put("post_time", post.getDate());
         params.put("post_edit_time", post.getLastEditDate());
         params.put("post_edit_count", post.getEditCount());
-        params.put("post_edit_user_id", post.getEditUserId());
+        params.put("post_edit_user_id", SqlHelper.toNullable(post.getEditUserId()));
         params.put("category", post.getCategory());
 
         Optional<Integer> postId = SqlHelper.handleSave(getHandle(), "lw_forum_post", params)
@@ -70,10 +69,10 @@ public interface ForumPostDao extends SqlObject, Serializable {
             post.setTopicId(rs.getInt("topic_id"));
             post.setUserId(rs.getInt("user_id"));
             post.setText(rs.getString("text"));
-            post.setDate(RsHelper.getLocalDateTime(rs.getTimestamp("post_time")));
-            post.setLastEditDate(RsHelper.getLocalDateTime(rs.getTimestamp("post_edit_time")));
+            post.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("post_time")));
+            post.setLastEditDate(SqlHelper.getLocalDateTime(rs.getTimestamp("post_edit_time")));
             post.setEditCount(rs.getInt("post_edit_count"));
-            post.setEditUserId(RsHelper.getInteger(rs, "post_edit_user_id"));
+            post.setEditUserId(rs.getInt("post_edit_user_id"));
             post.setCategory(rs.getString("category"));
             return post;
         }

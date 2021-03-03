@@ -25,7 +25,6 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.util.Cache;
 import de.l3s.util.HasId;
 import de.l3s.util.ICache;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(FileDao.FileMapper.class)
@@ -91,8 +90,8 @@ public interface FileDao extends SqlObject, Serializable {
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("file_id", file.getId() < 1 ? null : file.getId());
-        params.put("resource_id", file.getResourceId());
+        params.put("file_id", SqlHelper.toNullable(file.getId()));
+        params.put("resource_id", SqlHelper.toNullable(file.getResourceId()));
         params.put("resource_file_number", file.getType().ordinal());
         params.put("name", file.getName());
         params.put("mime_type", file.getMimeType());
@@ -122,12 +121,12 @@ public interface FileDao extends SqlObject, Serializable {
             if (file == null) {
                 file = new File();
                 file.setId(rs.getInt("file_id"));
-                file.setResourceId(RsHelper.getInteger(rs, "resource_id"));
+                file.setResourceId(rs.getInt("resource_id"));
                 file.setType(File.TYPE.values()[rs.getInt("resource_file_number")]);
                 file.setName(rs.getString("name"));
                 file.setMimeType(rs.getString("mime_type"));
                 file.setDownloadLogActivated(rs.getBoolean("log_actived"));
-                file.setLastModified(RsHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
+                file.setLastModified(SqlHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
 
                 if (!file.getActualFile().exists()) {
                     LogManager.getLogger(FileMapper.class).warn("Can't find file '{}' for resource {}",

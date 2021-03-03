@@ -28,7 +28,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.util.Cache;
 import de.l3s.util.HashHelper;
 import de.l3s.util.ICache;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(UserDao.UserMapper.class)
@@ -198,18 +197,18 @@ public interface UserDao extends SqlObject, Serializable {
         Objects.requireNonNull(user.getRegistrationDate());
 
         // for new users double check that the username is free. If not the existing user will be overwritten
-        if (user.getId() <= 0 && findByUsername(user.getRealUsername()).isPresent()) {
+        if (user.getId() == 0 && findByUsername(user.getRealUsername()).isPresent()) {
             throw new IllegalArgumentException("Username is already taken");
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("user_id", user.getId() < 1 ? null : user.getId());
+        params.put("user_id", SqlHelper.toNullable(user.getId()));
         params.put("username", user.getUsername());
         params.put("email", user.getEmail());
         params.put("email_confirmation_token", user.getEmailConfirmationToken());
         params.put("is_email_confirmed", user.isEmailConfirmed());
         params.put("organisation_id", user.getOrganisationId());
-        params.put("image_file_id", user.getImageFileId());
+        params.put("image_file_id", SqlHelper.toNullable(user.getImageFileId()));
         params.put("gender", user.getGender().ordinal());
         params.put("dateofbirth", user.getDateOfBirth());
         params.put("address", user.getAddress());
@@ -273,9 +272,9 @@ public interface UserDao extends SqlObject, Serializable {
                 user.setPasswordRaw(rs.getString("password"));
                 user.setHashing(rs.getString("hashing"));
                 user.setOrganisationId(rs.getInt("organisation_id"));
-                user.setImageFileId(RsHelper.getInteger(rs, "image_file_id"));
+                user.setImageFileId(rs.getInt("image_file_id"));
                 user.setGender(User.Gender.values()[rs.getInt("gender")]);
-                user.setDateOfBirth(RsHelper.getLocalDate(rs.getDate("dateofbirth")));
+                user.setDateOfBirth(SqlHelper.getLocalDate(rs.getDate("dateofbirth")));
                 user.setFullName(rs.getString("fullname"));
                 user.setAffiliation(rs.getString("affiliation"));
                 user.setAddress(rs.getString("address"));
@@ -283,7 +282,7 @@ public interface UserDao extends SqlObject, Serializable {
                 user.setAdditionalInformation(rs.getString("additionalinformation"));
                 user.setInterest(rs.getString("interest"));
                 user.setStudentId(rs.getString("student_identifier"));
-                user.setRegistrationDate(RsHelper.getLocalDateTime(rs.getTimestamp("registration_date")));
+                user.setRegistrationDate(SqlHelper.getLocalDateTime(rs.getTimestamp("registration_date")));
                 user.setCredits(rs.getString("credits"));
                 user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
                 user.setPreferredNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("preferred_notification_frequency")));

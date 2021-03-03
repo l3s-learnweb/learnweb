@@ -62,7 +62,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private BitSet options = new BitSet(Option.values().length);
     private List<MetadataField> metadataFields = new LinkedList<>();
     private transient String bannerImage;
-    private Integer bannerImageFileId;
+    private int bannerImageFileId;
     private String cssFile; // optional CSS file to load
     private List<Locale> glossaryLanguages = new ArrayList<>(4); // languages that can be used to construct a glossary
 
@@ -80,7 +80,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
      * Create a new organisation with default values to avoid NPEs.
      */
     public Organisation(String title) {
-        this(-1);
+        this(0);
 
         setTitle(title);
         setLanguageVariant(null);
@@ -352,7 +352,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         }
 
         if (null == bannerImage) {
-            if (bannerImageFileId == null) {
+            if (bannerImageFileId == 0) {
                 return null;
             }
 
@@ -367,11 +367,11 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         return bannerImage;
     }
 
-    public Integer getBannerImageFileId() {
+    public int getBannerImageFileId() {
         return bannerImageFileId;
     }
 
-    public void setBannerImageFileId(Integer bannerImageFileId) {
+    public void setBannerImageFileId(int bannerImageFileId) {
         this.bannerImageFileId = bannerImageFileId;
         this.bannerImage = null; // clear cache
     }

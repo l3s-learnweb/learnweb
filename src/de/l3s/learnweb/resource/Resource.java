@@ -59,7 +59,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         WORLD_READABLE, //all internet users with access to url can view resource
     }
 
-    private int id = -1; // default id, that indicates that this resource is not stored at fedora
+    private int id; // default id, that indicates that this resource is not stored at fedora
     private int groupId;
     private int folderId;
     private String title;
@@ -70,19 +70,19 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private ResourceService source; // The place where the resource was found
     private String location = ""; // The location where the resource content (e.g. video) is stored; for example Learnweb, Flickr, Youtube ...
     private String language; // language code
-    private String author = "";
+    private String author;
     private ResourceType type;
-    private String format = ""; // original mineType of the resource
+    private String format; // original mineType of the resource
     private int duration;
     private int ownerUserId;
-    private String idAtService = "";
+    private String idAtService;
     private int ratingSum;
     private int rateNumber;
     private String fileName; // stores the file name of uploaded resource
     private String fileUrl;
     private String maxImageUrl; // an url to the largest image preview of this resource
     private String query; // the query which was used to find this resource
-    private Integer originalResourceId; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
+    private int originalResourceId; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
     private String machineDescription;
     private Thumbnail thumbnail0; // 160x120            200x150px smallest thumbnail used on website (actual display size 160x120)
     private Thumbnail thumbnail1; // 150px
@@ -128,7 +128,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * Copy constructor.
      */
     public Resource(Resource old) {
-        setId(-1);
         setGroupId(old.groupId);
         setFolderId(old.folderId);
         setTitle(old.title);
@@ -165,7 +164,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
         // sets the originalResourceId to the id of the source resource
-        if (old.originalResourceId == null) {
+        if (old.originalResourceId == 0) {
             setOriginalResourceId(old.id);
         } else {
             setOriginalResourceId(old.originalResourceId);
@@ -218,7 +217,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public List<Comment> getComments() {
-        if (id != -1 && comments == null) {
+        if (comments == null && id != 0) {
             comments = Learnweb.dao().getCommentDao().findByResourceId(id);
         }
 
@@ -287,7 +286,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     @Override
     public User getUser() {
-        if (null == owner && ownerUserId > 0) {
+        if (null == owner && ownerUserId != 0) {
             owner = Learnweb.dao().getUserDao().findById(ownerUserId);
         }
         return owner;
@@ -300,7 +299,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public Group getOriginalGroup() {
-        if (originalResourceId == null) {
+        if (originalResourceId == 0) {
             return null;
         }
 
@@ -498,7 +497,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public OwnerList<Tag, User> getTags() {
-        if (null == tags || id != -1) {
+        if (tags == null && id != 0) {
             tags = Learnweb.dao().getTagDao().findByResourceId(id);
         }
         return tags;
@@ -682,7 +681,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public String getServiceIcon() {
-        if (getId() != -1) { // is stored in Learnweb
+        if (id != 0) { // is stored in Learnweb
             return "/resources/images/services/learnweb.png";
         }
 
@@ -735,9 +734,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * @return the query which was used to find this resource
      */
     public String getQuery() {
-        if (query == null) {
-            return "none";
-        }
         return query;
     }
 
@@ -751,14 +747,14 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     /**
      * @return if the resource was copied from an older Learnweb resource this returns the id of the original resource <b>0</b> otherwise
      */
-    public Integer getOriginalResourceId() {
+    public int getOriginalResourceId() {
         return originalResourceId;
     }
 
     /**
      * @param originalResourceId if the resource was copied from an older Learnweb resource this stores the id of the original resource
      */
-    public void setOriginalResourceId(Integer originalResourceId) {
+    public void setOriginalResourceId(int originalResourceId) {
         this.originalResourceId = originalResourceId;
     }
 
@@ -799,7 +795,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         if (files == null) {
             files = new LinkedHashMap<>();
 
-            if (id > 0) {
+            if (id != 0) {
                 List<File> loadedFiles = Learnweb.dao().getFileDao().findByResourceId(id);
 
                 for (File file : loadedFiles) {
@@ -831,7 +827,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     public void addFile(File file) {
         getFiles().put(file.getType().ordinal(), file);
 
-        if (id > 0 && file.getResourceId() == null) { // the resource is already stored, the new file needs to be added to the database
+        if (id != 0 && file.getResourceId() == 0) { // the resource is already stored, the new file needs to be added to the database
             file.setResourceId(id);
             Learnweb.dao().getFileDao().updateResource(this, file);
         }
@@ -1047,7 +1043,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public LinkedList<ArchiveUrl> getArchiveUrls() {
-        if (id != -1 && archiveUrls == null) {
+        if (archiveUrls == null && id != 0) {
             archiveUrls = new LinkedList<>(Learnweb.dao().getArchiveUrlDao().findByResourceId(id));
             archiveUrls.addAll(Learnweb.dao().getWaybackUrlDao().findByUrl(url));
         }

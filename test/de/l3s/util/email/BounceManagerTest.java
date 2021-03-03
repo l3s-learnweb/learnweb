@@ -43,7 +43,7 @@ class BounceManagerTest {
             bounceFolder.open(Folder.READ_ONLY);
             Message[] bounces = bounceFolder.getMessages();
 
-            if (bounces.length > 0) {
+            if (bounces.length != 0) {
                 log.debug("Bounced emails folder contains {} messages. Oldest and newest messages printed below:", bounceFolder.getMessageCount());
                 log.debug("{} {}", bounces[0].getSubject(), bounces[0].getReceivedDate());
                 log.debug("{} {}", bounces[bounces.length - 1].getSubject(), bounces[bounces.length - 1].getReceivedDate());

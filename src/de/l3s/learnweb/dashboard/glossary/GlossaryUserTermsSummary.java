@@ -8,7 +8,7 @@ import de.l3s.learnweb.user.User;
 public class GlossaryUserTermsSummary implements Serializable {
     private static final long serialVersionUID = 8450045158991797739L;
 
-    private int userId = -1;
+    private int userId;
     private int terms;
     private int termsPasted;
     private int pronounciation;
@@ -34,7 +34,7 @@ public class GlossaryUserTermsSummary implements Serializable {
     }
 
     public User getUser() {
-        if (null == user && userId > 0) {
+        if (null == user && userId != 0) {
             user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;

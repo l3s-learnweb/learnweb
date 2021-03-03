@@ -69,7 +69,7 @@ public class Search implements Serializable {
         this.interweb = interweb;
         this.query = query;
         this.searchFilters = sf;
-        this.userId = (null == user) ? -1 : user.getId();
+        this.userId = (null == user) ? 0 : user.getId();
         this.user = user;
         this.solrSearch = new SolrSearch(query, user);
 
@@ -209,7 +209,7 @@ public class Search implements Serializable {
         for (ResourceDecorator decoratedResource : learnwebResources) {
             Resource resource = decoratedResource.getResource();
 
-            if (resource.getId() > 0 && resource.getGroupId() == 0 && resource.getUserId() != userId) {
+            if (resource.getId() != 0 && resource.getGroupId() == 0 && resource.getUserId() != userId) {
                 // the resource is stored in learnweb, belongs to no group and the current user is not the owner
                 // of the resource. So he is not allowed to view the resource
                 privateResourceCount++;
@@ -236,7 +236,7 @@ public class Search implements Serializable {
             newResources.add(decoratedResource);
         }
 
-        if (notSatisfyFiltersCount > 0 || privateResourceCount > 0 || duplicatedUrlCount > 0) {
+        if (notSatisfyFiltersCount != 0 || privateResourceCount != 0 || duplicatedUrlCount != 0) {
             this.removedResourceCount += duplicatedUrlCount + privateResourceCount + notSatisfyFiltersCount;
             log.debug("Filtered {} resources and skipped {} private resources, {} duplicated resources",
                 notSatisfyFiltersCount, privateResourceCount, duplicatedUrlCount);
@@ -327,7 +327,7 @@ public class Search implements Serializable {
             newResources.add(decoratedResource);
         }
 
-        if (notSatisfyFiltersCount > 0 || duplicatedUrlCount > 0) {
+        if (notSatisfyFiltersCount != 0 || duplicatedUrlCount != 0) {
             this.removedResourceCount += duplicatedUrlCount + notSatisfyFiltersCount;
             log.debug("Filtered {} resources and skipped {} duplicated resources", notSatisfyFiltersCount, duplicatedUrlCount);
         }
@@ -464,7 +464,7 @@ public class Search implements Serializable {
 
         //call the method to fetch the html of the logged resources
         //only if search_mode='text' and userId is admin/specificUser
-        if (searchId > 0) {
+        if (searchId != 0) {
             Learnweb.dao().getSearchHistoryDao().insertResources(searchId, resources);
         }
     }

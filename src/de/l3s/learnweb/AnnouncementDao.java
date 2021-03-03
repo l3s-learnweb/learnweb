@@ -16,7 +16,6 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(AnnouncementDao.AnnouncementMapper.class)
@@ -39,10 +38,10 @@ public interface AnnouncementDao extends SqlObject, Serializable {
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("news_id", announcement.getId() < 1 ? null : announcement.getId());
+        params.put("news_id", SqlHelper.toNullable(announcement.getId()));
         params.put("title", announcement.getTitle());
         params.put("message", announcement.getText());
-        params.put("user_id", announcement.getUserId());
+        params.put("user_id", SqlHelper.toNullable(announcement.getUserId()));
         params.put("hidden", announcement.isHidden());
         params.put("created_at", announcement.getDate());
 
@@ -61,7 +60,7 @@ public interface AnnouncementDao extends SqlObject, Serializable {
             announcement.setText(rs.getString("message"));
             announcement.setUserId(rs.getInt("user_id"));
             announcement.setHidden(rs.getBoolean("hidden"));
-            announcement.setDate(RsHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            announcement.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return announcement;
         }
     }

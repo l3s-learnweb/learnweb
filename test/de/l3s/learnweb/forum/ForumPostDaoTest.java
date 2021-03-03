@@ -76,7 +76,7 @@ class ForumPostDaoTest {
         post.setUserId(2);
         post.setText("original forum post text");
         forumPostDao.save(post);
-        assertTrue(post.getId() > 0);
+        assertTrue(post.getId() != 0);
 
         Optional<ForumPost> retrieved = forumPostDao.findById(post.getId());
         assertTrue(retrieved.isPresent());

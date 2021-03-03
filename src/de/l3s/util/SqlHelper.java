@@ -1,5 +1,10 @@
 package de.l3s.util;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.LinkedHashMap;
 
 import org.apache.commons.lang3.StringUtils;
@@ -7,6 +12,34 @@ import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.statement.Update;
 
 public final class SqlHelper {
+
+    public static Integer toNullable(int value) {
+        return value == 0 ? null : value;
+    }
+
+    public static Long toNullable(long value) {
+        return value == 0 ? null : value;
+    }
+
+    public static String toNullable(String value) {
+        return StringUtils.isBlank(value) ? null : value.trim();
+    }
+
+    public static Instant getInstant(Timestamp timestamp) {
+        return timestamp == null ? null : timestamp.toInstant();
+    }
+
+    public static LocalDateTime getLocalDateTime(Timestamp timestamp) {
+        return timestamp == null ? null : timestamp.toLocalDateTime();
+    }
+
+    public static LocalDateTime getLocalDateTime(final int lastVisit) {
+        return LocalDateTime.ofEpochSecond(lastVisit, 0, ZoneOffset.UTC);
+    }
+
+    public static LocalDate getLocalDate(java.sql.Date date) {
+        return date == null ? null : date.toLocalDate();
+    }
 
     /**
      * Creates {@link Update} statement with `INSERT INTO tableName ON DUPLICATE KEY UPDATE ...` query and bound given parameters.

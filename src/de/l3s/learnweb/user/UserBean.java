@@ -92,11 +92,7 @@ public class UserBean implements Serializable {
      * The currently logged in user.
      */
     public User getUser() {
-        if (userId == 0) {
-            return null;
-        }
-
-        if (user == null) {
+        if (user == null && userId != 0) {
             user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;

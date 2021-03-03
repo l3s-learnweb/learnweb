@@ -160,7 +160,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         registerUser(user);
 
-        if (course.getDefaultGroupId() != null || StringUtils.isNumeric(group)) {
+        if (course.getDefaultGroupId() != 0 || StringUtils.isNumeric(group)) {
             joinDefaultGroup(user);
         }
 
@@ -189,12 +189,12 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     }
 
     private void joinDefaultGroup(final User user) {
-        int groupToJoin = Optional.ofNullable(course.getDefaultGroupId()).orElse(0);
+        int groupToJoin = course.getDefaultGroupId();
         if (StringUtils.isNumeric(group)) {
             groupToJoin = NumberUtils.toInt(group);
         }
 
-        if (groupToJoin > 0) {
+        if (groupToJoin != 0) {
             user.joinGroup(dao().getGroupDao().findById(groupToJoin));
             log(Action.group_joining, groupToJoin, groupToJoin, null, user);
         }

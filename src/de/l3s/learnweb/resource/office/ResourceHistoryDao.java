@@ -55,12 +55,12 @@ public interface ResourceHistoryDao extends SqlObject, Serializable {
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("resource_history_id", history.getId() < 1 ? null : history.getId());
-        params.put("resource_id", history.getResourceId());
-        params.put("user_id", history.getUser().get("id").getAsInt());
-        params.put("file_id", history.getFileId());
-        params.put("prev_file_id", history.getPrevFileId());
-        params.put("changes_file_id", history.getChangesFileId());
+        params.put("resource_history_id", SqlHelper.toNullable(history.getId()));
+        params.put("resource_id", SqlHelper.toNullable(history.getResourceId()));
+        params.put("user_id", SqlHelper.toNullable(history.getUser().get("id").getAsInt()));
+        params.put("file_id", SqlHelper.toNullable(history.getFileId()));
+        params.put("prev_file_id", SqlHelper.toNullable(history.getPrevFileId()));
+        params.put("changes_file_id", SqlHelper.toNullable(history.getChangesFileId()));
         params.put("server_version", history.getServerVersion());
         params.put("document_created", history.getCreated());
         params.put("document_key", history.getKey());

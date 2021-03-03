@@ -16,7 +16,6 @@ import org.jdbi.v3.sqlobject.customizer.BindList;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(CommentDao.CommentMapper.class)
@@ -38,9 +37,9 @@ public interface CommentDao extends SqlObject, Serializable {
 
     default void save(Comment comment) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("comment_id", comment.getId() < 1 ? null : comment.getId());
-        params.put("resource_id", comment.getResourceId());
-        params.put("user_id", comment.getUserId());
+        params.put("comment_id", SqlHelper.toNullable(comment.getId()));
+        params.put("resource_id", SqlHelper.toNullable(comment.getResourceId()));
+        params.put("user_id", SqlHelper.toNullable(comment.getUserId()));
         params.put("text", comment.getText());
         params.put("date", comment.getDate());
 
@@ -58,7 +57,7 @@ public interface CommentDao extends SqlObject, Serializable {
             comment.setResourceId(rs.getInt("resource_id"));
             comment.setUserId(rs.getInt("user_id"));
             comment.setText(rs.getString("text"));
-            comment.setDate(RsHelper.getLocalDateTime(rs.getTimestamp("date")));
+            comment.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("date")));
             return comment;
         }
     }

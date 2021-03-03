@@ -15,8 +15,8 @@ import de.l3s.util.HasId;
 public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable {
     private static final long serialVersionUID = 1251808024273639912L;
 
-    private int id = -1;
-    private Integer originalEntryId; // When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
+    private int id;
+    private int originalEntryId; // When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
     private int resourceId;
     private boolean deleted;
     private int userId; // the user who created this entry
@@ -46,7 +46,7 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
      * copy constructor.
      */
     public GlossaryEntry(GlossaryEntry oldEntry) {
-        setId(-1);
+        setId(0);
         setOriginalEntryId(oldEntry.id);
         setResourceId(oldEntry.resourceId);
         setDeleted(oldEntry.deleted);
@@ -212,11 +212,11 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
         this.lastChangedByUserId = lastChangedByUserId;
     }
 
-    public Integer getOriginalEntryId() {
+    public int getOriginalEntryId() {
         return originalEntryId;
     }
 
-    public void setOriginalEntryId(Integer originalEntryId) {
+    public void setOriginalEntryId(int originalEntryId) {
         this.originalEntryId = originalEntryId;
     }
 

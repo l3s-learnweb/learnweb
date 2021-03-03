@@ -62,7 +62,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
     }
 
     public boolean isReplyDialog() {
-        return dialogPost.getId() == -1;
+        return dialogPost.getId() == 0;
     }
 
     public void saveDialogPost() {

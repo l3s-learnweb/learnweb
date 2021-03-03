@@ -78,7 +78,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
                     entry.setDeleted(resource.isDeleted());
                     entry.setLastChangedByUserId(resource.getUserId());
                     entry.setResourceId(resource.getId());
-                    entry.getTerms().forEach(term -> term.setId(-1));
+                    entry.getTerms().forEach(term -> term.setId(0));
                     getGlossaryEntryDao().save(entry);
 
                     saveTerms(entry);
@@ -96,7 +96,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
 
     default void saveTerms(GlossaryEntry entry) {
         for (GlossaryTerm term : entry.getTerms()) {
-            if (term.getId() < 0) {
+            if (term.getId() == 0) {
                 term.setEntryId(entry.getId());
                 term.setUserId(entry.getUserId());
             }

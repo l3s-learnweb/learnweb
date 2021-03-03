@@ -40,7 +40,7 @@ public class SurveyBean extends ApplicationBean implements Serializable {
         BeanAssert.hasPermission(resource.canViewResource(getUser()));
 
         // whose answers shall be viewed
-        if (surveyUserId <= 0 || surveyUserId == getUser().getId()) {
+        if (surveyUserId == 0 || surveyUserId == getUser().getId()) {
             // by default view the answers of the current user
             surveyUserId = getUser().getId();
         } else {

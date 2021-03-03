@@ -84,8 +84,8 @@ public class SurveyQuestion implements Deletable, Serializable, Cloneable {
     }
 
     public SurveyQuestion(SurveyQuestion question) {
-        setId(-1);
-        setSurveyId(-1);
+        setId(0);
+        setSurveyId(0);
         setLabel(question.label);
         setInfo(question.info);
         setOptions(question.options);

@@ -93,7 +93,7 @@ public class DownloadServlet extends HttpServlet {
 
         int fileId = NumberUtils.toInt(requestFileId);
 
-        if (fileId <= 0) { // download url is incomplete
+        if (fileId == 0) { // download url is incomplete
             String referrer = request.getHeader("referer");
 
             // only log the error if the referrer is uni-hannover.de. Otherwise we have no chance to fix the link

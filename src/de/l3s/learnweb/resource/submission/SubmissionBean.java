@@ -101,7 +101,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
         }
 
         //When accessing the submission_resources page both these parameters are set
-        if (submissionId > 0 && userId > 0) {
+        if (submissionId != 0 && userId != 0) {
             selectedSubmission = submissionDao.findById(submissionId).orElseThrow();
             selectedResources = resourceDao.findBySubmissionIdAndUserId(submissionId, userId);
 
@@ -237,7 +237,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 String itemType = item.get("itemType").getAsString();
                 int itemId = item.get("itemId").getAsInt();
 
-                if ("resource".equals(itemType) && itemId > 0) {
+                if ("resource".equals(itemType) && itemId != 0) {
                     Resource resource = dao().getResourceDao().findById(itemId);
                     if (resource != null && selectedResources.contains(resource)) {
                         selectedResources.remove(resource);
@@ -261,7 +261,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 String itemType = item.get("itemType").getAsString();
 
                 int itemId = item.get("itemId").getAsInt();
-                if ("resource".equals(itemType) && itemId > 0) {
+                if ("resource".equals(itemType) && itemId != 0) {
                     Resource resource = dao().getResourceDao().findById(itemId);
                     if (resource != null && !selectedResources.contains(resource)) {
                         selectedResources.add(resource);
@@ -416,7 +416,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
     }
 
     public List<SelectItem> getEditSurveyResourcesList() {
-        if (editSurveyResourcesList.isEmpty() && this.selectedSubmission.getCourseId() > 0) {
+        if (editSurveyResourcesList.isEmpty() && this.selectedSubmission.getCourseId() != 0) {
             try {
                 List<Resource> editSurveyResourcesForCourse = dao().getResourceDao().findSurveysByCourseId(this.selectedSubmission.getCourseId());
                 for (Resource r : editSurveyResourcesForCourse) {
@@ -484,7 +484,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
      * on the admin/users_submissions page
      */
     public List<User> getUsers() {
-        if (users == null && courseId > 0) {
+        if (users == null && courseId != 0) {
             users = courseDao.findById(courseId).getMembers();
             userSubmissions = submissionDao.countPerUserByCourseId(courseId);
         }

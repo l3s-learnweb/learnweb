@@ -195,7 +195,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
             term.setLastChangedByUserId(getUser().getId());
             //log term edit actions
-            if (term.getId() > 0) {
+            if (term.getId() != 0) {
                 log(Action.glossary_term_edit, glossaryResource, term.getId());
             }
         }
@@ -242,7 +242,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
         term.setDeleted(true);
 
-        if (term.getId() <= 0) { //Its a new term. Safe to remove here.
+        if (term.getId() == 0) { //Its a new term. Safe to remove here.
             formEntry.getTerms().remove(term);
         }
         formEntry.setFulltext(null); // reset full text index

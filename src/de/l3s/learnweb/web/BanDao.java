@@ -13,7 +13,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.util.RsHelper;
+import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(BanDao.BanMapper.class)
 public interface BanDao extends SqlObject, Serializable {
@@ -45,10 +45,10 @@ public interface BanDao extends SqlObject, Serializable {
         @Override
         public Ban map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             Ban ban = new Ban(rs.getString("addr"));
-            ban.setExpires(RsHelper.getLocalDateTime(rs.getTimestamp("expires")));
+            ban.setExpires(SqlHelper.getLocalDateTime(rs.getTimestamp("expires")));
             ban.setAttempts(rs.getInt("attempts"));
             ban.setReason(rs.getString("reason"));
-            ban.setCreatedAt(RsHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            ban.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return ban;
         }
     }

@@ -97,7 +97,7 @@ class ForumTopicDaoTest {
         topic.setGroupId(2);
         topic.setTitle("Phasellus in felis");
         forumTopicDao.save(topic);
-        assertTrue(topic.getId() > 0);
+        assertTrue(topic.getId() != 0);
 
         Optional<ForumTopic> retrieved = forumTopicDao.findById(topic.getId());
 

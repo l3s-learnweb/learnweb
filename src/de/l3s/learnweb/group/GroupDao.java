@@ -25,7 +25,6 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 import de.l3s.util.HasId;
 import de.l3s.util.ICache;
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(GroupDao.GroupMapper.class)
@@ -166,9 +165,9 @@ public interface GroupDao extends SqlObject, Serializable {
 
     default void save(Group group) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("group_id", group.getId() < 1 ? null : group.getId());
+        params.put("group_id", SqlHelper.toNullable(group.getId()));
         params.put("title", group.getTitle());
-        params.put("description", group.getDescription());
+        params.put("description", SqlHelper.toNullable(group.getDescription()));
         params.put("leader_id", group.getLeaderUserId());
         params.put("course_id", group.getCourseId());
         params.put("restriction_forum_category_required", group.isRestrictionForumCategoryRequired());
@@ -224,8 +223,8 @@ public interface GroupDao extends SqlObject, Serializable {
             GroupUser group = new GroupUser();
             group.setGroupId(rs.getInt("group_id"));
             group.setUserId(rs.getInt("user_id"));
-            group.setJoinTime(RsHelper.getLocalDateTime(rs.getTimestamp("join_time")));
-            group.setLastVisit(RsHelper.getLocalDateTime(rs.getInt("last_visit")));
+            group.setJoinTime(SqlHelper.getLocalDateTime(rs.getTimestamp("join_time")));
+            group.setLastVisit(SqlHelper.getLocalDateTime(rs.getInt("last_visit")));
             group.setNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("notification_frequency")));
             return group;
         }

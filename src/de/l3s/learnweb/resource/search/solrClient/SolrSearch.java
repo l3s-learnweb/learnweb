@@ -371,7 +371,7 @@ public class SolrSearch implements Serializable {
                 resourceRank += 1;
             }
 
-            if (skippedResources > 0) {
+            if (skippedResources != 0) {
                 log.error("{} video/image resources have no thumbnails and were skipped", skippedResources);
             }
 

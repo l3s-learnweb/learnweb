@@ -10,11 +10,11 @@ import de.l3s.util.HasId;
 
 public class Comment implements Serializable, Comparable<Comment>, HasId {
     private static final long serialVersionUID = -5854582234222584285L;
-    private int id = -1;
+    private int id;
     private String text;
     private LocalDateTime date = LocalDateTime.now();
-    private int userId = -1;
-    private int resourceId = -1;
+    private int userId;
+    private int resourceId;
 
     private transient Resource resource;
     private transient User user;
@@ -55,7 +55,7 @@ public class Comment implements Serializable, Comparable<Comment>, HasId {
     }
 
     public Resource getResource() {
-        if (null == resource && resourceId != -1) {
+        if (null == resource && resourceId != 0) {
             resource = Learnweb.dao().getResourceDao().findById(resourceId);
         }
         return resource;
@@ -70,7 +70,7 @@ public class Comment implements Serializable, Comparable<Comment>, HasId {
     }
 
     public User getUser() {
-        if (null == user && userId != -1) {
+        if (null == user && userId != 0) {
             user = Learnweb.dao().getUserDao().findById(userId);
         }
         return user;

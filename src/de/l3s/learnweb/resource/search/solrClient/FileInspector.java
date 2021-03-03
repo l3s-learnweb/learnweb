@@ -67,10 +67,10 @@ public class FileInspector {
         FileInfo fileInfo = new FileInfo();
         fileInfo.fileName = INVALID_CHARS_FILENAME.matcher(fileName).replaceAll("_");
 
-        int i = fileName.lastIndexOf('.');
-        if (i > 0) {
-            fileInfo.mimeType = MimeTypes.getMimeType(fileName.substring(i + 1));
-            fileInfo.title = fileName.substring(0, i);
+        int indexOf = fileName.lastIndexOf('.');
+        if (indexOf != -1) {
+            fileInfo.mimeType = MimeTypes.getMimeType(fileName.substring(indexOf + 1));
+            fileInfo.title = fileName.substring(0, indexOf);
         } else {
             fileInfo.mimeType = "application/octet-stream";
             fileInfo.title = fileName;

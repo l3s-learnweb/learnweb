@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -19,7 +20,7 @@ import de.l3s.util.HasId;
 public class Survey implements Deletable, HasId, Serializable, Cloneable {
     private static final long serialVersionUID = -7478683722354893077L;
 
-    private int id = -1;
+    private int id;
     @NotBlank
     @Size(min = 5, max = 100)
     private String title;
@@ -38,7 +39,7 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
     }
 
     public Survey(Survey old) {
-        setId(-1);
+        setId(0);
         setTitle(old.getTitle());
         setDescription(old.getDescription());
         setOrganizationId(old.getOrganizationId());
@@ -86,6 +87,10 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
 
     public List<SurveyQuestion> getQuestions() {
         if (null == questions) {
+            if (id == 0) {
+                return new ArrayList<>();
+            }
+
             questions = Learnweb.dao().getSurveyDao().findQuestionsAndAnswersById(id);
         }
         return questions;

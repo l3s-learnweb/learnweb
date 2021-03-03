@@ -24,7 +24,6 @@ import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.util.RsHelper;
 import de.l3s.util.SqlHelper;
 import de.l3s.util.URL;
 
@@ -64,7 +63,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
 
     default void saveUrlRecord(UrlRecord record) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("url_id", record.getId() < 1 ? null : record.getId());
+        params.put("url_id", SqlHelper.toNullable(record.getId()));
         params.put("url", record.getUrl());
         params.put("first_capture", record.getFirstCapture());
         params.put("last_capture", record.getLastCapture());
@@ -105,7 +104,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
         getHandle().select("SELECT CAST(DATE_FORMAT(timestamp, '%Y-%m-01') as DATE) as date, count(*) as count FROM lw_resource_archiveurl "
             + "WHERE resource_id = ? GROUP BY year(timestamp), month(timestamp) ORDER BY timestamp ASC", resourceId)
             .map((rs, ctx) -> {
-                monthlySeriesData.put(RsHelper.getLocalDate(rs.getDate("date")), rs.getInt("count"));
+                monthlySeriesData.put(SqlHelper.getLocalDate(rs.getDate("date")), rs.getInt("count"));
                 return null;
             }).list();
 
@@ -114,7 +113,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
             getHandle().select("SELECT CAST(DATE_FORMAT(timestamp, '%Y-%m-01') as DATE) as date, count(*) as count FROM learnweb_large.wb2_url_capture "
                 + "WHERE url_id = ? GROUP BY year(timestamp), month(timestamp) ORDER BY timestamp ASC", resourceId)
                 .map((rs, ctx) -> {
-                    LocalDate timestamp = RsHelper.getLocalDate(rs.getDate("date"));
+                    LocalDate timestamp = SqlHelper.getLocalDate(rs.getDate("date"));
                     if (monthlySeriesData.containsKey(timestamp)) {
                         monthlySeriesData.put(timestamp, monthlySeriesData.get(timestamp) + rs.getInt("count"));
                     } else {
@@ -133,7 +132,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
         getHandle().select("SELECT CAST(timestamp as DATE) as date, count(*) as count FROM lw_resource_archiveurl "
             + "WHERE resource_id = ? GROUP BY YEAR(timestamp),MONTH(timestamp),DAY(timestamp) ORDER BY timestamp ASC", resourceId)
             .map((rs, ctx) -> {
-                monthlySeriesData.put(RsHelper.getLocalDate(rs.getDate("date")), rs.getInt("count"));
+                monthlySeriesData.put(SqlHelper.getLocalDate(rs.getDate("date")), rs.getInt("count"));
                 return null;
             }).list();
 
@@ -142,7 +141,7 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
             getHandle().select("SELECT CAST(timestamp as DATE) as date, count(*) as count FROM learnweb_large.wb2_url_capture "
                 + "WHERE url_id = ? GROUP BY YEAR(timestamp),MONTH(timestamp),DAY(timestamp) ORDER BY timestamp ASC", resourceId)
                 .map((rs, ctx) -> {
-                    LocalDate timestamp = RsHelper.getLocalDate(rs.getDate("date"));
+                    LocalDate timestamp = SqlHelper.getLocalDate(rs.getDate("date"));
                     if (monthlySeriesData.containsKey(timestamp)) {
                         monthlySeriesData.put(timestamp, monthlySeriesData.get(timestamp) + rs.getInt("count"));
                     } else {
@@ -161,12 +160,12 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
             try {
                 UrlRecord record = new UrlRecord(new URL(rs.getString("url")));
                 record.setId(rs.getLong(1));
-                record.setFirstCapture(RsHelper.getLocalDateTime(rs.getTimestamp(2)));
-                record.setLastCapture(RsHelper.getLocalDateTime(rs.getTimestamp(3)));
+                record.setFirstCapture(SqlHelper.getLocalDateTime(rs.getTimestamp(2)));
+                record.setLastCapture(SqlHelper.getLocalDateTime(rs.getTimestamp(3)));
                 record.setAllCapturesFetched(rs.getBoolean(4));
-                record.setCrawlDate(RsHelper.getInstant(rs.getTimestamp(5)));
+                record.setCrawlDate(SqlHelper.getInstant(rs.getTimestamp(5)));
                 record.setStatusCode(rs.getShort(6));
-                record.setStatusCodeDate(RsHelper.getInstant(rs.getTimestamp(7)));
+                record.setStatusCodeDate(SqlHelper.getInstant(rs.getTimestamp(7)));
                 return record;
             } catch (URISyntaxException e) {
                 throw new IllegalArgumentException(e);

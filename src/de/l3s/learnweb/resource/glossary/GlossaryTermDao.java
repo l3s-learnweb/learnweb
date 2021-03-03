@@ -75,11 +75,11 @@ public interface GlossaryTermDao extends SqlObject, Serializable {
 
     default void save(GlossaryTerm term) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("term_id", term.getId() < 1 ? null : term.getId());
+        params.put("term_id", SqlHelper.toNullable(term.getId()));
         params.put("entry_id", term.getEntryId());
-        params.put("original_term_id", term.getOriginalTermId());
-        params.put("last_changed_by_user_id", term.getLastChangedByUserId());
-        params.put("user_id", term.getUserId());
+        params.put("original_term_id", SqlHelper.toNullable(term.getOriginalTermId()));
+        params.put("last_changed_by_user_id", SqlHelper.toNullable(term.getLastChangedByUserId()));
+        params.put("user_id", SqlHelper.toNullable(term.getUserId()));
         params.put("term", term.getTerm());
         params.put("language", term.getLanguage().toLanguageTag());
         params.put("uses", term.getUses() == null ? "" : String.join(",", term.getUses()));
@@ -106,6 +106,7 @@ public interface GlossaryTermDao extends SqlObject, Serializable {
             term.setEntryId(rs.getInt("entry_id"));
             term.setUserId(rs.getInt("user_id"));
             term.setTerm(rs.getString("term"));
+            term.setOriginalTermId(rs.getInt("original_term_id"));
             term.setLanguage(Locale.forLanguageTag(rs.getString("language")));
             term.setUses(rs.getString("uses").isEmpty() ? new ArrayList<>() : Arrays.asList(rs.getString("uses").split(",")));
             term.setPronounciation(rs.getString("pronounciation"));

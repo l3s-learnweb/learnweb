@@ -31,14 +31,14 @@ public class File implements Serializable, HasId, Cloneable {
         FILE_ORIGINAL, // 7 if the file was converted the original file should be moved to this location
         PROFILE_PICTURE, // 8
         SYSTEM_FILE, // 9 for example course header images
-        HISTORY_FILE, // 10 previous version of an office file
-        CHANGES, // 11 zip file with changes for office resources
+        DOC_HISTORY, // 10 previous version of an office resource
+        DOC_CHANGES, // 11 zip file with changes for office resource
     }
 
-    private int fileId = -1;
+    private int fileId;
     private String name;
     private String mimeType;
-    private Integer resourceId;
+    private int resourceId;
     private TYPE type;
     private String url;
     private boolean downloadLogActivated = false;
@@ -87,11 +87,11 @@ public class File implements Serializable, HasId, Cloneable {
         this.mimeType = mimeType;
     }
 
-    public Integer getResourceId() {
+    public int getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(Integer resourceId) {
+    public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
     }
 
@@ -122,7 +122,7 @@ public class File implements Serializable, HasId, Cloneable {
      * @return The actual file in the file system
      */
     public java.io.File getActualFile() {
-        if (null == actualFile && fileId > 1) {
+        if (null == actualFile && fileId != 0) {
             actualFile = new java.io.File(Learnweb.config().getFileManagerFolder(), fileId + ".dat");
         } else if (null == actualFile) {
             throw new IllegalStateException("Either the file has not been saved yet, use FileManager.save() first. Or the file isn't present on this machine.");

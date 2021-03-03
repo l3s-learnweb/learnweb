@@ -17,8 +17,8 @@ import de.l3s.util.HasId;
 public class GlossaryTerm implements HasId, Deletable, Serializable, Cloneable {
     private static final long serialVersionUID = -8309235925484416943L;
 
-    private int id = -1;
-    private Integer originalTermId;
+    private int id;
+    private int originalTermId;
     private boolean deleted;
     private int entryId;
     private int userId; // the user who created this term
@@ -48,7 +48,7 @@ public class GlossaryTerm implements HasId, Deletable, Serializable, Cloneable {
     }
 
     public GlossaryTerm(GlossaryTerm oldTerm) {
-        setId(-1);
+        setId(0);
         setOriginalTermId(oldTerm.id);
         setDeleted(oldTerm.deleted);
         setEntryId(oldTerm.entryId);
@@ -247,11 +247,11 @@ public class GlossaryTerm implements HasId, Deletable, Serializable, Cloneable {
         }
     }
 
-    public Integer getOriginalTermId() {
+    public int getOriginalTermId() {
         return originalTermId;
     }
 
-    public void setOriginalTermId(Integer originalTermId) {
+    public void setOriginalTermId(int originalTermId) {
         this.originalTermId = originalTermId;
     }
 }

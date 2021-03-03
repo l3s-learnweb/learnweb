@@ -18,7 +18,7 @@ import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.util.RsHelper;
+import de.l3s.util.SqlHelper;
 
 public interface ArchiveUrlDao extends SqlObject, Serializable {
     @RegisterRowMapper(ArchiveUrlMapper.class)
@@ -38,7 +38,7 @@ public interface ArchiveUrlDao extends SqlObject, Serializable {
     class ArchiveUrlMapper implements RowMapper<ArchiveUrl> {
         @Override
         public ArchiveUrl map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            return new ArchiveUrl(rs.getString("archive_url"), RsHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
+            return new ArchiveUrl(rs.getString("archive_url"), SqlHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
         }
     }
 }

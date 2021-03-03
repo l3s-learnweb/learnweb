@@ -18,7 +18,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     private static final long serialVersionUID = -2494182373382483709L;
     //private static final Logger log = LogManager.getLogger(SubmissionModeratorBean.class);
 
-    private int submissionId = -1;
+    private int submissionId;
 
     private Submission submission;
     private SubmittedResources selectedUserSubmission;
