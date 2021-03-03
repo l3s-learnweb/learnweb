@@ -59,7 +59,7 @@ public class AdminNotificationBean extends ApplicationBean {
             moderatorCanSendMail = user.isEmailConfirmed();
         }
 
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
+        treeRoot = BeanHelper.createGroupsUsersTree(user, getLocale(), true);
     }
 
     public void send() {

@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -18,7 +18,7 @@ import de.l3s.learnweb.resource.CommentDao;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class AdminTextAnalysisBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = -3957625443067966969L;
 
