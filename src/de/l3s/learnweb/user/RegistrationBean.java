@@ -83,7 +83,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         if (StringUtils.isNotEmpty(wizard)) {
             course = courseDao.findByWizard(wizard).orElseThrow(() -> new BadRequestHttpException("register_invalid_wizard_error"));
-            BeanAssert.validate(!course.isWizardDisabled(), "registration.wizard_disabled");
+            BeanAssert.validate(!course.isWizardDisabledOrNull(), "registration.wizard_disabled");
 
             // special message for yell
             if (course.getId() == 505) {

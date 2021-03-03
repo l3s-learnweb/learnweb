@@ -67,7 +67,7 @@
 								<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}" disabled="#{adminCourseBean.course.wizardDisabled}"/>
 								<p:message for="@previous"/>
 								<p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{adminCourseBean.course.wizardParam}"
-												 rendered="#{not adminCourseBean.course.wizardDisabled}"/>
+												 rendered="#{not adminCourseBean.course.wizardDisabledOrNull}"/>
 							</div>
 
 							<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">

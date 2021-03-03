@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
@@ -111,6 +112,10 @@ public class Course implements Serializable, Comparable<Course>, HasId {
 
     public boolean isWizardDisabled() {
         return getOption(Option.Users_Disable_wizard);
+    }
+
+    public boolean isWizardDisabledOrNull() {
+        return getOption(Option.Users_Disable_wizard) || StringUtils.isBlank(wizardParam);
     }
 
     public int getOrganisationId() {
