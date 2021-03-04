@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.InputStream;
 
 import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class ProfileImageHelperTest {
 
     @Test
+    @Disabled("Remote host terminated the handshake on GitLab :(")
     void getGravatarAvatar() {
         ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar("205e460b479e2e5b48aec07710c08d50");
 
@@ -20,6 +22,7 @@ class ProfileImageHelperTest {
     }
 
     @Test
+    @Disabled("Remote host terminated the handshake on GitLab :(")
     void getGravatarAvatarMissing() {
         ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar("00000000000000000000000000000000");
 
