@@ -23,7 +23,7 @@
             <div class="ui-panel ui-widget ui-widget-content ui-corner-all profile-details">
                 <div class="ui-panel-content ui-widget-content">
                     <h:graphicImage library="images" name="universitaet_panorama.jpg" alt="profile background picture"></h:graphicImage>
-                    <img src="#{userBean.user.image}" alt="profile photo" class="profile-avatar"></img>
+                    <img src="#{userBean.user.imageUrl}" alt="profile photo" class="profile-avatar"></img>
                     <span class="profile-name"><h:outputText value="#{of:coalesce(userBean.user.fullName, 'N/D')}"/></span>
                     <span class="profile-role"><h:outputText value="#{userBean.user.username}"/></span>
                     <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="button"

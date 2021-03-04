@@ -17,7 +17,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
@@ -286,16 +286,11 @@ public class UserBean implements Serializable {
      */
     public String getBannerImage() {
         String bannerImage = null;
-
         if (isLoggedIn()) {
-            bannerImage = getActiveOrganisation().getBannerImage();
+            bannerImage = getActiveOrganisation().getBannerImageUrl();
         }
 
-        if (StringUtils.isNotEmpty(bannerImage)) {
-            return bannerImage;
-        }
-
-        return "logos/logo_learnweb.png";
+        return ObjectUtils.firstNonNull(bannerImage, "/javax.faces.resource/images/learnweb_logo.png");
     }
 
     public String getBannerLink() {

@@ -1,10 +1,6 @@
 package de.l3s.learnweb.user;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -36,7 +32,6 @@ import de.l3s.learnweb.forum.ForumPost;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.File;
-import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
 import de.l3s.learnweb.resource.submission.Submission;
@@ -44,11 +39,9 @@ import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 import de.l3s.util.HashHelper;
-import de.l3s.util.Image;
 import de.l3s.util.PBKDF2;
 import de.l3s.util.ProfileImageHelper;
 import de.l3s.util.StringHelper;
-import de.l3s.util.UrlHelper;
 import de.l3s.util.email.Mail;
 
 public class User implements Comparable<User>, Deletable, HasId, Serializable {
@@ -473,51 +466,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     /**
      * @return the url of the users image or a default image if no image has been added
      */
-    public String getImage() {
+    public String getImageUrl() {
         if (imageUrl == null) {
-            File imageFile = getImageFile();
-            imageUrl = imageFile != null ? imageFile.getUrl() : getDefaultImageUrl();
+            imageUrl = imageFileId != 0 ? getImageFile().getUrl() : ProfileImageHelper.getProfilePicture(StringUtils.firstNonBlank(fullName, username));
         }
-
         return imageUrl;
-    }
-
-    public void setImage(InputStream inputStream) throws IOException {
-        // process image
-        Image img = new Image(inputStream);
-
-        // save image file
-        File file = new File(TYPE.PROFILE_PICTURE, "user_icon.png", "image/png");
-        Image thumbnail = img.getResizedToSquare2(200, 0.0);
-        Learnweb.dao().getFileDao().save(file, thumbnail.getInputStream());
-        thumbnail.dispose();
-        inputStream.close();
-
-        setImageFileId(file.getId());
-        imageUrl = file.getUrl();
-    }
-
-    private String getDefaultImageUrl() {
-        final String profilePicture = ProfileImageHelper.getProfilePicture(StringUtils.isNotBlank(fullName) ? fullName : username);
-        return "data:image/svg+xml;base64," + StringHelper.encodeBase64(profilePicture);
-    }
-
-    public void setDefaultProfilePicture() {
-        try {
-            // try Gravatar, fallback to simple initials avatar
-            if (email != null) {
-                URL url = new URL("https://www.gravatar.com/avatar/" + HashHelper.md5(email) + "?d=404");
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-                con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
-                int responseCode = con.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    setImage(con.getInputStream());
-                }
-            }
-        } catch (Exception e) {
-            log.error("Unable to create default profile picture for user {}", this, e);
-        }
     }
 
     /**
@@ -537,16 +490,8 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     public void setImageFileId(int imageFileId) {
-        // delete existing image
-        if (this.imageFileId != 0 && this.imageFileId != imageFileId) {
-            try {
-                Learnweb.dao().getFileDao().deleteHard(getImageFile());
-            } catch (Exception e) {
-                log.error("Can't delete profile image of user {}", this);
-            }
-        }
-
         this.imageFileId = imageFileId;
+        this.imageUrl = null;
     }
 
     public LocalDateTime getRegistrationDate() {
@@ -764,7 +709,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
             case JOIN_GROUP:
                 return getGroupCount() > 0;
             case ADD_PHOTO:
-                return getImageFile() != null;
+                return getImageFileId() != 0;
             default:
                 return false;
         }

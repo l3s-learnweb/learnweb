@@ -38,7 +38,7 @@
 
 				<p:panelGrid columns="2" styleClass="d-flex" rendered="#{not userDetailBean.pageHidden}">
 					<f:facet name="header">
-						<img src="${userDetailBean.selectedUser.image}" id="profile_image" alt="profile image"/>
+						<img src="${userDetailBean.selectedUser.imageUrl}" id="profile_image" alt="profile image"/>
 					</f:facet>
 					<h:outputText value="#{msg.username}:"/>
 					<h:outputText value="#{userDetailBean.selectedUser.username}"/>

@@ -293,7 +293,7 @@
 	<h:panelGroup layout="block" id="comments_list">
 		<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
 			<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
-				<img class="profile-picture me-3 mt-1" src="#{comment.user.image}" alt="Profile picture"/>
+				<img class="profile-picture me-3 mt-1" src="#{comment.user.imageUrl}" alt="Profile picture"/>
 
 				<div class="comment-details flex-grow-1">
 					<p class="mb-0">

@@ -53,7 +53,7 @@
                 </f:facet>
                 
                 <div class="d-flex align-items-center">
-                    <img class="d-block profile-picture me-3" src="${userBean.user.image}" alt="Profile image"/>
+                    <img class="d-block profile-picture me-3" src="${userBean.user.imageUrl}" alt="Profile image"/>
                     <div>
                         <p class="mb-0">
                             <h:outputText value="#{msg.greeting} #{userBean.user.username},"/><br/>
@@ -118,7 +118,7 @@
                     </f:facet>
                     <ui:repeat var="message" value="#{welcomeBean.receivedMessages}" varStatus="status">
                         <div class="d-flex #{status.first ? '' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
-                            <img class="profile-picture me-3" src="#{message.fromUser.image}" alt="Profile picture"/>
+                            <img class="profile-picture me-3" src="#{message.fromUser.imageUrl}" alt="Profile picture"/>
 
                             <div class="text-break">
                                 <p class="h5">

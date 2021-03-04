@@ -16,7 +16,7 @@
                 </a>
             </ui:fragment>
             <a href="#{userBean.bannerLink}" class="header-element header-logo no-hover-bg">
-                <h:graphicImage library="images" name="#{userBean.bannerImage}" alt="#{msg['application.name']} logo" styleClass="w-100"/>
+                <h:graphicImage value="#{userBean.bannerImage}" alt="#{msg['application.name']} logo" styleClass="w-100"/>
             </a>
         </div>
 
@@ -43,7 +43,7 @@
 
             <ui:fragment rendered="#{userBean.loggedIn}">
                 <h:outputLink value="#{userBean.bannerLink}" id="userMenuButton" styleClass="header-element usermenu-button" ariaLabel="Profile" onclick="return false;">
-                    <img src="${userBean.user.image}" class="profile-picture" alt="" title="#{userBean.user.fullName}"/>
+                    <img src="${userBean.user.imageUrl}" class="profile-picture" alt="" title="#{userBean.user.fullName}"/>
                 </h:outputLink>
 
                 <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">

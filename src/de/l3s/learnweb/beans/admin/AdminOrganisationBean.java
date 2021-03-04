@@ -11,23 +11,24 @@ import java.util.stream.Collectors;
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.file.UploadedFile;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
-import de.l3s.learnweb.resource.search.solrClient.FileInspector;
-import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.learnweb.user.OrganisationDao;
+import de.l3s.util.Image;
 
 @Named
 @ViewScoped
@@ -40,13 +41,19 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     private LinkedList<OptionWrapperGroup> optionGroups;
     private List<SelectItem> availableGlossaryLanguages;
 
+    @Inject
+    private FileDao fileDao;
+
+    @Inject
+    private OrganisationDao organisationDao;
+
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
         if (organisationId != 0) {
             BeanAssert.hasPermission(getUser().isAdmin());
 
-            setOrganisation(dao().getOrganisationDao().findByIdOrElseThrow(organisationId));
+            setOrganisation(organisationDao.findByIdOrElseThrow(organisationId));
         } else {
             BeanAssert.hasPermission(getUser().isModerator());
 
@@ -55,27 +62,33 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     }
 
     public void handleFileUpload(FileUploadEvent event) {
-        UploadedFile uploadedFile = event.getFile();
-
         try {
-            FileInfo fileInfo = FileInspector.inspectFileName(uploadedFile.getFileName());
+            Image img = new Image(event.getFile().getInputStream());
 
-            File file = new File();
-            file.setType(TYPE.SYSTEM_FILE);
-            file.setName(fileInfo.getFileName());
-            file.setMimeType(fileInfo.getMimeType());
-
-            dao().getFileDao().save(file, uploadedFile.getInputStream());
+            File file = new File(TYPE.SYSTEM_FILE, "banner_image.png", "image/png");
+            Image thumbnail = img.getResized(324, 100);
+            fileDao.save(file, thumbnail.getInputStream());
+            thumbnail.dispose();
 
             if (organisation.getBannerImageFileId() != 0) { // delete old image first
-                dao().getFileDao().deleteHard(organisation.getBannerImageFile());
+                fileDao.deleteHard(organisation.getBannerImageFile());
             }
 
             organisation.setBannerImageFileId(file.getId());
+            organisationDao.save(organisation);
         } catch (Exception e) {
             log.error("Could not handle uploaded banner image", e);
             addGrowl(FacesMessage.SEVERITY_FATAL, "Could not store file");
         }
+    }
+
+    public void removeBannerImage() {
+        if (organisation.getBannerImageFileId() != 0) {
+            fileDao.deleteHard(organisation.getBannerImageFile());
+        }
+
+        organisation.setBannerImageFileId(0);
+        organisationDao.save(organisation);
     }
 
     /**
@@ -103,7 +116,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             }
         }
 
-        dao().getOrganisationDao().save(organisation);
+        organisationDao.save(organisation);
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 

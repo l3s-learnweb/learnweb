@@ -1,19 +1,46 @@
 package de.l3s.util;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class ProfileImageHelper {
-    // private static final Logger log = LogManager.getLogger(ImageHelper.class);
+    private static final Logger log = LogManager.getLogger(ProfileImageHelper.class);
 
     private static final Pattern NAME_SEPARATOR = Pattern.compile("[\\s.]+");
 
-    public static String getProfilePicture(String name) {
-        return getProfilePicture(getInitialsForProfilePicture(name), getColorForProfilePicture(name));
+    /**
+     * @return FileName, MineType, InputStream
+     */
+    public static ImmutableTriple<String, String, InputStream> getGravatarAvatar(final String hash) {
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL("https://www.gravatar.com/avatar/" + hash + "?d=404").openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent", UrlHelper.USER_AGENT);
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                String contentDisposition = con.getHeaderField("content-disposition");
+                String fileName = contentDisposition.substring(contentDisposition.indexOf('"') + 1, contentDisposition.lastIndexOf('"'));
+
+                return ImmutableTriple.of(fileName, con.getContentType(), con.getInputStream());
+            }
+        } catch (Exception e) {
+            log.error("Unable to retrieve gravatar for hash {}", hash, e);
+        }
+        return null;
     }
 
-    public static String getProfilePicture(String initials, String color) {
+    public static String getProfilePicture(final String name) {
+        final String pictureXml = getProfilePicture(getInitialsForProfilePicture(name), getColorForProfilePicture(name));
+        return "data:image/svg+xml;base64," + StringHelper.encodeBase64(pictureXml);
+    }
+
+    public static String getProfilePicture(final String initials, final String color) {
         return "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"200px\" height=\"200px\" viewBox=\"0 0 200 200\""
             + " version=\"1.1\"><rect fill=\"" + color + "\" cx=\"100\" width=\"200\" height=\"200\" cy=\"100\" r=\"100\"></rect><text x=\"50%\" y=\"50%\""
             + " style=\"color: #fff; line-height: 1;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans',"

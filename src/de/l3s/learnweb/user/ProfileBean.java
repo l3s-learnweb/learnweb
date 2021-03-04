@@ -31,7 +31,10 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.user.User.Gender;
+import de.l3s.util.Image;
 
 @Named
 @ViewScoped
@@ -65,6 +68,9 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     @Inject
     private UserDao userDao;
+
+    @Inject
+    private FileDao fileDao;
 
     @Inject
     private GroupDao groupDao;
@@ -104,10 +110,22 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     public void handleFileUpload(FileUploadEvent event) {
         try {
-            User user = getUser();
-            user.setImage(event.getFile().getInputStream());
-            user.setGuide(User.Guide.ADD_PHOTO, true);
-            user.save();
+            // process image
+            Image img = new Image(event.getFile().getInputStream());
+
+            // save image file
+            File file = new File(File.TYPE.PROFILE_PICTURE, "user_icon.png", "image/png");
+            Image thumbnail = img.getResizedToSquare2(200, 0.0);
+            fileDao.save(file, thumbnail.getInputStream());
+            thumbnail.dispose();
+
+            if (selectedUser.getImageFileId() != 0) {
+                fileDao.deleteHard(selectedUser.getImageFile());
+            }
+
+            selectedUser.setImageFileId(file.getId());
+            selectedUser.setGuide(User.Guide.ADD_PHOTO, true);
+            selectedUser.save();
         } catch (IllegalArgumentException e) { // image is smaller than 100px
             log.error("unhandled error", e);
 

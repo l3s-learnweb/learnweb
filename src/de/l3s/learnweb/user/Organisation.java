@@ -61,7 +61,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private String languageVariant; // optional variant that is added to the selected language
     private BitSet options = new BitSet(Option.values().length);
     private List<MetadataField> metadataFields = new LinkedList<>();
-    private transient String bannerImage;
+    private transient String bannerImageUrl;
     private int bannerImageFileId;
     private String cssFile; // optional CSS file to load
     private List<Locale> glossaryLanguages = new ArrayList<>(4); // languages that can be used to construct a glossary
@@ -342,33 +342,18 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         this.defaultSearchServiceVideo = defaultSearchServiceVideo;
     }
 
-    public String getBannerImage() {
-        if (id == 1249) {
-            return "logos/logo_eumade4all.png";
-        } else if (id == 1210) {
-            return "logos/logo_lumsa.png";
-        } else if (id == 480) {
-            return "logos/logo_yell.png";
+    public String getBannerImageUrl() {
+        if (null == bannerImageUrl && bannerImageFileId != 0) {
+            bannerImageUrl = getBannerImageFile().getUrl();
         }
-
-        if (null == bannerImage) {
-            if (bannerImageFileId == 0) {
-                return null;
-            }
-
-            File file = getBannerImageFile();
-
-            if (file != null) {
-                bannerImage = file.getUrl();
-            } else {
-                bannerImage = "";
-            }
-        }
-        return bannerImage;
+        return bannerImageUrl;
     }
 
     public File getBannerImageFile() {
-        return Learnweb.dao().getFileDao().findByIdOrElseThrow(bannerImageFileId);
+        if (bannerImageFileId != 0) {
+            return Learnweb.dao().getFileDao().findByIdOrElseThrow(bannerImageFileId);
+        }
+        return null;
     }
 
     public int getBannerImageFileId() {
@@ -377,7 +362,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
 
     public void setBannerImageFileId(int bannerImageFileId) {
         this.bannerImageFileId = bannerImageFileId;
-        this.bannerImage = null; // clear cache
+        this.bannerImageUrl = null;
     }
 
     public String getCssFile() {

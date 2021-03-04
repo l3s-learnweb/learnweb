@@ -30,7 +30,7 @@
 
 		<ui:repeat var="message" value="#{messageBean.receivedMessages}" varStatus="status">
 			<div class="d-flex #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
-				<img class="profile-picture me-3" src="#{message.fromUser.image}" alt="Profile picture"/>
+				<img class="profile-picture me-3" src="#{message.fromUser.imageUrl}" alt="Profile picture"/>
 
 				<div class="text-break">
 					<p class="h5">

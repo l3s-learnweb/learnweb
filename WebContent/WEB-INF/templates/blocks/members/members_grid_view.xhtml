@@ -15,7 +15,7 @@
         <li class="gridder-list member-item" data-griddercontent="#user${user.id}">
             <p:commandLink onclick="return false;" styleClass="member-block">
                 <div class="member-picture">
-                    <img src="#{user.image}" alt="#{user.fullName}"/>
+                    <img src="#{user.imageUrl}" alt="#{user.fullName}"/>
                 </div>
 
                 <ui:fragment rendered="#{not empty user.credits}">

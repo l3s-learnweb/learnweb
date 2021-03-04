@@ -303,8 +303,7 @@ public class ResourceMetadataExtractor {
             }
             if (StringUtils.isEmpty(resource.getAuthor())) {
                 JsonObject owner = json.getAsJsonObject("owner");
-                String realname = owner.get("realname").getAsString();
-                resource.setAuthor(StringUtils.isNotEmpty(realname) ? realname : owner.get("username").getAsString());
+                resource.setAuthor(StringUtils.firstNonEmpty(owner.get("realname").getAsString(), owner.get("username").getAsString()));
             }
 
             String thumbnailUrl = "https://farm" + json.get("farm").getAsString() + ".staticflickr.com/" + json.get("server").getAsString()

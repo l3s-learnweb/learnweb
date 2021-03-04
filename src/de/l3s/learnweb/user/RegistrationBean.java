@@ -1,5 +1,7 @@
 package de.l3s.learnweb.user;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,6 +22,7 @@ import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
@@ -28,6 +31,9 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.File;
+import de.l3s.util.HashHelper;
+import de.l3s.util.ProfileImageHelper;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
@@ -180,7 +186,20 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         user.setOrganisationId(course.getOrganisationId());
         user.setRegistrationDate(LocalDateTime.now());
         user.setPreferences(new HashMap<>());
-        user.setDefaultProfilePicture();
+
+        if (user.getEmail() != null) {
+            try {
+                ImmutableTriple<String, String, InputStream> gravatar = ProfileImageHelper.getGravatarAvatar(HashHelper.md5(user.getEmail()));
+
+                if (gravatar != null) {
+                    File file = new File(File.TYPE.PROFILE_PICTURE, gravatar.getLeft(), gravatar.getMiddle());
+                    dao().getFileDao().save(file, gravatar.getRight());
+                    user.setImageFileId(file.getId());
+                }
+            } catch (IOException e) {
+                log.error("Unable to save default avatar for user {}", user, e);
+            }
+        }
 
         userDao.save(user);
         log(Action.register, null, null, null, user);

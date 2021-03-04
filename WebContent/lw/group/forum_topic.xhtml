@@ -59,7 +59,7 @@
                 <p:column headerText="#{msg.author}" styleClass="py-2 text-center align-baseline w-15">
                     <h:link outcome="/lw/user/detail.jsf?user_id=#{post.userId}">
                         <h:outputText styleClass="d-block mb-1 fw-bold" value="#{post.user.username}"/>
-                        <img class="img-fluid profile-picture square fluent" src="${post.user.image}" alt="#{post.user.fullName}"/>
+                        <img class="img-fluid profile-picture square fluent" src="${post.user.imageUrl}" alt="#{post.user.fullName}"/>
                     </h:link>
 
                     <div class="text-muted small">
