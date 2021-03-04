@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.06.06</version>
+    <version>3.07.00</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -187,7 +187,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
         </dependency>
         <!-- JDBC wrapper -->
         <dependency>
@@ -402,7 +402,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.2.1</version>
+                        <version>4.2.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
