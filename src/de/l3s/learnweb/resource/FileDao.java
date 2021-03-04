@@ -44,7 +44,7 @@ public interface FileDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_file WHERE deleted = 0 ORDER BY resource_id DESC")
     List<File> findAll();
 
-    @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER by resource_file_number, timestamp")
+    @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER by type, updated_at")
     List<File> findByResourceId(int resourceId);
 
     @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ?")
@@ -99,11 +99,10 @@ public interface FileDao extends SqlObject, Serializable {
         params.put("file_id", SqlHelper.toNullable(file.getId()));
         params.put("deleted", file.isDeleted());
         params.put("resource_id", SqlHelper.toNullable(file.getResourceId()));
-        params.put("resource_file_number", file.getType().ordinal());
+        params.put("type", file.getType().ordinal());
         params.put("name", file.getName());
         params.put("mime_type", file.getMimeType());
-        params.put("log_actived", file.isDownloadLogActivated());
-        params.put("timestamp", file.getLastModified());
+        params.put("updated_at", file.getLastModified());
 
         Optional<Integer> fileId = SqlHelper.handleSave(getHandle(), "lw_file", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -130,11 +129,10 @@ public interface FileDao extends SqlObject, Serializable {
                 file.setId(rs.getInt("file_id"));
                 file.setDeleted(rs.getBoolean("deleted"));
                 file.setResourceId(rs.getInt("resource_id"));
-                file.setType(File.TYPE.values()[rs.getInt("resource_file_number")]);
+                file.setType(File.TYPE.values()[rs.getInt("type")]);
                 file.setName(rs.getString("name"));
                 file.setMimeType(rs.getString("mime_type"));
-                file.setDownloadLogActivated(rs.getBoolean("log_actived"));
-                file.setLastModified(SqlHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
+                file.setLastModified(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
 
                 if (!file.getActualFile().exists()) {
                     LogManager.getLogger(FileMapper.class).warn("Can't find file '{}' for resource {}",

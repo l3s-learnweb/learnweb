@@ -64,7 +64,7 @@ public class BounceManager {
         Instant currentCheck = Instant.now();
 
         if (lastBounceCheck == null) {
-            lastBounceCheck = bounceDao.findLastBounceDate().orElse(currentCheck.minus(1, ChronoUnit.YEARS));
+            lastBounceCheck = bounceDao.findLastBounceDate().orElse(currentCheck.minus(365, ChronoUnit.DAYS));
         }
 
         SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT, Date.from(lastBounceCheck.atZone(ZoneId.systemDefault()).toInstant()));

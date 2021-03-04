@@ -28,13 +28,13 @@ public interface ForumTopicDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_forum_topic WHERE topic_id = ?")
     Optional<ForumTopic> findById(int topicId);
 
-    @SqlQuery("SELECT * FROM lw_forum_topic WHERE group_id = ? ORDER BY topic_last_post_time DESC")
+    @SqlQuery("SELECT * FROM lw_forum_topic WHERE group_id = ? ORDER BY updated_at DESC")
     List<ForumTopic> findByGroupId(int groupId);
 
     default Map<Integer, List<ForumTopic>> findByNotificationFrequencies(List<User.NotificationFrequency> notificationFrequencies) {
         return getHandle().createQuery("SELECT gu.user_id as notification_user_id, ft.* "
             + "FROM lw_group_user gu JOIN lw_forum_topic ft USING(group_id) LEFT JOIN lw_forum_topic_user ftu ON gu.user_id = ftu.user_id AND ft.topic_id = ftu.topic_id "
-            + "WHERE notification_frequency IN (<frequencies>) AND (ftu.last_visit IS NULL OR ftu.last_visit < topic_last_post_time) AND ft.topic_last_post_time "
+            + "WHERE notification_frequency IN (<frequencies>) AND (ftu.last_visit IS NULL OR ftu.last_visit < updated_at) AND ft.updated_at "
             + "BETWEEN DATE_SUB(NOW(), INTERVAL CASE WHEN notification_frequency = 'MONTHLY' THEN 30 WHEN notification_frequency = 'WEEKLY' THEN 7 ELSE 1 END day) AND NOW() "
             + "ORDER BY notification_user_id").bindList("frequencies", notificationFrequencies)
             .reduceRows(new HashMap<>(), (results, rowView) -> {
@@ -46,10 +46,10 @@ public interface ForumTopicDao extends SqlObject, Serializable {
             });
     }
 
-    @SqlUpdate("UPDATE lw_forum_topic SET topic_views = topic_views + 1 WHERE topic_id = ?")
+    @SqlUpdate("UPDATE lw_forum_topic SET views = views + 1 WHERE topic_id = ?")
     void updateIncreaseViews(int topicId);
 
-    @SqlUpdate("UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = :postId, topic_last_post_time = :time, topic_last_post_user_id = :userId WHERE topic_id = :topicId AND topic_views > 0")
+    @SqlUpdate("UPDATE lw_forum_topic SET replies = replies + 1, last_post_id = :postId, updated_at = :time, last_post_user_id = :userId WHERE topic_id = :topicId AND views > 0")
     void updateIncreaseReplies(@Bind("topicId") int topicId, @Bind("postId") int postId, @Bind("userId") int userId, @Bind("time") LocalDateTime date);
 
     @SqlUpdate("DELETE FROM lw_forum_topic WHERE topic_id = ?")
@@ -63,14 +63,14 @@ public interface ForumTopicDao extends SqlObject, Serializable {
         params.put("topic_id", SqlHelper.toNullable(topic.getId()));
         params.put("group_id", topic.getGroupId());
         params.put("deleted", topic.isDeleted());
-        params.put("topic_title", topic.getTitle());
+        params.put("title", topic.getTitle());
         params.put("user_id", SqlHelper.toNullable(topic.getUserId()));
-        params.put("topic_time", topic.getDate());
-        params.put("topic_views", topic.getViews());
-        params.put("topic_replies", topic.getReplies());
-        params.put("topic_last_post_id", SqlHelper.toNullable(topic.getLastPostId()));
-        params.put("topic_last_post_time", topic.getLastPostDate());
-        params.put("topic_last_post_user_id", SqlHelper.toNullable(topic.getLastPostUserId()));
+        params.put("views", topic.getViews());
+        params.put("replies", topic.getReplies());
+        params.put("last_post_id", SqlHelper.toNullable(topic.getLastPostId()));
+        params.put("last_post_user_id", SqlHelper.toNullable(topic.getLastPostUserId()));
+        params.put("updated_at", topic.getLastPostDate());
+        params.put("created_at", topic.getDate());
 
         Optional<Integer> topicId = SqlHelper.handleSave(getHandle(), "lw_forum_topic", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -85,13 +85,13 @@ public interface ForumTopicDao extends SqlObject, Serializable {
             topic.setId(rs.getInt("topic_id"));
             topic.setUserId(rs.getInt("user_id"));
             topic.setGroupId(rs.getInt("group_id"));
-            topic.setTitle(rs.getString("topic_title"));
-            topic.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("topic_time")));
-            topic.setViews(rs.getInt("topic_views"));
-            topic.setReplies(rs.getInt("topic_replies"));
-            topic.setLastPostId(rs.getInt("topic_last_post_id"));
-            topic.setLastPostDate(SqlHelper.getLocalDateTime(rs.getTimestamp("topic_last_post_time")));
-            topic.setLastPostUserId(rs.getInt("topic_last_post_user_id"));
+            topic.setTitle(rs.getString("title"));
+            topic.setViews(rs.getInt("views"));
+            topic.setReplies(rs.getInt("replies"));
+            topic.setLastPostId(rs.getInt("last_post_id"));
+            topic.setLastPostUserId(rs.getInt("last_post_user_id"));
+            topic.setLastPostDate(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+            topic.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return topic;
         }
     }

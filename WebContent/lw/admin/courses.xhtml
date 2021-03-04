@@ -67,11 +67,11 @@
             </p:column>
 
             <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.wizardParam}" filterBy="#{course.wizardParam}" filterMatchMode="contains">
-                <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.wizardDisabled}"/>  
-                
+                <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.wizardDisabled}"/>
+
                 <h:outputLink value="#{of:getRequestBaseURL()}wizard=#{course.wizardParam}" rendered="#{not course.wizardDisabled}">
-                    <h:outputText value="#{course.wizardParam}"/>        
-                </h:outputLink>                         
+                    <h:outputText value="#{course.wizardParam}"/>
+                </h:outputLink>
 	        </p:column>
 
             <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none" sortBy="#{course.creationTimestamp}">
@@ -80,13 +80,13 @@
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="#{msg.organization}"  rendered="#{userBean.admin}" sortBy="#{course.organisation.title}" filterBy="#{course.organisation.title}" filterMatchMode="contains">
+            <p:column headerText="#{msg.organisation}" rendered="#{userBean.admin}" sortBy="#{course.organisation.title}" filterBy="#{course.organisation.title}" filterMatchMode="contains">
                 <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
-            </p:column>    
+            </p:column>
 
             <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}" styleClass="td-text-center dd-xs-none">
                 <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
-            </p:column>         
+            </p:column>
 
             <p:column headerText="#{msg.options}" styleClass="td-text-end mw-r15" >
                 <h:outputLink styleClass="icon-link" value="admin/course.jsf?course_id=#{course.id}">

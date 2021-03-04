@@ -3,10 +3,8 @@ CREATE TABLE IF NOT EXISTS `new_file` (
     `deleted` tinyint(1) NOT NULL DEFAULT 0,
     `name` varchar(255) NOT NULL,
     `mime_type` varchar(255) NOT NULL,
-    `log_actived` tinyint(1) NOT NULL,
-    `timestamp_update` timestamp NOT NULL DEFAULT current_timestamp(),
-    `timestamp_creation` timestamp NOT NULL DEFAULT current_timestamp(),
-    `doc_key` varchar(40) DEFAULT NULL
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 );
 
 CREATE TABLE IF NOT EXISTS `new_resource_file` (

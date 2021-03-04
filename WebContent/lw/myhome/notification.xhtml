@@ -35,7 +35,7 @@
 				<div class="text-break">
 					<p class="h5">
 						<h:outputText value="#{message.title}" />
-						<h:outputText rendered="#{not message.read}" value=" (#{msg.new_word})" />
+						<h:outputText rendered="#{not message.seen}" value=" (#{msg.new_word})" />
 					</p>
 					<div class="message-container m-1">
 						<h:outputText value="#{message.text}" escape="false"/>

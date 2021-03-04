@@ -30,11 +30,11 @@
                     <div class="d-flex m-0">
                         <div class="me-auto">#{userDetailBean.selectedUser.username}</div>
                         <p:linkButton href="myhome/profile.jsf?user_id=#{userDetailBean.userId}" value="#{msg.edit}" styleClass="alt-btn"
-                                rendered="#{userDetailBean.selectedUser eq userBean.user or userBean.moderator}" />          
-                        
+                                rendered="#{userDetailBean.selectedUser eq userBean.user or userBean.moderator}" />
+
                     </div>
                 </f:facet>
-                <h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}"/>
+                <h:outputText value="This information is hidden due to the privacy settings of your organisation." rendered="#{userDetailBean.pageHidden}"/>
 
 				<p:panelGrid columns="2" styleClass="d-flex" rendered="#{not userDetailBean.pageHidden}">
 					<f:facet name="header">
@@ -102,7 +102,7 @@
 
 		<div class="col-lg">
 			<p:panel header="#{msg.last_activities}" id="profile_news">
-				<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}"/>
+				<h:outputText value="This information is hidden due to the privacy settings of your organisation." rendered="#{userDetailBean.pageHidden}"/>
 
 				<ui:fragment rendered="#{not userDetailBean.pageHidden}">
 					<ui:repeat value="#{userDetailBean.latestLogEntries}" var="logEntry" varStatus="status">

@@ -61,10 +61,10 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
             generalStatistics.put("average_number_of_tags_per_tagged_resource", taggedResourcesAverage);
             generalStatistics.put("average_number_of_comments_per_commented_resource", commentedResourcesAverage);
 
-            activeUsersPerMonth = handle.select("SELECT timestamp, count(distinct user_id) as count FROM lw_user_log "
-                + "WHERE action = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) GROUP BY year(timestamp) ,month(timestamp) "
-                + "ORDER BY year(timestamp) DESC,month(timestamp) DESC LIMIT 13")
-                .setMapKeyColumn("timestamp")
+            activeUsersPerMonth = handle.select("SELECT created_at, count(distinct user_id) as count FROM lw_user_log "
+                + "WHERE action = 9 and created_at > DATE_SUB(NOW(), INTERVAL 390 day) GROUP BY year(created_at) ,month(created_at) "
+                + "ORDER BY year(created_at) DESC,month(created_at) DESC LIMIT 13")
+                .setMapKeyColumn("created_at")
                 .setMapValueColumn("count")
                 .collectInto(new GenericType<>() {});
 

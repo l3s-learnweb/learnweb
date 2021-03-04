@@ -10,7 +10,7 @@
     <ui:repeat var="user" value="#{members}" varStatus="status">
         <div class="#{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') }">
             <ui:fragment rendered="#{userDetailsHidden}">
-                <h:outputText value="This information is hidden due to the privacy settings of your organization." styleClass="m-2 d-block"/>
+                <h:outputText value="This information is hidden due to the privacy settings of your organisation." styleClass="m-2 d-block"/>
             </ui:fragment>
 
             <ui:fragment rendered="#{not userDetailsHidden}">

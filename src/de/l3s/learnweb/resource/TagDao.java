@@ -38,8 +38,7 @@ public interface TagDao extends SqlObject, Serializable {
             .reduceRows(new OwnerList<>(), (list, rowView) -> {
                 Tag tag = rowView.getRow(Tag.class);
                 User user = rowView.getRow(User.class);
-                LocalDateTime timestamp = rowView.getColumn("timestamp", LocalDateTime.class);
-                list.add(tag, user, timestamp);
+                list.add(tag, user, rowView.getColumn("created_at", LocalDateTime.class));
                 return list;
             });
     }

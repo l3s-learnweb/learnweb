@@ -31,19 +31,13 @@ public interface MessageDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_message WHERE recipient_user_id = ? ORDER BY created_at DESC LIMIT ?")
     List<Message> findIncoming(User user, int limit);
 
-    @SqlUpdate("UPDATE lw_message SET is_seen = 1 WHERE message_id = ?")
+    @SqlUpdate("UPDATE lw_message SET seen = 1 WHERE message_id = ?")
     void updateMarkSeen(Message message);
 
-    @SqlUpdate("UPDATE lw_message SET is_read = 1 WHERE message_id = ?")
-    void updateMarkRead(Message message);
-
-    @SqlUpdate("UPDATE lw_message SET is_seen = 1 WHERE recipient_user_id = ?")
+    @SqlUpdate("UPDATE lw_message SET seen = 1 WHERE recipient_user_id = ?")
     void updateMarkSeenAll(User user);
 
-    @SqlUpdate("UPDATE lw_message SET is_read = 1 WHERE recipient_user_id = ?")
-    void updateMarkReadAll(User user);
-
-    @SqlQuery("SELECT count(*) FROM lw_message WHERE recipient_user_id = ? AND is_seen = 0")
+    @SqlQuery("SELECT count(*) FROM lw_message WHERE recipient_user_id = ? AND seen = 0")
     int countNotSeen(User user);
 
     default void save(Message message) {
@@ -53,8 +47,7 @@ public interface MessageDao extends SqlObject, Serializable {
         params.put("recipient_user_id", message.getToUserId());
         params.put("title", message.getTitle());
         params.put("text", message.getText());
-        params.put("is_seen", message.isSeen());
-        params.put("is_read", message.isRead());
+        params.put("seen", message.isSeen());
         params.put("created_at", message.getTime());
 
         Optional<Integer> messageId = SqlHelper.handleSave(getHandle(), "lw_message", params)
@@ -72,8 +65,7 @@ public interface MessageDao extends SqlObject, Serializable {
             message.setToUserId(rs.getInt("recipient_user_id"));
             message.setTitle(rs.getString("title"));
             message.setText(rs.getString("text"));
-            message.setSeen(rs.getBoolean("is_seen"));
-            message.setRead(rs.getBoolean("is_read"));
+            message.setSeen(rs.getBoolean("seen"));
             message.setTime(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return message;
         }

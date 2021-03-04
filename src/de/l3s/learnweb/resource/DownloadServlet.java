@@ -225,9 +225,7 @@ public class DownloadServlet extends HttpServlet {
                 }
             }
 
-            if (file.isDownloadLogActivated()) {
-                //log.debug(requestString + "\n" + StringHelper.urlDecode(requestString));
-
+            if (file.getType() == File.TYPE.FILE_MAIN) {
                 HttpSession session = request.getSession(true);
                 User user = null;
                 Integer userId = (Integer) session.getAttribute("learnweb_user_id");

@@ -314,7 +314,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     /**
-     * getUsername() may return "Anonymous" for some organizations.
+     * getUsername() may return "Anonymous" for some organisation.
      * This method will always return the real username
      */
     public String getRealUsername() {

@@ -25,7 +25,7 @@ public class MessageBean extends ApplicationBean implements Serializable {
     private MessageDao messageDao;
 
     public void onLoad() {
-        messageDao.updateMarkReadAll(getUser());
+        messageDao.updateMarkSeenAll(getUser());
     }
 
     public List<Message> getReceivedMessages() {

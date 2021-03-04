@@ -35,7 +35,7 @@ public class DeleteOldUsers extends MaintenanceTask {
         // just to make sure that SOLR is connected reindex a random resource
         getLearnweb().getSolrClient().reIndexResource(resourceDao.findByIdOrElseThrow(200233));
 
-        //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organization
+        //deleteUsersWhoHaventLoggedInForYears(4, 478); // delete users that didn't login for more than 4 years from the public organisation
         /*
         deleteUsersWhoHaveBeenSoftDeleted(1);
         deleteAbandonedGroups();
@@ -82,7 +82,7 @@ public class DeleteOldUsers extends MaintenanceTask {
      * It will also delete resources a user has created in public groups. Thus this call might affect other users.
      *
      * @param configYears number of years a user has to be inactive to be deleted
-     * @param organisationId the organization from which inactive users are deleted
+     * @param organisationId the organisation from which inactive users are deleted
      */
     private void deleteUsersWhoHaveNotLoggedInForYears(int configYears, int organisationId) {
         log.info("deleteUsersWhoHaveNotLoggedInForYears() - Start");
@@ -129,8 +129,8 @@ public class DeleteOldUsers extends MaintenanceTask {
     private void deleteAlmostAbandonedGroups() {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<Group> groups = handle.select("SELECT g.* FROM lw_group g LEFT JOIN lw_group_user u USING(group_id) LEFT JOIN lw_resource r USING(group_id) "
-                + "WHERE course_id in (485) and YEAR(creation_time) < year(now())-1 GROUP BY g.group_id, g.creation_time HAVING count(u.user_id) <= 2 "
-                + "AND count(r.resource_id) <=2 ORDER BY g.creation_time DESC ").map(new GroupDao.GroupMapper()).list();
+                + "WHERE course_id in (485) and YEAR(created_at) < year(now())-1 GROUP BY g.group_id, g.created_at HAVING count(u.user_id) <= 2 "
+                + "AND count(r.resource_id) <=2 ORDER BY g.created_at DESC ").map(new GroupDao.GroupMapper()).list();
 
             for (Group group : groups) {
                 log.debug("Delete: {}; resources: {}", group, group.getResourcesCount());
@@ -146,7 +146,7 @@ public class DeleteOldUsers extends MaintenanceTask {
     private void deleteAbandonedGroups() {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<Group> groups = handle.select("SELECT * FROM lw_group LEFT JOIN lw_group_user u USING(group_id) "
-                + "WHERE (YEAR(creation_time) < year(now())-1 AND u.group_id IS NULL) OR deleted = 1").map(new GroupDao.GroupMapper()).list();
+                + "WHERE (YEAR(created_at) < year(now())-1 AND u.group_id IS NULL) OR deleted = 1").map(new GroupDao.GroupMapper()).list();
 
             for (Group group : groups) {
                 log.debug("Delete: {}; resources: {}", group, group.getResourcesCount());
@@ -159,8 +159,8 @@ public class DeleteOldUsers extends MaintenanceTask {
     }
 
     // find problems
-    // users who belong to a different organization then their courses
-    // SELECT * FROM lw_course c JOIN lw_user_course USING(course_id) JOIN lw_user u USING(user_id) WHERE c.organisation_id != u.organisation_id
+    // users who belong to a different organisation then their courses
+    // SELECT * FROM lw_course c JOIN lw_course_user USING(course_id) JOIN lw_user u USING(user_id) WHERE c.organisation_id != u.organisation_id
 
     public static void main(String[] args) {
         new DeleteOldUsers().start(args);

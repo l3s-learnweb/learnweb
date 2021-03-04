@@ -1,6 +1,7 @@
 package de.l3s.learnweb.group;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -104,7 +105,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private long cacheTime = 0L;
     private int resourceCount = -1;
     private int memberCount = -1;
-    private final HashMap<Integer, Integer> lastVisitCache = new HashMap<>();
+    private final HashMap<Integer, Instant> lastVisitCache = new HashMap<>();
 
     public Group() {
     }
@@ -310,23 +311,23 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     public void setLastVisit(User user) {
-        int time = time(); // TODO: fixme
-        Learnweb.dao().getGroupDao().insertLastVisitTime(time, this, user);
-        lastVisitCache.put(user.getId(), time);
+        Instant now = Instant.now();
+        Learnweb.dao().getGroupDao().insertLastVisitTime(now, this, user);
+        lastVisitCache.put(user.getId(), now);
     }
 
     /**
-     * @return unix timestamp when the user has visited the group the last time; returns -1 if he never viewed the group
+     * @return time when the user has visited the group the last time; returns Instant.EPOCH if he never viewed the group
      */
-    public int getLastVisit(User user) {
-        Integer time = lastVisitCache.get(user.getId());
-        if (null != time) {
-            return time;
+    public Instant getLastVisit(User user) {
+        Instant instant = lastVisitCache.get(user.getId());
+        if (null != instant) {
+            return instant;
         }
 
-        time = Learnweb.dao().getGroupDao().findLastVisitTime(this, user).orElse(-1);
-        lastVisitCache.put(user.getId(), time);
-        return time;
+        instant = Learnweb.dao().getGroupDao().findLastVisitTime(this, user).orElse(Instant.EPOCH);
+        lastVisitCache.put(user.getId(), instant);
+        return instant;
     }
 
     /**
@@ -598,10 +599,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
      */
     public void delete() {
         Learnweb.dao().getGroupDao().deleteSoft(this);
-    }
-
-    private static int time() {
-        return (int) (System.currentTimeMillis() / 1000);
     }
 
     public static TreeNode getFoldersTree(Group group, int activeFolder) {

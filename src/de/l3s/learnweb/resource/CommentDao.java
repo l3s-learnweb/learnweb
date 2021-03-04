@@ -29,7 +29,7 @@ public interface CommentDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_comment JOIN lw_resource USING(resource_id) WHERE user_id IN (<userIds>) AND deleted = 0")
     List<Comment> findByUserIds(@BindList("userIds") Collection<Integer> userIds);
 
-    @SqlQuery("SELECT * FROM lw_comment WHERE resource_id = ? ORDER BY date DESC")
+    @SqlQuery("SELECT * FROM lw_comment WHERE resource_id = ? ORDER BY created_at DESC")
     List<Comment> findByResourceId(int resourceId);
 
     @SqlUpdate("DELETE FROM lw_comment WHERE comment_id = ?")
@@ -41,7 +41,7 @@ public interface CommentDao extends SqlObject, Serializable {
         params.put("resource_id", SqlHelper.toNullable(comment.getResourceId()));
         params.put("user_id", SqlHelper.toNullable(comment.getUserId()));
         params.put("text", comment.getText());
-        params.put("date", comment.getDate());
+        params.put("created_at", comment.getDate());
 
         Optional<Integer> commentId = SqlHelper.handleSave(getHandle(), "lw_comment", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -57,7 +57,7 @@ public interface CommentDao extends SqlObject, Serializable {
             comment.setResourceId(rs.getInt("resource_id"));
             comment.setUserId(rs.getInt("user_id"));
             comment.setText(rs.getString("text"));
-            comment.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("date")));
+            comment.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return comment;
         }
     }

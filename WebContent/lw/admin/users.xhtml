@@ -93,7 +93,7 @@
                 <p:tooltip for="@previous" value="#{userView.coursesTitles}" position="top"/>
             </p:column>
 
-            <p:column headerText="#{msg.organization}" sortBy="#{userView.organisation.title}" filterBy="#{userView.organisation.title}" filterMatchMode="contains"
+            <p:column headerText="#{msg.organisation}" sortBy="#{userView.organisation.title}" filterBy="#{userView.organisation.title}" filterMatchMode="contains"
                       visible="false" styleClass="text-truncate mw-r10" rendered="#{adminUsersBean.courseId == 0}">
                 <h:outputText value="#{userView.organisation.title}" id="organisation"/>
                 <p:tooltip for="@previous" value="#{userView.organisation.title}" position="top"/>
@@ -105,7 +105,7 @@
                 </p:selectBooleanCheckbox>
             </p:column>
 
-            <p:column headerText="#{msg.options}"> 
+            <p:column headerText="#{msg.options}">
                 <h:commandLink action="#{adminUsersBean.rootLogin(userView.user)}" rendered="#{userBean.canLoginToAccount(userView.user)}">
                     #{msg.loginLabel}
                 </h:commandLink>

@@ -50,7 +50,7 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
 
     public void onCreateSurvey() {
         selectedSurvey = new Survey();
-        selectedSurvey.setOrganizationId(getUser().getOrganisationId());
+        selectedSurvey.setOrganisationId(getUser().getOrganisationId());
         selectedSurvey.setUserId(getUser().getId());
         selectedSurvey.setPublicTemplate(true);
     }

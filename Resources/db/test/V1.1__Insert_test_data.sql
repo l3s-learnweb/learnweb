@@ -12,7 +12,7 @@ INSERT INTO `lw_bans` (`addr`, `expires`, `created_at`, `attempts`, `reason`) VA
     ('179.243.153.100', '2022-08-28 20:58:18', '2020-05-21 10:50:15', 0, 'SQL injection'),
     ('128.23.35.138', '2027-12-19 04:41:09', '2020-03-10 00:18:46', 0, 'SQL injection');
 
-INSERT INTO `lw_bounces` (`id`, `address`, `timereceived`, `code`, `description`) VALUES
+INSERT INTO `lw_bounces` (`bounce_id`, `email`, `received`, `code`, `description`) VALUES
     (1, 'plehner@example.org', '2018-10-20 18:26:36', '4.1.2', 'Transient Persistent Failure: Bad destination system address'),
     (2, 'lstrosin@example.org', '2020-12-08 18:07:59', '5.4.1', 'Permanent Failure: No answer from host'),
     (3, 'sandy69@example.net', '2020-11-28 18:33:35', '5.4.1', 'Permanent Failure: No answer from host'),
@@ -24,7 +24,7 @@ INSERT INTO `lw_bounces` (`id`, `address`, `timereceived`, `code`, `description`
     (9, NULL, '2020-10-12 11:55:59', '5.0.0', 'Permanent Failure: Unspecified mailing error'),
     (10, 'nitzsche.jarod@example.org', '2019-03-23 18:16:24', '4.1.2', 'Transient Persistent Failure: Bad destination system address');
 
-INSERT INTO `lw_comment` (`comment_id`, `resource_id`, `user_id`, `text`, `date`) VALUES
+INSERT INTO `lw_comment` (`comment_id`, `resource_id`, `user_id`, `text`, `created_at`) VALUES
     (1, 1, 1, 'Lets get you into a', '2021-02-19 17:53:56'),
     (2, 2, 1, 'Common, common lets go.', '2021-02-19 17:54:54'),
     (3, 2, 1, 'That is private resource, no one else can comment 😭', '2021-02-19 17:55:25'),
@@ -36,7 +36,7 @@ INSERT INTO `lw_comment` (`comment_id`, `resource_id`, `user_id`, `text`, `date`
     (9, 6, 6, 'https://satoristudio.net/delorean-ipsum/', '2021-02-19 18:38:44'),
     (10, 6, 6, 'The keys are in the', '2021-02-19 18:40:36');
 
-INSERT INTO `lw_course` (`course_id`, `title`, `options_field1`, `organisation_id`, `default_group_id`, `wizard_param`, `next_x_users_become_moderator`, `welcome_message`, `timestamp_update`, `timestamp_creation`) VALUES
+INSERT INTO `lw_course` (`course_id`, `title`, `options_field1`, `organisation_id`, `default_group_id`, `wizard_param`, `next_x_users_become_moderator`, `welcome_message`, `updated_at`, `created_at`) VALUES
     (1, 'Public', 17, 1, NULL, 'default', 0, 'Welcome to the public course', '2019-11-27 20:38:07', '2019-11-27 20:38:07'),
     (2, 'Vel possimus', 53, 2, NULL, NULL, 3, 'Excepturi blanditiis eos veniam ut.', '2021-02-06 14:42:33', '2020-04-16 16:35:42'),
     (3, 'Nulla earum ratione', 53, 2, NULL, 'eius', 0, 'Velit alias asperiores ut in sunt et ratione ut.', '2021-02-04 01:02:29', '2020-06-29 14:47:29'),
@@ -48,45 +48,45 @@ INSERT INTO `lw_course` (`course_id`, `title`, `options_field1`, `organisation_i
     (9, 'Quia quo nulla', 49, 1, NULL, 'quo', 1, 'Aperiam iure reprehenderit numquam molestiae laborum.', '2021-02-10 07:54:11', '2020-05-29 04:59:29'),
     (10, 'Deleniti temporibus', 17, 1, NULL, 'harum', 0, 'Quisquam excepturi qui porro quia occaecati nulla placeat ut.', '2021-02-01 12:59:04', '2020-09-04 11:22:20');
 
-INSERT INTO `lw_file` (`file_id`, `deleted`, `resource_id`, `resource_file_number`, `name`, `mime_type`, `log_actived`, `timestamp`, `missing`, `doc_key`) VALUES
-    (1, 0, NULL, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 17:52:42', 0, NULL),
-    (2, 0, 1, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 17:52:47', 0, NULL),
-    (3, 0, 1, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 17:52:47', 0, NULL),
-    (5, 0, 1, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 17:52:48', 0, NULL),
-    (7, 0, 2, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 17:54:29', 0, NULL),
-    (8, 0, 2, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 17:54:29', 0, NULL),
-    (10, 0, 2, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 17:54:29', 0, NULL),
-    (12, 0, 2, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 17:54:32', 0, NULL),
-    (13, 0, 2, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 17:54:32', 0, NULL),
-    (15, 0, 2, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 17:54:33', 0, NULL),
-    (17, 0, 3, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 17:56:34', 0, NULL),
-    (18, 0, 3, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 17:56:34', 0, NULL),
-    (20, 0, 3, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 17:56:34', 0, NULL),
-    (22, 0, 3, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 17:56:36', 0, NULL),
-    (23, 0, 3, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 17:56:36', 0, NULL),
-    (25, 0, 3, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 17:56:37', 0, NULL),
-    (27, 0, 4, 4, 'Screenshot 2021-02-19 175929.png', 'image/png', 1, '2021-02-19 18:03:14', 0, NULL),
-    (28, 0, 4, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 18:03:14', 0, NULL),
-    (29, 0, 4, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 18:03:14', 0, NULL),
-    (31, 0, 4, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 18:03:14', 0, NULL),
-    (33, 0, 5, 4, 'Screenshot 2021-02-19 180005.png', 'image/png', 1, '2021-02-19 18:04:14', 0, NULL),
-    (34, 0, 5, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 18:04:14', 0, NULL),
-    (35, 0, 5, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 18:04:14', 0, NULL),
-    (37, 0, 5, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 18:04:14', 0, NULL),
-    (39, 0, 6, 4, 'Screenshot 2021-02-19 180048.png', 'image/png', 1, '2021-02-19 18:04:28', 0, NULL),
-    (40, 0, 6, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 18:04:28', 0, NULL),
-    (41, 0, 6, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 18:04:28', 0, NULL),
-    (43, 0, 6, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 18:04:28', 0, NULL),
-    (45, 0, 7, 4, 'Screenshot 2021-02-19 180230.png', 'image/png', 1, '2021-02-19 18:04:39', 0, NULL),
-    (46, 0, 7, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 18:04:39', 0, NULL),
-    (47, 0, 7, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 18:04:39', 0, NULL),
-    (49, 0, 7, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 18:04:39', 0, NULL),
-    (51, 0, 8, 4, 'Screenshot 2021-02-19 180254.png', 'image/png', 1, '2021-02-19 18:04:53', 0, NULL),
-    (52, 0, 8, 5, 'thumbnail4.png', 'image/png', 0, '2021-02-19 18:04:53', 0, NULL),
-    (53, 0, 8, 6, 'thumbnail0.png', 'image/png', 0, '2021-02-19 18:04:53', 0, NULL),
-    (55, 0, 8, 2, 'thumbnail2.png', 'image/png', 0, '2021-02-19 18:04:53', 0, NULL);
+INSERT INTO `lw_file` (`file_id`, `deleted`, `resource_id`, `type`, `name`, `mime_type`, `updated_at`) VALUES
+    (1, 0, NULL, 5, 'thumbnail4.png', 'image/png', '2021-02-19 17:52:42'),
+    (2, 0, 1, 5, 'thumbnail4.png', 'image/png', '2021-02-19 17:52:47'),
+    (3, 0, 1, 6, 'thumbnail0.png', 'image/png', '2021-02-19 17:52:47'),
+    (5, 0, 1, 2, 'thumbnail2.png', 'image/png', '2021-02-19 17:52:48'),
+    (7, 0, 2, 5, 'thumbnail4.png', 'image/png', '2021-02-19 17:54:29'),
+    (8, 0, 2, 6, 'thumbnail0.png', 'image/png', '2021-02-19 17:54:29'),
+    (10, 0, 2, 2, 'thumbnail2.png', 'image/png', '2021-02-19 17:54:29'),
+    (12, 0, 2, 5, 'thumbnail4.png', 'image/png', '2021-02-19 17:54:32'),
+    (13, 0, 2, 6, 'thumbnail0.png', 'image/png', '2021-02-19 17:54:32'),
+    (15, 0, 2, 2, 'thumbnail2.png', 'image/png', '2021-02-19 17:54:33'),
+    (17, 0, 3, 5, 'thumbnail4.png', 'image/png', '2021-02-19 17:56:34'),
+    (18, 0, 3, 6, 'thumbnail0.png', 'image/png', '2021-02-19 17:56:34'),
+    (20, 0, 3, 2, 'thumbnail2.png', 'image/png', '2021-02-19 17:56:34'),
+    (22, 0, 3, 5, 'thumbnail4.png', 'image/png', '2021-02-19 17:56:36'),
+    (23, 0, 3, 6, 'thumbnail0.png', 'image/png', '2021-02-19 17:56:36'),
+    (25, 0, 3, 2, 'thumbnail2.png', 'image/png', '2021-02-19 17:56:37'),
+    (27, 0, 4, 4, 'Screenshot 2021-02-19 175929.png', 'image/png', '2021-02-19 18:03:14'),
+    (28, 0, 4, 5, 'thumbnail4.png', 'image/png', '2021-02-19 18:03:14'),
+    (29, 0, 4, 6, 'thumbnail0.png', 'image/png', '2021-02-19 18:03:14'),
+    (31, 0, 4, 2, 'thumbnail2.png', 'image/png', '2021-02-19 18:03:14'),
+    (33, 0, 5, 4, 'Screenshot 2021-02-19 180005.png', 'image/png', '2021-02-19 18:04:14'),
+    (34, 0, 5, 5, 'thumbnail4.png', 'image/png', '2021-02-19 18:04:14'),
+    (35, 0, 5, 6, 'thumbnail0.png', 'image/png', '2021-02-19 18:04:14'),
+    (37, 0, 5, 2, 'thumbnail2.png', 'image/png', '2021-02-19 18:04:14'),
+    (39, 0, 6, 4, 'Screenshot 2021-02-19 180048.png', 'image/png', '2021-02-19 18:04:28'),
+    (40, 0, 6, 5, 'thumbnail4.png', 'image/png', '2021-02-19 18:04:28'),
+    (41, 0, 6, 6, 'thumbnail0.png', 'image/png', '2021-02-19 18:04:28'),
+    (43, 0, 6, 2, 'thumbnail2.png', 'image/png', '2021-02-19 18:04:28'),
+    (45, 0, 7, 4, 'Screenshot 2021-02-19 180230.png', 'image/png', '2021-02-19 18:04:39'),
+    (46, 0, 7, 5, 'thumbnail4.png', 'image/png', '2021-02-19 18:04:39'),
+    (47, 0, 7, 6, 'thumbnail0.png', 'image/png', '2021-02-19 18:04:39'),
+    (49, 0, 7, 2, 'thumbnail2.png', 'image/png', '2021-02-19 18:04:39'),
+    (51, 0, 8, 4, 'Screenshot 2021-02-19 180254.png', 'image/png', '2021-02-19 18:04:53'),
+    (52, 0, 8, 5, 'thumbnail4.png', 'image/png', '2021-02-19 18:04:53'),
+    (53, 0, 8, 6, 'thumbnail0.png', 'image/png', '2021-02-19 18:04:53'),
+    (55, 0, 8, 2, 'thumbnail2.png', 'image/png', '2021-02-19 18:04:53');
 
-INSERT INTO `lw_forum_post` (`post_id`, `deleted`, `topic_id`, `user_id`, `text`, `category`, `post_time`, `post_edit_time`, `post_edit_count`, `post_edit_user_id`) VALUES
+INSERT INTO `lw_forum_post` (`post_id`, `deleted`, `topic_id`, `user_id`, `text`, `category`, `created_at`, `updated_at`, `edit_count`, `edit_user_id`) VALUES
     (1, 0, 1, 4, '<p>Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti. Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum.</p>', NULL, '2021-02-19 18:33:49', '2021-02-19 18:33:49', 0, NULL),
     (2, 0, 2, 4, '<p>Vestibulum rutrum rutrum neque.</p>', NULL, '2021-02-19 18:34:02', '2021-02-19 18:34:02', 0, NULL),
     (3, 0, 2, 1, '<p>Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus. Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.</p>', NULL, '2021-02-19 18:34:32', '2021-02-19 18:34:32', 0, NULL),
@@ -103,7 +103,7 @@ INSERT INTO `lw_forum_post` (`post_id`, `deleted`, `topic_id`, `user_id`, `text`
     (14, 0, 5, 2, '<p>Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum. In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante.</p>', NULL, '2021-02-19 18:36:50', '2021-02-19 18:36:50', 0, NULL),
     (15, 0, 5, 2, '<p>In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices.</p>', NULL, '2021-02-19 18:36:56', '2021-02-19 18:36:56', 0, NULL);
 
-INSERT INTO `lw_forum_topic` (`topic_id`, `group_id`, `deleted`, `topic_title`, `user_id`, `topic_time`, `topic_views`, `topic_replies`, `topic_last_post_id`, `topic_last_post_time`, `topic_last_post_user_id`) VALUES
+INSERT INTO `lw_forum_topic` (`topic_id`, `group_id`, `deleted`, `title`, `user_id`, `created_at`, `views`, `replies`, `last_post_id`, `updated_at`, `last_post_user_id`) VALUES
     (1, 1, 0, 'Elevator', 4, '2021-02-19 18:33:49', 2, 2, 7, '2021-02-19 18:34:57', 1),
     (2, 1, 0, 'How I Live Now', 4, '2021-02-19 18:34:02', 2, 3, 5, '2021-02-19 18:34:43', 1),
     (3, 1, 0, 'Hair Show', 1, '2021-02-19 18:35:12', 1, 0, NULL, '2021-02-19 18:35:12', 1),
@@ -119,7 +119,7 @@ INSERT INTO `lw_forum_topic_user` (`topic_id`, `user_id`, `last_visit`) VALUES
     (4, 1, '2021-02-19 18:35:27'),
     (5, 2, '2021-02-19 18:36:30');
 
-INSERT INTO `lw_glossary_entry` (`entry_id`, `resource_id`, `original_entry_id`, `last_changed_by_user_id`, `user_id`, `deleted`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`, `timestamp`) VALUES
+INSERT INTO `lw_glossary_entry` (`entry_id`, `resource_id`, `original_entry_id`, `edit_user_id`, `user_id`, `deleted`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`, `created_at`) VALUES
     (1, 9, NULL, 4, 4, 0, 'Globalization', '', '', 'Dummy Text', 0, '2021-02-19 18:18:17'),
     (2, 9, NULL, 4, 4, 0, 'Tourism', 'Surroundings', '', 'where you can find minerals', 0, '2021-02-19 18:25:42'),
     (3, 9, NULL, 4, 4, 0, 'Tourism', 'Activities and Tours', '', 'accessories used to swim', 0, '2021-02-19 18:26:32'),
@@ -134,7 +134,7 @@ INSERT INTO `lw_glossary_entry` (`entry_id`, `resource_id`, `original_entry_id`,
 INSERT INTO `lw_glossary_resource` (`resource_id`, `allowed_languages`) VALUES
     (9, 'de,en,fr,it,es');
 
-INSERT INTO `lw_glossary_term` (`term_id`, `entry_id`, `original_term_id`, `last_changed_by_user_id`, `user_id`, `deleted`, `term`, `language`, `uses`, `pronounciation`, `acronym`, `source`, `phraseology`, `timestamp`, `term_pasted`, `pronounciation_pasted`, `acronym_pasted`, `phraseology_pasted`) VALUES
+INSERT INTO `lw_glossary_term` (`term_id`, `entry_id`, `original_term_id`, `edit_user_id`, `user_id`, `deleted`, `term`, `language`, `uses`, `pronounciation`, `acronym`, `source`, `phraseology`, `created_at`, `term_pasted`, `pronounciation_pasted`, `acronym_pasted`, `phraseology_pasted`) VALUES
     (1, 2, NULL, 4, 4, 0, 'Giacimento minerale', 'it', '', '', '', 'encyclopaedia', '', '2021-02-19 18:25:43', 1, 0, 0, 0),
     (2, 2, NULL, 4, 4, 0, 'Mineral deposit', 'en', 'technical', '', '', '', '', '2021-02-19 18:25:43', 1, 0, 0, 0),
     (3, 3, NULL, 4, 4, 0, 'Pinna', 'it', '', '', '', '', '', '2021-02-19 18:26:32', 1, 0, 0, 0),
@@ -156,7 +156,7 @@ INSERT INTO `lw_glossary_term` (`term_id`, `entry_id`, `original_term_id`, `last
     (19, 10, NULL, 4, 4, 0, 'Ettaro', 'it', '', '', '', 'Linguee or Reverso', '', '2021-02-19 18:32:18', 1, 0, 0, 0),
     (20, 10, NULL, 4, 4, 0, 'Hectare', 'en', '', '/ˈhekteə(r)/', '', '', '', '2021-02-19 18:32:18', 1, 0, 0, 0);
 
-INSERT INTO `lw_group` (`group_id`, `deleted`, `title`, `description`, `creation_time`, `course_id`, `max_member_count`, `restriction_forum_category_required`, `leader_id`, `policy_add`, `policy_annotate`, `policy_edit`, `policy_join`, `policy_view`, `hypothesis_link`, `hypothesis_token`) VALUES
+INSERT INTO `lw_group` (`group_id`, `deleted`, `title`, `description`, `created_at`, `course_id`, `max_member_count`, `restriction_forum_category_required`, `leader_id`, `policy_add`, `policy_annotate`, `policy_edit`, `policy_join`, `policy_view`, `hypothesis_link`, `hypothesis_token`) VALUES
     (1, 0, 'Ventosanzap', '<p><strong>Ut qui voluptas voluptas odio libero necessitatibus temporibus.</strong> Ab cum saepe aliquam non et ea sunt molestiae. Molestiae dolorem eum quaerat.</p>', '2016-03-07 02:39:23', 1, -1, 0, 1, 'GROUP_MEMBERS', 'ALL_LEARNWEB_USERS', 'GROUP_MEMBERS', 'ALL_LEARNWEB_USERS', 'ALL_LEARNWEB_USERS', NULL, NULL),
     (2, 0, 'Dolores optio ipsa illum', '<p>Optio est et ex quae id aut. <strong>Voluptatem nesciunt</strong> quia nulla dolor minus impedit quasi inventore. Vero et eos voluptas veniam harum molestiae dolorum magnam. Animi ea sequi nihil hic</p>', '2016-06-10 23:46:01', 1, 2, 0, 1, 'GROUP_MEMBERS', 'COURSE_MEMBERS', 'GROUP_MEMBERS', 'COURSE_MEMBERS', 'COURSE_MEMBERS', NULL, NULL),
     (3, 1, 'Dolor vel qui mollitia', '<p><s>Pariatur consequatur velit aperiam</s>. Voluptas eligendi doloribus enim dolorem earum. Ullam perspiciatis et et deserunt et modi fugit.</p>', '2016-05-13 22:51:45', 1, -1, 0, 1, 'GROUP_LEADER', 'COURSE_MEMBERS', 'GROUP_LEADER_AND_FILE_OWNER', 'ORGANISATION_MEMBERS', 'ALL_LEARNWEB_USERS', NULL, NULL),
@@ -168,7 +168,7 @@ INSERT INTO `lw_group` (`group_id`, `deleted`, `title`, `description`, `creation
     (9, 0, 'Dolor nemo rerum', '<p>Minus ex aut voluptas. Voluptatem dolor amet et ipsam deserunt minus assumenda vel. Et quasi quas quaerat sapiente rem</p>', '2015-12-14 13:30:45', 1, -1, 0, 7, 'GROUP_MEMBERS', 'COURSE_MEMBERS', 'GROUP_MEMBERS', 'COURSE_MEMBERS', 'COURSE_MEMBERS', NULL, NULL),
     (10, 0, 'Culpa et', '<p><em><u>Ad adipisci harum et nobis. Pariatur est et tenetur doloremque ex. Asperiores sint repellendus omnis in quia dolorem. Dignissimos assumenda quae esse ipsa officiis blanditiis debitis.</u></em></p>', '2017-07-19 21:45:31', 1, -1, 0, 1, 'GROUP_MEMBERS', 'COURSE_MEMBERS', 'GROUP_MEMBERS', 'COURSE_MEMBERS', 'COURSE_MEMBERS', NULL, NULL);
 
-INSERT INTO `lw_group_folder` (`folder_id`, `deleted`, `group_id`, `parent_folder_id`, `name`, `description`, `user_id`, `last_change`) VALUES
+INSERT INTO `lw_group_folder` (`folder_id`, `deleted`, `group_id`, `parent_folder_id`, `name`, `description`, `user_id`, `updated_at`) VALUES
     (1, 0, 1, NULL, 'Sonair', 'Sed vero ut quia.', 1, '2021-02-19 16:11:17'),
     (2, 0, 1, NULL, 'Treeflex', 'Eius animi.', 1, '2021-02-19 16:12:02'),
     (3, 0, 1, NULL, 'Duobam', '', 1, '2021-02-19 16:19:14'),
@@ -193,17 +193,17 @@ INSERT INTO `lw_group_user` (`group_id`, `user_id`, `join_time`, `last_visit`, `
     (9, 7, '2021-02-19 16:05:26', 0, 'NEVER'),
     (10, 1, '2021-02-19 16:06:37', 1613747458, 'NEVER');
 
-INSERT INTO `lw_message` (`message_id`, `sender_user_id`, `recipient_user_id`, `title`, `text`, `is_seen`, `is_read`, `created_at`) VALUES
-    (1, 6, 8, 'Dolorum maxime.', 'Sed eos vitae voluptatem qui et est. Aliquid nam officiis dolore ipsa. Repellat ab tenetur eveniet nostrum.', 0, 1, '2016-02-14 19:34:25'),
-    (2, 1, 2, 'Qui eaque rerum.', 'Doloribus aliquid harum cum facere totam est minus. Eveniet aut ab et fugiat dicta quia accusamus. Et consequatur eligendi in.', 1, 0, '2013-06-11 09:07:06'),
-    (3, 1, 7, 'Omnis sit dolorum commodi.', 'Eos velit aut rerum ut ullam non. Aut repellat labore earum quasi autem sed libero.', 0, 0, '2019-01-04 11:00:47'),
-    (4, 3, 1, 'Labore enim esse.', 'Voluptatem et labore sed est doloribus perferendis. Impedit quia qui iure inventore esse. Dicta optio aut sit est. Reprehenderit quibusdam est illum quia quasi est quis.', 1, 0, '2021-01-26 11:57:36'),
-    (5, 2, 3, 'Expedita atque porro vero.', 'Soluta dicta occaecati optio ullam quae quia. Officiis pariatur temporibus et est qui. Repellendus aut maxime dignissimos doloribus sunt. Animi eum voluptatem consequatur expedita.', 0, 0, '2014-02-22 01:11:57'),
-    (6, 7, 9, 'Exercitationem culpa voluptatem.', 'Voluptatum aliquid dolores aut aut commodi enim qui. Tempore velit et dolores libero. Officia sunt rerum ex aspernatur reprehenderit.', 0, 1, '2018-03-22 22:36:47'),
-    (7, 6, 4, 'Voluptatibus labore assumenda.', 'Sed ea eligendi veniam et fuga est. In blanditiis enim sunt nihil consequuntur. Doloribus porro eveniet tempora qui iure. Aut rerum provident error et consequatur.', 0, 0, '2015-06-19 10:34:35'),
-    (8, 4, 8, 'Eos deserunt quae enim.', 'Aliquam corrupti a enim ex vitae. Laboriosam expedita aut et. Fugiat rem ab sit quasi quos hic. Et similique at consequatur eveniet.', 0, 0, '2016-11-23 10:50:05'),
-    (9, 1, 2, 'Quia fugiat dolores.', 'Deserunt sunt hic quaerat sint incidunt nemo. Harum autem eos reiciendis ipsum. Non sunt eos accusantium ut non ut.', 0, 0, '2020-11-13 17:17:16'),
-    (10, 2, 1, 'Omnis ducimus.', 'Nobis debitis aut vero et delectus. Omnis velit facere voluptatum dolor quisquam. Ut earum excepturi ullam.', 0, 1, '2013-01-14 00:11:40');
+INSERT INTO `lw_message` (`message_id`, `sender_user_id`, `recipient_user_id`, `title`, `text`, `read`, `created_at`) VALUES
+    (1, 6, 8, 'Dolorum maxime.', 'Sed eos vitae voluptatem qui et est. Aliquid nam officiis dolore ipsa. Repellat ab tenetur eveniet nostrum.', 1, '2016-02-14 19:34:25'),
+    (2, 1, 2, 'Qui eaque rerum.', 'Doloribus aliquid harum cum facere totam est minus. Eveniet aut ab et fugiat dicta quia accusamus. Et consequatur eligendi in.', 0, '2013-06-11 09:07:06'),
+    (3, 1, 7, 'Omnis sit dolorum commodi.', 'Eos velit aut rerum ut ullam non. Aut repellat labore earum quasi autem sed libero.', 0, '2019-01-04 11:00:47'),
+    (4, 3, 1, 'Labore enim esse.', 'Voluptatem et labore sed est doloribus perferendis. Impedit quia qui iure inventore esse. Dicta optio aut sit est. Reprehenderit quibusdam est illum quia quasi est quis.', 0, '2021-01-26 11:57:36'),
+    (5, 2, 3, 'Expedita atque porro vero.', 'Soluta dicta occaecati optio ullam quae quia. Officiis pariatur temporibus et est qui. Repellendus aut maxime dignissimos doloribus sunt. Animi eum voluptatem consequatur expedita.', 0, '2014-02-22 01:11:57'),
+    (6, 7, 9, 'Exercitationem culpa voluptatem.', 'Voluptatum aliquid dolores aut aut commodi enim qui. Tempore velit et dolores libero. Officia sunt rerum ex aspernatur reprehenderit.', 1, '2018-03-22 22:36:47'),
+    (7, 6, 4, 'Voluptatibus labore assumenda.', 'Sed ea eligendi veniam et fuga est. In blanditiis enim sunt nihil consequuntur. Doloribus porro eveniet tempora qui iure. Aut rerum provident error et consequatur.', 0, '2015-06-19 10:34:35'),
+    (8, 4, 8, 'Eos deserunt quae enim.', 'Aliquam corrupti a enim ex vitae. Laboriosam expedita aut et. Fugiat rem ab sit quasi quos hic. Et similique at consequatur eveniet.', 0, '2016-11-23 10:50:05'),
+    (9, 1, 2, 'Quia fugiat dolores.', 'Deserunt sunt hic quaerat sint incidunt nemo. Harum autem eos reiciendis ipsum. Non sunt eos accusantium ut non ut.', 0, '2020-11-13 17:17:16'),
+    (10, 2, 1, 'Omnis ducimus.', 'Nobis debitis aut vero et delectus. Omnis velit facere voluptatum dolor quisquam. Ut earum excepturi ullam.', 1, '2013-01-14 00:11:40');
 
 INSERT INTO `lw_news` (`news_id`, `user_id`, `hidden`, `title`, `message`, `created_at`) VALUES
     (1, 2, 1, 'Dolores eum illum neque.', 'Omnis tempore et deserunt. Quia qui rerum qui eum commodi sint non.', '2017-03-03 00:01:02'),
@@ -229,7 +229,7 @@ INSERT INTO `lw_organisation` (`organisation_id`, `is_default`, `title`, `logo`,
     (9, NULL, 'Njala University', NULL, 'myhome/welcome.jsf', 'Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.', 196, 'learnweb', 'flickr', 'youtube', 'pt', '', NULL, NULL, 'de,en,it,lv,ru'),
     (10, NULL, 'Universidad de Navarra', NULL, 'myhome/welcome.jsf', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.', 12, 'bing', 'flickr', 'youtube', 'en', '', NULL, NULL, 'en,de,it');
 
-INSERT INTO `lw_requests` (`id`, `IP`, `requests`, `logins`, `usernames`, `time`) VALUES
+INSERT INTO `lw_requests` (`request_id`, `addr`, `requests`, `logins`, `usernames`, `updated_at`) VALUES
     (1, '33.143.226.138', 4, 2, '[admin]', '2019-06-16 05:00:00'),
     (2, '180.108.249.51', 1, 0, '', '2018-12-05 20:00:00'),
     (3, '40.77.167.200', 2, 0, '', '2018-06-30 06:00:00'),
@@ -241,7 +241,7 @@ INSERT INTO `lw_requests` (`id`, `IP`, `requests`, `logins`, `usernames`, `time`
     (9, '207.84.18.203', 1, 0, '', '2020-01-30 18:00:00'),
     (10, '151.45.185.174', 24, 0, '', '2018-03-27 18:00:00');
 
-INSERT INTO `lw_resource` (`resource_id`, `deleted`, `group_id`, `folder_id`, `title`, `description`, `url`, `storage_type`, `rights`, `source`, `language`, `author`, `type`, `format`, `duration`, `owner_user_id`, `id_at_service`, `rating`, `rate_number`, `filename`, `file_url`, `max_image_url`, `query`, `original_resource_id`, `machine_description`, `access`, `thumbnail0_url`, `thumbnail0_file_id`, `thumbnail0_width`, `thumbnail0_height`, `thumbnail2_url`, `thumbnail2_file_id`, `thumbnail2_width`, `thumbnail2_height`, `thumbnail4_url`, `thumbnail4_file_id`, `thumbnail4_width`, `thumbnail4_height`, `embeddedRaw`, `transcript`, `read_only_transcript`, `online_status`, `restricted`, `resource_timestamp`, `creation_date`, `metadata`) VALUES
+INSERT INTO `lw_resource` (`resource_id`, `deleted`, `group_id`, `folder_id`, `title`, `description`, `url`, `storage_type`, `rights`, `source`, `language`, `author`, `type`, `format`, `duration`, `owner_user_id`, `id_at_service`, `rating`, `rate_number`, `filename`, `file_url`, `max_image_url`, `query`, `original_resource_id`, `machine_description`, `access`, `thumbnail0_url`, `thumbnail0_file_id`, `thumbnail0_width`, `thumbnail0_height`, `thumbnail2_url`, `thumbnail2_file_id`, `thumbnail2_width`, `thumbnail2_height`, `thumbnail4_url`, `thumbnail4_file_id`, `thumbnail4_width`, `thumbnail4_height`, `embeddedRaw`, `transcript`, `read_only_transcript`, `online_status`, `restricted`, `updated_at`, `created_at`, `metadata`) VALUES
     (1, 0, 1, 4, 'Building the Perfect Squirrel Proof Bird Feeder', 'Squirrels were stealing my bird seed so I solved the problem with mechanical engineering :)\nGet your first month of KiwiCo for FREE!!! https://www.kiwico.com/markrober\n\nHere is an explanation of the illusion dish thing!- https://demos.smu.ca/index.php/demos/optics/69-mirage-mirror\n\nHere is a link to the illusion dish (not sponsored :) https://www.amazon.com/dp/B0718XCG7F/ref=cm_sw_em_r_mt_dp_U_D9PYEbC85X14F\n\n*MUSIC*\n0:02 - Arrow (Instrumental) - Andrew Applepie http://andrewapplepie.com/\n0:27 - Kalimba Jam - Blue Wednesday https://soundcloud.com/bluewednesday/\n3:21 - Zambo - Devil in Disguise https://danijel-zambo.bandcamp.com/track/devil-in-disguise-2 \n3:47 - Cereal Killa - Blue Wednesday https://soundcloud.com/bluewednesday/\n5:28 - J. Thompson - Real Quick Lovin https://www.amazon.com/Real-Quick-Lovin/dp/B0010YGE3W\n5:39 - New Shoes - Blue Wednesday https://soundcloud.com/bluewednesday/\n7:51- Chi- Ponder- https://www.prodbyponder.com/5-free-beats32029775\n8:31 - Marimba Idea - Blue Wednesday https://soundcloud.com/bluewednesday/ \n9:25 - Josef Falkenskold - Tiny Tumble https://www.epidemicsound.com/artists/josef-falkenskold\n19:07 - Nik- Ponder- https://www.prodbyponder.com/5-free-beats32029775', 'https://www.youtube.com/watch?v=hFZFjoX2cGg', 2, 0, 'youtube', '', 'Mark Rober', 'video', '', 0, 1, 'hFZFjoX2cGg', 0, 0, '', NULL, 'https://i.ytimg.com/vi/hFZFjoX2cGg/maxresdefault.jpg', 'none', NULL, NULL, NULL, NULL, 3, 150, 84, NULL, 5, 300, 169, NULL, 2, 1280, 720, NULL, NULL, 0, 'ONLINE', 0, '2021-02-19 17:52:48', '2021-02-19 17:52:38', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
     (2, 0, NULL, NULL, 'Using Drones to Plant 20,000,000 Trees', 'Join #TeamTrees at https://teamtrees.org/\nCreate your own personal website at https://wix.com/go/MarkRober\n\nALSO, see how I make all my builds using Wix: https://markroberbuildinstructions.com\n\nThanks to my friends at Discovery Channel for helping us find Arbor Day in the first place and then capturing all the footage for my video.  They are absolute champions to work with Ive got some really cool projects coming up soon.  \n\nLearn more about my smart friends at DroneSeed- https://www.droneseed.co/\n\nThanks to Carlyle tools for giving my workbench tools a seriously needed upgrade! https://www.carlyletools.com/\n\nIf you want to learn more about C02 in ancient ice, check out this great video from Dr. Joe Hanson at Its OK to be Smart- https://www.youtube.com/watch?v=myxVsYI4WZk&amp;t=2s\n\nMUSIC-\n0:28 - On My Way - Tom Goldstein https://artlist.io/song/14203/on-my-way\n3:27 - Arrow (Instrumental) - Andrew Applepie http://andrewapplepie.com/\n4:42 - Dive - Lvly \n6:27 - New Shoes - Blue Wednesday https://soundcloud.com/bluewednesday/\n9:16 - Cereal Killa - Blue Wednesday https://soundcloud.com/bluewednesday/\n11:13 - Q - Blue Wednesday https://soundcloud.com/bluewednesday/  \n12:22 - Too Happy to be cool by Notebreak https://soundcloud.com/notebreak/dubstep-too-happy-to-be-cool\n\n\n\n\nSummary:  The internet challenged Mr. Beast to plant 20 million trees.  That is a really hard thing to do. So...', 'https://www.youtube.com/watch?v=U7nJBFjKqAY', 2, 0, 'youtube', '', 'Mark Rober', 'video', '', 0, 1, 'U7nJBFjKqAY', 0, 0, '', NULL, 'https://i.ytimg.com/vi/U7nJBFjKqAY/maxresdefault.jpg', 'none', NULL, NULL, NULL, NULL, 13, 150, 84, NULL, 15, 300, 169, NULL, 12, 1280, 720, NULL, NULL, 0, 'ONLINE', 0, '2021-02-19 17:54:33', '2021-02-19 17:54:25', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
     (3, 0, NULL, 7, 'Glitterbomb 3.0 vs. Porch Pirates', 'Merry Christmas ya filthy animals.  If you want to learn the design fundamentals it takes to make something like the Glitter Bomb, enroll in my NEW Creative Engineering course at https://Monthly.com/MarkRober and Ill see you in class!\n\nMY NEW MERCH!!!  https://markrober.store/\n\nThanks to SimpliSafe for providing the cameras.  Check out their biggest sale of the year by visiting http://simplisafe.com/markrober\n\nSubscribe to Jims channel here- https://www.youtube.com/channel/UCBNG0osIBAprVcZZ3ic84vw\n\nBiodegradable glitter courtesy of  https://www.altnaturals.com/pages/glitter\n\nSo stoked to finally announce my creative engineering class has just launched today! Enrollment is now open until Dec 27 at Monthly.com/MarkRober (link also in bio).\n\nThis class is a hands-on, 30-day learning experience that will teach you how to use engineering and science to bring your creative ideas to life.\n\nDuring this class, Im going to share with you my entire creative engineering process from start to finish. Youre going to follow along with me as I fully design and engineer 3 brand new builds from scratch... from how I come up the idea, all the way through bringing the final builds to life.\n\nThe best part is, over the month, youll follow along with me and my process, side by side, and you will leave the class with 3 original, creative builds of your own.\n\nThis is the class I wish I had when...', 'https://www.youtube.com/watch?v=h4T_LlK1VE4', 2, 0, 'youtube', '', 'Mark Rober', 'video', '', 0, 1, 'h4T_LlK1VE4', 0, 0, '', NULL, 'https://i.ytimg.com/vi/h4T_LlK1VE4/maxresdefault.jpg', 'none', NULL, NULL, NULL, NULL, 23, 150, 84, NULL, 25, 300, 169, NULL, 22, 1280, 720, NULL, NULL, 0, 'ONLINE', 0, '2021-02-19 17:56:37', '2021-02-19 17:55:55', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
@@ -252,7 +252,7 @@ INSERT INTO `lw_resource` (`resource_id`, `deleted`, `group_id`, `folder_id`, `t
     (8, 0, 1, NULL, 'quis lectus suspendisse potenti in', '', '../download/51/Screenshot+2021-02-19+180254.png', 1, 0, 'desktop', '', '', 'image', 'image/png', 0, 4, '', 0, 0, 'Screenshot 2021-02-19 180254.png', '../download/51/Screenshot+2021-02-19+180254.png', NULL, 'none', NULL, NULL, NULL, NULL, 53, 150, 80, NULL, 55, 300, 161, NULL, 52, 1280, 685, NULL, NULL, 0, 'ONLINE', 0, '2021-02-19 18:04:54', '2021-02-19 18:04:43', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078),
     (9, 0, 1, NULL, 'Glossary res', '', 'resource.jsf?resource_id=9', 1, 0, 'learnweb', '', '', 'glossary', '', 0, 4, '', 0, 0, '', NULL, NULL, 'none', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ONLINE', 0, '2021-02-19 18:10:37', '2021-02-19 18:10:20', 0xACED0005737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000007708000000100000000078);
 
-INSERT INTO `lw_resource_tag` (`resource_id`, `tag_id`, `user_id`, `timestamp`) VALUES
+INSERT INTO `lw_resource_tag` (`resource_id`, `tag_id`, `user_id`, `created_at`) VALUES
     (1, 1, 1, '2021-02-19 17:53:04'),
     (1, 2, 1, '2021-02-19 17:53:36'),
     (2, 3, 1, '2021-02-19 17:54:43'),
@@ -293,7 +293,7 @@ INSERT INTO `lw_user_auth` (`auth_id`, `user_id`, `token_hash`, `expires`) VALUE
     (3717022187608771584, 1, '69c23fe80ff7943d6c617f0a7fdc871e95d978a184767b042b579fbbdb3de3c7', '2021-03-21 16:29:54'),
     (4175511675294148608, 6, '55253b8d3e92b9db406c3c779c3357144d9cc9e2e6fd77f20d5fd2cab3d8127b', '2021-03-21 16:03:15');
 
-INSERT INTO `lw_user_course` (`user_id`, `course_id`, `timestamp`) VALUES
+INSERT INTO `lw_course_user` (`user_id`, `course_id`, `created_at`) VALUES
     (1, 1, '2021-02-18 11:27:20'),
     (2, 1, '2021-02-18 11:32:34'),
     (3, 1, '2021-02-18 11:39:53'),

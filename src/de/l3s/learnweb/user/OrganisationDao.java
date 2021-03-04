@@ -59,7 +59,6 @@ public interface OrganisationDao extends SqlObject, Serializable {
         params.put("language_variant", organisation.getLanguageVariant());
         params.put("banner_image_file_id", SqlHelper.toNullable(organisation.getBannerImageFileId()));
         params.put("glossary_languages", StringHelper.join(organisation.getGlossaryLanguages()));
-        params.put("css_file", organisation.getCssFile());
 
         Optional<Integer> organisationId = SqlHelper.handleSave(getHandle(), "lw_organisation", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();

@@ -282,7 +282,7 @@ public class UserBean implements Serializable {
     // -------------------- Frontend ---------------------------
 
     /**
-     * Returns the css code for the banner image of the active organization or an empty string if no image is defined.
+     * Returns the css code for the banner image of the active organisation or an empty string if no image is defined.
      */
     public String getBannerImage() {
         String bannerImage = null;
@@ -485,7 +485,7 @@ public class UserBean implements Serializable {
     }
 
     /**
-     * @return Returns the given url proxied through WAPS.io if enabled for the current organization
+     * @return Returns the given url proxied through WAPS.io if enabled for the current organisation
      */
     public String getUrlProxied(String url) {
         User user = getUser();

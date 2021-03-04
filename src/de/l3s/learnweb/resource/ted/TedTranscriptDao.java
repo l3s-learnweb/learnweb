@@ -48,12 +48,12 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
     Optional<Integer> findResourceIdByTedXUrl(String url);
 
     @RegisterRowMapper(TranscriptLogMapper.class)
-    @SqlQuery("SELECT a.* FROM lw_transcript_actions a JOIN lw_resource USING(resource_id) WHERE user_id IN(<userIds>) and deleted = 0 ORDER BY user_id, timestamp DESC")
+    @SqlQuery("SELECT a.* FROM lw_transcript_log a JOIN lw_resource USING(resource_id) WHERE user_id IN(<userIds>) and deleted = 0 ORDER BY user_id, created_at DESC")
     List<TranscriptLog> findTranscriptLogsByUserIds(@BindList("userIds") Collection<Integer> userIds);
 
     @RegisterRowMapper(SimpleTranscriptLogMapper.class)
     @SqlQuery("SELECT t1.owner_user_id, t1.resource_id, title, SUM(action = 'selection') as selcount, SUM(action = 'deselection') as deselcount, SUM(user_annotation != '') as uacount "
-        + "FROM lw_resource t1 LEFT JOIN lw_transcript_actions t2 ON t1.resource_id = t2.resource_id "
+        + "FROM lw_resource t1 LEFT JOIN lw_transcript_log t2 ON t1.resource_id = t2.resource_id "
         + "WHERE (action = 'selection' OR action = 'deselection' OR user_annotation != '' OR action IS NULL) AND t1.owner_user_id IN (<userIds>) AND t1.deleted = 0 "
         + "GROUP BY t1.owner_user_id, t1.resource_id, title")
     List<SimpleTranscriptLog> findSimpleTranscriptLogs(@BindList("userIds") Collection<Integer> userIds);
@@ -109,7 +109,7 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
     void saveTranscriptLangMapping(String langCode, String language);
 
     default void saveTranscriptLog(TranscriptLog transcriptLog) {
-        getHandle().createUpdate("INSERT into lw_transcript_actions(user_id,resource_id,words_selected,user_annotation,action,timestamp) VALUES (?,?,?,?,?,?)")
+        getHandle().createUpdate("INSERT into lw_transcript_log(user_id,resource_id,words_selected,user_annotation,action,created_at) VALUES (?,?,?,?,?,?)")
             .bind(0, transcriptLog.getUserId())
             .bind(1, transcriptLog.getResourceId())
             .bind(2, transcriptLog.getWordsSelected())

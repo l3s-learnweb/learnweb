@@ -27,10 +27,10 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
     private String title;
     @Size(max = 1000)
     private String description;
-    private int organizationId; // if <> 0 only the specified organization can use this survey
+    private int organisationId; // if <> 0 only the specified organisation can use this survey
     private int userId; // user who created this survey
     private boolean deleted;
-    private boolean publicTemplate = true; // if "true", other users in the organization see it in the list of templates and can copy it
+    private boolean publicTemplate = true; // if "true", other users in the organisation see it in the list of templates and can copy it
     private boolean associated; //'true' if survey associated with at least one resource
 
     private List<SurveyQuestion> questions;
@@ -43,7 +43,7 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
         setId(0);
         setTitle(old.getTitle());
         setDescription(old.getDescription());
-        setOrganizationId(old.getOrganizationId());
+        setOrganisationId(old.getOrganisationId());
         setUserId(old.getUserId());
         setDeleted(old.isDeleted());
         setPublicTemplate(old.isPublicTemplate());
@@ -78,12 +78,12 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
         this.description = description;
     }
 
-    public int getOrganizationId() {
-        return organizationId;
+    public int getOrganisationId() {
+        return organisationId;
     }
 
-    public void setOrganizationId(int organizationId) {
-        this.organizationId = organizationId;
+    public void setOrganisationId(int organisationId) {
+        this.organisationId = organisationId;
     }
 
     public List<SurveyQuestion> getQuestions() {

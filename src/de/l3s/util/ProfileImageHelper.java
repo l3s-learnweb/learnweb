@@ -16,7 +16,7 @@ public final class ProfileImageHelper {
     private static final Pattern NAME_SEPARATOR = Pattern.compile("[\\s.]+");
 
     /**
-     * @return FileName, MineType, InputStream
+     * @return FileName, MimeType, InputStream
      */
     public static ImmutableTriple<String, String, InputStream> getGravatarAvatar(final String hash) {
         try {

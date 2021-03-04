@@ -35,14 +35,13 @@ public class File implements Serializable, HasId, Cloneable {
         DOC_CHANGES, // 11 zip file with changes for office resource
     }
 
-    private int fileId;
+    private int id;
     private boolean deleted;
+    private int resourceId;
     private String name;
     private String mimeType;
-    private int resourceId;
     private TYPE type;
     private String url;
-    private boolean downloadLogActivated = false;
     private LocalDateTime lastModified;
 
     private java.io.File actualFile;
@@ -65,11 +64,11 @@ public class File implements Serializable, HasId, Cloneable {
 
     @Override
     public int getId() {
-        return fileId;
+        return id;
     }
 
     public void setId(int fileId) {
-        this.fileId = fileId;
+        this.id = fileId;
     }
 
     public boolean isDeleted() {
@@ -106,7 +105,7 @@ public class File implements Serializable, HasId, Cloneable {
 
     public String getUrl() {
         if (url == null) {
-            url = "../download/" + fileId + "/" + StringHelper.urlEncode(name);
+            url = "../download/" + id + "/" + StringHelper.urlEncode(name);
         }
         return url;
     }
@@ -119,20 +118,12 @@ public class File implements Serializable, HasId, Cloneable {
         this.url = url;
     }
 
-    public boolean isDownloadLogActivated() {
-        return downloadLogActivated;
-    }
-
-    public void setDownloadLogActivated(boolean downloadLogActivated) {
-        this.downloadLogActivated = downloadLogActivated;
-    }
-
     /**
      * @return The actual file in the file system
      */
     public java.io.File getActualFile() {
-        if (null == actualFile && fileId != 0) {
-            actualFile = new java.io.File(Learnweb.config().getFileManagerFolder(), fileId + ".dat");
+        if (null == actualFile && id != 0) {
+            actualFile = new java.io.File(Learnweb.config().getFileManagerFolder(), id + ".dat");
         } else if (null == actualFile) {
             throw new IllegalStateException("Either the file has not been saved yet, use FileManager.save() first. Or the file isn't present on this machine.");
         }
@@ -181,7 +172,7 @@ public class File implements Serializable, HasId, Cloneable {
 
     @Override
     public String toString() {
-        return "File [fileId=" + fileId + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId +
+        return "File [fileId=" + id + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId +
             ", type=" + type + ", url=" + url + ", lastModified=" + lastModified + "]";
     }
 

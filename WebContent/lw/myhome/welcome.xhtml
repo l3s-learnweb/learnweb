@@ -42,7 +42,7 @@
                 </p:panel>
             </p:outputPanel>
 
-            <p:panel>                
+            <p:panel>
                 <f:facet name="header">
                     #{msg.welcome}
                     <ui:fragment rendered="#{userBean.moderator}">
@@ -51,7 +51,7 @@
                         </h:link>
                     </ui:fragment>
                 </f:facet>
-                
+
                 <div class="d-flex align-items-center">
                     <img class="d-block profile-picture me-3" src="${userBean.user.imageUrl}" alt="Profile image"/>
                     <div>
@@ -98,7 +98,7 @@
                             <ui:param name="logEntry" value="#{entry}"/>
                         </ui:decorate>
                     </ui:repeat>
-                </p:tab>           
+                </p:tab>
                 <p:tab rendered="#{not empty welcomeBean.newsResources}">
                     <f:facet name="title">
                         <i class="fas fa-fw fa-file" aria-hidden="true"></i>
@@ -123,7 +123,7 @@
                             <div class="text-break">
                                 <p class="h5">
                                     <h:outputText value="#{message.title}"/>
-                                    <h:outputText rendered="#{not message.read}" value=" (#{msg.new_word})"/>
+                                    <h:outputText rendered="#{not message.seen}" value=" (#{msg.new_word})"/>
                                 </p>
                                 <div class="message-container m-1">
                                     <h:outputText value="#{message.text}" escape="false"/>

@@ -25,10 +25,10 @@ public interface ForumPostDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_forum_post WHERE post_id = ?")
     Optional<ForumPost> findById(int postId);
 
-    @SqlQuery("SELECT * FROM lw_forum_post WHERE topic_id = ? ORDER BY post_time")
+    @SqlQuery("SELECT * FROM lw_forum_post WHERE topic_id = ? ORDER BY created_at")
     List<ForumPost> findByTopicId(int topicId);
 
-    @SqlQuery("SELECT * FROM lw_forum_post WHERE user_id = ? ORDER BY post_time DESC")
+    @SqlQuery("SELECT * FROM lw_forum_post WHERE user_id = ? ORDER BY created_at DESC")
     List<ForumPost> findByUserId(int userId);
 
     @SqlQuery("SELECT COUNT(*) FROM lw_forum_post WHERE user_id = ?")
@@ -49,11 +49,11 @@ public interface ForumPostDao extends SqlObject, Serializable {
         params.put("topic_id", post.getTopicId());
         params.put("user_id", SqlHelper.toNullable(post.getUserId()));
         params.put("text", post.getText());
-        params.put("post_time", post.getDate());
-        params.put("post_edit_time", post.getLastEditDate());
-        params.put("post_edit_count", post.getEditCount());
-        params.put("post_edit_user_id", SqlHelper.toNullable(post.getEditUserId()));
+        params.put("edit_count", post.getEditCount());
+        params.put("edit_user_id", SqlHelper.toNullable(post.getEditUserId()));
         params.put("category", post.getCategory());
+        params.put("updated_at", post.getLastEditDate());
+        params.put("created_at", post.getDate());
 
         Optional<Integer> postId = SqlHelper.handleSave(getHandle(), "lw_forum_post", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -69,11 +69,11 @@ public interface ForumPostDao extends SqlObject, Serializable {
             post.setTopicId(rs.getInt("topic_id"));
             post.setUserId(rs.getInt("user_id"));
             post.setText(rs.getString("text"));
-            post.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("post_time")));
-            post.setLastEditDate(SqlHelper.getLocalDateTime(rs.getTimestamp("post_edit_time")));
-            post.setEditCount(rs.getInt("post_edit_count"));
-            post.setEditUserId(rs.getInt("post_edit_user_id"));
+            post.setEditCount(rs.getInt("edit_count"));
+            post.setEditUserId(rs.getInt("edit_user_id"));
             post.setCategory(rs.getString("category"));
+            post.setLastEditDate(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+            post.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return post;
         }
     }

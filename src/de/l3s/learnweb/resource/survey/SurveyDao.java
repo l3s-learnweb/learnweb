@@ -53,8 +53,8 @@ public interface SurveyDao extends SqlObject, Serializable {
     @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_survey_resource sr WHERE sr.survey_id = s.survey_id) as res_count FROM lw_survey s WHERE survey_id = ?")
     Optional<Survey> findById(int surveyId);
 
-    @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_survey_resource sr WHERE sr.survey_id = s.survey_id) as res_count FROM lw_survey s WHERE organization_id = ? and deleted = 0 and (public_template = 1 or user_id = ?)")
-    List<Survey> findByOrganisationIdOrUserId(int organizationId, int userId);
+    @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_survey_resource sr WHERE sr.survey_id = s.survey_id) as res_count FROM lw_survey s WHERE organisation_id = ? and deleted = 0 and (public_template = 1 or user_id = ?)")
+    List<Survey> findByOrganisationIdOrUserId(int organisationId, int userId);
 
     /**
      * @return true if the given survey was submitted by the user
@@ -143,7 +143,7 @@ public interface SurveyDao extends SqlObject, Serializable {
     default void save(Survey survey, boolean updateMetadataOnly) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("survey_id", SqlHelper.toNullable(survey.getId()));
-        params.put("organization_id", SqlHelper.toNullable(survey.getOrganizationId()));
+        params.put("organisation_id", SqlHelper.toNullable(survey.getOrganisationId()));
         params.put("title", survey.getTitle());
         params.put("description", survey.getDescription());
         params.put("user_id", SqlHelper.toNullable(survey.getUserId()));
@@ -237,7 +237,7 @@ public interface SurveyDao extends SqlObject, Serializable {
             survey.setId(rs.getInt("survey_id"));
             survey.setTitle(rs.getString("title"));
             survey.setDescription(rs.getString("description"));
-            survey.setOrganizationId(rs.getInt("organization_id"));
+            survey.setOrganisationId(rs.getInt("organisation_id"));
             survey.setUserId(rs.getInt("user_id"));
             survey.setDeleted(rs.getBoolean("deleted"));
             survey.setPublicTemplate(rs.getBoolean("public_template"));

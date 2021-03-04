@@ -63,7 +63,6 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private List<MetadataField> metadataFields = new LinkedList<>();
     private transient String bannerImageUrl;
     private int bannerImageFileId;
-    private String cssFile; // optional CSS file to load
     private List<Locale> glossaryLanguages = new ArrayList<>(4); // languages that can be used to construct a glossary
 
     public Organisation(int id) {
@@ -88,7 +87,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     }
 
     /**
-     * @return The userIds of all organization members
+     * @return The userIds of all organisation members
      */
     public List<Integer> getUserIds() {
         List<User> users = getUsers();
@@ -365,14 +364,6 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         this.bannerImageUrl = null;
     }
 
-    public String getCssFile() {
-        return cssFile;
-    }
-
-    public void setCssFile(String cssFile) {
-        this.cssFile = cssFile;
-    }
-
     public String getLanguageVariant() {
         return languageVariant;
     }
@@ -398,7 +389,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     }
 
     /**
-     * @return All groups belonging to courses of this organization (sorted by title)
+     * @return All groups belonging to courses of this organisation (sorted by title)
      */
     public List<Group> getGroups() {
         List<Group> groups = new LinkedList<>();
@@ -411,7 +402,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     }
 
     /**
-     * @return all users that are registered to this organization
+     * @return all users that are registered to this organisation
      */
     public List<User> getUsers() {
         return Learnweb.dao().getUserDao().findByOrganisationId(id);

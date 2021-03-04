@@ -28,7 +28,7 @@ class ProfileImageHelperTest {
 
     @Test
     void getProfilePicture() {
-        assertEquals("#8f3b4f", ProfileImageHelper.getColorForProfilePicture("Hello"));
+        assertEquals("#514A9D", ProfileImageHelper.getColorForProfilePicture("Hello"));
     }
 
     @Test

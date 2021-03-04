@@ -10,8 +10,7 @@ import de.l3s.learnweb.user.Organisation.Option;
 
 /**
  * The privacy statement should show the tracker information only when the feature is enabled for
- * the users organization. But the information needs to be shown already during the registration
- * process
+ * the users organisation. But the information needs to be shown already during the registration process
  *
  * @author Philipp Kemkes
  */
@@ -38,7 +37,7 @@ public class PrivacyStatementBean extends ApplicationBean implements Serializabl
     }
 
     /**
-     * @return True either if tracking is enabled for the given organization id or if no id was gives the setting for
+     * @return True either if tracking is enabled for the given organisation id or if no id was gives the setting for
      * the currently logged in user is returned. If the current user isn't logged in it returns false
      */
     public boolean isTrackingEnabled() {

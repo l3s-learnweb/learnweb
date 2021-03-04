@@ -9,6 +9,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +40,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     private Resource resource;
     private Group targetGroup;
     private Folder targetFolder;
+
+    @Inject
+    private FileDao fileDao;
 
     // caches
     private transient List<SelectItem> availableGlossaryLanguages;
@@ -106,7 +110,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
     private void setResourceTypeSurvey() {
         Survey survey = new Survey();
-        survey.setOrganizationId(getUser().getOrganisationId());
+        survey.setOrganisationId(getUser().getOrganisationId());
         survey.setUserId(getUser().getId());
         survey.setTitle("Title placeholder"); // this values are overridden in addResource method
         survey.setDescription("Description placeholder");
@@ -136,9 +140,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
             log.debug("Saving the file...");
             File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
-            file.setDownloadLogActivated(true);
-
-            dao().getFileDao().save(file, uploadedFile.getInputStream());
+            fileDao.save(file, uploadedFile.getInputStream());
 
             resource.addFile(file);
             resource.setUrl(file.getUrl());
@@ -194,8 +196,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
             log.debug("Saving file...");
             File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
-            file.setDownloadLogActivated(true);
-            dao().getFileDao().save(file, new FileInputStream(sampleFile));
+            fileDao.save(file, new FileInputStream(sampleFile));
 
             resource.setTitle(info.getTitle());
             resource.addFile(file);

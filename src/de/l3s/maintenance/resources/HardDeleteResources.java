@@ -10,7 +10,7 @@ import de.l3s.maintenance.MaintenanceTask;
  *
  * @author Oleh Astappiev
  */
-public final class DeleteHardResources extends MaintenanceTask {
+public final class HardDeleteResources extends MaintenanceTask {
     private ResourceDao resourceDao;
 
     @Override
@@ -33,6 +33,6 @@ public final class DeleteHardResources extends MaintenanceTask {
     }
 
     public static void main(String[] args) {
-        new DeleteHardResources().start(args);
+        new HardDeleteResources().start(args);
     }
 }

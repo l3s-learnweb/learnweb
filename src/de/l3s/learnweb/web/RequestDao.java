@@ -19,10 +19,10 @@ import de.l3s.util.SqlHelper;
 @RegisterRowMapper(RequestDao.RequestMapper.class)
 public interface RequestDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT * FROM lw_requests WHERE ip = ?")
+    @SqlQuery("SELECT * FROM lw_requests WHERE addr = ?")
     List<Request> findByIp(String ip);
 
-    @SqlQuery("SELECT * FROM lw_requests WHERE time >= ?")
+    @SqlQuery("SELECT * FROM lw_requests WHERE updated_at >= ?")
     List<Request> findAfterDate(LocalDateTime date);
 
     @SuppressWarnings("SqlWithoutWhere")
@@ -30,7 +30,7 @@ public interface RequestDao extends SqlObject, Serializable {
     void deleteAll();
 
     default void save(Request request) {
-        getHandle().createUpdate("INSERT INTO lw_requests (IP, requests, logins, usernames, time) VALUES(?, ?, ?, ?, ?)")
+        getHandle().createUpdate("INSERT INTO lw_requests (addr, requests, logins, usernames, updated_at) VALUES(?, ?, ?, ?, ?)")
             .bind(0, request.getIp())
             .bind(1, request.getRequests())
             .bind(2, request.getLoginCount())
@@ -40,7 +40,7 @@ public interface RequestDao extends SqlObject, Serializable {
     }
 
     default void save(Iterable<Request> requests) {
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_requests (IP, requests, logins, usernames, time) VALUES(?, ?, ?, ?, ?)");
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_requests (addr, requests, logins, usernames, updated_at) VALUES(?, ?, ?, ?, ?)");
         for (Request request : requests) {
             batch.bind(0, request.getIp())
                 .bind(1, request.getRequests())
@@ -55,11 +55,11 @@ public interface RequestDao extends SqlObject, Serializable {
     class RequestMapper implements RowMapper<Request> {
         @Override
         public Request map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            Request request = new Request(rs.getString("ip"), null);
+            Request request = new Request(rs.getString("addr"), null);
             request.setRequests(rs.getInt("requests"));
             request.setLoginCount(rs.getInt("logins"));
             request.setUsernames(rs.getString("usernames"));
-            request.setTime(SqlHelper.getLocalDateTime(rs.getTimestamp("time")));
+            request.setTime(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
             return request;
         }
     }

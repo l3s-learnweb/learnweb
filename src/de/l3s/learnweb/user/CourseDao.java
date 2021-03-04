@@ -49,16 +49,16 @@ public interface CourseDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_course WHERE organisation_id = ? ORDER BY title")
     List<Course> findByOrganisationId(int organisationId);
 
-    @SqlQuery("SELECT c.* FROM lw_course c JOIN lw_user_course uc USING (course_id) WHERE uc.user_id = ? ORDER BY c.title")
+    @SqlQuery("SELECT c.* FROM lw_course c JOIN lw_course_user uc USING (course_id) WHERE uc.user_id = ? ORDER BY c.title")
     List<Course> findByUserId(int userId);
 
     /**
      * Add a user to a course.
      */
-    @SqlUpdate("INSERT INTO lw_user_course (course_id, user_id) VALUES (?, ?)")
+    @SqlUpdate("INSERT INTO lw_course_user (course_id, user_id) VALUES (?, ?)")
     void insertUser(Course course, User user);
 
-    @SqlUpdate("DELETE FROM lw_user_course WHERE course_id = ? AND user_id = ?")
+    @SqlUpdate("DELETE FROM lw_course_user WHERE course_id = ? AND user_id = ?")
     void deleteUser(Course course, User user);
 
     default void save(Course course) {
@@ -70,8 +70,8 @@ public interface CourseDao extends SqlObject, Serializable {
         params.put("wizard_param", SqlHelper.toNullable(course.getWizardParam()));
         params.put("next_x_users_become_moderator", course.getNextXUsersBecomeModerator());
         params.put("welcome_message", course.getWelcomeMessage());
-        params.put("timestamp_creation", course.getCreationTimestamp());
         params.put("options_field1", course.getOptions()[0]);
+        params.put("created_at", course.getCreationTimestamp());
 
         Optional<Integer> courseId = SqlHelper.handleSave(getHandle(), "lw_course", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -146,7 +146,7 @@ public interface CourseDao extends SqlObject, Serializable {
                 course.setWizardParam(rs.getString("wizard_param"));
                 course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
                 course.setWelcomeMessage(rs.getString("welcome_message"));
-                course.setCreationTimestamp(rs.getObject("timestamp_creation", LocalDateTime.class));
+                course.setCreationTimestamp(rs.getObject("created_at", LocalDateTime.class));
 
                 long[] options = new long[FIELDS];
                 for (int i = 0; i < FIELDS; i++) {

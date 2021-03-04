@@ -34,10 +34,10 @@ public interface SubmissionDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_submission WHERE submission_id = ? AND deleted = 0")
     Optional<Submission> findById(int submissionId);
 
-    @SqlQuery("SELECT * FROM lw_submission WHERE course_id IN (<courseIds>) AND deleted = 0 ORDER BY close_datetime")
+    @SqlQuery("SELECT * FROM lw_submission WHERE course_id IN (<courseIds>) AND deleted = 0 ORDER BY close_date")
     List<Submission> findByCourseIds(@BindList("courseIds") List<Integer> courseIds);
 
-    @SqlQuery("SELECT * FROM lw_submission WHERE course_id IN (<courseIds>) AND close_datetime >= NOW() AND open_datetime < NOW() AND deleted = 0 ORDER BY close_datetime")
+    @SqlQuery("SELECT * FROM lw_submission WHERE course_id IN (<courseIds>) AND close_date >= NOW() AND open_date < NOW() AND deleted = 0 ORDER BY close_date")
     List<Submission> findActiveByCourseIds(@BindList("courseIds") List<Integer> courseIds);
 
     @SqlQuery("SELECT * FROM lw_submission JOIN lw_resource USING(resource_id) WHERE user_id IN (<userIds>) AND deleted = 0")
@@ -55,7 +55,7 @@ public interface SubmissionDao extends SqlObject, Serializable {
     @ValueColumn("count")
     Map<Integer, Integer> countPerUserByCourseId(int courseId);
 
-    @SqlQuery("SELECT COUNT(*) FROM lw_submission WHERE course_id IN (<courseIds>) AND deleted = 0 ORDER BY close_datetime")
+    @SqlQuery("SELECT COUNT(*) FROM lw_submission WHERE course_id IN (<courseIds>) AND deleted = 0 ORDER BY close_date")
     int countByCourseIds(@BindList("courseIds") List<Integer> courseIds);
 
     @SqlUpdate("INSERT INTO lw_submission_status(submission_id, user_id, submitted) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE submitted = VALUES(submitted)")
@@ -120,8 +120,8 @@ public interface SubmissionDao extends SqlObject, Serializable {
         params.put("course_id", SqlHelper.toNullable(submission.getCourseId()));
         params.put("title", submission.getTitle());
         params.put("description", submission.getDescription());
-        params.put("open_datetime", submission.getOpenDatetime());
-        params.put("close_datetime", submission.getCloseDatetime());
+        params.put("open_date", submission.getOpenDatetime());
+        params.put("close_date", submission.getCloseDatetime());
         params.put("number_of_resources", submission.getNoOfResources());
         params.put("survey_resource_id", SqlHelper.toNullable(submission.getSurveyResourceId()));
 
@@ -140,8 +140,8 @@ public interface SubmissionDao extends SqlObject, Serializable {
             submission.setCourseId(rs.getInt("course_id"));
             submission.setTitle(rs.getString("title"));
             submission.setDescription(rs.getString("description"));
-            submission.setOpenDatetime(SqlHelper.getLocalDateTime(rs.getTimestamp("open_datetime")));
-            submission.setCloseDatetime(SqlHelper.getLocalDateTime(rs.getTimestamp("close_datetime")));
+            submission.setOpenDatetime(SqlHelper.getLocalDateTime(rs.getTimestamp("open_date")));
+            submission.setCloseDatetime(SqlHelper.getLocalDateTime(rs.getTimestamp("close_date")));
             submission.setNoOfResources(rs.getInt("number_of_resources"));
             submission.setSurveyResourceId(rs.getInt("survey_resource_id"));
             return submission;

@@ -39,24 +39,24 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
     List<GlossaryEntry> findByResourceId(int resourceId);
 
     default void deleteSoft(GlossaryEntry entry, int deletedByUserId) {
-        getHandle().execute("UPDATE lw_glossary_entry SET deleted = 1, last_changed_by_user_id = ? WHERE entry_id = ?", deletedByUserId, entry);
-        getHandle().execute("UPDATE lw_glossary_term SET deleted = 1, last_changed_by_user_id = ? WHERE entry_id = ?", deletedByUserId, entry);
+        getHandle().execute("UPDATE lw_glossary_entry SET deleted = 1, edit_user_id = ? WHERE entry_id = ?", deletedByUserId, entry);
+        getHandle().execute("UPDATE lw_glossary_term SET deleted = 1, edit_user_id = ? WHERE entry_id = ?", deletedByUserId, entry);
 
         entry.setDeleted(true);
     }
 
     @SqlQuery("SELECT COUNT(distinct ge.entry_id) FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) "
-        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN :start AND :end")
+        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end")
     int countTotalEntries(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     @SqlQuery("SELECT u.username, count(*) AS count FROM lw_resource r JOIN lw_user u ON u.user_id = r.owner_user_id JOIN lw_glossary_entry ge USING (resource_id) "
-        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.timestamp BETWEEN :start AND :end GROUP BY u.username ORDER BY username")
+        + "WHERE ge.deleted != 1 AND r.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end GROUP BY u.username ORDER BY username")
     @KeyColumn("username")
     @ValueColumn("count")
     Map<String, Integer> countEntriesPerUser(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     @RegisterRowMapper(GlossaryDescriptionSummaryMapper.class)
-    @SqlQuery("SELECT entry_id, resource_id, user_id, description, description_pasted FROM lw_glossary_entry WHERE deleted != 1 AND user_id IN(<userIds>) AND timestamp BETWEEN :start AND :end")
+    @SqlQuery("SELECT entry_id, resource_id, user_id, description, description_pasted FROM lw_glossary_entry WHERE deleted != 1 AND user_id IN(<userIds>) AND created_at BETWEEN :start AND :end")
     List<GlossaryDescriptionSummary> countGlossaryDescriptionSummary(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     default void save(GlossaryEntry entry) {
@@ -70,7 +70,7 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
         params.put("entry_id", SqlHelper.toNullable(entry.getId()));
         params.put("resource_id", entry.getResourceId());
         params.put("original_entry_id", SqlHelper.toNullable(entry.getOriginalEntryId()));
-        params.put("last_changed_by_user_id", SqlHelper.toNullable(entry.getLastChangedByUserId()));
+        params.put("edit_user_id", SqlHelper.toNullable(entry.getLastChangedByUserId()));
         params.put("user_id", SqlHelper.toNullable(entry.getUserId()));
         params.put("topic_one", entry.getTopicOne());
         params.put("topic_two", entry.getTopicTwo());
@@ -78,7 +78,7 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
         params.put("description", entry.getDescription());
         params.put("description_pasted", entry.isDescriptionPasted());
         params.put("imported", entry.isImported());
-        params.put("timestamp", entry.getTimestamp());
+        params.put("created_at", entry.getTimestamp());
 
         Optional<Integer> entryId = SqlHelper.handleSave(getHandle(), "lw_glossary_entry", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -101,7 +101,7 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
             entry.setDescription(rs.getString("description"));
             entry.setDescriptionPasted(rs.getBoolean("description_pasted"));
             entry.setImported(rs.getBoolean("imported"));
-            entry.setTimestamp(SqlHelper.getLocalDateTime(rs.getTimestamp("timestamp")));
+            entry.setTimestamp(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return entry;
         }
     }

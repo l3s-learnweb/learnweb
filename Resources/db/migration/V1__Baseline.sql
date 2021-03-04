@@ -1,15 +1,15 @@
 CREATE TABLE IF NOT EXISTS `lw_bans` (
     `addr` varchar(64) NOT NULL PRIMARY KEY,
-    `expires` datetime DEFAULT NULL,
+    `expires` timestamp DEFAULT NULL,
     `attempts` int(11) DEFAULT NULL,
     `reason` varchar(200) DEFAULT NULL,
     `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_bounces` (
-    `id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'TODO: rename to bounce_id',
-    `address` varchar(64) DEFAULT NULL,
-    `timereceived` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'TODO: rename to received',
+    `bounce_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `email` varchar(64) DEFAULT NULL,
+    `received` timestamp NOT NULL,
     `code` varchar(10) NOT NULL,
     `description` varchar(64) DEFAULT NULL,
     UNIQUE KEY `lw_bounces_address` (`address`)
@@ -20,20 +20,20 @@ CREATE TABLE IF NOT EXISTS `lw_comment` (
     `resource_id` int(10) unsigned NOT NULL,
     `user_id` int(10) unsigned NOT NULL,
     `text` mediumtext NOT NULL,
-    `date` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'TODO: rename to created_at'
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_course` (
     `course_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `organisation_id` int(10) unsigned NOT NULL,
     `title` varchar(50) NOT NULL,
     `options_field1` bigint(20) NOT NULL DEFAULT 1,
-    `organisation_id` int(10) unsigned NOT NULL,
     `default_group_id` int(10) unsigned DEFAULT NULL,
     `wizard_param` varchar(100) DEFAULT NULL,
     `next_x_users_become_moderator` tinyint(3) unsigned NOT NULL DEFAULT 0,
     `welcome_message` text DEFAULT NULL,
-    `timestamp_update` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'TODO: rename to updated_at',
-    `timestamp_creation` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'TODO: rename to created_at',
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     UNIQUE KEY `lw_course_wizard_param` (`wizard_param`)
 );
 
@@ -41,13 +41,11 @@ CREATE TABLE IF NOT EXISTS `lw_file` (
     `file_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `deleted` tinyint(1) NOT NULL DEFAULT 0,
     `resource_id` int(10) unsigned DEFAULT NULL,
-    `resource_file_number` smallint(5) unsigned NOT NULL,
+    `type` tinyint(1) unsigned NOT NULL,
     `name` varchar(255) NOT NULL,
     `mime_type` varchar(255) NOT NULL,
-    `log_actived` tinyint(1) NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `missing` tinyint(1) NOT NULL DEFAULT 0,
-    `doc_key` varchar(40) DEFAULT NULL
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_forum_post` (
@@ -57,26 +55,26 @@ CREATE TABLE IF NOT EXISTS `lw_forum_post` (
     `user_id` int(10) unsigned NOT NULL,
     `text` text NOT NULL,
     `category` varchar(70) DEFAULT '',
-    `post_time` timestamp NULL DEFAULT NULL,
-    `post_edit_time` timestamp NULL DEFAULT NULL,
-    `post_edit_count` smallint(11) unsigned NOT NULL DEFAULT 0,
-    `post_edit_user_id` int(10) unsigned DEFAULT NULL,
-    KEY `lw_forum_post_topic_id` (`topic_id`, `post_time`)
+    `edit_count` smallint(11) unsigned NOT NULL DEFAULT 0,
+    `edit_user_id` int(10) unsigned DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    KEY `lw_forum_post_topic_id` (`topic_id`, `created_at`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_forum_topic` (
     `topic_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `group_id` int(10) unsigned NOT NULL,
-    `deleted` tinyint(1) unsigned NOT NULL DEFAULT 0,
-    `topic_title` varchar(100) NOT NULL DEFAULT '',
     `user_id` int(10) unsigned NOT NULL,
-    `topic_time` timestamp NULL DEFAULT NULL,
-    `topic_views` int(11) DEFAULT 1,
-    `topic_replies` int(11) DEFAULT 0,
-    `topic_last_post_id` int(10) unsigned DEFAULT NULL,
-    `topic_last_post_time` timestamp NULL DEFAULT NULL,
-    `topic_last_post_user_id` int(10) unsigned DEFAULT NULL,
-    KEY `lw_forum_topic_group_id` (`group_id`, `deleted`, `topic_last_post_time`)
+    `deleted` tinyint(1) unsigned NOT NULL DEFAULT 0,
+    `title` varchar(100) NOT NULL DEFAULT '',
+    `views` int(11) DEFAULT 0,
+    `replies` int(11) DEFAULT 0,
+    `last_post_id` int(10) unsigned DEFAULT NULL,
+    `last_post_user_id` int(10) unsigned DEFAULT NULL,
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    KEY `lw_forum_topic_group_id` (`group_id`, `deleted`, `updated_at`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_forum_topic_user` (
@@ -84,13 +82,13 @@ CREATE TABLE IF NOT EXISTS `lw_forum_topic_user` (
     `user_id` int(10) unsigned NOT NULL,
     `last_visit` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     PRIMARY KEY (`topic_id`, `user_id`)
-) COMMENT ='saves when a user has last seen a forum topic';
+);
 
 CREATE TABLE IF NOT EXISTS `lw_glossary_entry` (
     `entry_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `resource_id` int(10) unsigned NOT NULL,
     `original_entry_id` int(10) unsigned DEFAULT NULL,
-    `last_changed_by_user_id` int(10) unsigned DEFAULT NULL,
+    `edit_user_id` int(10) unsigned DEFAULT NULL,
     `user_id` int(10) unsigned NULL,
     `deleted` tinyint(1) NOT NULL DEFAULT 0,
     `topic_one` varchar(100) DEFAULT NULL,
@@ -99,7 +97,8 @@ CREATE TABLE IF NOT EXISTS `lw_glossary_entry` (
     `description` varchar(3000) DEFAULT NULL,
     `description_pasted` tinyint(4) NOT NULL DEFAULT 0,
     `imported` tinyint(1) NOT NULL DEFAULT 0,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     KEY `lw_glossary_entry_resource_id` (`resource_id`, `deleted`)
 );
 
@@ -112,33 +111,33 @@ CREATE TABLE IF NOT EXISTS `lw_glossary_term` (
     `term_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `entry_id` int(10) unsigned NOT NULL,
     `original_term_id` int(10) unsigned DEFAULT NULL,
-    `last_changed_by_user_id` int(10) unsigned DEFAULT NULL,
+    `edit_user_id` int(10) unsigned DEFAULT NULL,
     `user_id` int(10) unsigned NULL,
     `deleted` tinyint(1) NOT NULL DEFAULT 0,
     `term` varchar(500) DEFAULT NULL,
+    `term_pasted` tinyint(4) NOT NULL DEFAULT 0,
+    `pronounciation` varchar(500) DEFAULT NULL,
+    `pronounciation_pasted` tinyint(4) NOT NULL DEFAULT 0,
+    `acronym` varchar(500) DEFAULT NULL,
+    `acronym_pasted` tinyint(4) NOT NULL DEFAULT 0,
+    `phraseology` varchar(4100) DEFAULT NULL,
+    `phraseology_pasted` tinyint(4) NOT NULL DEFAULT 0,
     `language` varchar(500) NOT NULL,
     `uses` varchar(500) DEFAULT NULL,
-    `pronounciation` varchar(500) DEFAULT NULL,
-    `acronym` varchar(500) DEFAULT NULL,
     `source` varchar(500) DEFAULT NULL,
-    `phraseology` varchar(4100) DEFAULT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `term_pasted` tinyint(4) NOT NULL DEFAULT 0,
-    `pronounciation_pasted` tinyint(4) NOT NULL DEFAULT 0,
-    `acronym_pasted` tinyint(4) NOT NULL DEFAULT 0,
-    `phraseology_pasted` tinyint(4) NOT NULL DEFAULT 0
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_group` (
     `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `course_id` int(10) unsigned NOT NULL,
+    `leader_id` int(10) unsigned NOT NULL,
     `deleted` tinyint(1) NOT NULL DEFAULT 0,
     `title` varchar(150) NOT NULL,
     `description` mediumtext DEFAULT NULL,
-    `creation_time` timestamp NOT NULL DEFAULT current_timestamp(),
-    `course_id` int(10) unsigned NOT NULL,
     `max_member_count` smallint(6) NOT NULL DEFAULT -1 COMMENT 'number of allowed members; -1 = unlimitted',
     `restriction_forum_category_required` tinyint(1) NOT NULL DEFAULT 0,
-    `leader_id` int(10) unsigned NOT NULL,
     `policy_add` enum ('GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'GROUP_MEMBERS',
     `policy_annotate` enum ('ALL_LEARNWEB_USERS','COURSE_MEMBERS','GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'ALL_LEARNWEB_USERS',
     `policy_edit` enum ('GROUP_MEMBERS','GROUP_LEADER','GROUP_LEADER_AND_FILE_OWNER') NOT NULL DEFAULT 'GROUP_MEMBERS',
@@ -146,20 +145,21 @@ CREATE TABLE IF NOT EXISTS `lw_group` (
     `policy_view` enum ('ALL_LEARNWEB_USERS','COURSE_MEMBERS','GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'ALL_LEARNWEB_USERS',
     `hypothesis_link` varchar(255) DEFAULT NULL,
     `hypothesis_token` varchar(255) DEFAULT NULL,
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     KEY `lw_group_title` (`title`),
-    KEY `lw_group_creation_time` (`creation_time`),
+    KEY `lw_group_created_at` (`created_at`),
     KEY `lw_group_course` (`deleted`, `group_id`, `policy_join`, `course_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_group_folder` (
     `folder_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` tinyint(1) unsigned NOT NULL DEFAULT 0,
-    `group_id` int(10) unsigned DEFAULT NULL,
     `parent_folder_id` int(10) unsigned DEFAULT NULL,
+    `group_id` int(10) unsigned DEFAULT NULL,
+    `user_id` int(10) unsigned DEFAULT NULL,
+    `deleted` tinyint(1) unsigned NOT NULL DEFAULT 0,
     `name` varchar(100) NOT NULL,
     `description` text DEFAULT NULL,
-    `user_id` int(10) unsigned DEFAULT NULL,
-    `last_change` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     KEY `lw_group_folder_group_id` (`group_id`, `parent_folder_id`)
 );
 
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `lw_group_user` (
     `group_id` int(10) unsigned NOT NULL,
     `user_id` int(10) unsigned NOT NULL,
     `join_time` timestamp NOT NULL DEFAULT current_timestamp(),
-    `last_visit` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'TODO: change type to timestamp',
+    `last_visit` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     `notification_frequency` enum ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
     PRIMARY KEY (`group_id`, `user_id`)
 );
@@ -178,10 +178,9 @@ CREATE TABLE IF NOT EXISTS `lw_message` (
     `recipient_user_id` int(10) unsigned NOT NULL,
     `title` varchar(2550) NOT NULL,
     `text` longtext NOT NULL,
-    `is_seen` tinyint(1) NOT NULL DEFAULT 0,
-    `is_read` tinyint(1) NOT NULL DEFAULT 0,
+    `seen` tinyint(1) NOT NULL DEFAULT 0,
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    KEY `lw_message_recipient_user_id` (`recipient_user_id`, `is_seen`)
+    KEY `lw_message_recipient_user_id` (`recipient_user_id`, `seen`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_news` (
@@ -207,18 +206,17 @@ CREATE TABLE IF NOT EXISTS `lw_organisation` (
     `default_language` char(2) DEFAULT NULL,
     `language_variant` varchar(10) DEFAULT NULL,
     `banner_image_file_id` int(10) unsigned DEFAULT NULL,
-    `css_file` varchar(100) DEFAULT NULL,
     `glossary_languages` varchar(1000) DEFAULT NULL,
     UNIQUE KEY `lw_organisation_is_default` (`is_default`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_requests` (
-    `id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'TODO: rename to request_id',
-    `IP` varchar(64) NOT NULL,
+    `request_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `addr` varchar(64) NOT NULL,
     `requests` int(11) DEFAULT NULL,
     `logins` int(11) DEFAULT NULL,
     `usernames` varchar(512) DEFAULT NULL,
-    `time` datetime NOT NULL
+    `updated_at` timestamp NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `lw_resource` (
@@ -265,8 +263,8 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `read_only_transcript` tinyint(1) NOT NULL DEFAULT 0,
     `online_status` enum ('UNKNOWN','ONLINE','OFFLINE','PROCESSING') NOT NULL DEFAULT 'UNKNOWN' COMMENT '0=unknown',
     `restricted` tinyint(1) NOT NULL DEFAULT 0,
-    `resource_timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `creation_date` datetime DEFAULT current_timestamp(),
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     `metadata` blob DEFAULT NULL,
     KEY `lw_resource_type` (`type`),
     KEY `lw_resource_storage_type` (`storage_type`, `deleted`),
@@ -298,7 +296,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource_rating` (
     `resource_id` int(10) unsigned NOT NULL,
     `user_id` int(10) unsigned NOT NULL,
     `rating` tinyint(1) NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     PRIMARY KEY (`resource_id`, `user_id`)
 );
 
@@ -306,7 +304,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource_tag` (
     `resource_id` int(10) unsigned NOT NULL,
     `tag_id` int(10) unsigned NOT NULL,
     `user_id` int(10) unsigned NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_submission` (
@@ -315,8 +313,8 @@ CREATE TABLE IF NOT EXISTS `lw_submission` (
     `course_id` int(10) unsigned NOT NULL,
     `title` varchar(100) DEFAULT NULL,
     `description` varchar(1000) DEFAULT NULL,
-    `open_datetime` datetime DEFAULT NULL,
-    `close_datetime` datetime DEFAULT NULL,
+    `open_date` timestamp DEFAULT NULL,
+    `close_date` timestamp DEFAULT NULL,
     `number_of_resources` int(10) NOT NULL DEFAULT 3,
     `survey_resource_id` int(10) unsigned DEFAULT NULL,
     KEY `lw_submission_course_id` (`course_id`, `deleted`)
@@ -339,7 +337,7 @@ CREATE TABLE IF NOT EXISTS `lw_submission_status` (
 
 CREATE TABLE IF NOT EXISTS `lw_survey` (
     `survey_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `organization_id` int(10) unsigned NOT NULL,
+    `organisation_id` int(10) unsigned NOT NULL,
     `title` varchar(100) NOT NULL,
     `description` varchar(1000) NOT NULL,
     `user_id` int(10) unsigned NOT NULL COMMENT 'the user who created this template',
@@ -379,8 +377,8 @@ CREATE TABLE IF NOT EXISTS `lw_survey_question_option` (
 CREATE TABLE IF NOT EXISTS `lw_survey_resource` (
     `resource_id` int(10) unsigned NOT NULL PRIMARY KEY,
     `survey_id` int(10) unsigned NOT NULL,
-    `open_date` datetime DEFAULT NULL,
-    `close_date` datetime DEFAULT NULL,
+    `open_date` timestamp DEFAULT NULL,
+    `close_date` timestamp DEFAULT NULL,
     `editable` tinyint(1) NOT NULL DEFAULT 0,
     KEY `lw_survey_resource_survey_id` (`survey_id`)
 );
@@ -389,7 +387,7 @@ CREATE TABLE IF NOT EXISTS `lw_survey_resource_user` (
     `resource_id` int(10) unsigned NOT NULL,
     `user_id` int(10) unsigned NOT NULL,
     `submitted` tinyint(1) NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     PRIMARY KEY (`resource_id`, `user_id`)
 ) COMMENT ='Contains submission status for a particular user';
 
@@ -406,14 +404,14 @@ CREATE TABLE IF NOT EXISTS `lw_thumb` (
     PRIMARY KEY (`resource_id`, `user_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `lw_transcript_actions` (
+CREATE TABLE IF NOT EXISTS `lw_transcript_log` (
     `user_id` int(10) unsigned NOT NULL,
     `resource_id` int(10) unsigned NOT NULL,
     `words_selected` longtext NOT NULL,
     `user_annotation` mediumtext NOT NULL,
     `action` char(25) NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) COMMENT 'TODO: rename to lw_transcript_log';
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+);
 
 CREATE TABLE IF NOT EXISTS `lw_transcript_selections` (
     `resource_id` int(10) unsigned NOT NULL,
@@ -473,22 +471,22 @@ CREATE TABLE IF NOT EXISTS `lw_user_auth` (
     `expires` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) COMMENT ='Used to store users sessions, used by "Remember for 30 days" feature';
 
-CREATE TABLE IF NOT EXISTS `lw_user_course` (
-    `user_id` int(10) unsigned NOT NULL,
+CREATE TABLE IF NOT EXISTS `lw_course_user` (
     `course_id` int(10) unsigned NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+    `user_id` int(10) unsigned NOT NULL,
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     PRIMARY KEY (`user_id`, `course_id`)
-) COMMENT ='TODO: rename to lw_course_user';
+);
 
 CREATE TABLE IF NOT EXISTS `lw_user_log` (
     `log_entry_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` int(10) unsigned NOT NULL,
+    `group_id` int(10) unsigned DEFAULT NULL,
     `session_id` char(32) NOT NULL,
     `action` tinyint(3) unsigned NOT NULL,
     `target_id` int(11) DEFAULT NULL,
     `params` varchar(255) NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
-    `group_id` int(10) unsigned DEFAULT NULL,
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     KEY `lw_user_log_session_id` (`session_id`),
     KEY `lw_user_log_group_id` (`group_id`, `action`, `user_id`)
 ) COMMENT ='TODO: refactor to multiple tables, one for each target_id';
@@ -505,7 +503,7 @@ CREATE TABLE IF NOT EXISTS `lw_user_token` (
     `user_id` int(10) unsigned NOT NULL,
     `type` enum ('grant') NOT NULL,
     `token` varchar(128) NOT NULL,
-    `created_at` datetime NOT NULL DEFAULT current_timestamp()
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 );
 
 ALTER TABLE `lw_course` ADD CONSTRAINT `FK_lw_course_lw_group` FOREIGN KEY (`default_group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -518,23 +516,23 @@ ALTER TABLE `lw_file` ADD CONSTRAINT `FK_lw_file_lw_resource` FOREIGN KEY (`reso
 
 ALTER TABLE `lw_forum_post` ADD CONSTRAINT `FK_lw_forum_post_lw_forum_topic` FOREIGN KEY (`topic_id`) REFERENCES `lw_forum_topic` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_forum_post` ADD CONSTRAINT `FK_lw_forum_post_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_forum_post` ADD CONSTRAINT `FK_lw_forum_post_lw_user_edit` FOREIGN KEY (`post_edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_post` ADD CONSTRAINT `FK_lw_forum_post_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_lw_forum_post` FOREIGN KEY (`topic_last_post_id`) REFERENCES `lw_forum_post` (`post_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_lw_user_last_post` FOREIGN KEY (`topic_last_post_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_last_post` FOREIGN KEY (`last_post_id`) REFERENCES `lw_forum_post` (`post_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_last_post_lw_user` FOREIGN KEY (`last_post_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `FK_lw_glossary_entry_lw_glossary_entry` FOREIGN KEY (`original_entry_id`) REFERENCES `lw_glossary_entry` (`entry_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `FK_lw_glossary_entry_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `FK_lw_glossary_entry_lw_user_changed` FOREIGN KEY (`last_changed_by_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `FK_lw_glossary_entry_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `FK_lw_glossary_entry_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `lw_glossary_resource` ADD CONSTRAINT `FK_lw_glossary_resource_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `FK_lw_glossary_term_lw_glossary_entry` FOREIGN KEY (`entry_id`) REFERENCES `lw_glossary_entry` (`entry_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `FK_lw_glossary_term_lw_glossary_term` FOREIGN KEY (`original_term_id`) REFERENCES `lw_glossary_term` (`term_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `FK_lw_glossary_term_lw_user_changed` FOREIGN KEY (`last_changed_by_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `FK_lw_glossary_term_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `FK_lw_glossary_term_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `lw_group` ADD CONSTRAINT `FK_lw_group_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -588,7 +586,7 @@ ALTER TABLE `lw_submission_status` ADD CONSTRAINT `FK_lw_submission_status_lw_su
 ALTER TABLE `lw_submission_status` ADD CONSTRAINT `FK_lw_submission_status_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_submission_status` ADD CONSTRAINT `FK_lw_submission_status_lw_resource` FOREIGN KEY (`survey_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_survey` ADD CONSTRAINT `FK_lw_survey_lw_organisation` FOREIGN KEY (`organization_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey` ADD CONSTRAINT `FK_lw_survey_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_survey` ADD CONSTRAINT `FK_lw_survey_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_survey_answer` ADD CONSTRAINT `FK_lw_survey_answer_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -608,8 +606,8 @@ ALTER TABLE `lw_survey_resource_user` ADD CONSTRAINT `FK_lw_survey_resource_user
 ALTER TABLE `lw_thumb` ADD CONSTRAINT `FK_lw_thumb_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_thumb` ADD CONSTRAINT `FK_lw_thumb_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_transcript_actions` ADD CONSTRAINT `FK_lw_transcript_actions_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_transcript_actions` ADD CONSTRAINT `FK_lw_transcript_actions_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_transcript_log` ADD CONSTRAINT `FK_lw_transcript_actions_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_transcript_log` ADD CONSTRAINT `FK_lw_transcript_actions_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_transcript_selections` ADD CONSTRAINT `FK_lw_transcript_selections_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -621,8 +619,8 @@ ALTER TABLE `lw_user` ADD CONSTRAINT `FK_lw_user_lw_organisation` FOREIGN KEY (`
 
 ALTER TABLE `lw_user_auth` ADD CONSTRAINT `FK_lw_user_auth_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_user_course` ADD CONSTRAINT `FK_lw_user_course_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_user_course` ADD CONSTRAINT `FK_lw_user_course_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_course_user` ADD CONSTRAINT `FK_lw_user_course_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_course_user` ADD CONSTRAINT `FK_lw_user_course_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_user_log` ADD CONSTRAINT `FK_lw_user_log_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_user_log` ADD CONSTRAINT `FK_lw_user_log_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;

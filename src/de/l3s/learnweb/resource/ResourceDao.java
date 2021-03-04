@@ -72,16 +72,16 @@ public interface ResourceDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_resource WHERE owner_user_id = ? AND deleted = 0")
     List<Resource> findByOwnerId(int userId);
 
-    @SqlQuery("SELECT * FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0")
+    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0")
     List<Resource> findByTagId(int tagId);
 
-    @SqlQuery("SELECT * FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0 LIMIT ?")
+    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0 LIMIT ?")
     List<Resource> findByTagId(int tagId, int limit);
 
     @SqlQuery("SELECT * FROM lw_resource WHERE url = ? AND deleted = 0 LIMIT 1")
     Optional<Resource> findByUrl(String url);
 
-    @SqlQuery("SELECT * FROM lw_resource r JOIN lw_resource_rating USING ( resource_id ) WHERE user_id = ? AND deleted = 0")
+    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_rating USING ( resource_id ) WHERE user_id = ? AND deleted = 0")
     List<Resource> findRatedByUsedId(int userId);
 
     @SqlQuery("SELECT * FROM lw_resource r  WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?")
@@ -96,7 +96,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     /**
      * Returns all survey resources that exists in the groups of the given course.
      */
-    @SqlQuery("SELECT * FROM lw_resource r JOIN lw_group g USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND g.course_id=? ORDER BY r.title")
+    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_group g USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND g.course_id=? ORDER BY r.title")
     List<Resource> findSurveysByCourseId(int courseId);
 
     @SqlQuery("SELECT * FROM lw_resource r WHERE owner_user_id IN (<userIds>) AND deleted = 0 AND type = :type")
@@ -213,7 +213,7 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("duration", resource.getDuration());
         params.put("restricted", resource.isRestricted());
         params.put("language", resource.getLanguage());
-        params.put("creation_date", resource.getCreationDate());
+        params.put("created_at", resource.getCreationDate());
         params.put("metadata", SerializationUtils.serialize(resource.getMetadata()));
         params.put("group_id", SqlHelper.toNullable(resource.getGroupId()));
         params.put("folder_id", SqlHelper.toNullable(resource.getFolderId()));
@@ -334,8 +334,8 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setDuration(rs.getInt("duration"));
                 resource.setLanguage(rs.getString("language"));
                 resource.setRestricted(rs.getBoolean("restricted"));
-                resource.setResourceTimestamp(SqlHelper.getLocalDateTime(rs.getTimestamp("resource_timestamp")));
-                resource.setCreationDate(SqlHelper.getLocalDateTime(rs.getTimestamp("creation_date")));
+                resource.setResourceTimestamp(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+                resource.setCreationDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
                 resource.setGroupId(rs.getInt("group_id"));
                 resource.setFolderId(rs.getInt("folder_id"));
                 resource.setDeleted(rs.getBoolean("deleted"));

@@ -5,7 +5,7 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="pageTitle" value="#{msg.organizations}"/>
+<ui:param name="pageTitle" value="#{msg.organisations}"/>
 <ui:param name="hasAccessPermission" value="#{userBean.admin}"/>
 
 <ui:define name="breadcrumb">
@@ -13,7 +13,7 @@
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
 	</lw:breadcrumb-item>
 
-	<lw:breadcrumb-item link="admin/organisations.jsf" title="#{msg.organizations}">
+	<lw:breadcrumb-item link="admin/organisations.jsf" title="#{msg.organisations}">
 		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
 	</lw:breadcrumb-item>
 </ui:define>
@@ -23,7 +23,7 @@
 		<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}">
 			<f:facet name="header">
 				<div class="d-flex">
-					<div class="me-auto">#{msg.organizations}</div>
+					<div class="me-auto">#{msg.organisations}</div>
 					<div class="d-md-block d-flex flex-column">
 						<p:commandButton value="#{msg.create}" styleClass="float-end alt-btn" onclick="PF('createOrgWidget').show();"/>
 					</div>
@@ -48,10 +48,10 @@
 		</p:dataTable>
 	</h:form>
 
-	<p:dialog header="#{msg.add_new_organization}" styleClass="overflow-hidden" widgetVar="createOrgWidget">
+	<p:dialog header="#{msg.add_new_organisation}" styleClass="overflow-hidden" widgetVar="createOrgWidget">
 		<h:form id="addorganisation">
 			<div class="form-group">
-				<p:outputLabel for="@next" value="#{msg.organization_title}:"/>
+				<p:outputLabel for="@next" value="#{msg.organisation_title}:"/>
 				<p:inputText value="#{adminOrganisationsBean.newOrganisationTitle}"/>
 				<p:message for="@previous"/>
 			</div>

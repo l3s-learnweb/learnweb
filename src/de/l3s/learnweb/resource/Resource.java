@@ -72,7 +72,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private String language; // language code
     private String author;
     private ResourceType type;
-    private String format; // original mineType of the resource
+    private String format; // original mimeType of the resource
     private int duration;
     private int ownerUserId;
     private String idAtService;
@@ -103,7 +103,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private int thumbDown = -1;
     private final HashMap<Integer, Integer> thumbRateByUser = new HashMap<>(); // userId : direction, null if not rated
     private final HashMap<Integer, Integer> rateByUser = new HashMap<>(); // userId : rate, null if not rated
-    private LinkedHashMap<Integer, File> files; // resource_file_number : file
+    private LinkedHashMap<Integer, File> files; // type : file
 
     // caches
     private transient OwnerList<Tag, User> tags;
@@ -1241,7 +1241,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     public LogEntry getThumbnailUpdateInfo() {
         /*
          This method returned a LogEntry for the following query:
-         select * FROM lw_user_log WHERE action=45 AND target_id = ? ORDER BY timestamp DESC LIMIT 1
+         select * FROM lw_user_log WHERE action=45 AND target_id = ? ORDER BY created_at DESC LIMIT 1
          setInt(1, getResource_id)
          But the implementation was bad and it was very rarely used. Let's see if someone misses it. - @kemkes 02.04.2020
          */

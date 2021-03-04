@@ -33,51 +33,51 @@ import de.l3s.util.StringHelper;
 @RegisterRowMapper(LogDao.LogEntryMapper.class)
 public interface LogDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND target_id = :targetId AND action IN(<actionIds>) ORDER BY timestamp DESC")
+    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND target_id = :targetId AND action IN(<actionIds>) ORDER BY created_at DESC")
     List<LogEntry> findByGroupIdAndTargetId(@Bind("groupId") int groupId, @Bind("targetId") int targetId, @DefineList("actionIds") List<Integer> actionIds);
 
-    @SqlQuery("SELECT * FROM lw_user_log WHERE user_id = ? ORDER BY timestamp DESC")
+    @SqlQuery("SELECT * FROM lw_user_log WHERE user_id = ? ORDER BY created_at DESC")
     List<LogEntry> findAllByUserId(int userId);
 
     /**
      * Get logs of the user, excluding logs of private group.
      */
-    @SqlQuery("SELECT * FROM lw_user_log WHERE user_id = :userId AND action IN(<actionIds>) AND group_id != 0 ORDER BY timestamp DESC LIMIT :limit")
+    @SqlQuery("SELECT * FROM lw_user_log WHERE user_id = :userId AND action IN(<actionIds>) AND group_id != 0 ORDER BY created_at DESC LIMIT :limit")
     List<LogEntry> findByUserId(@Bind("userId") int userId, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
 
     /**
      * Get logs for the given group. All actions that match the default filter will be returned
      */
-    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND user_id != 0 AND action IN(<actionIds>) ORDER BY timestamp DESC")
+    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND user_id != 0 AND action IN(<actionIds>) ORDER BY created_at DESC")
     List<LogEntry> findByGroupId(@Bind("groupId") int groupId, @DefineList("actionIds") List<Integer> actionIds);
 
-    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND user_id != 0 AND action IN(<actionIds>) ORDER BY timestamp DESC LIMIT :limit")
+    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND user_id != 0 AND action IN(<actionIds>) ORDER BY created_at DESC LIMIT :limit")
     List<LogEntry> findByGroupId(@Bind("groupId") int groupId, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
 
-    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND action IN(<actionIds>) AND user_id != 0 AND timestamp between :from AND :to ORDER BY timestamp DESC")
+    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id = :groupId AND action IN(<actionIds>) AND user_id != 0 AND created_at between :from AND :to ORDER BY created_at DESC")
     List<LogEntry> findByGroupIdBetweenTime(@Bind("groupId") int groupId, @DefineList("actionIds") List<Integer> actionIds, @Bind("from") LocalDateTime from, @Bind("to") LocalDateTime to);
 
     /**
      * Returns the newest log entries from the user's groups.
      * This doesn't include the user's own actions.
      */
-    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id IN(<groupIds>) AND action IN(<actionIds>) AND user_id != 0 AND user_id != :userId ORDER BY timestamp DESC LIMIT :limit")
+    @SqlQuery("SELECT * FROM lw_user_log WHERE group_id IN(<groupIds>) AND action IN(<actionIds>) AND user_id != 0 AND user_id != :userId ORDER BY created_at DESC LIMIT :limit")
     List<LogEntry> findByUsersGroupIds(@Bind("userId") int userId, @DefineList("groupIds") List<Integer> groupIds, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
 
-    @SqlQuery("SELECT timestamp FROM lw_user_log WHERE user_id = ? AND action = ? ORDER BY timestamp DESC LIMIT 1")
+    @SqlQuery("SELECT created_at FROM lw_user_log WHERE user_id = ? AND action = ? ORDER BY created_at DESC LIMIT 1")
     Optional<LocalDateTime> findDateOfLastByUserIdAndAction(int userId, int actionOrdinal);
 
-    @SqlQuery("SELECT action, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN :start AND :end GROUP BY action")
+    @SqlQuery("SELECT action, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND created_at BETWEEN :start AND :end GROUP BY action")
     @KeyColumn("action")
     @ValueColumn("count")
     Map<Integer, Integer> countUsagePerAction(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
-    @SqlQuery("SELECT DATE(timestamp) AS day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN :start AND :end GROUP BY day")
+    @SqlQuery("SELECT DATE(created_at) AS day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND created_at BETWEEN :start AND :end GROUP BY day")
     @KeyColumn("day")
     @ValueColumn("count")
     Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
-    @SqlQuery("SELECT DATE(timestamp) as day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND timestamp BETWEEN :start AND :end AND action in (<actions>) GROUP BY day")
+    @SqlQuery("SELECT DATE(created_at) as day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND created_at BETWEEN :start AND :end AND action in (<actions>) GROUP BY day")
     @KeyColumn("day")
     @ValueColumn("count")
     Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate, @Define("actions") String actions);
@@ -109,7 +109,7 @@ public interface LogDao extends SqlObject, Serializable {
             groupId = null;
         }
 
-        getHandle().createUpdate("INSERT INTO lw_user_log (user_id, session_id, action, target_id, params, group_id, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)")
+        getHandle().createUpdate("INSERT INTO lw_user_log (user_id, session_id, action, target_id, params, group_id, created_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)")
             .bind(0, userId)
             .bind(1, sessionId)
             .bind(2, action)
@@ -132,7 +132,7 @@ public interface LogDao extends SqlObject, Serializable {
             int userId = rs.getInt("user_id");
             // String sessionId = rs.getString("session_id");
             Action action = Action.values()[rs.getInt("action")];
-            LocalDateTime dateTime = SqlHelper.getLocalDateTime(rs.getTimestamp("timestamp"));
+            LocalDateTime dateTime = SqlHelper.getLocalDateTime(rs.getTimestamp("created_at"));
             String params = rs.getString("params");
             int groupId = rs.getInt("group_id");
             int targetId = rs.getInt("target_id");

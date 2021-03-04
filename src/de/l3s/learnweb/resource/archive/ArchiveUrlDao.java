@@ -26,13 +26,13 @@ public interface ArchiveUrlDao extends SqlObject, Serializable {
     List<ArchiveUrl> findByResourceId(int resourceId);
 
     @RegisterRowMapper(ArchiveUrlMapper.class)
-    @SqlQuery("SELECT * FROM lw_resource_archiveurl WHERE resource_id = ? AND DATE(timestamp) = DATE(?)")
+    @SqlQuery("SELECT * FROM lw_resource_archiveurl WHERE resource_id = ? AND date(timestamp) = date(?)")
     List<ArchiveUrl> findByResourceId(int resourceId, LocalDate timestamp);
 
-    @SqlUpdate("INSERT into lw_resource_archiveurl(resource_id,archive_url,timestamp) VALUES (?, ?, ?)")
+    @SqlUpdate("INSERT INTO lw_resource_archiveurl(resource_id, archive_url, timestamp) VALUES (?, ?, ?)")
     void insertArchiveUrl(int resourceId, String archiveUrl, LocalDateTime timestamp);
 
-    @SqlBatch("INSERT into lw_resource_archiveurl(resource_id,archive_url,timestamp) VALUES (:resourceId, :getArchiveUrl, :getTimestamp)")
+    @SqlBatch("INSERT INTO lw_resource_archiveurl(resource_id, archive_url, timestamp) VALUES (:resourceId, :getArchiveUrl, :getTimestamp)")
     void insertArchiveUrl(@Bind("resourceId") int resourceId, @BindMethods Collection<ArchiveUrl> archiveUrls);
 
     class ArchiveUrlMapper implements RowMapper<ArchiveUrl> {

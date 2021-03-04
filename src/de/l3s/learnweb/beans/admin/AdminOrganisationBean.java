@@ -57,7 +57,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         } else {
             BeanAssert.hasPermission(getUser().isModerator());
 
-            setOrganisation(getUser().getOrganisation()); // by default edit the users organization
+            setOrganisation(getUser().getOrganisation()); // by default edit the users organisation
         }
     }
 

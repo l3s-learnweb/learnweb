@@ -16,7 +16,6 @@ public class Message implements Comparable<Message>, Serializable, HasId {
     private String title;
     private String text;
     private boolean seen = false;
-    private boolean read = false;
     private LocalDateTime time;
 
     private transient User fromUser;
@@ -36,13 +35,13 @@ public class Message implements Comparable<Message>, Serializable, HasId {
             return false;
         }
         final Message message = (Message) o;
-        return id == message.id && fromUserId == message.fromUserId && toUserId == message.toUserId && seen == message.seen && read == message.read
+        return id == message.id && fromUserId == message.fromUserId && toUserId == message.toUserId && seen == message.seen
             && title.equals(message.title) && text.equals(message.text) && time.equals(message.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fromUserId, toUserId, title, text, seen, read, time);
+        return Objects.hash(id, fromUserId, toUserId, title, text, seen, time);
     }
 
     @Override
@@ -120,14 +119,6 @@ public class Message implements Comparable<Message>, Serializable, HasId {
 
     public void setSeen(boolean seen) {
         this.seen = seen;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
     }
 
     public LocalDateTime getTime() {

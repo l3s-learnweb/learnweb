@@ -362,7 +362,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         }
 
         if (!optionImportEnabled) {
-            throw new IllegalAccessException("This feature isn't enabled for your organization");
+            throw new IllegalAccessException("This feature isn't enabled for your organisation");
         }
 
         GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());

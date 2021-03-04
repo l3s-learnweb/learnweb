@@ -83,7 +83,7 @@ public interface UserDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_user WHERE organisation_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByOrganisationId(int organisationId);
 
-    @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username")
+    @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_course_user USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByCourseId(int courseId);
 
     @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username")
@@ -108,10 +108,10 @@ public interface UserDao extends SqlObject, Serializable {
         return getHandle().attach(LogDao.class).findDateOfLastByUserIdAndAction(userId, Action.login.ordinal());
     }
 
-    @SqlQuery("SELECT COUNT(*) FROM lw_user u JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0")
+    @SqlQuery("SELECT COUNT(*) FROM lw_user u JOIN lw_course_user USING(user_id) WHERE course_id = ? AND deleted = 0")
     int countByCourseId(int courseId);
 
-    @SqlQuery("SELECT COUNT(*) FROM lw_user_course WHERE user_id = ?")
+    @SqlQuery("SELECT COUNT(*) FROM lw_course_user WHERE user_id = ?")
     int countCoursesByUserId(int userId);
 
     @SqlUpdate("INSERT INTO lw_user_auth (user_id, auth_id, token_hash, expires) VALUES(?, ?, ?, ?)")

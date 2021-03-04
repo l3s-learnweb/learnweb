@@ -3,6 +3,7 @@ package de.l3s.learnweb.group;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,7 +72,7 @@ public interface GroupDao extends SqlObject, Serializable {
     /**
      * Returns a list of Groups which belong to the defined courses and were created after the specified date.
      */
-    @SqlQuery("SELECT * FROM lw_group g WHERE g.course_id IN(<courseIds>) AND g.deleted = 0 AND creation_time > :time ORDER BY title")
+    @SqlQuery("SELECT * FROM lw_group g WHERE g.course_id IN(<courseIds>) AND g.deleted = 0 AND created_at > :time ORDER BY title")
     List<Group> findByCourseIds(@BindList("courseIds") Collection<Integer> courseIds, @Bind("time") LocalDateTime newerThan);
 
 
@@ -94,7 +95,7 @@ public interface GroupDao extends SqlObject, Serializable {
      * @return unix timestamp when the user has visited the group the last time; returns -1 if he never view the group.
      */
     @SqlQuery("SELECT last_visit FROM lw_group_user WHERE group_id = ? AND user_id = ?")
-    Optional<Integer> findLastVisitTime(Group group, User user);
+    Optional<Instant> findLastVisitTime(Group group, User user);
 
     @SqlQuery("SELECT count(*) FROM lw_group_user WHERE group_id = ?")
     int countMembers(int groupId);
@@ -128,7 +129,7 @@ public interface GroupDao extends SqlObject, Serializable {
      * Define at which timestamp the user has visited the group the last time.
      */
     @SqlUpdate("UPDATE lw_group_user SET last_visit = ? WHERE group_id = ? AND user_id = ?")
-    void insertLastVisitTime(int time, Group group, User user);
+    void insertLastVisitTime(Instant visit, Group group, User user);
 
     @SqlUpdate("INSERT IGNORE INTO lw_group_user (group_id, user_id, notification_frequency) VALUES (?,?,?)")
     void insertUser(int groupId, User user, User.NotificationFrequency notificationFrequency);
@@ -228,7 +229,7 @@ public interface GroupDao extends SqlObject, Serializable {
             group.setGroupId(rs.getInt("group_id"));
             group.setUserId(rs.getInt("user_id"));
             group.setJoinTime(SqlHelper.getLocalDateTime(rs.getTimestamp("join_time")));
-            group.setLastVisit(SqlHelper.getLocalDateTime(rs.getInt("last_visit")));
+            group.setLastVisit(SqlHelper.getLocalDateTime(rs.getTimestamp("last_visit")));
             group.setNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("notification_frequency")));
             return group;
         }
