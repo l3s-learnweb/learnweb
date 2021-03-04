@@ -30,7 +30,7 @@ public class EditFolderBean extends ApplicationBean implements Serializable {
             Map<String, String> params = Faces.getRequestParameterMap();
             int itemId = Integer.parseInt(params.get("itemId"));
 
-            Folder folder = folderDao.findByIdOrElseThrow(itemId);
+            folder = folderDao.findByIdOrElseThrow(itemId);
             BeanAssert.validate(folder.canEditResource(getUser()), "You don't have permission to edit target folder.");
         } catch (IllegalArgumentException e) {
             addErrorMessage(e);
@@ -38,8 +38,6 @@ public class EditFolderBean extends ApplicationBean implements Serializable {
     }
 
     public void saveChanges() {
-        BeanAssert.hasPermission(folder.canEditResource(getUser()));
-
         folder.unlockResource(getUser());
         folder.save();
 
