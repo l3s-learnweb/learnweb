@@ -80,7 +80,10 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     @Override
     public Group getGroup() {
-        return Learnweb.dao().getGroupDao().findByIdOrElseThrow(groupId);
+        if (groupId != 0) {
+            return Learnweb.dao().getGroupDao().findByIdOrElseThrow(groupId);
+        }
+        return null;
     }
 
     public int getParentFolderId() {

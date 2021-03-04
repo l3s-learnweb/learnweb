@@ -80,7 +80,7 @@ public class ResourceDocument {
         this.language = resource.getLanguage().toLowerCase();
         this.source = resource.getSource().toString().toLowerCase();
         this.type = resource.getType().name();
-        this.format = resource.getFormat().toLowerCase();
+        this.format = resource.getFormat();
         // this.duration = resource.getDuration();
         this.author = resource.getAuthor();
         this.location = resource.getLocation().toLowerCase().replace("-", "");

@@ -60,7 +60,7 @@ public final class Learnweb {
         interweb = new InterWeb(configProvider.getProperty("interwebj_api_url"), configProvider.getProperty("interwebj_api_key"),
             configProvider.getProperty("interwebj_api_secret"));
 
-        resourcePreviewMaker = new ResourcePreviewMaker(daoProvider.getFileDao(), daoProvider.getArchiveUrlDao(), configProvider);
+        resourcePreviewMaker = new ResourcePreviewMaker(daoProvider.getFileDao(), configProvider);
         resourceMetadataExtractor = new ResourceMetadataExtractor(solrClient);
 
         if (learnweb == null) {

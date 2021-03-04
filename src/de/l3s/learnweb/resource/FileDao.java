@@ -47,6 +47,9 @@ public interface FileDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER by resource_file_number, timestamp")
     List<File> findByResourceId(int resourceId);
 
+    @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ?")
+    List<File> findAllByResourceId(int resourceId);
+
     @SqlUpdate("UPDATE lw_file SET resource_id = ? WHERE file_id = ?")
     void updateResource(Resource resource, File file);
 

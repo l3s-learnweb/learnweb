@@ -65,7 +65,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         try {
             Image img = new Image(event.getFile().getInputStream());
 
-            File file = new File(TYPE.SYSTEM_FILE, "banner_image.png", "image/png");
+            File file = new File(TYPE.ORGANISATION_BANNER, "banner_image.png", "image/png");
             Image thumbnail = img.getResized(324, 100);
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();

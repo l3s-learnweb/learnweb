@@ -300,9 +300,7 @@ public class TedManager {
                     fileDao.deleteHard(file);
                 }
                 resource.setThumbnail0(r2.getThumbnail0());
-                resource.setThumbnail1(r2.getThumbnail1());
                 resource.setThumbnail2(r2.getThumbnail2());
-                resource.setThumbnail3(r2.getThumbnail3());
                 resource.setThumbnail4(r2.getThumbnail4());
                 resource.setDuration(r2.getDuration());
                 resource.setIdAtService(r2.getIdAtService());

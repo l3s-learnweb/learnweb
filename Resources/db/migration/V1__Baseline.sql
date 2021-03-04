@@ -252,18 +252,10 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `thumbnail0_file_id` int(10) unsigned DEFAULT NULL,
     `thumbnail0_width` smallint(5) unsigned DEFAULT NULL,
     `thumbnail0_height` smallint(5) unsigned DEFAULT NULL,
-    `thumbnail1_url` varchar(255) DEFAULT NULL,
-    `thumbnail1_file_id` int(10) unsigned DEFAULT NULL,
-    `thumbnail1_width` smallint(5) unsigned DEFAULT NULL,
-    `thumbnail1_height` smallint(5) unsigned DEFAULT NULL,
     `thumbnail2_url` varchar(255) DEFAULT NULL,
     `thumbnail2_file_id` int(10) unsigned DEFAULT NULL,
     `thumbnail2_width` smallint(5) unsigned DEFAULT NULL,
     `thumbnail2_height` smallint(5) unsigned DEFAULT NULL,
-    `thumbnail3_url` varchar(255) DEFAULT NULL,
-    `thumbnail3_file_id` int(10) unsigned DEFAULT NULL,
-    `thumbnail3_width` smallint(5) unsigned DEFAULT NULL,
-    `thumbnail3_height` smallint(5) unsigned DEFAULT NULL,
     `thumbnail4_url` varchar(255) DEFAULT NULL,
     `thumbnail4_file_id` int(10) unsigned DEFAULT NULL,
     `thumbnail4_width` smallint(5) unsigned DEFAULT NULL,
@@ -563,9 +555,7 @@ ALTER TABLE `lw_news` ADD CONSTRAINT `FK_lw_news_lw_user` FOREIGN KEY (`user_id`
 ALTER TABLE `lw_organisation` ADD CONSTRAINT `FK_lw_organisation_lw_file` FOREIGN KEY (`banner_image_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t0` FOREIGN KEY (`thumbnail0_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t1` FOREIGN KEY (`thumbnail1_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t2` FOREIGN KEY (`thumbnail2_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t3` FOREIGN KEY (`thumbnail3_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t4` FOREIGN KEY (`thumbnail4_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_group_folder` FOREIGN KEY (`folder_id`) REFERENCES `lw_group_folder` (`folder_id`) ON DELETE RESTRICT ON UPDATE CASCADE;

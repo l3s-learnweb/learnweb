@@ -84,11 +84,9 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private String query; // the query which was used to find this resource
     private int originalResourceId; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
     private String machineDescription;
-    private Thumbnail thumbnail0; // 160x120            200x150px smallest thumbnail used on website (actual display size 160x120)
-    private Thumbnail thumbnail1; // 150px
-    private Thumbnail thumbnail2; // 300 / 220
-    private Thumbnail thumbnail3; // 500 / 600
-    private Thumbnail thumbnail4; // 1280 / 1024
+    private Thumbnail thumbnail0; // cropped to 160 x 120 px - smallest thumbnail used on website
+    private Thumbnail thumbnail2; // resized <= 280 x 210 px - resource preview image size
+    private Thumbnail thumbnail4; // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
     private String embeddedRaw; // stored in the database
     private String embeddedCode; // derived from type or embedded raw. Does not need to be stored in DB
     private String transcript; //To store the English transcripts for TED videos and saved articles
@@ -146,9 +144,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         setFileUrl(old.fileUrl);
         setQuery(old.query);
         setThumbnail0(old.thumbnail0);
-        setThumbnail1(old.thumbnail1);
         setThumbnail2(old.thumbnail2);
-        setThumbnail3(old.thumbnail3);
         setThumbnail4(old.thumbnail4);
         setEmbeddedRaw(old.embeddedRaw);
         setDuration(old.duration);
@@ -867,28 +863,12 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         this.thumbnail0 = thumbnail0;
     }
 
-    public Thumbnail getThumbnail1() {
-        return thumbnail1;
-    }
-
-    public void setThumbnail1(Thumbnail thumbnail1) {
-        this.thumbnail1 = thumbnail1;
-    }
-
     public Thumbnail getThumbnail2() {
         return thumbnail2;
     }
 
     public void setThumbnail2(Thumbnail thumbnail2) {
         this.thumbnail2 = thumbnail2;
-    }
-
-    public Thumbnail getThumbnail3() {
-        return thumbnail3;
-    }
-
-    public void setThumbnail3(Thumbnail thumbnail3) {
-        this.thumbnail3 = thumbnail3;
     }
 
     public Thumbnail getThumbnail4() {
@@ -903,22 +883,18 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * Get combined thumbnail.
      */
     public Thumbnail getSmallThumbnail() {
-        if (thumbnail0 != null) {
-            return thumbnail0;
-        }
-
-        return thumbnail1;
+        return thumbnail0;
     }
 
     /**
      * Get combined medium thumbnail.
      */
     public Thumbnail getMediumThumbnail() {
-        if (thumbnail2 != null) {
+        if (null != thumbnail2) {
             return thumbnail2;
         }
 
-        return thumbnail3;
+        return thumbnail0;
     }
 
     /**
@@ -928,14 +904,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         if (null != thumbnail4) {
             return thumbnail4;
         }
-        if (null != thumbnail3) {
-            return thumbnail3;
-        }
         if (null != thumbnail2) {
             return thumbnail2;
-        }
-        if (null != thumbnail1) {
-            return thumbnail1;
         }
         if (null != thumbnail0) {
             return thumbnail0;

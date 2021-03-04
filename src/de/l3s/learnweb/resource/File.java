@@ -21,13 +21,13 @@ public class File implements Serializable, HasId, Cloneable {
     private static final Pattern NAME_FORBIDDEN_CHARACTERS = Pattern.compile("[\\\\/:*?\"<>|]");
 
     public enum TYPE {
-        UNKNOWN, // 0
-        THUMBNAIL_SQUARED, // 1
-        THUMBNAIL_SMALL, // 2
-        THUMBNAIL_MEDIUM, // 3
+        ORGANISATION_BANNER, // 0
+        UNUSED1,
+        THUMBNAIL_MEDIUM, // 2, thumbnail2
+        UNUSED3,
         FILE_MAIN, // 4 the file that can be downloaded/viewed
-        THUMBNAIL_LARGE, // 5
-        THUMBNAIL_VERY_SMALL, // 6
+        THUMBNAIL_LARGE, // 5, thumbnail4
+        THUMBNAIL_SMALL, // 6, thumbnail0
         FILE_ORIGINAL, // 7 if the file was converted the original file should be moved to this location
         PROFILE_PICTURE, // 8
         SYSTEM_FILE, // 9 for example course header images

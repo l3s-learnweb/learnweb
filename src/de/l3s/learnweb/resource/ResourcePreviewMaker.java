@@ -8,8 +8,6 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +18,6 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
-import de.l3s.learnweb.resource.archive.ArchiveUrlDao;
 import de.l3s.learnweb.resource.office.ConverterService;
 import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
@@ -42,18 +39,14 @@ public class ResourcePreviewMaker implements Serializable {
     private static final long serialVersionUID = -5259988131984139763L;
     private static final Logger log = LogManager.getLogger(ResourcePreviewMaker.class);
 
-    private static final int SIZE0_MAX_WIDTH = 150;
-    private static final int SIZE0_MAX_HEIGHT = 120;
-    private static final int SIZE1_WIDTH = 150;
-    private static final int SIZE2_MAX_WIDTH = 300;
-    private static final int SIZE2_MAX_HEIGHT = 220;
-    private static final int SIZE3_MAX_WIDTH = 500;
-    private static final int SIZE3_MAX_HEIGHT = 600;
-    private static final int SIZE4_MAX_WIDTH = 1280;
-    private static final int SIZE4_MAX_HEIGHT = 1024;
+    private static final int THUMBNAIL_SMALL_WIDTH = 160;
+    private static final int THUMBNAIL_SMALL_HEIGHT = 120;
+    private static final int THUMBNAIL_MEDIUM_WIDTH = 280;
+    private static final int THUMBNAIL_MEDIUM_HEIGHT = 210;
+    private static final int THUMBNAIL_LARGE_WIDTH = 2048;
+    private static final int THUMBNAIL_LARGE_HEIGHT = 1536;
 
     private final FileDao fileDao;
-    private final ArchiveUrlDao archiveUrlDao;
 
     private final String ffmpegPath;
     private final String ffprobePath;
@@ -64,10 +57,8 @@ public class ResourcePreviewMaker implements Serializable {
     private transient FFprobe ffprobe;
     private transient FFmpegExecutor ffmpegExecutor;
 
-    @Inject
-    public ResourcePreviewMaker(final FileDao fileDao, final ArchiveUrlDao archiveUrlDao, final ConfigProvider configProvider) {
+    public ResourcePreviewMaker(final FileDao fileDao, final ConfigProvider configProvider) {
         this.fileDao = fileDao;
-        this.archiveUrlDao = archiveUrlDao;
 
         this.ffmpegPath = configProvider.getProperty("ffmpeg_path");
         this.ffprobePath = configProvider.getProperty("ffprobe_path");
@@ -171,18 +162,16 @@ public class ResourcePreviewMaker implements Serializable {
         // process image
         Image img = new Image(inputStream);
 
-        if (img.getWidth() > SIZE3_MAX_WIDTH || img.getHeight() > SIZE3_MAX_HEIGHT) {
-            Image thumbnail = img.getResized(SIZE4_MAX_WIDTH, SIZE4_MAX_HEIGHT);
-            File file = new File();
-            file.setType(TYPE.THUMBNAIL_LARGE);
-            file.setName("thumbnail4.png");
-            file.setMimeType("image/png");
-            fileDao.save(file, thumbnail.getInputStream());
-            thumbnail.dispose();
+        Image thumbnail = img.getResized(THUMBNAIL_LARGE_WIDTH, THUMBNAIL_LARGE_HEIGHT);
+        File file = new File();
+        file.setType(TYPE.THUMBNAIL_LARGE);
+        file.setName("thumbnail4.png");
+        file.setMimeType("image/png");
+        fileDao.save(file, thumbnail.getInputStream());
+        thumbnail.dispose();
 
-            resource.addFile(file);
-            resource.setThumbnail4(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
-        }
+        resource.addFile(file);
+        resource.setThumbnail4(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
 
         createThumbnails(resource, img, false);
     }
@@ -380,60 +369,32 @@ public class ResourcePreviewMaker implements Serializable {
     private void createThumbnails(Resource resource, Image img, boolean croppedToAspectRatio) throws IOException {
         int width = img.getWidth();
         int height = img.getHeight();
-        Image thumbnail = null;
 
         try {
-            thumbnail = img.getResized(SIZE0_MAX_WIDTH, SIZE0_MAX_HEIGHT, croppedToAspectRatio);
+            Image thumbnail = img.getCroppedAndResized(THUMBNAIL_SMALL_WIDTH, THUMBNAIL_SMALL_HEIGHT);
             File file = new File();
-            file.setType(TYPE.THUMBNAIL_VERY_SMALL);
+            file.setType(TYPE.THUMBNAIL_SMALL);
             file.setName("thumbnail0.png");
             file.setMimeType("image/png");
             fileDao.save(file, thumbnail.getInputStream());
+            thumbnail.dispose();
             resource.addFile(file);
             resource.setThumbnail0(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
 
-            if (width < SIZE0_MAX_WIDTH && height < SIZE0_MAX_HEIGHT) { // than it makes no sense to create larger thumbnails from a small image
+            if (width < THUMBNAIL_SMALL_WIDTH && height < THUMBNAIL_SMALL_HEIGHT) { // than it makes no sense to create larger thumbnails from a small image
                 return;
             }
 
-            thumbnail = croppedToAspectRatio ? img.getCroppedAndResized(SIZE1_WIDTH, SIZE1_WIDTH) : img.getResizedToSquare2(SIZE1_WIDTH, 0.0);
+            thumbnail = img.getResized(THUMBNAIL_MEDIUM_WIDTH, THUMBNAIL_MEDIUM_HEIGHT, croppedToAspectRatio);
             file = new File();
-            file.setType(TYPE.THUMBNAIL_SQUARED);
-            file.setName("thumbnail1.png");
-            file.setMimeType("image/png");
-            fileDao.save(file, thumbnail.getInputStream());
-            resource.addFile(file);
-            resource.setThumbnail1(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
-
-            if (width < SIZE1_WIDTH && height < SIZE1_WIDTH) {
-                return;
-            }
-
-            thumbnail = img.getResized(SIZE2_MAX_WIDTH, SIZE2_MAX_HEIGHT, croppedToAspectRatio);
-            file = new File();
-            file.setType(TYPE.THUMBNAIL_SMALL);
+            file.setType(TYPE.THUMBNAIL_MEDIUM);
             file.setName("thumbnail2.png");
             file.setMimeType("image/png");
             fileDao.save(file, thumbnail.getInputStream());
+            thumbnail.dispose();
             resource.addFile(file);
             resource.setThumbnail2(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
-
-            if (width < SIZE2_MAX_WIDTH && height < SIZE2_MAX_HEIGHT) {
-                return;
-            }
-
-            thumbnail = img.getResized(SIZE3_MAX_WIDTH, SIZE3_MAX_HEIGHT, croppedToAspectRatio);
-            file = new File();
-            file.setType(TYPE.THUMBNAIL_MEDIUM);
-            file.setName("thumbnail3.png");
-            file.setMimeType("image/png");
-            fileDao.save(file, thumbnail.getInputStream());
-            resource.addFile(file);
-            resource.setThumbnail3(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
         } finally {
-            if (thumbnail != null) {
-                thumbnail.dispose();
-            }
             img.dispose();
         }
     }

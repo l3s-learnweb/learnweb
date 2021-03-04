@@ -157,8 +157,8 @@ public interface ResourceDao extends SqlObject, Serializable {
 
         try {
             for (File file : sourceResource.getFiles().values()) {
-                if (List.of(File.TYPE.THUMBNAIL_VERY_SMALL, File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_SQUARED, File.TYPE.THUMBNAIL_MEDIUM,
-                    File.TYPE.THUMBNAIL_LARGE, File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY).contains(file.getType())) {
+                if (List.of(File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_LARGE,
+                    File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY).contains(file.getType())) {
                     continue; // skip them
                 }
 
@@ -229,15 +229,6 @@ public interface ResourceDao extends SqlObject, Serializable {
             params.put("thumbnail0_height", resource.getThumbnail0().getHeight());
         }
 
-        if (resource.getThumbnail1() != null) {
-            if (resource.getThumbnail1().getFileId() == 0) {
-                params.put("thumbnail1_url", resource.getThumbnail1().getUrl());
-            }
-            params.put("thumbnail1_file_id", SqlHelper.toNullable(resource.getThumbnail1().getFileId()));
-            params.put("thumbnail1_width", resource.getThumbnail1().getWidth());
-            params.put("thumbnail1_height", resource.getThumbnail1().getHeight());
-        }
-
         if (resource.getThumbnail2() != null) {
             if (resource.getThumbnail2().getFileId() == 0) {
                 params.put("thumbnail2_url", resource.getThumbnail2().getUrl());
@@ -245,15 +236,6 @@ public interface ResourceDao extends SqlObject, Serializable {
             params.put("thumbnail2_file_id", SqlHelper.toNullable(resource.getThumbnail2().getFileId()));
             params.put("thumbnail2_width", resource.getThumbnail2().getWidth());
             params.put("thumbnail2_height", resource.getThumbnail2().getHeight());
-        }
-
-        if (resource.getThumbnail3() != null) {
-            if (resource.getThumbnail3().getFileId() == 0) {
-                params.put("thumbnail3_url", resource.getThumbnail3().getUrl());
-            }
-            params.put("thumbnail3_file_id", SqlHelper.toNullable(resource.getThumbnail3().getFileId()));
-            params.put("thumbnail3_width", resource.getThumbnail3().getWidth());
-            params.put("thumbnail3_height", resource.getThumbnail3().getHeight());
         }
 
         if (resource.getThumbnail4() != null) {
@@ -300,7 +282,7 @@ public interface ResourceDao extends SqlObject, Serializable {
      * Usually you have to call deleteSoft()
      */
     default void deleteHard(Resource resource) {
-        for (File file : resource.getFiles().values()) {
+        for (File file : getFileDao().findAllByResourceId(resource.getId())) {
             getFileDao().deleteHard(file);
         }
 
@@ -343,9 +325,7 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setOriginalResourceId(rs.getInt("original_resource_id"));
                 resource.setFileUrl(rs.getString("file_url"));
                 resource.setThumbnail0(createThumbnail(rs, 0));
-                resource.setThumbnail1(createThumbnail(rs, 1));
                 resource.setThumbnail2(createThumbnail(rs, 2));
-                resource.setThumbnail3(createThumbnail(rs, 3));
                 resource.setThumbnail4(createThumbnail(rs, 4));
                 resource.setEmbeddedRaw(rs.getString("embeddedRaw"));
                 resource.setTranscript(rs.getString("transcript"));
@@ -363,10 +343,6 @@ public interface ResourceDao extends SqlObject, Serializable {
 
                 // This must be set manually because we stored some external sources in Learnweb/Solr
                 resource.setLocation(getLocation(resource));
-
-                if (resource.isDeleted()) {
-                    LogManager.getLogger(ResourceMapper.class).debug("resource {} was requested but is deleted", resource.getId());
-                }
 
                 // deserialize metadata
                 byte[] metadataBytes = rs.getBytes("metadata");

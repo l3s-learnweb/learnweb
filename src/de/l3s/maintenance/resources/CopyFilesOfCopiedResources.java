@@ -50,8 +50,8 @@ public final class CopyFilesOfCopiedResources extends MaintenanceTask {
     private void copyFiles(final Resource resource, final Collection<File> originalFiles, final boolean dryRun) {
         try {
             for (File file : originalFiles) {
-                if (List.of(File.TYPE.THUMBNAIL_VERY_SMALL, File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_SQUARED,
-                    File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_LARGE, File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY).contains(file.getType())) {
+                if (List.of(File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_LARGE,
+                    File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY).contains(file.getType())) {
                     continue; // skip them
                 }
 
