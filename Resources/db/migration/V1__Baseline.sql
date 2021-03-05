@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `lw_file` (
     `file_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `deleted` tinyint(1) NOT NULL DEFAULT 0,
     `resource_id` int(10) unsigned DEFAULT NULL,
-    `type` tinyint(1) unsigned NOT NULL,
+    `type` enum ('ORGANISATION_BANNER','PROFILE_PICTURE','THUMBNAIL_MEDIUM','THUMBNAIL_LARGE','THUMBNAIL_SMALL','SYSTEM_FILE','DOC_HISTORY','DOC_CHANGES','ORIGINAL','MAIN','OBSOLETE') NOT NULL,
     `name` varchar(255) NOT NULL,
     `mime_type` varchar(255) NOT NULL,
     `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -229,10 +229,10 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `url` varchar(4000) DEFAULT NULL,
     `storage_type` tinyint(1) NOT NULL,
     `rights` tinyint(1) NOT NULL,
-    `source` varchar(255) NOT NULL,
+    `source` enum ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck','desktop','internet','slideshare','speechrepository') NOT NULL,
     `language` varchar(200) DEFAULT NULL,
     `author` varchar(255) DEFAULT NULL,
-    `type` varchar(255) NOT NULL,
+    `type` enum ('text','video','image','audio','pdf','website','spreadsheet','presentation','document','file','survey','glossary') NOT NULL,
     `format` varchar(255) NOT NULL,
     `duration` int(10) unsigned DEFAULT NULL,
     `width` int(10) unsigned DEFAULT NULL,
@@ -241,7 +241,8 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `id_at_service` varchar(100) DEFAULT NULL,
     `rating` int(11) NOT NULL,
     `rate_number` int(11) NOT NULL,
-    `filename` varchar(200) DEFAULT NULL,
+    `file_id` int(10) unsigned NOT NULL,
+    `file_name` varchar(200) DEFAULT NULL,
     `file_url` varchar(1000) DEFAULT NULL,
     `max_image_url` varchar(1000) DEFAULT NULL,
     `query` varchar(1000) DEFAULT NULL,
@@ -545,6 +546,7 @@ ALTER TABLE `lw_news` ADD CONSTRAINT `FK_lw_news_lw_user` FOREIGN KEY (`user_id`
 
 ALTER TABLE `lw_organisation` ADD CONSTRAINT `FK_lw_organisation_lw_file` FOREIGN KEY (`banner_image_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
+ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file` FOREIGN KEY (`file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t0` FOREIGN KEY (`thumbnail0_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t2` FOREIGN KEY (`thumbnail2_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t4` FOREIGN KEY (`thumbnail4_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;

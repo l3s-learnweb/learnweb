@@ -100,7 +100,7 @@ public interface FileDao extends SqlObject, Serializable {
         params.put("file_id", SqlHelper.toNullable(file.getId()));
         params.put("deleted", file.isDeleted());
         params.put("resource_id", SqlHelper.toNullable(file.getResourceId()));
-        params.put("type", file.getType().ordinal());
+        params.put("type", file.getType().name());
         params.put("name", file.getName());
         params.put("mime_type", file.getMimeType());
         params.put("updated_at", file.getLastModified());
@@ -134,7 +134,7 @@ public interface FileDao extends SqlObject, Serializable {
                 file.setId(rs.getInt("file_id"));
                 file.setDeleted(rs.getBoolean("deleted"));
                 file.setResourceId(rs.getInt("resource_id"));
-                file.setType(File.TYPE.values()[rs.getInt("type")]);
+                file.setType(File.TYPE.valueOf(rs.getString("type")));
                 file.setName(rs.getString("name"));
                 file.setMimeType(rs.getString("mime_type"));
                 file.setLastModified(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));

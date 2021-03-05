@@ -21,7 +21,7 @@ public final class HardDeleteResources extends MaintenanceTask {
 
     @Override
     public void run(boolean dryRun) {
-        List<Integer> resourceIds = List.of(229236);
+        List<Integer> resourceIds = List.of(12604, 7156);
         log.info("Total resources to remove {}", resourceIds.size());
 
         if (!dryRun) {

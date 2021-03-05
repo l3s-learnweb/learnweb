@@ -55,7 +55,6 @@ public class IndexFakeNews extends MaintenanceTask {
             Resource resource = new Resource();
             resource.setType(ResourceType.website);
             resource.setSource(ResourceService.factcheck);
-            resource.setLocation("FactCheck");
             resource.setMetadataValue("publisher", "fullfact.org");
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
@@ -103,7 +102,6 @@ public class IndexFakeNews extends MaintenanceTask {
         Resource resource = new Resource();
         resource.setType(ResourceType.website);
         resource.setSource(ResourceService.factcheck);
-        resource.setLocation("FactCheck");
         resource.setMetadataValue("publisher", "snopes.com");
         resource.setUserId(7727); // Admin
         resource.setGroupId(1346); // Admin Fact Check group

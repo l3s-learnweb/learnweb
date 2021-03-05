@@ -51,7 +51,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         resource = new Resource();
         resource.setUser(getUser());
         resource.setSource(ResourceService.learnweb);
-        resource.setLocation("Learnweb");
         resource.setStorageType(Resource.LEARNWEB_RESOURCE);
         resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
 
@@ -100,7 +99,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         GlossaryResource glossaryResource = new GlossaryResource();
         glossaryResource.setUser(getUser());
         glossaryResource.setSource(ResourceService.learnweb);
-        glossaryResource.setLocation("Learnweb");
         glossaryResource.setStorageType(Resource.LEARNWEB_RESOURCE);
         glossaryResource.setDeleted(true);
         glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
@@ -120,7 +118,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         surveyResource.setUser(getUser());
         surveyResource.setDeleted(true);
         surveyResource.setSource(ResourceService.learnweb);
-        surveyResource.setLocation("Learnweb");
         surveyResource.setStorageType(Resource.LEARNWEB_RESOURCE);
         surveyResource.setType(ResourceType.survey);
 
@@ -139,12 +136,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
 
             log.debug("Saving the file...");
-            File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
+            File file = new File(TYPE.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, uploadedFile.getInputStream());
 
             resource.addFile(file);
-            resource.setUrl(file.getUrl());
-            resource.setFileUrl(file.getAbsoluteUrl()); // for Loro resources the file url is different from the url
+            resource.setFileId(file.getId());
             resource.setFileName(info.getFileName());
 
             log.debug("Extracting metadata from the file...");
@@ -195,13 +191,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(new FileInputStream(sampleFile), resource.getFileName());
 
             log.debug("Saving file...");
-            File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
+            File file = new File(TYPE.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, new FileInputStream(sampleFile));
 
             resource.setTitle(info.getTitle());
             resource.addFile(file);
-            resource.setUrl(file.getUrl());
-            resource.setFileUrl(file.getAbsoluteUrl());
+            resource.setFileId(file.getId());
             resource.setFileName(info.getFileName());
             resource.setFormat(info.getMimeType());
 

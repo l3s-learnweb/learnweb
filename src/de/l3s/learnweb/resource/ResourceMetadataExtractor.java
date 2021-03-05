@@ -347,7 +347,7 @@ public class ResourceMetadataExtractor {
     }
 
     public void processFileResource(Resource resource) {
-        File mainFile = resource.getFile(TYPE.FILE_MAIN);
+        File mainFile = resource.getFile(TYPE.MAIN);
         FileInfo fileInfo = this.getFileInfo(mainFile.getInputStream(), mainFile.getName());
         processFileResource(resource, fileInfo);
     }
@@ -356,7 +356,6 @@ public class ResourceMetadataExtractor {
         resource.setFormat(fileInfo.getMimeType());
         resource.setTypeFromFormat(resource.getFormat());
         resource.setFileName(fileInfo.getFileName());
-        resource.setFileUrl(resource.getUrl());
 
         if (StringUtils.isNotEmpty(fileInfo.getTitle()) && StringUtils.isEmpty(resource.getTitle()) && !fileInfo.getTitle().equalsIgnoreCase("unknown")) {
             resource.setTitle(fileInfo.getTitle());

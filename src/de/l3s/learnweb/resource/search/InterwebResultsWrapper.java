@@ -73,7 +73,6 @@ public class InterwebResultsWrapper implements Serializable {
         Resource resource = new Resource();
         resource.setType("text".equals(searchResult.getType()) ? ResourceType.website : ResourceType.valueOf(searchResult.getType()));
         resource.setTitle(searchResult.getTitle());
-        resource.setLocation(searchResult.getService());
         resource.setSource(searchResult.getService());
         // resource.setViews(searchResult.getNumberOfViews());
         resource.setIdAtService(searchResult.getIdAtService());

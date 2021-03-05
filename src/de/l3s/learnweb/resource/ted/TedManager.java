@@ -118,7 +118,6 @@ public class TedManager {
         resource.setDescription(tedVideo.getDescription());
         resource.setUrl("https://www.ted.com/talks/" + tedVideo.getSlug());
         resource.setSource(ResourceService.ted);
-        resource.setLocation("TED");
         resource.setType(ResourceType.video);
         resource.setDuration(tedVideo.getDuration());
         resource.setWidth(tedVideo.getPhotoWidth());
@@ -159,9 +158,7 @@ public class TedManager {
 
             for (ResourceDecorator decoratedResource : resources) {
                 Resource resource = decoratedResource.getResource();
-
                 resource.setSource(ResourceService.teded);
-                resource.setLocation("teded");
 
                 //Regex for setting the title and author for TEDx videos
                 /*String[] title = resource.getTitle().split("\\|");

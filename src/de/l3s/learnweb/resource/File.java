@@ -22,18 +22,17 @@ public class File implements Serializable, HasId, Cloneable {
     private static final Pattern NAME_FORBIDDEN_CHARACTERS = Pattern.compile("[\\\\/:*?\"<>|]");
 
     public enum TYPE {
-        ORGANISATION_BANNER, // 0
-        UNUSED1,
-        THUMBNAIL_MEDIUM, // 2, thumbnail2
-        UNUSED3,
-        FILE_MAIN, // 4 the file that can be downloaded/viewed
-        THUMBNAIL_LARGE, // 5, thumbnail4
-        THUMBNAIL_SMALL, // 6, thumbnail0
-        FILE_ORIGINAL, // 7 if the file was converted the original file should be moved to this location
-        PROFILE_PICTURE, // 8
-        SYSTEM_FILE, // 9 for example course header images
-        DOC_HISTORY, // 10 previous version of an office resource
-        DOC_CHANGES; // 11 zip file with changes for office resource
+        SYSTEM_FILE, // for example course header images
+        ORGANISATION_BANNER,
+        PROFILE_PICTURE,
+        THUMBNAIL_SMALL, // thumbnail0
+        THUMBNAIL_MEDIUM, // thumbnail2
+        THUMBNAIL_LARGE, // thumbnail4
+        MAIN, // the file that can be downloaded/viewed
+        ORIGINAL, // if the file was converted the original file should be moved to this location
+        DOC_HISTORY, // previous version of an office resource
+        DOC_CHANGES, // zip file with changes for office resource
+        OBSOLETE; // something that probably will not be used anymore, like thumbnail1 and thumbnail3
 
         public boolean in(TYPE... types) {
             return Arrays.stream(types).anyMatch(type -> type == this);

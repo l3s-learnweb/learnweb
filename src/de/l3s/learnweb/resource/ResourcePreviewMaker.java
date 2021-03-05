@@ -88,19 +88,19 @@ public class ResourcePreviewMaker implements Serializable {
             if (resource.getStorageType() == Resource.WEB_RESOURCE && resource.getType() != ResourceType.website
                 && (resource.getSource() == ResourceService.bing || resource.getSource() == ResourceService.internet)) {
                 File file = new File();
-                file.setType(TYPE.FILE_MAIN);
+                file.setType(TYPE.MAIN);
                 file.setName(resource.getFileName());
                 file.setMimeType(resource.getFormat());
                 fileDao.save(file, UrlHelper.getInputStream(resource.getUrl()));
 
                 resource.addFile(file);
-                resource.setFileUrl(file.getAbsoluteUrl());
+                resource.setFileId(file.getId());
             }
 
             if (resource.getType() == ResourceType.website) {
                 processWebsite(resource);
-            } else if (resource.getFile(TYPE.FILE_MAIN) != null) { // resource.getStorageType() == Resource.LEARNWEB_RESOURCE &&
-                inputStream = resource.getFile(TYPE.FILE_MAIN).getInputStream();
+            } else if (resource.getFile(TYPE.MAIN) != null) { // resource.getStorageType() == Resource.LEARNWEB_RESOURCE &&
+                inputStream = resource.getFile(TYPE.MAIN).getInputStream();
                 processFile(resource, inputStream);
             } else if (resource.getStorageType() == Resource.WEB_RESOURCE && StringUtils.isNotEmpty(resource.getMaxImageUrl())) {
                 inputStream = UrlHelper.getInputStream(resource.getMaxImageUrl());
@@ -145,7 +145,7 @@ public class ResourcePreviewMaker implements Serializable {
 
     private void processOfficeDocument(Resource resource) {
         try {
-            String thumbnailUrl = ConverterService.convert(officeConverterService, resource.getFile(TYPE.FILE_MAIN));
+            String thumbnailUrl = ConverterService.convert(officeConverterService, resource.getFile(TYPE.MAIN));
             InputStream thumbnailStream = UrlHelper.getInputStream(thumbnailUrl);
             if (thumbnailStream == null) {
                 throw new IllegalStateException("Error during conversion : stream is null");
@@ -154,7 +154,7 @@ public class ResourcePreviewMaker implements Serializable {
             createThumbnails(resource, new Image(thumbnailStream), false);
             thumbnailStream.close();
         } catch (Exception e) {
-            log.error("An error occurs during creating thumbnail for document: resource_id={}; file={}", resource.getId(), resource.getFileUrl(), e);
+            log.error("An error occurs during creating thumbnail for document: resource_id={}", resource.getId(), e);
         }
     }
 
@@ -221,7 +221,7 @@ public class ResourcePreviewMaker implements Serializable {
         try {
             if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video
                 && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == 0)) {
-                originalFile = resource.getFile(TYPE.FILE_MAIN);
+                originalFile = resource.getFile(TYPE.MAIN);
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 
                 java.io.File tmpDir = new java.io.File(System.getProperty("java.io.tmpdir"), originalFile.getId() + "_thumbnails");
@@ -243,7 +243,7 @@ public class ResourcePreviewMaker implements Serializable {
                 FileUtils.deleteDirectory(tmpDir);
             }
         } catch (Exception e) {
-            log.error("An error occurs during creating thumbnail for a video: resource_id={}; file={}", resource.getId(), resource.getFileUrl(), e);
+            log.error("An error occurs during creating thumbnail for a video: resource_id={}", resource.getId(), e);
         }
 
         // TODO @astappiev: move it somewhere in one place with converting documents
@@ -257,7 +257,7 @@ public class ResourcePreviewMaker implements Serializable {
                 && ffProbeResult.streams.stream().anyMatch(videoStream -> videoStream.codec_name.equals("h264"));
 
             if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video && !isSupported) {
-                originalFile = resource.getFile(TYPE.FILE_MAIN);
+                originalFile = resource.getFile(TYPE.MAIN);
 
                 java.io.File tempVideoFile = java.io.File.createTempFile(originalFile.getId() + "_video_", ".mp4");
 
@@ -265,13 +265,13 @@ public class ResourcePreviewMaker implements Serializable {
                 convertVideo(ffProbeResult, outputPath);
 
                 // move original file
-                originalFile.setType(TYPE.FILE_ORIGINAL);
+                originalFile.setType(TYPE.ORIGINAL);
                 fileDao.save(originalFile);
                 resource.addFile(originalFile);
 
                 // create new file
                 File convertedFile = new File();
-                convertedFile.setType(TYPE.FILE_MAIN);
+                convertedFile.setType(TYPE.MAIN);
                 convertedFile.setName(StringHelper.filenameChangeExt(originalFile.getName(), "mp4"));
                 convertedFile.setMimeType("video/mp4");
                 fileDao.save(convertedFile, new FileInputStream(outputPath));
@@ -279,9 +279,8 @@ public class ResourcePreviewMaker implements Serializable {
 
                 // update resource files
                 resource.addFile(convertedFile);
+                resource.setFileId(convertedFile.getId());
                 resource.setFileName(convertedFile.getName());
-                resource.setFileUrl(convertedFile.getAbsoluteUrl());
-                resource.setUrl(convertedFile.getUrl());
                 resource.setFormat("video/mp4");
             }
         } catch (Exception e) {

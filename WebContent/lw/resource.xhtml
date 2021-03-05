@@ -1,65 +1,67 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui"
-				xmlns:o="http://omnifaces.org/ui">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui">
 
 <ui:param name="pageTitle" value="#{resourceDetailBean.resource.title}"/>
 
 <ui:define name="metadata">
-	<f:metadata>
-		<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true" converter="idConverter"/>
-		<f:viewParam name="edit" value="#{resourceDetailBean.editResource}" required="false"/>
-		<f:viewAction action="#{resourceDetailBean.onLoad}"/>
-	</f:metadata>
+    <f:metadata>
+        <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true" converter="idConverter"/>
+        <f:viewParam name="edit" value="#{resourceDetailBean.editResource}" required="false"/>
+        <f:viewAction action="#{resourceDetailBean.onLoad}"/>
+    </f:metadata>
 </ui:define>
 
 <ui:define name="body_content">
-	<h:outputScript name="learnweb/js/resource-view.js" target="body"/>
+    <h:outputScript name="learnweb/js/resource-view.js" target="body"/>
 
-	<div class="res-view">
-		<div class="row g-0">
-			<div class="col res-view-embedded d-flex flex-column">
-				<div class="res-view-navbar d-flex flex-row align-items-center w-100 p-2">
-					<div class="res-buttons-left pe-3">
-						<p:linkButton icon="fas fa-arrow-left" styleClass="transparent-btn navbar-back" title="#{msg.close}" outcome="group/resources.jsf">
-							<f:param name="group_id" value="#{resourceDetailBean.resource.groupId}"/>
-							<f:param name="folder_id" value="#{resourceDetailBean.resource.folderId}"/>
-						</p:linkButton>
-					</div>
-					<h4 class="text-white me-auto m-0">#{resourceDetailBean.resource.title}</h4>
-					<div class="res-buttons-right ps-3">
-						<p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource.url)}" icon="fas fa-external-link-alt" styleClass="transparent-btn"
-									  title="#{resourceDetailBean.resource.url}" target="_blank" rendered="#{resourceDetailBean.resource.type eq 'text'
-									  or resourceDetailBean.resource.type eq 'website' or resourceDetailBean.resource.type eq 'pdf'}"/>
+    <div class="res-view">
+        <div class="row g-0">
+            <div class="col res-view-embedded d-flex flex-column">
+                <div class="res-view-navbar d-flex flex-row align-items-center w-100 p-2">
+                    <div class="res-buttons-left pe-3">
+                        <p:linkButton icon="fas fa-arrow-left" styleClass="transparent-btn navbar-back" title="#{msg.close}" outcome="group/resources.jsf">
+                            <f:param name="group_id" value="#{resourceDetailBean.resource.groupId}"/>
+                            <f:param name="folder_id" value="#{resourceDetailBean.resource.folderId}"/>
+                        </p:linkButton>
+                    </div>
+                    <h4 class="text-white me-auto m-0">#{resourceDetailBean.resource.title}</h4>
+                    <div class="res-buttons-right ps-3">
+                        <p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource.url)}" icon="fas fa-external-link-alt" styleClass="transparent-btn"
+                                      title="#{resourceDetailBean.resource.url}" target="_blank" rendered="#{resourceDetailBean.resource.type eq 'website'}"/>
 
-						<p:button icon="fas fa-toggle-on" styleClass="transparent-btn" title="#{msg.toggle_details}"
-								  onclick="$('.res-view-details').toggleClass('collapse');$('.ui-icon', this).toggleClass('fas fa-toggle-off fas fa-toggle-on');return false;"/>
-					</div>
-				</div>
+                        <p:linkButton href="#{resourceDetailBean.resource.downloadUrl}" title="#{resourceDetailBean.resource.title}" icon="fas fa-download" target="_blank"
+                                      styleClass="transparent-btn" rendered="#{resourceDetailBean.resource.type eq 'text' or resourceDetailBean.resource.type eq 'pdf' or resourceDetailBean.resource.type eq 'file'}"/>
 
-				<div class="preview-wrapper d-flex flex-column">
-					<ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded.xhtml">
-						<ui:param name="res" value="#{resourceDetailBean.resource}"/>
-					</ui:decorate>
-				</div>
-			</div>
-			<div class="col-12 col-lg-4 col-xl-3 res-view-details">
-				<div class="res-view-panel">
-					<o:form id="resourceViewForm" prependId="false" styleClass="resource-details">
-						<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
-							<h:outputText value="#{msg.please_wait}"/>
-						</p:blockUI>
+                        <p:button icon="fas fa-toggle-on" styleClass="transparent-btn" title="#{msg.toggle_details}"
+                                  onclick="$('.res-view-details').toggleClass('collapse');$('.ui-icon', this).toggleClass('fas fa-toggle-off fas fa-toggle-on');return false;"/>
+                    </div>
+                </div>
 
-						<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view.xhtml">
-							<ui:param name="res" value="#{resourceDetailBean.resource}"/>
-						</ui:decorate>
-					</o:form>
-				</div>
-			</div>
-		</div>
-	</div>
+                <div class="preview-wrapper d-flex flex-column">
+                    <ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded.xhtml">
+                        <ui:param name="res" value="#{resourceDetailBean.resource}"/>
+                    </ui:decorate>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4 col-xl-3 res-view-details">
+                <div class="res-view-panel">
+                    <o:form id="resourceViewForm" prependId="false" styleClass="resource-details">
+                        <p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
+                            <h:outputText value="#{msg.please_wait}"/>
+                        </p:blockUI>
+
+                        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view.xhtml">
+                            <ui:param name="res" value="#{resourceDetailBean.resource}"/>
+                        </ui:decorate>
+                    </o:form>
+                </div>
+            </div>
+        </div>
+    </div>
 </ui:define>
 
 </ui:composition>

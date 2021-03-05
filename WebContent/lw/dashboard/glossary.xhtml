@@ -132,10 +132,10 @@
                             </f:facet>
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.title}" sortBy="#{glossary.title}" filterBy="#{glossary.title}" filterMatchMode="contains">
-                                <h:outputLink value="#{glossary.url}">
+                                <h:outputLink value="resource.jsf?resource_id=#{glossary.id}">
                                     <h:outputText value="#{glossary.title}"/>
                                 </h:outputLink>
-                            </p:column>                          
+                            </p:column>
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.user}" sortBy="#{glossary.user.username}">
                                 <h:outputText value="#{glossary.user.username}"/>
@@ -150,7 +150,7 @@
                                     <f:param name="resource_id" value="#{glossary.id}"/>
                                     <h:outputText value="#{glossary.group.title}"/>
                                 </h:outputLink>
-                            </p:column>   
+                            </p:column>
                         </p:dataTable>
                     </h:form>
                 </div>

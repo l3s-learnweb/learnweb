@@ -25,10 +25,9 @@ public class GlossaryResource extends Resource {
     private boolean clonedButNotSaved = false;
 
     public GlossaryResource() {
-        this.setSource(ResourceService.learnweb);
-        this.setLocation("Learnweb");
-        this.setStorageType(Resource.LEARNWEB_RESOURCE);
         this.setType(ResourceType.glossary);
+        this.setSource(ResourceService.learnweb);
+        this.setStorageType(Resource.LEARNWEB_RESOURCE);
     }
 
     /**
@@ -110,10 +109,5 @@ public class GlossaryResource extends Resource {
             }
         }
         return tableView;
-    }
-
-    @Override
-    public String getUrl() {
-        return "resource.jsf?resource_id=" + getId();
     }
 }

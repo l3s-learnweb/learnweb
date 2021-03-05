@@ -1,5 +1,10 @@
 package de.l3s.learnweb.resource;
 
+/**
+ * List of possible resource types.
+ *
+ * Used in database ENUMs: lw_resource.type
+ */
 public enum ResourceType {
     text,
     video,
@@ -24,12 +29,5 @@ public enum ResourceType {
             default:
                 return super.toString();
         }
-    }
-
-    /**
-     * Same as ResourceType.valueOf(), but case insensitive.
-     */
-    public static ResourceType parse(String value) {
-        return valueOf(value.toLowerCase());
     }
 }

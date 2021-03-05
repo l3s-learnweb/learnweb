@@ -101,14 +101,13 @@ public class SaverServlet extends HttpServlet {
         Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
 
         File file = new File();
-        file.setType(TYPE.FILE_MAIN);
+        file.setType(TYPE.MAIN);
         file.setName(resource.getFileName());
         file.setMimeType(resource.getFormat());
         file.setResourceId(resource.getId());
         fileDao.save(file, UrlHelper.getInputStream(data.getUrl()));
 
         resource.addFile(file);
-        resource.setUrl(file.getUrl());
         resource.save();
 
         resourcePreviewMaker.processResource(resource);

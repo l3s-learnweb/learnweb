@@ -22,7 +22,7 @@
 	<ui:fragment rendered="${not empty res.fileName and res.source ne 'loro'}">
 		<dt class="col-sm-4">#{msg.file}:</dt>
 		<dd class="col-sm-8">
-			<a href="#{res.fileUrl}" target="_top">
+			<a href="#{res.downloadUrl}" target="_top">
 				<i class="fas fa-fw fa-download" aria-hidden="true"></i>
 				#{res.fileName}
 			</a>
@@ -38,13 +38,6 @@
 					</h:outputText>)
 				</div>
 			</ui:fragment>
-		</dd>
-	</ui:fragment>
-
-	<ui:fragment rendered="${empty res.fileName and res.type == 'file' }">
-		<dt class="col-sm-4">#{msg.resource}:</dt>
-		<dd class="col-sm-8">
-			<a href="#{res.url}" target="_blank">#{res.url}</a>
 		</dd>
 	</ui:fragment>
 
@@ -101,14 +94,16 @@
 		</dd>
 	</ui:fragment>
 
-	<dt class="col-sm-4">#{msg.source}:</dt>
-	<dd class="col-sm-8">
-		<a href="#{userBean.getUrlProxied(res.url)}" target="_top"><h:outputText value="#{res.source.label}"/></a>
+	<ui:fragment rendered="#{res.source != 'learnweb' and res.url != null}">
+		<dt class="col-sm-4">#{msg.source}:</dt>
+		<dd class="col-sm-8">
+			<a href="#{userBean.getUrlProxied(res.url)}" target="_top"><h:outputText value="#{res.source.label}"/></a>
 
-		<p:commandButton id="archive_now" process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
-						 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" styleClass="d-block"
-						 rendered="#{res.type eq 'website'}"/>
-	</dd>
+			<p:commandButton id="archive_now" process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
+							 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" styleClass="d-block"
+							 rendered="#{res.type eq 'website'}"/>
+		</dd>
+	</ui:fragment>
 
 	<ui:fragment rendered="${not empty res.group}">
 		<dt class="col-sm-4">#{msg.group}:</dt>

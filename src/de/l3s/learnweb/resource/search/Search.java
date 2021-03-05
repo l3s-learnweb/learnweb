@@ -392,9 +392,9 @@ public class Search implements Serializable {
 
         for (ResourceDecorator res : resources) {
             GroupedResources resGroup = new GroupedResources();
-            resGroup.setGroupName(res.getLocation());
+            resGroup.setGroupName(res.getSource().getLabel());
 
-            if (res.getLocation().equalsIgnoreCase(searchService.name())) {
+            if (res.getSource().getLabel().equalsIgnoreCase(searchService.name())) {
                 continue;
             }
 

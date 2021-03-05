@@ -117,13 +117,13 @@ public class ExportManager {
             Folder folder = learnweb.getDaoProvider().getFolderDao().findByIdOrElseThrow(resource.getFolderId());
             String folderName = createFolderPath(folder, groupRootFolder);
 
-            File mainFile = resource.getFile(TYPE.FILE_MAIN);
+            File mainFile = resource.getFile(TYPE.MAIN);
 
             // TODO @astappiev: remove when all files copied from originals
             if (mainFile == null && resource.getOriginalResourceId() != 0) {
                 Optional<Resource> originalResource = learnweb.getDaoProvider().getResourceDao().findById(resource.getOriginalResourceId());
                 if (originalResource.isPresent()) {
-                    mainFile = originalResource.get().getFile(TYPE.FILE_MAIN);
+                    mainFile = originalResource.get().getFile(TYPE.MAIN);
                 }
             }
 

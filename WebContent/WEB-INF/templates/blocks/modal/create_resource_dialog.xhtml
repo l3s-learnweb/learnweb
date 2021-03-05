@@ -109,7 +109,7 @@
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'file'}">
                 <h:outputText value="#{msg.file}:" styleClass="ui-outputlabel"/>
-                <h:outputText value="#{addResourceBean.resource.url}" />
+                <h:outputText value="#{addResourceBean.resource.downloadUrl}" />
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.smallThumbnail != null}">

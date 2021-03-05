@@ -290,7 +290,7 @@ public class UserBean implements Serializable {
             bannerImage = getActiveOrganisation().getBannerImageUrl();
         }
 
-        return ObjectUtils.firstNonNull(bannerImage, "/javax.faces.resource/images/learnweb_logo.png");
+        return ObjectUtils.firstNonNull(bannerImage, "/resources/images/learnweb_logo.png");
     }
 
     public String getBannerLink() {

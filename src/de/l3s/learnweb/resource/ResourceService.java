@@ -2,6 +2,11 @@ package de.l3s.learnweb.resource;
 
 import java.util.regex.Pattern;
 
+/**
+ * List of possible resource sources.
+ *
+ * Used in database ENUMs: lw_resource.source
+ */
 public enum ResourceService { // when adding more services remember to update the service column of learnweb_large.sl_query
     bing("Bing"), // Does not support filtering by date
     flickr("Flickr"),
@@ -50,6 +55,23 @@ public enum ResourceService { // when adding more services remember to update th
     @Override
     public String toString() {
         return label;
+    }
+
+    /**
+     * Returns the the location were a resource is stored. Necessary because some external sources are indexed in our Solr instance.
+     */
+    public String getLocation() {
+        switch (this) {
+            case teded:
+            case ted:
+            case tedx:
+            case yovisto:
+            case archiveit:
+            case factcheck:
+                return getLabel();
+            default:
+                return "Learnweb";
+        }
     }
 
     /**

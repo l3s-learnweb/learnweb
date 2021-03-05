@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -31,6 +32,8 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
+import de.l3s.learnweb.resource.glossary.GlossaryResource;
+import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Expirable;
 import de.l3s.util.HasId;
@@ -64,11 +67,10 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private int folderId;
     private String title;
     private String description = "";
-    private String url;
+    private String url; // `website` resources stores external link here, also `video` resources stores link to source (like YouTube page)
     private int storageType = WEB_RESOURCE;
     private ResourceViewRights rights = ResourceViewRights.DEFAULT_RIGHTS;
     private ResourceService source; // The place where the resource was found
-    private String location = ""; // The location where the resource content (e.g. video) is stored; for example Learnweb, Flickr, Youtube ...
     private String language; // language code
     private String author;
     private ResourceType type;
@@ -80,6 +82,7 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private String idAtService;
     private int ratingSum;
     private int rateNumber;
+    private int fileId;
     private String fileName; // stores the file name of uploaded resource
     private String fileUrl;
     private String maxImageUrl; // an url to the largest image preview of this resource
@@ -124,6 +127,10 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     public Resource() {
     }
 
+    public Resource(ResourceType type) {
+        setType(type);
+    }
+
     /**
      * Copy constructor.
      */
@@ -135,13 +142,13 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         setUrl(old.url);
         setStorageType(old.storageType);
         setRights(old.rights.ordinal());
-        setLocation(old.location);
         setSource(old.source);
         setAuthor(old.author);
         setType(old.type);
         setFormat(old.format);
         setUserId(old.ownerUserId);
         setMaxImageUrl(old.maxImageUrl);
+        setFileId(old.fileId);
         setFileName(old.fileName);
         setFileUrl(old.fileUrl);
         setQuery(old.query);
@@ -153,7 +160,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         setWidth(old.width);
         setHeight(old.height);
         setMachineDescription(old.machineDescription);
-        setFileName(old.fileName);
         setTranscript(old.transcript);
         setOnlineStatus(old.onlineStatus);
         setIdAtService(old.idAtService);
@@ -171,6 +177,21 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         }
 
         setMetadata(new HashMap<>(old.getMetadata()));
+    }
+
+    /**
+     * Creates appropriate Resource instances based on the resource type.
+     * Necessary since some resource types extend the normal Resource class.
+     */
+    public static Resource ofType(ResourceType type) {
+        switch (type) {
+            case survey:
+                return new SurveyResource();
+            case glossary:
+                return new GlossaryResource();
+            default:
+                return new Resource(type);
+        }
     }
 
     /**
@@ -411,16 +432,10 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * @return for example Learnweb, Flickr, Youtube ...
      */
     public String getLocation() {
-        return location;
-    }
-
-    /**
-     * The location where the resource (metadata) is stored.
-     *
-     * @param location for example Learnweb, Flickr, Youtube ...
-     */
-    public void setLocation(String location) {
-        this.location = location;
+        if (source != null) {
+            return source.getLocation();
+        }
+        return null;
     }
 
     public ResourceType getType() {
@@ -666,6 +681,23 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         return url;
     }
 
+    public String getDownloadUrl() {
+        if (fileUrl != null) {
+            return fileUrl;
+        }
+        File mainFile = getMainFile();
+        if (mainFile != null) {
+            return mainFile.getAbsoluteUrl();
+        }
+        if (fileId != 0) {
+            Optional<File> altMainFile = Learnweb.dao().getFileDao().findById(fileId);
+            if (altMainFile.isPresent()) {
+                return altMainFile.get().getAbsoluteUrl();
+            }
+        }
+        return url;
+    }
+
     public void setUrl(String url) {
         if (url != null && url.length() > 4000) {
             throw new IllegalArgumentException("url is too long: " + url.length() + "; " + url);
@@ -675,11 +707,11 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     }
 
     public String getServiceIcon() {
-        if (id != 0) { // is stored in Learnweb
+        if (id != 0 || source == null) { // is stored in Learnweb
             return "/resources/images/services/learnweb.png";
         }
 
-        return "/resources/images/services/" + getLocation().toLowerCase() + ".png";
+        return "/resources/images/services/" + source.name() + ".png";
     }
 
     /**
@@ -700,6 +732,14 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public String getShortDescription() {
         return Jsoup.clean(StringHelper.shortnString(description, 200), Whitelist.simpleText());
+    }
+
+    public int getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(final int fileId) {
+        this.fileId = fileId;
     }
 
     /**
@@ -794,15 +834,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
                 for (File file : loadedFiles) {
                     files.put(file.getType().ordinal(), file);
-
-                    if (file.getType() == File.TYPE.FILE_MAIN) {
-                        setFileUrl(file.getAbsoluteUrl());
-                        setFileName(file.getName());
-
-                        if (getStorageType() == LEARNWEB_RESOURCE) {
-                            setUrl(file.getUrl());
-                        }
-                    }
                 }
             }
         }
@@ -835,14 +866,14 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
      * @return If the uploaded file was modified (e.g. a video or office document) we keep a copy of the original file
      */
     public File getOriginalFile() {
-        return getFile(TYPE.FILE_ORIGINAL);
+        return getFile(TYPE.ORIGINAL);
     }
 
     /**
      * @return If the uploaded file was modified (e.g. a video or office document) we keep a copy of the original file
      */
     public File getMainFile() {
-        return getFile(TYPE.FILE_MAIN);
+        return getFile(TYPE.MAIN);
     }
 
     /**

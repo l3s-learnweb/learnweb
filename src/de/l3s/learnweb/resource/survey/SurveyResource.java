@@ -8,13 +8,12 @@ import java.util.List;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 
 public class SurveyResource extends Resource {
     private static final long serialVersionUID = 3431955030925189235L;
-
-    private static final String PATH = "survey/answer.jsf?resource_id=";
 
     private int surveyId;
     private LocalDateTime start;
@@ -29,7 +28,7 @@ public class SurveyResource extends Resource {
      * Do nothing constructor.
      */
     public SurveyResource() {
-
+        setType(ResourceType.survey);
     }
 
     /**
@@ -188,11 +187,6 @@ public class SurveyResource extends Resource {
 
     public void setSaveable(boolean editable) {
         this.saveable = editable;
-    }
-
-    @Override
-    public String getUrl() {
-        return PATH + this.getId();
     }
 
 }

@@ -29,8 +29,6 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
-import de.l3s.learnweb.resource.glossary.GlossaryResource;
-import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
@@ -178,19 +176,24 @@ public interface ResourceDao extends SqlObject, Serializable {
                 getFileDao().save(copyFile, file.getInputStream());
                 resource.addFile(copyFile);
 
-                if (file.getType() == File.TYPE.FILE_MAIN) {
-                    if (resource.getUrl().equals(file.getUrl())) {
-                        resource.setUrl(copyFile.getUrl());
-                    }
+                if (file.getType() == File.TYPE.MAIN) {
+                    resource.setFileId(file.getId());
+                }
 
-                    if (resource.getFileUrl().equals(file.getAbsoluteUrl())) {
-                        resource.setFileUrl(copyFile.getAbsoluteUrl());
-                    }
+                if (file.getType() == File.TYPE.THUMBNAIL_SMALL) {
+                    resource.setThumbnail0(new Thumbnail(file));
+                }
 
-                    save(resource);
+                if (file.getType() == File.TYPE.THUMBNAIL_MEDIUM) {
+                    resource.setThumbnail2(new Thumbnail(file));
+                }
+
+                if (file.getType() == File.TYPE.THUMBNAIL_LARGE) {
+                    resource.setThumbnail4(new Thumbnail(file));
                 }
             }
 
+            save(resource);
             return ImmutablePair.of(filesCount, sizeBytes);
         } catch (IOException e) {
             LogManager.getLogger(ResourceDao.class).error("Error during copying resource files {}", resource, e);
@@ -208,26 +211,27 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("rights", resource.getRights());
         params.put("source", resource.getSource().name());
         params.put("type", resource.getType().name());
-        params.put("format", resource.getFormat());
+        params.put("format", SqlHelper.toNullable(resource.getFormat()));
         params.put("owner_user_id", SqlHelper.toNullable(resource.getUserId()));
         params.put("rating", resource.getRatingSum());
         params.put("rate_number", resource.getRateNumber());
         params.put("query", resource.getQuery());
-        params.put("filename", resource.getFileName());
         params.put("max_image_url", resource.getMaxImageUrl());
         params.put("original_resource_id", SqlHelper.toNullable(resource.getOriginalResourceId()));
         params.put("machine_description", resource.getMachineDescription());
-        params.put("author", resource.getAuthor());
+        params.put("author", SqlHelper.toNullable(resource.getAuthor()));
+        params.put("file_id", SqlHelper.toNullable(resource.getFileId()));
+        params.put("file_name", resource.getFileName());
         params.put("file_url", resource.getFileUrl());
         params.put("embeddedRaw", resource.getEmbeddedRaw());
         params.put("transcript", resource.getTranscript());
         params.put("online_status", resource.getOnlineStatus().name());
-        params.put("id_at_service", resource.getIdAtService());
+        params.put("id_at_service", SqlHelper.toNullable(resource.getIdAtService()));
         params.put("duration", SqlHelper.toNullable(resource.getDuration()));
         params.put("width", SqlHelper.toNullable(resource.getWidth()));
         params.put("height", SqlHelper.toNullable(resource.getHeight()));
         params.put("restricted", resource.isRestricted());
-        params.put("language", resource.getLanguage());
+        params.put("language", SqlHelper.toNullable(resource.getLanguage()));
         params.put("created_at", resource.getCreationDate());
         params.put("metadata", SerializationUtils.serialize(resource.getMetadata()));
         params.put("group_id", SqlHelper.toNullable(resource.getGroupId()));
@@ -294,26 +298,24 @@ public interface ResourceDao extends SqlObject, Serializable {
             Resource resource = cache.get(rs.getInt("resource_id"));
 
             if (resource == null) {
-                ResourceType type = ResourceType.parse(rs.getString("type"));
-
-                resource = newResource(type);
+                resource = Resource.ofType(ResourceType.valueOf(rs.getString("type")));
                 resource.setId(rs.getInt("resource_id"));
                 resource.setFormat(rs.getString("format"));
-                resource.setType(type);
                 resource.setTitle(rs.getString("title"));
                 resource.setDescription(rs.getString("description"));
                 resource.setUrl(rs.getString("url"));
                 resource.setStorageType(rs.getInt("storage_type"));
                 resource.setRights(rs.getInt("rights"));
-                resource.setSource(rs.getString("source"));
+                resource.setSource(ResourceService.valueOf(rs.getString("source")));
                 resource.setAuthor(rs.getString("author"));
                 resource.setUserId(rs.getInt("owner_user_id"));
                 resource.setRatingSum(rs.getInt("rating"));
                 resource.setRateNumber(rs.getInt("rate_number"));
-                resource.setFileName(rs.getString("filename"));
                 resource.setMaxImageUrl(rs.getString("max_image_url"));
                 resource.setQuery(rs.getString("query"));
                 resource.setOriginalResourceId(rs.getInt("original_resource_id"));
+                resource.setFileId(rs.getInt("file_id"));
+                resource.setFileName(rs.getString("file_name"));
                 resource.setFileUrl(rs.getString("file_url"));
                 resource.setThumbnail0(createThumbnail(rs, 0));
                 resource.setThumbnail2(createThumbnail(rs, 2));
@@ -334,9 +336,6 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setDeleted(rs.getBoolean("deleted"));
                 resource.setReadOnlyTranscript(rs.getBoolean("read_only_transcript"));
 
-                // This must be set manually because we stored some external sources in Learnweb/Solr
-                resource.setLocation(getLocation(resource));
-
                 // deserialize metadata
                 byte[] metadataBytes = rs.getBytes("metadata");
                 if (metadataBytes != null && metadataBytes.length > 0) {
@@ -353,21 +352,6 @@ public interface ResourceDao extends SqlObject, Serializable {
             return resource;
         }
 
-        /**
-         * Creates appropriate Resource instances based on the resource type.
-         * Necessary since some resource types extend the normal Resource class.
-         */
-        private static Resource newResource(ResourceType type) {
-            switch (type) {
-                case survey:
-                    return new SurveyResource();
-                case glossary:
-                    return new GlossaryResource();
-                default:
-                    return new Resource();
-            }
-        }
-
         private static Thumbnail createThumbnail(ResultSet rs, int thumbnailSize) throws SQLException {
             int fileId = rs.getInt("thumbnail" + thumbnailSize + "_file_id");
 
@@ -379,29 +363,6 @@ public interface ResourceDao extends SqlObject, Serializable {
                 return new Thumbnail(file);
             } else {
                 return null;
-            }
-        }
-
-        /**
-         * Returns the the location were a resource is stored. Necessary because some external sources are indexed in our Solr instance.
-         */
-        private static String getLocation(Resource resource) {
-            ResourceService source = resource.getSource();
-
-            if (null == source) {
-                return "Learnweb";
-            }
-
-            switch (source) {
-                case teded:
-                case ted:
-                case tedx:
-                case yovisto:
-                case archiveit:
-                case factcheck:
-                    return source.toString();
-                default:
-                    return "Learnweb";
             }
         }
     }
