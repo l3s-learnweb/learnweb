@@ -297,7 +297,7 @@ public class TedManager {
                 resource.setSource(ResourceService.ted);
                 resource.setMaxImageUrl(r2.getMaxImageUrl());
                 for (File file : resource.getFiles().values()) {
-                    fileDao.deleteHard(file);
+                    fileDao.deleteSoft(file);
                 }
                 resource.setThumbnail0(r2.getThumbnail0());
                 resource.setThumbnail2(r2.getThumbnail2());

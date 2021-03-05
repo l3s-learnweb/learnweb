@@ -263,7 +263,7 @@ public class ResourcePreviewMaker implements Serializable {
 
                 // move original file
                 originalFile.setType(TYPE.FILE_ORIGINAL);
-                fileDao.save(originalFile, null);
+                fileDao.save(originalFile);
                 resource.addFile(originalFile);
 
                 // create new file

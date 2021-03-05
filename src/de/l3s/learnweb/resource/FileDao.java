@@ -67,9 +67,10 @@ public interface FileDao extends SqlObject, Serializable {
     }
 
     default void deleteSoft(File file) {
-        getHandle().execute("UPDATE lw_file SET deleted = 1 WHERE file_id = ?", file);
-
         file.setDeleted(true);
+        file.setResourceId(0);
+        save(file);
+
         cache.remove(file.getId());
     }
 
@@ -90,7 +91,7 @@ public interface FileDao extends SqlObject, Serializable {
      * Saves the file to the database.
      * If the file is not yet stored at the database, a new record will be created and the returned file contains the new id.
      */
-    default void save(File file, InputStream inputStream) throws IOException {
+    default void save(File file) {
         if (file.getLastModified() == null) {
             file.setLastModified(LocalDateTime.now());
         }
@@ -111,6 +112,10 @@ public interface FileDao extends SqlObject, Serializable {
             file.setId(id);
             cache.put(file);
         });
+    }
+
+    default void save(File file, InputStream inputStream) throws IOException {
+        save(file);
 
         if (inputStream != null) {
             // copy the data into the file

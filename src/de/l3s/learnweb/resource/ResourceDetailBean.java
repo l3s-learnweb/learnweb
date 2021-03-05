@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -311,14 +310,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             }
 
             // first delete old thumbnails
-            Collection<File> files = resource.getFiles().values();
-            for (File file : files) {
-                if (Arrays.asList(File.TYPE.THUMBNAIL_LARGE, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_SMALL).contains(file.getType())) {
-                    log.debug("Delete {}", file.getName());
-                    dao().getFileDao().deleteHard(file);
-                }
-            }
-
+            resource.deleteThumbnails();
             getLearnweb().getResourcePreviewMaker().processResource(resource);
 
             resource.save();
@@ -403,13 +395,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public void setResourceThumbnail(String archiveUrl) {
         try {
-            Collection<File> files = resource.getFiles().values();
-            for (File file : files) {
-                if (Arrays.asList(File.TYPE.THUMBNAIL_LARGE, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_SMALL).contains(file.getType())) {
-                    log.debug("Delete {}", file.getName());
-                    dao().getFileDao().deleteHard(file);
-                }
-            }
+            resource.deleteThumbnails();
 
             //Getting mime type
             FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(UrlHelper.getInputStream(archiveUrl), resource.getFileName());

@@ -19,6 +19,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.office.history.model.History;
 import de.l3s.learnweb.resource.office.history.model.HistoryData;
 import de.l3s.util.SqlHelper;
@@ -91,9 +92,10 @@ public interface ResourceHistoryDao extends SqlObject, Serializable {
     class HistoryDataMapper implements RowMapper<HistoryData> {
         @Override
         public HistoryData map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            File file = Learnweb.dao().getFileDao().findByIdOrElseThrow(rs.getInt("file_id"));
-            File prevFile = Learnweb.dao().getFileDao().findByIdOrElseThrow(rs.getInt("prev_file_id"));
-            File changeFile = Learnweb.dao().getFileDao().findByIdOrElseThrow(rs.getInt("changes_file_id"));
+            final FileDao fileDao = Learnweb.dao().getFileDao();
+            File file = fileDao.findByIdOrElseThrow(rs.getInt("file_id"));
+            File prevFile = fileDao.findByIdOrElseThrow(rs.getInt("prev_file_id"));
+            File changeFile = fileDao.findByIdOrElseThrow(rs.getInt("changes_file_id"));
 
             HistoryData prevData = new HistoryData();
             prevData.setUrl(prevFile.getAbsoluteUrl());

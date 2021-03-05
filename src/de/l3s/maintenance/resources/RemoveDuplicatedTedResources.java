@@ -12,6 +12,12 @@ import de.l3s.maintenance.MaintenanceTask;
  * @author Oleh Astappiev
  */
 public final class RemoveDuplicatedTedResources extends MaintenanceTask {
+
+    @Override
+    protected void init() {
+        requireConfirmation = true;
+    }
+
     @Override
     protected void run(final boolean dryRun) {
         List<Resource> resources = getLearnweb().getDaoProvider().getJdbi().withHandle(handle -> handle
@@ -21,11 +27,13 @@ public final class RemoveDuplicatedTedResources extends MaintenanceTask {
                 + "NOT EXISTS ( SELECT 1 FROM lw_resource r3 WHERE r3.original_resource_id = r.resource_id)")
             .map(new ResourceDao.ResourceMapper()).list());
 
-        log.info("Process resources: {}", resources.size());
+        log.info("Found {} duplicates", resources.size());
 
-        for (Resource resource : resources) {
-            log.debug("Deleting resource {}", resource.getId());
-            getLearnweb().getDaoProvider().getResourceDao().deleteHard(resource);
+        if (!dryRun) {
+            for (Resource resource : resources) {
+                log.debug("Deleting resource {}", resource.getId());
+                getLearnweb().getDaoProvider().getResourceDao().deleteHard(resource);
+            }
         }
     }
 

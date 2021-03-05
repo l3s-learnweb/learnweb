@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +33,11 @@ public class File implements Serializable, HasId, Cloneable {
         PROFILE_PICTURE, // 8
         SYSTEM_FILE, // 9 for example course header images
         DOC_HISTORY, // 10 previous version of an office resource
-        DOC_CHANGES, // 11 zip file with changes for office resource
+        DOC_CHANGES; // 11 zip file with changes for office resource
+
+        public boolean in(TYPE... types) {
+            return Arrays.stream(types).anyMatch(type -> type == this);
+        }
     }
 
     private int id;
@@ -110,12 +115,12 @@ public class File implements Serializable, HasId, Cloneable {
         return url;
     }
 
-    public String getAbsoluteUrl() {
-        return Learnweb.config().getServerUrl() + getUrl().substring(2);
-    }
-
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getAbsoluteUrl() {
+        return Learnweb.config().getServerUrl() + getUrl().substring(2);
     }
 
     /**

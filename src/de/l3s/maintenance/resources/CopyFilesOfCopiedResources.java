@@ -28,8 +28,7 @@ public final class CopyFilesOfCopiedResources extends MaintenanceTask {
     @Override
     public void run(boolean dryRun) {
         List<Resource> resources = getLearnweb().getDaoProvider().getJdbi().withHandle(handle -> handle
-            .select("SELECT * FROM lw_resource r WHERE original_resource_id > 0 AND "
-                + "NOT EXISTS(SELECT 1 FROM lw_resource r2 WHERE r.original_resource_id = r2.resource_id AND r.file_url <> r2.file_url)")
+            .select("SELECT r.* FROM lw_resource r JOIN lw_file f ON r.thumbnail0_file_id = f.file_id WHERE f.resource_id != r.resource_id LIMIT 100")
             .map(new ResourceDao.ResourceMapper()).list());
 
         log.info("Total affected {} resources", resources.size());
@@ -50,8 +49,7 @@ public final class CopyFilesOfCopiedResources extends MaintenanceTask {
     private void copyFiles(final Resource resource, final Collection<File> originalFiles, final boolean dryRun) {
         try {
             for (File file : originalFiles) {
-                if (List.of(File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_LARGE,
-                    File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY).contains(file.getType())) {
+                if (file.getType().in(File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY)) {
                     continue; // skip them
                 }
 

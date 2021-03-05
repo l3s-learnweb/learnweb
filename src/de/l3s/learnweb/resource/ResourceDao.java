@@ -157,8 +157,7 @@ public interface ResourceDao extends SqlObject, Serializable {
 
         try {
             for (File file : sourceResource.getFiles().values()) {
-                if (List.of(File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_LARGE,
-                    File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY).contains(file.getType())) {
+                if (file.getType().in(File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY)) {
                     continue; // skip them
                 }
 
@@ -173,11 +172,11 @@ public interface ResourceDao extends SqlObject, Serializable {
                         resource.setUrl(copyFile.getUrl());
                     }
 
-                    if (resource.getFileUrl().equals(file.getUrl())) {
+                    if (resource.getFileUrl().equals(file.getAbsoluteUrl())) {
                         resource.setFileUrl(copyFile.getAbsoluteUrl());
                     }
 
-                    Learnweb.dao().getResourceDao().save(resource);
+                    save(resource);
                 }
             }
         } catch (IOException e) {
@@ -283,7 +282,7 @@ public interface ResourceDao extends SqlObject, Serializable {
      */
     default void deleteHard(Resource resource) {
         for (File file : getFileDao().findAllByResourceId(resource.getId())) {
-            getFileDao().deleteHard(file);
+            getFileDao().deleteSoft(file);
         }
 
         getHandle().execute("DELETE FROM lw_resource WHERE resource_id = ?", resource);

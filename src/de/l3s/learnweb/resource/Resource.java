@@ -914,6 +914,21 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         return null;
     }
 
+    public void deleteThumbnails() {
+        Collection<File> files = getFiles().values();
+
+        for (File file : files) {
+            if (file.getType().in(File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_LARGE)) {
+                log.debug("Delete {}", file.getName());
+                Learnweb.dao().getFileDao().deleteSoft(file);
+            }
+        }
+
+        setThumbnail0(null);
+        setThumbnail2(null);
+        setThumbnail4(null);
+    }
+
     public String getEmbedded() {
         if (embeddedCode == null) {
             if (getType() == ResourceType.video) {
