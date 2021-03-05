@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
@@ -155,11 +156,21 @@ public interface ResourceDao extends SqlObject, Serializable {
         resource.setUser(user);
         save(resource);
 
+        copyFiles(resource, sourceResource.getFiles().values());
+    }
+
+    default ImmutablePair<Integer, Long> copyFiles(final Resource resource, final Collection<File> files) {
         try {
-            for (File file : sourceResource.getFiles().values()) {
+            int filesCount = 0;
+            long sizeBytes = 0;
+
+            for (File file : files) {
                 if (file.getType().in(File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY)) {
                     continue; // skip them
                 }
+
+                filesCount += 1;
+                sizeBytes += FileUtils.sizeOf(file.getActualFile());
 
                 File copyFile = new File(file);
                 copyFile.setResourceId(resource.getId());
@@ -179,8 +190,11 @@ public interface ResourceDao extends SqlObject, Serializable {
                     save(resource);
                 }
             }
+
+            return ImmutablePair.of(filesCount, sizeBytes);
         } catch (IOException e) {
             LogManager.getLogger(ResourceDao.class).error("Error during copying resource files {}", resource, e);
+            return null;
         }
     }
 
@@ -209,7 +223,9 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("transcript", resource.getTranscript());
         params.put("online_status", resource.getOnlineStatus().name());
         params.put("id_at_service", resource.getIdAtService());
-        params.put("duration", resource.getDuration());
+        params.put("duration", SqlHelper.toNullable(resource.getDuration()));
+        params.put("width", SqlHelper.toNullable(resource.getWidth()));
+        params.put("height", SqlHelper.toNullable(resource.getHeight()));
         params.put("restricted", resource.isRestricted());
         params.put("language", resource.getLanguage());
         params.put("created_at", resource.getCreationDate());
@@ -218,24 +234,9 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("folder_id", SqlHelper.toNullable(resource.getFolderId()));
         params.put("deleted", resource.isDeleted());
         params.put("read_only_transcript", resource.isReadOnlyTranscript());
-
-        if (resource.getThumbnail0() != null) {
-            params.put("thumbnail0_file_id", SqlHelper.toNullable(resource.getThumbnail0().getFileId()));
-            params.put("thumbnail0_width", resource.getThumbnail0().getWidth());
-            params.put("thumbnail0_height", resource.getThumbnail0().getHeight());
-        }
-
-        if (resource.getThumbnail2() != null) {
-            params.put("thumbnail2_file_id", SqlHelper.toNullable(resource.getThumbnail2().getFileId()));
-            params.put("thumbnail2_width", resource.getThumbnail2().getWidth());
-            params.put("thumbnail2_height", resource.getThumbnail2().getHeight());
-        }
-
-        if (resource.getThumbnail4() != null) {
-            params.put("thumbnail4_file_id", SqlHelper.toNullable(resource.getThumbnail4().getFileId()));
-            params.put("thumbnail4_width", resource.getThumbnail4().getWidth());
-            params.put("thumbnail4_height", resource.getThumbnail4().getHeight());
-        }
+        params.put("thumbnail0_file_id", resource.getThumbnail0() == null ? null : SqlHelper.toNullable(resource.getThumbnail0().getFileId()));
+        params.put("thumbnail2_file_id", resource.getThumbnail2() == null ? null : SqlHelper.toNullable(resource.getThumbnail2().getFileId()));
+        params.put("thumbnail4_file_id", resource.getThumbnail4() == null ? null : SqlHelper.toNullable(resource.getThumbnail4().getFileId()));
 
         Optional<Integer> resourceId = SqlHelper.handleSave(getHandle(), "lw_resource", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -322,6 +323,8 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setOnlineStatus(Resource.OnlineStatus.valueOf(rs.getString("online_status")));
                 resource.setIdAtService(rs.getString("id_at_service"));
                 resource.setDuration(rs.getInt("duration"));
+                resource.setWidth(rs.getInt("width"));
+                resource.setHeight(rs.getInt("height"));
                 resource.setLanguage(rs.getString("language"));
                 resource.setRestricted(rs.getBoolean("restricted"));
                 resource.setResourceTimestamp(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
@@ -366,12 +369,14 @@ public interface ResourceDao extends SqlObject, Serializable {
         }
 
         private static Thumbnail createThumbnail(ResultSet rs, int thumbnailSize) throws SQLException {
-            String prefix = "thumbnail" + thumbnailSize;
-            int fileId = rs.getInt(prefix + "_file_id");
+            int fileId = rs.getInt("thumbnail" + thumbnailSize + "_file_id");
 
             if (fileId != 0) {
-                String url = "../download/" + fileId + "/thumbnail" + thumbnailSize + ".png";
-                return new Thumbnail(url, rs.getInt(prefix + "_width"), rs.getInt(prefix + "_height"), fileId);
+                File file = new File();
+                file.setId(fileId);
+                file.setName("thumbnail" + thumbnailSize + ".png");
+                file.setMimeType("image/png");
+                return new Thumbnail(file);
             } else {
                 return null;
             }

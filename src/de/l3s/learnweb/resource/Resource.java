@@ -74,6 +74,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
     private ResourceType type;
     private String format; // original mimeType of the resource
     private int duration;
+    private int width;
+    private int height;
     private int ownerUserId;
     private String idAtService;
     private int ratingSum;
@@ -148,6 +150,8 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         setThumbnail4(old.thumbnail4);
         setEmbeddedRaw(old.embeddedRaw);
         setDuration(old.duration);
+        setWidth(old.width);
+        setHeight(old.height);
         setMachineDescription(old.machineDescription);
         setFileName(old.fileName);
         setTranscript(old.transcript);
@@ -976,6 +980,22 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public String getDurationInMinutes() {
         return StringHelper.getDurationInMinutes(duration);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(final int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(final int height) {
+        this.height = height;
     }
 
     /**

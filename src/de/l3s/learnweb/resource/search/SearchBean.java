@@ -216,7 +216,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         if (resource.getEmbedded() != null) {
             PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbedded());
         } else {
-            PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getResource().getLargestThumbnail().getHtml());
+            PrimeFaces.current().ajax().addCallbackParam("embeddedCode", "<img src=\"" + resource.getResource().getLargestThumbnail().getUrl() + "\" />");
         }
     }
 

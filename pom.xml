@@ -42,7 +42,7 @@
         <dependency>
             <groupId>de.l3s.interweb</groupId>
             <artifactId>interwebj-client</artifactId>
-            <version>3.1.1</version>
+            <version>3.3.0</version>
         </dependency>
 
         <!-- ################ Java EE ################ -->
@@ -204,7 +204,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>7.5.4</version>
+            <version>7.6.0</version>
         </dependency>
         <!-- Solr client (the library has 10 MB of dependencies :/) -->
         <dependency>

@@ -137,6 +137,14 @@ public class ResourceDecorator implements Serializable {
         return resource.getDurationInMinutes();
     }
 
+    public int getWidth() {
+        return resource.getWidth();
+    }
+
+    public int getHeight() {
+        return resource.getHeight();
+    }
+
     public Group getGroup() {
         return resource.getGroup();
     }

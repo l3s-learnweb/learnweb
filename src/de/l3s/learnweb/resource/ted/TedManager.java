@@ -121,6 +121,8 @@ public class TedManager {
         resource.setLocation("TED");
         resource.setType(ResourceType.video);
         resource.setDuration(tedVideo.getDuration());
+        resource.setWidth(tedVideo.getPhotoWidth());
+        resource.setHeight(tedVideo.getPhotoHeight());
         resource.setMaxImageUrl(tedVideo.getPhotoUrl());
         resource.setIdAtService(Integer.toString(tedVideo.getTedId()));
         resource.setCreationDate(tedVideo.getPublishedAt());
@@ -135,6 +137,7 @@ public class TedManager {
         User admin = userDao.findByIdOrElseThrow(7727);
 
         TreeMap<String, String> params = new TreeMap<>();
+        params.put("q", "user::TEDEducation");
         params.put("media_types", "video");
         params.put("services", "YouTube");
         params.put("per_page", "50");
@@ -149,7 +152,7 @@ public class TedManager {
             //SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDx tedxtrento", params);
 
             //To fetch youtube videos from TED-Ed user
-            SearchResponse interwebResponse = Learnweb.getInstance().getInterweb().search("user::TEDEducation", params);
+            SearchResponse interwebResponse = Learnweb.getInstance().getInterweb().search(params);
             InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(interwebResponse);
             //log.debug(interwebResponse.getResultCountAtService());
             resources = interwebResults.getResources();
@@ -303,6 +306,8 @@ public class TedManager {
                 resource.setThumbnail2(r2.getThumbnail2());
                 resource.setThumbnail4(r2.getThumbnail4());
                 resource.setDuration(r2.getDuration());
+                resource.setWidth(r2.getWidth());
+                resource.setHeight(r2.getHeight());
                 resource.setIdAtService(r2.getIdAtService());
                 resource.setType(r2.getType());
                 resource.setFormat(r2.getFormat());

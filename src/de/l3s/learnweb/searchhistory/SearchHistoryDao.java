@@ -63,7 +63,9 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                     res.setUrl(rs.getString("url"));
                     res.setTitle(rs.getString("title"));
                     res.setDescription(rs.getString("description"));
-                    res.setThumbnail2(new Thumbnail(rs.getString("thumbnail_url"), rs.getInt("thumbnail_width"), rs.getInt("thumbnail_height")));
+                    res.setHeight(rs.getInt("thumbnail_height"));
+                    res.setWidth(rs.getInt("thumbnail_width"));
+                    res.setThumbnail2(new Thumbnail(rs.getString("thumbnail_url")));
                 }
 
                 ResourceDecorator rd = new ResourceDecorator(res);
@@ -140,17 +142,9 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 batch.bind(3, decoratedResource.getUrl());
                 batch.bind(4, StringHelper.shortnString(decoratedResource.getTitle(), 250));
                 batch.bind(5, StringHelper.shortnString(decoratedResource.getDescription(), 1000));
-
-                Thumbnail thumbnail = decoratedResource.getMediumThumbnail();
-                if (thumbnail != null) {
-                    batch.bind(6, thumbnail.getUrl());
-                    batch.bind(7, Math.min(thumbnail.getHeight(), 65535));
-                    batch.bind(8, Math.min(thumbnail.getWidth(), 65535));
-                } else {
-                    batch.bindNull(6, Types.VARCHAR);
-                    batch.bindNull(7, Types.INTEGER);
-                    batch.bindNull(8, Types.INTEGER);
-                }
+                batch.bind(6, decoratedResource.getMediumThumbnail() == null ? null : decoratedResource.getMediumThumbnail().getUrl());
+                batch.bind(7, SqlHelper.toNullable(decoratedResource.getHeight()));
+                batch.bind(8, SqlHelper.toNullable(decoratedResource.getWidth()));
             }
             batch.add();
         }

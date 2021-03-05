@@ -15,7 +15,6 @@ import org.jsoup.safety.Whitelist;
 
 import de.l3s.interwebj.client.model.SearchResponse;
 import de.l3s.interwebj.client.model.SearchResult;
-import de.l3s.interwebj.client.model.SearchThumbnail;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
@@ -80,6 +79,8 @@ public class InterwebResultsWrapper implements Serializable {
         resource.setIdAtService(searchResult.getIdAtService());
         resource.setDescription(searchResult.getDescription());
         resource.setAuthor(searchResult.getAuthor());
+        resource.setWidth(searchResult.getWidth());
+        resource.setHeight(searchResult.getHeight());
 
         if (resource.getTitle().equals(resource.getDescription())) { // delete description when equal to title
             resource.setDescription("");
@@ -103,21 +104,21 @@ public class InterwebResultsWrapper implements Serializable {
 
     private static void setThumbnails(Resource resource, SearchResult searchResult) {
         if (searchResult.getThumbnailSmall() != null) {
-            resource.setThumbnail0(createThumbnail(searchResult.getThumbnailSmall()));
+            resource.setThumbnail0(new Thumbnail(searchResult.getThumbnailSmall().getUrl()));
         } else if (searchResult.getThumbnailLarge() != null) {
-            resource.setThumbnail0(createThumbnail(searchResult.getThumbnailLarge()));
+            resource.setThumbnail0(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
         }
 
         if (searchResult.getThumbnailMedium() != null) {
-            resource.setThumbnail2(createThumbnail(searchResult.getThumbnailMedium()));
+            resource.setThumbnail2(new Thumbnail(searchResult.getThumbnailMedium().getUrl()));
         } else if (searchResult.getThumbnailLarge() != null) {
-            resource.setThumbnail2(createThumbnail(searchResult.getThumbnailLarge()));
+            resource.setThumbnail2(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
         }
 
         if (searchResult.getThumbnailLarge() != null) {
-            resource.setThumbnail4(createThumbnail(searchResult.getThumbnailLarge()));
+            resource.setThumbnail4(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
         } else if (searchResult.getThumbnailOriginal() != null) {
-            resource.setThumbnail4(createThumbnail(searchResult.getThumbnailOriginal()));
+            resource.setThumbnail4(new Thumbnail(searchResult.getThumbnailOriginal().getUrl()));
         }
 
         if (searchResult.getThumbnailOriginal() != null) {
@@ -128,10 +129,6 @@ public class InterwebResultsWrapper implements Serializable {
                 resource.setMaxImageUrl(biggestThumbnail.getUrl());
             }
         }
-    }
-
-    private static Thumbnail createThumbnail(SearchThumbnail searchThumbnail) {
-        return new Thumbnail(searchThumbnail.getUrl(), searchThumbnail.getWidth(), searchThumbnail.getHeight());
     }
 
     private static ResourceDecorator createDecoratedResource(SearchResult searchResult, Resource resource) {

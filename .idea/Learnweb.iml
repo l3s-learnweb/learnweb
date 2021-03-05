@@ -33,7 +33,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: de.l3s.interweb:interwebj-client:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: de.l3s.interweb:interwebj-client:3.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.14.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.servlet:jakarta.servlet-api:4.0.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.el:jakarta.el-api:3.0.3" level="project" />
@@ -126,7 +126,7 @@
     <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.7.2" level="project" />
     <orderEntry type="library" name="Maven: io.leangen.geantyref:geantyref:1.3.7" level="project" />
     <orderEntry type="library" name="Maven: org.jdbi:jdbi3-sqlobject:3.18.0" level="project" />
-    <orderEntry type="library" name="Maven: org.flywaydb:flyway-core:7.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.flywaydb:flyway-core:7.6.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.solr:solr-solrj:8.8.1" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.50.Final" level="project" />

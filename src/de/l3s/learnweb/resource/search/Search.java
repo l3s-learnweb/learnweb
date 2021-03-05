@@ -218,7 +218,7 @@ public class Search implements Serializable {
 
             // check if an other resource with the same url exists
             // Yovisto urls are not unique in this case we use the file url
-            if (!urlHashMap.add(StringUtils.isNotBlank(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrl())) {
+            if (!urlHashMap.add(StringUtils.firstNonBlank(resource.getFileUrl(), resource.getUrl()))) {
                 duplicatedUrlCount++;
                 continue;
             }
@@ -250,6 +250,7 @@ public class Search implements Serializable {
 
         // Setup filters
         TreeMap<String, String> params = new TreeMap<>();
+        params.put("q", query);
         params.put("media_types", configMode.name());
         params.put("page", Integer.toString(page));
         params.put("extras", "duration");
@@ -281,7 +282,7 @@ public class Search implements Serializable {
             params.put("language", searchFilters.getFilterValue(FilterType.language));
         }
 
-        SearchResponse interwebResponse = interweb.search(query, params);
+        SearchResponse interwebResponse = interweb.search(params);
         InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(interwebResponse);
         log.debug("Interweb returned {} results in {} ms", interwebResults.getResources().size(), System.currentTimeMillis() - start);
 

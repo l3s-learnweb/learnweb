@@ -259,6 +259,8 @@ public class TedCrawlerSimple implements Runnable {
             tedResource.setSource(ResourceService.ted);
             tedResource.setType(ResourceType.video);
             tedResource.setDuration(duration);
+            tedResource.setWidth(tedVideo.getPhotoWidth());
+            tedResource.setHeight(tedVideo.getPhotoHeight());
             tedResource.setMaxImageUrl(tedVideo.getPhotoUrl());
             tedResource.setCreationDate(tedVideo.getPublishedAt());
             tedResource.setIdAtService(String.valueOf(tedVideo.getTedId()));

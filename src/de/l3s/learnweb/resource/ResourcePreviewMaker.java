@@ -162,6 +162,9 @@ public class ResourcePreviewMaker implements Serializable {
         // process image
         Image img = new Image(inputStream);
 
+        resource.setWidth(img.getWidth());
+        resource.setHeight(img.getHeight());
+
         Image thumbnail = img.getResized(THUMBNAIL_LARGE_WIDTH, THUMBNAIL_LARGE_HEIGHT);
         File file = new File();
         file.setType(TYPE.THUMBNAIL_LARGE);
@@ -171,7 +174,7 @@ public class ResourcePreviewMaker implements Serializable {
         thumbnail.dispose();
 
         resource.addFile(file);
-        resource.setThumbnail4(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
+        resource.setThumbnail4(new Thumbnail(file));
 
         createThumbnails(resource, img, false);
     }
@@ -189,7 +192,7 @@ public class ResourcePreviewMaker implements Serializable {
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
-        resource.setThumbnail4(new Thumbnail(file.getUrl(), img.getWidth(), img.getHeight(), file.getId()));
+        resource.setThumbnail4(new Thumbnail(file));
 
         createThumbnails(resource, img, true);
     }
@@ -207,7 +210,7 @@ public class ResourcePreviewMaker implements Serializable {
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
-        resource.setThumbnail4(new Thumbnail(file.getUrl(), img.getWidth(), img.getHeight(), file.getId()));
+        resource.setThumbnail4(new Thumbnail(file));
 
         createThumbnails(resource, img, true);
     }
@@ -379,7 +382,7 @@ public class ResourcePreviewMaker implements Serializable {
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);
-            resource.setThumbnail0(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
+            resource.setThumbnail0(new Thumbnail(file));
 
             if (width < THUMBNAIL_SMALL_WIDTH && height < THUMBNAIL_SMALL_HEIGHT) { // than it makes no sense to create larger thumbnails from a small image
                 return;
@@ -393,7 +396,7 @@ public class ResourcePreviewMaker implements Serializable {
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);
-            resource.setThumbnail2(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
+            resource.setThumbnail2(new Thumbnail(file));
         } finally {
             img.dispose();
         }
