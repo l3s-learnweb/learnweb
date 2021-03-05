@@ -220,27 +220,18 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("read_only_transcript", resource.isReadOnlyTranscript());
 
         if (resource.getThumbnail0() != null) {
-            if (resource.getThumbnail0().getFileId() == 0) {
-                params.put("thumbnail0_url", resource.getThumbnail0().getUrl());
-            }
             params.put("thumbnail0_file_id", SqlHelper.toNullable(resource.getThumbnail0().getFileId()));
             params.put("thumbnail0_width", resource.getThumbnail0().getWidth());
             params.put("thumbnail0_height", resource.getThumbnail0().getHeight());
         }
 
         if (resource.getThumbnail2() != null) {
-            if (resource.getThumbnail2().getFileId() == 0) {
-                params.put("thumbnail2_url", resource.getThumbnail2().getUrl());
-            }
             params.put("thumbnail2_file_id", SqlHelper.toNullable(resource.getThumbnail2().getFileId()));
             params.put("thumbnail2_width", resource.getThumbnail2().getWidth());
             params.put("thumbnail2_height", resource.getThumbnail2().getHeight());
         }
 
         if (resource.getThumbnail4() != null) {
-            if (resource.getThumbnail4().getFileId() == 0) {
-                params.put("thumbnail4_url", resource.getThumbnail4().getUrl());
-            }
             params.put("thumbnail4_file_id", SqlHelper.toNullable(resource.getThumbnail4().getFileId()));
             params.put("thumbnail4_width", resource.getThumbnail4().getWidth());
             params.put("thumbnail4_height", resource.getThumbnail4().getHeight());
@@ -376,16 +367,14 @@ public interface ResourceDao extends SqlObject, Serializable {
 
         private static Thumbnail createThumbnail(ResultSet rs, int thumbnailSize) throws SQLException {
             String prefix = "thumbnail" + thumbnailSize;
-            String url = rs.getString(prefix + "_url");
             int fileId = rs.getInt(prefix + "_file_id");
 
             if (fileId != 0) {
-                url = "../download/" + fileId + "/thumbnail" + thumbnailSize + ".png";
-            } else if (url == null) {
+                String url = "../download/" + fileId + "/thumbnail" + thumbnailSize + ".png";
+                return new Thumbnail(url, rs.getInt(prefix + "_width"), rs.getInt(prefix + "_height"), fileId);
+            } else {
                 return null;
             }
-
-            return new Thumbnail(url, rs.getInt(prefix + "_width"), rs.getInt(prefix + "_height"), fileId);
         }
 
         /**
