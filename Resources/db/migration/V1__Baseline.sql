@@ -621,3 +621,148 @@ ALTER TABLE `lw_user_log` ADD CONSTRAINT `FK_lw_user_log_lw_group` FOREIGN KEY (
 ALTER TABLE `lw_user_log` ADD CONSTRAINT `FK_lw_user_log_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_user_token` ADD CONSTRAINT `FK_lw_user_token_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/* ================= External tables to store crawled data ================= */
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.sl_action` (
+    `search_id` int(10) UNSIGNED NOT NULL,
+    `rank` smallint(5) UNSIGNED NOT NULL,
+    `user_id` int(10) UNSIGNED NOT NULL,
+    `action` enum ('resource_clicked','resource_saved') NOT NULL,
+    `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    KEY `sl_action_search_id` (`search_id`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.sl_entity_co_occur` (
+    `source` varchar(255) NOT NULL,
+    `target` varchar(255) NOT NULL,
+    `score` double NOT NULL,
+    KEY `sl_entity_co_occur_source` (`source`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.sl_query` (
+    `search_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group_id` int(10) UNSIGNED DEFAULT 0,
+    `query` varchar(250) NOT NULL,
+    `mode` enum ('text','image','video','group','advanced') NOT NULL,
+    `service` enum ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck') NOT NULL,
+    `language` char(5) DEFAULT NULL,
+    `filters` varchar(1000) DEFAULT NULL,
+    `user_id` int(10) UNSIGNED NOT NULL,
+    `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `learnweb_version` tinyint(4) NOT NULL DEFAULT 0 COMMENT 'which learnweb instance has inserted this row'
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.sl_query_entities` (
+    `search_id` int(10) UNSIGNED NOT NULL PRIMARY KEY,
+    `related_entities` blob DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.sl_resource` (
+    `search_id` int(10) UNSIGNED NOT NULL,
+    `rank` smallint(5) UNSIGNED NOT NULL,
+    `resource_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'id of a learnweb resource NULL otherwise',
+    `url` varchar(1000) DEFAULT NULL COMMENT 'null if learnweb resource',
+    `title` varchar(250) DEFAULT NULL COMMENT 'null if learnweb resource',
+    `description` varchar(1000) DEFAULT NULL COMMENT 'null if learnweb resource',
+    `thumbnail_url` varchar(1000) DEFAULT NULL,
+    `thumbnail_height` smallint(5) UNSIGNED DEFAULT NULL,
+    `thumbnail_width` smallint(5) UNSIGNED DEFAULT NULL,
+    PRIMARY KEY (`search_id`, `rank`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.speechrepository_video` (
+    `id` int(11) NOT NULL,
+    `title` varchar(1000) NOT NULL,
+    `url` varchar(1000) NOT NULL,
+    `rights` varchar(1000) NOT NULL,
+    `date` varchar(1000) NOT NULL,
+    `description` varchar(1000) NOT NULL,
+    `notes` varchar(2000) DEFAULT NULL,
+    `image_link` varchar(1000) NOT NULL,
+    `video_link` varchar(1000) NOT NULL,
+    `duration` int(11) NOT NULL,
+    `language` varchar(1000) NOT NULL,
+    `level` varchar(1000) DEFAULT NULL,
+    `use` varchar(1000) DEFAULT NULL,
+    `type` varchar(1000) DEFAULT NULL,
+    `domains` varchar(1000) DEFAULT NULL,
+    `terminology` text DEFAULT NULL,
+    `learnweb_resource_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+    KEY `speechrepository_video_learnweb_resource_id` (`learnweb_resource_id`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.ted_transcripts_lang_mapping` (
+    `language_code` char(10) NOT NULL,
+    `language` char(25) NOT NULL,
+    PRIMARY KEY (`language_code`, `language`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.ted_transcripts_paragraphs` (
+    `resource_id` int(10) UNSIGNED NOT NULL,
+    `language` char(10) NOT NULL,
+    `starttime` int(10) UNSIGNED NOT NULL,
+    `paragraph` longtext NOT NULL,
+    KEY `ted_transcripts_paragraphs_resource_id` (`resource_id`, `language`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.ted_video` (
+    `ted_id` int(10) UNSIGNED NOT NULL DEFAULT 0 PRIMARY KEY,
+    `resource_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+    `title` varchar(200) NOT NULL,
+    `description` mediumtext NOT NULL,
+    `slug` varchar(200) NOT NULL,
+    `viewed_count` int(10) UNSIGNED NOT NULL,
+    `published_at` timestamp NULL DEFAULT NULL,
+    `talk_updated_at` timestamp NULL DEFAULT NULL,
+    `photo1_url` varchar(255) DEFAULT NULL,
+    `photo1_width` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
+    `photo1_height` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
+    `photo2_url` varchar(255) DEFAULT NULL,
+    `photo2_width` smallint(6) NOT NULL DEFAULT 0,
+    `photo2_height` smallint(6) NOT NULL DEFAULT 0,
+    `tags` mediumtext NOT NULL,
+    `duration` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
+    `json` mediumtext DEFAULT NULL,
+    KEY `ted_video_slug` (`slug`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.wb2_url` (
+    `url_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `url` varchar(2000) NOT NULL,
+    `first_capture` timestamp NULL DEFAULT NULL,
+    `last_capture` timestamp NULL DEFAULT NULL,
+    `all_captures_fetched` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 when all captures have been loaded into wb_url_capture; 0 else',
+    `update_time` timestamp NOT NULL DEFAULT current_timestamp(),
+    KEY `wb2_url_url` (`url`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.wb2_url_capture` (
+    `url_id` bigint(20) NOT NULL,
+    `timestamp` timestamp NULL DEFAULT NULL,
+    KEY `wb2_url_capture_url_id` (`url_id`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.wb_url` (
+    `url_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `url` varchar(2084) NOT NULL,
+    `first_capture` timestamp NULL DEFAULT NULL,
+    `last_capture` timestamp NULL DEFAULT NULL,
+    `all_captures_fetched` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 when all captures have been loaded into wb_url_capture; 0 else',
+    `crawl_time` timestamp NOT NULL DEFAULT current_timestamp(),
+    `status_code` smallint(6) NOT NULL DEFAULT -3,
+    `status_code_date` timestamp NOT NULL DEFAULT '1990-01-01 01:00:00',
+    UNIQUE KEY `wb_url_url_index` (`url`)
+);
+
+CREATE TABLE IF NOT EXISTS `learnweb_large.wb_url_content` (
+    `url_id` bigint(20) NOT NULL,
+    `status_code` smallint(6) NOT NULL DEFAULT -3,
+    `content` longtext DEFAULT NULL,
+    `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    KEY `wb_url_content_url_id` (`url_id`)
+);
+
+ALTER TABLE `learnweb_large.sl_action` ADD CONSTRAINT `FK_sl_action_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large.sl_query` (`search_id`) ON DELETE CASCADE;
+ALTER TABLE `learnweb_large.sl_query_entities` ADD CONSTRAINT `FK_sl_query_entities_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large.sl_query` (`search_id`) ON DELETE CASCADE;
+ALTER TABLE `learnweb_large.sl_resource` ADD CONSTRAINT `FK_sl_resource_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large.sl_query` (`search_id`) ON DELETE CASCADE;
