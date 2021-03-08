@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
-public class GlossaryTerm implements HasId, Deletable, Serializable, Cloneable {
+public class GlossaryTerm implements HasId, Deletable, Serializable {
     private static final long serialVersionUID = -8309235925484416943L;
 
     private int id;
@@ -86,11 +86,6 @@ public class GlossaryTerm implements HasId, Deletable, Serializable, Cloneable {
             default:
                 throw new IllegalArgumentException(fieldName + " is not implemented");
         }
-    }
-
-    @Override
-    public GlossaryTerm clone() {
-        return new GlossaryTerm(this);
     }
 
     public String getTerm() {

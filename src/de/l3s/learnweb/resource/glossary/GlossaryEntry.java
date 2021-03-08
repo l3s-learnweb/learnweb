@@ -12,7 +12,7 @@ import org.jsoup.helper.Validate;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
-public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable {
+public class GlossaryEntry implements HasId, Deletable, Serializable {
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id;
@@ -61,13 +61,8 @@ public class GlossaryEntry implements HasId, Deletable, Serializable, Cloneable 
         setTimestamp(oldEntry.timestamp);
 
         for (GlossaryTerm oldTerm : oldEntry.terms) {
-            this.addTerm(oldTerm.clone());
+            this.addTerm(new GlossaryTerm(oldTerm));
         }
-    }
-
-    @Override
-    public GlossaryEntry clone() {
-        return new GlossaryEntry(this);
     }
 
     private void generateFulltext() {

@@ -145,11 +145,6 @@ public class SurveyResource extends Resource {
     }
 
     @Override
-    public SurveyResource clone() {
-        return new SurveyResource(this);
-    }
-
-    @Override
     public String toString() {
         return "Survey" + super.toString();
     }

@@ -179,49 +179,49 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
         User specialAdmin = userDao.findByIdOrElseThrow(SUBMISSION_ADMIN_USER_ID); //special user id
         LocalDateTime submissionDate = LocalDateTime.now(); //Date for the resources submitted, so that the moderator can know when they were submitted
 
-        List<Resource> clonedSelectedResources = new ArrayList<>();
+        List<Resource> copiedResources = new ArrayList<>();
         for (Resource r : selectedResources) {
             log.debug("resource: {}; submission: {}; user:{}", r.getId(), submissionId, userId);
             if (r.getUserId() == specialAdmin.getId()) {
-                clonedSelectedResources.add(r);
+                copiedResources.add(r);
             } else {
-                Resource clonedResource = r.clone();
+                Resource resourceCopy = new Resource(r);
 
-                //So that owner of clonedResource can view the resource
-                clonedResource.setOriginalResourceId(r.getId());
-                clonedResource.setRights(ResourceViewRights.SUBMISSION_READABLE);
-                clonedResource.setCreationDate(submissionDate);
-                clonedResource.setUser(specialAdmin);
-                clonedResource.save();
+                // So that owner of the original resource can view it
+                resourceCopy.setOriginalResourceId(r.getId());
+                resourceCopy.setRights(ResourceViewRights.SUBMISSION_READABLE);
+                resourceCopy.setCreationDate(submissionDate);
+                resourceCopy.setUser(specialAdmin);
+                resourceCopy.save();
 
-                //clone comments/tags of resource if it exists
-                clonedResource.cloneComments(r.getComments());
-                clonedResource.cloneTags(r.getTags());
+                // copy comments/tags of resource if exists
+                resourceCopy.copyComments(r.getComments());
+                resourceCopy.copyTags(r.getTags());
 
-                if (clonedResource.getType() == ResourceType.website) {
+                if (resourceCopy.getType() == ResourceType.website) {
 
-                    String response = Beans.getInstance(ArchiveUrlManager.class).addResourceToArchive(clonedResource);
+                    String response = Beans.getInstance(ArchiveUrlManager.class).addResourceToArchive(resourceCopy);
                     if (StringUtils.equalsAny(response, "ROBOTS_ERROR", "GENERIC_ERROR", "PARSE_DATE_ERROR", "SQL_SAVE_ERROR")) {
-                        if (clonedResource.getSmallThumbnail() == null) {
+                        if (resourceCopy.getSmallThumbnail() == null) {
                             try {
-                                getLearnweb().getResourcePreviewMaker().processResource(clonedResource);
+                                getLearnweb().getResourcePreviewMaker().processResource(resourceCopy);
                             } catch (IOException e) {
-                                log.error("Could not archive the resource during submission because of {} for resource {}", response, clonedResource.getId());
-                                log.error("Error during submission while processing thumbnails for resource: {}", clonedResource.getId(), e);
+                                log.error("Could not archive the resource during submission because of {} for resource {}", response, resourceCopy.getId());
+                                log.error("Error during submission while processing thumbnails for resource: {}", resourceCopy.getId(), e);
                             }
                         }
                     }
                 }
 
-                submissionDao.insertSubmissionResource(submissionId, clonedResource.getId(), userId);
+                submissionDao.insertSubmissionResource(submissionId, resourceCopy.getId(), userId);
 
                 log(Action.submission_submitted, 0, r.getId()); // this doesn't happen in a group context. Hence group_id = 0
 
-                clonedSelectedResources.add(clonedResource);
+                copiedResources.add(resourceCopy);
             }
         }
         selectedResources.clear();
-        selectedResources.addAll(clonedSelectedResources);
+        selectedResources.addAll(copiedResources);
         setSubmitted(true);
 
         submissionDao.insertSubmissionStatus(submissionId, userId, true);

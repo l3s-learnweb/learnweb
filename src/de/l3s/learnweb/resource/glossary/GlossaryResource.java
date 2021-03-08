@@ -38,7 +38,7 @@ public class GlossaryResource extends Resource {
         setAllowedLanguages(new ArrayList<>(other.allowedLanguages));
         setClonedButNotPersisted(true);
 
-        other.getEntries().forEach(entry -> this.entries.add(entry.clone()));
+        other.getEntries().forEach(entry -> this.entries.add(new GlossaryEntry(entry)));
     }
 
     public List<Locale> getAllowedLanguages() {
@@ -47,11 +47,6 @@ public class GlossaryResource extends Resource {
 
     public void setAllowedLanguages(List<Locale> allowedLanguages) {
         this.allowedLanguages = allowedLanguages;
-    }
-
-    @Override
-    public GlossaryResource clone() {
-        return new GlossaryResource(this);
     }
 
     @Override

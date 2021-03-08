@@ -18,7 +18,7 @@ import de.l3s.util.HasId;
  *
  * @author Philipp Kemkes
  */
-public class Survey implements Deletable, HasId, Serializable, Cloneable {
+public class Survey implements Deletable, HasId, Serializable {
     private static final long serialVersionUID = -7478683722354893077L;
 
     private int id;
@@ -49,7 +49,7 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
         setPublicTemplate(old.isPublicTemplate());
 
         for (SurveyQuestion question : old.getQuestions()) {
-            questions.add(question.clone());
+            questions.add(new SurveyQuestion(question));
         }
     }
 
@@ -135,14 +135,6 @@ public class Survey implements Deletable, HasId, Serializable, Cloneable {
 
     public void setPublicTemplate(final boolean publicTemplate) {
         this.publicTemplate = publicTemplate;
-    }
-
-    /**
-     * Returns a copy of this Survey Template (Ids are set to default this the Object isn't persisted yet).
-     */
-    @Override
-    public Survey clone() {
-        return new Survey(this);
     }
 
     public boolean isAssociated() {

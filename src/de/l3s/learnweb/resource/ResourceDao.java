@@ -148,7 +148,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     void deleteTag(Resource resource, Tag tag);
 
     default void copy(final Resource sourceResource, final int targetGroupId, final int targetFolderId, final User user) {
-        Resource resource = sourceResource.clone();
+        Resource resource = new Resource(sourceResource);
         resource.setGroupId(targetGroupId);
         resource.setFolderId(targetFolderId);
         resource.setUser(user);

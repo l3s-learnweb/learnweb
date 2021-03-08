@@ -44,7 +44,7 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
     }
 
     public void onCopySurvey(int surveyId) {
-        selectedSurvey = dao().getSurveyDao().findById(surveyId).orElseThrow(BeanAssert.NOT_FOUND).clone();
+        selectedSurvey = new Survey(dao().getSurveyDao().findById(surveyId).orElseThrow(BeanAssert.NOT_FOUND));
         selectedSurvey.setUserId(getUser().getId());
     }
 

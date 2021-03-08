@@ -118,7 +118,7 @@ public class SaverServlet extends HttpServlet {
         // The idea of what is going here: we copy existing file, to a new file and than replace old file with new one
         // I'm not sure why it is necessary, but I guess to have permanent link to latest file (also to avoid reindex resource)
         File file = fileDao.findByIdOrElseThrow(fileId);
-        File previousFile = file.clone();
+        File previousFile = new File(file);
 
         // save copy of existing file as a history file
         previousFile.setType(TYPE.DOC_HISTORY);

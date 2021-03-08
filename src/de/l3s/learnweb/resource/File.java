@@ -16,7 +16,7 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
-public class File implements Serializable, HasId, Cloneable {
+public class File implements Serializable, HasId {
     private static final long serialVersionUID = 6573841175365679674L;
 
     private static final Pattern NAME_FORBIDDEN_CHARACTERS = Pattern.compile("[\\\\/:*?\"<>|]");
@@ -61,9 +61,13 @@ public class File implements Serializable, HasId, Cloneable {
     }
 
     public File(final File file) {
+        this.id = 0;
+        this.deleted = file.isDeleted();
+        this.resourceId = file.getResourceId();
         this.type = file.getType();
         this.name = file.getName();
         this.mimeType = file.getMimeType();
+        this.lastModified = file.getLastModified();
     }
 
     @Override
@@ -186,26 +190,5 @@ public class File implements Serializable, HasId, Cloneable {
 
     public void setType(TYPE type) {
         this.type = type;
-    }
-
-    public File clone() {
-        File destination = new File();
-        if (name != null) {
-            destination.setName(name);
-        }
-        if (url != null) {
-            destination.setUrl(url);
-        }
-        if (type != null) {
-            destination.setType(type);
-        }
-        if (lastModified != null) {
-            destination.setLastModified(lastModified);
-        }
-        if (mimeType != null) {
-            destination.setMimeType(mimeType);
-        }
-        destination.setResourceId(resourceId);
-        return destination;
     }
 }

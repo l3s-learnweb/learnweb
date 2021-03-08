@@ -18,10 +18,6 @@
             <Bug pattern="EI_EXPOSE_REP2"/>
         </Or>
     </Match>
-    <!-- Clone method does not call super.clone() -->
-    <Match>
-        <Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
-    </Match>
     <!-- TODO @astappiev: WaybackUrlManager has hardcoded path to log file -->
     <Match>
         <Bug pattern="DMI_HARDCODED_ABSOLUTE_FILENAME"/>

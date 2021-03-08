@@ -39,7 +39,7 @@ import de.l3s.util.Expirable;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
-public class Resource extends AbstractResource implements Serializable, Cloneable {
+public class Resource extends AbstractResource implements Serializable {
     private static final long serialVersionUID = -8486919346993051937L;
     private static final Logger log = LogManager.getLogger(Resource.class);
 
@@ -514,16 +514,6 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
 
     public void setTags(OwnerList<Tag, User> tags) {
         this.tags = tags;
-    }
-
-    /**
-     * Creates a copy of a resource.
-     * Ratings and comments are not copied.
-     * (Ids are set to default this the Object isn't persisted yet).
-     */
-    @Override
-    public Resource clone() {
-        return new Resource(this);
     }
 
     @Override
@@ -1364,13 +1354,13 @@ public class Resource extends AbstractResource implements Serializable, Cloneabl
         return metadataMultiValue;
     }
 
-    public void cloneComments(List<Comment> comments) {
+    public void copyComments(List<Comment> comments) {
         for (Comment comment : comments) {
             addComment(comment.getText(), comment.getUser());
         }
     }
 
-    public void cloneTags(OwnerList<Tag, User> tags) {
+    public void copyTags(OwnerList<Tag, User> tags) {
         for (Tag tag : tags) {
             addTag(tag.getName(), tags.getElementOwner(tag));
         }

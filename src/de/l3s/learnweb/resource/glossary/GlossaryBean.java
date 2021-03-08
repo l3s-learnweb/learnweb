@@ -163,7 +163,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public void setGlossaryForm(GlossaryTableView tableItem) {
         //set form entry
-        formEntry = tableItem.getEntry().clone();
+        formEntry = new GlossaryEntry(tableItem.getEntry());
         //Reset ID to old entry ID as it is not copy action
         formEntry.setId(tableItem.getEntryId()); //entry ID
         //Reset original entry ID as it is not a copy action

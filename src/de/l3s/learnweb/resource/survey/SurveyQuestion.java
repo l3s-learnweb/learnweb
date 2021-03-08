@@ -15,7 +15,7 @@ import de.l3s.util.Deletable;
 /**
  * @author Rishita
  */
-public class SurveyQuestion implements Deletable, Serializable, Cloneable {
+public class SurveyQuestion implements Deletable, Serializable {
     private static final long serialVersionUID = -7698089608547415349L;
 
     public enum QuestionType { // represents primefaces input types
@@ -209,14 +209,6 @@ public class SurveyQuestion implements Deletable, Serializable, Cloneable {
 
     public void setOrder(int order) {
         this.order = order;
-    }
-
-    /**
-     * Returns a copy of this Survey Question (Ids are set to default this the Object isn't persisted yet).
-     */
-    @Override
-    public SurveyQuestion clone() {
-        return new SurveyQuestion(this);
     }
 
     public static String joinOptions(Map<String, Object> options) {

@@ -141,7 +141,7 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable 
 
     public void onCopyQuestions() {
         for (SurveyQuestion question : selectedSurvey.getQuestions()) {
-            survey.getQuestions().add(question.clone());
+            survey.getQuestions().add(new SurveyQuestion(question));
         }
     }
 }
