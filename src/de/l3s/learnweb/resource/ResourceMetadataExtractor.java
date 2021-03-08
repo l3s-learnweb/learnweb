@@ -61,12 +61,10 @@ public class ResourceMetadataExtractor {
     }
 
     public void processResource(Resource resource) {
-        if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE) {
-            this.processFileResource(resource);
-        } else if (resource.getStorageType() == Resource.WEB_RESOURCE) {
+        if (resource.isWebResource()) {
             this.processWebResource(resource);
         } else {
-            log.error("Unknown resource's storage type: {}", resource.getStorageType());
+            this.processFileResource(resource);
         }
     }
 

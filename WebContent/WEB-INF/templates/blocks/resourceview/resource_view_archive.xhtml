@@ -62,19 +62,6 @@
 					<iframe id="archive_iframe" data-src="#{res.lastArchivedObject.archiveUrl}" class="ui-blockui bg-center"></iframe>
 				</div>
 				<div class="row align-items-center mt-2">
-					<ui:remove>
-						<!-- at the moment there exists only one log entry for this action (45); therefore I've disabled it; reevaluate later - @kemkes 02.04.2020 -->
-
-						<h:panelGroup styleClass="col-md" layout="block" rendered="${not empty res.thumbnailUpdateInfo}">
-							<span class="text-muted">
-								<h:outputText value="#{msg['Archive.thumbnail_update_info']}: "/>
-								<h:outputText value="#{res.thumbnailUpdateInfo.date}">
-									<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
-								</h:outputText>
-								<h:outputText value=" (#{msg.by} #{res.thumbnailUpdateInfo.username})"/>
-							</span>
-						</h:panelGroup>
-					</ui:remove>
 					<div class="col-md text-end">
 						<span>
 							<h:outputText value="#{msg['Archive.show_version']}: "/>

@@ -34,7 +34,7 @@
 
 		<h:panelGroup rendered="#{showPreview and logEntry.resource != null}" layout="block" styleClass="resource-log-snippet mt-2">
 			<h:outputLink styleClass="resource-preview text-decoration-none mx-auto mw-r10" value="resource.jsf" pt:data-resview="default"
-						  rendered="#{not empty logEntry.resource.smallThumbnail}">
+						  rendered="#{not empty logEntry.resource.thumbnailSmall}">
 				<f:param name="resource_id" value="#{logEntry.resource.id}"/>
 
 				<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">

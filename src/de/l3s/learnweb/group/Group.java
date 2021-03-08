@@ -89,11 +89,11 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private String hypothesisLink;
     private String hypothesisToken;
 
-    private PolicyJoin policyJoin = Group.PolicyJoin.COURSE_MEMBERS;
-    private PolicyAdd policyAdd = Group.PolicyAdd.GROUP_MEMBERS;
-    private PolicyEdit policyEdit = Group.PolicyEdit.GROUP_MEMBERS;
-    private PolicyView policyView = Group.PolicyView.COURSE_MEMBERS;
-    private PolicyAnnotate policyAnnotate = Group.PolicyAnnotate.COURSE_MEMBERS;
+    private PolicyJoin policyJoin = PolicyJoin.COURSE_MEMBERS;
+    private PolicyAdd policyAdd = PolicyAdd.GROUP_MEMBERS;
+    private PolicyEdit policyEdit = PolicyEdit.GROUP_MEMBERS;
+    private PolicyView policyView = PolicyView.COURSE_MEMBERS;
+    private PolicyAnnotate policyAnnotate = PolicyAnnotate.COURSE_MEMBERS;
 
     private boolean restrictionForumCategoryRequired = false;
     private int maxMemberCount = -1; // defines how many users can join this group
@@ -402,23 +402,23 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     public PolicyJoin[] getPolicyJoinOptions() {
-        return Group.PolicyJoin.values();
+        return PolicyJoin.values();
     }
 
     public PolicyAdd[] getPolicyAddOptions() {
-        return Group.PolicyAdd.values();
+        return PolicyAdd.values();
     }
 
     public PolicyEdit[] getPolicyEditOptions() {
-        return Group.PolicyEdit.values();
+        return PolicyEdit.values();
     }
 
     public PolicyView[] getPolicyViewOptions() {
-        return Group.PolicyView.values();
+        return PolicyView.values();
     }
 
     public PolicyAnnotate[] getPolicyAnnotateOptions() {
-        return Group.PolicyAnnotate.values();
+        return PolicyAnnotate.values();
     }
 
     public boolean canAddResources(User user) {
@@ -430,7 +430,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             return true;
         }
 
-        if (policyAdd == Group.PolicyAdd.GROUP_MEMBERS && isMember(user)) {
+        if (policyAdd == PolicyAdd.GROUP_MEMBERS && isMember(user)) {
             return true;
         }
 

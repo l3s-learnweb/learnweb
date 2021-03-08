@@ -197,7 +197,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         } catch (RuntimeException | IOException e) {
             String details = "resource: " + newResource + "; selectedResource: " + selectedResource;
             if (newResource != null) {
-                details += "; thumbnail0:" + newResource.getThumbnail0();
+                details += "; thumbnail0:" + newResource.getThumbnailSmall();
             }
             addErrorMessage(details, e);
         }
@@ -216,7 +216,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         if (resource.getEmbedded() != null) {
             PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbedded());
         } else {
-            PrimeFaces.current().ajax().addCallbackParam("embeddedCode", "<img src=\"" + resource.getResource().getLargestThumbnail().getUrl() + "\" />");
+            PrimeFaces.current().ajax().addCallbackParam("embeddedCode", "<img src=\"" + resource.getResource().getThumbnailLargest().getUrl() + "\" />");
         }
     }
 

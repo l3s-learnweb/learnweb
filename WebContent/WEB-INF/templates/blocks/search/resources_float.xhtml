@@ -9,7 +9,7 @@
 
     <ui:repeat var="res" value="#{resources}">
         <a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-image search-item-lightbox d-inline-block ${res.clicked ? 'snippet-clicked' : ''}">
-            <img src="#{res.mediumThumbnail.url}" alt="#{res.title}" height="#{res.height}" width="#{res.width}"/>
+            <img src="#{res.thumbnailMedium.url}" alt="#{res.title}" height="#{res.height}" width="#{res.width}"/>
         </a>
     </ui:repeat>
 

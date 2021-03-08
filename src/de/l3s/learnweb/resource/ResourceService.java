@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
@@ -79,5 +80,9 @@ public enum ResourceService { // when adding more services remember to update th
      */
     public static ResourceService parse(String value) {
         return valueOf(Pattern.compile("[ -]").matcher(value.toLowerCase()).replaceAll(""));
+    }
+
+    public boolean in(ResourceService... values) {
+        return Arrays.stream(values).anyMatch(value -> value == this);
     }
 }

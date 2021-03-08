@@ -181,20 +181,19 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     }
 
     private void createDocument() {
-        log.debug("Creating new document...");
-        resource.setSource(ResourceService.learnweb);
-        resource.setFileName(resource.getFileName() + FileUtility.getInternalExtension(resource.getType()));
-
         try {
+            log.debug("Creating new document...");
+            resource.setSource(ResourceService.learnweb);
+
             log.debug("Getting the fileInfo from uploaded file...");
+            String fileName = resource.getTitle() + FileUtility.getInternalExtension(resource.getType());
             java.io.File sampleFile = FileUtility.getSampleOfficeFile(resource.getType());
-            FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(new FileInputStream(sampleFile), resource.getFileName());
+            FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(new FileInputStream(sampleFile), fileName);
 
             log.debug("Saving file...");
             File file = new File(FileType.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, new FileInputStream(sampleFile));
 
-            resource.setTitle(info.getTitle());
             resource.addFile(file);
             resource.setFileId(file.getId());
             resource.setFileName(info.getFileName());
@@ -244,7 +243,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
         // create thumbnails for the resource
         if (!resource.isProcessing()
-            && (resource.getSmallThumbnail() == null || resource.getSmallThumbnail().getFileId() == 0 || resource.getType() == ResourceType.video)) {
+            && (resource.getThumbnailSmall() == null || resource.getThumbnailSmall().getFileId() == 0 || resource.getType() == ResourceType.video)) {
             new ResourcePreviewMaker.CreateThumbnailThread(resource).start();
         }
 

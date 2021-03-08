@@ -85,8 +85,7 @@ public class ResourcePreviewMaker implements Serializable {
         InputStream inputStream = null;
         try {
             // if a web resource is not a simple website then download it
-            if (resource.getStorageType() == Resource.WEB_RESOURCE && resource.getType() != ResourceType.website
-                && (resource.getSource() == ResourceService.bing || resource.getSource() == ResourceService.internet)) {
+            if (resource.isWebResource() && resource.getType() != ResourceType.website && resource.getSource().in(ResourceService.bing, ResourceService.internet)) {
                 File file = new File(FileType.MAIN, resource.getId(), resource.getFileName(), resource.getFormat());
                 fileDao.save(file, UrlHelper.getInputStream(resource.getUrl()));
 
@@ -99,7 +98,7 @@ public class ResourcePreviewMaker implements Serializable {
             } else if (resource.getFile(FileType.MAIN) != null) {
                 inputStream = resource.getFile(FileType.MAIN).getInputStream();
                 processFile(resource, inputStream);
-            } else if (resource.getStorageType() == Resource.WEB_RESOURCE && StringUtils.isNotEmpty(resource.getMaxImageUrl())) {
+            } else if (resource.isWebResource() && StringUtils.isNotEmpty(resource.getMaxImageUrl())) {
                 inputStream = UrlHelper.getInputStream(resource.getMaxImageUrl());
                 processImage(resource, inputStream);
             } else if (resource.getType() != ResourceType.glossary && resource.getType() != ResourceType.survey) {
@@ -168,7 +167,7 @@ public class ResourcePreviewMaker implements Serializable {
         thumbnail.dispose();
 
         resource.addFile(file);
-        resource.setThumbnail4(new Thumbnail(file));
+        resource.setThumbnailLarge(new Thumbnail(file));
 
         createThumbnails(resource, img, false);
     }
@@ -183,7 +182,7 @@ public class ResourcePreviewMaker implements Serializable {
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
-        resource.setThumbnail4(new Thumbnail(file));
+        resource.setThumbnailLarge(new Thumbnail(file));
 
         createThumbnails(resource, img, true);
     }
@@ -198,7 +197,7 @@ public class ResourcePreviewMaker implements Serializable {
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
-        resource.setThumbnail4(new Thumbnail(file));
+        resource.setThumbnailLarge(new Thumbnail(file));
 
         createThumbnails(resource, img, true);
     }
@@ -207,8 +206,7 @@ public class ResourcePreviewMaker implements Serializable {
         File originalFile;
         FFmpegProbeResult ffProbeResult = null;
         try {
-            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video
-                && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == 0)) {
+            if (!resource.isWebResource() && resource.getType() == ResourceType.video && (resource.getThumbnailMedium() == null || resource.getThumbnailMedium().getFileId() == 0)) {
                 originalFile = resource.getFile(FileType.MAIN);
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 
@@ -244,7 +242,7 @@ public class ResourcePreviewMaker implements Serializable {
             boolean isSupported = resource.getFormat().equals("video/mp4")
                 && ffProbeResult.streams.stream().anyMatch(videoStream -> videoStream.codec_name.equals("h264"));
 
-            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video && !isSupported) {
+            if (!resource.isWebResource() && resource.getType() == ResourceType.video && !isSupported) {
                 originalFile = resource.getFile(FileType.MAIN);
 
                 java.io.File tempVideoFile = java.io.File.createTempFile(originalFile.getId() + "_video_", ".mp4");
@@ -363,7 +361,7 @@ public class ResourcePreviewMaker implements Serializable {
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);
-            resource.setThumbnail0(new Thumbnail(file));
+            resource.setThumbnailSmall(new Thumbnail(file));
 
             if (width < THUMBNAIL_SMALL_WIDTH && height < THUMBNAIL_SMALL_HEIGHT) { // than it makes no sense to create larger thumbnails from a small image
                 return;
@@ -374,7 +372,7 @@ public class ResourcePreviewMaker implements Serializable {
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);
-            resource.setThumbnail2(new Thumbnail(file));
+            resource.setThumbnailMedium(new Thumbnail(file));
         } finally {
             img.dispose();
         }

@@ -181,15 +181,15 @@ public interface ResourceDao extends SqlObject, Serializable {
                 }
 
                 if (file.getType() == File.FileType.THUMBNAIL_SMALL) {
-                    resource.setThumbnail0(new Thumbnail(file));
+                    resource.setThumbnailSmall(new Thumbnail(file));
                 }
 
                 if (file.getType() == File.FileType.THUMBNAIL_MEDIUM) {
-                    resource.setThumbnail2(new Thumbnail(file));
+                    resource.setThumbnailMedium(new Thumbnail(file));
                 }
 
                 if (file.getType() == File.FileType.THUMBNAIL_LARGE) {
-                    resource.setThumbnail4(new Thumbnail(file));
+                    resource.setThumbnailLarge(new Thumbnail(file));
                 }
             }
 
@@ -208,7 +208,7 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("description", SqlHelper.toNullable(resource.getDescription()));
         params.put("url", SqlHelper.toNullable(resource.getUrl()));
         params.put("storage_type", resource.getStorageType());
-        params.put("rights", resource.getRights());
+        params.put("rights", resource.getPolicyView());
         params.put("source", resource.getSource().name());
         params.put("type", resource.getType().name());
         params.put("format", SqlHelper.toNullable(resource.getFormat()));
@@ -232,15 +232,15 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("height", SqlHelper.toNullable(resource.getHeight()));
         params.put("restricted", resource.isRestricted());
         params.put("language", SqlHelper.toNullable(resource.getLanguage()));
-        params.put("created_at", resource.getCreationDate());
+        params.put("created_at", resource.getCreatedAt());
         params.put("metadata", SerializationUtils.serialize(resource.getMetadata()));
         params.put("group_id", SqlHelper.toNullable(resource.getGroupId()));
         params.put("folder_id", SqlHelper.toNullable(resource.getFolderId()));
         params.put("deleted", resource.isDeleted());
         params.put("read_only_transcript", resource.isReadOnlyTranscript());
-        params.put("thumbnail0_file_id", resource.getThumbnail0() == null ? null : SqlHelper.toNullable(resource.getThumbnail0().getFileId()));
-        params.put("thumbnail2_file_id", resource.getThumbnail2() == null ? null : SqlHelper.toNullable(resource.getThumbnail2().getFileId()));
-        params.put("thumbnail4_file_id", resource.getThumbnail4() == null ? null : SqlHelper.toNullable(resource.getThumbnail4().getFileId()));
+        params.put("thumbnail0_file_id", resource.getThumbnailSmall() == null ? null : SqlHelper.toNullable(resource.getThumbnailSmall().getFileId()));
+        params.put("thumbnail2_file_id", resource.getThumbnailMedium() == null ? null : SqlHelper.toNullable(resource.getThumbnailMedium().getFileId()));
+        params.put("thumbnail4_file_id", resource.getThumbnailLarge() == null ? null : SqlHelper.toNullable(resource.getThumbnailLarge().getFileId()));
 
         Optional<Integer> resourceId = SqlHelper.handleSave(getHandle(), "lw_resource", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -307,7 +307,7 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setDescription(rs.getString("description"));
                 resource.setUrl(rs.getString("url"));
                 resource.setStorageType(rs.getInt("storage_type"));
-                resource.setRights(rs.getInt("rights"));
+                resource.setPolicyView(rs.getInt("rights"));
                 resource.setSource(ResourceService.valueOf(rs.getString("source")));
                 resource.setAuthor(rs.getString("author"));
                 resource.setUserId(rs.getInt("owner_user_id"));
@@ -319,9 +319,9 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setFileId(rs.getInt("file_id"));
                 resource.setFileName(rs.getString("file_name"));
                 resource.setFileUrl(rs.getString("file_url"));
-                resource.setThumbnail0(createThumbnail(rs, 0));
-                resource.setThumbnail2(createThumbnail(rs, 2));
-                resource.setThumbnail4(createThumbnail(rs, 4));
+                resource.setThumbnailSmall(createThumbnail(rs, 0));
+                resource.setThumbnailMedium(createThumbnail(rs, 2));
+                resource.setThumbnailLarge(createThumbnail(rs, 4));
                 resource.setEmbeddedRaw(rs.getString("embeddedRaw"));
                 resource.setTranscript(rs.getString("transcript"));
                 resource.setOnlineStatus(Resource.OnlineStatus.valueOf(rs.getString("online_status")));
@@ -331,8 +331,8 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setHeight(rs.getInt("height"));
                 resource.setLanguage(rs.getString("language"));
                 resource.setRestricted(rs.getBoolean("restricted"));
-                resource.setResourceTimestamp(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
-                resource.setCreationDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+                resource.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+                resource.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
                 resource.setGroupId(rs.getInt("group_id"));
                 resource.setFolderId(rs.getInt("folder_id"));
                 resource.setDeleted(rs.getBoolean("deleted"));

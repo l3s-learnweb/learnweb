@@ -192,7 +192,7 @@ public class SpeechRepositoryCrawler implements Runnable {
             String dateStr = speechEntity.getDate();
             Matcher matcher = DATE_PATTERN.matcher(dateStr);
             if (matcher.find()) {
-                resource.setCreationDate(LocalDate.parse(matcher.group(1), DATE_FORMATTER).atStartOfDay());
+                resource.setCreatedAt(LocalDate.parse(matcher.group(1), DATE_FORMATTER).atStartOfDay());
             } else {
                 log.error("Did not expect this date value {}, speechEntity {}", speechEntity.getDate(), speechEntity.getId());
             }

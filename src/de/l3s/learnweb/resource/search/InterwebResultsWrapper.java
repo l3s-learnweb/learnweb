@@ -51,7 +51,7 @@ public class InterwebResultsWrapper implements Serializable {
         for (SearchResult searchResult : searchResults) {
             Resource resource = createResource(searchResult);
 
-            if (resource.getType() != ResourceType.website && null == resource.getMediumThumbnail()) { // no thumbnail set
+            if (resource.getType() != ResourceType.website && null == resource.getThumbnailMedium()) { // no thumbnail set
                 log.warn("Found no thumbnail: {}", searchResult);
                 counter++;
 
@@ -103,27 +103,27 @@ public class InterwebResultsWrapper implements Serializable {
 
     private static void setThumbnails(Resource resource, SearchResult searchResult) {
         if (searchResult.getThumbnailSmall() != null) {
-            resource.setThumbnail0(new Thumbnail(searchResult.getThumbnailSmall().getUrl()));
+            resource.setThumbnailSmall(new Thumbnail(searchResult.getThumbnailSmall().getUrl()));
         } else if (searchResult.getThumbnailLarge() != null) {
-            resource.setThumbnail0(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
+            resource.setThumbnailSmall(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
         }
 
         if (searchResult.getThumbnailMedium() != null) {
-            resource.setThumbnail2(new Thumbnail(searchResult.getThumbnailMedium().getUrl()));
+            resource.setThumbnailMedium(new Thumbnail(searchResult.getThumbnailMedium().getUrl()));
         } else if (searchResult.getThumbnailLarge() != null) {
-            resource.setThumbnail2(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
+            resource.setThumbnailMedium(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
         }
 
         if (searchResult.getThumbnailLarge() != null) {
-            resource.setThumbnail4(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
+            resource.setThumbnailLarge(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
         } else if (searchResult.getThumbnailOriginal() != null) {
-            resource.setThumbnail4(new Thumbnail(searchResult.getThumbnailOriginal().getUrl()));
+            resource.setThumbnailLarge(new Thumbnail(searchResult.getThumbnailOriginal().getUrl()));
         }
 
         if (searchResult.getThumbnailOriginal() != null) {
             resource.setMaxImageUrl(searchResult.getThumbnailOriginal().getUrl());
         } else {
-            Thumbnail biggestThumbnail = resource.getLargestThumbnail();
+            Thumbnail biggestThumbnail = resource.getThumbnailLargest();
             if (biggestThumbnail != null) {
                 resource.setMaxImageUrl(biggestThumbnail.getUrl());
             }

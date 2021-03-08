@@ -59,9 +59,9 @@ public class IndexFakeNews extends MaintenanceTask {
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
 
-            resource.setThumbnail0(logoResource.getThumbnail0());
-            resource.setThumbnail2(logoResource.getThumbnail2());
-            resource.setThumbnail4(logoResource.getThumbnail4());
+            resource.setThumbnailSmall(logoResource.getThumbnailSmall());
+            resource.setThumbnailMedium(logoResource.getThumbnailMedium());
+            resource.setThumbnailLarge(logoResource.getThumbnailLarge());
 
             resource.setTitle(title);
             resource.setDescription(description);

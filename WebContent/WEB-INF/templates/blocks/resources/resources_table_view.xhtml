@@ -32,8 +32,8 @@
                 <h:outputText value="#{res.user.username}"/>
             </p:column>
 
-            <p:column headerText="#{msg.creation_date}" styleClass="res-row-date" sortBy="#{res.resource.creationDate}">
-                <h:outputText  value="#{res.resource.creationDate}">
+            <p:column headerText="#{msg.creation_date}" styleClass="res-row-date" sortBy="#{res.resource.createdAt}">
+                <h:outputText  value="#{res.resource.createdAt}">
                     <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
                 </h:outputText>
             </p:column>

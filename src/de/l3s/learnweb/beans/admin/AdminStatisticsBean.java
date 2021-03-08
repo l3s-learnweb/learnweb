@@ -2,7 +2,6 @@ package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,7 +103,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                 sb.append("</div>\n<ul>");
 
                 List<Resource> resources = group.getResources();
-                resources.sort(new ResourceComparator());
+                resources.sort(Resource.createTitleComparator());
 
                 for (Resource resource : resources) {
                     sb.append("\n\t<li><div style=\"color:").append(color[resource.getStorageType()]).append("\">");
@@ -179,19 +178,5 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
     public List<Map<String, String>> getGroupStatistics() {
         return groupStatistics;
-    }
-
-    private static class ResourceComparator implements Comparator<Resource>, Serializable {
-        private static final long serialVersionUID = 132047489495909404L;
-
-        @Override
-        public int compare(Resource o1, Resource o2) {
-            if (o1.getStorageType() == o2.getStorageType()) {
-                return o1.getTitle().compareTo(o2.getTitle());
-            }
-
-            return Integer.compare(o1.getStorageType(), o2.getStorageType());
-        }
-
     }
 }

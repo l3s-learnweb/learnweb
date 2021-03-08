@@ -18,8 +18,8 @@ public enum ResourceType {
     file, // applications, archives, etc
 
     // learnweb types
-    survey,
-    glossary;
+    survey, // SurveyResource
+    glossary; // GlossaryResource
 
     @Override
     public String toString() {

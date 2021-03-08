@@ -19,12 +19,12 @@
 </div>
 
 <dl class="row">
-	<ui:fragment rendered="${not empty res.fileName and res.source ne 'loro'}">
+	<ui:fragment rendered="${res.mainFile ne null}">
 		<dt class="col-sm-4">#{msg.file}:</dt>
 		<dd class="col-sm-8">
 			<a href="#{res.downloadUrl}" target="_top">
 				<i class="fas fa-fw fa-download" aria-hidden="true"></i>
-				#{res.fileName}
+				#{res.mainFile.name}
 			</a>
 
 			<ui:fragment rendered="${not empty res.originalFile}">
@@ -207,10 +207,10 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="${not empty res.creationDate}">
+	<ui:fragment rendered="${not empty res.createdAt}">
 		<dt class="col-sm-4">#{msg.date}:</dt>
 		<dd class="col-sm-8">
-			<h:outputText value="#{res.creationDate}">
+			<h:outputText value="#{res.createdAt}">
 				<f:convertDateTime type="localDate" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 			</h:outputText>
 		</dd>

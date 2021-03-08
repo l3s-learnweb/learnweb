@@ -103,10 +103,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             this.videoResourceId = tedTranscriptDao.findResourceIdByTedXUrl(tedResource.getUrl()).orElseThrow(BeanAssert.NOT_FOUND);
         }
 
-        if (tedResource.getSource() == ResourceService.tedx) {
-            //this.tedResource.setEmbeddedRaw("<iframe width='100%' height='100%' src='https://www.youtube-nocookie.com/embed/" + tedResource.getIdAtService() + "' frameborder='0' scrolling='no' allowfullscreen></iframe>");
-            this.tedResource.setEmbeddedRaw(tedResource.getEmbeddedRaw().replace("width=\"500\" height=\"400\"", "width='100%' height='100%'"));
-        }
         String transcript = tedResource.getTranscript();
         noteId = 0;
 

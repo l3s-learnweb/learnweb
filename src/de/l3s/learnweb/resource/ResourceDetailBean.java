@@ -75,9 +75,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
         resource = resourceDao.findByIdOrElseThrow(resourceId);
         BeanAssert.notDeleted(resource);
-
-        BeanAssert.authorized(resource.canViewResource(getUser()));
-
         BeanAssert.hasPermission(resource.canViewResource(getUser()));
 
         log(Action.opening_resource, this.resource.getGroupId(), this.resource.getId());

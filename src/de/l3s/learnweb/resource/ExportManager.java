@@ -93,10 +93,10 @@ public class ExportManager {
         List<Resource> webResources = new ArrayList<>();
 
         for (Resource resource : resources) {
-            if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE) {
-                learnwebResources.add(resource);
-            } else if (resource.getStorageType() == Resource.WEB_RESOURCE) {
+            if (resource.isWebResource()) {
                 webResources.add(resource);
+            } else {
+                learnwebResources.add(resource);
             }
         }
 

@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -217,8 +216,7 @@ public class Search implements Serializable {
             }
 
             // check if an other resource with the same url exists
-            // Yovisto urls are not unique in this case we use the file url
-            if (!urlHashMap.add(StringUtils.firstNonBlank(resource.getFileUrl(), resource.getUrl()))) {
+            if (!urlHashMap.add(resource.getUrl())) {
                 duplicatedUrlCount++;
                 continue;
             }

@@ -70,7 +70,7 @@ public final class ArchiveUrlManager {
 
     public String addResourceToArchive(Resource resource) {
         String response = "";
-        if (resource.getStorageType() != Resource.LEARNWEB_RESOURCE) {
+        if (resource.isWebResource()) {
             Future<String> executorResponse = executorService.submit(new ArchiveNowWorker(resource));
 
             try {

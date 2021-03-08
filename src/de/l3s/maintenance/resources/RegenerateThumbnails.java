@@ -55,7 +55,7 @@ public class RegenerateThumbnails extends MaintenanceTask {
         resource.setOnlineStatus(Resource.OnlineStatus.ONLINE);
         log.debug("online");
 
-        if (resource.getSmallThumbnail() == null) {
+        if (resource.getThumbnailSmall() == null) {
             log.debug("create thumbnail");
             try {
                 getLearnweb().getResourcePreviewMaker().processWebsite(resource);

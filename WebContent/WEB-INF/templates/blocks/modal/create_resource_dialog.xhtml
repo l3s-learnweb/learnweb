@@ -22,7 +22,7 @@
             <ui:fragment rendered="#{addResourceBean.resource.officeResource}">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
                 <div class="fg-col">
-                    <p:inputText value="#{addResourceBean.resource.fileName}" required="true" />
+                    <p:inputText value="#{addResourceBean.resource.title}" required="true" />
                     <p:message for="@previous"/>
                 </div>
             </ui:fragment>
@@ -43,9 +43,9 @@
                               oncomplete="PF('createResourceDialog').resetPosition();"/>
             </ui:fragment>
 
-            <ui:fragment rendered="#{addResourceBean.resource.smallThumbnail != null}">
+            <ui:fragment rendered="#{addResourceBean.resource.thumbnailSmall != null}">
                 <p:outputLabel value="#{msg.preview}:"/>
-                <img src="#{addResourceBean.resource.smallThumbnail.url}" alt="#{addResourceBean.resource.title}"/>
+                <img src="#{addResourceBean.resource.thumbnailSmall.url}" alt="#{addResourceBean.resource.title}"/>
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary'}">
@@ -112,9 +112,9 @@
                 <h:outputText value="#{addResourceBean.resource.downloadUrl}" />
             </ui:fragment>
 
-            <ui:fragment rendered="#{addResourceBean.resource.smallThumbnail != null}">
+            <ui:fragment rendered="#{addResourceBean.resource.thumbnailSmall != null}">
                 <h:outputText value="#{msg.preview}:" styleClass="ui-outputlabel"/>
-                <img src="#{addResourceBean.resource.smallThumbnail.url}" alt="#{addResourceBean.resource.title}"/>
+                <img src="#{addResourceBean.resource.thumbnailSmall.url}" alt="#{addResourceBean.resource.title}"/>
             </ui:fragment>
 
             <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">

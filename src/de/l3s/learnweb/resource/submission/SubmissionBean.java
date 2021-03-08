@@ -30,7 +30,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.Resource.ResourceViewRights;
+import de.l3s.learnweb.resource.Resource.PolicyView;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
@@ -189,8 +189,8 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
 
                 // So that owner of the original resource can view it
                 resourceCopy.setOriginalResourceId(r.getId());
-                resourceCopy.setRights(ResourceViewRights.SUBMISSION_READABLE);
-                resourceCopy.setCreationDate(submissionDate);
+                resourceCopy.setPolicyView(PolicyView.SUBMISSION_READABLE);
+                resourceCopy.setCreatedAt(submissionDate);
                 resourceCopy.setUser(specialAdmin);
                 resourceCopy.save();
 
@@ -199,10 +199,9 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 resourceCopy.copyTags(r.getTags());
 
                 if (resourceCopy.getType() == ResourceType.website) {
-
                     String response = Beans.getInstance(ArchiveUrlManager.class).addResourceToArchive(resourceCopy);
                     if (StringUtils.equalsAny(response, "ROBOTS_ERROR", "GENERIC_ERROR", "PARSE_DATE_ERROR", "SQL_SAVE_ERROR")) {
-                        if (resourceCopy.getSmallThumbnail() == null) {
+                        if (resourceCopy.getThumbnailSmall() == null) {
                             try {
                                 getLearnweb().getResourcePreviewMaker().processResource(resourceCopy);
                             } catch (IOException e) {

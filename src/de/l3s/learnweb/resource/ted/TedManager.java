@@ -124,7 +124,7 @@ public class TedManager {
         resource.setHeight(tedVideo.getPhotoHeight());
         resource.setMaxImageUrl(tedVideo.getPhotoUrl());
         resource.setIdAtService(Integer.toString(tedVideo.getTedId()));
-        resource.setCreationDate(tedVideo.getPublishedAt());
+        resource.setCreatedAt(tedVideo.getPublishedAt());
         resource.setTranscript("");
         return resource;
     }
@@ -299,9 +299,9 @@ public class TedManager {
                 for (File file : resource.getFiles().values()) {
                     fileDao.deleteSoft(file);
                 }
-                resource.setThumbnail0(r2.getThumbnail0());
-                resource.setThumbnail2(r2.getThumbnail2());
-                resource.setThumbnail4(r2.getThumbnail4());
+                resource.setThumbnailSmall(r2.getThumbnailSmall());
+                resource.setThumbnailMedium(r2.getThumbnailMedium());
+                resource.setThumbnailLarge(r2.getThumbnailLarge());
                 resource.setDuration(r2.getDuration());
                 resource.setWidth(r2.getWidth());
                 resource.setHeight(r2.getHeight());

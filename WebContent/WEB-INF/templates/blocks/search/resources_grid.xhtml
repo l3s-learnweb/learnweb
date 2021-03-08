@@ -8,7 +8,7 @@
 	<ui:repeat var="res" value="#{resources}">
 		<a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-video search-item-lightbox" target="_blank">
 			<div class="item-thumbnail ratio ratio-16x9">
-				<img src="#{res.mediumThumbnail.url}" alt="#{res.title}"/>
+				<img src="#{res.thumbnailMedium.url}" alt="#{res.title}"/>
 				<h:outputText value="#{res.durationInMinutes}" styleClass="video-duration" rendered="#{res.resource.duration gt 0}"/>
 			</div>
 

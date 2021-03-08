@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -55,11 +56,14 @@ public class Resource extends AbstractResource implements Serializable {
         PROCESSING // e.g. while a document/video is converted
     }
 
-    public enum ResourceViewRights {
-        DEFAULT_RIGHTS, //inherits group rights
+    /**
+     * Who can view the resource?
+     */
+    public enum PolicyView { // be careful when adding options. The new option must be added to the lw_resource table too
+        DEFAULT_RIGHTS, // inherits group rights
         SUBMISSION_READABLE, // the submitter of the resource (stored in the original resource id) and assessors can view the resource
-        LEARNWEB_READABLE, //all learnweb users can view resource given url
-        WORLD_READABLE, //all internet users with access to url can view resource
+        LEARNWEB_READABLE, // all learnweb users can view resource given url
+        WORLD_READABLE, // all internet users with access to url can view resource
     }
 
     private int id; // default id, that indicates that this resource is not stored at fedora
@@ -69,7 +73,7 @@ public class Resource extends AbstractResource implements Serializable {
     private String description = "";
     private String url; // `website` resources stores external link here, also `video` resources stores link to source (like YouTube page)
     private int storageType = WEB_RESOURCE;
-    private ResourceViewRights rights = ResourceViewRights.DEFAULT_RIGHTS;
+    private PolicyView policyView = PolicyView.DEFAULT_RIGHTS;
     private ResourceService source; // The place where the resource was found
     private String language; // language code
     private String author;
@@ -89,17 +93,17 @@ public class Resource extends AbstractResource implements Serializable {
     private String query; // the query which was used to find this resource
     private int originalResourceId; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
     private String machineDescription;
-    private Thumbnail thumbnail0; // cropped to 160 x 120 px - smallest thumbnail used on website
-    private Thumbnail thumbnail2; // resized <= 280 x 210 px - resource preview image size
-    private Thumbnail thumbnail4; // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
+    private Thumbnail thumbnailSmall; // cropped to 160 x 120 px - smallest thumbnail used on website
+    private Thumbnail thumbnailMedium; // resized <= 280 x 210 px - resource preview image size
+    private Thumbnail thumbnailLarge; // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
     private String embeddedRaw; // stored in the database
     private String embeddedCode; // derived from type or embedded raw. Does not need to be stored in DB
     private String transcript; //To store the English transcripts for TED videos and saved articles
     private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private boolean restricted = false;
-    private LocalDateTime resourceTimestamp;
-    private LocalDateTime creationDate = LocalDateTime.now();
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
     private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
 
     private boolean deleted = false; // indicates whether this resource has been deleted
@@ -127,10 +131,6 @@ public class Resource extends AbstractResource implements Serializable {
     public Resource() {
     }
 
-    public Resource(ResourceType type) {
-        setType(type);
-    }
-
     /**
      * Copy constructor.
      */
@@ -141,7 +141,7 @@ public class Resource extends AbstractResource implements Serializable {
         setDescription(old.description);
         setUrl(old.url);
         setStorageType(old.storageType);
-        setRights(old.rights.ordinal());
+        setPolicyView(old.policyView.ordinal());
         setSource(old.source);
         setAuthor(old.author);
         setType(old.type);
@@ -152,9 +152,9 @@ public class Resource extends AbstractResource implements Serializable {
         setFileName(old.fileName);
         setFileUrl(old.fileUrl);
         setQuery(old.query);
-        setThumbnail0(old.thumbnail0);
-        setThumbnail2(old.thumbnail2);
-        setThumbnail4(old.thumbnail4);
+        setThumbnailSmall(old.thumbnailSmall);
+        setThumbnailMedium(old.thumbnailMedium);
+        setThumbnailLarge(old.thumbnailLarge);
         setEmbeddedRaw(old.embeddedRaw);
         setDuration(old.duration);
         setWidth(old.width);
@@ -164,8 +164,8 @@ public class Resource extends AbstractResource implements Serializable {
         setOnlineStatus(old.onlineStatus);
         setIdAtService(old.idAtService);
         setRestricted(old.restricted);
-        setResourceTimestamp(LocalDateTime.now());
-        setCreationDate(LocalDateTime.now());
+        setUpdatedAt(LocalDateTime.now());
+        setCreatedAt(LocalDateTime.now());
         setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
@@ -190,7 +190,9 @@ public class Resource extends AbstractResource implements Serializable {
             case glossary:
                 return new GlossaryResource();
             default:
-                return new Resource(type);
+                Resource resource = new Resource();
+                resource.setType(type);
+                return resource;
         }
     }
 
@@ -379,8 +381,12 @@ public class Resource extends AbstractResource implements Serializable {
         this.storageType = type;
     }
 
+    public boolean isWebResource() {
+        return storageType == WEB_RESOURCE;
+    }
+
     public boolean isOfficeResource() {
-        if (getSource() == ResourceService.slideshare) {
+        if (source == ResourceService.slideshare) {
             return false;
         }
 
@@ -399,31 +405,31 @@ public class Resource extends AbstractResource implements Serializable {
         return OnlineStatus.PROCESSING == onlineStatus;
     }
 
-    public int getRights() {
-        return rights.ordinal();
+    public int getPolicyView() {
+        return policyView.ordinal();
     }
 
-    public void setRights(int rights) {
-        switch (rights) {
+    public void setPolicyView(int policyView) {
+        switch (policyView) {
             case 0:
-                this.rights = ResourceViewRights.DEFAULT_RIGHTS;
+                this.policyView = PolicyView.DEFAULT_RIGHTS;
                 break;
             case 1:
-                this.rights = ResourceViewRights.SUBMISSION_READABLE;
+                this.policyView = PolicyView.SUBMISSION_READABLE;
                 break;
             case 2:
-                this.rights = ResourceViewRights.LEARNWEB_READABLE;
+                this.policyView = PolicyView.LEARNWEB_READABLE;
                 break;
             case 3:
-                this.rights = ResourceViewRights.WORLD_READABLE;
+                this.policyView = PolicyView.WORLD_READABLE;
                 break;
             default:
-                log.error("Unknown rights value {}", rights);
+                log.error("Unknown rights value {}", policyView);
         }
     }
 
-    public void setRights(ResourceViewRights rights) {
-        this.rights = rights;
+    public void setPolicyView(PolicyView policyView) {
+        this.policyView = policyView;
     }
 
     /**
@@ -875,78 +881,58 @@ public class Resource extends AbstractResource implements Serializable {
         this.machineDescription = machineDescription;
     }
 
-    public Thumbnail getThumbnail0() {
-        return thumbnail0;
+    public Thumbnail getThumbnailSmall() {
+        return thumbnailSmall;
     }
 
-    public void setThumbnail0(Thumbnail thumbnail0) {
-        this.thumbnail0 = thumbnail0;
+    public void setThumbnailSmall(Thumbnail thumbnailSmall) {
+        this.thumbnailSmall = thumbnailSmall;
     }
 
-    public Thumbnail getThumbnail2() {
-        return thumbnail2;
+    public Thumbnail getThumbnailMedium() {
+        return thumbnailMedium;
     }
 
-    public void setThumbnail2(Thumbnail thumbnail2) {
-        this.thumbnail2 = thumbnail2;
+    public void setThumbnailMedium(Thumbnail thumbnailMedium) {
+        this.thumbnailMedium = thumbnailMedium;
     }
 
-    public Thumbnail getThumbnail4() {
-        return thumbnail4;
+    public Thumbnail getThumbnailLarge() {
+        return thumbnailLarge;
     }
 
-    public void setThumbnail4(Thumbnail thumbnail4) {
-        this.thumbnail4 = thumbnail4;
-    }
-
-    /**
-     * Get combined thumbnail.
-     */
-    public Thumbnail getSmallThumbnail() {
-        return thumbnail0;
+    public void setThumbnailLarge(Thumbnail thumbnailLarge) {
+        this.thumbnailLarge = thumbnailLarge;
     }
 
     /**
-     * Get combined medium thumbnail.
+     * Get combined largest thumbnail.
      */
-    public Thumbnail getMediumThumbnail() {
-        if (null != thumbnail2) {
-            return thumbnail2;
+    public Thumbnail getThumbnailLargest() {
+        if (null != thumbnailLarge) {
+            return thumbnailLarge;
         }
-
-        return thumbnail0;
-    }
-
-    /**
-     * Get combined large (largest) thumbnail.
-     */
-    public Thumbnail getLargestThumbnail() {
-        if (null != thumbnail4) {
-            return thumbnail4;
+        if (null != thumbnailMedium) {
+            return thumbnailMedium;
         }
-        if (null != thumbnail2) {
-            return thumbnail2;
-        }
-        if (null != thumbnail0) {
-            return thumbnail0;
+        if (null != thumbnailSmall) {
+            return thumbnailSmall;
         }
 
         return null;
     }
 
     public void deleteThumbnails() {
-        Collection<File> files = getFiles().values();
-
-        for (File file : files) {
+        for (File file : getFiles().values()) {
             if (file.getType().in(FileType.THUMBNAIL_SMALL, FileType.THUMBNAIL_MEDIUM, FileType.THUMBNAIL_LARGE)) {
                 log.debug("Delete {}", file.getName());
                 Learnweb.dao().getFileDao().deleteSoft(file);
             }
         }
 
-        setThumbnail0(null);
-        setThumbnail2(null);
-        setThumbnail4(null);
+        thumbnailSmall = null;
+        thumbnailMedium = null;
+        thumbnailLarge = null;
     }
 
     public String getEmbedded() {
@@ -1025,12 +1011,6 @@ public class Resource extends AbstractResource implements Serializable {
 
     public void setEmbeddedRaw(String embeddedRaw) {
         this.embeddedRaw = embeddedRaw;
-    }
-
-    @Override
-    public String toString() {
-        return "Resource [id=" + id + ", title=" + title + ", url=" + url + ", storageType=" + storageType +
-            ", source=" + source + ", type=" + type + ", format=" + format + ", date=" + getCreationDate() + "]";
     }
 
     public String getTranscript() {
@@ -1135,20 +1115,20 @@ public class Resource extends AbstractResource implements Serializable {
         this.language = language;
     }
 
-    public LocalDateTime getResourceTimestamp() {
-        return resourceTimestamp;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setResourceTimestamp(LocalDateTime resourceTimestamp) {
-        this.resourceTimestamp = resourceTimestamp;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
@@ -1185,7 +1165,7 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     /**
-     * returns a string representation of the resources path.
+     * Returns a string representation of the resources path.
      */
     @Override
     public String getPath() {
@@ -1199,7 +1179,7 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     /**
-     * returns a string representation of the resources path.
+     * Returns a string representation of the resources path.
      */
     @Override
     public String getPrettyPath() {
@@ -1234,7 +1214,7 @@ public class Resource extends AbstractResource implements Serializable {
             return true;
         }
 
-        switch (rights) {
+        switch (policyView) {
             case WORLD_READABLE:
                 return true;
             case LEARNWEB_READABLE:
@@ -1287,16 +1267,6 @@ public class Resource extends AbstractResource implements Serializable {
         }
 
         return false;
-    }
-
-    public LogEntry getThumbnailUpdateInfo() {
-        /*
-         This method returned a LogEntry for the following query:
-         select * FROM lw_user_log WHERE action=45 AND target_id = ? ORDER BY created_at DESC LIMIT 1
-         setInt(1, getResource_id)
-         But the implementation was bad and it was very rarely used. Let's see if someone misses it. - @kemkes 02.04.2020
-         */
-        return null;
     }
 
     /**
@@ -1388,15 +1358,22 @@ public class Resource extends AbstractResource implements Serializable {
         log.debug("Deserialize resource: {}", id);
         try {
             return Learnweb.dao().getResourceDao().findByIdOrElseThrow(id);
-        } catch (RuntimeException e) {
-            if (!e.getMessage().startsWith("Learnweb is not initialized correctly.")) { // ignore this error
-                log.fatal("Can't load resource: {}", id, e);
-            }
         } catch (Exception e) {
             log.fatal("Can't load resource: {}", id, e);
         }
-
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("id", id)
+            .append("title", title)
+            .append("url", url)
+            .append("storageType", storageType)
+            .append("source", source)
+            .append("type", type)
+            .toString();
     }
 
     public static Comparator<Resource> createIdComparator() {
