@@ -9,11 +9,6 @@ public class Thumbnail implements Serializable {
     private final String url;
     private final int fileId;
 
-    public Thumbnail(String url, int fileId) {
-        this.url = url;
-        this.fileId = fileId;
-    }
-
     public Thumbnail(String url) {
         this.url = url;
         this.fileId = 0;

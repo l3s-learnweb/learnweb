@@ -114,7 +114,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             Image img = new Image(event.getFile().getInputStream());
 
             // save image file
-            File file = new File(File.TYPE.PROFILE_PICTURE, "user_icon.png", "image/png");
+            File file = new File(File.FileType.PROFILE_PICTURE, "profile_picture.png", "image/png");
             Image thumbnail = img.getResizedToSquare2(200, 0.0);
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();

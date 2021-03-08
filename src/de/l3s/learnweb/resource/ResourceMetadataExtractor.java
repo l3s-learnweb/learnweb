@@ -22,7 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
-import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
@@ -347,7 +347,7 @@ public class ResourceMetadataExtractor {
     }
 
     public void processFileResource(Resource resource) {
-        File mainFile = resource.getFile(TYPE.MAIN);
+        File mainFile = resource.getFile(FileType.MAIN);
         FileInfo fileInfo = this.getFileInfo(mainFile.getInputStream(), mainFile.getName());
         processFileResource(resource, fileInfo);
     }

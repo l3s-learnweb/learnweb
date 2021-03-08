@@ -53,8 +53,8 @@ public final class FileUtility {
 
     public static String getInfoForKey(File file) {
         String infoForKey = null;
-        if (file != null && file.getLastModified() != null) {
-            infoForKey = Long.toString(file.getLastModified().toEpochSecond(ZoneOffset.UTC)) + file.getId();
+        if (file != null && file.getUpdatedAt() != null) {
+            infoForKey = Long.toString(file.getUpdatedAt().toEpochSecond(ZoneOffset.UTC)) + file.getId();
         }
         return infoForKey;
     }

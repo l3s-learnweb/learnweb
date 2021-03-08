@@ -2,26 +2,23 @@ package de.l3s.learnweb.resource;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.HasId;
-import de.l3s.util.StringHelper;
 
 public class File implements Serializable, HasId {
     private static final long serialVersionUID = 6573841175365679674L;
 
-    private static final Pattern NAME_FORBIDDEN_CHARACTERS = Pattern.compile("[\\\\/:*?\"<>|]");
-
-    public enum TYPE {
+    public enum FileType {
         SYSTEM_FILE, // for example course header images
         ORGANISATION_BANNER,
         PROFILE_PICTURE,
@@ -34,40 +31,49 @@ public class File implements Serializable, HasId {
         DOC_CHANGES, // zip file with changes for office resource
         OBSOLETE; // something that probably will not be used anymore, like thumbnail1 and thumbnail3
 
-        public boolean in(TYPE... types) {
-            return Arrays.stream(types).anyMatch(type -> type == this);
+        public boolean in(FileType... values) {
+            return Arrays.stream(values).anyMatch(value -> value == this);
         }
     }
 
+    // entity fields
     private int id;
     private boolean deleted;
     private int resourceId;
+    private FileType type;
     private String name;
     private String mimeType;
-    private TYPE type;
-    private String url;
-    private LocalDateTime lastModified;
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
 
+    // runtime fields
+    private String url;
+    private String absoluteUrl;
     private java.io.File actualFile;
-    private boolean actualFileExists = true; // when the actual file doesn't exist it is replaced by an error image
+    private Boolean exists; // `true` if the actual file exist on this machine
 
     public File() {
     }
 
-    public File(final TYPE type, final String name, final String mimeType) {
+    public File(final FileType type, final String name, final String mimeType) {
         this.type = type;
-        this.name = name;
+        setName(name);
+        this.mimeType = mimeType;
+    }
+
+    public File(final FileType type, int resourceId, final String name, final String mimeType) {
+        this.type = type;
+        this.resourceId = resourceId;
+        setName(name);
         this.mimeType = mimeType;
     }
 
     public File(final File file) {
-        this.id = 0;
         this.deleted = file.isDeleted();
         this.resourceId = file.getResourceId();
         this.type = file.getType();
         this.name = file.getName();
         this.mimeType = file.getMimeType();
-        this.lastModified = file.getLastModified();
     }
 
     @Override
@@ -87,12 +93,28 @@ public class File implements Serializable, HasId {
         this.deleted = deleted;
     }
 
+    public int getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(int resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public FileType getType() {
+        return type;
+    }
+
+    public void setType(FileType type) {
+        this.type = type;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-        this.name = NAME_FORBIDDEN_CHARACTERS.matcher(StringUtils.defaultString(name)).replaceAll("_"); // replace invalid characters
+        this.name = StringUtils.replaceChars(name, "\\/:*?\"<>|", "_");
     }
 
     public String getMimeType() {
@@ -103,66 +125,63 @@ public class File implements Serializable, HasId {
         this.mimeType = mimeType;
     }
 
-    public int getResourceId() {
-        return resourceId;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setResourceId(int resourceId) {
-        this.resourceId = resourceId;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getUrl() {
         if (url == null) {
-            url = "../download/" + id + "/" + StringHelper.urlEncode(name);
+            url = "../download/" + id + "/" + (name != null ? URLEncoder.encode(name, StandardCharsets.UTF_8) : "unknown");
         }
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getAbsoluteUrl() {
-        return Learnweb.config().getServerUrl() + getUrl().substring(2);
+        if (absoluteUrl == null) {
+            absoluteUrl = Learnweb.config().getServerUrl() + getUrl().substring(2);
+        }
+        return absoluteUrl;
     }
 
     /**
      * @return The actual file in the file system
      */
     public java.io.File getActualFile() {
-        if (null == actualFile && id != 0) {
+        if (null == actualFile) {
+            if (id == 0) {
+                throw new IllegalStateException("The file has not been saved yet, use FileDao.save() first");
+            }
+
             actualFile = new java.io.File(Learnweb.config().getFileManagerFolder(), id + ".dat");
-        } else if (null == actualFile) {
-            throw new IllegalStateException("Either the file has not been saved yet, use FileManager.save() first. Or the file isn't present on this machine.");
         }
         return actualFile;
     }
 
-    protected void setActualFile(java.io.File actualFile) {
-        this.actualFile = actualFile;
-    }
-
-    public boolean exists() {
-        return actualFileExists;
-    }
-
-    public void setExists(boolean actualFileExists) {
-        this.actualFileExists = actualFileExists;
-    }
-
-    public OutputStream getOutputStream() throws FileNotFoundException {
-        // if the actual file doesn't exist it is replaced with an error image. Make sure that this image isn't changed
-        if (!exists()) {
-            throw new FileNotFoundException();
+    public boolean isExists() {
+        if (exists == null) {
+            exists = getActualFile().exists();
         }
-        return new FileOutputStream(getActualFile());
+        return exists;
     }
 
     public InputStream getInputStream() {
         try {
             return new FileInputStream(getActualFile());
         } catch (FileNotFoundException e) { // the FileManager has to take care that this exception never occurs
-            throw new IllegalStateException(e);
+            exists = false;
+            throw new IllegalStateException("The file isn't present on this machine", e);
         }
     }
 
@@ -170,25 +189,18 @@ public class File implements Serializable, HasId {
         return getActualFile().length();
     }
 
-    public LocalDateTime getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(LocalDateTime lastModified) {
-        this.lastModified = lastModified;
-    }
-
     @Override
     public String toString() {
-        return "File [fileId=" + id + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId +
-            ", type=" + type + ", url=" + url + ", lastModified=" + lastModified + "]";
-    }
-
-    public TYPE getType() {
-        return type;
-    }
-
-    public void setType(TYPE type) {
-        this.type = type;
+        return new ToStringBuilder(this)
+            .append("id", id)
+            .append("deleted", deleted)
+            .append("resourceId", resourceId)
+            .append("name", name)
+            .append("mimeType", mimeType)
+            .append("type", type)
+            .append("url", url)
+            .append("updatedAt", updatedAt)
+            .append("createdAt", createdAt)
+            .toString();
     }
 }

@@ -20,7 +20,7 @@ import org.primefaces.model.file.UploadedFile;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
@@ -136,7 +136,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
 
             log.debug("Saving the file...");
-            File file = new File(TYPE.MAIN, info.getFileName(), info.getMimeType());
+            File file = new File(FileType.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, uploadedFile.getInputStream());
 
             resource.addFile(file);
@@ -191,7 +191,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(new FileInputStream(sampleFile), resource.getFileName());
 
             log.debug("Saving file...");
-            File file = new File(TYPE.MAIN, info.getFileName(), info.getMimeType());
+            File file = new File(FileType.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, new FileInputStream(sampleFile));
 
             resource.setTitle(info.getTitle());

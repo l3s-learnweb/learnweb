@@ -23,7 +23,7 @@ import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.File;
-import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.Organisation.Option;
@@ -65,7 +65,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         try {
             Image img = new Image(event.getFile().getInputStream());
 
-            File file = new File(TYPE.ORGANISATION_BANNER, "banner_image.png", "image/png");
+            File file = new File(FileType.ORGANISATION_BANNER, "organization_banner.png", "image/png");
             Image thumbnail = img.getResized(324, 100);
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();

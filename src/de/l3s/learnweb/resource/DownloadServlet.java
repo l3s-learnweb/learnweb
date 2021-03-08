@@ -119,8 +119,9 @@ public class DownloadServlet extends HttpServlet {
                 return;
             }
 
-            long lastModified = file.getLastModified().toEpochSecond(ZoneOffset.UTC);
-            String eTag = file.getName() + "_" + file.getLength() + "_" + lastModified;
+            long length = file.getLength();
+            long lastModified = file.getUpdatedAt().toEpochSecond(ZoneOffset.UTC);
+            String eTag = file.getName() + "_" + length + "_" + lastModified;
             long expires = System.currentTimeMillis() + CACHE_DURATION_IN_MS;
 
             /* Validate request headers for caching */
@@ -168,7 +169,6 @@ public class DownloadServlet extends HttpServlet {
 
             /* Validate and process range */
 
-            long length = file.getLength();
             // Prepare some variables. The full Range represents the complete file.
             Range fullRange = new Range(0, length - 1, length);
             List<Range> ranges = new ArrayList<>();
@@ -225,7 +225,7 @@ public class DownloadServlet extends HttpServlet {
                 }
             }
 
-            if (file.getType() == File.TYPE.MAIN) {
+            if (file.getType() == File.FileType.MAIN) {
                 HttpSession session = request.getSession(true);
                 User user = null;
                 Integer userId = (Integer) session.getAttribute("learnweb_user_id");

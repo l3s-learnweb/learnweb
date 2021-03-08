@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.maintenance.MaintenanceTask;
@@ -25,6 +26,7 @@ public final class CopyFilesOfCopiedResources extends MaintenanceTask {
     @Override
     public void run(boolean dryRun) {
         ResourceDao resourceDao = getLearnweb().getDaoProvider().getResourceDao();
+        FileDao fileDao = getLearnweb().getDaoProvider().getFileDao();
         List<Resource> resources = resourceDao.withHandle(handle -> handle
             .select("SELECT r.* FROM lw_resource r JOIN lw_file f ON r.thumbnail0_file_id = f.file_id WHERE f.resource_id != r.resource_id LIMIT 100")
             .map(new ResourceDao.ResourceMapper()).list());
@@ -36,7 +38,7 @@ public final class CopyFilesOfCopiedResources extends MaintenanceTask {
             long sizeBytes = 0;
 
             for (Resource resource : resources) {
-                List<File> originalFiles = getLearnweb().getDaoProvider().getFileDao().findByResourceId(resource.getOriginalResourceId());
+                List<File> originalFiles = fileDao.findByResourceId(resource.getOriginalResourceId());
 
                 if (originalFiles == null || originalFiles.isEmpty()) {
                     log.warn("No files of origin {} for resource {}!", resource.getOriginalResourceId(), resource.getId());

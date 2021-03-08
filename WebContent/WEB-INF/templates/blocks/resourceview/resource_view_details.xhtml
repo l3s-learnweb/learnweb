@@ -33,7 +33,7 @@
 						<i class="fas fa-fw fa-download" aria-hidden="true"></i>
 						#{res.originalFile.name}
 					</a>
-					(Backup <h:outputText value="#{res.originalFile.lastModified}">
+					(Backup <h:outputText value="#{res.originalFile.createdAt}">
 						<f:convertDateTime type="localDate" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 					</h:outputText>)
 				</div>

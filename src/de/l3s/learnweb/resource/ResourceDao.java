@@ -163,7 +163,7 @@ public interface ResourceDao extends SqlObject, Serializable {
             long sizeBytes = 0;
 
             for (File file : files) {
-                if (file.getType().in(File.TYPE.DOC_CHANGES, File.TYPE.DOC_HISTORY)) {
+                if (file.getType().in(File.FileType.DOC_CHANGES, File.FileType.DOC_HISTORY)) {
                     continue; // skip them
                 }
 
@@ -176,19 +176,19 @@ public interface ResourceDao extends SqlObject, Serializable {
                 getFileDao().save(copyFile, file.getInputStream());
                 resource.addFile(copyFile);
 
-                if (file.getType() == File.TYPE.MAIN) {
+                if (file.getType() == File.FileType.MAIN) {
                     resource.setFileId(file.getId());
                 }
 
-                if (file.getType() == File.TYPE.THUMBNAIL_SMALL) {
+                if (file.getType() == File.FileType.THUMBNAIL_SMALL) {
                     resource.setThumbnail0(new Thumbnail(file));
                 }
 
-                if (file.getType() == File.TYPE.THUMBNAIL_MEDIUM) {
+                if (file.getType() == File.FileType.THUMBNAIL_MEDIUM) {
                     resource.setThumbnail2(new Thumbnail(file));
                 }
 
-                if (file.getType() == File.TYPE.THUMBNAIL_LARGE) {
+                if (file.getType() == File.FileType.THUMBNAIL_LARGE) {
                     resource.setThumbnail4(new Thumbnail(file));
                 }
             }
@@ -205,8 +205,8 @@ public interface ResourceDao extends SqlObject, Serializable {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("resource_id", SqlHelper.toNullable(resource.getId()));
         params.put("title", resource.getTitle());
-        params.put("description", resource.getDescription());
-        params.put("url", resource.getUrl());
+        params.put("description", SqlHelper.toNullable(resource.getDescription()));
+        params.put("url", SqlHelper.toNullable(resource.getUrl()));
         params.put("storage_type", resource.getStorageType());
         params.put("rights", resource.getRights());
         params.put("source", resource.getSource().name());
@@ -215,10 +215,10 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("owner_user_id", SqlHelper.toNullable(resource.getUserId()));
         params.put("rating", resource.getRatingSum());
         params.put("rate_number", resource.getRateNumber());
-        params.put("query", resource.getQuery());
-        params.put("max_image_url", resource.getMaxImageUrl());
+        params.put("query", SqlHelper.toNullable(resource.getQuery()));
+        params.put("max_image_url", SqlHelper.toNullable(resource.getMaxImageUrl()));
         params.put("original_resource_id", SqlHelper.toNullable(resource.getOriginalResourceId()));
-        params.put("machine_description", resource.getMachineDescription());
+        params.put("machine_description", SqlHelper.toNullable(resource.getMachineDescription()));
         params.put("author", SqlHelper.toNullable(resource.getAuthor()));
         params.put("file_id", SqlHelper.toNullable(resource.getFileId()));
         params.put("file_name", resource.getFileName());
@@ -254,7 +254,9 @@ public interface ResourceDao extends SqlObject, Serializable {
         // resource.setLocation(getLocation(resource));
 
         // persist the relation between the resource and its files
-        getFileDao().updateResource(resource, resource.getFiles().values());
+        if (!resource.getFiles().isEmpty()) {
+            getFileDao().updateResourceId(resource, resource.getFiles().values());
+        }
 
         Learnweb.getInstance().getSolrClient().reIndexResource(resource);
     }
@@ -277,7 +279,7 @@ public interface ResourceDao extends SqlObject, Serializable {
      * Usually you have to call deleteSoft()
      */
     default void deleteHard(Resource resource) {
-        for (File file : getFileDao().findAllByResourceId(resource.getId())) {
+        for (File file : getFileDao().findByResourceId(resource.getId())) {
             getFileDao().deleteSoft(file);
         }
 

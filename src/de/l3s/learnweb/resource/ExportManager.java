@@ -35,7 +35,7 @@ import com.hp.gagawa.java.elements.Tr;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.user.User;
 
 public class ExportManager {
@@ -117,18 +117,18 @@ public class ExportManager {
             Folder folder = learnweb.getDaoProvider().getFolderDao().findByIdOrElseThrow(resource.getFolderId());
             String folderName = createFolderPath(folder, groupRootFolder);
 
-            File mainFile = resource.getFile(TYPE.MAIN);
+            File mainFile = resource.getFile(FileType.MAIN);
 
             // TODO @astappiev: remove when all files copied from originals
             if (mainFile == null && resource.getOriginalResourceId() != 0) {
                 Optional<Resource> originalResource = learnweb.getDaoProvider().getResourceDao().findById(resource.getOriginalResourceId());
                 if (originalResource.isPresent()) {
-                    mainFile = originalResource.get().getFile(TYPE.MAIN);
+                    mainFile = originalResource.get().getFile(FileType.MAIN);
                 }
             }
 
             if (mainFile != null) {
-                files.put(folderName + resource.getFileName(), new FileInputStream(mainFile.getActualFile()));
+                files.put(folderName + mainFile.getName(), new FileInputStream(mainFile.getActualFile()));
             } else {
                 log.error("Can't get main file for resource {}", resource.getId());
             }

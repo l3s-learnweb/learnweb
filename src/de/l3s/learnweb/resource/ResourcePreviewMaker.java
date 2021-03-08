@@ -17,7 +17,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 
 import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.Learnweb;
-import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.office.ConverterService;
 import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
@@ -87,10 +87,7 @@ public class ResourcePreviewMaker implements Serializable {
             // if a web resource is not a simple website then download it
             if (resource.getStorageType() == Resource.WEB_RESOURCE && resource.getType() != ResourceType.website
                 && (resource.getSource() == ResourceService.bing || resource.getSource() == ResourceService.internet)) {
-                File file = new File();
-                file.setType(TYPE.MAIN);
-                file.setName(resource.getFileName());
-                file.setMimeType(resource.getFormat());
+                File file = new File(FileType.MAIN, resource.getId(), resource.getFileName(), resource.getFormat());
                 fileDao.save(file, UrlHelper.getInputStream(resource.getUrl()));
 
                 resource.addFile(file);
@@ -99,8 +96,8 @@ public class ResourcePreviewMaker implements Serializable {
 
             if (resource.getType() == ResourceType.website) {
                 processWebsite(resource);
-            } else if (resource.getFile(TYPE.MAIN) != null) { // resource.getStorageType() == Resource.LEARNWEB_RESOURCE &&
-                inputStream = resource.getFile(TYPE.MAIN).getInputStream();
+            } else if (resource.getFile(FileType.MAIN) != null) {
+                inputStream = resource.getFile(FileType.MAIN).getInputStream();
                 processFile(resource, inputStream);
             } else if (resource.getStorageType() == Resource.WEB_RESOURCE && StringUtils.isNotEmpty(resource.getMaxImageUrl())) {
                 inputStream = UrlHelper.getInputStream(resource.getMaxImageUrl());
@@ -145,7 +142,7 @@ public class ResourcePreviewMaker implements Serializable {
 
     private void processOfficeDocument(Resource resource) {
         try {
-            String thumbnailUrl = ConverterService.convert(officeConverterService, resource.getFile(TYPE.MAIN));
+            String thumbnailUrl = ConverterService.convert(officeConverterService, resource.getFile(FileType.MAIN));
             InputStream thumbnailStream = UrlHelper.getInputStream(thumbnailUrl);
             if (thumbnailStream == null) {
                 throw new IllegalStateException("Error during conversion : stream is null");
@@ -166,10 +163,7 @@ public class ResourcePreviewMaker implements Serializable {
         resource.setHeight(img.getHeight());
 
         Image thumbnail = img.getResized(THUMBNAIL_LARGE_WIDTH, THUMBNAIL_LARGE_HEIGHT);
-        File file = new File();
-        file.setType(TYPE.THUMBNAIL_LARGE);
-        file.setName("thumbnail4.png");
-        file.setMimeType("image/png");
+        File file = new File(FileType.THUMBNAIL_LARGE, resource.getId(), "thumbnail4.png", "image/png");
         fileDao.save(file, thumbnail.getInputStream());
         thumbnail.dispose();
 
@@ -185,10 +179,7 @@ public class ResourcePreviewMaker implements Serializable {
         // process image
         Image img = new Image(thumbnailUrl.openStream());
 
-        File file = new File();
-        file.setType(TYPE.THUMBNAIL_LARGE);
-        file.setName("website.png");
-        file.setMimeType("image/png");
+        File file = new File(FileType.THUMBNAIL_LARGE, resource.getId(), "website.png", "image/png");
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
@@ -203,10 +194,7 @@ public class ResourcePreviewMaker implements Serializable {
         // process image
         Image img = new Image(thumbnailUrl.openStream());
 
-        File file = new File();
-        file.setType(TYPE.THUMBNAIL_LARGE);
-        file.setName("wayback_thumbnail.png");
-        file.setMimeType("image/png");
+        File file = new File(FileType.THUMBNAIL_LARGE, resource.getId(), "wayback_thumbnail.png", "image/png");
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
@@ -221,7 +209,7 @@ public class ResourcePreviewMaker implements Serializable {
         try {
             if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video
                 && (resource.getMediumThumbnail() == null || resource.getMediumThumbnail().getFileId() == 0)) {
-                originalFile = resource.getFile(TYPE.MAIN);
+                originalFile = resource.getFile(FileType.MAIN);
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 
                 java.io.File tmpDir = new java.io.File(System.getProperty("java.io.tmpdir"), originalFile.getId() + "_thumbnails");
@@ -257,7 +245,7 @@ public class ResourcePreviewMaker implements Serializable {
                 && ffProbeResult.streams.stream().anyMatch(videoStream -> videoStream.codec_name.equals("h264"));
 
             if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType() == ResourceType.video && !isSupported) {
-                originalFile = resource.getFile(TYPE.MAIN);
+                originalFile = resource.getFile(FileType.MAIN);
 
                 java.io.File tempVideoFile = java.io.File.createTempFile(originalFile.getId() + "_video_", ".mp4");
 
@@ -265,15 +253,12 @@ public class ResourcePreviewMaker implements Serializable {
                 convertVideo(ffProbeResult, outputPath);
 
                 // move original file
-                originalFile.setType(TYPE.ORIGINAL);
+                originalFile.setType(FileType.ORIGINAL);
                 fileDao.save(originalFile);
                 resource.addFile(originalFile);
 
                 // create new file
-                File convertedFile = new File();
-                convertedFile.setType(TYPE.MAIN);
-                convertedFile.setName(StringHelper.filenameChangeExt(originalFile.getName(), "mp4"));
-                convertedFile.setMimeType("video/mp4");
+                File convertedFile = new File(FileType.MAIN, resource.getId(), StringHelper.filenameChangeExt(originalFile.getName(), "mp4"), "video/mp4");
                 fileDao.save(convertedFile, new FileInputStream(outputPath));
                 tempVideoFile.delete();
 
@@ -374,10 +359,7 @@ public class ResourcePreviewMaker implements Serializable {
 
         try {
             Image thumbnail = img.getCroppedAndResized(THUMBNAIL_SMALL_WIDTH, THUMBNAIL_SMALL_HEIGHT);
-            File file = new File();
-            file.setType(TYPE.THUMBNAIL_SMALL);
-            file.setName("thumbnail0.png");
-            file.setMimeType("image/png");
+            File file = new File(FileType.THUMBNAIL_SMALL, resource.getId(), "thumbnail0.png", "image/png");
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);
@@ -388,10 +370,7 @@ public class ResourcePreviewMaker implements Serializable {
             }
 
             thumbnail = img.getResized(THUMBNAIL_MEDIUM_WIDTH, THUMBNAIL_MEDIUM_HEIGHT, croppedToAspectRatio);
-            file = new File();
-            file.setType(TYPE.THUMBNAIL_MEDIUM);
-            file.setName("thumbnail2.png");
-            file.setMimeType("image/png");
+            file = new File(FileType.THUMBNAIL_MEDIUM, resource.getId(), "thumbnail2.png", "image/png");
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);

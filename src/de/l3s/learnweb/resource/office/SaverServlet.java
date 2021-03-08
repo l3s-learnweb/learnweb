@@ -21,7 +21,7 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.resource.File;
-import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
@@ -100,11 +100,7 @@ public class SaverServlet extends HttpServlet {
     private void saveNewDocument(CallbackData data, int resourceId, User user, String sessionId) throws IOException {
         Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
 
-        File file = new File();
-        file.setType(TYPE.MAIN);
-        file.setName(resource.getFileName());
-        file.setMimeType(resource.getFormat());
-        file.setResourceId(resource.getId());
+        File file = new File(FileType.MAIN, resource.getId(), resource.getMainFile().getName(), resource.getMainFile().getMimeType());
         fileDao.save(file, UrlHelper.getInputStream(data.getUrl()));
 
         resource.addFile(file);
@@ -121,10 +117,8 @@ public class SaverServlet extends HttpServlet {
         File previousFile = new File(file);
 
         // save copy of existing file as a history file
-        previousFile.setType(TYPE.DOC_HISTORY);
+        previousFile.setType(FileType.DOC_HISTORY);
         fileDao.save(previousFile, file.getInputStream());
-
-        file.setLastModified(null); // the correct value will be set on save
         fileDao.save(file, UrlHelper.getInputStream(data.getUrl()));
 
         try {
@@ -144,11 +138,7 @@ public class SaverServlet extends HttpServlet {
     }
 
     private void saveDocumentHistory(CallbackData data, File file) throws IOException {
-        File changesFile = new File();
-        changesFile.setResourceId(file.getResourceId());
-        changesFile.setType(TYPE.DOC_CHANGES);
-        changesFile.setName("changes.zip");
-        changesFile.setMimeType("zip");
+        File changesFile = new File(FileType.DOC_CHANGES, file.getResourceId(), "changes.zip", "application/zip");
         fileDao.save(changesFile, UrlHelper.getInputStream(data.getChangesUrl()));
 
         History history = data.getHistory();

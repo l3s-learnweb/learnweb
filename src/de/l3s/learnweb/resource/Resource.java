@@ -30,7 +30,7 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
-import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
@@ -841,14 +841,9 @@ public class Resource extends AbstractResource implements Serializable {
      */
     public void addFile(File file) {
         getFiles().put(file.getType().ordinal(), file);
-
-        if (id != 0 && file.getResourceId() == 0) { // the resource is already stored, the new file needs to be added to the database
-            file.setResourceId(id);
-            Learnweb.dao().getFileDao().updateResource(this, file);
-        }
     }
 
-    public File getFile(File.TYPE fileType) {
+    public File getFile(FileType fileType) {
         return getFiles().get(fileType.ordinal());
     }
 
@@ -856,14 +851,14 @@ public class Resource extends AbstractResource implements Serializable {
      * @return If the uploaded file was modified (e.g. a video or office document) we keep a copy of the original file
      */
     public File getOriginalFile() {
-        return getFile(TYPE.ORIGINAL);
+        return getFile(FileType.ORIGINAL);
     }
 
     /**
      * @return If the uploaded file was modified (e.g. a video or office document) we keep a copy of the original file
      */
     public File getMainFile() {
-        return getFile(TYPE.MAIN);
+        return getFile(FileType.MAIN);
     }
 
     /**
@@ -943,7 +938,7 @@ public class Resource extends AbstractResource implements Serializable {
         Collection<File> files = getFiles().values();
 
         for (File file : files) {
-            if (file.getType().in(File.TYPE.THUMBNAIL_SMALL, File.TYPE.THUMBNAIL_MEDIUM, File.TYPE.THUMBNAIL_LARGE)) {
+            if (file.getType().in(FileType.THUMBNAIL_SMALL, FileType.THUMBNAIL_MEDIUM, FileType.THUMBNAIL_LARGE)) {
                 log.debug("Delete {}", file.getName());
                 Learnweb.dao().getFileDao().deleteSoft(file);
             }
