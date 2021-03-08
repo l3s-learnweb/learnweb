@@ -59,6 +59,11 @@ public interface ForumTopicDao extends SqlObject, Serializable {
     void insertUserVisit(int topicId, int userId);
 
     default void save(ForumTopic topic) {
+        topic.setUpdatedAt(SqlHelper.now());
+        if (topic.getCreatedAt() == null) {
+            topic.setCreatedAt(SqlHelper.now());
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("topic_id", SqlHelper.toNullable(topic.getId()));
         params.put("group_id", topic.getGroupId());
@@ -69,8 +74,8 @@ public interface ForumTopicDao extends SqlObject, Serializable {
         params.put("replies", topic.getReplies());
         params.put("last_post_id", SqlHelper.toNullable(topic.getLastPostId()));
         params.put("last_post_user_id", SqlHelper.toNullable(topic.getLastPostUserId()));
-        params.put("updated_at", topic.getLastPostDate());
-        params.put("created_at", topic.getDate());
+        params.put("updated_at", topic.getUpdatedAt());
+        params.put("created_at", topic.getCreatedAt());
 
         Optional<Integer> topicId = SqlHelper.handleSave(getHandle(), "lw_forum_topic", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -90,8 +95,8 @@ public interface ForumTopicDao extends SqlObject, Serializable {
             topic.setReplies(rs.getInt("replies"));
             topic.setLastPostId(rs.getInt("last_post_id"));
             topic.setLastPostUserId(rs.getInt("last_post_user_id"));
-            topic.setLastPostDate(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
-            topic.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            topic.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+            topic.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return topic;
         }
     }

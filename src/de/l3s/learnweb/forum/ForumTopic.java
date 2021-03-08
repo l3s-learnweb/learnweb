@@ -15,13 +15,13 @@ public class ForumTopic implements Serializable, Deletable {
     private int userId;
     private int groupId;
     private String title;
-    private LocalDateTime date;
     private int views;
     private int replies;
     private int lastPostId;
-    private LocalDateTime lastPostDate;
     private int lastPostUserId;
     private boolean deleted;
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
 
     // cached values
     private transient Group group;
@@ -73,14 +73,6 @@ public class ForumTopic implements Serializable, Deletable {
         this.groupId = groupId;
     }
 
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
     public int getId() {
         return id;
     }
@@ -121,14 +113,6 @@ public class ForumTopic implements Serializable, Deletable {
         this.lastPostId = lastPostId;
     }
 
-    public LocalDateTime getLastPostDate() {
-        return lastPostDate;
-    }
-
-    public void setLastPostDate(LocalDateTime lastPostDate) {
-        this.lastPostDate = lastPostDate;
-    }
-
     @Override
     public boolean isDeleted() {
         return deleted;
@@ -138,9 +122,25 @@ public class ForumTopic implements Serializable, Deletable {
         this.deleted = deleted;
     }
 
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
-        return "ForumTopic [id=" + id + ", userId=" + userId + ", groupId=" + groupId + ", title=" + title + ", date=" + date + ", views=" + views
-            + ", replies=" + replies + ", lastPostId=" + lastPostId + ", lastPostDate=" + lastPostDate + "]";
+        return "ForumTopic [id=" + id + ", userId=" + userId + ", groupId=" + groupId + ", title=" + title + ", date=" + createdAt + ", views=" + views
+            + ", replies=" + replies + ", lastPostId=" + lastPostId + ", lastPostDate=" + updatedAt + "]";
     }
 }

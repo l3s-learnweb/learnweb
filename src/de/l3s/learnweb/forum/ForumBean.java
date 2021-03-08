@@ -1,7 +1,6 @@
 package de.l3s.learnweb.forum;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -59,26 +58,21 @@ public class ForumBean extends ApplicationBean implements Serializable {
     }
 
     public String onSavePost() {
-        LocalDateTime now = LocalDateTime.now();
-
         ForumTopic topic = new ForumTopic();
         topic.setGroupId(groupId);
         topic.setTitle(newTopicTitle);
         topic.setUserId(getUser().getId());
-        topic.setDate(now);
         topic.setLastPostUserId(getUser().getId());
-        topic.setLastPostDate(now);
         forumTopicDao.save(topic);
 
         ForumPost post = new ForumPost();
         post.setUserId(getUser().getId());
-        post.setDate(now);
         post.setText(newTopicText);
         post.setCategory(newTopicCategory);
         post.setTopicId(topic.getId());
         forumPostDao.save(post);
 
-        forumTopicDao.updateIncreaseReplies(post.getTopicId(), post.getId(), post.getUserId(), post.getDate());
+        forumTopicDao.updateIncreaseReplies(post.getTopicId(), post.getId(), post.getUserId(), post.getCreatedAt());
         post.getUser().incForumPostCount();
 
         log(Action.forum_topic_added, groupId, topic.getId(), newTopicTitle);

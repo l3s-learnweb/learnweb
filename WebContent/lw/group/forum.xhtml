@@ -54,7 +54,7 @@
 
 			<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
 				<h:link outcome="/lw/group/forum_topic.jsf?topic_id=#{topic.id}">
-					<ui:fragment rendered="#{userBean.user.lastLoginDate lt topic.lastPostDate}">
+					<ui:fragment rendered="#{userBean.user.lastLoginDate lt topic.updatedAt}">
 						<i class="fas fa-fw fa-envelope" aria-hidden="true"></i>
 					</ui:fragment>
 					<h:outputText value="#{topic.title}"/>
@@ -73,8 +73,8 @@
 				<h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
 			</p:column>
 
-			<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.lastPostDate}">
-				<h:outputText value="#{topic.lastPostDate}" styleClass="d-block">
+			<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.updatedAt}">
+				<h:outputText value="#{topic.updatedAt}" styleClass="d-block">
 					<f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
 				</h:outputText>
 				<div>#{msg.by} <h:link value="#{topic.lastPostUser.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/></div>

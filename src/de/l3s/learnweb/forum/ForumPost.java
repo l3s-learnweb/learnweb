@@ -17,12 +17,12 @@ public class ForumPost implements Serializable, Deletable {
     private int topicId;
     @NotBlank
     private String text;
-    private LocalDateTime date;
     private int editCount;
-    private LocalDateTime lastEditDate;
     private int editUserId;
     private boolean deleted;
     private String category;
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
 
     // cached values
     private transient User user;
@@ -84,31 +84,12 @@ public class ForumPost implements Serializable, Deletable {
         this.text = text;
     }
 
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-        if (this.lastEditDate == null) {
-            this.lastEditDate = date;
-        }
-    }
-
     public int getEditCount() {
         return editCount;
     }
 
     public void setEditCount(int editCount) {
         this.editCount = editCount;
-    }
-
-    public LocalDateTime getLastEditDate() {
-        return lastEditDate;
-    }
-
-    public void setLastEditDate(LocalDateTime lastEditDate) {
-        this.lastEditDate = lastEditDate;
     }
 
     public int getEditUserId() {
@@ -150,9 +131,25 @@ public class ForumPost implements Serializable, Deletable {
         this.deleted = deleted;
     }
 
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
-        return "ForumPost [id=" + id + ", userId=" + userId + ", topicId=" + topicId + ", text=" + text + ", date=" + date + ", editCount=" + editCount
-            + ", lastEditDate=" + lastEditDate + ", editUserId=" + editUserId + "]";
+        return "ForumPost [id=" + id + ", userId=" + userId + ", topicId=" + topicId + ", text=" + text + ", date=" + createdAt + ", editCount=" + editCount
+            + ", lastEditDate=" + updatedAt + ", editUserId=" + editUserId + "]";
     }
 }

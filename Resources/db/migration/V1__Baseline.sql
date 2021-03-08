@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `lw_bounces` (
     `received` timestamp NOT NULL,
     `code` varchar(10) NOT NULL,
     `description` varchar(64) DEFAULT NULL,
-    UNIQUE KEY `lw_bounces_address` (`address`)
+    UNIQUE KEY `lw_bounces_email` (`email`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_comment` (
@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `group_id` int(10) unsigned DEFAULT NULL,
     `folder_id` int(10) unsigned DEFAULT NULL,
     `title` varchar(1000) NOT NULL,
-    `description` mediumtext NOT NULL,
+    `description` mediumtext DEFAULT NULL,
     `url` varchar(4000) DEFAULT NULL,
     `storage_type` tinyint(1) NOT NULL,
     `rights` tinyint(1) NOT NULL,
@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `id_at_service` varchar(100) DEFAULT NULL,
     `rating` int(11) NOT NULL,
     `rate_number` int(11) NOT NULL,
-    `file_id` int(10) unsigned NOT NULL,
+    `file_id` int(10) unsigned DEFAULT NULL,
     `file_name` varchar(200) DEFAULT NULL,
     `file_url` varchar(1000) DEFAULT NULL,
     `max_image_url` varchar(1000) DEFAULT NULL,
@@ -506,7 +506,7 @@ ALTER TABLE `lw_course` ADD CONSTRAINT `FK_lw_course_lw_organisation` FOREIGN KE
 ALTER TABLE `lw_comment` ADD CONSTRAINT `FK_lw_comment_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_comment` ADD CONSTRAINT `FK_lw_comment_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_file` ADD CONSTRAINT `FK_lw_file_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `lw_file` ADD CONSTRAINT `FK_lw_file_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `lw_forum_post` ADD CONSTRAINT `FK_lw_forum_post_lw_forum_topic` FOREIGN KEY (`topic_id`) REFERENCES `lw_forum_topic` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_forum_post` ADD CONSTRAINT `FK_lw_forum_post_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;

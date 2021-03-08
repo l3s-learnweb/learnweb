@@ -29,7 +29,7 @@ class ForumPostDaoTest {
         assertEquals(1, post.get().getUserId());
         assertEquals("<p>Proin leo odio, porttitor id, consequat in, consequat ut, nulla.</p>", post.get().getText());
         assertEquals(0, post.get().getEditCount());
-        assertEquals(LocalDateTime.of(2021, 2, 19, 18, 34, 43), post.get().getDate());
+        assertEquals(LocalDateTime.of(2021, 2, 19, 18, 34, 43), post.get().getCreatedAt());
     }
 
     @Test
@@ -84,7 +84,7 @@ class ForumPostDaoTest {
         assertEquals(post.getText(), retrieved.get().getText());
         assertEquals(post.getUserId(), retrieved.get().getUserId());
         assertEquals(post.isDeleted(), retrieved.get().isDeleted());
-        assertEquals(post.getDate(), retrieved.get().getDate());
+        assertEquals(post.getCreatedAt(), retrieved.get().getCreatedAt());
 
         post.setText("updated text");
         forumPostDao.save(post);

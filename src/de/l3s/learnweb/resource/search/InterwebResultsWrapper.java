@@ -93,9 +93,9 @@ public class InterwebResultsWrapper implements Serializable {
             resource.setDuration(searchResult.getDuration().intValue());
         }
 
-        if (searchResult.getEmbeddedCode() != null) {
-            resource.setEmbeddedRaw(searchResult.getEmbeddedCode());
-        }
+        // if (searchResult.getEmbeddedCode() != null) {
+        //     resource.setEmbeddedRaw(searchResult.getEmbeddedCode());
+        // }
 
         setThumbnails(resource, searchResult);
         return resource;

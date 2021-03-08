@@ -43,6 +43,11 @@ public interface ForumPostDao extends SqlObject, Serializable {
     void delete(int postId);
 
     default void save(ForumPost post) {
+        post.setUpdatedAt(SqlHelper.now());
+        if (post.getCreatedAt() == null) {
+            post.setCreatedAt(SqlHelper.now());
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("post_id", SqlHelper.toNullable(post.getId()));
         params.put("deleted", post.isDeleted());
@@ -52,8 +57,8 @@ public interface ForumPostDao extends SqlObject, Serializable {
         params.put("edit_count", post.getEditCount());
         params.put("edit_user_id", SqlHelper.toNullable(post.getEditUserId()));
         params.put("category", post.getCategory());
-        params.put("updated_at", post.getLastEditDate());
-        params.put("created_at", post.getDate());
+        params.put("updated_at", post.getUpdatedAt());
+        params.put("created_at", post.getCreatedAt());
 
         Optional<Integer> postId = SqlHelper.handleSave(getHandle(), "lw_forum_post", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -72,8 +77,8 @@ public interface ForumPostDao extends SqlObject, Serializable {
             post.setEditCount(rs.getInt("edit_count"));
             post.setEditUserId(rs.getInt("edit_user_id"));
             post.setCategory(rs.getString("category"));
-            post.setLastEditDate(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
-            post.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            post.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+            post.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return post;
         }
     }

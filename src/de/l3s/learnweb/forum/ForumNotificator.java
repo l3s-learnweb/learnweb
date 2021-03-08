@@ -146,7 +146,7 @@ public class ForumNotificator implements Runnable, Serializable {
                 content.append("</td>");
 
                 content.append("<td class=\"third-child\">");
-                content.append(MessageFormat.format("{0, date, medium} {1, time, short}", topic.getLastPostDate(), topic.getLastPostDate()));
+                content.append(MessageFormat.format("{0, date, medium} {1, time, short}", topic.getUpdatedAt(), topic.getUpdatedAt()));
                 content.append("</td>");
 
                 content.append("</tr>");
@@ -176,7 +176,7 @@ public class ForumNotificator implements Runnable, Serializable {
                 content.append("</td>");
 
                 content.append("<td class=\"third-child\">");
-                content.append(MessageFormat.format("{0, date, medium} {1, time, short}", topic.getLastPostDate(), topic.getLastPostDate()));
+                content.append(MessageFormat.format("{0, date, medium} {1, time, short}", topic.getUpdatedAt(), topic.getUpdatedAt()));
                 content.append("</td>");
 
                 content.append("</tr>");

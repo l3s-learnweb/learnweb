@@ -26,13 +26,13 @@ class ForumTopicDaoTest {
         assertEquals(2, topic.get().getId());
         assertEquals(4, topic.get().getUserId());
         assertEquals(1, topic.get().getGroupId());
-        assertEquals(LocalDateTime.of(2021, 2, 19, 18, 34, 2), topic.get().getDate());
+        assertEquals(LocalDateTime.of(2021, 2, 19, 18, 34, 2), topic.get().getCreatedAt());
         assertEquals(3, topic.get().getReplies());
         assertEquals(2, topic.get().getViews());
         assertFalse(topic.get().isDeleted());
         assertEquals("How I Live Now", topic.get().getTitle());
         assertEquals(5, topic.get().getLastPostId());
-        assertEquals(LocalDateTime.of(2021, 2, 19, 18, 34, 43), topic.get().getLastPostDate());
+        assertEquals(LocalDateTime.of(2021, 2, 19, 18, 34, 43), topic.get().getUpdatedAt());
         assertEquals(1, topic.get().getLastPostUserId());
     }
 
@@ -62,13 +62,13 @@ class ForumTopicDaoTest {
         newPost.setText("new post text");
         forumPostDao.save(newPost);
 
-        forumTopicDao.updateIncreaseReplies(4, newPost.getId(), newPost.getUserId(), newPost.getDate());
+        forumTopicDao.updateIncreaseReplies(4, newPost.getId(), newPost.getUserId(), newPost.getCreatedAt());
 
         Optional<ForumTopic> updated = forumTopicDao.findById(4);
         assertTrue(updated.isPresent());
         assertEquals(4, updated.get().getReplies());
         assertEquals(newPost.getId(), updated.get().getLastPostId());
-        assertEquals(newPost.getDate(), updated.get().getLastPostDate());
+        assertEquals(newPost.getUpdatedAt(), updated.get().getUpdatedAt());
         assertEquals(newPost.getUserId(), updated.get().getLastPostUserId());
     }
 
@@ -105,7 +105,7 @@ class ForumTopicDaoTest {
         assertEquals(topic.getId(), retrieved.get().getId());
         assertEquals(topic.getUserId(), retrieved.get().getUserId());
         assertEquals(topic.getGroupId(), retrieved.get().getGroupId());
-        assertEquals(topic.getDate(), retrieved.get().getDate());
+        assertEquals(topic.getCreatedAt(), retrieved.get().getCreatedAt());
         assertEquals(topic.getReplies(), retrieved.get().getReplies());
         assertEquals(topic.getViews(), retrieved.get().getViews());
         assertEquals(topic.isDeleted(), retrieved.get().isDeleted());

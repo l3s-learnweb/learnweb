@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,10 @@ import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.statement.Update;
 
 public final class SqlHelper {
+
+    public static LocalDateTime now() {
+        return LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    }
 
     public static Integer toNullable(int value) {
         return value == 0 ? null : value;

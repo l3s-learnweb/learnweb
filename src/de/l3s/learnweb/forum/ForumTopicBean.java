@@ -1,7 +1,6 @@
 package de.l3s.learnweb.forum;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -68,10 +67,8 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
         if (replyDialog) {
             dialogPost.setUserId(getUser().getId());
-            dialogPost.setDate(LocalDateTime.now());
             dialogPost.setTopicId(topicId);
         } else {
-            dialogPost.setLastEditDate(LocalDateTime.now());
             dialogPost.setEditCount(dialogPost.getEditCount() + 1);
             dialogPost.setEditUserId(getUser().getId());
         }
@@ -80,7 +77,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
 
         if (replyDialog) {
             posts.add(dialogPost);
-            forumTopicDao.updateIncreaseReplies(dialogPost.getTopicId(), dialogPost.getId(), dialogPost.getUserId(), dialogPost.getDate());
+            forumTopicDao.updateIncreaseReplies(dialogPost.getTopicId(), dialogPost.getId(), dialogPost.getUserId(), dialogPost.getCreatedAt());
             dialogPost.getUser().incForumPostCount();
             log(Action.forum_post_added, group.getId(), topicId, topic.getTitle());
         } else {

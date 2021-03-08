@@ -85,7 +85,7 @@
                             </ui:fragment>
                             <div class="col text-end">
                                 #{msg['ForumIndex.postedOn']}
-                                <h:outputText value="#{post.date}">
+                                <h:outputText value="#{post.createdAt}">
                                     <f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                 </h:outputText>
                             </div>
@@ -102,7 +102,7 @@
                                 <div class="col">
                                     <h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
                                         <f:param value="#{post.editCount}"/>
-                                        <f:param value="#{post.lastEditDate}"/>
+                                        <f:param value="#{post.updatedAt}"/>
                                         <f:param value="#{post.editUser.username}"/>
                                         <f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                     </h:outputFormat>

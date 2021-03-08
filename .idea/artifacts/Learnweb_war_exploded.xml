@@ -14,7 +14,7 @@
           <element id="module-output" name="Learnweb" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Maven: de.l3s.interweb:interwebj-client:3.3.0" />
+          <element id="library" level="project" name="Maven: de.l3s.interweb:interwebj-client:3.4.0" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.14.0" />
           <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-api:2.3-next-M4" />
           <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-impl:2.3-next-M4" />
@@ -137,8 +137,8 @@
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-web:2.14.0" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.14.0" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.14.0" />
-          <element id="library" level="project" name="Maven: io.sentry:sentry-log4j2:4.2.0" />
-          <element id="library" level="project" name="Maven: io.sentry:sentry:4.2.0" />
+          <element id="library" level="project" name="Maven: io.sentry:sentry-log4j2:4.3.0" />
+          <element id="library" level="project" name="Maven: io.sentry:sentry:4.3.0" />
           <element id="library" level="project" name="Maven: com.github.ben-manes.caffeine:caffeine:3.0.0" />
           <element id="library" level="project" name="Maven: org.checkerframework:checker-qual:3.10.0" />
           <element id="library" level="project" name="Maven: com.google.errorprone:error_prone_annotations:2.5.1" />
