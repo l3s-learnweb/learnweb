@@ -76,13 +76,18 @@ public class InterwebResultsWrapper implements Serializable {
         resource.setSource(searchResult.getService());
         // resource.setViews(searchResult.getNumberOfViews());
         resource.setIdAtService(searchResult.getIdAtService());
-        resource.setDescription(searchResult.getDescription());
         resource.setAuthor(searchResult.getAuthor());
-        resource.setWidth(searchResult.getWidth());
-        resource.setHeight(searchResult.getHeight());
 
-        if (resource.getTitle().equals(resource.getDescription())) { // delete description when equal to title
-            resource.setDescription("");
+        if (!resource.getTitle().equals(resource.getDescription())) {
+            resource.setDescription(searchResult.getDescription());
+        }
+
+        if (searchResult.getWidth() != null) {
+            resource.setWidth(searchResult.getWidth());
+        }
+
+        if (searchResult.getHeight() != null) {
+            resource.setHeight(searchResult.getHeight());
         }
 
         if (searchResult.getUrl() != null) {

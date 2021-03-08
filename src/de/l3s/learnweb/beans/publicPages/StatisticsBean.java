@@ -14,9 +14,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import org.jdbi.v3.core.Handle;
-import org.jdbi.v3.core.generic.GenericType;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.util.SqlHelper;
 
 @Named
 @RequestScoped
@@ -64,9 +64,8 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
             activeUsersPerMonth = handle.select("SELECT created_at, count(distinct user_id) as count FROM lw_user_log "
                 + "WHERE action = 9 and created_at > DATE_SUB(NOW(), INTERVAL 390 day) GROUP BY year(created_at) ,month(created_at) "
                 + "ORDER BY year(created_at) DESC,month(created_at) DESC LIMIT 13")
-                .setMapKeyColumn("created_at")
-                .setMapValueColumn("count")
-                .collectInto(new GenericType<>() {});
+                .map((rs, ctx) -> new SimpleEntry<>(SqlHelper.getLocalDateTime(rs.getTimestamp(1)), rs.getInt(2)))
+                .list();
 
             HashSet<String> highlightedEntries = new HashSet<>();
             highlightedEntries.add("Archive-It");

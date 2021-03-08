@@ -71,7 +71,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     }
 
     public void onGroupEdit() {
-        if (!editedGroupDescription.equals(group.getDescription())) {
+        if (!StringUtils.equals(editedGroupDescription, group.getDescription())) {
             group.setDescription(editedGroupDescription);
             log(Action.group_changing_description, group.getId(), group.getId());
         }
