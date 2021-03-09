@@ -3,7 +3,6 @@ package de.l3s.learnweb.user;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,6 +61,11 @@ public interface CourseDao extends SqlObject, Serializable {
     void deleteUser(Course course, User user);
 
     default void save(Course course) {
+        course.setUpdatedAt(SqlHelper.now());
+        if (course.getCreatedAt() == null) {
+            course.setCreatedAt(course.getUpdatedAt());
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("course_id", SqlHelper.toNullable(course.getId()));
         params.put("title", course.getTitle());
@@ -69,9 +73,10 @@ public interface CourseDao extends SqlObject, Serializable {
         params.put("default_group_id", SqlHelper.toNullable(course.getDefaultGroupId()));
         params.put("wizard_param", SqlHelper.toNullable(course.getWizardParam()));
         params.put("next_x_users_become_moderator", course.getNextXUsersBecomeModerator());
-        params.put("welcome_message", course.getWelcomeMessage());
+        params.put("welcome_message", SqlHelper.toNullable(course.getWelcomeMessage()));
         params.put("options_field1", course.getOptions()[0]);
-        params.put("created_at", course.getCreationTimestamp());
+        params.put("updated_at", course.getUpdatedAt());
+        params.put("created_at", course.getCreatedAt());
 
         Optional<Integer> courseId = SqlHelper.handleSave(getHandle(), "lw_course", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -116,6 +121,7 @@ public interface CourseDao extends SqlObject, Serializable {
      */
     default List<User> anonymize(Course course) {
         // disable registration wizard
+        course.setWizardParam(null);
         course.setOption(Course.Option.Users_Disable_wizard, true);
         save(course);
 
@@ -146,7 +152,8 @@ public interface CourseDao extends SqlObject, Serializable {
                 course.setWizardParam(rs.getString("wizard_param"));
                 course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
                 course.setWelcomeMessage(rs.getString("welcome_message"));
-                course.setCreationTimestamp(rs.getObject("created_at", LocalDateTime.class));
+                course.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+                course.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
 
                 long[] options = new long[FIELDS];
                 for (int i = 0; i < FIELDS; i++) {

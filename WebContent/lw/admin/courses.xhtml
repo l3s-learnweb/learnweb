@@ -74,8 +74,8 @@
                 </h:outputLink>
 	        </p:column>
 
-            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none" sortBy="#{course.creationTimestamp}">
-                <h:outputText value="#{course.creationTimestamp}">
+            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none" sortBy="#{course.createdAt}">
+                <h:outputText value="#{course.createdAt}">
                     <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>

@@ -27,7 +27,7 @@ public interface FolderDao extends SqlObject, Serializable {
 
     default Optional<Folder> findById(int folderId) {
         return Optional.ofNullable(cache.get(folderId))
-            .or(() -> getHandle().select("SELECT * FROM lw_group_folder WHERE deleted = 0 AND folder_id = ?", folderId).mapTo(Folder.class).findOne());
+            .or(() -> getHandle().select("SELECT * FROM lw_group_folder WHERE folder_id = ?", folderId).mapTo(Folder.class).findOne());
     }
 
     default Folder findByIdOrElseThrow(int fileId) {
@@ -64,6 +64,10 @@ public interface FolderDao extends SqlObject, Serializable {
     }
 
     default void save(Folder folder) {
+        if (folder.getCreatedAt() == null) {
+            folder.setCreatedAt(SqlHelper.now());
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("folder_id", SqlHelper.toNullable(folder.getId()));
         params.put("group_id", SqlHelper.toNullable(folder.getGroupId()));
@@ -72,6 +76,7 @@ public interface FolderDao extends SqlObject, Serializable {
         params.put("description", folder.getDescription());
         params.put("user_id", SqlHelper.toNullable(folder.getUserId()));
         params.put("deleted", folder.isDeleted());
+        params.put("updated_at", folder.getCreatedAt());
 
         Optional<Integer> folderId = SqlHelper.handleSave(getHandle(), "lw_group_folder", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -98,6 +103,7 @@ public interface FolderDao extends SqlObject, Serializable {
                 folder.setDescription(rs.getString("description"));
                 folder.setUserId(rs.getInt("user_id"));
                 folder.setDeleted(rs.getBoolean("deleted"));
+                folder.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
                 cache.put(folder);
             }
 

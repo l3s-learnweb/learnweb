@@ -30,7 +30,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         Groups_Only_moderators_can_create_groups,
         Users_Require_mail_address,
         Users_Disable_wizard,
-        Groups_Google_Docs_sign_in_enabled,
+        Unused_6,
         Users_Require_affiliation,
         Users_Require_student_id
     }
@@ -46,7 +46,8 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     private int nextXUsersBecomeModerator;
     @Length(max = 65000)
     private String welcomeMessage;
-    private LocalDateTime creationTimestamp;
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
 
     private BitSet options = new BitSet(Option.values().length);
 
@@ -75,7 +76,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     }
 
     /**
-     * A negative id indicates, that this object is not stored at the database.
+     * Zero id indicates, that this object is not stored at the database.
      */
     @Override
     public int getId() {
@@ -187,7 +188,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
             user.setModerator(true);
 
             nextXUsersBecomeModerator--;
-            save();
+            Learnweb.dao().getCourseDao().save(this);
         }
 
         Learnweb.dao().getCourseDao().insertUser(this, user);
@@ -231,6 +232,22 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         this.welcomeMessage = welcomeMessage;
     }
 
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(final LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public int compareTo(Course o) {
         return getTitle().compareTo(o.getTitle());
@@ -256,17 +273,5 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     @Override
     public String toString() {
         return "Course [id=" + id + ", title=" + title + "]";
-    }
-
-    public LocalDateTime getCreationTimestamp() {
-        return creationTimestamp;
-    }
-
-    public void setCreationTimestamp(LocalDateTime creationTimestamp) {
-        this.creationTimestamp = creationTimestamp;
-    }
-
-    public void save() {
-        Learnweb.dao().getCourseDao().save(this);
     }
 }

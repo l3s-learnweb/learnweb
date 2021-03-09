@@ -41,7 +41,7 @@
                                     <li class="news mb-3">
                                         <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>
 
-                                        <h:outputText value="#{news.date}" styleClass="news-date mb-1">
+                                        <h:outputText value="#{news.createdAt}" styleClass="news-date mb-1">
                                             <f:convertDateTime type="localDate" timeZone="#{userBean.timeZone}"/>
                                         </h:outputText>
 

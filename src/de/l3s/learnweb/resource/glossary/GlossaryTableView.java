@@ -94,7 +94,7 @@ public class GlossaryTableView implements Serializable {
     }
 
     public LocalDateTime getTimestamp() {
-        return entry.getTimestamp();
+        return entry.getCreatedAt();
     }
 
     public GlossaryEntry getEntry() {

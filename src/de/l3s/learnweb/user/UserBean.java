@@ -129,7 +129,7 @@ public class UserBean implements Serializable {
         // persist user preferences in database
         if (null != user) {
             user.setLocale(locale);
-            user.onDestroy();
+            Learnweb.dao().getUserDao().save(user);
         }
     }
 

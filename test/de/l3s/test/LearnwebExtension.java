@@ -1,5 +1,6 @@
 package de.l3s.test;
 
+import java.util.UUID;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.jdbi.v3.core.Handle;
@@ -19,6 +20,7 @@ public final class LearnwebExtension implements BeforeAllCallback, AfterAllCallb
 
     private Handle handle;
     private LearnwebResource resource;
+    private String savepointName;
 
     public LearnwebExtension() {
         this(false);
@@ -38,16 +40,18 @@ public final class LearnwebExtension implements BeforeAllCallback, AfterAllCallb
 
     @Override
     public void beforeEach(final ExtensionContext context) {
-        handle.savepoint("beforeEach");
+        savepointName = UUID.randomUUID().toString();
+        handle.savepoint(savepointName);
     }
 
     @Override
     public void afterEach(final ExtensionContext context) {
-        handle.rollback();
+        handle.rollbackToSavepoint(savepointName);
     }
 
     @Override
     public void afterAll(final ExtensionContext context) {
+        handle.rollback();
         handle.close();
     }
 

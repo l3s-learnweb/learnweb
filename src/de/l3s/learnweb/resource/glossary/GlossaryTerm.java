@@ -1,7 +1,7 @@
 package de.l3s.learnweb.resource.glossary;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,11 +34,12 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
     @Length(max = 1500)
     private String phraseology;
     private Locale language;
-    private Timestamp timestamp;
     private boolean termPasted = false;
     private boolean pronounciationPasted = false;
     private boolean acronymPasted = false;
     private boolean phraseologyPasted = false;
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
 
     /**
      * do nothing constructor.
@@ -48,7 +49,6 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
     }
 
     public GlossaryTerm(GlossaryTerm oldTerm) {
-        setId(0);
         setOriginalTermId(oldTerm.id);
         setDeleted(oldTerm.deleted);
         setEntryId(oldTerm.entryId);
@@ -60,7 +60,6 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
         setSource(oldTerm.source);
         setPhraseology(oldTerm.phraseology);
         setLanguage(oldTerm.language);
-        setTimestamp(new Timestamp(System.currentTimeMillis()));
         setTermPasted(oldTerm.termPasted);
         setPronounciationPasted(oldTerm.pronounciationPasted);
         setAcronymPasted(oldTerm.acronymPasted);
@@ -226,12 +225,20 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
         this.deleted = deleted;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setUpdatedAt(final LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getUsesDisplayLabel() {

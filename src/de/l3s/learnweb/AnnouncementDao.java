@@ -3,8 +3,6 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +31,8 @@ public interface AnnouncementDao extends SqlObject, Serializable {
     void delete(int newsId);
 
     default void save(Announcement announcement) {
-        if (announcement.getDate() == null) {
-            announcement.setDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        if (announcement.getCreatedAt() == null) {
+            announcement.setCreatedAt(SqlHelper.now());
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
@@ -43,7 +41,7 @@ public interface AnnouncementDao extends SqlObject, Serializable {
         params.put("message", announcement.getText());
         params.put("user_id", SqlHelper.toNullable(announcement.getUserId()));
         params.put("hidden", announcement.isHidden());
-        params.put("created_at", announcement.getDate());
+        params.put("created_at", announcement.getCreatedAt());
 
         Optional<Integer> announcementId = SqlHelper.handleSave(getHandle(), "lw_news", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -60,7 +58,7 @@ public interface AnnouncementDao extends SqlObject, Serializable {
             announcement.setText(rs.getString("message"));
             announcement.setUserId(rs.getInt("user_id"));
             announcement.setHidden(rs.getBoolean("hidden"));
-            announcement.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            announcement.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return announcement;
         }
     }

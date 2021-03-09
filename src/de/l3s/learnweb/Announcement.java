@@ -9,13 +9,21 @@ public final class Announcement implements Serializable {
     private static final long serialVersionUID = 4219676681480459859L;
 
     private int id;
+    private int userId;
+    private boolean hidden;
     @NotBlank
     private String title;
     @NotBlank
     private String text;
-    private LocalDateTime date;
-    private boolean hidden;
-    private int userId;
+    private LocalDateTime createdAt;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(final int id) {
+        this.id = id;
+    }
 
     public int getUserId() {
         return userId;
@@ -25,20 +33,12 @@ public final class Announcement implements Serializable {
         this.userId = userId;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public void setText(final String text) {
+        this.text = text;
     }
 
-    public void setDate(final LocalDateTime date) {
-        this.date = date;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(final int id) {
-        this.id = id;
+    public boolean isHidden() {
+        return hidden;
     }
 
     public String getTitle() {
@@ -53,16 +53,16 @@ public final class Announcement implements Serializable {
         return text;
     }
 
-    public void setText(final String text) {
-        this.text = text;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
     public void setHidden(final boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
@@ -70,7 +70,7 @@ public final class Announcement implements Serializable {
         return "Announcement [id=" + id +
             ", title=" + title +
             ", message=" + text +
-            ", created_at=" + date +
+            ", created_at=" + createdAt +
             ", userId=" + userId +
             ", hidden=" + hidden + "]";
     }

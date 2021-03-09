@@ -118,7 +118,7 @@
                     </f:facet>
                     <ui:repeat var="message" value="#{welcomeBean.receivedMessages}" varStatus="status">
                         <div class="d-flex #{status.first ? '' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
-                            <img class="profile-picture me-3" src="#{message.fromUser.imageUrl}" alt="Profile picture"/>
+                            <img class="profile-picture me-3" src="#{message.senderUser.imageUrl}" alt="Profile picture"/>
 
                             <div class="text-break">
                                 <p class="h5">
@@ -130,9 +130,9 @@
                                 </div>
                                 <span class="small fw-light">
                                     <h:outputText value="#{msg.from_user} "/>
-                                    <h:outputText value="#{message.fromUser.username} " styleClass="fw-bold"/>
+                                    <h:outputText value="#{message.senderUser.username} " styleClass="fw-bold"/>
                                     <h:outputText value="#{msg.on_date} " styleClass="fw-light"/>
-                                    <h:outputText value="#{message.time}">
+                                    <h:outputText value="#{message.createdAt}">
                                         <f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                     </h:outputText>
                                 </span>

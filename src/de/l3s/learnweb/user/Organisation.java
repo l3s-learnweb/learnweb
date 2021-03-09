@@ -240,7 +240,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     }
 
     /**
-     * A negative id indicates, that this object is not stored at the database.
+     * Zero id indicates, that this object is not stored at the database.
      */
     public int getId() {
         return id;

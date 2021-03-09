@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `lw_forum_topic` (
 CREATE TABLE IF NOT EXISTS `lw_forum_topic_user` (
     `topic_id` INT(10) UNSIGNED NOT NULL,
     `user_id` INT(10) UNSIGNED NOT NULL,
-    `last_visit` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `last_visit` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`topic_id`, `user_id`)
 );
 
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `lw_glossary_entry` (
     `description` VARCHAR(3000) DEFAULT NULL,
     `description_pasted` TINYINT(4) NOT NULL DEFAULT 0,
     `imported` TINYINT(1) NOT NULL DEFAULT 0,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_glossary_entry_resource_id` (`resource_id`, `deleted`)
 );
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `lw_glossary_term` (
     `language` VARCHAR(500) NOT NULL,
     `uses` VARCHAR(500) DEFAULT NULL,
     `source` VARCHAR(500) DEFAULT NULL,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
@@ -153,13 +153,13 @@ CREATE TABLE IF NOT EXISTS `lw_group` (
 
 CREATE TABLE IF NOT EXISTS `lw_group_folder` (
     `folder_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `parent_folder_id` INT(10) UNSIGNED DEFAULT NULL,
     `group_id` INT(10) UNSIGNED DEFAULT NULL,
+    `parent_folder_id` INT(10) UNSIGNED DEFAULT NULL,
     `user_id` INT(10) UNSIGNED DEFAULT NULL,
     `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
-    `name` VARCHAR(100) NOT NULL,
+    `name` VARCHAR(100) NOT NULL, -- TODO: rename to title
     `description` TEXT DEFAULT NULL,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), -- TODO: remane to created_at
     KEY `lw_group_folder_group_id` (`group_id`, `parent_folder_id`)
 );
 
@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `lw_group_user` (
     `group_id` INT(10) UNSIGNED NOT NULL,
     `user_id` INT(10) UNSIGNED NOT NULL,
     `join_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    `last_visit` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `last_visit` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `notification_frequency` ENUM ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
     PRIMARY KEY (`group_id`, `user_id`)
 );
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `lw_news` (
     `user_id` INT(10) UNSIGNED NOT NULL,
     `hidden` TINYINT(1) NOT NULL DEFAULT 0,
     `title` VARCHAR(500) NOT NULL,
-    `message` VARCHAR(5000) DEFAULT NULL,
+    `message` VARCHAR(5000) DEFAULT NULL, -- TODO: rename to text
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
@@ -211,12 +211,12 @@ CREATE TABLE IF NOT EXISTS `lw_organisation` (
 );
 
 CREATE TABLE IF NOT EXISTS `lw_requests` (
-    `request_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `request_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, -- TODO: do we need id? why do we have duplicates?
     `addr` VARCHAR(64) NOT NULL,
     `requests` INT(11) DEFAULT NULL,
     `logins` INT(11) DEFAULT NULL,
     `usernames` VARCHAR(512) DEFAULT NULL,
-    `updated_at` TIMESTAMP NOT NULL
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() -- TODO: do we need to store created_at?
 );
 
 CREATE TABLE IF NOT EXISTS `lw_resource` (
@@ -257,7 +257,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `read_only_transcript` TINYINT(1) NOT NULL DEFAULT 0,
     `online_status` ENUM ('UNKNOWN','ONLINE','OFFLINE','PROCESSING') NOT NULL DEFAULT 'UNKNOWN',
     `restricted` TINYINT(1) NOT NULL DEFAULT 0,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `metadata` BLOB DEFAULT NULL,
     KEY `lw_resource_type` (`type`),
@@ -290,7 +290,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource_rating` (
     `resource_id` INT(10) UNSIGNED NOT NULL,
     `user_id` INT(10) UNSIGNED NOT NULL,
     `rating` TINYINT(1) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`resource_id`, `user_id`)
 );
 
@@ -383,7 +383,7 @@ CREATE TABLE IF NOT EXISTS `lw_survey_resource_user` (
     `submitted` TINYINT(1) NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`resource_id`, `user_id`)
-) COMMENT ='Contains submission status for a particular user';
+) COMMENT = 'Contains submission status for a particular user';
 
 CREATE TABLE IF NOT EXISTS `lw_tag` (
     `tag_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -445,7 +445,6 @@ CREATE TABLE IF NOT EXISTS `lw_user` (
     `phone` VARCHAR(255) DEFAULT NULL,
     `is_admin` TINYINT(1) NOT NULL DEFAULT 0,
     `is_moderator` TINYINT(1) NOT NULL DEFAULT 0,
-    `registration_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `preferences` BLOB DEFAULT NULL,
     `credits` VARCHAR(255) DEFAULT NULL,
     `fullname` VARCHAR(105) DEFAULT NULL,
@@ -455,6 +454,7 @@ CREATE TABLE IF NOT EXISTS `lw_user` (
     `time_zone` VARCHAR(100) DEFAULT 'Europe/Berlin',
     `language` VARCHAR(10) DEFAULT 'en-UK',
     `guides` BIGINT(20) NOT NULL DEFAULT 0,
+    `registration_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), -- TODO: rename to createdAt
     UNIQUE KEY `lw_user_username` (`username`)
 );
 
@@ -462,8 +462,8 @@ CREATE TABLE IF NOT EXISTS `lw_user_auth` (
     `auth_id` BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY,
     `user_id` INT(10) UNSIGNED NOT NULL,
     `token_hash` VARCHAR(64) NOT NULL,
-    `expires` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()
-) COMMENT ='Used to store users sessions, used by "Remember for 30 days" feature';
+    `expires` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
+) COMMENT = 'Used to store users sessions, used by "Remember for 30 days" feature';
 
 CREATE TABLE IF NOT EXISTS `lw_course_user` (
     `course_id` INT(10) UNSIGNED NOT NULL,
@@ -483,14 +483,14 @@ CREATE TABLE IF NOT EXISTS `lw_user_log` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_user_log_session_id` (`session_id`),
     KEY `lw_user_log_group_id` (`group_id`, `action`, `user_id`)
-) COMMENT ='TODO: refactor to multiple tables, one for each target_id';
+) COMMENT = 'TODO: refactor to multiple tables, one for each target_id';
 
 CREATE TABLE IF NOT EXISTS `lw_user_log_action` (
     `action` TINYINT(4) NOT NULL PRIMARY KEY,
     `name` VARCHAR(100) NOT NULL,
     `target` ENUM ('NONE','RESOURCE_ID','GROUP_ID','USER_ID','FORUM_TOPIC_ID','FORUM_POST_ID','COURSE_ID','FOLDER_ID','OTHER') NOT NULL,
     `category` ENUM ('OTHER','RESOURCE','FOLDER','GROUP','GLOSSARY','SURVEY','SEARCH','USER','FORUM','MODERATOR') NOT NULL
-) COMMENT ='This table is only used for debugging. Is not automatically synced with Action.java';
+) COMMENT = 'This table is only used for debugging. Is not automatically synced with Action.java';
 
 CREATE TABLE IF NOT EXISTS `lw_user_token` (
     `token_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

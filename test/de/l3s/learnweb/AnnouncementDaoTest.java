@@ -25,7 +25,7 @@ class AnnouncementDaoTest {
         assertEquals("Dolores eum illum neque.", announcement.get().getTitle());
         assertEquals("Omnis tempore et deserunt. Quia qui rerum qui eum commodi sint non.", announcement.get().getText());
         assertEquals(2, announcement.get().getUserId());
-        assertEquals(LocalDateTime.of(2017, 3, 3, 0, 1, 2), announcement.get().getDate());
+        assertEquals(LocalDateTime.of(2017, 3, 3, 0, 1, 2), announcement.get().getCreatedAt());
     }
 
     @Test
@@ -56,7 +56,7 @@ class AnnouncementDaoTest {
         announcement.setText("Porro in enim nam quia quo dolores nulla.");
         announcementDao.save(announcement);
         assertTrue(announcement.getId() != 0);
-        assertNotNull(announcement.getDate());
+        assertNotNull(announcement.getCreatedAt());
 
         Optional<Announcement> retrieved = announcementDao.findById(announcement.getId());
         assertTrue(retrieved.isPresent());
@@ -65,7 +65,7 @@ class AnnouncementDaoTest {
         assertEquals(announcement.getTitle(), retrieved.get().getTitle());
         assertEquals(announcement.getText(), retrieved.get().getText());
         assertEquals(announcement.getUserId(), retrieved.get().getUserId());
-        assertEquals(announcement.getDate(), retrieved.get().getDate());
+        assertEquals(announcement.getCreatedAt(), retrieved.get().getCreatedAt());
 
         announcement.setText("updated text");
         announcementDao.save(announcement);

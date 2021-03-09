@@ -148,14 +148,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         activeSubmissions = null;
     }
 
-    public void onDestroy() {
-        this.save();
-    }
-
-    public void save() {
-        Learnweb.dao().getUserDao().save(this);
-    }
-
     public List<Course> getCourses() {
         if (courses == null) {
             courses = Learnweb.dao().getCourseDao().findByUserId(id);

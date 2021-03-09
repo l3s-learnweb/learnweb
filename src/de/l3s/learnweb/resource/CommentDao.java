@@ -36,12 +36,16 @@ public interface CommentDao extends SqlObject, Serializable {
     void delete(Comment comment);
 
     default void save(Comment comment) {
+        if (comment.getCreatedAt() == null) {
+            comment.setCreatedAt(SqlHelper.now());
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("comment_id", SqlHelper.toNullable(comment.getId()));
         params.put("resource_id", SqlHelper.toNullable(comment.getResourceId()));
         params.put("user_id", SqlHelper.toNullable(comment.getUserId()));
         params.put("text", comment.getText());
-        params.put("created_at", comment.getDate());
+        params.put("created_at", comment.getCreatedAt());
 
         Optional<Integer> commentId = SqlHelper.handleSave(getHandle(), "lw_comment", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -57,7 +61,7 @@ public interface CommentDao extends SqlObject, Serializable {
             comment.setResourceId(rs.getInt("resource_id"));
             comment.setUserId(rs.getInt("user_id"));
             comment.setText(rs.getString("text"));
-            comment.setDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            comment.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return comment;
         }
     }

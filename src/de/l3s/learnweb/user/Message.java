@@ -11,15 +11,15 @@ public class Message implements Comparable<Message>, Serializable, HasId {
     private static final long serialVersionUID = -5510804242529450186L;
 
     private int id;
-    private int fromUserId;
-    private int toUserId;
+    private int senderUserId;
+    private int recipientUserId;
     private String title;
     private String text;
     private boolean seen = false;
-    private LocalDateTime time;
+    private LocalDateTime createdAt;
 
-    private transient User fromUser;
-    private transient User toUser;
+    private transient User senderUser;
+    private transient User recipientUser;
 
     @Override
     public int compareTo(Message g) {
@@ -35,18 +35,18 @@ public class Message implements Comparable<Message>, Serializable, HasId {
             return false;
         }
         final Message message = (Message) o;
-        return id == message.id && fromUserId == message.fromUserId && toUserId == message.toUserId && seen == message.seen
-            && title.equals(message.title) && text.equals(message.text) && time.equals(message.time);
+        return id == message.id && senderUserId == message.senderUserId && recipientUserId == message.recipientUserId && seen == message.seen
+            && title.equals(message.title) && text.equals(message.text) && createdAt.equals(message.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fromUserId, toUserId, title, text, seen, time);
+        return Objects.hash(id, senderUserId, recipientUserId, title, text, seen, createdAt);
     }
 
     @Override
     public String toString() {
-        return String.format("%s -> %s%n%s: %n%s", fromUser.getUsername(), toUser.getUsername(), time, title);
+        return String.format("%s -> %s %s: %s", getSenderUser().getUsername(), getRecipientUser().getUsername(), createdAt, title);
     }
 
     public int getId() {
@@ -57,44 +57,44 @@ public class Message implements Comparable<Message>, Serializable, HasId {
         this.id = id;
     }
 
-    public int getFromUserId() {
-        return fromUserId;
+    public int getSenderUserId() {
+        return senderUserId;
     }
 
-    public void setFromUserId(final int fromUserId) {
-        this.fromUserId = fromUserId;
+    public void setSenderUserId(final int senderUserId) {
+        this.senderUserId = senderUserId;
     }
 
-    public User getFromUser() {
-        if (fromUser == null) {
-            fromUser = Learnweb.dao().getUserDao().findByIdOrElseThrow(fromUserId);
+    public User getSenderUser() {
+        if (senderUser == null && senderUserId != 0) {
+            senderUser = Learnweb.dao().getUserDao().findByIdOrElseThrow(senderUserId);
         }
-        return fromUser;
+        return senderUser;
     }
 
-    public void setFromUser(User fromUser) {
-        this.fromUserId = fromUser.getId();
-        this.fromUser = fromUser;
+    public void setSenderUser(User senderUser) {
+        this.senderUserId = senderUser.getId();
+        this.senderUser = senderUser;
     }
 
-    public int getToUserId() {
-        return toUserId;
+    public int getRecipientUserId() {
+        return recipientUserId;
     }
 
-    public void setToUserId(final int toUserId) {
-        this.toUserId = toUserId;
+    public void setRecipientUserId(final int recipientUserId) {
+        this.recipientUserId = recipientUserId;
     }
 
-    public User getToUser() {
-        if (toUser == null) {
-            toUser = Learnweb.dao().getUserDao().findByIdOrElseThrow(toUserId);
+    public User getRecipientUser() {
+        if (recipientUser == null && recipientUserId != 0) {
+            recipientUser = Learnweb.dao().getUserDao().findByIdOrElseThrow(recipientUserId);
         }
-        return toUser;
+        return recipientUser;
     }
 
-    public void setToUser(User toUser) {
-        this.toUserId = toUser.getId();
-        this.toUser = toUser;
+    public void setRecipientUser(User recipientUser) {
+        this.recipientUserId = recipientUser.getId();
+        this.recipientUser = recipientUser;
     }
 
     public String getTitle() {
@@ -121,11 +121,11 @@ public class Message implements Comparable<Message>, Serializable, HasId {
         this.seen = seen;
     }
 
-    public LocalDateTime getTime() {
-        return time;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

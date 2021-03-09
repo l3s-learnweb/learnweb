@@ -100,7 +100,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
 
         log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getId(), selectedGroup.getTitle());
 
-        selectedGroup.delete();
+        groupDao.deleteSoft(selectedGroup);
         myGroups = getUser().getGroups();
         joinAbleGroups = groupDao.findJoinAble(getUser());
 

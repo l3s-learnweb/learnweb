@@ -34,7 +34,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
 
         user = userDao.findByEmailConfirmationToken(email, token).orElseThrow(() -> new BadRequestHttpException("confirm_token_invalid"));
         user.setEmailConfirmed(true);
-        user.save();
+        userDao.save(user);
 
         if (user.equals(getConfirmRequiredBean().getLoggedInUser())) {
             LoginBean.loginUser(this, user);

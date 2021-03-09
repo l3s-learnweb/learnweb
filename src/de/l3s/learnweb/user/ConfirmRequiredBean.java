@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.Email;
 
@@ -20,6 +21,9 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
 
     @Email
     private String email;
+
+    @Inject
+    private UserDao userDao;
 
     @Override
     public User getUser() {
@@ -38,7 +42,7 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
         User user = getUser();
         if (StringUtils.isNotEmpty(email) && !StringUtils.equals(user.getEmail(), email)) {
             user.setEmail(email);
-            user.save();
+            userDao.save(user);
         }
 
         if (user.sendEmailConfirmation()) {

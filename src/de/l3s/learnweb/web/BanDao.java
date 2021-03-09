@@ -31,6 +31,10 @@ public interface BanDao extends SqlObject, Serializable {
     void deleteOutdated();
 
     default void save(Ban ban) {
+        if (ban.getCreatedAt() == null) {
+            ban.setCreatedAt(SqlHelper.now());
+        }
+
         getHandle().createUpdate("INSERT INTO lw_bans (addr, expires, attempts, reason, created_at) VALUES (?, ?, ?, ?, ?) "
             + "ON DUPLICATE KEY UPDATE expires = VALUES(expires)")
             .bind(0, ban.getAddr())

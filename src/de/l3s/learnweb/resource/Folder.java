@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -19,11 +20,12 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     private int id;
     private int groupId;
     private int parentFolderId;
+    private int userId;
+    private boolean deleted = false; // indicates whether this folder has been deleted
     @NotBlank
     private String title;
     private String description;
-    private int userId;
-    private boolean deleted = false; // indicates whether this folder has been deleted
+    private LocalDateTime createdAt;
 
     // cache
     private transient User user;
@@ -49,7 +51,6 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
      * Copy constructor.
      */
     public Folder(Folder another) {
-        this.id = 0;
         this.groupId = another.getGroupId();
         this.parentFolderId = another.getParentFolderId();
         this.title = another.getTitle();
@@ -167,6 +168,14 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     public void setDeleted(final boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

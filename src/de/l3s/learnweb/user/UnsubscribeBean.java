@@ -51,7 +51,7 @@ public class UnsubscribeBean extends ApplicationBean implements Serializable {
 
     public void onUnsubscribe() {
         user.setPreferredNotificationFrequency(User.NotificationFrequency.NEVER);
-        user.save();
+        userDao.save(user);
 
         for (Group group : user.getGroups()) {
             groupDao.updateNotificationFrequency(User.NotificationFrequency.NEVER, group.getId(), user.getId());

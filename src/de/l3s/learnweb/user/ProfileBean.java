@@ -125,7 +125,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
             selectedUser.setImageFileId(file.getId());
             selectedUser.setGuide(User.Guide.ADD_PHOTO, true);
-            selectedUser.save();
+            userDao.save(selectedUser);
         } catch (IllegalArgumentException e) { // image is smaller than 100px
             log.error("unhandled error", e);
 
@@ -312,7 +312,8 @@ public class ProfileBean extends ApplicationBean implements Serializable {
      * Sets users preferredNotificationFrequency and the frequency of all his groups.
      */
     public void onSaveAllNotificationFrequencies() {
-        selectedUser.save();
+        userDao.save(selectedUser);
+
         for (GroupUser groupUser : userGroups) {
             groupUser.setNotificationFrequency(selectedUser.getPreferredNotificationFrequency());
             groupDao.updateNotificationFrequency(groupUser.getNotificationFrequency(), groupUser.getGroupId(), selectedUser.getId());

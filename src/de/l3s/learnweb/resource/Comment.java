@@ -10,11 +10,12 @@ import de.l3s.util.HasId;
 
 public class Comment implements Serializable, Comparable<Comment>, HasId {
     private static final long serialVersionUID = -5854582234222584285L;
+
     private int id;
-    private String text;
-    private LocalDateTime date = LocalDateTime.now();
-    private int userId;
     private int resourceId;
+    private int userId;
+    private String text;
+    private LocalDateTime createdAt;
 
     private transient Resource resource;
     private transient User user;
@@ -22,9 +23,8 @@ public class Comment implements Serializable, Comparable<Comment>, HasId {
     public Comment() {
     }
 
-    public Comment(String text, LocalDateTime date, Resource resource, User user) {
+    public Comment(String text, Resource resource, User user) {
         this.text = text;
-        this.date = date;
 
         setResource(resource);
         setUser(user);
@@ -38,6 +38,24 @@ public class Comment implements Serializable, Comparable<Comment>, HasId {
         this.id = id;
     }
 
+    public int getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(int resourceId) {
+        this.resourceId = resourceId;
+        this.resource = null; // force reload
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+        this.user = null; //force reload
+    }
+
     public String getText() {
         return text;
     }
@@ -46,12 +64,12 @@ public class Comment implements Serializable, Comparable<Comment>, HasId {
         this.text = text;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Resource getResource() {
@@ -84,27 +102,9 @@ public class Comment implements Serializable, Comparable<Comment>, HasId {
         }
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-        this.user = null; //force reload
-    }
-
-    public int getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(int resourceId) {
-        this.resourceId = resourceId;
-        setResource(null); //force reload
-    }
-
     @Override
     public int compareTo(Comment comment) {
-        return comment.getDate().compareTo(this.getDate());
+        return createdAt.compareTo(comment.getCreatedAt());
     }
 
     @Override
@@ -117,11 +117,11 @@ public class Comment implements Serializable, Comparable<Comment>, HasId {
         }
         final Comment comment = (Comment) o;
         return id == comment.id && userId == comment.userId && resourceId == comment.resourceId
-            && Objects.equals(text, comment.text) && Objects.equals(date, comment.date);
+            && Objects.equals(text, comment.text) && Objects.equals(createdAt, comment.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, date, userId, resourceId);
+        return Objects.hash(id, text, createdAt, userId, resourceId);
     }
 }

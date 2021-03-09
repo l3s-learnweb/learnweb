@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,7 +63,10 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
             entry.setUserId(entry.getLastChangedByUserId()); // last change by userID == original user ID in insert
         }
 
-        entry.setTimestamp(LocalDateTime.now());
+        entry.setUpdatedAt(SqlHelper.now());
+        if (entry.getCreatedAt() == null) {
+            entry.setCreatedAt(entry.getUpdatedAt());
+        }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("entry_id", SqlHelper.toNullable(entry.getId()));
@@ -78,7 +80,8 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
         params.put("description", entry.getDescription());
         params.put("description_pasted", entry.isDescriptionPasted());
         params.put("imported", entry.isImported());
-        params.put("created_at", entry.getTimestamp());
+        params.put("updated_at", entry.getUpdatedAt());
+        params.put("created_at", entry.getCreatedAt());
 
         Optional<Integer> entryId = SqlHelper.handleSave(getHandle(), "lw_glossary_entry", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -101,7 +104,8 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
             entry.setDescription(rs.getString("description"));
             entry.setDescriptionPasted(rs.getBoolean("description_pasted"));
             entry.setImported(rs.getBoolean("imported"));
-            entry.setTimestamp(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            entry.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+            entry.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return entry;
         }
     }

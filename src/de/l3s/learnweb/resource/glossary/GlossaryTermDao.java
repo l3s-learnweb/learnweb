@@ -74,6 +74,11 @@ public interface GlossaryTermDao extends SqlObject, Serializable {
     List<GlossaryUserActivity> countGlossaryUserActivity(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     default void save(GlossaryTerm term) {
+        term.setUpdatedAt(SqlHelper.now());
+        if (term.getCreatedAt() == null) {
+            term.setCreatedAt(term.getUpdatedAt());
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("term_id", SqlHelper.toNullable(term.getId()));
         params.put("entry_id", term.getEntryId());
@@ -91,6 +96,8 @@ public interface GlossaryTermDao extends SqlObject, Serializable {
         params.put("pronounciation_pasted", term.isPronounciationPasted());
         params.put("acronym_pasted", term.isAcronymPasted());
         params.put("phraseology_pasted", term.isPhraseologyPasted());
+        params.put("updated_at", term.getUpdatedAt());
+        params.put("created_at", term.getCreatedAt());
 
         Optional<Integer> termId = SqlHelper.handleSave(getHandle(), "lw_glossary_term", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -113,11 +120,12 @@ public interface GlossaryTermDao extends SqlObject, Serializable {
             term.setAcronym(rs.getString("acronym"));
             term.setSource(rs.getString("source"));
             term.setPhraseology(rs.getString("phraseology"));
-            term.setTimestamp(rs.getTimestamp("created_at"));
             term.setTermPasted(rs.getBoolean("term_pasted"));
             term.setPronounciationPasted(rs.getBoolean("pronounciation_pasted"));
             term.setAcronymPasted(rs.getBoolean("acronym_pasted"));
             term.setPhraseologyPasted(rs.getBoolean("phraseology_pasted"));
+            term.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+            term.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return term;
         }
     }

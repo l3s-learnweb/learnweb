@@ -137,6 +137,9 @@ public interface GroupDao extends SqlObject, Serializable {
     @SqlUpdate("DELETE FROM lw_group_user WHERE group_id = ? AND user_id = ?")
     void deleteUser(int groupId, User user);
 
+    /**
+     * Flags the group as deleted and removes all users from the group.
+     */
     default void deleteSoft(Group group) {
         for (Resource resource : group.getResources()) {
             getResourceDao().deleteSoft(resource);
@@ -167,6 +170,10 @@ public interface GroupDao extends SqlObject, Serializable {
     }
 
     default void save(Group group) {
+        if (group.getCreatedAt() == null) {
+            group.setCreatedAt(SqlHelper.now());
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("group_id", SqlHelper.toNullable(group.getId()));
         params.put("deleted", group.isDeleted());
@@ -182,6 +189,7 @@ public interface GroupDao extends SqlObject, Serializable {
         params.put("policy_view", group.getPolicyView().name());
         params.put("hypothesis_link", group.getHypothesisLink());
         params.put("hypothesis_token", group.getHypothesisToken());
+        params.put("created_at", group.getCreatedAt());
 
         Optional<Integer> groupId = SqlHelper.handleSave(getHandle(), "lw_group", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -209,12 +217,12 @@ public interface GroupDao extends SqlObject, Serializable {
                 group.setMaxMemberCount(rs.getInt("max_member_count"));
                 group.setHypothesisLink(rs.getString("hypothesis_link"));
                 group.setHypothesisToken(rs.getString("hypothesis_token"));
-
                 group.setPolicyAdd(Group.PolicyAdd.valueOf(rs.getString("policy_add")));
                 group.setPolicyAnnotate(Group.PolicyAnnotate.valueOf(rs.getString("policy_annotate")));
                 group.setPolicyEdit(Group.PolicyEdit.valueOf(rs.getString("policy_edit")));
                 group.setPolicyJoin(Group.PolicyJoin.valueOf(rs.getString("policy_join")));
                 group.setPolicyView(Group.PolicyView.valueOf(rs.getString("policy_view")));
+                group.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
 
                 cache.put(group);
             }

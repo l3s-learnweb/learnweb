@@ -33,7 +33,8 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     private List<GlossaryTerm> terms = new LinkedList<>();
     private String fulltext; // fulltext search in glossary
     private boolean imported; // This value is `true` when the entry has been imported from a file.
-    private LocalDateTime timestamp;
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
 
     /**
      * do nothing constructor.
@@ -46,7 +47,6 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
      * copy constructor.
      */
     public GlossaryEntry(GlossaryEntry oldEntry) {
-        setId(0);
         setOriginalEntryId(oldEntry.id);
         setResourceId(oldEntry.resourceId);
         setDeleted(oldEntry.deleted);
@@ -58,7 +58,6 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         setTopicTwo(oldEntry.topicTwo);
         setTopicThree(oldEntry.topicThree);
         setFulltext(oldEntry.fulltext);
-        setTimestamp(oldEntry.timestamp);
 
         for (GlossaryTerm oldTerm : oldEntry.terms) {
             this.addTerm(new GlossaryTerm(oldTerm));
@@ -234,12 +233,20 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         this.imported = imported;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setUpdatedAt(final LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     /**

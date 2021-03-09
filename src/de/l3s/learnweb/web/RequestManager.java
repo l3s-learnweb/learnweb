@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -395,8 +396,7 @@ public class RequestManager implements Serializable {
     public void ban(String addr, String reason, Duration amount) {
         Ban ban = banlist.computeIfAbsent(addr, Ban::new);
         ban.setReason(reason);
-        ban.setExpires(LocalDateTime.now().plus(amount));
-        ban.setCreatedAt(LocalDateTime.now());
+        ban.setExpires(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plus(amount));
 
         banDao.save(ban);
         log.info("Banned {} until {}", ban.getAddr(), ban.getExpires());

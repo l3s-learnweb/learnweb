@@ -43,12 +43,12 @@ public interface MessageDao extends SqlObject, Serializable {
     default void save(Message message) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("message_id", SqlHelper.toNullable(message.getId()));
-        params.put("sender_user_id", message.getFromUserId());
-        params.put("recipient_user_id", message.getToUserId());
+        params.put("sender_user_id", message.getSenderUserId());
+        params.put("recipient_user_id", message.getRecipientUserId());
         params.put("title", message.getTitle());
         params.put("text", message.getText());
         params.put("seen", message.isSeen());
-        params.put("created_at", message.getTime());
+        params.put("created_at", message.getCreatedAt());
 
         Optional<Integer> messageId = SqlHelper.handleSave(getHandle(), "lw_message", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -61,12 +61,12 @@ public interface MessageDao extends SqlObject, Serializable {
         public Message map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             Message message = new Message();
             message.setId(rs.getInt("message_id"));
-            message.setFromUserId(rs.getInt("sender_user_id"));
-            message.setToUserId(rs.getInt("recipient_user_id"));
+            message.setSenderUserId(rs.getInt("sender_user_id"));
+            message.setRecipientUserId(rs.getInt("recipient_user_id"));
             message.setTitle(rs.getString("title"));
             message.setText(rs.getString("text"));
             message.setSeen(rs.getBoolean("seen"));
-            message.setTime(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            message.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return message;
         }
     }

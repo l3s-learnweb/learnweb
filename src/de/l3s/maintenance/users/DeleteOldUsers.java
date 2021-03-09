@@ -22,11 +22,13 @@ import de.l3s.maintenance.MaintenanceTask;
 public class DeleteOldUsers extends MaintenanceTask {
 
     private UserDao userDao;
+    private GroupDao groupDao;
     private ResourceDao resourceDao;
 
     @Override
     protected void init() {
         userDao = getLearnweb().getDaoProvider().getUserDao();
+        groupDao = getLearnweb().getDaoProvider().getGroupDao();
         resourceDao = getLearnweb().getDaoProvider().getResourceDao();
     }
 
@@ -138,7 +140,7 @@ public class DeleteOldUsers extends MaintenanceTask {
                     log.debug("confirm");
 
                 }
-                group.deleteHard();
+                groupDao.deleteHard(group);
             }
         }
     }
@@ -153,7 +155,7 @@ public class DeleteOldUsers extends MaintenanceTask {
                 if (group.getResourcesCount() > 1) {
                     log.debug("confirm");
                 }
-                group.deleteHard();
+                groupDao.deleteHard(group);
             }
         }
     }

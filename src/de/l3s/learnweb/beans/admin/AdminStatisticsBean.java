@@ -135,7 +135,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                             sb.append("<tr><td>");
                             sb.append(comment.getUser().getUsername());
                             sb.append("</td><td>");
-                            sb.append(comment.getDate());
+                            sb.append(comment.getCreatedAt());
                             sb.append("</td><td>");
                             sb.append(comment.getText());
                             sb.append("</td></tr>");

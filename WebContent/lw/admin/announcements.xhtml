@@ -43,8 +43,8 @@
                 <h:outputText value="#{news.title}"/>
             </p:column>
 
-            <p:column headerText="#{msg.date}" sortBy="#{news.date}">
-                <h:outputText  value="#{news.date}">
+            <p:column headerText="#{msg.date}" sortBy="#{news.createdAt}">
+                <h:outputText  value="#{news.createdAt}">
                     <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDate"/>
                 </h:outputText>
             </p:column>

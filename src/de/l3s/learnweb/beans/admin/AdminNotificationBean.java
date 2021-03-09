@@ -70,10 +70,10 @@ public class AdminNotificationBean extends ApplicationBean {
         }
 
         Message message = new Message();
-        message.setFromUser(getUser());
+        message.setSenderUser(getUser());
         message.setTitle(this.title);
         message.setText(this.text);
-        message.setTime(LocalDateTime.now());
+        message.setCreatedAt(LocalDateTime.now());
 
         int counter = 0;
 
@@ -82,7 +82,7 @@ public class AdminNotificationBean extends ApplicationBean {
 
         for (int userId : selectedUsers) {
             User user = userDao.findByIdOrElseThrow(userId);
-            message.setToUser(user);
+            message.setRecipientUser(user);
             messageDao.save(message);
 
             if (StringUtils.isEmpty(user.getEmail()) || !user.isEmailConfirmed()) {

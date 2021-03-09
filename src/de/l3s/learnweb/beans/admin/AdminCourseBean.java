@@ -91,7 +91,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
             }
         }
 
-        course.save();
+        courseDao.save(course);
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 

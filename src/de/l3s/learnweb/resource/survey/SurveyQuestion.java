@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.Deletable;
 
 /**
@@ -189,10 +188,6 @@ public class SurveyQuestion implements Deletable, Serializable {
 
     public void setDeleted(final boolean deleted) {
         this.deleted = deleted;
-    }
-
-    public void save() {
-        Learnweb.dao().getSurveyDao().saveQuestion(this);
     }
 
     public int getSurveyId() {

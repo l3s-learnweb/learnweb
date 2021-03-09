@@ -2,6 +2,7 @@ package de.l3s.learnweb.group;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -76,29 +77,27 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     private int id;
-    private boolean deleted;
-    private int leaderUserId;
-    private User leader;
     private int courseId;
-
+    private int leaderUserId;
+    private boolean deleted;
     @NotBlank
     @Length(min = 3, max = 60)
     private String title;
     @Length(max = 500)
     private String description;
-    private String hypothesisLink;
-    private String hypothesisToken;
-
+    private int maxMemberCount = -1; // defines how many users can join this group
+    private boolean restrictionForumCategoryRequired = false;
     private PolicyJoin policyJoin = PolicyJoin.COURSE_MEMBERS;
     private PolicyAdd policyAdd = PolicyAdd.GROUP_MEMBERS;
     private PolicyEdit policyEdit = PolicyEdit.GROUP_MEMBERS;
     private PolicyView policyView = PolicyView.COURSE_MEMBERS;
     private PolicyAnnotate policyAnnotate = PolicyAnnotate.COURSE_MEMBERS;
-
-    private boolean restrictionForumCategoryRequired = false;
-    private int maxMemberCount = -1; // defines how many users can join this group
+    private String hypothesisLink;
+    private String hypothesisToken;
+    private LocalDateTime createdAt;
 
     // caches
+    private transient User leader;
     protected transient List<User> members;
     protected transient List<Folder> folders;
     private transient Course course;
@@ -586,19 +585,12 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.hypothesisToken = hypothesisToken;
     }
 
-    public boolean isGoogleDocsSignInEnabled() {
-        return getCourse().getOption(Course.Option.Groups_Google_Docs_sign_in_enabled);
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void deleteHard() {
-        Learnweb.dao().getGroupDao().deleteHard(this);
-    }
-
-    /**
-     * Flags the group and deleted and removes all users from the group.
-     */
-    public void delete() {
-        Learnweb.dao().getGroupDao().deleteSoft(this);
+    public void setCreatedAt(final LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public static TreeNode getFoldersTree(Group group, int activeFolder) {

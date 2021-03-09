@@ -139,23 +139,24 @@ public interface UserDao extends SqlObject, Serializable {
     @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_user_token t USING(user_id) WHERE t.type = 'grant' AND t.token = ?")
     Optional<User> findByGrantToken(String token);
 
-    @SqlQuery("SELECT token FROM lw_user_token WHERE type = 'grant' AND user_id = ?")
-    Optional<String> findGrantToken(int userId);
+    /**
+     * Retrieves token of type `grant` from database or creates a new one if missing.
+     */
+    default String findGrantToken(int userId) {
+        Optional<String> dbToken = getHandle()
+            .select("SELECT token FROM lw_user_token WHERE type = 'grant' AND user_id = ?", userId).mapTo(String.class).findOne();
 
-    @SqlUpdate("INSERT INTO lw_user_token (user_id, type, token) VALUES(?, 'grant', ?)")
-    void insertGrantToken(int userId, String token);
-
-    default String getGrantToken(Integer userId) {
-        Optional<String> tokenOpt = findGrantToken(userId);
-
-        if (tokenOpt.isEmpty()) {
+        if (dbToken.isEmpty()) {
             String token = RandomStringUtils.randomAlphanumeric(128);
             insertGrantToken(userId, token);
             return token;
         }
 
-        return tokenOpt.get();
+        return dbToken.get();
     }
+
+    @SqlUpdate("INSERT INTO lw_user_token (user_id, type, token) VALUES(?, 'grant', ?)")
+    void insertGrantToken(int userId, String token);
 
     /**
      * <ul>
@@ -177,7 +178,7 @@ public interface UserDao extends SqlObject, Serializable {
         user.setEmailRaw(HashHelper.sha512(user.getEmail()));
         user.setPasswordRaw("deleted user");
         user.setUsername(user.getRealUsername() + " (Deleted)");
-        user.save();
+        save(user);
 
         cache.remove(user.getId());
     }
@@ -255,7 +256,7 @@ public interface UserDao extends SqlObject, Serializable {
         user.setStudentId("");
         user.setUsername("Anonym " + user.getId());
         user.setEmailRaw(HashHelper.sha512(user.getEmail()));
-        user.save();
+        save(user);
     }
 
     class UserMapper implements RowMapper<User> {

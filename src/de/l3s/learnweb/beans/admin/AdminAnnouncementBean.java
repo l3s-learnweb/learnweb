@@ -40,7 +40,7 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
 
             announcement = new Announcement();
             announcement.setUserId(getUser().getId());
-            announcement.setDate(LocalDateTime.now());
+            announcement.setCreatedAt(LocalDateTime.now());
         }
     }
 

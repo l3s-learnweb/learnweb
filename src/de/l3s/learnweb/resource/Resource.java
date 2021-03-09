@@ -257,7 +257,7 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     public Comment addComment(String text, User user) {
-        Comment comment = new Comment(text, LocalDateTime.now(), this, user);
+        Comment comment = new Comment(text, this, user);
         Learnweb.dao().getCommentDao().save(comment);
 
         getComments(); // make sure comments are loaded before adding a new one

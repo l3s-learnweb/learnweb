@@ -55,7 +55,7 @@ public interface ForumTopicDao extends SqlObject, Serializable {
     @SqlUpdate("DELETE FROM lw_forum_topic WHERE topic_id = ?")
     void delete(int topicId);
 
-    @SqlUpdate("INSERT INTO lw_forum_topic_user (topic_id, user_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_visit = NOW()")
+    @SqlUpdate("INSERT INTO lw_forum_topic_user (topic_id, user_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_visit = CURRENT_TIMESTAMP()")
     void insertUserVisit(int topicId, int userId);
 
     default void save(ForumTopic topic) {

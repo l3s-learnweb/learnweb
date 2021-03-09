@@ -46,7 +46,7 @@ public class UsersAddMissingProfilePictures extends MaintenanceTask {
                     Learnweb.dao().getFileDao().save(file, gravatar.getRight());
 
                     user.setImageFileId(file.getId());
-                    user.save();
+                    userDao.save(user);
                 }
             }
         }
@@ -64,7 +64,7 @@ public class UsersAddMissingProfilePictures extends MaintenanceTask {
                 fileDao.deleteHard(file);
 
                 user.setImageFileId(0);
-                user.save();
+                userDao.save(user);
             }
         }
     }
