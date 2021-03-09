@@ -202,6 +202,11 @@ public interface ResourceDao extends SqlObject, Serializable {
     }
 
     default void save(Resource resource) {
+        resource.setUpdatedAt(SqlHelper.now());
+        if (resource.getCreatedAt() == null) {
+            resource.setCreatedAt(resource.getUpdatedAt());
+        }
+
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("resource_id", SqlHelper.toNullable(resource.getId()));
         params.put("title", resource.getTitle());
@@ -300,15 +305,13 @@ public interface ResourceDao extends SqlObject, Serializable {
             Resource resource = cache.get(rs.getInt("resource_id"));
 
             if (resource == null) {
-                resource = Resource.ofType(ResourceType.valueOf(rs.getString("type")));
+                resource = Resource.ofType(rs.getInt("storage_type"), rs.getString("type"), rs.getString("source"));
                 resource.setId(rs.getInt("resource_id"));
                 resource.setFormat(rs.getString("format"));
                 resource.setTitle(rs.getString("title"));
                 resource.setDescription(rs.getString("description"));
                 resource.setUrl(rs.getString("url"));
-                resource.setStorageType(rs.getInt("storage_type"));
                 resource.setPolicyView(rs.getInt("rights"));
-                resource.setSource(ResourceService.valueOf(rs.getString("source")));
                 resource.setAuthor(rs.getString("author"));
                 resource.setUserId(rs.getInt("owner_user_id"));
                 resource.setRatingSum(rs.getInt("rating"));

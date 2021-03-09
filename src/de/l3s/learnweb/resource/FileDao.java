@@ -97,7 +97,7 @@ public interface FileDao extends SqlObject, Serializable {
     default void save(File file) {
         file.setUpdatedAt(SqlHelper.now());
         if (file.getCreatedAt() == null) {
-            file.setCreatedAt(SqlHelper.now());
+            file.setCreatedAt(file.getUpdatedAt());
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();

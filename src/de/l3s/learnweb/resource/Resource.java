@@ -131,6 +131,12 @@ public class Resource extends AbstractResource implements Serializable {
     public Resource() {
     }
 
+    public Resource(int storageType, ResourceType type, ResourceService source) {
+        setStorageType(storageType);
+        setType(type);
+        setSource(source);
+    }
+
     /**
      * Copy constructor.
      */
@@ -183,16 +189,16 @@ public class Resource extends AbstractResource implements Serializable {
      * Creates appropriate Resource instances based on the resource type.
      * Necessary since some resource types extend the normal Resource class.
      */
-    public static Resource ofType(ResourceType type) {
-        switch (type) {
+    public static Resource ofType(int storageType, String type, String source) {
+        ResourceType resourceType = ResourceType.valueOf(type);
+
+        switch (resourceType) {
             case survey:
                 return new SurveyResource();
             case glossary:
                 return new GlossaryResource();
             default:
-                Resource resource = new Resource();
-                resource.setType(type);
-                return resource;
+                return new Resource(storageType, resourceType, ResourceService.valueOf(source));
         }
     }
 
@@ -806,19 +812,6 @@ public class Resource extends AbstractResource implements Serializable {
     public void setSource(ResourceService source) {
         Validate.notNull(source);
         this.source = source;
-    }
-
-    /**
-     * better use setSource(SERVICE source).
-     */
-    public void setSource(String source) {
-        Validate.notEmpty(source);
-
-        try {
-            this.source = ResourceService.valueOf(source.toLowerCase().replace("-", ""));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid source: " + source + " resource " + this, e);
-        }
     }
 
     public LinkedHashMap<Integer, File> getFiles() {

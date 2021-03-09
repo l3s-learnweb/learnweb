@@ -8,6 +8,7 @@ import java.util.List;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
@@ -28,7 +29,7 @@ public class SurveyResource extends Resource {
      * Do nothing constructor.
      */
     public SurveyResource() {
-        setType(ResourceType.survey);
+        super(LEARNWEB_RESOURCE, ResourceType.survey, ResourceService.learnweb);
     }
 
     /**

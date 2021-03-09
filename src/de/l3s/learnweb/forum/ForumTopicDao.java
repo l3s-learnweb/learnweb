@@ -61,7 +61,7 @@ public interface ForumTopicDao extends SqlObject, Serializable {
     default void save(ForumTopic topic) {
         topic.setUpdatedAt(SqlHelper.now());
         if (topic.getCreatedAt() == null) {
-            topic.setCreatedAt(SqlHelper.now());
+            topic.setCreatedAt(topic.getUpdatedAt());
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();

@@ -108,7 +108,7 @@ public class TedManager {
     }
 
     private Resource createResource(TedVideo tedVideo) {
-        Resource resource = new Resource();
+        Resource resource = new Resource(Resource.WEB_RESOURCE, ResourceType.video, ResourceService.ted);
 
         if (tedVideo.getResourceId() != 0) { // the video is already stored and will be updated
             resource = resourceDao.findByIdOrElseThrow(tedVideo.getResourceId());
@@ -117,8 +117,6 @@ public class TedManager {
         resource.setTitle(tedVideo.getTitle());
         resource.setDescription(tedVideo.getDescription());
         resource.setUrl("https://www.ted.com/talks/" + tedVideo.getSlug());
-        resource.setSource(ResourceService.ted);
-        resource.setType(ResourceType.video);
         resource.setDuration(tedVideo.getDuration());
         resource.setWidth(tedVideo.getPhotoWidth());
         resource.setHeight(tedVideo.getPhotoHeight());

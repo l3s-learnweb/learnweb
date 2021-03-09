@@ -70,10 +70,11 @@ public class InterwebResultsWrapper implements Serializable {
     }
 
     private static Resource createResource(SearchResult searchResult) {
-        Resource resource = new Resource();
-        resource.setType("text".equals(searchResult.getType()) ? ResourceType.website : ResourceType.valueOf(searchResult.getType()));
+        ResourceType resourceType = "text".equals(searchResult.getType()) ? ResourceType.website : ResourceType.valueOf(searchResult.getType());
+        ResourceService resourceService = ResourceService.valueOf(searchResult.getService().toLowerCase().replace("-", ""));
+
+        Resource resource = new Resource(Resource.WEB_RESOURCE, resourceType, resourceService);
         resource.setTitle(searchResult.getTitle());
-        resource.setSource(searchResult.getService());
         // resource.setViews(searchResult.getNumberOfViews());
         resource.setIdAtService(searchResult.getIdAtService());
         resource.setAuthor(searchResult.getAuthor());

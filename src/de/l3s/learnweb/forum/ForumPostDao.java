@@ -45,7 +45,7 @@ public interface ForumPostDao extends SqlObject, Serializable {
     default void save(ForumPost post) {
         post.setUpdatedAt(SqlHelper.now());
         if (post.getCreatedAt() == null) {
-            post.setCreatedAt(SqlHelper.now());
+            post.setCreatedAt(post.getUpdatedAt());
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();

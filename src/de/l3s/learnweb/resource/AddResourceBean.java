@@ -47,18 +47,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     // caches
     private transient List<SelectItem> availableGlossaryLanguages;
 
-    public void reset() {
-        resource = new Resource();
-        resource.setUser(getUser());
-        resource.setSource(ResourceService.learnweb);
-        resource.setStorageType(Resource.LEARNWEB_RESOURCE);
-        resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
-
-        formStep = 1;
-    }
-
     public void create(final String type, Group targetGroup, Folder targetFolder) {
-        this.reset();
+        this.formStep = 1;
 
         // Set target group and folder in beans
         this.targetGroup = targetGroup;
@@ -67,69 +57,49 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         // Set target view and defaults
         switch (type) {
             case "file":
-                this.resource.setType(ResourceType.file);
+                resource = new Resource(Resource.LEARNWEB_RESOURCE, ResourceType.file, ResourceService.desktop);
                 break;
             case "url":
             case "website":
-                this.resource.setType(ResourceType.website);
-                this.resource.setStorageType(Resource.WEB_RESOURCE);
+                resource = new Resource(Resource.WEB_RESOURCE, ResourceType.website, ResourceService.internet);
                 break;
             case "glossary":
-                this.setResourceTypeGlossary();
+                GlossaryResource glossaryResource = new GlossaryResource();
+                glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
+                resource = glossaryResource;
                 break;
             case "survey":
-                this.setResourceTypeSurvey();
+                Survey survey = new Survey();
+                survey.setOrganisationId(getUser().getOrganisationId());
+                survey.setUserId(getUser().getId());
+                survey.setTitle("Title placeholder"); // this values are overridden in addResource method
+                survey.setDescription("Description placeholder");
+
+                SurveyResource surveyResource = new SurveyResource();
+                surveyResource.setSurvey(survey);
+                this.resource = surveyResource;
                 break;
             case "document":
-                this.resource.setType(ResourceType.document);
+                resource = new Resource(Resource.LEARNWEB_RESOURCE, ResourceType.document, ResourceService.learnweb);
                 break;
             case "spreadsheet":
-                this.resource.setType(ResourceType.spreadsheet);
+                resource = new Resource(Resource.LEARNWEB_RESOURCE, ResourceType.spreadsheet, ResourceService.learnweb);
                 break;
             case "presentation":
-                this.resource.setType(ResourceType.presentation);
+                resource = new Resource(Resource.LEARNWEB_RESOURCE, ResourceType.presentation, ResourceService.learnweb);
                 break;
             default:
-                log.error("Unsupported item type: {}", type);
+                log.error("Unsupported resource type: {}", type);
                 break;
         }
-    }
 
-    private void setResourceTypeGlossary() {
-        GlossaryResource glossaryResource = new GlossaryResource();
-        glossaryResource.setUser(getUser());
-        glossaryResource.setSource(ResourceService.learnweb);
-        glossaryResource.setStorageType(Resource.LEARNWEB_RESOURCE);
-        glossaryResource.setDeleted(true);
-        glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
-
-        this.resource = glossaryResource;
-    }
-
-    private void setResourceTypeSurvey() {
-        Survey survey = new Survey();
-        survey.setOrganisationId(getUser().getOrganisationId());
-        survey.setUserId(getUser().getId());
-        survey.setTitle("Title placeholder"); // this values are overridden in addResource method
-        survey.setDescription("Description placeholder");
-
-        SurveyResource surveyResource = new SurveyResource();
-        surveyResource.setSurvey(survey);
-        surveyResource.setUser(getUser());
-        surveyResource.setDeleted(true);
-        surveyResource.setSource(ResourceService.learnweb);
-        surveyResource.setStorageType(Resource.LEARNWEB_RESOURCE);
-        surveyResource.setType(ResourceType.survey);
-
-        this.resource = surveyResource;
+        resource.setUser(getUser());
+        resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
     }
 
     public void handleFileUpload(FileUploadEvent event) {
         try {
             log.debug("Handle File upload");
-            resource.setSource(ResourceService.desktop);
-            resource.setDeleted(true);
-
             UploadedFile uploadedFile = event.getFile();
 
             log.debug("Getting the fileInfo from uploaded file...");
@@ -161,8 +131,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     public void handleUrlInput() {
         try {
             log.debug("Handle Url input");
-            resource.setSource(ResourceService.internet);
-            resource.setStorageType(Resource.WEB_RESOURCE);
             resource.setUrl(UrlHelper.validateUrl(resource.getUrl()));
 
             log.debug("Extracting info from given url...");
@@ -183,9 +151,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     private void createDocument() {
         try {
             log.debug("Creating new document...");
-            resource.setSource(ResourceService.learnweb);
-
-            log.debug("Getting the fileInfo from uploaded file...");
             String fileName = resource.getTitle() + FileUtility.getInternalExtension(resource.getType());
             java.io.File sampleFile = FileUtility.getSampleOfficeFile(resource.getType());
             FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(new FileInputStream(sampleFile), fileName);

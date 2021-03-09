@@ -252,12 +252,10 @@ public class TedCrawlerSimple implements Runnable {
 
             log.info("TedVideo: {}", tedVideo);
 
-            Resource tedResource = new Resource();
+            Resource tedResource = new Resource(Resource.WEB_RESOURCE, ResourceType.video, ResourceService.ted);
             tedResource.setTitle(tedVideo.getTitle());
             tedResource.setDescription(tedVideo.getDescription());
             tedResource.setUrl("https://www.ted.com/talks/" + tedVideo.getSlug());
-            tedResource.setSource(ResourceService.ted);
-            tedResource.setType(ResourceType.video);
             tedResource.setDuration(duration);
             tedResource.setWidth(tedVideo.getPhotoWidth());
             tedResource.setHeight(tedVideo.getPhotoHeight());

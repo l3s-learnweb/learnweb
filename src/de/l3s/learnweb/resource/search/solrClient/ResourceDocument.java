@@ -87,7 +87,7 @@ public class ResourceDocument {
         this.groupId = resource.getGroupId();
         this.path = resource.getPath();
         this.ownerUserId = resource.getUserId();
-        this.timestamp = Date.from((resource.getCreatedAt() != null ? resource.getCreatedAt() : resource.getUpdatedAt()).toInstant(ZoneOffset.UTC));
+        this.timestamp = Date.from(resource.getCreatedAt().toInstant(ZoneOffset.UTC));
 
         if (null != resource.getTags()) {
             this.tags = new LinkedList<>();
