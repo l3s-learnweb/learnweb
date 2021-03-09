@@ -24,7 +24,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.Validate;
 import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.app.Learnweb;
@@ -46,8 +45,10 @@ public class Resource extends AbstractResource implements Serializable {
 
     public static final char METADATA_SEPARATOR = ';';
 
-    public static final int LEARNWEB_RESOURCE = 1;
-    public static final int WEB_RESOURCE = 2;
+    public enum StorageType {
+        LEARNWEB,
+        WEB
+    }
 
     public enum OnlineStatus {
         UNKNOWN,
@@ -70,11 +71,11 @@ public class Resource extends AbstractResource implements Serializable {
     private int groupId;
     private int folderId;
     private String title;
-    private String description = "";
+    private String description;
     private String url; // `website` resources stores external link here, also `video` resources stores link to source (like YouTube page)
-    private int storageType = WEB_RESOURCE;
+    private StorageType storageType = StorageType.LEARNWEB;
     private PolicyView policyView = PolicyView.DEFAULT_RIGHTS;
-    private ResourceService source; // The place where the resource was found
+    private ResourceService service; // The place where the resource was found
     private String language; // language code
     private String author;
     private ResourceType type;
@@ -88,7 +89,7 @@ public class Resource extends AbstractResource implements Serializable {
     private int rateNumber;
     private int fileId;
     private String fileName; // stores the file name of uploaded resource
-    private String fileUrl;
+    private String downloadUrl;
     private String maxImageUrl; // an url to the largest image preview of this resource
     private String query; // the query which was used to find this resource
     private int originalResourceId; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
@@ -96,12 +97,11 @@ public class Resource extends AbstractResource implements Serializable {
     private Thumbnail thumbnailSmall; // cropped to 160 x 120 px - smallest thumbnail used on website
     private Thumbnail thumbnailMedium; // resized <= 280 x 210 px - resource preview image size
     private Thumbnail thumbnailLarge; // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
-    private String embeddedRaw; // stored in the database
+    private String embeddedUrl; // stored in the database
     private String embeddedCode; // derived from type or embedded raw. Does not need to be stored in DB
     private String transcript; //To store the English transcripts for TED videos and saved articles
     private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
-    private boolean restricted = false;
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
     private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
@@ -131,10 +131,10 @@ public class Resource extends AbstractResource implements Serializable {
     public Resource() {
     }
 
-    public Resource(int storageType, ResourceType type, ResourceService source) {
-        setStorageType(storageType);
-        setType(type);
-        setSource(source);
+    public Resource(StorageType storageType, ResourceType type, ResourceService service) {
+        this.storageType = storageType;
+        this.type = type;
+        this.service = service;
     }
 
     /**
@@ -147,8 +147,8 @@ public class Resource extends AbstractResource implements Serializable {
         setDescription(old.description);
         setUrl(old.url);
         setStorageType(old.storageType);
-        setPolicyView(old.policyView.ordinal());
-        setSource(old.source);
+        setPolicyView(old.policyView);
+        setService(old.service);
         setAuthor(old.author);
         setType(old.type);
         setFormat(old.format);
@@ -156,12 +156,12 @@ public class Resource extends AbstractResource implements Serializable {
         setMaxImageUrl(old.maxImageUrl);
         setFileId(old.fileId);
         setFileName(old.fileName);
-        setFileUrl(old.fileUrl);
+        setDownloadUrl(old.downloadUrl);
         setQuery(old.query);
         setThumbnailSmall(old.thumbnailSmall);
         setThumbnailMedium(old.thumbnailMedium);
         setThumbnailLarge(old.thumbnailLarge);
-        setEmbeddedRaw(old.embeddedRaw);
+        setEmbeddedUrl(old.embeddedUrl);
         setDuration(old.duration);
         setWidth(old.width);
         setHeight(old.height);
@@ -169,7 +169,6 @@ public class Resource extends AbstractResource implements Serializable {
         setTranscript(old.transcript);
         setOnlineStatus(old.onlineStatus);
         setIdAtService(old.idAtService);
-        setRestricted(old.restricted);
         setUpdatedAt(LocalDateTime.now());
         setCreatedAt(LocalDateTime.now());
         setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
@@ -189,7 +188,7 @@ public class Resource extends AbstractResource implements Serializable {
      * Creates appropriate Resource instances based on the resource type.
      * Necessary since some resource types extend the normal Resource class.
      */
-    public static Resource ofType(int storageType, String type, String source) {
+    public static Resource ofType(String storageType, String type, String source) {
         ResourceType resourceType = ResourceType.valueOf(type);
 
         switch (resourceType) {
@@ -198,7 +197,7 @@ public class Resource extends AbstractResource implements Serializable {
             case glossary:
                 return new GlossaryResource();
             default:
-                return new Resource(storageType, resourceType, ResourceService.valueOf(source));
+                return new Resource(StorageType.valueOf(storageType), resourceType, ResourceService.valueOf(source));
         }
     }
 
@@ -376,23 +375,20 @@ public class Resource extends AbstractResource implements Serializable {
         return description.replace("\n", "<br/>");
     }
 
-    public int getStorageType() {
+    public StorageType getStorageType() {
         return storageType;
     }
 
-    public void setStorageType(int type) {
-        if (type != LEARNWEB_RESOURCE && type != WEB_RESOURCE) {
-            throw new IllegalArgumentException("Unknown storageType of the resource: " + id);
-        }
-        this.storageType = type;
+    public void setStorageType(StorageType storageType) {
+        this.storageType = storageType;
     }
 
     public boolean isWebResource() {
-        return storageType == WEB_RESOURCE;
+        return storageType == StorageType.WEB;
     }
 
     public boolean isOfficeResource() {
-        if (source == ResourceService.slideshare) {
+        if (service == ResourceService.slideshare) {
             return false;
         }
 
@@ -411,27 +407,8 @@ public class Resource extends AbstractResource implements Serializable {
         return OnlineStatus.PROCESSING == onlineStatus;
     }
 
-    public int getPolicyView() {
-        return policyView.ordinal();
-    }
-
-    public void setPolicyView(int policyView) {
-        switch (policyView) {
-            case 0:
-                this.policyView = PolicyView.DEFAULT_RIGHTS;
-                break;
-            case 1:
-                this.policyView = PolicyView.SUBMISSION_READABLE;
-                break;
-            case 2:
-                this.policyView = PolicyView.LEARNWEB_READABLE;
-                break;
-            case 3:
-                this.policyView = PolicyView.WORLD_READABLE;
-                break;
-            default:
-                log.error("Unknown rights value {}", policyView);
-        }
+    public PolicyView getPolicyView() {
+        return policyView;
     }
 
     public void setPolicyView(PolicyView policyView) {
@@ -444,8 +421,8 @@ public class Resource extends AbstractResource implements Serializable {
      * @return for example Learnweb, Flickr, Youtube ...
      */
     public String getLocation() {
-        if (source != null) {
-            return source.getLocation();
+        if (service != null) {
+            return service.getLocation();
         }
         return null;
     }
@@ -683,23 +660,6 @@ public class Resource extends AbstractResource implements Serializable {
         return url;
     }
 
-    public String getDownloadUrl() {
-        if (fileUrl != null) {
-            return fileUrl;
-        }
-        File mainFile = getMainFile();
-        if (mainFile != null) {
-            return mainFile.getAbsoluteUrl();
-        }
-        if (fileId != 0) {
-            Optional<File> altMainFile = Learnweb.dao().getFileDao().findById(fileId);
-            if (altMainFile.isPresent()) {
-                return altMainFile.get().getAbsoluteUrl();
-            }
-        }
-        return url;
-    }
-
     public void setUrl(String url) {
         if (url != null && url.length() > 4000) {
             throw new IllegalArgumentException("url is too long: " + url.length() + "; " + url);
@@ -709,11 +669,11 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     public String getServiceIcon() {
-        if (id != 0 || source == null) { // is stored in Learnweb
+        if (id != 0 || service == null) { // is stored in Learnweb
             return "/resources/images/services/learnweb.png";
         }
 
-        return "/resources/images/services/" + source.name() + ".png";
+        return "/resources/images/services/" + service.name() + ".png";
     }
 
     /**
@@ -805,13 +765,12 @@ public class Resource extends AbstractResource implements Serializable {
     /**
      * The place where the resource was found. Example: Flickr or Youtube or Desktop ...
      */
-    public ResourceService getSource() {
-        return source;
+    public ResourceService getService() {
+        return service;
     }
 
-    public void setSource(ResourceService source) {
-        Validate.notNull(source);
-        this.source = source;
+    public void setService(ResourceService service) {
+        this.service = service;
     }
 
     public LinkedHashMap<Integer, File> getFiles() {
@@ -928,34 +887,35 @@ public class Resource extends AbstractResource implements Serializable {
         thumbnailLarge = null;
     }
 
-    public String getEmbedded() {
+    public String getEmbeddedCode() {
         if (embeddedCode == null) {
-            if (getType() == ResourceType.video) {
-                if (isProcessing()) {
-                    // return immediately, do not cache the temporal warning
-                    return "<h3 style='padding: 2rem; color: red; position: absolute; width: 100%; box-sizing: border-box;'>"
-                        + "We are converting this video. If your browser can't display it, try again in a few minutes.</h3>";
-                }
+            if (isProcessing()) {
+                // return immediately, do not cache the temporal warning
+                return "<h3 class=\"processing\">We are processing this resource. If your browser can't display it, try again in a few minutes.</h3>";
+            }
 
-                String iframeUrl = null;
-
-                if (getSource() == ResourceService.ted) {
-                    iframeUrl = getUrl().replace("http://www", "//embed").replace("https://www", "//embed");
-                } else if (getSource() == ResourceService.youtube || getSource() == ResourceService.teded || getSource() == ResourceService.tedx) {
-                    iframeUrl = "https://www.youtube-nocookie.com/embed/" + getIdAtService();
-                } else if (getSource() == ResourceService.vimeo) {
-                    iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
-                }
-
-                if (null != iframeUrl) {
-                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" allowfullscreen referrerpolicy=\"origin\">Your browser has blocked this iframe</iframe>";
+            String iframeUrl = null;
+            if (embeddedUrl != null) {
+                iframeUrl = embeddedUrl;
+            } else if (type == ResourceType.video) {
+                switch (service) {
+                    case ted:
+                        iframeUrl = getUrl().replace("//www.", "//embed.");
+                        break;
+                    case youtube:
+                    case teded:
+                    case tedx:
+                        iframeUrl = "https://www.youtube-nocookie.com/embed/" + getIdAtService();
+                        break;
+                    case vimeo:
+                        iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
+                        break;
+                    default:
                 }
             }
 
-            // if no rule above works
-            if (embeddedCode == null && StringUtils.isNoneEmpty(getEmbeddedRaw())) {
-                // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
-                embeddedCode = getEmbeddedRaw();
+            if (null != iframeUrl) {
+                embeddedCode = "<iframe src=\"" + iframeUrl + "\" allowfullscreen referrerpolicy=\"origin\">Your browser has blocked this iframe</iframe>";
             }
         }
 
@@ -998,12 +958,12 @@ public class Resource extends AbstractResource implements Serializable {
      * Normally you should not call this function.
      * Use getEmbedded() instead.
      */
-    public String getEmbeddedRaw() {
-        return embeddedRaw;
+    public String getEmbeddedUrl() {
+        return embeddedUrl;
     }
 
-    public void setEmbeddedRaw(String embeddedRaw) {
-        this.embeddedRaw = embeddedRaw;
+    public void setEmbeddedUrl(String embeddedUrl) {
+        this.embeddedUrl = embeddedUrl;
     }
 
     public String getTranscript() {
@@ -1071,24 +1031,35 @@ public class Resource extends AbstractResource implements Serializable {
         return archiveUrls.getLast();
     }
 
-    public boolean isRestricted() {
-        return restricted;
-    }
-
-    public void setRestricted(boolean restricted) {
-        this.restricted = restricted;
-    }
-
-    public String getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        if (fileUrl != null && fileUrl.length() > 4000) {
-            throw new IllegalArgumentException("url is too long: " + fileUrl.length() + "; " + fileUrl);
+    public String getCombinedDownloadUrl() {
+        if (downloadUrl != null) {
+            return downloadUrl;
         }
 
-        this.fileUrl = fileUrl;
+        File mainFile = getMainFile();
+        if (mainFile != null) {
+            return mainFile.getAbsoluteUrl();
+        }
+
+        if (fileId != 0) {
+            Optional<File> altMainFile = Learnweb.dao().getFileDao().findById(fileId);
+            if (altMainFile.isPresent()) {
+                return altMainFile.get().getAbsoluteUrl();
+            }
+        }
+        return null;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        if (downloadUrl != null && downloadUrl.length() > 1000) {
+            throw new IllegalArgumentException("downloadUrl is too long: " + downloadUrl.length() + "; " + downloadUrl);
+        }
+
+        this.downloadUrl = downloadUrl;
     }
 
     /**
@@ -1364,7 +1335,7 @@ public class Resource extends AbstractResource implements Serializable {
             .append("title", title)
             .append("url", url)
             .append("storageType", storageType)
-            .append("source", source)
+            .append("service", service)
             .append("type", type)
             .toString();
     }

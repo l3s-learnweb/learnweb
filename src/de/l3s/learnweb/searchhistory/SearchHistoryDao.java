@@ -57,7 +57,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 if (resourceId != 0) {
                     res = resourceDao.findByIdOrElseThrow(resourceId);
                 } else {
-                    res = new Resource(Resource.WEB_RESOURCE, ResourceType.website, ResourceService.learnweb);
+                    res = new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.learnweb);
                     res.setUrl(rs.getString("url"));
                     res.setTitle(rs.getString("title"));
                     res.setDescription(rs.getString("description"));

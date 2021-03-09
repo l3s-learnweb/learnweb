@@ -212,9 +212,9 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("title", resource.getTitle());
         params.put("description", SqlHelper.toNullable(resource.getDescription()));
         params.put("url", SqlHelper.toNullable(resource.getUrl()));
-        params.put("storage_type", resource.getStorageType());
-        params.put("rights", resource.getPolicyView());
-        params.put("source", resource.getSource().name());
+        params.put("storage_type", resource.getStorageType().name());
+        params.put("policy_view", resource.getPolicyView().name());
+        params.put("service", resource.getService().name());
         params.put("type", resource.getType().name());
         params.put("format", SqlHelper.toNullable(resource.getFormat()));
         params.put("owner_user_id", SqlHelper.toNullable(resource.getUserId()));
@@ -227,15 +227,14 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("author", SqlHelper.toNullable(resource.getAuthor()));
         params.put("file_id", SqlHelper.toNullable(resource.getFileId()));
         params.put("file_name", resource.getFileName());
-        params.put("file_url", resource.getFileUrl());
-        params.put("embeddedRaw", resource.getEmbeddedRaw());
+        params.put("download_url", resource.getDownloadUrl());
+        params.put("embedded_url", resource.getEmbeddedUrl());
         params.put("transcript", resource.getTranscript());
         params.put("online_status", resource.getOnlineStatus().name());
         params.put("id_at_service", SqlHelper.toNullable(resource.getIdAtService()));
         params.put("duration", SqlHelper.toNullable(resource.getDuration()));
         params.put("width", SqlHelper.toNullable(resource.getWidth()));
         params.put("height", SqlHelper.toNullable(resource.getHeight()));
-        params.put("restricted", resource.isRestricted());
         params.put("language", SqlHelper.toNullable(resource.getLanguage()));
         params.put("created_at", resource.getCreatedAt());
         params.put("metadata", SerializationUtils.serialize(resource.getMetadata()));
@@ -305,13 +304,13 @@ public interface ResourceDao extends SqlObject, Serializable {
             Resource resource = cache.get(rs.getInt("resource_id"));
 
             if (resource == null) {
-                resource = Resource.ofType(rs.getInt("storage_type"), rs.getString("type"), rs.getString("source"));
+                resource = Resource.ofType(rs.getString("storage_type"), rs.getString("type"), rs.getString("service"));
                 resource.setId(rs.getInt("resource_id"));
                 resource.setFormat(rs.getString("format"));
                 resource.setTitle(rs.getString("title"));
                 resource.setDescription(rs.getString("description"));
                 resource.setUrl(rs.getString("url"));
-                resource.setPolicyView(rs.getInt("rights"));
+                resource.setPolicyView(Resource.PolicyView.valueOf(rs.getString("policy_view")));
                 resource.setAuthor(rs.getString("author"));
                 resource.setUserId(rs.getInt("owner_user_id"));
                 resource.setRatingSum(rs.getInt("rating"));
@@ -321,11 +320,11 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setOriginalResourceId(rs.getInt("original_resource_id"));
                 resource.setFileId(rs.getInt("file_id"));
                 resource.setFileName(rs.getString("file_name"));
-                resource.setFileUrl(rs.getString("file_url"));
+                resource.setDownloadUrl(rs.getString("download_url"));
                 resource.setThumbnailSmall(createThumbnail(rs, 0));
                 resource.setThumbnailMedium(createThumbnail(rs, 2));
                 resource.setThumbnailLarge(createThumbnail(rs, 4));
-                resource.setEmbeddedRaw(rs.getString("embeddedRaw"));
+                resource.setEmbeddedUrl(rs.getString("embedded_url"));
                 resource.setTranscript(rs.getString("transcript"));
                 resource.setOnlineStatus(Resource.OnlineStatus.valueOf(rs.getString("online_status")));
                 resource.setIdAtService(rs.getString("id_at_service"));
@@ -333,7 +332,6 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setWidth(rs.getInt("width"));
                 resource.setHeight(rs.getInt("height"));
                 resource.setLanguage(rs.getString("language"));
-                resource.setRestricted(rs.getBoolean("restricted"));
                 resource.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
                 resource.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
                 resource.setGroupId(rs.getInt("group_id"));

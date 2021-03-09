@@ -37,6 +37,13 @@ CREATE TABLE IF NOT EXISTS `lw_course` (
     UNIQUE KEY `lw_course_wizard_param` (`wizard_param`)
 );
 
+CREATE TABLE IF NOT EXISTS `lw_course_user` (
+    `course_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    PRIMARY KEY (`user_id`, `course_id`)
+);
+
 CREATE TABLE IF NOT EXISTS `lw_file` (
     `file_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `deleted` TINYINT(1) NOT NULL DEFAULT 0,
@@ -157,9 +164,9 @@ CREATE TABLE IF NOT EXISTS `lw_group_folder` (
     `parent_folder_id` INT(10) UNSIGNED DEFAULT NULL,
     `user_id` INT(10) UNSIGNED DEFAULT NULL,
     `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
-    `name` VARCHAR(100) NOT NULL, -- TODO: rename to title
+    `title` VARCHAR(100) NOT NULL,
     `description` TEXT DEFAULT NULL,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), -- TODO: remane to created_at
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_group_folder_group_id` (`group_id`, `parent_folder_id`)
 );
 
@@ -188,13 +195,13 @@ CREATE TABLE IF NOT EXISTS `lw_news` (
     `user_id` INT(10) UNSIGNED NOT NULL,
     `hidden` TINYINT(1) NOT NULL DEFAULT 0,
     `title` VARCHAR(500) NOT NULL,
-    `message` VARCHAR(5000) DEFAULT NULL, -- TODO: rename to text
+    `text` VARCHAR(5000) DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_organisation` (
     `organisation_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `is_default` TINYINT(1) DEFAULT NULL,
+    `default` TINYINT(1) DEFAULT NULL,
     `title` VARCHAR(60) NOT NULL,
     `logo` LONGTEXT DEFAULT NULL,
     `welcome_page` VARCHAR(255) DEFAULT NULL,
@@ -207,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `lw_organisation` (
     `language_variant` VARCHAR(10) DEFAULT NULL,
     `banner_image_file_id` INT(10) UNSIGNED DEFAULT NULL,
     `glossary_languages` VARCHAR(1000) DEFAULT NULL,
-    UNIQUE KEY `lw_organisation_is_default` (`is_default`)
+    UNIQUE KEY `lw_organisation_default` (`default`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_requests` (
@@ -227,9 +234,9 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `title` VARCHAR(1000) NOT NULL,
     `description` MEDIUMTEXT DEFAULT NULL,
     `url` VARCHAR(4000) DEFAULT NULL,
-    `storage_type` TINYINT(1) NOT NULL,
-    `rights` TINYINT(1) NOT NULL,
-    `source` ENUM ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck','desktop','internet','slideshare','speechrepository') NOT NULL,
+    `storage_type` ENUM('LEARNWEB','WEB') NOT NULL DEFAULT 'LEARNWEB',
+    `policy_view` ENUM('DEFAULT_RIGHTS','SUBMISSION_READABLE','LEARNWEB_READABLE','WORLD_READABLE') NOT NULL DEFAULT 'DEFAULT_RIGHTS',
+    `service` ENUM ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck','desktop','internet','slideshare','speechrepository') NOT NULL,
     `language` VARCHAR(200) DEFAULT NULL,
     `author` VARCHAR(255) DEFAULT NULL,
     `type` ENUM ('text','video','image','audio','pdf','website','spreadsheet','presentation','document','file','survey','glossary') NOT NULL,
@@ -243,20 +250,18 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `rate_number` INT(11) NOT NULL,
     `file_id` INT(10) UNSIGNED DEFAULT NULL,
     `file_name` VARCHAR(200) DEFAULT NULL,
-    `file_url` VARCHAR(1000) DEFAULT NULL,
+    `download_url` VARCHAR(1000) DEFAULT NULL,
     `max_image_url` VARCHAR(1000) DEFAULT NULL,
     `query` VARCHAR(1000) DEFAULT NULL,
     `original_resource_id` INT(10) UNSIGNED DEFAULT NULL,
     `machine_description` LONGTEXT DEFAULT NULL,
-    `access` VARCHAR(1) DEFAULT NULL,
     `thumbnail0_file_id` INT(10) UNSIGNED DEFAULT NULL,
     `thumbnail2_file_id` INT(10) UNSIGNED DEFAULT NULL,
     `thumbnail4_file_id` INT(10) UNSIGNED DEFAULT NULL,
-    `embeddedraw` MEDIUMTEXT DEFAULT NULL,
+    `embedded_url` MEDIUMTEXT DEFAULT NULL,
     `transcript` LONGTEXT DEFAULT NULL,
     `read_only_transcript` TINYINT(1) NOT NULL DEFAULT 0,
     `online_status` ENUM ('UNKNOWN','ONLINE','OFFLINE','PROCESSING') NOT NULL DEFAULT 'UNKNOWN',
-    `restricted` TINYINT(1) NOT NULL DEFAULT 0,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `metadata` BLOB DEFAULT NULL,
@@ -431,30 +436,30 @@ CREATE TABLE IF NOT EXISTS `lw_user` (
     `password` VARCHAR(512) DEFAULT NULL,
     `hashing` ENUM ('EMPTY','MD5','PBKDF2') NOT NULL DEFAULT 'MD5',
     `email` VARCHAR(250) DEFAULT NULL,
-    `email_confirmation_token` VARCHAR(32) DEFAULT NULL,
-    `is_email_confirmed` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
+    `email_confirmation_token` VARCHAR(32) DEFAULT NULL, -- TODO: move to lw_user_token
+    `email_confirmed` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
     `organisation_id` INT(10) UNSIGNED NOT NULL,
     `image_file_id` INT(10) UNSIGNED DEFAULT NULL,
     `gender` TINYINT(1) NOT NULL DEFAULT 0,
-    `dateofbirth` DATE DEFAULT NULL,
+    `birthdate` DATE DEFAULT NULL,
     `address` VARCHAR(255) DEFAULT NULL,
     `profession` VARCHAR(105) DEFAULT NULL,
-    `additionalinformation` VARCHAR(255) DEFAULT NULL,
+    `bio` VARCHAR(255) DEFAULT NULL,
     `interest` VARCHAR(255) DEFAULT NULL,
-    `student_identifier` VARCHAR(50) DEFAULT NULL,
-    `phone` VARCHAR(255) DEFAULT NULL,
+    `phone` VARCHAR(255) DEFAULT NULL, -- TODO: delete? we don't set or read it from Java
     `is_admin` TINYINT(1) NOT NULL DEFAULT 0,
     `is_moderator` TINYINT(1) NOT NULL DEFAULT 0,
     `preferences` BLOB DEFAULT NULL,
     `credits` VARCHAR(255) DEFAULT NULL,
     `fullname` VARCHAR(105) DEFAULT NULL,
     `affiliation` VARCHAR(105) DEFAULT NULL,
+    `student_identifier` VARCHAR(50) DEFAULT NULL,
     `accept_terms_and_conditions` TINYINT(1) NOT NULL DEFAULT 0,
     `preferred_notification_frequency` ENUM ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
     `time_zone` VARCHAR(100) DEFAULT 'Europe/Berlin',
     `language` VARCHAR(10) DEFAULT 'en-UK',
     `guides` BIGINT(20) NOT NULL DEFAULT 0,
-    `registration_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(), -- TODO: rename to createdAt
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     UNIQUE KEY `lw_user_username` (`username`)
 );
 
@@ -465,14 +470,7 @@ CREATE TABLE IF NOT EXISTS `lw_user_auth` (
     `expires` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 ) COMMENT = 'Used to store users sessions, used by "Remember for 30 days" feature';
 
-CREATE TABLE IF NOT EXISTS `lw_course_user` (
-    `course_id` INT(10) UNSIGNED NOT NULL,
-    `user_id` INT(10) UNSIGNED NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    PRIMARY KEY (`user_id`, `course_id`)
-);
-
-CREATE TABLE IF NOT EXISTS `lw_user_log` (
+CREATE TABLE IF NOT EXISTS `lw_user_log` ( -- TODO: refactor to multiple tables, one for each target_id
     `log_entry_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT(10) UNSIGNED NOT NULL,
     `group_id` INT(10) UNSIGNED DEFAULT NULL,
@@ -483,7 +481,7 @@ CREATE TABLE IF NOT EXISTS `lw_user_log` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_user_log_session_id` (`session_id`),
     KEY `lw_user_log_group_id` (`group_id`, `action`, `user_id`)
-) COMMENT = 'TODO: refactor to multiple tables, one for each target_id';
+);
 
 CREATE TABLE IF NOT EXISTS `lw_user_log_action` (
     `action` TINYINT(4) NOT NULL PRIMARY KEY,
@@ -495,7 +493,7 @@ CREATE TABLE IF NOT EXISTS `lw_user_log_action` (
 CREATE TABLE IF NOT EXISTS `lw_user_token` (
     `token_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT(10) UNSIGNED NOT NULL,
-    `type` ENUM ('grant') NOT NULL,
+    `type` ENUM ('GRANT','EMAIL_CONFIRMATION','PASSWORD_RESET') NOT NULL,
     `token` VARCHAR(128) NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );

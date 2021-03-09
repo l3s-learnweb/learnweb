@@ -45,7 +45,7 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
         documentFileType = FileUtility.getFileExtension(documentFile.getName());
 
         if (FileUtility.isSupportedFileType(documentFileType)) {
-            documentUrl = resource.getDownloadUrl();
+            documentUrl = documentFile.getAbsoluteUrl();
             documentType = FileUtility.getFileType(documentFile.getName());
             documentFileId = documentFile.getId();
             documentKey = FileUtility.generateRevisionId(documentFile);

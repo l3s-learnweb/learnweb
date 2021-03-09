@@ -159,12 +159,12 @@ public class SpeechRepositoryCrawler implements Runnable {
             return resourceDao.findByIdOrElseThrow(speechEntity.getLearnwebResourceId());
         }
 
-        Resource resource = new Resource(Resource.WEB_RESOURCE, ResourceType.video, ResourceService.speechrepository);
+        Resource resource = new Resource(Resource.StorageType.WEB, ResourceType.video, ResourceService.speechrepository);
         resource.setTitle(speechEntity.getTitle());
         resource.setDescription(speechEntity.getDescription() + "\\n<br/>\n" + speechEntity.getNotes());
         resource.setUrl(speechEntity.getUrl());
         resource.setMaxImageUrl(speechEntity.getImageLink());
-        resource.setFileUrl(speechEntity.getVideoLink());
+        resource.setDownloadUrl(speechEntity.getVideoLink());
         resource.setDuration(speechEntity.getDuration());
         resource.setIdAtService(String.valueOf(speechEntity.getId()));
 

@@ -6,7 +6,7 @@
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-<ui:fragment rendered="${res.storageType == 2 and res.canEditResource(userBean.user)}">
+<ui:fragment rendered="${res.webResource and res.canEditResource(userBean.user)}">
 	<div>
 		<p:button onclick="loadArchiveUrlsModal();return false;" styleClass="secondary-btn" value="#{msg['Archive.change_thumbnail']}"/>
 

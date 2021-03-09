@@ -68,6 +68,12 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         ADD_PHOTO,
     }
 
+    public enum TokenType {
+        GRANT,
+        EMAIL_CONFIRMATION,
+        PASSWORD_RESET,
+    }
+
     public enum NotificationFrequency {
         NEVER(-1),
         DAILY(1),
@@ -420,7 +426,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         try {
             String confirmEmailUrl = Learnweb.config().getServerUrl() + "/lw/user/confirm_email.jsf?" +
                 "email=" + StringHelper.urlEncode(getEmail()) +
-                "&token=" + getEmailConfirmationToken();
+                "&token=" + emailConfirmationToken;
 
             Mail message = new Mail();
             message.setSubject("Confirmation request from Learnweb");

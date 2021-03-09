@@ -78,7 +78,7 @@ public class ResourceDocument {
         this.machineDescription = resource.getMachineDescription();
         this.url = resource.getUrl();
         this.language = resource.getLanguage().toLowerCase();
-        this.source = resource.getSource().toString().toLowerCase();
+        this.source = resource.getService().toString().toLowerCase();
         this.type = resource.getType().name();
         this.format = resource.getFormat();
         // this.duration = resource.getDuration();

@@ -97,9 +97,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     private void setTedResource(Resource tedResource) {
         this.tedResource = tedResource;
 
-        if (tedResource.getSource() == ResourceService.ted) {
+        if (tedResource.getService() == ResourceService.ted) {
             this.videoResourceId = tedTranscriptDao.findResourceIdBySlug(tedResource.getUrl()).orElseThrow(BeanAssert.NOT_FOUND);
-        } else if (tedResource.getSource() == ResourceService.tedx) {
+        } else if (tedResource.getService() == ResourceService.tedx) {
             this.videoResourceId = tedTranscriptDao.findResourceIdByTedXUrl(tedResource.getUrl()).orElseThrow(BeanAssert.NOT_FOUND);
         }
 

@@ -22,7 +22,7 @@
 	<ui:fragment rendered="${res.mainFile ne null}">
 		<dt class="col-sm-4">#{msg.file}:</dt>
 		<dd class="col-sm-8">
-			<a href="#{res.downloadUrl}" target="_top">
+			<a href="#{res.mainFile.absoluteUrl}" target="_top">
 				<i class="fas fa-fw fa-download" aria-hidden="true"></i>
 				#{res.mainFile.name}
 			</a>
@@ -94,10 +94,10 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{res.source != 'learnweb' and res.url != null}">
+	<ui:fragment rendered="#{res.service != 'learnweb' and res.url != null}">
 		<dt class="col-sm-4">#{msg.source}:</dt>
 		<dd class="col-sm-8">
-			<a href="#{userBean.getUrlProxied(res.url)}" target="_top"><h:outputText value="#{res.source.label}"/></a>
+			<a href="#{userBean.getUrlProxied(res.url)}" target="_top"><h:outputText value="#{res.service.label}"/></a>
 
 			<p:commandButton id="archive_now" process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
 							 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" styleClass="d-block"
@@ -197,7 +197,7 @@
 		</ui:fragment>
 	</ui:repeat>
 
-	<ui:fragment rendered="${res.source == 'ted' or res.source == 'tedx'}">
+	<ui:fragment rendered="${res.service == 'ted' or res.service == 'tedx'}">
 		<dt class="col-sm-4">#{msg.transcript}:</dt>
 		<dd class="col-sm-8">
 			<h:outputLink value="ted_transcript.jsf" target="_top">

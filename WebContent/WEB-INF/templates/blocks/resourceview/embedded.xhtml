@@ -14,8 +14,8 @@
         </ui:decorate>
     </c:when>
 
-    <c:when test="${res.type eq 'video' and res.embedded ne null}">
-        <h:outputText value="#{res.embedded}" escape="false"/>
+    <c:when test="${res.type eq 'video' and res.embeddedCode ne null}">
+        <h:outputText value="#{res.embeddedCode}" escape="false"/>
     </c:when>
 
     <c:when test="${res.type eq 'video'}">
@@ -37,7 +37,7 @@
     </c:when>
 
     <c:when test="${res.type eq 'pdf'}">
-        <iframe src="#{res.downloadUrl}" title="#{res.title}"></iframe>
+        <iframe src="#{res.combinedDownloadUrl}" title="#{res.title}"></iframe>
     </c:when>
 
     <c:when test="${res.type eq 'survey'}">

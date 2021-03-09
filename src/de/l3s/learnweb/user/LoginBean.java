@@ -211,7 +211,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             // this `grant` parameter is used by annotation client/waps proxy to receive grant token for user auth
             String grant = Faces.getRequestParameter("grant");
             if (StringUtils.isNotEmpty(grant)) {
-                String token = Learnweb.dao().getUserDao().findGrantToken(user.getId());
+                String token = Learnweb.dao().getUserDao().findTokenOrElseGenerate(User.TokenType.GRANT, user.getId());
                 log.debug("Grant token [{}] requested for user [{}], redirect to {}", token, user.getId(), redirectUrl);
                 Faces.redirect(redirectUrl + "?token=" + token);
             }

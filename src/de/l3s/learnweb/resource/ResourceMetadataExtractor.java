@@ -80,7 +80,7 @@ public class ResourceMetadataExtractor {
             Matcher youTubeMatcher = compYouTubePattern.matcher(resource.getUrl());
             if (youTubeMatcher.find()) {
                 resource.setType(ResourceType.video);
-                resource.setSource(ResourceService.youtube);
+                resource.setService(ResourceService.youtube);
                 resource.setIdAtService(youTubeMatcher.group(1));
                 processYoutubeResource(resource);
                 return;
@@ -90,7 +90,7 @@ public class ResourceMetadataExtractor {
             Matcher vimeoMatcher = compVimeoPattern.matcher(resource.getUrl());
             if (vimeoMatcher.find()) {
                 resource.setType(ResourceType.video);
-                resource.setSource(ResourceService.vimeo);
+                resource.setService(ResourceService.vimeo);
                 resource.setIdAtService(vimeoMatcher.group(1));
                 processVimeoResource(resource);
                 return;
@@ -100,7 +100,7 @@ public class ResourceMetadataExtractor {
             Matcher flickrMatcher = compFlickrPattern.matcher(resource.getUrl());
             if (flickrMatcher.find()) {
                 resource.setType(ResourceType.image);
-                resource.setSource(ResourceService.flickr);
+                resource.setService(ResourceService.flickr);
                 resource.setIdAtService(flickrMatcher.group(1));
                 processFlickrResource(resource);
                 return;
@@ -110,7 +110,7 @@ public class ResourceMetadataExtractor {
             Matcher flickrShortMatcher = compFlickrShortPattern.matcher(resource.getUrl());
             if (flickrShortMatcher.find()) {
                 resource.setType(ResourceType.image);
-                resource.setSource(ResourceService.flickr);
+                resource.setService(ResourceService.flickr);
                 resource.setIdAtService(decodeBase58(flickrShortMatcher.group(1)));
                 processFlickrResource(resource);
                 return;
@@ -120,7 +120,7 @@ public class ResourceMetadataExtractor {
             Matcher ipernityMatcher = compIpernityPattern.matcher(resource.getUrl());
             if (ipernityMatcher.find()) {
                 resource.setType(ResourceType.image);
-                resource.setSource(ResourceService.ipernity);
+                resource.setService(ResourceService.ipernity);
                 resource.setIdAtService(ipernityMatcher.group(1));
                 processIpernityResource(resource);
                 return;
@@ -128,7 +128,7 @@ public class ResourceMetadataExtractor {
 
             if (resource.getUrl().startsWith("https://webgate.ec.europa.eu/")) {
                 resource.setType(ResourceType.video);
-                resource.setSource(ResourceService.speechrepository);
+                resource.setService(ResourceService.speechrepository);
                 processSpeechRepositoryResource(resource);
                 return;
             }
@@ -166,7 +166,7 @@ public class ResourceMetadataExtractor {
             }
         } catch (JsonParseException | IOException e) {
             resource.setOnlineStatus(OnlineStatus.UNKNOWN); // most probably offline
-            log.error("Can't get more details about resource (id: {}, url: {}) from {} source.", resource.getId(), resource.getUrl(), resource.getSource(), e);
+            log.error("Can't get more details about resource (id: {}, url: {}) from {} source.", resource.getId(), resource.getUrl(), resource.getService(), e);
         }
     }
 
@@ -240,7 +240,7 @@ public class ResourceMetadataExtractor {
                 for (int i = 0, len = sourcesJsonArray.size(); i < len; ++i) {
                     JsonObject objectSource = sourcesJsonArray.get(i).getAsJsonObject();
                     if (!"auto".equals(objectSource.get("label").getAsString())) {
-                        resource.setFileUrl(objectSource.get("file").getAsString());
+                        resource.setDownloadUrl(objectSource.get("file").getAsString());
                         break;
                     }
                 }

@@ -52,7 +52,7 @@ public class IndexFakeNews extends MaintenanceTask {
                 .replaceFirst("Claim\n", "<b>Claim</b>: ") + "\n<br/>" + csvRecord.get("conclusion_text").trim()
                 .replaceFirst("Conclusion\n", "<b>Conclusion</b>: ");
 
-            Resource resource = new Resource(Resource.WEB_RESOURCE, ResourceType.website, ResourceService.factcheck);
+            Resource resource = new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.factcheck);
             resource.setMetadataValue("publisher", "fullfact.org");
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
@@ -97,7 +97,7 @@ public class IndexFakeNews extends MaintenanceTask {
     }
 
     private void indexSnopesFile(File file) throws IOException {
-        Resource resource = new Resource(Resource.WEB_RESOURCE, ResourceType.website, ResourceService.factcheck);
+        Resource resource = new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.factcheck);
         resource.setMetadataValue("publisher", "snopes.com");
         resource.setUserId(7727); // Admin
         resource.setGroupId(1346); // Admin Fact Check group

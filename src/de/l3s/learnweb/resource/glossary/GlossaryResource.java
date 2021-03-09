@@ -25,7 +25,7 @@ public class GlossaryResource extends Resource {
     private boolean clonedButNotSaved = false;
 
     public GlossaryResource() {
-        super(Resource.LEARNWEB_RESOURCE, ResourceType.glossary, ResourceService.learnweb);
+        super(StorageType.LEARNWEB, ResourceType.glossary, ResourceService.learnweb);
     }
 
     /**

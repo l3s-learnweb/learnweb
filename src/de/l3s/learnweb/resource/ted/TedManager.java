@@ -108,7 +108,7 @@ public class TedManager {
     }
 
     private Resource createResource(TedVideo tedVideo) {
-        Resource resource = new Resource(Resource.WEB_RESOURCE, ResourceType.video, ResourceService.ted);
+        Resource resource = new Resource(Resource.StorageType.WEB, ResourceType.video, ResourceService.ted);
 
         if (tedVideo.getResourceId() != 0) { // the video is already stored and will be updated
             resource = resourceDao.findByIdOrElseThrow(tedVideo.getResourceId());
@@ -156,7 +156,7 @@ public class TedManager {
 
             for (ResourceDecorator decoratedResource : resources) {
                 Resource resource = decoratedResource.getResource();
-                resource.setSource(ResourceService.teded);
+                resource.setService(ResourceService.teded);
 
                 //Regex for setting the title and author for TEDx videos
                 /*String[] title = resource.getTitle().split("\\|");
@@ -292,7 +292,7 @@ public class TedManager {
             if (tedVideoResourceId.isPresent()) {
                 Resource r2 = resourceDao.findByIdOrElseThrow(tedVideoResourceId.get());
 
-                resource.setSource(ResourceService.ted);
+                resource.setService(ResourceService.ted);
                 resource.setMaxImageUrl(r2.getMaxImageUrl());
                 for (File file : resource.getFiles().values()) {
                     fileDao.deleteSoft(file);

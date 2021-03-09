@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -216,7 +217,7 @@ public class Search implements Serializable {
             }
 
             // check if an other resource with the same url exists
-            if (!urlHashMap.add(resource.getUrl())) {
+            if (!urlHashMap.add(StringUtils.firstNonBlank(resource.getUrl(), resource.getCombinedDownloadUrl()))) {
                 duplicatedUrlCount++;
                 continue;
             }
@@ -390,9 +391,9 @@ public class Search implements Serializable {
 
         for (ResourceDecorator res : resources) {
             GroupedResources resGroup = new GroupedResources();
-            resGroup.setGroupName(res.getSource().getLabel());
+            resGroup.setGroupName(res.getService().getLabel());
 
-            if (res.getSource().getLabel().equalsIgnoreCase(searchService.name())) {
+            if (res.getService().getLabel().equalsIgnoreCase(searchService.name())) {
                 continue;
             }
 

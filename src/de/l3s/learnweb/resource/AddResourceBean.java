@@ -57,11 +57,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         // Set target view and defaults
         switch (type) {
             case "file":
-                resource = new Resource(Resource.LEARNWEB_RESOURCE, ResourceType.file, ResourceService.desktop);
+                resource = new Resource(Resource.StorageType.LEARNWEB, ResourceType.file, ResourceService.desktop);
                 break;
             case "url":
             case "website":
-                resource = new Resource(Resource.WEB_RESOURCE, ResourceType.website, ResourceService.internet);
+                resource = new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.internet);
                 break;
             case "glossary":
                 GlossaryResource glossaryResource = new GlossaryResource();
@@ -80,13 +80,13 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
                 this.resource = surveyResource;
                 break;
             case "document":
-                resource = new Resource(Resource.LEARNWEB_RESOURCE, ResourceType.document, ResourceService.learnweb);
+                resource = new Resource(Resource.StorageType.LEARNWEB, ResourceType.document, ResourceService.learnweb);
                 break;
             case "spreadsheet":
-                resource = new Resource(Resource.LEARNWEB_RESOURCE, ResourceType.spreadsheet, ResourceService.learnweb);
+                resource = new Resource(Resource.StorageType.LEARNWEB, ResourceType.spreadsheet, ResourceService.learnweb);
                 break;
             case "presentation":
-                resource = new Resource(Resource.LEARNWEB_RESOURCE, ResourceType.presentation, ResourceService.learnweb);
+                resource = new Resource(Resource.StorageType.LEARNWEB, ResourceType.presentation, ResourceService.learnweb);
                 break;
             default:
                 log.error("Unsupported resource type: {}", type);
@@ -176,7 +176,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     }
 
     public void addResource() {
-        if (this.resource.isOfficeResource() && this.resource.getSource() != ResourceService.desktop) {
+        if (this.resource.isOfficeResource() && this.resource.getService() != ResourceService.desktop) {
             this.createDocument();
         }
 

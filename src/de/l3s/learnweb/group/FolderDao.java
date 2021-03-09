@@ -72,11 +72,11 @@ public interface FolderDao extends SqlObject, Serializable {
         params.put("folder_id", SqlHelper.toNullable(folder.getId()));
         params.put("group_id", SqlHelper.toNullable(folder.getGroupId()));
         params.put("parent_folder_id", SqlHelper.toNullable(folder.getParentFolderId()));
-        params.put("name", folder.getTitle());
-        params.put("description", folder.getDescription());
         params.put("user_id", SqlHelper.toNullable(folder.getUserId()));
         params.put("deleted", folder.isDeleted());
-        params.put("updated_at", folder.getCreatedAt());
+        params.put("title", folder.getTitle());
+        params.put("description", SqlHelper.toNullable(folder.getDescription()));
+        params.put("created_at", folder.getCreatedAt());
 
         Optional<Integer> folderId = SqlHelper.handleSave(getHandle(), "lw_group_folder", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -99,11 +99,11 @@ public interface FolderDao extends SqlObject, Serializable {
                 folder.setId(rs.getInt("folder_id"));
                 folder.setGroupId(rs.getInt("group_id"));
                 folder.setParentFolderId(rs.getInt("parent_folder_id"));
-                folder.setTitle(rs.getString("name"));
-                folder.setDescription(rs.getString("description"));
                 folder.setUserId(rs.getInt("user_id"));
                 folder.setDeleted(rs.getBoolean("deleted"));
-                folder.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+                folder.setTitle(rs.getString("title"));
+                folder.setDescription(rs.getString("description"));
+                folder.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
                 cache.put(folder);
             }
 

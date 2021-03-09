@@ -38,7 +38,7 @@ public interface AnnouncementDao extends SqlObject, Serializable {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("news_id", SqlHelper.toNullable(announcement.getId()));
         params.put("title", announcement.getTitle());
-        params.put("message", announcement.getText());
+        params.put("text", announcement.getText());
         params.put("user_id", SqlHelper.toNullable(announcement.getUserId()));
         params.put("hidden", announcement.isHidden());
         params.put("created_at", announcement.getCreatedAt());
@@ -55,7 +55,7 @@ public interface AnnouncementDao extends SqlObject, Serializable {
             Announcement announcement = new Announcement();
             announcement.setId(rs.getInt("news_id"));
             announcement.setTitle(rs.getString("title"));
-            announcement.setText(rs.getString("message"));
+            announcement.setText(rs.getString("text"));
             announcement.setUserId(rs.getInt("user_id"));
             announcement.setHidden(rs.getBoolean("hidden"));
             announcement.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));

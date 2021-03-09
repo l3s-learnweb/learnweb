@@ -89,8 +89,8 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
         }
 
         if (showDetails) {
-            String[] type = {"", "uploaded resource", "web resource"};
-            String[] color = {"", "green", "blue"};
+            String[] type = {"uploaded resource", "web resource"};
+            String[] color = {"green", "blue"};
 
             StringBuilder sb = new StringBuilder();
             sb.append("<ul>");
@@ -106,12 +106,12 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                 resources.sort(Resource.createTitleComparator());
 
                 for (Resource resource : resources) {
-                    sb.append("\n\t<li><div style=\"color:").append(color[resource.getStorageType()]).append("\">");
+                    sb.append("\n\t<li><div style=\"color:").append(color[resource.getStorageType().ordinal()]).append("\">");
                     sb.append(resource.getTitle());
                     sb.append("; ");
-                    sb.append(type[resource.getStorageType()]);
+                    sb.append(type[resource.getStorageType().ordinal()]);
                     sb.append("; Source: ");
-                    sb.append(resource.getSource());
+                    sb.append(resource.getService());
                     sb.append("; Tags: ");
                     sb.append(resource.getTagsAsString());
                     sb.append("</div>");

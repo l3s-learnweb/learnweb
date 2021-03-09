@@ -153,7 +153,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         try {
             if (selectedResource.getId() == 0) { // resource is not yet stored at the database
                 newResource = selectedResource.getResource();
-                if (newResource.getSource() == ResourceService.bing) { // resource which is already saved in database already has wayback captures stored
+                if (newResource.getService() == ResourceService.bing) { // resource which is already saved in database already has wayback captures stored
                     Beans.getInstance(WaybackCapturesLogger.class).logWaybackCaptures(newResource);
                 }
             } else {
@@ -175,7 +175,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             log.debug("Add resource; group: {}; folder: {}", newResource.getGroupId(), newResource.getFolderId());
 
             // we need to check whether a Bing result is a PDF, Word or other document
-            if (newResource.getOriginalResourceId() == 0 && newResource.getSource() == ResourceService.bing
+            if (newResource.getOriginalResourceId() == 0 && newResource.getService() == ResourceService.bing
                 && (newResource.getType() == ResourceType.website || newResource.getType() == ResourceType.text)) {
                 log.debug("Extracting info from given url...");
                 FileInfo fileInfo = getLearnweb().getResourceMetadataExtractor().getFileInfo(newResource.getUrl());
@@ -213,8 +213,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
         PrimeFaces.current().ajax().addCallbackParam("slideIndex", params.get("slideIndex"));
         PrimeFaces.current().ajax().addCallbackParam("resourceRank", resource.getRank());
 
-        if (resource.getEmbedded() != null) {
-            PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbedded());
+        if (resource.getEmbeddedCode() != null) {
+            PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbeddedCode());
         } else {
             PrimeFaces.current().ajax().addCallbackParam("embeddedCode", "<img src=\"" + resource.getResource().getThumbnailLargest().getUrl() + "\" />");
         }

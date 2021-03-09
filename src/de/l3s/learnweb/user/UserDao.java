@@ -136,27 +136,29 @@ public interface UserDao extends SqlObject, Serializable {
         }).findOne();
     }
 
-    @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_user_token t USING(user_id) WHERE t.type = 'grant' AND t.token = ?")
-    Optional<User> findByGrantToken(String token);
+    @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_user_token t USING(user_id) WHERE t.type = ? AND t.token = ? LIMIT 1")
+    Optional<User> findByToken(User.TokenType tokenType, String token);
+
+    @SqlQuery("SELECT token FROM lw_user_token WHERE type = ? AND user_id = ? LIMIT 1")
+    Optional<String> findToken(User.TokenType tokenType, int userId);
 
     /**
-     * Retrieves token of type `grant` from database or creates a new one if missing.
+     * Retrieves token by type and userId from database or creates a new one if none exists.
      */
-    default String findGrantToken(int userId) {
-        Optional<String> dbToken = getHandle()
-            .select("SELECT token FROM lw_user_token WHERE type = 'grant' AND user_id = ?", userId).mapTo(String.class).findOne();
+    default String findTokenOrElseGenerate(User.TokenType tokenType, int userId) {
+        Optional<String> dbToken = findToken(tokenType, userId);
 
         if (dbToken.isEmpty()) {
             String token = RandomStringUtils.randomAlphanumeric(128);
-            insertGrantToken(userId, token);
+            insertToken(userId, tokenType, token);
             return token;
         }
 
         return dbToken.get();
     }
 
-    @SqlUpdate("INSERT INTO lw_user_token (user_id, type, token) VALUES(?, 'grant', ?)")
-    void insertGrantToken(int userId, String token);
+    @SqlUpdate("INSERT INTO lw_user_token (user_id, type, token) VALUES(?, ?, ?)")
+    void insertToken(int userId, User.TokenType tokenType, String token);
 
     /**
      * <ul>
@@ -207,27 +209,27 @@ public interface UserDao extends SqlObject, Serializable {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("user_id", SqlHelper.toNullable(user.getId()));
         params.put("username", user.getUsername());
-        params.put("email", user.getEmail());
+        params.put("email", SqlHelper.toNullable(user.getEmail()));
         params.put("email_confirmation_token", user.getEmailConfirmationToken());
-        params.put("is_email_confirmed", user.isEmailConfirmed());
+        params.put("email_confirmed", user.isEmailConfirmed());
         params.put("organisation_id", user.getOrganisationId());
         params.put("image_file_id", SqlHelper.toNullable(user.getImageFileId()));
         params.put("gender", user.getGender().ordinal());
-        params.put("dateofbirth", user.getDateOfBirth());
-        params.put("address", user.getAddress());
-        params.put("profession", user.getProfession());
-        params.put("additionalinformation", user.getAdditionalInformation());
-        params.put("interest", user.getInterest());
-        params.put("student_identifier", user.getStudentId());
+        params.put("birthdate", user.getDateOfBirth());
+        params.put("address", SqlHelper.toNullable(user.getAddress()));
+        params.put("profession", SqlHelper.toNullable(user.getProfession()));
+        params.put("bio", SqlHelper.toNullable(user.getAdditionalInformation()));
+        params.put("interest", SqlHelper.toNullable(user.getInterest()));
+        params.put("student_identifier", SqlHelper.toNullable(user.getStudentId()));
         params.put("is_admin", user.isAdmin());
         params.put("is_moderator", user.isModerator());
-        params.put("registration_date", user.getRegistrationDate());
+        params.put("created_at", user.getRegistrationDate());
         params.put("password", user.getPassword());
         params.put("hashing", user.getHashing().name());
         params.put("preferences", SerializationUtils.serialize(user.getPreferences()));
-        params.put("credits", user.getCredits());
-        params.put("fullname", user.getFullName());
-        params.put("affiliation", user.getAffiliation());
+        params.put("credits", SqlHelper.toNullable(user.getCredits()));
+        params.put("fullname", SqlHelper.toNullable(user.getFullName()));
+        params.put("affiliation", SqlHelper.toNullable(user.getAffiliation()));
         params.put("accept_terms_and_conditions", user.isAcceptTermsAndConditions());
         params.put("deleted", user.isDeleted());
         params.put("preferred_notification_frequency", user.getPreferredNotificationFrequency().toString());
@@ -271,21 +273,21 @@ public interface UserDao extends SqlObject, Serializable {
                 user.setUsername(rs.getString("username"));
                 user.setEmailRaw(rs.getString("email"));
                 user.setEmailConfirmationToken(rs.getString("email_confirmation_token"));
-                user.setEmailConfirmed(rs.getBoolean("is_email_confirmed"));
+                user.setEmailConfirmed(rs.getBoolean("email_confirmed"));
                 user.setPasswordRaw(rs.getString("password"));
                 user.setHashing(rs.getString("hashing"));
                 user.setOrganisationId(rs.getInt("organisation_id"));
                 user.setImageFileId(rs.getInt("image_file_id"));
                 user.setGender(User.Gender.values()[rs.getInt("gender")]);
-                user.setDateOfBirth(SqlHelper.getLocalDate(rs.getDate("dateofbirth")));
+                user.setDateOfBirth(SqlHelper.getLocalDate(rs.getDate("birthdate")));
                 user.setFullName(rs.getString("fullname"));
                 user.setAffiliation(rs.getString("affiliation"));
                 user.setAddress(rs.getString("address"));
                 user.setProfession(rs.getString("profession"));
-                user.setAdditionalInformation(rs.getString("additionalinformation"));
+                user.setAdditionalInformation(rs.getString("bio"));
                 user.setInterest(rs.getString("interest"));
                 user.setStudentId(rs.getString("student_identifier"));
-                user.setRegistrationDate(SqlHelper.getLocalDateTime(rs.getTimestamp("registration_date")));
+                user.setRegistrationDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
                 user.setCredits(rs.getString("credits"));
                 user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
                 user.setPreferredNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("preferred_notification_frequency")));

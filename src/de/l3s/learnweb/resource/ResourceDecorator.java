@@ -113,8 +113,8 @@ public class ResourceDecorator implements Serializable {
         return resource.getLocation();
     }
 
-    public ResourceService getSource() {
-        return resource.getSource();
+    public ResourceService getService() {
+        return resource.getService();
     }
 
     public String getDescription() {
@@ -125,8 +125,8 @@ public class ResourceDecorator implements Serializable {
         return resource.getDescriptionHTML();
     }
 
-    public String getEmbedded() {
-        return resource.getEmbedded();
+    public String getEmbeddedCode() {
+        return resource.getEmbeddedCode();
     }
 
     public String getUrl() {

@@ -123,7 +123,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
             }
         } else {
             // default sort
-            data.sort(new LazySorter("timestamp", SortOrder.DESCENDING));
+            data.sort(new LazySorter("createdAt", SortOrder.DESCENDING));
         }
 
         //paginate

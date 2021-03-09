@@ -29,7 +29,7 @@ public class SurveyResource extends Resource {
      * Do nothing constructor.
      */
     public SurveyResource() {
-        super(LEARNWEB_RESOURCE, ResourceType.survey, ResourceService.learnweb);
+        super(StorageType.LEARNWEB, ResourceType.survey, ResourceService.learnweb);
     }
 
     /**

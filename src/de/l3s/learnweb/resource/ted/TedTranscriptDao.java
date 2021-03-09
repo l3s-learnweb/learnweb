@@ -194,7 +194,7 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
                 rs.getString("words_selected"),
                 rs.getString("user_annotation"),
                 rs.getString("action"),
-                rs.getTimestamp("timestamp").toInstant()
+                rs.getTimestamp("created_at").toInstant()
             );
         }
     }

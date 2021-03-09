@@ -73,7 +73,7 @@ public class InterwebResultsWrapper implements Serializable {
         ResourceType resourceType = "text".equals(searchResult.getType()) ? ResourceType.website : ResourceType.valueOf(searchResult.getType());
         ResourceService resourceService = ResourceService.valueOf(searchResult.getService().toLowerCase().replace("-", ""));
 
-        Resource resource = new Resource(Resource.WEB_RESOURCE, resourceType, resourceService);
+        Resource resource = new Resource(Resource.StorageType.WEB, resourceType, resourceService);
         resource.setTitle(searchResult.getTitle());
         // resource.setViews(searchResult.getNumberOfViews());
         resource.setIdAtService(searchResult.getIdAtService());
@@ -99,9 +99,9 @@ public class InterwebResultsWrapper implements Serializable {
             resource.setDuration(searchResult.getDuration().intValue());
         }
 
-        // if (searchResult.getEmbeddedCode() != null) {
-        //     resource.setEmbeddedRaw(searchResult.getEmbeddedCode());
-        // }
+        if (searchResult.getEmbeddedUrl() != null) {
+            resource.setEmbeddedUrl(searchResult.getEmbeddedUrl());
+        }
 
         setThumbnails(resource, searchResult);
         return resource;
@@ -144,7 +144,7 @@ public class InterwebResultsWrapper implements Serializable {
         decoratedResource.setAuthorUrl(searchResult.getAuthorUrl());
 
         // bing description contains snippet with term highlighting
-        if (resource.getSource() == ResourceService.bing && decoratedResource.getSnippet() == null) {
+        if (resource.getService() == ResourceService.bing && decoratedResource.getSnippet() == null) {
             // add snippet
             decoratedResource.setSnippet(resource.getDescription());
             // remove search term highlighting from description
