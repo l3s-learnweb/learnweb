@@ -1,265 +1,265 @@
 CREATE TABLE IF NOT EXISTS `lw_bans` (
-    `addr` varchar(64) NOT NULL PRIMARY KEY,
-    `expires` timestamp DEFAULT NULL,
-    `attempts` int(11) DEFAULT NULL,
-    `reason` varchar(200) DEFAULT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+    `addr` VARCHAR(64) NOT NULL PRIMARY KEY,
+    `expires` TIMESTAMP DEFAULT NULL,
+    `attempts` INT(11) DEFAULT NULL,
+    `reason` VARCHAR(200) DEFAULT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_bounces` (
-    `bounce_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `email` varchar(64) DEFAULT NULL,
-    `received` timestamp NOT NULL,
-    `code` varchar(10) NOT NULL,
-    `description` varchar(64) DEFAULT NULL,
+    `bounce_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `email` VARCHAR(64) DEFAULT NULL,
+    `received` TIMESTAMP NOT NULL,
+    `code` VARCHAR(10) NOT NULL,
+    `description` VARCHAR(64) DEFAULT NULL,
     UNIQUE KEY `lw_bounces_email` (`email`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_comment` (
-    `comment_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `resource_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `text` mediumtext NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+    `comment_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `text` MEDIUMTEXT NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_course` (
-    `course_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `organisation_id` int(10) unsigned NOT NULL,
-    `title` varchar(50) NOT NULL,
-    `options_field1` bigint(20) NOT NULL DEFAULT 1,
-    `default_group_id` int(10) unsigned DEFAULT NULL,
-    `wizard_param` varchar(100) DEFAULT NULL,
-    `next_x_users_become_moderator` tinyint(3) unsigned NOT NULL DEFAULT 0,
-    `welcome_message` text DEFAULT NULL,
-    `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `course_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `organisation_id` INT(10) UNSIGNED NOT NULL,
+    `title` VARCHAR(50) NOT NULL,
+    `options_field1` BIGINT(20) NOT NULL DEFAULT 1,
+    `default_group_id` INT(10) UNSIGNED DEFAULT NULL,
+    `wizard_param` VARCHAR(100) DEFAULT NULL,
+    `next_x_users_become_moderator` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
+    `welcome_message` TEXT DEFAULT NULL,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     UNIQUE KEY `lw_course_wizard_param` (`wizard_param`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_file` (
-    `file_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `resource_id` int(10) unsigned DEFAULT NULL,
-    `type` enum ('ORGANISATION_BANNER','PROFILE_PICTURE','THUMBNAIL_MEDIUM','THUMBNAIL_LARGE','THUMBNAIL_SMALL','SYSTEM_FILE','DOC_HISTORY','DOC_CHANGES','ORIGINAL','MAIN','OBSOLETE') NOT NULL,
-    `name` varchar(255) NOT NULL,
-    `mime_type` varchar(255) NOT NULL,
-    `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+    `file_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `resource_id` INT(10) UNSIGNED DEFAULT NULL,
+    `type` ENUM ('ORGANISATION_BANNER','PROFILE_PICTURE','THUMBNAIL_MEDIUM','THUMBNAIL_LARGE','THUMBNAIL_SMALL','SYSTEM_FILE','DOC_HISTORY','DOC_CHANGES','ORIGINAL','MAIN','OBSOLETE') NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `mime_type` VARCHAR(255) NOT NULL,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_forum_post` (
-    `post_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `topic_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `text` text NOT NULL,
-    `category` varchar(70) DEFAULT '',
-    `edit_count` smallint(11) unsigned NOT NULL DEFAULT 0,
-    `edit_user_id` int(10) unsigned DEFAULT NULL,
-    `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `post_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `topic_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `text` TEXT NOT NULL,
+    `category` VARCHAR(70) DEFAULT '',
+    `edit_count` SMALLINT(11) UNSIGNED NOT NULL DEFAULT 0,
+    `edit_user_id` INT(10) UNSIGNED DEFAULT NULL,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_forum_post_topic_id` (`topic_id`, `created_at`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_forum_topic` (
-    `topic_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `group_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `deleted` tinyint(1) unsigned NOT NULL DEFAULT 0,
-    `title` varchar(100) NOT NULL DEFAULT '',
-    `views` int(11) DEFAULT 0,
-    `replies` int(11) DEFAULT 0,
-    `last_post_id` int(10) unsigned DEFAULT NULL,
-    `last_post_user_id` int(10) unsigned DEFAULT NULL,
-    `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `topic_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    `title` VARCHAR(100) NOT NULL DEFAULT '',
+    `views` INT(11) DEFAULT 0,
+    `replies` INT(11) DEFAULT 0,
+    `last_post_id` INT(10) UNSIGNED DEFAULT NULL,
+    `last_post_user_id` INT(10) UNSIGNED DEFAULT NULL,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_forum_topic_group_id` (`group_id`, `deleted`, `updated_at`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_forum_topic_user` (
-    `topic_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `last_visit` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `topic_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `last_visit` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
     PRIMARY KEY (`topic_id`, `user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_glossary_entry` (
-    `entry_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `resource_id` int(10) unsigned NOT NULL,
-    `original_entry_id` int(10) unsigned DEFAULT NULL,
-    `edit_user_id` int(10) unsigned DEFAULT NULL,
-    `user_id` int(10) unsigned NULL,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `topic_one` varchar(100) DEFAULT NULL,
-    `topic_two` varchar(100) DEFAULT NULL,
-    `topic_three` varchar(100) DEFAULT NULL,
-    `description` varchar(3000) DEFAULT NULL,
-    `description_pasted` tinyint(4) NOT NULL DEFAULT 0,
-    `imported` tinyint(1) NOT NULL DEFAULT 0,
-    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `entry_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `original_entry_id` INT(10) UNSIGNED DEFAULT NULL,
+    `edit_user_id` INT(10) UNSIGNED DEFAULT NULL,
+    `user_id` INT(10) UNSIGNED NULL,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `topic_one` VARCHAR(100) DEFAULT NULL,
+    `topic_two` VARCHAR(100) DEFAULT NULL,
+    `topic_three` VARCHAR(100) DEFAULT NULL,
+    `description` VARCHAR(3000) DEFAULT NULL,
+    `description_pasted` TINYINT(4) NOT NULL DEFAULT 0,
+    `imported` TINYINT(1) NOT NULL DEFAULT 0,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_glossary_entry_resource_id` (`resource_id`, `deleted`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_glossary_resource` (
-    `resource_id` int(10) unsigned NOT NULL PRIMARY KEY,
-    `allowed_languages` varchar(200) DEFAULT NULL
+    `resource_id` INT(10) UNSIGNED NOT NULL PRIMARY KEY,
+    `allowed_languages` VARCHAR(200) DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `lw_glossary_term` (
-    `term_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `entry_id` int(10) unsigned NOT NULL,
-    `original_term_id` int(10) unsigned DEFAULT NULL,
-    `edit_user_id` int(10) unsigned DEFAULT NULL,
-    `user_id` int(10) unsigned NULL,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `term` varchar(500) DEFAULT NULL,
-    `term_pasted` tinyint(4) NOT NULL DEFAULT 0,
-    `pronounciation` varchar(500) DEFAULT NULL,
-    `pronounciation_pasted` tinyint(4) NOT NULL DEFAULT 0,
-    `acronym` varchar(500) DEFAULT NULL,
-    `acronym_pasted` tinyint(4) NOT NULL DEFAULT 0,
-    `phraseology` varchar(4100) DEFAULT NULL,
-    `phraseology_pasted` tinyint(4) NOT NULL DEFAULT 0,
-    `language` varchar(500) NOT NULL,
-    `uses` varchar(500) DEFAULT NULL,
-    `source` varchar(500) DEFAULT NULL,
-    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+    `term_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `entry_id` INT(10) UNSIGNED NOT NULL,
+    `original_term_id` INT(10) UNSIGNED DEFAULT NULL,
+    `edit_user_id` INT(10) UNSIGNED DEFAULT NULL,
+    `user_id` INT(10) UNSIGNED NULL,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `term` VARCHAR(500) DEFAULT NULL,
+    `term_pasted` TINYINT(4) NOT NULL DEFAULT 0,
+    `pronounciation` VARCHAR(500) DEFAULT NULL,
+    `pronounciation_pasted` TINYINT(4) NOT NULL DEFAULT 0,
+    `acronym` VARCHAR(500) DEFAULT NULL,
+    `acronym_pasted` TINYINT(4) NOT NULL DEFAULT 0,
+    `phraseology` VARCHAR(4100) DEFAULT NULL,
+    `phraseology_pasted` TINYINT(4) NOT NULL DEFAULT 0,
+    `language` VARCHAR(500) NOT NULL,
+    `uses` VARCHAR(500) DEFAULT NULL,
+    `source` VARCHAR(500) DEFAULT NULL,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_group` (
-    `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `course_id` int(10) unsigned NOT NULL,
-    `leader_id` int(10) unsigned NOT NULL,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `title` varchar(150) NOT NULL,
-    `description` mediumtext DEFAULT NULL,
-    `max_member_count` smallint(6) NOT NULL DEFAULT -1 COMMENT 'number of allowed members; -1 = unlimitted',
-    `restriction_forum_category_required` tinyint(1) NOT NULL DEFAULT 0,
-    `policy_add` enum ('GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'GROUP_MEMBERS',
-    `policy_annotate` enum ('ALL_LEARNWEB_USERS','COURSE_MEMBERS','GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'ALL_LEARNWEB_USERS',
-    `policy_edit` enum ('GROUP_MEMBERS','GROUP_LEADER','GROUP_LEADER_AND_FILE_OWNER') NOT NULL DEFAULT 'GROUP_MEMBERS',
-    `policy_join` enum ('COURSE_MEMBERS','NOBODY','ALL_LEARNWEB_USERS','ORGANISATION_MEMBERS') NOT NULL DEFAULT 'COURSE_MEMBERS',
-    `policy_view` enum ('ALL_LEARNWEB_USERS','COURSE_MEMBERS','GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'ALL_LEARNWEB_USERS',
-    `hypothesis_link` varchar(255) DEFAULT NULL,
-    `hypothesis_token` varchar(255) DEFAULT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `group_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `course_id` INT(10) UNSIGNED NOT NULL,
+    `leader_id` INT(10) UNSIGNED NOT NULL,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `title` VARCHAR(150) NOT NULL,
+    `description` MEDIUMTEXT DEFAULT NULL,
+    `max_member_count` SMALLINT(6) NOT NULL DEFAULT -1 COMMENT 'number of allowed members; -1 = unlimitted',
+    `restriction_forum_category_required` TINYINT(1) NOT NULL DEFAULT 0,
+    `policy_add` ENUM ('GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'GROUP_MEMBERS',
+    `policy_annotate` ENUM ('ALL_LEARNWEB_USERS','COURSE_MEMBERS','GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'ALL_LEARNWEB_USERS',
+    `policy_edit` ENUM ('GROUP_MEMBERS','GROUP_LEADER','GROUP_LEADER_AND_FILE_OWNER') NOT NULL DEFAULT 'GROUP_MEMBERS',
+    `policy_join` ENUM ('COURSE_MEMBERS','NOBODY','ALL_LEARNWEB_USERS','ORGANISATION_MEMBERS') NOT NULL DEFAULT 'COURSE_MEMBERS',
+    `policy_view` ENUM ('ALL_LEARNWEB_USERS','COURSE_MEMBERS','GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'ALL_LEARNWEB_USERS',
+    `hypothesis_link` VARCHAR(255) DEFAULT NULL,
+    `hypothesis_token` VARCHAR(255) DEFAULT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_group_title` (`title`),
     KEY `lw_group_created_at` (`created_at`),
     KEY `lw_group_course` (`deleted`, `group_id`, `policy_join`, `course_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_group_folder` (
-    `folder_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `parent_folder_id` int(10) unsigned DEFAULT NULL,
-    `group_id` int(10) unsigned DEFAULT NULL,
-    `user_id` int(10) unsigned DEFAULT NULL,
-    `deleted` tinyint(1) unsigned NOT NULL DEFAULT 0,
-    `name` varchar(100) NOT NULL,
-    `description` text DEFAULT NULL,
-    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `folder_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `parent_folder_id` INT(10) UNSIGNED DEFAULT NULL,
+    `group_id` INT(10) UNSIGNED DEFAULT NULL,
+    `user_id` INT(10) UNSIGNED DEFAULT NULL,
+    `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    `name` VARCHAR(100) NOT NULL,
+    `description` TEXT DEFAULT NULL,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
     KEY `lw_group_folder_group_id` (`group_id`, `parent_folder_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_group_user` (
-    `group_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `join_time` timestamp NOT NULL DEFAULT current_timestamp(),
-    `last_visit` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `notification_frequency` enum ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
+    `group_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `join_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `last_visit` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `notification_frequency` ENUM ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
     PRIMARY KEY (`group_id`, `user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_message` (
-    `message_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `sender_user_id` int(10) unsigned NOT NULL,
-    `recipient_user_id` int(10) unsigned NOT NULL,
-    `title` varchar(2550) NOT NULL,
-    `text` longtext NOT NULL,
-    `seen` tinyint(1) NOT NULL DEFAULT 0,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `message_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `sender_user_id` INT(10) UNSIGNED NOT NULL,
+    `recipient_user_id` INT(10) UNSIGNED NOT NULL,
+    `title` VARCHAR(2550) NOT NULL,
+    `text` LONGTEXT NOT NULL,
+    `seen` TINYINT(1) NOT NULL DEFAULT 0,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_message_recipient_user_id` (`recipient_user_id`, `seen`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_news` (
-    `news_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user_id` int(10) unsigned NOT NULL,
-    `hidden` tinyint(1) NOT NULL DEFAULT 0,
-    `title` varchar(500) NOT NULL,
-    `message` varchar(5000) DEFAULT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+    `news_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `hidden` TINYINT(1) NOT NULL DEFAULT 0,
+    `title` VARCHAR(500) NOT NULL,
+    `message` VARCHAR(5000) DEFAULT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_organisation` (
-    `organisation_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `is_default` tinyint(1) DEFAULT NULL,
-    `title` varchar(60) NOT NULL,
-    `logo` longtext DEFAULT NULL,
-    `welcome_page` varchar(255) DEFAULT NULL,
-    `welcome_message` text DEFAULT NULL,
-    `options_field1` bigint(20) NOT NULL DEFAULT 0,
-    `default_search_text` varchar(16) NOT NULL DEFAULT 'bing',
-    `default_search_image` varchar(16) NOT NULL DEFAULT 'flickr',
-    `default_search_video` varchar(16) NOT NULL DEFAULT 'youtube',
-    `default_language` char(2) DEFAULT NULL,
-    `language_variant` varchar(10) DEFAULT NULL,
-    `banner_image_file_id` int(10) unsigned DEFAULT NULL,
-    `glossary_languages` varchar(1000) DEFAULT NULL,
+    `organisation_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `is_default` TINYINT(1) DEFAULT NULL,
+    `title` VARCHAR(60) NOT NULL,
+    `logo` LONGTEXT DEFAULT NULL,
+    `welcome_page` VARCHAR(255) DEFAULT NULL,
+    `welcome_message` TEXT DEFAULT NULL,
+    `options_field1` BIGINT(20) NOT NULL DEFAULT 0,
+    `default_search_text` VARCHAR(16) NOT NULL DEFAULT 'bing',
+    `default_search_image` VARCHAR(16) NOT NULL DEFAULT 'flickr',
+    `default_search_video` VARCHAR(16) NOT NULL DEFAULT 'youtube',
+    `default_language` CHAR(2) DEFAULT NULL,
+    `language_variant` VARCHAR(10) DEFAULT NULL,
+    `banner_image_file_id` INT(10) UNSIGNED DEFAULT NULL,
+    `glossary_languages` VARCHAR(1000) DEFAULT NULL,
     UNIQUE KEY `lw_organisation_is_default` (`is_default`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_requests` (
-    `request_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `addr` varchar(64) NOT NULL,
-    `requests` int(11) DEFAULT NULL,
-    `logins` int(11) DEFAULT NULL,
-    `usernames` varchar(512) DEFAULT NULL,
-    `updated_at` timestamp NOT NULL
+    `request_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `addr` VARCHAR(64) NOT NULL,
+    `requests` INT(11) DEFAULT NULL,
+    `logins` INT(11) DEFAULT NULL,
+    `usernames` VARCHAR(512) DEFAULT NULL,
+    `updated_at` TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `lw_resource` (
-    `resource_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `group_id` int(10) unsigned DEFAULT NULL,
-    `folder_id` int(10) unsigned DEFAULT NULL,
-    `title` varchar(1000) NOT NULL,
-    `description` mediumtext DEFAULT NULL,
-    `url` varchar(4000) DEFAULT NULL,
-    `storage_type` tinyint(1) NOT NULL,
-    `rights` tinyint(1) NOT NULL,
-    `source` enum ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck','desktop','internet','slideshare','speechrepository') NOT NULL,
-    `language` varchar(200) DEFAULT NULL,
-    `author` varchar(255) DEFAULT NULL,
-    `type` enum ('text','video','image','audio','pdf','website','spreadsheet','presentation','document','file','survey','glossary') NOT NULL,
-    `format` varchar(255) NOT NULL,
-    `duration` int(10) unsigned DEFAULT NULL,
-    `width` int(10) unsigned DEFAULT NULL,
-    `height` int(10) unsigned DEFAULT NULL,
-    `owner_user_id` int(10) unsigned NOT NULL,
-    `id_at_service` varchar(100) DEFAULT NULL,
-    `rating` int(11) NOT NULL,
-    `rate_number` int(11) NOT NULL,
-    `file_id` int(10) unsigned DEFAULT NULL,
-    `file_name` varchar(200) DEFAULT NULL,
-    `file_url` varchar(1000) DEFAULT NULL,
-    `max_image_url` varchar(1000) DEFAULT NULL,
-    `query` varchar(1000) DEFAULT NULL,
-    `original_resource_id` int(10) unsigned DEFAULT NULL,
-    `machine_description` longtext DEFAULT NULL,
-    `access` varchar(1) DEFAULT NULL,
-    `thumbnail0_file_id` int(10) unsigned DEFAULT NULL,
-    `thumbnail2_file_id` int(10) unsigned DEFAULT NULL,
-    `thumbnail4_file_id` int(10) unsigned DEFAULT NULL,
-    `embeddedRaw` mediumtext DEFAULT NULL,
-    `transcript` longtext DEFAULT NULL,
-    `read_only_transcript` tinyint(1) NOT NULL DEFAULT 0,
-    `online_status` enum ('UNKNOWN','ONLINE','OFFLINE','PROCESSING') NOT NULL DEFAULT 'UNKNOWN',
-    `restricted` tinyint(1) NOT NULL DEFAULT 0,
-    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-    `metadata` blob DEFAULT NULL,
+    `resource_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `group_id` INT(10) UNSIGNED DEFAULT NULL,
+    `folder_id` INT(10) UNSIGNED DEFAULT NULL,
+    `title` VARCHAR(1000) NOT NULL,
+    `description` MEDIUMTEXT DEFAULT NULL,
+    `url` VARCHAR(4000) DEFAULT NULL,
+    `storage_type` TINYINT(1) NOT NULL,
+    `rights` TINYINT(1) NOT NULL,
+    `source` ENUM ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck','desktop','internet','slideshare','speechrepository') NOT NULL,
+    `language` VARCHAR(200) DEFAULT NULL,
+    `author` VARCHAR(255) DEFAULT NULL,
+    `type` ENUM ('text','video','image','audio','pdf','website','spreadsheet','presentation','document','file','survey','glossary') NOT NULL,
+    `format` VARCHAR(255) NOT NULL,
+    `duration` INT(10) UNSIGNED DEFAULT NULL,
+    `width` INT(10) UNSIGNED DEFAULT NULL,
+    `height` INT(10) UNSIGNED DEFAULT NULL,
+    `owner_user_id` INT(10) UNSIGNED NOT NULL,
+    `id_at_service` VARCHAR(100) DEFAULT NULL,
+    `rating` INT(11) NOT NULL,
+    `rate_number` INT(11) NOT NULL,
+    `file_id` INT(10) UNSIGNED DEFAULT NULL,
+    `file_name` VARCHAR(200) DEFAULT NULL,
+    `file_url` VARCHAR(1000) DEFAULT NULL,
+    `max_image_url` VARCHAR(1000) DEFAULT NULL,
+    `query` VARCHAR(1000) DEFAULT NULL,
+    `original_resource_id` INT(10) UNSIGNED DEFAULT NULL,
+    `machine_description` LONGTEXT DEFAULT NULL,
+    `access` VARCHAR(1) DEFAULT NULL,
+    `thumbnail0_file_id` INT(10) UNSIGNED DEFAULT NULL,
+    `thumbnail2_file_id` INT(10) UNSIGNED DEFAULT NULL,
+    `thumbnail4_file_id` INT(10) UNSIGNED DEFAULT NULL,
+    `embeddedraw` MEDIUMTEXT DEFAULT NULL,
+    `transcript` LONGTEXT DEFAULT NULL,
+    `read_only_transcript` TINYINT(1) NOT NULL DEFAULT 0,
+    `online_status` ENUM ('UNKNOWN','ONLINE','OFFLINE','PROCESSING') NOT NULL DEFAULT 'UNKNOWN',
+    `restricted` TINYINT(1) NOT NULL DEFAULT 0,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `metadata` BLOB DEFAULT NULL,
     KEY `lw_resource_type` (`type`),
     KEY `lw_resource_storage_type` (`storage_type`, `deleted`),
     KEY `lw_resource_url` (`url`),
@@ -267,502 +267,489 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
 );
 
 CREATE TABLE IF NOT EXISTS `lw_resource_archiveurl` (
-    `resource_id` int(10) unsigned NOT NULL,
-    `archive_url` varchar(600) NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `archive_url` VARCHAR(600) NOT NULL,
+    `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_resource_history` (
-    `resource_history_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `resource_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NULL,
-    `file_id` int(10) unsigned NOT NULL,
-    `prev_file_id` int(10) unsigned NOT NULL,
-    `changes_file_id` int(10) unsigned NOT NULL,
-    `server_version` varchar(20) NOT NULL,
-    `document_created` varchar(20) NOT NULL,
-    `document_key` varchar(20) NOT NULL,
-    `document_version` int(11) NOT NULL,
-    `document_changes` mediumtext DEFAULT NULL
+    `resource_history_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NULL,
+    `file_id` INT(10) UNSIGNED NOT NULL,
+    `prev_file_id` INT(10) UNSIGNED NOT NULL,
+    `changes_file_id` INT(10) UNSIGNED NOT NULL,
+    `server_version` VARCHAR(20) NOT NULL,
+    `document_created` VARCHAR(20) NOT NULL,
+    `document_key` VARCHAR(20) NOT NULL,
+    `document_version` INT(11) NOT NULL,
+    `document_changes` MEDIUMTEXT DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `lw_resource_rating` (
-    `resource_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `rating` tinyint(1) NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `rating` TINYINT(1) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
     PRIMARY KEY (`resource_id`, `user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_resource_tag` (
-    `resource_id` int(10) unsigned NOT NULL,
-    `tag_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `tag_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_submission` (
-    `submission_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `course_id` int(10) unsigned NOT NULL,
-    `title` varchar(100) DEFAULT NULL,
-    `description` varchar(1000) DEFAULT NULL,
-    `open_date` timestamp DEFAULT NULL,
-    `close_date` timestamp DEFAULT NULL,
-    `number_of_resources` int(10) NOT NULL DEFAULT 3,
-    `survey_resource_id` int(10) unsigned DEFAULT NULL,
+    `submission_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `course_id` INT(10) UNSIGNED NOT NULL,
+    `title` VARCHAR(100) DEFAULT NULL,
+    `description` VARCHAR(1000) DEFAULT NULL,
+    `open_date` TIMESTAMP DEFAULT NULL,
+    `close_date` TIMESTAMP DEFAULT NULL,
+    `number_of_resources` INT(10) NOT NULL DEFAULT 3,
+    `survey_resource_id` INT(10) UNSIGNED DEFAULT NULL,
     KEY `lw_submission_course_id` (`course_id`, `deleted`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_submission_resource` (
-    `submission_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `resource_id` int(10) unsigned NOT NULL,
+    `submission_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `resource_id` INT(10) UNSIGNED NOT NULL,
     PRIMARY KEY (`submission_id`, `user_id`, `resource_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_submission_status` (
-    `submission_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `submitted` tinyint(1) NOT NULL DEFAULT 1,
-    `survey_resource_id` int(10) unsigned DEFAULT NULL,
+    `submission_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `submitted` TINYINT(1) NOT NULL DEFAULT 1,
+    `survey_resource_id` INT(10) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (`submission_id`, `user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_survey` (
-    `survey_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `organisation_id` int(10) unsigned NOT NULL,
-    `title` varchar(100) NOT NULL,
-    `description` varchar(1000) NOT NULL,
-    `user_id` int(10) unsigned NOT NULL COMMENT 'the user who created this template',
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `public_template` tinyint(1) NOT NULL DEFAULT 0
+    `survey_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `organisation_id` INT(10) UNSIGNED NOT NULL,
+    `title` VARCHAR(100) NOT NULL,
+    `description` VARCHAR(1000) NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL COMMENT 'the user who created this template',
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `public_template` TINYINT(1) NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS `lw_survey_answer` (
-    `resource_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `question_id` int(10) unsigned NOT NULL,
-    `answer` varchar(6000) DEFAULT NULL COMMENT 'delimited by ||| if multi valued',
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `question_id` INT(10) UNSIGNED NOT NULL,
+    `answer` VARCHAR(6000) DEFAULT NULL COMMENT 'delimited by ||| if multi valued',
     PRIMARY KEY (`resource_id`, `user_id`, `question_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_survey_question` (
-    `question_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `survey_id` int(10) unsigned NOT NULL,
-    `order` smallint(5) unsigned DEFAULT NULL,
-    `question` varchar(1000) NOT NULL,
-    `question_type` enum ('INPUT_TEXT','INPUT_TEXTAREA','ONE_MENU','ONE_MENU_EDITABLE','MULTIPLE_MENU','FULLWIDTH_HEADER','FULLWIDTH_DESCRIPTION','ONE_RADIO','MANY_CHECKBOX') NOT NULL,
-    `answers` varchar(6000) DEFAULT NULL COMMENT 'answers separated by ||| delimiter',
-    `extra` varchar(1000) DEFAULT NULL,
-    `option` varchar(100) DEFAULT NULL COMMENT 'optional value, depends on question_type',
-    `info` varchar(1000) DEFAULT NULL COMMENT 'optional description that can be shown as tooltip',
-    `required` tinyint(1) NOT NULL DEFAULT 0
+    `question_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `survey_id` INT(10) UNSIGNED NOT NULL,
+    `order` SMALLINT(5) UNSIGNED DEFAULT NULL,
+    `question` VARCHAR(1000) NOT NULL,
+    `question_type` ENUM ('INPUT_TEXT','INPUT_TEXTAREA','ONE_MENU','ONE_MENU_EDITABLE','MULTIPLE_MENU','FULLWIDTH_HEADER','FULLWIDTH_DESCRIPTION','ONE_RADIO','MANY_CHECKBOX') NOT NULL,
+    `answers` VARCHAR(6000) DEFAULT NULL COMMENT 'answers separated by ||| delimiter',
+    `extra` VARCHAR(1000) DEFAULT NULL,
+    `option` VARCHAR(100) DEFAULT NULL COMMENT 'optional value, depends on question_type',
+    `info` VARCHAR(1000) DEFAULT NULL COMMENT 'optional description that can be shown as tooltip',
+    `required` TINYINT(1) NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS `lw_survey_question_option` (
-    `answer_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `question_id` int(10) unsigned NOT NULL,
-    `value` varchar(1000) DEFAULT NULL
+    `answer_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `question_id` INT(10) UNSIGNED NOT NULL,
+    `value` VARCHAR(1000) DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `lw_survey_resource` (
-    `resource_id` int(10) unsigned NOT NULL PRIMARY KEY,
-    `survey_id` int(10) unsigned NOT NULL,
-    `open_date` timestamp DEFAULT NULL,
-    `close_date` timestamp DEFAULT NULL,
-    `editable` tinyint(1) NOT NULL DEFAULT 0,
+    `resource_id` INT(10) UNSIGNED NOT NULL PRIMARY KEY,
+    `survey_id` INT(10) UNSIGNED NOT NULL,
+    `open_date` TIMESTAMP DEFAULT NULL,
+    `close_date` TIMESTAMP DEFAULT NULL,
+    `editable` TINYINT(1) NOT NULL DEFAULT 0,
     KEY `lw_survey_resource_survey_id` (`survey_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_survey_resource_user` (
-    `resource_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `submitted` tinyint(1) NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `submitted` TINYINT(1) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`resource_id`, `user_id`)
 ) COMMENT ='Contains submission status for a particular user';
 
 CREATE TABLE IF NOT EXISTS `lw_tag` (
-    `tag_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` varchar(230) NOT NULL,
+    `tag_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(230) NOT NULL,
     KEY `lw_tag_name` (`name`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_thumb` (
-    `resource_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `direction` tinyint(1) NOT NULL,
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `direction` TINYINT(1) NOT NULL,
     PRIMARY KEY (`resource_id`, `user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_transcript_log` (
-    `user_id` int(10) unsigned NOT NULL,
-    `resource_id` int(10) unsigned NOT NULL,
-    `words_selected` longtext NOT NULL,
-    `user_annotation` mediumtext NOT NULL,
-    `action` char(25) NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `words_selected` LONGTEXT NOT NULL,
+    `user_annotation` MEDIUMTEXT NOT NULL,
+    `action` CHAR(25) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_transcript_selections` (
-    `resource_id` int(10) unsigned NOT NULL,
-    `words_selected` longtext NOT NULL,
-    `user_annotation` mediumtext NOT NULL,
-    `ua_corrected` mediumtext DEFAULT NULL,
-    `start_offset` int(10) NOT NULL,
-    `end_offset` int(10) NOT NULL
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `words_selected` LONGTEXT NOT NULL,
+    `user_annotation` MEDIUMTEXT NOT NULL,
+    `ua_corrected` MEDIUMTEXT DEFAULT NULL,
+    `start_offset` INT(10) NOT NULL,
+    `end_offset` INT(10) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `lw_transcript_summary` (
-    `user_id` int(10) unsigned NOT NULL,
-    `resource_id` int(10) unsigned NOT NULL,
-    `summary_type` enum ('SHORT','LONG','DETAILED') NOT NULL,
-    `summary_text` mediumtext NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `summary_type` ENUM ('SHORT','LONG','DETAILED') NOT NULL,
+    `summary_text` MEDIUMTEXT NOT NULL,
     PRIMARY KEY (`user_id`, `resource_id`, `summary_type`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_user` (
-    `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` tinyint(1) NOT NULL DEFAULT 0,
-    `username` varchar(50) NOT NULL,
-    `password` varchar(512) DEFAULT NULL,
-    `hashing` enum ('EMPTY','MD5','PBKDF2') NOT NULL DEFAULT 'MD5',
-    `email` varchar(250) DEFAULT NULL,
-    `email_confirmation_token` varchar(32) DEFAULT NULL,
-    `is_email_confirmed` tinyint(1) unsigned NOT NULL DEFAULT 1,
-    `organisation_id` int(10) unsigned NOT NULL,
-    `image_file_id` int(10) unsigned DEFAULT NULL,
-    `gender` tinyint(1) NOT NULL DEFAULT 0,
-    `dateofbirth` date DEFAULT NULL,
-    `address` varchar(255) DEFAULT NULL,
-    `profession` varchar(105) DEFAULT NULL,
-    `additionalinformation` varchar(255) DEFAULT NULL,
-    `interest` varchar(255) DEFAULT NULL,
-    `student_identifier` varchar(50) DEFAULT NULL,
-    `phone` varchar(255) DEFAULT NULL,
-    `is_admin` tinyint(1) NOT NULL DEFAULT 0,
-    `is_moderator` tinyint(1) NOT NULL DEFAULT 0,
-    `registration_date` timestamp NOT NULL DEFAULT current_timestamp(),
-    `preferences` blob DEFAULT NULL,
-    `credits` varchar(255) DEFAULT NULL,
-    `fullname` varchar(105) DEFAULT NULL,
-    `affiliation` varchar(105) DEFAULT NULL,
-    `accept_terms_and_conditions` tinyint(1) NOT NULL DEFAULT 0,
-    `preferred_notification_frequency` enum ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
-    `time_zone` varchar(100) DEFAULT 'Europe/Berlin',
-    `language` varchar(10) DEFAULT 'en-UK',
-    `guides` bigint(20) NOT NULL DEFAULT 0,
+    `user_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `username` VARCHAR(50) NOT NULL,
+    `password` VARCHAR(512) DEFAULT NULL,
+    `hashing` ENUM ('EMPTY','MD5','PBKDF2') NOT NULL DEFAULT 'MD5',
+    `email` VARCHAR(250) DEFAULT NULL,
+    `email_confirmation_token` VARCHAR(32) DEFAULT NULL,
+    `is_email_confirmed` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
+    `organisation_id` INT(10) UNSIGNED NOT NULL,
+    `image_file_id` INT(10) UNSIGNED DEFAULT NULL,
+    `gender` TINYINT(1) NOT NULL DEFAULT 0,
+    `dateofbirth` DATE DEFAULT NULL,
+    `address` VARCHAR(255) DEFAULT NULL,
+    `profession` VARCHAR(105) DEFAULT NULL,
+    `additionalinformation` VARCHAR(255) DEFAULT NULL,
+    `interest` VARCHAR(255) DEFAULT NULL,
+    `student_identifier` VARCHAR(50) DEFAULT NULL,
+    `phone` VARCHAR(255) DEFAULT NULL,
+    `is_admin` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_moderator` TINYINT(1) NOT NULL DEFAULT 0,
+    `registration_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `preferences` BLOB DEFAULT NULL,
+    `credits` VARCHAR(255) DEFAULT NULL,
+    `fullname` VARCHAR(105) DEFAULT NULL,
+    `affiliation` VARCHAR(105) DEFAULT NULL,
+    `accept_terms_and_conditions` TINYINT(1) NOT NULL DEFAULT 0,
+    `preferred_notification_frequency` ENUM ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
+    `time_zone` VARCHAR(100) DEFAULT 'Europe/Berlin',
+    `language` VARCHAR(10) DEFAULT 'en-UK',
+    `guides` BIGINT(20) NOT NULL DEFAULT 0,
     UNIQUE KEY `lw_user_username` (`username`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_user_auth` (
-    `auth_id` bigint(20) unsigned NOT NULL PRIMARY KEY,
-    `user_id` int(10) unsigned NOT NULL,
-    `token_hash` varchar(64) NOT NULL,
-    `expires` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+    `auth_id` BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `token_hash` VARCHAR(64) NOT NULL,
+    `expires` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()
 ) COMMENT ='Used to store users sessions, used by "Remember for 30 days" feature';
 
 CREATE TABLE IF NOT EXISTS `lw_course_user` (
-    `course_id` int(10) unsigned NOT NULL,
-    `user_id` int(10) unsigned NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `course_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`user_id`, `course_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_user_log` (
-    `log_entry_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user_id` int(10) unsigned NOT NULL,
-    `group_id` int(10) unsigned DEFAULT NULL,
-    `session_id` char(32) NOT NULL,
-    `action` tinyint(3) unsigned NOT NULL,
-    `target_id` int(11) DEFAULT NULL,
-    `params` varchar(255) NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `log_entry_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `group_id` INT(10) UNSIGNED DEFAULT NULL,
+    `session_id` CHAR(32) NOT NULL,
+    `action` TINYINT(3) UNSIGNED NOT NULL,
+    `target_id` INT(11) DEFAULT NULL,
+    `params` VARCHAR(255) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_user_log_session_id` (`session_id`),
     KEY `lw_user_log_group_id` (`group_id`, `action`, `user_id`)
 ) COMMENT ='TODO: refactor to multiple tables, one for each target_id';
 
 CREATE TABLE IF NOT EXISTS `lw_user_log_action` (
-    `action` tinyint(4) NOT NULL PRIMARY KEY,
-    `name` varchar(100) NOT NULL,
-    `target` enum ('NONE','RESOURCE_ID','GROUP_ID','USER_ID','FORUM_TOPIC_ID','FORUM_POST_ID','COURSE_ID','FOLDER_ID','OTHER') NOT NULL,
-    `category` enum ('OTHER','RESOURCE','FOLDER','GROUP','GLOSSARY','SURVEY','SEARCH','USER','FORUM','MODERATOR') NOT NULL
+    `action` TINYINT(4) NOT NULL PRIMARY KEY,
+    `name` VARCHAR(100) NOT NULL,
+    `target` ENUM ('NONE','RESOURCE_ID','GROUP_ID','USER_ID','FORUM_TOPIC_ID','FORUM_POST_ID','COURSE_ID','FOLDER_ID','OTHER') NOT NULL,
+    `category` ENUM ('OTHER','RESOURCE','FOLDER','GROUP','GLOSSARY','SURVEY','SEARCH','USER','FORUM','MODERATOR') NOT NULL
 ) COMMENT ='This table is only used for debugging. Is not automatically synced with Action.java';
 
 CREATE TABLE IF NOT EXISTS `lw_user_token` (
-    `token_id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user_id` int(10) unsigned NOT NULL,
-    `type` enum ('grant') NOT NULL,
-    `token` varchar(128) NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+    `token_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `type` ENUM ('grant') NOT NULL,
+    `token` VARCHAR(128) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
-ALTER TABLE `lw_course` ADD CONSTRAINT `FK_lw_course_lw_group` FOREIGN KEY (`default_group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_course` ADD CONSTRAINT `FK_lw_course_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_course` ADD CONSTRAINT `fk_lw_course_lw_group` FOREIGN KEY (`default_group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_course` ADD CONSTRAINT `fk_lw_course_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_comment` ADD CONSTRAINT `FK_lw_comment_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_comment` ADD CONSTRAINT `FK_lw_comment_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_comment` ADD CONSTRAINT `fk_lw_comment_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_comment` ADD CONSTRAINT `fk_lw_comment_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_file` ADD CONSTRAINT `FK_lw_file_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_file` ADD CONSTRAINT `fk_lw_file_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_forum_post` ADD CONSTRAINT `FK_lw_forum_post_lw_forum_topic` FOREIGN KEY (`topic_id`) REFERENCES `lw_forum_topic` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_forum_post` ADD CONSTRAINT `FK_lw_forum_post_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_forum_post` ADD CONSTRAINT `FK_lw_forum_post_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_forum_topic` FOREIGN KEY (`topic_id`) REFERENCES `lw_forum_topic` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_last_post` FOREIGN KEY (`last_post_id`) REFERENCES `lw_forum_post` (`post_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `FK_lw_forum_topic_last_post_lw_user` FOREIGN KEY (`last_post_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `fk_lw_forum_topic_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `fk_lw_forum_topic_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `fk_lw_forum_topic_last_post` FOREIGN KEY (`last_post_id`) REFERENCES `lw_forum_post` (`post_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `fk_lw_forum_topic_last_post_lw_user` FOREIGN KEY (`last_post_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `FK_lw_glossary_entry_lw_glossary_entry` FOREIGN KEY (`original_entry_id`) REFERENCES `lw_glossary_entry` (`entry_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `FK_lw_glossary_entry_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `FK_lw_glossary_entry_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `FK_lw_glossary_entry_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `fk_lw_glossary_entry_lw_glossary_entry` FOREIGN KEY (`original_entry_id`) REFERENCES `lw_glossary_entry` (`entry_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `fk_lw_glossary_entry_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `fk_lw_glossary_entry_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_entry` ADD CONSTRAINT `fk_lw_glossary_entry_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_glossary_resource` ADD CONSTRAINT `FK_lw_glossary_resource_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_resource` ADD CONSTRAINT `fk_lw_glossary_resource_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `FK_lw_glossary_term_lw_glossary_entry` FOREIGN KEY (`entry_id`) REFERENCES `lw_glossary_entry` (`entry_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `FK_lw_glossary_term_lw_glossary_term` FOREIGN KEY (`original_term_id`) REFERENCES `lw_glossary_term` (`term_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `FK_lw_glossary_term_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `FK_lw_glossary_term_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `fk_lw_glossary_term_lw_glossary_entry` FOREIGN KEY (`entry_id`) REFERENCES `lw_glossary_entry` (`entry_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `fk_lw_glossary_term_lw_glossary_term` FOREIGN KEY (`original_term_id`) REFERENCES `lw_glossary_term` (`term_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `fk_lw_glossary_term_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_glossary_term` ADD CONSTRAINT `fk_lw_glossary_term_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_group` ADD CONSTRAINT `FK_lw_group_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_group` ADD CONSTRAINT `FK_lw_group_lw_user` FOREIGN KEY (`leader_id`) REFERENCES `lw_user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `lw_group` ADD CONSTRAINT `fk_lw_group_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_group` ADD CONSTRAINT `fk_lw_group_lw_user` FOREIGN KEY (`leader_id`) REFERENCES `lw_user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
-ALTER TABLE `lw_group_folder` ADD CONSTRAINT `FK_lw_group_folder_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_group_folder` ADD CONSTRAINT `FK_lw_group_folder_lw_group_folder` FOREIGN KEY (`parent_folder_id`) REFERENCES `lw_group_folder` (`folder_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_group_folder` ADD CONSTRAINT `FK_lw_group_folder_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_group_folder` ADD CONSTRAINT `fk_lw_group_folder_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_group_folder` ADD CONSTRAINT `fk_lw_group_folder_lw_group_folder` FOREIGN KEY (`parent_folder_id`) REFERENCES `lw_group_folder` (`folder_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_group_folder` ADD CONSTRAINT `fk_lw_group_folder_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_group_user` ADD CONSTRAINT `FK_lw_group_user_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_group_user` ADD CONSTRAINT `FK_lw_group_user_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_group_user` ADD CONSTRAINT `fk_lw_group_user_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_group_user` ADD CONSTRAINT `fk_lw_group_user_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_message` ADD CONSTRAINT `FK_lw_message_lw_user_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_message` ADD CONSTRAINT `FK_lw_message_lw_user_recipient` FOREIGN KEY (`recipient_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_message` ADD CONSTRAINT `fk_lw_message_lw_user_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_message` ADD CONSTRAINT `fk_lw_message_lw_user_recipient` FOREIGN KEY (`recipient_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_news` ADD CONSTRAINT `FK_lw_news_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_news` ADD CONSTRAINT `fk_lw_news_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_organisation` ADD CONSTRAINT `FK_lw_organisation_lw_file` FOREIGN KEY (`banner_image_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_organisation` ADD CONSTRAINT `fk_lw_organisation_lw_file` FOREIGN KEY (`banner_image_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file` FOREIGN KEY (`file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t0` FOREIGN KEY (`thumbnail0_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t2` FOREIGN KEY (`thumbnail2_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_file_t4` FOREIGN KEY (`thumbnail4_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_group_folder` FOREIGN KEY (`folder_id`) REFERENCES `lw_group_folder` (`folder_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_resource` FOREIGN KEY (`original_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `FK_lw_resource_lw_user` FOREIGN KEY (`owner_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_file` FOREIGN KEY (`file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_file_t0` FOREIGN KEY (`thumbnail0_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_file_t2` FOREIGN KEY (`thumbnail2_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_file_t4` FOREIGN KEY (`thumbnail4_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_group_folder` FOREIGN KEY (`folder_id`) REFERENCES `lw_group_folder` (`folder_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_resource` FOREIGN KEY (`original_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_user` FOREIGN KEY (`owner_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
-ALTER TABLE `lw_resource_archiveurl` ADD CONSTRAINT `FK_lw_resource_archiveurl_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_archiveurl` ADD CONSTRAINT `fk_lw_resource_archiveurl_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_resource_history` ADD CONSTRAINT `FK_lw_resource_history_lw_file` FOREIGN KEY (`file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_resource_history` ADD CONSTRAINT `FK_lw_resource_history_lw_file_prev` FOREIGN KEY (`prev_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_resource_history` ADD CONSTRAINT `FK_lw_resource_history_lw_file_changes` FOREIGN KEY (`changes_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_resource_history` ADD CONSTRAINT `FK_lw_resource_history_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_resource_history` ADD CONSTRAINT `FK_lw_resource_history_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_history` ADD CONSTRAINT `fk_lw_resource_history_lw_file` FOREIGN KEY (`file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_history` ADD CONSTRAINT `fk_lw_resource_history_lw_file_prev` FOREIGN KEY (`prev_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_history` ADD CONSTRAINT `fk_lw_resource_history_lw_file_changes` FOREIGN KEY (`changes_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_history` ADD CONSTRAINT `fk_lw_resource_history_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_history` ADD CONSTRAINT `fk_lw_resource_history_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_resource_rating` ADD CONSTRAINT `FK_lw_resource_rating_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_resource_rating` ADD CONSTRAINT `FK_lw_resource_rating_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_rating` ADD CONSTRAINT `fk_lw_resource_rating_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_rating` ADD CONSTRAINT `fk_lw_resource_rating_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_resource_tag` ADD CONSTRAINT `FK_lw_resource_tag_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_resource_tag` ADD CONSTRAINT `FK_lw_resource_tag_lw_tag` FOREIGN KEY (`tag_id`) REFERENCES `lw_tag` (`tag_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_resource_tag` ADD CONSTRAINT `FK_lw_resource_tag_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_tag` ADD CONSTRAINT `fk_lw_resource_tag_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_tag` ADD CONSTRAINT `fk_lw_resource_tag_lw_tag` FOREIGN KEY (`tag_id`) REFERENCES `lw_tag` (`tag_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_tag` ADD CONSTRAINT `fk_lw_resource_tag_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_submission` ADD CONSTRAINT `FK_lw_submission_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission` ADD CONSTRAINT `FK_lw_submission_lw_resource` FOREIGN KEY (`survey_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_submission` ADD CONSTRAINT `fk_lw_submission_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_submission` ADD CONSTRAINT `fk_lw_submission_lw_resource` FOREIGN KEY (`survey_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_submission_resource` ADD CONSTRAINT `FK_lw_submission_resource_lw_submission` FOREIGN KEY (`submission_id`) REFERENCES `lw_submission` (`submission_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission_resource` ADD CONSTRAINT `FK_lw_submission_resource_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission_resource` ADD CONSTRAINT `FK_lw_submission_resource_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_submission_resource` ADD CONSTRAINT `fk_lw_submission_resource_lw_submission` FOREIGN KEY (`submission_id`) REFERENCES `lw_submission` (`submission_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_submission_resource` ADD CONSTRAINT `fk_lw_submission_resource_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_submission_resource` ADD CONSTRAINT `fk_lw_submission_resource_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_submission_status` ADD CONSTRAINT `FK_lw_submission_status_lw_submission` FOREIGN KEY (`submission_id`) REFERENCES `lw_submission` (`submission_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission_status` ADD CONSTRAINT `FK_lw_submission_status_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission_status` ADD CONSTRAINT `FK_lw_submission_status_lw_resource` FOREIGN KEY (`survey_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_submission_status` ADD CONSTRAINT `fk_lw_submission_status_lw_submission` FOREIGN KEY (`submission_id`) REFERENCES `lw_submission` (`submission_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_submission_status` ADD CONSTRAINT `fk_lw_submission_status_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_submission_status` ADD CONSTRAINT `fk_lw_submission_status_lw_resource` FOREIGN KEY (`survey_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_survey` ADD CONSTRAINT `FK_lw_survey_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_survey` ADD CONSTRAINT `FK_lw_survey_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey` ADD CONSTRAINT `fk_lw_survey_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey` ADD CONSTRAINT `fk_lw_survey_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_survey_answer` ADD CONSTRAINT `FK_lw_survey_answer_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_survey_answer` ADD CONSTRAINT `FK_lw_survey_answer_lw_survey_question` FOREIGN KEY (`question_id`) REFERENCES `lw_survey_question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_survey_answer` ADD CONSTRAINT `FK_lw_survey_answer_lw_survey_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_survey_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey_answer` ADD CONSTRAINT `fk_lw_survey_answer_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey_answer` ADD CONSTRAINT `fk_lw_survey_answer_lw_survey_question` FOREIGN KEY (`question_id`) REFERENCES `lw_survey_question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey_answer` ADD CONSTRAINT `fk_lw_survey_answer_lw_survey_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_survey_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_survey_question` ADD CONSTRAINT `FK_lw_survey_question_lw_survey` FOREIGN KEY (`survey_id`) REFERENCES `lw_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey_question` ADD CONSTRAINT `fk_lw_survey_question_lw_survey` FOREIGN KEY (`survey_id`) REFERENCES `lw_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_survey_question_option` ADD CONSTRAINT `FK_question_id` FOREIGN KEY (`question_id`) REFERENCES `lw_survey_question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey_question_option` ADD CONSTRAINT `fk_question_id` FOREIGN KEY (`question_id`) REFERENCES `lw_survey_question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_survey_resource` ADD CONSTRAINT `FK_lw_survey_resource_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_survey_resource` ADD CONSTRAINT `FK_lw_survey_resource_lw_survey` FOREIGN KEY (`survey_id`) REFERENCES `lw_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey_resource` ADD CONSTRAINT `fk_lw_survey_resource_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey_resource` ADD CONSTRAINT `fk_lw_survey_resource_lw_survey` FOREIGN KEY (`survey_id`) REFERENCES `lw_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_survey_resource_user` ADD CONSTRAINT `FK_lw_survey_resource_user_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_survey_resource_user` ADD CONSTRAINT `FK_lw_survey_resource_user_lw_survey_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_survey_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey_resource_user` ADD CONSTRAINT `fk_lw_survey_resource_user_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_survey_resource_user` ADD CONSTRAINT `fk_lw_survey_resource_user_lw_survey_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_survey_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_thumb` ADD CONSTRAINT `FK_lw_thumb_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_thumb` ADD CONSTRAINT `FK_lw_thumb_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_thumb` ADD CONSTRAINT `fk_lw_thumb_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_thumb` ADD CONSTRAINT `fk_lw_thumb_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_transcript_log` ADD CONSTRAINT `FK_lw_transcript_actions_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_transcript_log` ADD CONSTRAINT `FK_lw_transcript_actions_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_transcript_log` ADD CONSTRAINT `fk_lw_transcript_actions_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_transcript_log` ADD CONSTRAINT `fk_lw_transcript_actions_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_transcript_selections` ADD CONSTRAINT `FK_lw_transcript_selections_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_transcript_selections` ADD CONSTRAINT `fk_lw_transcript_selections_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_transcript_summary` ADD CONSTRAINT `FK_lw_transcript_summary_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_transcript_summary` ADD CONSTRAINT `FK_lw_transcript_summary_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_transcript_summary` ADD CONSTRAINT `fk_lw_transcript_summary_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_transcript_summary` ADD CONSTRAINT `fk_lw_transcript_summary_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_user` ADD CONSTRAINT `FK_lw_user_lw_file` FOREIGN KEY (`image_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_user` ADD CONSTRAINT `FK_lw_user_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_user` ADD CONSTRAINT `fk_lw_user_lw_file` FOREIGN KEY (`image_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `lw_user` ADD CONSTRAINT `fk_lw_user_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_user_auth` ADD CONSTRAINT `FK_lw_user_auth_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_user_auth` ADD CONSTRAINT `fk_lw_user_auth_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_course_user` ADD CONSTRAINT `FK_lw_user_course_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_course_user` ADD CONSTRAINT `FK_lw_user_course_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_course_user` ADD CONSTRAINT `fk_lw_user_course_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_course_user` ADD CONSTRAINT `fk_lw_user_course_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_user_log` ADD CONSTRAINT `FK_lw_user_log_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_user_log` ADD CONSTRAINT `FK_lw_user_log_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_user_log` ADD CONSTRAINT `fk_lw_user_log_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_user_log` ADD CONSTRAINT `fk_lw_user_log_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_user_token` ADD CONSTRAINT `FK_lw_user_token_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_user_token` ADD CONSTRAINT `fk_lw_user_token_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /* ================= External tables to store crawled data ================= */
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.sl_action` (
-    `search_id` int(10) UNSIGNED NOT NULL,
-    `rank` smallint(5) UNSIGNED NOT NULL,
-    `user_id` int(10) UNSIGNED NOT NULL,
-    `action` enum ('resource_clicked','resource_saved') NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `search_id` INT(10) UNSIGNED NOT NULL,
+    `rank` SMALLINT(5) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `action` ENUM ('resource_clicked','resource_saved') NOT NULL,
+    `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
     KEY `sl_action_search_id` (`search_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `learnweb_large.sl_entity_co_occur` (
-    `source` varchar(255) NOT NULL,
-    `target` varchar(255) NOT NULL,
-    `score` double NOT NULL,
-    KEY `sl_entity_co_occur_source` (`source`)
-);
-
 CREATE TABLE IF NOT EXISTS `learnweb_large.sl_query` (
-    `search_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `group_id` int(10) UNSIGNED DEFAULT 0,
-    `query` varchar(250) NOT NULL,
-    `mode` enum ('text','image','video','group','advanced') NOT NULL,
-    `service` enum ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck') NOT NULL,
-    `language` char(5) DEFAULT NULL,
-    `filters` varchar(1000) DEFAULT NULL,
-    `user_id` int(10) UNSIGNED NOT NULL,
-    `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `learnweb_version` tinyint(4) NOT NULL DEFAULT 0 COMMENT 'which learnweb instance has inserted this row'
-);
-
-CREATE TABLE IF NOT EXISTS `learnweb_large.sl_query_entities` (
-    `search_id` int(10) UNSIGNED NOT NULL PRIMARY KEY,
-    `related_entities` blob DEFAULT NULL
+    `search_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `group_id` INT(10) UNSIGNED DEFAULT 0,
+    `query` VARCHAR(250) NOT NULL,
+    `mode` ENUM ('text','image','video','group','advanced') NOT NULL,
+    `service` ENUM ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck') NOT NULL,
+    `language` CHAR(5) DEFAULT NULL,
+    `filters` VARCHAR(1000) DEFAULT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `learnweb_version` TINYINT(4) NOT NULL DEFAULT 0 COMMENT 'which learnweb instance has inserted this row'
 );
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.sl_resource` (
-    `search_id` int(10) UNSIGNED NOT NULL,
-    `rank` smallint(5) UNSIGNED NOT NULL,
-    `resource_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'id of a learnweb resource NULL otherwise',
-    `url` varchar(1000) DEFAULT NULL COMMENT 'null if learnweb resource',
-    `title` varchar(250) DEFAULT NULL COMMENT 'null if learnweb resource',
-    `description` varchar(1000) DEFAULT NULL COMMENT 'null if learnweb resource',
-    `thumbnail_url` varchar(1000) DEFAULT NULL,
-    `thumbnail_height` smallint(5) UNSIGNED DEFAULT NULL,
-    `thumbnail_width` smallint(5) UNSIGNED DEFAULT NULL,
+    `search_id` INT(10) UNSIGNED NOT NULL,
+    `rank` SMALLINT(5) UNSIGNED NOT NULL,
+    `resource_id` INT(10) UNSIGNED DEFAULT NULL COMMENT 'id of a learnweb resource NULL otherwise',
+    `url` VARCHAR(1000) DEFAULT NULL COMMENT 'null if learnweb resource',
+    `title` VARCHAR(250) DEFAULT NULL COMMENT 'null if learnweb resource',
+    `description` VARCHAR(1000) DEFAULT NULL COMMENT 'null if learnweb resource',
+    `thumbnail_url` VARCHAR(1000) DEFAULT NULL,
+    `thumbnail_height` SMALLINT(5) UNSIGNED DEFAULT NULL,
+    `thumbnail_width` SMALLINT(5) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (`search_id`, `rank`)
 );
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.speechrepository_video` (
-    `id` int(11) NOT NULL,
-    `title` varchar(1000) NOT NULL,
-    `url` varchar(1000) NOT NULL,
-    `rights` varchar(1000) NOT NULL,
-    `date` varchar(1000) NOT NULL,
-    `description` varchar(1000) NOT NULL,
-    `notes` varchar(2000) DEFAULT NULL,
-    `image_link` varchar(1000) NOT NULL,
-    `video_link` varchar(1000) NOT NULL,
-    `duration` int(11) NOT NULL,
-    `language` varchar(1000) NOT NULL,
-    `level` varchar(1000) DEFAULT NULL,
-    `use` varchar(1000) DEFAULT NULL,
-    `type` varchar(1000) DEFAULT NULL,
-    `domains` varchar(1000) DEFAULT NULL,
-    `terminology` text DEFAULT NULL,
-    `learnweb_resource_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+    `id` INT(11) NOT NULL PRIMARY KEY,
+    `title` VARCHAR(1000) NOT NULL,
+    `url` VARCHAR(1000) NOT NULL,
+    `rights` VARCHAR(1000) NOT NULL,
+    `date` VARCHAR(1000) NOT NULL,
+    `description` VARCHAR(1000) NOT NULL,
+    `notes` VARCHAR(2000) DEFAULT NULL,
+    `image_link` VARCHAR(1000) NOT NULL,
+    `video_link` VARCHAR(1000) NOT NULL,
+    `duration` INT(11) NOT NULL,
+    `language` VARCHAR(1000) NOT NULL,
+    `level` VARCHAR(1000) DEFAULT NULL,
+    `use` VARCHAR(1000) DEFAULT NULL,
+    `type` VARCHAR(1000) DEFAULT NULL,
+    `domains` VARCHAR(1000) DEFAULT NULL,
+    `terminology` TEXT DEFAULT NULL,
+    `learnweb_resource_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
     KEY `speechrepository_video_learnweb_resource_id` (`learnweb_resource_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.ted_transcripts_lang_mapping` (
-    `language_code` char(10) NOT NULL,
-    `language` char(25) NOT NULL,
+    `language_code` CHAR(10) NOT NULL,
+    `language` CHAR(25) NOT NULL,
     PRIMARY KEY (`language_code`, `language`)
 );
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.ted_transcripts_paragraphs` (
-    `resource_id` int(10) UNSIGNED NOT NULL,
-    `language` char(10) NOT NULL,
-    `starttime` int(10) UNSIGNED NOT NULL,
-    `paragraph` longtext NOT NULL,
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `language` CHAR(10) NOT NULL,
+    `starttime` INT(10) UNSIGNED NOT NULL,
+    `paragraph` LONGTEXT NOT NULL,
     KEY `ted_transcripts_paragraphs_resource_id` (`resource_id`, `language`)
 );
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.ted_video` (
-    `ted_id` int(10) UNSIGNED NOT NULL DEFAULT 0 PRIMARY KEY,
-    `resource_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
-    `title` varchar(200) NOT NULL,
-    `description` mediumtext NOT NULL,
-    `slug` varchar(200) NOT NULL,
-    `viewed_count` int(10) UNSIGNED NOT NULL,
-    `published_at` timestamp NULL DEFAULT NULL,
-    `talk_updated_at` timestamp NULL DEFAULT NULL,
-    `photo1_url` varchar(255) DEFAULT NULL,
-    `photo1_width` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
-    `photo1_height` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
-    `photo2_url` varchar(255) DEFAULT NULL,
-    `photo2_width` smallint(6) NOT NULL DEFAULT 0,
-    `photo2_height` smallint(6) NOT NULL DEFAULT 0,
-    `tags` mediumtext NOT NULL,
-    `duration` smallint(6) UNSIGNED NOT NULL DEFAULT 0,
-    `json` mediumtext DEFAULT NULL,
+    `ted_id` INT(10) UNSIGNED NOT NULL DEFAULT 0 PRIMARY KEY,
+    `resource_id` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `title` VARCHAR(200) NOT NULL,
+    `description` MEDIUMTEXT NOT NULL,
+    `slug` VARCHAR(200) NOT NULL,
+    `viewed_count` INT(10) UNSIGNED NOT NULL,
+    `published_at` TIMESTAMP NULL DEFAULT NULL,
+    `talk_updated_at` TIMESTAMP NULL DEFAULT NULL,
+    `photo1_url` VARCHAR(255) DEFAULT NULL,
+    `photo1_width` SMALLINT(6) UNSIGNED NOT NULL DEFAULT 0,
+    `photo1_height` SMALLINT(6) UNSIGNED NOT NULL DEFAULT 0,
+    `photo2_url` VARCHAR(255) DEFAULT NULL,
+    `photo2_width` SMALLINT(6) NOT NULL DEFAULT 0,
+    `photo2_height` SMALLINT(6) NOT NULL DEFAULT 0,
+    `tags` MEDIUMTEXT NOT NULL,
+    `duration` SMALLINT(6) UNSIGNED NOT NULL DEFAULT 0,
+    `json` MEDIUMTEXT DEFAULT NULL,
     KEY `ted_video_slug` (`slug`)
 );
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.wb2_url` (
-    `url_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `url` varchar(2000) NOT NULL,
-    `first_capture` timestamp NULL DEFAULT NULL,
-    `last_capture` timestamp NULL DEFAULT NULL,
-    `all_captures_fetched` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 when all captures have been loaded into wb_url_capture; 0 else',
-    `update_time` timestamp NOT NULL DEFAULT current_timestamp(),
+    `url_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `url` VARCHAR(2000) NOT NULL,
+    `first_capture` TIMESTAMP NULL DEFAULT NULL,
+    `last_capture` TIMESTAMP NULL DEFAULT NULL,
+    `all_captures_fetched` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 when all captures have been loaded into wb_url_capture; 0 else',
+    `update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `wb2_url_url` (`url`)
 );
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.wb2_url_capture` (
-    `url_id` bigint(20) NOT NULL,
-    `timestamp` timestamp NULL DEFAULT NULL,
+    `url_id` BIGINT(20) NOT NULL,
+    `timestamp` TIMESTAMP NULL DEFAULT NULL,
     KEY `wb2_url_capture_url_id` (`url_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.wb_url` (
-    `url_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `url` varchar(2084) NOT NULL,
-    `first_capture` timestamp NULL DEFAULT NULL,
-    `last_capture` timestamp NULL DEFAULT NULL,
-    `all_captures_fetched` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 when all captures have been loaded into wb_url_capture; 0 else',
-    `crawl_time` timestamp NOT NULL DEFAULT current_timestamp(),
-    `status_code` smallint(6) NOT NULL DEFAULT -3,
-    `status_code_date` timestamp NOT NULL DEFAULT '1990-01-01 01:00:00',
+    `url_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `url` VARCHAR(2084) NOT NULL,
+    `first_capture` TIMESTAMP NULL DEFAULT NULL,
+    `last_capture` TIMESTAMP NULL DEFAULT NULL,
+    `all_captures_fetched` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 when all captures have been loaded into wb_url_capture; 0 else',
+    `crawl_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `status_code` SMALLINT(6) NOT NULL DEFAULT -3,
+    `status_code_date` TIMESTAMP NOT NULL DEFAULT '1990-01-01 01:00:00',
     UNIQUE KEY `wb_url_url_index` (`url`)
 );
 
 CREATE TABLE IF NOT EXISTS `learnweb_large.wb_url_content` (
-    `url_id` bigint(20) NOT NULL,
-    `status_code` smallint(6) NOT NULL DEFAULT -3,
-    `content` longtext DEFAULT NULL,
-    `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `url_id` BIGINT(20) NOT NULL,
+    `status_code` SMALLINT(6) NOT NULL DEFAULT -3,
+    `content` LONGTEXT DEFAULT NULL,
+    `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
     KEY `wb_url_content_url_id` (`url_id`)
 );
 
-ALTER TABLE `learnweb_large.sl_action` ADD CONSTRAINT `FK_sl_action_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large.sl_query` (`search_id`) ON DELETE CASCADE;
-ALTER TABLE `learnweb_large.sl_query_entities` ADD CONSTRAINT `FK_sl_query_entities_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large.sl_query` (`search_id`) ON DELETE CASCADE;
-ALTER TABLE `learnweb_large.sl_resource` ADD CONSTRAINT `FK_sl_resource_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large.sl_query` (`search_id`) ON DELETE CASCADE;
+ALTER TABLE `learnweb_large.sl_action` ADD CONSTRAINT `fk_sl_action_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large.sl_query` (`search_id`) ON DELETE CASCADE;
+ALTER TABLE `learnweb_large.sl_resource` ADD CONSTRAINT `fk_sl_resource_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large.sl_query` (`search_id`) ON DELETE CASCADE;

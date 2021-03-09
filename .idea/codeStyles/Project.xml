@@ -55,15 +55,20 @@
     <SqlCodeStyleSettings version="5">
       <option name="KEYWORD_CASE" value="2" />
       <option name="IDENTIFIER_CASE" value="1" />
-      <option name="TYPE_CASE" value="4" />
+      <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="ALIAS_CASE" value="4" />
-      <option name="BUILT_IN_CASE" value="4" />
+      <option name="QUOTED_IDENTIFIER_CASE" value="1" />
+      <option name="QUOTE_TYPE" value="31" />
+      <option name="INSERT_INTO_NL" value="2" />
+      <option name="INSERT_EL_WRAP" value="0" />
       <option name="TABLE_OPENING" value="1" />
       <option name="TABLE_CONTENT" value="2" />
       <option name="TABLE_CLOSING" value="3" />
       <option name="TABLE_TYPES_ALIGN" value="false" />
       <option name="TABLE_DEFAULTS_ALIGN" value="false" />
       <option name="TABLE_NULLABILITIES_ALIGN" value="false" />
+      <option name="TABLE_ALTER_INSTRUCTION_WRAP" value="0" />
       <option name="TABLE_ALTER_INSTRUCTION_ALIGN" value="false" />
       <option name="POST_OPT_WRAP_2" value="false" />
     </SqlCodeStyleSettings>
