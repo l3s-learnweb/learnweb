@@ -323,8 +323,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
         this.newSubmission = new Submission();
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
 
-        getUser().clearCaches();
-        // TODO @astappiev/@hulyi: call User.clearCaches of all users of the affected course
+        newSubmission.getCourse().getMembers().forEach(User::clearCaches);
     }
 
     public Submission getNewSubmission() {

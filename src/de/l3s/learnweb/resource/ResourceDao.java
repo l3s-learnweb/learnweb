@@ -254,9 +254,6 @@ public interface ResourceDao extends SqlObject, Serializable {
             cache.put(resource);
         });
 
-        // TODO: do something with location
-        // resource.setLocation(getLocation(resource));
-
         // persist the relation between the resource and its files
         if (!resource.getFiles().isEmpty()) {
             getFileDao().updateResourceId(resource, resource.getFiles().values());

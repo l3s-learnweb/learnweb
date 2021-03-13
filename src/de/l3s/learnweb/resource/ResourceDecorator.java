@@ -109,10 +109,6 @@ public class ResourceDecorator implements Serializable {
         return resource.getThumbnailLargest();
     }
 
-    public String getLocation() {
-        return resource.getLocation();
-    }
-
     public ResourceService getService() {
         return resource.getService();
     }

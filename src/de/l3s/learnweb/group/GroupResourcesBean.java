@@ -211,7 +211,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         solrSearch.setOrder("timestamp", SolrQuery.ORDER.desc);
 
         if (searchFilters.isFilterActive(FilterType.service)) {
-            solrSearch.setFilterLocation(searchFilters.getFilterValue(FilterType.service));
+            solrSearch.setFilterService(searchFilters.getFilterValue(FilterType.service));
         }
         if (searchFilters.isFilterActive(FilterType.type)) {
             solrSearch.setFilterType(searchFilters.getFilterValue(FilterType.type));

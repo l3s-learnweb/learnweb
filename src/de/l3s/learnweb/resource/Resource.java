@@ -75,7 +75,7 @@ public class Resource extends AbstractResource implements Serializable {
     private String url; // `website` resources stores external link here, also `video` resources stores link to source (like YouTube page)
     private StorageType storageType = StorageType.LEARNWEB;
     private PolicyView policyView = PolicyView.DEFAULT_RIGHTS;
-    private ResourceService service; // The place where the resource was found
+    private ResourceService service; // The place where the resource was found TODO: what is better naming `source` vs `service`?
     private String language; // language code
     private String author;
     private ResourceType type;
@@ -413,18 +413,6 @@ public class Resource extends AbstractResource implements Serializable {
 
     public void setPolicyView(PolicyView policyView) {
         this.policyView = policyView;
-    }
-
-    /**
-     * The location where the resource (metadata) is stored.
-     *
-     * @return for example Learnweb, Flickr, Youtube ...
-     */
-    public String getLocation() {
-        if (service != null) {
-            return service.getLocation();
-        }
-        return null;
     }
 
     public ResourceType getType() {
@@ -1446,7 +1434,6 @@ public class Resource extends AbstractResource implements Serializable {
 
         @Override
         public String get(Object key) {
-            // TODO @kemkes: why the type of key can't be changed to String?
             if (!key.getClass().equals(String.class)) {
                 throw new IllegalArgumentException("key must be a string");
             }

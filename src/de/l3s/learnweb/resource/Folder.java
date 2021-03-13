@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.app.Learnweb;
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
@@ -263,12 +264,11 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     @Override
     public void moveTo(int newGroupId, int newFolderId) {
-        // TODO @astappiev: throw an error instead of silent ignore
         if (getId() == newFolderId) {
             return; // if move to itself
         }
         if (getGroupId() == newGroupId && isParentOf(newFolderId)) {
-            return; // if move to own sub folder
+            throw new BadRequestHttpException("You can't move a folder to a child folder of it");
         }
 
         int groupId = getGroupId();

@@ -39,7 +39,7 @@ public class InterwebResultsWrapper implements Serializable {
         totalResults = response.getTotalResults();
 
         if (response.getResultsPerService() != null && !response.getResultsPerService().isEmpty()) {
-            FacetField facetField = new FacetField("location");
+            FacetField facetField = new FacetField("source");
             for (Map.Entry<String, Long> serviceResults : response.getResultsPerService().entrySet()) {
                 resultCountPerService.add(new Count(facetField, serviceResults.getKey(), serviceResults.getValue()));
             }

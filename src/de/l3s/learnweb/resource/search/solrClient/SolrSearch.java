@@ -45,7 +45,7 @@ public class SolrSearch implements Serializable {
 
     // search filters
     private String filterType = ""; // image, video or web
-    private String filterLocation = ""; // Bing, Flickr, YouTube, Vimeo, SlideShare, Ipernity, TED, Learnweb ...
+    private String filterService = ""; // Bing, Flickr, YouTube, Vimeo, SlideShare, Ipernity, TED, Learnweb ...
     private String filterDateFrom = "";
     private String filterDateTo = "";
     private String filterCollector = "";
@@ -117,8 +117,8 @@ public class SolrSearch implements Serializable {
         this.filterType = filterType;
     }
 
-    public void setFilterLocation(String filterLocation) {
-        this.filterLocation = filterLocation;
+    public void setFilterService(String filterService) {
+        this.filterService = filterService;
     }
 
     public void setFilterDateFrom(String date) {
@@ -168,7 +168,7 @@ public class SolrSearch implements Serializable {
             this.filterGroupIds.clear();
         }
         this.filterLanguage = "";
-        this.filterLocation = "";
+        this.filterService = "";
         this.filterType = "";
         this.filterDateFrom = "";
         this.filterDateTo = "";
@@ -282,8 +282,8 @@ public class SolrSearch implements Serializable {
     }
 
     private void applySearchFilters(final SolrQuery solrQuery) {
-        if (!filterLocation.isEmpty()) {
-            solrQuery.addFilterQuery("location : " + filterLocation);
+        if (!filterService.isEmpty()) {
+            solrQuery.addFilterQuery("source : " + filterService);
         }
 
         if (!filterType.isEmpty()) {

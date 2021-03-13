@@ -52,8 +52,6 @@ public class ResourceDocument {
     private List<String> tags;
     @Field("comments")
     private List<String> comments;
-    @Field("location")
-    private String location;
     @Field("groupId")
     private Integer groupId;
     @Field("path")
@@ -83,7 +81,6 @@ public class ResourceDocument {
         this.format = resource.getFormat();
         // this.duration = resource.getDuration();
         this.author = resource.getAuthor();
-        this.location = resource.getLocation().toLowerCase().replace("-", "");
         this.groupId = resource.getGroupId();
         this.path = resource.getPath();
         this.ownerUserId = resource.getUserId();
@@ -256,14 +253,6 @@ public class ResourceDocument {
 
     public void setComments(List<String> comments) {
         this.comments = comments;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public Integer getGroupId() {

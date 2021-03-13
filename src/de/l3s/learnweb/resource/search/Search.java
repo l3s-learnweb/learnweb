@@ -73,7 +73,7 @@ public class Search implements Serializable {
         this.user = user;
         this.solrSearch = new SolrSearch(query, user);
 
-        if (query.startsWith("source:") || query.startsWith("location:") || query.startsWith("groups:") || query.startsWith("title:")) {
+        if (query.startsWith("source:") || query.startsWith("groups:") || query.startsWith("title:")) {
             hasMoreInterwebResults = false;
         }
     }
@@ -143,7 +143,7 @@ public class Search implements Serializable {
 
         this.solrSearch.setFilterType(configMode == SearchMode.text ? "web" : configMode.name());
         if (searchFilters.isFilterActive(FilterType.service)) {
-            this.solrSearch.setFilterLocation(searchFilters.getFilterValue(FilterType.service));
+            this.solrSearch.setFilterService(searchFilters.getFilterValue(FilterType.service));
             this.solrSearch.setResultsPerPage(configResultsPerService * 4);
         } else {
             this.solrSearch.setResultsPerPage(configResultsPerService);
