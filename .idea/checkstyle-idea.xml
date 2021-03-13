@@ -4,14 +4,14 @@
     <option name="configuration">
       <map>
         <entry key="active-configuration" value="PROJECT_RELATIVE:$PROJECT_DIR$/.mvn/checkstyle-config.xml:Learnweb styles (mvn)" />
-        <entry key="checkstyle-version" value="8.40" />
+        <entry key="checkstyle-version" value="8.41" />
         <entry key="copy-libs" value="false" />
         <entry key="location-0" value="BUNDLED:(bundled):Sun Checks" />
         <entry key="location-1" value="BUNDLED:(bundled):Google Checks" />
         <entry key="location-2" value="PROJECT_RELATIVE:$PROJECT_DIR$/.mvn/checkstyle-config.xml:Learnweb styles (mvn)" />
         <entry key="property-2.org.checkstyle.sun.suppressionfilter.config" value="" />
         <entry key="property-2.org.checkstyle.sun.suppressionxpathfilter.config" value="" />
-        <entry key="scan-before-checkin" value="true" />
+        <entry key="scan-before-checkin" value="false" />
         <entry key="scanscope" value="Everything" />
         <entry key="suppress-errors" value="true" />
       </map>
