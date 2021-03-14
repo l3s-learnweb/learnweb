@@ -32,7 +32,7 @@
 						<f:facet name="filter">
 							<p:datePicker onchange="PF('requestsTable').filter()"/>
 						</f:facet>
-						<h:outputText value="#{reqData.time}">
+						<h:outputText value="#{reqData.createdAt}">
 							<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 						</h:outputText>
 					</p:column>
@@ -88,7 +88,7 @@
 						<f:facet name="filter">
 							<p:datePicker onchange="PF('aggrRequestsTable').filter()"/>
 						</f:facet>
-						<h:outputText value="#{aRequest.time}">
+						<h:outputText value="#{aRequest.createdAt}">
 							<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 						</h:outputText>
 					</p:column>

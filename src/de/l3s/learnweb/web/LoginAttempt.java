@@ -11,24 +11,24 @@ import java.time.LocalDateTime;
 public class LoginAttempt implements Serializable {
     private static final long serialVersionUID = 8349103575359014279L;
 
-    private String ip;
+    private String addr;
     private String username;
     private boolean success;
-    private LocalDateTime dateTime;
+    private LocalDateTime createdAt;
 
-    public LoginAttempt(String ip, String username, boolean success) {
-        this.ip = ip;
+    public LoginAttempt(String addr, String username, boolean success) {
+        this.addr = addr;
         this.username = username;
         this.success = success;
-        this.dateTime = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
-    public String getIp() {
-        return ip;
+    public String getAddr() {
+        return addr;
     }
 
-    public void setIp(String iP) {
-        ip = iP;
+    public void setAddr(String iP) {
+        addr = iP;
     }
 
     public String getUsername() {
@@ -47,12 +47,12 @@ public class LoginAttempt implements Serializable {
         this.success = success;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
 }

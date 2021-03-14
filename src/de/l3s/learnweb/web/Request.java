@@ -11,21 +11,21 @@ import java.time.LocalDateTime;
 public class Request implements Serializable {
     private static final long serialVersionUID = 2159959917673844305L;
 
-    private final String ip;
+    private final String addr;
     private final String url;
     private int requests;
     private int loginCount;
     private String usernames;
-    private LocalDateTime time;
+    private LocalDateTime createdAt;
 
-    public Request(final String ip, final String url) {
-        this.ip = ip;
+    public Request(final String addr, final String url) {
+        this.addr = addr;
         this.url = url;
-        this.time = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
-    public String getIp() {
-        return ip;
+    public String getAddr() {
+        return addr;
     }
 
     public String getUrl() {
@@ -36,7 +36,7 @@ public class Request implements Serializable {
         return requests;
     }
 
-    public void setRequests(int requests) {
+    void setRequests(int requests) {
         this.requests = requests;
     }
 
@@ -44,7 +44,7 @@ public class Request implements Serializable {
         return loginCount;
     }
 
-    public void setLoginCount(int loginCount) {
+    void setLoginCount(int loginCount) {
         this.loginCount = loginCount;
     }
 
@@ -52,15 +52,15 @@ public class Request implements Serializable {
         return usernames;
     }
 
-    public void setUsernames(String usernames) {
+    void setUsernames(String usernames) {
         this.usernames = usernames;
     }
 
-    public LocalDateTime getTime() {
-        return time;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
+    void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

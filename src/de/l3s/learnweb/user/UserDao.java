@@ -3,7 +3,6 @@ package de.l3s.learnweb.user;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.LinkedHashMap;
@@ -12,7 +11,6 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.mapper.RowMapper;
@@ -21,7 +19,6 @@ import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.logging.Action;
@@ -52,9 +49,6 @@ public interface UserDao extends SqlObject, Serializable {
 
     @SqlQuery("SELECT * FROM lw_user WHERE username = ?")
     Optional<User> findByUsername(String username);
-
-    @SqlQuery("SELECT * FROM lw_user WHERE email = ? AND email_confirmation_token = ?")
-    Optional<User> findByEmailConfirmationToken(String email, String confirmationToken);
 
     default Optional<User> findByUsernameAndPassword(String username, String password) {
         Optional<User> user = findByUsername(username);
@@ -114,52 +108,6 @@ public interface UserDao extends SqlObject, Serializable {
     @SqlQuery("SELECT COUNT(*) FROM lw_course_user WHERE user_id = ?")
     int countCoursesByUserId(int userId);
 
-    @SqlUpdate("INSERT INTO lw_user_auth (user_id, auth_id, token_hash, expires) VALUES(?, ?, ?, ?)")
-    void insertAuth(User user, long authId, String token, LocalDateTime expires);
-
-    @SqlUpdate("DELETE FROM lw_user_auth WHERE auth_id = ?")
-    void deleteAuth(long authId);
-
-    default Optional<User> findByAuthToken(long authId, String token) {
-        return getHandle().select("SELECT user_id, token_hash, expires FROM lw_user_auth WHERE auth_id = ?", authId).map((rs, ctx) -> {
-            int userId = rs.getInt("user_id");
-            String tokenHash = rs.getString("token_hash");
-            boolean expired = rs.getTimestamp("expires").toInstant().isBefore(Instant.now());
-
-            if (!expired && HashHelper.isValidSha256(token, tokenHash)) {
-                return findById(userId).orElse(null);
-            } else {
-                deleteAuth(authId); // it is expired, or someone trying to hijack it
-            }
-
-            return null;
-        }).findOne();
-    }
-
-    @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_user_token t USING(user_id) WHERE t.type = ? AND t.token = ? LIMIT 1")
-    Optional<User> findByToken(User.TokenType tokenType, String token);
-
-    @SqlQuery("SELECT token FROM lw_user_token WHERE type = ? AND user_id = ? LIMIT 1")
-    Optional<String> findToken(User.TokenType tokenType, int userId);
-
-    /**
-     * Retrieves token by type and userId from database or creates a new one if none exists.
-     */
-    default String findTokenOrElseGenerate(User.TokenType tokenType, int userId) {
-        Optional<String> dbToken = findToken(tokenType, userId);
-
-        if (dbToken.isEmpty()) {
-            String token = RandomStringUtils.randomAlphanumeric(128);
-            insertToken(userId, tokenType, token);
-            return token;
-        }
-
-        return dbToken.get();
-    }
-
-    @SqlUpdate("INSERT INTO lw_user_token (user_id, type, token) VALUES(?, ?, ?)")
-    void insertToken(int userId, User.TokenType tokenType, String token);
-
     /**
      * <ul>
      * <li>The user is removed from all his groups.
@@ -210,7 +158,6 @@ public interface UserDao extends SqlObject, Serializable {
         params.put("user_id", SqlHelper.toNullable(user.getId()));
         params.put("username", user.getUsername());
         params.put("email", SqlHelper.toNullable(user.getEmail()));
-        params.put("email_confirmation_token", user.getEmailConfirmationToken());
         params.put("email_confirmed", user.isEmailConfirmed());
         params.put("organisation_id", user.getOrganisationId());
         params.put("image_file_id", SqlHelper.toNullable(user.getImageFileId()));
@@ -272,7 +219,6 @@ public interface UserDao extends SqlObject, Serializable {
                 user.setDeleted(rs.getBoolean("deleted"));
                 user.setUsername(rs.getString("username"));
                 user.setEmailRaw(rs.getString("email"));
-                user.setEmailConfirmationToken(rs.getString("email_confirmation_token"));
                 user.setEmailConfirmed(rs.getBoolean("email_confirmed"));
                 user.setPasswordRaw(rs.getString("password"));
                 user.setHashing(rs.getString("hashing"));

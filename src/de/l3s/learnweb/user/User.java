@@ -68,12 +68,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         ADD_PHOTO,
     }
 
-    public enum TokenType {
-        GRANT,
-        EMAIL_CONFIRMATION,
-        PASSWORD_RESET,
-    }
-
     public enum NotificationFrequency {
         NEVER(-1),
         DAILY(1),
@@ -104,7 +98,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private String username;
     @Email
     private String email; // it is important to set null instead of empty string
-    private String emailConfirmationToken;
     private boolean emailConfirmed = true;
     private String password;
     private PasswordHashing hashing;
@@ -228,18 +221,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         if (StringUtils.isNotBlank(email) && !StringUtils.equalsIgnoreCase(email, this.email)) {
             this.email = email;
             this.emailConfirmed = false;
-            this.emailConfirmationToken = RandomStringUtils.randomAlphanumeric(32);
+
+            Learnweb.dao().getTokenDao().override(id, Token.TokenType.EMAIL_CONFIRMATION, RandomStringUtils.randomAlphanumeric(32), LocalDateTime.now().plusYears(1));
         } else {
             this.email = StringUtils.isNotBlank(email) ? email : null;
         }
-    }
-
-    public String getEmailConfirmationToken() {
-        return emailConfirmationToken;
-    }
-
-    public void setEmailConfirmationToken(String emailConfirmationToken) {
-        this.emailConfirmationToken = emailConfirmationToken;
     }
 
     public boolean isEmailConfirmed() {
@@ -424,9 +410,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      */
     public boolean sendEmailConfirmation() {
         try {
+            Token token = Learnweb.dao().getTokenDao().findByTypeAndUser(Token.TokenType.EMAIL_CONFIRMATION, id).orElseThrow();
+
             String confirmEmailUrl = Learnweb.config().getServerUrl() + "/lw/user/confirm_email.jsf?" +
                 "email=" + StringHelper.urlEncode(getEmail()) +
-                "&token=" + emailConfirmationToken;
+                "&token=" + token.getId() + ":" + token.getToken();
 
             Mail message = new Mail();
             message.setSubject("Confirmation request from Learnweb");

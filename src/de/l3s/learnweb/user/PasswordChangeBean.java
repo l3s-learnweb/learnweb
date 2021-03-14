@@ -1,6 +1,7 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
@@ -8,15 +9,20 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
+import de.l3s.learnweb.web.RequestManager;
+import de.l3s.util.HashHelper;
 
 @Named
 @ViewScoped
 public class PasswordChangeBean extends ApplicationBean implements Serializable {
-    //private static final Logger log = LogManager.getLogger(PasswordChangeBean.class);
+    private static final Logger log = LogManager.getLogger(PasswordChangeBean.class);
     private static final long serialVersionUID = 2237249691332567548L;
 
     private String parameter;
@@ -27,24 +33,33 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable 
     private User user;
 
     @Inject
-    private UserDao userDao;
+    private TokenDao tokenDao;
+
+    @Inject
+    private RequestManager requestManager;
 
     public void onLoad() {
         BeanAssert.validate(StringUtils.isNotEmpty(parameter));
-        String[] splits = parameter.split("_");
-        BeanAssert.validate(splits.length == 2 && !StringUtils.isAnyEmpty(splits), "error_pages.bad_request_email_link");
 
-        int userId = NumberUtils.toInt(splits[0]);
-        String hash = splits[1];
+        try {
+            String[] splits = parameter.split(":");
+            Optional<User> userOptional = tokenDao.findUserByToken(Integer.parseInt(splits[0]), HashHelper.sha256(splits[1]));
 
-        user = userDao.findById(userId).orElse(null);
-        BeanAssert.validate(user != null && hash.length() == PasswordBean.PASSWORD_CHANGE_HASH_LENGTH, "error_pages.bad_request_email_link");
-        BeanAssert.validate(hash.equals(PasswordBean.createPasswordChangeHash(user)), "Your request seams to be invalid. Maybe you have already changed the password?");
+            if (userOptional.isPresent()) {
+                user = userOptional.get();
+            } else {
+                requestManager.recordFailedAttempt(Faces.getRemoteAddr(), "pass:" + splits[0]);
+                throw new BadRequestHttpException("Your request seams to be invalid. Maybe you have already changed the password?");
+            }
+        } catch (Exception e) {
+            throw new BadRequestHttpException("error_pages.bad_request_email_link", e);
+        }
     }
 
     public String changePassword() {
         user.setPassword(password);
-        userDao.save(user);
+        tokenDao.getUserDao().save(user);
+        tokenDao.deleteByTypeAndUser(Token.TokenType.PASSWORD_RESET, user.getId());
 
         setKeepMessages();
         addMessage(FacesMessage.SEVERITY_INFO, "password_changed");

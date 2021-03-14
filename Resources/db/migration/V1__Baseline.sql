@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `lw_requests` (
     `requests` INT(11) DEFAULT NULL,
     `logins` INT(11) DEFAULT NULL,
     `usernames` VARCHAR(512) DEFAULT NULL,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() -- TODO: do we need to store created_at?
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS `lw_resource` (
@@ -231,6 +231,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `deleted` TINYINT(1) NOT NULL DEFAULT 0,
     `group_id` INT(10) UNSIGNED DEFAULT NULL,
     `folder_id` INT(10) UNSIGNED DEFAULT NULL,
+    `owner_user_id` INT(10) UNSIGNED NOT NULL,
     `title` VARCHAR(1000) NOT NULL,
     `description` MEDIUMTEXT DEFAULT NULL,
     `url` VARCHAR(4000) DEFAULT NULL,
@@ -244,21 +245,20 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `duration` INT(10) UNSIGNED DEFAULT NULL,
     `width` INT(10) UNSIGNED DEFAULT NULL,
     `height` INT(10) UNSIGNED DEFAULT NULL,
-    `owner_user_id` INT(10) UNSIGNED NOT NULL,
     `id_at_service` VARCHAR(100) DEFAULT NULL,
     `rating` INT(11) NOT NULL,
     `rate_number` INT(11) NOT NULL,
+    `query` VARCHAR(1000) DEFAULT NULL,
     `file_id` INT(10) UNSIGNED DEFAULT NULL,
     `file_name` VARCHAR(200) DEFAULT NULL,
     `download_url` VARCHAR(1000) DEFAULT NULL,
     `max_image_url` VARCHAR(1000) DEFAULT NULL,
-    `query` VARCHAR(1000) DEFAULT NULL,
-    `original_resource_id` INT(10) UNSIGNED DEFAULT NULL,
-    `machine_description` LONGTEXT DEFAULT NULL,
     `thumbnail0_file_id` INT(10) UNSIGNED DEFAULT NULL,
     `thumbnail2_file_id` INT(10) UNSIGNED DEFAULT NULL,
     `thumbnail4_file_id` INT(10) UNSIGNED DEFAULT NULL,
     `embedded_url` MEDIUMTEXT DEFAULT NULL,
+    `original_resource_id` INT(10) UNSIGNED DEFAULT NULL,
+    `machine_description` LONGTEXT DEFAULT NULL,
     `transcript` LONGTEXT DEFAULT NULL,
     `read_only_transcript` TINYINT(1) NOT NULL DEFAULT 0,
     `online_status` ENUM ('UNKNOWN','ONLINE','OFFLINE','PROCESSING') NOT NULL DEFAULT 'UNKNOWN',
@@ -431,44 +431,36 @@ CREATE TABLE IF NOT EXISTS `lw_transcript_summary` (
 
 CREATE TABLE IF NOT EXISTS `lw_user` (
     `user_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `organisation_id` INT(10) UNSIGNED NOT NULL,
     `deleted` TINYINT(1) NOT NULL DEFAULT 0,
     `username` VARCHAR(50) NOT NULL,
     `password` VARCHAR(512) DEFAULT NULL,
     `hashing` ENUM ('EMPTY','MD5','PBKDF2') NOT NULL DEFAULT 'MD5',
     `email` VARCHAR(250) DEFAULT NULL,
-    `email_confirmation_token` VARCHAR(32) DEFAULT NULL, -- TODO: move to lw_user_token
     `email_confirmed` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
-    `organisation_id` INT(10) UNSIGNED NOT NULL,
     `image_file_id` INT(10) UNSIGNED DEFAULT NULL,
+    `fullname` VARCHAR(105) DEFAULT NULL,
     `gender` TINYINT(1) NOT NULL DEFAULT 0,
     `birthdate` DATE DEFAULT NULL,
     `address` VARCHAR(255) DEFAULT NULL,
     `profession` VARCHAR(105) DEFAULT NULL,
-    `bio` VARCHAR(255) DEFAULT NULL,
     `interest` VARCHAR(255) DEFAULT NULL,
     `phone` VARCHAR(255) DEFAULT NULL, -- TODO: delete? we don't set or read it from Java
-    `is_admin` TINYINT(1) NOT NULL DEFAULT 0,
-    `is_moderator` TINYINT(1) NOT NULL DEFAULT 0,
-    `preferences` BLOB DEFAULT NULL,
+    `bio` VARCHAR(255) DEFAULT NULL,
     `credits` VARCHAR(255) DEFAULT NULL,
-    `fullname` VARCHAR(105) DEFAULT NULL,
     `affiliation` VARCHAR(105) DEFAULT NULL,
     `student_identifier` VARCHAR(50) DEFAULT NULL,
+    `is_admin` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_moderator` TINYINT(1) NOT NULL DEFAULT 0,
     `accept_terms_and_conditions` TINYINT(1) NOT NULL DEFAULT 0,
     `preferred_notification_frequency` ENUM ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
     `time_zone` VARCHAR(100) DEFAULT 'Europe/Berlin',
     `language` VARCHAR(10) DEFAULT 'en-UK',
     `guides` BIGINT(20) NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `preferences` BLOB DEFAULT NULL,
     UNIQUE KEY `lw_user_username` (`username`)
 );
-
-CREATE TABLE IF NOT EXISTS `lw_user_auth` (
-    `auth_id` BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY,
-    `user_id` INT(10) UNSIGNED NOT NULL,
-    `token_hash` VARCHAR(64) NOT NULL,
-    `expires` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
-) COMMENT = 'Used to store users sessions, used by "Remember for 30 days" feature';
 
 CREATE TABLE IF NOT EXISTS `lw_user_log` ( -- TODO: refactor to multiple tables, one for each target_id
     `log_entry_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -493,8 +485,9 @@ CREATE TABLE IF NOT EXISTS `lw_user_log_action` (
 CREATE TABLE IF NOT EXISTS `lw_user_token` (
     `token_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT(10) UNSIGNED NOT NULL,
-    `type` ENUM ('GRANT','EMAIL_CONFIRMATION','PASSWORD_RESET') NOT NULL,
+    `type` ENUM ('GRANT','AUTH','EMAIL_CONFIRMATION','PASSWORD_RESET') NOT NULL,
     `token` VARCHAR(128) NOT NULL,
+    `expires` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
@@ -609,8 +602,6 @@ ALTER TABLE `lw_transcript_summary` ADD CONSTRAINT `fk_lw_transcript_summary_lw_
 
 ALTER TABLE `lw_user` ADD CONSTRAINT `fk_lw_user_lw_file` FOREIGN KEY (`image_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_user` ADD CONSTRAINT `fk_lw_user_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `lw_user_auth` ADD CONSTRAINT `fk_lw_user_auth_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_course_user` ADD CONSTRAINT `fk_lw_user_course_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_course_user` ADD CONSTRAINT `fk_lw_user_course_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -56,7 +56,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
     }
 
     public void onRemoveSuspicious(String addr) {
-        requestManager.getSuspiciousRequests().removeIf(requestData -> addr.equals(requestData.getIp()));
+        requestManager.getSuspiciousRequests().removeIf(requestData -> addr.equals(requestData.getAddr()));
         suspiciousActivityList = null;
     }
 

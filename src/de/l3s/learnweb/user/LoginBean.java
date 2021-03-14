@@ -13,7 +13,6 @@ import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +44,9 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
     @Inject
     private UserDao userDao;
+
+    @Inject
+    private TokenDao tokenDao;
 
     @Inject
     private RequestManager requestManager;
@@ -95,12 +97,11 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
         if (user.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
-            requestManager.updateFailedAttempts(remoteAddr, username);
+            requestManager.recordFailedAttempt(remoteAddr, username);
             return "/lw/user/login.xhtml";
         }
 
-        requestManager.updateSuccessfulAttempts(remoteAddr, username);
-        requestManager.recordLogin(remoteAddr, username);
+        requestManager.recordSuccessfulAttempt(remoteAddr, username);
 
         if (!user.get().isEmailConfirmed() && user.get().isEmailRequired()) {
             confirmRequiredBean.setLoggedInUser(user.get());
@@ -108,11 +109,9 @@ public class LoginBean extends ApplicationBean implements Serializable {
         }
 
         if (remember) {
-            long authId = RandomUtils.nextLong();
-            String token = RandomStringUtils.randomAlphanumeric(128);
-
-            Faces.addResponseCookie(AUTH_COOKIE_NAME, authId + ":" + token, "/", Math.toIntExact(Duration.ofDays(AUTH_COOKIE_AGE_DAYS).toSeconds()));
-            userDao.insertAuth(user.get(), authId, HashHelper.sha256(token), LocalDateTime.now().plusDays(AUTH_COOKIE_AGE_DAYS));
+            String authToken = RandomStringUtils.randomAlphanumeric(128);
+            int tokenId = tokenDao.insert(user.get().getId(), Token.TokenType.AUTH, HashHelper.sha512(authToken), LocalDateTime.now().plusDays(AUTH_COOKIE_AGE_DAYS));
+            Faces.addResponseCookie(AUTH_COOKIE_NAME, tokenId + ":" + authToken, "/", Math.toIntExact(Duration.ofDays(AUTH_COOKIE_AGE_DAYS).toSeconds()));
         } else {
             Faces.removeResponseCookie(AUTH_COOKIE_NAME, "/");
         }
@@ -211,7 +210,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             // this `grant` parameter is used by annotation client/waps proxy to receive grant token for user auth
             String grant = Faces.getRequestParameter("grant");
             if (StringUtils.isNotEmpty(grant)) {
-                String token = Learnweb.dao().getUserDao().findTokenOrElseGenerate(User.TokenType.GRANT, user.getId());
+                String token = Learnweb.dao().getTokenDao().findOrCreate(Token.TokenType.GRANT, user.getId());
                 log.debug("Grant token [{}] requested for user [{}], redirect to {}", token, user.getId(), redirectUrl);
                 Faces.redirect(redirectUrl + "?token=" + token);
             }

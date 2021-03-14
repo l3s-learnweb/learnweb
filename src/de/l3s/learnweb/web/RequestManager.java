@@ -31,6 +31,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.app.Learnweb;
+import de.l3s.util.SqlHelper;
 import de.l3s.util.email.Mail;
 
 /**
@@ -76,7 +77,7 @@ public class RequestManager implements Serializable {
     public void init() {
         adminEmail = Learnweb.config().getProperty("admin_mail");
 
-        loadBanLists();
+        loadBanlist();
         loadWhitelist();
     }
 
@@ -99,7 +100,7 @@ public class RequestManager implements Serializable {
     /**
      * Loads ban lists from the database. Should be called by every constructor.
      */
-    private void loadBanLists() {
+    private void loadBanlist() {
         banDao.findAll().forEach(ban -> banlist.put(ban.getAddr(), ban));
 
         log.debug("Banlist loaded. Entries: {}", banlist.size());
@@ -115,9 +116,26 @@ public class RequestManager implements Serializable {
     /**
      * Records successful login into a Map(IP, Set(username)), thus matching every IP to usernames that were logged into from it.
      */
-    public void recordLogin(String ip, String username) {
-        Set<String> names = logins.computeIfAbsent(ip, key -> new HashSet<>());
-        names.add(username);
+    public void recordSuccessfulAttempt(String addr, String username) {
+        attemptedLogins.add(new LoginAttempt(addr, username, true));
+
+        logins.computeIfAbsent(addr, key -> new HashSet<>()).add(username);
+
+        Ban ipData = banlist.get(addr);
+        if (ipData != null) {
+            ipData.resetAttempts();
+        }
+    }
+
+    public void recordFailedAttempt(String addr, String username) {
+        attemptedLogins.add(new LoginAttempt(addr, username, false));
+
+        Ban ipData = banlist.computeIfAbsent(addr, Ban::new);
+        ipData.logAttempt();
+
+        if (ipData.getAllowedAttempts() < 0) {
+            analyzeAccess(ipData);
+        }
     }
 
     /**
@@ -125,11 +143,11 @@ public class RequestManager implements Serializable {
      *
      * @return All of the request info on certain IP.
      */
-    public List<Request> getRequestsByIp(String ip) {
-        List<Request> requests = requestDao.findByIp(ip);
+    public List<Request> getRequests(String addr) {
+        List<Request> requests = requestDao.findByIp(addr);
 
-        long recentRequests = this.requests.stream().filter(r -> ip.equals(r.getIp())).count();
-        Set<String> logins = this.logins.get(ip);
+        long recentRequests = this.requests.stream().filter(request -> addr.equals(request.getAddr())).count();
+        Set<String> logins = this.logins.get(addr);
 
         if (logins != null) {
             for (Request request : requests) {
@@ -148,8 +166,8 @@ public class RequestManager implements Serializable {
     public void cleanOldRequests() {
         LocalDateTime hourAgo = LocalDateTime.now().minusHours(1);
 
-        while (!requests.isEmpty() && requests.peek().getTime().isBefore(hourAgo)) {
-            logins.remove(requests.peek().getIp());
+        while (!requests.isEmpty() && requests.peek().getCreatedAt().isBefore(hourAgo)) {
+            logins.remove(requests.peek().getAddr());
             requests.poll();
         }
     }
@@ -160,8 +178,8 @@ public class RequestManager implements Serializable {
     public void flushRequests() {
         List<Request> requestsToSave = new ArrayList<>();
 
-        Map<String, Long> requestsByIp = requests.stream().collect(Collectors.groupingBy(Request::getIp, Collectors.counting()));
-        for (Map.Entry<String, Long> entry : requestsByIp.entrySet()) {
+        Map<String, Long> requestsByAddr = requests.stream().collect(Collectors.groupingBy(Request::getAddr, Collectors.counting()));
+        for (Map.Entry<String, Long> entry : requestsByAddr.entrySet()) {
             Request request = new Request(entry.getKey(), null);
             request.setRequests(entry.getValue().intValue());
 
@@ -228,38 +246,11 @@ public class RequestManager implements Serializable {
         return ban.getAttempts() > CAPTCHA_THRESHOLD;
     }
 
-    public void updateFailedAttempts(String ip, String username) {
-        attemptedLogins.add(new LoginAttempt(ip, username, false));
-
-        Ban ipData = banlist.get(ip);
-        Ban usernameData = banlist.get(username);
-
-        if (ipData == null) {
-            ipData = new Ban(ip);
-            banlist.put(ip, ipData);
-        }
-
-        if (usernameData == null) {
-            usernameData = new Ban(username);
-            banlist.put(username, usernameData);
-        }
-
-        ipData.logAttempt();
-        usernameData.logAttempt();
-
-        if (ipData.getAllowedAttempts() < 0) {
-            analyzeAccess(ipData, true);
-        } else if (usernameData.getAllowedAttempts() < 0) {
-            analyzeAccess(usernameData, false);
-        }
-
-    }
-
     /**
      * Checks whether the currently accessing IP either has a high request rate (over 300).
      */
-    private void analyzeAccess(Ban ban, boolean isIP) {
-        if (isIP && whitelist.contains(ban.getAddr()) && ban.getAttempts() < 300) {
+    private void analyzeAccess(Ban ban) {
+        if (whitelist.contains(ban.getAddr()) && ban.getAttempts() < 300) {
             ban.setAllowedAttempts(ATTEMPTS_STEP);
             return;
         }
@@ -267,15 +258,9 @@ public class RequestManager implements Serializable {
         LocalDateTime threshold = LocalDateTime.now().minusMinutes(MINUTES_ANALYZED);
 
         List<LoginAttempt> list;
-        if (isIP) {
-            list = attemptedLogins.stream()
-                .filter(x -> x.getIp().equals(ban.getAddr()) && x.getDateTime().isAfter(threshold))
-                .collect(Collectors.toList());
-        } else {
-            list = attemptedLogins.stream()
-                .filter(x -> x.getUsername().equals(ban.getAddr()) && x.getDateTime().isAfter(threshold))
-                .collect(Collectors.toList());
-        }
+        list = attemptedLogins.stream()
+            .filter(x -> x.getAddr().equals(ban.getAddr()) && x.getCreatedAt().isAfter(threshold))
+            .collect(Collectors.toList());
 
         if (list.size() > BAN_THRESHOLD) {
             flagSuspicious(ban);
@@ -288,7 +273,7 @@ public class RequestManager implements Serializable {
      * Adds the suspicious acc data to the suspicious list and sends admin an email every 30 entries.
      */
     private void flagSuspicious(Ban ban) {
-        suspiciousRequests.addAll(getRequestsByIp(ban.getAddr()));
+        suspiciousRequests.addAll(getRequests(ban.getAddr()));
 
         if (suspiciousRequests.size() > 30) {
             sendMail();
@@ -325,7 +310,7 @@ public class RequestManager implements Serializable {
                 content.append("<tr>");
 
                 content.append("<td>");
-                content.append(ard.getIp());
+                content.append(ard.getAddr());
                 content.append("</td>");
 
                 content.append("<td>");
@@ -333,7 +318,7 @@ public class RequestManager implements Serializable {
                 content.append("</td>");
 
                 content.append("<td>");
-                content.append(ard.getTime());
+                content.append(ard.getCreatedAt());
                 content.append("</td>");
 
                 content.append("</tr>");
@@ -351,21 +336,6 @@ public class RequestManager implements Serializable {
         }
     }
 
-    public void updateSuccessfulAttempts(String ip, String username) {
-        Ban ipData = banlist.get(ip);
-        Ban usernameData = banlist.get(username);
-
-        if (ipData != null) {
-            ipData.resetAttempts();
-        }
-
-        if (usernameData != null) {
-            usernameData.resetAttempts();
-        }
-
-        attemptedLogins.add(new LoginAttempt(ip, username, true));
-    }
-
     public void clearBan(String addr) {
         banDao.delete(addr);
 
@@ -377,7 +347,7 @@ public class RequestManager implements Serializable {
         banDao.deleteOutdated();
 
         banlist.clear();
-        loadBanLists();
+        loadBanlist();
 
         log.debug("Older entries have been cleaned up from ban lists.");
     }
@@ -396,7 +366,7 @@ public class RequestManager implements Serializable {
     public void ban(String addr, String reason, Duration amount) {
         Ban ban = banlist.computeIfAbsent(addr, Ban::new);
         ban.setReason(reason);
-        ban.setExpires(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plus(amount));
+        ban.setExpires(SqlHelper.now().plus(amount));
 
         banDao.save(ban);
         log.info("Banned {} until {}", ban.getAddr(), ban.getExpires());

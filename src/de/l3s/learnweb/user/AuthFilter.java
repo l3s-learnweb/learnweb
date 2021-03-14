@@ -14,7 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
+
+import de.l3s.learnweb.web.RequestManager;
+import de.l3s.util.HashHelper;
 
 /**
  * Checks if user is logged in or auth cookie is present and restores auth for new session.
@@ -27,10 +31,13 @@ public class AuthFilter extends HttpFilter {
     private static final Logger log = LogManager.getLogger(AuthFilter.class);
 
     @Inject
-    private UserDao userDao;
+    private TokenDao tokenDao;
 
     @Inject
     private UserBean userBean;
+
+    @Inject
+    private RequestManager requestManager;
 
     @Override
     protected void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
@@ -43,21 +50,21 @@ public class AuthFilter extends HttpFilter {
 
                 if (StringUtils.isNotEmpty(authValue)) {
                     String[] auth = authValue.split(":", 2);
-                    Optional<User> user = userDao.findByAuthToken(Long.parseLong(auth[0]), auth[1]);
-                    user.ifPresent(value -> userBean.setUser(value, request));
+                    Optional<User> user = tokenDao.findUserByToken(Integer.parseInt(auth[0]), HashHelper.sha512(auth[1]));
+                    if (user.isPresent()) {
+                        userBean.setUser(user.get(), request);
+                    } else {
+                        requestManager.recordFailedAttempt(Servlets.getRemoteAddr(request), "auth:" + auth[0]);
+                        Servlets.removeResponseCookie(request, response, LoginBean.AUTH_COOKIE_NAME, "/");
+                    }
                 }
             }
+        } catch (NumberFormatException e) {
+            // TODO: remove after some time, needed after migration from long id to int. Just remove old cookie and require login for that time.
+            Servlets.removeResponseCookie(request, response, LoginBean.AUTH_COOKIE_NAME, "/");
         } catch (Exception e) {
+            Servlets.removeResponseCookie(request, response, LoginBean.AUTH_COOKIE_NAME, "/");
             log.error("Unable to finish auth verification", e);
-        }
-
-        // Validate if session is not expired
-        try {
-            if (request.getRequestedSessionId() != null && !request.isRequestedSessionIdValid()) {
-                log.warn("Request attempt with invalid session {}", request.getRequestURI());
-            }
-        } catch (Exception e) {
-            log.error("Unable detect session status", e);
         }
 
         chain.doFilter(request, response);

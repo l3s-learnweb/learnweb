@@ -22,7 +22,7 @@ public interface RequestDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_requests WHERE addr = ?")
     List<Request> findByIp(String ip);
 
-    @SqlQuery("SELECT * FROM lw_requests WHERE updated_at >= ?")
+    @SqlQuery("SELECT * FROM lw_requests WHERE created_at >= ?")
     List<Request> findAfterDate(LocalDateTime date);
 
     @SuppressWarnings("SqlWithoutWhere")
@@ -30,23 +30,23 @@ public interface RequestDao extends SqlObject, Serializable {
     void deleteAll();
 
     default void save(Request request) {
-        getHandle().createUpdate("INSERT INTO lw_requests (addr, requests, logins, usernames, updated_at) VALUES(?, ?, ?, ?, ?)")
-            .bind(0, request.getIp())
+        getHandle().createUpdate("INSERT INTO lw_requests (addr, requests, logins, usernames, created_at) VALUES(?, ?, ?, ?, ?)")
+            .bind(0, request.getAddr())
             .bind(1, request.getRequests())
             .bind(2, request.getLoginCount())
             .bind(3, request.getUsernames())
-            .bind(4, request.getTime())
+            .bind(4, request.getCreatedAt())
             .execute();
     }
 
     default void save(Iterable<Request> requests) {
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_requests (addr, requests, logins, usernames, updated_at) VALUES(?, ?, ?, ?, ?)");
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_requests (addr, requests, logins, usernames, created_at) VALUES(?, ?, ?, ?, ?)");
         for (Request request : requests) {
-            batch.bind(0, request.getIp())
+            batch.bind(0, request.getAddr())
                 .bind(1, request.getRequests())
                 .bind(2, request.getLoginCount())
                 .bind(3, request.getUsernames())
-                .bind(4, request.getTime())
+                .bind(4, request.getCreatedAt())
                 .add();
         }
         batch.execute();
@@ -59,7 +59,7 @@ public interface RequestDao extends SqlObject, Serializable {
             request.setRequests(rs.getInt("requests"));
             request.setLoginCount(rs.getInt("logins"));
             request.setUsernames(rs.getString("usernames"));
-            request.setTime(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+            request.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return request;
         }
     }

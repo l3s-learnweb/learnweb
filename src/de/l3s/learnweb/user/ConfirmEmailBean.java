@@ -23,24 +23,32 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
     private User user;
 
     @Inject
-    private UserDao userDao;
+    private TokenDao tokenDao;
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
     public String onLoad() {
         BeanAssert.validate(!StringUtils.isAnyEmpty(email, token), "error_pages.bad_request_email_link");
-        BeanAssert.validate(token.length() >= 32, "confirm_token_to_short");
+        String[] splits = token.split(":");
+        BeanAssert.validate(splits.length == 2 && !StringUtils.isAnyEmpty(splits), "confirm_token_to_short");
 
-        user = userDao.findByEmailConfirmationToken(email, token).orElseThrow(() -> new BadRequestHttpException("confirm_token_invalid"));
-        user.setEmailConfirmed(true);
-        userDao.save(user);
+        try {
+            user = tokenDao.findUserByToken(Integer.parseInt(splits[0]), splits[1]).orElseThrow();
+            BeanAssert.validate(user.getEmail().equals(email), "confirm_token_invalid");
 
-        if (user.equals(getConfirmRequiredBean().getLoggedInUser())) {
-            LoginBean.loginUser(this, user);
-            return user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
+            user.setEmailConfirmed(true);
+            tokenDao.getUserDao().save(user);
+            tokenDao.deleteByTypeAndUser(Token.TokenType.EMAIL_CONFIRMATION, user.getId());
+
+            if (user.equals(getConfirmRequiredBean().getLoggedInUser())) {
+                LoginBean.loginUser(this, user);
+                return user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
+            }
+            return null;
+        } catch (Exception e) {
+            throw new BadRequestHttpException("confirm_token_invalid", e);
         }
-        return null;
     }
 
     public String getEmail() {

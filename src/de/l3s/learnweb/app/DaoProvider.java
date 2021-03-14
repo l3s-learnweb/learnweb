@@ -44,6 +44,7 @@ import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.MessageDao;
 import de.l3s.learnweb.user.OrganisationDao;
+import de.l3s.learnweb.user.TokenDao;
 import de.l3s.learnweb.user.UserDao;
 import de.l3s.learnweb.web.BanDao;
 import de.l3s.learnweb.web.BounceDao;
@@ -95,6 +96,7 @@ public class DaoProvider {
     private final SubmissionDao submissionDao;
     private final SurveyDao surveyDao;
     private final TagDao tagDao;
+    private final TokenDao tokenDao;
     private final TedTranscriptDao tedTranscriptDao;
     private final UserDao userDao;
     private final WaybackUrlDao waybackUrlDao;
@@ -142,6 +144,7 @@ public class DaoProvider {
         submissionDao = jdbi.onDemand(SubmissionDao.class);
         surveyDao = jdbi.onDemand(SurveyDao.class);
         tagDao = jdbi.onDemand(TagDao.class);
+        tokenDao = jdbi.onDemand(TokenDao.class);
         tedTranscriptDao = jdbi.onDemand(TedTranscriptDao.class);
         userDao = jdbi.onDemand(UserDao.class);
         waybackUrlDao = jdbi.onDemand(WaybackUrlDao.class);
@@ -307,6 +310,11 @@ public class DaoProvider {
     @Produces
     public TagDao getTagDao() {
         return tagDao;
+    }
+
+    @Produces
+    public TokenDao getTokenDao() {
+        return tokenDao;
     }
 
     @Produces

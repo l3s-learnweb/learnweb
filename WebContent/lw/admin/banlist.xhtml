@@ -137,8 +137,8 @@
         <h:form id="suspiciouslistform">
             <p:dataTable  paginatorPosition="bottom" var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true"
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-                <p:column headerText="IP" sortBy="#{aggrReqData.ip}">
-                    <h:outputText value="#{aggrReqData.ip}"/>
+                <p:column headerText="IP" sortBy="#{aggrReqData.addr}">
+                    <h:outputText value="#{aggrReqData.addr}"/>
                 </p:column>
 
                 <p:column headerText="#{msg.requests_count}" sortBy="#{aggrReqData.requests}">
@@ -153,8 +153,8 @@
                     <h:outputText value="#{aggrReqData.usernames}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.time_stamp}" sortBy="#{aggrReqData.time}">
-                    <h:outputText value="#{aggrReqData.time}">
+                <p:column headerText="#{msg.time_stamp}" sortBy="#{aggrReqData.createdAt}">
+                    <h:outputText value="#{aggrReqData.createdAt}">
                         <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
                     </h:outputText>
                 </p:column>
@@ -166,9 +166,9 @@
                         <h:outputText value="#{msg.ban}"/>
                     </p:commandLink>
 
-                    <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.ip)}"
+                    <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.addr)}"
                                    update=":suspiciouslistform" styleClass="icon-link">
-                        <p:confirm message="#{msg.remove} #{aggrReqData.ip}?"/>
+                        <p:confirm message="#{msg.remove} #{aggrReqData.addr}?"/>
                         <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                         <h:outputText value="#{msg.remove}"/>
                     </p:commandLink>
