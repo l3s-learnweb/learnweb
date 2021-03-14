@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -138,6 +137,10 @@ public class RequestManager implements Serializable {
         }
     }
 
+    public Queue<Request> getRequests() {
+        return requests;
+    }
+
     /**
      * Gets the aggregated and fresh data on the given IP. Used for warning generation.
      *
@@ -195,10 +198,6 @@ public class RequestManager implements Serializable {
         if (!requestsToSave.isEmpty()) {
             requestDao.save(requestsToSave);
         }
-    }
-
-    public Queue<Request> getRequests() {
-        return requests;
     }
 
     public Map<String, Set<String>> getLogins() {
