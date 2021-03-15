@@ -20,18 +20,22 @@ class LearnwebResource implements ExtensionContext.Store.CloseableResource {
         ConfigProvider configProvider = new ConfigProvider(false);
         configProvider.setServerUrl("https://learnweb.l3s.uni-hannover.de");
 
-        DataSource dataSource = useRealDatabase ? DaoProvider.createDataSource(configProvider) :
-            JdbcConnectionPool.create("jdbc:h2:mem:" + UUID.randomUUID() + ";DB_CLOSE_DELAY=-1;MODE=MYSQL", "", "");
+        DaoProvider daoProvider;
+        if (useRealDatabase) {
+            daoProvider = new DaoProvider(configProvider);
+        } else {
+            DataSource dataSource = JdbcConnectionPool.create("jdbc:h2:mem:" + UUID.randomUUID() + ";DB_CLOSE_DELAY=-1;MODE=MYSQL", "", "");
 
-        DaoProvider daoProvider = new DaoProvider(configProvider, dataSource);
+            daoProvider = new DaoProvider(configProvider, dataSource);
+
+            Flyway flyway = Flyway.configure()
+                .dataSource(dataSource)
+                .locations("db/migration", "db/test")
+                .load();
+            flyway.migrate();
+        }
+
         learnweb = new Learnweb(configProvider, daoProvider);
-
-        Flyway flyway = Flyway.configure()
-            .dataSource(dataSource)
-            .locations("db/migration", "db/test")
-            .load();
-        flyway.migrate();
-
         learnweb.init();
     }
 

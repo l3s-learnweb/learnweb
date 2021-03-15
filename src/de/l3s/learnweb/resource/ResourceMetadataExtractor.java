@@ -39,11 +39,11 @@ import de.l3s.util.UrlHelper;
 public class ResourceMetadataExtractor {
     private static final Logger log = LogManager.getLogger(ResourceMetadataExtractor.class);
 
-    private static final String YOUTUBE_PATTERN = "https?://(?:[0-9A-Z-]+\\.)?(?:youtu\\.be/|youtube\\.com\\S*[^\\w\\-\\s])([\\w\\-]{11})(?=[^\\w\\-]|$)(?![?=&+%\\w]*(?:['\"][^<>]*>|</a>))[?=&+%\\w]*";
-    private static final String VIMEO_PATTERN = "https?://(?:www\\.)?(?:player\\.)?vimeo\\.com/(?:[a-z]*/)*([0-9]{6,11})[?]?.*";
-    private static final String FLICKR_PATTERN = "https?://(?:www\\.)?flickr\\.com/(?:photos/[^/]+/(\\d+))";
-    private static final String FLICKR_SHORT_PATTERN = "https?://(?:www\\.)?(?:flic\\.kr/p/|flickr\\.com/photo\\.gne\\?short=)(\\w+)";
-    private static final String IPERNITY_PATTERN = "https?://(?:www\\.)?ipernity\\.com/(?:doc/[^/]+/(\\d+))";
+    private static final Pattern YOUTUBE_PATTERN = Pattern.compile("https?://(?:[0-9A-Z-]+\\.)?(?:youtu\\.be/|youtube\\.com\\S*[^\\w\\-\\s])([\\w\\-]{11})(?=[^\\w\\-]|$)(?![?=&+%\\w]*(?:['\"][^<>]*>|</a>))[?=&+%\\w]*", Pattern.CASE_INSENSITIVE);
+    private static final Pattern VIMEO_PATTERN = Pattern.compile("https?://(?:www\\.)?(?:player\\.)?vimeo\\.com/(?:[a-z]*/)*([0-9]{6,11})[?]?.*", Pattern.CASE_INSENSITIVE);
+    private static final Pattern FLICKR_PATTERN = Pattern.compile("https?://(?:www\\.)?flickr\\.com/(?:photos/[^/]+/(\\d+))", Pattern.CASE_INSENSITIVE);
+    private static final Pattern FLICKR_SHORT_PATTERN = Pattern.compile("https?://(?:www\\.)?(?:flic\\.kr/p/|flickr\\.com/photo\\.gne\\?short=)(\\w+)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern IPERNITY_PATTERN = Pattern.compile("https?://(?:www\\.)?ipernity\\.com/(?:doc/[^/]+/(\\d+))", Pattern.CASE_INSENSITIVE);
 
     private static final String YOUTUBE_API_REQUEST = "https://www.googleapis.com/youtube/v3/videos?key=***REMOVED***&part=snippet&id=";
     private static final String VIMEO_API_REQUEST = "http://vimeo.com/api/v2/video/";
@@ -76,8 +76,7 @@ public class ResourceMetadataExtractor {
         try {
             resource.setOnlineStatus(OnlineStatus.ONLINE);
 
-            Pattern compYouTubePattern = Pattern.compile(YOUTUBE_PATTERN, Pattern.CASE_INSENSITIVE);
-            Matcher youTubeMatcher = compYouTubePattern.matcher(resource.getUrl());
+            Matcher youTubeMatcher = YOUTUBE_PATTERN.matcher(resource.getUrl());
             if (youTubeMatcher.find()) {
                 resource.setType(ResourceType.video);
                 resource.setService(ResourceService.youtube);
@@ -86,8 +85,7 @@ public class ResourceMetadataExtractor {
                 return;
             }
 
-            Pattern compVimeoPattern = Pattern.compile(VIMEO_PATTERN, Pattern.CASE_INSENSITIVE);
-            Matcher vimeoMatcher = compVimeoPattern.matcher(resource.getUrl());
+            Matcher vimeoMatcher = VIMEO_PATTERN.matcher(resource.getUrl());
             if (vimeoMatcher.find()) {
                 resource.setType(ResourceType.video);
                 resource.setService(ResourceService.vimeo);
@@ -96,8 +94,7 @@ public class ResourceMetadataExtractor {
                 return;
             }
 
-            Pattern compFlickrPattern = Pattern.compile(FLICKR_PATTERN, Pattern.CASE_INSENSITIVE);
-            Matcher flickrMatcher = compFlickrPattern.matcher(resource.getUrl());
+            Matcher flickrMatcher = FLICKR_PATTERN.matcher(resource.getUrl());
             if (flickrMatcher.find()) {
                 resource.setType(ResourceType.image);
                 resource.setService(ResourceService.flickr);
@@ -106,8 +103,7 @@ public class ResourceMetadataExtractor {
                 return;
             }
 
-            Pattern compFlickrShortPattern = Pattern.compile(FLICKR_SHORT_PATTERN, Pattern.CASE_INSENSITIVE);
-            Matcher flickrShortMatcher = compFlickrShortPattern.matcher(resource.getUrl());
+            Matcher flickrShortMatcher = FLICKR_SHORT_PATTERN.matcher(resource.getUrl());
             if (flickrShortMatcher.find()) {
                 resource.setType(ResourceType.image);
                 resource.setService(ResourceService.flickr);
@@ -116,8 +112,7 @@ public class ResourceMetadataExtractor {
                 return;
             }
 
-            Pattern compIpernityPattern = Pattern.compile(IPERNITY_PATTERN, Pattern.CASE_INSENSITIVE);
-            Matcher ipernityMatcher = compIpernityPattern.matcher(resource.getUrl());
+            Matcher ipernityMatcher = IPERNITY_PATTERN.matcher(resource.getUrl());
             if (ipernityMatcher.find()) {
                 resource.setType(ResourceType.image);
                 resource.setService(ResourceService.ipernity);
