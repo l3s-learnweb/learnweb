@@ -21,7 +21,6 @@ import de.l3s.util.StringHelper;
 
 @RegisterRowMapper(OrganisationDao.OrganisationMapper.class)
 public interface OrganisationDao extends SqlObject, Serializable {
-    int FIELDS = 1; // number of options_fieldX fields, increase if Organisation.Options has more than 64 values
     ICache<Organisation> cache = new Cache<>(10000);
 
     default Optional<Organisation> findById(int organisationId) {
@@ -51,7 +50,6 @@ public interface OrganisationDao extends SqlObject, Serializable {
         params.put("title", organisation.getTitle());
         params.put("welcome_page", organisation.getWelcomePage());
         params.put("welcome_message", organisation.getWelcomeMessage());
-        params.put("options_field1", organisation.getOptions()[0]);
         params.put("default_search_text", organisation.getDefaultSearchServiceText());
         params.put("default_search_image", organisation.getDefaultSearchServiceImage());
         params.put("default_search_video", organisation.getDefaultSearchServiceVideo());
@@ -59,6 +57,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
         params.put("language_variant", organisation.getLanguageVariant());
         params.put("banner_image_file_id", SqlHelper.toNullable(organisation.getBannerImageFileId()));
         params.put("glossary_languages", StringHelper.join(organisation.getGlossaryLanguages()));
+        SqlHelper.setBitSet(params, "options_field", organisation.getOptions());
 
         Optional<Integer> organisationId = SqlHelper.handleSave(getHandle(), "lw_organisation", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -84,12 +83,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 organisation.setLanguageVariant(rs.getString("language_variant"));
                 organisation.setBannerImageFileId(rs.getInt("banner_image_file_id"));
                 organisation.setGlossaryLanguages(StringHelper.splitLocales(rs.getString("glossary_languages")));
-
-                long[] options = new long[FIELDS];
-                for (int i = 0; i < FIELDS; i++) {
-                    options[i] = rs.getLong("options_field" + (i + 1));
-                }
-                organisation.setOptions(options);
+                organisation.setOptions(SqlHelper.getBitSet(rs, "options_field", Organisation.Option.values().length));
                 cache.put(organisation);
             }
             return organisation;

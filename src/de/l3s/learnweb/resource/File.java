@@ -22,14 +22,13 @@ public class File implements Serializable, HasId {
         SYSTEM_FILE, // for example course header images
         ORGANISATION_BANNER,
         PROFILE_PICTURE,
-        THUMBNAIL_SMALL, // thumbnail0
-        THUMBNAIL_MEDIUM, // thumbnail2
-        THUMBNAIL_LARGE, // thumbnail4
+        THUMBNAIL_SMALL, // cropped to 160 x 120 px - smallest thumbnail used on website
+        THUMBNAIL_MEDIUM, // resized <= 280 x 210 px - resource preview image size
+        THUMBNAIL_LARGE, // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
         MAIN, // the file that can be downloaded/viewed
         ORIGINAL, // if the file was converted the original file should be moved to this location
         DOC_HISTORY, // previous version of an office resource
-        DOC_CHANGES, // zip file with changes for office resource
-        OBSOLETE; // something that probably will not be used anymore, like thumbnail1 and thumbnail3
+        DOC_CHANGES; // zip file with changes for office resource
 
         public boolean in(FileType... values) {
             return Arrays.stream(values).anyMatch(value -> value == this);

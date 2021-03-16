@@ -235,7 +235,7 @@ public class ResourceMetadataExtractor {
                 for (int i = 0, len = sourcesJsonArray.size(); i < len; ++i) {
                     JsonObject objectSource = sourcesJsonArray.get(i).getAsJsonObject();
                     if (!"auto".equals(objectSource.get("label").getAsString())) {
-                        resource.setDownloadUrl(objectSource.get("file").getAsString());
+                        resource.setEmbeddedUrl(objectSource.get("file").getAsString());
                         break;
                     }
                 }
@@ -347,8 +347,7 @@ public class ResourceMetadataExtractor {
 
     public void processFileResource(Resource resource, FileInfo fileInfo) {
         resource.setFormat(fileInfo.getMimeType());
-        resource.setTypeFromFormat(resource.getFormat());
-        resource.setFileName(fileInfo.getFileName());
+        resource.setTypeFromFormat(fileInfo.getMimeType());
 
         if (StringUtils.isNotEmpty(fileInfo.getTitle()) && StringUtils.isEmpty(resource.getTitle()) && !fileInfo.getTitle().equalsIgnoreCase("unknown")) {
             resource.setTitle(fileInfo.getTitle());

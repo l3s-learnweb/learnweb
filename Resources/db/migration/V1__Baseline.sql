@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `lw_file` (
     `file_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `deleted` TINYINT(1) NOT NULL DEFAULT 0,
     `resource_id` INT(10) UNSIGNED DEFAULT NULL,
-    `type` ENUM ('SYSTEM_FILE','ORGANISATION_BANNER','PROFILE_PICTURE','THUMBNAIL_SMALL','THUMBNAIL_MEDIUM','THUMBNAIL_LARGE','MAIN','ORIGINAL','DOC_HISTORY','DOC_CHANGES','OBSOLETE') NOT NULL,
+    `type` ENUM ('SYSTEM_FILE','ORGANISATION_BANNER','PROFILE_PICTURE','THUMBNAIL_SMALL','THUMBNAIL_MEDIUM','THUMBNAIL_LARGE','MAIN','ORIGINAL','DOC_HISTORY','DOC_CHANGES') NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `mime_type` VARCHAR(255) NOT NULL,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
@@ -217,8 +217,8 @@ CREATE TABLE IF NOT EXISTS `lw_organisation` (
     UNIQUE KEY `lw_organisation_default` (`default`)
 );
 
-CREATE TABLE IF NOT EXISTS `lw_requests` (
-    `request_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, -- TODO: do we need id? why do we have duplicates?
+CREATE TABLE IF NOT EXISTS `lw_requests` ( -- TODO: flush data on destroy
+    `request_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `addr` VARCHAR(64) NOT NULL,
     `requests` INT(11) DEFAULT NULL,
     `logins` INT(11) DEFAULT NULL,
@@ -445,8 +445,6 @@ CREATE TABLE IF NOT EXISTS `lw_user` (
     `address` VARCHAR(255) DEFAULT NULL,
     `profession` VARCHAR(105) DEFAULT NULL,
     `interest` VARCHAR(255) DEFAULT NULL,
-    `phone` VARCHAR(255) DEFAULT NULL, -- TODO: delete? we don't set or read it from Java
-    `bio` VARCHAR(255) DEFAULT NULL,
     `credits` VARCHAR(255) DEFAULT NULL,
     `affiliation` VARCHAR(105) DEFAULT NULL,
     `student_identifier` VARCHAR(50) DEFAULT NULL,
@@ -456,7 +454,7 @@ CREATE TABLE IF NOT EXISTS `lw_user` (
     `preferred_notification_frequency` ENUM ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
     `time_zone` VARCHAR(100) DEFAULT 'Europe/Berlin',
     `language` VARCHAR(10) DEFAULT 'en-UK',
-    `guides` BIGINT(20) NOT NULL DEFAULT 0,
+    `guide_field1` BIGINT(20) NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `preferences` BLOB DEFAULT NULL,
     UNIQUE KEY `lw_user_username` (`username`)

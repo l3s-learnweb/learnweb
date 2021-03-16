@@ -46,7 +46,7 @@
         <ui:fragment rendered="#{user.gender ne 'UNASSIGNED'}">
     		<p class="text-muted small mb-0"><b>#{msg.gender}:</b><h:outputText value=" #{msg['user.gender.' += user.gender]}" /></p>
         </ui:fragment>
-        
+
 		<ui:fragment rendered="#{not empty user.address}">
 			<p class="text-muted small mb-0"><b>#{msg.address}:</b> #{user.address}</p>
 		</ui:fragment>
@@ -59,13 +59,9 @@
 			<p class="text-muted small mb-0"><b>#{msg.interest}:</b> #{user.interest}</p>
 		</ui:fragment>
 
-		<ui:fragment rendered="#{not empty user.additionalInformation}">
-			<p class="text-muted small mb-0"><b>#{msg.additionalinformation}:</b> #{user.additionalInformation}</p>
-		</ui:fragment>
-
 		<p class="text-muted small mb-0">
 			<b>#{msg.registered_since}: </b>
-			<h:outputText value="#{user.registrationDate}">
+			<h:outputText value="#{user.createdAt}">
 				<f:convertDateTime dateStyle="default" type="localDate" timeZone="#{userBean.timeZone}"/>
 			</h:outputText>
 		</p>

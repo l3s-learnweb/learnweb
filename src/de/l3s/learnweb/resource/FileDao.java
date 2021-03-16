@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +21,7 @@ import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.FetchSize;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
@@ -40,11 +42,9 @@ public interface FileDao extends SqlObject, Serializable {
         return findById(fileId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_object_description"));
     }
 
-    @SqlQuery("SELECT * FROM lw_file ORDER BY resource_id DESC")
-    List<File> findAll();
-
-    @SqlQuery("SELECT * FROM lw_file WHERE deleted = 0 ORDER BY resource_id DESC")
-    List<File> findUndeleted();
+    @FetchSize(1000)
+    @SqlQuery("SELECT * FROM lw_file WHERE f.deleted = 0")
+    Stream<File> findAll();
 
     @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER BY type, updated_at")
     List<File> findByResourceId(int resourceId);
@@ -148,7 +148,7 @@ public interface FileDao extends SqlObject, Serializable {
                 file.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
 
                 if (!file.isExists()) {
-                    log.warn("Can't find file {} at '{}' for resource {}", file.getId(), file.getActualFile().getAbsolutePath(), file.getResourceId());
+                    log.warn("Can't find file {} at '{}'", file.getId(), file.getActualFile().getAbsolutePath());
                 }
 
                 cache.put(file);

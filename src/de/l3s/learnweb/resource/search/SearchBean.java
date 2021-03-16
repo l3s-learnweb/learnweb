@@ -196,9 +196,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
         } catch (RuntimeException | IOException e) {
             String details = "resource: " + newResource + "; selectedResource: " + selectedResource;
-            if (newResource != null) {
-                details += "; thumbnail0:" + newResource.getThumbnailSmall();
-            }
             addErrorMessage(details, e);
         }
     }

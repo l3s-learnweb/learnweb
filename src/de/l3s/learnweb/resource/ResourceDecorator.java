@@ -173,10 +173,6 @@ public class ResourceDecorator implements Serializable {
         return resource.getUser();
     }
 
-    public String getFileName() {
-        return resource.getFileName();
-    }
-
     public double getStarRating() {
         return resource.getStarRating();
     }

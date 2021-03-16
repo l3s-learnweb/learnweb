@@ -24,6 +24,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.config.ValueColumn;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindList;
+import org.jdbi.v3.sqlobject.customizer.FetchSize;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -53,6 +54,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     /**
      * Returns all resources (that were not deleted).
      */
+    @FetchSize(1000)
     @SqlQuery("SELECT * FROM lw_resource r WHERE deleted = 0 ORDER BY resource_id")
     Stream<Resource> findAll();
 
@@ -209,6 +211,7 @@ public interface ResourceDao extends SqlObject, Serializable {
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("resource_id", SqlHelper.toNullable(resource.getId()));
+        params.put("deleted", resource.isDeleted());
         params.put("title", resource.getTitle());
         params.put("description", SqlHelper.toNullable(resource.getDescription()));
         params.put("url", SqlHelper.toNullable(resource.getUrl()));
@@ -227,7 +230,6 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("author", SqlHelper.toNullable(resource.getAuthor()));
         params.put("file_id", SqlHelper.toNullable(resource.getFileId()));
         params.put("file_name", resource.getFileName());
-        params.put("download_url", resource.getDownloadUrl());
         params.put("embedded_url", resource.getEmbeddedUrl());
         params.put("transcript", resource.getTranscript());
         params.put("online_status", resource.getOnlineStatus().name());
@@ -240,7 +242,6 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("metadata", SerializationUtils.serialize(resource.getMetadata()));
         params.put("group_id", SqlHelper.toNullable(resource.getGroupId()));
         params.put("folder_id", SqlHelper.toNullable(resource.getFolderId()));
-        params.put("deleted", resource.isDeleted());
         params.put("read_only_transcript", resource.isReadOnlyTranscript());
         params.put("thumbnail0_file_id", resource.getThumbnailSmall() == null ? null : SqlHelper.toNullable(resource.getThumbnailSmall().getFileId()));
         params.put("thumbnail2_file_id", resource.getThumbnailMedium() == null ? null : SqlHelper.toNullable(resource.getThumbnailMedium().getFileId()));
@@ -302,6 +303,7 @@ public interface ResourceDao extends SqlObject, Serializable {
 
             if (resource == null) {
                 resource = Resource.ofType(rs.getString("storage_type"), rs.getString("type"), rs.getString("service"));
+                resource.setDeleted(rs.getBoolean("deleted"));
                 resource.setId(rs.getInt("resource_id"));
                 resource.setFormat(rs.getString("format"));
                 resource.setTitle(rs.getString("title"));
@@ -317,7 +319,6 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setOriginalResourceId(rs.getInt("original_resource_id"));
                 resource.setFileId(rs.getInt("file_id"));
                 resource.setFileName(rs.getString("file_name"));
-                resource.setDownloadUrl(rs.getString("download_url"));
                 resource.setThumbnailSmall(createThumbnail(rs, 0));
                 resource.setThumbnailMedium(createThumbnail(rs, 2));
                 resource.setThumbnailLarge(createThumbnail(rs, 4));
@@ -329,22 +330,12 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setWidth(rs.getInt("width"));
                 resource.setHeight(rs.getInt("height"));
                 resource.setLanguage(rs.getString("language"));
-                resource.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
-                resource.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
                 resource.setGroupId(rs.getInt("group_id"));
                 resource.setFolderId(rs.getInt("folder_id"));
-                resource.setDeleted(rs.getBoolean("deleted"));
                 resource.setReadOnlyTranscript(rs.getBoolean("read_only_transcript"));
-
-                // deserialize metadata
-                byte[] metadataBytes = rs.getBytes("metadata");
-                if (metadataBytes != null && metadataBytes.length > 0) {
-                    try {
-                        resource.setMetadata(SerializationUtils.deserialize(metadataBytes));
-                    } catch (Exception e) {
-                        LogManager.getLogger(ResourceMapper.class).error("Couldn't load metadata for resource {}", resource.getId(), e);
-                    }
-                }
+                resource.setMetadata(SqlHelper.deserializeHashMap(rs.getBytes("metadata")));
+                resource.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
+                resource.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
 
                 resource.postConstruct();
                 cache.put(resource);

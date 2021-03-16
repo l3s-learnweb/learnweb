@@ -164,7 +164,7 @@ public class SpeechRepositoryCrawler implements Runnable {
         resource.setDescription(speechEntity.getDescription() + "\\n<br/>\n" + speechEntity.getNotes());
         resource.setUrl(speechEntity.getUrl());
         resource.setMaxImageUrl(speechEntity.getImageLink());
-        resource.setDownloadUrl(speechEntity.getVideoLink());
+        resource.setEmbeddedUrl(speechEntity.getVideoLink());
         resource.setDuration(speechEntity.getDuration());
         resource.setIdAtService(String.valueOf(speechEntity.getId()));
 

@@ -93,14 +93,14 @@ public class SaverServlet extends HttpServlet {
         if (fileId == 0) {
             saveNewDocument(data, resourceId, user, sessionId);
         } else {
-            saveEditedDocument(data, fileId, user, sessionId);
+            saveEditedDocument(data, resourceId, fileId, user, sessionId);
         }
     }
 
     private void saveNewDocument(CallbackData data, int resourceId, User user, String sessionId) throws IOException {
         Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
 
-        File file = new File(FileType.MAIN, resource.getId(), resource.getMainFile().getName(), resource.getMainFile().getMimeType());
+        File file = new File(FileType.MAIN, resourceId, resource.getMainFile().getName(), resource.getMainFile().getMimeType());
         fileDao.save(file, UrlHelper.getInputStream(data.getUrl()));
 
         resource.addFile(file);
@@ -110,7 +110,7 @@ public class SaverServlet extends HttpServlet {
         logDao.insert(user, Action.changing_office_resource, resource.getGroupId(), resource.getId(), null, sessionId);
     }
 
-    private void saveEditedDocument(CallbackData data, int fileId, User user, String sessionId) throws IOException {
+    private void saveEditedDocument(CallbackData data, int resourceId, int fileId, User user, String sessionId) throws IOException {
         // The idea of what is going here: we copy existing file, to a new file and than replace old file with new one
         // I'm not sure why it is necessary, but I guess to have permanent link to latest file (also to avoid reindex resource)
         File file = fileDao.findByIdOrElseThrow(fileId);
@@ -122,27 +122,27 @@ public class SaverServlet extends HttpServlet {
         fileDao.save(file, UrlHelper.getInputStream(data.getUrl()));
 
         try {
-            log.debug("Started history saving for resource {}", file.getResourceId());
+            log.debug("Started history saving for resource {}", resourceId);
             data.getHistory().setUser(user.getId());
             data.getHistory().setFileId(file.getId());
             data.getHistory().setPrevFileId(previousFile.getId());
-            saveDocumentHistory(data, file);
-            log.debug("History saved for resource {}", file.getResourceId());
+            saveDocumentHistory(data, resourceId, file);
+            log.debug("History saved for resource {}", resourceId);
         } catch (IOException e) {
-            log.error("Unable to store document history {}", file.getResourceId(), e);
+            log.error("Unable to store document history {}", resourceId, e);
         }
 
-        Resource resource = resourceDao.findByIdOrElseThrow(file.getResourceId());
+        Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
         resourcePreviewMaker.processResource(resource); // create new thumbnails for the resource
         logDao.insert(user, Action.changing_office_resource, resource.getGroupId(), resource.getId(), null, sessionId);
     }
 
-    private void saveDocumentHistory(CallbackData data, File file) throws IOException {
-        File changesFile = new File(FileType.DOC_CHANGES, file.getResourceId(), "changes.zip", "application/zip");
+    private void saveDocumentHistory(CallbackData data, int resourceId, File file) throws IOException {
+        File changesFile = new File(FileType.DOC_CHANGES, resourceId, "changes.zip", "application/zip");
         fileDao.save(changesFile, UrlHelper.getInputStream(data.getChangesUrl()));
 
         History history = data.getHistory();
-        history.setResourceId(file.getResourceId());
+        history.setResourceId(resourceId);
         history.setChangesFileId(changesFile.getId());
         history.setKey(FileUtility.generateRevisionId(file));
         resourceHistoryDao.save(history);

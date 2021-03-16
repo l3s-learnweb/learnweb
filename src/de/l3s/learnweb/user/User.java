@@ -111,12 +111,9 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     @Length(max = 100)
     private String profession;
     @Length(max = 250)
-    private String additionalInformation;
-    @Length(max = 250)
     private String interest;
     @Length(max = 50)
     private String studentId;
-    private LocalDateTime registrationDate;
     @Length(max = 250)
     private String credits;
     private boolean acceptTermsAndConditions = false;
@@ -126,6 +123,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     private HashMap<String, String> preferences = new HashMap<>();
     private ZoneId timeZone;
+    private LocalDateTime createdAt;
 
     // caches
     private transient List<Course> courses;
@@ -183,14 +181,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         }
 
         return false;
-    }
-
-    public String getAdditionalInformation() {
-        return additionalInformation;
-    }
-
-    public void setAdditionalInformation(String additionalInformation) {
-        this.additionalInformation = additionalInformation;
     }
 
     public String getAddress() {
@@ -298,6 +288,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     /**
+     * TODO: getUsername can be renamed to getDisplayName and getRealUsername to getUsername
      * getUsername() may return "Anonymous" for some organisation.
      * This method will always return the real username
      */
@@ -480,12 +471,12 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         this.imageUrl = null;
     }
 
-    public LocalDateTime getRegistrationDate() {
-        return registrationDate;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public HashMap<String, String> getPreferences() {
@@ -553,7 +544,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     public void updateLoginDate() {
-        this.lastLoginDate = Learnweb.dao().getUserDao().findLastLoginDate(getId()).orElse(registrationDate);
+        this.lastLoginDate = Learnweb.dao().getUserDao().findLastLoginDate(getId()).orElse(createdAt);
     }
 
     @Override
@@ -705,16 +696,12 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         guides.set(option.ordinal(), value);
     }
 
-    protected long[] getGuides() {
-        long[] array = guides.toLongArray();
-        if (array.length == 0) {
-            array = new long[1];
-        }
-        return array;
+    protected BitSet getGuides() {
+        return guides;
     }
 
-    protected void setGuides(long[] stepValues) {
-        this.guides = BitSet.valueOf(stepValues);
+    protected void setGuides(BitSet guides) {
+        this.guides = guides;
     }
 
 }

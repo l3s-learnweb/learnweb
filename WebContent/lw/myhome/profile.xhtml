@@ -133,12 +133,6 @@
                             </h:panelGroup>
 
                             <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.moderatorAccess}">
-                                <p:outputLabel for="@next" value="#{msg.additionalinformation}:"/>
-                                <p:inputTextarea id="useradditionalinformation" value="#{profileBean.selectedUser.additionalInformation}"/>
-                                <p:message for="@previous"/>
-                            </h:panelGroup>
-
-                            <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.moderatorAccess}">
                                 <p:outputLabel for="@next" value="#{msg.awards}:"/>
                                 <p:textEditor id="usercredits" widgetVar="editorWidget" value="#{profileBean.selectedUser.credits}" height="80">
                                     <f:facet name="toolbar">

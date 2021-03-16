@@ -24,7 +24,6 @@ import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(CourseDao.CourseMapper.class)
 public interface CourseDao extends SqlObject, Serializable {
-    int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
     ICache<Course> cache = new Cache<>(10000);
 
     default Optional<Course> findById(int courseId) {
@@ -74,7 +73,7 @@ public interface CourseDao extends SqlObject, Serializable {
         params.put("wizard_param", SqlHelper.toNullable(course.getWizardParam()));
         params.put("next_x_users_become_moderator", course.getNextXUsersBecomeModerator());
         params.put("welcome_message", SqlHelper.toNullable(course.getWelcomeMessage()));
-        params.put("options_field1", course.getOptions()[0]);
+        SqlHelper.setBitSet(params, "options_field", course.getOptions());
         params.put("updated_at", course.getUpdatedAt());
         params.put("created_at", course.getCreatedAt());
 
@@ -152,14 +151,9 @@ public interface CourseDao extends SqlObject, Serializable {
                 course.setWizardParam(rs.getString("wizard_param"));
                 course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
                 course.setWelcomeMessage(rs.getString("welcome_message"));
+                course.setOptions(SqlHelper.getBitSet(rs, "options_field", Course.Option.values().length));
                 course.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
                 course.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
-
-                long[] options = new long[FIELDS];
-                for (int i = 0; i < FIELDS; i++) {
-                    options[i] = rs.getLong("options_field" + (i + 1));
-                }
-                course.setOptions(options);
                 cache.put(course);
             }
             return course;

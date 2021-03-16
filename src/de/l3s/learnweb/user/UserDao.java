@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.SerializationUtils;
-import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
@@ -32,7 +31,6 @@ import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(UserDao.UserMapper.class)
 public interface UserDao extends SqlObject, Serializable {
-    int FIELDS = 1; // number of options_fieldX fields, increase if User.Options has more than 64 values
     ICache<User> cache = new Cache<>(500);
 
     @CreateSqlObject
@@ -147,7 +145,10 @@ public interface UserDao extends SqlObject, Serializable {
     default void save(User user) {
         // verify that the given obj is valid; added only attributes that had already caused problems in the past
         Objects.requireNonNull(user.getRealUsername());
-        Objects.requireNonNull(user.getRegistrationDate());
+
+        if (user.getCreatedAt() == null) {
+            user.setCreatedAt(SqlHelper.now());
+        }
 
         // for new users double check that the username is free. If not the existing user will be overwritten
         if (user.getId() == 0 && findByUsername(user.getRealUsername()).isPresent()) {
@@ -165,12 +166,11 @@ public interface UserDao extends SqlObject, Serializable {
         params.put("birthdate", user.getDateOfBirth());
         params.put("address", SqlHelper.toNullable(user.getAddress()));
         params.put("profession", SqlHelper.toNullable(user.getProfession()));
-        params.put("bio", SqlHelper.toNullable(user.getAdditionalInformation()));
         params.put("interest", SqlHelper.toNullable(user.getInterest()));
         params.put("student_identifier", SqlHelper.toNullable(user.getStudentId()));
         params.put("is_admin", user.isAdmin());
         params.put("is_moderator", user.isModerator());
-        params.put("created_at", user.getRegistrationDate());
+        params.put("created_at", user.getCreatedAt());
         params.put("password", user.getPassword());
         params.put("hashing", user.getHashing().name());
         params.put("preferences", SerializationUtils.serialize(user.getPreferences()));
@@ -182,7 +182,7 @@ public interface UserDao extends SqlObject, Serializable {
         params.put("preferred_notification_frequency", user.getPreferredNotificationFrequency().toString());
         params.put("time_zone", user.getTimeZone().getId());
         params.put("language", user.getLocale().toString());
-        params.put("guides", user.getGuides()[0]);
+        SqlHelper.setBitSet(params, "guide_field", user.getGuides());
 
         Optional<Integer> userId = SqlHelper.handleSave(getHandle(), "lw_user", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -194,7 +194,6 @@ public interface UserDao extends SqlObject, Serializable {
     }
 
     default void anonymize(User user) {
-        user.setAdditionalInformation("");
         user.setAddress("");
         user.setAffiliation("");
         user.setDateOfBirth(null);
@@ -230,31 +229,18 @@ public interface UserDao extends SqlObject, Serializable {
                 user.setAffiliation(rs.getString("affiliation"));
                 user.setAddress(rs.getString("address"));
                 user.setProfession(rs.getString("profession"));
-                user.setAdditionalInformation(rs.getString("bio"));
                 user.setInterest(rs.getString("interest"));
                 user.setStudentId(rs.getString("student_identifier"));
-                user.setRegistrationDate(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+                user.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
                 user.setCredits(rs.getString("credits"));
                 user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
                 user.setPreferredNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("preferred_notification_frequency")));
-                user.setGuides(new long[] {rs.getLong("guides")});
-
+                user.setGuides(SqlHelper.getBitSet(rs, "guide_field", User.Guide.values().length));
                 user.setTimeZone(ZoneId.of(rs.getString("time_zone")));
                 user.setLocale(Locale.forLanguageTag(rs.getString("language").replace("_", "-")));
-
                 user.setAdmin(rs.getBoolean("is_admin"));
                 user.setModerator(rs.getBoolean("is_moderator"));
-
-                // deserialize preferences
-                byte[] preferenceBytes = rs.getBytes("preferences");
-                if (preferenceBytes != null && preferenceBytes.length > 0) {
-                    try {
-                        user.setPreferences(SerializationUtils.deserialize(preferenceBytes));
-                    } catch (Exception e) {
-                        LogManager.getLogger(UserMapper.class).error("Couldn't load preferences for user {}", user.getId(), e);
-                    }
-                }
-
+                user.setPreferences(SqlHelper.deserializeHashMap(rs.getBytes("preferences")));
                 cache.put(user);
             }
             return user;

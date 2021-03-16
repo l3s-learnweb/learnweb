@@ -1,18 +1,54 @@
 package de.l3s.util;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.BitSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.statement.Update;
 
 public final class SqlHelper {
+    private static final Logger log = LogManager.getLogger(SqlHelper.class);
+
+    public static HashMap<String, String> deserializeHashMap(final byte[] bytes) {
+        if (bytes != null && bytes.length > 0) {
+            try {
+                return SerializationUtils.deserialize(bytes);
+            } catch (Exception e) {
+                log.error("Couldn't deserialize bytes", e);
+            }
+        }
+        return new HashMap<>();
+    }
+
+    public static BitSet getBitSet(final ResultSet rs, final String prefix, final int length) throws SQLException {
+        int numberOfFields = (length + Long.SIZE - 1) / Long.SIZE;
+        long[] options = new long[numberOfFields];
+        for (int i = 0; i < numberOfFields; i++) {
+            options[i] = rs.getLong(prefix + (i + 1));
+        }
+        return BitSet.valueOf(options);
+    }
+
+    public static void setBitSet(final LinkedHashMap<String, Object> params, final String prefix, final BitSet bitSet) {
+        int numberOfFields = (bitSet.length() + Long.SIZE - 1) / Long.SIZE;
+        long[] array = bitSet.toLongArray();
+        for (int i = 0; i < numberOfFields; i++) {
+            params.put(prefix + (i + 1), array.length > i ? array[i] : 0);
+        }
+    }
 
     public static LocalDateTime now() {
         return LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);

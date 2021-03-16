@@ -98,17 +98,12 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         this.title = title;
     }
 
-    protected long[] getOptions() {
-        long[] array = options.toLongArray();
-        // if all values are false the array will be empty. But we need to return an array representing the values
-        if (array.length == 0) {
-            array = new long[1];
-        }
-        return array;
+    protected BitSet getOptions() {
+        return options;
     }
 
-    protected void setOptions(long[] optionValues) {
-        this.options = BitSet.valueOf(optionValues);
+    protected void setOptions(BitSet options) {
+        this.options = options;
     }
 
     public boolean isWizardDisabled() {

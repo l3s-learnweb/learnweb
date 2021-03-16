@@ -41,7 +41,7 @@ public interface GroupDao extends SqlObject, Serializable {
 
     default Optional<Group> findById(int groupId) {
         return Optional.ofNullable(cache.get(groupId))
-            .or(() -> getHandle().select("SELECT * FROM lw_group WHERE group_id = ? AND deleted = 0", groupId).mapTo(Group.class).findOne());
+            .or(() -> getHandle().select("SELECT * FROM lw_group WHERE group_id = ?", groupId).mapTo(Group.class).findOne());
     }
 
     default Group findByIdOrElseThrow(int groupId) {

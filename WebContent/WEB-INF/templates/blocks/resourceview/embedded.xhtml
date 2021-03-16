@@ -37,7 +37,7 @@
     </c:when>
 
     <c:when test="${res.type eq 'pdf'}">
-        <iframe src="#{res.combinedDownloadUrl}" title="#{res.title}"></iframe>
+        <iframe src="#{res.downloadUrl}" title="#{res.title}"></iframe>
     </c:when>
 
     <c:when test="${res.type eq 'survey'}">

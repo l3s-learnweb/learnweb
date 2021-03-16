@@ -288,20 +288,11 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         options.set(option.ordinal(), value);
     }
 
-    protected long[] getOptions() {
-        long[] array = options.toLongArray();
-        // if all values are false the array will be empty. But we need to return an array representing the values
-        if (array.length == 0) {
-            array = new long[1];
-        }
-        return array;
+    protected BitSet getOptions() {
+        return options;
     }
 
-    protected void setOptions(long[] optionValues) {
-        this.options = BitSet.valueOf(optionValues);
-    }
-
-    public void setOptions(BitSet options) {
+    protected void setOptions(BitSet options) {
         this.options = options;
     }
 

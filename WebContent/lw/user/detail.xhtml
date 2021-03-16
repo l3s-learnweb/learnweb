@@ -58,12 +58,8 @@
 					<h:outputText value="#{msg.interest}:" rendered="#{not empty userDetailBean.selectedUser.interest}"/>
 					<h:outputText value="#{userDetailBean.selectedUser.interest}" rendered="#{not empty userDetailBean.selectedUser.interest}"/>
 
-					<h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty userDetailBean.selectedUser.additionalInformation}"/>
-					<h:outputText value="#{userDetailBean.selectedUser.additionalInformation}"
-								  rendered="#{not empty userDetailBean.selectedUser.additionalInformation}"/>
-
 					<h:outputText value="#{msg.registered_since}:"/>
-					<h:outputText value="#{userDetailBean.selectedUser.registrationDate}">
+					<h:outputText value="#{userDetailBean.selectedUser.createdAt}">
 						<f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
 					</h:outputText>
 				</p:panelGrid>

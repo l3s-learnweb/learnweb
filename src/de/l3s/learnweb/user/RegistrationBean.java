@@ -3,7 +3,6 @@ package de.l3s.learnweb.user;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Locale;
@@ -184,7 +183,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
     private void registerUser(final User user) {
         user.setOrganisationId(course.getOrganisationId());
-        user.setRegistrationDate(LocalDateTime.now());
         user.setPreferences(new HashMap<>());
 
         if (user.getEmail() != null) {

@@ -33,7 +33,7 @@
                         <p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource.url)}" icon="fas fa-external-link-alt" styleClass="transparent-btn"
                                       title="#{resourceDetailBean.resource.url}" target="_blank" rendered="#{resourceDetailBean.resource.type eq 'website'}"/>
 
-                        <p:linkButton href="#{resourceDetailBean.resource.combinedDownloadUrl}" title="#{resourceDetailBean.resource.title}" icon="fas fa-download" target="_blank"
+                        <p:linkButton href="#{resourceDetailBean.resource.downloadUrl}" title="#{resourceDetailBean.resource.title}" icon="fas fa-download" target="_blank"
                                       styleClass="transparent-btn" rendered="#{resourceDetailBean.resource.type eq 'text' or resourceDetailBean.resource.type eq 'pdf' or resourceDetailBean.resource.type eq 'file'}"/>
 
                         <p:button icon="fas fa-toggle-on" styleClass="transparent-btn" title="#{msg.toggle_details}"

@@ -10,7 +10,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 public interface BounceDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT max(received) FROM lw_bounces")
+    @SqlQuery("SELECT MAX(received) FROM lw_bounces")
     Optional<Instant> findLastBounceDate();
 
     @SqlUpdate("INSERT INTO lw_bounces (email, received, code, description) VALUES (?, ?, ?, ?) ON DUPLICATE KEY "

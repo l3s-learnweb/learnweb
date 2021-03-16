@@ -31,7 +31,7 @@ import de.l3s.util.SqlHelper;
 @RegisterRowMapper(SubmissionDao.SubmissionMapper.class)
 public interface SubmissionDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT * FROM lw_submission WHERE submission_id = ? AND deleted = 0")
+    @SqlQuery("SELECT * FROM lw_submission WHERE submission_id = ?")
     Optional<Submission> findById(int submissionId);
 
     @SqlQuery("SELECT * FROM lw_submission WHERE course_id IN (<courseIds>) AND deleted = 0 ORDER BY close_date")

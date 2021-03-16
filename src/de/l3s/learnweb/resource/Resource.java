@@ -68,6 +68,7 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     private int id; // default id, that indicates that this resource is not stored at fedora
+    private boolean deleted = false; // indicates whether this resource has been deleted
     private int groupId;
     private int folderId;
     private String title;
@@ -105,8 +106,6 @@ public class Resource extends AbstractResource implements Serializable {
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
     private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
-
-    private boolean deleted = false; // indicates whether this resource has been deleted
 
     private int thumbUp = -1;
     private int thumbDown = -1;
@@ -156,7 +155,6 @@ public class Resource extends AbstractResource implements Serializable {
         setMaxImageUrl(old.maxImageUrl);
         setFileId(old.fileId);
         setFileName(old.fileName);
-        setDownloadUrl(old.downloadUrl);
         setQuery(old.query);
         setThumbnailSmall(old.thumbnailSmall);
         setThumbnailMedium(old.thumbnailMedium);
@@ -1019,9 +1017,9 @@ public class Resource extends AbstractResource implements Serializable {
         return archiveUrls.getLast();
     }
 
-    public String getCombinedDownloadUrl() {
-        if (downloadUrl != null) {
-            return downloadUrl;
+    public String getDownloadUrl() {
+        if (service == ResourceService.speechrepository) {
+            return embeddedUrl;
         }
 
         File mainFile = getMainFile();
@@ -1036,18 +1034,6 @@ public class Resource extends AbstractResource implements Serializable {
             }
         }
         return null;
-    }
-
-    public String getDownloadUrl() {
-        return downloadUrl;
-    }
-
-    public void setDownloadUrl(String downloadUrl) {
-        if (downloadUrl != null && downloadUrl.length() > 1000) {
-            throw new IllegalArgumentException("downloadUrl is too long: " + downloadUrl.length() + "; " + downloadUrl);
-        }
-
-        this.downloadUrl = downloadUrl;
     }
 
     /**

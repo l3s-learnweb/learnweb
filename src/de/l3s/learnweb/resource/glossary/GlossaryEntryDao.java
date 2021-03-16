@@ -30,10 +30,10 @@ import de.l3s.util.SqlHelper;
 @RegisterRowMapper(GlossaryTermDao.GlossaryTermMapper.class)
 public interface GlossaryEntryDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT * FROM lw_glossary_entry e JOIN lw_glossary_term t USING (entry_id) WHERE entry_id = ?")
-    Optional<GlossaryEntry> findById(String entryId);
+    @SqlQuery("SELECT * FROM lw_glossary_entry WHERE entry_id = ?")
+    Optional<GlossaryEntry> findById(int entryId);
 
-    @SqlQuery("SELECT * FROM lw_glossary_entry e JOIN lw_glossary_term t USING (entry_id) WHERE resource_id = ? and e.deleted = 0")
+    @SqlQuery("SELECT * FROM lw_glossary_entry e JOIN lw_glossary_term t USING (entry_id) WHERE e.resource_id = ? and e.deleted = 0")
     @UseRowReducer(GlossaryEntryTermReducer.class)
     List<GlossaryEntry> findByResourceId(int resourceId);
 
