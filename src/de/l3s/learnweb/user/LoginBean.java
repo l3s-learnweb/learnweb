@@ -93,30 +93,31 @@ public class LoginBean extends ApplicationBean implements Serializable {
         BeanAssert.hasPermission(!requestManager.isBanned(username), "username_banned");
 
         // USER AUTHORIZATION HAPPENS HERE
-        final Optional<User> user = userDao.findByUsernameAndPassword(username, password);
+        final Optional<User> userOptional = userDao.findByUsernameAndPassword(username, password);
 
-        if (user.isEmpty()) {
+        if (userOptional.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
             requestManager.recordFailedAttempt(remoteAddr, username);
             return "/lw/user/login.xhtml";
         }
 
+        final User user = userOptional.get();
         requestManager.recordSuccessfulAttempt(remoteAddr, username);
 
-        if (!user.get().isEmailConfirmed() && user.get().isEmailRequired()) {
-            confirmRequiredBean.setLoggedInUser(user.get());
+        if (!user.isEmailConfirmed() && user.isEmailRequired()) {
+            confirmRequiredBean.setLoggedInUser(user);
             return "/lw/user/confirm_required.xhtml?faces-redirect=true";
         }
 
         if (remember) {
             String authToken = RandomStringUtils.randomAlphanumeric(128);
-            int tokenId = tokenDao.insert(user.get().getId(), Token.TokenType.AUTH, HashHelper.sha512(authToken), LocalDateTime.now().plusDays(AUTH_COOKIE_AGE_DAYS));
+            int tokenId = tokenDao.insert(user.getId(), Token.TokenType.AUTH, HashHelper.sha512(authToken), LocalDateTime.now().plusDays(AUTH_COOKIE_AGE_DAYS));
             Faces.addResponseCookie(AUTH_COOKIE_NAME, tokenId + ":" + authToken, "/", Math.toIntExact(Duration.ofDays(AUTH_COOKIE_AGE_DAYS).toSeconds()));
         } else {
             Faces.removeResponseCookie(AUTH_COOKIE_NAME, "/");
         }
 
-        return loginUser(this, user.get());
+        return loginUser(this, user);
     }
 
     /**
