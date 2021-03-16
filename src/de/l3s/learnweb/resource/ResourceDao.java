@@ -128,7 +128,10 @@ public interface ResourceDao extends SqlObject, Serializable {
         getHandle().execute("UPDATE lw_resource SET rating = rating + ?, rate_number = rate_number + 1 WHERE resource_id = ?", value, resourceId);
     }
 
-    @SqlUpdate("INSERT INTO lw_thumb (resource_id ,user_id ,direction) VALUES (?, ?, ?)")
+    @SqlQuery("SELECT direction FROM lw_resource_thumb WHERE resource_id = ? AND user_id = ?")
+    Optional<Integer> findThumbRate(Resource resource, User user);
+
+    @SqlUpdate("INSERT INTO lw_resource_thumb (resource_id ,user_id ,direction) VALUES (?, ?, ?)")
     void insertThumbRate(Resource resource, User user, int direction);
 
     /**
@@ -136,12 +139,9 @@ public interface ResourceDao extends SqlObject, Serializable {
      */
     default Optional<ImmutablePair<Integer, Integer>> findThumbRatings(Resource resource) {
         return getHandle()
-            .select("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM lw_thumb WHERE resource_id = ?", resource)
+            .select("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM lw_resource_thumb WHERE resource_id = ?", resource)
             .map((rs, ctx) -> new ImmutablePair<>(rs.getInt(1), rs.getInt(2))).findOne();
     }
-
-    @SqlQuery("SELECT direction FROM lw_thumb WHERE resource_id = ? AND user_id = ?")
-    Optional<Integer> findThumbRate(Resource resource, User user);
 
     @SqlUpdate("INSERT INTO lw_resource_tag (resource_id, user_id, tag_id) VALUES (?, ?, ?)")
     void insertTag(Resource resource, User user, Tag tag);

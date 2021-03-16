@@ -265,6 +265,30 @@ VALUES (1, 1, 1, '2021-02-19 17:53:04'),
        (6, 7, 4, '2021-02-19 18:07:30'),
        (6, 10, 6, '2021-02-19 18:39:33');
 
+INSERT INTO `lw_resource_rating` (resource_id, user_id, rating)
+VALUES (1, 2, 2),
+       (1, 5, 5),
+       (4, 3, 4),
+       (4, 4, 5),
+       (4, 2, 3),
+       (5, 5, 5),
+       (5, 3, 4),
+       (6, 4, 4),
+       (6, 6, 3),
+       (6, 2, 3);
+
+INSERT INTO `lw_resource_thumb` (resource_id, user_id, direction)
+VALUES (1, 2, -1),
+       (1, 5, 1),
+       (4, 3, 1),
+       (4, 4, 1),
+       (4, 2, 1),
+       (5, 5, 1),
+       (5, 3, 1),
+       (6, 4, 1),
+       (6, 6, -1),
+       (6, 2, 1);
+
 INSERT INTO `lw_tag` (`tag_id`, `name`)
 VALUES (10, 'Cactus'),
        (8, 'Cat'),

@@ -131,7 +131,7 @@ public class DeleteOldUsers extends MaintenanceTask {
     private void deleteAlmostAbandonedGroups() {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<Group> groups = handle.select("SELECT g.* FROM lw_group g LEFT JOIN lw_group_user u USING(group_id) LEFT JOIN lw_resource r USING(group_id) "
-                + "WHERE course_id in (485) and YEAR(created_at) < year(now())-1 GROUP BY g.group_id, g.created_at HAVING count(u.user_id) <= 2 "
+                + "WHERE course_id in (485) and YEAR(g.created_at) < year(now())-1 GROUP BY g.group_id, g.created_at HAVING count(u.user_id) <= 2 "
                 + "AND count(r.resource_id) <=2 ORDER BY g.created_at DESC ").map(new GroupDao.GroupMapper()).list();
 
             for (Group group : groups) {

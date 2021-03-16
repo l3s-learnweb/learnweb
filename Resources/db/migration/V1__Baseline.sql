@@ -306,6 +306,14 @@ CREATE TABLE IF NOT EXISTS `lw_resource_tag` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
+CREATE TABLE IF NOT EXISTS `lw_resource_thumb` (
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED NOT NULL,
+    `direction` TINYINT(1) NOT NULL,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    PRIMARY KEY (`resource_id`, `user_id`)
+);
+
 CREATE TABLE IF NOT EXISTS `lw_submission` (
     `submission_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `deleted` TINYINT(1) NOT NULL DEFAULT 0,
@@ -394,13 +402,6 @@ CREATE TABLE IF NOT EXISTS `lw_tag` (
     `tag_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(230) NOT NULL,
     KEY `lw_tag_name` (`name`)
-);
-
-CREATE TABLE IF NOT EXISTS `lw_thumb` (
-    `resource_id` INT(10) UNSIGNED NOT NULL,
-    `user_id` INT(10) UNSIGNED NOT NULL,
-    `direction` TINYINT(1) NOT NULL,
-    PRIMARY KEY (`resource_id`, `user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_transcript_log` (
@@ -587,8 +588,8 @@ ALTER TABLE `lw_survey_resource` ADD CONSTRAINT `fk_lw_survey_resource_lw_survey
 ALTER TABLE `lw_survey_resource_user` ADD CONSTRAINT `fk_lw_survey_resource_user_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_survey_resource_user` ADD CONSTRAINT `fk_lw_survey_resource_user_lw_survey_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_survey_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_thumb` ADD CONSTRAINT `fk_lw_thumb_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_thumb` ADD CONSTRAINT `fk_lw_thumb_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_thumb` ADD CONSTRAINT `fk_lw_resource_thumb_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_thumb` ADD CONSTRAINT `fk_lw_resource_thumb_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_transcript_log` ADD CONSTRAINT `fk_lw_transcript_actions_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_transcript_log` ADD CONSTRAINT `fk_lw_transcript_actions_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;

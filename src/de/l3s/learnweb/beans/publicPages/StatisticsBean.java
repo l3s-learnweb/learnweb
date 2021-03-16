@@ -35,11 +35,11 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
             Long resources = handle.select("SELECT count(*) FROM lw_resource WHERE deleted = 0").mapTo(Long.class).one();
             Long courses = handle.select("SELECT count(*) FROM lw_course").mapTo(Long.class).one();
 
-            Long ratedResourcesCount = handle.select("SELECT (SELECT count(DISTINCT resource_id) FROM lw_resource_rating) + (SELECT count(DISTINCT resource_id) FROM lw_thumb)").mapTo(Long.class).one();
+            Long ratedResourcesCount = handle.select("SELECT (SELECT count(DISTINCT resource_id) FROM lw_resource_rating) + (SELECT count(DISTINCT resource_id) FROM lw_resource_thumb)").mapTo(Long.class).one();
             Long taggedResourcesCount = handle.select("SELECT count(DISTINCT resource_id) FROM lw_resource_tag").mapTo(Long.class).one();
             Long commentedResourcesCount = handle.select("SELECT count(DISTINCT resource_id) FROM lw_comment").mapTo(Long.class).one();
 
-            Long rateCount = handle.select("SELECT (SELECT count(*) FROM lw_resource_rating) + (SELECT count(*) FROM lw_thumb)").mapTo(Long.class).one();
+            Long rateCount = handle.select("SELECT (SELECT count(*) FROM lw_resource_rating) + (SELECT count(*) FROM lw_resource_thumb)").mapTo(Long.class).one();
             Long tagCount = handle.select("SELECT count(*) FROM lw_resource_tag").mapTo(Long.class).one();
             Long commentCount = handle.select("SELECT count(*) FROM lw_comment").mapTo(Long.class).one();
 

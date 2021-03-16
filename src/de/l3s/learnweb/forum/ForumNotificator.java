@@ -127,21 +127,21 @@ public class ForumNotificator implements Runnable, Serializable {
             content.append("<br>");
             content.append("<h4>").append(msg.getString("email_forum_notifications.new_answers_to_your_posts")).append("</h4>");
             content.append("<table>");
-            content.append("  <tr>" +
-                "    <th>" + msg.getString("group") + "</th>" +
-                "    <th>" + msg.getString("title") + "</th>" +
-                "    <th>" + msg.getString("last_activities") + "</th>" +
-                "  </tr>");
+            content.append("<tr>")
+                .append("<th>").append(msg.getString("group")).append("</th>")
+                .append("<th>").append(msg.getString("title")).append("</th>")
+                .append("<th>").append(msg.getString("last_activities")).append("</th>")
+                .append("</tr>");
             for (ForumTopic topic : userTopics) {
                 content.append("<tr>");
 
                 content.append("<td class=\"first-child\">");
-                content.append("<a href='" + serverUrl + "/lw/group/overview.jsf?group_id=").append(topic.getGroupId())
+                content.append("<a href='").append(serverUrl).append("/lw/group/overview.jsf?group_id=").append(topic.getGroupId())
                     .append("'>").append(topic.getGroup().getTitle()).append("</a>");
                 content.append("</td>");
 
                 content.append("<td class=\"second-child\">");
-                content.append("<a href='" + serverUrl + "/lw/group/forum_topic.jsf?topic_id=").append(topic.getId())
+                content.append("<a href='").append(serverUrl).append("/lw/group/forum_topic.jsf?topic_id=").append(topic.getId())
                     .append("'>").append(topic.getTitle()).append("</a>");
                 content.append("</td>");
 
@@ -157,21 +157,21 @@ public class ForumNotificator implements Runnable, Serializable {
             content.append("<br>");
             content.append("<h4>").append(msg.getString("email_forum_notifications.other_new_posts")).append("</h4>");
             content.append("<table>");
-            content.append("  <tr>" +
-                "    <th>" + msg.getString("group") + "</th>" +
-                "    <th>" + msg.getString("title") + "</th>" +
-                "    <th>" + msg.getString("last_activities") + "</th>" +
-                "  </tr>");
+            content.append("<tr>")
+                .append("<th>").append(msg.getString("group")).append("</th>")
+                .append("<th>").append(msg.getString("title")).append("</th>")
+                .append("<th>").append(msg.getString("last_activities")).append("</th>")
+                .append("</tr>");
             for (ForumTopic topic : otherTopics) {
                 content.append("<tr>");
 
                 content.append("<td class=\"first-child\">");
-                content.append("<a href='" + serverUrl + "/lw/group/overview.jsf?group_id=").append(topic.getGroupId())
+                content.append("<a href='").append(serverUrl).append("/lw/group/overview.jsf?group_id=").append(topic.getGroupId())
                     .append("'>").append(topic.getGroup().getTitle()).append("</a>");
                 content.append("</td>");
 
                 content.append("<td class=\"second-child\">");
-                content.append("<a href='" + serverUrl + "/lw/group/forum_topic.jsf?topic_id=").append(topic.getId())
+                content.append("<a href='").append(serverUrl).append("/lw/group/forum_topic.jsf?topic_id=").append(topic.getId())
                     .append("'>").append(topic.getTitle()).append("</a>");
                 content.append("</td>");
 
@@ -186,11 +186,11 @@ public class ForumNotificator implements Runnable, Serializable {
 
         content.append("<ul>");
         content.append("<li>");
-        content.append("<a href='" + serverUrl + "/lw/myhome/profile.jsf?user_id=").append(user.getId()).append("'>")
+        content.append("<a href='").append(serverUrl).append("/lw/myhome/profile.jsf?user_id=").append(user.getId()).append("'>")
             .append(msg.getString("email_forum_notifications.change_how_often_we_send_mails")).append("</a>.");
         content.append("</li>");
         content.append("<li>");
-        content.append("<a href='" + serverUrl + "/lw/user/unsubscribe.jsf?hash=").append(getHash(user)).append("'>")
+        content.append("<a href='").append(serverUrl).append("/lw/user/unsubscribe.jsf?hash=").append(getHash(user)).append("'>")
             .append(msg.getString("notification_settings.unsubscribe_from_all")).append("</a>.");
         content.append("</li>");
         content.append("</ul>");

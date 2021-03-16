@@ -43,7 +43,7 @@ public interface FileDao extends SqlObject, Serializable {
     }
 
     @FetchSize(1000)
-    @SqlQuery("SELECT * FROM lw_file WHERE f.deleted = 0")
+    @SqlQuery("SELECT * FROM lw_file WHERE deleted = 0")
     Stream<File> findAll();
 
     @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER BY type, updated_at")

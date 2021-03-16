@@ -110,7 +110,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @GetGeneratedKeys("search_id")
     int insertGroupQuery(int groupId, String query, String language, String searchFilters, int userId);
 
-    @SqlUpdate("INSERT INTO learnweb_large.sl_action (search_id, rank, user_id, action, timestamp) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)")
+    @SqlUpdate("INSERT INTO learnweb_large.sl_action (search_id, `rank`, user_id, action, timestamp) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)")
     void insertAction(int searchId, int rank, User user, SearchAction action);
 
     default void insertResources(int searchId, List<ResourceDecorator> resources) {
@@ -118,7 +118,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             return;
         }
 
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO learnweb_large.sl_resource (search_id, rank, resource_id, url, title, description, "
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO learnweb_large.sl_resource (search_id, `rank`, resource_id, url, title, description, "
             + "thumbnail_url, thumbnail_height, thumbnail_width) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         for (ResourceDecorator decoratedResource : resources) {

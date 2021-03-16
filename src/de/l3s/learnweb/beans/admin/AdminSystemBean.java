@@ -107,11 +107,9 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
     public void reindexResources() throws Exception {
         reindexProgress = 0;
 
-        ReindexResources task = new ReindexResources(getLearnweb(), progress -> {
-            reindexProgress = progress;
-        });
-
+        ReindexResources task = new ReindexResources(getLearnweb(), progress -> reindexProgress = progress);
         task.run(false);
+
         indexedResources = null;
         totalResources = null;
     }
