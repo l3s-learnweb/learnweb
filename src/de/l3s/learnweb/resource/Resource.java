@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -71,6 +72,7 @@ public class Resource extends AbstractResource implements Serializable {
     private boolean deleted = false; // indicates whether this resource has been deleted
     private int groupId;
     private int folderId;
+    private int ownerUserId;
     private String title;
     private String description;
     private String url; // `website` resources stores external link here, also `video` resources stores link to source (like YouTube page)
@@ -84,34 +86,33 @@ public class Resource extends AbstractResource implements Serializable {
     private int duration;
     private int width;
     private int height;
-    private int ownerUserId;
     private String idAtService;
     private int ratingSum;
     private int rateNumber;
     private int fileId;
     private String fileName; // stores the file name of uploaded resource
-    private String downloadUrl;
     private String maxImageUrl; // an url to the largest image preview of this resource
     private String query; // the query which was used to find this resource
-    private int originalResourceId; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
-    private String machineDescription;
     private Thumbnail thumbnailSmall; // cropped to 160 x 120 px - smallest thumbnail used on website
     private Thumbnail thumbnailMedium; // resized <= 280 x 210 px - resource preview image size
     private Thumbnail thumbnailLarge; // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
     private String embeddedUrl; // stored in the database
     private String embeddedCode; // derived from type or embedded raw. Does not need to be stored in DB
-    private String transcript; //To store the English transcripts for TED videos and saved articles
-    private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
+    private String transcript; // To store the English transcripts for TED videos and saved articles
+    private boolean readOnlyTranscript = false; // indicates resource transcript is read only for TED videos
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
+    private int originalResourceId; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
+    private String machineDescription;
     private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
 
+    // rating
     private int thumbUp = -1;
     private int thumbDown = -1;
     private final HashMap<Integer, Integer> thumbRateByUser = new HashMap<>(); // userId : direction, null if not rated
     private final HashMap<Integer, Integer> rateByUser = new HashMap<>(); // userId : rate, null if not rated
-    private LinkedHashMap<Integer, File> files; // type : file
+    private LinkedHashMap<FileType, File> files; // type : file
 
     // caches
     private transient OwnerList<Tag, User> tags;
@@ -759,7 +760,7 @@ public class Resource extends AbstractResource implements Serializable {
         this.service = service;
     }
 
-    public LinkedHashMap<Integer, File> getFiles() {
+    public LinkedHashMap<FileType, File> getFiles() {
         if (files == null) {
             files = new LinkedHashMap<>();
 
@@ -767,7 +768,7 @@ public class Resource extends AbstractResource implements Serializable {
                 List<File> loadedFiles = Learnweb.dao().getFileDao().findByResourceId(id);
 
                 for (File file : loadedFiles) {
-                    files.put(file.getType().ordinal(), file);
+                    files.put(file.getType(), file);
                 }
             }
         }
@@ -775,20 +776,19 @@ public class Resource extends AbstractResource implements Serializable {
         return files;
     }
 
-    public void setFiles(LinkedHashMap<Integer, File> files) {
+    public void setFiles(LinkedHashMap<FileType, File> files) {
         this.files = files;
     }
 
     /**
-     * This method does not persist the changes.
-     * see: FileManager.addFileToResource(file, resource);
+     * This method does not persist the changes immediately. You should call `resource.save()` to do so.
      */
     public void addFile(File file) {
-        getFiles().put(file.getType().ordinal(), file);
+        getFiles().put(file.getType(), file);
     }
 
     public File getFile(FileType fileType) {
-        return getFiles().get(fileType.ordinal());
+        return getFiles().get(fileType);
     }
 
     /**
@@ -847,17 +847,7 @@ public class Resource extends AbstractResource implements Serializable {
      * Get combined largest thumbnail.
      */
     public Thumbnail getThumbnailLargest() {
-        if (null != thumbnailLarge) {
-            return thumbnailLarge;
-        }
-        if (null != thumbnailMedium) {
-            return thumbnailMedium;
-        }
-        if (null != thumbnailSmall) {
-            return thumbnailSmall;
-        }
-
-        return null;
+        return ObjectUtils.firstNonNull(getThumbnailLarge(), getThumbnailMedium(), getThumbnailSmall());
     }
 
     public void deleteThumbnails() {

@@ -211,10 +211,8 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         if (StringUtils.isNotBlank(email) && !StringUtils.equalsIgnoreCase(email, this.email)) {
             this.email = email;
             this.emailConfirmed = false;
-
-            Learnweb.dao().getTokenDao().override(id, Token.TokenType.EMAIL_CONFIRMATION, RandomStringUtils.randomAlphanumeric(32), LocalDateTime.now().plusYears(1));
         } else {
-            this.email = StringUtils.isNotBlank(email) ? email : null;
+            this.email = StringUtils.firstNonBlank(email);
         }
     }
 
@@ -401,11 +399,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      */
     public boolean sendEmailConfirmation() {
         try {
-            Token token = Learnweb.dao().getTokenDao().findByTypeAndUser(Token.TokenType.EMAIL_CONFIRMATION, id).orElseThrow();
+            String token = RandomStringUtils.randomAlphanumeric(32);
+            int tokenId = Learnweb.dao().getTokenDao().override(id, Token.TokenType.EMAIL_CONFIRMATION, token, LocalDateTime.now().plusYears(1));
 
             String confirmEmailUrl = Learnweb.config().getServerUrl() + "/lw/user/confirm_email.jsf?" +
-                "email=" + StringHelper.urlEncode(getEmail()) +
-                "&token=" + token.getId() + ":" + token.getToken();
+                "email=" + StringHelper.urlEncode(getEmail()) + "&token=" + tokenId + ":" + token;
 
             Mail message = new Mail();
             message.setSubject("Confirmation request from Learnweb");

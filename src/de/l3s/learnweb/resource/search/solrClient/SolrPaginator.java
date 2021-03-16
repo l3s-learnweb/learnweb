@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField;
 
@@ -13,6 +15,7 @@ import de.l3s.learnweb.resource.ResourceDecorator;
 
 public class SolrPaginator extends AbstractPaginator {
     private static final long serialVersionUID = 3823389610985272265L;
+    private static final Logger log = LogManager.getLogger(SolrPaginator.class);
 
     private final SolrSearch search;
     private int searchLogId;
@@ -48,8 +51,12 @@ public class SolrPaginator extends AbstractPaginator {
         facetQueriesResults = search.getResultsFacetQuery();
 
         setCurrentPageCache(results);
-        if (searchLogId != 0) {
-            Learnweb.dao().getSearchHistoryDao().insertResources(searchLogId, results);
+        try {
+            if (searchLogId != 0) {
+                Learnweb.dao().getSearchHistoryDao().insertResources(searchLogId, results);
+            }
+        } catch (Exception e) {
+            log.error("Failed to save search results", e);
         }
         return results;
     }

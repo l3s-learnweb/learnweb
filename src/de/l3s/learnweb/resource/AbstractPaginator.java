@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public abstract class AbstractPaginator implements Serializable {
     private int totalPages;
     private int totalResults = Integer.MIN_VALUE;
 
-    private transient List<ResourceDecorator> currentPageCache;
+    private final transient LinkedHashMap<Integer, List<ResourceDecorator>> pageCache = new LinkedHashMap<>();
 
     /**
      * Classes which use this constructor must call setTotalResults(int totalResults) as soon as possible.
@@ -46,8 +47,6 @@ public abstract class AbstractPaginator implements Serializable {
 
     public void setPageIndex(int pageIndex) {
         this.pageIndex = pageIndex;
-
-        setCurrentPageCache(null); // invalidate cache
     }
 
     public int getTotalPages() {
@@ -59,11 +58,11 @@ public abstract class AbstractPaginator implements Serializable {
     }
 
     protected List<ResourceDecorator> getCurrentPageCache() {
-        return currentPageCache;
+        return pageCache.get(pageIndex);
     }
 
     protected void setCurrentPageCache(List<ResourceDecorator> currentPageCache) {
-        this.currentPageCache = currentPageCache;
+        this.pageCache.put(pageIndex, currentPageCache);
     }
 
     public List<Integer> getPageList() {

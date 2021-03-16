@@ -122,7 +122,11 @@ public class Search implements Serializable {
             log.fatal("error during search", e);
         }
 
-        logResources(newResources, page);
+        try {
+            logResources(newResources, page);
+        } catch (Exception e) {
+            log.error("Failed to save search results", e);
+        }
 
         return newResources;
     }
