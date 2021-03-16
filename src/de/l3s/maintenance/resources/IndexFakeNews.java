@@ -56,11 +56,7 @@ public class IndexFakeNews extends MaintenanceTask {
             resource.setMetadataValue("publisher", "fullfact.org");
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
-
-            resource.setThumbnailSmall(logoResource.getThumbnailSmall());
-            resource.setThumbnailMedium(logoResource.getThumbnailMedium());
-            resource.setThumbnailLarge(logoResource.getThumbnailLarge());
-
+            resource.copyThumbnails(logoResource);
             resource.setTitle(title);
             resource.setDescription(description);
             resource.setUrl(url);

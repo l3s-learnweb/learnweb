@@ -20,7 +20,6 @@ import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
-import de.l3s.learnweb.resource.Thumbnail;
 import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.SqlHelper;
@@ -63,7 +62,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                     res.setDescription(rs.getString("description"));
                     res.setHeight(rs.getInt("thumbnail_height"));
                     res.setWidth(rs.getInt("thumbnail_width"));
-                    res.setThumbnailMedium(new Thumbnail(rs.getString("thumbnail_url")));
+                    res.setThumbnailMedium(rs.getString("thumbnail_url"));
                 }
 
                 ResourceDecorator rd = new ResourceDecorator(res);
@@ -140,7 +139,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 batch.bind(3, decoratedResource.getUrl());
                 batch.bind(4, StringHelper.shortnString(decoratedResource.getTitle(), 250));
                 batch.bind(5, StringHelper.shortnString(decoratedResource.getDescription(), 1000));
-                batch.bind(6, decoratedResource.getThumbnailMedium() == null ? null : decoratedResource.getThumbnailMedium().getUrl());
+                batch.bind(6, decoratedResource.getThumbnailMedium());
                 batch.bind(7, SqlHelper.toNullable(decoratedResource.getHeight()));
                 batch.bind(8, SqlHelper.toNullable(decoratedResource.getWidth()));
             }

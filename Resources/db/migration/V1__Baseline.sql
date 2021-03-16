@@ -46,12 +46,9 @@ CREATE TABLE IF NOT EXISTS `lw_course_user` (
 
 CREATE TABLE IF NOT EXISTS `lw_file` (
     `file_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
-    `resource_id` INT(10) UNSIGNED DEFAULT NULL,
     `type` ENUM ('SYSTEM_FILE','ORGANISATION_BANNER','PROFILE_PICTURE','THUMBNAIL_SMALL','THUMBNAIL_MEDIUM','THUMBNAIL_LARGE','MAIN','ORIGINAL','DOC_HISTORY','DOC_CHANGES') NOT NULL,
     `name` VARCHAR(255) NOT NULL,
     `mime_type` VARCHAR(255) NOT NULL,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
@@ -249,13 +246,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `rating` INT(11) NOT NULL,
     `rate_number` INT(11) NOT NULL,
     `query` VARCHAR(1000) DEFAULT NULL,
-    `file_id` INT(10) UNSIGNED DEFAULT NULL,
-    `file_name` VARCHAR(200) DEFAULT NULL,
-    `download_url` VARCHAR(1000) DEFAULT NULL,
     `max_image_url` VARCHAR(1000) DEFAULT NULL,
-    `thumbnail0_file_id` INT(10) UNSIGNED DEFAULT NULL,
-    `thumbnail2_file_id` INT(10) UNSIGNED DEFAULT NULL,
-    `thumbnail4_file_id` INT(10) UNSIGNED DEFAULT NULL,
     `embedded_url` MEDIUMTEXT DEFAULT NULL,
     `original_resource_id` INT(10) UNSIGNED DEFAULT NULL,
     `machine_description` LONGTEXT DEFAULT NULL,
@@ -269,6 +260,12 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     KEY `lw_resource_storage_type` (`storage_type`, `deleted`),
     KEY `lw_resource_url` (`url`),
     KEY `lw_resource_owner_user_id` (`owner_user_id`, `deleted`)
+);
+
+CREATE TABLE IF NOT EXISTS `lw_resource_file` (
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `file_id` INT(10) UNSIGNED NOT NULL,
+    PRIMARY KEY (`resource_id`, `file_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_resource_archiveurl` (
@@ -496,8 +493,6 @@ ALTER TABLE `lw_course` ADD CONSTRAINT `fk_lw_course_lw_organisation` FOREIGN KE
 ALTER TABLE `lw_comment` ADD CONSTRAINT `fk_lw_comment_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_comment` ADD CONSTRAINT `fk_lw_comment_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `lw_file` ADD CONSTRAINT `fk_lw_file_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
 ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_forum_topic` FOREIGN KEY (`topic_id`) REFERENCES `lw_forum_topic` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -536,14 +531,13 @@ ALTER TABLE `lw_news` ADD CONSTRAINT `fk_lw_news_lw_user` FOREIGN KEY (`user_id`
 
 ALTER TABLE `lw_organisation` ADD CONSTRAINT `fk_lw_organisation_lw_file` FOREIGN KEY (`banner_image_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_file` FOREIGN KEY (`file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_file_t0` FOREIGN KEY (`thumbnail0_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_file_t2` FOREIGN KEY (`thumbnail2_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_file_t4` FOREIGN KEY (`thumbnail4_file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_group_folder` FOREIGN KEY (`folder_id`) REFERENCES `lw_group_folder` (`folder_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_resource` FOREIGN KEY (`original_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_resource` ADD CONSTRAINT `fk_lw_resource_lw_user` FOREIGN KEY (`owner_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE `lw_resource_file` ADD CONSTRAINT `fk_lw_resource_file_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_resource_file` ADD CONSTRAINT `fk_lw_resource_file_lw_file` FOREIGN KEY (`file_id`) REFERENCES `lw_file` (`file_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_resource_archiveurl` ADD CONSTRAINT `fk_lw_resource_archiveurl_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 

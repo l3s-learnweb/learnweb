@@ -22,14 +22,14 @@
 	<ui:fragment rendered="${res.mainFile ne null}">
 		<dt class="col-sm-4">#{msg.file}:</dt>
 		<dd class="col-sm-8">
-			<a href="#{res.mainFile.absoluteUrl}" target="_top">
+			<a href="#{res.mainFile.getResourceUrl(res.id)}" target="_top">
 				<i class="fas fa-fw fa-download" aria-hidden="true"></i>
 				#{res.mainFile.name}
 			</a>
 
 			<ui:fragment rendered="${not empty res.originalFile}">
 				<div>
-					<a href="#{res.originalFile.url}" target="_top">
+					<a href="#{res.originalFile.getResourceUrl(res.id)}" target="_top">
 						<i class="fas fa-fw fa-download" aria-hidden="true"></i>
 						#{res.originalFile.name}
 					</a>

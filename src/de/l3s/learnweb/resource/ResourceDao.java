@@ -1,6 +1,5 @@
 package de.l3s.learnweb.resource;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,10 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.CreateSqlObject;
@@ -154,37 +151,12 @@ public interface ResourceDao extends SqlObject, Serializable {
         resource.setGroupId(targetGroupId);
         resource.setFolderId(targetFolderId);
         resource.setUser(user);
-        save(resource);
 
-        copyFiles(resource, sourceResource.getFiles().values());
-    }
-
-    default ImmutablePair<Integer, Long> copyFiles(final Resource resource, final Collection<File> files) {
-        try {
-            int filesCount = 0;
-            long sizeBytes = 0;
-
-            for (File file : files) {
-                if (file.getType().in(File.FileType.DOC_CHANGES, File.FileType.DOC_HISTORY)) {
-                    continue; // skip them
-                }
-
-                filesCount += 1;
-                sizeBytes += FileUtils.sizeOf(file.getActualFile());
-
-                File copyFile = new File(file);
-                copyFile.setResourceId(resource.getId());
-                // TODO @astappiev: improve copy performance by using fs copy
-                getFileDao().save(copyFile, file.getInputStream());
-                resource.addFile(copyFile);
-            }
-
-            save(resource);
-            return ImmutablePair.of(filesCount, sizeBytes);
-        } catch (IOException e) {
-            LogManager.getLogger(ResourceDao.class).error("Error during copying resource files {}", resource, e);
-            return null;
+        for (File file : sourceResource.getFiles().values()) {
+            resource.addFile(file);
         }
+
+        save(resource);
     }
 
     default void save(Resource resource) {
@@ -212,8 +184,6 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("original_resource_id", SqlHelper.toNullable(resource.getOriginalResourceId()));
         params.put("machine_description", SqlHelper.toNullable(resource.getMachineDescription()));
         params.put("author", SqlHelper.toNullable(resource.getAuthor()));
-        params.put("file_id", SqlHelper.toNullable(resource.getFileId()));
-        params.put("file_name", resource.getFileName());
         params.put("embedded_url", resource.getEmbeddedUrl());
         params.put("transcript", resource.getTranscript());
         params.put("online_status", resource.getOnlineStatus().name());
@@ -227,9 +197,6 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("group_id", SqlHelper.toNullable(resource.getGroupId()));
         params.put("folder_id", SqlHelper.toNullable(resource.getFolderId()));
         params.put("read_only_transcript", resource.isReadOnlyTranscript());
-        params.put("thumbnail0_file_id", resource.getThumbnailSmall() instanceof File ? ((File) resource.getThumbnailSmall()).getId() : null);
-        params.put("thumbnail2_file_id", resource.getThumbnailMedium() instanceof File ? ((File) resource.getThumbnailMedium()).getId() : null);
-        params.put("thumbnail4_file_id", resource.getThumbnailLarge() instanceof File ? ((File) resource.getThumbnailLarge()).getId() : null);
 
         Optional<Integer> resourceId = SqlHelper.handleSave(getHandle(), "lw_resource", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -240,9 +207,8 @@ public interface ResourceDao extends SqlObject, Serializable {
         });
 
         // persist the relation between the resource and its files
-        if (!resource.getFiles().isEmpty()) {
-            getFileDao().updateResourceId(resource, resource.getFiles().values());
-        }
+        getFileDao().deleteResourceFiles(resource, resource.getDeletedFiles());
+        getFileDao().insertResourceFiles(resource, resource.getAddedFiles());
 
         Learnweb.getInstance().getSolrClient().reIndexResource(resource);
     }
@@ -265,10 +231,6 @@ public interface ResourceDao extends SqlObject, Serializable {
      * Usually you have to call deleteSoft()
      */
     default void deleteHard(Resource resource) {
-        for (File file : getFileDao().findByResourceId(resource.getId())) {
-            getFileDao().deleteSoft(file);
-        }
-
         getHandle().execute("DELETE FROM lw_resource WHERE resource_id = ?", resource);
 
         try {
@@ -301,11 +263,6 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setMaxImageUrl(rs.getString("max_image_url"));
                 resource.setQuery(rs.getString("query"));
                 resource.setOriginalResourceId(rs.getInt("original_resource_id"));
-                resource.setFileId(rs.getInt("file_id"));
-                resource.setFileName(rs.getString("file_name"));
-                resource.setThumbnailSmall(createThumbnail(rs, 0));
-                resource.setThumbnailMedium(createThumbnail(rs, 2));
-                resource.setThumbnailLarge(createThumbnail(rs, 4));
                 resource.setEmbeddedUrl(rs.getString("embedded_url"));
                 resource.setTranscript(rs.getString("transcript"));
                 resource.setOnlineStatus(Resource.OnlineStatus.valueOf(rs.getString("online_status")));
@@ -325,20 +282,6 @@ public interface ResourceDao extends SqlObject, Serializable {
                 cache.put(resource);
             }
             return resource;
-        }
-
-        private static Thumbnail createThumbnail(ResultSet rs, int thumbnailSize) throws SQLException {
-            int fileId = rs.getInt("thumbnail" + thumbnailSize + "_file_id");
-
-            if (fileId != 0) {
-                File file = new File();
-                file.setId(fileId);
-                file.setName("thumbnail" + thumbnailSize + ".png");
-                file.setMimeType("image/png");
-                return file;
-            } else {
-                return null;
-            }
         }
     }
 }

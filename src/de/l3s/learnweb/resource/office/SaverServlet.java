@@ -100,7 +100,7 @@ public class SaverServlet extends HttpServlet {
     private void saveNewDocument(CallbackData data, int resourceId, User user, String sessionId) throws IOException {
         Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
 
-        File file = new File(FileType.MAIN, resourceId, resource.getMainFile().getName(), resource.getMainFile().getMimeType());
+        File file = new File(FileType.MAIN, resource.getMainFile().getName(), resource.getMainFile().getMimeType());
         fileDao.save(file, UrlHelper.getInputStream(data.getUrl()));
 
         resource.addFile(file);
@@ -138,7 +138,7 @@ public class SaverServlet extends HttpServlet {
     }
 
     private void saveDocumentHistory(CallbackData data, int resourceId, File file) throws IOException {
-        File changesFile = new File(FileType.DOC_CHANGES, resourceId, "changes.zip", "application/zip");
+        File changesFile = new File(FileType.DOC_CHANGES, "changes.zip", "application/zip");
         fileDao.save(changesFile, UrlHelper.getInputStream(data.getChangesUrl()));
 
         History history = data.getHistory();

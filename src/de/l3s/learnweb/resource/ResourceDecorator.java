@@ -97,15 +97,15 @@ public class ResourceDecorator implements Serializable {
         return resource.getMetadataValue(key);
     }
 
-    public Thumbnail getThumbnailSmall() {
+    public String getThumbnailSmall() {
         return resource.getThumbnailSmall();
     }
 
-    public Thumbnail getThumbnailMedium() {
+    public String getThumbnailMedium() {
         return resource.getThumbnailMedium();
     }
 
-    public Thumbnail getThumbnailLargest() {
+    public String getThumbnailLargest() {
         return resource.getThumbnailLargest();
     }
 

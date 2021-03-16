@@ -306,8 +306,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
                 return;
             }
 
-            // first delete old thumbnails
-            resource.deleteThumbnails();
             getLearnweb().getResourcePreviewMaker().processResource(resource);
 
             resource.save();
@@ -392,10 +390,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public void setResourceThumbnail(String archiveUrl) {
         try {
-            resource.deleteThumbnails();
-
             //Getting mime type
-            FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(UrlHelper.getInputStream(archiveUrl), resource.getFileName());
+            FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(archiveUrl);
             String type = info.getMimeType().substring(0, info.getMimeType().indexOf('/'));
             if (type.equals("application")) {
                 type = info.getMimeType().substring(info.getMimeType().indexOf('/') + 1);

@@ -19,7 +19,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
-import de.l3s.learnweb.resource.Thumbnail;
 import de.l3s.util.StringHelper;
 
 public class InterwebResultsWrapper implements Serializable {
@@ -71,7 +70,7 @@ public class InterwebResultsWrapper implements Serializable {
 
     private static Resource createResource(SearchResult searchResult) {
         ResourceType resourceType = "text".equals(searchResult.getType()) ? ResourceType.website : ResourceType.valueOf(searchResult.getType());
-        ResourceService resourceService = ResourceService.valueOf(searchResult.getService().toLowerCase().replace("-", ""));
+        ResourceService resourceService = ResourceService.parse(searchResult.getService());
 
         Resource resource = new Resource(Resource.StorageType.WEB, resourceType, resourceService);
         resource.setTitle(searchResult.getTitle());
@@ -108,31 +107,20 @@ public class InterwebResultsWrapper implements Serializable {
     }
 
     private static void setThumbnails(Resource resource, SearchResult searchResult) {
-        if (searchResult.getThumbnailSmall() != null) {
-            resource.setThumbnailSmall(new Thumbnail(searchResult.getThumbnailSmall().getUrl()));
-        } else if (searchResult.getThumbnailLarge() != null) {
-            resource.setThumbnailSmall(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
+        if (searchResult.getThumbnailSmallCombined() != null) {
+            resource.setThumbnailSmall(searchResult.getThumbnailSmallCombined().getUrl());
         }
 
-        if (searchResult.getThumbnailMedium() != null) {
-            resource.setThumbnailMedium(new Thumbnail(searchResult.getThumbnailMedium().getUrl()));
-        } else if (searchResult.getThumbnailLarge() != null) {
-            resource.setThumbnailMedium(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
+        if (searchResult.getThumbnailMediumCombined() != null) {
+            resource.setThumbnailMedium(searchResult.getThumbnailMediumCombined().getUrl());
         }
 
-        if (searchResult.getThumbnailLarge() != null) {
-            resource.setThumbnailLarge(new Thumbnail(searchResult.getThumbnailLarge().getUrl()));
-        } else if (searchResult.getThumbnailOriginal() != null) {
-            resource.setThumbnailLarge(new Thumbnail(searchResult.getThumbnailOriginal().getUrl()));
+        if (searchResult.getThumbnailLargeCombined() != null) {
+            resource.setThumbnailLarge(searchResult.getThumbnailLargeCombined().getUrl());
         }
 
-        if (searchResult.getThumbnailOriginal() != null) {
-            resource.setMaxImageUrl(searchResult.getThumbnailOriginal().getUrl());
-        } else {
-            Thumbnail biggestThumbnail = resource.getThumbnailLargest();
-            if (biggestThumbnail != null) {
-                resource.setMaxImageUrl(biggestThumbnail.getUrl());
-            }
+        if (searchResult.getThumbnailOriginalCombined() != null) {
+            resource.setMaxImageUrl(searchResult.getThumbnailOriginalCombined().getUrl());
         }
     }
 

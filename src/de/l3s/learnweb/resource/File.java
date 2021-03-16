@@ -2,11 +2,10 @@ package de.l3s.learnweb.resource;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,43 +14,50 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.HasId;
 
-public class File extends Thumbnail implements HasId {
+public class File implements Serializable, HasId {
     private static final long serialVersionUID = 6573841175365679674L;
 
     public enum FileType {
+        // general files
         SYSTEM_FILE, // for example course header images
         ORGANISATION_BANNER,
         PROFILE_PICTURE,
+        // resource files
         THUMBNAIL_SMALL, // cropped to 160 x 120 px - smallest thumbnail used on website
         THUMBNAIL_MEDIUM, // resized <= 280 x 210 px - resource preview image size
         THUMBNAIL_LARGE, // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
         MAIN, // the file that can be downloaded/viewed
         ORIGINAL, // if the file was converted the original file should be moved to this location
+        // special resource files
         DOC_HISTORY, // previous version of an office resource
         DOC_CHANGES; // zip file with changes for office resource
 
-        public boolean in(FileType... values) {
-            return Arrays.stream(values).anyMatch(value -> value == this);
+        public boolean isResourceFile() {
+            switch (this) {
+                case THUMBNAIL_SMALL:
+                case THUMBNAIL_MEDIUM:
+                case THUMBNAIL_LARGE:
+                case MAIN:
+                case ORIGINAL:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 
     // entity fields
     private int id;
-    private boolean deleted;
-    private int resourceId;
     private FileType type;
     private String name;
     private String mimeType;
-    private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
 
     // runtime fields
+    private String url;
     private String absoluteUrl;
     private java.io.File actualFile;
     private Boolean exists; // `true` if the actual file exist on this machine
-
-    public File() {
-    }
 
     public File(final FileType type, final String name, final String mimeType) {
         this.type = type;
@@ -59,19 +65,11 @@ public class File extends Thumbnail implements HasId {
         this.mimeType = mimeType;
     }
 
-    public File(final FileType type, int resourceId, final String name, final String mimeType) {
-        this.type = type;
-        this.resourceId = resourceId;
-        setName(name);
-        this.mimeType = mimeType;
-    }
-
     public File(final File file) {
-        this.deleted = file.isDeleted();
-        this.resourceId = file.getResourceId();
         this.type = file.getType();
         this.name = file.getName();
         this.mimeType = file.getMimeType();
+        this.createdAt = file.getCreatedAt();
     }
 
     @Override
@@ -81,22 +79,6 @@ public class File extends Thumbnail implements HasId {
 
     public void setId(int fileId) {
         this.id = fileId;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(final boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public int getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(int resourceId) {
-        this.resourceId = resourceId;
     }
 
     public FileType getType() {
@@ -123,14 +105,6 @@ public class File extends Thumbnail implements HasId {
         this.mimeType = mimeType;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -139,17 +113,20 @@ public class File extends Thumbnail implements HasId {
         this.createdAt = createdAt;
     }
 
-    @Override
-    public String getUrl() {
+    public String getSimpleUrl() {
+        return "../download/" + id + "/" + URLEncoder.encode(name, StandardCharsets.UTF_8);
+    }
+
+    public String getResourceUrl(int resourceId) {
         if (url == null) {
-            url = "../download/" + id + "/" + (name != null ? URLEncoder.encode(name, StandardCharsets.UTF_8) : "unknown");
+            url = "../file/" + resourceId + "/" + id + "/" + URLEncoder.encode(name, StandardCharsets.UTF_8);
         }
         return url;
     }
 
     public String getAbsoluteUrl() {
         if (absoluteUrl == null) {
-            absoluteUrl = Learnweb.config().getServerUrl() + getUrl().substring(2);
+            absoluteUrl = Learnweb.config().getServerUrl() + getSimpleUrl().substring(2);
         }
         return absoluteUrl;
     }
@@ -175,7 +152,7 @@ public class File extends Thumbnail implements HasId {
         return exists;
     }
 
-    public InputStream getInputStream() {
+    public FileInputStream getInputStream() {
         try {
             return new FileInputStream(getActualFile());
         } catch (FileNotFoundException e) { // the FileManager has to take care that this exception never occurs
@@ -197,26 +174,22 @@ public class File extends Thumbnail implements HasId {
             return false;
         }
         final File file = (File) o;
-        return id == file.id && deleted == file.deleted && resourceId == file.resourceId && type == file.type && Objects.equals(name, file.name)
-            && Objects.equals(mimeType, file.mimeType) && Objects.equals(updatedAt, file.updatedAt) && Objects.equals(createdAt, file.createdAt);
+        return id == file.id && type == file.type && Objects.equals(name, file.name) && Objects.equals(mimeType, file.mimeType)
+            && Objects.equals(createdAt, file.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, deleted, resourceId, type, name, mimeType, updatedAt, createdAt);
+        return Objects.hash(id, type, name, mimeType, createdAt);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
             .append("id", id)
-            .append("deleted", deleted)
-            .append("resourceId", resourceId)
+            .append("type", type)
             .append("name", name)
             .append("mimeType", mimeType)
-            .append("type", type)
-            .append("url", url)
-            .append("updatedAt", updatedAt)
             .append("createdAt", createdAt)
             .toString();
     }

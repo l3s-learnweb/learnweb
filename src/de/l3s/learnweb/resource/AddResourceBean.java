@@ -108,10 +108,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             log.debug("Saving the file...");
             File file = new File(FileType.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, uploadedFile.getInputStream());
-
             resource.addFile(file);
-            resource.setFileId(file.getId());
-            resource.setFileName(info.getFileName());
 
             log.debug("Extracting metadata from the file...");
             getLearnweb().getResourceMetadataExtractor().processFileResource(resource, info);
@@ -158,10 +155,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             log.debug("Saving file...");
             File file = new File(FileType.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, new FileInputStream(sampleFile));
-
             resource.addFile(file);
-            resource.setFileId(file.getId());
-            resource.setFileName(info.getFileName());
             resource.setFormat(info.getMimeType());
 
             log.debug("Creating thumbnails from uploaded file...");

@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.PreparedBatch;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
@@ -43,38 +43,31 @@ public interface FileDao extends SqlObject, Serializable {
     }
 
     @FetchSize(1000)
-    @SqlQuery("SELECT * FROM lw_file WHERE deleted = 0")
+    @SqlQuery("SELECT * FROM lw_file")
     Stream<File> findAll();
 
-    @SqlQuery("SELECT * FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER BY type, updated_at")
+    @SqlQuery("SELECT f.* FROM lw_file f JOIN lw_resource_file rf USING (file_id) WHERE rf.resource_id = ?")
     List<File> findByResourceId(int resourceId);
 
-    default void updateResourceId(Resource resource, Collection<File> files) {
-        HashSet<Integer> updateIds = new HashSet<>();
-        files.forEach(file -> {
-            if (file.getResourceId() != resource.getId()) {
-                if (file.getResourceId() != 0) {
-                    LogManager.getLogger(FileDao.class).error("Overriding resource {} by {} of file {}", file.getResourceId(), resource.getId(), file.getId());
-                }
-
-                file.setResourceId(resource.getId());
-                updateIds.add(file.getId());
+    default void insertResourceFiles(Resource resource, Collection<File> files) {
+        if (!files.isEmpty()) {
+            PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_resource_file (resource_id, file_id) VALUES (?, ?) ON DUPLICATE KEY "
+                + "UPDATE resource_id = VALUES(resource_id), file_id = VALUES(file_id)");
+            for (File file : files) {
+                batch.bind(0, resource.getId()).bind(1, file.getId()).add();
             }
-        });
-
-        if (!updateIds.isEmpty()) {
-            getHandle().createUpdate("UPDATE lw_file SET resource_id = :resId WHERE file_id IN(<fileIds>)")
-                .bind("resId", resource.getId())
-                .bindList("fileIds", updateIds)
-                .execute();
+            batch.execute();
         }
     }
 
-    default void deleteSoft(File file) {
-        file.setDeleted(true);
-        save(file);
-
-        cache.remove(file.getId());
+    default void deleteResourceFiles(Resource resource, Collection<File> files) {
+        if (!files.isEmpty()) {
+            PreparedBatch batch = getHandle().prepareBatch("DELETE FROM lw_resource_file WHERE resource_id = ? AND file_id = ?");
+            for (File file : files) {
+                batch.bind(0, resource.getId()).bind(1, file.getId()).add();
+            }
+            batch.execute();
+        }
     }
 
     default void deleteHard(File file) {
@@ -95,19 +88,15 @@ public interface FileDao extends SqlObject, Serializable {
      * If the file is not yet stored at the database, a new record will be created and the returned file contains the new id.
      */
     default void save(File file) {
-        file.setUpdatedAt(SqlHelper.now());
         if (file.getCreatedAt() == null) {
-            file.setCreatedAt(file.getUpdatedAt());
+            file.setCreatedAt(SqlHelper.now());
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         params.put("file_id", SqlHelper.toNullable(file.getId()));
-        params.put("deleted", file.isDeleted());
-        params.put("resource_id", SqlHelper.toNullable(file.getResourceId()));
         params.put("type", file.getType().name());
         params.put("name", file.getName());
         params.put("mime_type", file.getMimeType());
-        params.put("updated_at", file.getUpdatedAt());
         params.put("created_at", file.getCreatedAt());
 
         Optional<Integer> fileId = SqlHelper.handleSave(getHandle(), "lw_file", params)
@@ -137,14 +126,8 @@ public interface FileDao extends SqlObject, Serializable {
         public File map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             File file = cache.get(rs.getInt("file_id"));
             if (file == null) {
-                file = new File();
+                file = new File(File.FileType.valueOf(rs.getString("type")), rs.getString("name"), rs.getString("mime_type"));
                 file.setId(rs.getInt("file_id"));
-                file.setDeleted(rs.getBoolean("deleted"));
-                file.setResourceId(rs.getInt("resource_id"));
-                file.setType(File.FileType.valueOf(rs.getString("type")));
-                file.setName(rs.getString("name"));
-                file.setMimeType(rs.getString("mime_type"));
-                file.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
                 file.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
 
                 if (!file.isExists()) {

@@ -11,12 +11,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -90,13 +90,8 @@ public class Resource extends AbstractResource implements Serializable {
     private String idAtService;
     private int ratingSum;
     private int rateNumber;
-    private int fileId;
-    private String fileName; // stores the file name of uploaded resource
     private String maxImageUrl; // an url to the largest image preview of this resource
     private String query; // the query which was used to find this resource
-    private Thumbnail thumbnailSmall; // cropped to 160 x 120 px - smallest thumbnail used on website
-    private Thumbnail thumbnailMedium; // resized <= 280 x 210 px - resource preview image size
-    private Thumbnail thumbnailLarge; // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
     private String embeddedUrl; // stored in the database
     private String embeddedCode; // derived from type or embedded raw. Does not need to be stored in DB
     private String transcript; // To store the English transcripts for TED videos and saved articles
@@ -114,8 +109,13 @@ public class Resource extends AbstractResource implements Serializable {
     private final HashMap<Integer, Integer> thumbRateByUser = new HashMap<>(); // userId : direction, null if not rated
     private final HashMap<Integer, Integer> rateByUser = new HashMap<>(); // userId : rate, null if not rated
     private EnumMap<FileType, File> files; // type : file
+    private final HashSet<File> addedFiles = new HashSet<>(); // files that were added to the resource since last save
+    private final HashSet<File> deletedFiles = new HashSet<>(); // files that were deleted from the resource since last save
 
     // caches
+    private transient String thumbnailSmall; // cropped to 160 x 120 px - smallest thumbnail used on website
+    private transient String thumbnailMedium; // resized <= 280 x 210 px - resource preview image size
+    private transient String thumbnailLarge; // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
     private transient OwnerList<Tag, User> tags;
     private transient List<Comment> comments;
     private transient User owner;
@@ -155,12 +155,7 @@ public class Resource extends AbstractResource implements Serializable {
         setFormat(old.format);
         setUserId(old.ownerUserId);
         setMaxImageUrl(old.maxImageUrl);
-        setFileId(old.fileId);
-        setFileName(old.fileName);
         setQuery(old.query);
-        setThumbnailSmall(old.thumbnailSmall);
-        setThumbnailMedium(old.thumbnailMedium);
-        setThumbnailLarge(old.thumbnailLarge);
         setEmbeddedUrl(old.embeddedUrl);
         setDuration(old.duration);
         setWidth(old.width);
@@ -684,36 +679,6 @@ public class Resource extends AbstractResource implements Serializable {
         return Jsoup.clean(StringHelper.shortnString(description, 200), Whitelist.simpleText());
     }
 
-    public int getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(final int fileId) {
-        this.fileId = fileId;
-    }
-
-    /**
-     * @return the file name of uploaded resource
-     */
-    public String getFileName() {
-        if (fileName == null) {
-            return "";
-        }
-
-        return fileName;
-    }
-
-    /**
-     * @param fileName the file name of uploaded resource
-     */
-    public void setFileName(String fileName) {
-        if (fileName != null && fileName.length() > 200) {
-            throw new IllegalArgumentException("file name is too long: " + fileName.length() + "; " + fileName);
-        }
-
-        this.fileName = fileName;
-    }
-
     /**
      * @return the query which was used to find this resource
      */
@@ -777,21 +742,40 @@ public class Resource extends AbstractResource implements Serializable {
         return files;
     }
 
+    public Collection<File> getAddedFiles() {
+        return addedFiles;
+    }
+
+    public Collection<File> getDeletedFiles() {
+        return deletedFiles;
+    }
+
+    /**
+     * This method does not persist the changes immediately. You should call `resource.save()` to do so.
+     */
+    public void deleteFile(FileType fileType) {
+        if (getFiles().containsKey(fileType)) {
+            deletedFiles.add(getFiles().get(fileType));
+            getFiles().remove(fileType);
+        }
+    }
+
     /**
      * This method does not persist the changes immediately. You should call `resource.save()` to do so.
      */
     public void addFile(File file) {
-        getFiles().put(file.getType(), file);
+        if (file != null) {
+            deleteFile(file.getType());
+            addedFiles.add(file);
+            getFiles().put(file.getType(), file);
 
-        if (file.getType() == FileType.THUMBNAIL_SMALL) {
-            thumbnailSmall = file;
-        } else if (file.getType() == FileType.THUMBNAIL_MEDIUM) {
-            thumbnailMedium = file;
-        } else if (file.getType() == FileType.THUMBNAIL_LARGE) {
-            thumbnailLarge = file;
-        } else if (file.getType() == FileType.MAIN) {
-            fileId = file.getId();
-            fileName = file.getName();
+            if (file.getType() == FileType.THUMBNAIL_SMALL) {
+                thumbnailSmall = null;
+            } else if (file.getType() == FileType.THUMBNAIL_MEDIUM) {
+                thumbnailMedium = null;
+            } else if (file.getType() == FileType.THUMBNAIL_LARGE) {
+                thumbnailLarge = null;
+            }
         }
     }
 
@@ -827,57 +811,50 @@ public class Resource extends AbstractResource implements Serializable {
         this.machineDescription = machineDescription;
     }
 
-    public Thumbnail getThumbnailSmall() {
-        if (thumbnailSmall == null) {
-            thumbnailSmall = getFile(FileType.THUMBNAIL_SMALL);
+    public String getThumbnailSmall() {
+        if (thumbnailSmall == null && getFile(FileType.THUMBNAIL_SMALL) != null) {
+            thumbnailSmall = getFile(FileType.THUMBNAIL_SMALL).getResourceUrl(id);
         }
         return thumbnailSmall;
     }
 
-    public void setThumbnailSmall(Thumbnail thumbnailSmall) {
+    public void setThumbnailSmall(String thumbnailSmall) {
         this.thumbnailSmall = thumbnailSmall;
     }
 
-    public Thumbnail getThumbnailMedium() {
-        if (thumbnailMedium == null) {
-            thumbnailMedium = getFile(FileType.THUMBNAIL_MEDIUM);
+    public String getThumbnailMedium() {
+        if (thumbnailMedium == null && getFile(FileType.THUMBNAIL_MEDIUM) != null) {
+            thumbnailMedium = getFile(FileType.THUMBNAIL_MEDIUM).getResourceUrl(id);
         }
         return thumbnailMedium;
     }
 
-    public void setThumbnailMedium(Thumbnail thumbnailMedium) {
+    public void setThumbnailMedium(String thumbnailMedium) {
         this.thumbnailMedium = thumbnailMedium;
     }
 
-    public Thumbnail getThumbnailLarge() {
-        if (thumbnailLarge == null) {
-            thumbnailLarge = getFile(FileType.THUMBNAIL_LARGE);
+    public String getThumbnailLarge() {
+        if (thumbnailLarge == null && getFile(FileType.THUMBNAIL_LARGE) != null) {
+            thumbnailLarge = getFile(FileType.THUMBNAIL_LARGE).getResourceUrl(id);
         }
         return thumbnailLarge;
     }
 
-    public void setThumbnailLarge(Thumbnail thumbnailLarge) {
+    public void setThumbnailLarge(String thumbnailLarge) {
         this.thumbnailLarge = thumbnailLarge;
     }
 
     /**
      * Get combined largest thumbnail.
      */
-    public Thumbnail getThumbnailLargest() {
+    public String getThumbnailLargest() {
         return ObjectUtils.firstNonNull(getThumbnailLarge(), getThumbnailMedium(), getThumbnailSmall());
     }
 
-    public void deleteThumbnails() {
-        for (File file : getFiles().values()) {
-            if (file.getType().in(FileType.THUMBNAIL_SMALL, FileType.THUMBNAIL_MEDIUM, FileType.THUMBNAIL_LARGE)) {
-                log.debug("Delete {}", file.getName());
-                Learnweb.dao().getFileDao().deleteSoft(file);
-            }
-        }
-
-        thumbnailSmall = null;
-        thumbnailMedium = null;
-        thumbnailLarge = null;
+    public void copyThumbnails(Resource resource) {
+        addFile(resource.getFile(FileType.THUMBNAIL_SMALL));
+        addFile(resource.getFile(FileType.THUMBNAIL_MEDIUM));
+        addFile(resource.getFile(FileType.THUMBNAIL_LARGE));
     }
 
     public String getEmbeddedCode() {
@@ -1031,15 +1008,9 @@ public class Resource extends AbstractResource implements Serializable {
 
         File mainFile = getMainFile();
         if (mainFile != null) {
-            return mainFile.getAbsoluteUrl();
+            return mainFile.getResourceUrl(id);
         }
 
-        if (fileId != 0) {
-            Optional<File> altMainFile = Learnweb.dao().getFileDao().findById(fileId);
-            if (altMainFile.isPresent()) {
-                return altMainFile.get().getAbsoluteUrl();
-            }
-        }
         return null;
     }
 

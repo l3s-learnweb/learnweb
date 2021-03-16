@@ -24,7 +24,6 @@ import de.l3s.interwebj.client.model.SearchResponse;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
-import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
@@ -294,12 +293,7 @@ public class TedManager {
 
                 resource.setService(ResourceService.ted);
                 resource.setMaxImageUrl(r2.getMaxImageUrl());
-                for (File file : resource.getFiles().values()) {
-                    fileDao.deleteSoft(file);
-                }
-                resource.setThumbnailSmall(r2.getThumbnailSmall());
-                resource.setThumbnailMedium(r2.getThumbnailMedium());
-                resource.setThumbnailLarge(r2.getThumbnailLarge());
+                resource.copyThumbnails(r2);
                 resource.setDuration(r2.getDuration());
                 resource.setWidth(r2.getWidth());
                 resource.setHeight(r2.getHeight());

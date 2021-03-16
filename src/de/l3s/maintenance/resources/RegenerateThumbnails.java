@@ -18,14 +18,16 @@ public class RegenerateThumbnails extends MaintenanceTask {
     @Override
     protected void run(final boolean dryRun) throws Exception {
         final ResourceDao resourceDao = getLearnweb().getDaoProvider().getResourceDao();
-        List<Resource> imagesWithoutThumbnail = resourceDao.withHandle(handle -> handle.select("SELECT *  FROM lw_resource "
-            + "WHERE deleted = 0 AND max_image_url IS NOT NULL AND max_image_url IS NOT NULL AND thumbnail0_file_id IS NULL "
-            + "AND storage_type=2 and type in('video', 'image') AND online_status != 'OFFLINE'").map(new ResourceDao.ResourceMapper()).list());
+        List<Resource> imagesWithoutThumbnail = resourceDao.withHandle(handle -> handle.select("SELECT *  FROM lw_resource r "
+            + "WHERE deleted = 0 AND max_image_url IS NOT NULL AND storage_type=2 AND type IN ('video', 'image') AND online_status != 'OFFLINE' "
+            + "AND NOT EXISTS (SELECT 1 FROM lw_resource_file rf WHERE r.resource_id = rf.resource_id AND rf.type = 'THUMBNAIL_SMALL')")
+            .map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} image/video resources without thumbnails", imagesWithoutThumbnail.size());
 
         List<Resource> websitesWithoutThumbnail = resourceDao.withHandle(handle -> handle.select("SELECT * FROM lw_resource "
-            + "WHERE storage_type = 2 AND type = 'website' AND deleted = 0 AND url NOT LIKE '%learnweb%' AND group_id != 1346 " // exclude Fact Check group
-            + "AND online_status = 'UNKNOWN' and thumbnail0_file_id IS NULL ORDER BY resource_id DESC").map(new ResourceDao.ResourceMapper()).list());
+            + "WHERE storage_type = 2 AND type = 'website' AND deleted = 0 AND url NOT LIKE '%learnweb%' AND online_status = 'UNKNOWN' AND group_id != 1346 " // exclude Fact Check group
+            + "AND NOT EXISTS (SELECT 1 FROM lw_resource_file rf WHERE r.resource_id = rf.resource_id AND rf.type = 'THUMBNAIL_SMALL') ORDER BY resource_id DESC")
+            .map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} web resources without thumbnails", websitesWithoutThumbnail.size());
 
         if (!dryRun) {

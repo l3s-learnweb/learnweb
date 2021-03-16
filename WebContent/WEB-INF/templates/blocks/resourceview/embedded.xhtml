@@ -62,7 +62,7 @@
     </c:when>
 
     <c:when test="${not empty res.thumbnailLargest}">
-        <img src="#{res.thumbnailLargest.url}" alt="#{res.title}" class="d-block"/>
+        <img src="#{res.thumbnailLargest}" alt="#{res.title}" class="d-block"/>
     </c:when>
 
     <c:otherwise>

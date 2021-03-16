@@ -221,7 +221,7 @@ public class Search implements Serializable {
             }
 
             // check if an other resource with the same url exists
-            if (!urlHashMap.add(StringUtils.firstNonBlank(resource.getUrl(), resource.getDownloadUrl()))) {
+            if (!urlHashMap.add(StringUtils.firstNonBlank(resource.getUrl(), String.valueOf(resource.getId())))) {
                 duplicatedUrlCount++;
                 continue;
             }

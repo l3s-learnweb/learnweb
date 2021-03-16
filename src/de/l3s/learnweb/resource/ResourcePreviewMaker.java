@@ -86,11 +86,9 @@ public class ResourcePreviewMaker implements Serializable {
         try {
             // if a web resource is not a simple website then download it
             if (resource.isWebResource() && resource.getType() != ResourceType.website && resource.getService().in(ResourceService.bing, ResourceService.internet)) {
-                File file = new File(FileType.MAIN, resource.getId(), resource.getFileName(), resource.getFormat());
+                File file = new File(FileType.MAIN, null, null); // FIXME: investigate how it was set before
                 fileDao.save(file, UrlHelper.getInputStream(resource.getUrl()));
-
                 resource.addFile(file);
-                resource.setFileId(file.getId());
             }
 
             if (resource.getType() == ResourceType.website) {
@@ -162,7 +160,7 @@ public class ResourcePreviewMaker implements Serializable {
         resource.setHeight(img.getHeight());
 
         Image thumbnail = img.getResized(THUMBNAIL_LARGE_WIDTH, THUMBNAIL_LARGE_HEIGHT);
-        File file = new File(FileType.THUMBNAIL_LARGE, resource.getId(), "thumbnail4.png", "image/png");
+        File file = new File(FileType.THUMBNAIL_LARGE, "thumbnail4.png", "image/png");
         fileDao.save(file, thumbnail.getInputStream());
         thumbnail.dispose();
 
@@ -176,7 +174,7 @@ public class ResourcePreviewMaker implements Serializable {
         // process image
         Image img = new Image(thumbnailUrl.openStream());
 
-        File file = new File(FileType.THUMBNAIL_LARGE, resource.getId(), "website.png", "image/png");
+        File file = new File(FileType.THUMBNAIL_LARGE, "website.png", "image/png");
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
@@ -189,7 +187,7 @@ public class ResourcePreviewMaker implements Serializable {
         // process image
         Image img = new Image(thumbnailUrl.openStream());
 
-        File file = new File(FileType.THUMBNAIL_LARGE, resource.getId(), "wayback_thumbnail.png", "image/png");
+        File file = new File(FileType.THUMBNAIL_LARGE, "wayback_thumbnail.png", "image/png");
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
@@ -250,14 +248,12 @@ public class ResourcePreviewMaker implements Serializable {
                 resource.addFile(originalFile);
 
                 // create new file
-                File convertedFile = new File(FileType.MAIN, resource.getId(), StringHelper.filenameChangeExt(originalFile.getName(), "mp4"), "video/mp4");
+                File convertedFile = new File(FileType.MAIN, StringHelper.filenameChangeExt(originalFile.getName(), "mp4"), "video/mp4");
                 fileDao.save(convertedFile, new FileInputStream(outputPath));
                 tempVideoFile.delete();
 
                 // update resource files
                 resource.addFile(convertedFile);
-                resource.setFileId(convertedFile.getId());
-                resource.setFileName(convertedFile.getName());
                 resource.setFormat("video/mp4");
             }
         } catch (Exception e) {
@@ -351,7 +347,7 @@ public class ResourcePreviewMaker implements Serializable {
 
         try {
             Image thumbnail = img.getCroppedAndResized(THUMBNAIL_SMALL_WIDTH, THUMBNAIL_SMALL_HEIGHT);
-            File file = new File(FileType.THUMBNAIL_SMALL, resource.getId(), "thumbnail0.png", "image/png");
+            File file = new File(FileType.THUMBNAIL_SMALL, "thumbnail0.png", "image/png");
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);
@@ -361,7 +357,7 @@ public class ResourcePreviewMaker implements Serializable {
             }
 
             thumbnail = img.getResized(THUMBNAIL_MEDIUM_WIDTH, THUMBNAIL_MEDIUM_HEIGHT, croppedToAspectRatio);
-            file = new File(FileType.THUMBNAIL_MEDIUM, resource.getId(), "thumbnail2.png", "image/png");
+            file = new File(FileType.THUMBNAIL_MEDIUM, "thumbnail2.png", "image/png");
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);

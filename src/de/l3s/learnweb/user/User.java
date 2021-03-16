@@ -443,7 +443,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      */
     public String getImageUrl() {
         if (imageUrl == null) {
-            imageUrl = imageFileId != 0 ? getImageFile().getUrl() : ProfileImageHelper.getProfilePicture(StringUtils.firstNonBlank(fullName, username));
+            imageUrl = imageFileId != 0 ? getImageFile().getSimpleUrl() : ProfileImageHelper.getProfilePicture(StringUtils.firstNonBlank(fullName, username));
         }
         return imageUrl;
     }

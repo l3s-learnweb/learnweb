@@ -45,7 +45,7 @@
 
             <ui:fragment rendered="#{addResourceBean.resource.thumbnailSmall != null}">
                 <p:outputLabel value="#{msg.preview}:"/>
-                <img src="#{addResourceBean.resource.thumbnailSmall.url}" alt="#{addResourceBean.resource.title}"/>
+                <img src="#{addResourceBean.resource.thumbnailSmall}" alt="#{addResourceBean.resource.title}"/>
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary'}">
@@ -114,7 +114,7 @@
 
             <ui:fragment rendered="#{addResourceBean.resource.thumbnailSmall != null}">
                 <h:outputText value="#{msg.preview}:" styleClass="ui-outputlabel"/>
-                <img src="#{addResourceBean.resource.thumbnailSmall.url}" alt="#{addResourceBean.resource.title}"/>
+                <img src="#{addResourceBean.resource.thumbnailSmall}" alt="#{addResourceBean.resource.title}"/>
             </ui:fragment>
 
             <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
