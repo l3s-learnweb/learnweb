@@ -37,6 +37,7 @@ import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -160,7 +161,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             if (selectedResource.getId() == 0) { // resource is not yet stored at the database
                 newResource = selectedResource.getResource();
                 if (newResource.getService() == ResourceService.bing) { // resource which is already saved in database already has wayback captures stored
-                    Beans.getInstance(WaybackCapturesLogger.class).logWaybackCaptures(newResource);
+                    Beans.getInstance(WaybackCapturesLogger.class).logWaybackCaptures((WebResource) newResource);
                 }
             } else {
                 // create a copy

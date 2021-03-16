@@ -155,7 +155,5 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-junit-jupiter:4.5.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-inline:4.5.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.h2database:h2:2.1.212" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.percy:percy-java-selenium:1.0.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.json:json:20210307" level="project" />
   </component>
 </module>

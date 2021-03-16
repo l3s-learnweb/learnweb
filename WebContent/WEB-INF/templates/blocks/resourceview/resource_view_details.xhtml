@@ -99,7 +99,7 @@
 		<dd class="col-sm-8">
 			<a href="#{userBean.getUrlProxied(res.url)}" target="_top"><h:outputText value="#{res.service.label}"/></a>
 
-			<p:commandButton id="archive_now" process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
+			<p:commandButton id="archive_now" process="@this" immediate="true" action="#{webResourceBean.archiveCurrentVersion}"
 							 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" styleClass="d-block"
 							 rendered="#{res.type eq 'website'}"/>
 		</dd>

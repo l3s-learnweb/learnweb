@@ -27,8 +27,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.app.ConfigProvider;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.web.WebResource;
 
 @ApplicationScoped
 public final class ArchiveUrlManager {
@@ -68,19 +68,17 @@ public final class ArchiveUrlManager {
         }
     }
 
-    public String addResourceToArchive(Resource resource) {
+    public String addResourceToArchive(WebResource resource) {
         String response = "";
-        if (resource.isWebResource()) {
-            Future<String> executorResponse = executorService.submit(new ArchiveNowWorker(resource));
+        Future<String> executorResponse = executorService.submit(new ArchiveNowWorker(resource));
 
-            try {
-                response = executorResponse.get();
-                //log.debug(response);
-            } catch (InterruptedException e) {
-                log.error("Execution of the thread was interrupted on a task for resource: {}", resource.getId(), e);
-            } catch (ExecutionException e) {
-                log.error("Error while retrieving response from a task that was interrupted by an exception for resource: {}", resource.getId(), e);
-            }
+        try {
+            response = executorResponse.get();
+            //log.debug(response);
+        } catch (InterruptedException e) {
+            log.error("Execution of the thread was interrupted on a task for resource: {}", resource.getId(), e);
+        } catch (ExecutionException e) {
+            log.error("Error while retrieving response from a task that was interrupted by an exception for resource: {}", resource.getId(), e);
         }
         return response;
     }
@@ -126,9 +124,9 @@ public final class ArchiveUrlManager {
     class ArchiveNowWorker implements Callable<String> {
         private final DateTimeFormatter responseDate = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 
-        final Resource resource;
+        final WebResource resource;
 
-        ArchiveNowWorker(Resource resource) {
+        ArchiveNowWorker(WebResource resource) {
             this.resource = resource;
         }
 

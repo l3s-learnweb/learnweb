@@ -10,9 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
@@ -22,20 +19,13 @@ import jakarta.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Beans;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.RateEvent;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
-import de.l3s.learnweb.resource.archive.ArchiveUrl;
-import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.UrlHelper;
@@ -161,113 +151,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             viewAction = ViewAction.viewResource;
             PrimeFaces.current().ajax().update(":resourceViewForm");
         }
-    }
-
-    /**
-     * The method is used from JS in resource_view_archive_timeline.xhtml.
-     */
-    public String getArchiveTimelineJsonData() { // TODO @astappiev: move this and all other archive related methods to new WebResourceBean
-        TreeMap<LocalDate, Integer> monthlySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByMonths(resource.getId(), resource.getUrl());
-
-        JsonArray highChartsData = new JsonArray();
-        monthlySeriesData.forEach((key, value) -> {
-            JsonArray innerArray = new JsonArray();
-            innerArray.add(key.toEpochDay());
-            innerArray.add(value);
-            highChartsData.add(innerArray);
-        });
-        return new Gson().toJson(highChartsData);
-    }
-
-    /**
-     * The method is used from JS in resource_view_archive_timeline.xhtml.
-     */
-    public String getArchiveCalendarJsonData() {
-        JsonObject archiveDates = new JsonObject();
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
-
-        TreeMap<LocalDate, Integer> dailySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByDays(resource.getId(), resource.getUrl());
-        for (final Map.Entry<LocalDate, Integer> entry : dailySeriesData.entrySet()) {
-            JsonObject archiveDay = new JsonObject();
-            archiveDay.addProperty("number", entry.getValue());
-            archiveDay.addProperty("badgeClass", "badge-warning");
-
-            List<ArchiveUrl> archiveUrlsData = dao().getArchiveUrlDao().findByResourceId(resource.getId(), entry.getKey());
-            archiveUrlsData.addAll(dao().getWaybackUrlDao().findByUrl(resource.getUrl(), entry.getKey()));
-
-            JsonArray archiveVersions = new JsonArray();
-            for (ArchiveUrl archiveUrl : archiveUrlsData) {
-                JsonObject archiveVersion = new JsonObject();
-                archiveVersion.addProperty("url", archiveUrl.archiveUrl());
-                archiveVersion.addProperty("time", DateTimeFormatter.ISO_TIME.format(archiveUrl.timestamp()));
-                archiveVersions.add(archiveVersion);
-            }
-            archiveDay.add("dayEvents", archiveVersions);
-            archiveDates.add(dateFormat.format(entry.getKey()), archiveDay);
-        }
-        return new Gson().toJson(archiveDates);
-    }
-
-    /**
-     * Function to get short week day names for the calendar.
-     */
-    public List<String> getShortWeekDays() {
-        DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
-        List<String> dayNames = Arrays.asList(symbols.getShortWeekdays());
-        Collections.rotate(dayNames.subList(1, 8), -1);
-        return dayNames.subList(1, 8);
-    }
-
-    /**
-     * Function to localized month names for the calendar.
-     * The method is used from JS in resource_view_archive_timeline.xhtml
-     */
-    public String getMonthNames() {
-        DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
-        JsonArray monthNames = new JsonArray();
-        for (String month : symbols.getMonths()) {
-            if (!month.isBlank()) {
-                monthNames.add(month);
-            }
-        }
-        return new Gson().toJson(monthNames);
-    }
-
-    /**
-     * Function to get localized short month names for the timeline.
-     * The method is used from JS in resource_view_archive_timeline.xhtml
-     */
-    public String getShortMonthNames() {
-        DateFormatSymbols symbols = new DateFormatSymbols(getUserBean().getLocale());
-        JsonArray monthNames = new JsonArray();
-        for (String month : symbols.getShortMonths()) {
-            if (!month.isBlank()) {
-                monthNames.add(month);
-            }
-        }
-        return new Gson().toJson(monthNames);
-    }
-
-    public void archiveCurrentVersion() {
-        boolean addToQueue = true;
-        if (!resource.getArchiveUrls().isEmpty()) {
-            // captured more than 5 minutes ago
-            addToQueue = resource.getArchiveUrls().getLast().timestamp().isBefore(LocalDateTime.now().minusMinutes(5));
-        }
-
-        if (addToQueue) {
-            String response = Beans.getInstance(ArchiveUrlManager.class).addResourceToArchive(resource);
-            if (response.equalsIgnoreCase("archive_success")) {
-                addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
-            } else if (response.equalsIgnoreCase("robots_error")) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "archiveRobotsMessage");
-            } else if (response.equalsIgnoreCase("generic_error")) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "archiveErrorMessage");
-            }
-        } else {
-            addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
-        }
-
     }
 
     public void onDeleteTag(Tag tag) {

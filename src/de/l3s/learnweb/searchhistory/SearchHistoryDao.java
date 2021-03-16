@@ -19,8 +19,8 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
-import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.SearchMode;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.SqlHelper;
 import de.l3s.util.StringHelper;
@@ -56,7 +56,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 if (resourceId != 0) {
                     res = resourceDao.findByIdOrElseThrow(resourceId);
                 } else {
-                    res = new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.learnweb);
+                    res = new WebResource();
                     res.setUrl(rs.getString("url"));
                     res.setTitle(rs.getString("title"));
                     res.setDescription(rs.getString("description"));

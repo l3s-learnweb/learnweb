@@ -17,7 +17,7 @@ import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.web.WebResource;
 
 @ApplicationScoped
 public class WaybackCapturesLogger {
@@ -55,7 +55,7 @@ public class WaybackCapturesLogger {
         }
     }
 
-    public void logWaybackCaptures(Resource resource) {
+    public void logWaybackCaptures(WebResource resource) {
         if (resource == null) {
             throw new IllegalStateException();
         }
@@ -115,9 +115,9 @@ public class WaybackCapturesLogger {
     }
 
     private class CDXWorker implements Callable<String> {
-        final Resource resource;
+        final WebResource resource;
 
-        CDXWorker(Resource resource) {
+        CDXWorker(WebResource resource) {
             this.resource = resource;
         }
 

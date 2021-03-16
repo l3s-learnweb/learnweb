@@ -27,6 +27,7 @@ import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.survey.Survey;
 import de.l3s.learnweb.resource.survey.SurveyResource;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 import de.l3s.util.UrlHelper;
@@ -59,7 +60,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         // Set target view and defaults
         resource = switch (type) {
             case "file" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.file, ResourceService.desktop);
-            case "url", "website" -> new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.internet);
+            case "url", "website" -> new WebResource();
             case "glossary" -> {
                 GlossaryResource glossaryResource = new GlossaryResource();
                 glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages

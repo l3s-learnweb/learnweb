@@ -6,21 +6,17 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -34,9 +30,9 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.FileType;
-import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Expirable;
 import de.l3s.util.HasId;
@@ -128,7 +124,6 @@ public class Resource extends AbstractResource implements Serializable {
     private transient OwnerList<Tag, User> tags;
     private transient List<Comment> comments;
     private transient User owner;
-    private transient LinkedList<ArchiveUrl> archiveUrls; //To store the archived URLs
     private transient String path;
     private transient String prettyPath;
     private transient MetadataMapWrapper metadataWrapper; // includes static fields like title, description and author into the map
@@ -177,9 +172,6 @@ public class Resource extends AbstractResource implements Serializable {
         setCreatedAt(LocalDateTime.now());
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
-        if (old.getArchiveUrls() != null) {
-            setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
-        }
         // sets the originalResourceId to the id of the source resource
         if (old.originalResourceId == 0) {
             setOriginalResourceId(old.id);
@@ -200,6 +192,7 @@ public class Resource extends AbstractResource implements Serializable {
         return switch (resourceType) {
             case survey -> new SurveyResource();
             case glossary -> new GlossaryResource();
+            case website -> new WebResource();
             default -> new Resource(StorageType.valueOf(storageType), resourceType, ResourceService.valueOf(source));
         };
     }
@@ -551,17 +544,6 @@ public class Resource extends AbstractResource implements Serializable {
     @Override
     public Resource save() {
         Learnweb.dao().getResourceDao().save(this);
-
-        // TODO @astappiev: this has to be moved to the save method of WebResource.class, which has to be created
-        if (CollectionUtils.isNotEmpty(getArchiveUrls())) {
-            try {
-                // To copy archive versions of a resource if it exists
-                Learnweb.dao().getArchiveUrlDao().insertArchiveUrl(getId(), getArchiveUrls());
-            } catch (Exception e) {
-                log.error("Can't save archiveUrls", e);
-            }
-        }
-
         return this;
     }
 
@@ -697,7 +679,6 @@ public class Resource extends AbstractResource implements Serializable {
     public String getShortDescription() {
         return Jsoup.clean(StringHelper.shortnString(description, 200), Safelist.simpleText());
     }
-
     /**
      * @return the query which was used to find this resource
      */
@@ -976,47 +957,6 @@ public class Resource extends AbstractResource implements Serializable {
         this.idAtService = idAtService;
     }
 
-    public LinkedList<ArchiveUrl> getArchiveUrls() {
-        if (archiveUrls == null && id != 0) {
-            archiveUrls = new LinkedList<>(Learnweb.dao().getArchiveUrlDao().findByResourceId(id));
-            archiveUrls.addAll(Learnweb.dao().getWaybackUrlDao().findByUrl(url));
-        }
-
-        return archiveUrls;
-    }
-
-    public void setArchiveUrls(LinkedList<ArchiveUrl> archiveUrls) {
-        this.archiveUrls = archiveUrls;
-    }
-
-    public HashMap<Integer, List<ArchiveUrl>> getArchiveUrlsAsYears() {
-        HashMap<Integer, List<ArchiveUrl>> versions = new LinkedHashMap<>();
-        for (ArchiveUrl url : archiveUrls) {
-            int year = url.timestamp().getYear();
-            if (!versions.containsKey(year)) {
-                versions.put(year, new ArrayList<>());
-            }
-            versions.get(year).add(url);
-        }
-        return versions;
-    }
-
-    public void addArchiveUrl(ArchiveUrl archiveUrl) {
-        archiveUrls = null;
-    }
-
-    public boolean isArchived() {
-        return getArchiveUrls() != null && !archiveUrls.isEmpty();
-    }
-
-    public ArchiveUrl getFirstArchivedObject() {
-        return archiveUrls.getFirst();
-    }
-
-    public ArchiveUrl getLastArchivedObject() {
-        return archiveUrls.getLast();
-    }
-
     public String getDownloadUrl() {
         if (service == ResourceService.speechrepository) {
             return embeddedUrl;
@@ -1130,7 +1070,6 @@ public class Resource extends AbstractResource implements Serializable {
         tags = null;
         comments = null;
         owner = null;
-        archiveUrls = null;
         metadataWrapper = null;
         metadataMultiValue = null;
     }

@@ -20,6 +20,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.util.StringHelper;
 
 public class InterwebResultsWrapper implements Serializable {
@@ -50,7 +51,7 @@ public class InterwebResultsWrapper implements Serializable {
 
         int counter = 0;
         for (SearchResult searchResult : searchResults) {
-            Resource resource = createResource(searchResult);
+            WebResource resource = createResource(searchResult);
 
             if (resource.getType() != ResourceType.website && null == resource.getThumbnailMedium()) { // no thumbnail set
                 log.warn("Found no thumbnail: {}", searchResult);
@@ -70,11 +71,11 @@ public class InterwebResultsWrapper implements Serializable {
         }
     }
 
-    private static Resource createResource(SearchResult searchResult) {
+    private static WebResource createResource(SearchResult searchResult) {
         ResourceType resourceType = "text".equals(searchResult.getType()) ? ResourceType.website : ResourceType.valueOf(searchResult.getType());
         ResourceService resourceService = ResourceService.parse(searchResult.getService());
 
-        Resource resource = new Resource(Resource.StorageType.WEB, resourceType, resourceService);
+        WebResource resource = new WebResource(resourceType, resourceService);
         resource.setTitle(searchResult.getTitle());
         // resource.setViews(searchResult.getNumberOfViews());
         resource.setIdAtService(searchResult.getIdAtService());
@@ -126,7 +127,7 @@ public class InterwebResultsWrapper implements Serializable {
         }
     }
 
-    private static ResourceDecorator createDecoratedResource(SearchResult searchResult, Resource resource) {
+    private static ResourceDecorator createDecoratedResource(SearchResult searchResult, WebResource resource) {
         ResourceDecorator decoratedResource = new ResourceDecorator(resource);
         decoratedResource.setRank(searchResult.getRankAtService());
         decoratedResource.setTitle(searchResult.getTitle());

@@ -47,7 +47,7 @@
             </p:tab>
             <p:tab title="${msg['resource.tab.ARCHIVED']}">
                 <h:form>
-                    <p:commandButton process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
+                    <p:commandButton process="@this" immediate="true" action="#{webResourceBean.archiveCurrentVersion}"
                                      icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" styleClass="d-block position-absolute top-0 end-0 mx-3 my-1"
                                      rendered="#{res.type eq 'website'}"/>
                     <ui:fragment rendered="#{not empty res.archiveUrls}">

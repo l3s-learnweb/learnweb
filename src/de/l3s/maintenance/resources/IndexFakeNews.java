@@ -17,8 +17,8 @@ import com.google.gson.JsonParser;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceService;
-import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.maintenance.MaintenanceTask;
 
 public class IndexFakeNews extends MaintenanceTask {
@@ -53,7 +53,7 @@ public class IndexFakeNews extends MaintenanceTask {
                 + csvRecord.get("conclusion_text").trim()
                     .replaceFirst("Conclusion\n", "<b>Conclusion</b>: ");
 
-            Resource resource = new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.factcheck);
+            Resource resource = new WebResource(ResourceService.factcheck);
             resource.setMetadataValue("publisher", "fullfact.org");
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
@@ -70,7 +70,7 @@ public class IndexFakeNews extends MaintenanceTask {
 
     public void reindexAllFakeNewsResources() {
         List<Resource> resources = getLearnweb().getDaoProvider().getJdbi().withHandle(handle -> handle
-            .select("SELECT * FROM lw_resource r WHERE deleted = 0 AND group_id = 1346 AND source = 'FactCheck' and url like 'http://fullfa%'")
+            .select("SELECT * FROM lw_resource r WHERE deleted = 0 AND group_id = 1346 AND source = 'FactCheck' AND url LIKE 'http://fullfa%'")
             .map(new ResourceDao.ResourceMapper()).list());
 
         int counter = 0;
@@ -94,7 +94,7 @@ public class IndexFakeNews extends MaintenanceTask {
     }
 
     private void indexSnopesFile(File file) throws IOException {
-        Resource resource = new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.factcheck);
+        Resource resource = new WebResource(ResourceService.factcheck);
         resource.setMetadataValue("publisher", "snopes.com");
         resource.setUserId(7727); // Admin
         resource.setGroupId(1346); // Admin Fact Check group

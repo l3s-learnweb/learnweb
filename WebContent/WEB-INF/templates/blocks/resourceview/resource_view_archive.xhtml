@@ -4,13 +4,13 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
-<!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+<!--@elvariable id="res" type="de.l3s.learnweb.resource.web.WebResource"-->
 
 <ui:fragment rendered="${res.webResource and res.canEditResource(userBean.user)}">
 	<div>
 		<p:button onclick="loadArchiveUrlsModal();return false;" styleClass="secondary-btn" value="#{msg['Archive.change_thumbnail']}"/>
 
-		<p:commandButton id="archive_now_btn" process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
+		<p:commandButton id="archive_now_btn" process="@this" immediate="true" action="#{webResourceBean.archiveCurrentVersion}"
 						 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" update="archive_view_options"/>
 	</div>
 
