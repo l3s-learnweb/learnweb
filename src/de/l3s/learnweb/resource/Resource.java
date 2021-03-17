@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -112,7 +113,7 @@ public class Resource extends AbstractResource implements Serializable {
     private int thumbDown = -1;
     private final HashMap<Integer, Integer> thumbRateByUser = new HashMap<>(); // userId : direction, null if not rated
     private final HashMap<Integer, Integer> rateByUser = new HashMap<>(); // userId : rate, null if not rated
-    private LinkedHashMap<FileType, File> files; // type : file
+    private EnumMap<FileType, File> files; // type : file
 
     // caches
     private transient OwnerList<Tag, User> tags;
@@ -760,9 +761,9 @@ public class Resource extends AbstractResource implements Serializable {
         this.service = service;
     }
 
-    public LinkedHashMap<FileType, File> getFiles() {
+    public EnumMap<FileType, File> getFiles() {
         if (files == null) {
-            files = new LinkedHashMap<>();
+            files = new EnumMap<>(FileType.class);
 
             if (id != 0) {
                 List<File> loadedFiles = Learnweb.dao().getFileDao().findByResourceId(id);
@@ -776,15 +777,22 @@ public class Resource extends AbstractResource implements Serializable {
         return files;
     }
 
-    public void setFiles(LinkedHashMap<FileType, File> files) {
-        this.files = files;
-    }
-
     /**
      * This method does not persist the changes immediately. You should call `resource.save()` to do so.
      */
     public void addFile(File file) {
         getFiles().put(file.getType(), file);
+
+        if (file.getType() == FileType.THUMBNAIL_SMALL) {
+            thumbnailSmall = file;
+        } else if (file.getType() == FileType.THUMBNAIL_MEDIUM) {
+            thumbnailMedium = file;
+        } else if (file.getType() == FileType.THUMBNAIL_LARGE) {
+            thumbnailLarge = file;
+        } else if (file.getType() == FileType.MAIN) {
+            fileId = file.getId();
+            fileName = file.getName();
+        }
     }
 
     public File getFile(FileType fileType) {
@@ -820,6 +828,9 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     public Thumbnail getThumbnailSmall() {
+        if (thumbnailSmall == null) {
+            thumbnailSmall = getFile(FileType.THUMBNAIL_SMALL);
+        }
         return thumbnailSmall;
     }
 
@@ -828,6 +839,9 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     public Thumbnail getThumbnailMedium() {
+        if (thumbnailMedium == null) {
+            thumbnailMedium = getFile(FileType.THUMBNAIL_MEDIUM);
+        }
         return thumbnailMedium;
     }
 
@@ -836,6 +850,9 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     public Thumbnail getThumbnailLarge() {
+        if (thumbnailLarge == null) {
+            thumbnailLarge = getFile(FileType.THUMBNAIL_LARGE);
+        }
         return thumbnailLarge;
     }
 

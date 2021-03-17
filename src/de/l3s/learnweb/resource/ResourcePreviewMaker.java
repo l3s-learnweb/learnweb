@@ -167,8 +167,6 @@ public class ResourcePreviewMaker implements Serializable {
         thumbnail.dispose();
 
         resource.addFile(file);
-        resource.setThumbnailLarge(new Thumbnail(file));
-
         createThumbnails(resource, img, false);
     }
 
@@ -182,8 +180,6 @@ public class ResourcePreviewMaker implements Serializable {
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
-        resource.setThumbnailLarge(new Thumbnail(file));
-
         createThumbnails(resource, img, true);
     }
 
@@ -197,8 +193,6 @@ public class ResourcePreviewMaker implements Serializable {
         fileDao.save(file, img.getInputStream());
 
         resource.addFile(file);
-        resource.setThumbnailLarge(new Thumbnail(file));
-
         createThumbnails(resource, img, true);
     }
 
@@ -206,7 +200,7 @@ public class ResourcePreviewMaker implements Serializable {
         File originalFile;
         FFmpegProbeResult ffProbeResult = null;
         try {
-            if (!resource.isWebResource() && resource.getType() == ResourceType.video && (resource.getThumbnailMedium() == null || resource.getThumbnailMedium().getFileId() == 0)) {
+            if (!resource.isWebResource() && resource.getType() == ResourceType.video && resource.getThumbnailMedium() == null) {
                 originalFile = resource.getFile(FileType.MAIN);
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 
@@ -361,7 +355,6 @@ public class ResourcePreviewMaker implements Serializable {
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);
-            resource.setThumbnailSmall(new Thumbnail(file));
 
             if (width < THUMBNAIL_SMALL_WIDTH && height < THUMBNAIL_SMALL_HEIGHT) { // than it makes no sense to create larger thumbnails from a small image
                 return;
@@ -372,7 +365,6 @@ public class ResourcePreviewMaker implements Serializable {
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
             resource.addFile(file);
-            resource.setThumbnailMedium(new Thumbnail(file));
         } finally {
             img.dispose();
         }

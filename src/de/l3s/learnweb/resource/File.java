@@ -3,11 +3,11 @@ package de.l3s.learnweb.resource;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.HasId;
 
-public class File implements Serializable, HasId {
+public class File extends Thumbnail implements HasId {
     private static final long serialVersionUID = 6573841175365679674L;
 
     public enum FileType {
@@ -46,7 +46,6 @@ public class File implements Serializable, HasId {
     private LocalDateTime createdAt;
 
     // runtime fields
-    private String url;
     private String absoluteUrl;
     private java.io.File actualFile;
     private Boolean exists; // `true` if the actual file exist on this machine
@@ -140,6 +139,7 @@ public class File implements Serializable, HasId {
         this.createdAt = createdAt;
     }
 
+    @Override
     public String getUrl() {
         if (url == null) {
             url = "../download/" + id + "/" + (name != null ? URLEncoder.encode(name, StandardCharsets.UTF_8) : "unknown");
@@ -186,6 +186,24 @@ public class File implements Serializable, HasId {
 
     public long getLength() {
         return getActualFile().length();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final File file = (File) o;
+        return id == file.id && deleted == file.deleted && resourceId == file.resourceId && type == file.type && Objects.equals(name, file.name) &&
+            Objects.equals(mimeType, file.mimeType) && Objects.equals(updatedAt, file.updatedAt) && Objects.equals(createdAt, file.createdAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, deleted, resourceId, type, name, mimeType, updatedAt, createdAt);
     }
 
     @Override

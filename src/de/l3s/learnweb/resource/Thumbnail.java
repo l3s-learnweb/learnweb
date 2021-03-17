@@ -6,28 +6,17 @@ import java.util.Objects;
 public class Thumbnail implements Serializable {
     private static final long serialVersionUID = -792701713759619246L;
 
-    private final String url;
-    private final int fileId;
+    protected String url;
+
+    protected Thumbnail() {
+    }
 
     public Thumbnail(String url) {
         this.url = url;
-        this.fileId = 0;
-    }
-
-    public Thumbnail(File file) {
-        this.url = file.getUrl();
-        this.fileId = file.getId();
     }
 
     public String getUrl() {
         return url;
-    }
-
-    /**
-     * The file id is null if the thumbnail is not stored in learnweb.
-     */
-    public int getFileId() {
-        return fileId;
     }
 
     @Override
@@ -39,16 +28,16 @@ public class Thumbnail implements Serializable {
             return false;
         }
         final Thumbnail thumbnail = (Thumbnail) o;
-        return fileId == thumbnail.fileId;
+        return Objects.equals(url, thumbnail.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fileId);
+        return Objects.hash(url);
     }
 
     @Override
     public String toString() {
-        return "Thumbnail [url=" + url + ", fileId=" + fileId + "]";
+        return "Thumbnail [url=" + url + "]";
     }
 }

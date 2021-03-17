@@ -177,22 +177,6 @@ public interface ResourceDao extends SqlObject, Serializable {
                 // TODO @astappiev: improve copy performance by using fs copy
                 getFileDao().save(copyFile, file.getInputStream());
                 resource.addFile(copyFile);
-
-                if (file.getType() == File.FileType.MAIN) {
-                    resource.setFileId(file.getId());
-                }
-
-                if (file.getType() == File.FileType.THUMBNAIL_SMALL) {
-                    resource.setThumbnailSmall(new Thumbnail(file));
-                }
-
-                if (file.getType() == File.FileType.THUMBNAIL_MEDIUM) {
-                    resource.setThumbnailMedium(new Thumbnail(file));
-                }
-
-                if (file.getType() == File.FileType.THUMBNAIL_LARGE) {
-                    resource.setThumbnailLarge(new Thumbnail(file));
-                }
             }
 
             save(resource);
@@ -243,9 +227,9 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("group_id", SqlHelper.toNullable(resource.getGroupId()));
         params.put("folder_id", SqlHelper.toNullable(resource.getFolderId()));
         params.put("read_only_transcript", resource.isReadOnlyTranscript());
-        params.put("thumbnail0_file_id", resource.getThumbnailSmall() == null ? null : SqlHelper.toNullable(resource.getThumbnailSmall().getFileId()));
-        params.put("thumbnail2_file_id", resource.getThumbnailMedium() == null ? null : SqlHelper.toNullable(resource.getThumbnailMedium().getFileId()));
-        params.put("thumbnail4_file_id", resource.getThumbnailLarge() == null ? null : SqlHelper.toNullable(resource.getThumbnailLarge().getFileId()));
+        params.put("thumbnail0_file_id", resource.getThumbnailSmall() instanceof File ? ((File) resource.getThumbnailSmall()).getId() : null);
+        params.put("thumbnail2_file_id", resource.getThumbnailMedium() instanceof File ? ((File) resource.getThumbnailMedium()).getId() : null);
+        params.put("thumbnail4_file_id", resource.getThumbnailLarge() instanceof File ? ((File) resource.getThumbnailLarge()).getId() : null);
 
         Optional<Integer> resourceId = SqlHelper.handleSave(getHandle(), "lw_resource", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -351,7 +335,7 @@ public interface ResourceDao extends SqlObject, Serializable {
                 file.setId(fileId);
                 file.setName("thumbnail" + thumbnailSize + ".png");
                 file.setMimeType("image/png");
-                return new Thumbnail(file);
+                return file;
             } else {
                 return null;
             }
