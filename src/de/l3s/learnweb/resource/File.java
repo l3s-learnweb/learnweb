@@ -197,8 +197,8 @@ public class File extends Thumbnail implements HasId {
             return false;
         }
         final File file = (File) o;
-        return id == file.id && deleted == file.deleted && resourceId == file.resourceId && type == file.type && Objects.equals(name, file.name) &&
-            Objects.equals(mimeType, file.mimeType) && Objects.equals(updatedAt, file.updatedAt) && Objects.equals(createdAt, file.createdAt);
+        return id == file.id && deleted == file.deleted && resourceId == file.resourceId && type == file.type && Objects.equals(name, file.name)
+            && Objects.equals(mimeType, file.mimeType) && Objects.equals(updatedAt, file.updatedAt) && Objects.equals(createdAt, file.createdAt);
     }
 
     @Override
