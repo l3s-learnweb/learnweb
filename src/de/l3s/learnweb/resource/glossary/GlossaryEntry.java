@@ -20,7 +20,7 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     private int resourceId;
     private boolean deleted;
     private int userId; // the user who created this entry
-    private Integer lastChangedByUserId;
+    private int lastChangedByUserId;
     @Length(max = 900)
     private String description;
     private boolean descriptionPasted = false;
@@ -198,11 +198,11 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         this.terms.add(term);
     }
 
-    public Integer getLastChangedByUserId() {
+    public int getLastChangedByUserId() {
         return lastChangedByUserId;
     }
 
-    public void setLastChangedByUserId(Integer lastChangedByUserId) {
+    public void setLastChangedByUserId(int lastChangedByUserId) {
         this.lastChangedByUserId = lastChangedByUserId;
     }
 
