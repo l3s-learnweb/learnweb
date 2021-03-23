@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `lw_bans` (
 CREATE TABLE IF NOT EXISTS `lw_bounces` (
     `bounce_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `email` VARCHAR(64) DEFAULT NULL,
-    `received` TIMESTAMP NOT NULL,
+    `received` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `code` VARCHAR(10) NOT NULL,
     `description` VARCHAR(64) DEFAULT NULL,
     UNIQUE KEY `lw_bounces_email` (`email`)
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `lw_forum_post` (
     `post_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `deleted` TINYINT(1) NOT NULL DEFAULT 0,
     `topic_id` INT(10) UNSIGNED NOT NULL,
-    `user_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED DEFAULT NULL,
     `text` TEXT NOT NULL,
     `category` VARCHAR(70) DEFAULT '',
     `edit_count` SMALLINT(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `lw_forum_post` (
 CREATE TABLE IF NOT EXISTS `lw_forum_topic` (
     `topic_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `group_id` INT(10) UNSIGNED NOT NULL,
-    `user_id` INT(10) UNSIGNED NOT NULL,
+    `user_id` INT(10) UNSIGNED DEFAULT NULL,
     `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
     `title` VARCHAR(100) NOT NULL DEFAULT '',
     `views` INT(11) DEFAULT 0,
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `lw_glossary_entry` (
     `resource_id` INT(10) UNSIGNED NOT NULL,
     `original_entry_id` INT(10) UNSIGNED DEFAULT NULL,
     `edit_user_id` INT(10) UNSIGNED DEFAULT NULL,
-    `user_id` INT(10) UNSIGNED NULL,
+    `user_id` INT(10) UNSIGNED DEFAULT NULL,
     `deleted` TINYINT(1) NOT NULL DEFAULT 0,
     `topic_one` VARCHAR(100) DEFAULT NULL,
     `topic_two` VARCHAR(100) DEFAULT NULL,
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `lw_glossary_term` (
     `entry_id` INT(10) UNSIGNED NOT NULL,
     `original_term_id` INT(10) UNSIGNED DEFAULT NULL,
     `edit_user_id` INT(10) UNSIGNED DEFAULT NULL,
-    `user_id` INT(10) UNSIGNED NULL,
+    `user_id` INT(10) UNSIGNED DEFAULT NULL,
     `deleted` TINYINT(1) NOT NULL DEFAULT 0,
     `term` VARCHAR(500) DEFAULT NULL,
     `term_pasted` TINYINT(4) NOT NULL DEFAULT 0,
@@ -232,13 +232,13 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `title` VARCHAR(1000) NOT NULL,
     `description` MEDIUMTEXT DEFAULT NULL,
     `url` VARCHAR(4000) DEFAULT NULL,
-    `storage_type` ENUM('LEARNWEB','WEB') NOT NULL DEFAULT 'LEARNWEB',
-    `policy_view` ENUM('DEFAULT_RIGHTS','SUBMISSION_READABLE','LEARNWEB_READABLE','WORLD_READABLE') NOT NULL DEFAULT 'DEFAULT_RIGHTS',
+    `storage_type` ENUM ('LEARNWEB','WEB') NOT NULL DEFAULT 'LEARNWEB',
+    `policy_view` ENUM ('DEFAULT_RIGHTS','SUBMISSION_READABLE','LEARNWEB_READABLE','WORLD_READABLE') NOT NULL DEFAULT 'DEFAULT_RIGHTS',
     `service` ENUM ('bing','flickr','giphy','youtube','vimeo','ipernity','ted','tedx','loro','yovisto','learnweb','archiveit','teded','factcheck','desktop','internet','slideshare','speechrepository') NOT NULL,
     `language` VARCHAR(200) DEFAULT NULL,
     `author` VARCHAR(255) DEFAULT NULL,
     `type` ENUM ('text','video','image','audio','pdf','website','spreadsheet','presentation','document','file','survey','glossary') NOT NULL,
-    `format` VARCHAR(255) NOT NULL,
+    `format` VARCHAR(255) DEFAULT NULL,
     `duration` INT(10) UNSIGNED DEFAULT NULL,
     `width` INT(10) UNSIGNED DEFAULT NULL,
     `height` INT(10) UNSIGNED DEFAULT NULL,
@@ -262,22 +262,22 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     KEY `lw_resource_owner_user_id` (`owner_user_id`, `deleted`)
 );
 
-CREATE TABLE IF NOT EXISTS `lw_resource_file` (
-    `resource_id` INT(10) UNSIGNED NOT NULL,
-    `file_id` INT(10) UNSIGNED NOT NULL,
-    PRIMARY KEY (`resource_id`, `file_id`)
-);
-
 CREATE TABLE IF NOT EXISTS `lw_resource_archiveurl` (
     `resource_id` INT(10) UNSIGNED NOT NULL,
     `archive_url` VARCHAR(600) NOT NULL,
     `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
 );
 
+CREATE TABLE IF NOT EXISTS `lw_resource_file` (
+    `resource_id` INT(10) UNSIGNED NOT NULL,
+    `file_id` INT(10) UNSIGNED NOT NULL,
+    PRIMARY KEY (`resource_id`, `file_id`)
+);
+
 CREATE TABLE IF NOT EXISTS `lw_resource_history` (
     `resource_history_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `resource_id` INT(10) UNSIGNED NOT NULL,
-    `user_id` INT(10) UNSIGNED NULL,
+    `user_id` INT(10) UNSIGNED DEFAULT NULL,
     `file_id` INT(10) UNSIGNED NOT NULL,
     `prev_file_id` INT(10) UNSIGNED NOT NULL,
     `changes_file_id` INT(10) UNSIGNED NOT NULL,
