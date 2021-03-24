@@ -65,15 +65,18 @@
     }
   }
 
-  &.ui-button-text-icon-right {
-    .ui-button-text {
-      padding: $input-btn-padding-y $input-btn-padding-x*2.333 $input-btn-padding-y $input-btn-padding-x;
-    }
+//    Disabled because Primefaces uses .ui-button-text-icon-right when no icon is set.
+//    Since we never use text-icon right it should be fine to remove this rule.
 
-    .ui-icon {
-      margin-top: -1*($input-btn-padding-y*1.5);
-    }
-  }
+//    &.ui-button-text-icon-right {
+//      .ui-button-text {
+//        padding: $input-btn-padding-y $input-btn-padding-x*2.333 $input-btn-padding-y $input-btn-padding-x;
+//      }
+
+//      .ui-icon {
+//        margin-top: -1*($input-btn-padding-y*1.5);
+//      }
+//    }
 
   &.ui-button-icon-only {
     margin-right: 0;
