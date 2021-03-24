@@ -90,7 +90,7 @@ public class DownloadServlet extends HttpServlet {
             // Check if file actually exists in the filesystem.
             File file = fileDao.findByIdOrElseThrow(fileId);
 
-            if (file.getType().isResourceFile()) {
+            if (file.getType().isResourceFile() && file.getType() != File.FileType.THUMBNAIL_SMALL) {
                 String referrer = request.getHeader("referer");
 
                 if (StringUtils.isNotEmpty(referrer)) {

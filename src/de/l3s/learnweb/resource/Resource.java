@@ -813,7 +813,11 @@ public class Resource extends AbstractResource implements Serializable {
 
     public String getThumbnailSmall() {
         if (thumbnailSmall == null && getFile(FileType.THUMBNAIL_SMALL) != null) {
-            thumbnailSmall = getFile(FileType.THUMBNAIL_SMALL).getResourceUrl(id);
+            if (id == 0) { // when resource is uploaded, but not yet saved it has no id
+                thumbnailSmall = getFile(FileType.THUMBNAIL_SMALL).getSimpleUrl();
+            } else {
+                thumbnailSmall = getFile(FileType.THUMBNAIL_SMALL).getResourceUrl(id);
+            }
         }
         return thumbnailSmall;
     }

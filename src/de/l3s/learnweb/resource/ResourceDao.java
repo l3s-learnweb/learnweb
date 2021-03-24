@@ -203,6 +203,7 @@ public interface ResourceDao extends SqlObject, Serializable {
 
         resourceId.ifPresent(id -> {
             resource.setId(id);
+            resource.setThumbnailSmall(null);
             cache.put(resource);
         });
 

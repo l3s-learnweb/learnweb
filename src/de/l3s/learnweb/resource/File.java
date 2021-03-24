@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.logging.log4j.LogManager;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.HasId;
@@ -54,7 +55,7 @@ public class File implements Serializable, HasId {
     private LocalDateTime createdAt;
 
     // runtime fields
-    private String url;
+    private String urlSuffix;
     private String absoluteUrl;
     private java.io.File actualFile;
     private Boolean exists; // `true` if the actual file exist on this machine
@@ -114,21 +115,29 @@ public class File implements Serializable, HasId {
     }
 
     public String getSimpleUrl() {
-        return "../download/" + id + "/" + URLEncoder.encode(name, StandardCharsets.UTF_8);
-    }
-
-    public String getResourceUrl(int resourceId) {
-        if (url == null && resourceId != 0) {
-            url = "../file/" + resourceId + "/" + id + "/" + URLEncoder.encode(name, StandardCharsets.UTF_8);
-        }
-        return url;
+        return "../download/" + getUrlSuffix();
     }
 
     public String getAbsoluteUrl() {
         if (absoluteUrl == null) {
-            absoluteUrl = Learnweb.config().getServerUrl() + getSimpleUrl().substring(2);
+            absoluteUrl = Learnweb.config().getServerUrl() + "/download/" + getUrlSuffix();
         }
         return absoluteUrl;
+    }
+
+    public String getResourceUrl(int resourceId) {
+        if (resourceId == 0) {
+            LogManager.getLogger(File.class).error("getResourceUrl called with resourceId == 0", new Exception()); // FIXME: remove after a while
+            return null;
+        }
+        return "../file/" + resourceId + "/" + getUrlSuffix();
+    }
+
+    private String getUrlSuffix() {
+        if (urlSuffix == null) {
+            urlSuffix = id + "/" + URLEncoder.encode(name, StandardCharsets.UTF_8);
+        }
+        return urlSuffix;
     }
 
     /**
