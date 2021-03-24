@@ -96,6 +96,8 @@ public class DownloadServlet extends HttpServlet {
                 throw BeanAssert.NOT_FOUND.get();
             }
 
+            // Consistency check: Files which are attached to a resource should be accessed through the other FileDownloadServlet.
+            // Except for small thumbnail files which are shown during resource upload and thus are not connected to a resource yet.
             if (file.getType().isResourceFile() && file.getType() != File.FileType.THUMBNAIL_SMALL) {
                 String requestSummery = BeanHelper.getRequestSummary(request);
                 // log error only when request has a referrer or comes from a logged in user

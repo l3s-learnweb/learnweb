@@ -59,6 +59,7 @@ public class UserBean implements Serializable {
     private transient Organisation activeOrganisation;
 
     private boolean guided; // indicates that the user has started one of the guides
+    private transient String bannerLink; // link to the homepage. This may vary depending on the login state and the user's organisation
 
     @PostConstruct
     public void init() {
@@ -118,6 +119,7 @@ public class UserBean implements Serializable {
         this.newGroups = null;
         this.cacheShowMessageJoinGroup = true;
         this.cacheShowMessageAddResource = true;
+        this.bannerLink = null;
 
         refreshLocale();
         String clientInfo = storeMetadataInSession(request);
@@ -294,11 +296,14 @@ public class UserBean implements Serializable {
     }
 
     public String getBannerLink() {
-        if (!isLoggedIn()) {
-            return "/";
+        if (bannerLink == null) {
+            if (!isLoggedIn()) {
+                bannerLink = Faces.getRequestContextPath() + "/";
+            } else {
+                bannerLink = Faces.getRequestContextPath() + getActiveOrganisation().getWelcomePage();
+            }
         }
-
-        return getActiveOrganisation().getWelcomePage();
+        return bannerLink;
     }
 
     /**

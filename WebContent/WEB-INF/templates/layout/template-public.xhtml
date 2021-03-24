@@ -25,7 +25,7 @@
                 <header class="layout-header bg-primary">
                     <div class="container d-flex flex-row align-items-center">
                         <div class="d-flex ms-sm-0 me-auto">
-                            <a href="#{userBean.loggedIn ? userBean.bannerLink : request.contextPath}" class="header-element header-logo no-hover-bg">
+                            <a href="#{userBean.bannerLink}" class="header-element header-logo no-hover-bg">
                                 <h:graphicImage library="images" name="learnweb_logo.png" alt="#{msg['application.name']}" styleClass="w-inherit"/>
                             </a>
                         </div>
