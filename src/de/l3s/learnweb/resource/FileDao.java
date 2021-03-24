@@ -46,7 +46,7 @@ public interface FileDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_file")
     Stream<File> findAll();
 
-    @SqlQuery("SELECT f.* FROM lw_file f JOIN lw_resource_file rf USING (file_id) WHERE rf.resource_id = ?")
+    @SqlQuery("SELECT f.* FROM lw_file f JOIN lw_resource_file rf USING (file_id) WHERE rf.resource_id = ? ORDER BY f.file_id DESC")
     List<File> findByResourceId(int resourceId);
 
     default void insertResourceFiles(Resource resource, Collection<File> files) {

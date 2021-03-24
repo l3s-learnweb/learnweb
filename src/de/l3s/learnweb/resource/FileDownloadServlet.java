@@ -81,7 +81,7 @@ public class FileDownloadServlet extends DownloadServlet {
             // Get user from session
             User user = userBean.getUser();
 
-            BeanAssert.validate(file.getName().equals(fileName)); // validate file name
+            BeanAssert.validate(file.getEncodedName().equals(fileName)); // validate file name
             BeanAssert.validate(resource.getFiles().containsValue(file)); // validate the file belongs to the resource
             BeanAssert.hasPermission(resource.canViewResource(user)); // validate user has access to the resource
 
