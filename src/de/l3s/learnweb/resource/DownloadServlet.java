@@ -91,7 +91,11 @@ public class DownloadServlet extends HttpServlet {
             File file = fileDao.findByIdOrElseThrow(fileId);
 
             if (file.getType().isResourceFile()) {
-                log.error("A file requested using inappropriate servlet: request: {}, referer: {}", requestURI, request.getHeader("referer"));
+                String referrer = request.getHeader("referer");
+
+                if (StringUtils.isNotEmpty(referrer)) {
+                    log.error("A file requested using inappropriate servlet: request: {}, referer: {}", requestURI, referrer);
+                }
             }
 
             sendFile(request, response, file, content);

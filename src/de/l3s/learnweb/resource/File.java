@@ -118,7 +118,7 @@ public class File implements Serializable, HasId {
     }
 
     public String getResourceUrl(int resourceId) {
-        if (url == null) {
+        if (url == null && resourceId != 0) {
             url = "../file/" + resourceId + "/" + id + "/" + URLEncoder.encode(name, StandardCharsets.UTF_8);
         }
         return url;
