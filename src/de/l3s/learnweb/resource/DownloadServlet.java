@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.util.bean.BeanHelper;
 
@@ -70,13 +71,13 @@ public class DownloadServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content) throws IOException {
         try {
+            String referrer = request.getHeader("referer");
             String requestURI = request.getRequestURI();
             // remove the servlet's urlPattern
             requestURI = requestURI.substring(requestURI.indexOf(URL_PATTERN) + URL_PATTERN.length());
 
             String[] partsURI = requestURI.split("/");
             if (partsURI.length != 2 || !NumberUtils.isCreatable(partsURI[0]) || StringUtils.isBlank(partsURI[1])) { // download url is incomplete
-                String referrer = request.getHeader("referer");
 
                 // only log the error if the referrer is uni-hannover.de. Otherwise we have no chance to fix the link
                 Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
@@ -90,12 +91,16 @@ public class DownloadServlet extends HttpServlet {
             // Check if file actually exists in the filesystem.
             File file = fileDao.findByIdOrElseThrow(fileId);
 
-            if (file.getType().isResourceFile() && file.getType() != File.FileType.THUMBNAIL_SMALL) {
-                String referrer = request.getHeader("referer");
+            if (!file.isExists()) {
+                log.error("File doesn't exist in the file system (happens when files are created locally but not on the server); file: {}: request: {}", fileId, BeanHelper.getRequestSummary(request));
+                throw BeanAssert.NOT_FOUND.get();
+            }
 
-                if (StringUtils.isNotEmpty(referrer)) {
-                    log.error("A file requested using inappropriate servlet: request: {}, referer: {}", requestURI, referrer);
-                }
+            if (file.getType().isResourceFile() && file.getType() != File.FileType.THUMBNAIL_SMALL) {
+                String requestSummery = BeanHelper.getRequestSummary(request);
+                // log error only when request has a referrer or comes from a logged in user
+                Level logLevel = referrer != null || requestSummery.contains("userId") ? Level.ERROR : Level.WARN;
+                log.log(logLevel, "A file requested using inappropriate servlet; request: {}; {}", requestURI, requestSummery);
             }
 
             sendFile(request, response, file, content);

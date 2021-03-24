@@ -88,7 +88,7 @@ public class FileDownloadServlet extends DownloadServlet {
             if (file.getType() == File.FileType.MAIN) { // log download of main file
                 if (null != user) {
                     HttpSession session = request.getSession(true);
-                    logDao.insert(user, Action.downloading, 0, resourceId, Integer.toString(file.getId()), session.getId());
+                    logDao.insert(user, Action.downloading, resource.getGroupId(), resourceId, Integer.toString(file.getId()), session.getId());
                 }
             }
 

@@ -24,7 +24,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.FetchSize;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
-import de.l3s.learnweb.exceptions.NotFoundHttpException;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
@@ -39,7 +39,7 @@ public interface FileDao extends SqlObject, Serializable {
     }
 
     default File findByIdOrElseThrow(int fileId) {
-        return findById(fileId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_object_description"));
+        return findById(fileId).orElseThrow(BeanAssert.NOT_FOUND);
     }
 
     @FetchSize(1000)
