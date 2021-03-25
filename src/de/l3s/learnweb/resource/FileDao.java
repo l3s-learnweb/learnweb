@@ -46,7 +46,7 @@ public interface FileDao extends SqlObject, Serializable {
 
         // Check if file actually exists in the file system.
         if (!includeMissingFiles && file.isPresent() && !file.get().isExists()) {
-            throw BeanAssert.NOT_FOUND.get();
+            return Optional.empty();
         }
 
         return file;

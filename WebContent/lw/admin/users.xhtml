@@ -58,7 +58,11 @@
                         <p:dataExporter type="csv" target="users_table" fileName="users"/>
                     </h:commandLink>
                 </h:panelGroup>
-            </f:facet>
+            </f:facet>         
+
+            <p:column filterBy="#{userView.id}" filterMatchMode="exact" headerText="ID" sortBy="#{userView.id}" rendered="#{userBean.admin}">
+                <h:outputText value="#{userView.id}"/>
+            </p:column>
 
             <p:column filterBy="#{userView.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{userView.realUsername}">
                 <p:link outcome="/lw/myhome/profile" value="#{userView.realUsername}" id="username">
