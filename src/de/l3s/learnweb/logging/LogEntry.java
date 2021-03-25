@@ -102,7 +102,7 @@ public class LogEntry implements Serializable {
         Group group = getGroup();
 
         if (null == group) {
-            return "Deleted group";
+            return "<b>Deleted group</b>";
         } else {
             return "<a href=\"group/overview.jsf?group_id=" + getGroupId() + "\" target=\"_top\">" + group.getTitle() + "</a> ";
         }
@@ -110,7 +110,7 @@ public class LogEntry implements Serializable {
 
     private String getUsernameLink(Locale locale) {
         if (getUser() == null || getUser().isDeleted()) {
-            return "Deleted user";
+            return "<b>Deleted user</b>";
         }
         return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getUsername() + "</a>";
     }

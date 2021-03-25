@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.Organisation;
@@ -53,6 +54,9 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
     @Inject
     private UserDao userDao;
 
+    @Inject
+    private LogDao logDao;
+
     public void onLoad() {
         User user = getUser();
         BeanAssert.authorized(user);
@@ -82,7 +86,8 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
 
     public void fetchAllLogs() {
         showAllLogs = true;
-        logMessages = dao().getLogDao().findByGroupId(groupId, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER));
+        logMessages = logDao.findByGroupId(groupId, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER));
+        removeForeignResources(logMessages);
     }
 
     public boolean isShowAllLogs() {
@@ -91,7 +96,8 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
 
     public List<LogEntry> getLogMessages() {
         if (null == logMessages) {
-            logMessages = dao().getLogDao().findByGroupId(groupId, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER), ACTIVITY_LIST_LIMIT);
+            logMessages = logDao.findByGroupId(groupId, Action.collectOrdinals(Action.LOGS_DEFAULT_FILTER), ACTIVITY_LIST_LIMIT);
+            removeForeignResources(logMessages);
         }
         return logMessages;
     }
@@ -121,8 +127,13 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable {
         }
     }
 
+    private void removeForeignResources(List<LogEntry> logs) {
+        logs.removeIf(logEntry -> logEntry.getResource() != null && logEntry.getResource().getGroupId() != groupId);
+    }
+
     private SummaryOverview createSummaryOverview(LocalDateTime from, LocalDateTime to) {
-        List<LogEntry> logs = dao().getLogDao().findByGroupIdBetweenTime(groupId, Action.collectOrdinals(OVERVIEW_ACTIONS), from, to);
+        List<LogEntry> logs = logDao.findByGroupIdBetweenTime(groupId, Action.collectOrdinals(OVERVIEW_ACTIONS), from, to);
+        removeForeignResources(logs);
 
         if (logs.isEmpty()) {
             return null;

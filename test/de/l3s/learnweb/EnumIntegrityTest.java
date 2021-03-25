@@ -100,13 +100,19 @@ class EnumIntegrityTest {
         assertArrayEquals(Arrays.stream(SearchMode.values()).map(Enum::name).toArray(), getDatabaseColumnEnumValues("learnweb_large.sl_query", "mode"));
     }
 
-    private String getDatabaseColumnType(final String tableName, final String columnName) throws SQLException {
+    private String getDatabaseColumnType(String tableName, final String columnName) throws SQLException {
         // the default database name is the ones provided in database url, so we need to retrieve it
         String catalog = learnwebExt.getHandle().getConnection().getCatalog(); // random UUID for H2, database name for MySQL
         String schema = learnwebExt.getHandle().getConnection().getSchema(); // `PUBLIC` for H2, null for MySQL
 
+        if (tableName.contains(".")) {
+            String[] parts = tableName.split("\\.");
+            schema = parts[0];
+            tableName = parts[1];
+        }
+
         // IDK why, but mysql requires that TABLE_NAME values was lowercase and H2 requires uppercase, so this LOWER is necessary here!
-        return learnwebExt.getHandle().select("SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND "
+        return learnwebExt.getHandle().select("SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE LOWER(TABLE_SCHEMA) = LOWER(?) AND "
             + "LOWER(TABLE_NAME) = LOWER(?) AND LOWER(COLUMN_NAME) = LOWER(?)", ObjectUtils.firstNonNull(schema, catalog), tableName, columnName).mapTo(String.class).one();
     }
 
