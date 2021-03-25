@@ -119,10 +119,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
 
-            if (selectedUser.getImageFileId() != 0) {
-                fileDao.deleteHard(selectedUser.getImageFile());
-            }
-
+            selectedUser.getImageFile().ifPresent(image -> fileDao.deleteHard(image)); // delete old image
             selectedUser.setImageFileId(file.getId());
             selectedUser.setGuide(User.Guide.ADD_PHOTO, true);
             userDao.save(selectedUser);

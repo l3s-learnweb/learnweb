@@ -58,13 +58,14 @@ public class UsersAddMissingProfilePictures extends MaintenanceTask {
     private void deleteMissingAvatars() {
         List<User> users = userDao.findAll();
         for (User user : users) {
-            File file = user.getImageFile();
+            File file = fileDao.findById(user.getImageFileId(), true).get();
             if (null != file && !file.isExists()) {
-                log.debug("Update user: {}", user);
+                log.debug("Image file {} of user {} doesn't exist", file, user);
+                /*
                 fileDao.deleteHard(file);
-
                 user.setImageFileId(0);
                 userDao.save(user);
+                */
             }
         }
     }

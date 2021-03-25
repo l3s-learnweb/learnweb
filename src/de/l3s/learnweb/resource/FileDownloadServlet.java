@@ -77,12 +77,6 @@ public class FileDownloadServlet extends DownloadServlet {
             // Check && retrieve file
             File file = fileDao.findByIdOrElseThrow(fileId);
 
-            // Check if file actually exists in the file system.
-            if (!file.isExists()) {
-                log.error("File doesn't exist in the file system (happens when files are created locally but not on the server); file: {}: request: {}", fileId, BeanHelper.getRequestSummary(request));
-                throw BeanAssert.NOT_FOUND.get();
-            }
-
             // Check && retrieve resource
             Resource resource = resourceDao.findByIdOrElseThrow(resourceId);
             // Get user from session

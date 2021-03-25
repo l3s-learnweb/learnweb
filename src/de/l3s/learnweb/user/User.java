@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -438,26 +439,25 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         this.moderator = moderator;
     }
 
+    private String getFallbackImage() {
+        return ProfileImageHelper.getProfilePicture(StringUtils.firstNonBlank(fullName, username));
+    }
+
     /**
      * @return the url of the users image or a default image if no image has been added
      */
     public String getImageUrl() {
         if (imageUrl == null) {
-            imageUrl = imageFileId != 0 ? getImageFile().getSimpleUrl() : ProfileImageHelper.getProfilePicture(StringUtils.firstNonBlank(fullName, username));
+            imageUrl = getImageFile().map(image -> image.getSimpleUrl()).orElse(getFallbackImage());
         }
         return imageUrl;
     }
 
     /**
      * return the File of the profile picture.
-     *
-     * @return Null if not present
      */
-    public File getImageFile() {
-        if (imageFileId != 0) {
-            return Learnweb.dao().getFileDao().findByIdOrElseThrow(imageFileId);
-        }
-        return null;
+    public Optional<File> getImageFile() {
+        return Learnweb.dao().getFileDao().findById(imageFileId);
     }
 
     public int getImageFileId() {

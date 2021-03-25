@@ -34,8 +34,22 @@ public interface FileDao extends SqlObject, Serializable {
     ICache<File> cache = new Cache<>(3000);
 
     default Optional<File> findById(int fileId) {
-        return Optional.ofNullable(cache.get(fileId))
+        return findById(fileId, false);
+    }
+
+    default Optional<File> findById(int fileId, boolean includeMissingFiles) {
+        if (fileId == 0) {
+            return Optional.empty();
+        }
+        Optional<File> file = Optional.ofNullable(cache.get(fileId))
             .or(() -> getHandle().select("SELECT * FROM lw_file WHERE file_id = ?", fileId).mapTo(File.class).findOne());
+
+        // Check if file actually exists in the file system.
+        if (!includeMissingFiles && file.isPresent() && !file.get().isExists()) {
+            throw BeanAssert.NOT_FOUND.get();
+        }
+
+        return file;
     }
 
     default File findByIdOrElseThrow(int fileId) {
@@ -131,7 +145,7 @@ public interface FileDao extends SqlObject, Serializable {
                 file.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
 
                 if (!file.isExists()) {
-                    log.warn("Can't find file {} at '{}'", file.getId(), file.getActualFile().getAbsolutePath());
+                    log.error("Can't find file {} at '{}'", file.getId(), file.getActualFile().getAbsolutePath());
                 }
 
                 cache.put(file);

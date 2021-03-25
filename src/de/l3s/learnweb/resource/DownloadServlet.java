@@ -22,7 +22,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.util.bean.BeanHelper;
 
@@ -89,12 +88,6 @@ public class DownloadServlet extends HttpServlet {
             int fileId = NumberUtils.toInt(partsURI[0]);
 
             File file = fileDao.findByIdOrElseThrow(fileId);
-
-            // Check if file actually exists in the file system.
-            if (!file.isExists()) {
-                log.error("File doesn't exist in the file system (happens when files are created locally but not on the server); file: {}: request: {}", fileId, BeanHelper.getRequestSummary(request));
-                throw BeanAssert.NOT_FOUND.get();
-            }
 
             // TODO: When implementing access control remember that some files have to be accessed by our converter and other services. See File.getAbsoluteUrl()
 
