@@ -769,6 +769,7 @@ public class Resource extends AbstractResource implements Serializable {
             addedFiles.add(file);
             getFiles().put(file.getType(), file);
 
+            // clear caches
             if (file.getType() == FileType.THUMBNAIL_SMALL) {
                 thumbnailSmall = null;
             } else if (file.getType() == FileType.THUMBNAIL_MEDIUM) {

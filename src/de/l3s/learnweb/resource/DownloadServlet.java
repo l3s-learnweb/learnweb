@@ -88,13 +88,15 @@ public class DownloadServlet extends HttpServlet {
 
             int fileId = NumberUtils.toInt(partsURI[0]);
 
-            // Check if file actually exists in the filesystem.
             File file = fileDao.findByIdOrElseThrow(fileId);
 
+            // Check if file actually exists in the file system.
             if (!file.isExists()) {
                 log.error("File doesn't exist in the file system (happens when files are created locally but not on the server); file: {}: request: {}", fileId, BeanHelper.getRequestSummary(request));
                 throw BeanAssert.NOT_FOUND.get();
             }
+
+            // TODO: When implementing access control remember that some files have to be accessed by our converter and other services. See File.getAbsoluteUrl()
 
             // Consistency check: Files which are attached to a resource should be accessed through the other FileDownloadServlet.
             // Except for small thumbnail files which are shown during resource upload and thus are not connected to a resource yet.
