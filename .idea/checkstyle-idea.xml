@@ -11,7 +11,7 @@
         <entry key="location-2" value="PROJECT_RELATIVE:$PROJECT_DIR$/.mvn/checkstyle-config.xml:Learnweb styles (mvn)" />
         <entry key="property-2.org.checkstyle.sun.suppressionfilter.config" value="" />
         <entry key="property-2.org.checkstyle.sun.suppressionxpathfilter.config" value="" />
-        <entry key="scan-before-checkin" value="false" />
+        <entry key="scan-before-checkin" value="true" />
         <entry key="scanscope" value="Everything" />
         <entry key="suppress-errors" value="true" />
       </map>
