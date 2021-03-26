@@ -138,7 +138,7 @@ public class File implements Serializable, HasId {
             LogManager.getLogger(File.class).error("getResourceUrl called with resourceId == 0", new Exception()); // FIXME: remove after a while and replace with an exception
             return null;
         }
-        return "../file/" + resourceId + "/" + getUrlSuffix();
+        return "../download/" + resourceId + "/" + getUrlSuffix();
     }
 
     private String getUrlSuffix() {

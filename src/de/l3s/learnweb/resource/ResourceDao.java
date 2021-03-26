@@ -40,6 +40,9 @@ public interface ResourceDao extends SqlObject, Serializable {
     FileDao getFileDao();
 
     default Optional<Resource> findById(int resourceId) {
+        if (resourceId == 0) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(cache.get(resourceId))
             .or(() -> getHandle().select("SELECT * FROM lw_resource WHERE resource_id = ?", resourceId).mapTo(Resource.class).findOne());
     }

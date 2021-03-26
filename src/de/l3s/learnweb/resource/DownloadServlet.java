@@ -8,6 +8,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.servlet.ServletOutputStream;
@@ -15,14 +16,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogDao;
+import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserBean;
 import de.l3s.util.bean.BeanHelper;
 
 /**
@@ -41,6 +47,15 @@ public class DownloadServlet extends HttpServlet {
 
     @Inject
     private FileDao fileDao;
+
+    @Inject
+    private ResourceDao resourceDao;
+
+    @Inject
+    private UserBean userBean;
+
+    @Inject
+    private LogDao logDao;
 
     /**
      * Process HEAD request. This returns the same headers as GET request, but without content.
@@ -71,34 +86,12 @@ public class DownloadServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content) throws IOException {
         try {
             String referrer = request.getHeader("referer");
-            String requestURI = request.getRequestURI();
-            // remove the servlet's urlPattern
-            requestURI = requestURI.substring(requestURI.indexOf(URL_PATTERN) + URL_PATTERN.length());
+            String requestURI = StringUtils.substringAfter(request.getRequestURI(), URL_PATTERN); // remove the servlet's urlPattern
+            RequestData requestData = parseRequestURI(request, requestURI, referrer);
 
-            String[] partsURI = requestURI.split("/");
-            if (partsURI.length != 2 || !NumberUtils.isCreatable(partsURI[0]) || StringUtils.isBlank(partsURI[1])) { // download url is incomplete
-
-                // only log the error if the referrer is uni-hannover.de. Otherwise we have no chance to fix the link
-                Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
-                log.log(logLevel, "Invalid download URL: {}; {}", requestURI, BeanHelper.getRequestSummary(request));
-
-                throw new HttpException(HttpServletResponse.SC_BAD_REQUEST);
-            }
-
-            int fileId = NumberUtils.toInt(partsURI[0]);
-
-            File file = fileDao.findByIdOrElseThrow(fileId);
-
-            // TODO: When implementing access control remember that some files have to be accessed by our converter and other services. See File.getAbsoluteUrl()
-
-            // Consistency check: Files which are attached to a resource should be accessed through the other FileDownloadServlet.
-            // Except for small thumbnail files which are shown during resource upload and thus are not connected to a resource yet.
-            if (file.getType().isResourceFile() && file.getType() != File.FileType.THUMBNAIL_SMALL) {
-                String requestSummery = BeanHelper.getRequestSummary(request);
-                // log error only when request has a referrer or comes from a logged in user
-                Level logLevel = referrer != null || requestSummery.contains("userId") ? Level.ERROR : Level.WARN;
-                log.log(logLevel, "A file requested using inappropriate servlet; request: {}; {}", requestURI, requestSummery);
-            }
+            // Check && retrieve file, if the file is missing will throw an error
+            File file = fileDao.findByIdOrElseThrow(requestData.fileId);
+            validatePermissions(request, file, requestData, referrer);
 
             sendFile(request, response, file, content);
         } catch (HttpException e) {
@@ -107,6 +100,67 @@ public class DownloadServlet extends HttpServlet {
         } catch (Exception e) {
             log.fatal("Unexpected error in download servlet {}", request.getRequestURI(), e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    protected RequestData parseRequestURI(HttpServletRequest request, String requestURI, String referrer) {
+        String[] partsURI = requestURI.split("/");
+
+        try {
+            if (partsURI.length == 2) {
+                return new RequestData(0, Integer.parseInt(partsURI[0]), partsURI[1]);
+            }
+
+            if (partsURI.length == 3) {
+                return new RequestData(Integer.parseInt(partsURI[0]), Integer.parseInt(partsURI[1]), partsURI[2]);
+            }
+
+            throw new IllegalArgumentException();
+        } catch (IllegalArgumentException e) {
+            // only log the error if the referrer is uni-hannover.de. Otherwise we have no chance to fix the link
+            Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
+            log.log(logLevel, "Invalid download URL: {}; {}", requestURI, BeanHelper.getRequestSummary(request));
+            throw new HttpException(HttpServletResponse.SC_BAD_REQUEST, "Download URL is invalid", e);
+        }
+    }
+
+    protected void validatePermissions(HttpServletRequest request, File file, RequestData requestData, String referrer) {
+        if (!file.getType().isResourceFile()) {
+            return;
+        }
+
+        // Small thumbnail files which are shown during resource upload and thus are not connected to a resource yet.
+        if (file.getType() == File.FileType.THUMBNAIL_SMALL) {
+            return;
+        }
+
+        // Check && retrieve resource
+        Optional<Resource> resource = resourceDao.findById(requestData.resourceId);
+
+        // Files which are attached to a resource should have the resourceId in the url
+        if (resource.isEmpty()) {
+            String requestSummery = BeanHelper.getRequestSummary(request);
+            // log error only when request has a referrer or comes from a logged in user
+            Level logLevel = referrer != null || requestSummery.contains("userId:") ? Level.ERROR : Level.WARN;
+            log.log(logLevel, "A resource file accessed without resourceId in the URL; {}", requestSummery);
+
+            // TODO: When implementing access control remember that some files have to be accessed by our converter and other services. See File.getAbsoluteUrl()
+            return;
+        }
+
+        // Get user from session
+        User user = userBean.getUser();
+
+        BeanAssert.validate(file.getEncodedName().equals(requestData.fileName)); // validate file name
+        BeanAssert.validate(resource.get().getFiles().containsValue(file)); // validate the file belongs to the resource
+        BeanAssert.hasPermission(resource.get().canViewResource(user)); // validate user has access to the resource
+
+        // log downloading of the MAIN files
+        if (file.getType() == File.FileType.MAIN) {
+            if (null != user) {
+                HttpSession session = request.getSession(true);
+                logDao.insert(user, Action.downloading, resource.get().getGroupId(), resource.get().getId(), Integer.toString(file.getId()), session.getId());
+            }
         }
     }
 
@@ -416,6 +470,22 @@ public class DownloadServlet extends HttpServlet {
             this.end = end;
             this.length = end - start + 1;
             this.total = total;
+        }
+    }
+
+    protected static class RequestData {
+        final int resourceId;
+        final int fileId;
+        final String fileName;
+
+        RequestData(int resourceId, int fileId, String fileName) {
+            this.resourceId = resourceId;
+            this.fileId = fileId;
+            this.fileName = fileName;
+
+            if (fileId == 0 || StringUtils.isEmpty(fileName)) {
+                throw new IllegalArgumentException();
+            }
         }
     }
 
