@@ -101,8 +101,10 @@
                     </h:panelGroup>
 
                     <h:panelGroup styleClass="row mx-0" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}" layout="block">
-                        <div class="search-carousel-image col-6" style="background-image:url('#{gr.resources[0].smallThumbnail}');"></div>
-                        <div class="search-carousel-image col-6" style="background-image:url('#{gr.resources[1].smallThumbnail}');"></div>
+                        <div class="search-carousel-image col-6" style="background-image:url('#{gr.resources[0].thumbnailSmall}');"></div>
+                        <ui:fragment rendered="#{gr.totalResources > 1}">
+                            <div class="search-carousel-image col-6" style="background-image:url('#{gr.resources[1].thumbnailSmall}');"></div>
+                        </ui:fragment>
                     </h:panelGroup>
                 </h:link>
             </p:carousel>
