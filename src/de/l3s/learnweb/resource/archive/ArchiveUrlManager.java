@@ -19,8 +19,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +30,7 @@ import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 
-@Singleton
+@ApplicationScoped
 public final class ArchiveUrlManager {
     private static final Logger log = LogManager.getLogger(ArchiveUrlManager.class);
 
