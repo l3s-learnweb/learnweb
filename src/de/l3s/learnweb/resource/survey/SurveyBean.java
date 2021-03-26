@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,10 +32,13 @@ public class SurveyBean extends ApplicationBean implements Serializable {
     private String goBackPageLink; // link to the go back page derived from goBackPage name
     private String goBackPageTitle; //  title of the go back link
 
+    @Inject
+    private SurveyDao surveyDao;
+
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        resource = dao().getSurveyDao().findResourceById(surveyResourceId).orElseThrow(BeanAssert.NOT_FOUND);
+        resource = surveyDao.findResourceById(surveyResourceId).orElseThrow(BeanAssert.NOT_FOUND);
         BeanAssert.notDeleted(resource);
         BeanAssert.hasPermission(resource.canViewResource(getUser()));
 
@@ -92,7 +96,7 @@ public class SurveyBean extends ApplicationBean implements Serializable {
             return false;
         }
 
-        dao().getSurveyDao().saveAnswers(userAnswers, submit);
+        surveyDao.saveAnswers(userAnswers, submit);
         return true;
     }
 
