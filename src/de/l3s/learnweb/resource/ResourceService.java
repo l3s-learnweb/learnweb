@@ -49,6 +49,23 @@ public enum ResourceService { // when adding more services remember to update th
         }
     }
 
+    /**
+     * indicates if the resources from this service have been crawled automatically. Only used for statistical purposes
+     */
+    public boolean isCrawled() {
+        switch (this) {
+            case archiveit:
+            case ted:
+            case tedx:
+            case teded:
+            case factcheck:
+            case speechrepository:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public String getLabel() {
         return label;
     }

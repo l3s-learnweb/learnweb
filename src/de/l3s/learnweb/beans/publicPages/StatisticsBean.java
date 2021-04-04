@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +12,19 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.util.SqlHelper;
 
 @Named
 @RequestScoped
 public class StatisticsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 8540469716342151138L;
+    private static final Logger log = LogManager.getLogger(StatisticsBean.class);
 
     private List<SimpleEntry<LocalDateTime, Integer>> activeUsersPerMonth;
     private List<SimpleEntry<String, Integer>> resourcesPerSource;
@@ -67,24 +70,21 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
                 .map((rs, ctx) -> new SimpleEntry<>(SqlHelper.getLocalDateTime(rs.getTimestamp(1)), rs.getInt(2)))
                 .list();
 
-            HashSet<String> highlightedEntries = new HashSet<>();
-            highlightedEntries.add("Archive-It");
-            highlightedEntries.add("Yovisto");
-            highlightedEntries.add("LORO");
-            highlightedEntries.add("TEDx");
-            highlightedEntries.add("TED");
-            highlightedEntries.add("TED-Ed");
-            highlightedEntries.add("FactCheck");
-            highlightedEntries.add("speechrepository");
-
-            resourcesPerSource = handle.select("SELECT source, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY source ORDER BY count( * ) DESC")
+            resourcesPerSource = handle.select("SELECT service, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY service ORDER BY count( * ) DESC")
                 .map((rs, ctx) -> {
-                    String key = rs.getString(1);
-                    if (highlightedEntries.contains(key)) {
-                        key += " *";
+                    String serviceName = rs.getString(1);
+                    ResourceService service = ResourceService.valueOf(serviceName);
+
+                    if (null == service) {
+                        log.error("Unknown service: {}", serviceName);
+                    } else {
+                        serviceName = service.getLabel();
+                        if (service.isCrawled()) {
+                            serviceName += " *";
+                        }
                     }
 
-                    return new AbstractMap.SimpleEntry<>(key, rs.getInt(2));
+                    return new AbstractMap.SimpleEntry<>(serviceName, rs.getInt(2));
                 }).list();
         }
     }
