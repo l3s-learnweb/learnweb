@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
@@ -290,7 +291,7 @@ public class UserBean implements Serializable {
             bannerImage = getActiveOrganisation().getBannerImageUrl();
         }
 
-        return ObjectUtils.firstNonNull(bannerImage, "/resources/images/learnweb_logo.png");
+        return StringUtils.firstNonBlank(bannerImage, "/resources/images/learnweb_logo.png");
     }
 
     public String getBannerLink() {

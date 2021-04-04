@@ -70,10 +70,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
 
-            if (organisation.getBannerImageFileId() != 0) { // delete old image first
-                fileDao.deleteHard(organisation.getBannerImageFile());
-            }
-
+            organisation.getBannerImageFile().ifPresent(image -> fileDao.deleteHard(image)); // delete old image first
             organisation.setBannerImageFileId(file.getId());
             organisationDao.save(organisation);
         } catch (Exception e) {
@@ -83,9 +80,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
     }
 
     public void removeBannerImage() {
-        if (organisation.getBannerImageFileId() != 0) {
-            fileDao.deleteHard(organisation.getBannerImageFile());
-        }
+        organisation.getBannerImageFile().ifPresent(image -> fileDao.deleteHard(image)); // delete old image first
 
         organisation.setBannerImageFileId(0);
         organisationDao.save(organisation);

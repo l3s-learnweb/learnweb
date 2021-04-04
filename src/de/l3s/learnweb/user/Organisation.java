@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.faces.model.SelectItem;
 import javax.validation.constraints.NotBlank;
@@ -242,6 +243,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     /**
      * Zero id indicates, that this object is not stored at the database.
      */
+    @Override
     public int getId() {
         return id;
     }
@@ -334,16 +336,14 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
 
     public String getBannerImageUrl() {
         if (null == bannerImageUrl && bannerImageFileId != 0) {
-            bannerImageUrl = getBannerImageFile().getSimpleUrl();
+            bannerImageUrl = getBannerImageFile().map(file -> file.getSimpleUrl()).orElse("");
         }
         return bannerImageUrl;
+
     }
 
-    public File getBannerImageFile() {
-        if (bannerImageFileId != 0) {
-            return Learnweb.dao().getFileDao().findByIdOrElseThrow(bannerImageFileId);
-        }
-        return null;
+    public Optional<File> getBannerImageFile() {
+        return Learnweb.dao().getFileDao().findById(bannerImageFileId);
     }
 
     public int getBannerImageFileId() {
