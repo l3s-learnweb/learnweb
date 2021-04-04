@@ -137,12 +137,9 @@ public class DownloadServlet extends HttpServlet {
         // Check && retrieve resource
         Optional<Resource> resource = resourceDao.findById(requestData.resourceId);
 
-        // Files which are attached to a resource should have the resourceId in the url
+        // Files which are attached to a resource should have the resourceId in the URL but there exist many old links on the web that don't include the resourceId
         if (resource.isEmpty()) {
-            String requestSummery = BeanHelper.getRequestSummary(request);
-            // log error only when request has a referrer or comes from a logged in user
-            Level logLevel = referrer != null || requestSummery.contains("userId:") ? Level.ERROR : Level.WARN;
-            log.log(logLevel, "A resource file accessed without resourceId in the URL; {}", requestSummery);
+            log.debug("A resource file accessed without resourceId in the URL; {}", BeanHelper.getRequestSummary(request));
 
             // TODO: When implementing access control remember that some files have to be accessed by our converter and other services. See File.getAbsoluteUrl()
             return;
@@ -153,7 +150,12 @@ public class DownloadServlet extends HttpServlet {
 
         BeanAssert.validate(file.getEncodedName().equals(requestData.fileName)); // validate file name
         BeanAssert.validate(resource.get().getFiles().containsValue(file)); // validate the file belongs to the resource
-        BeanAssert.hasPermission(resource.get().canViewResource(user)); // validate user has access to the resource
+
+        boolean hasPermission = resource.get().canViewResource(user);
+        if (!hasPermission) {
+            BeanAssert.authorized(user); // resource is definitely not readable by anonymous users, hence make sure that the user is logged in
+        }
+        BeanAssert.hasPermission(hasPermission); // validate user has access to the resource
 
         // log downloading of the MAIN files
         if (file.getType() == File.FileType.MAIN) {
