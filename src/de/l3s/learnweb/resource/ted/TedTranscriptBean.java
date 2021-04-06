@@ -3,18 +3,16 @@ package de.l3s.learnweb.resource.ted;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +24,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.omnifaces.util.Faces;
 import org.primefaces.PrimeFaces;
-import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -37,7 +34,6 @@ import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
 import de.l3s.learnweb.user.Course;
 import de.l3s.util.Misc;
 import de.l3s.util.NlpHelper;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -60,34 +56,20 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     private int videoResourceId;
 
     private int resourceId;
-    private List<SelectItem> languageList;
     private String locale;
+    private List<SelectItem> languageList;
 
-    private List<SimpleTranscriptLog> simpleTranscriptLogs;
-    private List<TranscriptLog> detailedTranscriptLogs;
-    private List<TranscriptSummary> transcriptSummaries;
-    //private int selectedCourseId;
-    private Collection<Integer> selectedUsers;
-    private TreeNode treeRoot;
-    private TreeNode[] selectedNodes;
-
+    @Inject
     private TedTranscriptDao tedTranscriptDao;
 
-    @PostConstruct
-    public void init() {
+    public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        locale = getUserBean().getLocaleCode();
-        tedTranscriptDao = dao().getTedTranscriptDao();
-
-        selectedUsers = new TreeSet<>();
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
-    }
-
-    public void onLoad() {
         Resource resource = dao().getResourceDao().findByIdOrElseThrow(resourceId);
         BeanAssert.notDeleted(resource);
         setTedResource(resource);
+
+        locale = getUserBean().getLocaleCode();
     }
 
     public Resource getTedResource() {
@@ -282,43 +264,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         return noteId;
     }
 
-    /**
-     * Returns detailed transcript logs for selected users.
-     */
-    public List<TranscriptLog> getTranscriptLogs() {
-        if (detailedTranscriptLogs == null) {
-            detailedTranscriptLogs = tedTranscriptDao.findTranscriptLogsByUserIds(selectedUsers);
-        }
-        return detailedTranscriptLogs;
-    }
-
-    public void onSubmitSelectedUsers() {
-        this.selectedUsers = BeanHelper.getSelectedUsers(selectedNodes);
-
-        resetTranscriptLogs();
-        resetTranscriptSummaries();
-    }
-
-    /**
-     * Returns transcript logs of selected users aggregating selection, deselection and user annotation counts.
-     */
-    public List<SimpleTranscriptLog> getSimpleTranscriptLogs() {
-        if (simpleTranscriptLogs == null) {
-            simpleTranscriptLogs = tedTranscriptDao.findSimpleTranscriptLogs(selectedUsers);
-        }
-        return simpleTranscriptLogs;
-    }
-
-    /**
-     * Returns transcript summaries of selected users.
-     */
-    public List<TranscriptSummary> getTranscriptSummaries() {
-        if (transcriptSummaries == null) {
-            transcriptSummaries = tedTranscriptDao.findTranscriptSummariesByUserIds(selectedUsers);
-        }
-        return transcriptSummaries;
-    }
-
     public int getResourceId() {
         return resourceId;
     }
@@ -329,15 +274,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     public List<Course> getCourses() {
         return getUser().getCourses();
-    }
-
-    public void resetTranscriptLogs() {
-        simpleTranscriptLogs = null;
-        detailedTranscriptLogs = null;
-    }
-
-    public void resetTranscriptSummaries() {
-        transcriptSummaries = null;
     }
 
     public String getSummaryTextS() {
@@ -362,17 +298,5 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
     public void setSummaryTextL(String summaryTextL) {
         this.summaryTextL = summaryTextL;
-    }
-
-    public TreeNode getTreeRoot() {
-        return treeRoot;
-    }
-
-    public TreeNode[] getSelectedNodes() {
-        return selectedNodes;
-    }
-
-    public void setSelectedNodes(final TreeNode[] selectedNodes) {
-        this.selectedNodes = selectedNodes;
     }
 }

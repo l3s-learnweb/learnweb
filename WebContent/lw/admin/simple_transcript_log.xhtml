@@ -8,6 +8,12 @@
 <ui:param name="pageTitle" value="#{msg.simple_transcript_log}"/>
 <ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
 
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewAction action="#{tedTranscriptLogBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
+
 <ui:define name="breadcrumb">
     <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
@@ -25,8 +31,8 @@
 <ui:define name="center_layout">
     <h:form id="us_form" prependId="false">
         <p:panel header="#{msg.select_users}">
-            <p:tree value="#{tedTranscriptBean.treeRoot}" var="node" required="true" styleClass="ui-tree-borderless"
-                    selectionMode="checkbox" selection="#{tedTranscriptBean.selectedNodes}">
+            <p:tree value="#{tedTranscriptLogBean.treeRoot}" var="node" required="true" styleClass="ui-tree-borderless"
+                    selectionMode="checkbox" selection="#{tedTranscriptLogBean.selectedNodes}">
                 <p:treeNode>
                     <h:outputText value="#{node.title}"/>
                 </p:treeNode>
@@ -42,13 +48,13 @@
             </p:tree>
             <p:message for="@previous"/>
 
-            <p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="#{msg['transcript.gather_logs']}"
+            <p:commandButton actionListener="#{tedTranscriptLogBean.onSubmitSelectedUsers}" value="#{msg['transcript.gather_logs']}"
                              process="@form" update=":transcript_table @form"/>
         </p:panel>
     </h:form>
 
     <h:form prependId="false" styleClass="mt-3">
-        <p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30"
+        <p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" value="#{tedTranscriptLogBean.simpleTranscriptLogs}" rows="30"
                      paginator="true" rowsPerPageTemplate="20,25,30"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
             <f:facet name="{Exporters}">
