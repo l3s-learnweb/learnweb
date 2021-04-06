@@ -46,7 +46,7 @@
     <orderEntry type="library" name="Maven: com.fasterxml:classmate:1.5.1" level="project" />
     <orderEntry type="library" name="Maven: com.sun.mail:jakarta.mail:1.6.5" level="project" />
     <orderEntry type="library" name="Maven: com.sun.activation:jakarta.activation:1.2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.omnifaces:omnifaces:3.10.1" level="project" />
+    <orderEntry type="library" name="Maven: org.omnifaces:omnifaces:3.11" level="project" />
     <orderEntry type="library" name="Maven: org.primefaces:primefaces:10.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.github.librepdf:openpdf:1.3.25" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
@@ -122,11 +122,11 @@
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-hdr:3.6.4" level="project" />
     <orderEntry type="library" name="Maven: org.mariadb.jdbc:mariadb-java-client:2.7.2" level="project" />
     <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:4.0.3" level="project" />
-    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-core:3.18.0" level="project" />
-    <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.7.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-core:3.18.1" level="project" />
+    <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.9" level="project" />
     <orderEntry type="library" name="Maven: io.leangen.geantyref:geantyref:1.3.7" level="project" />
-    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-sqlobject:3.18.0" level="project" />
-    <orderEntry type="library" name="Maven: org.flywaydb:flyway-core:7.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-sqlobject:3.18.1" level="project" />
+    <orderEntry type="library" name="Maven: org.flywaydb:flyway-core:7.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.solr:solr-solrj:8.8.1" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.50.Final" level="project" />

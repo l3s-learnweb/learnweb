@@ -336,7 +336,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
 
     public String getBannerImageUrl() {
         if (null == bannerImageUrl && bannerImageFileId != 0) {
-            bannerImageUrl = getBannerImageFile().map(file -> file.getSimpleUrl()).orElse("");
+            bannerImageUrl = getBannerImageFile().map(File::getSimpleUrl).orElse(null);
         }
         return bannerImageUrl;
 
