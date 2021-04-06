@@ -4,7 +4,10 @@ import static javax.servlet.RequestDispatcher.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
+import javax.el.ELException;
+import javax.faces.FacesException;
 import javax.faces.application.ViewExpiredException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jboss.weld.exceptions.WeldException;
 import org.omnifaces.util.Exceptions;
 import org.omnifaces.util.Servlets;
 import org.omnifaces.util.Utils;
@@ -38,7 +42,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
             response.sendError(HttpException.NOT_FOUND, request.getRequestURI());
         } catch (ServletException exception) {
             // get unwrapped exception
-            Throwable throwable = Exceptions.unwrap(exception.getRootCause());
+            Throwable throwable = Exceptions.unwrap(exception.getRootCause(), FacesException.class, ELException.class, WeldException.class, InvocationTargetException.class);
             LearnwebExceptionHandler.logException(throwable, request);
 
             request.setAttribute(ERROR_MESSAGE, throwable.getMessage());

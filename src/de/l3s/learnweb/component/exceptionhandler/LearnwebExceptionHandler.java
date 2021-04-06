@@ -42,7 +42,7 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
         String requestSummary = BeanHelper.getRequestSummary(request);
 
         if (rootCause instanceof HttpException && ((HttpException) rootCause).isSilent()) {
-            log.warn("Silent exception {} ", requestSummary, rootCause);
+            log.warn("Bean exception {} ", requestSummary, rootCause);
             return;
         }
 
@@ -51,7 +51,7 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
         } else if (rootCause instanceof BadRequestHttpException) {
             log.log(isBotUserAgent(request) ? Level.WARN : Level.ERROR, "Bad request {} ", requestSummary, rootCause);
         } else if (rootCause instanceof ViewExpiredException) {
-            log.warn("View expired {}", requestSummary);
+            log.debug("View expired {}", requestSummary);
         } else {
             log.fatal("Fatal unhandled error on {}", requestSummary, rootCause);
         }
@@ -66,7 +66,6 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
         if (StringUtils.isEmpty(userAgent)) {
             return false; // can't be sure
         }
-        userAgent = userAgent.toLowerCase();
 
         return StringUtils.containsAny(userAgent.toLowerCase(), "bot;", "bot/", "bot ", "java", "wget", "spider", "python-requests", "ltx71.com");
     }

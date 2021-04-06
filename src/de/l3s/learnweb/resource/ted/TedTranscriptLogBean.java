@@ -13,7 +13,6 @@ import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
-import de.l3s.learnweb.user.Course;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
