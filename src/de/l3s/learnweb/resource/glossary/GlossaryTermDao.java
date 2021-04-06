@@ -36,40 +36,40 @@ public interface GlossaryTermDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_glossary_term WHERE entry_id = ? and deleted = 0")
     List<GlossaryTerm> findByEntryId(int entryId);
 
-    @SqlQuery("SELECT COUNT(*) FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
+    @SqlQuery("SELECT COUNT(*) FROM lw_resource r JOIN lw_glossary_entry ge ON r.resource_id = ge.resource_id JOIN lw_glossary_term gt ON ge.entry_id = gt.entry_id "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end")
     int countTotalTerms(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     @SqlQuery("SELECT u.username, COUNT(distinct gt.term_id) AS count FROM lw_resource r JOIN lw_user u ON u.user_id = r.owner_user_id JOIN lw_glossary_entry ge "
-        + "USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1"
-        + " AND r.owner_user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end GROUP BY username ORDER BY username")
+        + "ON r.resource_id = ge.resource_id JOIN lw_glossary_term gt ON ge.entry_id = gt.entry_id WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 "
+        + "AND r.owner_user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end GROUP BY username ORDER BY username")
     @KeyColumn("username")
     @ValueColumn("count")
     Map<String, Integer> countTermsPerUser(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
-    @SqlQuery("SELECT COUNT(distinct gt.source) FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
+    @SqlQuery("SELECT COUNT(distinct gt.source) FROM lw_resource r JOIN lw_glossary_entry ge ON r.resource_id = ge.resource_id JOIN lw_glossary_term gt ON ge.entry_id = gt.entry_id "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end")
     int countTotalSources(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
-    @SqlQuery("SELECT gt.source AS refs, COUNT(*) AS count FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
+    @SqlQuery("SELECT gt.source AS refs, COUNT(*) AS count FROM lw_resource r JOIN lw_glossary_entry ge ON r.resource_id = ge.resource_id JOIN lw_glossary_term gt ON ge.entry_id = gt.entry_id "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end GROUP BY refs")
     @KeyColumn("refs")
     @ValueColumn("count")
     Map<String, Integer> countUsagePerSource(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     @RegisterRowMapper(GlossaryUserTermsSummaryMapper.class)
-    @SqlQuery("SELECT ge.user_id, COUNT(*) AS total_terms, COUNT(distinct entry_id) AS entries,COUNT( NULLIF( gt.term_pasted, 0 ) ) AS term_pasted, "
+    @SqlQuery("SELECT ge.user_id, COUNT(*) AS total_terms, COUNT(distinct ge.entry_id) AS entries,COUNT( NULLIF( gt.term_pasted, 0 ) ) AS term_pasted, "
         + "COUNT( NULLIF( gt.pronounciation, '' ) ) AS pronounciation, COUNT( NULLIF( gt.pronounciation_pasted, 0 ) ) AS pronounciation_pasted, "
         + "COUNT( NULLIF( gt.acronym, '' ) ) AS acronym, COUNT( NULLIF( gt.acronym_pasted, 0 ) ) AS acronym_pasted, "
         + "COUNT( NULLIF( gt.phraseology, '' ) ) AS phraseology, COUNT( NULLIF( gt.phraseology_pasted, 0 ) ) AS phraseology_pasted, "
         + "COUNT( NULLIF( gt.uses, '' ) ) AS uses, COUNT( NULLIF( gt.source, '' ) ) AS source "
-        + "FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
+        + "FROM lw_resource r JOIN lw_glossary_entry ge ON r.resource_id = ge.resource_id JOIN lw_glossary_term gt ON ge.entry_id = gt.entry_id "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND ge.user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end GROUP BY ge.user_id")
     List<GlossaryUserTermsSummary> countGlossaryUserTermsSummary(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     @RegisterRowMapper(GlossaryUserActivityMapper.class)
     @SqlQuery("SELECT r.owner_user_id, count(distinct ge.entry_id) AS total_entries, count(*) AS total_terms, count(distinct gt.source) AS total_refs "
-        + "FROM lw_resource r JOIN lw_glossary_entry ge USING(resource_id) JOIN lw_glossary_term gt USING(entry_id) "
+        + "FROM lw_resource r JOIN lw_glossary_entry ge ON r.resource_id = ge.resource_id JOIN lw_glossary_term gt ON ge.entry_id = gt.entry_id "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND r.owner_user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end GROUP BY owner_user_id")
     List<GlossaryUserActivity> countGlossaryUserActivity(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
