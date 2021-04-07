@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.publicPages;
 
+import java.net.HttpURLConnection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,9 +9,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import org.jdbi.v3.core.Handle;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.util.UrlHelper;
 
 @Named
 @RequestScoped
@@ -28,8 +29,10 @@ public class StatusBean extends ApplicationBean {
         // very simple database integrity test
         services.add(getDatabaseIntegrity());
 
-        // test office server
-        services.add(getOnlyOfficeServer());
+        // if any not healthy, set status code to 503
+        if (services.stream().anyMatch(service -> !service.healthy)) {
+            Faces.setResponseStatus(HttpURLConnection.HTTP_UNAVAILABLE);
+        }
     }
 
     private Service getDatabaseConnection() {
@@ -47,19 +50,6 @@ public class StatusBean extends ApplicationBean {
             return new Service("Database Integrity", true, null);
         } catch (Exception e) {
             return new Service("Database Integrity", false, e.getMessage());
-        }
-    }
-
-    private Service getOnlyOfficeServer() {
-        try {
-            String onlyofficeServerUrl = config().getProperty("onlyoffice_server_url");
-            if (!UrlHelper.isOnline(onlyofficeServerUrl + "/healthcheck")) {
-                throw new IllegalStateException("The OnlyOffice Server is not reachable or down");
-            }
-
-            return new Service("OnlyOffice Server", true, null);
-        } catch (Exception e) {
-            return new Service("OnlyOffice Server", false, e.getMessage());
         }
     }
 
