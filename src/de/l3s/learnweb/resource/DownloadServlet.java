@@ -90,7 +90,10 @@ public class DownloadServlet extends HttpServlet {
             RequestData requestData = parseRequestURI(request, requestURI, referrer);
 
             // Check && retrieve file, if the file is missing will throw an error
-            File file = fileDao.findByIdOrElseThrow(requestData.fileId);
+            //File file = fileDao.findByIdOrElseThrow(requestData.fileId);
+            // for local testing only, to check files that are not present locally:
+            File file = fileDao.findById(requestData.fileId, true).orElseThrow(BeanAssert.NOT_FOUND);
+
             validatePermissions(request, file, requestData, referrer);
 
             sendFile(request, response, file, content);
@@ -148,8 +151,16 @@ public class DownloadServlet extends HttpServlet {
         // Get user from session
         User user = userBean.getUser();
 
-        BeanAssert.validate(file.getEncodedName().equals(requestData.fileName)); // validate file name
-        BeanAssert.validate(resource.get().getFiles().containsValue(file)); // validate the file belongs to the resource
+        //TODO block invalid requests. But for a while we will only log them
+        if (!file.getEncodedName().equals(requestData.fileName)) {
+            log.debug("A resource file accessed invalid file name; db name: {}; request name: {}; request: {}", file.getEncodedName(), requestData.fileName, BeanHelper.getRequestSummary(request));
+        }
+
+        if (!resource.get().getFiles().containsValue(file)) {
+            log.debug("A resource file accessed with an invalid resource id; request: {}", BeanHelper.getRequestSummary(request));
+        }
+        //BeanAssert.validate(file.getEncodedName().equals(requestData.fileName)); // validate file name
+        //BeanAssert.validate(resource.get().getFiles().containsValue(file)); // validate the file belongs to the resource
 
         boolean hasPermission = resource.get().canViewResource(user);
         if (!hasPermission) {
