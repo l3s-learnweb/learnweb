@@ -153,11 +153,11 @@ public class DownloadServlet extends HttpServlet {
 
         //TODO block invalid requests. But for a while we will only log them
         if (!file.getEncodedName().equals(requestData.fileName)) {
-            log.debug("A resource file accessed invalid file name; db name: {}; request name: {}; request: {}", file.getEncodedName(), requestData.fileName, BeanHelper.getRequestSummary(request));
+            log.error("A resource file accessed invalid file name; db name: {}; request name: {}; request: {}", file.getEncodedName(), requestData.fileName, BeanHelper.getRequestSummary(request));
         }
 
         if (!resource.get().getFiles().containsValue(file)) {
-            log.debug("A resource file accessed with an invalid resource id; request: {}", BeanHelper.getRequestSummary(request));
+            log.error("A resource file accessed with an invalid resource id; request: {}", BeanHelper.getRequestSummary(request));
         }
         //BeanAssert.validate(file.getEncodedName().equals(requestData.fileName)); // validate file name
         //BeanAssert.validate(resource.get().getFiles().containsValue(file)); // validate the file belongs to the resource
