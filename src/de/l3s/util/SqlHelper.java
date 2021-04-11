@@ -106,7 +106,7 @@ public final class SqlHelper {
         sb.append(tableName).append(" (");
 
         for (String column : columns) {
-            sb.append(column).append(',');
+            sb.append('`').append(column).append('`').append(',');
         }
         sb.setLength(sb.length() - 1); // remove last comma
 
@@ -115,7 +115,7 @@ public final class SqlHelper {
 
         for (int i = 1, len = columns.length; i < len; i++) { // skip first column
             String column = columns[i];
-            sb.append(column).append("=VALUES(").append(column).append("),");
+            sb.append('`').append(column).append('`').append("=VALUES(").append('`').append(column).append('`').append("),");
         }
         sb.setLength(sb.length() - 1); // remove last comma
 
@@ -130,7 +130,7 @@ public final class SqlHelper {
         sb.append(tableName).append(" (");
 
         for (String column : columns) {
-            sb.append(column).append(',');
+            sb.append('`').append(column).append('`').append(',');
         }
         sb.setLength(sb.length() - 1); // remove last comma
 
@@ -147,11 +147,11 @@ public final class SqlHelper {
         sb.append(tableName).append(" SET ");
 
         for (final String column : columns) {
-            sb.append(column).append("=?,");
+            sb.append('`').append(column).append('`').append("=?,");
         }
         sb.setLength(sb.length() - 1); // remove last comma
 
-        sb.append(" WHERE ").append(primaryKey).append("=?");
+        sb.append(" WHERE ").append('`').append(primaryKey).append('`').append("=?");
         return sb.toString();
     }
 }
