@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.11.06</version>
+    <version>3.11.07</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -19,10 +19,10 @@
         <maven.compiler.release>11</maven.compiler.release>
         <maven.dependency.myfaces.version>2.3-next-M4</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.6.4</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.18.1</maven.dependency.jdbi3.version>
+        <maven.dependency.jdbi3.version>3.19.0</maven.dependency.jdbi3.version>
         <maven.dependency.log4j.version>2.14.1</maven.dependency.log4j.version>
         <maven.dependency.junit.version>5.7.1</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>3.8.0</maven.dependency.mockito.version>
+        <maven.dependency.mockito.version>3.9.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.npm.install.phase>prepare-package</project.npm.install.phase>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-shaded</artifactId>
-            <version>3.1.6.Final</version>
+            <version>3.1.7.Final</version>
         </dependency>
         <!-- Validator API & Impl -->
         <dependency>
@@ -205,7 +205,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>7.7.2</version>
+            <version>7.7.3</version>
         </dependency>
         <!-- Solr client (the library has 10 MB of dependencies :/) -->
         <dependency>

@@ -18,7 +18,7 @@
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.14.1" />
           <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-api:2.3-next-M4" />
           <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-impl:2.3-next-M4" />
-          <element id="library" level="project" name="Maven: org.jboss.weld.servlet:weld-servlet-shaded:3.1.6.Final" />
+          <element id="library" level="project" name="Maven: org.jboss.weld.servlet:weld-servlet-shaded:3.1.7.Final" />
           <element id="library" level="project" name="Maven: org.hibernate.validator:hibernate-validator:6.2.0.Final" />
           <element id="library" level="project" name="Maven: jakarta.validation:jakarta.validation-api:2.0.2" />
           <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.4.1.Final" />
@@ -101,11 +101,11 @@
           <element id="library" level="project" name="Maven: com.twelvemonkeys.imageio:imageio-hdr:3.6.4" />
           <element id="library" level="project" name="Maven: org.mariadb.jdbc:mariadb-java-client:2.7.2" />
           <element id="library" level="project" name="Maven: com.zaxxer:HikariCP:4.0.3" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.18.1" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.19.0" />
           <element id="library" level="project" name="Maven: org.antlr:antlr4-runtime:4.9" />
-          <element id="library" level="project" name="Maven: io.leangen.geantyref:geantyref:1.3.7" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.18.1" />
-          <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:7.7.2" />
+          <element id="library" level="project" name="Maven: io.leangen.geantyref:geantyref:1.3.11" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.19.0" />
+          <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:7.7.3" />
           <element id="library" level="project" name="Maven: org.apache.solr:solr-solrj:8.8.1" />
           <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.6" />
           <element id="library" level="project" name="Maven: io.netty:netty-buffer:4.1.50.Final" />
