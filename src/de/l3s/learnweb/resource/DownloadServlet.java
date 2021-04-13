@@ -3,6 +3,8 @@ package de.l3s.learnweb.resource;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -90,9 +92,7 @@ public class DownloadServlet extends HttpServlet {
             RequestData requestData = parseRequestURI(request, requestURI, referrer);
 
             // Check && retrieve file, if the file is missing will throw an error
-            //File file = fileDao.findByIdOrElseThrow(requestData.fileId);
-            // for local testing only, to check files that are not present locally:
-            File file = fileDao.findById(requestData.fileId, true).orElseThrow(BeanAssert.NOT_FOUND);
+            File file = fileDao.findByIdOrElseThrow(requestData.fileId);
 
             validatePermissions(request, file, requestData, referrer);
 
@@ -152,8 +152,8 @@ public class DownloadServlet extends HttpServlet {
         User user = userBean.getUser();
 
         //TODO block invalid requests. But for a while we will only log them
-        if (!file.getEncodedName().equals(requestData.fileName)) {
-            log.error("A resource file accessed invalid file name; db name: {}; request name: {}; request: {}", file.getEncodedName(), requestData.fileName, BeanHelper.getRequestSummary(request));
+        if (!file.getName().equals(requestData.fileName)) {
+            log.error("A resource file accessed invalid file name; db name: {}; request name: {}; request: {}", file.getName(), requestData.fileName, BeanHelper.getRequestSummary(request));
         }
 
         if (!resource.get().getFiles().containsValue(file)) {
@@ -494,7 +494,7 @@ public class DownloadServlet extends HttpServlet {
         RequestData(int resourceId, int fileId, String fileName) {
             this.resourceId = resourceId;
             this.fileId = fileId;
-            this.fileName = fileName;
+            this.fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
 
             if (fileId == 0 || StringUtils.isEmpty(fileName)) {
                 throw new IllegalArgumentException();

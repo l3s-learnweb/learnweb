@@ -94,12 +94,8 @@ public class File implements Serializable, HasId {
         return name;
     }
 
-    public String getEncodedName() {
-        return URLEncoder.encode(name, StandardCharsets.UTF_8);
-    }
-
     public void setName(String name) {
-        this.name = StringUtils.replaceChars(name, "\\/:*?\"<>|", "_");
+        this.name = StringUtils.replaceChars(name, "\\/:*?\"<>|%", "_");
     }
 
     public String getMimeType() {
@@ -143,7 +139,7 @@ public class File implements Serializable, HasId {
 
     private String getUrlSuffix() {
         if (urlSuffix == null) {
-            urlSuffix = id + "/" + getEncodedName();
+            urlSuffix = id + "/" + URLEncoder.encode(name, StandardCharsets.UTF_8);
         }
         return urlSuffix;
     }

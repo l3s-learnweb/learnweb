@@ -56,6 +56,10 @@ public interface FileDao extends SqlObject, Serializable {
         return findById(fileId).orElseThrow(BeanAssert.NOT_FOUND);
     }
 
+    default File findByIdOrElseThrow(int fileId, boolean includeMissingFiles) {
+        return findById(fileId, includeMissingFiles).orElseThrow(BeanAssert.NOT_FOUND);
+    }
+
     @FetchSize(1000)
     @SqlQuery("SELECT * FROM lw_file")
     Stream<File> findAll();
