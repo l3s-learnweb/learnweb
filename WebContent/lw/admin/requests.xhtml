@@ -26,7 +26,7 @@
 				<p:dataTable id="requestsTable" widgetVar="requestsTable" paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}"
 							 rows="100" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 							 currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
-					<p:column field="ip" headerText="IP" filterMatchMode="contains"/>
+					<p:column field="addr" headerText="IP" filterMatchMode="contains"/>
 
 					<p:column field="time" headerText="#{msg.time}">
 						<f:facet name="filter">
@@ -76,7 +76,7 @@
 
 				<p:dataTable id="aggrRequestsTable" widgetVar="aggrRequestsTable" tableStyleClass="mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}"
 							 rows="50" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-					<p:column field="ip" headerText="IP" filterMatchMode="contains"/>
+					<p:column field="addr" headerText="IP" filterMatchMode="contains"/>
 
 					<p:column field="requests" headerText="#{msg.requests_count}" filterMatchMode="contains"/>
 
