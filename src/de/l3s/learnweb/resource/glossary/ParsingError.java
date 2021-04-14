@@ -21,7 +21,7 @@ public class ParsingError implements Serializable {
      * Convenience method.
      */
     public ParsingError(int rowNum, Cell cell, String errorMessage) {
-        this(rowNum, cell.getAddress().formatAsString(), errorMessage);
+        this(rowNum, cell == null || cell.getAddress() == null ? null : cell.getAddress().formatAsString(), errorMessage);
     }
 
     public int getRow() {
