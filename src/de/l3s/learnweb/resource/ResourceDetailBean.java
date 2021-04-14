@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -198,7 +197,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             for (ArchiveUrl archiveUrl : archiveUrlsData) {
                 JsonObject archiveVersion = new JsonObject();
                 archiveVersion.addProperty("url", archiveUrl.getArchiveUrl());
-                archiveVersion.addProperty("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
+                archiveVersion.addProperty("time", DateTimeFormatter.ISO_TIME.format(archiveUrl.getTimestamp()));
                 archiveVersions.add(archiveVersion);
             }
             archiveDay.add("dayEvents", archiveVersions);
