@@ -132,11 +132,6 @@ public class DownloadServlet extends HttpServlet {
             return;
         }
 
-        // Small thumbnail files which are shown during resource upload and thus are not connected to a resource yet.
-        if (file.getType() == File.FileType.THUMBNAIL_SMALL) {
-            return;
-        }
-
         // Check && retrieve resource
         Optional<Resource> resource = resourceDao.findById(requestData.resourceId);
 

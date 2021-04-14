@@ -35,7 +35,7 @@ public class File implements Serializable, HasId {
 
         public boolean isResourceFile() {
             switch (this) {
-                case THUMBNAIL_SMALL:
+                // case THUMBNAIL_SMALL: // Small thumbnail files which are shown during resource upload and thus are not connected to a resource yet.
                 case THUMBNAIL_MEDIUM:
                 case THUMBNAIL_LARGE:
                 case MAIN:
