@@ -32,6 +32,13 @@ public class ParsingError implements Serializable {
         return cell;
     }
 
+    public String getRowName() {
+        if (row == -1)
+            return "";
+
+        return Integer.toString(row + 1); // internal row count starts at zero
+    }
+
     public String getErrorMessage() {
         return errorMessage;
     }

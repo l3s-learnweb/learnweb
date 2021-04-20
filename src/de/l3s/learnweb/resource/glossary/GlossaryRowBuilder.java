@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
@@ -46,27 +47,27 @@ public class GlossaryRowBuilder {
 
             String cellValue = getStringValueForCell(header.getCell(cellPosition));
 
-            if (isEqualForSomeLocale(cellValue, "Glossary.first_topic")) {
+            if (isEqualForAnyLocale(cellValue, Column.topicOne)) {
                 topicOneHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "Glossary.second_topic")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.topicTwo)) {
                 topicTwoHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "Glossary.third_topic")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.topicThree)) {
                 topicThreeHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "Glossary.Definition")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.description)) {
                 descriptionHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "Glossary.term")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.term)) {
                 termHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "language")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.language)) {
                 languageHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "Glossary.use")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.uses)) {
                 usesHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "Glossary.pronounciation")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.pronounciation)) {
                 pronunciationHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "Glossary.acronym")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.acronym)) {
                 acronymHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "source")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.source)) {
                 sourceHeaderPosition = cellPosition;
-            } else if (isEqualForSomeLocale(cellValue, "Glossary.phraseology")) {
+            } else if (isEqualForAnyLocale(cellValue, Column.phraseology)) {
                 phraseologyHeaderPosition = cellPosition;
             } else {
                 errors.add(new ParsingError(header.getRowNum(), header.getCell(cellPosition), "Unknown column name: " + cellValue));
@@ -75,28 +76,24 @@ public class GlossaryRowBuilder {
         return errors.isEmpty();
     }
 
-    private boolean isEqualForSomeLocale(String value, String propertyAlias) {
-        for (Locale localeToCheck : LanguageBundle.getSupportedLocales()) {
-            String translation = LanguageBundle.getLocaleMessage(localeToCheck, propertyAlias);
-
-            if (value.equalsIgnoreCase(translation)) {
-                return true;
-            }
-        }
-        return false;
+    /**
+     * Check if the given value is equal to any translated name of the given column
+     */
+    private boolean isEqualForAnyLocale(String value, Column column) {
+        return LanguageBundle.isEqualForAnyLocale(value, column.getMsgKey());
     }
 
-    protected String getStringValueForCell(Cell cell) {
+    static String getStringValueForCell(Cell cell) {
         if (cell == null) {
             return "";
         }
         switch (cell.getCellType()) {
             case STRING:
-                return cell.getStringCellValue();
+                return cell.getStringCellValue().trim();
             case NUMERIC:
                 return String.valueOf(cell.getNumericCellValue());
             case FORMULA:
-                return cell.getCellFormula();
+                return cell.getCellFormula().trim();
             default:
                 return "";
         }
@@ -123,13 +120,16 @@ public class GlossaryRowBuilder {
     private GlossaryTerm buildTerm(Row row) {
         GlossaryTerm term = new GlossaryTerm();
 
+        String cellValue = getStringValueForCell(row.getCell(languageHeaderPosition));
+
         term.setTerm(getStringValueForCell(row.getCell(termHeaderPosition)));
-        if (languageMap.containsKey(getStringValueForCell(row.getCell(languageHeaderPosition)))) {
-            term.setLanguage(languageMap.get(getStringValueForCell(row.getCell(languageHeaderPosition))));
+        if (languageMap.containsKey(cellValue)) {
+            term.setLanguage(languageMap.get(cellValue));
         } else {
+
             errors.add(new ParsingError(row.getRowNum(), row.getCell(languageHeaderPosition),
-                "Invalid language '" + getStringValueForCell(row.getCell(languageHeaderPosition)) +
-                    "' This glossary is limited to " + languageMap.keySet() + " entries."));
+                "Invalid language; Current value: " + StringUtils.firstNonBlank(cellValue, "<i>empty</i>") +
+                    "; Valid values: " + String.join(", ", languageMap.keySet())));
         }
         String usesString = getStringValueForCell(row.getCell(usesHeaderPosition));
         List<String> uses = Arrays.asList(usesString.split(","));

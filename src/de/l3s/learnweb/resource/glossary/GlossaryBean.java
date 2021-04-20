@@ -19,6 +19,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -403,65 +404,52 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             HSSFRow row0 = sheet.getRow(1);
 
             if (row0 == null) {
-                return;
+                return; // empty sheet -> nothing to do
+            }
+
+            // add empty separator row between topics
+            HSSFCell cellPrev = row0.getCell(0);
+            for (int i = 2; i <= sheet.getLastRowNum(); i++) {
+                HSSFRow row = sheet.getRow(i);
+                HSSFCell cellCurrent = row.getCell(0);
+
+                if (cellCurrent != null && !StringUtils.equalsIgnoreCase(cellCurrent.getStringCellValue(), cellPrev.getStringCellValue())) {
+                    cellPrev = cellCurrent;
+                    sheet.shiftRows(i, sheet.getLastRowNum(), 1);
+                }
             }
 
             if (user.getOrganisation().getOption(Option.Glossary_Add_Watermark)) {
-                log.debug("post processing glossary xls");
-
-                HSSFCell cell0 = row0.getCell(0);
-
+                // create image from user name
                 Image watermark = Image.fromText(glossaryResource.getUser().getUsername());
                 InputStream is = watermark.getInputStream();
-
-                byte[] bytes = IOUtils.toByteArray(is);
-                int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+                int pictureIdx = wb.addPicture(IOUtils.toByteArray(is), Workbook.PICTURE_TYPE_PNG);
                 is.close();
+
+                // create anchor
                 CreationHelper helper = wb.getCreationHelper();
                 HSSFPatriarch drawing = sheet.createDrawingPatriarch();
                 ClientAnchor anchor = helper.createClientAnchor();
                 anchor.setAnchorType(ClientAnchor.AnchorType.DONT_MOVE_AND_RESIZE);
 
-                for (int i = 2; i <= sheet.getLastRowNum(); i++) {
-                    HSSFRow row = sheet.getRow(i);
-                    HSSFCell cell = row.getCell(0);
-
-                    if (cell != null) {
-                        cell.setCellValue(cell.getStringCellValue());
-                        if (cell.getStringCellValue().equals(cell0.getStringCellValue())) {
-                            cell0.setCellValue(cell0.getStringCellValue());
-                        } else {
-                            int rowIndex = i;
-                            if (sheet.getRow(rowIndex).getCell(0) != null) {
-                                cell0 = sheet.getRow(rowIndex).getCell(0);
-                                sheet.shiftRows(rowIndex, sheet.getLastRowNum(), 1);
-                            }
-                        }
-                    }
-                }
-
-                //Set owner details
-
                 //set top-left corner of the picture,
                 //subsequent call of Picture#resize() will operate relative to it
-                int row1 = (sheet.getLastRowNum() / 4);
-                int row2 = ((sheet.getLastRowNum() / 4) * 3);
-                anchor.setCol1(3);
-                anchor.setRow1(row1);
-                anchor.setCol2(10);
-                anchor.setRow2(row2);
+                int row = sheet.getLastRowNum() / 4;
+                anchor.setCol1(0);
+                anchor.setRow1(row);
+                anchor.setCol2(3);
+                anchor.setRow2(row + 3);
 
-                //Picture pict =
                 drawing.createPicture(anchor, pictureIdx);
+
                 HSSFCellStyle copyrightStyle = wb.createCellStyle();
                 copyrightStyle.setLocked(true);
-                sheet.protectSheet("learnweb");
+                sheet.protectSheet(Learnweb.SALT_1); // use SALT as password
             }
         } catch (RuntimeException | IOException e) {
             log.error("Error in postprocessing Glossary xls for resource: {}", glossaryResource.getId(), e);
             addErrorMessage(e);
         }
-
     }
 
     public void rotatePDF(Object document) {
@@ -546,5 +534,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
     public boolean isOptionImportEnabled() {
         return optionImportEnabled;
+    }
+
+    public Column[] getColumns() {
+        return Column.values();
     }
 }

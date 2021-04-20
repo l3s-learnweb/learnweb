@@ -16,6 +16,8 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.model.file.UploadedFile;
 
+import de.l3s.learnweb.LanguageBundle;
+
 public class GlossaryXLSParser {
     private static final Logger log = LogManager.getLogger(GlossaryXLSParser.class);
 
@@ -29,6 +31,22 @@ public class GlossaryXLSParser {
 
     private boolean isEmptyRow(Row row) {
         if (row != null) {
+            if (row.getPhysicalNumberOfCells() < 2) {
+                return true; // treats also the footer, which shows the entry count, as an empty row
+            }
+
+            // another (ugly) way to detect the footer. It seams that the physicalNumberOfCells is chanced when the file is edited with OpenOffice
+            if (row.getCell(0) != null) {
+                String value = GlossaryRowBuilder.getStringValueForCell(row.getCell(0));
+                if (!value.isEmpty() && value.contains(" = ")) {
+                    String[] parts = value.split(" = ");
+
+                    if (LanguageBundle.isEqualForAnyLocale(parts[0], "Glossary.total_entries")) {
+                        return true;
+                    }
+                }
+            }
+
             for (int cellNumber = 0; cellNumber < row.getPhysicalNumberOfCells(); ++cellNumber) {
                 if (StringUtils.isNoneEmpty(row.getCell(cellNumber).getStringCellValue())) {
                     return false;
@@ -47,16 +65,18 @@ public class GlossaryXLSParser {
             List<GlossaryEntry> glossaryEntries = new ArrayList<>();
 
             for (int rowNumber = 0; rowNumber < sheet.getPhysicalNumberOfRows(); ++rowNumber) {
-                if (!isEmptyRow(sheet.getRow(rowNumber))) {
+                Row row = sheet.getRow(rowNumber);
+
+                if (!isEmptyRow(row)) {
                     if (glossaryRowBuilder == null) { // parse header
                         glossaryRowBuilder = new GlossaryRowBuilder();
-                        if (!glossaryRowBuilder.headerInit(sheet.getRow(rowNumber), languageMap)) {
+                        if (!glossaryRowBuilder.headerInit(row, languageMap)) {
                             log.error("Errors during header processing, can't continue.");
 
                             return new GlossaryParserResponse(null, glossaryRowBuilder.getErrors());
                         }
                     } else { // parse entry
-                        GlossaryEntry entry = glossaryRowBuilder.build(sheet.getRow(rowNumber));
+                        GlossaryEntry entry = glossaryRowBuilder.build(row);
                         glossaryEntries.add(entry);
                     }
                 }

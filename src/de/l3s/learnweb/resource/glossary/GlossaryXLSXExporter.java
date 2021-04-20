@@ -69,12 +69,8 @@ public final class GlossaryXLSXExporter {
 
         int columnIndex = 0;
         for (Column column : Column.values()) {
-            if (column == Column.pronounciation) { // don't show in Excel file
-                continue;
-            }
-
             Cell cell = headerRow.createCell(columnIndex++);
-            cell.setCellValue(LanguageBundle.getLocaleMessage(language, column.getLocaleName()));
+            cell.setCellValue(LanguageBundle.getLocaleMessage(language, column.getMsgKey()));
             cell.setCellStyle(styles.get("header"));
         }
 

@@ -187,6 +187,25 @@ public class LanguageBundle extends ResourceBundle {
     }
 
     /**
+     * True if the given value is equal to any translation of the given msg key
+     */
+    public static boolean isEqualForAnyLocale(String value, String msgKey) {
+
+        for (Locale localeToCheck : LanguageBundle.getSupportedLocales()) {
+            String translation = LanguageBundle.getLocaleMessage(localeToCheck, msgKey);
+
+            if (!translation.equals(translation.trim())) {
+                log.warn(msgKey + " contains whitespaces");
+            }
+
+            if (value.equalsIgnoreCase(translation)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * This bundle returns always the key as it's value. This helps to find the appropriate key in the frontend
      */
     private static class DebugBundle extends ResourceBundle {

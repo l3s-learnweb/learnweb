@@ -3,10 +3,12 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
                 xmlns:of="http://omnifaces.org/functions"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+<o:importConstants type="de.l3s.learnweb.resource.glossary.Column" />
 
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB" async="async"></script>
 <h:outputScript name="learnweb/js/glossary.js" target="body"/>
@@ -70,22 +72,22 @@
                 </p:commandLink>
             </div>
         </p:column>
-        <p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topicOne}" sortBy="#{item.topicOne}">
+        <p:column headerText="#{msg[Column.topicOne]}" filterable="true" filterBy="#{item.topicOne}" sortBy="#{item.topicOne}">
             <h:outputText value="#{item.topicOne}" pt:data-itemId="#{item.entryId}" id="cell1" escape="false"/>
         </p:column>
-        <p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topicTwo}" sortBy="#{item.topicTwo}">
+        <p:column headerText="#{msg[Column.topicTwo]}" filterable="true" filterBy="#{item.topicTwo}" sortBy="#{item.topicTwo}">
             <h:outputText value="#{item.topicTwo}" pt:data-itemId="#{item.entryId}" id="cell2"/>
         </p:column>
-        <p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topicThree}" sortBy="#{item.topicThree}">
+        <p:column headerText="#{msg[Column.topicThree]}" filterable="true" filterBy="#{item.topicThree}" sortBy="#{item.topicThree}">
             <h:outputText value="#{item.topicThree}" pt:data-itemId="#{item.entryId}" id="cell3"/>
         </p:column>
-        <p:column headerText="#{msg['Glossary.Definition']}" filterable="true" sortBy="#{item.description}" filterBy="#{item.description}">
+        <p:column headerText="#{msg[Column.description]}" filterable="true" sortBy="#{item.description}" filterBy="#{item.description}">
             <h:outputText value="#{item.description}" pt:data-itemId="#{item.entryId}" id="cell4"/>
         </p:column>
-        <p:column headerText="#{msg['Glossary.term']}" filterable="true" filterBy="#{item.term}">
+        <p:column headerText="#{msg[Column.term]}" filterable="true" filterBy="#{item.term}">
             <h:outputText value="#{item.term}"/>
         </p:column>
-        <p:column headerText="#{msg.language}" filterBy="#{item.language}">
+        <p:column headerText="#{msg[Column.language]}" filterBy="#{item.language}">
             <f:facet name="filter">
                 <p:selectCheckboxMenu label="#{msg.filter}" value="#{glossaryBean.tableLanguageFilter}" onchange="PF('glossTable').filter()"
                                       converter="localeConverter">
@@ -95,23 +97,23 @@
             </f:facet>
             <h:outputText value="#{msg['language_' += item.languageTag]}"/>
         </p:column>
-        <p:column headerText="#{msg['Glossary.use']}">
+        <p:column headerText="#{msg[Column.uses]}">
             <h:outputText value="#{item.uses}"/>
         </p:column>
-        <p:column headerText="#{msg['Glossary.pronounciation']}">
+        <p:column headerText="#{msg[Column.pronounciation]}">
             <p:commandLink type="button" rendered="#{item.term ne null and glossaryBean.getPronounciationVoice(item.language) ne null}"
                            onclick="responsiveVoice.speak('#{of:escapeJS(item.term)}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
                 <i class="fas fa-fw fa-volume-up"></i>
             </p:commandLink>
             <h:outputText value="#{item.pronounciation}"/>
         </p:column>
-        <p:column headerText="#{msg['Glossary.acronym']}" filterable="true" filterBy="#{item.acronym}">
+        <p:column headerText="#{msg[Column.acronym]}" filterable="true" filterBy="#{item.acronym}">
             <h:outputText value="#{item.acronym}"/>
         </p:column>
-        <p:column headerText="#{msg['source']}" filterable="true" filterBy="#{item.source}">
+        <p:column headerText="#{msg[Column.source]}" filterable="true" filterBy="#{item.source}">
             <h:outputText value="#{item.source}"/>
         </p:column>
-        <p:column headerText="#{msg['Glossary.phraseology']}" filterable="true" filterBy="#{item.phraseology}">
+        <p:column headerText="#{msg[Column.phraseology]}" filterable="true" filterBy="#{item.phraseology}">
             <h:outputText value="#{item.phraseology}"/>
         </p:column>
     </p:dataTable>
@@ -133,14 +135,17 @@
     <h:outputFormat value="#{msg['Glossary.import_successful']}" styleClass="d-block" rendered="#{glossaryBean.importResponse.successful}">
         <f:param value="#{glossaryBean.importResponse.entryCount}"/>
     </h:outputFormat>
-    <h:outputText value="#{msg['Glossary.import_error']}" styleClass="d-block" rendered="#{not glossaryBean.importResponse.successful}"/>
+    <h:outputText value="#{msg['Glossary.import_error']}" styleClass="d-block ui-messages-error p-2" rendered="#{not glossaryBean.importResponse.successful}"/>
     <h:form>
         <p:dataTable var="error" value="#{glossaryBean.importResponse.errors}" rendered="#{not glossaryBean.importResponse.successful}">
-            <p:column headerText="Excel cell">
+            <p:column headerText="#{msg.row}">
+                <h:outputText value="#{error.rowName}"/>
+            </p:column>
+            <p:column headerText="#{msg.column}">
                 <h:outputText value="#{error.cell}"/>
             </p:column>
-            <p:column headerText="Error message">
-                <h:outputText value="#{error.errorMessage}"/>
+            <p:column headerText="#{msg.error}">
+                <h:outputText value="#{error.errorMessage}" escape="false"/>
             </p:column>
         </p:dataTable>
     </h:form>
