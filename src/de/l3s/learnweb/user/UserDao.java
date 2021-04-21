@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -45,13 +46,14 @@ public interface UserDao extends SqlObject, Serializable {
         return findById(userId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_object_description"));
     }
 
-    @SqlQuery("SELECT * FROM lw_user WHERE username = ?")
+    @SqlQuery("SELECT * FROM lw_user WHERE username = ? AND deleted = 0")
     Optional<User> findByUsername(String username);
 
     default Optional<User> findByUsernameAndPassword(String username, String password) {
         Optional<User> user = findByUsername(username);
 
         if (user.isPresent() && user.get().validatePassword(password)) {
+            // update pw to use new hashing algorithm
             if (user.get().getHashing() != User.PasswordHashing.PBKDF2) {
                 user.get().setPassword(password);
                 save(user.get());
@@ -125,7 +127,8 @@ public interface UserDao extends SqlObject, Serializable {
         user.setDeleted(true);
         user.setEmailRaw(HashHelper.sha512(user.getEmail()));
         user.setPasswordRaw("deleted user");
-        user.setUsername(user.getRealUsername() + " (Deleted)");
+        // alter username so that it is unlikely to cause conflicts with other usernames
+        user.setUsername(user.getRealUsername() + " (Deleted) " + user.getId() + " - " + RandomUtils.nextInt(1, 100));
         save(user);
 
         cache.remove(user.getId());
