@@ -875,7 +875,7 @@ public class Resource extends AbstractResource implements Serializable {
             } else if (type == ResourceType.video) {
                 switch (service) {
                     case ted:
-                        iframeUrl = getUrl().replace("//www.", "//embed.");
+                        iframeUrl = getUrl().replace("//www.", "//embed.").replace("http://", "https://");
                         break;
                     case youtube:
                     case teded:
