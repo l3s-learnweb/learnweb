@@ -1,4 +1,4 @@
-package de.l3s.learnweb.resource.glossary;
+package de.l3s.learnweb.resource.glossary.parser;
 
 import java.io.Serializable;
 
@@ -33,8 +33,9 @@ public class ParsingError implements Serializable {
     }
 
     public String getRowName() {
-        if (row == -1)
+        if (row == -1) {
             return "";
+        }
 
         return Integer.toString(row + 1); // internal row count starts at zero
     }

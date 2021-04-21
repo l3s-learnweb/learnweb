@@ -1,4 +1,4 @@
-package de.l3s.learnweb.resource.glossary;
+package de.l3s.learnweb.resource.glossary.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +11,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
 import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.resource.glossary.Column;
+import de.l3s.learnweb.resource.glossary.GlossaryEntry;
+import de.l3s.learnweb.resource.glossary.GlossaryTerm;
 
 public class GlossaryRowBuilder {
     protected int topicOneHeaderPosition = -1;
@@ -77,7 +80,7 @@ public class GlossaryRowBuilder {
     }
 
     /**
-     * Check if the given value is equal to any translated name of the given column
+     * Check if the given value is equal to any translated name of the given column.
      */
     private boolean isEqualForAnyLocale(String value, Column column) {
         return LanguageBundle.isEqualForAnyLocale(value, column.getMsgKey());

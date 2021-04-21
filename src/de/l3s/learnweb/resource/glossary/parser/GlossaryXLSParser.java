@@ -1,4 +1,4 @@
-package de.l3s.learnweb.resource.glossary;
+package de.l3s.learnweb.resource.glossary.parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.model.file.UploadedFile;
 
 import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.resource.glossary.GlossaryEntry;
 
 public class GlossaryXLSParser {
     private static final Logger log = LogManager.getLogger(GlossaryXLSParser.class);
