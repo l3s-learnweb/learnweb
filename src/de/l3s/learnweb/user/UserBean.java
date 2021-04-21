@@ -393,7 +393,7 @@ public class UserBean implements Serializable {
                 .url("admin/index.jsf")
                 .addElement(DefaultMenuItem.builder().value(msg.getString("organisations")).icon("fas fa-sitemap").url("admin/organisations.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("banlist")).icon("fas fa-ban").url("admin/banlist.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("ip_requests")).icon("fas fa-chart-area").url("admin/requests.jsf").build())
+                .addElement(DefaultMenuItem.builder().value("Requests").icon("fas fa-chart-area").url("admin/requests.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("system_tools")).icon("fas fa-tools").url("admin/systemtools.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("announcements")).icon("fas fa-bullhorn").url("admin/announcements.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("survey.survey_overview")).icon("fas fa-poll-h").url("survey/surveys.jsf").build())

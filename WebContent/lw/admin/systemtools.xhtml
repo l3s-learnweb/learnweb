@@ -1,135 +1,135 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui"
-				xmlns:lw="http://l3s.de/learnweb">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.system_tools}"/>
 <ui:param name="hasAccessPermission" value="#{userBean.admin}"/>
 
 <ui:define name="breadcrumb">
-	<lw:breadcrumb-item link="admin/index.jsf" title="#{msg.admin}">
-		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-	</lw:breadcrumb-item>
+    <lw:breadcrumb-item link="admin/index.jsf" title="#{msg.admin}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
 
-	<lw:breadcrumb-item link="admin/systemtools.jsf" title="#{msg.system_tools}">
-		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
-	</lw:breadcrumb-item>
+    <lw:breadcrumb-item link="admin/systemtools.jsf" title="#{msg.system_tools}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
+    </lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-	<h:form>
-		<p:dashboard id="board" model="#{adminSystemBean.model}" reordering="false">
-			<p:panel id="memory" header="Memory usage">
-				<p:panelGrid columns="2" styleClass="w-100">
-					<h:outputText value="Free memory:"/>
-					<h:outputText value="#{adminSystemBean.runtimeInfo.freeMemory}"/>
+    <h:form>
+        <p:dashboard id="board" model="#{adminSystemBean.model}" reordering="false">
+            <p:panel id="memory" header="Memory usage">
+                <p:panelGrid columns="2" styleClass="w-100">
+                    <h:outputText value="Free memory:"/>
+                    <h:outputText value="#{adminSystemBean.runtimeInfo.freeMemory}"/>
 
-					<h:outputText value="Total memory:"/>
-					<h:outputText value="#{adminSystemBean.runtimeInfo.totalMemory}"/>
+                    <h:outputText value="Total memory:"/>
+                    <h:outputText value="#{adminSystemBean.runtimeInfo.totalMemory}"/>
 
-					<h:outputText value="Max memory (Java VM):"/>
-					<h:outputText value="#{adminSystemBean.runtimeInfo.maxMemory}"/>
-				</p:panelGrid>
-			</p:panel>
+                    <h:outputText value="Max memory (Java VM):"/>
+                    <h:outputText value="#{adminSystemBean.runtimeInfo.maxMemory}"/>
+                </p:panelGrid>
+            </p:panel>
 
-			<p:panel id="cache" header="Objects cache">
-				<p:dataTable var="cache" value="#{adminSystemBean.cacheObjects}" styleClass="mb-3">
-					<p:column headerText="Name"><h:outputText value="#{cache.name}"/></p:column>
-					<p:column headerText="Size"><h:outputText value="#{cache.size}"/></p:column>
-					<p:column headerText="Size (sec.)"><h:outputText value="#{cache.sizeSecondary}"/></p:column>
-				</p:dataTable>
+            <p:panel id="cache" header="Objects cache">
+                <p:dataTable var="cache" value="#{adminSystemBean.cacheObjects}" styleClass="mb-3">
+                    <p:column headerText="Name"><h:outputText value="#{cache.name}"/></p:column>
+                    <p:column headerText="Size"><h:outputText value="#{cache.size}"/></p:column>
+                    <p:column headerText="Size (sec.)"><h:outputText value="#{cache.sizeSecondary}"/></p:column>
+                </p:dataTable>
 
-				<p:commandButton actionListener="#{adminSystemBean.clearAllCaches()}" value="#{msg.clear_caches}" update="cache" styleClass="orange-btn"/>
-			</p:panel>
+                <p:commandButton actionListener="#{adminSystemBean.clearAllCaches()}" value="#{msg.clear_caches}" update="cache" styleClass="orange-btn"/>
+            </p:panel>
 
-			<p:panel id="maintenance" header="Maintenance">
-				<p:toggleSwitch value="#{config.maintenance}">
-					<p:ajax listener="#{adminSystemBean.onMaintenanceUpdate}"/>
-				</p:toggleSwitch>
-			</p:panel>
+            <p:panel id="maintenance" header="Maintenance">
+                <p:toggleSwitch value="#{config.maintenance}">
+                    <p:ajax listener="#{adminSystemBean.onMaintenanceUpdate}"/>
+                </p:toggleSwitch>
+            </p:panel>
 
-			<p:panel id="solrIndex" header="Solr Index">
-				<p:panelGrid columns="2" styleClass="w-100 mb-3">
-					<h:outputText value="Total resources:"/>
-					<h:outputText value="#{adminSystemBean.totalResources}"/>
+            <p:panel id="solrIndex" header="Solr Index">
+                <p:panelGrid columns="2" styleClass="w-100 mb-3">
+                    <h:outputText value="Total resources:"/>
+                    <h:outputText value="#{adminSystemBean.totalResources}"/>
 
-					<h:outputText value="Indexed resources:"/>
-					<h:outputText value="#{adminSystemBean.indexedResources}"/>
-				</p:panelGrid>
+                    <h:outputText value="Indexed resources:"/>
+                    <h:outputText value="#{adminSystemBean.indexedResources}"/>
+                </p:panelGrid>
 
-				<p:commandButton actionListener="#{adminSystemBean.reindexResources()}" widgetVar="reindexBtn" value="Reindex" styleClass="orange-btn mb-2"
-								 update="solrIndex" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
+                <p:commandButton actionListener="#{adminSystemBean.reindexResources()}" widgetVar="reindexBtn" value="Reindex" styleClass="orange-btn mb-2"
+                                 update="solrIndex" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
 
-				<p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true"
-							   labelTemplate="{value}%" styleClass="p-mt-3 collapse" global="false" interval="500">
-					<p:ajax event="complete" listener="#{adminSystemBean.onReindexComplete}"
-							oncomplete="PF('reindexBtn').enable();PF('reindexProgress').cancel();" />
-				</p:progressBar>
-			</p:panel>
-		</p:dashboard>
+                <p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true"
+                               labelTemplate="{value}%" styleClass="p-mt-3 collapse" global="false" interval="500">
+                    <p:ajax event="complete" listener="#{adminSystemBean.onReindexComplete}"
+                            oncomplete="PF('reindexBtn').enable();PF('reindexProgress').cancel();"/>
+                </p:progressBar>
+            </p:panel>
+        </p:dashboard>
 
-		<div class="clearfix"></div>
+        <div class="clearfix"></div>
 
-		<p:blockUI block="processTable" widgetVar="processTableOverlay">
-			<h:outputText value="#{msg.please_wait}"/>
-		</p:blockUI>
+        <p:blockUI block="processTable" widgetVar="processTableOverlay">
+            <h:outputText value="#{msg.please_wait}"/>
+        </p:blockUI>
 
-		<p:dataTable id="processTable" var="process" value="#{adminSystemBean.databaseProcesses}" emptyMessage="No open connections">
-			<f:facet name="header">
-				<div class="d-flex">
-					<div class="me-auto">#{msg.database_connections}</div>
-					<div class="d-md-block d-flex flex-column">
-						<p:commandButton value="Terminate all" action="#{adminSystemBean.terminateAllProcesses()}" styleClass="alt-btn"/>
-					</div>
-				</div>
-			</f:facet>
+        <p:dataTable id="processTable" var="process" value="#{adminSystemBean.databaseProcesses}" emptyMessage="No open connections">
+            <f:facet name="header">
+                <div class="d-flex">
+                    <div class="me-auto">#{msg.database_connections}</div>
+                    <div class="d-md-block d-flex flex-column">
+                        <p:commandButton value="Terminate all" action="#{adminSystemBean.terminateAllProcesses()}" styleClass="alt-btn"/>
+                    </div>
+                </div>
+            </f:facet>
 
-			<p:column headerText="#{msg.id}" sortBy="#{process.id}">
-				<h:outputText value="#{process.id}"/>
-			</p:column>
+            <p:column headerText="#{msg.id}" sortBy="#{process.id}">
+                <h:outputText value="#{process.id}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.username}" sortBy="#{process.user}">
-				<h:outputText value="#{process.user}"/>
-			</p:column>
+            <p:column headerText="#{msg.username}" sortBy="#{process.user}">
+                <h:outputText value="#{process.user}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.host}" sortBy="#{process.host}">
-				<h:outputText value="#{process.host}"/>
-			</p:column>
+            <p:column headerText="Host" sortBy="#{process.host}">
+                <h:outputText value="#{process.host}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.db}" sortBy="#{process.db}">
-				<h:outputText value="#{process.db}"/>
-			</p:column>
+            <p:column headerText="DB" sortBy="#{process.db}">
+                <h:outputText value="#{process.db}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.command}" sortBy="#{process.command}">
-				<h:outputText value="#{process.command}"/>
-			</p:column>
+            <p:column headerText="Command" sortBy="#{process.command}">
+                <h:outputText value="#{process.command}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.time}" sortBy="#{process.time}">
-				<h:outputText value="#{process.time}"/>
-			</p:column>
+            <p:column headerText="#{msg.time}" sortBy="#{process.time}">
+                <h:outputText value="#{process.time}"/>
+            </p:column>
 
-			<p:column headerText="${msg.state}" sortBy="#{process.state}">
-				<h:outputText value="#{process.state}"/>
-			</p:column>
+            <p:column headerText="State" sortBy="#{process.state}">
+                <h:outputText value="#{process.state}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.info}" sortBy="#{process.info}">
-				<h:outputText value="#{process.info}"/>
-			</p:column>
+            <p:column headerText="#{msg.info}" sortBy="#{process.info}">
+                <h:outputText value="#{process.info}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.progress}" sortBy="#{process.progress}">
-				<h:outputText value="#{process.progress}"/>
-			</p:column>
+            <p:column headerText="Progress" sortBy="#{process.progress}">
+                <h:outputText value="#{process.progress}"/>
+            </p:column>
 
-			<p:column headerText="#{msg.terminate}">
-				<p:commandButton styleClass="m-auto d-block" value="#{msg.terminate}" actionListener="#{adminSystemBean.terminateProcess(process)}"
-								 update="processTable" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()">
-				</p:commandButton>
-			</p:column>
-		</p:dataTable>
+            <p:column headerText="#{msg.options}">
+                <p:commandButton styleClass="m-auto d-block" value="Terminate" actionListener="#{adminSystemBean.terminateProcess(process)}"
+                                 update="processTable" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()">
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
 
-	</h:form>
+    </h:form>
 </ui:define>
 
 </ui:composition>

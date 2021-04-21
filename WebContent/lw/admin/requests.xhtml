@@ -1,101 +1,104 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui"
-				xmlns:of="http://omnifaces.org/functions"
-				xmlns:lw="http://l3s.de/learnweb">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.requests_header}"/>
 <ui:param name="hasAccessPermission" value="#{userBean.admin}"/>
 
 <ui:define name="breadcrumb">
-	<lw:breadcrumb-item link="admin/index.jsf" title="#{msg.admin}">
-		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-	</lw:breadcrumb-item>
+    <lw:breadcrumb-item link="admin/index.jsf" title="#{msg.admin}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
 
-	<lw:breadcrumb-item link="admin/requests.jsf" title="#{msg.ip_requests}">
-		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
-	</lw:breadcrumb-item>
+    <lw:breadcrumb-item link="admin/requests.jsf" title="Requests">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
+    </lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
-	<p:tabView styleClass="ui-tabs-transparent">
-		<p:tab title="#{msg.requests}">
-			<h:form id="requestform">
-				<p:dataTable id="requestsTable" widgetVar="requestsTable" paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}"
-							 rows="100" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-							 currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
-					<p:column field="addr" headerText="IP" filterMatchMode="contains"/>
+    <p:tabView styleClass="ui-tabs-transparent">
+        <p:tab title="#{msg.requests}">
+            <h:form id="requestform">
+                <p:dataTable id="requestsTable" widgetVar="requestsTable" paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}"
+                             rows="100" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
+                    <p:column field="addr" headerText="IP" filterMatchMode="contains"/>
 
-					<p:column field="time" headerText="#{msg.time}">
-						<f:facet name="filter">
-							<p:datePicker onchange="PF('requestsTable').filter()"/>
-						</f:facet>
-						<h:outputText value="#{reqData.createdAt}">
-							<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
-						</h:outputText>
-					</p:column>
+                    <p:column field="time" headerText="#{msg.time}">
+                        <f:facet name="filter">
+                            <p:datePicker onchange="PF('requestsTable').filter()"/>
+                        </f:facet>
+                        <h:outputText value="#{reqData.createdAt}">
+                            <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
+                        </h:outputText>
+                    </p:column>
 
-					<p:column field="url" headerText="URL" filterMatchMode="contains"/>
-				</p:dataTable>
-			</h:form>
-		</p:tab>
+                    <p:column field="url" headerText="URL" filterMatchMode="contains"/>
+                </p:dataTable>
+            </h:form>
+        </p:tab>
 
-		<p:tab title="#{msg.logins}">
-			<h:form id="loginform">
-				<p:dataTable var="login" paginatorPosition="bottom" value="#{of:mapToList(adminRequestListBean.logins)}" rows="100" paginator="true"
-					   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-					   currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
-					<p:column headerText="IP" sortBy="#{login.key}" filterBy="#{login.key}" filterMatchMode="contains">
-						<h:outputText value="#{login.key}"/>
-					</p:column>
+        <p:tab title="#{msg.logins}">
+            <h:form id="loginform">
+                <p:dataTable var="login" paginatorPosition="bottom" value="#{of:mapToList(adminRequestListBean.logins)}" rows="100" paginator="true"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
+                    <p:column headerText="IP" sortBy="#{login.key}" filterBy="#{login.key}" filterMatchMode="contains">
+                        <h:outputText value="#{login.key}"/>
+                    </p:column>
 
-					<p:column headerText="#{msg.logins_amount}" sortBy="#{login.value.size()}" filterBy="#{login.value.size()}" filterMatchMode="contains">
-						<h:outputText value="#{login.value.size()}"/>
-					</p:column>
+                    <p:column headerText="#{msg.logins_amount}" sortBy="#{login.value.size()}" filterBy="#{login.value.size()}" filterMatchMode="contains">
+                        <h:outputText value="#{login.value.size()}"/>
+                    </p:column>
 
-					<p:column headerText="#{msg.request_usernames}" sortBy="#{login.value.toString()}" filterBy="#{login.value.toString()}" filterMatchMode="contains">
-						<h:outputText value="#{login.value.toString()}"/>
-					</p:column>
-				</p:dataTable>
-			</h:form>
-		</p:tab>
+                    <p:column headerText="#{msg.request_usernames}" sortBy="#{login.value.toString()}" filterBy="#{login.value.toString()}"
+                              filterMatchMode="contains">
+                        <h:outputText value="#{login.value.toString()}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:tab>
 
-		<p:tab title="#{msg.aggr_requests}">
-			<h:form id="aggrrequestform">
-				<p:blockUI block="aggrRequestsTable" widgetVar="requestsTableOverlay">
-					<h:outputText value="#{msg.please_wait}"/>
-				</p:blockUI>
-				<span>
-					#{msg.aggr_request_updated}: <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
+        <p:tab title="Requests over time by IP">
+            <h:form id="aggrrequestform">
+                <p:blockUI block="aggrRequestsTable" widgetVar="requestsTableOverlay">
+                    <h:outputText value="#{msg.please_wait}"/>
+                </p:blockUI>
+                <span>
+					Requests updated: <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
 													<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 												 </h:outputText>
-					<p:commandButton onstart="PF('requestsTableOverlay').show()" oncomplete="PF('requestsTableOverlay').hide()" action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="ms-3" immediate="true"/>
+					<p:commandButton onstart="PF('requestsTableOverlay').show()" oncomplete="PF('requestsTableOverlay').hide()"
+                                     action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="ms-3" immediate="true"/>
 				</span>
 
-				<p:dataTable id="aggrRequestsTable" widgetVar="aggrRequestsTable" tableStyleClass="mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}"
-							 rows="50" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-					<p:column field="addr" headerText="IP" filterMatchMode="contains"/>
+                <p:dataTable id="aggrRequestsTable" widgetVar="aggrRequestsTable" tableStyleClass="mt-3" var="aRequest" paginatorPosition="bottom"
+                             value="#{adminRequestListBean.aggregatedRequests}"
+                             rows="50" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+                    <p:column field="addr" headerText="IP" filterMatchMode="contains"/>
 
-					<p:column field="requests" headerText="#{msg.requests_count}" filterMatchMode="contains"/>
+                    <p:column field="requests" headerText="#{msg.requests_count}" filterMatchMode="contains"/>
 
-					<p:column field="loginCount" headerText="#{msg.logins_amount}" filterMatchMode="contains"/>
+                    <p:column field="loginCount" headerText="#{msg.logins_amount}" filterMatchMode="contains"/>
 
-					<p:column field="usernames" headerText="#{msg.request_usernames}" filterMatchMode="contains"/>
+                    <p:column field="usernames" headerText="#{msg.request_usernames}" filterMatchMode="contains"/>
 
-					<p:column field="time" headerText="#{msg.time_stamp}">
-						<f:facet name="filter">
-							<p:datePicker onchange="PF('aggrRequestsTable').filter()"/>
-						</f:facet>
-						<h:outputText value="#{aRequest.createdAt}">
-							<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
-						</h:outputText>
-					</p:column>
-				</p:dataTable>
-			</h:form>
-		</p:tab>
-	</p:tabView>
+                    <p:column field="time" headerText="#{msg.time_stamp}">
+                        <f:facet name="filter">
+                            <p:datePicker onchange="PF('aggrRequestsTable').filter()"/>
+                        </f:facet>
+                        <h:outputText value="#{aRequest.createdAt}">
+                            <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:tab>
+    </p:tabView>
 </ui:define>
 
 </ui:composition>

@@ -8,7 +8,7 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
-<o:importConstants type="de.l3s.learnweb.resource.glossary.Column" />
+<o:importConstants type="de.l3s.learnweb.resource.glossary.Column"/>
 
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB" async="async"></script>
 <h:outputScript name="learnweb/js/glossary.js" target="body"/>
@@ -130,7 +130,7 @@
     </div>
 </p:dialog>
 
-<p:dialog id="glossary_dialog" header="#{msg['Glossary.import_result']}" widgetVar="glossaryDlg"
+<p:dialog id="glossary_dialog" header="#{msg['Glossary.import_glossary']}" widgetVar="glossaryDlg"
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
     <h:outputFormat value="#{msg['Glossary.import_successful']}" styleClass="d-block" rendered="#{glossaryBean.importResponse.successful}">
         <f:param value="#{glossaryBean.importResponse.entryCount}"/>
@@ -182,7 +182,7 @@
 
             <p:outputLabel for="description" styleClass="fw-bold" value="#{msg['Glossary.Definition']}"/>
             <h:panelGroup>
-                <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description" />
+                <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description"/>
                 <p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="w-100"
                              required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');"/>
             </h:panelGroup>
