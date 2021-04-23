@@ -153,6 +153,10 @@ public class ConfigProvider implements Serializable {
         }
     }
 
+    public Object setProperty(final String key, final String value) {
+        return properties.setProperty(key, value);
+    }
+
     public String getProperty(final String key) {
         return properties.getProperty(key);
     }

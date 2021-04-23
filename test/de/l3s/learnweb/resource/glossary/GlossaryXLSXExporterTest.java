@@ -10,7 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
+@Disabled("Use to debug Glossary Export")
 class GlossaryXLSXExporterTest {
     private static final Logger log = LogManager.getLogger(GlossaryXLSXExporterTest.class);
 

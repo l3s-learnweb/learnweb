@@ -122,7 +122,8 @@ public interface LogDao extends SqlObject, Serializable {
     @SqlBatch("INSERT INTO lw_user_log_action (action, name, target, category) VALUES (:ordinal, :name, :getTargetId, :getCategory)")
     void insertUserLogAction(@BindMethods Action... actions);
 
-    @SqlUpdate("TRUNCATE TABLE lw_user_log_action")
+    @SuppressWarnings("SqlWithoutWhere")
+    @SqlUpdate("DELETE FROM lw_user_log_action")
     void truncateUserLogAction();
 
     class LogEntryMapper implements RowMapper<LogEntry> {

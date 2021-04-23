@@ -46,8 +46,8 @@ class ProfileImageHelperTest {
         assertEquals("hw", ProfileImageHelper.getInitialsForProfilePicture("hello world"));
         assertEquals("h6", ProfileImageHelper.getInitialsForProfilePicture("hello 156"));
         assertEquals("HW", ProfileImageHelper.getInitialsForProfilePicture("Hello World"));
-        assertEquals("HbW", ProfileImageHelper.getInitialsForProfilePicture("Hello blabla World")); // FIXME
-        assertEquals("HbbW", ProfileImageHelper.getInitialsForProfilePicture("Hello bla bla World")); // FIXME
+        assertEquals("HW", ProfileImageHelper.getInitialsForProfilePicture("Hello blabla World"));
+        assertEquals("HW", ProfileImageHelper.getInitialsForProfilePicture("Hello bla bla World"));
         assertEquals("HW", ProfileImageHelper.getInitialsForProfilePicture("HelloWorld"));
         assertEquals("H", ProfileImageHelper.getInitialsForProfilePicture("Hello"));
         assertEquals("46", ProfileImageHelper.getInitialsForProfilePicture("14584546"));

@@ -24,7 +24,7 @@ public interface SpeechRepositoryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM learnweb_large.speechrepository_video WHERE learnweb_resource_id = ?")
     List<SpeechRepositoryEntity> findByResourceId(int resourceId);
 
-    @SqlQuery("SELECT DISTINCT id FROM learnweb_large.speechrepository_video WHERE id = ?")
+    @SqlQuery("SELECT COUNT(1) FROM learnweb_large.speechrepository_video WHERE id = ?")
     boolean isExists(int speechId);
 
     @SqlUpdate("UPDATE learnweb_large.speechrepository_video SET learnweb_resource_id = ? WHERE id = ?")

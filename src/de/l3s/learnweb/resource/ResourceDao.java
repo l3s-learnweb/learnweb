@@ -149,6 +149,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     @SqlUpdate("DELETE FROM lw_resource_tag WHERE resource_id = ? AND tag_id = ?")
     void deleteTag(Resource resource, Tag tag);
 
+    @Deprecated
     default void copy(final Resource sourceResource, final int targetGroupId, final int targetFolderId, final User user) {
         Resource resource = new Resource(sourceResource);
         resource.setGroupId(targetGroupId);
@@ -222,7 +223,7 @@ public interface ResourceDao extends SqlObject, Serializable {
         resource.setDeleted(true);
 
         try {
-            Learnweb.getInstance().getSolrClient().deleteFromIndex(resource.getId());
+            Learnweb.getInstance().getSolrClient().deleteResource(resource);
         } catch (Exception e) {
             throw new IllegalStateException("Couldn't delete resource " + resource.getId() + " from Solr", e);
         }
@@ -238,7 +239,7 @@ public interface ResourceDao extends SqlObject, Serializable {
         getHandle().execute("DELETE FROM lw_resource WHERE resource_id = ?", resource);
 
         try {
-            Learnweb.getInstance().getSolrClient().deleteFromIndex(resource.getId());
+            Learnweb.getInstance().getSolrClient().deleteResource(resource);
         } catch (Exception e) {
             throw new IllegalStateException("Couldn't delete resource " + resource.getId() + " from Solr", e);
         }

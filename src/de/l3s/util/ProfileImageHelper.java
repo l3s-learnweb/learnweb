@@ -75,29 +75,54 @@ public final class ProfileImageHelper {
             return name.substring(name.length() - 2);
         }
 
+        String[] parts = NAME_SEPARATOR.split(name);
+
+        // name consists of single part
+        if (parts.length == 1) {
+            return getInitialsOfSinglePart(parts[0]);
+        }
+
+        // name consists of multiple terms separated by whitespaces or dots
         StringBuilder initials = new StringBuilder();
-        if (name.contains(" ") || name.contains(".")) { // name consists of multiple terms separated by whitespaces or dots
-            for (String part : NAME_SEPARATOR.split(name)) {
-                if (part.isEmpty()) {
-                    continue;
-                }
-                int index = StringUtils.isNumeric(part) ? (part.length() - 1) : 0; // if is number use last digit as initial
-                initials.append(part.charAt(index));
+        // get char of first part
+        initials.append(getCharOfPart(parts[0]));
+
+        // get first char of any part which starts with uppercase
+        for (int i = 1, len = parts.length; i < len; i++) {
+            if (!parts[i].isEmpty() && Character.isUpperCase(parts[i].charAt(0))) {
+                initials.append(parts[i].charAt(0));
+                break;
             }
-        } else if (StringUtils.isMixedCase(name)) {
+        }
+
+        // if no parts starts with uppercase, use a char from second part
+        if (initials.length() == 1) {
+            initials.append(getCharOfPart(parts[1]));
+        }
+
+        return initials.toString();
+    }
+
+    private static char getCharOfPart(String part) {
+        int index = StringUtils.isNumeric(part) ? (part.length() - 1) : 0; // if is number use last digit as initial
+        return part.charAt(index);
+    }
+
+    private static String getInitialsOfSinglePart(String name) {
+        if (StringUtils.isMixedCase(name)) { // if contains mixed case, try to get second uppercase
+            StringBuilder initials = new StringBuilder();
             initials.append(name.charAt(0)); // always add first char
 
             for (int i = 1, len = name.length() - 1; i < len; i++) {
                 if (Character.isUpperCase(name.charAt(i))) {
                     initials.append(name.charAt(i));
+                    return initials.toString(); // return as soon as second letter added
                 }
             }
+
+            return initials.toString(); // return single letter if no uppercase
         }
 
-        if (initials.length() == 0) {
-            initials.append(name, 0, 2);
-        }
-
-        return initials.toString();
+        return name.substring(0, 2); // if all lowercase or uppercase, just return first two chars
     }
 }

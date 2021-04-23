@@ -12,7 +12,7 @@
 
     <Loggers>
         <Logger name="com.zaxxer.hikari" level="INFO"/>
-        <Logger name="org.flywaydb.core" level="INFO"/>
+        <Logger name="org.flywaydb.core" level="WARN"/>
 
         <Root level="DEBUG">
             <appender-ref ref="console"/>

@@ -14,6 +14,8 @@ import org.apache.logging.log4j.Logger;
 public final class PBKDF2 {
     private static final Logger log = LogManager.getLogger(PBKDF2.class);
 
+    private static final SecureRandom random = new SecureRandom();
+
     // The following constants may be changed without breaking existing hashes.
     private static final int ITERATIONS = 1000;
     private static final int HASH_BYTES = 128;
@@ -64,7 +66,6 @@ public final class PBKDF2 {
     }
 
     private static byte[] salt(final int bytes) {
-        SecureRandom random = new SecureRandom();
         byte[] salt = new byte[bytes];
         random.nextBytes(salt);
         return salt;

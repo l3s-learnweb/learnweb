@@ -10,7 +10,7 @@ import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-@Disabled
+@Disabled("Use to debug Ted transcript crawler")
 class TedManagerTest {
     private static final Logger log = LogManager.getLogger(TedManagerTest.class);
     private static final String VIDEO_ID = "7TXEZ4tP06c";

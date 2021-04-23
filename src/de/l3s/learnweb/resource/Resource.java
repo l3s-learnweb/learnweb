@@ -221,7 +221,7 @@ public class Resource extends AbstractResource implements Serializable {
                 Collections.sort(tags);
             }
 
-            Learnweb.getInstance().getSolrClient().indexTag(tag, this);
+            Learnweb.getInstance().getSolrClient().reIndexResource(this);
         }
     }
 
@@ -229,13 +229,13 @@ public class Resource extends AbstractResource implements Serializable {
         Learnweb.dao().getResourceDao().deleteTag(this, tag);
         tags.remove(tag);
 
-        Learnweb.getInstance().getSolrClient().deleteFromIndex(tag, this);
+        Learnweb.getInstance().getSolrClient().reIndexResource(this);
     }
 
     public void deleteComment(Comment comment) {
         comments.remove(comment);
         Learnweb.dao().getCommentDao().delete(comment);
-        Learnweb.getInstance().getSolrClient().deleteFromIndex(comment);
+        Learnweb.getInstance().getSolrClient().reIndexResource(this);
     }
 
     public List<Comment> getComments() {
@@ -257,8 +257,7 @@ public class Resource extends AbstractResource implements Serializable {
         getComments(); // make sure comments are loaded before adding a new one
         comments.add(0, comment);
 
-        Learnweb.getInstance().getSolrClient().indexComment(comment);
-
+        Learnweb.getInstance().getSolrClient().reIndexResource(this);
         return comment;
     }
 
