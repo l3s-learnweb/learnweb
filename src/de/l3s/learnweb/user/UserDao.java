@@ -125,8 +125,8 @@ public interface UserDao extends SqlObject, Serializable {
         getHandle().execute("DELETE FROM lw_group_user WHERE user_id = ?", user);
 
         user.setDeleted(true);
+        user.setPassword(null);
         user.setEmailRaw(HashHelper.sha512(user.getEmail()));
-        user.setPasswordRaw("deleted user");
         // alter username so that it is unlikely to cause conflicts with other usernames
         user.setUsername(user.getRealUsername() + " (Deleted) " + user.getId() + " - " + RandomUtils.nextInt(1, 100));
         save(user);

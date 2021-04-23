@@ -495,6 +495,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
             this.hashing = PasswordHashing.PBKDF2;
         } else {
             this.hashing = PasswordHashing.EMPTY;
+            this.password = null;
         }
     }
 
