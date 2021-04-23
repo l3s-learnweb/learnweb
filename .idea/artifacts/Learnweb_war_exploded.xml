@@ -101,12 +101,12 @@
           <element id="library" level="project" name="Maven: com.twelvemonkeys.imageio:imageio-hdr:3.6.4" />
           <element id="library" level="project" name="Maven: org.mariadb.jdbc:mariadb-java-client:2.7.2" />
           <element id="library" level="project" name="Maven: com.zaxxer:HikariCP:4.0.3" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.19.0" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.20.0" />
           <element id="library" level="project" name="Maven: org.antlr:antlr4-runtime:4.9" />
           <element id="library" level="project" name="Maven: io.leangen.geantyref:geantyref:1.3.11" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.19.0" />
-          <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:7.7.3" />
-          <element id="library" level="project" name="Maven: org.apache.solr:solr-solrj:8.8.1" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.20.0" />
+          <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:7.8.1" />
+          <element id="library" level="project" name="Maven: org.apache.solr:solr-solrj:8.8.2" />
           <element id="library" level="project" name="Maven: commons-lang:commons-lang:2.6" />
           <element id="library" level="project" name="Maven: io.netty:netty-buffer:4.1.50.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-codec:4.1.50.Final" />
