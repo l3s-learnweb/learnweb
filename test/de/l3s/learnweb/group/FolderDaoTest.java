@@ -29,33 +29,29 @@ class FolderDaoTest {
     void findById() {
         Optional<Folder> retrieved = folderDao.findById(1);
         assertTrue(retrieved.isPresent());
-        assertFalse(retrieved.get().isDeleted());
+        assertEquals(retrieved.get().getId(), 1);
+        assertEquals(retrieved.get().getTitle(), "Sonair");
     }
 
     @Test
     void findByGroupAndRootFolder() {
         List<Folder> retrieved = folderDao.findByGroupAndRootFolder(1);
-        assertNotNull(retrieved);
         assertEquals(3, retrieved.size());
-        assertEquals(1, retrieved.get(0).getId());
-        assertEquals(0.0, retrieved.get(1).getParentFolderId());
+        assertArrayEquals(new Integer[] {1, 2, 3}, retrieved.stream().map(Folder::getId).toArray(Integer[]::new));
     }
 
     @Test
-    void findByGroupAndFolder() { // difference
+    void findByGroupAndFolder() {
         List<Folder> retrieved = folderDao.findByGroupAndFolder(1, 1);
-        assertNotNull(retrieved);
         assertEquals(3, retrieved.size());
-        assertFalse(retrieved.get(0).isDeleted());
-        assertEquals(1, retrieved.get(1).getParentFolderId());
+        assertArrayEquals(new Integer[] {4, 5, 10}, retrieved.stream().map(Folder::getId).toArray(Integer[]::new));
     }
 
     @Test
     void findByPrivateGroupAndRootFolder() {
         List<Folder> retrieved = folderDao.findByPrivateGroupAndRootFolder(1);
-        assertNotNull(retrieved);
         assertEquals(1, retrieved.size());
-        assertFalse(retrieved.get(0).isDeleted());
+        assertEquals(6, retrieved.get(0).getId());
         assertEquals(0, retrieved.get(0).getGroupId());
         assertEquals(0, retrieved.get(0).getParentFolderId());
     }
@@ -63,10 +59,8 @@ class FolderDaoTest {
     @Test
     void findByPrivateGroupAndFolder() {
         List<Folder> retrieved = folderDao.findByPrivateGroupAndFolder(6, 1);
-        assertNotNull(retrieved);
         assertEquals(2, retrieved.size());
-        assertEquals(6, retrieved.get(0).getParentFolderId());
-        assertEquals("A hidden folder", retrieved.get(1).getDescription());
+        assertArrayEquals(new Integer[] {7, 8}, retrieved.stream().map(Folder::getId).toArray(Integer[]::new));
     }
 
     @Test
@@ -74,7 +68,9 @@ class FolderDaoTest {
         Optional<Folder> retrievedOld = folderDao.findById(1);
         assertTrue(retrievedOld.isPresent());
         assertFalse(retrievedOld.get().isDeleted());
+
         folderDao.deleteSoft(retrievedOld.get());
+
         Optional<Folder> retrieved = folderDao.findById(1);
         assertTrue(retrieved.isPresent());
         assertTrue(retrieved.get().isDeleted());
@@ -83,17 +79,15 @@ class FolderDaoTest {
     @Test
     void save() {
         Folder folder = new Folder();
-        folder.setDeleted(false);
-        folder.setParentFolderId(1);
-        folder.setDescription("myFolder");
-        folder.setId(11);
-        folder.setGroupId(1);
+        folder.setGroupId(0);
+        folder.setParentFolderId(6);
         folder.setTitle("private stuff");
+        folder.setDescription("myFolder");
         folder.setUser(userDao.findByIdOrElseThrow(1));
         folderDao.save(folder);
         FolderDao.cache.clear();
 
-        Optional<Folder> retrieved = folderDao.findById(11);
+        Optional<Folder> retrieved = folderDao.findById(folder.getId());
         assertTrue(retrieved.isPresent());
         assertNotSame(folder, retrieved.get());
         assertEquals(folder.getId(), retrieved.get().getId());
@@ -107,8 +101,9 @@ class FolderDaoTest {
         folderDao.save(folder);
         FolderDao.cache.clear();
 
-        Optional<Folder> updated = folderDao.findById(11);
+        Optional<Folder> updated = folderDao.findById(folder.getId());
         assertTrue(updated.isPresent());
+        assertNotSame(folder, retrieved.get());
         assertEquals(folder.getTitle(), updated.get().getTitle());
     }
 }

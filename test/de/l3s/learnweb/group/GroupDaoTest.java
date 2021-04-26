@@ -11,8 +11,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 import de.l3s.test.LearnwebExtension;
@@ -25,25 +23,10 @@ class GroupDaoTest {
     private final UserDao userDao = learnwebExt.attach(UserDao.class);
 
     @Test
-    void getResourceDao() {
-        ResourceDao resourceDao = groupDao.getResourceDao();
-        Optional<Resource> resource = resourceDao.findById(1);
-        assertTrue(resource.isPresent());
-        assertEquals(1, resource.get().getId());
-    }
-
-    @Test
     void findById() {
         Optional<Group> group = groupDao.findById(1);
         assertTrue(group.isPresent());
         assertEquals(1, group.get().getId());
-    }
-
-    //FIXME
-    @Test
-    void findByIdOrElseThrow() {
-
-        //assertThrows(() -> groupDao.findByIdOrElseThrow(51));
     }
 
     @Test
@@ -89,12 +72,11 @@ class GroupDaoTest {
 
     @Test
     void findGroupUserRelation() {
-        Optional<Group> group = groupDao.findById(1);
-        assertTrue(group.isPresent());
-        Optional<User> user = userDao.findById(4);
-        assertTrue(user.isPresent());
-        Optional<GroupUser> groupUser = groupDao.findGroupUserRelation(group.get(), user.get());
+        Optional<GroupUser> groupUser = groupDao.findGroupUserRelation(groupDao.findByIdOrElseThrow(1), userDao.findByIdOrElseThrow(4));
         assertTrue(groupUser.isPresent());
+
+        Optional<GroupUser> groupUser2 = groupDao.findGroupUserRelation(groupDao.findByIdOrElseThrow(1), userDao.findByIdOrElseThrow(2));
+        assertFalse(groupUser2.isPresent());
     }
 
     @Test
@@ -105,104 +87,83 @@ class GroupDaoTest {
 
     @Test
     void findLastVisitTime() {
-        Optional<Group> group = groupDao.findById(1);
-        assertTrue(group.isPresent());
-        Optional<User> user = userDao.findById(4);
-        assertTrue(user.isPresent());
-        Optional<Instant> visitTime = groupDao.findLastVisitTime(group.get(), user.get());
+        Optional<Instant> visitTime = groupDao.findLastVisitTime(groupDao.findByIdOrElseThrow(1), userDao.findByIdOrElseThrow(4));
         assertTrue(visitTime.isPresent());
+        assertEquals(Instant.ofEpochSecond(1613755967), visitTime.get());
     }
 
     @Test
     void countMembers() {
-        int count = groupDao.countMembers(4);
-        assertEquals(1, count);
+        assertEquals(3, groupDao.countMembers(1));
     }
 
     @Test
     void findJoinAble() {
-        Optional<User> user = userDao.findById(4);
-        assertTrue(user.isPresent());
-        List<Group> joinAbles = groupDao.findJoinAble(user.get());
+        List<Group> joinAbles = groupDao.findJoinAble(userDao.findByIdOrElseThrow(4));
         assertFalse(joinAbles.isEmpty());
         assertArrayEquals(new Integer[] {4, 5}, joinAbles.stream().map(Group::getId).sorted().toArray(Integer[]::new));
     }
 
     @Test
     void updateNotificationFrequency() {
-        Optional<Group> group = groupDao.findById(1);
-        assertTrue(group.isPresent());
-        Optional<User> user = userDao.findById(4);
-        assertTrue(user.isPresent());
-        Optional<GroupUser> groupUser = groupDao.findGroupUserRelation(group.get(), user.get());
+        Group group = groupDao.findByIdOrElseThrow(1);
+        User user = userDao.findByIdOrElseThrow(4);
+
+        Optional<GroupUser> groupUser = groupDao.findGroupUserRelation(group, user);
         assertTrue(groupUser.isPresent());
-        User.NotificationFrequency frequency = groupUser.get().getNotificationFrequency();
+        assertEquals(groupUser.get().getNotificationFrequency(), User.NotificationFrequency.NEVER);
+
         groupDao.updateNotificationFrequency(User.NotificationFrequency.DAILY, 1, 4);
-        Optional<GroupUser> lateGroupUser = groupDao.findGroupUserRelation(group.get(), user.get());
+        Optional<GroupUser> lateGroupUser = groupDao.findGroupUserRelation(group, user);
         assertTrue(lateGroupUser.isPresent());
-        User.NotificationFrequency lateFrequency = lateGroupUser.get().getNotificationFrequency();
-        assertNotEquals(frequency, lateFrequency);
+        assertEquals(lateGroupUser.get().getNotificationFrequency(), User.NotificationFrequency.DAILY);
     }
 
     @Test
     void insertLastVisitTime() {
-        Optional<Group> group = groupDao.findById(1);
-        assertTrue(group.isPresent());
-        Optional<User> user = userDao.findById(4);
-        assertTrue(user.isPresent());
-        Optional<Instant> visitTime = groupDao.findLastVisitTime(group.get(), user.get());
+        Group group = groupDao.findByIdOrElseThrow(1);
+        User user = userDao.findByIdOrElseThrow(4);
+
+        Optional<Instant> visitTime = groupDao.findLastVisitTime(group, user);
         assertTrue(visitTime.isPresent());
-        groupDao.insertLastVisitTime(Instant.now(), group.get(), user.get());
-        Optional<Instant> lateVisitTime = groupDao.findLastVisitTime(group.get(), user.get());
-        assertNotEquals(visitTime, lateVisitTime);
+
+        groupDao.insertLastVisitTime(Instant.now(), group, user);
+
+        Optional<Instant> lateVisitTime = groupDao.findLastVisitTime(group, user);
+        assertTrue(lateVisitTime.isPresent());
+        assertNotEquals(visitTime.get(), lateVisitTime.get());
     }
 
     @Test
     void insertUser() {
-        Optional<Group> group = groupDao.findById(5);
-        assertTrue(group.isPresent());
-        Optional<User> user = userDao.findById(5);
-        assertTrue(user.isPresent());
-        Optional<GroupUser> groupUser = groupDao.findGroupUserRelation(group.get(), user.get());
-        assertFalse(groupUser.isPresent());
-        groupDao.insertUser(group.get().getId(), user.get(), User.NotificationFrequency.WEEKLY);
-        groupUser = groupDao.findGroupUserRelation(group.get(), user.get());
-        assertTrue(groupUser.isPresent());
+        Group group = groupDao.findByIdOrElseThrow(5);
+        User user = userDao.findByIdOrElseThrow(5);
+
+        assertFalse(groupDao.findGroupUserRelation(group, user).isPresent());
+        groupDao.insertUser(group.getId(), user, User.NotificationFrequency.WEEKLY);
+        assertTrue(groupDao.findGroupUserRelation(group, user).isPresent());
     }
 
     @Test
     void deleteUser() {
-        Optional<Group> group = groupDao.findById(4);
-        assertTrue(group.isPresent());
-        Optional<User> user = userDao.findById(6);
-        assertTrue(user.isPresent());
-        Optional<GroupUser> groupUser = groupDao.findGroupUserRelation(group.get(), user.get());
-        assertTrue(groupUser.isPresent());
-        groupDao.deleteUser(group.get().getId(), user.get());
-        groupUser = groupDao.findGroupUserRelation(group.get(), user.get());
-        assertFalse(groupUser.isPresent());
+        Group group = groupDao.findByIdOrElseThrow(4);
+        User user = userDao.findByIdOrElseThrow(6);
+
+        assertTrue(groupDao.findGroupUserRelation(group, user).isPresent());
+        groupDao.deleteUser(group.getId(), user);
+        assertFalse(groupDao.findGroupUserRelation(group, user).isPresent());
     }
 
     @Test
     void deleteSoft() {
-        Optional<Group> group = groupDao.findById(3);
-        assertTrue(group.isPresent());
-
-        groupDao.deleteHard(group.get());
-
-        Optional<Group> retrieved = groupDao.findById(3);
-        assertTrue(retrieved.isEmpty());
+        groupDao.deleteHard(groupDao.findByIdOrElseThrow(3));
+        assertTrue(groupDao.findById(3).isEmpty());
     }
 
     @Test
     void deleteHard() {
-        Optional<Group> group = groupDao.findById(3);
-        assertTrue(group.isPresent());
-
-        groupDao.deleteHard(group.get());
-
-        Optional<Group> retrieved = groupDao.findById(3);
-        assertTrue(retrieved.isEmpty());
+        groupDao.deleteHard(groupDao.findByIdOrElseThrow(3));
+        assertTrue(groupDao.findById(3).isEmpty());
     }
 
     @Test

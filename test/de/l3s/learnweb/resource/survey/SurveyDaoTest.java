@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.test.LearnwebExtension;
 
 class SurveyDaoTest {
@@ -18,12 +17,6 @@ class SurveyDaoTest {
     @RegisterExtension
     static final LearnwebExtension learnwebExt = new LearnwebExtension();
     private final SurveyDao surveyDao = learnwebExt.attach(SurveyDao.class);
-
-    @Test
-    void getResourceDao() {
-        ResourceDao resourceDao = surveyDao.getResourceDao();
-        assertTrue(resourceDao.findById(10).isPresent());
-    }
 
     @Test
     void findResourceById() {

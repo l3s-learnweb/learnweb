@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -33,7 +34,32 @@ class UserDaoTest {
     void findById() {
         Optional<User> user = userDao.findById(1);
         assertTrue(user.isPresent());
+
         assertEquals(1, user.get().getId());
+        assertFalse(user.get().isDeleted());
+        assertEquals(0, user.get().getImageFileId());
+        assertEquals(1, user.get().getOrganisationId());
+        assertNull(user.get().getFullName());
+        assertNull(user.get().getAffiliation());
+        assertEquals("admin", user.get().getUsername());
+        assertEquals("lwadmin@maildrop.cc", user.get().getEmail());
+        assertTrue(user.get().isEmailConfirmed());
+        assertEquals(310, user.get().getPassword().length());
+        assertEquals(User.PasswordHashing.PBKDF2, user.get().getHashing());
+        assertEquals(User.NotificationFrequency.NEVER, user.get().getPreferredNotificationFrequency());
+        assertEquals(new Locale("en", "UK"), user.get().getLocale());
+        assertEquals(User.Gender.OTHER, user.get().getGender());
+        assertNull(user.get().getDateOfBirth());
+        assertNull(user.get().getAddress());
+        assertNull(user.get().getProfession());
+        assertNull(user.get().getInterest());
+        assertNull(user.get().getStudentId());
+        assertNull(user.get().getCredits());
+        assertTrue(user.get().isAcceptTermsAndConditions());
+        assertEquals(ZoneId.of("Europe/Berlin"), user.get().getTimeZone());
+        assertTrue(user.get().isAdmin());
+        assertTrue(user.get().isModerator());
+        assertEquals(LocalDateTime.of(2021, 2, 18, 11, 27, 19), user.get().getCreatedAt());
     }
 
     @Test
@@ -68,8 +94,8 @@ class UserDaoTest {
     @Test
     void findWithEnabledForumNotifications() {
         List<User> users = userDao.findWithEnabledForumNotifications();
-        assertTrue(users.isEmpty());
-        //assertArrayEquals(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, users.stream().map(User::getId).sorted().toArray(Integer[]::new));
+        assertFalse(users.isEmpty());
+        assertArrayEquals(new Integer[] {3, 7, 9}, users.stream().map(User::getId).sorted().toArray(Integer[]::new));
     }
 
     @Test
@@ -123,16 +149,12 @@ class UserDaoTest {
 
     @Test
     void countByCourseId() {
-        int numberOfCourseId = userDao.countByCourseId(1);
-        assertTrue(numberOfCourseId > 0);
-        assertEquals(5, numberOfCourseId);
+        assertEquals(5, userDao.countByCourseId(1));
     }
 
     @Test
     void countCoursesByUserId() {
-        int numberByUserId = userDao.countCoursesByUserId(1);
-        assertTrue(numberByUserId > 0);
-        assertEquals(1, numberByUserId);
+        assertEquals(1, userDao.countCoursesByUserId(1));
     }
 
     @Test
