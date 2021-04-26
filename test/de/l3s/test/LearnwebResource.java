@@ -1,5 +1,6 @@
 package de.l3s.test;
 
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.sql.DataSource;
@@ -27,6 +28,7 @@ class LearnwebResource implements ExtensionContext.Store.CloseableResource {
         if (useRealDatabase) {
             daoProvider = new DaoProvider(configProvider);
         } else {
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
             DataSource dataSource = JdbcConnectionPool.create("jdbc:h2:mem:" + UUID.randomUUID() + ";DB_CLOSE_DELAY=-1;MODE=MYSQL", "", "");
 
             daoProvider = new DaoProvider(configProvider, dataSource);

@@ -21,7 +21,7 @@ class BounceDaoTest {
     void findLastBounceDate() {
         Optional<Instant> local = bounceDao.findLastBounceDate();
         assertTrue(local.isPresent());
-        assertEquals(Instant.ofEpochSecond(1607447279), local.get());
+        assertEquals(Instant.ofEpochSecond(1607450879), local.get());
     }
 
     @Test
