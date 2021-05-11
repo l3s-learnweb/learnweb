@@ -13,6 +13,10 @@
   > .ui-widget {
     width: 100%;
   }
+
+  .p-datepicker > input {
+    width: inherit;
+  }
 }
 
 // In case we need backward compatibility for browsers without CSS Grid https://codepen.io/SitePoint/pen/bxVaKK

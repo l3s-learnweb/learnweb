@@ -38,8 +38,7 @@
 
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg.date}:"/>
-				<p:datePicker id="datetime" value="#{adminAnnouncementBean.announcement.createdAt}" timeZone="#{userBean.timeZone}" label="#{msg.date}"
-                              locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
+				<p:datePicker value="#{adminAnnouncementBean.announcement.createdAt}" label="#{msg.date}" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
 				<p:message for="@previous"/>
 			</div>
 
