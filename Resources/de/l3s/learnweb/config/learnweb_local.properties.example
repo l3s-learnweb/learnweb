@@ -2,8 +2,8 @@
 # This properties are only applied for development profile which is active by default, but disabled on production
 
 # Decide where you want to locally store files uploaded to Learnweb (primarily needed for Group's resources)
-# On Windows the path should looks like the following L://learnweb/uploaded_files
-file_manager_folder=/mnt/learnweb/uploaded_files
+# On Windows the path should looks like the following L://learnweb/dev_files
+file_manager_folder=/mnt/learnweb/dev_files
 
 # If you are using SSH port forwarding, use the following values
 #solr_server_url=http://localhost:8982/solr/learnweb

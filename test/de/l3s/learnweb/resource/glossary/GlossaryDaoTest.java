@@ -75,7 +75,8 @@ class GlossaryDaoTest {
         glossary.setDescription("desc");
         glossary.setTitle("title");
         glossary.setId(11);
-        glossary.save();
+        resourceDao.save(glossary);
+        glossaryDao.save(glossary);
 
         Optional<GlossaryResource> retrieved = glossaryDao.findResourceById(11);
         assertTrue(retrieved.isPresent());
