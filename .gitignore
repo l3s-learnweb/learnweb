@@ -33,6 +33,7 @@ target
 build
 logs
 node_modules
+files
 
 ## Local files
 learnweb_local.properties

@@ -36,8 +36,12 @@
         </ui:decorate>
     </c:when>
 
-    <c:when test="${res.type eq 'pdf'}">
+    <c:when test="${res.type eq 'pdf' and res.downloadUrl ne null}">
         <iframe src="#{res.downloadUrl}" title="#{res.title}"></iframe>
+    </c:when>
+
+    <c:when test="${res.type eq 'text' and res.downloadUrl ne null}">
+        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-white p-1"></iframe>
     </c:when>
 
     <c:when test="${res.type eq 'survey'}">
@@ -66,7 +70,11 @@
     </c:when>
 
     <c:otherwise>
-        <span>No emdedded view</span>
+        <div class="bg-dark-90 text-center text-white align-self-center p-4 px-5 m-3">
+            <h:outputText value="#{msg['resource.no_preview']}" styleClass="fs-4 d-block mb-4"/>
+            <p:linkButton icon="fas fa-download" value="#{msg.download}" href="#{resourceDetailBean.resource.downloadUrl}"
+                          rendered="#{resourceDetailBean.resource.downloadUrl ne null}"/>
+        </div>
     </c:otherwise>
 </c:choose>
 
