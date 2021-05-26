@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -106,9 +107,7 @@ public class ResourcePreviewMaker implements Serializable {
         } catch (Throwable e) {
             log.error("Error creating thumbnails from {} (type: {}) for resource: {}", resource.getFormat(), resource.getType(), resource.getId(), e);
         } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
+            IOUtils.close(inputStream);
         }
     }
 
