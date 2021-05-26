@@ -8,7 +8,7 @@
 
 .search-grid {
   display: grid;
-  grid-gap: $grid-gutter-width / 2;
+  grid-gap: $grid-gutter-width * 0.5;
   grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
 }
 
@@ -373,7 +373,7 @@
     /* Change arrow color */
     .fancybox-navigation button {
       color: $themeDarkBgColor !important;
-      top: calc(50% - #{$search-lightbox-toolbar-height / 2});
+      top: calc(50% - #{$search-lightbox-toolbar-height * 0.5});
       padding: 0;
     }
 

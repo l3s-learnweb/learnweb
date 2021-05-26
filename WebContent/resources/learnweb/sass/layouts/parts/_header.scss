@@ -35,7 +35,7 @@ $topbar-button-padding: 1rem;
     }
 
     .header-logo {
-      padding: 0 $topbar-button-padding / 2;
+      padding: 0 $topbar-button-padding * 0.5;
       width: $sidebar-width - ($topbar-button-size + $topbar-button-padding) - 1rem;
     }
 

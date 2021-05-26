@@ -6,7 +6,7 @@
   .gridder-list {
     display: inline-block;
     vertical-align: top;
-    margin: $grid-gutter-width / 2;
+    margin: $grid-gutter-width * 0.5;
     width: 100px;
 
     &.gridder-active a::after {
@@ -28,7 +28,7 @@
     width: 100%;
     position: relative;
     background: $gray-200;
-    margin: $grid-gutter-width / 2;
+    margin: $grid-gutter-width * 0.5;
     padding: 1rem;
   }
 }

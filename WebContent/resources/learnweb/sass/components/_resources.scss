@@ -370,7 +370,7 @@ ul.res-filters {
 
 .res-li {
   display: flex;
-  padding: $grid-gutter-width / 2;
+  padding: $grid-gutter-width * 0.5;
   border-bottom: $border-width solid $themeSidebarDividerColor;
 
   &:hover {
@@ -379,7 +379,7 @@ ul.res-filters {
 
   .res-col {
     align-self: center;
-    padding: 0 $grid-gutter-width / 2;
+    padding: 0 $grid-gutter-width * 0.5;
   }
 
   .res-col-type {
@@ -396,7 +396,7 @@ ul.res-filters {
 }
 
 .res-datatable {
-  padding: $grid-gutter-width / 2;
+  padding: $grid-gutter-width * 0.5;
   border-bottom: $border-width solid $themeSidebarDividerColor;
 
   @include media-breakpoint-up(sm) {
@@ -528,7 +528,7 @@ ul.res-filters {
 }
 
 .res-container {
-  padding: $grid-gutter-width / 2;
+  padding: $grid-gutter-width * 0.5;
 
   // When file dragged over the element
   &.ui-state-dragenter {
@@ -571,7 +571,7 @@ ul.res-filters {
   }
 
   .res-item {
-    margin: $grid-gutter-width / 2;
+    margin: $grid-gutter-width * 0.5;
   }
 
   @include media-breakpoint-down(sm) {
@@ -830,8 +830,8 @@ ul.res-filters {
 
 .paginator {
   .ui-button {
-    margin-left: $grid-gutter-width / 8;
-    margin-right: $grid-gutter-width / 8;
+    margin-left: $grid-gutter-width * 0.125;
+    margin-right: $grid-gutter-width * 0.125;
 
     &:first-child {
       margin-left: 0;

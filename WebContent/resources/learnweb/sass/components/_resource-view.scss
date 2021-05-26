@@ -70,7 +70,7 @@
       min-height: 2.9rem;
 
       .ui-button {
-        margin: 0 $grid-gutter-width / 4;
+        margin: 0 $grid-gutter-width * 0.25;
       }
     }
 
@@ -181,7 +181,7 @@
   background: $body-bg;
 
   .ui-datatable-tablewrapper {
-    margin: 0 $grid-gutter-width / 2;
+    margin: 0 $grid-gutter-width * 0.5;
   }
 }
 
