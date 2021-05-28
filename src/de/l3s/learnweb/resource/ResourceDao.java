@@ -79,6 +79,12 @@ public interface ResourceDao extends SqlObject, Serializable {
     @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0 LIMIT ?")
     List<Resource> findByTagId(int tagId, int limit);
 
+    /**
+     * Returns at most one (random) resource for the given URL. Note that the URL column isn't indexed. This method was added for a specific crawler and
+     * shouldn't be
+     * used.
+     */
+    @Deprecated
     @SqlQuery("SELECT * FROM lw_resource WHERE url = ? AND deleted = 0 LIMIT 1")
     Optional<Resource> findByUrl(String url);
 

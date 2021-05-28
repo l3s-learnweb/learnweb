@@ -258,7 +258,6 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `metadata` BLOB DEFAULT NULL,
     KEY `lw_resource_type` (`type`),
     KEY `lw_resource_storage_type` (`storage_type`, `deleted`),
-    KEY `lw_resource_url` (`url`),
     KEY `lw_resource_owner_user_id` (`owner_user_id`, `deleted`)
 );
 

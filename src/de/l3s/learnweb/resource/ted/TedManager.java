@@ -24,7 +24,6 @@ import de.l3s.interwebj.client.model.SearchResponse;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
-import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -50,9 +49,6 @@ public class TedManager {
 
     @Inject
     private GroupDao groupDao;
-
-    @Inject
-    private FileDao fileDao;
 
     @Inject
     private ResourceDao resourceDao;
@@ -172,7 +168,7 @@ public class TedManager {
                     resource.setTitle(title[0]);
                 }
 
-                Optional<Resource> learnwebResource = resourceDao.findByUrl(resource.getUrl());
+                Optional<Resource> learnwebResource = resourceDao.findByUrl(resource.getUrl()); // TODO if ever used again: check if the resource exists in the tedx group and not if it exists in general
 
                 if (learnwebResource.isPresent()) { // it is already stored
                     if (learnwebResource.get().getIdAtService() == null || learnwebResource.get().getIdAtService().isEmpty()) {
