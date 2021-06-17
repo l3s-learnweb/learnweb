@@ -297,7 +297,7 @@ public class UserBean implements Serializable {
         if (!isLoggedIn()) {
             return "./";
         } else {
-            return ".." + getActiveOrganisation().getWelcomePage(); // welcome pages contain the "/lw" prefix which is already part of the template base path.
+            return "./" + getActiveOrganisation().getWelcomePage();
         }
     }
 

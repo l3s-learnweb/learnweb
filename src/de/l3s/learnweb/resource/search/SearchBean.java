@@ -22,7 +22,6 @@ import org.omnifaces.util.Servlets;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.interwebj.client.InterWeb;
-import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
