@@ -215,6 +215,10 @@ public class ConfigProvider implements Serializable {
         return development;
     }
 
+    public boolean isCollectSearchHistory() {
+        return !isDevelopment() || getPropertyBoolean("force_search_history");
+    }
+
     public boolean isMaintenance() {
         return maintenance;
     }

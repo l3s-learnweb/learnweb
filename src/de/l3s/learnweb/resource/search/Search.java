@@ -474,14 +474,18 @@ public class Search implements Serializable {
     }
 
     public void logResourceClicked(int rank, User user) {
-        Learnweb.dao().getSearchHistoryDao().insertAction(searchId, rank, user, SearchHistoryDao.SearchAction.resource_clicked);
+        if (searchId != 0) {
+            Learnweb.dao().getSearchHistoryDao().insertAction(searchId, rank, user, SearchHistoryDao.SearchAction.resource_clicked);
+        }
     }
 
     /**
      * @param newResourceId Id of the new stored resource
      */
     public void logResourceSaved(int rank, User user, int newResourceId) {
-        Learnweb.dao().getSearchHistoryDao().insertAction(searchId, rank, user, SearchHistoryDao.SearchAction.resource_saved);
+        if (searchId != 0) {
+            Learnweb.dao().getSearchHistoryDao().insertAction(searchId, rank, user, SearchHistoryDao.SearchAction.resource_saved);
+        }
     }
 
     public static class GroupedResources implements Serializable, Comparable<GroupedResources> {

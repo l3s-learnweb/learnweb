@@ -22,6 +22,7 @@ import org.omnifaces.util.Servlets;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.interwebj.client.InterWeb;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
@@ -119,7 +120,10 @@ public class SearchBean extends ApplicationBean implements Serializable {
             searchFilters.setFilter(FilterType.service, searchService.name());
             searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());
 
-            search.logQuery(query, searchService, searchFilters.getFilterValue(FilterType.language), queryFilters);
+            if (config().isCollectSearchHistory()) {
+                search.logQuery(query, searchService, searchFilters.getFilterValue(FilterType.language), queryFilters);
+            }
+
             search.getResourcesByPage(1); // load first page
 
             log(Action.searching, 0, search.getId(), query);
