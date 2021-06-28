@@ -13,6 +13,14 @@
     <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
         <ui:param name="res" value="#{res}"/>
     </ui:decorate>
+
+    <p:outputLabel for="@next" value="#{msg['resource.defaultTab']}:"/>
+    <div class="fg-col">
+        <p:selectOneRadio value="#{res.defaultTab}" layout="grid" columns="1">
+            <f:selectItems value="#{res.defaultTabs}" var="defaultTab" itemLabel="#{msg['resource.tab.'+=defaultTab]}" itemValue="#{defaultTab}"/>
+        </p:selectOneRadio>
+    </div>
+    <p:message for="@previous"/>
 </div>
 
 <div class="d-flex">
@@ -26,7 +34,7 @@
         <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" action="#{resourceDetailBean.cancelEdit}"
                          update=":resourceDetails" immediate="true"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
-        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceDetails"
+        <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceDetails" process="@form"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"/>
     </div>
 </div>

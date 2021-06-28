@@ -207,6 +207,7 @@ public interface ResourceDao extends SqlObject, Serializable {
         params.put("group_id", SqlHelper.toNullable(resource.getGroupId()));
         params.put("folder_id", SqlHelper.toNullable(resource.getFolderId()));
         params.put("read_only_transcript", resource.isReadOnlyTranscript());
+        params.put("website_view_tab", resource.getDefaultTab().name());
 
         Optional<Integer> resourceId = SqlHelper.handleSave(getHandle(), "lw_resource", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -288,6 +289,7 @@ public interface ResourceDao extends SqlObject, Serializable {
                 resource.setMetadata(SqlHelper.deserializeHashMap(rs.getBytes("metadata")));
                 resource.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
                 resource.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+                resource.setDefaultTab(Resource.DefaultTab.valueOf(rs.getString("website_view_tab")));
 
                 resource.postConstruct();
                 cache.put(resource);

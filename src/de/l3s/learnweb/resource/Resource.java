@@ -59,6 +59,12 @@ public class Resource extends AbstractResource implements Serializable {
         PROCESSING // e.g. while a document/video is converted
     }
 
+    public enum DefaultTab {
+        SCREENSHOT,
+        LIVE,
+        ARCHIVED
+    }
+
     /**
      * Who can view the resource?
      */
@@ -102,6 +108,7 @@ public class Resource extends AbstractResource implements Serializable {
     private LocalDateTime createdAt;
     private String machineDescription;
     private HashMap<String, String> metadata = new HashMap<>(); // field_name : field_value
+    private DefaultTab defaultTab = DefaultTab.SCREENSHOT;
 
     // rating
     private int thumbUp = -1;
@@ -200,6 +207,18 @@ public class Resource extends AbstractResource implements Serializable {
      * Called by the ResourceManager after all setters have been called.
      */
     protected void postConstruct() {
+    }
+
+    public DefaultTab getDefaultTab() {
+        return defaultTab;
+    }
+
+    public DefaultTab[] getDefaultTabs() {
+        return DefaultTab.values();
+    }
+
+    public void setDefaultTab(DefaultTab tab) {
+        this.defaultTab = tab;
     }
 
     public void addTag(String tagName, User user) {

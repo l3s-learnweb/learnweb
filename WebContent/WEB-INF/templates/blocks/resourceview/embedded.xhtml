@@ -36,6 +36,28 @@
         </ui:decorate>
     </c:when>
 
+    <c:when test="${res.type eq 'website'}">
+        <p:tabView styleClass="res-view-tabs res-embedded-tabs" activeIndex="#{res.defaultTab.ordinal()}">
+            <p:tab title="${msg['resource.tab.SCREENSHOT']}">
+                <img src="#{res.thumbnailLargest}" alt="#{res.title}" class="d-block"/>
+            </p:tab>
+            <p:tab title="${msg['resource.tab.LIVE']}">
+                <iframe src="#{res.url}" title="#{res.title}"></iframe>
+            </p:tab>
+            <p:tab title="${msg['resource.tab.ARCHIVED']}">
+                <h:form>
+                    <p:commandButton process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
+                                     icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" styleClass="d-block position-absolute top-0 end-0 mx-3 my-1"
+                                     rendered="#{res.type eq 'website'}"/>
+                    <ui:fragment rendered="#{not empty res.archiveUrls}">
+                        <iframe src="#{res.archiveUrls[0].archiveUrl}" title="#{res.title}"></iframe>
+                    </ui:fragment>
+                    <h:outputText rendered="#{empty res.archiveUrls}">This page has no archived yet</h:outputText>
+                </h:form>
+            </p:tab>
+        </p:tabView>
+    </c:when>
+
     <c:when test="${res.type eq 'pdf' and res.downloadUrl ne null}">
         <iframe src="#{res.downloadUrl}" title="#{res.title}"></iframe>
     </c:when>
