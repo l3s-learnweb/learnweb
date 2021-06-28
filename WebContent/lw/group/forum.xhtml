@@ -70,14 +70,14 @@
 			</p:column>
 
 			<p:column headerText="#{msg['ForumIndex.author']}" styleClass="text-center" sortBy="#{topic.user.username}">
-				<h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
+				<lw:user user="#{topic.user}"/>
 			</p:column>
 
 			<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.updatedAt}">
 				<h:outputText value="#{topic.updatedAt}" styleClass="d-block">
 					<f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
 				</h:outputText>
-				<div>#{msg.by} <h:link value="#{topic.lastPostUser.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/></div>
+				<div>#{msg.by} <lw:user user="#{topic.lastPostUser}"/></div>
 			</p:column>
 
 			<p:column headerText="#{msg.options}" styleClass="td-text-end" rendered="#{userBean.moderator}" >

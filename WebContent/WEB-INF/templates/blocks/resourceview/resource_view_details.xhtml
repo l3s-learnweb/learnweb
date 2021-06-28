@@ -292,7 +292,7 @@
 
 				<div class="comment-details flex-grow-1">
 					<p class="mb-0">
-						<h:link value="#{comment.user.username}" outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="fw-bold comment-author me-3"/>
+						<lw:user user="#{comment.user}" styleClass="fw-bold comment-author me-3"/>
 						<lw:timeAgo date="#{comment.createdAt}" timeZone="#{userBean.timeZone}" styleClass="small fw-light mb-0 comment-date" />
 					</p>
 					<p:inplace id="editCommentInplace" toggleable="false" editor="true" saveLabel="#{msg.save}" cancelLabel="#{msg.cancel}"

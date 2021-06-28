@@ -111,4 +111,30 @@
         </attribute>
     </tag>
 
+    <tag>
+        <description><![CDATA[]]></description>
+        <tag-name>user</tag-name>
+        <component>
+            <component-type>de.l3s.learnweb.component.LearnwebUser</component-type>
+        </component>
+        <attribute>
+            <description><![CDATA[The user to be displayed.]]></description>
+            <name>user</name>
+            <required>true</required>
+            <type>de.l3s.learnweb.user.User</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[Style class of the main container element.]]></description>
+            <name>styleClass</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description><![CDATA[Inline style of the main container element.]]></description>
+            <name>style</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
 </facelet-taglib>

@@ -57,10 +57,10 @@
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
                 <p:column headerText="#{msg.author}" styleClass="py-2 text-center align-baseline w-15">
-                    <h:link outcome="/lw/user/detail.jsf?user_id=#{post.userId}">
+                    <lw:user user="#{post.user}">
                         <h:outputText styleClass="d-block mb-1 fw-bold" value="#{post.user.username}"/>
                         <img class="img-fluid profile-picture square fluent" src="${post.user.imageUrl}" alt="#{post.user.fullName}"/>
-                    </h:link>
+                    </lw:user>
 
                     <div class="text-muted small">
                         <p class="mb-0">
