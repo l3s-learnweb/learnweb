@@ -82,6 +82,13 @@ $input-btn-padding-x: $input-btn-padding-y * 3;
 
 $table-cell-padding: 0.25rem 0.5rem;
 
+$position-values: (
+  auto: auto,
+  0: 0,
+  50: 50%,
+  100: 100%
+);
+
 // Tooltips
 
 $tooltip-font-size: $font-size-base;

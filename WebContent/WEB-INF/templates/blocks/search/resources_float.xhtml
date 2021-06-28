@@ -10,6 +10,8 @@
     <ui:repeat var="res" value="#{resources}">
         <a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-image search-item-lightbox d-inline-block ${res.clicked ? 'snippet-clicked' : ''}">
             <img src="#{res.thumbnailMedium}" alt="#{res.title}" height="#{res.height}" width="#{res.width}"/>
+            <div class="jg-caption">#{res.title}</div>
+            <div class="jg-caption top-0 start-auto bottom-auto end-0">#{res.height} x #{res.width}</div>
         </a>
     </ui:repeat>
 
