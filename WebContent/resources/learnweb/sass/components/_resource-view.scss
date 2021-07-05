@@ -112,13 +112,6 @@
       color: #ff6767 !important;
     }
   }
-
-  // TODO: lazy hotfix, should be improved later
-  &.res-t-glossary {
-    .res-view-embedded {
-      height: auto;
-    }
-  }
 }
 
 .ui-tabs.res-view-tabs {

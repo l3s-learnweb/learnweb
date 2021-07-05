@@ -13,7 +13,7 @@
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB" async="async"></script>
 <h:outputScript name="learnweb/js/glossary.js" target="body"/>
 
-<h:form id="glossary_table_form" prependId="false">
+<h:form id="glossary_table_form" prependId="false" styleClass="h-100">
     <p:dataTable id="glossary_table" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
                  styleClass="glossary-table" allowUnsorting="true"
                  paginator="true" rows="200" rowsPerPageTemplate="100,200,400,1000"
@@ -60,8 +60,7 @@
 
         <p:column style="width: 57px;" exportable="false">
             <div class="text-end">
-                <p:commandLink action="#{glossaryBean.onDeleteEntry(item)}" title="#{msg.delete}"
-                               process="@this" update=":glossary_table_form " oncomplete="groupRow()">
+                <p:commandLink action="#{glossaryBean.onDeleteEntry(item)}" title="#{msg.delete}" process="@this" update="@form" oncomplete="groupRow()">
                     <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                     <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, item.topics)}"/>
                 </p:commandLink>
