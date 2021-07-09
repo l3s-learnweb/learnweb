@@ -27,7 +27,7 @@
             </Filters>
         </SMTP>
 
-        <Sentry name="Sentry" dsn="https://63af1d456ba341e39c0c855750d97020@o313174.ingest.sentry.io/1784383">
+        <Sentry name="Sentry" dsn="https://3b3136e07926401b8ec84c95803f88bc@sentry.kbs.uni-hannover.de/2">
             <Filters>
                 <ThresholdFilter level="${env:LEARNWEB_MAIL_LOGLEVEL}" onMatch="NEUTRAL" onMismatch="DENY"/>
                 <!-- Rate is a number of events per second, current value is 10 messages per 1 hour (1/60/60 * maxBurst) -->

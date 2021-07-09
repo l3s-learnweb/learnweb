@@ -11,15 +11,15 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.resource.Resource;
 
-@Singleton
+@ApplicationScoped
 public class WaybackCapturesLogger {
     private static final Logger log = LogManager.getLogger(WaybackCapturesLogger.class);
     private static final Container LAST_ENTRY = new Container("", null, null); // this element indicates that the consumer thread should stop
