@@ -10,8 +10,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Validate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.util.Misc;
@@ -26,7 +24,7 @@ import de.l3s.util.Misc;
 public final class UserView implements Serializable {
 
     private static final long serialVersionUID = 5664039620488069850L;
-    private static final Logger log = LogManager.getLogger(UserView.class);
+    //private static final Logger log = LogManager.getLogger(UserView.class);
 
     private final User user;
 

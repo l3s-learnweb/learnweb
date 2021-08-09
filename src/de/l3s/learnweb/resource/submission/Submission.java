@@ -5,9 +5,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.Resource;
@@ -18,7 +15,7 @@ import de.l3s.util.HasId;
 
 public class Submission implements Serializable, HasId {
     private static final long serialVersionUID = -3143872721852606973L;
-    private static final Logger log = LogManager.getLogger(Submission.class);
+    //private static final Logger log = LogManager.getLogger(Submission.class);
 
     private int id;
     private boolean deleted;
@@ -40,6 +37,7 @@ public class Submission implements Serializable, HasId {
     private transient List<SubmittedResources> submittedResourcesGroupedByUser;
     private transient SurveyUserAnswers surveyAnswer;
 
+    @Override
     public int getId() {
         return id;
     }

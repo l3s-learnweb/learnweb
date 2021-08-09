@@ -5,8 +5,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -32,7 +30,7 @@ import de.l3s.learnweb.LanguageBundle;
  *
  */
 public final class GlossaryXLSXExporter {
-    private static final Logger log = LogManager.getLogger(GlossaryXLSXExporter.class);
+    //private static final Logger log = LogManager.getLogger(GlossaryXLSXExporter.class);
 
     private final GlossaryResource glossaryResource;
     private final Locale language; // language of the exported header fields

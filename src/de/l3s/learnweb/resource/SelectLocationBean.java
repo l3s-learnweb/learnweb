@@ -8,8 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -23,7 +21,7 @@ import de.l3s.learnweb.user.User;
 @ViewScoped
 public class SelectLocationBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 6699391944318695838L;
-    private static final Logger log = LogManager.getLogger(SelectLocationBean.class);
+    //private static final Logger log = LogManager.getLogger(SelectLocationBean.class);
 
     private Group privateGroup;
 

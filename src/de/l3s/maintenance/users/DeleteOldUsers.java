@@ -48,7 +48,7 @@ public class DeleteOldUsers extends MaintenanceTask {
     /**
      * Hard deletes users who have already been soft deleted. The method deletes only users who haven't logged in within the defined number of years.
      */
-    private void deleteUsersWhoHaveBeenSoftDeleted(int configYears) {
+    public void deleteUsersWhoHaveBeenSoftDeleted(int configYears) {
         log.info("deleteUsersWhoHaveBeenSoftDeleted() - Start");
 
         LocalDateTime deadline = LocalDateTime.now().minus(configYears * 365L, ChronoUnit.DAYS);
@@ -86,7 +86,7 @@ public class DeleteOldUsers extends MaintenanceTask {
      * @param configYears number of years a user has to be inactive to be deleted
      * @param organisationId the organisation from which inactive users are deleted
      */
-    private void deleteUsersWhoHaveNotLoggedInForYears(int configYears, int organisationId) {
+    public void deleteUsersWhoHaveNotLoggedInForYears(int configYears, int organisationId) {
         log.info("deleteUsersWhoHaveNotLoggedInForYears() - Start");
         LocalDateTime deadline = LocalDateTime.now().minus(configYears * 365L, ChronoUnit.DAYS);
 
@@ -116,7 +116,7 @@ public class DeleteOldUsers extends MaintenanceTask {
         log.info("deleteUsersWhoHaveNotLoggedInForYears() - End");
     }
 
-    private void deleteAbandonedResources() {
+    public void deleteAbandonedResources() {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<Integer> resourceIds = handle.select("SELECT resource_id FROM lw_resource r LEFT JOIN lw_group g USING(group_id) "
                 + "WHERE (r.group_id != 0 AND g.group_id IS NULL) OR r.deleted = 1").mapTo(Integer.class).list();
@@ -128,7 +128,7 @@ public class DeleteOldUsers extends MaintenanceTask {
         }
     }
 
-    private void deleteAlmostAbandonedGroups() {
+    public void deleteAlmostAbandonedGroups() {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<Group> groups = handle.select("SELECT g.* FROM lw_group g LEFT JOIN lw_group_user u USING(group_id) LEFT JOIN lw_resource r USING(group_id) "
                 + "WHERE course_id in (485) and YEAR(g.created_at) < year(now())-1 GROUP BY g.group_id, g.created_at HAVING count(u.user_id) <= 2 "
@@ -145,7 +145,7 @@ public class DeleteOldUsers extends MaintenanceTask {
         }
     }
 
-    private void deleteAbandonedGroups() {
+    public void deleteAbandonedGroups() {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<Group> groups = handle.select("SELECT * FROM lw_group LEFT JOIN lw_group_user u USING(group_id) "
                 + "WHERE (YEAR(created_at) < year(now())-1 AND u.group_id IS NULL) OR deleted = 1").map(new GroupDao.GroupMapper()).list();

@@ -9,8 +9,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
 import org.primefaces.model.DashboardColumn;
 import org.primefaces.model.DashboardModel;
@@ -31,7 +29,7 @@ import de.l3s.maintenance.resources.ReindexResources;
 @ViewScoped
 public class AdminSystemBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 1354024417928664741L;
-    private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
+    //private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
 
     private final DashboardModel model;
 

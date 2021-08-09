@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.app.Learnweb;
@@ -21,7 +19,7 @@ import de.l3s.util.StringHelper;
 
 public class LogEntry implements Serializable {
     private static final long serialVersionUID = -4239479233091966928L;
-    private static final Logger log = LogManager.getLogger(LogEntry.class);
+    //private static final Logger log = LogManager.getLogger(LogEntry.class);
 
     private final int userId;
     private final Action action;

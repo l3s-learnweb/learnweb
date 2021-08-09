@@ -10,8 +10,6 @@ import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -24,7 +22,7 @@ import de.l3s.learnweb.user.User;
 @ViewScoped
 public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private static final long serialVersionUID = 7748993079932830367L;
-    private static final Logger log = LogManager.getLogger(GroupOptionsBean.class);
+    //private static final Logger log = LogManager.getLogger(GroupOptionsBean.class);
 
     private int groupId;
     private Group group;

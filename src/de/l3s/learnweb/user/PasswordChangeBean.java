@@ -9,8 +9,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -22,7 +20,7 @@ import de.l3s.util.HashHelper;
 @Named
 @ViewScoped
 public class PasswordChangeBean extends ApplicationBean implements Serializable {
-    private static final Logger log = LogManager.getLogger(PasswordChangeBean.class);
+    //private static final Logger log = LogManager.getLogger(PasswordChangeBean.class);
     private static final long serialVersionUID = 2237249691332567548L;
 
     private String parameter;

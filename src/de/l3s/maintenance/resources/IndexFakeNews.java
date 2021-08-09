@@ -40,7 +40,7 @@ public class IndexFakeNews extends MaintenanceTask {
         //indexSnopes();
     }
 
-    private void indexFullfactFile(String file) throws IOException {
+    public void indexFullfactFile(String file) throws IOException {
         CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.withHeader());
 
         logoResource = resourceDao.findByIdOrElseThrow(217749);
@@ -49,8 +49,9 @@ public class IndexFakeNews extends MaintenanceTask {
             String title = csvRecord.get("title").trim();
             String url = csvRecord.get("url").trim();
             String description = csvRecord.get("claim_text").trim()
-                .replaceFirst("Claim\n", "<b>Claim</b>: ") + "\n<br/>" + csvRecord.get("conclusion_text").trim()
-                .replaceFirst("Conclusion\n", "<b>Conclusion</b>: ");
+                .replaceFirst("Claim\n", "<b>Claim</b>: ") + "\n<br/>"
+                + csvRecord.get("conclusion_text").trim()
+                    .replaceFirst("Conclusion\n", "<b>Conclusion</b>: ");
 
             Resource resource = new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.factcheck);
             resource.setMetadataValue("publisher", "fullfact.org");
@@ -81,7 +82,7 @@ public class IndexFakeNews extends MaintenanceTask {
         }
     }
 
-    private void indexSnopes() throws IOException {
+    public void indexSnopes() throws IOException {
         File[] files = new File("./Snopes").listFiles();
         if (files != null) {
             int i = 1;
