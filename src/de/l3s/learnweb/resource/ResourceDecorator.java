@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
@@ -57,7 +57,7 @@ public class ResourceDecorator implements Serializable {
     }
 
     public String getShortSnippet() {
-        return Jsoup.clean(StringHelper.shortnString(getSnippet(), 80), Whitelist.none());
+        return Jsoup.clean(StringHelper.shortnString(getSnippet(), 80), Safelist.none());
     }
 
     public Resource getResource() {

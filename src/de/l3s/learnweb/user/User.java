@@ -26,7 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.forum.ForumPost;
@@ -574,7 +574,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
                 credits = credits.substring(4);
             }
 
-            credits = Jsoup.clean(credits, Whitelist.basic());
+            credits = Jsoup.clean(credits, Safelist.basic());
         }
         this.credits = credits;
     }

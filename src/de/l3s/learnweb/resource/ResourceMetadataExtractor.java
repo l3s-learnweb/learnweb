@@ -147,7 +147,7 @@ public class ResourceMetadataExtractor {
 
                     log.debug("machine:" + resource.getMachineDescription());
                     log.debug("boiler :" + str);
-                    resource.setTranscript(Jsoup.clean(str, "", Whitelist.none(), new OutputSettings().prettyPrint(false)));
+                    resource.setTranscript(Jsoup.clean(str, "", Safelist.none(), new OutputSettings().prettyPrint(false)));
 
                 }
                 catch(IOException | BoilerpipeProcessingException | SAXException e)

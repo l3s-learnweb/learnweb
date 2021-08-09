@@ -21,7 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 public final class StringHelper {
     private static final Logger log = LogManager.getLogger(StringHelper.class);
@@ -244,9 +244,9 @@ public final class StringHelper {
     /**
      * Like Jsoup.clean but it preserves line breaks and spacing.
      *
-     * @param whitelist for example: Whitelist.none()
+     * @param whitelist for example: Safelist.none()
      */
-    public static String clean(String html, Whitelist whitelist) {
+    public static String clean(String html, Safelist whitelist) {
         if (html == null) {
             return null;
         }
@@ -266,7 +266,7 @@ public final class StringHelper {
             return true;
         }
 
-        text = clean(text, Whitelist.none());
+        text = clean(text, Safelist.none());
 
         return StringUtils.isBlank(text);
     }

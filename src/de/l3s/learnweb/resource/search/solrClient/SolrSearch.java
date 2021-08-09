@@ -23,7 +23,7 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -468,7 +468,7 @@ public class SolrSearch implements Serializable {
 
         // still no real snippet => use description
         if (snippet.length() < 40 && null != resource.getDescription()) {
-            snippet.append(StringHelper.shortnString(Jsoup.clean(resource.getDescription(), Whitelist.none()), 230));
+            snippet.append(StringHelper.shortnString(Jsoup.clean(resource.getDescription(), Safelist.none()), 230));
         }
 
         String oneLineSnippet = StringHelper.removeNewLines(snippet.toString());

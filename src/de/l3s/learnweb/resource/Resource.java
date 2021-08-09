@@ -26,7 +26,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -373,7 +373,7 @@ public class Resource extends AbstractResource implements Serializable {
 
     @Override
     public void setTitle(String title) {
-        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(Jsoup.clean(title, Whitelist.none()), 980) : "no title";
+        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(Jsoup.clean(title, Safelist.none()), 980) : "no title";
     }
 
     public String getDescription() {
@@ -381,7 +381,7 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     public void setDescription(String description) {
-        this.description = StringUtils.isNotEmpty(description) ? (StringHelper.clean(description, Whitelist.simpleText())) : "";
+        this.description = StringUtils.isNotEmpty(description) ? (StringHelper.clean(description, Safelist.simpleText())) : "";
     }
 
     public String getDescriptionHTML() {
@@ -694,7 +694,7 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     public String getShortDescription() {
-        return Jsoup.clean(StringHelper.shortnString(description, 200), Whitelist.simpleText());
+        return Jsoup.clean(StringHelper.shortnString(description, 200), Safelist.simpleText());
     }
 
     /**
