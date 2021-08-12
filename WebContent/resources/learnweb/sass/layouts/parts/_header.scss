@@ -181,15 +181,15 @@ $topbar-button-padding: 1rem;
       height: $spinner-size;
       background: transparent;
       border-style: solid;
-      border-width: $spinner-size/16;
+      border-width: $spinner-size * 0.0625;
       border-right-color: transparent;
       border-left-color: transparent;
       animation: ball-clip-rotate-pulse-rotate 1s cubic-bezier(0.09, 0.57, 0.49, 0.9) infinite;
     }
 
     &:last-child {
-      width: $spinner-size/2;
-      height: $spinner-size/2;
+      width: $spinner-size * 0.5;
+      height: $spinner-size * 0.5;
       animation: ball-clip-rotate-pulse-scale 1s cubic-bezier(0.09, 0.57, 0.49, 0.9) infinite;
     }
   }

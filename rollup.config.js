@@ -3,7 +3,7 @@ import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
 import copy from 'rollup-plugin-copy';
 import replace from '@rollup/plugin-replace';
-import scss from '@astappiev/rollup-plugin-scss';
+import scss from 'rollup-plugin-scss';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
