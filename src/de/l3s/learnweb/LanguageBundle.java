@@ -162,7 +162,7 @@ public class LanguageBundle extends ResourceBundle {
         if (supportedLocales.isEmpty()) {
             supportedLocales.addAll(Faces.getSupportedLocales());
         }
-        return supportedLocales;
+        return Collections.unmodifiableList(supportedLocales);
     }
 
     public static String getLocaleMessage(Locale locale, String msgKey, Object... args) {
@@ -187,12 +187,11 @@ public class LanguageBundle extends ResourceBundle {
     }
 
     /**
-     * True if the given value is equal to any translation of the given msg key
+     * True if the given value is equal to any translation of the given msg key.
      */
     public static boolean isEqualForAnyLocale(String value, String msgKey) {
-
-        for (Locale localeToCheck : LanguageBundle.getSupportedLocales()) {
-            String translation = LanguageBundle.getLocaleMessage(localeToCheck, msgKey);
+        for (Locale localeToCheck : getSupportedLocales()) {
+            String translation = getLocaleMessage(localeToCheck, msgKey);
 
             if (!translation.equals(translation.trim())) {
                 log.warn(msgKey + " contains whitespaces");
