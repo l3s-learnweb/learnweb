@@ -32,7 +32,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private static final long serialVersionUID = -5187205229505825818L;
     private static final Logger log = LogManager.getLogger(Organisation.class);
 
-    // add new options add the end , don't delete options !!!!!
+    // add new options to the end, don't delete existing options !!!!!
     // if you add 64 options you have to add one options_field{x} column in lw_organisation
     public enum Option {
         Resource_Hide_Star_rating,
@@ -46,7 +46,8 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         Users_Hide_language_switch,
         Glossary_Add_Watermark,
         Glossary_Mandatory_Description,
-        Glossary_Enable_Import // enables the glossary file import
+        Glossary_Enable_Import, // enables the glossary file import
+        Privacy_Eyes_Tracking
     }
 
     private int id;

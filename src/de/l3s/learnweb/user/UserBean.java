@@ -529,6 +529,10 @@ public class UserBean implements Serializable {
         return !getActiveOrganisation().getOption(Option.Privacy_Tracker_disabled);
     }
 
+    public boolean isEyesTrackingEnabled() {
+        return getActiveOrganisation().getOption(Option.Privacy_Eyes_Tracking);
+    }
+
     public boolean isLanguageSwitchEnabled() {
         return !getActiveOrganisation().getOption(Option.Users_Hide_language_switch);
     }
