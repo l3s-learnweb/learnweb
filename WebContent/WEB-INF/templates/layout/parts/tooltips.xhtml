@@ -4,7 +4,7 @@
 
 <h:outputScript type="text/javascript">
   function createTooltip(target, content, position) {
-    const tooltip = $(target).popover({
+    var popover = new bootstrap.Popover(document.querySelector(target), {
       trigger: 'manual',
       delay: 600,
       content: content,
@@ -12,13 +12,8 @@
       boundary: 'viewport'
     });
 
-    setTimeout(function () {
-      tooltip.popover('show');
-    }, 1000);
-
-    $(window).on('mousedown', function () {
-      tooltip.popover('hide');
-    });
+    setTimeout(popover.show.bind(popover), 1000);
+    $(window).on('mousedown', popover.hide.bind(popover));
   }
 </h:outputScript>
 
