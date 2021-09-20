@@ -4,16 +4,19 @@
 
 <h:outputScript type="text/javascript">
   function createTooltip(target, content, position) {
-    var popover = new bootstrap.Popover(document.querySelector(target), {
-      trigger: 'manual',
-      delay: 600,
-      content: content,
-      placement: position,
-      boundary: 'viewport'
-    });
+    const targetEl = document.querySelector(target);
+    if (targetEl) {
+      var popover = new bootstrap.Popover(targetEl, {
+        trigger: 'manual',
+        delay: 600,
+        content: content,
+        placement: position,
+        boundary: 'viewport'
+      });
 
-    setTimeout(popover.show.bind(popover), 1000);
-    $(window).on('mousedown', popover.hide.bind(popover));
+      setTimeout(popover.show.bind(popover), 1000);
+      $(window).on('mousedown', popover.hide.bind(popover));
+    }
   }
 </h:outputScript>
 
