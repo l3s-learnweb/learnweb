@@ -510,6 +510,10 @@ public class UserBean implements Serializable {
     }
 
     public String getTrackerApiKey() {
+        if (StringUtils.isNotEmpty(getActiveOrganisation().getTrackerApiKey())) {
+            return getActiveOrganisation().getTrackerApiKey();
+        }
+
         return Learnweb.config().getProperty("tracker_api_key");
     }
 

@@ -56,6 +56,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
         params.put("default_language", organisation.getDefaultLanguage());
         params.put("language_variant", organisation.getLanguageVariant());
         params.put("banner_image_file_id", SqlHelper.toNullable(organisation.getBannerImageFileId()));
+        params.put("tracker_api_key", SqlHelper.toNullable(organisation.getTrackerApiKey()));
         params.put("glossary_languages", StringHelper.join(organisation.getGlossaryLanguages()));
         SqlHelper.setBitSet(params, "options_field", organisation.getOptions());
 
@@ -82,6 +83,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 organisation.setDefaultLanguage(rs.getString("default_language"));
                 organisation.setLanguageVariant(rs.getString("language_variant"));
                 organisation.setBannerImageFileId(rs.getInt("banner_image_file_id"));
+                organisation.setTrackerApiKey(rs.getString("tracker_api_key"));
                 organisation.setGlossaryLanguages(StringHelper.splitLocales(rs.getString("glossary_languages")));
                 organisation.setOptions(SqlHelper.getBitSet(rs, "options_field", Organisation.Option.values().length));
                 cache.put(organisation);

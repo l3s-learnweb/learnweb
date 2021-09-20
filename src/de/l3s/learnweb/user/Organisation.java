@@ -65,6 +65,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private List<MetadataField> metadataFields = new LinkedList<>();
     private transient String bannerImageUrl;
     private int bannerImageFileId;
+    private String trackerApiKey;
     private List<Locale> glossaryLanguages = new ArrayList<>(4); // languages that can be used to construct a glossary
 
     public Organisation(int id) {
@@ -354,6 +355,14 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     public void setBannerImageFileId(int bannerImageFileId) {
         this.bannerImageFileId = bannerImageFileId;
         this.bannerImageUrl = null;
+    }
+
+    public String getTrackerApiKey() {
+        return trackerApiKey;
+    }
+
+    public void setTrackerApiKey(final String trackerApiKey) {
+        this.trackerApiKey = trackerApiKey;
     }
 
     public String getLanguageVariant() {
