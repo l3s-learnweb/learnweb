@@ -21,6 +21,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.omnifaces.util.Faces;
+import org.omnifaces.util.Messages;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -97,7 +98,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             if (tedResource.getType() != ResourceType.website) {
                 tedResource.setTranscript(doc.getElementsByTag("body").html());
             }
-
         } else {
             transcriptLanguage = "en";
             setTranscript();
@@ -135,7 +135,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
      * Also logs the 'save' event.
      */
     public void commandSaveResource() {
-        String transcript = Faces.getRequestParameter("transcript");
+        String transcript = Faces.getRequestParameter("annotatedText");
 
         tedResource.setTranscript(transcript);
         tedResource.save();
@@ -169,8 +169,8 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
      */
     public void commandSaveLog() {
         Map<String, String> params = Faces.getRequestParameterMap();
-        String word = params.get("word");
-        String userAnnotation = params.get("user_annotation");
+        String word = params.get("selection");
+        String userAnnotation = params.get("annotation");
         String action = params.get("action");
 
         TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), word, userAnnotation, action, Instant.now());
@@ -180,8 +180,8 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     /**
      * Retrieves the set of synonyms from WordNet for given selection of word.
      */
-    public void commandSetSynonyms() {
-        String words = Faces.getRequestParameter("word");
+    public void commandGetDefinition() {
+        String words = Faces.getRequestParameter("term");
         StringBuilder synonymsList = new StringBuilder();
         int wordCount = SPACES.split(words.trim()).length;
 
@@ -192,14 +192,13 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
                 synonymsList.append(definition).append("&lt;br/&gt;");
             }
 
-            if (definitions.isEmpty() && wordCount == 1) {
-                synonymsList.append(getLocaleMessage("No definition available"));
-            } else if (synonymsList.isEmpty()) {
-                synonymsList.append(getLocaleMessage("Multiple"));
+            if (definitions.isEmpty()) {
+                Messages.addError("growl", "No definition available");
+            } else {
+                PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList.toString());
             }
-            PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList.toString());
         } else {
-            PrimeFaces.current().ajax().addCallbackParam("synonyms", "multiple");
+            Messages.addError("growl", "Too many words selected");
         }
     }
 
