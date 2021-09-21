@@ -9,7 +9,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +18,6 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.search.ComparisonTerm;
 import javax.mail.search.ReceivedDateTerm;
@@ -28,7 +26,7 @@ import javax.mail.search.SearchTerm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.util.email.Mail;
+import de.l3s.mail.Mail;
 
 /**
  * Parses the mailbox every sometime and detects whether or not bounces are present. Bounced emails are
@@ -48,16 +46,7 @@ public class BounceManager {
     private BounceDao bounceDao;
 
     public Store getStore() throws MessagingException {
-        Properties props = new Properties();
-        props.setProperty("mail.imap.host", "mail.kbs.uni-hannover.de");
-        props.setProperty("mail.imap.port", "143");
-        props.setProperty("mail.imap.socketFactory.port", "143");
-        props.setProperty("mail.imap.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.setProperty("mail.imap.auth", "true");
-        props.setProperty("mail.imap.starttls.enable", "true");
-
-        Session session = Session.getInstance(props, Mail.AUTHENTICATOR);
-        return session.getStore("imap");
+        return Mail.createSession().getStore("imap");
     }
 
     public void parseInbox() throws MessagingException, IOException {

@@ -57,6 +57,7 @@ public class LanguageBundle extends ResourceBundle {
         cache.put(new Locale("xx"), new DebugBundle());
     }
 
+    private Locale locale;
     private Map<String, String> values;
 
     public LanguageBundle() { // this is required by JSF because we can't pass arguments to the default constructor
@@ -67,10 +68,11 @@ public class LanguageBundle extends ResourceBundle {
         setParent(getLanguageBundle(locale));
     }
 
-    private LanguageBundle(ResourceBundle sourceBundle) {
+    private LanguageBundle(Locale loc, ResourceBundle sourceBundle) {
         // iterate over keys an replace constants of type #[key_name]
         ArrayList<String> keys = Collections.list(sourceBundle.getKeys());
 
+        locale = loc;
         values = new HashMap<>(keys.size());
         for (String key : keys) {
             String value = sourceBundle.getString(key);
@@ -140,6 +142,11 @@ public class LanguageBundle extends ResourceBundle {
     }
 
     @Override
+    public Locale getLocale() {
+        return locale;
+    }
+
+    @Override
     protected Object handleGetObject(String key) {
         Object value = values != null ? values.get(key) : parent.getObject(key);
         // to make sure we do not show questions marks on frontend like "??? key ???", show key instead
@@ -152,7 +159,7 @@ public class LanguageBundle extends ResourceBundle {
     }
 
     public static ResourceBundle getLanguageBundle(Locale locale) {
-        return cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(BASE_NAME, loc, control)));
+        return cache.computeIfAbsent(locale, loc -> new LanguageBundle(loc, ResourceBundle.getBundle(BASE_NAME, loc, control)));
     }
 
     /**
@@ -166,8 +173,10 @@ public class LanguageBundle extends ResourceBundle {
     }
 
     public static String getLocaleMessage(Locale locale, String msgKey, Object... args) {
-        ResourceBundle bundle = getLanguageBundle(locale);
+        return getLocaleMessage(getLanguageBundle(locale), msgKey, args);
+    }
 
+    public static String getLocaleMessage(ResourceBundle bundle, String msgKey, Object... args) {
         String msg = "";
         try {
             msg = bundle.getString(msgKey);

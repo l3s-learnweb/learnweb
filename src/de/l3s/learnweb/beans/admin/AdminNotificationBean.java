@@ -9,8 +9,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.mail.Message.RecipientType;
-import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,8 +22,9 @@ import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.MessageDao;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
+import de.l3s.mail.Mail;
+import de.l3s.mail.MailFactory;
 import de.l3s.util.bean.BeanHelper;
-import de.l3s.util.email.Mail;
 
 @Named
 @RequestScoped
@@ -107,24 +106,12 @@ public class AdminNotificationBean extends ApplicationBean {
     private void sendMail(final ArrayList<String> recipients) {
         Mail mail = null;
         try {
-            // copy addresses to array
-            int i = 0;
-            InternetAddress[] recipientsArr = new InternetAddress[recipients.size()];
+            mail = MailFactory.buildNotificationEmail(title, text, user.getUsername()).build(user.getLocale());
+            mail.setReplyTo(user.getEmail());
+            mail.setBccRecipients(recipients);
+            mail.send();
 
-            for (String address : recipients) {
-                recipientsArr[i++] = new InternetAddress(address);
-                log.debug("send mail to: {}", address);
-            }
-
-            mail = new Mail();
-            mail.setRecipients(RecipientType.BCC, recipientsArr);
-            mail.setReplyTo(new InternetAddress(user.getEmail()));
-            mail.setRecipient(RecipientType.TO, new InternetAddress(user.getEmail()));
-            mail.setHTML(text + "<br/>\n<br/>\n___________________________<br/>\n" + getLocaleMessage("mail_notification_footer", user.getUsername()));
-            mail.setSubject("Learnweb: " + title);
-            mail.sendMail();
-
-            addMessage(FacesMessage.SEVERITY_INFO, recipientsArr.length + " emails send");
+            addMessage(FacesMessage.SEVERITY_INFO, recipients.size() + " emails send");
         } catch (Exception e) {
             log.error("Could not send notification mail: {}", mail, e);
             addMessage(FacesMessage.SEVERITY_ERROR, "Email could not be sent");

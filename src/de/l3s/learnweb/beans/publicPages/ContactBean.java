@@ -4,11 +4,8 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
 import javax.inject.Named;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -16,8 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.bean.BeanHelper;
-import de.l3s.util.email.Mail;
+import de.l3s.mail.Mail;
+import de.l3s.mail.MailFactory;
 
 @Named
 @RequestScoped
@@ -48,18 +45,15 @@ public class ContactBean extends ApplicationBean implements Serializable {
         String adminEmail = config().getProperty("admin_mail");
 
         try {
-            Mail message = new Mail();
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(adminEmail));
-            message.setSubject("Contact Form message");
-            message.setText("name: " + name + "\nemail: " + email + "\nmessage: " + this.message + "\n\n-------\n" + BeanHelper.getRequestSummary());
-            message.sendMail();
+            Mail mail = MailFactory.buildContactFormEmail(name, email, message).build(getLocale());
+            mail.setRecipient(adminEmail);
+            mail.setReplyTo(email);
+            mail.send();
 
-            addMessage(FacesMessage.SEVERITY_INFO, "Request sent successfully. We will get back to you shortly.");
             clearForm();
         } catch (MessagingException mex) {
             addErrorMessage(mex);
         }
-
     }
 
     public void clearForm() {

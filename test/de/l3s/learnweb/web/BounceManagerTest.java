@@ -1,4 +1,4 @@
-package de.l3s.util.email;
+package de.l3s.learnweb.web;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,8 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import de.l3s.learnweb.web.BounceManager;
 
 class BounceManagerTest {
     private static final Logger log = LogManager.getLogger(BounceManagerTest.class);

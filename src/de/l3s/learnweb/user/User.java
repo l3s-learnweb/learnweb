@@ -13,9 +13,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -37,13 +35,14 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
 import de.l3s.learnweb.resource.submission.Submission;
 import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.mail.Mail;
+import de.l3s.mail.MailFactory;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 import de.l3s.util.HashHelper;
 import de.l3s.util.PBKDF2;
 import de.l3s.util.ProfileImageHelper;
 import de.l3s.util.StringHelper;
-import de.l3s.util.email.Mail;
 
 public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private static final Logger log = LogManager.getLogger(User.class);
@@ -406,16 +405,9 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
             String confirmEmailUrl = Learnweb.config().getServerUrl() + "/lw/user/confirm_email.jsf?" +
                 "email=" + StringHelper.urlEncode(getEmail()) + "&token=" + tokenId + ":" + token;
 
-            Mail message = new Mail();
-            message.setSubject("Confirmation request from Learnweb");
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(getEmail()));
-            message.setText("Hi " + getRealUsername() + ",\n\n" +
-                "please use this link to confirm your mail address:\n" + confirmEmailUrl + "\n\n" +
-                "Or just ignore this email, if you haven't requested it.\n\n" +
-                "Best regards,\nLearnweb Team");
-
-            message.sendMail();
-
+            Mail mail = MailFactory.buildConfirmEmail(getRealUsername(), confirmEmailUrl).build(getLocale());
+            mail.setRecipient(getEmail());
+            mail.send();
             return true;
         } catch (MessagingException e) {
             log.error("Can't send confirmation mail to {}", this, e);

@@ -8,15 +8,14 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.mail.Mail;
+import de.l3s.mail.MailFactory;
 import de.l3s.util.HashHelper;
-import de.l3s.util.email.Mail;
 
 @Named
 @RequestScoped
@@ -32,28 +31,21 @@ public class PasswordBean extends ApplicationBean implements Serializable {
     public void onGetPassword() {
         try {
             List<User> users = tokenDao.getUserDao().findByEmail(email);
-
             if (users.isEmpty()) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "unknown_email");
                 return;
             }
 
-            Mail message = new Mail();
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
 
             String url = config().getServerUrl() + "/lw/user/change_password.jsf?token=";
             for (User user : users) {
                 String token = RandomStringUtils.randomAlphanumeric(32);
                 int tokenId = tokenDao.insert(user.getId(), Token.TokenType.PASSWORD_RESET, HashHelper.sha256(token), LocalDateTime.now().plusDays(1));
-
                 String link = url + tokenId + ":" + token;
-                String text = "Hi " + user.getRealUsername() + ",\n\nyou can change the password of your learnweb account '" + user.getRealUsername() +
-                    "' by clicking on this link:\n" + link + "\n\nThe link will expire in 24 hours.\n" +
-                    "You can just ignore this email, if you haven't requested it.\n\nBest regards,\nLearnweb Team";
 
-                message.setText(text);
-                message.setSubject("Retrieve learnweb password: " + user.getRealUsername());
-                message.sendMail();
+                Mail mail = MailFactory.buildPasswordChangeEmail(user.getRealUsername(), link).build(user.getLocale());
+                mail.setRecipient(this.email);
+                mail.send();
             }
 
             addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");

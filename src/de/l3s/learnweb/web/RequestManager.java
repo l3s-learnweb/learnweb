@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -22,16 +23,15 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.app.Learnweb;
+import de.l3s.mail.Mail;
+import de.l3s.mail.MailFactory;
 import de.l3s.util.SqlHelper;
-import de.l3s.util.email.Mail;
 
 /**
  * Manages, stores and analyzes request data. Implements singleton since it has to be accessed by filter.
@@ -287,49 +287,11 @@ public class RequestManager implements Serializable {
 
     private void sendMail() {
         try {
-            Mail message = new Mail();
-            message.setSubject("[Learnweb] Suspicious activity alert");
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(adminEmail));
+            List<Request> suspiciousTemp = suspiciousRequests.size() > 10 ? suspiciousRequests.subList(0, 10) : suspiciousRequests;
 
-            StringBuilder content = new StringBuilder("Multiple accounts have been flagged as suspicious by Learnweb protection system. Please look at them closer at https://learnweb.l3s.uni-hannover.de/lw/admin/banlist.jsf.\n"
-                + "Here are the ten most recent entries in the suspicious list: "
-                + "\n\n");
-
-            content.append("<table border=\"1\"><br>");
-
-            List<Request> suspiciousTemp;
-
-            if (suspiciousRequests.size() > 10) {
-                suspiciousTemp = suspiciousRequests.subList(0, 10);
-            } else {
-                suspiciousTemp = suspiciousRequests;
-            }
-
-            for (Request ard : suspiciousTemp) {
-                content.append("<tr>");
-
-                content.append("<td>");
-                content.append(ard.getAddr());
-                content.append("</td>");
-
-                content.append("<td>");
-                content.append(ard.getRequests());
-                content.append("</td>");
-
-                content.append("<td>");
-                content.append(ard.getCreatedAt());
-                content.append("</td>");
-
-                content.append("</tr>");
-
-            }
-
-            content.append("</table><br>");
-
-            content.append("Total entries requiring your attention: ").append(suspiciousRequests.size());
-
-            message.setHTML(content.toString());
-            message.sendMail();
+            Mail mail = MailFactory.buildSuspiciousAlertEmail(suspiciousTemp).build(Locale.ENGLISH);
+            mail.setRecipient(adminEmail);
+            mail.send();
         } catch (MessagingException e) {
             log.error("Failed to send admin alert mail. Error: ", e);
         }
