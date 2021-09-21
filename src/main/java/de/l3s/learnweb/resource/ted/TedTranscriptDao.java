@@ -112,8 +112,8 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
         getHandle().createUpdate("INSERT into lw_transcript_log(user_id,resource_id,words_selected,user_annotation,action,created_at) VALUES (?,?,?,?,?,?)")
             .bind(0, transcriptLog.getUserId())
             .bind(1, transcriptLog.getResourceId())
-            .bind(2, transcriptLog.getWordsSelected())
-            .bind(3, transcriptLog.getUserAnnotation())
+            .bind(2, transcriptLog.getSelection())
+            .bind(3, transcriptLog.getAnnotation())
             .bind(4, transcriptLog.getAction())
             .bind(5, transcriptLog.getTimestamp())
             .execute();

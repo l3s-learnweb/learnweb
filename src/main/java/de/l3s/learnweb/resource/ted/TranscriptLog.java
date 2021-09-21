@@ -14,8 +14,8 @@ public class TranscriptLog implements Serializable {
 
     private int userId;
     private int resourceId;
-    private String wordsSelected;
-    private String userAnnotation;
+    private String selection;
+    private String annotation;
     private String action;
     private Instant timestamp;
 
@@ -27,11 +27,11 @@ public class TranscriptLog implements Serializable {
 
     }
 
-    public TranscriptLog(int userId, int resourceId, String wordsSelected, String userAnnotation, String action, Instant timestamp) {
+    public TranscriptLog(int userId, int resourceId, String selection, String annotation, String action, Instant timestamp) {
         this.userId = userId;
         this.resourceId = resourceId;
-        this.wordsSelected = wordsSelected;
-        this.userAnnotation = userAnnotation;
+        this.selection = selection;
+        this.annotation = annotation;
         this.action = action;
         this.timestamp = timestamp;
     }
@@ -52,20 +52,20 @@ public class TranscriptLog implements Serializable {
         this.resourceId = resourceId;
     }
 
-    public String getWordsSelected() {
-        return wordsSelected;
+    public String getSelection() {
+        return selection;
     }
 
-    public void setWordsSelected(String wordsSelected) {
-        this.wordsSelected = wordsSelected;
+    public void setSelection(String selection) {
+        this.selection = selection;
     }
 
-    public String getUserAnnotation() {
-        return userAnnotation;
+    public String getAnnotation() {
+        return annotation;
     }
 
-    public void setUserAnnotation(String userAnnotation) {
-        this.userAnnotation = userAnnotation;
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
     }
 
     public String getAction() {
