@@ -8,8 +8,11 @@ import jakarta.faces.validator.ValidatorException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.l3s.learnweb.app.Learnweb;
+
 @FacesValidator
 public class EmailValidator extends AbstractValidator<Object> {
+
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         if (value instanceof String) {
@@ -24,6 +27,12 @@ public class EmailValidator extends AbstractValidator<Object> {
                 }
                 throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, message));
             }
+
+            Learnweb.dao().getBounceDao().findByEmail(email).ifPresent(bounce -> {
+                String message = "In the past emails to " + email + " could not be delivered. On " + bounce.received()
+                    + " we received the following error: " + bounce.description();
+                throw new ValidatorException(getFacesMessage(context, component, FacesMessage.SEVERITY_ERROR, message));
+            });
         }
     }
 }
