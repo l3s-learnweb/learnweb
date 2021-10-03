@@ -136,5 +136,20 @@
             <type>java.lang.String</type>
         </attribute>
     </tag>
-
+    <tag>
+        <tag-name>encryptEmail</tag-name>
+        <component>
+            <component-type>de.l3s.learnweb.component.LearnwebEncryptEmail</component-type>
+        </component>
+        <attribute>
+            <name>email</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <name>styleClass</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
 </facelet-taglib>

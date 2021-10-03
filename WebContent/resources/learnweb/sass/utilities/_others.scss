@@ -148,3 +148,7 @@ section:target .highlight {
     }
   }
 }
+
+.encrypt-email::after {
+  content: attr(data-name) '@' attr(data-domain) '.' attr(data-tld);
+}

@@ -43,8 +43,10 @@
 					<h:outputText value="#{msg.username}:"/>
 					<h:outputText value="#{userDetailBean.selectedUser.username}"/>
 
-					<h:outputText value="#{msg.email_address}:" rendered="#{not empty userDetailBean.selectedUser.email}"/>
-					<h:outputText value="#{userDetailBean.selectedUser.email}" rendered="#{not empty userDetailBean.selectedUser.email}"/>
+					<ui:fragment rendered="#{not empty userDetailBean.selectedUser.email}">
+						<h:outputText value="#{msg.email_address}:" />
+						<lw:encryptEmail email="#{userDetailBean.selectedUser.email}"/>
+					</ui:fragment>
 
 					<h:outputText value="#{msg.gender}:" rendered="#{userDetailBean.selectedUser.gender ne 'UNASSIGNED'}" />
 					<h:outputText value="#{msg['user.gender.' += userDetailBean.selectedUser.gender]}" rendered="#{userDetailBean.selectedUser.gender ne 'UNASSIGNED'}" />

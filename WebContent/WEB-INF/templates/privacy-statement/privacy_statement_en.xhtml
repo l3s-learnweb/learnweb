@@ -1,6 +1,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html">
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:lw="http://l3s.de/learnweb">
 
     <div class="row">
         <div class="col-md-4">
@@ -69,8 +70,10 @@
                     </p>
 
                     <p>
-                        Tel. <a href="tel:+49 511 762 17715">+49 511 762 - 17715</a><br /> Fax <a href="tel:+49 511 762 17719">+49 511 762 - 17779</a><br /> E-Mail: <a
-                            href="mailto:#{msg['application.serverAdmin']}">#{msg['application.serverAdmin']}</a><br /> <a href="http://www.l3s.de" target="_blank">www.l3s.de</a>
+                        Tel. <a href="tel:+49 511 762 17715">+49 511 762 - 17715</a><br />
+                        Fax <a href="tel:+49 511 762 17719">+49 511 762 - 17779</a><br />
+                        E-Mail: <lw:encryptEmail email="#{msg['application.serverAdmin']}"/><br />
+                        <a href="http://www.l3s.de" target="_blank">www.l3s.de</a>
                     </p>
 
                     <p>Represented by: Prof. Dr. Wolfgang Nejdl (Director), Dr. Claudia Niederée (Managing Director)</p>
@@ -87,11 +90,11 @@
                         Gottfried Wilhelm Leibniz Universität Hannover<br /> - Datenschutzbeauftragter - <br /> Königsworther Platz 1 <br /> 30167 Hannover
                     </p>
 
-
                     <p>
-                        Tel. <a href="tel:+49 511 762 8132">+49 511 762 - 8132</a><br /> Fax <a href="tel:+49 511 762 8258">+49 511 762 - 8258</a><br /> E-Mail: <a
-                            href="mailto:datenschutz@uni-hannover.de">datenschutz@uni-hannover.de</a><br /> <a
-                            href="https://www.uni-hannover.de/de/universitaet/organisation/praesidialstab-und-stabsstellen/datenschutz/" target="_blank">Website</a>
+                        Tel. <a href="tel:+49 511 762 8132">+49 511 762 - 8132</a><br />
+                        Fax <a href="tel:+49 511 762 8258">+49 511 762 - 8258</a><br />
+                        E-Mail: <lw:encryptEmail email="datenschutz@uni-hannover.de"/><br />
+                        <a href="https://www.uni-hannover.de/de/universitaet/organisation/praesidialstab-und-stabsstellen/datenschutz/" target="_blank">Website</a>
                     </p>
                 </div>
             </div>
