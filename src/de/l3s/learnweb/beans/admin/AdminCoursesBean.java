@@ -15,6 +15,7 @@ import jakarta.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
@@ -88,6 +89,9 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
 
         course.addUser(user);
         addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
+        if (StringUtils.isNotEmpty(course.getWizardParam())) {
+            addMessage(FacesMessage.SEVERITY_INFO, "The wizard is: " + Faces.getRequestBaseURL() + course.getWizardParam());
+        }
 
         newCourse = new Course(); // reset input values
         courses.add(course);
