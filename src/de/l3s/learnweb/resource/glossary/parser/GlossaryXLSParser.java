@@ -36,10 +36,10 @@ public class GlossaryXLSParser {
                 return true; // treats also the footer, which shows the entry count, as an empty row
             }
 
-            // another (ugly) way to detect the footer. It seams that the physicalNumberOfCells is chanced when the file is edited with OpenOffice
+            // another (ugly) way to detect the footer. It seems that the physicalNumberOfCells is chanced when the file is edited with OpenOffice
             if (row.getCell(0) != null) {
                 String value = GlossaryRowBuilder.getStringValueForCell(row.getCell(0));
-                if (!value.isEmpty() && value.contains(" = ")) {
+                if (value.contains(" = ")) {
                     String[] parts = value.split(" = ");
 
                     if (LanguageBundle.isEqualForAnyLocale(parts[0], "Glossary.total_entries")) {

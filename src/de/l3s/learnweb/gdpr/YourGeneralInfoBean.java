@@ -1,5 +1,6 @@
 package de.l3s.learnweb.gdpr;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.annotation.PostConstruct;
@@ -20,6 +21,7 @@ import de.l3s.util.HasId;
 @Named
 @ViewScoped
 public class YourGeneralInfoBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3786761818878931646L;
     //private static final Logger log = LogManager.getLogger(YourGeneralInfoBean.class);
 

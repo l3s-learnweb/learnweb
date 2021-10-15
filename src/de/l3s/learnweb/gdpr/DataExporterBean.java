@@ -1,6 +1,7 @@
 package de.l3s.learnweb.gdpr;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.faces.view.ViewScoped;
@@ -12,11 +13,12 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.ExportManager;
 
 /**
- * Allows to download resources of a user or a group.
+ * Allows downloading resources of a user or a group.
  */
 @Named
 @ViewScoped
 public class DataExporterBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -505457925640299810L;
 
     public void requestUserResources() throws IOException {

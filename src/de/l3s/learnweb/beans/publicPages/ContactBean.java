@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.publicPages;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.annotation.PostConstruct;
@@ -19,6 +20,7 @@ import de.l3s.mail.MailFactory;
 @Named
 @RequestScoped
 public class ContactBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1506604546829332647L;
 
     @NotBlank

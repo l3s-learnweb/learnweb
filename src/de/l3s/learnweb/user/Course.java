@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.BitSet;
@@ -18,6 +19,7 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.util.HasId;
 
 public class Course implements Serializable, Comparable<Course>, HasId {
+    @Serial
     private static final long serialVersionUID = -1101352995500154406L;
     private static final Logger log = LogManager.getLogger(Course.class);
 

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import de.l3s.learnweb.user.UserView;
 @Named
 @ViewScoped
 public class AdminUsersBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 155899638864937408L;
 
     private List<UserView> userViews;

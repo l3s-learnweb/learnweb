@@ -1,6 +1,9 @@
 package de.l3s.learnweb.exceptions;
 
+import java.io.Serial;
+
 public class HttpException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 8490079026477441484L;
 
     /**
@@ -35,7 +38,7 @@ public class HttpException extends RuntimeException {
      */
     public static final int INTERNAL_SERVER_ERROR = 500;
     /**
-     * Indicating the the server is temporarily unable to handle the request.
+     * Indicating the server is temporarily unable to handle the request.
      */
     public static final int UNAVAILABLE = 503;
 

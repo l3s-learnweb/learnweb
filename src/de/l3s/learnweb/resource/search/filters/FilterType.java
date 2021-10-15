@@ -37,33 +37,18 @@ public enum FilterType {
     }
 
     public boolean isEncodeBase64() {
-        switch (this) {
-            case collector:
-            case author:
-            case coverage:
-            case publisher:
-            case yell_target:
-            case yell_purpose:
-            case tags:
-                return true;
-            default:
-                return false;
-        }
+        return switch (this) {
+            case collector, author, coverage, publisher, yell_target, yell_purpose, tags -> true;
+            default -> false;
+        };
     }
 
     public static FilterType[] getFilters(SearchMode searchMode) {
-        switch (searchMode) {
-            case text:
-                return new FilterType[] {service, date, group, collector, author, coverage, publisher, tags};
-            case image:
-                return new FilterType[] {service, date, group, author, tags, size};
-            case video:
-                return new FilterType[] {service, date, group, author, tags, duration};
-            case group:
-                return new FilterType[] {service, type, date, collector, author, coverage, publisher, language_level,
-                    yell_target, yell_purpose, tags, language};
-            default:
-                return values();
-        }
+        return switch (searchMode) {
+            case text -> new FilterType[] {service, date, group, collector, author, coverage, publisher, tags};
+            case image -> new FilterType[] {service, date, group, author, tags, size};
+            case video -> new FilterType[] {service, date, group, author, tags, duration};
+            case group -> new FilterType[] {service, type, date, collector, author, coverage, publisher, language_level, yell_target, yell_purpose, tags, language};
+        };
     }
 }

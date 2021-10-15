@@ -1,5 +1,6 @@
 package de.l3s.util;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class Cache<E extends HasId> implements ICache<E> {
         this.capacity = capacity;
 
         values = new LinkedHashMap<>(this.capacity + 1, 0.75F, true) {
+            @Serial
             private static final long serialVersionUID = -7231532816950321903L;
 
             @Override

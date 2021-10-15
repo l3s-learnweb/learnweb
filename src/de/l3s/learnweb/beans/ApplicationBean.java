@@ -37,7 +37,7 @@ public abstract class ApplicationBean {
     // User ------------------------------------------------------------------------------------------------------------
 
     /**
-     * Returns the currently logged in user.
+     * Returns the currently logged-in user.
      *
      * @return null if not logged in
      */
@@ -47,7 +47,7 @@ public abstract class ApplicationBean {
     }
 
     /**
-     * Returns the currently locale.
+     * Returns the current locale.
      */
     protected Locale getLocale() {
         return getUserBean().getLocale();
@@ -175,7 +175,7 @@ public abstract class ApplicationBean {
 
     /**
      * Call this method if you want to keep messages during a post-redirect-get.
-     * This value determines whether or not any FacesMessage instances queued in the current FacesContext must be preserved so they are accessible on
+     * This value determines whether any FacesMessage instances queued in the current FacesContext must be preserved, so they are accessible on
      * the next traversal of the lifecycle on this session, regardless of the request being a redirect after post, or a normal postback.
      */
     public void setKeepMessages() {

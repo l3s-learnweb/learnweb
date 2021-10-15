@@ -1,5 +1,6 @@
 package de.l3s.learnweb.gdpr;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +21,7 @@ import de.l3s.learnweb.user.User;
 @Named
 @ViewScoped
 public class YourSearchHistoryBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8515265854401597437L;
     //private static final Logger log = LogManager.getLogger(YourSearchHistoryBean.class);
 

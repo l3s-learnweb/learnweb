@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.enterprise.context.SessionScoped;
@@ -15,6 +16,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 @Named
 @SessionScoped
 public class ConfirmRequiredBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 934105342636869805L;
 
     private User loggedInUser;

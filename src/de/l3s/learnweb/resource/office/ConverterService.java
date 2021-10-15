@@ -78,27 +78,17 @@ public final class ConverterService {
     }
 
     private static String getErrorResponseMessage(final int errorCode) {
-        switch (errorCode) {
-            case -8:
-                return "Error document VKey";
-            case -7:
-                return "Error document request";
-            case -6:
-                return "Error database";
-            case -5:
-                return "Error unexpected guid";
-            case -4:
-                return "Error during download";
-            case -3:
-                return "Error during convertation";
-            case -2:
-                return "Error convertation timeout";
-            case -1:
-                return "Error convertation unknown";
-            case 0:
-                return null;
-            default:
-                return "ErrorCode = " + errorCode;
-        }
+        return switch (errorCode) {
+            case -8 -> "Error document VKey";
+            case -7 -> "Error document request";
+            case -6 -> "Error database";
+            case -5 -> "Error unexpected guid";
+            case -4 -> "Error during download";
+            case -3 -> "Error during convertation";
+            case -2 -> "Error convertation timeout";
+            case -1 -> "Error convertation unknown";
+            case 0 -> null;
+            default -> "ErrorCode = " + errorCode;
+        };
     }
 }

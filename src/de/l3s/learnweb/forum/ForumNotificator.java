@@ -1,5 +1,6 @@
 package de.l3s.learnweb.forum;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import de.l3s.mail.MailFactory;
 import de.l3s.util.HashHelper;
 
 public class ForumNotificator implements Runnable, Serializable {
+    @Serial
     private static final long serialVersionUID = -7141107765791779330L;
     private static final Logger log = LogManager.getLogger(ForumNotificator.class);
 

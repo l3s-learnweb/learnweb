@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
@@ -42,6 +43,7 @@ import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
 public class Resource extends AbstractResource implements Serializable {
+    @Serial
     private static final long serialVersionUID = -8486919346993051937L;
     private static final Logger log = LogManager.getLogger(Resource.class);
 
@@ -193,14 +195,11 @@ public class Resource extends AbstractResource implements Serializable {
     public static Resource ofType(String storageType, String type, String source) {
         ResourceType resourceType = ResourceType.valueOf(type);
 
-        switch (resourceType) {
-            case survey:
-                return new SurveyResource();
-            case glossary:
-                return new GlossaryResource();
-            default:
-                return new Resource(StorageType.valueOf(storageType), resourceType, ResourceService.valueOf(source));
-        }
+        return switch (resourceType) {
+            case survey -> new SurveyResource();
+            case glossary -> new GlossaryResource();
+            default -> new Resource(StorageType.valueOf(storageType), resourceType, ResourceService.valueOf(source));
+        };
     }
 
     /**
@@ -487,7 +486,7 @@ public class Resource extends AbstractResource implements Serializable {
     public String getTagsAsString(String delimiter) {
         StringBuilder out = new StringBuilder();
         for (Tag tag : getTags()) {
-            if (out.length() != 0) {
+            if (!out.isEmpty()) {
                 out.append(delimiter);
             }
             out.append(tag.getName());
@@ -891,20 +890,12 @@ public class Resource extends AbstractResource implements Serializable {
             if (embeddedUrl != null) {
                 iframeUrl = embeddedUrl;
             } else if (type == ResourceType.video) {
-                switch (service) {
-                    case ted:
-                        iframeUrl = getUrl().replace("//www.", "//embed.").replace("http://", "https://");
-                        break;
-                    case youtube:
-                    case teded:
-                    case tedx:
-                        iframeUrl = "https://www.youtube-nocookie.com/embed/" + getIdAtService();
-                        break;
-                    case vimeo:
-                        iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
-                        break;
-                    default:
-                }
+                iframeUrl = switch (service) {
+                    case ted ->  getUrl().replace("//www.", "//embed.").replace("http://", "https://");
+                    case youtube, teded, tedx -> "https://www.youtube-nocookie.com/embed/" + getIdAtService();
+                    case vimeo -> "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
+                    default -> null;
+                };
             }
 
             if (null != iframeUrl) {
@@ -999,7 +990,7 @@ public class Resource extends AbstractResource implements Serializable {
     public HashMap<Integer, List<ArchiveUrl>> getArchiveUrlsAsYears() {
         HashMap<Integer, List<ArchiveUrl>> versions = new LinkedHashMap<>();
         for (ArchiveUrl url : archiveUrls) {
-            int year = url.getTimestamp().getYear();
+            int year = url.timestamp().getYear();
             if (!versions.containsKey(year)) {
                 versions.put(year, new ArrayList<>());
             }
@@ -1293,6 +1284,7 @@ public class Resource extends AbstractResource implements Serializable {
      * To make sure that there exists only one instance of each resource we interfere the deserialization process
      * if there exists a cached version of the resource we will return this instance
      */
+    @Serial
     protected Object readResolve() {
         log.debug("Deserialize resource: {}", id);
         try {
@@ -1333,6 +1325,7 @@ public class Resource extends AbstractResource implements Serializable {
      * @author Philipp Kemkes
      */
     public static final class MetadataMultiValueMapWrapper implements Map<String, String[]>, Serializable {
+        @Serial
         private static final long serialVersionUID = 1514209886446380743L;
         private final Map<String, String> wrappedMap;
 
@@ -1408,6 +1401,7 @@ public class Resource extends AbstractResource implements Serializable {
      * @author Philipp Kemkes
      */
     public class MetadataMapWrapper implements Map<String, String>, Serializable {
+        @Serial
         private static final long serialVersionUID = -7357288281713761896L;
         private final Map<String, String> wrappedMap;
 
@@ -1427,18 +1421,13 @@ public class Resource extends AbstractResource implements Serializable {
 
             String keyString = ((String) key).toLowerCase();
 
-            switch (keyString) {
-                case "title":
-                    return getTitle();
-                case "author":
-                    return getAuthor();
-                case "description":
-                    return getDescription();
-                case "language":
-                    return getLanguage();
-                default:
-                    return wrappedMap.get(key);
-            }
+            return switch (keyString) {
+                case "title" -> getTitle();
+                case "author" -> getAuthor();
+                case "description" -> getDescription();
+                case "language" -> getLanguage();
+                default -> wrappedMap.get(key);
+            };
         }
 
         @Override

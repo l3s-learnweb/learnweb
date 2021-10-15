@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -40,6 +41,7 @@ import de.l3s.util.Image;
 @ViewScoped
 public class ProfileBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(ProfileBean.class);
+    @Serial
     private static final long serialVersionUID = -2460055719611784132L;
 
     private int userId;

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ import de.l3s.util.HashHelper;
 @ViewScoped
 public class PasswordChangeBean extends ApplicationBean implements Serializable {
     //private static final Logger log = LogManager.getLogger(PasswordChangeBean.class);
+    @Serial
     private static final long serialVersionUID = 2237249691332567548L;
 
     private String parameter;

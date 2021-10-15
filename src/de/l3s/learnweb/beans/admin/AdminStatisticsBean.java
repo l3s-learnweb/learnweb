@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import de.l3s.util.bean.BeanHelper;
 @Named
 @RequestScoped
 public class AdminStatisticsBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 5584983377737726111L;
 
     private TreeNode[] selectedNodes;

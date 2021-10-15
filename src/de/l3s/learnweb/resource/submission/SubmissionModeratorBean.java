@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.submission;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.faces.view.ViewScoped;
@@ -15,6 +16,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 @Named
 @ViewScoped
 public class SubmissionModeratorBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -2494182373382483709L;
     //private static final Logger log = LogManager.getLogger(SubmissionModeratorBean.class);
 

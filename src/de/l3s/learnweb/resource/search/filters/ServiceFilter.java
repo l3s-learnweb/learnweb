@@ -1,10 +1,13 @@
 package de.l3s.learnweb.resource.search.filters;
 
+import java.io.Serial;
+
 import org.apache.solr.client.solrj.response.FacetField;
 
 import de.l3s.learnweb.resource.ResourceService;
 
 public class ServiceFilter extends Filter {
+    @Serial
     private static final long serialVersionUID = -465289044335451995L;
 
     private ResourceService service;

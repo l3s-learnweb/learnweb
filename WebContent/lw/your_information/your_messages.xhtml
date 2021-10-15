@@ -1,6 +1,5 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.messages} - #{msg.your_information}"/>
@@ -17,7 +16,7 @@
 
 <ui:define name="center_layout">
     <ui:decorate template="/WEB-INF/templates/blocks/your-information/messages_table_skeletton.xhtml">
-        <ui:param name="messages" value="#{yourMessagesBean.messagesToUser}"/>
+        <ui:param name="messages" value="#{yourMessagesBean.receivedMessages}"/>
         <ui:param name="name_for_file" value="received_messages"/>
         <ui:param name="target_user_category_msg" value="#{msg.received_from_msg}"></ui:param>
         <ui:param name="which_messages" value="message.fromUser.realUsername"></ui:param>
@@ -25,7 +24,7 @@
     </ui:decorate>
 
     <ui:decorate template="/WEB-INF/templates/blocks/your-information/messages_table_skeletton.xhtml">
-        <ui:param name="messages" value="#{yourMessagesBean.messagesFromUser}"/>
+        <ui:param name="messages" value="#{yourMessagesBean.sentMessages}"/>
         <ui:param name="name_for_file" value="sent_messages"/>
         <ui:param name="target_user_category_msg" value="#{msg.sent_to_msg}"></ui:param>
         <ui:param name="which_messages" value="message.toUser.realUsername"></ui:param>

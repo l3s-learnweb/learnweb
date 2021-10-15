@@ -27,7 +27,7 @@ public class CDXClient {
     private int waybackApiRequests = 0;
 
     /**
-     * This method checks whether a URL is archived. If yes it updates the first_timestamp and last_timestamp fields of the resource's meta data
+     * This method checks whether a URL is archived. If yes it updates the first_timestamp and last_timestamp fields of the resource's metadata
      */
     public boolean isArchived(ResourceDecorator resource) throws NumberFormatException, IOException {
         //int crawlTime = 0, captures = 0;

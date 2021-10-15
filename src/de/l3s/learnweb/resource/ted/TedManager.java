@@ -93,7 +93,7 @@ public class TedManager {
         for (Transcript transcript : tedTranscriptDao.findTranscriptsByResourceId(learnwebResourceId)) {
             if (StringUtils.equalsAny(transcript.getLanguageCode(), "en", "fr", "de", "es", "it")) {
                 for (Paragraph paragraph : transcript.getParagraphs()) {
-                    sb.append(paragraph.getText());
+                    sb.append(paragraph.text());
                     sb.append("\n\n");
                 }
             }
@@ -258,10 +258,7 @@ public class TedManager {
             .map(new ResourceDao.ResourceMapper()).list());
 
         for (Resource resource : resources) {
-            boolean existsInTedVideo = false;
-            if (tedTranscriptDao.findTedVideoByResourceId(resource.getId()).isPresent()) {
-                existsInTedVideo = true;
-            }
+            boolean existsInTedVideo = tedTranscriptDao.findTedVideoByResourceId(resource.getId()).isPresent();
 
             if (!existsInTedVideo) {
                 // log.debug(resource);

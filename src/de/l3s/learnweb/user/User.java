@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,6 +47,7 @@ import de.l3s.util.StringHelper;
 
 public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private static final Logger log = LogManager.getLogger(User.class);
+    @Serial
     private static final long serialVersionUID = 2482790243930271009L;
 
     public enum PasswordHashing {
@@ -440,7 +442,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      */
     public String getImageUrl() {
         if (imageUrl == null) {
-            imageUrl = getImageFile().map(image -> image.getSimpleUrl()).orElse(getFallbackImage());
+            imageUrl = getImageFile().map(File::getSimpleUrl).orElse(getFallbackImage());
         }
         return imageUrl;
     }
@@ -671,16 +673,12 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     private boolean getComputedGuide(Guide guide) {
-        switch (guide) {
-            case ADD_RESOURCE:
-                return getResourceCount() > 0;
-            case JOIN_GROUP:
-                return getGroupCount() > 0;
-            case ADD_PHOTO:
-                return getImageFileId() != 0;
-            default:
-                return false;
-        }
+        return switch (guide) {
+            case ADD_RESOURCE -> getResourceCount() > 0;
+            case JOIN_GROUP -> getGroupCount() > 0;
+            case ADD_PHOTO -> getImageFileId() != 0;
+            default -> false;
+        };
     }
 
     public void setGuide(Guide option, boolean value) {

@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource.search;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +43,7 @@ import de.l3s.util.StringHelper;
 @Named
 @ViewScoped
 public class SearchBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8540469716342051138L;
     private static final Logger log = LogManager.getLogger(SearchBean.class);
 
@@ -311,7 +313,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         }
 
         if (StringUtils.isNotBlank(value)) {
-            if (sb.length() != 0) {
+            if (!sb.isEmpty()) {
                 sb.append(':');
             }
             sb.append(filterType.name()).append(':').append(filterType.isEncodeBase64() ? StringHelper.encodeBase64(value) : value);
@@ -388,6 +390,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         return counter++;
     }
 
+    @Serial
     private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         inputStream.defaultReadObject();
     }

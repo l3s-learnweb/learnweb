@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
@@ -20,6 +21,7 @@ import de.l3s.learnweb.user.User;
 @Named
 @ViewScoped
 public class SelectLocationBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6699391944318695838L;
     //private static final Logger log = LogManager.getLogger(SelectLocationBean.class);
 

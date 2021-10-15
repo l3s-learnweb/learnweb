@@ -1,9 +1,11 @@
 package de.l3s.learnweb.resource.ted;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class TedVideo implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7530341865385703099L;
 
     private int tedId;

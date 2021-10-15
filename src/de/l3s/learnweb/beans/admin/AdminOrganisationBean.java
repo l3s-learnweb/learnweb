@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -33,6 +34,7 @@ import de.l3s.util.Image;
 @Named
 @ViewScoped
 public class AdminOrganisationBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4815509777068373043L;
     private static final Logger log = LogManager.getLogger(AdminOrganisationBean.class);
 
@@ -106,7 +108,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
     public void onSave() {
         for (OptionWrapperGroup group : optionGroups) {
-            for (OptionWrapper optionWrapper : group.getOptions()) {
+            for (OptionWrapper optionWrapper : group.options()) {
                 organisation.setOption(optionWrapper.getOption(), optionWrapper.getValue());
             }
         }
@@ -170,6 +172,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
     // only helper classes to display the options
     public static class OptionWrapper implements Serializable {
+        @Serial
         private static final long serialVersionUID = 4028764135842666696L;
         private final Option option;
         private boolean value;
@@ -196,26 +199,13 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         }
     }
 
-    public static class OptionWrapperGroup implements Serializable {
+    public record OptionWrapperGroup(String title, List<OptionWrapper> options) implements Serializable {
+        @Serial
         private static final long serialVersionUID = -7136479116433806735L;
-        private final String title;
-        private final List<OptionWrapper> options;
-
-        public OptionWrapperGroup(String title, List<OptionWrapper> options) {
-            this.title = title;
-            this.options = options;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public List<OptionWrapper> getOptions() {
-            return options;
-        }
     }
 
     private static class EnumComparator implements Comparator<Option>, Serializable {
+        @Serial
         private static final long serialVersionUID = 6363944568317854215L;
 
         @Override

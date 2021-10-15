@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.List;
@@ -21,6 +22,7 @@ import de.l3s.util.StringHelper;
 @Named
 @RequestScoped
 public class WelcomeBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4337683111157393180L;
 
     // Filter for forum

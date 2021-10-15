@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.enterprise.context.RequestScoped;
@@ -15,6 +16,7 @@ import de.l3s.learnweb.exceptions.BadRequestHttpException;
 @Named
 @RequestScoped
 public class ConfirmEmailBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -6040579499279231182L;
 
     private String email;

@@ -4,6 +4,7 @@ import static jakarta.servlet.RequestDispatcher.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serial;
 import java.lang.reflect.InvocationTargetException;
 
 import jakarta.el.ELException;
@@ -29,6 +30,7 @@ import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
  */
 @WebFilter(filterName = "LearnwebExceptionFilter", urlPatterns = "/*", asyncSupported = true)
 public class LearnwebExceptionFilter extends HttpFilter {
+    @Serial
     private static final long serialVersionUID = 3190219905269569699L;
 
     @Override
@@ -53,8 +55,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
             } else if (throwable instanceof UnauthorizedHttpException) {
                 // In case of unauthorized user, redirect to login page
                 response.sendRedirect(prepareLoginURL(request));
-            } else if (throwable instanceof HttpException) {
-                HttpException httpException = (HttpException) throwable;
+            } else if (throwable instanceof HttpException httpException) {
                 // Show an appropriate error page, these exceptions usually expected
                 response.sendError(httpException.getStatus(), httpException.getReason());
             } else {

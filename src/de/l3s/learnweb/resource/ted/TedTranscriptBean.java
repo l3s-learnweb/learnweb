@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.ted;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import de.l3s.util.NlpHelper;
 @Named
 @ViewScoped
 public class TedTranscriptBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -1803725556672379697L;
     //private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
 
@@ -120,7 +122,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         StringBuilder sb = new StringBuilder();
         paragraphs.forEach(paragraph -> {
             sb.append(paragraph.getStartTimeInMinutes()).append("\t");
-            sb.append(paragraph.getText()).append("\n");
+            sb.append(paragraph.text()).append("\n");
         });
 
         // TODO: but why do we need this (two lines below)?
@@ -193,7 +195,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
 
             if (definitions.isEmpty() && wordCount == 1) {
                 synonymsList.append(getLocaleMessage("No definition available"));
-            } else if (synonymsList.length() == 0) {
+            } else if (synonymsList.isEmpty()) {
                 synonymsList.append(getLocaleMessage("Multiple"));
             }
             PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList.toString());

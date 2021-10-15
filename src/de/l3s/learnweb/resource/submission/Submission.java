@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.submission;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -14,6 +15,7 @@ import de.l3s.learnweb.user.Course;
 import de.l3s.util.HasId;
 
 public class Submission implements Serializable, HasId {
+    @Serial
     private static final long serialVersionUID = -3143872721852606973L;
     //private static final Logger log = LogManager.getLogger(Submission.class);
 

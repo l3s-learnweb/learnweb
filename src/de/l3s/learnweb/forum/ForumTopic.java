@@ -1,5 +1,6 @@
 package de.l3s.learnweb.forum;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -9,6 +10,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.Deletable;
 
 public class ForumTopic implements Serializable, Deletable {
+    @Serial
     private static final long serialVersionUID = 5370327788969640983L;
 
     private int id;

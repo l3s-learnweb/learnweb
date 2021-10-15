@@ -1,7 +1,10 @@
 package de.l3s.learnweb.exceptions;
 
+import java.io.Serial;
+
 public class UnavailableHttpException extends HttpException {
 
+    @Serial
     private static final long serialVersionUID = -7948413557549460098L;
 
     public UnavailableHttpException() {

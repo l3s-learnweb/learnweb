@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 @Named
 @ViewScoped
 public class AdminAnnouncementBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -5638619327036890427L;
     //    private static final Logger log = LogManager.getLogger(AdminAnnouncementsBean.class);
 

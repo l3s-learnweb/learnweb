@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ import de.l3s.learnweb.logging.Action;
 @Named
 @ViewScoped
 public class SurveyBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -6217166153267996666L;
     private static final Logger log = LogManager.getLogger(SurveyBean.class);
     private int surveyResourceId;
@@ -151,12 +153,11 @@ public class SurveyBean extends ApplicationBean implements Serializable {
         this.goBackPage = goBackPage;
 
         switch (goBackPage) {
-            case "assessmentResults":
+            case "assessmentResults" -> {
                 goBackPageLink = "myhome/assessmentResults.jsf";
                 goBackPageTitle = "Go back to the assessment results";
-                break;
-            default:
-                log.error("Unknown value of goBackPage {}", goBackPage);
+            }
+            default -> log.error("Unknown value of goBackPage {}", goBackPage);
         }
     }
 

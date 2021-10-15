@@ -57,27 +57,5 @@ public class StatusBean extends ApplicationBean {
         return services;
     }
 
-    public static class Service {
-        private final String name;
-        private final boolean healthy;
-        private final String description;
-
-        public Service(String name, boolean healthy, String description) {
-            this.name = name;
-            this.healthy = healthy;
-            this.description = description;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean isHealthy() {
-            return healthy;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
+    public record Service(String name, boolean healthy, String description) {}
 }

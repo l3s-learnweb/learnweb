@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import de.l3s.util.Deletable;
  * @author Rishita
  */
 public class SurveyQuestion implements Deletable, Serializable {
+    @Serial
     private static final long serialVersionUID = -7698089608547415349L;
 
     public enum QuestionType { // represents primefaces input types

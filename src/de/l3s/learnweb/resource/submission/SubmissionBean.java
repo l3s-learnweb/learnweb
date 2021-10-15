@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.submission;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ import de.l3s.learnweb.user.UserDao;
 @Named
 @ViewScoped
 public class SubmissionBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -2494290373382483709L;
     private static final Logger log = LogManager.getLogger(SubmissionBean.class);
 
@@ -145,19 +147,13 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
 
         try {
             switch (action) {
-                case "add":
-                    this.actionAddSelectedItems(items);
-                    break;
-                case "remove":
-                    this.actionRemoveItems(items);
-                    break;
-                case "update":
+                case "add" -> this.actionAddSelectedItems(items);
+                case "remove" -> this.actionRemoveItems(items);
+                case "update" -> {
                     selectedResources.clear();
                     this.actionAddSelectedItems(items);
-                    break;
-                default:
-                    log.error("Unsupported action: {}", action);
-                    break;
+                }
+                default -> log.error("Unsupported action: {}", action);
             }
         } catch (JsonParseException e) {
             log.error("Exception while parsing items in actionUpdateSelectedItems", e);

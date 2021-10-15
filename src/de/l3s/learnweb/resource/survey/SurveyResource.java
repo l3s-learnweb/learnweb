@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -14,6 +15,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 
 public class SurveyResource extends Resource {
+    @Serial
     private static final long serialVersionUID = 3431955030925189235L;
 
     private int surveyId;

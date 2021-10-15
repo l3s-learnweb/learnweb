@@ -88,7 +88,7 @@ public final class SqlHelper {
      */
     public static Update handleSave(final Handle handle, final String tableName, final LinkedHashMap<String, Object> params) {
         String[] keys = params.keySet().toArray(new String[0]);
-        Update update = handle.createUpdate(generateInsertReplaceQuery(tableName, keys));
+        Update update = handle.createUpdate(generateInsertQuery(tableName, keys, true));
 
         for (int i = 0, len = keys.length; i < len; ++i) {
             update.bind(i, params.get(keys[i]));
@@ -98,34 +98,11 @@ public final class SqlHelper {
     }
 
     /**
-     * Creates `INSERT INTO tableName ON DUPLICATE KEY UPDATE` query.
-     * Assumes that the first column is the primary key of this table.
-     */
-    public static String generateInsertReplaceQuery(final String tableName, final String[] columns) {
-        StringBuilder sb = new StringBuilder("INSERT INTO ");
-        sb.append(tableName).append(" (");
-
-        for (String column : columns) {
-            sb.append('`').append(column).append('`').append(',');
-        }
-        sb.setLength(sb.length() - 1); // remove last comma
-
-        String questionMarks = StringUtils.repeat(",?", columns.length).substring(1);
-        sb.append(") VALUES (").append(questionMarks).append(") ON DUPLICATE KEY UPDATE ");
-
-        for (int i = 1, len = columns.length; i < len; i++) { // skip first column
-            String column = columns[i];
-            sb.append('`').append(column).append('`').append("=VALUES(").append('`').append(column).append('`').append("),");
-        }
-        sb.setLength(sb.length() - 1); // remove last comma
-
-        return sb.toString();
-    }
-
-    /**
      * Creates `INSERT INTO tableName (column1,column2,column3) VALUES (?,?,?)` query.
+     * @param replace if {@code true} generates `INSERT INTO tableName ON DUPLICATE KEY UPDATE` query.
+     *   Assumes that the first column is the primary key of this table.
      */
-    public static String generateInsertQuery(final String tableName, final String[] columns) {
+    public static String generateInsertQuery(final String tableName, final String[] columns, boolean replace) {
         StringBuilder sb = new StringBuilder("INSERT INTO ");
         sb.append(tableName).append(" (");
 
@@ -136,6 +113,17 @@ public final class SqlHelper {
 
         String questionMarks = StringUtils.repeat(",?", columns.length).substring(1);
         sb.append(") VALUES (").append(questionMarks).append(")");
+
+        if (replace) {
+            sb.append(" ON DUPLICATE KEY UPDATE ");
+
+            for (int i = 1, len = columns.length; i < len; i++) { // skip first column
+                String column = columns[i];
+                sb.append('`').append(column).append('`').append("=VALUES(").append('`').append(column).append('`').append("),");
+            }
+            sb.setLength(sb.length() - 1); // remove last comma
+        }
+
         return sb.toString();
     }
 

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.search;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import de.l3s.util.StringHelper;
  * total_hours_wasted_here = 58
  */
 public class SearchFilters implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8012567994091306088L;
     static final Logger log = LogManager.getLogger(SearchFilters.class);
 
@@ -106,44 +108,19 @@ public class SearchFilters implements Serializable {
     public void putResourceCounters(List<FacetField> facetFields) {
         for (FacetField facetField : facetFields) {
             switch (facetField.getName()) {
-                case "source":
-                    putResourceCounters(FilterType.service, facetField.getValues(), false);
-                    break;
-                case "type":
-                    putResourceCounters(FilterType.type, facetField.getValues(), false);
-                    break;
-                case "groupId":
-                    putResourceCounters(FilterType.group, facetField.getValues(), false);
-                    break;
-                case "collector_s":
-                    putResourceCounters(FilterType.collector, facetField.getValues(), false);
-                    break;
-                case "author_s":
-                    putResourceCounters(FilterType.author, facetField.getValues(), false);
-                    break;
-                case "coverage_s":
-                    putResourceCounters(FilterType.coverage, facetField.getValues(), false);
-                    break;
-                case "publisher_s":
-                    putResourceCounters(FilterType.publisher, facetField.getValues(), false);
-                    break;
-                case "language_level_ss":
-                    putResourceCounters(FilterType.language_level, facetField.getValues(), false);
-                    break;
-                case "yell_target_ss":
-                    putResourceCounters(FilterType.yell_target, facetField.getValues(), false);
-                    break;
-                case "yell_purpose_ss":
-                    putResourceCounters(FilterType.yell_purpose, facetField.getValues(), false);
-                    break;
-                case "tags_ss":
-                    putResourceCounters(FilterType.tags, facetField.getValues(), false);
-                    break;
-                case "language":
-                    putResourceCounters(FilterType.language, facetField.getValues(), false);
-                    break;
-                default:
-                    log.error("Unknown facetField name {}", facetField);
+                case "source" -> putResourceCounters(FilterType.service, facetField.getValues(), false);
+                case "type" -> putResourceCounters(FilterType.type, facetField.getValues(), false);
+                case "groupId" -> putResourceCounters(FilterType.group, facetField.getValues(), false);
+                case "collector_s" -> putResourceCounters(FilterType.collector, facetField.getValues(), false);
+                case "author_s" -> putResourceCounters(FilterType.author, facetField.getValues(), false);
+                case "coverage_s" -> putResourceCounters(FilterType.coverage, facetField.getValues(), false);
+                case "publisher_s" -> putResourceCounters(FilterType.publisher, facetField.getValues(), false);
+                case "language_level_ss" -> putResourceCounters(FilterType.language_level, facetField.getValues(), false);
+                case "yell_target_ss" -> putResourceCounters(FilterType.yell_target, facetField.getValues(), false);
+                case "yell_purpose_ss" -> putResourceCounters(FilterType.yell_purpose, facetField.getValues(), false);
+                case "tags_ss" -> putResourceCounters(FilterType.tags, facetField.getValues(), false);
+                case "language" -> putResourceCounters(FilterType.language, facetField.getValues(), false);
+                default -> log.error("Unknown facetField name {}", facetField);
             }
         }
     }

@@ -1,6 +1,7 @@
 package de.l3s.mail.message;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -21,9 +22,7 @@ public class Paragraph extends Element {
 
     public Paragraph(Element... elements) {
         if (elements != null) {
-            for (Element element : elements) {
-                children.add(element);
-            }
+            Collections.addAll(children, elements);
         }
     }
 

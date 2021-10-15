@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.ted;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import de.l3s.learnweb.app.Learnweb;
@@ -7,6 +8,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
 public class TranscriptSummary implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4882492393068437410L;
 
     private final int userId;

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.searchhistory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import de.l3s.learnweb.user.UserDao;
 @Named
 @ViewScoped
 public class SearchHistoryBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -7682314831788865416L;
     //private static final Logger log = LogManager.getLogger(SearchHistoryBean.class);
 
@@ -35,7 +37,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private SearchQuery selectedQuery;
 
     private transient List<SearchSession> sessions;
-    private transient Map<Integer, List<ResourceDecorator>> snippets = new HashMap<>();
+    private final transient Map<Integer, List<ResourceDecorator>> snippets = new HashMap<>();
 
     @Inject
     private UserDao userDao;
@@ -73,11 +75,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public String getSearchResultsView() {
-        if ("text".equals(selectedQuery.getMode())) {
+        if ("text".equals(selectedQuery.mode())) {
             return "list";
-        } else if ("image".equals(selectedQuery.getMode())) {
+        } else if ("image".equals(selectedQuery.mode())) {
             return "float";
-        } else if ("video".equals(selectedQuery.getMode())) {
+        } else if ("video".equals(selectedQuery.mode())) {
             return "grid";
         }
 
@@ -87,11 +89,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     public List<ResourceDecorator> getSearchResults() {
         List<ResourceDecorator> searchResults = new ArrayList<>();
         if (selectedQuery != null) {
-            if (!snippets.containsKey(selectedQuery.getSearchId())) {
-                snippets.put(selectedQuery.getSearchId(), dao().getSearchHistoryDao().findSearchResultsByQuery(selectedQuery, 100));
+            if (!snippets.containsKey(selectedQuery.searchId())) {
+                snippets.put(selectedQuery.searchId(), dao().getSearchHistoryDao().findSearchResultsByQuery(selectedQuery, 100));
             }
 
-            searchResults.addAll(snippets.get(selectedQuery.getSearchId()));
+            searchResults.addAll(snippets.get(selectedQuery.searchId()));
         }
         return searchResults;
     }
@@ -177,7 +179,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
                     return StringUtils.containsIgnoreCase(session.getUser().getUsername(), finalQuery);
                 }
 
-                return session.getQueries().stream().anyMatch(query -> StringUtils.containsIgnoreCase(query.getQuery(), finalQuery));
+                return session.getQueries().stream().anyMatch(query -> StringUtils.containsIgnoreCase(query.query(), finalQuery));
 
             }).collect(Collectors.toList());
         }

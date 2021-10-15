@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.office;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.Map;
 
 import jakarta.inject.Inject;
@@ -34,6 +35,7 @@ import de.l3s.util.UrlHelper;
 
 @WebServlet(name = "saverServlet", description = "Servlet for saving edited office documents", urlPatterns = "/save", loadOnStartup = 4)
 public class SaverServlet extends HttpServlet {
+    @Serial
     private static final long serialVersionUID = 7296371511069054378L;
     private static final Logger log = LogManager.getLogger(SaverServlet.class);
 

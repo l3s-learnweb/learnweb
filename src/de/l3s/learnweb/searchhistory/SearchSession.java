@@ -1,5 +1,6 @@
 package de.l3s.learnweb.searchhistory;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -9,6 +10,7 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
 
 public class SearchSession implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6139247221701183553L;
 
     private final int userId;
@@ -46,10 +48,10 @@ public class SearchSession implements Serializable {
     }
 
     public LocalDateTime getStartTimestamp() {
-        return queries.getFirst().getTimestamp();
+        return queries.getFirst().timestamp();
     }
 
     public LocalDateTime getEndTimestamp() {
-        return queries.getLast().getTimestamp();
+        return queries.getLast().timestamp();
     }
 }

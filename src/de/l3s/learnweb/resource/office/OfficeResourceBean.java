@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.office;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.annotation.PostConstruct;
@@ -19,6 +20,7 @@ import de.l3s.learnweb.resource.ResourceDetailBean;
 @Named
 @ViewScoped
 public class OfficeResourceBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -655001215017199006L;
     private static final Logger log = LogManager.getLogger(OfficeResourceBean.class);
 

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.component;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.Submenu;
 
 public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
+    @Serial
     private static final long serialVersionUID = -6646980546205592030L;
 
     private String id;

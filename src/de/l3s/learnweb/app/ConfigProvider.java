@@ -3,6 +3,7 @@ package de.l3s.learnweb.app;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
@@ -25,6 +26,7 @@ import de.l3s.util.UrlHelper;
 @Named("config")
 @ApplicationScoped
 public class ConfigProvider implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8999792363825397979L;
     private static final Logger log = LogManager.getLogger(ConfigProvider.class);
 
@@ -34,7 +36,7 @@ public class ConfigProvider implements Serializable {
     private final Properties properties = new Properties();
 
     /**
-     * An version of the application from pom.xml (extracted from web.xml, maven should put it there on build).
+     * A version of the application from pom.xml (extracted from web.xml, maven should put it there on build).
      */
     private String version;
 

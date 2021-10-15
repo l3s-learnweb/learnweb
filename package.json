@@ -127,6 +127,17 @@
     "ignoreFiles": [
       "**/node_modules/**",
       "**/bundle/**"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.xhtml"
+        ],
+        "syntax": "html",
+        "rules": {
+          "declaration-block-semicolon-newline-after": "never-multi-line"
+        }
+      }
     ]
   }
 }

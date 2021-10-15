@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
@@ -40,6 +41,7 @@ import de.l3s.util.StringHelper;
 @Named
 @SessionScoped
 public class UserBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -8577036953815676943L;
     private static final Logger log = LogManager.getLogger(UserBean.class);
 
@@ -186,37 +188,8 @@ public class UserBean implements Serializable {
 
     public String setLocaleCode(String localeCode) {
         setSidebarMenuModel(null);
-        String languageVariant = getActiveOrganisation().getLanguageVariant();
         //log.debug("set locale " + localeCode);
-
-        switch (localeCode) {
-            case "de":
-                locale = new Locale("de", "DE", languageVariant);
-                break;
-            case "en":
-                locale = new Locale("en", "UK", languageVariant);
-                break;
-            case "it":
-                locale = new Locale("it", "IT", languageVariant);
-                break;
-            case "pt":
-                locale = new Locale("pt", "BR", languageVariant);
-                break;
-            case "es":
-                locale = new Locale("es", "ES", languageVariant);
-                break;
-            case "uk":
-                locale = new Locale("uk", "UA", languageVariant);
-                break;
-            case "xx":
-                // only for translation editors
-                locale = new Locale("xx");
-                break;
-            default:
-                locale = new Locale("en", "UK");
-                log.error("Unsupported language: {}", localeCode);
-                break;
-        }
+        locale = getLocaleByLocaleCode(localeCode);
 
         FacesContext fc = FacesContext.getCurrentInstance();
         if (fc == null || fc.getViewRoot() == null) {
@@ -224,6 +197,24 @@ public class UserBean implements Serializable {
         }
 
         return fc.getViewRoot().getViewId() + "?faces-redirect=true&includeViewParams=true";
+    }
+
+    private Locale getLocaleByLocaleCode(String localeCode) {
+        String languageVariant = getActiveOrganisation().getLanguageVariant();
+
+        return switch (localeCode) {
+            case "de" -> new Locale("de", "DE", languageVariant);
+            case "en" -> new Locale("en", "UK", languageVariant);
+            case "it" -> new Locale("it", "IT", languageVariant);
+            case "pt" -> new Locale("pt", "BR", languageVariant);
+            case "es" -> new Locale("es", "ES", languageVariant);
+            case "uk" -> new Locale("uk", "UA", languageVariant);
+            case "xx" -> new Locale("xx"); // only for translation editors
+            default -> {
+                log.error("Unsupported language: {}", localeCode);
+                yield new Locale("en", "UK");
+            }
+        };
     }
 
     public boolean isAdmin() {
@@ -294,10 +285,10 @@ public class UserBean implements Serializable {
     }
 
     public String getBannerLink() {
-        if (!isLoggedIn()) {
-            return "./";
-        } else {
+        if (isLoggedIn()) {
             return "./" + getActiveOrganisation().getWelcomePage();
+        } else {
+            return "./";
         }
     }
 

@@ -1,11 +1,13 @@
 package de.l3s.learnweb;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
 
 public final class Announcement implements Serializable {
+    @Serial
     private static final long serialVersionUID = 4219676681480459859L;
 
     private int id;

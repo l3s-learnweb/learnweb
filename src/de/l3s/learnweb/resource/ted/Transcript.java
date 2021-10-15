@@ -32,26 +32,10 @@ public class Transcript {
         getParagraphs().add(new Paragraph(startTime, text));
     }
 
-    public static class Paragraph {
-        private final int startTime;
-        private final String text;
-
-        public Paragraph(int startTime, String text) {
-            this.startTime = startTime;
-            this.text = text;
-        }
-
-        public int getStartTime() {
-            return startTime;
-        }
-
+    public record Paragraph(int startTime, String text) {
         public String getStartTimeInMinutes() {
             int seconds = startTime / 1000;
             return StringHelper.getDurationInMinutes(seconds);
-        }
-
-        public String getText() {
-            return text;
         }
     }
 

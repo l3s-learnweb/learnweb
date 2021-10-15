@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import org.apache.poi.ss.formula.eval.NotImplementedException;
 
 /**
- * Stores an URL as ASCII encoded bytes.
+ * Stores a URL as ASCII encoded bytes.
  *
  * @author Philipp Kemkes
  */

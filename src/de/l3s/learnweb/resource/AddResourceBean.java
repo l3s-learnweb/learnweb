@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -33,6 +34,7 @@ import de.l3s.util.UrlHelper;
 @Named
 @ViewScoped
 public class AddResourceBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1736402639245432708L;
     private static final Logger log = LogManager.getLogger(AddResourceBean.class);
 
@@ -55,43 +57,29 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         this.targetFolder = targetFolder;
 
         // Set target view and defaults
-        switch (type) {
-            case "file":
-                resource = new Resource(Resource.StorageType.LEARNWEB, ResourceType.file, ResourceService.desktop);
-                break;
-            case "url":
-            case "website":
-                resource = new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.internet);
-                break;
-            case "glossary":
+        resource = switch (type) {
+            case "file" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.file, ResourceService.desktop);
+            case "url", "website" -> new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.internet);
+            case "glossary" -> {
                 GlossaryResource glossaryResource = new GlossaryResource();
                 glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
-                resource = glossaryResource;
-                break;
-            case "survey":
+                yield  glossaryResource;
+            }
+            case "survey" -> {
                 Survey survey = new Survey();
                 survey.setOrganisationId(getUser().getOrganisationId());
                 survey.setUserId(getUser().getId());
-                survey.setTitle("Title placeholder"); // this values are overridden in addResource method
+                survey.setTitle("Title placeholder"); // these values are overridden in addResource method
                 survey.setDescription("Description placeholder");
-
                 SurveyResource surveyResource = new SurveyResource();
                 surveyResource.setSurvey(survey);
-                this.resource = surveyResource;
-                break;
-            case "document":
-                resource = new Resource(Resource.StorageType.LEARNWEB, ResourceType.document, ResourceService.learnweb);
-                break;
-            case "spreadsheet":
-                resource = new Resource(Resource.StorageType.LEARNWEB, ResourceType.spreadsheet, ResourceService.learnweb);
-                break;
-            case "presentation":
-                resource = new Resource(Resource.StorageType.LEARNWEB, ResourceType.presentation, ResourceService.learnweb);
-                break;
-            default:
-                log.error("Unsupported resource type: {}", type);
-                break;
-        }
+                yield  surveyResource;
+            }
+            case "document" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.document, ResourceService.learnweb);
+            case "spreadsheet" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.spreadsheet, ResourceService.learnweb);
+            case "presentation" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.presentation, ResourceService.learnweb);
+            default -> throw new IllegalStateException("Unsupported resource type: " + type);
+        };
 
         resource.setUser(getUser());
         resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
@@ -179,8 +167,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             return;
         }
 
-        if (resource.getType() == ResourceType.survey && resource instanceof SurveyResource) {
-            SurveyResource surveyResource = (SurveyResource) resource;
+        if (resource.getType() == ResourceType.survey && resource instanceof SurveyResource surveyResource) {
             surveyResource.getSurvey().setTitle(resource.getTitle());
             surveyResource.getSurvey().setDescription(resource.getDescription());
         }

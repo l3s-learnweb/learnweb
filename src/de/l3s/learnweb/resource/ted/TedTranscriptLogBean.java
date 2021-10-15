@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.ted;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -18,6 +19,7 @@ import de.l3s.util.bean.BeanHelper;
 @Named
 @ViewScoped
 public class TedTranscriptLogBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -1803725556672379697L;
 
     //private int selectedCourseId;

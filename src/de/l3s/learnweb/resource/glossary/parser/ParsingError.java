@@ -1,10 +1,12 @@
 package de.l3s.learnweb.resource.glossary.parser;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import org.apache.poi.ss.usermodel.Cell;
 
 public class ParsingError implements Serializable {
+    @Serial
     private static final long serialVersionUID = 4934470524700107862L;
 
     private final int row;

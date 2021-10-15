@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.search.filters;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +12,7 @@ import org.apache.solr.client.solrj.response.FacetField;
  * Default Solr Filter, all options are dynamic values.
  */
 public class Filter implements Serializable {
+    @Serial
     private static final long serialVersionUID = 4814395595067137441L;
 
     private final FilterType type;

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.forum;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +26,7 @@ import de.l3s.learnweb.logging.Action;
 @Named
 @ViewScoped
 public class ForumBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8303246537720508084L;
     //private static final Logger log = LogManager.getLogger(ForumBean.class);
 

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -13,6 +14,7 @@ import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
 public class GlossaryEntry implements HasId, Deletable, Serializable {
+    @Serial
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id;
@@ -253,19 +255,13 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
      * Convenience function that calls the getter of a given field.
      */
     public String get(String fieldName) {
-        switch (fieldName) {
-            case "description":
-                return getDescription();
-            case "topicOne":
-                return getTopicOne();
-            case "topicTwo":
-                return getTopicTwo();
-            case "topicThree":
-                return getTopicThree();
-            case "fulltext":
-                return getFulltext();
-            default:
-                throw new IllegalArgumentException(fieldName + " is not implemented");
-        }
+        return switch (fieldName) {
+            case "description" -> getDescription();
+            case "topicOne" -> getTopicOne();
+            case "topicTwo" -> getTopicTwo();
+            case "topicThree" -> getTopicThree();
+            case "fulltext" -> getFulltext();
+            default -> throw new IllegalArgumentException(fieldName + " is not implemented");
+        };
     }
 }

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.group;
 
+import java.io.Serial;
 import java.util.List;
 
 import de.l3s.learnweb.app.Learnweb;
@@ -9,6 +10,7 @@ import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 
 public class PrivateGroup extends Group {
+    @Serial
     private static final long serialVersionUID = -4541934616443225307L;
 
     public PrivateGroup(final String title, final User user) {

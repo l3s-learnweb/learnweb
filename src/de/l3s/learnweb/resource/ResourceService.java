@@ -35,35 +35,20 @@ public enum ResourceService { // when adding more services remember to update th
     }
 
     public boolean isInterweb() {
-        switch (this) {
-            case bing:
-            case giphy:
-            case flickr:
-            case youtube:
-            case vimeo:
-            case ipernity:
-            case slideshare:
-                return true;
-            default:
-                return false;
-        }
+        return switch (this) {
+            case bing, giphy, flickr, youtube, vimeo, ipernity, slideshare -> true;
+            default -> false;
+        };
     }
 
     /**
      * indicates if the resources from this service have been crawled automatically. Only used for statistical purposes
      */
     public boolean isCrawled() {
-        switch (this) {
-            case archiveit:
-            case ted:
-            case tedx:
-            case teded:
-            case factcheck:
-            case speechrepository:
-                return true;
-            default:
-                return false;
-        }
+        return switch (this) {
+            case archiveit, ted, tedx, teded, factcheck, speechrepository -> true;
+            default -> false;
+        };
     }
 
     public String getLabel() {
@@ -79,17 +64,10 @@ public enum ResourceService { // when adding more services remember to update th
      * Returns the the location were a resource is stored. Necessary because some external sources are indexed in our Solr instance.
      */
     public String getLocation() {
-        switch (this) {
-            case teded:
-            case ted:
-            case tedx:
-            case yovisto:
-            case archiveit:
-            case factcheck:
-                return getLabel();
-            default:
-                return "Learnweb";
-        }
+        return switch (this) {
+            case teded, ted, tedx, yovisto, archiveit, factcheck -> getLabel();
+            default -> "Learnweb";
+        };
     }
 
     /**

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.web;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
  * @author Kate
  */
 public class LoginAttempt implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8349103575359014279L;
 
     private String addr;

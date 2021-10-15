@@ -24,7 +24,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import de.l3s.learnweb.LanguageBundle;
 
 /**
- * Allows to export a glossary into a Excel file.
+ * Allows to export a glossary into an Excel file.
  *
  * @author Philipp
  *

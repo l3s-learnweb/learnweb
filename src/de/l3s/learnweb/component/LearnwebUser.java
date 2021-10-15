@@ -10,11 +10,15 @@ import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.user.User;
 
 @FacesComponent(createTag = true, tagName = "user", namespace = "http://l3s.de/learnweb")
 public class LearnwebUser extends UIComponentBase {
+    private static final Logger log = LogManager.getLogger(LearnwebUser.class);
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component.LearnwebUser";
     public User user;
 
@@ -33,7 +37,7 @@ public class LearnwebUser extends UIComponentBase {
                 return;
             }
         } catch (Exception e) {
-            System.err.println("IOException while passing User");
+            log.error("IOException while passing User", e);
             return;
         }
         int userId = user.getId();

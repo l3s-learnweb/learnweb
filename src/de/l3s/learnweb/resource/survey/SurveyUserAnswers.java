@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,6 +18,7 @@ import de.l3s.util.HasId;
  * @author Philipp Kemkes
  */
 public class SurveyUserAnswers implements Serializable, HasId {
+    @Serial
     private static final long serialVersionUID = -1442011853436353323L;
 
     private final int userId;

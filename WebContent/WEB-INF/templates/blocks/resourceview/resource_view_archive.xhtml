@@ -22,11 +22,11 @@
 			<h:outputText value="#{res.title}" escape="false" styleClass="h5"/>
 		</div>
 		<div class="d-flex h-100">
-			<div class="me-3 archive-snapshots-wrapper content-scroll" style="width:14rem;">
+			<div class="me-3 archive-snapshots-wrapper content-scroll" style="width: 14rem;">
 				<ui:fragment rendered="${res.archiveUrls.size() le 100}">
 					<ul class="archive-snapshot-list list-unstyled mb-0">
 						<ui:repeat var="au" value="#{res.archiveUrls}">
-							<li style="width:12rem;">
+							<li style="width: 12rem;">
 								<a href="#{au.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
 									<h:outputText value="#{au.timestamp}">
 										<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
@@ -43,7 +43,7 @@
 								<p:button value="#{ay.key}" styleClass="outline-btn m-0 mb-1" onclick="return false;"/>
 								<ul class="list-unstyled ps-3 collapse">
 									<ui:repeat var="au2" value="#{ay.value}">
-										<li style="width:12rem;">
+										<li style="width: 12rem;">
 											<a href="#{au2.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
 												<h:outputText value="#{au2.timestamp}">
 													<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
@@ -99,7 +99,7 @@
 				<div class="ms-0 ms-sm-3 list-unstyled ps-0 ps-sm-3 my-1 collapse col-12">
 					<div class="d-flex flex-wrap">
 						<ui:repeat var="au2" value="#{ay.value}">
-							<div style="width:12rem;" class="mx-2">
+							<div style="width: 12rem;" class="mx-2">
 								<a href="#{au2.archiveUrl}" target="_blank" class="w-100 m-0 mb-1">
 									<h:outputText value="#{au2.timestamp}">
 										<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>

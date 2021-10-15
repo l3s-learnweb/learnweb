@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +17,7 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.HasId;
 
 public class File implements Serializable, HasId {
+    @Serial
     private static final long serialVersionUID = 6573841175365679674L;
 
     public enum FileType {
@@ -24,7 +26,7 @@ public class File implements Serializable, HasId {
         ORGANISATION_BANNER,
         PROFILE_PICTURE,
         // resource files
-        THUMBNAIL_SMALL, // cropped to 160 x 120 px - smallest thumbnail used on website
+        THUMBNAIL_SMALL, // cropped to 160 x 120 px - the smallest thumbnail used on website
         THUMBNAIL_MEDIUM, // resized <= 280 x 210 px - resource preview image size
         THUMBNAIL_LARGE, // resized <= 2048 x 1536 px - FHD image size, used on resource page if other media type is not available
         MAIN, // the file that can be downloaded/viewed
@@ -34,16 +36,11 @@ public class File implements Serializable, HasId {
         DOC_CHANGES; // zip file with changes for office resource
 
         public boolean isResourceFile() {
-            switch (this) {
+            return switch (this) {
                 // case THUMBNAIL_SMALL: // Small thumbnail files which are shown during resource upload and thus are not connected to a resource yet.
-                case THUMBNAIL_MEDIUM:
-                case THUMBNAIL_LARGE:
-                case MAIN:
-                case ORIGINAL:
-                    return true;
-                default:
-                    return false;
-            }
+                case THUMBNAIL_MEDIUM, THUMBNAIL_LARGE, MAIN, ORIGINAL -> true;
+                default -> false;
+            };
         }
     }
 

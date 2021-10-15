@@ -203,7 +203,7 @@ public class LanguageBundle extends ResourceBundle {
             String translation = getLocaleMessage(localeToCheck, msgKey);
 
             if (!translation.equals(translation.trim())) {
-                log.warn(msgKey + " contains whitespaces");
+                log.warn("{} contains whitespaces", msgKey);
             }
 
             if (value.equalsIgnoreCase(translation)) {

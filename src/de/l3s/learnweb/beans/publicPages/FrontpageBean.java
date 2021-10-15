@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.publicPages;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 @Named
 @RequestScoped
 public class FrontpageBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6447676611928379575L;
 
     private static final int MAX_ANNOUNCEMENTS = 5; // maximal number of announcements that will be shown

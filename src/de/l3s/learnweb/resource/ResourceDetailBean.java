@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
@@ -42,6 +43,7 @@ import de.l3s.util.UrlHelper;
 @Named
 @ViewScoped
 public class ResourceDetailBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 4911923763255682055L;
     private static final Logger log = LogManager.getLogger(ResourceDetailBean.class);
 
@@ -196,8 +198,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             JsonArray archiveVersions = new JsonArray();
             for (ArchiveUrl archiveUrl : archiveUrlsData) {
                 JsonObject archiveVersion = new JsonObject();
-                archiveVersion.addProperty("url", archiveUrl.getArchiveUrl());
-                archiveVersion.addProperty("time", DateTimeFormatter.ISO_TIME.format(archiveUrl.getTimestamp()));
+                archiveVersion.addProperty("url", archiveUrl.archiveUrl());
+                archiveVersion.addProperty("time", DateTimeFormatter.ISO_TIME.format(archiveUrl.timestamp()));
                 archiveVersions.add(archiveVersion);
             }
             archiveDay.add("dayEvents", archiveVersions);
@@ -250,7 +252,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         boolean addToQueue = true;
         if (!resource.getArchiveUrls().isEmpty()) {
             // captured more than 5 minutes ago
-            addToQueue = resource.getArchiveUrls().getLast().getTimestamp().isBefore(LocalDateTime.now().minusMinutes(5));
+            addToQueue = resource.getArchiveUrls().getLast().timestamp().isBefore(LocalDateTime.now().minusMinutes(5));
         }
 
         if (addToQueue) {
@@ -333,11 +335,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         PrimeFaces.current().dialog().showMessageDynamic(message);
     }
 
-    public boolean canEditComment(Object commentO) {
-        if (!(commentO instanceof Comment)) {
-            return false;
-        }
-
+    public boolean canEditComment(Comment comment) {
         User user = getUser();
         if (null == user) {
             return false;
@@ -346,16 +344,11 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             return true;
         }
 
-        Comment comment = (Comment) commentO;
         User owner = comment.getUser();
         return user.equals(owner);
     }
 
-    public boolean canDeleteTag(Object tagO) {
-        if (!(tagO instanceof Tag)) {
-            return false;
-        }
-
+    public boolean canDeleteTag(Tag tag) {
         User user = getUser();
         if (null == user) {
             return false;
@@ -364,7 +357,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             return true;
         }
 
-        Tag tag = (Tag) tagO;
         User owner = resource.getTags().getElementOwner(tag);
         return user.equals(owner);
     }

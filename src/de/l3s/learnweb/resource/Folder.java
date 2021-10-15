@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +16,7 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
 public class Folder extends AbstractResource implements Serializable, ResourceContainer {
+    @Serial
     private static final long serialVersionUID = 2147007718176177138L;
     private static final Logger log = LogManager.getLogger(Folder.class);
 
@@ -224,7 +226,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     }
 
     /**
-     * @return a string representation of the resources path for views
+     * @return a string representation of the resources' path for views
      */
     @Override
     public String getPrettyPath() {

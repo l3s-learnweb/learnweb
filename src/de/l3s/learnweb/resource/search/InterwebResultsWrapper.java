@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.search;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.util.StringHelper;
 
 public class InterwebResultsWrapper implements Serializable {
+    @Serial
     private static final long serialVersionUID = 681547180910687848L;
     private static final Logger log = LogManager.getLogger(InterwebResultsWrapper.class);
 

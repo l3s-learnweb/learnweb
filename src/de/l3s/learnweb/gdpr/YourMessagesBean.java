@@ -1,5 +1,6 @@
 package de.l3s.learnweb.gdpr;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import de.l3s.learnweb.user.User;
 @Named
 @ViewScoped
 public class YourMessagesBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 9183874194970002045L;
     //private static final Logger log = LogManager.getLogger(YourMessagesBean.class);
 
@@ -38,11 +40,11 @@ public class YourMessagesBean extends ApplicationBean implements Serializable {
         this.sentMessages = messageDao.findOutgoing(user);
     }
 
-    public List<Message> getMessagesToUser() {
+    public List<Message> getReceivedMessages() {
         return this.receivedMessages;
     }
 
-    public List<Message> getMessagesFromUser() {
+    public List<Message> getSentMessages() {
         return this.sentMessages;
     }
 }

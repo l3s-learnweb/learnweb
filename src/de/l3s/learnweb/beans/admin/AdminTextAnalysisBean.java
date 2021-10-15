@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,7 @@ import de.l3s.util.bean.BeanHelper;
 @Named
 @ViewScoped
 public class AdminTextAnalysisBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -3957625443067966969L;
 
     private String textBR;

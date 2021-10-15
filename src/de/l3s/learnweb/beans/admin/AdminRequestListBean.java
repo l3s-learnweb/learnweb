@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import de.l3s.learnweb.web.RequestManager;
 @Named
 @RequestScoped
 public class AdminRequestListBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -3469152668344315959L;
 
     private List<Request> requests;

@@ -1,8 +1,10 @@
 package de.l3s.learnweb.resource.search.filters;
 
+import java.io.Serial;
 import java.util.ArrayList;
 
 public class SizeFilter extends Filter {
+    @Serial
     private static final long serialVersionUID = -3826334775933813398L;
 
     private enum DefaultValues {
@@ -37,17 +39,11 @@ public class SizeFilter extends Filter {
     }
 
     public boolean isValid(int width) {
-        switch (value) {
-            case small:
-                return width <= 150;
-            case medium:
-                return width > 150 && width <= 600;
-            case large:
-                return width > 600 && width <= 1200;
-            case xlarge:
-                return width > 1200;
-            default:
-                return true;
-        }
+        return switch (value) {
+            case small -> width <= 150;
+            case medium -> width > 150 && width <= 600;
+            case large -> width > 600 && width <= 1200;
+            case xlarge -> width > 1200;
+        };
     }
 }

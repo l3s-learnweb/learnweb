@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ import jakarta.faces.model.SelectItem;
 import org.apache.commons.lang3.StringUtils;
 
 public class MetadataField implements Serializable {
+    @Serial
     private static final long serialVersionUID = -7698089608547415349L;
 
     /**

@@ -1,11 +1,13 @@
 package de.l3s.learnweb.dashboard.glossary;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.user.User;
 
 public class GlossaryUserActivity implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7241101860157505330L;
 
     private int userId;

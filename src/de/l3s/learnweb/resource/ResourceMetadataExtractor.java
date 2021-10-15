@@ -216,7 +216,7 @@ public class ResourceMetadataExtractor {
         // extracting video url
         for (Element element : document.select("script").not("[src]")) {
             String scriptData = element.data();
-            if (scriptData != null && !scriptData.isEmpty() && scriptData.contains("jQuery.extend(Drupal.settings")) {
+            if (scriptData.contains("jQuery.extend(Drupal.settings")) {
                 scriptData = scriptData.substring(scriptData.indexOf('{'), scriptData.lastIndexOf('}') + 1);
 
                 JsonObject jsonObject = JsonParser.parseString(scriptData).getAsJsonObject();
@@ -246,7 +246,7 @@ public class ResourceMetadataExtractor {
     private void processYoutubeResource(Resource resource) throws IOException {
         JsonObject json = readJsonObjectFromUrl(YOUTUBE_API_REQUEST + resource.getIdAtService());
         JsonArray items = json.getAsJsonArray("items");
-        if (items.size() != 0) {
+        if (!items.isEmpty()) {
             JsonObject snippet = items.get(0).getAsJsonObject().getAsJsonObject("snippet");
             if (StringUtils.isEmpty(resource.getTitle())) {
                 resource.setTitle(snippet.get("title").getAsString());
@@ -319,7 +319,7 @@ public class ResourceMetadataExtractor {
             }
 
             JsonArray thumbnails = json.getAsJsonObject("thumbs").getAsJsonArray("thumb");
-            if (thumbnails != null && thumbnails.size() != 0) {
+            if (thumbnails != null && !thumbnails.isEmpty()) {
                 String thumbnailUrl = null;
                 int width = 0;
                 for (int i = 0, len = thumbnails.size(); i < len; i++) {

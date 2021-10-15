@@ -48,7 +48,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         return getHandle().select("SELECT r.resource_id, r.rank, r.url, r.title, r.description, r.thumbnail_url, r.thumbnail_width, r.thumbnail_height, "
             + "COUNT(a.action = 'resource_clicked') AS clicked, COUNT(a.action = 'resource_saved') AS saved "
             + "FROM learnweb_large.sl_resource r LEFT JOIN learnweb_large.sl_action a ON r.search_id = a.search_id AND r.rank = a.rank "
-            + "WHERE r.search_id = ? GROUP BY r.resource_id, r.rank, r.url, r.title, r.description ORDER BY r.rank ASC LIMIT ?", query.getSearchId(), limit)
+            + "WHERE r.search_id = ? GROUP BY r.resource_id, r.rank, r.url, r.title, r.description ORDER BY r.rank ASC LIMIT ?", query.searchId(), limit)
             .map((rs, ctx) -> {
                 int resourceId = rs.getInt("resource_id");
 

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.group;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -9,7 +10,6 @@ import java.util.Objects;
 
 import jakarta.validation.constraints.NotBlank;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.hibernate.validator.constraints.Length;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -28,6 +28,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
 public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer {
+    @Serial
     private static final long serialVersionUID = -6209978709028007958L;
 
     /**
@@ -326,7 +327,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     /**
-     * @return time when the user has visited the group the last time; returns Instant.EPOCH if he never viewed the group
+     * @return time when the user has visited the group the last time; returns Instant. EPOCH if he never viewed the group
      */
     public Instant getLastVisit(User user) {
         Instant instant = lastVisitCache.get(user.getId());
@@ -454,7 +455,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     }
 
     public boolean canDeleteResource(User user, AbstractResource resource) {
-        return canEditResource(user, resource); // currently they share the same policy
+        return canEditResource(user, resource); // currently, they share the same policy
     }
 
     public boolean canEditResource(User user, AbstractResource resource) {
@@ -466,16 +467,11 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             return true;
         }
 
-        switch (policyEdit) {
-            case GROUP_MEMBERS:
-                return isMember(user);
-            case GROUP_LEADER:
-                return isLeader(user);
-            case GROUP_LEADER_AND_FILE_OWNER:
-                return isLeader(user) || resource.getUserId() == user.getId();
-        }
-
-        throw new NotImplementedException("this should never happen");
+        return switch (policyEdit) {
+            case GROUP_MEMBERS -> isMember(user);
+            case GROUP_LEADER -> isLeader(user);
+            case GROUP_LEADER_AND_FILE_OWNER -> isLeader(user) || resource.getUserId() == user.getId();
+        };
     }
 
     public boolean canDeleteGroup(User user) {
@@ -499,18 +495,12 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             return true;
         }
 
-        switch (policyJoin) {
-            case ALL_LEARNWEB_USERS:
-                return true;
-            case ORGANISATION_MEMBERS:
-                return getCourse().getOrganisationId() == user.getOrganisationId();
-            case COURSE_MEMBERS:
-                return getCourse().isMember(user);
-            case NOBODY:
-                return false;
-        }
-
-        throw new NotImplementedException("this should never happen");
+        return switch (policyJoin) {
+            case ALL_LEARNWEB_USERS -> true;
+            case ORGANISATION_MEMBERS -> getCourse().getOrganisationId() == user.getOrganisationId();
+            case COURSE_MEMBERS -> getCourse().isMember(user);
+            case NOBODY -> false;
+        };
     }
 
     public boolean canViewResources(User user) {
@@ -522,18 +512,12 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             return true;
         }
 
-        switch (policyView) {
-            case ALL_LEARNWEB_USERS:
-                return true;
-            case COURSE_MEMBERS:
-                return getCourse().isMember(user) || isMember(user);
-            case GROUP_MEMBERS:
-                return isMember(user);
-            case GROUP_LEADER:
-                return isLeader(user);
-        }
-
-        return false;
+        return switch (policyView) {
+            case ALL_LEARNWEB_USERS -> true;
+            case COURSE_MEMBERS -> getCourse().isMember(user) || isMember(user);
+            case GROUP_MEMBERS -> isMember(user);
+            case GROUP_LEADER -> isLeader(user);
+        };
     }
 
     public boolean canAnnotateResources(User user) {
@@ -545,18 +529,13 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             return true;
         }
 
-        switch (policyAnnotate) {
-            case ALL_LEARNWEB_USERS:
-                return true;
-            case COURSE_MEMBERS:
-                return getCourse().isMember(user) || isMember(user);
-            case GROUP_MEMBERS:
-                return isMember(user);
-            case GROUP_LEADER:
-                return isLeader(user);
-        }
+        return switch (policyAnnotate) {
+            case ALL_LEARNWEB_USERS -> true;
+            case COURSE_MEMBERS -> getCourse().isMember(user) || isMember(user);
+            case GROUP_MEMBERS -> isMember(user);
+            case GROUP_LEADER -> isLeader(user);
+        };
 
-        return false;
     }
 
     public int getMaxMemberCount() {

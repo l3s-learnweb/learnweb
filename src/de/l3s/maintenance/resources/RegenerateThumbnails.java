@@ -24,8 +24,9 @@ public class RegenerateThumbnails extends MaintenanceTask {
             .map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} image/video resources without thumbnails", imagesWithoutThumbnail.size());
 
+        // exclude Fact Check group (1346)
         List<Resource> websitesWithoutThumbnail = resourceDao.withHandle(handle -> handle.select("SELECT * FROM lw_resource "
-            + "WHERE storage_type = 2 AND type = 'website' AND deleted = 0 AND url NOT LIKE '%learnweb%' AND online_status = 'UNKNOWN' AND group_id != 1346 " // exclude Fact Check group
+            + "WHERE storage_type = 2 AND type = 'website' AND deleted = 0 AND url NOT LIKE '%learnweb%' AND online_status = 'UNKNOWN' AND group_id != 1346 "
             + "AND NOT EXISTS (SELECT 1 FROM lw_resource_file rf WHERE r.resource_id = rf.resource_id AND rf.type = 'THUMBNAIL_SMALL') ORDER BY resource_id DESC")
             .map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} web resources without thumbnails", websitesWithoutThumbnail.size());

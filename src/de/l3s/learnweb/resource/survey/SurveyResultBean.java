@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedList;
 
@@ -12,6 +13,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 @Named
 @ViewScoped
 public class SurveyResultBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 706177879900332816L;
     //private static final Logger log = LogManager.getLogger(SurveyResultBean.class);
 

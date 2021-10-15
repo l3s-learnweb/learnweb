@@ -23,11 +23,9 @@ public enum ResourceType {
 
     @Override
     public String toString() {
-        switch (this) {
-            case text:
-                return "Document";
-            default:
-                return super.toString();
-        }
+        return switch (this) {
+            case text -> "Document";
+            default -> super.toString();
+        };
     }
 }

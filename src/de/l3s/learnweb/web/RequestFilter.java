@@ -1,6 +1,7 @@
 package de.l3s.learnweb.web;
 
 import java.io.IOException;
+import java.io.Serial;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.FilterChain;
@@ -29,6 +30,7 @@ import de.l3s.util.bean.BeanHelper;
 @SuppressWarnings("UnstableApiUsage")
 @WebFilter(filterName = "RequestFilter", urlPatterns = "/*", asyncSupported = true)
 public class RequestFilter extends HttpFilter {
+    @Serial
     private static final long serialVersionUID = -6484981916986254209L;
     private static final Logger log = LogManager.getLogger(RequestFilter.class);
 

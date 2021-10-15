@@ -1,5 +1,6 @@
 package de.l3s.learnweb.dashboard.activity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,6 +29,7 @@ import de.l3s.learnweb.logging.LogDao;
 @Named
 @ViewScoped
 public class ActivityDashboardBean extends CommonDashboardUserBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3326736281893564706L;
 
     private Map<String, String> actions;

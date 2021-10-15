@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Locale;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import de.l3s.util.StringHelper;
 
 public class GlossaryTableView implements Serializable {
+    @Serial
     private static final long serialVersionUID = -757320545292668593L;
     private GlossaryEntry entry;
     private GlossaryTerm term;

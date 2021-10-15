@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.enterprise.context.RequestScoped;
@@ -17,6 +18,7 @@ import de.l3s.learnweb.user.Organisation.Option;
 @Named
 @RequestScoped
 public class PrivacyStatementBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -6243573356677232210L;
 
     private boolean trackingEnabled = false;

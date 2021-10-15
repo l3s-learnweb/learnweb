@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import de.l3s.maintenance.resources.ReindexResources;
 @Named
 @ViewScoped
 public class AdminSystemBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1354024417928664741L;
     //private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
 
@@ -84,17 +86,17 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
 
     public void terminateProcess(DatabaseProcess process) {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
-            handle.execute("KILL ?", process.getId());
+            handle.execute("KILL ?", process.id());
         }
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "Killed process " + process.getId());
+        addGrowl(FacesMessage.SEVERITY_INFO, "Killed process " + process.id());
         databaseProcesses = null;
     }
 
     public void terminateAllProcesses() {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             for (DatabaseProcess process : databaseProcesses) {
-                handle.execute("KILL ?", process.getId());
+                handle.execute("KILL ?", process.id());
             }
         }
 
@@ -145,16 +147,17 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         if (databaseProcesses == null) {
             try (Handle handle = getLearnweb().openJdbiHandle()) {
                 databaseProcesses = handle.select("SHOW FULL PROCESSLIST").map((rs, ctx) -> {
-                    DatabaseProcess ps = new DatabaseProcess();
-                    ps.setId(rs.getInt("Id"));
-                    ps.setUser(rs.getString("User"));
-                    ps.setHost(rs.getString("Host"));
-                    ps.setDb(rs.getString("db"));
-                    ps.setCommand(rs.getString("Command"));
-                    ps.setTime(rs.getString("Time"));
-                    ps.setState(rs.getString("State"));
-                    ps.setInfo(rs.getString("Info"));
-                    ps.setProgress(rs.getString("Progress"));
+                    DatabaseProcess ps = new DatabaseProcess(
+                        rs.getInt("Id"),
+                        rs.getString("User"),
+                        rs.getString("Host"),
+                        rs.getString("db"),
+                        rs.getString("Command"),
+                        rs.getString("Time"),
+                        rs.getString("State"),
+                        rs.getString("Info"),
+                        rs.getString("Progress")
+                    );
                     return ps;
                 }).list();
             }
@@ -176,141 +179,17 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         return cacheObjects;
     }
 
-    public static final class DatabaseProcess {
-        private int id;
-        private String user;
-        private String host;
-        private String db;
-        private String command;
-        private String time;
-        private String state;
-        private String info;
-        private String progress;
+    public record DatabaseProcess(int id, String user, String host, String db, String command, String time, String state, String info, String progress) {}
 
-        public int getId() {
-            return id;
-        }
+    public record CacheObject(String name, int size, long sizeSecondary) {}
 
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getUser() {
-            return user;
-        }
-
-        public void setUser(String user) {
-            this.user = user;
-        }
-
-        public String getHost() {
-            return host;
-        }
-
-        public void setHost(String host) {
-            this.host = host;
-        }
-
-        public String getDb() {
-            return db;
-        }
-
-        public void setDb(String db) {
-            this.db = db;
-        }
-
-        public String getCommand() {
-            return command;
-        }
-
-        public void setCommand(String command) {
-            this.command = command;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-
-        public String getState() {
-            return state;
-        }
-
-        public void setState(String state) {
-            this.state = state;
-        }
-
-        public String getInfo() {
-            return info;
-        }
-
-        public void setInfo(String info) {
-            this.info = info;
-        }
-
-        public String getProgress() {
-            return progress;
-        }
-
-        public void setProgress(String progress) {
-            this.progress = progress;
-        }
-
-        @Override
-        public String toString() {
-            return "ProcessStatistic [id=" + id + ", user=" + user + ", host=" + host + ", db=" + db + ", command=" + command
-                + ", time=" + time + ", state=" + state + ", info=" + info + ", progress=" + progress + "]";
-        }
-    }
-
-    public static final class CacheObject {
-        private final String name;
-        private final int size;
-        private final long sizeSecondary;
-
-        private CacheObject(String name, int size, long sizeSecondary) {
-            this.name = name;
-            this.size = size;
-            this.sizeSecondary = sizeSecondary;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getSize() {
-            return size;
-        }
-
-        public long getSizeSecondary() {
-            return sizeSecondary;
-        }
-    }
-
-    public static final class RuntimeInfo {
-        private final String totalMemory;
-        private final String freeMemory;
-        private final String maxMemory;
-
+    public record RuntimeInfo(String totalMemory, String freeMemory, String maxMemory) {
         private RuntimeInfo(Runtime runtime) {
-            this.totalMemory = FileUtils.byteCountToDisplaySize(runtime.totalMemory());
-            this.freeMemory = FileUtils.byteCountToDisplaySize(runtime.freeMemory());
-            this.maxMemory = FileUtils.byteCountToDisplaySize(runtime.maxMemory());
-        }
-
-        public String getTotalMemory() {
-            return totalMemory;
-        }
-
-        public String getFreeMemory() {
-            return freeMemory;
-        }
-
-        public String getMaxMemory() {
-            return maxMemory;
+            this(
+                FileUtils.byteCountToDisplaySize(runtime.totalMemory()),
+                FileUtils.byteCountToDisplaySize(runtime.freeMemory()),
+                FileUtils.byteCountToDisplaySize(runtime.maxMemory())
+            );
         }
     }
 }

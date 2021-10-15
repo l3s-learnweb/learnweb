@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -8,6 +9,7 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.util.HasId;
 
 public class Tag implements Comparable<Tag>, Serializable, HasId {
+    @Serial
     private static final long serialVersionUID = 7542445827379987188L;
 
     private int id;

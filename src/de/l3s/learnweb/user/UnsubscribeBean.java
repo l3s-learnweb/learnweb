@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.faces.application.FacesMessage;
@@ -16,6 +17,7 @@ import de.l3s.learnweb.group.GroupDao;
 @Named
 @ViewScoped
 public class UnsubscribeBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -6855126832857385223L;
 
     private String givenHash;

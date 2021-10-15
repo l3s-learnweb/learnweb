@@ -135,7 +135,7 @@ class TedTranscriptDaoTest {
 
         List<Transcript.Paragraph> retrieved = tedTranscriptDao.findTranscriptsParagraphs(74000, "en");
         assertFalse(retrieved.isEmpty());
-        assertArrayEquals(new Integer[] {70000},  retrieved.stream().map(Transcript.Paragraph::getStartTime).sorted().toArray(Integer[]::new));
+        assertArrayEquals(new Integer[] {70000},  retrieved.stream().map(Transcript.Paragraph::startTime).sorted().toArray(Integer[]::new));
     }
 
     @Test

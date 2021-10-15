@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -29,6 +30,7 @@ import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.util.HasId;
 
 public class Organisation implements HasId, Serializable, Comparable<Organisation> {
+    @Serial
     private static final long serialVersionUID = -5187205229505825818L;
     private static final Logger log = LogManager.getLogger(Organisation.class);
 
@@ -166,6 +168,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadataFields.add(new MetadataField("noname", "Please tell us about the characteristics of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
 
             metadata = new MetadataField("author", "author", MetadataType.AUTOCOMPLETE) {
+                @Serial
                 private static final long serialVersionUID = -2914974737800412242L;
 
                 @Override
@@ -186,6 +189,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadataFields.add(metadata);
 
             metadata = new MetadataField("language", "language", MetadataType.MULTIPLE_MENU) {
+                @Serial
                 private static final long serialVersionUID = 1934886927426174254L;
 
                 @Override

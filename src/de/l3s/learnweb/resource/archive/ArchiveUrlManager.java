@@ -114,13 +114,7 @@ public final class ArchiveUrlManager {
 
     }
 
-    private static final class CDXWorker implements Callable<String> {
-        private final ResourceDecorator resource;
-
-        private CDXWorker(ResourceDecorator resource) {
-            this.resource = resource;
-        }
-
+    private record CDXWorker(ResourceDecorator resource) implements Callable<String> {
         @Override
         public String call() throws IOException {
             CDXClient cdxClient = new CDXClient();
@@ -147,7 +141,7 @@ public final class ArchiveUrlManager {
             if (resource.getArchiveUrls() != null) {
                 int versions = resource.getArchiveUrls().size();
                 if (versions > 0) {
-                    boolean isArchivedRecently = resource.getArchiveUrls().getLast().getTimestamp().isAfter(LocalDateTime.now().minusMinutes(5));
+                    boolean isArchivedRecently = resource.getArchiveUrls().getLast().timestamp().isAfter(LocalDateTime.now().minusMinutes(5));
                     if (isArchivedRecently) {
                         return "resource was last archived less than 5 minutes ago";
                     }
@@ -190,7 +184,7 @@ public final class ArchiveUrlManager {
             } else if (response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN) {
                 Optional<String> livewebError = response.headers().firstValue("X-Archive-Wayback-Liveweb-Error");
                 if (livewebError.isPresent()) {
-                    if (livewebError.get().equalsIgnoreCase("RobotAccessControlException: Blocked By Robots")) {
+                    if ("RobotAccessControlException: Blocked By Robots".equalsIgnoreCase(livewebError.get())) {
                         return "ROBOTS_ERROR";
                     }
                 }

@@ -66,8 +66,8 @@ class ResourceDaoTest {
     }
 
     @Test
-    void findByUrl() {
-        Optional<Resource> resources = resourceDao.findByUrl("https://www.youtube.com/watch?v=hFZFjoX2cGg");
+    void findByGroupIdAndUrl() {
+        Optional<Resource> resources = resourceDao.findByGroupIdAndUrl(1, "https://www.youtube.com/watch?v=hFZFjoX2cGg");
         assertTrue(resources.isPresent());
         assertEquals(1, resources.get().getId());
     }

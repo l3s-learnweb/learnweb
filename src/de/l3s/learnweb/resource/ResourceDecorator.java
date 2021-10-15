@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import de.l3s.util.StringHelper;
  * Which lead to different text snippets.
  */
 public class ResourceDecorator implements Serializable {
+    @Serial
     private static final long serialVersionUID = -6611930555147350248L;
 
     private final Resource resource;

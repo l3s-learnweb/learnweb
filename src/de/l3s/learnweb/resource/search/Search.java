@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.search;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,7 @@ import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.User;
 
 public class Search implements Serializable {
+    @Serial
     private static final long serialVersionUID = -2405235188000105509L;
     private static final Logger log = LogManager.getLogger(Search.class);
 
@@ -489,6 +491,7 @@ public class Search implements Serializable {
     }
 
     public static class GroupedResources implements Serializable, Comparable<GroupedResources> {
+        @Serial
         private static final long serialVersionUID = -1060339894351517966L;
 
         String groupName;

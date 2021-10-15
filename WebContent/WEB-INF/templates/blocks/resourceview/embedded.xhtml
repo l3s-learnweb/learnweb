@@ -68,7 +68,7 @@
 
     <c:when test="${res.type eq 'survey'}">
         <!-- quick and dirty solution to link to surveys need complete refactoring -->
-        <div style=" position: absolute; top: 50%; transform: translateY(-50%);text-align: center;width: 100%;" >
+        <div style="position: absolute; top: 50%; transform: translateY(-50%); text-align: center; width: 100%;">
             <ui:fragment rendered="#{userBean.admin}">
                 <p:linkButton outcome="/lw/survey/template" icon="fas fa-window-maximize" styleClass="secondary-btn" value="Edit Template"
                               target="_top" rendered="#{res.type eq 'survey'}">

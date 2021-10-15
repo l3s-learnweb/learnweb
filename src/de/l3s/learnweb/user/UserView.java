@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,6 +24,7 @@ import de.l3s.util.Misc;
  */
 public final class UserView implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 5664039620488069850L;
     //private static final Logger log = LogManager.getLogger(UserView.class);
 

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serial;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -41,6 +42,7 @@ import de.l3s.util.SqlHelper;
  */
 @ApplicationScoped
 public class RequestManager implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8152764483449652749L;
     private static final Logger log = LogManager.getLogger(RequestManager.class);
 

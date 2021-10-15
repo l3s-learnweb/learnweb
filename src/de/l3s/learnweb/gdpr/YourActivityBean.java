@@ -1,5 +1,6 @@
 package de.l3s.learnweb.gdpr;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import de.l3s.learnweb.user.User;
 @Named
 @ViewScoped
 public class YourActivityBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -53694900500236594L;
     private static final Logger log = LogManager.getLogger(YourActivityBean.class);
 
@@ -47,12 +49,8 @@ public class YourActivityBean extends ApplicationBean implements Serializable {
 
                 switch (action.getGroupId()) {
                     // general action, which has no group assigned
-                    case 0:
-                        groupTitles.put(action.getGroupId(), "");
-                        break;
-                    default:
-                        groupTitles.put(action.getGroupId(), groupDao.findByIdOrElseThrow(action.getGroupId()).getTitle());
-                        break;
+                    case 0 -> groupTitles.put(action.getGroupId(), "");
+                    default -> groupTitles.put(action.getGroupId(), groupDao.findByIdOrElseThrow(action.getGroupId()).getTitle());
                 }
             } catch (Throwable e) {
                 log.error("Can't process action '{}' in group {}", action.getAction(), action.getGroupId(), e);

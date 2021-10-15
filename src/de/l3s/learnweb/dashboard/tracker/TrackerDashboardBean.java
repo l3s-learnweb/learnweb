@@ -1,5 +1,6 @@
 package de.l3s.learnweb.dashboard.tracker;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import de.l3s.util.MapHelper;
 @Named
 @ViewScoped
 public class TrackerDashboardBean extends CommonDashboardUserBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3640317272542005280L;
     //private static final Logger log = LogManager.getLogger(TrackerDashboardBean.class);
 

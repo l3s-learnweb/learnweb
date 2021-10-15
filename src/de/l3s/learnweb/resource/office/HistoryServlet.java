@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.office;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.List;
 
 import jakarta.inject.Inject;
@@ -24,6 +25,7 @@ import de.l3s.learnweb.resource.office.history.model.HistoryInfo;
  */
 @WebServlet(name = "HistoryServlet", urlPatterns = "/history", loadOnStartup = 5)
 public class HistoryServlet extends HttpServlet {
+    @Serial
     private static final long serialVersionUID = -1782046122568142569L;
     private static final Logger log = LogManager.getLogger(HistoryServlet.class);
 

@@ -113,7 +113,7 @@ public interface CourseDao extends SqlObject, Serializable {
     }
 
     /**
-     * The personal information of all course members will be removed and they won't be able to login anymore. Users who are also member of other
+     * The personal information of all course members will be removed, and they won't be able to login anymore. Users who are also member of other
      * courses are not affected.
      *
      * @return The users who where not anonymize because they are member of other courses.

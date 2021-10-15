@@ -1,5 +1,6 @@
 package de.l3s.learnweb.web;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
  * @author Kate
  */
 public class Ban implements Serializable {
+    @Serial
     private static final long serialVersionUID = -2074629486516643542L;
 
     private final String addr;

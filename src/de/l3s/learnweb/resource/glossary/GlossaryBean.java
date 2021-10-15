@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource.glossary;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
@@ -53,6 +54,7 @@ import de.l3s.util.Image;
 @Named
 @ViewScoped
 public class GlossaryBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7104637880221636543L;
     private static final Logger log = LogManager.getLogger(GlossaryBean.class);
 
@@ -244,7 +246,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
 
         term.setDeleted(true);
 
-        if (term.getId() == 0) { //Its a new term. Safe to remove here.
+        if (term.getId() == 0) { // It's a new term. Safe to remove here.
             formEntry.getTerms().remove(term);
         }
         formEntry.setFulltext(null); // reset full text index
@@ -422,7 +424,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
             }
 
             if (user.getOrganisation().getOption(Option.Glossary_Add_Watermark)) {
-                // create image from user name
+                // create image from username
                 Image watermark = Image.fromText(glossaryResource.getUser().getUsername());
                 InputStream is = watermark.getInputStream();
                 int pictureIdx = wb.addPicture(IOUtils.toByteArray(is), Workbook.PICTURE_TYPE_PNG);

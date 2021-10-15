@@ -92,7 +92,7 @@ public interface GroupDao extends SqlObject, Serializable {
     List<GroupUser> findGroupUserRelations(int userId);
 
     /**
-     * @return unix timestamp when the user has visited the group the last time; returns -1 if he never view the group.
+     * @return unix timestamp when the user has visited the group the last time; returns -1 if they never viewed the group.
      */
     @SqlQuery("SELECT last_visit FROM lw_group_user WHERE group_id = ? AND user_id = ?")
     Optional<Instant> findLastVisitTime(Group group, User user);
@@ -102,7 +102,7 @@ public interface GroupDao extends SqlObject, Serializable {
 
     /**
      * Returns all groups a user can join.
-     * This are all groups of his courses except for groups he has already joined + groups that are open to everybody.
+     * These are all groups of his courses except for groups he has already joined + groups that are open to everybody.
      */
     default List<Group> findJoinAble(User user) {
         ArrayList<Integer> coursesIn = HasId.collectIds(user.getCourses());

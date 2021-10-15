@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.glossary.parser;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import de.l3s.learnweb.resource.glossary.GlossaryEntry;
 
 public class GlossaryParserResponse implements Serializable {
+    @Serial
     private static final long serialVersionUID = -7175633373702703896L;
 
     private final List<GlossaryEntry> entries;

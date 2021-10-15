@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.io.Serial;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletOutputStream;
@@ -38,6 +40,7 @@ import de.l3s.util.bean.BeanHelper;
  */
 @WebServlet(name = "DownloadServlet", urlPatterns = "/download/*", loadOnStartup = 2)
 public class DownloadServlet extends HttpServlet {
+    @Serial
     private static final long serialVersionUID = 7083477094183456614L;
     private static final Logger log = LogManager.getLogger(DownloadServlet.class);
 
@@ -46,6 +49,10 @@ public class DownloadServlet extends HttpServlet {
     private static final int BUFFER_SIZE = 8192; // 8KB
 
     private static final String URL_PATTERN = "/download/";
+    private static final Pattern HEADER_RANGE_BYTES = Pattern.compile("^bytes=\\d*-\\d*(,\\d*-\\d*)*$");
+    private static final Pattern HEADER_ACCEPTS_SPLIT = Pattern.compile("\\s*([,;])\\s*");
+    private static final Pattern HEADER_ACCEPTS_REPLACE = Pattern.compile("/.*$");
+    private static final Pattern HEADER_MATCHES_SPLIT = Pattern.compile("\\s*,\\s*");
 
     @Inject
     private FileDao fileDao;
@@ -120,7 +127,7 @@ public class DownloadServlet extends HttpServlet {
 
             throw new IllegalArgumentException();
         } catch (IllegalArgumentException e) {
-            // only log the error if the referrer is uni-hannover.de. Otherwise we have no chance to fix the link
+            // only log the error if the referrer is uni-hannover.de. Otherwise, we have no chance to fix the link
             Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
             log.log(logLevel, "Invalid download URL: {}; {}", requestURI, BeanHelper.getRequestSummary(request));
             throw new HttpException(HttpServletResponse.SC_BAD_REQUEST, "Download URL is invalid", e);
@@ -146,9 +153,10 @@ public class DownloadServlet extends HttpServlet {
         // Get user from session
         User user = userBean.getUser();
 
-        //TODO block invalid requests. But for a while we will only log them
+        // TODO block invalid requests. But for a while we will only log them
         if (!file.getName().equals(requestData.fileName)) {
-            log.error("A resource file accessed invalid file name; db name: {}; request name: {}; request: {}", file.getName(), requestData.fileName, BeanHelper.getRequestSummary(request));
+            log.error("A resource file accessed invalid file name; db name: {}; request name: {}; request: {}",
+                file.getName(), requestData.fileName, BeanHelper.getRequestSummary(request));
         }
 
         if (!resource.get().getFiles().containsValue(file)) {
@@ -257,7 +265,7 @@ public class DownloadServlet extends HttpServlet {
                     output.println("Content-Type: " + contentType);
                     output.println("Content-Range: bytes " + r.start + "-" + r.end + "/" + r.total);
 
-                    // Copy single part range of multi part range.
+                    // Copy single part range of multipart range.
                     copyPartRange(input, output, r.start, r.length);
                 }
 
@@ -319,13 +327,13 @@ public class DownloadServlet extends HttpServlet {
         String range = request.getHeader("Range");
         if (range != null) {
             // Range header should match format "bytes=n-n,n-n,n-n...". If not, then return 416.
-            if (!range.matches("^bytes=\\d*-\\d*(,\\d*-\\d*)*$")) {
+            if (!HEADER_RANGE_BYTES.matcher(range).matches()) {
                 response.setStatus(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
                 response.setHeader("Content-Range", "bytes */" + length); // Required in 416.
                 throw new ValidationException(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
             }
 
-            // If-Range header should either match ETag or be greater then LastModified. If not, then return full file.
+            // If-Range header should either match ETag or be greater than LastModified. If not, then return full file.
             String ifRange = request.getHeader("If-Range");
             if (ifRange != null && !ifRange.equals(eTag)) {
                 try {
@@ -423,10 +431,10 @@ public class DownloadServlet extends HttpServlet {
      * @return True if the given accept header accepts the given value.
      */
     private static boolean accepts(String acceptHeader, String toAccept) {
-        String[] acceptValues = acceptHeader.split("\\s*([,;])\\s*");
+        String[] acceptValues = HEADER_ACCEPTS_SPLIT.split(acceptHeader);
         Arrays.sort(acceptValues);
         return Arrays.binarySearch(acceptValues, toAccept) > -1
-            || Arrays.binarySearch(acceptValues, toAccept.replaceAll("/.*$", "/*")) > -1
+            || Arrays.binarySearch(acceptValues, HEADER_ACCEPTS_REPLACE.matcher(toAccept).replaceAll("/*")) > -1
             || Arrays.binarySearch(acceptValues, "*/*") > -1;
     }
 
@@ -438,7 +446,7 @@ public class DownloadServlet extends HttpServlet {
      * @return True if the given match header matches the given value.
      */
     private static boolean matches(String matchHeader, String toMatch) {
-        String[] matchValues = matchHeader.split("\\s*,\\s*");
+        String[] matchValues = HEADER_MATCHES_SPLIT.split(matchHeader);
         Arrays.sort(matchValues);
         return Arrays.binarySearch(matchValues, toMatch) > -1 || Arrays.binarySearch(matchValues, "*") > -1;
     }
@@ -481,11 +489,7 @@ public class DownloadServlet extends HttpServlet {
         }
     }
 
-    protected static class RequestData {
-        final int resourceId;
-        final int fileId;
-        final String fileName;
-
+    private record RequestData(int resourceId, int fileId, String fileName) {
         RequestData(int resourceId, int fileId, String fileName) {
             this.resourceId = resourceId;
             this.fileId = fileId;
@@ -498,6 +502,7 @@ public class DownloadServlet extends HttpServlet {
     }
 
     private static class ValidationException extends Exception {
+        @Serial
         private static final long serialVersionUID = -3869278798616542070L;
 
         final int statusCode;

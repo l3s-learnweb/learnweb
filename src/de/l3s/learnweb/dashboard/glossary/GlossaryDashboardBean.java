@@ -1,5 +1,6 @@
 package de.l3s.learnweb.dashboard.glossary;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import de.l3s.learnweb.resource.glossary.GlossaryTermDao;
 @Named
 @ViewScoped
 public class GlossaryDashboardBean extends CommonDashboardUserBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1708095580068235081L;
     //private static final Logger log = LogManager.getLogger(GlossaryDashboardBean.class);
 

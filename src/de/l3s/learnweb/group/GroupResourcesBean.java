@@ -1,6 +1,7 @@
 package de.l3s.learnweb.group;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -50,6 +51,7 @@ import de.l3s.util.HasId;
 @Named
 @ViewScoped
 public class GroupResourcesBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -9105093690086624246L;
     private static final Logger log = LogManager.getLogger(GroupResourcesBean.class);
 
@@ -314,13 +316,13 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             ResourceUpdateBatch items = new ResourceUpdateBatch(params.get("items"), folderDao, resourceDao);
 
             switch (action) {
-                case "copy":
+                case "copy" -> {
                     SelectLocationBean selectLocationBean = Beans.getInstance(SelectLocationBean.class);
                     Group targetGroup = selectLocationBean.getTargetGroup();
                     Folder targetFolder = selectLocationBean.getTargetFolder();
                     this.copyResources(items, targetGroup, targetFolder, false);
-                    break;
-                case "move":
+                }
+                case "move" -> {
                     if (params.containsKey("destination")) {
                         JsonObject dest = JsonParser.parseString(params.get("destination")).getAsJsonObject();
                         int targetGroupId = dest.has("groupId") && dest.get("groupId").isJsonPrimitive() ? dest.get("groupId").getAsInt() : group.getId();
@@ -328,25 +330,20 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
                         this.moveResources(items, targetGroupId, targetFolderId);
                         break;
                     }
-
                     this.moveResources(items, null, null);
-                    break;
-                case "delete":
-                    this.deleteResources(items);
-                    break;
-                case "add-tag":
+                }
+                case "delete" -> this.deleteResources(items);
+                case "add-tag" -> {
                     String tag = params.get("tag");
                     this.tagResources(items, tag);
-                    break;
-                default:
-                    log.error("Unsupported action: {}", action);
-                    break;
+                }
+                default -> log.error("Unsupported action: {}", action);
             }
 
             if (items.failed() != 0) {
                 addGrowl(FacesMessage.SEVERITY_WARN, "For some reason, {0, choice, 1#{0} resource|1<{0} of resources} can not be processed.", items.failed());
             }
-        } catch (IllegalArgumentException | IllegalAccessError | JsonParseException e) { // these exceptions will have user friendly messages
+        } catch (IllegalArgumentException | IllegalAccessError | JsonParseException e) { // these exceptions will have user-friendly messages
             addErrorMessage(e.getMessage(), e);
         }
     }

@@ -116,26 +116,19 @@ public final class FileUtility {
     }
 
     public static String getInternalExtension(ResourceType fileType) {
-        switch (fileType) {
-            case spreadsheet:
-                return ".xlsx";
-            case presentation:
-                return ".pptx";
-            default:
-                return ".docx";
-        }
+        return switch (fileType) {
+            case spreadsheet -> ".xlsx";
+            case presentation -> ".pptx";
+            default -> ".docx";
+        };
     }
 
     public static String getSampleFileName(ResourceType fileType) {
-        switch (fileType) {
-            case document:
-                return SAMPLE_DOCX;
-            case spreadsheet:
-                return SAMPLE_XLSX;
-            case presentation:
-                return SAMPLE_PPTX;
-            default:
-                return null;
-        }
+        return switch (fileType) {
+            case document -> SAMPLE_DOCX;
+            case spreadsheet -> SAMPLE_XLSX;
+            case presentation -> SAMPLE_PPTX;
+            default -> null;
+        };
     }
 }

@@ -90,16 +90,12 @@ public class GlossaryRowBuilder {
         if (cell == null) {
             return "";
         }
-        switch (cell.getCellType()) {
-            case STRING:
-                return cell.getStringCellValue().trim();
-            case NUMERIC:
-                return String.valueOf(cell.getNumericCellValue());
-            case FORMULA:
-                return cell.getCellFormula().trim();
-            default:
-                return "";
-        }
+        return switch (cell.getCellType()) {
+            case STRING -> cell.getStringCellValue().trim();
+            case NUMERIC -> String.valueOf(cell.getNumericCellValue());
+            case FORMULA -> cell.getCellFormula().trim();
+            default -> "";
+        };
     }
 
     public GlossaryEntry build(Row row) {

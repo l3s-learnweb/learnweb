@@ -85,22 +85,11 @@ public class WaybackCapturesLogger {
         }
     }
 
-    private static class Container {
-        final String url;
-        final LocalDateTime firstCapture;
-        final LocalDateTime lastCapture;
-
-        Container(String url, LocalDateTime firstCapture, LocalDateTime lastCapture) {
-            this.url = url;
-            this.firstCapture = firstCapture;
-            this.lastCapture = lastCapture;
-        }
-
+    private record Container(String url, LocalDateTime firstCapture, LocalDateTime lastCapture) {
         @Override
         public String toString() {
             return "Container [url=" + url + ", firstCapture=" + firstCapture + ", lastCapture=" + lastCapture + "]";
         }
-
     }
 
     private class Consumer implements Runnable {

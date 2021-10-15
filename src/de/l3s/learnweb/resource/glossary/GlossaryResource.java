@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +19,7 @@ import de.l3s.util.StringHelper;
  * @author Rishita
  */
 public class GlossaryResource extends Resource {
+    @Serial
     private static final long serialVersionUID = 8388778401614338522L;
 
     private List<Locale> allowedLanguages = new ArrayList<>();

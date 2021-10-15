@@ -14,7 +14,7 @@ public class History implements HasId {
     private Integer prevFileId;
     private Integer changesFileId;
 
-    // values received from OnlyOffice and should be send back by request
+    // values received from OnlyOffice and should be sent back by request
     private JsonArray changes;
     private String created;
     private String key;

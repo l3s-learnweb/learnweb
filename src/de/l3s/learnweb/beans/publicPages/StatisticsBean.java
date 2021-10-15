@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.publicPages;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
@@ -23,6 +24,7 @@ import de.l3s.util.SqlHelper;
 @Named
 @RequestScoped
 public class StatisticsBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8540469716342151138L;
     private static final Logger log = LogManager.getLogger(StatisticsBean.class);
 
@@ -75,13 +77,9 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
                     String serviceName = rs.getString(1);
                     ResourceService service = ResourceService.valueOf(serviceName);
 
-                    if (null == service) {
-                        log.error("Unknown service: {}", serviceName);
-                    } else {
-                        serviceName = service.getLabel();
-                        if (service.isCrawled()) {
-                            serviceName += " *";
-                        }
+                    serviceName = service.getLabel();
+                    if (service.isCrawled()) {
+                        serviceName += " *";
                     }
 
                     return new AbstractMap.SimpleEntry<>(serviceName, rs.getInt(2));

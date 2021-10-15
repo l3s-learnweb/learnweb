@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ import de.l3s.util.HashHelper;
 @Named
 @RequestScoped
 public class LoginBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7980062591522267111L;
 
     private static final Logger log = LogManager.getLogger(LoginBean.class);

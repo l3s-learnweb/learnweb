@@ -1,5 +1,6 @@
 package de.l3s.learnweb.group;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import de.l3s.learnweb.user.UserDao;
 @Named
 @ViewScoped
 public class GroupOverviewBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -6297485484480890425L;
     private static final Logger log = LogManager.getLogger(GroupOverviewBean.class);
 

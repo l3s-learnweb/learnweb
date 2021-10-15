@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
@@ -27,6 +28,7 @@ import de.l3s.learnweb.user.User;
 @Named
 @ViewScoped
 public class AdminCoursesBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -5469152668344315959L;
     private static final Logger log = LogManager.getLogger(AdminCoursesBean.class);
 
@@ -46,7 +48,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         } else if (getUser().isModerator()) {
             courses = new ArrayList<>(getUser().getOrganisation().getCourses());
         } else {
-            BeanAssert.authorized(false);
+            throw new UnauthorizedHttpException();
         }
 
         Collections.sort(courses);

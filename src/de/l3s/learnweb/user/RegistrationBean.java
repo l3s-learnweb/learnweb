@@ -2,6 +2,7 @@ package de.l3s.learnweb.user;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZoneId;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import de.l3s.util.bean.BeanHelper;
 @Named
 @ViewScoped
 public class RegistrationBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 4567220515408089722L;
     private static final Logger log = LogManager.getLogger(RegistrationBean.class);
 

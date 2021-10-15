@@ -124,7 +124,7 @@ public class SpeechRepositoryCrawler implements Runnable {
         // extracting video url
         for (Element element : doc.select("script").not("[src]")) {
             String scriptData = element.data();
-            if (scriptData != null && !scriptData.isEmpty() && scriptData.contains("jQuery.extend(Drupal.settings")) {
+            if (scriptData.contains("jQuery.extend(Drupal.settings")) {
                 scriptData = scriptData.substring(scriptData.indexOf('{'), scriptData.lastIndexOf('}') + 1);
 
                 JsonObject jsonObject = JsonParser.parseString(scriptData).getAsJsonObject();

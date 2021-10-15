@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -9,6 +10,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
 public class Comment implements Serializable, Comparable<Comment>, HasId {
+    @Serial
     private static final long serialVersionUID = -5854582234222584285L;
 
     private int id;

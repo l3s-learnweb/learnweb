@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
 public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
+    @Serial
     private static final long serialVersionUID = 4388428278103454292L;
     private static final Logger log = LogManager.getLogger(LazyGlossaryTableView.class);
 
@@ -88,24 +90,13 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
             simpleFilters.put(filterField, filterValueStr);
 
             switch (filterField) { // TODO @kemkes: move fields to an ENUM rename topicOne to topic1 and so on
-                case "fulltext":
-                case "description":
-                case "topicOne":
-                case "topicTwo":
-                case "topicThree":
+                case "fulltext", "description", "topicOne", "topicTwo", "topicThree" ->
                     //log.debug("added filter for:" + filterField + " = " + filterValueStr);
                     allPredicates.add(e -> e.get(filterField).toLowerCase().contains(filterValueStr));
-                    break;
-                case "term":
-                case "pronounciation":
-                case "acronym":
-                case "source":
-                case "phraseology":
+                case "term", "pronounciation", "acronym", "source", "phraseology" ->
                     //log.debug("added filter for:" + filterField + " = " + filterValueStr);
                     allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> t.get(filterField).toLowerCase().contains(filterValueStr)));
-                    break;
-                default:
-                    log.error("unsupported filter:{}", filterField);
+                default -> log.error("unsupported filter:{}", filterField);
             }
         }
 
@@ -157,6 +148,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
     }
 
     public static class LazySorter implements Comparator<GlossaryEntry>, Serializable {
+        @Serial
         private static final long serialVersionUID = 899131076207451811L;
 
         private final String field;

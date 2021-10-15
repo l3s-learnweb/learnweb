@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import de.l3s.util.HasId;
  * @author Philipp Kemkes
  */
 public class Survey implements Deletable, HasId, Serializable {
+    @Serial
     private static final long serialVersionUID = -7478683722354893077L;
 
     private int id;

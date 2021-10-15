@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -38,6 +39,7 @@ import de.l3s.learnweb.group.GroupDao;
 @Named
 @RequestScoped
 public class AdminGroupDiscussionActivityBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6519388228766929819L;
     private static final Logger log = LogManager.getLogger(AdminGroupDiscussionActivityBean.class);
 
@@ -137,6 +139,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     }
 
     public static class AnnotationEntity implements Serializable {
+        @Serial
         private static final long serialVersionUID = -5780824434073985590L;
 
         String name;

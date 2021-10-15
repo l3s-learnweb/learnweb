@@ -1,6 +1,7 @@
 package de.l3s.learnweb.user;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.util.Optional;
 
 import jakarta.inject.Inject;
@@ -26,6 +27,7 @@ import de.l3s.util.HashHelper;
  */
 @WebFilter(filterName = "AuthFilter", urlPatterns = "/*", asyncSupported = true)
 public class AuthFilter extends HttpFilter {
+    @Serial
     private static final long serialVersionUID = 5223280572456365126L;
     private static final Logger log = LogManager.getLogger(AuthFilter.class);
 

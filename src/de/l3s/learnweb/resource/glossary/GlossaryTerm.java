@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
 public class GlossaryTerm implements HasId, Deletable, Serializable {
+    @Serial
     private static final long serialVersionUID = -8309235925484416943L;
 
     private int id;
@@ -71,20 +73,14 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
      * Convenience function that calls the getter of a given field.
      */
     public String get(String fieldName) {
-        switch (fieldName) {
-            case "term":
-                return getTerm();
-            case "pronounciation":
-                return getPronounciation();
-            case "acronym":
-                return getAcronym();
-            case "source":
-                return getSource();
-            case "phraseology":
-                return getPhraseology();
-            default:
-                throw new IllegalArgumentException(fieldName + " is not implemented");
-        }
+        return switch (fieldName) {
+            case "term" -> getTerm();
+            case "pronounciation" -> getPronounciation();
+            case "acronym" -> getAcronym();
+            case "source" -> getSource();
+            case "phraseology" -> getPhraseology();
+            default -> throw new IllegalArgumentException(fieldName + " is not implemented");
+        };
     }
 
     public String getTerm() {

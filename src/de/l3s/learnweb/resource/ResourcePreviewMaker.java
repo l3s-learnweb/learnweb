@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +38,7 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
  * @author Philipp Kemkes, Oleh Astappiev
  */
 public class ResourcePreviewMaker implements Serializable {
+    @Serial
     private static final long serialVersionUID = -5259988131984139763L;
     private static final Logger log = LogManager.getLogger(ResourcePreviewMaker.class);
 

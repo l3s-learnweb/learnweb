@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import de.l3s.learnweb.user.User;
 @Named
 @ViewScoped
 public class AdminCourseBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -1276599881084055950L;
     //private static final Logger log = LogManager.getLogger(AdminCourseBean.class);
 
@@ -65,7 +67,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
             // example: this gets "Services" from "Services_Allow_logout_from_Interweb"
             String newOptionGroupName = option.name().substring(0, option.name().indexOf('_'));
 
-            if (newOptionGroupName.equals("Unused")) {
+            if ("Unused".equals(newOptionGroupName)) {
                 continue;
             }
 
@@ -117,6 +119,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
 
     // only helper classes to display the options
     public static class OptionWrapper implements Serializable {
+        @Serial
         private static final long serialVersionUID = 2828959818690832148L;
         private final Option option;
         private boolean value;
@@ -144,6 +147,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
     }
 
     public static class OptionWrapperGroup implements Serializable {
+        @Serial
         private static final long serialVersionUID = -2323320446956640229L;
         private final String title;
         private final List<OptionWrapper> options;
@@ -163,6 +167,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
     }
 
     private static class EnumComparator implements Comparator<Option>, Serializable {
+        @Serial
         private static final long serialVersionUID = -6590111487348788376L;
 
         @Override

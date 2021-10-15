@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.search.solrClient;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +35,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
 public class SolrSearch implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6623209570091677070L;
     private static final Logger log = LogManager.getLogger(SolrSearch.class);
 

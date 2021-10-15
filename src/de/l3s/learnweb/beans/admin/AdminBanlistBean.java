@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.List;
@@ -22,6 +23,7 @@ import de.l3s.learnweb.web.RequestManager;
 @Named
 @ViewScoped
 public class AdminBanlistBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -4469152668344315959L;
 
     private String addr;

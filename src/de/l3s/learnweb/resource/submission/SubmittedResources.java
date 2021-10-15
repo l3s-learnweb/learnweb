@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.submission;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import de.l3s.learnweb.user.User;
  * @author Philipp Kemkes
  */
 public class SubmittedResources implements Serializable {
+    @Serial
     private static final long serialVersionUID = -7336342838037456587L;
 
     private int userId;

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.group;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ import de.l3s.learnweb.user.User;
 @ViewScoped
 public class GroupsBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(GroupsBean.class);
+    @Serial
     private static final long serialVersionUID = 5364340827474357098L;
 
     private List<Group> joinAbleGroups;

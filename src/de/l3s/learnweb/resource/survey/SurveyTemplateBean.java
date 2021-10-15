@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.survey;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +17,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 @Named
 @ViewScoped
 public class SurveyTemplateBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 669288862248912801L;
 
     private int surveyId;

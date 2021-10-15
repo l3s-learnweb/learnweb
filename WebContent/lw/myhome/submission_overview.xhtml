@@ -88,7 +88,7 @@
 				</p:selectBooleanCheckbox>
 			</div>
 
-			<div class="form-group" id="edit_dialog_survey_text" style="display:none;">
+			<div class="form-group d-none" id="edit_dialog_survey_text">
 				<p:outputLabel for="@next" value="#{msg['survey']}:"/>
 				<p:selectOneMenu id="edit_dialog_survey_menu" value="#{submissionBean.selectedSubmission.surveyResourceId}"
 								 required="#{submissionBean.selectedSubmission.surveyMandatory}"
@@ -167,7 +167,7 @@
 				</p:selectBooleanCheckbox>
 			</div>
 
-			<div class="form-group modal-dialog-select" id="create_dialog_survey_text" style="display:none;">
+			<div class="form-group modal-dialog-select" id="create_dialog_survey_text" style="display: none;">
 				<p:outputLabel for="@next" value="#{msg['survey']}:"/>
 				<p:selectOneMenu id="create_dialog_survey_menu" value="#{submissionBean.newSubmission.surveyResourceId}"
 								 required="#{submissionBean.newSubmission.surveyMandatory}"

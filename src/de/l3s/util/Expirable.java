@@ -1,5 +1,6 @@
 package de.l3s.util;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
@@ -12,6 +13,7 @@ import org.primefaces.util.SerializableSupplier;
  * If serialized and then deserialized, always gets a new value.
  */
 public final class Expirable<T> implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6877022635730725601L;
 
     private final TemporalAmount duration;

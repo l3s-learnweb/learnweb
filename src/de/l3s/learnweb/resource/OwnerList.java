@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import java.util.LinkedList;
  * @param <O> the owner of this element
  */
 public class OwnerList<E, O> extends LinkedList<E> {
+    @Serial
     private static final long serialVersionUID = -2264077519939704399L;
 
     private HashMap<E, O> elementOwner = new HashMap<>();

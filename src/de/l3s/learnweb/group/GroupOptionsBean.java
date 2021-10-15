@@ -1,5 +1,6 @@
 package de.l3s.learnweb.group;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import de.l3s.learnweb.user.User;
 @Named
 @ViewScoped
 public class GroupOptionsBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7748993079932830367L;
     //private static final Logger log = LogManager.getLogger(GroupOptionsBean.class);
 

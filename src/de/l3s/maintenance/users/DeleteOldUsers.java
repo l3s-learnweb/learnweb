@@ -79,9 +79,9 @@ public class DeleteOldUsers extends MaintenanceTask {
     }
 
     /**
-     * Deletes users that didn't login for more than defined number of years.
+     * Deletes users that didn't log in for more than defined number of years.
      * Use this method only if you know what you are doing.
-     * It will also delete resources a user has created in public groups. Thus this call might affect other users.
+     * It will also delete resources a user has created in public groups. Thus, this call might affect other users.
      *
      * @param configYears number of years a user has to be inactive to be deleted
      * @param organisationId the organisation from which inactive users are deleted

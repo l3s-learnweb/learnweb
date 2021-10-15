@@ -1,5 +1,6 @@
 package de.l3s.learnweb.gdpr;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import de.l3s.learnweb.user.User;
 @Named
 @ViewScoped
 public class YourSubmissionsBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -7818173987582995716L;
     //private static final Logger log = LogManager.getLogger(YourSubmissionsBean.class);
 

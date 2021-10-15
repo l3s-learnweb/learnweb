@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.mail.Mail;
 
 /**
- * Parses the mailbox every sometime and detects whether or not bounces are present. Bounced emails are
+ * Parses the mailbox every sometime and detects whether bounces are present. Bounced emails are
  *
  * @author Kate
  */
@@ -157,129 +157,49 @@ public class BounceManager {
             description = "Permanent Failure: ";
         }
 
-        //Actual code explanation. VERY LONG
-        switch (codes[1]) {
-            case "1.0":
-                description += "Other address status";
-                break;
-            case "1.1":
-                description += "Bad destination mailbox address";
-                break;
-            case "1.2":
-                description += "Bad destination system address";
-                break;
-            case "1.3":
-                description += "Bad destination mailbox address syntax";
-                break;
-            case "1.4":
-                description += "Destination mailbox address ambiguous";
-                break;
-            case "1.5":
-                description += "Destination mailbox address valid";
-                break;
-            case "1.6":
-                description += "Mailbox has moved";
-                break;
-            case "1.7":
-                description += "Bad sender's mailbox address syntax";
-                break;
-            case "1.8":
-                description += "Bad sender's system address";
-                break;
-            case "2.0":
-                description += "Other or undefined mailbox status";
-                break;
-            case "2.1":
-                description += "Mailbox disabled, not accepting messages";
-                break;
-            case "2.2":
-                description += "Mailbox full";
-                break;
-            case "2.3":
-                description += "Message length exceeds administrative limit";
-                break;
-            case "2.4":
-                description += "Mailing list expansion problem";
-                break;
-            case "3.0":
-                description += "Other or undefined mail system status";
-                break;
-            case "3.1":
-                description += "Mail system full";
-                break;
-            case "3.2":
-                description += "System not accepting network messages";
-                break;
-            case "3.3":
-                description += "System not capable of selected features";
-                break;
-            case "3.4":
-                description += " Message too big for system";
-                break;
-            case "4.0":
-                description += "Other or undefined network or routing status";
-                break;
-            case "4.1":
-                description += "No answer from host";
-                break;
-            case "4.2":
-                description += "Bad connection";
-                break;
-            case "4.3":
-                description += "Routing server failure";
-                break;
-            case "4.4":
-                description += "Unable to route";
-                break;
-            case "4.5":
-                description += "Network congestion";
-                break;
-            case "4.6":
-                description += "Routing loop detected";
-                break;
-            case "4.7":
-                description += "Delivery time expired";
-                break;
-            case "5.0":
-                description += "Other or undefined protocol status";
-                break;
-            case "5.1":
-                description += "Invalid command";
-                break;
-            case "5.2":
-                description += "Syntax error";
-                break;
-            case "5.3":
-                description += "Too many recipients";
-                break;
-            case "5.4":
-                description += "Invalid command arguments";
-                break;
-            case "5.5":
-                description += "Wrong protocol version";
-                break;
-            case "6.0":
-                description += "Other or undefined media error";
-                break;
-            case "6.1":
-                description += "Media not supported";
-                break;
-            case "6.2":
-                description += "Conversion required and prohibited";
-                break;
-            case "6.3":
-                description += "Conversion required but not supported";
-                break;
-            case "6.4":
-                description += "Conversion with loss performed";
-                break;
-            case "6.5":
-                description += "Conversion failed";
-                break;
-            default:
-                description += "Unspecified mailing error";
-                break;
-        }
+        // Actual code explanation. VERY LONG
+        description += switch (codes[1]) {
+            case "1.0" -> "Other address status";
+            case "1.1" -> "Bad destination mailbox address";
+            case "1.2" -> "Bad destination system address";
+            case "1.3" -> "Bad destination mailbox address syntax";
+            case "1.4" -> "Destination mailbox address ambiguous";
+            case "1.5" -> "Destination mailbox address valid";
+            case "1.6" -> "Mailbox has moved";
+            case "1.7" -> "Bad sender's mailbox address syntax";
+            case "1.8" -> "Bad sender's system address";
+            case "2.0" -> "Other or undefined mailbox status";
+            case "2.1" -> "Mailbox disabled, not accepting messages";
+            case "2.2" -> "Mailbox full";
+            case "2.3" -> "Message length exceeds administrative limit";
+            case "2.4" -> "Mailing list expansion problem";
+            case "3.0" -> "Other or undefined mail system status";
+            case "3.1" -> "Mail system full";
+            case "3.2" -> "System not accepting network messages";
+            case "3.3" -> "System not capable of selected features";
+            case "3.4" -> " Message too big for system";
+            case "4.0" -> "Other or undefined network or routing status";
+            case "4.1" -> "No answer from host";
+            case "4.2" -> "Bad connection";
+            case "4.3" -> "Routing server failure";
+            case "4.4" -> "Unable to route";
+            case "4.5" -> "Network congestion";
+            case "4.6" -> "Routing loop detected";
+            case "4.7" -> "Delivery time expired";
+            case "5.0" -> "Other or undefined protocol status";
+            case "5.1" -> "Invalid command";
+            case "5.2" -> "Syntax error";
+            case "5.3" -> "Too many recipients";
+            case "5.4" -> "Invalid command arguments";
+            case "5.5" -> "Wrong protocol version";
+            case "6.0" -> "Other or undefined media error";
+            case "6.1" -> "Media not supported";
+            case "6.2" -> "Conversion required and prohibited";
+            case "6.3" -> "Conversion required but not supported";
+            case "6.4" -> "Conversion with loss performed";
+            case "6.5" -> "Conversion failed";
+            default -> "Unspecified mailing error";
+        };
 
         return description;
     }

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.faces.application.FacesMessage;
@@ -13,6 +14,7 @@ import de.l3s.learnweb.logging.Action;
 @Named
 @ViewScoped
 public class AddFolderBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3716630972434428811L;
 
     private Folder folder;

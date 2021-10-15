@@ -1,8 +1,10 @@
 package de.l3s.learnweb.resource.search.filters;
 
+import java.io.Serial;
 import java.util.ArrayList;
 
 public class DurationFilter extends Filter {
+    @Serial
     private static final long serialVersionUID = 9120230856128443235L;
 
     @SuppressWarnings("StandardVariableNames")
@@ -37,15 +39,10 @@ public class DurationFilter extends Filter {
     }
 
     public boolean isValid(int duration) {
-        switch (value) {
-            case s:
-                return duration <= 240;
-            case m:
-                return duration > 240 && duration <= 1200;
-            case l:
-                return duration > 1200;
-            default:
-                return true;
-        }
+        return switch (value) {
+            case s -> duration <= 240;
+            case m -> duration > 240 && duration <= 1200;
+            case l -> duration > 1200;
+        };
     }
 }

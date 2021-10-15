@@ -1,9 +1,11 @@
 package de.l3s.learnweb.resource.search.filters;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class FilterOption implements Serializable, Comparable<FilterOption> {
+    @Serial
     private static final long serialVersionUID = -5553821306095298015L;
 
     private final String title;
