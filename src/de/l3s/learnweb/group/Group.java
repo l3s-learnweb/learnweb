@@ -18,6 +18,7 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.AbstractResource;
+import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceContainer;
@@ -239,7 +240,16 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         }
 
         for (Resource resource : getResources()) {
-            Learnweb.dao().getResourceDao().copy(resource, groupId, foldersMap.get(resource.getFolderId()), user);
+            Resource newResource = new Resource(resource);
+            newResource.setGroupId(groupId);
+            newResource.setFolderId(foldersMap.get(newResource.getFolderId()));
+            newResource.setUser(user);
+
+            for (File file : resource.getFiles().values()) {
+                newResource.addFile(file);
+            }
+
+            newResource.save();
         }
     }
 

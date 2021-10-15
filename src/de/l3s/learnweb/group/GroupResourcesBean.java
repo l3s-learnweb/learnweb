@@ -32,6 +32,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
+import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
@@ -365,7 +366,16 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         int targetFolderId = HasId.getIdOrDefault(targetFolder, 0);
 
         for (Resource resource : items.getResources()) {
-            dao().getResourceDao().copy(resource, targetGroupId, targetFolderId, getUser());
+            Resource newResource = new Resource(resource);
+            newResource.setGroupId(targetGroupId);
+            newResource.setFolderId(targetFolderId);
+            newResource.setUser(getUser());
+
+            for (File file : resource.getFiles().values()) {
+                newResource.addFile(file);
+            }
+
+            newResource.save();
             log(Action.adding_resource, targetGroup.getId(), resource.getId());
         }
 

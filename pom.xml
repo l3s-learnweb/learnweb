@@ -95,7 +95,7 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>4.0-M9</version>
+            <version>4.0-M10</version>
         </dependency>
         <!-- PrimeFaces -->
         <dependency>

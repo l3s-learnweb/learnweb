@@ -81,12 +81,10 @@ public interface ResourceDao extends SqlObject, Serializable {
 
     /**
      * Returns at most one (random) resource for the given URL. Note that the URL column isn't indexed. This method was added for a specific crawler and
-     * shouldn't be
-     * used.
+     * shouldn't be used.
      */
-    @Deprecated
-    @SqlQuery("SELECT * FROM lw_resource WHERE url = ? AND deleted = 0 LIMIT 1")
-    Optional<Resource> findByUrl(String url);
+    @SqlQuery("SELECT * FROM lw_resource WHERE group_id = ? AND url = ? AND deleted = 0 LIMIT 1")
+    Optional<Resource> findByGroupIdAndUrl(int groupId, String url);
 
     @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_rating USING ( resource_id ) WHERE user_id = ? AND deleted = 0")
     List<Resource> findRatedByUsedId(int userId);
@@ -154,20 +152,6 @@ public interface ResourceDao extends SqlObject, Serializable {
 
     @SqlUpdate("DELETE FROM lw_resource_tag WHERE resource_id = ? AND tag_id = ?")
     void deleteTag(Resource resource, Tag tag);
-
-    @Deprecated
-    default void copy(final Resource sourceResource, final int targetGroupId, final int targetFolderId, final User user) {
-        Resource resource = new Resource(sourceResource);
-        resource.setGroupId(targetGroupId);
-        resource.setFolderId(targetFolderId);
-        resource.setUser(user);
-
-        for (File file : sourceResource.getFiles().values()) {
-            resource.addFile(file);
-        }
-
-        save(resource);
-    }
 
     default void save(Resource resource) {
         resource.setUpdatedAt(SqlHelper.now());

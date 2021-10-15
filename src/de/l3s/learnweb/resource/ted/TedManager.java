@@ -168,8 +168,7 @@ public class TedManager {
                     resource.setTitle(title[0]);
                 }
 
-                Optional<Resource> learnwebResource = resourceDao.findByUrl(resource.getUrl()); // TODO if ever used again: check if the resource exists in the tedx group and not if it exists in general
-
+                Optional<Resource> learnwebResource = resourceDao.findByGroupIdAndUrl(921, resource.getUrl());
                 if (learnwebResource.isPresent()) { // it is already stored
                     if (learnwebResource.get().getIdAtService() == null || learnwebResource.get().getIdAtService().isEmpty()) {
                         learnwebResource.get().setIdAtService(resource.getIdAtService());

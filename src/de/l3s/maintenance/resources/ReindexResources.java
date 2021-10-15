@@ -3,10 +3,10 @@ package de.l3s.maintenance.resources;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.UpdateResponse;
-import org.omnifaces.util.Callback;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -19,7 +19,7 @@ public class ReindexResources extends MaintenanceTask {
 
     private final ResourceDao resourceDao;
     private final SolrClient solrClient;
-    private final Callback.WithArgument<Integer> progressCallback;
+    private final Consumer<Integer> progressCallback;
 
     private ReindexResources() {
         progressCallback = integer -> {};
@@ -27,7 +27,7 @@ public class ReindexResources extends MaintenanceTask {
         solrClient = getLearnweb().getSolrClient();
     }
 
-    public ReindexResources(Learnweb learnweb, final Callback.WithArgument<Integer> callback) {
+    public ReindexResources(Learnweb learnweb, final Consumer<Integer> callback) {
         super(learnweb);
 
         progressCallback = callback;
@@ -48,9 +48,9 @@ public class ReindexResources extends MaintenanceTask {
 
         /* Reindex all resources */
         deleteAllResource();
-        progressCallback.invoke(0);
+        progressCallback.accept(0);
         indexAllResources();
-        progressCallback.invoke(100);
+        progressCallback.accept(100);
 
         log.debug("All tasks completed.");
     }
@@ -96,7 +96,7 @@ public class ReindexResources extends MaintenanceTask {
 
             solrClient.getHttpSolrClient().commit();
             indexedResources += resourceDocuments.size();
-            progressCallback.invoke((indexedResources * 100) / totalResources);
+            progressCallback.accept((indexedResources * 100) / totalResources);
 
             resourceDocuments.clear();
         }
