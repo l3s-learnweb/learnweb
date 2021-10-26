@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run locally (Tomcat 9)" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9" ALTERNATIVE_JRE_ENABLED="false">
+  <configuration default="false" name="Run locally" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10" ALTERNATIVE_JRE_ENABLED="false">
     <option name="UPDATE_ON_FRAME_DEACTIVATION" value="true" />
     <option name="UPDATING_POLICY" value="redeploy-artifacts" />
     <deployment>
@@ -10,7 +10,7 @@
       </artifact>
     </deployment>
     <server-settings>
-      <option name="BASE_DIRECTORY_NAME" value="Run_locally_(1)_Learnweb" />
+      <option name="BASE_DIRECTORY_NAME" value="bcbf46c5-24b1-4023-b14e-430153a0bf35" />
       <option name="HTTP_PORT" value="8090" />
     </server-settings>
     <predefined_log_file enabled="true" id="Tomcat" />
