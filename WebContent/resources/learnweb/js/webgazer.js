@@ -162,7 +162,6 @@ class WebgazerCalibrate {
      */
     window.onload = () => {
       this.clearCanvas();
-      PF('helpDialog').show();
 
       webgazer.params.showVideoPreview = true;
       // start the webgazer tracker
