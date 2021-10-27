@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.13.0</version>
+    <version>3.13.01</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -482,7 +482,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <url>https://learnweb.l3s.uni-hannover.de/manager/text</url>
+                    <url>http://learnweb.l3s.uni-hannover.de:8100/manager/text</url>
                     <!--suppress UnresolvedMavenProperty -->
                     <username>${env.LEARNWEB_TOMCAT_USERNAME}</username>
                     <!--suppress UnresolvedMavenProperty -->
@@ -542,7 +542,7 @@
                                     <version>[3.6,)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>[11,)</version>
+                                    <version>[17,)</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
