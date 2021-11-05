@@ -37,6 +37,7 @@ export default [
         },
       }),
       scss({
+        quietDeps: true, // FIXME: remove when fontawesome updated
         outputStyle: production ? 'compressed' : 'expanded',
         sourceMap: true,
         watch: path.resolve(__dirname, 'WebContent/resources/learnweb/sass'),

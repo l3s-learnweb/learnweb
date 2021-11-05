@@ -1,5 +1,5 @@
 /* global Highcharts, translatedShortMonthsNames, translatedMonthsNames,
-          msg_timelineNumVersions, msg_timelineTitle, msg_timelineSeriesName, msg_timelineClickZoom, msg_timelineTouchZoom */
+          msgTimelineNumVersions, msgTimelineTitle, msgTimelineSeriesName, msgTimelineClickZoom, msgTimelineTouchZoom */
 
 let chart; // handle to access the HighCharts methods
 
@@ -61,11 +61,11 @@ function loadTimeline(dataVar) {
       enabled: false,
     },
     title: {
-      text: msg_timelineTitle,
+      text: msgTimelineTitle,
     },
     subtitle: {
       // eslint-disable-next-line camelcase
-      text: document.ontouchstart === undefined ? msg_timelineClickZoom : msg_timelineTouchZoom,
+      text: document.ontouchstart === undefined ? msgTimelineClickZoom : msgTimelineTouchZoom,
     },
     xAxis: {
       type: 'datetime',
@@ -74,7 +74,7 @@ function loadTimeline(dataVar) {
     },
     yAxis: {
       title: {
-        text: msg_timelineNumVersions,
+        text: msgTimelineNumVersions,
       },
     },
     tooltip: {
@@ -107,7 +107,7 @@ function loadTimeline(dataVar) {
 
     series: [{
       type: 'column',
-      name: msg_timelineSeriesName,
+      name: msgTimelineSeriesName,
       data: dataVar,
     }],
   });
