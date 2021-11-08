@@ -1,12 +1,3 @@
-function openGlossForm() {
-  $('#glossaryForm').css('display', 'block');
-  document.getElementById('glossaryForm').scrollIntoView();
-}
-
-function closeGlossForm() {
-  $('#glossaryForm').css('display', 'none');
-}
-
 function groupRow() {
   const columnsToMerge = 5; // number of first columns to merge
   const glossaryEntryColumn = 2; // index of column that contains the glossaryEntryId

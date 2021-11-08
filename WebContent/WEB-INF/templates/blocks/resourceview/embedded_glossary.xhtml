@@ -30,7 +30,7 @@
                     <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['Glossary.search_filter_placeholder']}"/>
                 </p:outputPanel>
                 <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="col-auto alt-btn" process="@this"
-                                 update=":glossary_add" oncomplete="openGlossForm();" global="false"/>
+                                 update=":glossary_add" oncomplete="PF('glossaryEditDialog').show();return false;" global="false"/>
             </div>
         </f:facet>
 
@@ -40,7 +40,7 @@
                     <h:outputText value="#{msg['Glossary.total_entries']} = #{glossaryBean.entryCount}"></h:outputText>
                 </div>
                 <div class="col text-end">
-                    <p:commandLink styleClass="text-warning me-2" onclick="PF('excel_import_dialog').show();return false;"
+                    <p:commandLink styleClass="text-warning me-2" onclick="PF('glossaryImportDialog').show();return false;"
                                    rendered="#{glossaryBean.optionImportEnabled}">
                         Import <i class="fas fa-fw fa-upload" aria-hidden="true"></i>
                     </p:commandLink>
@@ -66,7 +66,7 @@
                 </p:commandLink>
 
                 <p:commandLink action="#{glossaryBean.setGlossaryForm(item)}" title="#{msg.edit_entry}"
-                               process="@this" update=":glossary_add" oncomplete="openGlossForm();">
+                               process="@this" update=":glossary_add" oncomplete="PF('glossaryEditDialog').show();return false;">
                     <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
                 </p:commandLink>
             </div>
@@ -118,39 +118,38 @@
     </p:dataTable>
 </h:form>
 
-<p:dialog header="#{msg['Glossary.import_glossary']}" widgetVar="excel_import_dialog"
+<p:dialog widgetVar="glossaryImportDialog" header="#{msg['Glossary.import_glossary']}"
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
-    <div class="p-grid">
-        <h:form id="import_form" prependId="false">
+    <h:form id="import_form">
+        <h:panelGroup styleClass="p-grid" layout="block" rendered="#{glossaryBean.importResponse == null}">
             <p:fileUpload mode="advanced" skinSimple="true" listener="#{glossaryBean.onImportXls}" styleClass="fileupload-minimal"
-                          allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update=":glossary_dialog :glossary_table_form"
-                          oncomplete="PF('excel_import_dialog').hide(); PF('glossaryDlg').show(); groupRow();"/>
-        </h:form>
-    </div>
-</p:dialog>
+                          allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update="@form :glossary_table_form" oncomplete="groupRow();"/>
+        </h:panelGroup>
 
-<p:dialog id="glossary_dialog" header="#{msg['Glossary.import_glossary']}" widgetVar="glossaryDlg"
-          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
-    <h:outputFormat value="#{msg['Glossary.import_successful']}" styleClass="d-block" rendered="#{glossaryBean.importResponse.successful}">
-        <f:param value="#{glossaryBean.importResponse.entryCount}"/>
-    </h:outputFormat>
-    <h:outputText value="#{msg['Glossary.import_error']}" styleClass="d-block ui-messages-error p-2" rendered="#{not glossaryBean.importResponse.successful}"/>
-    <h:form>
-        <p:dataTable var="error" value="#{glossaryBean.importResponse.errors}" rendered="#{not glossaryBean.importResponse.successful}">
-            <p:column headerText="#{msg.row}">
-                <h:outputText value="#{error.rowName}"/>
-            </p:column>
-            <p:column headerText="#{msg.column}">
-                <h:outputText value="#{error.cell}"/>
-            </p:column>
-            <p:column headerText="#{msg.error}">
-                <h:outputText value="#{error.errorMessage}" escape="false"/>
-            </p:column>
-        </p:dataTable>
+        <h:panelGroup styleClass="p-grid" layout="block" rendered="#{glossaryBean.importResponse != null}">
+            <h:outputFormat value="#{msg['Glossary.import_successful']}" styleClass="d-block" rendered="#{glossaryBean.importResponse.successful}">
+                <f:param value="#{glossaryBean.importResponse.entryCount}"/>
+            </h:outputFormat>
+
+            <h:outputText value="#{msg['Glossary.import_error']}" styleClass="d-block ui-messages-error p-2"
+                          rendered="#{not glossaryBean.importResponse.successful}"/>
+            <p:dataTable var="error" value="#{glossaryBean.importResponse.errors}" rendered="#{not glossaryBean.importResponse.successful}">
+                <p:column headerText="#{msg.row}">
+                    <h:outputText value="#{error.rowName}"/>
+                </p:column>
+                <p:column headerText="#{msg.column}">
+                    <h:outputText value="#{error.cell}"/>
+                </p:column>
+                <p:column headerText="#{msg.error}">
+                    <h:outputText value="#{error.errorMessage}" escape="false"/>
+                </p:column>
+            </p:dataTable>
+        </h:panelGroup>
     </h:form>
 </p:dialog>
 
-<p:panel header="#{msg['Glossary.edit_glossary']}" id="glossaryForm" styleClass="collapse mt-1">
+<p:dialog widgetVar="glossaryEditDialog" header="#{msg['Glossary.edit_glossary']}"
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
     <h:form id="glossary_add" prependId="false">
         <p:panelGrid id="grid" styleClass="my-0 mb-3 mx-auto" columns="3">
             <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['Glossary.topic']} 1"/>
@@ -240,8 +239,8 @@
                                  pt:onpaste="setPasteStatus(this, 'phraseology');"/>
             </p:column>
             <p:column width="20" rendered="#{not term.deleted}">
-                <p:commandLink id="delete_term" actionListener="#{glossaryBean.onDeleteTerm(term)}" update=":lang_terms " title="#{msg.delete}">
-                    <f:ajax execute="@this lang_terms"/>
+                <p:commandLink id="delete_term" actionListener="#{glossaryBean.onDeleteTerm(term)}" title="#{msg.delete}"
+                               update=":glossary_add :lang_terms" process="@this lang_terms" oncomplete="PF('glossaryEditDialog').resetPosition();">
                     <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                 </p:commandLink>
             </p:column>
@@ -249,21 +248,21 @@
 
         <div class="d-flex mt-3">
             <div class="me-auto">
-                <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}"
-                                 update=":glossary_add :lang_terms" process="@this lang_terms" styleClass="alt-btn">
+                <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}" styleClass="alt-btn"
+                                 update=":glossary_add :lang_terms" process="@this lang_terms" oncomplete="PF('glossaryEditDialog').resetPosition();">
                 </p:commandButton>
             </div>
             <div>
                 <p:defaultCommand target="save"/>
-                <p:commandButton value="#{msg.cancel}" action="#{glossaryBean.onClearEntryForm}"
-                                 process="@this" resetValues="true" oncomplete="closeGlossForm()" styleClass="secondary-btn">
+                <p:commandButton value="#{msg.cancel}" process="@this" resetValues="true" styleClass="secondary-btn"
+                                 oncomplete="PF('glossaryEditDialog').hide();return false;">
                 </p:commandButton>
                 <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave}" update=":glossary_add :glossary_table_form "
-                                 binding="#{save}" oncomplete="groupRow()">
+                                 binding="#{save}" oncomplete="PF('glossaryEditDialog').hide();groupRow()">
                 </p:commandButton>
             </div>
         </div>
     </h:form>
-</p:panel>
+</p:dialog>
 
 </ui:composition>
