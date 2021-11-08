@@ -13,7 +13,7 @@ $topbar-button-padding: 1rem;
   display: flex;
   align-items: center;
   text-decoration: none;
-  transition: background-color .2s;
+  transition: background-color 0.2s;
   flex-shrink: 0;
   padding: 0 $navbar-nav-link-padding-x;
   margin-right: $navbar-nav-link-padding-x * 0.5;
@@ -73,7 +73,7 @@ $topbar-button-padding: 1rem;
     }
 
     img {
-      height:  1.875rem;
+      height: 1.875rem;
       border-radius: $btn-border-radius;
     }
   }
@@ -82,7 +82,7 @@ $topbar-button-padding: 1rem;
 .dropdown-item {
   &.nav-link-flag {
     img {
-      height:  1.5rem;
+      height: 1.5rem;
       border-radius: $btn-border-radius;
       margin-right: 0.3rem;
     }
