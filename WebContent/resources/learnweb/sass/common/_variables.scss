@@ -73,7 +73,7 @@ $box-shadow-lg: 0 0.5rem 1rem rgba($black, 0.25);
 $border-radius: 0;
 $btn-border-radius: 0.2rem;
 
-$nav-link-padding-y: 0.2rem;
+$nav-link-padding-y: 0.35rem;
 $nav-link-padding-x: 0.5rem;
 $input-padding-y: 0.25rem;
 $input-padding-x: 0.25rem;
@@ -88,6 +88,29 @@ $position-values: (
   50: 50%,
   100: 100%
 );
+
+// Navbar
+
+$navbar-padding-y: 0;
+$navbar-padding-x: null;
+$navbar-nav-link-padding-x: 1rem;
+$navbar-nav-link-padding-y: 0.7rem;
+$navbar-dark-color: $themeElementTextColor;
+$navbar-dark-hover-color: $themeElementTextColor;
+$navbar-brand-padding-y: 0;
+$navbar-brand-padding-y: 0;
+
+// Dropdown
+
+$dropdown-dark-link-color: $white;
+$dropdown-dark-bg: $themePrimaryColor;
+$dropdown-dark-link-hover-bg: $themePrimaryDarkerAlt;
+$dropdown-dark-link-active-bg: $themePrimaryDarkerAlt;
+$dropdown-spacer: 0;
+$dropdown-border-width: 0;
+$dropdown-padding-y: 0;
+$dropdown-item-padding-y: 0.5rem;
+$dropdown-item-padding-x: 1rem;
 
 // Tooltips
 

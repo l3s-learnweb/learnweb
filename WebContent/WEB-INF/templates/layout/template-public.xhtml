@@ -14,6 +14,9 @@
         <h:head>
             <ui:include src="parts/head.xhtml"/>
             <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{!empty pageTitle}"/>#{msg['application.name']}</title>
+
+            <h:outputScript library="primefaces" name="jquery/jquery.js"/>
+            <h:outputScript name="bundle/learnweb.main.js"/>
         </h:head>
 
         <h:body styleClass="layout-body template-page">
@@ -22,23 +25,22 @@
             </f:facet>
 
             <div class="layout-wrapper layout-wrapper-sidebar-inactive">
-                <header class="layout-header bg-primary">
-                    <div class="container d-flex flex-row align-items-center">
-                        <div class="d-flex ms-sm-0 me-auto">
-                            <a href="#{userBean.bannerLink}" class="header-element header-logo no-hover-bg">
-                                <h:graphicImage library="images" name="learnweb_logo.png" alt="#{msg['application.name']}" styleClass="w-inherit"/>
-                            </a>
-                        </div>
-
-                        <h:form id="header_right" styleClass="d-flex mw-100 ms-auto mx-sm-0">
-                            <div class="header-element no-hover-bg d-flex justify-content-end px-2">
+                <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary shadow">
+                    <h:form id="navbar_form" styleClass="container align-items-stretch">
+                        <a href="#{userBean.bannerLink}" class="navbar-brand">
+                            <h:graphicImage library="images" name="learnweb_logo.png" alt="#{msg['application.name']}"/>
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerMenu" aria-controls="navbarTogglerMenu" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarTogglerMenu">
+                            <ul class="navbar-nav navbar-nav-scroll ms-auto mb-2 mb-lg-0">
                                 <ui:insert name="header_right"/>
-                            </div>
-
-                            <ui:include src="parts/language_switch.xhtml"/>
-                        </h:form>
-                    </div>
-                </header>
+                                <ui:include src="parts/language_switch.xhtml"/>
+                            </ul>
+                        </div>
+                    </h:form>
+                </nav>
 
                 <div class="layout-main d-flex flex-column" id="main">
                     <noscript>

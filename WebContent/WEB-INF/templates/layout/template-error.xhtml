@@ -21,15 +21,13 @@
             </f:facet>
 
             <div class="layout-wrapper layout-wrapper-sidebar-inactive">
-                <header class="layout-header bg-primary">
-                    <div class="container d-flex flex-row align-items-center">
-                        <div class="d-flex ms-sm-0 me-auto">
-                            <a href="#{request.contextPath}/" class="header-element header-logo no-hover-bg">
-                                <h:graphicImage library="images" name="learnweb_logo.png" alt="#{msg['application.name']}" styleClass="w-inherit"/>
-                            </a>
-                        </div>
-                    </div>
-                </header>
+                <nav class="navbar sticky-top navbar-expand-sm navbar-dark bg-primary shadow">
+                    <h:form id="navbar_form" styleClass="container">
+                        <a href="#{request.contextPath}/" class="navbar-brand">
+                            <h:graphicImage library="images" name="learnweb_logo.png" alt="#{msg['application.name']}"/>
+                        </a>
+                    </h:form>
+                </nav>
 
                 <div class="layout-main d-flex flex-column" id="main">
                     <main class="layout-main-content">

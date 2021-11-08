@@ -5,9 +5,17 @@ import './sass/main.scss';
 import Tooltip from 'bootstrap/js/src/tooltip';
 import Popover from 'bootstrap/js/src/popover';
 import Scrollspy from 'bootstrap/js/src/scrollspy';
+import Collapse from 'bootstrap/js/src/collapse';
+import Dropdown from 'bootstrap/js/src/dropdown';
 
 // Learnweb modules
 import './js/modules/jquery.auto-complete';
 // import './js/modules/*';
 
-window.bootstrap = { Tooltip, Popover, Scrollspy };
+window.bootstrap = {
+  Tooltip,
+  Popover,
+  Scrollspy,
+  Collapse,
+  Dropdown,
+};

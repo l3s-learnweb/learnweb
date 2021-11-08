@@ -13,7 +13,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     this.wrapper = $('.layout-wrapper');
 
     if (this.wrapper.length === 0) return;
-    this.header = this.wrapper.children('.layout-header');
+    this.header = this.wrapper.children('.navbar');
     this.menuButton = this.header.find('#menu-button');
 
     this._bindEvents();

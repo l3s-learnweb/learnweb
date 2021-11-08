@@ -14,21 +14,12 @@ body {
 .layout-wrapper {
   .layout-main {
     position: relative;
-    padding-top: $topbar-height;
     margin-left: $sidebar-width;
-    min-height: 100vh;
+    min-height: calc(100vh - 52px);
     @include transition(margin-left $transition-duration);
 
     @include media-breakpoint-down($sidebar-hide-display) {
       margin-left: 0;
-    }
-
-    @include media-breakpoint-down($topbar-two-row-display) {
-      padding-top: $topbar-height * 2;
-
-      .template-page & {
-        padding-top: $topbar-height;
-      }
     }
 
     .layout-main-content {

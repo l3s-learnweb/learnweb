@@ -2,126 +2,184 @@ $topbar-button-size: 1.875rem;
 $topbar-button-lg-size: 2.5rem;
 $topbar-button-padding: 1rem;
 
-.layout-wrapper {
-  .layout-header {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
+.navbar-brand {
+  img {
+    height: 3rem;
+  }
+}
+
+.navbar-menu {
+  color: $white;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: background-color .2s;
+  flex-shrink: 0;
+  padding: 0 $navbar-nav-link-padding-x;
+  margin-right: $navbar-nav-link-padding-x * 0.5;
+
+  &:hover {
+    color: $white;
+    background: $themePrimaryDarkerAlt;
+  }
+}
+
+.navbar-search {
+  max-width: 30rem;
+  font-size: $font-size-base;
+
+  input {
     width: 100%;
-    z-index: 998;
-    height: $topbar-height;
-    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2);
+    height: $topbar-button-size;
+    border: 0 !important;
+    outline: none;
+    padding: 0 3px 0 6px;
+  }
 
-    .header-element {
-      height: $topbar-height;
+  button {
+    border: 0;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    height: $topbar-button-size;
+    background: $themeElementTextColor;
+    color: $themeSidebarHoverBgColor;
+
+    &:hover {
+      background: $themePrimaryDarkerAlt;
       color: $themeElementTextColor;
-      font-size: $topbar-button-size;
-      padding: 0 $topbar-button-padding;
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      @include transition(background-color $transition-duration);
+    }
+  }
+}
 
-      &:hover:not(.no-hover-bg) {
-        background-color: $themePrimaryDarkerAlt;
-      }
+.navbar-nav .nav-link {
+  padding-right: $nav-link-padding-x;
+  padding-left: $nav-link-padding-x;
+  font-size: $font-size-lg;
+
+  &:hover {
+    background: $themePrimaryDarkerAlt;
+  }
+
+  &.nav-link-flag {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 0;
+    @include transition(background-color $transition-duration);
+
+    &:hover {
+      background-color: $themePrimaryDarkerAlt;
     }
 
-    .menu-button {
-      padding: 0;
-      flex-shrink: 0;
-      width: $topbar-button-size + $topbar-button-padding * 2;
+    img {
+      height:  1.875rem;
+      border-radius: $btn-border-radius;
     }
+  }
+}
 
-    .header-logo {
-      padding: 0 $topbar-button-padding * 0.5;
-      width: $sidebar-width - ($topbar-button-size + $topbar-button-padding) - 1rem;
+.dropdown-item {
+  &.nav-link-flag {
+    img {
+      height:  1.5rem;
+      border-radius: $btn-border-radius;
+      margin-right: 0.3rem;
     }
+  }
+}
 
-    .lang-button {
-      img {
-        height: $topbar-button-size;
-      }
-    }
+// scss-docs-start navbar-expand-loop
+// Generate series of `.navbar-expand-*` responsive classes for configuring
+// where your navbar collapses.
+.navbar-main,
+.navbar-expand {
+  @each $breakpoint in map-keys($grid-breakpoints) {
+    $next: breakpoint-next($breakpoint, $grid-breakpoints);
+    $infix: breakpoint-infix($next, $grid-breakpoints);
 
-    .search-form {
-      max-width: 30rem;
-      font-size: $font-size-base;
+    // stylelint-disable-next-line scss/selector-no-union-class-name
+    &#{$infix} {
+      @include media-breakpoint-up($next) {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
 
-      input {
-        width: 100%;
-        height: $topbar-button-size;
-        border: 0;
-        outline: none;
-        padding: 0 3px 0 6px;
-      }
+        .navbar-expand-hide {
+          display: none;
+        }
 
-      button {
-        border: 0;
-        border-radius: 0;
-        display: flex;
-        align-items: center;
-        height: $topbar-button-size;
-        background: $themeElementTextColor;
-        color: $themeSidebarHoverBgColor;
+        .navbar-nav {
+          height: 100%;
+          flex-direction: row;
 
-        &:hover {
-          background: $themePrimaryDarkerAlt;
-          color: $themeElementTextColor;
+          .dropdown-menu {
+            position: absolute;
+          }
+
+          .nav-link {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0 $navbar-nav-link-padding-x;
+            border-bottom: 0.2rem solid transparent;
+
+            &:hover {
+              border-color: $navbar-dark-hover-color;
+            }
+
+            &.nav-link-profile {
+              padding-top: 0.2rem !important;
+              padding-bottom: 0 !important;
+            }
+
+            &.nav-link-flag {
+              padding-top: 0 !important;
+              padding-bottom: 0 !important;
+            }
+          }
         }
       }
     }
+  }
+}
 
-    .profile-picture {
-      width: $topbar-button-lg-size;
-      height: $topbar-button-lg-size;
-    }
-
-    .header-menu {
-      list-style: none;
-      padding-right: 1rem;
-      margin-bottom: 0;
-      font-size: $font-size-base;
-
-      a {
-        padding: 0.7rem 1rem;
-        font-size: $font-size-lg;
-        text-decoration: none;
-        border-bottom: 0.2rem solid transparent;
-        color: $themeElementTextColor;
-
-        &:hover {
-          border-color: $themeElementTextColor;
-        }
-      }
-    }
-
-    @include media-breakpoint-down($topbar-two-row-display) {
+.navbar-main {
+  @include media-breakpoint-down(md) {
+    .container-fluid {
       height: auto;
       flex-wrap: wrap;
+    }
 
-      > *:not(.search-wrapper) {
-        max-width: 50%;
-      }
+    .navbar-search {
+      max-width: initial;
+      width: 100%;
+      order: 1;
+      padding: 0.625rem 0;
+    }
+  }
 
-      .search-wrapper {
+  @include media-breakpoint-down(sm) {
+    .layout-combined-loader,
+    .navbar-nav {
+      max-width: 50%;
+    }
+
+    .navbar-menu,
+    .navbar-brand {
+      margin-right: 0.3rem;
+    }
+
+    .navbar-brand {
+      img {
         width: 100%;
+        height: initial;
       }
+    }
 
-      .search-form {
-        max-width: 100%;
-      }
-
-      .header-menu {
-        a {
-          padding: 0.7rem 0.6rem;
-        }
-      }
-
-      .header-element {
-        padding: 0 $topbar-button-padding - 0.6;
-      }
+    .navbar-menu,
+    .navbar-nav .nav-link {
+      padding-right: 0.3rem;
+      padding-left: 0.3rem;
     }
   }
 }
@@ -140,16 +198,6 @@ $topbar-button-padding: 1rem;
     .loader-element {
       display: block;
     }
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
   }
 }
 
@@ -192,6 +240,16 @@ $topbar-button-padding: 1rem;
       height: $spinner-size * 0.5;
       animation: ball-clip-rotate-pulse-scale 1s cubic-bezier(0.09, 0.57, 0.49, 0.9) infinite;
     }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
 

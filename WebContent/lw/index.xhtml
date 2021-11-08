@@ -7,11 +7,15 @@
 <ui:param name="pageTitle" value="#{msg['application.name']}"/>
 
 <ui:define name="header_right">
-    <ul class="header-menu d-flex justify-content-end px-0">
-        <li><a href="#login"><span>#{msg.loginLabel}</span></a></li>
-        <li><a href="#about"><span>#{msg['frontpage.about_learnweb']}</span></a></li>
-        <li><a href="#courses"><span>#{msg.registerLabel}</span></a></li>
-    </ul>
+    <li class="nav-item">
+        <a class="nav-link" href="#login">#{msg.loginLabel}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#about">#{msg['frontpage.about_learnweb']}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#courses">#{msg.registerLabel}</a>
+    </li>
 </ui:define>
 
 <ui:define name="center_layout">
