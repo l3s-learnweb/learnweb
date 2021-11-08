@@ -248,7 +248,10 @@
             <f:param value="#{groupResourcesBean.group.resourcesCount}"/>
         </h:outputFormat>
 
-        <p:commandButton value="#{msg.start_download}" action="#{dataExporterBean.requestGroupResources(groupResourcesBean.group)}"/>
+        <p:commandButton value="#{msg.start_download}" ajax="false"
+                         onclick="PrimeFaces.monitorDownload(() => PF('ajax-status').trigger('start'), () => PF('ajax-status').trigger('complete'))">
+            <p:fileDownload value="#{dataExporterBean.streamGroupResources(groupResourcesBean.group)}"/>
+        </p:commandButton>
     </h:form>
 </p:dialog>
 

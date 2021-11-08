@@ -2,7 +2,7 @@ package de.l3s.learnweb.resource;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,16 +11,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import jakarta.faces.context.FacesContext;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import com.hp.gagawa.java.Document;
 import com.hp.gagawa.java.DocumentType;
@@ -33,42 +31,45 @@ import com.hp.gagawa.java.elements.Td;
 import com.hp.gagawa.java.elements.Thead;
 import com.hp.gagawa.java.elements.Tr;
 
-import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.user.User;
 
-public class ExportManager {
+public final class ExportManager {
     private static final Logger log = LogManager.getLogger(ExportManager.class);
     private static final String EXPORT_FILE_PREFIX = "learnweb-";
     private static final String EXPORT_FILE_EXT = ".zip";
+    private static final String EXPORT_CONTENT_TYPE = "application/zip";
 
-    private final Learnweb learnweb;
-
-    public ExportManager(Learnweb learnweb) {
-        this.learnweb = learnweb;
+    public static StreamedContent streamResources(User user) throws IOException {
+        return streamResources(packResources(null, user.getResources()), user.getUsername().toLowerCase());
     }
 
-    public void handleResponse(User user) throws IOException {
-        handleResponse(packResources(null, user.getResources()), user.getUsername().toLowerCase());
+    public static StreamedContent streamResources(final Group group) throws IOException {
+        return streamResources(packResources(group.getTitle(), group.getResources()), "group_" + group.getId());
     }
 
-    public void handleResponse(final Group group) throws IOException {
-        handleResponse(packResources(group.getTitle(), group.getResources()), "group_" + group.getId());
+    private static StreamedContent streamResources(final Map<String, InputStream> resourcesToPack, final String fileSuffix) {
+        return DefaultStreamedContent.builder()
+            .name(getFileName(fileSuffix))
+            .contentType(EXPORT_CONTENT_TYPE)
+            .stream(() -> {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                createArchive(resourcesToPack, baos);
+                return new ByteArrayInputStream(baos.toByteArray());
+            })
+            .build();
     }
 
     /**
-     * Entry point for handling HTTP request.
+     * TODO: should be improved to use Group/Folder name as file name
      */
-    private void handleResponse(final Map<String, InputStream> resourcesToPack, final String fileSuffix) throws IOException {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+    private static String getFileName(final String fileSuffix) {
+        return EXPORT_FILE_PREFIX + fileSuffix + EXPORT_FILE_EXT;
+    }
 
-        response.setContentType("application/zip");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + EXPORT_FILE_PREFIX + fileSuffix + EXPORT_FILE_EXT + "\"");
-
-        OutputStream responseOutputStream = response.getOutputStream();
-        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(responseOutputStream))) {
+    private static void createArchive(final Map<String, InputStream> resourcesToPack, final OutputStream os) {
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(os))) {
             zipOutputStream.setLevel(Deflater.NO_COMPRESSION);
 
             for (Map.Entry<String, InputStream> entry : resourcesToPack.entrySet()) {
@@ -82,13 +83,12 @@ public class ExportManager {
                 }
                 zipOutputStream.closeEntry();
             }
+        } catch (IOException e) {
+            log.error("Unable to create an archive", e);
         }
-        responseOutputStream.flush();
-        responseOutputStream.close();
-        facesContext.responseComplete();
     }
 
-    private Map<String, InputStream> packResources(final String groupTitle, final List<Resource> resources) throws IOException {
+    private static Map<String, InputStream> packResources(final String groupTitle, final List<Resource> resources) {
         List<Resource> learnwebResources = new ArrayList<>();
         List<Resource> webResources = new ArrayList<>();
 
@@ -110,25 +110,19 @@ public class ExportManager {
         return filesToPack;
     }
 
-    private Map<String, InputStream> getLearnwebResources(List<Resource> resources, String groupRootFolder) throws IOException {
+    /**
+     * TODO: should try other files if MAIN file doesn't exists
+     */
+    private static Map<String, InputStream> getLearnwebResources(List<Resource> resources, String groupRootFolder) {
         Map<String, InputStream> files = new HashMap<>();
 
         for (Resource resource : resources) {
-            Folder folder = learnweb.getDaoProvider().getFolderDao().findByIdOrElseThrow(resource.getFolderId());
+            Folder folder = resource.getFolder();
             String folderName = createFolderPath(folder, groupRootFolder);
 
             File mainFile = resource.getFile(FileType.MAIN);
-
-            // TODO @astappiev: remove when all files copied from originals
-            if (mainFile == null && resource.getOriginalResourceId() != 0) {
-                Optional<Resource> originalResource = learnweb.getDaoProvider().getResourceDao().findById(resource.getOriginalResourceId());
-                if (originalResource.isPresent()) {
-                    mainFile = originalResource.get().getFile(FileType.MAIN);
-                }
-            }
-
             if (mainFile != null) {
-                files.put(folderName + mainFile.getName(), new FileInputStream(mainFile.getActualFile()));
+                files.put(folderName + mainFile.getName(), mainFile.getInputStream());
             } else {
                 log.error("Can't get main file for resource {}", resource.getId());
             }
@@ -137,7 +131,7 @@ public class ExportManager {
         return files;
     }
 
-    private String createFolderPath(Folder folder, String groupRootFolder) {
+    private static String createFolderPath(Folder folder, String groupRootFolder) {
         StringBuilder folderPath = new StringBuilder();
 
         Folder currentFolder = folder;
@@ -157,7 +151,7 @@ public class ExportManager {
         return folderPath.toString();
     }
 
-    private InputStream getWebResourcesAsHtml(List<Resource> webResources) {
+    private static InputStream getWebResourcesAsHtml(List<Resource> webResources) {
         Document indexFile = new Document(DocumentType.HTMLStrict);
         indexFile.head.appendChild(new Meta("text/html;charset=UTF-8"));
 
