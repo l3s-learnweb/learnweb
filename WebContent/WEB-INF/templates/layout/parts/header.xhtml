@@ -26,7 +26,7 @@
                 <p:outputLabel for="@next" styleClass="d-none" value="#{msg.searchLabel}"/>
                 <p:inputText id="searchfield" placeholder="#{msg.searchLabel}" type="search"/>
                 <p:commandButton title="#{msg.searchLabel}" icon="fas fa-search"
-                                 onclick="window.location.href = 'search.jsf?query=' + $('#searchfield').val();return false;"/>
+                                 onclick="window.location.href = 'search.jsf?query=' + $('#navbar_form\\:searchfield').val();return false;"/>
             </div>
 
             <h:panelGroup layout="block" styleClass="d-flex px-2 dd-xxl-none" rendered="#{config.development}">
