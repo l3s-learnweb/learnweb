@@ -59,7 +59,7 @@ $(() => {
 
     // Initializing toggle only on the elements which has a data-title or data-content
     if (selectedElement.attr('data-content')) {
-      selectedElement.attr('data-content', selectedElement.attr('data-content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>'));
+      selectedElement.attr('data-content', selectedElement.attr('data-content').replace(/&lt;br\/&gt;/g, '<br/>'));
       selectedElement.attr('data-bs-toggle', 'popover');
     } else if (selectedElement.attr('data-title')) {
       selectedElement.attr('data-bs-toggle', 'tooltip');
@@ -288,7 +288,7 @@ function setSynonyms(xhr, status, args) {
   synonyms += args.synonyms;
   const selectedNode = $(`span#${selectedNodeId}`);
   if (synonyms.toLowerCase() !== 'multiple') {
-    selectedNode.attr('data-content', synonyms.replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>'));
+    selectedNode.attr('data-content', synonyms.replace(/&lt;br\/&gt;/g, '<br/>'));
     selectedNode.attr('data-bs-toggle', 'popover');
 
     saveTranscriptAction(selectedNode.text(), '', 'display definition');

@@ -107,7 +107,7 @@ function attachEditor(elementId, editorType, configValues) {
         document.title = title + (event.data ? '*' : '');
       },
       onRequestEditRights() {
-        window.location.href = window.location.href.replace(RegExp('action=view&?', 'i'), '');
+        window.location.href = window.location.href.replace(/action=view&?/i, '');
       },
       onError(err) {
         console.error(err);
