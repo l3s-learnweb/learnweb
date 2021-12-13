@@ -55,11 +55,12 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         Collections.sort(courses);
     }
 
-    public void onCreateCourse() {
-        createCourse();
+    public String onCreateCourse() {
+        Course course = createCourse();
+        return "admin/course.jsf?course_id=" + course.getId();
     }
 
-    public void onCreateCourseAndGroup() {
+    public String onCreateCourseAndGroup() {
         User user = getUser();
         Course course = createCourse();
 
@@ -74,6 +75,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         // log and show notification
         log(Action.group_creating, group.getId(), group.getId());
         addMessage(FacesMessage.SEVERITY_INFO, "A new group with the name of the course was created.");
+        return "admin/course.jsf?course_id=" + course.getId();
     }
 
     private Course createCourse() {
