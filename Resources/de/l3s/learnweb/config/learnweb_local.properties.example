@@ -7,10 +7,10 @@ file_manager_folder=/mnt/learnweb/dev_files
 
 # If you are using SSH port forwarding, use the following values
 #solr_server_url=http://localhost:8982/solr/learnweb_dev
-#mysql_url=jdbc:mysql://localhost:3307/learnweb_dev
+#mysql_url=jdbc:mariadb://localhost:3307/learnweb_dev
 
 # If you want to use local database, you need to override user and password
-#mysql_url=jdbc:mysql://localhost:3306/learnweb
+#mysql_url=jdbc:mariadb://localhost:3306/learnweb
 #mysql_user=root
 #mysql_password=
 

@@ -20,7 +20,7 @@
         <maven.dependency.myfaces.version>3.0.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.7.0</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.25.0</maven.dependency.jdbi3.version>
-        <maven.dependency.log4j.version>2.15.0</maven.dependency.log4j.version>
+        <maven.dependency.log4j.version>2.16.0</maven.dependency.log4j.version>
         <maven.dependency.junit.version>5.8.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>4.1.0</maven.dependency.mockito.version>
 
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>7.0.1.Final</version>
+            <version>7.0.2.Final</version>
         </dependency>
         <!-- Mail API -->
         <dependency>
@@ -207,13 +207,13 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>8.2.1</version>
+            <version>8.0.5</version>
         </dependency>
         <!-- Solr client (the library has 10 MB of dependencies :/) -->
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>8.10.1</version>
+            <version>8.11.0</version>
         </dependency>
         <!-- URL rewrite -->
         <dependency>
@@ -409,7 +409,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.4.2</version>
+                <version>4.5.0.0</version>
                 <configuration>
                     <excludeFilterFile>.mvn/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -417,7 +417,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.5.1</version>
+                        <version>4.5.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
