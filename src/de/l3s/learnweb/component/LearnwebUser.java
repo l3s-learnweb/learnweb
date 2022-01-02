@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import jakarta.faces.component.FacesComponent;
-import jakarta.faces.component.UIComponent;
 import jakarta.faces.component.UIComponentBase;
 import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
@@ -65,33 +64,13 @@ public class LearnwebUser extends UIComponentBase {
         ResponseWriter writer = context.getResponseWriter();
         if (user != null && !user.isDeleted()) {
             if (this.getChildCount() > 0) {
-                renderChildren(context, this);
+                if (this.getRendersChildren()) {
+                    this.encodeChildren(context);
+                }
             } else {
                 writer.write(user.getUsername());
             }
             writer.endElement("a");
         }
-    }
-
-    protected void renderChildren(FacesContext context, UIComponent component) throws IOException {
-        for (int i = 0; i < component.getChildCount(); i++) {
-            UIComponent child = component.getChildren().get(i);
-            renderChild(context, child);
-        }
-    }
-
-    protected void renderChild(FacesContext context, UIComponent child) throws IOException {
-        if (!child.isRendered()) {
-            return;
-        }
-
-        child.encodeBegin(context);
-
-        if (child.getRendersChildren()) {
-            child.encodeChildren(context);
-        } else {
-            renderChildren(context, child);
-        }
-        child.encodeEnd(context);
     }
 }
