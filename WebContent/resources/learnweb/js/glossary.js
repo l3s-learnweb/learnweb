@@ -1,5 +1,5 @@
 function groupRow() {
-  const columnsToMerge = 5; // number of first columns to merge
+  const columnsToMerge = 6; // number of first columns to merge
   const glossaryEntryColumn = 2; // index of column that contains the glossaryEntryId
 
   const rows = $('#glossary_table').find('tr');
@@ -7,6 +7,11 @@ function groupRow() {
   let rowGroupCount = 1;
   let rowGroupGlossaryEntryId = null;
   let groupCounter = 1;
+
+  // if no search result
+  if (rows.length === 2) {
+    return;
+  }
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows.eq(i);

@@ -3,11 +3,13 @@ package de.l3s.learnweb.resource.glossary;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.l3s.learnweb.resource.File;
 import de.l3s.util.StringHelper;
 
 public class GlossaryTableView implements Serializable {
@@ -57,6 +59,10 @@ public class GlossaryTableView implements Serializable {
 
     public String getDescription() {
         return entry.getDescription();
+    }
+
+    public List<File> getPictures() {
+        return entry.getPictures();
     }
 
     public String getTerm() {

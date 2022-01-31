@@ -83,6 +83,20 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
         };
     }
 
+    /**
+     * Convenience function that calls the setter of a given field.
+     */
+    public void set(String fieldName, String toSet) {
+        switch (fieldName) {
+            case "term" -> setTerm(toSet);
+            case "pronounciation" -> setPronounciation(toSet);
+            case "acronym" -> setAcronym(toSet);
+            case "source" -> setSource(toSet);
+            case "phraseology" -> setPhraseology(toSet);
+            default -> throw new IllegalArgumentException(fieldName + " is not implemented");
+        }
+    }
+
     public String getTerm() {
         return term;
     }

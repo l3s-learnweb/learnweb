@@ -17,6 +17,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.event.AjaxBehaviorEvent;
 import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.io.IOUtils;
@@ -34,6 +35,7 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.file.UploadedFile;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
@@ -43,10 +45,13 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.resource.glossary.parser.GlossaryParserResponse;
 import de.l3s.learnweb.resource.glossary.parser.GlossaryXLSParser;
+import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Image;
@@ -57,6 +62,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 7104637880221636543L;
     private static final Logger log = LogManager.getLogger(GlossaryBean.class);
+
+    @Inject
+    private FileDao fileDao;
 
     private static final Map<Locale, String> PRONOUNCIATION_VOICES = Map.ofEntries(
         Map.entry(new Locale.Builder().setLanguage("sq").build(), "Albanian Male"),
@@ -459,6 +467,23 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     public void rotatePDF(Object document) {
         Document doc = (Document) document;
         doc.setPageSize(PageSize.A4.rotate());
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
+            log.debug("Handle File upload");
+            UploadedFile uploadedFile = event.getFile();
+
+            log.debug("Getting the fileInfo from uploaded file...");
+            FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
+
+            log.debug("Saving the file...");
+            File file = new File(File.FileType.MAIN, info.getFileName(), info.getMimeType());
+            fileDao.save(file, uploadedFile.getInputStream());
+            getFormEntry().setPictures(file);
+        } catch (IOException e) {
+            addErrorMessage(e);
+        }
     }
 
     public GlossaryResource getGlossaryResource() {

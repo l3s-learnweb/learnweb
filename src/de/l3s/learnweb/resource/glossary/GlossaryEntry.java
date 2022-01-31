@@ -3,19 +3,24 @@ package de.l3s.learnweb.resource.glossary;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
+import de.l3s.learnweb.resource.File;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
 public class GlossaryEntry implements HasId, Deletable, Serializable {
     @Serial
     private static final long serialVersionUID = 1251808024273639912L;
+    private static final Logger log = LogManager.getLogger(GlossaryEntry.class);
 
     private int id;
     private int originalEntryId; // When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
@@ -37,6 +42,7 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     private boolean imported; // This value is `true` when the entry has been imported from a file.
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
+    private final List<File> pictures = new ArrayList<>();
 
     /**
      * do nothing constructor.
@@ -251,6 +257,15 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         this.createdAt = createdAt;
     }
 
+    public void setPictures(final File picture) {
+        pictures.add(picture);
+    }
+
+    public List<File> getPictures() {
+        log.debug(pictures);
+        return pictures;
+    }
+
     /**
      * Convenience function that calls the getter of a given field.
      */
@@ -263,5 +278,19 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
             case "fulltext" -> getFulltext();
             default -> throw new IllegalArgumentException(fieldName + " is not implemented");
         };
+    }
+
+    /**
+     * Convenience function that calls the setter of a given field.
+     */
+    public void set(String fieldName, String toSet) {
+        switch (fieldName) {
+            case "description" -> setDescription(toSet);
+            case "topicOne" -> setTopicOne(toSet);
+            case "topicTwo" -> setTopicTwo(toSet);
+            case "topicThree" -> setTopicThree(toSet);
+            case "fulltext" -> setFulltext(toSet);
+            default -> throw new IllegalArgumentException(fieldName + " is not implemented");
+        }
     }
 }
