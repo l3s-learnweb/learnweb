@@ -119,7 +119,7 @@
 </h:form>
 
 <p:dialog widgetVar="glossaryImportDialog" header="#{msg['Glossary.import_glossary']}"
-          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+          modal="true" resizable="false" draggable="false" closeOnEscape="true">
     <h:form id="import_form">
         <h:panelGroup styleClass="p-grid" layout="block" rendered="#{glossaryBean.importResponse == null}">
             <p:fileUpload mode="advanced" skinSimple="true" listener="#{glossaryBean.onImportXls}" styleClass="fileupload-minimal"
@@ -149,7 +149,7 @@
 </p:dialog>
 
 <p:dialog widgetVar="glossaryEditDialog" header="#{msg['Glossary.edit_glossary']}"
-          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+          modal="true" resizable="false" draggable="false" closeOnEscape="true">
     <h:form id="glossary_add" prependId="false">
         <p:panelGrid id="grid" styleClass="my-0 mb-3 mx-auto" columns="3">
             <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['Glossary.topic']} 1"/>

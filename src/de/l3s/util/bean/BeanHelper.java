@@ -26,18 +26,18 @@ import de.l3s.learnweb.user.UserDao;
 public final class BeanHelper {
     private static final Logger log = LogManager.getLogger(BeanHelper.class);
 
-    public static TreeNode createGroupsUsersTree(final User user, final Locale locale, final boolean includeUsers) {
-        TreeNode root = new CheckboxTreeNode(LanguageBundle.getLocaleMessage(locale, "msg.courses"), null);
+    public static TreeNode<String> createGroupsUsersTree(final User user, final Locale locale, final boolean includeUsers) {
+        TreeNode<String> root = new CheckboxTreeNode<>(LanguageBundle.getLocaleMessage(locale, "msg.courses"), null);
 
         for (Course course : user.getCourses()) {
-            TreeNode courseNode = new CheckboxTreeNode("course", course, root);
+            TreeNode<Course> courseNode = new CheckboxTreeNode<>("course", course, root);
 
             for (Group group : course.getGroups()) {
-                TreeNode groupNode = new CheckboxTreeNode("group", group, courseNode);
+                TreeNode<Group> groupNode = new CheckboxTreeNode<>("group", group, courseNode);
 
                 if (includeUsers) {
                     for (User member : group.getMembers()) {
-                        new CheckboxTreeNode("user", member, groupNode); // create userNode
+                        new CheckboxTreeNode<>("user", member, groupNode); // create userNode
                     }
                 }
             }

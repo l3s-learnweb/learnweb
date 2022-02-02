@@ -131,7 +131,7 @@
     </h:form>
 
     <p:dialog id="post_dialog" widgetVar="postDialog" header="#{forumTopicBean.replyDialog ? msg['ForumIndex.reply'] : msg['edit']}"
-              modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
+              modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true">
         <h:form id="post_form">
             <ui:fragment rendered="#{forumTopicBean.group.restrictionForumCategoryEnabled}">
                 <div class="form-group">

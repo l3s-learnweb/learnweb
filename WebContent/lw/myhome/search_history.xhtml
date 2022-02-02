@@ -131,7 +131,7 @@
 						</h:form>
 					</div>
 
-					<p:dialog header="#{msg.options}" widgetVar="copyResourceDialog" responsive="true" draggable="true" resizable="false" id="copy_resource_dialog" modal="true">
+					<p:dialog header="#{msg.options}" widgetVar="copyResourceDialog" draggable="true" resizable="false" id="copy_resource_dialog" modal="true">
 						<h:form rendered="#{userBean.loggedIn and searchBean.selectedResource ne null}">
 							<div class="fg-grid mb-3">
 								<ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">

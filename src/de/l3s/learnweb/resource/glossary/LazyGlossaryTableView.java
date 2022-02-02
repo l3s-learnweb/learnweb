@@ -35,25 +35,12 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
 
     public LazyGlossaryTableView(GlossaryResource glossaryResource) {
         this.glossaryResource = glossaryResource;
-        setRowCount(glossaryResource.getEntries().size() * PAGE_SIZE_MULTIPLICATOR);
-    }
-
-    /*
-    @Override
-    public GlossaryTableView getRowData(String rowKey) {
-        for(GlossaryTableView GlossaryTableView : datasource) {
-            if(Integer.valueOf(GlossaryTableView.getTermId()).equals(rowKey)) {
-                return GlossaryTableView;
-            }
-        }
-
-        return null;
     }
 
     @Override
-    public Object getRowKey(GlossaryTableView GlossaryTableView) {
-        return Integer.valueOf(GlossaryTableView.getTermId());
-    }*/
+    public int count(final Map<String, FilterMeta> map) {
+        return 0;
+    }
 
     @Override
     public List<GlossaryTableView> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {

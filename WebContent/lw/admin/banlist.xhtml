@@ -103,7 +103,7 @@
     <p:panel header="#{msg.suspicious_activity}" styleClass="mt-3" rendered="#{true}">
         <p>#{msg.suspicious_activity_message}</p>
 
-        <p:dialog header="Ban" widgetVar="banDialog" modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+        <p:dialog header="Ban" widgetVar="banDialog" modal="true" resizable="false" draggable="false" closeOnEscape="true">
             <h:form class="banform" id="banDialogForm">
                 <div class="form-group">
                     <p:outputLabel for="@next" value="#{msg.ip_addr}:"/>

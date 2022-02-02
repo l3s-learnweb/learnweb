@@ -120,7 +120,7 @@ final class GlossaryDashboardChartsFactory {
         dataSet.setFill(false);
         dataSet.setBorderColor("rgb(75, 192, 192)");
         dataSet.setLabel("interactions");
-        dataSet.setLineTension(0.1);
+        dataSet.setTension(0.1);
 
         for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
             String dateKey = DATE_FORMAT.format(date);

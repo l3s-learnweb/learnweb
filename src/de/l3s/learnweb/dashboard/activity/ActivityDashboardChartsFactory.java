@@ -32,7 +32,7 @@ public final class ActivityDashboardChartsFactory {
             dataSet.setBorderColor(colors.get(0));
             colors.remove(0);
             dataSet.setLabel(activityData.getName());
-            dataSet.setLineTension(0.1);
+            dataSet.setTension(0.1);
 
             for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
                 String dateKey = DATE_FORMAT.format(date);

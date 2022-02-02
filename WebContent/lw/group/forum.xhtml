@@ -90,7 +90,7 @@
 	</h:form>
 
 	<p:dialog header="#{msg['ForumIndex.new_topic']}" widgetVar="newTopicDialog" rendered="${forumBean.group.isMember(userBean.user)}"
-			  modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+			  modal="true" resizable="false" draggable="false" closeOnEscape="true">
 		<h:form id="new_topic_form">
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg['ForumIndex.topic']}:"/>
