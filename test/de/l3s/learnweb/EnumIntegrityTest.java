@@ -100,10 +100,10 @@ class EnumIntegrityTest {
         assertArrayEquals(Arrays.stream(SearchMode.values()).map(Enum::name).toArray(), getDatabaseColumnEnumValues("learnweb_large.sl_query", "mode"));
     }
 
-    private String getDatabaseColumnType(String tableName, final String columnName) throws SQLException {
-        // the default database name is the ones provided in database url, so we need to retrieve it
-        String catalog = learnwebExt.getHandle().getConnection().getCatalog(); // random UUID for H2, database name for MySQL
-        String schema = learnwebExt.getHandle().getConnection().getSchema(); // `PUBLIC` for H2, null for MySQL
+    private String[] getDatabaseColumnEnumValues(String tableName, final String columnName) throws SQLException {
+        String databaseType = learnwebExt.getHandle().getConnection().getMetaData().getDatabaseProductName();
+        String catalog = learnwebExt.getHandle().getConnection().getCatalog(); // random UUID for H2, default database name provided in database url for MariaDB
+        String schema = learnwebExt.getHandle().getConnection().getSchema(); // `PUBLIC` for H2, null for MariaDB
 
         if (tableName.contains(".")) {
             String[] parts = tableName.split("\\.");
@@ -111,14 +111,17 @@ class EnumIntegrityTest {
             tableName = parts[1];
         }
 
-        // IDK why, but mysql requires that TABLE_NAME values was lowercase and H2 requires uppercase, so this LOWER is necessary here!
-        return learnwebExt.getHandle().select("SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE LOWER(TABLE_SCHEMA) = LOWER(?) AND "
-            + "LOWER(TABLE_NAME) = LOWER(?) AND LOWER(COLUMN_NAME) = LOWER(?)", ObjectUtils.firstNonNull(schema, catalog), tableName, columnName).mapTo(String.class).one();
-    }
+        if ("H2".equals(databaseType)) {
+            return learnwebExt.getHandle().select("SELECT v.value_name FROM information_schema.enum_values v INNER JOIN information_schema.columns c "
+                    + "ON v.object_schema = c.table_schema AND v.object_name = c.table_name AND v.enum_identifier = c.dtd_identifier "
+                    + "WHERE object_schema = ? AND object_name = ? AND column_name = ?", ObjectUtils.firstNonNull(schema, catalog), tableName, columnName)
+                .mapTo(String.class).list().toArray(new String[0]);
+        } else {
+            String columnType = learnwebExt.getHandle().select("SELECT column_type FROM information_schema.columns WHERE table_schema = ? AND "
+                + "table_name = ? AND column_name = ?", ObjectUtils.firstNonNull(schema, catalog), tableName, columnName).mapTo(String.class).one();
 
-    private String[] getDatabaseColumnEnumValues(final String tableName, final String columnName) throws SQLException {
-        final String columnType = getDatabaseColumnType(tableName, columnName);
-        String types = columnType.substring(columnType.indexOf('(') + 1, columnType.indexOf(')')).replace("'", "");
-        return SPLIT_PATTERN.split(types);
+            String types = columnType.substring(columnType.indexOf('(') + 1, columnType.indexOf(')')).replace("'", "");
+            return SPLIT_PATTERN.split(types);
+        }
     }
 }

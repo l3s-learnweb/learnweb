@@ -27,7 +27,7 @@ public interface BanDao extends SqlObject, Serializable {
     @SqlUpdate("DELETE FROM lw_bans WHERE addr = ?")
     void delete(String addr);
 
-    @SqlUpdate("DELETE FROM lw_bans WHERE expires <= CURDATE() - INTERVAL 7 DAY")
+    @SqlUpdate("DELETE FROM lw_bans WHERE expires <= TIMESTAMPADD(DAY,-7, CURRENT_DATE)")
     void deleteOutdated();
 
     default void save(Ban ban) {

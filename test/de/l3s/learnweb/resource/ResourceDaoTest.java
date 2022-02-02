@@ -136,7 +136,7 @@ class ResourceDaoTest {
     void findResourceRating() {
         Optional<Integer> rating = resourceDao.findResourceRating(4, 2);
         assertTrue(rating.isPresent());
-        assertEquals(rating.get(), 3);
+        assertEquals(3, rating.get());
     }
 
     @Test
@@ -148,7 +148,7 @@ class ResourceDaoTest {
 
         Optional<Integer> newRating = resourceDao.findResourceRating(4, 1);
         assertTrue(newRating.isPresent());
-        assertEquals(newRating.get(), 5);
+        assertEquals(5, newRating.get());
     }
 
     @Test

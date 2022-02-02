@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `lw_file` (
 
 CREATE TABLE IF NOT EXISTS `lw_forum_post` (
     `post_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `topic_id` INT(10) UNSIGNED NOT NULL,
     `user_id` INT(10) UNSIGNED DEFAULT NULL,
     `text` TEXT NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `lw_forum_topic` (
     `topic_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `group_id` INT(10) UNSIGNED NOT NULL,
     `user_id` INT(10) UNSIGNED DEFAULT NULL,
-    `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `title` VARCHAR(100) NOT NULL DEFAULT '',
     `views` INT(11) DEFAULT 0,
     `replies` INT(11) DEFAULT 0,
@@ -94,13 +94,13 @@ CREATE TABLE IF NOT EXISTS `lw_glossary_entry` (
     `original_entry_id` INT(10) UNSIGNED DEFAULT NULL,
     `edit_user_id` INT(10) UNSIGNED DEFAULT NULL,
     `user_id` INT(10) UNSIGNED DEFAULT NULL,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `topic_one` VARCHAR(100) DEFAULT NULL,
     `topic_two` VARCHAR(100) DEFAULT NULL,
     `topic_three` VARCHAR(100) DEFAULT NULL,
     `description` VARCHAR(3000) DEFAULT NULL,
     `description_pasted` TINYINT(4) NOT NULL DEFAULT 0,
-    `imported` TINYINT(1) NOT NULL DEFAULT 0,
+    `imported` BOOLEAN NOT NULL DEFAULT 0,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_glossary_entry_resource_id` (`resource_id`, `deleted`)
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `lw_glossary_term` (
     `original_term_id` INT(10) UNSIGNED DEFAULT NULL,
     `edit_user_id` INT(10) UNSIGNED DEFAULT NULL,
     `user_id` INT(10) UNSIGNED DEFAULT NULL,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `term` VARCHAR(500) DEFAULT NULL,
     `term_pasted` TINYINT(4) NOT NULL DEFAULT 0,
     `pronounciation` VARCHAR(500) DEFAULT NULL,
@@ -137,11 +137,11 @@ CREATE TABLE IF NOT EXISTS `lw_group` (
     `group_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `course_id` INT(10) UNSIGNED NOT NULL,
     `leader_id` INT(10) UNSIGNED NOT NULL,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `title` VARCHAR(150) NOT NULL,
     `description` MEDIUMTEXT DEFAULT NULL,
     `max_member_count` SMALLINT(6) NOT NULL DEFAULT -1 COMMENT 'number of allowed members; -1 = unlimitted',
-    `restriction_forum_category_required` TINYINT(1) NOT NULL DEFAULT 0,
+    `restriction_forum_category_required` BOOLEAN NOT NULL DEFAULT 0,
     `policy_add` ENUM ('GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'GROUP_MEMBERS',
     `policy_annotate` ENUM ('ALL_LEARNWEB_USERS','COURSE_MEMBERS','GROUP_MEMBERS','GROUP_LEADER') NOT NULL DEFAULT 'ALL_LEARNWEB_USERS',
     `policy_edit` ENUM ('GROUP_MEMBERS','GROUP_LEADER_AND_FILE_OWNER','GROUP_LEADER') NOT NULL DEFAULT 'GROUP_MEMBERS',
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `lw_group_folder` (
     `group_id` INT(10) UNSIGNED DEFAULT NULL,
     `parent_folder_id` INT(10) UNSIGNED DEFAULT NULL,
     `user_id` INT(10) UNSIGNED DEFAULT NULL,
-    `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `title` VARCHAR(100) NOT NULL,
     `description` TEXT DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `lw_message` (
     `recipient_user_id` INT(10) UNSIGNED NOT NULL,
     `title` VARCHAR(2550) NOT NULL,
     `text` LONGTEXT NOT NULL,
-    `seen` TINYINT(1) NOT NULL DEFAULT 0,
+    `seen` BOOLEAN NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     KEY `lw_message_recipient_user_id` (`recipient_user_id`, `seen`)
 );
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `lw_message` (
 CREATE TABLE IF NOT EXISTS `lw_news` (
     `news_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT(10) UNSIGNED NOT NULL,
-    `hidden` TINYINT(1) NOT NULL DEFAULT 0,
+    `hidden` BOOLEAN NOT NULL DEFAULT 0,
     `title` VARCHAR(500) NOT NULL,
     `text` VARCHAR(5000) DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP()
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `lw_news` (
 
 CREATE TABLE IF NOT EXISTS `lw_organisation` (
     `organisation_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `default` TINYINT(1) DEFAULT NULL,
+    `default` BOOLEAN DEFAULT NULL,
     `title` VARCHAR(60) NOT NULL,
     `logo` LONGTEXT DEFAULT NULL,
     `welcome_page` VARCHAR(255) DEFAULT NULL,
@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `lw_requests` ( -- TODO: flush data on destroy
 
 CREATE TABLE IF NOT EXISTS `lw_resource` (
     `resource_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `group_id` INT(10) UNSIGNED DEFAULT NULL,
     `folder_id` INT(10) UNSIGNED DEFAULT NULL,
     `owner_user_id` INT(10) UNSIGNED NOT NULL,
@@ -251,7 +251,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource` (
     `original_resource_id` INT(10) UNSIGNED DEFAULT NULL,
     `machine_description` LONGTEXT DEFAULT NULL,
     `transcript` LONGTEXT DEFAULT NULL,
-    `read_only_transcript` TINYINT(1) NOT NULL DEFAULT 0,
+    `read_only_transcript` BOOLEAN NOT NULL DEFAULT 0,
     `online_status` ENUM ('UNKNOWN','ONLINE','OFFLINE','PROCESSING') NOT NULL DEFAULT 'UNKNOWN',
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
@@ -312,7 +312,7 @@ CREATE TABLE IF NOT EXISTS `lw_resource_thumb` (
 
 CREATE TABLE IF NOT EXISTS `lw_submission` (
     `submission_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `course_id` INT(10) UNSIGNED NOT NULL,
     `title` VARCHAR(100) DEFAULT NULL,
     `description` VARCHAR(1000) DEFAULT NULL,
@@ -333,7 +333,7 @@ CREATE TABLE IF NOT EXISTS `lw_submission_resource` (
 CREATE TABLE IF NOT EXISTS `lw_submission_status` (
     `submission_id` INT(10) UNSIGNED NOT NULL,
     `user_id` INT(10) UNSIGNED NOT NULL,
-    `submitted` TINYINT(1) NOT NULL DEFAULT 1,
+    `submitted` BOOLEAN NOT NULL DEFAULT 1,
     `survey_resource_id` INT(10) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (`submission_id`, `user_id`)
 );
@@ -344,8 +344,8 @@ CREATE TABLE IF NOT EXISTS `lw_survey` (
     `title` VARCHAR(100) NOT NULL,
     `description` VARCHAR(1000) NOT NULL,
     `user_id` INT(10) UNSIGNED NOT NULL COMMENT 'the user who created this template',
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
-    `public_template` TINYINT(1) NOT NULL DEFAULT 0
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
+    `public_template` BOOLEAN NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS `lw_survey_answer` (
@@ -358,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `lw_survey_answer` (
 
 CREATE TABLE IF NOT EXISTS `lw_survey_question` (
     `question_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `survey_id` INT(10) UNSIGNED NOT NULL,
     `order` SMALLINT(5) UNSIGNED DEFAULT NULL,
     `question` VARCHAR(1000) NOT NULL,
@@ -367,12 +367,12 @@ CREATE TABLE IF NOT EXISTS `lw_survey_question` (
     `extra` VARCHAR(1000) DEFAULT NULL,
     `option` VARCHAR(100) DEFAULT NULL COMMENT 'optional value, depends on question_type',
     `info` VARCHAR(1000) DEFAULT NULL COMMENT 'optional description that can be shown as tooltip',
-    `required` TINYINT(1) NOT NULL DEFAULT 0
+    `required` BOOLEAN NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS `lw_survey_question_option` (
     `answer_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `question_id` INT(10) UNSIGNED NOT NULL,
     `value` VARCHAR(1000) DEFAULT NULL
 );
@@ -382,14 +382,14 @@ CREATE TABLE IF NOT EXISTS `lw_survey_resource` (
     `survey_id` INT(10) UNSIGNED NOT NULL,
     `open_date` TIMESTAMP NULL DEFAULT NULL,
     `close_date` TIMESTAMP NULL DEFAULT NULL,
-    `editable` TINYINT(1) NOT NULL DEFAULT 0,
+    `editable` BOOLEAN NOT NULL DEFAULT 0,
     KEY `lw_survey_resource_survey_id` (`survey_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `lw_survey_resource_user` (
     `resource_id` INT(10) UNSIGNED NOT NULL,
     `user_id` INT(10) UNSIGNED NOT NULL,
-    `submitted` TINYINT(1) NOT NULL,
+    `submitted` BOOLEAN NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`resource_id`, `user_id`)
 ) COMMENT = 'Contains submission status for a particular user';
@@ -429,12 +429,12 @@ CREATE TABLE IF NOT EXISTS `lw_transcript_summary` (
 CREATE TABLE IF NOT EXISTS `lw_user` (
     `user_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `organisation_id` INT(10) UNSIGNED NOT NULL,
-    `deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `deleted` BOOLEAN NOT NULL DEFAULT 0,
     `username` VARCHAR(50) NOT NULL,
     `password` VARCHAR(512) DEFAULT NULL,
     `hashing` ENUM ('EMPTY','MD5','PBKDF2') NOT NULL DEFAULT 'MD5',
     `email` VARCHAR(250) DEFAULT NULL,
-    `email_confirmed` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1,
+    `email_confirmed` BOOLEAN NOT NULL DEFAULT 1,
     `image_file_id` INT(10) UNSIGNED DEFAULT NULL,
     `fullname` VARCHAR(105) DEFAULT NULL,
     `gender` TINYINT(1) NOT NULL DEFAULT 0,
@@ -445,9 +445,9 @@ CREATE TABLE IF NOT EXISTS `lw_user` (
     `credits` VARCHAR(255) DEFAULT NULL,
     `affiliation` VARCHAR(105) DEFAULT NULL,
     `student_identifier` VARCHAR(50) DEFAULT NULL,
-    `is_admin` TINYINT(1) NOT NULL DEFAULT 0,
-    `is_moderator` TINYINT(1) NOT NULL DEFAULT 0,
-    `accept_terms_and_conditions` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_admin` BOOLEAN NOT NULL DEFAULT 0,
+    `is_moderator` BOOLEAN NOT NULL DEFAULT 0,
+    `accept_terms_and_conditions` BOOLEAN NOT NULL DEFAULT 0,
     `preferred_notification_frequency` ENUM ('NEVER','DAILY','WEEKLY','MONTHLY') NOT NULL DEFAULT 'NEVER',
     `time_zone` VARCHAR(100) DEFAULT 'Europe/Berlin',
     `language` VARCHAR(10) DEFAULT 'en-UK',

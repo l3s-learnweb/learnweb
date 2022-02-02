@@ -72,12 +72,12 @@ public interface LogDao extends SqlObject, Serializable {
     @ValueColumn("count")
     Map<Integer, Integer> countUsagePerAction(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
-    @SqlQuery("SELECT DATE(created_at) AS day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND created_at BETWEEN :start AND :end GROUP BY day")
+    @SqlQuery("SELECT DATE(created_at) AS `day`, COUNT(*) AS `count` FROM lw_user_log WHERE user_id IN(<userIds>) AND created_at BETWEEN :start AND :end GROUP BY `day`")
     @KeyColumn("day")
     @ValueColumn("count")
     Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
-    @SqlQuery("SELECT DATE(created_at) as day, COUNT(*) AS count FROM lw_user_log WHERE user_id IN(<userIds>) AND created_at BETWEEN :start AND :end AND action in (<actions>) GROUP BY day")
+    @SqlQuery("SELECT DATE(created_at) as `day`, COUNT(*) AS `count` FROM lw_user_log WHERE user_id IN(<userIds>) AND created_at BETWEEN :start AND :end AND action in (<actions>) GROUP BY `day`")
     @KeyColumn("day")
     @ValueColumn("count")
     Map<String, Integer> countActionsPerDay(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate, @Define("actions") String actions);
