@@ -31,11 +31,9 @@ import com.hp.gagawa.java.elements.Td;
 import com.hp.gagawa.java.elements.Thead;
 import com.hp.gagawa.java.elements.Tr;
 
-import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserBean;
 
 public final class ExportManager {
     private static final Logger log = LogManager.getLogger(ExportManager.class);
@@ -49,6 +47,18 @@ public final class ExportManager {
 
     public static StreamedContent streamResources(final Group group) throws IOException {
         return streamResources(packResources(group.getTitle(), group.getResources()), group.getTitle());
+    }
+
+    private static StreamedContent streamResources(final Map<String, InputStream> resourcesToPack, final String fileSuffix) {
+        return DefaultStreamedContent.builder()
+            .name(getFileName(fileSuffix))
+            .contentType(EXPORT_CONTENT_TYPE)
+            .stream(() -> {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                createArchive(resourcesToPack, baos);
+                return new ByteArrayInputStream(baos.toByteArray());
+            })
+            .build();
     }
 
     public static StreamedContent streamSelectedResources(Group group, List<Folder> folders, List<Resource> list) throws IOException {
@@ -69,18 +79,6 @@ public final class ExportManager {
             }
         }
         return res;
-    }
-
-    private static StreamedContent streamResources(final Map<String, InputStream> resourcesToPack, final String fileSuffix) {
-        return DefaultStreamedContent.builder()
-            .name(getFileName(fileSuffix))
-            .contentType(EXPORT_CONTENT_TYPE)
-            .stream(() -> {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                createArchive(resourcesToPack, baos);
-                return new ByteArrayInputStream(baos.toByteArray());
-            })
-            .build();
     }
 
     /**
