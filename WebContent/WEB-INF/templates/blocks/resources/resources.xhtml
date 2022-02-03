@@ -214,6 +214,20 @@
     </h:panelGroup>
 </p:dialog>
 
+<p:dialog id="downloadConfirmDialog" header="#{msg.download}" widgetVar="downloadConfirm" appendTo="@(body)"
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
+    <h:outputText value="#{msg.download_confirm_dialog_content}"/>
+
+    <h:form styleClass="text-end" prependId="false">
+        <h:inputHidden id="selectedElements" value="#{groupResourcesBean.selectedElements}"/>
+        <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('downloadConfirm').hide(); return false;"/>
+        <p:commandButton value="#{msg.download}" ajax="false"
+                         onclick="document.getElementById('selectedElements').value= JSON.stringify(selected);PrimeFaces.monitorDownload(() => PF('ajax-status').trigger('start'), () => PF('ajax-status').trigger('complete'))">
+            <p:fileDownload value="#{groupResourcesBean.downloadResources()}"/>
+        </p:commandButton>
+    </h:form>
+</p:dialog>
+
 <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)"
           modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true">
 

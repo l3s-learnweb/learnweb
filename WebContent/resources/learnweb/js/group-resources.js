@@ -543,6 +543,13 @@ function doAction(action, extraAttr1, extraAttr2) {
         console.error('No resources selected.');
       }
       break;
+    case 'download':
+      if (selected.size() > 0) {
+        PF('downloadConfirm').show();
+      } else {
+        console.error('No resources selected.');
+      }
+      break;
     default:
       console.error('Unimplemented or unsupported action: ', action);
   }

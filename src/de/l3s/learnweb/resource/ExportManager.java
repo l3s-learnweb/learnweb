@@ -31,9 +31,11 @@ import com.hp.gagawa.java.elements.Td;
 import com.hp.gagawa.java.elements.Thead;
 import com.hp.gagawa.java.elements.Tr;
 
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserBean;
 
 public final class ExportManager {
     private static final Logger log = LogManager.getLogger(ExportManager.class);
@@ -46,7 +48,27 @@ public final class ExportManager {
     }
 
     public static StreamedContent streamResources(final Group group) throws IOException {
-        return streamResources(packResources(group.getTitle(), group.getResources()), "group_" + group.getId());
+        return streamResources(packResources(group.getTitle(), group.getResources()), group.getTitle());
+    }
+
+    public static StreamedContent streamSelectedResources(Group group, List<Folder> folders, List<Resource> list) throws IOException {
+        if (!folders.isEmpty()) {
+            list.addAll(getResources(folders));
+        }
+        return streamResources(packResources(group.getTitle(), list), group.getTitle());
+    }
+
+    private static List<Resource> getResources(List<Folder> folders) {
+        List<Resource> res = new ArrayList<>();
+        for (Folder folder : folders) {
+            if (!folder.getSubFolders().isEmpty()) {
+                res.addAll(getResources(folder.getSubFolders()));
+            }
+            if (!folder.getResources().isEmpty()) {
+                res.addAll(folder.getResources());
+            }
+        }
+        return res;
     }
 
     private static StreamedContent streamResources(final Map<String, InputStream> resourcesToPack, final String fileSuffix) {
@@ -95,6 +117,9 @@ public final class ExportManager {
         for (Resource resource : resources) {
             if (resource.isWebResource()) {
                 webResources.add(resource);
+                if (resource.getFile(FileType.THUMBNAIL_LARGE) != null) {
+                    learnwebResources.add(resource);
+                }
             } else {
                 learnwebResources.add(resource);
             }
@@ -120,6 +145,11 @@ public final class ExportManager {
             Folder folder = resource.getFolder();
             String folderName = createFolderPath(folder, groupRootFolder);
 
+            File webThumbnail = resource.getFile(FileType.THUMBNAIL_LARGE);
+            if (resource.isWebResource() && webThumbnail != null) {
+                files.put(folderName + webThumbnail.getName(), webThumbnail.getInputStream());
+            }
+
             File mainFile = resource.getFile(FileType.MAIN);
             if (mainFile != null) {
                 files.put(folderName + mainFile.getName(), mainFile.getInputStream());
@@ -127,7 +157,6 @@ public final class ExportManager {
                 log.error("Can't get main file for resource {}", resource.getId());
             }
         }
-
         return files;
     }
 
@@ -138,14 +167,6 @@ public final class ExportManager {
         while (null != currentFolder) {
             folderPath.insert(0, currentFolder.getTitle() + "/");
             currentFolder = currentFolder.getParentFolder();
-        }
-
-        if (groupRootFolder != null) {
-            folderPath.insert(0, groupRootFolder + "/");
-        } else if (folder != null && folder.getGroup() != null) {
-            folderPath.insert(0, folder.getGroup().getTitle() + "/");
-        } else {
-            folderPath.insert(0, "Private resources/");
         }
 
         return folderPath.toString();

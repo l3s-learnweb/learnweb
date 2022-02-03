@@ -22,6 +22,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 
 import com.google.gson.JsonObject;
@@ -33,6 +34,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
+import de.l3s.learnweb.resource.ExportManager;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
@@ -86,6 +88,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     private transient List<Folder> breadcrumbs;
     private transient TreeNode foldersTree;
     private TreeNode selectedTreeNode; // Selected node in the left Folder's panel
+    private String selectedElements;
 
     @Inject
     private GroupDao groupDao;
@@ -444,6 +447,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
     }
 
+    public StreamedContent downloadResources() throws IOException {
+        ResourceUpdateBatch items = new ResourceUpdateBatch(selectedElements, folderDao, resourceDao);
+        return ExportManager.streamSelectedResources(group, items.getFolders(), items.getResources());
+    }
+
     private void deleteResources(ResourceUpdateBatch items) {
         int skipped = 0;
 
@@ -562,5 +570,13 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             this.searchQuery = searchQuery;
             log(Action.group_resource_search, group.getId(), 0, searchQuery);
         }
+    }
+
+    public void setSelectedElements(final String selectedElements) {
+        this.selectedElements = selectedElements;
+    }
+
+    public String getSelectedElements() {
+        return selectedElements;
     }
 }
