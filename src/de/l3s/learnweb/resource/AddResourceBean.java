@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.faces.application.FacesMessage;
@@ -41,7 +40,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
     private int formStep = 1;
     private Resource resource;
-    private List<Resource> resources = new ArrayList<>();
     private Group targetGroup;
     private Folder targetFolder;
 
@@ -52,7 +50,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     private transient List<SelectItem> availableGlossaryLanguages;
 
     public void create(final String type, Group targetGroup, Folder targetFolder) {
-        this.resources.clear();
         this.formStep = 1;
 
         // Set target group and folder in beans
@@ -85,7 +82,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         };
 
         resource.setUser(getUser());
-        resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
     }
 
     public void handleFileUpload(FileUploadEvent event) {
@@ -99,19 +95,17 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             log.debug("Saving the file...");
             File file = new File(FileType.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, uploadedFile.getInputStream());
-            Resource resCopy = new Resource(Resource.StorageType.LEARNWEB, ResourceType.file, ResourceService.desktop);
-            resCopy.setUser(getUser());
-            resCopy.addFile(file);
+            Resource res = new Resource(resource);
+            res.addFile(file);
 
             log.debug("Extracting metadata from the file...");
-            getLearnweb().getResourceMetadataExtractor().processFileResource(resCopy, info);
+            getLearnweb().getResourceMetadataExtractor().processFileResource(res, info);
+            addResource(res);
 
             log.debug("Creating thumbnails from the file...");
-            Thread createThumbnailThreadCopy = new ResourcePreviewMaker.CreateThumbnailThread(resCopy);
-            createThumbnailThreadCopy.start();
-            createThumbnailThreadCopy.join(1000);
-
-            resources.add(resCopy);
+            Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(res);
+            createThumbnailThread.start();
+            createThumbnailThread.join(1000);
 
             log.debug("Next step");
             formStep++;
@@ -164,40 +158,39 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void addResource() {
-        for (Resource res : this.resources) {
-            if (res.isOfficeResource() && res.getService() != ResourceService.desktop) {
-                this.createDocument();
-            }
-
-            if (!targetGroup.canAddResources(getUser())) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
-                return;
-            }
-
-            if (res.getType() == ResourceType.survey && res instanceof SurveyResource) {
-                SurveyResource surveyResource = (SurveyResource) res;
-                surveyResource.getSurvey().setTitle(res.getTitle());
-                surveyResource.getSurvey().setDescription(res.getDescription());
-            }
-
-            log.debug("addResource; res={}", res);
-
-            res.setDeleted(false);
-
-            // add resource to a group if selected
-            res.setGroupId(targetGroup.getId());
-            res.setFolderId(HasId.getIdOrDefault(targetFolder, 0));
-            res.save();
-            getUser().setGuide(User.Guide.ADD_RESOURCE, true);
-
-            log(Action.adding_resource, res.getGroupId(), res.getId());
-
-            // create temporal thumbnails
-            res.postConstruct();
-
-            addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", res.getTitle());
+    public void createResource() {
+        if (resource.isOfficeResource() && resource.getService() != ResourceService.desktop) {
+            this.createDocument();
         }
+
+        if (resource.getType() == ResourceType.survey && resource instanceof SurveyResource surveyResource) {
+            surveyResource.getSurvey().setTitle(resource.getTitle());
+            surveyResource.getSurvey().setDescription(resource.getDescription());
+        }
+
+        addResource(resource);
+    }
+
+    private void addResource(Resource res) {
+        if (!targetGroup.canAddResources(getUser())) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
+            return;
+        }
+
+        log.debug("addResource; res={}", res);
+
+        // add resource to a group if selected
+        res.setGroupId(targetGroup.getId());
+        res.setFolderId(HasId.getIdOrDefault(targetFolder, 0));
+        res.save();
+        getUser().setGuide(User.Guide.ADD_RESOURCE, true);
+
+        log(Action.adding_resource, res.getGroupId(), res.getId());
+
+        // create temporal thumbnails
+        res.postConstruct();
+
+        addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", res.getTitle());
     }
 
     public String getCurrentPath() {

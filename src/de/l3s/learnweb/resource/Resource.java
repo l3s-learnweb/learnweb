@@ -372,7 +372,7 @@ public class Resource extends AbstractResource implements Serializable {
 
     @Override
     public void setTitle(String title) {
-        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(Jsoup.clean(title, Safelist.none()), 980) : "no title";
+        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(Jsoup.clean(title, Safelist.none()), 980) : null;
     }
 
     public String getDescription() {
@@ -380,7 +380,7 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     public void setDescription(String description) {
-        this.description = StringUtils.isNotEmpty(description) ? (StringHelper.clean(description, Safelist.simpleText())) : "";
+        this.description = StringUtils.isNotEmpty(description) ? StringHelper.clean(description, Safelist.simpleText()) : null;
     }
 
     public String getDescriptionHTML() {

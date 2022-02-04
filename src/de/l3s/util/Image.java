@@ -15,10 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -98,36 +96,7 @@ public class Image {
 
         BufferedImageOp resampler = new ResampleOp(width, newHeight, ResampleOp.FILTER_LANCZOS); // A good default filter, see class documentation for more info
         BufferedImage resizedImage = resampler.filter(img, null);
-
-        /*
-        MultiStepRescaleOp rescale = new MultiStepRescaleOp(width, nHeight);
-        rescale.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Soft);
-        BufferedImage resizedImage = rescale.filter(img, null);
-        */
-
         return new Image(resizedImage);
-    }
-
-    /**
-     * First crops the image to the aspect ratio given by the parameters height and width and then resize it.
-     */
-    public Image getCroppedAndResized(int maxWidth, int maxHeight) {
-        if (maxWidth > getWidth() && maxHeight > getHeight()) {
-            return new Image(img);
-        }
-
-        double ratio = (double) maxWidth / (double) maxHeight;
-
-        int newWidth = Math.min(getWidth(), 1050);
-        int newHeight = (int) Math.round(newWidth / ratio);
-
-        if (newHeight > getHeight()) { // the website is not very long
-            newHeight = getHeight();
-        }
-
-        int cutOff = (getWidth() - newWidth) / 2;
-
-        return crop(cutOff, 0, newWidth + cutOff, newHeight).getResized(maxWidth, maxHeight);
     }
 
     public Image getResized(int maxWidth, int maxHeight, boolean croppedToAspectRatio) {
@@ -157,48 +126,29 @@ public class Image {
             newHeight = maxHeight;
         }
 
-        /*
-        MultiStepRescaleOp rescale = new MultiStepRescaleOp(newWidth, newHeight);
-        rescale.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Soft);
-        BufferedImage resizedImage = rescale.filter(img, null);
-        */
-        BufferedImageOp resampler = new ResampleOp(newWidth, newHeight, ResampleOp.FILTER_LANCZOS); // A good default filter, see class documentation for more info
+        BufferedImageOp resampler = new ResampleOp(newWidth, newHeight, ResampleOp.FILTER_TRIANGLE);
         BufferedImage resizedImage = resampler.filter(img, null);
-
         return new Image(resizedImage);
     }
 
-    public Image getResized(int maxWidth, int maxHeight, int cropPixels) {
-        int x1 = 0;
-        int y1 = 0;
-        int x2 = getWidth();
-        int y2 = getHeight();
-
-        int cropPixelsX = cropPixels;
-        int cropPixelsY = cropPixels;
-
-        if (getWidth() > getHeight()) {
-            cropPixelsX = cropPixels * 2;
-        } else {
-            cropPixelsY = cropPixels * 2;
+    /**
+     * First crops the image to the aspect ratio given by the parameters height and width and then resize it.
+     */
+    public Image getCroppedAndResized(int maxWidth, int maxHeight) {
+        if (maxWidth > getWidth() && maxHeight > getHeight()) {
+            return new Image(img);
         }
 
-        // should there be any edge cropping?
-        if (cropPixels != 0) {
-            x1 += cropPixelsX;
-            x2 -= cropPixelsX;
-            y1 += cropPixelsY;
-            y2 -= cropPixelsY;
+        double ratio = (double) maxWidth / (double) maxHeight;
+        int newWidth = getWidth();
+        int newHeight = (int) Math.round(newWidth / ratio);
+
+        if (newHeight > getHeight()) { // the website is not very long
+            newHeight = getHeight();
         }
 
-        // generate the image cropped to a square
-        Image cropped = crop(x1, y1, x2, y2);
-
-        // now resize. we do crop first then resize to preserve detail
-        Image resized = cropped.getResized(maxWidth, maxHeight);
-        cropped.dispose();
-
-        return resized;
+        int cutOff = (getWidth() - newWidth) / 2;
+        return crop(cutOff, 0, newWidth + cutOff, newHeight).getResized(maxWidth, maxHeight);
     }
 
     /**
@@ -219,11 +169,10 @@ public class Image {
         int nNewWidth = x2 - x1;
         int nNewHeight = y2 - y1;
         BufferedImage cropped = new BufferedImage(nNewWidth, nNewHeight, type);
-        Graphics2D g = cropped.createGraphics();
 
+        Graphics2D g = cropped.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g.setComposite(AlphaComposite.Src);
-
         g.drawImage(img, 0, 0, nNewWidth, nNewHeight, x1, y1, x2, y2, null);
         g.dispose();
 
@@ -308,6 +257,9 @@ public class Image {
         os.close();
     }
 
+    /**
+     * Streams the image to the InputStream.
+     */
     public InputStream getInputStream() throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ImageIO.write(img, "png", os);
@@ -320,6 +272,20 @@ public class Image {
      */
     public void dispose() {
         img.flush();
+    }
+
+    /**
+     * Used mostly for testing purposes.
+     */
+    public static Image blank(int width, int height) {
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D graphic = bufferedImage.createGraphics();
+        graphic.setPaint(Color.lightGray);
+        graphic.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
+        graphic.dispose();
+
+        return new Image(bufferedImage);
     }
 
     /**
@@ -354,12 +320,5 @@ public class Image {
         graphic.dispose();
 
         return new Image(bufferedImage);
-    }
-
-    public static void main(String[] args) {
-        Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("SVG");
-        while (readers.hasNext()) {
-            log.debug("reader: {}", readers.next());
-        }
     }
 }
