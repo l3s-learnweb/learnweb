@@ -120,10 +120,10 @@ public interface FileDao extends SqlObject, Serializable {
         Optional<Integer> fileId = SqlHelper.handleSave(getHandle(), "lw_file", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        fileId.ifPresent(id -> {
-            file.setId(id);
+        if (fileId.isPresent() && fileId.get() != 0) {
+            file.setId(fileId.get());
             cache.put(file);
-        });
+        }
     }
 
     default void save(File file, InputStream inputStream) throws IOException {

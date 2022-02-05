@@ -86,7 +86,9 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
         Optional<Integer> entryId = SqlHelper.handleSave(getHandle(), "lw_glossary_entry", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        entryId.ifPresent(entry::setId);
+        if (entryId.isPresent() && entryId.get() != 0) {
+            entry.setId(entryId.get());
+        }
     }
 
     class GlossaryEntryMapper implements RowMapper<GlossaryEntry> {

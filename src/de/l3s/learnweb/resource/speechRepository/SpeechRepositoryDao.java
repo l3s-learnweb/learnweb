@@ -56,7 +56,9 @@ public interface SpeechRepositoryDao extends SqlObject, Serializable {
         Optional<Integer> speechId = SqlHelper.handleSave(getHandle(), "learnweb_large.speechrepository_video", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        speechId.ifPresent(speech::setId);
+        if (speechId.isPresent() && speechId.get() != 0) {
+            speech.setId(speechId.get());
+        }
     }
 
     class SpeechRepositoryEntityMapper implements RowMapper<SpeechRepositoryEntity> {

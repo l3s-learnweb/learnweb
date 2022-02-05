@@ -162,7 +162,9 @@ public interface TedTranscriptDao extends SqlObject, Serializable {
         Optional<Integer> videoId = SqlHelper.handleSave(getHandle(), "learnweb_large.ted_video", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        videoId.ifPresent(video::setTedId);
+        if (videoId.isPresent() && videoId.get() != 0) {
+            video.setTedId(videoId.get());
+        }
     }
 
     class TedVideoMapper implements RowMapper<TedVideo> {

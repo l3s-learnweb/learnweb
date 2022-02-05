@@ -102,7 +102,9 @@ public interface GlossaryTermDao extends SqlObject, Serializable {
         Optional<Integer> termId = SqlHelper.handleSave(getHandle(), "lw_glossary_term", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        termId.ifPresent(term::setId);
+        if (termId.isPresent() && termId.get() != 0) {
+            term.setId(termId.get());
+        }
     }
 
     class GlossaryTermMapper implements RowMapper<GlossaryTerm> {

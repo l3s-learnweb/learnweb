@@ -190,10 +190,10 @@ public interface UserDao extends SqlObject, Serializable {
         Optional<Integer> userId = SqlHelper.handleSave(getHandle(), "lw_user", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        userId.ifPresent(id -> {
-            user.setId(id);
+        if (userId.isPresent() && userId.get() != 0) {
+            user.setId(userId.get());
             cache.put(user);
-        });
+        }
     }
 
     default void anonymize(User user) {

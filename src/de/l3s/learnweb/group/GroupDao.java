@@ -194,10 +194,10 @@ public interface GroupDao extends SqlObject, Serializable {
         Optional<Integer> groupId = SqlHelper.handleSave(getHandle(), "lw_group", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        groupId.ifPresent(id -> {
-            group.setId(id);
+        if (groupId.isPresent() && groupId.get() != 0) {
+            group.setId(groupId.get());
             cache.put(group);
-        });
+        }
     }
 
     class GroupMapper implements RowMapper<Group> {

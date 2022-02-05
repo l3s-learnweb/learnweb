@@ -46,7 +46,9 @@ public interface AnnouncementDao extends SqlObject, Serializable {
         Optional<Integer> announcementId = SqlHelper.handleSave(getHandle(), "lw_news", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        announcementId.ifPresent(announcement::setId);
+        if (announcementId.isPresent() && announcementId.get() != 0) {
+            announcement.setId(announcementId.get());
+        }
     }
 
     class AnnouncementMapper implements RowMapper<Announcement> {

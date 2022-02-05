@@ -68,10 +68,12 @@ public interface ResourceHistoryDao extends SqlObject, Serializable {
         params.put("document_version", history.getVersion());
         params.put("document_changes", history.getChanges() != null ? history.getChanges().toString() : null);
 
-        Optional<Integer> commentId = SqlHelper.handleSave(getHandle(), "lw_resource_history", params)
+        Optional<Integer> historyId = SqlHelper.handleSave(getHandle(), "lw_resource_history", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        commentId.ifPresent(history::setId);
+        if (historyId.isPresent() && historyId.get() != 0) {
+            history.setId(historyId.get());
+        }
     }
 
     class HistoryMapper implements RowMapper<History> {

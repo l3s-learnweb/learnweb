@@ -50,7 +50,9 @@ public interface CommentDao extends SqlObject, Serializable {
         Optional<Integer> commentId = SqlHelper.handleSave(getHandle(), "lw_comment", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        commentId.ifPresent(comment::setId);
+        if (commentId.isPresent() && commentId.get() != 0) {
+            comment.setId(commentId.get());
+        }
     }
 
     class CommentMapper implements RowMapper<Comment> {

@@ -128,7 +128,9 @@ public interface SubmissionDao extends SqlObject, Serializable {
         Optional<Integer> submissionId = SqlHelper.handleSave(getHandle(), "lw_submission", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        submissionId.ifPresent(submission::setId);
+        if (submissionId.isPresent() && submissionId.get() != 0) {
+            submission.setId(submissionId.get());
+        }
     }
 
     class SubmissionMapper implements RowMapper<Submission> {

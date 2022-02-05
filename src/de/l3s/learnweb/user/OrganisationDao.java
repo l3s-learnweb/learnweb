@@ -63,8 +63,10 @@ public interface OrganisationDao extends SqlObject, Serializable {
         Optional<Integer> organisationId = SqlHelper.handleSave(getHandle(), "lw_organisation", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        organisationId.ifPresent(organisation::setId);
-        cache.put(organisation);
+        if (organisationId.isPresent() && organisationId.get() != 0) {
+            organisation.setId(organisationId.get());
+            cache.put(organisation);
+        }
     }
 
     class OrganisationMapper implements RowMapper<Organisation> {

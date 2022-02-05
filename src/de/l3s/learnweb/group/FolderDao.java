@@ -81,10 +81,10 @@ public interface FolderDao extends SqlObject, Serializable {
         Optional<Integer> folderId = SqlHelper.handleSave(getHandle(), "lw_group_folder", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        folderId.ifPresent(id -> {
-            folder.setId(id);
+        if (folderId.isPresent() && folderId.get() != 0) {
+            folder.setId(folderId.get());
             cache.put(folder);
-        });
+        }
 
         folder.clearCaches();
     }

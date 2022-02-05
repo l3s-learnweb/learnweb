@@ -75,7 +75,9 @@ public interface WaybackUrlDao extends SqlObject, Serializable {
         Optional<Long> urlId = SqlHelper.handleSave(getHandle(), "learnweb_large.wb_url", params)
             .executeAndReturnGeneratedKeys().mapTo(Long.class).findOne();
 
-        urlId.ifPresent(record::setId);
+        if (urlId.isPresent() && urlId.get() != 0) {
+            record.setId(urlId.get());
+        }
     }
 
     default List<ArchiveUrl> findByUrl(String url) {

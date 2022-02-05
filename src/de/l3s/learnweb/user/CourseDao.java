@@ -80,10 +80,10 @@ public interface CourseDao extends SqlObject, Serializable {
         Optional<Integer> courseId = SqlHelper.handleSave(getHandle(), "lw_course", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        courseId.ifPresent(id -> {
-            course.setId(id);
+        if (courseId.isPresent() && courseId.get() != 0) {
+            course.setId(courseId.get());
             cache.put(course);
-        });
+        }
     }
 
     default List<User> deleteHard(Course course, boolean force) {

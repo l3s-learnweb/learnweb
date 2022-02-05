@@ -53,7 +53,9 @@ public interface MessageDao extends SqlObject, Serializable {
         Optional<Integer> messageId = SqlHelper.handleSave(getHandle(), "lw_message", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        messageId.ifPresent(message::setId);
+        if (messageId.isPresent() && messageId.get() != 0) {
+            message.setId(messageId.get());
+        }
     }
 
     class MessageMapper implements RowMapper<Message> {

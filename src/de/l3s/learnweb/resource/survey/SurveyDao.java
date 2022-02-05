@@ -152,7 +152,9 @@ public interface SurveyDao extends SqlObject, Serializable {
         Optional<Integer> surveyId = SqlHelper.handleSave(getHandle(), "lw_survey", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        surveyId.ifPresent(survey::setId);
+        if (surveyId.isPresent() && surveyId.get() != 0) {
+            survey.setId(surveyId.get());
+        }
 
         if (!updateMetadataOnly) {
             for (SurveyQuestion question : survey.getQuestions()) {
@@ -177,7 +179,9 @@ public interface SurveyDao extends SqlObject, Serializable {
         Optional<Integer> questionId = SqlHelper.handleSave(getHandle(), "lw_survey_question", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        questionId.ifPresent(question::setId);
+        if (questionId.isPresent() && questionId.get() != 0) {
+            question.setId(questionId.get());
+        }
 
         for (SurveyQuestionOption answer : question.getAnswers()) {
             saveQuestionOption(question.getId(), answer);
@@ -194,7 +198,9 @@ public interface SurveyDao extends SqlObject, Serializable {
         Optional<Integer> optionId = SqlHelper.handleSave(getHandle(), "lw_survey_question_option", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        optionId.ifPresent(option::setId);
+        if (optionId.isPresent() && optionId.get() != 0) {
+            option.setId(optionId.get());
+        }
     }
 
     default void saveSurveyResource(SurveyResource surveyResource) {

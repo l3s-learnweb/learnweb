@@ -54,7 +54,9 @@ public interface TagDao extends SqlObject, Serializable {
         Optional<Integer> tagId = SqlHelper.handleSave(getHandle(), "lw_tag", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        tagId.ifPresent(tag::setId);
+        if (tagId.isPresent() && tagId.get() != 0) {
+            tag.setId(tagId.get());
+        }
     }
 
     class TagMapper implements RowMapper<Tag> {

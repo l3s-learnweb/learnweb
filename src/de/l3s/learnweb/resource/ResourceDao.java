@@ -196,11 +196,11 @@ public interface ResourceDao extends SqlObject, Serializable {
         Optional<Integer> resourceId = SqlHelper.handleSave(getHandle(), "lw_resource", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        resourceId.ifPresent(id -> {
-            resource.setId(id);
+        if (resourceId.isPresent() && resourceId.get() != 0) {
+            resource.setId(resourceId.get());
             resource.setThumbnailSmall(null);
             cache.put(resource);
-        });
+        }
 
         // persist the relation between the resource and its files
         getFileDao().deleteResourceFiles(resource, resource.getDeletedFiles());

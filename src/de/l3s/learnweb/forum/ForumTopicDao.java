@@ -80,7 +80,9 @@ public interface ForumTopicDao extends SqlObject, Serializable {
         Optional<Integer> topicId = SqlHelper.handleSave(getHandle(), "lw_forum_topic", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        topicId.ifPresent(topic::setId);
+        if (topicId.isPresent() && topicId.get() != 0) {
+            topic.setId(topicId.get());
+        }
     }
 
     class ForumTopicMapper implements RowMapper<ForumTopic> {

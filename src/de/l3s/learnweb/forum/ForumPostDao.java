@@ -63,7 +63,9 @@ public interface ForumPostDao extends SqlObject, Serializable {
         Optional<Integer> postId = SqlHelper.handleSave(getHandle(), "lw_forum_post", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        postId.ifPresent(post::setId);
+        if (postId.isPresent() && postId.get() != 0) {
+            post.setId(postId.get());
+        }
     }
 
     class ForumPostMapper implements RowMapper<ForumPost> {
