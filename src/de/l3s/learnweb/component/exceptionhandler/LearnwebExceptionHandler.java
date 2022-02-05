@@ -51,7 +51,7 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
         } else if (rootCause instanceof BadRequestHttpException) {
             log.log(isBotUserAgent(request) ? Level.WARN : Level.ERROR, "Bad request {} ", requestSummary, rootCause);
         } else if (rootCause instanceof ViewExpiredException) {
-            log.debug("View expired {}", requestSummary);
+            log.debug("View expired {}", requestSummary, rootCause);
         } else {
             log.fatal("Fatal unhandled error on {}", requestSummary, rootCause);
         }

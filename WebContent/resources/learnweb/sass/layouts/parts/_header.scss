@@ -109,7 +109,7 @@ $topbar-button-padding: 1rem;
         }
 
         .navbar-nav {
-          height: 100%;
+          min-height: 100%;
           flex-direction: row;
 
           .dropdown-menu {

@@ -134,7 +134,7 @@ public class InterwebResultsWrapper implements Serializable {
         decoratedResource.setAuthorUrl(searchResult.getAuthorUrl());
 
         // bing description contains snippet with term highlighting
-        if (resource.getService() == ResourceService.bing && decoratedResource.getSnippet() == null) {
+        if (resource.getService() == ResourceService.bing && decoratedResource.getSnippet() == null && decoratedResource.getDescription() != null) {
             // add snippet
             decoratedResource.setSnippet(resource.getDescription());
             // remove search term highlighting from description
