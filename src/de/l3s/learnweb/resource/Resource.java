@@ -175,9 +175,11 @@ public class Resource extends AbstractResource implements Serializable {
         setIdAtService(old.idAtService);
         setUpdatedAt(LocalDateTime.now());
         setCreatedAt(LocalDateTime.now());
-        if (old.getArchiveUrls() != null) setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
+        if (old.getArchiveUrls() != null) {
+            setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
+        }
         // sets the originalResourceId to the id of the source resource
         if (old.originalResourceId == 0) {
             setOriginalResourceId(old.id);
