@@ -31,10 +31,6 @@
         <message-bundle>de.l3s.learnweb.facesMessages.Messages</message-bundle>
     </application>
 
-    <lifecycle>
-        <phase-listener>org.primefaces.component.lifecycle.LifecyclePhaseListener</phase-listener>
-    </lifecycle>
-
     <factory>
         <exception-handler-factory>de.l3s.learnweb.component.exceptionhandler.LearnwebExceptionHandlerFactory</exception-handler-factory>
     </factory>

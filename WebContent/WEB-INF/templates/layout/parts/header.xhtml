@@ -29,10 +29,6 @@
                                  onclick="window.location.href = 'search.jsf?query=' + $('#navbar_form\\:searchfield').val();return false;"/>
             </div>
 
-            <h:panelGroup layout="block" styleClass="d-flex px-2 dd-xxl-none" rendered="#{config.development}">
-                <p:lifecycle/>
-            </h:panelGroup>
-
             <ul class="navbar-nav ms-auto">
                 <ui:fragment rendered="#{userBean.loggedIn}">
                     <li class="nav-item"><a class="nav-link fs-1 lh-1" href="#{request.contextPath}/lw/myhome/notification.jsf">
