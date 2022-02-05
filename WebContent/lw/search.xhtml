@@ -72,42 +72,45 @@
                 </h:outputFormat>
             </p:outputPanel>
 
-            <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" circular="true"
-                        breakpoint="-1" styleClass="ui-carousel-light search-source-carousel" itemStyleClass="p-0 mx-2">
-                <h:link outcome="search" styleClass="text-decoration-none">
-                    <f:param name="action" value="#{searchBean.searchMode}"/>
-                    <f:param name="service" value="#{gr.groupAlias}"/>
-                    <f:param name="query" value="#{searchBean.query}"/>
+            <div class="row">
+                <ui:repeat value="#{searchBean.getResourcesGroupedBySource()}" var="gr">
+                    <div class="col-auto">
+                        <h:link outcome="search" styleClass="text-decoration-none">
+                            <f:param name="action" value="#{searchBean.searchMode}"/>
+                            <f:param name="service" value="#{gr.groupAlias}"/>
+                            <f:param name="query" value="#{searchBean.query}"/>
 
-                    <div class="d-flex border-bottom">
-                        <div class="search-source-icon source-#{gr.groupAlias}"></div>
-                        <div class="group-menu-title fw-bold">
-                            <h:outputFormat value="#{msg.search_groups_title}" styleClass="small" escape="false">
-                                <f:param value="#{gr.groupName}"/>
-                                <f:param value="#{gr.totalResources}"/>
-                            </h:outputFormat>
-                        </div>
-                    </div>
+                            <div class="d-flex border-bottom">
+                                <div class="search-source-icon source-#{gr.groupAlias}"></div>
+                                <div class="group-menu-title fw-bold">
+                                    <h:outputFormat value="#{msg.search_groups_title}" styleClass="small" escape="false">
+                                        <f:param value="#{gr.groupName}"/>
+                                        <f:param value="#{gr.totalResources}"/>
+                                    </h:outputFormat>
+                                </div>
+                            </div>
 
-                    <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column mw-r15" rendered="#{searchBean.searchMode == 'text'}">
-                        <ui:repeat value="#{gr.resources}" var="res">
+                            <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column mw-r15" rendered="#{searchBean.searchMode == 'text'}">
+                                <ui:repeat value="#{gr.resources}" var="res">
                             <span class="text-truncate d-block w-100 p-1 small">
                                 <h:outputText value="#{res.title}" styleClass="me-1 text-primary" escape="false"/>
                                 <h:outputText value="#{res.url}" styleClass="text-blue" escape="false"/>
                                 <br/>
                                 <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-dark" escape="false"/>
                             </span>
-                        </ui:repeat>
-                    </h:panelGroup>
+                                </ui:repeat>
+                            </h:panelGroup>
 
-                    <h:panelGroup styleClass="row mx-0" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}" layout="block">
-                        <div class="search-carousel-image col-6" style="background-image: url('#{gr.resources[0].thumbnailSmall}');"></div>
-                        <ui:fragment rendered="#{gr.totalResources > 1}">
-                            <div class="search-carousel-image col-6" style="background-image: url('#{gr.resources[1].thumbnailSmall}');"></div>
-                        </ui:fragment>
-                    </h:panelGroup>
-                </h:link>
-            </p:carousel>
+                            <h:panelGroup styleClass="row mx-0" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}" layout="block">
+                                <div class="search-carousel-image col-6" style="background-image: url('#{gr.resources[0].thumbnailSmall}');"></div>
+                                <ui:fragment rendered="#{gr.totalResources > 1}">
+                                    <div class="search-carousel-image col-6" style="background-image: url('#{gr.resources[1].thumbnailSmall}');"></div>
+                                </ui:fragment>
+                            </h:panelGroup>
+                        </h:link>
+                    </div>
+                </ui:repeat>
+            </div>
         </h:form>
     </h:panelGroup>
 

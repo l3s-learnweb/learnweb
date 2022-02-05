@@ -320,47 +320,6 @@ PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
   this.resetPosition();
 })(PrimeFaces.widget.Dialog.prototype.show));
 
-// noinspection JSUnusedGlobalSymbols
-/**
- * This is used for adaptive PrimeFaces Carousel.
- * By default you can set only fixed amount of column and it will be changed only on mobile phones to single column.
- * But this script allows to set dynamic number of column based on the size of first element.
- * To use it, set `breakpoint` property of `p:carousel` to `-1`.
- */
-PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
-  if (this.cfg.breakpoint === -1) {
-    const firstItem = this.items.eq(0);
-    firstItem.css('width', 'auto');
-    const firstItemWidth = firstItem.length ? firstItem.width() : 150; // firstItem.outerWidth(true), firstItem.width()
-    const viewportInnerWidth = this.viewport.innerWidth();
-    this.columns = Math.floor(viewportInnerWidth / firstItemWidth);
-    this.calculateItemWidths();
-    this.totalPages = Math.ceil(this.itemsCount / this.columns);
-    if (this.totalPages === 1) {
-      this.nextNav.hide();
-      this.prevNav.hide();
-    }
-    this.responsiveDropdown.hide();
-    this.pageLinks.show();
-  } else if ($(window).width() <= this.cfg.breakpoint) {
-    this.columns = 1;
-    this.calculateItemWidths(this.columns);
-    this.totalPages = this.itemsCount;
-    this.responsiveDropdown.show();
-    this.pageLinks.hide();
-  } else {
-    this.columns = this.cfg.numVisible;
-    this.calculateItemWidths();
-    this.totalPages = Math.ceil(this.itemsCount / this.cfg.numVisible);
-    this.responsiveDropdown.hide();
-    this.pageLinks.show();
-  }
-
-  this.page = Math.ceil(this.first / this.columns);
-  this.updateNavigators();
-  this.itemsContainer.css('left', (-1 * (this.viewport.innerWidth() * this.page)));
-};
-
 /**
  * This is a new implementation of old script which changes size of filters list.
  * If list contains more than N items, then all after N will be hidden and 'Show more' will be displayed instead.
