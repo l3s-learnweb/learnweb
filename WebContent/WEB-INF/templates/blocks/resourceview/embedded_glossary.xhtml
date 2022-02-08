@@ -82,34 +82,14 @@
         <p:column headerText="#{msg[Column.description]}" filterable="true" sortBy="#{item.description}" filterBy="#{item.description}">
             <h:outputText value="#{item.description}" id="cell4" escape="false"/>
         </p:column>
-        <p:column headerText="Pic" filterable="true">
-            <p:outputPanel id="pic" style="display: block;">
+        <p:column headerText="Pic" filterable="false" exportable="false">
+            <p:outputPanel id="entryPictures" layout="block" rendered="#{not empty item.pictures}">
                 <i class="fas fa-camera"></i>
             </p:outputPanel>
-            <p:overlayPanel for="pic" dismissable="false">
-                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-indicators">
-                        <ui:repeat value="#{item.pictures}" var="pic" varStatus="status">
-                            <button type="button" data-bs-target="#carouselExampleIndicators" aria-label="Slide 1"
-                                    data-bs-slide-to="#{status.index}" class="#{status.first ? 'active' : ''}" aria-current="#{status.first ? 'true' : 'false'}"></button>
-                        </ui:repeat>
-                    </div>
-                    <div class="carousel-inner">
-                        <ui:repeat value="#{item.pictures}" var="pic" varStatus="status">
-                            <div class="carousel-item #{status.first ? 'active' : ''}">
-                                <img src="#{pic.getResourceUrl(glossaryBean.glossaryResource.id)}" class="d-block w-100" alt="..."/>
-                            </div>
-                        </ui:repeat>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
+            <p:overlayPanel for="entryPictures" dynamic="true">
+                <p:carousel value="#{item.pictures}" var="pic" circular="true" varStatus="status" styleClass="mw-r15">
+                    <img src="#{pic.getResourceUrl(glossaryBean.glossaryResource.id)}" class="d-block w-100" alt="#{item.description}"/>
+                </p:carousel>
             </p:overlayPanel>
         </p:column>
         <p:column headerText="#{msg[Column.term]}" filterable="true" filterBy="#{item.term}">
