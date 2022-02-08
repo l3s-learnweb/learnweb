@@ -1,41 +1,41 @@
 function groupRow() {
   const columnsToMerge = 6; // number of first columns to merge
-  const glossaryEntryColumn = 2; // index of column that contains the glossaryEntryId
 
-  const rows = $('#glossary_table').find('tr');
-  let groupStartIndex = null;
-  let rowGroupCount = 1;
-  let rowGroupGlossaryEntryId = null;
-  let groupCounter = 1;
+  const tableEl = document.getElementById('glossary_table');
+  const rows = tableEl.querySelectorAll('.ui-datatable-data > tr');
 
   // if no search result
   if (rows.length === 2) {
     return;
   }
 
+  let groupsCounter = 1;
+  let lastGroupCells = null;
+  let lastGroupRows = 1;
+  let lastGroupEntryId = null;
   for (let i = 0; i < rows.length; i++) {
-    const row = rows.eq(i);
-    const glossaryEntryId = row.children('td').eq(glossaryEntryColumn).find('span').first()
-      .data('itemid');
+    const row = rows[i];
+    const cells = row.querySelectorAll(':scope > td');
+    const glossaryEntryId = cells[0].dataset.itemid;
 
-    if (rowGroupGlossaryEntryId !== glossaryEntryId) {
-      groupCounter++;
-      groupStartIndex = i;
-      rowGroupGlossaryEntryId = glossaryEntryId;
-      rowGroupCount = 1;
+    // noinspection NegatedIfStatementJS
+    if (lastGroupEntryId !== glossaryEntryId) {
+      lastGroupEntryId = glossaryEntryId;
+      lastGroupRows = 1;
+      lastGroupCells = cells;
+      groupsCounter++;
     } else {
-      // remove the first 5 columns
-      for (let k = 0; k < columnsToMerge; k++) row.children('td').eq(0).remove();
+      lastGroupRows++;
 
-      rowGroupCount++;
-    }
+      for (let k = 0; k < columnsToMerge; k++) {
+        row.removeChild(cells[k]); // remove merged columns
+      }
 
-    if (groupStartIndex != null && rowGroupCount > 1) {
-      for (let l = 0; l < columnsToMerge; l++) {
-        const cell = rows.eq(groupStartIndex).children('td').eq(l);
-        cell.attr('rowspan', rowGroupCount);
-        cell.removeClass(); // remove all classes
-        cell.addClass(groupCounter % 2 === 0 ? 'ui-datatable-even' : 'ui-datatable-odd');
+      for (let k = 0; k < columnsToMerge; k++) {
+        const cell = lastGroupCells[k];
+        cell.setAttribute('rowspan', lastGroupRows);
+        cell.removeAttribute('class');
+        cell.classList.add(groupsCounter % 2 === 0 ? 'ui-datatable-even' : 'ui-datatable-odd');
       }
     }
   }
@@ -43,23 +43,21 @@ function groupRow() {
 
 // noinspection JSUnusedGlobalSymbols
 function setPasteStatus(element, field) {
-  let id = $(element).attr('id');
+  let { id } = element;
   id = id.substring(0, id.lastIndexOf(':'));
   id = `${id}:paste_status_${field}`;
-  id = `#${id.replace(/:/g, '\\:')}`; //  need to escape : for jquery
-  $(id).val('true');
+  document.getElementById(id).value = 'true';
 }
 
 /* see LazyGlossaryTableView comments for more details */
-function correctPaginatorCount(index) {
-  const option = $(this);
-  console.log('correctPaginatorCount', option.val(), option);
-  option.text(option.val() / 20);
+function correctPaginatorCount(el) {
+  console.log('correctPaginatorCount', el.value);
+  el.text = el.value / 20;
 }
 
 $(() => {
   groupRow();
 
-  $('#glossary_table_paginator_bottom select option').each(correctPaginatorCount);
-  $('#glossary_table_paginator_top select option').each(correctPaginatorCount);
+  Array.prototype.forEach.call(document.querySelectorAll('#glossary_table_paginator_bottom select option'), correctPaginatorCount);
+  Array.prototype.forEach.call(document.querySelectorAll('#glossary_table_paginator_top select option'), correctPaginatorCount);
 });

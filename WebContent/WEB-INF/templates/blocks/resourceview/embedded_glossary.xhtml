@@ -12,10 +12,10 @@
 
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB" async="async"></script>
 <h:outputScript name="learnweb/js/glossary.js" target="body"/>
+
 <h:form id="glossary_table_form" prependId="false" styleClass="h-100">
-    <p:dataTable id="glossary_table" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
-                 styleClass="glossary-table" allowUnsorting="true"
-                 paginator="true" rows="200" rowsPerPageTemplate="100,200,400,1000"
+    <p:dataTable id="glossary_table" widgetVar="glossTable" var="item" value="#{glossaryBean.lazyTableItems}"
+                 styleClass="glossary-table" allowUnsorting="true" paginator="true" rows="200" rowsPerPageTemplate="100,200,400,1000"
                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
 
         <p:ajax event="filter" oncomplete="groupRow()"/>
@@ -57,7 +57,7 @@
             </div>
         </f:facet>
 
-        <p:column style="width: 57px;" exportable="false">
+        <p:column style="width: 57px;" exportable="false" pt:data-itemId="#{item.entryId}">
             <div class="text-end">
                 <p:commandLink action="#{glossaryBean.onDeleteEntry(item)}" title="#{msg.delete}" process="@this" update="@form" oncomplete="groupRow()">
                     <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
@@ -71,16 +71,16 @@
             </div>
         </p:column>
         <p:column headerText="#{msg[Column.topicOne]}" filterable="true" filterBy="#{item.topicOne}" sortBy="#{item.topicOne}">
-            <h:outputText value="#{item.topicOne}" pt:data-itemId="#{item.entryId}" id="cell1" escape="false"/>
+            <h:outputText value="#{item.topicOne}" id="cell1" escape="false"/>
         </p:column>
         <p:column headerText="#{msg[Column.topicTwo]}" filterable="true" filterBy="#{item.topicTwo}" sortBy="#{item.topicTwo}">
-            <h:outputText value="#{item.topicTwo}" pt:data-itemId="#{item.entryId}" id="cell2" escape="false"/>
+            <h:outputText value="#{item.topicTwo}" id="cell2" escape="false"/>
         </p:column>
         <p:column headerText="#{msg[Column.topicThree]}" filterable="true" filterBy="#{item.topicThree}" sortBy="#{item.topicThree}">
-            <h:outputText value="#{item.topicThree}" pt:data-itemId="#{item.entryId}" id="cell3" escape="false"/>
+            <h:outputText value="#{item.topicThree}" id="cell3" escape="false"/>
         </p:column>
         <p:column headerText="#{msg[Column.description]}" filterable="true" sortBy="#{item.description}" filterBy="#{item.description}">
-            <h:outputText value="#{item.description}" pt:data-itemId="#{item.entryId}" id="cell4" escape="false"/>
+            <h:outputText value="#{item.description}" id="cell4" escape="false"/>
         </p:column>
         <p:column headerText="Pic" filterable="true">
             <p:outputPanel id="pic" style="display: block;">
