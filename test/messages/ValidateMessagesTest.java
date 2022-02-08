@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -23,6 +24,13 @@ public class ValidateMessagesTest {
         MessageFormat messageFormat = new MessageFormat("On {1, date}, there was {2} on planet {0, number, integer}.", Locale.ENGLISH);
         String result = messageFormat.format(new Object[]{7, new Date(1564660800000L), "a disturbance in the Force"});
         assertEquals("On Aug 1, 2019, there was a disturbance in the Force on planet 7.", result);
+    }
+
+    @Test
+    void testYearFormat() {
+        MessageFormat messageFormat = new MessageFormat("It was in {0, number,#}", Locale.ENGLISH);
+        String result = messageFormat.format(new Object[]{LocalDate.of(2022, 2, 8).getYear()});
+        assertEquals("It was in 2022", result);
     }
 
     @Test

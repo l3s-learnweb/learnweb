@@ -3,7 +3,6 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions"
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.requests_header}"/>
@@ -44,7 +43,7 @@
 
         <p:tab title="#{msg.logins}">
             <h:form id="loginform">
-                <p:dataTable var="login" paginatorPosition="bottom" value="#{of:mapToList(adminRequestListBean.logins)}" rows="100" paginator="true"
+                <p:dataTable var="login" paginatorPosition="bottom" value="#{adminRequestListBean.logins}" rows="100" paginator="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
                              currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
                     <p:column headerText="IP" sortBy="#{login.key}" filterBy="#{login.key}" filterMatchMode="contains">

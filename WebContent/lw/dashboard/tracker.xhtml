@@ -40,8 +40,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h:form>
-                       <p:dataTable value="#{trackerDashboardBean.usersProxySourcesList}"
-                                    var="pll" styleClass="my-2" emptyMessage="#{msg.no_data}">
+                       <p:dataTable value="#{trackerDashboardBean.proxySources}" var="pll" styleClass="my-2" emptyMessage="#{msg.no_data}">
                             <f:facet name="header">
                                 #{msg['Glossary.proxy_sources_list']}
                             </f:facet>
@@ -61,7 +60,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h:form>
-                        <p:dataTable value="#{trackerDashboardBean.trackerStatistics}"
+                        <p:dataTable value="#{trackerDashboardBean.statistics}"
                                      var="ts" styleClass="my-2" emptyMessage="#{msg.no_data}">
                             <f:facet name="header">
                                 #{msg.data}

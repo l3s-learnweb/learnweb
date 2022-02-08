@@ -23,6 +23,7 @@
 .idea/**/dbnavigator.xml
 .idea/**/watcherTasks.xml
 .idea/**/contentModel.xml
+.idea/**/deployment.xml
 .idea/**/gradle.xml
 .idea/**/libraries
 

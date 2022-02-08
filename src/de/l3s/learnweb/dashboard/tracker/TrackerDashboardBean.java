@@ -2,7 +2,6 @@ package de.l3s.learnweb.dashboard.tracker;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import jakarta.inject.Named;
 import org.apache.commons.collections4.CollectionUtils;
 
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
-import de.l3s.util.MapHelper;
 
 @Named
 @ViewScoped
@@ -24,8 +22,8 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
     private static final int TRACKER_CLIENT_ID = 2;
 
     private TrackerDao trackerDao;
-    private Map<String, Integer> proxySourcesWithCounters;
-    private List<TrackerUserActivity> trackerStatistics;
+    private Map<String, Integer> proxySources;
+    private List<TrackerUserActivity> statistics;
 
     @Override
     public void onLoad() {
@@ -37,8 +35,8 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
 
     @Override
     public void cleanAndUpdateStoredData() {
-        trackerStatistics = null;
-        proxySourcesWithCounters = null;
+        statistics = null;
+        proxySources = null;
 
         fetchDataFromManager();
     }
@@ -46,16 +44,16 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
     private void fetchDataFromManager() {
         if (!CollectionUtils.isEmpty(getSelectedUsersIds())) {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
-            trackerStatistics = trackerDao.countTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
-            proxySourcesWithCounters = trackerDao.countUsagePerDomain(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
+            statistics = trackerDao.countTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
+            proxySources = trackerDao.countUsagePerDomain(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
         }
     }
 
-    public List<Map.Entry<String, Integer>> getUsersProxySourcesList() {
-        return new ArrayList<>(MapHelper.sortByValue(proxySourcesWithCounters).entrySet());
+    public List<TrackerUserActivity> getStatistics() {
+        return statistics;
     }
 
-    public List<TrackerUserActivity> getTrackerStatistics() {
-        return trackerStatistics;
+    public Map<String, Integer> getProxySources() {
+        return proxySources;
     }
 }

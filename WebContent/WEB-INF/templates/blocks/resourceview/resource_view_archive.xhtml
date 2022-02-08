@@ -38,9 +38,9 @@
 				</ui:fragment>
 				<ui:fragment rendered="${res.archiveUrls.size() gt 100}">
 					<ul class="archive-snapshot-list list-unstyled mb-0">
-						<ui:repeat var="ay" value="#{res.archiveUrlsAsYears.entrySet().toArray()}">
+						<ui:repeat var="ay" value="#{res.archiveUrlsAsYears}">
 							<li>
-								<p:button value="#{ay.key}" styleClass="outline-btn m-0 mb-1" onclick="return false;"/>
+								<p:button value="#{ay.key.toString()}" styleClass="outline-btn m-0 mb-1" onclick="return false;"/>
 								<ul class="list-unstyled ps-3 collapse">
 									<ui:repeat var="au2" value="#{ay.value}">
 										<li style="width: 12rem;">
@@ -87,9 +87,9 @@
 	<hr/>
 
 	<ul class="archive-snapshot-list list-unstyled">
-		<ui:repeat var="ay" value="#{res.archiveUrlsAsYears.entrySet().toArray()}">
+		<ui:repeat var="ay" value="#{res.archiveUrlsAsYears}">
 			<li class="row g-0 align-items-baseline">
-				<p:button value="#{ay.key}" styleClass="outline-btn m-0 mb-1 mt-1 mt-sm-0 col-3 col-md-2 me-3" onclick="return false;"/>
+				<p:button value="#{ay.key.toString()}" styleClass="outline-btn m-0 mb-1 mt-1 mt-sm-0 col-3 col-md-2 me-3" onclick="return false;"/>
 
 				<h:outputFormat value="#{msg.archive_stored}" escape="false" styleClass="col">
 					<f:param value="#{ay.value.size()}"/>
