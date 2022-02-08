@@ -20,14 +20,14 @@ public class RegenerateThumbnails extends MaintenanceTask {
         final ResourceDao resourceDao = getLearnweb().getDaoProvider().getResourceDao();
         List<Resource> imagesWithoutThumbnail = resourceDao.withHandle(handle -> handle.select("SELECT *  FROM lw_resource r "
             + "WHERE deleted = 0 AND max_image_url IS NOT NULL AND storage_type=2 AND type IN ('video', 'image') AND online_status != 'OFFLINE' "
-            + "AND NOT EXISTS (SELECT 1 FROM lw_resource_file rf WHERE r.resource_id = rf.resource_id AND rf.type = 'THUMBNAIL_SMALL')")
+            + "AND NOT EXISTS (SELECT 1 FROM lw_resource_file rf WHERE r.resource_id = rf.resource_id)")
             .map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} image/video resources without thumbnails", imagesWithoutThumbnail.size());
 
         // exclude Fact Check group (1346)
-        List<Resource> websitesWithoutThumbnail = resourceDao.withHandle(handle -> handle.select("SELECT * FROM lw_resource "
+        List<Resource> websitesWithoutThumbnail = resourceDao.withHandle(handle -> handle.select("SELECT * FROM lw_resource r "
             + "WHERE storage_type = 2 AND type = 'website' AND deleted = 0 AND url NOT LIKE '%learnweb%' AND online_status = 'UNKNOWN' AND group_id != 1346 "
-            + "AND NOT EXISTS (SELECT 1 FROM lw_resource_file rf WHERE r.resource_id = rf.resource_id AND rf.type = 'THUMBNAIL_SMALL') ORDER BY resource_id DESC")
+            + "AND NOT EXISTS (SELECT 1 FROM lw_resource_file rf WHERE r.resource_id = rf.resource_id) ORDER BY resource_id DESC")
             .map(new ResourceDao.ResourceMapper()).list());
         log.warn("Found {} web resources without thumbnails", websitesWithoutThumbnail.size());
 

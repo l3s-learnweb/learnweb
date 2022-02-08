@@ -32,7 +32,7 @@ public interface ArchiveUrlDao extends SqlObject, Serializable {
     @SqlUpdate("INSERT INTO lw_resource_archiveurl(resource_id, archive_url, timestamp) VALUES (?, ?, ?)")
     void insertArchiveUrl(int resourceId, String archiveUrl, LocalDateTime timestamp);
 
-    @SqlBatch("INSERT INTO lw_resource_archiveurl(resource_id, archive_url, timestamp) VALUES (:resourceId, :getArchiveUrl, :getTimestamp)")
+    @SqlBatch("INSERT INTO lw_resource_archiveurl(resource_id, archive_url, timestamp) VALUES (:resourceId, :archiveUrl, :timestamp)")
     void insertArchiveUrl(@Bind("resourceId") int resourceId, @BindMethods Collection<ArchiveUrl> archiveUrls);
 
     class ArchiveUrlMapper implements RowMapper<ArchiveUrl> {
