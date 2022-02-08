@@ -83,7 +83,7 @@ public interface UserDao extends SqlObject, Serializable {
     @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByGroupId(int groupId);
 
-    @SqlQuery("SELECT * FROM lw_user JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY join_time LIMIT ?")
+    @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY join_time LIMIT ?")
     List<User> findByGroupIdLastJoined(int groupId, int limit);
 
     /**
