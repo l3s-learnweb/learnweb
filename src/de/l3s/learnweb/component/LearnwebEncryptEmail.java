@@ -22,16 +22,24 @@ public class LearnwebEncryptEmail extends UIComponentBase {
         String email = (String) getAttributes().get("email");
 
         ResponseWriter writer = context.getResponseWriter();
-        String name = email.split("@")[0];
-        String domain = email.split("@")[1].split("\\.")[0];
-        String tld = email.split("@")[1].split("\\.")[1];
         writer.startElement("a", this);
         writer.writeAttribute("href", "#", null);
-        writer.writeAttribute("data-name", name, null);
-        writer.writeAttribute("data-domain", domain, null);
-        writer.writeAttribute("data-tld", tld, null);
-        writer.writeAttribute("class", "encrypt-email" + (styleClass != null ? " " + styleClass : ""), null);
-        writer.writeAttribute("onclick", "window.location.href = 'mailto:' + this.dataset.name + '@' + this.dataset.domain + '.' + this.dataset.tld; return false;", null);
+
+        String[] emailParts = email.split("@");
+        if (emailParts.length == 2) {
+            String name = emailParts[0];
+            int lastDotIndex = emailParts[1].lastIndexOf('.');
+
+            writer.writeAttribute("data-name", name, null);
+            writer.writeAttribute("data-domain", emailParts[1].substring(0, lastDotIndex), null);
+            writer.writeAttribute("data-tld", emailParts[1].substring(lastDotIndex + 1), null);
+            writer.writeAttribute("class", "encrypt-email" + (styleClass != null ? " " + styleClass : ""), null);
+            writer.writeAttribute("onclick", "window.location.href = 'mailto:' + this.dataset.name + '@' + this.dataset.domain + '.' + this.dataset.tld; return false;", null);
+        } else {
+            writer.writeAttribute("onclick", "return false;", null);
+            // it can be hashed email, which should not be clickable
+            writer.write(email);
+        }
         writer.endElement("a");
     }
 }
