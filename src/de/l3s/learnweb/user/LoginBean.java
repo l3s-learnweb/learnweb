@@ -180,6 +180,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
             || userBean.getPreference("SEARCH_SERVICE_IMAGE") == null
             || userBean.getPreference("SEARCH_SERVICE_VIDEO") == null) {
 
+            userBean.setPreference("SEARCH_ACTION", userOrganisation.getDefaultSearchMode().name());
             userBean.setPreference("SEARCH_SERVICE_TEXT", userOrganisation.getDefaultSearchServiceText().name());
             userBean.setPreference("SEARCH_SERVICE_IMAGE", userOrganisation.getDefaultSearchServiceImage().name());
             userBean.setPreference("SEARCH_SERVICE_VIDEO", userOrganisation.getDefaultSearchServiceVideo().name());

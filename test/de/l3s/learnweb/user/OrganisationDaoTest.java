@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import de.l3s.learnweb.resource.ResourceService;
+import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.test.LearnwebExtension;
 
 class OrganisationDaoTest {
@@ -34,6 +35,7 @@ class OrganisationDaoTest {
         assertEquals("myhome/welcome.jsf", retrieved.get().getWelcomePage());
         assertEquals("en", retrieved.get().getDefaultLanguage());
         assertEquals(3, retrieved.get().getGlossaryLanguages().size());
+        assertEquals(SearchMode.text, retrieved.get().getDefaultSearchMode());
         assertEquals(ResourceService.bing, retrieved.get().getDefaultSearchServiceText());
         assertEquals(ResourceService.flickr, retrieved.get().getDefaultSearchServiceImage());
         assertEquals(ResourceService.youtube, retrieved.get().getDefaultSearchServiceVideo());
@@ -49,6 +51,7 @@ class OrganisationDaoTest {
         assertEquals("myhome/welcome.jsf", organisationDefault.getWelcomePage());
         assertEquals("en", organisationDefault.getDefaultLanguage());
         assertEquals(3, organisationDefault.getGlossaryLanguages().size());
+        assertEquals(SearchMode.text, organisationDefault.getDefaultSearchMode());
         assertEquals(ResourceService.bing, organisationDefault.getDefaultSearchServiceText());
         assertEquals(ResourceService.flickr, organisationDefault.getDefaultSearchServiceImage());
         assertEquals(ResourceService.youtube, organisationDefault.getDefaultSearchServiceVideo());
@@ -98,6 +101,7 @@ class OrganisationDaoTest {
         assertEquals("/lw/myhome/welcome.jsf", retrieved.get().getWelcomePage());
         assertEquals("en", retrieved.get().getDefaultLanguage());
 
+        assertEquals(SearchMode.text, retrieved.get().getDefaultSearchMode());
         assertEquals(ResourceService.bing, retrieved.get().getDefaultSearchServiceText());
         assertEquals(ResourceService.flickr, retrieved.get().getDefaultSearchServiceImage());
         assertEquals(ResourceService.youtube, retrieved.get().getDefaultSearchServiceVideo());

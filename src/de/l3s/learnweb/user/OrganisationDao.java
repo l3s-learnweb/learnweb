@@ -14,6 +14,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
+import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
@@ -50,6 +51,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
         params.put("title", organisation.getTitle());
         params.put("welcome_page", organisation.getWelcomePage());
         params.put("welcome_message", organisation.getWelcomeMessage());
+        params.put("default_search_mode", organisation.getDefaultSearchMode());
         params.put("default_search_text", organisation.getDefaultSearchServiceText());
         params.put("default_search_image", organisation.getDefaultSearchServiceImage());
         params.put("default_search_video", organisation.getDefaultSearchServiceVideo());
@@ -79,6 +81,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 organisation.setTitle(rs.getString("title"));
                 organisation.setWelcomePage(rs.getString("welcome_page"));
                 organisation.setWelcomeMessage(rs.getString("welcome_message"));
+                organisation.setDefaultSearchMode(SearchMode.valueOf(rs.getString("default_search_mode")));
                 organisation.setDefaultSearchServiceText(rs.getString("default_search_text"));
                 organisation.setDefaultSearchServiceImage(rs.getString("default_search_image"));
                 organisation.setDefaultSearchServiceVideo(rs.getString("default_search_video"));

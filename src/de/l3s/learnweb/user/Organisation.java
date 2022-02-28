@@ -27,6 +27,7 @@ import de.l3s.learnweb.resource.MetadataField;
 import de.l3s.learnweb.resource.MetadataField.MetadataType;
 import de.l3s.learnweb.resource.ResourceMetaDataBean;
 import de.l3s.learnweb.resource.ResourceService;
+import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.util.HasId;
 
 public class Organisation implements HasId, Serializable, Comparable<Organisation> {
@@ -58,6 +59,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private String title;
     private String welcomeMessage;
     private String welcomePage = "myhome/welcome.jsf"; // page to show after login
+    private SearchMode defaultSearchMode = SearchMode.text;
     private ResourceService defaultSearchServiceText = ResourceService.bing;
     private ResourceService defaultSearchServiceImage = ResourceService.flickr;
     private ResourceService defaultSearchServiceVideo = ResourceService.youtube;
@@ -302,6 +304,14 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
 
     protected void setOptions(BitSet options) {
         this.options = options;
+    }
+
+    public SearchMode getDefaultSearchMode() {
+        return defaultSearchMode;
+    }
+
+    public void setDefaultSearchMode(final SearchMode defaultSearchMode) {
+        this.defaultSearchMode = defaultSearchMode;
     }
 
     public ResourceService getDefaultSearchServiceText() {
