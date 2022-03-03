@@ -174,7 +174,7 @@ class WebgazerCalibrate {
         .saveDataAcrossSessions(true)
         .begin()
         .then(() => {
-          webgazer.showVideoPreview(true) /* shows all video previews */
+          webgazer.showVideoPreview(false) /* shows all video previews */
             .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
             .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
 

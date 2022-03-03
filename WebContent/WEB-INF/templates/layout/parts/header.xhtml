@@ -24,7 +24,7 @@
 
             <div class="d-flex align-items-center navbar-search flex-grow-1 mx-md-2">
                 <p:outputLabel for="@next" styleClass="d-none" value="#{msg.searchLabel}"/>
-                <p:inputText id="searchfield" placeholder="#{msg.searchLabel}" type="search"/>
+                <p:inputText id="searchfield" placeholder="#{msg.searchLabel}" type="search" autocomplete="off"/>
                 <p:commandButton title="#{msg.searchLabel}" icon="fas fa-search"
                                  onclick="window.location.href = 'search.jsf?query=' + $('#navbar_form\\:searchfield').val();return false;"/>
             </div>
@@ -58,7 +58,7 @@
                             </a></li>
                             <ui:fragment rendered="#{userBean.eyesTrackingEnabled or config.development}">
                                 <li><a href="#{request.contextPath}/lw/calibrate.jsf" class="dropdown-item">
-                                    <i class="fas fa-fw fa-eye" aria-hidden="true"></i> Calibrate Eyes Tracker
+                                    <i class="fas fa-fw fa-eye" aria-hidden="true"></i> #{msg['calibrate_eyes_tracker']}
                                 </a></li>
                             </ui:fragment>
                             <li><h:commandLink action="#{loginBean.logout}" styleClass="dropdown-item">

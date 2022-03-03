@@ -9,9 +9,9 @@
 
     <h:panelGroup layout="block" styleClass="metadata text-start" rendered="#{res ne null}">
         <h:form styleClass="mb-2">
-            <p:linkButton href="${userBean.getUrlProxied(res.url)}" value="Visit Website" styleClass="secondary-btn me-2" target="_blank"/>
+            <p:linkButton href="${userBean.getUrlProxied(res.url)}" value="#{msg.search_resource_visit}" styleClass="secondary-btn me-2" target="_blank"/>
 
-            <p:linkButton href="${res.thumbnailLargest}" value="Full-size image" styleClass="secondary-btn me-2" target="_blank"
+            <p:linkButton href="${res.thumbnailLargest}" value="#{msg.search_resource_image}" styleClass="secondary-btn me-2" target="_blank"
                           rendered="#{res.type == 'image' and res.thumbnailLargest ne null}"/>
 
             <p:commandButton styleClass="me-2" value="#{msg.save}"
