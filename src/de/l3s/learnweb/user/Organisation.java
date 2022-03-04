@@ -43,7 +43,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         Groups_Hide_public_groups,
         Privacy_Proxy_enabled,
         Privacy_Anonymize_usernames,
-        Resource_Show_Content_Annotation_Field, // not used any more
+        Privacy_Profile_prevent_edit,
         Privacy_Logging_disabled,
         Privacy_Tracker_disabled,
         Users_Hide_language_switch,

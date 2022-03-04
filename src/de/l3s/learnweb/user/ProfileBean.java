@@ -345,6 +345,10 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         return User.NotificationFrequency.values();
     }
 
+    public boolean isEditingDisabled() {
+        return selectedUser.getOrganisation().getOption(Organisation.Option.Privacy_Profile_prevent_edit);
+    }
+
     public String rootLogin() {
         return LoginBean.rootLogin(this, selectedUser);
     }

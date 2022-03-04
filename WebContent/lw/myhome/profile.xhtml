@@ -39,7 +39,8 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <p:outputLabel for="@next" value="#{msg.username}:"/>
-                                    <p:inputText id="username" value="#{profileBean.selectedUser.realUsername}" validator="#{profileBean.validateUsername}" label="#{msg.username}" required="true">
+                                    <p:inputText id="username" value="#{profileBean.selectedUser.realUsername}" validator="#{profileBean.validateUsername}"
+                                                 label="#{msg.username}" required="true">
                                         <f:validateLength minimum="2" maximum="50"></f:validateLength>
                                     </p:inputText>
                                     <p:message for="@previous"/>
@@ -47,13 +48,15 @@
 
                                 <div class="form-group">
                                     <p:outputLabel for="@next" value="#{msg.full_name}:"/>
-                                    <p:inputText id="userfullname" value="#{profileBean.selectedUser.fullName}" label="#{msg.full_name}:"/>
+                                    <p:inputText id="userfullname" value="#{profileBean.selectedUser.fullName}" label="#{msg.full_name}:"
+                                                 disabled="#{profileBean.editingDisabled}"/>
                                     <p:message for="@previous"/>
                                 </div>
 
                                 <div class="form-group">
                                     <p:outputLabel for="@next" value="#{msg.email_address}:"/>
-                                    <p:inputText id="useremail" value="#{profileBean.email}" label="#{msg.email_address}:" required="#{profileBean.mailRequired}" validator="emailValidator"/>
+                                    <p:inputText id="useremail" value="#{profileBean.email}" label="#{msg.email_address}:"
+                                                 required="#{profileBean.mailRequired}" validator="emailValidator"/>
                                     <p:message for="@previous"/>
                                 </div>
                             </div>
@@ -66,7 +69,7 @@
                                     <p:fileUpload id="profilephoto" listener="${profileBean.handleFileUpload}" styleClass="fileupload-minimal"
                                                   mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
                                                   update="profile_image" oncomplete="if (#{userBean.guided}) {guideFinish.show();}" auto="true" label="#{msg.choose_file}" cancelLabel="abb"
-                                                  disabled="#{profileBean.anonymizeUsername}"/>
+                                                  disabled="#{profileBean.anonymizeUsername || profileBean.editingDisabled}"/>
                                     <p:message for="@previous"/>
                                 </div>
                             </div>
@@ -74,7 +77,7 @@
                         <div>
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.gender}:"/>
-                                <p:selectOneMenu id="usergender" value="#{profileBean.selectedUser.gender}">
+                                <p:selectOneMenu id="usergender" value="#{profileBean.selectedUser.gender}" disabled="#{profileBean.editingDisabled}">
                                     <f:selectItems value="#{profileBean.genders}" var="gender"  itemLabel="#{msg['user.gender.'+=gender]}" itemValue="#{gender}"/>
                                 </p:selectOneMenu>
                                 <p:message for="@previous"/>
@@ -82,7 +85,8 @@
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.student_id}:"/>
-                                <p:inputText id="studentId" value="#{profileBean.selectedUser.studentId}" label="#{msg.student_id}:" required="#{profileBean.studentIdRequired}"/>
+                                <p:inputText id="studentId" value="#{profileBean.selectedUser.studentId}" label="#{msg.student_id}:"
+                                             required="#{profileBean.studentIdRequired}" disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
@@ -95,25 +99,26 @@
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.affiliation}:"/>
-                                <p:inputText id="useraffiliation" value="#{profileBean.selectedUser.affiliation}" required="#{profileBean.affiliationRequired}"/>
+                                <p:inputText id="useraffiliation" value="#{profileBean.selectedUser.affiliation}" required="#{profileBean.affiliationRequired}"
+                                             disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.address}:"/>
-                                <p:inputTextarea id="useraddress" value="#{profileBean.selectedUser.address}"/>
+                                <p:inputTextarea id="useraddress" value="#{profileBean.selectedUser.address}" disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.profession}:"/>
-                                <p:inputText id="userprofession" value="#{profileBean.selectedUser.profession}"/>
+                                <p:inputText id="userprofession" value="#{profileBean.selectedUser.profession}" disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.interest}:"/>
-                                <p:inputTextarea id="userinterest" value="#{profileBean.selectedUser.interest}"/>
+                                <p:inputTextarea id="userinterest" value="#{profileBean.selectedUser.interest}" disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
@@ -128,7 +133,8 @@
                             <h:panelGroup layout="block" styleClass="form-group" rendered="false">
                                 <p:outputLabel for="@next" value="#{msg.dateofbirth}:"/>
                                 <p:datePicker id="userdateofbirth" value="#{profileBean.selectedUser.dateOfBirth}" maxdate="#{profileBean.maxBirthday}"
-                                              monthNavigator="true" yearNavigator="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
+                                              monthNavigator="true" yearNavigator="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"
+                                              disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 
