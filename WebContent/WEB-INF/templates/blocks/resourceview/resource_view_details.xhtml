@@ -54,7 +54,7 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{userBean.starRatingEnabled}">
-		<dt class="col-sm-4">#{userBean.user.organisationId == 1604 ? msg.columns : msg.relevance}:</dt>
+		<dt class="col-sm-4">#{userBean.user.organisationId == 1604 ? msg.credibility : msg.relevance}:</dt>
 		<dd class="col-sm-8">
 			<h:panelGroup id="relevance" layout="block">
 				<p:rating value="#{res.starRatingRounded}" cancel="false" immediate="true"
