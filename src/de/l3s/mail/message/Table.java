@@ -10,12 +10,12 @@ public class Table extends Element {
     private final java.util.List<String> columnClass = new ArrayList<>();
     private final java.util.List<String> titleRowClass = new ArrayList<>();
 
-    public Table addRow(Element...elements) {
+    public Table addRow(Element... elements) {
         rows.add(new TableRow(elements));
         return this;
     }
 
-    public Table addRow(String...elements) {
+    public Table addRow(String... elements) {
         rows.add(new TableRow(elements));
         return this;
     }
