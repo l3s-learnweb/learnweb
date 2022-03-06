@@ -3,13 +3,15 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
 
     <h:panelGroup layout="block" styleClass="metadata text-start" rendered="#{res ne null}">
         <h:form styleClass="mb-2">
-            <p:linkButton href="${userBean.getUrlProxied(res.url)}" value="#{msg.search_resource_visit}" styleClass="secondary-btn me-2" target="_blank"/>
+            <p:linkButton href="${userBean.getUrlProxied(res.url)}" styleClass="secondary-btn me-2" target="_blank"
+                          value="#{res.service == 'internet' ? msg.search_resource_visit : of:format1(msg.search_resource_visit_service, res.service.label)}"/>
 
             <p:linkButton href="${res.thumbnailLargest}" value="#{msg.search_resource_image}" styleClass="secondary-btn me-2" target="_blank"
                           rendered="#{res.type == 'image' and res.thumbnailLargest ne null}"/>
