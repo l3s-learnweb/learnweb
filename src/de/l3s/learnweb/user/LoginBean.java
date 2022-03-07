@@ -174,18 +174,6 @@ public class LoginBean extends ApplicationBean implements Serializable {
         }
 
         Organisation userOrganisation = user.getOrganisation();
-
-        // set default search service if not already selected
-        if (userBean.getPreference("SEARCH_SERVICE_TEXT") == null
-            || userBean.getPreference("SEARCH_SERVICE_IMAGE") == null
-            || userBean.getPreference("SEARCH_SERVICE_VIDEO") == null) {
-
-            userBean.setPreference("SEARCH_ACTION", userOrganisation.getDefaultSearchMode().name());
-            userBean.setPreference("SEARCH_SERVICE_TEXT", userOrganisation.getDefaultSearchServiceText().name());
-            userBean.setPreference("SEARCH_SERVICE_IMAGE", userOrganisation.getDefaultSearchServiceImage().name());
-            userBean.setPreference("SEARCH_SERVICE_VIDEO", userOrganisation.getDefaultSearchServiceVideo().name());
-        }
-
         String redirect = Faces.getRequestParameter("redirect");
         if (StringUtils.isNotEmpty(redirect)) {
             return redirect(user, redirect);
