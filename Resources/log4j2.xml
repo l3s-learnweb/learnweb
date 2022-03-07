@@ -18,16 +18,6 @@
             <DefaultRolloverStrategy max="30"/>
         </RollingFile>
 
-        <SMTP name="email" subject="${env:LEARNWEB_MAIL_SUBJECT}" to="astappiev@l3s.de,kemkes@l3s.de"
-              from="no-reply@l3s.de" smtpHost="l3s.de" smtpPort="587" bufferSize="10">
-            <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
-            <Filters>
-                <ThresholdFilter level="${env:LEARNWEB_MAIL_LOGLEVEL}" onMatch="NEUTRAL" onMismatch="DENY"/>
-                <!-- Rate is a number of events per second, current value is 2 messages per 1 hour (1/60/60 * maxBurst) -->
-                <BurstFilter level="OFF" rate="0.00056" maxBurst="2"/>
-            </Filters>
-        </SMTP>
-
         <Sentry name="Sentry" dsn="https://3b3136e07926401b8ec84c95803f88bc@sentry.kbs.uni-hannover.de/2">
             <Filters>
                 <ThresholdFilter level="${env:LEARNWEB_MAIL_LOGLEVEL}" onMatch="NEUTRAL" onMismatch="DENY"/>
@@ -49,7 +39,6 @@
         <Root level="DEBUG">
             <appender-ref ref="console"/>
             <appender-ref ref="file"/>
-            <appender-ref ref="email"/>
             <appender-ref ref="Sentry" level="WARN"/>
         </Root>
     </Loggers>

@@ -28,7 +28,6 @@
           <element id="library" level="project" name="Maven: com.fasterxml:classmate:1.5.1" />
           <element id="library" level="project" name="Maven: com.sun.mail:jakarta.mail:2.0.1" />
           <element id="library" level="project" name="Maven: com.sun.activation:jakarta.activation:2.0.1" />
-          <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
           <element id="library" level="project" name="Maven: org.omnifaces:omnifaces:4.0-M13" />
           <element id="library" level="project" name="Maven: org.primefaces:primefaces:jakarta:11.0.0" />
           <element id="library" level="project" name="Maven: com.github.librepdf:openpdf:1.3.27" />

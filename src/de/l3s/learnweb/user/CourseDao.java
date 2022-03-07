@@ -73,7 +73,7 @@ public interface CourseDao extends SqlObject, Serializable {
         params.put("wizard_param", SqlHelper.toNullable(course.getWizardParam()));
         params.put("next_x_users_become_moderator", course.getNextXUsersBecomeModerator());
         params.put("welcome_message", SqlHelper.toNullable(course.getWelcomeMessage()));
-        SqlHelper.setBitSet(params, "options_field", course.getOptions());
+        SqlHelper.setBitSet(params, Course.Option.values().length, "options_field", course.getOptions());
         params.put("updated_at", course.getUpdatedAt());
         params.put("created_at", course.getCreatedAt());
 
@@ -151,7 +151,7 @@ public interface CourseDao extends SqlObject, Serializable {
                 course.setWizardParam(rs.getString("wizard_param"));
                 course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
                 course.setWelcomeMessage(rs.getString("welcome_message"));
-                course.setOptions(SqlHelper.getBitSet(rs, "options_field", Course.Option.values().length));
+                course.setOptions(SqlHelper.getBitSet(rs, Course.Option.values().length, "options_field"));
                 course.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
                 course.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
                 cache.put(course);

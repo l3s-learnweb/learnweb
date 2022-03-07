@@ -119,6 +119,7 @@ class CourseDaoTest {
         assertEquals("test", retrievedCourse.get().getWizardParam());
         assertEquals(2, retrievedCourse.get().getNextXUsersBecomeModerator());
         assertEquals("Welcome to the public course", retrievedCourse.get().getWelcomeMessage());
+        assertTrue(retrievedCourse.get().getOption(Course.Option.Users_Disable_wizard));
     }
 
     @Test

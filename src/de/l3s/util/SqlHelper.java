@@ -33,7 +33,7 @@ public final class SqlHelper {
         return new HashMap<>();
     }
 
-    public static BitSet getBitSet(final ResultSet rs, final String prefix, final int length) throws SQLException {
+    public static BitSet getBitSet(final ResultSet rs, final int length, final String prefix) throws SQLException {
         int numberOfFields = (length + Long.SIZE - 1) / Long.SIZE;
         long[] options = new long[numberOfFields];
         for (int i = 0; i < numberOfFields; i++) {
@@ -42,8 +42,8 @@ public final class SqlHelper {
         return BitSet.valueOf(options);
     }
 
-    public static void setBitSet(final LinkedHashMap<String, Object> params, final String prefix, final BitSet bitSet) {
-        int numberOfFields = (bitSet.length() + Long.SIZE - 1) / Long.SIZE;
+    public static void setBitSet(final LinkedHashMap<String, Object> params, final int length, final String prefix, final BitSet bitSet) {
+        int numberOfFields = (length + Long.SIZE - 1) / Long.SIZE;
         long[] array = bitSet.toLongArray();
         for (int i = 0; i < numberOfFields; i++) {
             params.put(prefix + (i + 1), array.length > i ? array[i] : 0);
