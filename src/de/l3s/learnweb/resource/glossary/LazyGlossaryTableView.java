@@ -34,8 +34,6 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
 
     private final GlossaryResource glossaryResource;
 
-    private String toFilter;
-
     public LazyGlossaryTableView(GlossaryResource glossaryResource) {
         this.glossaryResource = glossaryResource;
     }
@@ -72,7 +70,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
             final String filterField = filterFieldOriginal;
 
             // ignore empty filter
-            toFilter = String.valueOf(filterValue).toLowerCase();
+            String toFilter = String.valueOf(filterValue).toLowerCase();
             if (StringUtils.isBlank(toFilter)) {
                 continue;
             }
@@ -94,7 +92,9 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
             .filter(allPredicates.stream().reduce(x -> true, Predicate::and))
             .collect(Collectors.toList());
 
-        if(filterBy.get("globalFilter") != null) highlightText(data);
+        if (filterBy.get("globalFilter") != null) {
+            highlightText(data, filterBy.get("globalFilter").getFilterValue().toString());
+        }
         // single column sort
         //Collections.sort(data, new LazySorter(field, order));
 
@@ -153,12 +153,14 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
         return str;
     }
 
-    private void highlightText(List<GlossaryEntry> data) {
+    private void highlightText(List<GlossaryEntry> data, String toFilter) {
         String[] fieldName = {"topicOne", "topicTwo", "topicThree", "description"};
         for (GlossaryEntry entry : data) {
             Arrays.stream(fieldName).forEach(field -> {
-                if (toFilter != null && !toFilter.isBlank() && matchesRegion(entry.get(field))) {
-                    if (!alreadyBold(entry.get(field))) entry.set(field, makeBold(entry.get(field)));
+                if (toFilter != null && !toFilter.isBlank() && matchesRegion(entry.get(field), toFilter)) {
+                    if (!alreadyBold(entry.get(field))) {
+                        entry.set(field, makeBold(entry.get(field)));
+                    }
                 } else {
                     entry.set(field, makeRegular(entry.get(field)));
                 }
@@ -166,8 +168,10 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
             for (GlossaryTerm term : entry.getTerms()) {
                 String[] fieldData = {"term", "acronym", "source", "phraseology"};
                 Arrays.stream(fieldData).forEach(field -> {
-                    if (toFilter != null && !toFilter.isBlank() && matchesRegion(term.get(field))) {
-                        if (!alreadyBold(term.get(field))) term.set(field, makeBold(term.get(field)));
+                    if (toFilter != null && !toFilter.isBlank() && matchesRegion(term.get(field), toFilter)) {
+                        if (!alreadyBold(term.get(field))) {
+                            term.set(field, makeBold(term.get(field)));
+                        }
                     } else {
                         term.set(field, makeRegular(term.get(field)));
                     }
@@ -176,7 +180,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
         }
     }
 
-    private Boolean matchesRegion (String str) {
+    private Boolean matchesRegion (String str, String toFilter) {
         for (int i = 0; i <= (str.length() - toFilter.length()); i++) {
             if (str.regionMatches(i, toFilter, 0, toFilter.length())) {
                 return true;

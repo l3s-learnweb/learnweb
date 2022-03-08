@@ -83,7 +83,7 @@
             <h:outputText value="#{item.description}" id="cell4" escape="false"/>
         </p:column>
         <p:column headerText="Pic" filterable="false" exportable="false">
-            <p:outputPanel id="entryPictures" layout="block" rendered="#{not empty item.pictures}">
+            <p:outputPanel id="entryPictures" layout="block" rendered="#{item.pictureCount gt 0}">
                 <i class="fas fa-camera"></i>
             </p:outputPanel>
             <p:overlayPanel for="entryPictures" dynamic="true">
@@ -160,8 +160,8 @@
 <p:dialog widgetVar="glossaryEditDialog" header="#{msg['Glossary.edit_glossary']}"
           modal="true" resizable="false" draggable="false" closeOnEscape="true">
     <h:form id="glossary_add" prependId="false" enctype="multipart/form-data">
-        <div class="d-flex">
-            <p:panelGrid id="grid" styleClass="my-0 mb-3 mx-auto" columns="3">
+        <div class="d-flex justify-content-around">
+            <p:panelGrid id="grid" styleClass="my-0 mb-3" columns="3">
                 <p:outputLabel for="@next" styleClass="fw-bold" value="#{msg['Glossary.topic']} 1"/>
                 <p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" editable="true">
                     <f:selectItems value="#{glossaryBean.availableTopicOne}"/>
@@ -196,6 +196,20 @@
                 </h:panelGroup>
                 <p:message for="description"/>
             </p:panelGrid>
+
+            <p:dataScroller value="#{glossaryBean.formEntry.pictures}" var="pic" chunkSize="10" mode="inline" scrollHeight="200">
+                <f:facet name="header">
+                    Edit Pictures
+                </f:facet>
+
+                <div class="flex-row">
+                    <img src="#{pic.getResourceUrl(glossaryBean.glossaryResource.id)}" class="d-block w-50" alt="#{glossaryBean.formEntry.description}"/>
+                    <p:commandLink id="delete_pic" title="#{msg.delete}"
+                                   update=":glossary_add :lang_terms" process="@this lang_terms" oncomplete="PF('glossaryEditDialog').resetPosition();">
+                        <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
+                    </p:commandLink>
+                </div>
+            </p:dataScroller>
 
             <p:fileUpload listener="#{glossaryBean.handleFileUpload}" multiple="true" auto="true"></p:fileUpload>
         </div>

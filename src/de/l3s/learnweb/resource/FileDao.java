@@ -67,6 +67,9 @@ public interface FileDao extends SqlObject, Serializable {
     @SqlQuery("SELECT f.* FROM lw_file f JOIN lw_resource_file rf USING (file_id) WHERE rf.resource_id = ? ORDER BY f.file_id DESC")
     List<File> findByResourceId(int resourceId);
 
+    @SqlQuery("SELECT f.* FROM lw_file f JOIN lw_glossary_entry_file ef USING (file_id) WHERE ef.entry_id = ? ORDER BY f.file_id DESC")
+    List<File> findByGlossaryEntryId(int entryId);
+
     default void insertResourceFiles(Resource resource, Collection<File> files) {
         if (!files.isEmpty()) {
             PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_resource_file (resource_id, file_id) VALUES (?, ?) ON DUPLICATE KEY "

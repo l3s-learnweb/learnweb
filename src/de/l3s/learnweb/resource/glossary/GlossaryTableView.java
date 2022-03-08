@@ -65,6 +65,10 @@ public class GlossaryTableView implements Serializable {
         return entry.getPictures();
     }
 
+    public int getPictureCount() {
+        return  entry.getPictureCount();
+    }
+
     public String getTerm() {
         return term.getTerm();
     }

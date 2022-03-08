@@ -3,7 +3,6 @@ package de.l3s.learnweb.resource.glossary;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.File;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
@@ -42,7 +42,8 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     private boolean imported; // This value is `true` when the entry has been imported from a file.
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
-    private final List<File> pictures = new ArrayList<>();
+    private List<File> pictures;
+    private int pictureCount;
 
     /**
      * do nothing constructor.
@@ -262,8 +263,18 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     }
 
     public List<File> getPictures() {
-        log.debug(pictures);
+        if (pictures == null) {
+            pictures = Learnweb.dao().getFileDao().findByGlossaryEntryId(id);
+        }
         return pictures;
+    }
+
+    public int getPictureCount() {
+        return pictureCount;
+    }
+
+    public void setPictureCount(final int pictureCount) {
+        this.pictureCount = pictureCount;
     }
 
     /**
