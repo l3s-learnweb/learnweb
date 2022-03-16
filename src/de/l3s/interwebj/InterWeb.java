@@ -3,6 +3,7 @@ package de.l3s.interwebj;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.apache.commons.io.IOUtils;
@@ -15,6 +16,8 @@ import com.sun.jersey.oauth.client.OAuthClientFilter;
 import com.sun.jersey.oauth.signature.HMAC_SHA1;
 import com.sun.jersey.oauth.signature.OAuthParameters;
 import com.sun.jersey.oauth.signature.OAuthSecrets;
+
+import de.l3s.learnweb.resource.ResourceDecorator;
 
 public class InterWeb implements Serializable
 {
@@ -165,7 +168,7 @@ public class InterWeb implements Serializable
         InterWeb iw = new InterWeb("http://learnweb.l3s.uni-hannover.de/interweb/api/", "***REMOVED***", "***REMOVED***");
 
         SearchQuery interwebResponse = iw.search("london", params);
-        var res = interwebResponse.getResults();
+        List<ResourceDecorator> res = interwebResponse.getResults();
         System.out.println(res);
     }
 }
