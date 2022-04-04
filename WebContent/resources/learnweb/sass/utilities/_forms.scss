@@ -57,7 +57,7 @@
     }
   }
 
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(sm) {
     grid-template-columns: minmax(3rem, max-content) auto;
 
     > .ui-outputlabel {

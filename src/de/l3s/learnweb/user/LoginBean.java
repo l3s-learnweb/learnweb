@@ -186,7 +186,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         // if the user logs in from the start or the login page, redirect him to the welcome page
         String viewId = Faces.getViewId();
         if (StringUtils.endsWithAny(viewId, "/index.xhtml", "/user/login.xhtml", "/user/register.xhtml", "/admin/users.xhtml")) {
-            return userOrganisation.getWelcomePage() + "?faces-redirect=true";
+            return "/lw/" + userOrganisation.getWelcomePage() + "?faces-redirect=true";
         }
 
         // otherwise reload his last page
