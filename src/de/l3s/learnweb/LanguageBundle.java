@@ -68,18 +68,21 @@ public class LanguageBundle extends ResourceBundle {
         setParent(getLanguageBundle(locale));
     }
 
-    private LanguageBundle(Locale loc, ResourceBundle sourceBundle) {
-        // iterate over keys an replace constants of type #[key_name]
-        ArrayList<String> keys = Collections.list(sourceBundle.getKeys());
+    /**
+     * Creates a new {@code LanguageBundle} by copying all entries from {@code sourceBundle}. In addition its iterates over all values and replace constants of type #[key_name]
+     */
+    private LanguageBundle(Locale locale, ResourceBundle sourceBundle) {
+        this.locale = locale;
 
-        locale = loc;
+        // copy content from sourceBundle
+        ArrayList<String> keys = Collections.list(sourceBundle.getKeys());
         values = new HashMap<>(keys.size());
         for (String key : keys) {
             String value = sourceBundle.getString(key);
-
             values.put(key, value);
         }
 
+        // replace constants
         boolean replacedAtLeastOneConstant;
         do {
             replacedAtLeastOneConstant = false;
@@ -197,6 +200,8 @@ public class LanguageBundle extends ResourceBundle {
 
     /**
      * True if the given value is equal to any translation of the given msg key.
+     *
+     * This is mainly a helper method for the glossary import feature
      */
     public static boolean isEqualForAnyLocale(String value, String msgKey) {
         for (Locale localeToCheck : getSupportedLocales()) {
