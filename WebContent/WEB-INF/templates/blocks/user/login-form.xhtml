@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:o="http://omnifaces.org/ui">
 
-<o:form>
+<o:form id="login_form">
     <div class="form-group">
         <p:outputLabel for="@next" value="#{msg.username}:" indicateRequired="false"/>
         <p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}"/>
@@ -29,7 +29,7 @@
         <p:message for="@previous"/>
     </h:panelGroup>
 
-	<p:commandButton action="#{loginBean.login}" value="#{msg.loginLabel}" ajax="false"/>
+	<p:commandButton id="login_buttom" action="#{loginBean.login}" value="#{msg.loginLabel}" ajax="false"/>
 
 	<h:outputLink value="#{request.contextPath}/lw/user/password.jsf" styleClass="d-block mt-2">#{msg.forgotten_password}</h:outputLink>
 </o:form>
