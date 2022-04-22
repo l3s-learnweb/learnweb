@@ -17,9 +17,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.DeploymentException;
 import jakarta.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
+import org.omnifaces.util.Servlets;
 
 import de.l3s.util.UrlHelper;
 
@@ -29,6 +31,7 @@ public class ConfigProvider implements Serializable {
     @Serial
     private static final long serialVersionUID = 8999792363825397979L;
     private static final Logger log = LogManager.getLogger(ConfigProvider.class);
+    private static final String PROP_KEY_PREFIX = "learnweb_".toLowerCase(Locale.ROOT);
 
     /**
      * All the application configuration stored here.
@@ -77,6 +80,10 @@ public class ConfigProvider implements Serializable {
         this.servlet = servlet;
         if (servlet) {
             loadJndiVariables();
+
+            String contextPath = Servlets.getContext().getContextPath();
+            log.info("Found environment context: {}", contextPath);
+            replaceVariablesContext(contextPath);
         } else {
             development = true;
             version = "dev";
@@ -120,8 +127,8 @@ public class ConfigProvider implements Serializable {
             Map<String, String> env = System.getenv();
             env.forEach((originalKey, propValue) -> {
                 String propKey = originalKey.toLowerCase(Locale.ROOT);
-                if (propKey.startsWith("learnweb_")) {
-                    propKey = propKey.substring(9);
+                if (propKey.startsWith(PROP_KEY_PREFIX)) {
+                    propKey = propKey.substring(PROP_KEY_PREFIX.length());
                     log.debug("Found environment variable {}: {} (original name {})", propKey, propValue, originalKey);
                     properties.setProperty(propKey, propValue);
                 }
@@ -141,8 +148,8 @@ public class ConfigProvider implements Serializable {
                 NameClassPair next = list.next();
                 String namespacedKey = namespace + next.getName();
                 String propKey = next.getName().toLowerCase(Locale.ROOT);
-                if (propKey.startsWith("learnweb_")) {
-                    propKey = propKey.substring(9);
+                if (propKey.startsWith(PROP_KEY_PREFIX)) {
+                    propKey = propKey.substring(PROP_KEY_PREFIX.length());
                     String propValue = ctx.lookup(namespacedKey).toString();
                     log.debug("Found JNDI variable {}: {} (original name {})", propKey, propValue, namespacedKey);
                     properties.setProperty(propKey, propValue);
@@ -153,6 +160,21 @@ public class ConfigProvider implements Serializable {
             ctx.close();
         } catch (Exception e) {
             log.error("Unable to load JNDI variables", e);
+        }
+    }
+
+    private void replaceVariablesContext(String contextPath) {
+        if (StringUtils.isNotBlank(contextPath)) {
+            String prefix = contextPath.replace("/", "") + "_";
+            for (String propKey : properties.stringPropertyNames()) {
+                if (propKey.startsWith(prefix)) {
+                    final String newKey = propKey.substring(prefix.length());
+                    log.debug("Property {} replaced by {}", newKey, propKey);
+                    properties.setProperty(newKey, properties.getProperty(propKey));
+                }
+            }
+        } else {
+            log.debug("No context path specified, skipping variable replacement");
         }
     }
 
