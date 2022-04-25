@@ -133,7 +133,9 @@
     },
     "ignoreFiles": [
       "**/node_modules/**",
-      "**/bundle/**"
+      "**/bundle/**",
+      "**/california/theme/**",
+      "**/california/variables/**"
     ],
     "overrides": [
       {

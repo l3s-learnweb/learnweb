@@ -147,7 +147,7 @@ body {
         top: 50%;
         right: auto;
         bottom: auto;
-        margin-top: math.div(-1 * $iconSize, 2);
+        margin-top: divide(-1 * $iconSize, 2);
         color: $inputIconColor;
       }
 

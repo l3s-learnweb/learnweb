@@ -38,7 +38,7 @@ body {
     }
 
     .ui-tag-icon {
-      margin-right: math.div($inlineSpacing, 2);
+      margin-right: divide($inlineSpacing, 2);
       font-size: $badgeFontSize;
     }
   }

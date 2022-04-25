@@ -57,8 +57,8 @@ body {
         position: absolute;
         top: 50%;
         left: 50%;
-        margin-top: math.div(-1 * $checkboxHeight, 2);
-        margin-left: math.div(-1 * $checkboxWidth, 2);
+        margin-top: divide(-1 * $checkboxHeight, 2);
+        margin-left: divide(-1 * $checkboxWidth, 2);
       }
     }
   }

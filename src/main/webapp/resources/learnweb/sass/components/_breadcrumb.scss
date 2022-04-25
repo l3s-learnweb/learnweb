@@ -1,7 +1,7 @@
 .breadcrumb {
   display: none;
-  background-color: $white;
-  border: 1px solid $primaryColor;
+  background-color: var(--panel-bg);
+  border: 1px solid var(--primary);
   border-left: 0;
   border-right: 0;
   align-items: center;
@@ -20,7 +20,7 @@
 
     &.ui-state-active {
       .breadcrumb-title {
-        color: $white;
+        color: var(--white);
       }
     }
 
@@ -32,7 +32,7 @@
           background: none;
 
           a {
-            color: $gray-700 !important;
+            color: var(--heading-color) !important;
           }
         }
 
@@ -40,7 +40,7 @@
           pointer-events: none;
 
           &:hover {
-            color: $gray-700 !important;
+            color: var(--heading-color) !important;
           }
         }
 
@@ -52,31 +52,31 @@
 
     div {
       display: flex;
-      color: $gray-700;
+      color: var(--heading-color);
       text-decoration: none;
       height: 2.4rem;
       position: relative;
       cursor: pointer;
 
       &:hover {
-        background: $primaryColor;
+        background: var(--primary);
 
         a {
-          color: $white !important;
+          color: var(--white) !important;
           text-decoration: none;
 
           i {
-            color: $white;
+            color: var(--white);
           }
         }
 
         .breadcrumb-toggle {
-          background: $primaryColor;
+          background: var(--primary);
         }
       }
 
       a {
-        color: $gray-700;
+        color: var(--heading-color);
         height: 100%;
         padding: 0 10px 0 30px;
         display: flex;
@@ -92,14 +92,14 @@
         right: -1.2rem;
         transform: scale(0.707) rotate(45deg);
         z-index: 1;
-        background: $white;
-        box-shadow: 1px -1px 0 0 $primaryColor;
+        background: var(--panel-bg);
+        box-shadow: 1px -1px 0 0 var(--primary);
         padding-right: 0;
 
         &:hover,
         &:focus {
-          color: $white;
-          background: $primaryDarkColor !important;
+          color: var(--white);
+          background: var(--primary-dark) !important;
         }
 
         i {
@@ -116,9 +116,9 @@
 
     ul {
       position: absolute;
-      color: $white;
+      color: var(--white);
       z-index: 10;
-      background: $primaryColor;
+      background: var(--primary);
       box-shadow: $box-shadow;
       list-style: none;
       padding: 0;
@@ -135,7 +135,7 @@
           text-decoration: none;
 
           &:hover {
-            background: $primaryDarkColor;
+            background: var(--primary-dark);
           }
         }
       }

@@ -45,8 +45,8 @@ body {
         position: absolute;
         left: 50%;
         top: 50%;
-        margin-left: math.div(-1 * $iconSize, 2);
-        margin-top: math.div(-1 * $iconSize, 2);
+        margin-left: divide(-1 * $iconSize, 2);
+        margin-top: divide(-1 * $iconSize, 2);
 
         &.ui-icon-check {
           @include icon_override("\e909");

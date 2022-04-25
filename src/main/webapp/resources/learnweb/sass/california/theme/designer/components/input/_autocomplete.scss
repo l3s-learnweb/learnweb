@@ -24,7 +24,7 @@ body {
     }
 
     .ui-autocomplete-multiple-container {
-      padding: math.div(nth($inputPadding, 1), 2) nth($inputPadding, 2);
+      padding: divide(nth($inputPadding, 1), 2) nth($inputPadding, 2);
 
       .ui-autocomplete-token {
         padding: 1px 0;
@@ -37,11 +37,11 @@ body {
         border-radius: $borderRadius;
 
         .ui-autocomplete-token-label {
-          padding: 0 $iconSize * 2 0 math.div($iconSize, 2);
+          padding: 0 $iconSize * 2 0 divide($iconSize, 2);
         }
 
         .ui-autocomplete-token-icon {
-          margin-top: math.div(-1 * $iconSize, 2);
+          margin-top: divide(-1 * $iconSize, 2);
           position: absolute;
           @include icon_override("\e90b");
         }
@@ -49,7 +49,7 @@ body {
 
       .ui-autocomplete-input-token {
         margin: 0;
-        padding: math.div(nth($inputPadding, 1), 2) 0;
+        padding: divide(nth($inputPadding, 1), 2) 0;
         display: inline-block;
         vertical-align: middle;
         float: none;
@@ -58,7 +58,7 @@ body {
           font-family: $fontFamily;
           font-size: $inputTextFontSize;
           color: $inputTextColor;
-          -webkit-appearance: none;
+          //-webkit-appearance: none;
           appearance: none;
           padding: 0;
           margin: 0;

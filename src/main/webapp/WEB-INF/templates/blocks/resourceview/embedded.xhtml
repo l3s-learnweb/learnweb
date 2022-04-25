@@ -39,7 +39,7 @@
     </c:when>
 
     <c:when test="${res.type eq 'website'}">
-        <p:tabView styleClass="res-view-tabs res-embedded-tabs" activeIndex="#{res.defaultTab.ordinal()}">
+        <p:tabView styleClass="res-embedded-tabs" activeIndex="#{res.defaultTab.ordinal()}">
             <p:tab title="${msg['resource.tab.SCREENSHOT']}">
                 <img src="#{res.thumbnailLargest}" alt="#{res.title}" class="d-block"/>
             </p:tab>
@@ -58,7 +58,7 @@
     </c:when>
 
     <c:when test="${res.type eq 'text' and res.downloadUrl ne null}">
-        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-white p-1"></iframe>
+        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-panel p-1"></iframe>
     </c:when>
 
     <c:when test="${res.type eq 'survey'}">
@@ -87,7 +87,7 @@
     </c:when>
 
     <c:otherwise>
-        <div class="bg-dark-90 text-center text-white align-self-center p-4 px-5 m-3">
+        <div class="bg-dark text-center text-white align-self-center p-4 px-5 m-3">
             <h:outputText value="#{msg['resource.no_preview']}" styleClass="fs-4 d-block mb-4"/>
             <p:linkButton icon="fas fa-download" value="#{msg.download}" href="#{resourceDetailBean.resource.downloadUrl}"
                           rendered="#{resourceDetailBean.resource.downloadUrl ne null}"/>

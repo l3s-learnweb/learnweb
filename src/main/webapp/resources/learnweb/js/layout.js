@@ -14,10 +14,68 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
     if (this.wrapper.length === 0) return;
     this.header = this.wrapper.children('.navbar');
+    this.sidebar = this.wrapper.children('.layout-sidebar');
     this.menuButton = this.header.find('#menu-button');
+
+    this.sidebarMenuClick = false;
 
     this._bindEvents();
     this._autoComplete();
+  },
+
+  _bindEvents() {
+    // Used for expanding resource filters on devices without hover
+    $(document).on('click', '.res-filters .filter', (e) => {
+      const $target = $(e.currentTarget);
+      $target.toggleClass('ui-state-expand');
+
+      if ($target.hasClass('ui-state-expand')) {
+        $(document).one('click', () => {
+          $target.removeClass('ui-state-expand');
+        });
+      }
+    });
+
+    $(window).on('beforeunload', () => {
+      PF('ajax-status').trigger('start');
+
+      if (typeof onUnloadCommand === 'function') {
+        onUnloadCommand();
+      }
+    });
+
+    /**
+     * Listener to trigger modal close, when clicked on dialog overlay.
+     */
+    $(document).on('click', '.ui-dialog-mask', (e) => {
+      getWidgetVarById(e.currentTarget.id.replace('_modal', '')).hide();
+    });
+
+    this.menuButton.off('click').on('click', (e) => {
+      if (this.isDesktop()) {
+        this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active');
+        if (this.wrapper.hasClass('layout-wrapper-sidebar-inactive')) {
+          this.wrapper.removeClass('layout-wrapper-sidebar-inactive');
+          setPreference('HIDE_SIDEBAR', false);
+        } else {
+          this.wrapper.addClass('layout-wrapper-sidebar-inactive');
+          setPreference('HIDE_SIDEBAR', true);
+        }
+      } else {
+        this.wrapper.removeClass('layout-wrapper-sidebar-inactive');
+        this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
+      }
+
+      e.preventDefault();
+    });
+
+    $(document.body).off('click.layoutBody').on('click.layoutBody', () => {
+      if (!this.sidebarMenuClick && (this.wrapper.hasClass('layout-wrapper-sidebar-mobile-active'))) {
+        this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active');
+      }
+
+      this.sidebarMenuClick = false;
+    });
   },
 
   _autoComplete() {
@@ -58,41 +116,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     });
   },
 
-  _bindEvents() {
-    $(window).on('beforeunload', () => {
-      PF('ajax-status').trigger('start');
-
-      if (typeof onUnloadCommand === 'function') {
-        onUnloadCommand();
-      }
-    });
-
-    /**
-     * Listener to trigger modal close, when clicked on dialog overlay.
-     */
-    $(document).on('click', '.ui-dialog-mask', (e) => {
-      getWidgetVarById(e.currentTarget.id.replace('_modal', '')).hide();
-    });
-
-    this.menuButton.off('click').on('click', (e) => {
-      if (this.isDesktop()) {
-        this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active');
-        if (this.wrapper.hasClass('layout-wrapper-sidebar-inactive')) {
-          this.wrapper.removeClass('layout-wrapper-sidebar-inactive');
-          setPreference('HIDE_SIDEBAR', false);
-        } else {
-          this.wrapper.addClass('layout-wrapper-sidebar-inactive');
-          setPreference('HIDE_SIDEBAR', true);
-        }
-      } else {
-        this.wrapper.removeClass('layout-wrapper-sidebar-inactive');
-        this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
-      }
-
-      e.preventDefault();
-    });
-  },
-
   isDesktop() {
     return window.innerWidth > 1200; // Do not forget to change scss value according
   },
@@ -119,104 +142,108 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 
   init(cfg) {
     this._super(cfg);
-    this.menuitemLinks = this.jq.find('.ui-menuitem-link:not(.ui-state-disabled)');
 
-    this.bindEvents();
+    this.menu = this.jq;
+    this.menulinks = this.menu.find('a');
 
-    this.markCurrentMenuItem();
+    this._bindEvents();
+    this._expandActiveItems();
   },
 
-  bindEvents() {
-    // Used for expanding resource filters on devices without hover
-    $(document).on('click', '.res-filters .filter', (e) => {
-      const $target = $(e.currentTarget);
-      $target.toggleClass('ui-state-expand');
+  _bindEvents() {
+    this.menulinks.off('click.menu').on('click.menu', (e) => {
+      const link = $(e.currentTarget);
+      const item = link.parent('li');
+      const submenu = item.children('ul');
+      const hasAction = link.href !== '#';
+      const clickOnIcon = e.target.nodeName === 'I';
 
-      if ($target.hasClass('ui-state-expand')) {
-        $(document).one('click', () => {
-          $target.removeClass('ui-state-expand');
-        });
-      }
-    });
-
-    this.menuitemLinks.on('click', (e) => {
-      const $currentLink = $(e.currentTarget);
-
-      if (e.target.className.indexOf('ui-menuitem-icon-expand') === -1) {
-        const href = $currentLink.attr('href');
-
-        if (href && href !== '#') {
-          window.location.href = href;
-          e.preventDefault();
-          return;
+      if (item.hasClass('active-menuitem')) {
+        if (submenu.length) {
+          submenu.slideUp(400, () => {
+            item.removeClass('active-menuitem');
+          });
         }
+      } else if (submenu.length && (clickOnIcon || !hasAction)) {
+        this.deactivateItems(item.siblings(), true);
+        this.activate(item, true);
       }
 
-      const submenu = $currentLink.parent();
-      if (submenu.hasClass('ui-menu-parent')) {
-        if (this.isExpanded(submenu)) {
-          this.collapseTreeItem(submenu);
-        } else {
-          this.expandTreeItem(submenu, false);
-        }
+      if (submenu.length && (!hasAction || clickOnIcon)) {
+        e.preventDefault();
       }
-
-      e.preventDefault();
     });
   },
 
-  isExpanded(item) {
-    return item.children('.ui-menu-list').is(':visible');
-  },
+  activate(item, animate) {
+    const submenu = item.children('ul');
+    item.addClass('active-menuitem');
 
-  collapseTreeItem(submenu) {
-    submenu.find('> .ui-menuitem-link > .ui-menuitem-text').attr('aria-expanded', false);
-    submenu.children('.ui-menu-list').attr('aria-hidden', true);
-
-    submenu.children('.ui-menu-list').slideUp('normal', 'easeInOutCirc', () => {
-      submenu.removeClass('ui-state-expand');
-    });
-  },
-
-  expandTreeItem(submenu, restoring) {
-    submenu.find('> .ui-menuitem-link > .ui-menuitem-text').attr('aria-expanded', true);
-    submenu.children('.ui-menu-list').attr('aria-hidden', false);
-
-    if (restoring) {
-      submenu.addClass('ui-state-expand');
-    } else {
-      submenu.addClass('ui-state-expand');
-      submenu.children('.ui-menu-list').hide().slideDown('normal', 'easeInOutCirc');
+    if (submenu.length) {
+      if (animate) {
+        submenu.slideDown();
+      } else {
+        submenu.show();
+      }
     }
   },
 
-  markCurrentMenuItem() {
+  deactivate(item) {
+    const submenu = item.children('ul');
+    item.removeClass('active-menuitem');
+
+    if (submenu.length) {
+      submenu.hide();
+    }
+  },
+
+  deactivateItems(items, animate) {
+    for (let i = 0; i < items.length; i++) {
+      const item = items.eq(i);
+      const submenu = item.children('ul');
+
+      if (submenu.length) {
+        if (item.hasClass('active-menuitem')) {
+          item.removeClass('active-menuitem');
+          item.find('.ink').remove();
+
+          if (animate) {
+            submenu.slideUp('normal', () => {
+              submenu.parent().find('.active-menuitem').each((ignore, el) => {
+                this.deactivate($(el));
+              });
+            });
+          } else {
+            submenu.hide();
+            item.find('.active-menuitem').each((ignore, el) => {
+              this.deactivate($(el));
+            });
+          }
+        } else {
+          item.find('.active-menuitem').each((ignore, el) => {
+            this.deactivate($(el));
+          });
+        }
+      } else if (item.hasClass('active-menuitem')) {
+        this.deactivate(item);
+      }
+    }
+  },
+
+  _expandActiveItems() {
     let currentPath = window.location.href;
     if (currentPath.includes('groups_')) {
       const replace = currentPath.substring(currentPath.indexOf('_'), currentPath.indexOf('.'));
       currentPath = currentPath.replace(replace, '');
     }
 
-    this.menuitemLinks.filter((i, el) => currentPath.indexOf(el.href) === 0).each((i, el) => {
-      const $activeMenuLink = $(el);
-      const $activeMenuItem = $activeMenuLink.closest('.ui-menuitem');
+    this.menulinks.filter((i, el) => currentPath.indexOf(el.href) === 0).each((i, el) => {
+      const link = $(el);
 
-      $activeMenuLink.addClass('ui-state-active');
-      $activeMenuItem[0].scrollIntoView();
-
-      this.expandMenuItemThree($activeMenuItem);
+      link.parentsUntil('.layout-menu', 'li').each((ignore, li) => {
+        this.activate($(li));
+      });
     });
-  },
-
-  expandMenuItemThree(submenu) {
-    if (!submenu.hasClass('ui-state-empty')) {
-      this.expandTreeItem(submenu, true);
-    }
-
-    const parentSubmenu = submenu.parent().closest('.ui-menu-parent');
-    if (parentSubmenu.length) {
-      this.expandMenuItemThree(parentSubmenu);
-    }
   },
 });
 
@@ -297,7 +324,7 @@ $(() => {
   // After that, we can access any method of it by using `PF('learnweb')`
   PrimeFaces.cw('LearnwebTheme', 'learnweb', { id: 'learnweb' });
 
-  const $fbResources = $('[data-resview="default"]');
+  const $fbResources = $('[data-resview="single"]');
   if ($.fancybox && $fbResources.length) {
     $fbResources
       .on('click', (e) => e.preventDefault())
@@ -383,3 +410,36 @@ PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
     }
   },
 });
+
+if (PrimeFaces.widget.InputSwitch) {
+  PrimeFaces.widget.InputSwitch = PrimeFaces.widget.InputSwitch.extend({
+
+    init(cfg) {
+      this._super(cfg);
+
+      if (this.input.prop('checked')) {
+        this.jq.addClass('ui-inputswitch-checked');
+      }
+    },
+
+    toggle() {
+      if (this.input.prop('checked')) {
+        this.uncheck();
+        setTimeout(() => {
+          this.jq.removeClass('ui-inputswitch-checked');
+        }, 100);
+      } else {
+        this.check();
+        setTimeout(() => {
+          this.jq.addClass('ui-inputswitch-checked');
+        }, 100);
+      }
+    },
+  });
+}
+
+if (PrimeFaces.widget.Menu) {
+  PrimeFaces.widget.Menu.prototype.align = ((() => function () {
+    this.jq.css({ left: 0, top: 0, 'transform-origin': 'center top' }).position(this.cfg.pos);
+  })(PrimeFaces.widget.Menu.prototype.align));
+}

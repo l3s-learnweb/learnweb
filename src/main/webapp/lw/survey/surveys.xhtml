@@ -41,28 +41,20 @@
 				<h:outputText value="#{survey.description}" escape="false"/>
 			</p:column>
 
-			<p:column headerText="#{msg['options']}" styleClass="td-text-end">
-				<div class="d-flex justify-content-end">
-					<p:commandLink styleClass="icon-link me-2" oncomplete="PF('createSurvey').show();" action="#{surveyTemplatesBean.onCopySurvey(survey.id)}" update="createSurvey" process="@this">
-						<i class="fas fa-fw fa-copy text-warning" aria-hidden="true"></i>
-						<h:outputText value="#{msg['copy']}"/>
-					</p:commandLink>
-					<p:tooltip for="@next" rendered="#{survey.associated}" value="#{msg['survey.template_already_associated']}." position="left"/>
-					<h:panelGroup id="edit" layout="block" styleClass="me-2">
-						<p:commandLink styleClass="icon-link" action="#{surveyTemplatesBean.onEditSurvey(survey.id)}" disabled="#{survey.associated}">
-							<i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
-							<h:outputText value="#{msg['edit']}"/>
-						</p:commandLink>
-					</h:panelGroup>
-					<p:tooltip for="@next" rendered="#{survey.associated}" value="#{msg['survey.template_already_associated']}." position="left"/>
-					<h:panelGroup id="delete" layout="block">
-						<p:commandLink styleClass="icon-link" disabled="#{survey.associated}" action="#{surveyTemplatesBean.onDeleteSurvey(survey)}" update="@form" process="@this">
-							<p:confirm header="#{msg['delete']}" message="#{msg['survey.delete_template']}" icon="fas fa-triangle-exclamation"/>
-							<i class="fas fa-fw fa-trash-alt text-warning" aria-hidden="true"></i>
-							<h:outputText value="#{msg['delete']}"/>
-						</p:commandLink>
-					</h:panelGroup>
-				</div>
+			<p:column styleClass="text-end">
+				<p:commandButton styleClass="ui-button-warning rounded-button ui-button-flat" icon="fas fa-copy" title="#{msg.copy}"
+								 process="@this" action="#{surveyTemplatesBean.onCopySurvey(survey.id)}" update="createSurvey"
+								 oncomplete="PF('createSurvey').show();"/>
+
+				<p:commandButton styleClass="ui-button-info rounded-button ui-button-flat" icon="fas fa-pencil"
+								 title="#{survey.associated ? msg['survey.template_already_associated'] : msg.edit}"
+								 process="@this" action="#{surveyTemplatesBean.onEditSurvey(survey.id)}" update="createSurvey" disabled="#{survey.associated}"/>
+
+				<p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash"
+								 title="#{survey.associated ? msg['survey.template_already_associated'] : msg.delete}"
+								 process="@this" action="#{surveyTemplatesBean.onDeleteSurvey(survey.id)}" update="@form" disabled="#{survey.associated}">
+					<p:confirm header="#{msg['delete']}" message="#{msg['survey.delete_template']}" icon="fas fa-triangle-exclamation"/>
+				</p:commandButton>
 			</p:column>
 		</p:dataTable>
 	</h:form>

@@ -1,5 +1,5 @@
 .shepherd-element {
-  background: $white;
+  background: var(--panel-bg);
   border-radius: $btn-border-radius;
   box-shadow: $box-shadow;
   border: $border-width solid $gray-500;

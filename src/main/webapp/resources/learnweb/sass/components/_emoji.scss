@@ -53,8 +53,8 @@
   z-index: 999;
   max-width: 16.5rem;
   overflow: hidden;
-  background: $white;
-  border: 1px solid $gray-500;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
   box-shadow: $box-shadow-sm;
   margin-top: 8px;
   outline: none;
@@ -64,7 +64,7 @@
     margin: 0;
     display: table;
     width: 100%;
-    background: $gray-300;
+    background: var(--gray-300);
     list-style: none;
 
     > li {
@@ -83,12 +83,12 @@
       cursor: pointer;
 
       &:hover {
-        background: $gray-400;
+        background: var(--border-color);
         opacity: 1;
       }
 
       &.active {
-        background: $gray-500;
+        background: var(--gray-500);
       }
     }
   }
@@ -115,10 +115,10 @@
       height: 2.5rem;
       text-align: center;
       cursor: pointer;
-      color: $body-color;
+      color: var(--body-color);
 
       &:hover {
-        background: $gray-300;
+        background: var(--gray-300);
       }
     }
   }

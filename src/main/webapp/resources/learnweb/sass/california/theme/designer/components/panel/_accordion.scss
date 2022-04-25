@@ -38,13 +38,13 @@ body {
 
       &.ui-state-active {
         border-color: $accordionHeaderActiveBorderColor;
-        background: $panelHeaderBg;
+        background: $accordionHeaderActiveBg;
         color: $accordionHeaderTextActiveColor;
 
         &:hover {
           border-color: $accordionHeaderActiveHoverBorderColor;
           background: $accordionHeaderActiveHoverBg;
-          color: $accordionHeaderTextHoverColor;
+          color: $accordionHeaderActiveTextHoverColor;
         }
       }
 

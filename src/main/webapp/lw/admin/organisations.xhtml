@@ -38,12 +38,11 @@
 				<h:outputText value="#{organisation.welcomePage}"/>
 			</p:column>
 
-			<p:column headerText="#{msg.options}" styleClass="td-text-end">
-				<h:link title="#{msg.edit}" styleClass="icon-link" outcome="/lw/admin/organisation">
-					<i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
+			<p:column styleClass="text-end">
+				<p:linkButton styleClass="ui-button-info rounded-button ui-button-flat" icon="fas fa-pencil" title="#{msg.edit}"
+                              outcome="/lw/admin/organisation">
 					<f:param name="organisation_id" value="#{organisation.id}"/>
-					<h:outputText value="#{msg.edit}"/>
-				</h:link>
+				</p:linkButton>
 			</p:column>
 		</p:dataTable>
 	</h:form>

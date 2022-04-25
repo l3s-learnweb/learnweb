@@ -1,0 +1,85 @@
+body {
+  .ui-fluid .ui-message {
+    width: 100%;
+    margin: 0.2rem 0 0;
+  }
+
+  .ui-message:empty {
+    display: none;
+  }
+
+  .ui-selectonemenu .ui-selectonemenu-label {
+    min-height: inherit;
+  }
+
+  .ui-inplace {
+    .ui-inplace-cancel {
+      @extend .ui-button-secondary;
+    }
+  }
+}
+
+// Custom Grid solution (Horizontal form Layout)
+.fields-grid {
+  display: grid;
+  grid-gap: $spacer;
+  margin-bottom: $spacer;
+
+  > .ui-outputlabel {
+    margin-bottom: -$spacer;
+  }
+
+  @include media-breakpoint-up(sm) {
+    grid-template-columns: minmax(3rem, max-content) auto;
+
+    > .ui-outputlabel {
+      max-width: 13rem;
+      margin-bottom: 0;
+    }
+
+    .fg-row {
+      grid-column: 1/span 2;
+    }
+  }
+}
+
+
+// PrimeFlex field (Vertical form layout)
+// https://www.primefaces.org/primeflex/formlayout
+
+.field {
+  margin-bottom: $spacer;
+}
+
+.field > label {
+  display: inline-block;
+  margin-bottom: $spacer * 0.5;
+}
+
+.field.grid > label {
+  display: flex;
+  align-items: center;
+}
+
+.field > small {
+  margin-top: $spacer * 0.25;
+}
+
+.formgroup-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.formgroup-inline .field,
+.formgroup-inline .field-checkbox,
+.formgroup-inline .field-radiobutton {
+  margin-right: $spacer;
+}
+
+.formgroup-inline .field > label,
+.formgroup-inline .field-checkbox > label,
+.formgroup-inline .field-radiobutton > label {
+  margin-right: $spacer * 0.5;
+  margin-bottom: 0;
+}

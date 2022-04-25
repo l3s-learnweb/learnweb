@@ -1,3 +1,16 @@
+$resource-default-color: #606c88;
+$resource-text-color: #205493;
+$resource-video-color: #d32f2f;
+$resource-image-color: #d32f2f;
+$resource-audio-color: #d32f2f;
+$resource-pdf-color: #d32f2f;
+$resource-website-color: #00a6d2;
+$resource-spreadsheet-color: #378d4f;
+$resource-presentation-color: #eaa200;
+$resource-document-color: #0071bc;
+$resource-survey-color: #684c4e;
+$resource-glossary-color: #6a4aa5;
+
 .resource-log-snippet {
   display: flex;
   flex-wrap: nowrap;
@@ -13,62 +26,62 @@
 }
 
 .res-t-icon {
-  color: $ash;
-  @include ui-icon-content($fa-var-file);
+  color: $resource-default-color;
+  @include fa-icon-content($fa-var-file);
 
   .res-t-text & {
-    color: $blueDark;
-    @include ui-icon-content($fa-var-file-alt);
+    color: $resource-text-color;
+    @include fa-icon-content($fa-var-file-alt);
   }
 
   .res-t-video & {
-    color: $danger;
-    @include ui-icon-content($fa-var-file-video);
+    color: $resource-video-color;
+    @include fa-icon-content($fa-var-file-video);
   }
 
   .res-t-image & {
-    color: $danger;
-    @include ui-icon-content($fa-var-file-image);
+    color: $resource-image-color;
+    @include fa-icon-content($fa-var-file-image);
   }
 
   .res-t-audio & {
-    color: $danger;
-    @include ui-icon-content($fa-var-file-audio);
+    color: $resource-audio-color;
+    @include fa-icon-content($fa-var-file-audio);
   }
 
   .res-t-pdf & {
-    color: $danger;
-    @include ui-icon-content($fa-var-file-pdf);
+    color: $resource-pdf-color;
+    @include fa-icon-content($fa-var-file-pdf);
   }
 
   .res-t-website & {
-    color: $cyanDark;
-    @include ui-icon-content($fa-var-link);
+    color: $resource-website-color;
+    @include fa-icon-content($fa-var-link);
   }
 
   .res-t-spreadsheet & {
-    color: $greenDark;
-    @include ui-icon-content($fa-var-file-excel);
+    color: $resource-spreadsheet-color;
+    @include fa-icon-content($fa-var-file-excel);
   }
 
   .res-t-presentation & {
-    color: $yellowDarker;
-    @include ui-icon-content($fa-var-file-powerpoint);
+    color: $resource-presentation-color;
+    @include fa-icon-content($fa-var-file-powerpoint);
   }
 
   .res-t-document & {
-    color: $blue;
-    @include ui-icon-content($fa-var-file-word);
+    color: $resource-document-color;
+    @include fa-icon-content($fa-var-file-word);
   }
 
   .res-t-survey & {
-    color: $cappuccino;
-    @include ui-icon-content($fa-var-poll-h);
+    color: $resource-survey-color;
+    @include fa-icon-content($fa-var-poll-h);
   }
 
   .res-t-glossary & {
-    color: $purple;
-    @include ui-icon-content($fa-var-book);
+    color: $resource-glossary-color;
+    @include fa-icon-content($fa-var-book);
   }
 }
 
@@ -126,9 +139,9 @@
 img.res-image-simple {
   max-height: 100%;
   max-width: 100%;
-  border-radius: $btn-border-radius;
+  border-radius: var(--border-radius);
   animation: fadein $transition-duration;
-  border: $border-width solid $gray-400;
+  border: var(--border-width) var(--border-style) var(--border-color);
   transition: max-height $transition-duration ease, max-width $transition-duration ease;
   transform-origin: center;
 }
@@ -137,25 +150,26 @@ ul.res-breadcrumbs {
   padding: 0 1rem;
   margin-bottom: 0;
   list-style: none;
-  background: $gray-100;
-  border: $border-width solid $gray-200;
+  background: var(--gray-100);
+  border: var(--border-width) var(--border-style) var(--border-color);
   border-left: 0;
+  border-right: 0;
   border-radius: 0;
 
   li {
     display: inline-block;
     position: relative;
-    border: $border-width solid transparent;
+    border: var(--border-width) solid transparent;
 
     &.ui-droppable-active {
-      background: lighten($yellow, 30%);
-      border-color: $yellow;
+      background: scale-color($warning, $lightness: 70%);
+      border-color: var(--warning);
       border-style: dashed;
     }
 
     &.ui-droppable-hover {
-      border-color: $yellowDark;
-      background: $yellowDark;
+      border-color: scale-color($warning, $lightness: -10%);
+      background: scale-color($warning, $lightness: -10%);
     }
 
     a {
@@ -164,7 +178,7 @@ ul.res-breadcrumbs {
       padding: 0.2rem 0.5rem;
 
       &:hover {
-        background-color: $gray-300 !important;
+        background-color: var(--gray-300) !important;
       }
     }
 
@@ -212,7 +226,7 @@ ul.res-filters {
     &.active,
     &.ui-state-expand,
     &:hover {
-      background-color: $gray-400;
+      background-color: var(--border-color);
     }
 
     &.ui-state-expand .filter-sub-bar,
@@ -236,24 +250,24 @@ ul.res-filters {
     padding-left: 0;
     left: 0;
     z-index: 10;
-    border: $border-width solid $gray-400;
+    border: var(--border-width) var(--border-style) var(--border-color);
     max-height: 15rem;
     overflow-y: auto;
     scrollbar-width: thin;
 
     li {
-      background: $gray-200;
+      background: var(--light);
 
       a {
         display: block;
         padding: 0.5rem;
-        color: $black !important;
+        color: var(--black) !important;
         text-decoration: none;
       }
 
       &.active,
       &:hover {
-        background: $gray-400;
+        background: var(--border-color);
       }
     }
   }
@@ -277,16 +291,19 @@ ul.res-filters {
     display: none;
 
     input {
-      border: $border-width solid $dark;
+      border: var(--border-width) var(--border-style) var(--dark);
       border-right: 0;
-      padding: 2px;
+      padding: 1px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
     button {
-      border: $border-width solid $dark;
+      border: var(--border-width) var(--border-style) var(--dark);
       border-left: 0;
       background: none;
-      border-radius: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
       width: 2em;
 
       .ui-icon {
@@ -301,7 +318,7 @@ ul.res-filters {
 
       &:hover,
       &:focus {
-        background-color: $gray-200 !important;
+        background-color: var(--light) !important;
       }
     }
   }
@@ -311,7 +328,7 @@ ul.res-filters {
       background: none;
 
       a {
-        color: $primary !important;
+        color: var(--primary) !important;
       }
     }
   }
@@ -344,7 +361,7 @@ ul.res-filters {
     color: rgba(0, 0, 0, 0.4);
     text-align: center;
     border-radius: 50%;
-    background: $white content-box;
+    background: var(--panel-bg) content-box;
     transition: transform 333ms ease, opacity 333ms ease;
     position: absolute;
     top: 0;
@@ -363,7 +380,7 @@ ul.res-filters {
     &::before {
       opacity: 1;
       transform: scale(0.7);
-      color: $primaryColor;
+      color: var(--primary);
       //font-weight: 900 !important;
     }
   }
@@ -372,10 +389,10 @@ ul.res-filters {
 .res-li {
   display: flex;
   padding: $grid-gutter-width * 0.5;
-  border-bottom: $border-width solid $gray-400;
+  border-bottom: var(--border-width) var(--border-style) var(--border-color);
 
   &:hover {
-    background: $gray-200;
+    background: var(--light);
   }
 
   .res-col {
@@ -398,7 +415,7 @@ ul.res-filters {
 
 .res-datatable {
   padding: $grid-gutter-width * 0.5;
-  border-bottom: $border-width solid $gray-400;
+  border-bottom: var(--border-width) var(--border-style) var(--border-color);
 
   @include media-breakpoint-up(sm) {
     .res-row-type {
@@ -468,13 +485,13 @@ ul.res-filters {
         background: none !important;
 
         span {
-          color: $primaryColor !important;
+          color: var(--primary) !important;
         }
       }
 
       &:hover {
         background: none !important;
-        color: lighten($primaryColor, 10%) !important;
+        color: var(--primary-lighter) !important;
       }
 
       .ui-icon-carat-2-n-s::before {
@@ -506,7 +523,7 @@ ul.res-filters {
       }
 
       &:hover {
-        background: lighten($primaryColor, 40%) !important;
+        background: var(--primary-light) !important;
       }
     }
   }
@@ -543,8 +560,8 @@ ul.res-filters {
       height: 100%;
       content: '';
       z-index: 9;
-      background: $light;
-      border: 3px dashed $primaryColor;
+      background: var(--light);
+      border: 3px dashed var(--primary);
     }
 
     &::after {
@@ -552,7 +569,7 @@ ul.res-filters {
 
       content: fa-content($fa-var-cloud-upload-alt);
       z-index: 10;
-      color: $primaryColor;
+      color: var(--primary);
       position: absolute;
       top: 50%;
       left: 50%;
@@ -583,18 +600,18 @@ ul.res-filters {
 .res-block {
   display: block;
   position: relative;
-  color: $body-color;
-  background: $gray-200;
+  color: var(--body-color);
+  background: var(--light);
   box-shadow: $box-shadow-sm;
 
   .res-bl-preview {
     &::before {
-      background-color: $gray-400;
+      background-color: var(--border-color);
     }
 
     img {
       transition: opacity $transition-duration ease-in-out;
-      background-color: $white;
+      background-color: var(--white);
       object-fit: cover;
       pointer-events: none;
       user-select: none;
@@ -613,8 +630,8 @@ ul.res-filters {
       justify-content: center;
       align-items: center;
       font-size: 1.25rem;
-      color: $gray-600;
-      background: $gray-300;
+      color: var(--gray-600);
+      background: var(--gray-300);
     }
 
     .res-bl-menu {
@@ -647,15 +664,15 @@ ul.res-filters {
       }
 
       .res-bl-author {
-        color: $gray-600;
+        color: var(--gray-600);
         font-size: $font-size-sm;
       }
     }
   }
 
   &:hover {
-    color: $primaryTextColor;
-    background: $primaryColor;
+    color: var(--primary-text-color);
+    background: var(--primary);
 
     .res-selector {
       opacity: 1;
@@ -672,30 +689,30 @@ ul.res-filters {
     }
 
     .res-bl-icon {
-      color: $primaryColor;
+      color: var(--primary);
     }
 
     .res-bl-author,
     .res-bl-menu {
-      color: $primaryTextColor !important;
+      color: var(--primary-text-color) !important;
     }
   }
 
   .ui-draggable-helper &, // When dragging an element which was not selected before
   .ui-selecting &, // when the lasso includes this element
   .ui-selected & { // after a successful selection
-    color: $primaryTextColor;
-    background: $primaryDarkColor;
+    color: var(--primary-text-color);
+    background: var(--primary-dark);
 
     .res-bl-preview:empty {
       &::before {
-        background-color: lighten($primaryColor, 40%);
+        background-color: var(--primary-light);
       }
     }
 
     .res-bl-preview:not(:empty) {
       &::before {
-        background-color: $primaryColor;
+        background-color: var(--primary);
       }
 
       img {
@@ -704,12 +721,12 @@ ul.res-filters {
     }
 
     .res-bl-icon {
-      color: $primaryDarkColor;
+      color: var(--primary-dark);
     }
 
     .res-bl-menu,
     .res-bl-author {
-      color: $primaryTextColor !important;
+      color: var(--primary-text-color) !important;
     }
   }
 
@@ -720,36 +737,36 @@ ul.res-filters {
   }
 
   .ui-droppable-active & { // When a draggable that can be dropped on this droppable is activated
-    border-color: $yellow;
+    border-color: var(--warning);
     border-style: dashed;
 
     .res-bl-icon {
-      background: lighten($yellow, 30%);
+      background: scale-color($warning, $lightness: 70%);
     }
   }
 
   .ui-droppable-hover & { // When dragging a draggable over this droppable
-    color: $primaryTextColor;
-    background: $yellowDark;
-    border-color: $yellowDark;
+    color: var(--primary-text-color);
+    background: scale-color($warning, $lightness: -10%);
+    border-color: scale-color($warning, $lightness: -10%);
 
     .res-bl-preview { // actually not used, folders don't have preview
-      border-color: $yellowDark;
+      border-color: scale-color($warning, $lightness: -10%);
     }
 
     .res-bl-icon {
-      color: $primaryTextColor;
-      background: $yellowDark;
+      color: var(--primary-text-color);
+      background: scale-color($warning, $lightness: -10%);
     }
 
     .res-bl-author {
-      color: $primaryTextColor !important;
+      color: var(--primary-text-color) !important;
     }
   }
 
   .ui-draggable-helper & { // The floating element
-    background-color: $primaryColor;
-    color: $white;
+    background-color: var(--primary);
+    color: var(--white);
     box-shadow: $box-shadow;
     opacity: 1;
 
@@ -789,8 +806,10 @@ ul.res-filters {
   .ui-toolbar {
     border: 0;
     padding: 0.1875rem 1rem;
-    background: $primaryColor;
-    color: $primaryTextColor;
+    background: var(--primary);
+    color: var(--primary-text-color);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 
     .ui-separator {
       pointer-events: none;
@@ -803,13 +822,13 @@ ul.res-filters {
       justify-content: flex-end;
 
       .ui-button {
-        background-color: $yellow;
-        border: $border-width solid $yellow;
+        background-color: var(--warning);
+        border: var(--border-width) var(--border-style) var(--warning);
 
         &.ui-state-hover,
         &.ui-state-focus {
-          background-color: $yellowDarker;
-          border-color: $yellowDarker;
+          background-color: scale-color($warning, $lightness: -10%);
+          border-color: scale-color($warning, $lightness: -10%);
         }
 
         &:last-child {
@@ -824,7 +843,7 @@ ul.res-filters {
   position: absolute;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   background-color: rgba(0, 0, 0, 0.1);
-  border: $border-width dotted $black;
+  border: var(--border-width) dotted var(--black);
   pointer-events: none;
   z-index: 99999 !important;
 }

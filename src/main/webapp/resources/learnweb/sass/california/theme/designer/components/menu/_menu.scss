@@ -108,13 +108,13 @@ body {
           .ui-icon-triangle-1-e:last-child {
             @include icon_override("\e932");
             position: relative;
-            margin-right: math.div(-1 * $iconSize, 2);
+            margin-right: divide(-1 * $iconSize, 2);
             color: $menuitemIconColor;
           }
 
           .ui-icon-triangle-1-s:last-child {
             @include icon_override("\e930");
-            margin-right: math.div(-1 * $iconSize, 2);
+            margin-right: divide(-1 * $iconSize, 2);
             color: $menuitemIconColor;
           }
         }

@@ -19,7 +19,7 @@
 
   .vjs-big-play-button:focus,
   &:hover .vjs-big-play-button {
-    color: $primaryColor;
+    color: var(--primary);
     background-color: rgba($white, 0.5);
   }
 
@@ -58,7 +58,7 @@
   }
 
   .vjs-play-progress {
-    background-color: $primaryColor;
+    background-color: var(--primary);
   }
 
   .vjs-remaining-time {
@@ -70,7 +70,7 @@
     width: 3em;
 
     &:hover {
-      color: $primaryColor;
+      color: var(--primary);
     }
   }
 

@@ -109,14 +109,11 @@
                 </p:selectBooleanCheckbox>
             </p:column>
 
-            <p:column headerText="#{msg.options}">
-                <h:commandLink action="#{adminUsersBean.rootLogin(userView.user)}" rendered="#{userBean.canLoginToAccount(userView.user)}">
-                    #{msg.loginLabel}
-                </h:commandLink>
-            </p:column>
-
-            <p:column headerText="#{msg.logs}">
-                <h:outputLink value="https://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{userView.id}" target="_blank">#{msg.mouse_tracker}</h:outputLink>
+            <p:column styleClass="text-end">
+                <p:commandButton title="#{msg.loginLabel}" styleClass="ui-button-success rounded-button ui-button-flat" action="#{adminUsersBean.rootLogin(userView.user)}"
+                                 process="@this" icon="fas fa-arrow-right-to-bracket" rendered="#{userBean.canLoginToAccount(userView.user)}"/>
+                <p:linkButton styleClass="ui-button-secondary rounded-button ui-button-flat" icon="fas fa-arrow-pointer" target="_blank"
+                              title="#{msg.mouse_tracker}" href="https://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{userView.id}"/>
             </p:column>
         </p:dataTable>
     </h:form>

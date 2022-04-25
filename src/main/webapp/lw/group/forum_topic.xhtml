@@ -41,7 +41,7 @@
 
 <ui:define name="center_layout">
     <h:form prependId="false">
-        <p:panel styleClass="ui-widget-content-flat ui-widget-content-border-0">
+        <p:panel styleClass="ui-widget-content-flat">
             <f:facet name="header">
                 #{msg['ForumIndex.topic']}: #{forumTopicBean.topic.title}
             </f:facet>
@@ -56,10 +56,13 @@
                          paginator="true" paginatorPosition="bottom" tableStyleClass="h-100" styleClass="text-break"
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-                <p:column headerText="#{msg.author}" styleClass="py-2 text-center align-baseline w-15">
+                <p:column headerText="#{msg.author}" styleClass="py-2 text-center align-baseline" width="130">
                     <lw:user user="#{post.user}">
                         <h:outputText styleClass="d-block mb-1 fw-bold" value="#{post.user.username}"/>
-                        <img class="img-fluid profile-picture square fluent" src="${post.user.imageUrl}" alt="#{post.user.fullName}"/>
+
+                        <p:avatar label="${post.user.initials}" size="large" dynamicColor="true" saturation="50" lightness="50">
+                            <h:graphicImage value="#{post.user.imageUrl}" alt="#{post.user.fullName}" rendered="#{not empty post.user.imageUrl}"/>
+                        </p:avatar>
                     </lw:user>
 
                     <div class="text-muted small">

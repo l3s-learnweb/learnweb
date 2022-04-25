@@ -17,7 +17,7 @@
       height: 0;
       width: 0;
       border: 1rem solid transparent;
-      border-bottom-color: $gray-200;
+      border-bottom-color: var(--light);
       margin: -1rem 0 0 -1rem;
     }
   }
@@ -27,7 +27,7 @@
     float: left;
     width: 100%;
     position: relative;
-    background: $gray-200;
+    background: var(--light);
     margin: $grid-gutter-width * 0.5;
     padding: 1rem;
   }

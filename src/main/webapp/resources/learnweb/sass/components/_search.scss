@@ -23,19 +23,19 @@
     top: 0.5em;
     left: 4.5rem;
     right: 0;
-    background-color: $border-color;
+    background-color: var(--border-color);
     height: 1px;
   }
 }
 
 .snippet-clicked {
   &.search-item-web {
-    background-color: $lightGreen;
+    background-color: scale-color($success, $lightness: 85%);
   }
 
   &.search-item-image,
   &.search-item-video {
-    border: 3px solid $greenDarker;
+    border: 3px solid scale-color($info, $lightness: 85%);
   }
 }
 
@@ -80,11 +80,7 @@
     }
 
     .item-origin {
-      color: $blue;
-    }
-
-    &:visited .item-origin {
-      color: $blueDarker;
+      color: var(--info);
     }
 
     &:hover .item-title {
@@ -99,18 +95,18 @@
   display: flex;
   flex-direction: column;
   word-wrap: break-word;
-  color: $body-color;
-  background-color: $gray-200;
+  color: var(--body-color);
+  background-color: var(--light);
 
   .item-thumbnail {
     &::before {
-      background: $gray-900;
+      background: var(--gray-900);
     }
 
     img {
       object-fit: cover;
       pointer-events: none;
-      background-color: $white;
+      background-color: var(--white);
       transition: opacity $transition-duration ease-in-out;
     }
   }
@@ -130,17 +126,17 @@
     top: auto;
     left: auto;
     opacity: 0.75;
-    background-color: $highlightBg;
-    color: $primaryTextColor;
-    border-radius: $btn-border-radius;
+    background-color: var(--primary-lighter);
+    color: var(--primary-text-color);
+    border-radius: var(--border-radius);
     font-size: $font-size-sm;
     padding: 0 0.2rem;
   }
 
   &:hover {
     text-decoration: none;
-    color: $primaryTextColor;
-    background: $primaryColor;
+    color: var(--primary-text-color);
+    background: var(--primary);
 
     .item-thumbnail {
       img {
@@ -263,7 +259,7 @@
   .fancybox-outer {
     margin: auto;
     overflow: visible;
-    background: $white;
+    background: var(--panel-bg);
     box-shadow: $box-shadow-lg;
     transition: opacity 0.3s;
   }
@@ -275,7 +271,7 @@
 
   /* Set color for background element */
   .fancybox-bg {
-    background-color: $gray-700;
+    background-color: var(--gray-700);
   }
 
   &.fancybox-is-open .fancybox-bg {
@@ -311,25 +307,20 @@
     left: auto;
     width: $search-lightbox-caption-width;
     padding: 0;
-    background: $highlightBg;
+    background: var(--primary-lighter);
 
     .fancybox-caption__body {
       max-height: 100%;
       padding: $grid-gutter-width;
     }
-
-    /* Make space between elements smaller */
-    .field {
-      margin-bottom: 0.5rem;
-    }
   }
 
   /* Align buttons at the right side  */
   .fancybox-toolbar {
-    background: $highlightBg;
+    background: var(--primary-lighter);
     max-height: $search-lightbox-toolbar-height;
     width: $search-lightbox-caption-width;
-    border-bottom: 1px solid $gray-900;
+    border-bottom: 1px solid var(--gray-900);
     display: flex;
     flex-direction: row-reverse;
   }
@@ -362,7 +353,7 @@
 
     .fancybox-inner::before {
       content: '';
-      background: $highlightBg;
+      background: var(--primary-lighter);
       right: 0;
       top: 0;
       width: $search-lightbox-caption-width;
@@ -372,7 +363,7 @@
 
     /* Change arrow color */
     .fancybox-navigation button {
-      color: $highlightBg !important;
+      color: var(--primary-lighter) !important;
       top: calc(50% - #{$search-lightbox-toolbar-height * 0.5});
       padding: 0;
     }

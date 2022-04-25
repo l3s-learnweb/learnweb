@@ -73,7 +73,7 @@ body {
           color: $inputListItemHighlightTextColor;
 
           &.ui-sortable-placeholder {
-            background-color: scale-color($highlightBg, $lightness: -20%);
+            background-color: var(--primary-light);
           }
         }
       }

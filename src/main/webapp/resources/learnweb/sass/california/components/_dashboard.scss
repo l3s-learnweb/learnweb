@@ -1,0 +1,18 @@
+body {
+  .ui-dashboard {
+    @extend .row;
+
+    .ui-dashboard-column {
+      @extend .col;
+
+      float: initial;
+      padding-bottom: 0;
+
+      &.ui-sortable-disabled {
+        .ui-panel-titlebar {
+          cursor: default;
+        }
+      }
+    }
+  }
+}

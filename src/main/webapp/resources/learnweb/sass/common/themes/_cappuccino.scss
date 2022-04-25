@@ -1,5 +1,7 @@
-@import '../colors';
+$primary: #684c4e;
 
-$primaryColor: $cappuccino;
-$primaryDarkColor: $cappuccinoDark;
-$primaryDarkerColor: $cappuccinoDarker;
+$primary-dark: #503739;
+$primary-darker: #3c2628;
+
+$primary-light: scale-color($primary, $lightness: 60%);
+$primary-lighter: scale-color($primary, $lightness: 80%);

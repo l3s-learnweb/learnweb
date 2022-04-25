@@ -6,7 +6,7 @@
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-<p:tabView dynamic="true" cache="true" prependId="false" styleClass="res-view-tabs">
+<p:tabView dynamic="true" cache="true" prependId="false">
     <p:ajax event="tabChange" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
 
     <p:tab title="#{msg.details_right_pane}">

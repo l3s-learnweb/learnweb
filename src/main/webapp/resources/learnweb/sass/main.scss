@@ -1,10 +1,16 @@
 // Load variables
 @import 'common/variables';
-@import 'common/global';
+@import 'common/utilities';
 
 // Libraries loaded from node_modules
-@import 'external/bootstrap'; // Bootstrap grid and utils (No other components!)
-@import 'external/fontawesome'; // Icons
+@import 'vendor/bootstrap'; // Bootstrap grid and utils (Only selected components)
+@import 'vendor/fontawesome'; // Only Regular & Solid Icons
+
+// Global styles
+@import 'global/root';
+@import 'common/themes';
+@import 'global/type';
+@import 'global/utils';
 
 // PrimeFaces components styles
 @import 'california/theme/theme';
@@ -18,23 +24,13 @@
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
 @import 'layouts/template';
 
-// Load utilities and helpers
-@import 'utilities/background';
-@import 'utilities/buttons';
-@import 'utilities/fancybox';
-@import 'utilities/forms';
-@import 'utilities/grid';
-@import 'utilities/others';
-@import 'utilities/tables';
-
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
 @import 'components/autocomplete';
 @import 'components/breadcrumb';
-@import 'components/dashboard';
 @import 'components/emoji';
+@import 'components/fancybox';
 @import 'components/groups';
 @import 'components/guide';
-@import 'components/landing';
 @import 'components/og-grid';
 @import 'components/resource-view';
 @import 'components/resources';
@@ -43,3 +39,7 @@
 @import 'components/search-history';
 @import 'components/transcript';
 @import 'components/video-js';
+
+// Page specific styles
+@import 'pages/landing';
+@import 'pages/dashboard';

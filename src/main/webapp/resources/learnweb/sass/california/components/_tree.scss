@@ -1,0 +1,29 @@
+body {
+  .ui-tree {
+    padding: 0;
+
+    .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label {
+      @include text-truncate;
+    }
+
+    .ui-treenode {
+      &.ui-droppable-active {
+        background: scale-color($warning, $lightness: 70%);
+        outline: 1px dashed var(--warning);
+
+        .ui-state-hover {
+          background: transparent !important;
+        }
+      }
+
+      &.ui-droppable-hover {
+        background: var(--warning);
+        outline: 1px solid var(--warning);
+
+        .ui-state-hover {
+          background: transparent !important;
+        }
+      }
+    }
+  }
+}

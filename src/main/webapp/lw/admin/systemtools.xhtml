@@ -144,9 +144,9 @@
                 <h:outputText value="#{process.progress}"/>
             </p:column>
 
-            <p:column headerText="#{msg.options}">
-                <p:commandButton styleClass="m-auto d-block" value="Terminate" actionListener="#{adminSystemBean.terminateProcess(process)}"
-                                 update="processTable" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()">
+            <p:column styleClass="text-end">
+                <p:commandButton title="Terminate" styleClass="ui-button-danger rounded-button ui-button-flat" actionListener="#{adminSystemBean.terminateProcess(process)}"
+                                 process="@this" update="processTable" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()" icon="fas fa-hand">
                 </p:commandButton>
             </p:column>
         </p:dataTable>

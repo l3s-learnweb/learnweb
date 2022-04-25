@@ -88,32 +88,28 @@
                 <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
             </p:column>
 
-            <p:column headerText="#{msg.options}" styleClass="td-text-end mw-r15" >
-                <h:outputLink styleClass="icon-link" value="admin/course.jsf?course_id=#{course.id}">
-                    <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
-                    <h:outputText value="#{msg.edit}"/>
-                </h:outputLink>
+            <p:column styleClass="text-end mw-r15">
+                <p:linkButton styleClass="ui-button-info rounded-button ui-button-flat" icon="fas fa-pencil" title="#{msg.edit}" href="admin/course.jsf">
+                    <f:param name="course_id" value="#{course.id}"/>
+                </p:linkButton>
 
-                <p:commandLink styleClass="icon-link" actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this"
-                               update="@form" rendered="#{course.memberCount == 0 || userBean.admin}" title="#{msg.delete}"
-                               onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
-                    <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
-                    <h:outputText value="#{msg.delete}"/>
+                <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.delete}"
+                                 process="@this" actionListener="#{adminCoursesBean.onDeleteCourse(course)}" update="@form"
+                                 rendered="#{course.memberCount == 0 || userBean.admin}"
+                                 onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
                     <p:confirm message="#{of:format1(msg.courses_delete_question, course.title)}"/>
-                </p:commandLink>
+                </p:commandButton>
 
-                <p:commandLink styleClass="icon-link" actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
-                               update="@form" rendered="#{userBean.admin}"
-                               onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
-                    <i class="fas fa-fw fa-eye-slash text-muted" aria-hidden="true"></i>
-                    <h:outputText value="#{msg.anonymise}"/>
+                <p:commandButton styleClass="ui-button-secondary rounded-button ui-button-flat" icon="fas fa-eye-slash" title="#{msg.anonymise}"
+                                 process="@this" actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" update="@form" rendered="#{userBean.admin}"
+                                 onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
                     <p:confirm message="#{of:format1(msg.courses_anonymise_question, course.title)}"/>
-                </p:commandLink>
+                </p:commandButton>
 
-                <h:outputLink styleClass="icon-link" value="admin/users_submissions.jsf?course_id=#{course.id}">
-                    <i class="fas fa-fw fa-check-circle text-success" aria-hidden="true"></i>
-                    <h:outputText value="#{msg['Submission.view_user_submissions']}"/>
-                </h:outputLink>
+                <p:linkButton styleClass="ui-button-success rounded-button ui-button-flat" icon="fas fa-check-double"
+                              title="#{msg['Submission.view_user_submissions']}" href="admin/users_submissions.jsf">
+                    <f:param name="course_id" value="#{course.id}"/>
+                </p:linkButton>
             </p:column>
         </p:dataTable>
     </h:form>

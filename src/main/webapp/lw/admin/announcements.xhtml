@@ -57,20 +57,16 @@
                 </p:selectBooleanCheckbox>
             </p:column>
 
-            <p:column headerText="#{msg.options}" styleClass="td-text-end">
-                <h:outputLink value="admin/announcement.jsf" styleClass="icon-link" title="#{msg.edit}">
-                    <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
-                    <h:outputText value="#{msg.edit}"/>
+            <p:column styleClass="text-end">
+                <p:linkButton styleClass="ui-button-info rounded-button ui-button-flat" icon="fas fa-pencil" title="#{msg.edit}" href="admin/announcement.jsf">
                     <f:param name="announcement_id" value="#{news.id}"/>
-                </h:outputLink>
+                </p:linkButton>
 
-                <p:commandLink actionListener="#{adminAnnouncementsBean.onDelete(news)}" styleClass="icon-link" process="@this"
-                               update="@form" title="#{msg.delete}"
-                               onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()">
-                    <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
-                    <h:outputText value="#{msg.delete}"/>
-                    <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, news.title)}"/>
-                </p:commandLink>
+                <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.delete}"
+                                 process="@this" actionListener="#{adminAnnouncementsBean.onDelete(news)}" update="@form"
+                                 onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()">
+                    <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, news.title)}" icon="fas fa-triangle-exclamation"/>
+                </p:commandButton>
             </p:column>
         </p:dataTable>
     </h:form>

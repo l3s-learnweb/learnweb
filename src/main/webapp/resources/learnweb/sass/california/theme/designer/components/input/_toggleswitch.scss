@@ -25,7 +25,7 @@ body {
       width: 1.250rem;
       height: 1.250rem;
       left: .25rem;
-      margin-top: math.div(-1 * 1.250rem, 2);
+      margin-top: divide(-1 * 1.250rem, 2);
       border-radius: $inputSwitchHandleBorderRadius;
       transition: transform $transitionDuration;
     }

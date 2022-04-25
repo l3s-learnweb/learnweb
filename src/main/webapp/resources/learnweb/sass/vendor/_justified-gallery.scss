@@ -33,11 +33,11 @@
       position: absolute;
       bottom: 0;
       padding: 5px;
-      background-color: $black;
+      background-color: var(--black);
       left: 0;
       right: 0;
       margin: 0;
-      color: $white;
+      color: var(--white);
       font-size: 12px;
       font-weight: 300;
       font-family: sans-serif;

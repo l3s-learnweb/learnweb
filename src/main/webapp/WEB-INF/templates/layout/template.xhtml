@@ -5,7 +5,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:p="http://primefaces.org/ui"
-      lang="#{userBean.localeCode}">
+      lang="#{userBean.localeCode}" data-theme="emerald">
 
     <!--@elvariable id="pageTitle" type="java.lang.String"-->
     <!--@elvariable id="helpText" type="java.lang.String"-->
@@ -56,7 +56,7 @@
                         <ui:include src="parts/sidebar.xhtml"/>
                     </ui:fragment>
 
-                    <div class="layout-main d-flex flex-column" id="main">
+                    <div class="layout-main ui-fluid d-flex flex-column" id="main">
                         <main class="layout-main-content #{extraPageClass}">
                             <p:messages id="message" showDetail="false" showSummary="true" escape="false" globalOnly="true">
                                 <p:autoUpdate />
@@ -104,7 +104,7 @@
 
             <p:confirmDialog widgetVar="gConfirmDlg" global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}">
                 <p:commandButton value="#{msg.yes}" type="button" styleClass="ui-confirmdialog-yes" icon="fas fa-check"/>
-                <p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="fas fa-close"/>
+                <p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no ui-button-outlined ui-button-secondary" icon="fas fa-xmark"/>
             </p:confirmDialog>
 
             <ui:include src="parts/guide.xhtml"/>

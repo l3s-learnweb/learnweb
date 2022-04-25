@@ -20,8 +20,8 @@ body {
         margin: 0;
         margin-left: $inlineSpacing;
         @include action-icon();
-        margin-top: math.div(-1 * $actionIconHeight, 8);
-        margin-bottom: math.div(-1 * $actionIconHeight, 4);
+        margin-top: divide(-1 * $actionIconHeight, 8);
+        margin-bottom: divide(-1 * $actionIconHeight, 4);
 
         .ui-icon-closethick {
           @include icon_override("\e90b");
@@ -71,8 +71,8 @@ body {
           position: absolute;
           top: 50%;
           left: 50%;
-          margin-left: math.div(-1 * $iconSize, 2);
-          margin-top: math.div(-1 * $iconSize, 2);
+          margin-left: divide(-1 * $iconSize, 2);
+          margin-top: divide(-1 * $iconSize, 2);
         }
       }
     }

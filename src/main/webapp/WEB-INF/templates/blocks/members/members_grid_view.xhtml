@@ -14,9 +14,9 @@
     <ui:repeat var="user" value="#{members}">
         <li class="gridder-list member-item" data-griddercontent="#user${user.id}">
             <p:commandLink onclick="return false;" styleClass="member-block">
-                <div class="member-picture">
-                    <img src="#{user.imageUrl}" alt="#{user.fullName}"/>
-                </div>
+                <p:avatar label="${user.initials}" styleClass="ui-avatar-fluid" dynamicColor="true" saturation="50" lightness="50">
+                    <h:graphicImage value="#{user.imageUrl}" alt="#{user.fullName}" rendered="#{not empty user.imageUrl}"/>
+                </p:avatar>
 
                 <ui:fragment rendered="#{not empty user.credits}">
                     <div class="member-star"></div>

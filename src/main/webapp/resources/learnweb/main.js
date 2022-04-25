@@ -6,7 +6,6 @@ import Tooltip from 'bootstrap/js/src/tooltip';
 import Popover from 'bootstrap/js/src/popover';
 import Scrollspy from 'bootstrap/js/src/scrollspy';
 import Collapse from 'bootstrap/js/src/collapse';
-import Dropdown from 'bootstrap/js/src/dropdown';
 
 // Learnweb modules
 import './js/modules/jquery.auto-complete';
@@ -17,5 +16,4 @@ window.bootstrap = {
   Popover,
   Scrollspy,
   Collapse,
-  Dropdown,
 };

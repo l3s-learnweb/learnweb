@@ -19,7 +19,7 @@
     text-align: center;
 
     a {
-      color: $black;
+      color: var(--black);
       display: block;
       cursor: pointer;
       padding: 20% 0;
@@ -36,13 +36,13 @@
     }
 
     &.header {
-      border-bottom: 1px $gray-500 solid;
+      border-bottom: 1px var(--gray-500) solid;
     }
 
     &.active {
       a {
         background-color: #1d86c8;
-        color: $white;
+        color: var(--white);
 
         &:hover {
           background-color: #36a0e2;
@@ -51,7 +51,7 @@
 
       .not-current {
         background-color: #8fcaef;
-        color: $white;
+        color: var(--white);
 
         &:hover {
           background-color: #bcdff5;

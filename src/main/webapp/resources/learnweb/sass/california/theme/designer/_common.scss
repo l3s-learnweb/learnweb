@@ -1,13 +1,13 @@
-* {
-    box-sizing: border-box;
-}
+//* {
+//    box-sizing: border-box;
+//}
 
 body {
-    .ui-widget {
-        font-family: $fontFamily;
-        font-size: $fontSize;
-        text-decoration: none;
-    }
+    //.ui-widget {
+    //    font-family: $fontFamily;
+    //    font-size: $fontSize;
+    //    text-decoration: none;
+    //}
 
     .ui-icon {
         font-size: $iconSize;
@@ -25,7 +25,7 @@ body {
     }
 
     .ui-widget-overlay {
-        -webkit-animation-name: modal-in;
+        //-webkit-animation-name: modal-in;
         animation-name: modal-in;
         animation-duration: $animationDuration;
         animation-timing-function: $animationTimingFunction;

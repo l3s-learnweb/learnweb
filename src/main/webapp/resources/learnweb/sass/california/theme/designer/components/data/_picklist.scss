@@ -64,7 +64,7 @@ body {
         left: nth($inputPadding, 2);
         top: 50%;
         right: auto;
-        margin-top: math.div(-1 * $iconSize, 2) - math.div($inlineSpacing, 2);
+        margin-top: divide(-1 * $iconSize, 2) - divide($inlineSpacing, 2);
         color: $inputIconColor;
       }
     }
@@ -94,7 +94,7 @@ body {
           color: $inputListItemHighlightTextColor;
 
           &.ui-sortable-placeholder {
-            background-color: scale-color($highlightBg, $lightness: -20%);
+            background-color: var(--primary-light);
           }
         }
       }

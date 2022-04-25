@@ -3,7 +3,8 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:of="http://omnifaces.org/functions"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:lw="http://l3s.de/learnweb"
+                xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="pageTitle" value="#{msg.personal_info} - #{msg.your_information}"/>
 
@@ -23,7 +24,11 @@
             <div class="ui-panel ui-widget ui-widget-content ui-corner-all profile-details">
                 <div class="ui-panel-content ui-widget-content">
                     <h:graphicImage library="images" name="universitaet_panorama.jpg" alt="profile background picture"></h:graphicImage>
-                    <img src="#{userBean.user.imageUrl}" alt="profile photo" class="profile-avatar"></img>
+
+                    <p:avatar label="${userBean.user.initials}" size="large" styleClass="profile-avatar" dynamicColor="true" saturation="50" lightness="50">
+                        <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.fullName}" rendered="#{not empty userBean.user.imageUrl}"/>
+                    </p:avatar>
+
                     <span class="profile-name"><h:outputText value="#{of:coalesce(userBean.user.fullName, 'N/D')}"/></span>
                     <span class="profile-role"><h:outputText value="#{userBean.user.username}"/></span>
                     <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="button"

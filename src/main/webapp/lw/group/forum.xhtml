@@ -80,9 +80,9 @@
 				<div>#{msg.by} <lw:user user="#{topic.lastPostUser}"/></div>
 			</p:column>
 
-			<p:column headerText="#{msg.options}" styleClass="td-text-end" rendered="#{userBean.moderator}" >
-				<p:commandButton value="#{msg.delete}" actionListener="#{forumBean.onDeleteTopic(topic)}" styleClass="ui-button-mod"
-								 process="@this" update="@form" onstart="PF('topicsOverlay').show()" oncomplete="PF('topicsOverlay').hide()">
+			<p:column styleClass="text-end" rendered="#{userBean.moderator}" >
+				<p:commandButton title="#{msg.delete}" styleClass="ui-button-danger rounded-button ui-button-flat" actionListener="#{forumBean.onDeleteTopic(topic)}"
+								 process="@this" update="@form" onstart="PF('topicsOverlay').show()" oncomplete="PF('topicsOverlay').hide()" icon="fas fa-trash">
 					<p:confirm message="#{of:format1(msg.delete_entry_confirm_message, topic.title)}"/>
 				</p:commandButton>
 			</p:column>

@@ -1,7 +1,7 @@
-@import '../colors';
+$primary: #4a505d;
 
-$primaryColor: $predawn;
-$primaryDarkColor: $predawnDark;
-$primaryDarkerColor: $predawnDarker;
+$primary-dark: #303644;
+$primary-darker: #20242d;
 
-$highlightBg: scale-color($primaryColor, $lightness: 75%) !default;
+$primary-light: scale-color($primary, $lightness: 60%);
+$primary-lighter: scale-color($primary, $lightness: 75%);

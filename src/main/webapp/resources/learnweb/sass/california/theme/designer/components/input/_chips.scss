@@ -1,7 +1,7 @@
 body {
   .ui-chips {
     .ui-chips-container {
-      padding: math.div(nth($inputPadding, 1), 2) nth($inputPadding, 2);
+      padding: divide(nth($inputPadding, 1), 2) nth($inputPadding, 2);
 
       .ui-chips-token {
         padding: 1px 0;
@@ -11,11 +11,11 @@ body {
         border-radius: $borderRadius;
 
         .ui-chips-token-label {
-          padding: 0 $iconSize * 2 0 math.div($iconSize, 2);
+          padding: 0 $iconSize * 2 0 divide($iconSize, 2);
         }
 
         .ui-chips-token-icon {
-          margin-top: math.div(-1 * $iconSize, 2);
+          margin-top: divide(-1 * $iconSize, 2);
           position: absolute;
           @include icon_override("\e90b");
         }
@@ -23,13 +23,13 @@ body {
 
       .ui-chips-input-token {
         margin: 0;
-        padding: math.div(nth($inputPadding, 1), 2) 0;
+        padding: divide(nth($inputPadding, 1), 2) 0;
 
         input {
           font-family: $fontFamily;
           font-size: $inputTextFontSize;
           color: $inputTextColor;
-          -webkit-appearance: none;
+          //-webkit-appearance: none;
           appearance: none;
           padding: 0;
           margin: 0;

@@ -2,7 +2,7 @@ body {
   .ui-datatable {
     .ui-datatable-header {
       background: $datatableHeaderBg;
-      border: $datatableHeaderCellBorder;
+      border: $datatableHeaderBorder;
       border-width: $datatableHeaderBorderWidth;
       color: $datatableHeaderTextColor;
       padding: $datatableHeaderPadding;
@@ -12,7 +12,7 @@ body {
 
     .ui-datatable-footer {
       background: $datatableFooterBg;
-      border: $datatableFooterCellBorder;
+      border: $datatableFooterBorder;
       border-width: $datatableFooterBorderWidth;
       color: $datatableFooterTextColor;
       padding: $datatableFooterPadding;

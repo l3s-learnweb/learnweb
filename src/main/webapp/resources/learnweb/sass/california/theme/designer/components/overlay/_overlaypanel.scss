@@ -15,8 +15,8 @@ body {
       position: absolute;
       width: $actionIconWidth;
       height: $actionIconHeight;
-      right: math.div(-1 * $actionIconWidth, 2);
-      top: math.div(-1 * $actionIconWidth, 2);
+      right: divide(-1 * $actionIconWidth, 2);
+      top: divide(-1 * $actionIconWidth, 2);
       background: $overlayPanelCloseIconBg;
       color: $overlayPanelCloseIconColor;
       transition: $transition;

@@ -1,7 +1,7 @@
-@import '../colors';
+$primary: #8f3b4f;
 
-$primaryColor: $montreal;
-$primaryDarkColor: $montrealDark;
-$primaryDarkerColor: $montrealDarker;
+$primary-dark: #772d3f;
+$primary-darker: #5a2330;
 
-$highlightBg: scale-color($primaryColor, $lightness: 85%) !default;
+$primary-light: scale-color($primary, $lightness: 60%);
+$primary-lighter: scale-color($primary, $lightness: 85%);

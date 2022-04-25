@@ -22,7 +22,7 @@ body {
     }
 
     .ui-inplace-cancel {
-      margin-left: math.div($inlineSpacing, 2);
+      margin-left: divide($inlineSpacing, 2);
       .ui-icon {
         @include icon_override("\e90b");
       }

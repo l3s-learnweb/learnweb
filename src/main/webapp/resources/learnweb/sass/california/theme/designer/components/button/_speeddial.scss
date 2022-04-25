@@ -24,7 +24,7 @@ body {
 
   .ui-speeddial-direction-up {
     .ui-speeddial-item {
-      margin: math.div($inlineSpacing, 2) 0;
+      margin: divide($inlineSpacing, 2) 0;
 
       &:first-child {
         margin-bottom: $inlineSpacing;
@@ -34,7 +34,7 @@ body {
 
   .ui-speeddial-direction-down {
     .ui-speeddial-item {
-      margin: math.div($inlineSpacing, 2) 0;
+      margin: divide($inlineSpacing, 2) 0;
 
       &:first-child {
         margin-top: $inlineSpacing;
@@ -44,7 +44,7 @@ body {
 
   .ui-speeddial-direction-left {
     .ui-speeddial-item {
-      margin: 0 math.div($inlineSpacing, 2);
+      margin: 0 divide($inlineSpacing, 2);
 
       &:first-child {
         margin-right: $inlineSpacing;
@@ -54,7 +54,7 @@ body {
 
   .ui-speeddial-direction-right {
     .ui-speeddial-item {
-      margin: 0 math.div($inlineSpacing, 2);
+      margin: 0 divide($inlineSpacing, 2);
 
       &:first-child {
         margin-left: $inlineSpacing;

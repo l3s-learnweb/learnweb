@@ -10,7 +10,7 @@
 
 <p:panel header="#{summaryTitle}" rendered="#{not empty summary.isEmpty()}" styleClass="mb-3">
     <h:form id="summary_overview_form">
-        <p:accordionPanel styleClass="last-activity-overview ui-widget-content-pt-0" multiple="true">
+        <p:accordionPanel styleClass="last-activity-overview" multiple="true">
             <p:tab rendered="#{not empty summary.addedResources}">
                 <f:facet name="title">
                     <i class="fas fa-fw fa-plus text-success pe-1" aria-hidden="true"></i>
@@ -19,7 +19,7 @@
 
                 <div class="activity-feed-slider activity-feed-added-resources">
                     <p:carousel value="#{summary.addedResources}" var="item" circular="false" numVisible="#{summary.addedResources.size() > 4 ? 4 : summary.addedResources.size()}">
-                        <h:outputLink styleClass="text-decoration-none d-block mx-2 mw-r15" value="resource.jsf" pt:data-resview="default">
+                        <h:outputLink styleClass="text-decoration-none d-block mx-2 mw-r15" value="resource.jsf" pt:data-resview="single">
                             <f:param name="resource_id" value="#{item.resource.id}"/>
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
@@ -54,7 +54,7 @@
 
                 <div class="activity-feed-slider activity-feed-updated-resources">
                     <p:carousel value="#{summary.updatedResources.keySet()}" var="res" circular="true" numVisible="#{summary.addedResources.size() > 4 ? 4 : summary.addedResources.size()}">
-                        <h:outputLink styleClass="text-decoration-none d-block mx-2 mw-r15" value="resource.jsf" pt:data-resview="default">
+                        <h:outputLink styleClass="text-decoration-none d-block mx-2 mw-r15" value="resource.jsf" pt:data-resview="single">
                             <f:param name="resource_id" value="#{res.id}"/>
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">

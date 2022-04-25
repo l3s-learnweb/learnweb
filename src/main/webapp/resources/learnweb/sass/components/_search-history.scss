@@ -11,7 +11,7 @@
     display: block;
     width: 0;
     height: 100%;
-    border: 1px dashed $primaryColor;
+    border: 1px dashed var(--primary);
     position: absolute;
     top: 0;
     left: -5px;
@@ -21,12 +21,12 @@
     margin: 2rem 1rem 3rem;
     position: relative;
     padding: 0.5rem;
-    background: $primaryColor;
-    color: $white;
+    background: var(--primary);
+    color: var(--white);
     border-radius: 10px;
 
     &.active {
-      background: $primaryDarkColor;
+      background: var(--primary-dark);
     }
 
     > span {
@@ -34,7 +34,7 @@
       display: block;
       width: 0;
       height: 100%;
-      border: 1px solid $primaryColor;
+      border: 1px solid var(--primary);
       position: absolute;
       top: 0;
       left: -15px;
@@ -46,8 +46,8 @@
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background: $primaryColor;
-        border: 1px solid $white;
+        background: var(--primary);
+        border: 1px solid var(--white);
         position: absolute;
         left: -5px;
       }
@@ -68,12 +68,12 @@
         span {
           background-size: 10px 10px;
           padding-left: 15px;
-          color: $white;
+          color: var(--white);
         }
 
         &:hover,
         &.active {
-          background: $primaryDarkColor;
+          background: var(--primary-dark);
         }
       }
     }
@@ -81,7 +81,7 @@
     .session-time span {
       position: absolute;
       left: -5.5rem;
-      color: $black;
+      color: var(--black);
       font-size: $font-size-sm * 0.9;
 
       &:first-child {
@@ -98,51 +98,20 @@
 
   &.sh-session-group {
     &::before {
-      border: 1px dashed $gray-600;
+      border: 1px dashed var(--gray-600);
     }
 
     li {
       > span {
-        border: 1px solid $gray-600;
+        border: 1px solid var(--gray-600);
 
         &::before,
         &::after {
-          background: $gray-600;
+          background: var(--gray-600);
         }
       }
 
-      background: $gray-600;
-    }
-  }
-}
-
-#snippetsList {
-  .snippet-description {
-    min-width: 0;
-
-    a,
-    a:hover {
-      text-decoration: none;
-    }
-  }
-
-  .snippet {
-    span {
-      display: block;
-      max-width: 100%;
-      @include text-truncate();
-    }
-
-    .snippet-link {
-      color: $blue;
-    }
-
-    &:visited .snippet-link {
-      color: $blueDarker;
-    }
-
-    &:hover .snippet-title {
-      text-decoration: underline !important;
+      background: var(--gray-600);
     }
   }
 }

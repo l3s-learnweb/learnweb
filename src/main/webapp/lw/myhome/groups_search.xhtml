@@ -58,20 +58,17 @@
                     <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.options}" styleClass="td-text-end">
-                    <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{userBean.moderator}">
+                <p:column styleClass="text-end">
+                    <p:linkButton styleClass="ui-button-info rounded-button ui-button-flat" icon="fas fa-pencil" title="#{msg.edit}"
+                                  href="group/options.jsf" rendered="#{userBean.moderator}">
                         <f:param name="group_id" value="#{group.id}"/>
-                        <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
-                        <h:outputText value="#{msg.edit}"/>
-                    </h:outputLink>
+                    </p:linkButton>
 
-                    <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :sidebar_menu" process="@this" styleClass="icon-link" title="#{msg.join}" >
+                    <p:commandButton styleClass="ui-button-success rounded-button ui-button-flat" icon="fas fa-right-to-bracket" title="#{msg.join_group}"
+                                     process="@this" action="#{groupsBean.joinGroup}" update=":other_groups :sidebar_menu">
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                         <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
-
-                        <i class="fas fa-fw fa-sign-in-alt text-success" aria-hidden="true"></i>
-                        <h:outputText value="#{msg.join_group}"/>
-                    </p:commandLink>
+                    </p:commandButton>
                 </p:column>
             </p:dataTable>
         </ui:fragment>

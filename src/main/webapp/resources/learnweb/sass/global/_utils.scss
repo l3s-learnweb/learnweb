@@ -1,49 +1,42 @@
-.profile-picture {
-  $pictureMinSize: 2.8125rem;
-  $pictureMaxSize: 6.25rem;
+.mw-r10 {
+  max-width: 10rem;
+}
 
-  min-width: $pictureMinSize;
-  min-height: $pictureMinSize;
-  max-width: $pictureMaxSize;
-  max-height: $pictureMaxSize;
-  background: $primaryTextColor;
-  border: 1px solid $primaryColor;
+.mw-r15 {
+  max-width: 15rem;
+}
 
-  &:not(.square) {
-    border-radius: 50%;
-  }
+.mw-r25 {
+  max-width: 25rem;
+}
 
-  &:not(.fluent) {
-    width: $pictureMinSize;
-    height: $pictureMinSize;
+.mw-r30 {
+  max-width: 30rem;
+}
+
+.mh-vh50 {
+  max-height: 50vh;
+  overflow: auto;
+}
+
+.mh-vh30 {
+  max-height: 30vh;
+  overflow: auto;
+}
+
+// fix position of sticky-md-top, considering height of our navbar
+@include media-breakpoint-up(md) {
+  .sticky-md-top {
+    top: $topbar-height + $spacer;
   }
 }
 
-.has-badge {
-  position: relative;
-
-  &::after {
-    position: absolute;
-    right: 0;
-    top: 0;
-    content: attr(data-count);
-    font-size: 0.7rem;
-    padding: 0.5em;
-    border-radius: 50%;
-    line-height: 0.75em;
-    color: $primaryTextColor;
-    background: rgba($danger, 0.85);
-    text-align: center;
-    min-width: 1.75em;
-    font-weight: bold;
-  }
-
-  &.ui-draggable-helper::after {
-    background: $danger;
-    right: -0.5rem;
-    top: -0.5rem;
-    font-size: 0.875rem;
-  }
+.bg-highlight {
+  color: var(--white);
+  background-color: var(--gray-600);
+  border: 1px solid var(--gray-600);
+  border-radius: var(--border-radius);
+  padding: 0 var(--border-radius);
 }
 
 .text-truncate-multiline {
@@ -76,19 +69,6 @@
 section:target .highlight {
   @include media-breakpoint-up(md) {
     animation: highlight 1s ease;
-  }
-}
-
-.message-container {
-  p {
-    margin-bottom: 0;
-  }
-}
-
-.forum-message-container {
-  p {
-    margin-bottom: 0;
-    margin-top: 0.5rem;
   }
 }
 
@@ -130,10 +110,6 @@ section:target .highlight {
   }
 }
 
-.text-blue {
-  color: $blue;
-}
-
 // Utilities for hiding content on smaller displays. Similar to existing .d-#{}-none utils, but using max-width (down) instead of min-width
 // For example, instead of .d-none.d-md-block, you can use .dd-sm-none class.
 @each $breakpoint in map-keys($grid-breakpoints) {
@@ -147,8 +123,4 @@ section:target .highlight {
 
 .encrypt-email::after {
   content: attr(data-name) '@' attr(data-domain) '.' attr(data-tld);
-}
-
-.sticky-top {
-  z-index: 1000 !important;
 }

@@ -347,8 +347,12 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
       ui.helper[0].style.width = `${selected.getItem(0).element.offsetWidth}px`;
 
       if (selected.size() > 1) {
-        ui.helper[0].classList.add('has-badge');
-        ui.helper[0].setAttribute('data-count', selected.size());
+        const badge = document.createElement('span');
+        badge.className = 'ui-badge ui-widget ui-badge-no-gutter ui-badge-lg ui-badge-danger';
+        badge.textContent = selected.size();
+
+        ui.helper[0].classList.add('ui-overlay-badge');
+        ui.helper[0].appendChild(badge);
       }
     },
     stop() {

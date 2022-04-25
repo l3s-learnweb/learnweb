@@ -60,14 +60,15 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <img class="d-block w-100 profile-picture m-auto fluent" src="${profileBean.selectedUser.imageUrl}"
-                                     alt="Profile image"/>
+                                <p:avatar label="${profileBean.selectedUser.initials}" styleClass="d-flex m-auto" size="large" shape="circle" dynamicColor="true" saturation="50" lightness="50">
+                                    <h:graphicImage value="#{profileBean.selectedUser.imageUrl}" alt="#{profileBean.selectedUser.fullName}" rendered="#{not empty profileBean.selectedUser.imageUrl}"/>
+                                </p:avatar>
 
                                 <div class="field mt-2 text-center">
-                                    <p:outputLabel for="@next" value="#{msg.photo}"/>
-                                    <p:fileUpload id="profilephoto" listener="${profileBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
-                                                  mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
-                                                  update="profile_image" auto="true" label="#{msg.choose_file}" cancelLabel="abb"
+                                    <p:outputLabel for="@next" value="#{msg.photo}" styleClass="d-block"/>
+                                    <p:fileUpload id="profilephoto" listener="${profileBean.handleFileUpload}" mode="simple" skinSimple="true" auto="true"
+                                                  styleClass="ui-fileupload-minimal" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
+                                                  update="profile_image" label="#{msg.choose_file}"
                                                   disabled="#{profileBean.anonymizeUsername || profileBean.editingDisabled}"/>
                                     <p:message for="@previous"/>
                                 </div>

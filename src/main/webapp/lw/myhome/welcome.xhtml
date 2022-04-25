@@ -28,7 +28,9 @@
                 </f:facet>
 
                 <div class="d-flex align-items-center">
-                    <img class="d-block profile-picture me-3" src="${userBean.user.imageUrl}" alt="Profile image"/>
+                    <p:avatar label="${userBean.user.initials}" styleClass="me-3" shape="circle" dynamicColor="true" saturation="50" lightness="50">
+                        <h:graphicImage value="#{userBean.user.imageUrl}" alt="#{userBean.user.fullName}" rendered="#{not empty userBean.user.imageUrl}"/>
+                    </p:avatar>
                     <div>
                         <p class="mb-0">
                             <h:outputText value="#{msg.greeting} #{userBean.user.username},"/><br/>
@@ -95,7 +97,9 @@
                     </f:facet>
                     <ui:repeat var="message" value="#{welcomeBean.receivedMessages}" varStatus="status">
                         <div class="d-flex #{status.first ? '' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
-                            <img class="profile-picture me-3" src="#{message.senderUser.imageUrl}" alt="Profile picture"/>
+                            <p:avatar label="${message.senderUser.initials}" styleClass="me-3" shape="circle" dynamicColor="true" saturation="50" lightness="50">
+                                <h:graphicImage value="#{message.senderUser.imageUrl}" alt="#{message.senderUser.fullName}" rendered="#{not empty message.senderUser.imageUrl}"/>
+                            </p:avatar>
 
                             <div class="text-break">
                                 <h5>

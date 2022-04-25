@@ -16,7 +16,7 @@
 
 <h:form id="glossary_table_form" prependId="false" styleClass="h-100">
     <p:dataTable id="glossary_table" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
-                 styleClass="glossary-table" allowUnsorting="true" rows="200"
+                 styleClass="bg-body" allowUnsorting="true" rows="200"
                  paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="100,200,400,1000"
                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
 
@@ -59,18 +59,15 @@
             </div>
         </f:facet>
 
-        <p:column style="width: 57px;" exportable="false" pt:data-itemId="#{item.entryId}">
-            <div class="text-end">
-                <p:commandLink action="#{glossaryBean.onDeleteEntry(item)}" title="#{msg.delete}" process="@this" update="@form" oncomplete="groupRow()">
-                    <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
-                    <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, item.topics)}"/>
-                </p:commandLink>
+        <p:column style="width: 79px;" exportable="false" pt:data-itemId="#{item.entryId}" styleClass="text-end">
+            <p:commandButton styleClass="ui-button-warning rounded-button ui-button-flat" icon="fas fa-pencil" title="#{msg.edit_entry}"
+                             process="@this" update=":glossary_add" action="#{glossaryBean.setGlossaryForm(item)}"
+                             oncomplete="PF('glossaryEditDialog').show();return false;"/>
 
-                <p:commandLink action="#{glossaryBean.setGlossaryForm(item)}" title="#{msg.edit_entry}"
-                               process="@this" update=":glossary_add" oncomplete="PF('glossaryEditDialog').show();return false;">
-                    <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
-                </p:commandLink>
-            </div>
+            <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.delete}"
+                             process="@this" update="@form" action="#{glossaryBean.onDeleteEntry(item)}" oncomplete="groupRow()">
+                <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, item.topics)}"/>
+            </p:commandButton>
         </p:column>
         <p:column headerText="#{msg[Column.topicOne]}" filterable="true" filterBy="#{item.topicOne}" sortBy="#{item.topicOne}">
             <h:outputText value="#{item.topicOne}" id="cell1" escape="false"/>
@@ -129,12 +126,12 @@
 <p:dialog widgetVar="glossaryImportDialog" header="#{msg['Glossary.import_glossary']}"
           modal="true" resizable="false" draggable="false" closeOnEscape="true">
     <h:form id="import_form">
-        <h:panelGroup styleClass="p-grid" layout="block" rendered="#{glossaryBean.importResponse == null}">
-            <p:fileUpload mode="advanced" skinSimple="true" listener="#{glossaryBean.onImportXls}" styleClass="ui-fileupload-minimal"
+        <h:panelGroup layout="block" rendered="#{glossaryBean.importResponse == null}">
+            <p:fileUpload mode="advanced" listener="#{glossaryBean.onImportXls}" styleClass="ui-fileupload-minimal"
                           allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update="@form :glossary_table_form" oncomplete="groupRow();"/>
         </h:panelGroup>
 
-        <h:panelGroup styleClass="p-grid" layout="block" rendered="#{glossaryBean.importResponse != null}">
+        <h:panelGroup layout="block" rendered="#{glossaryBean.importResponse != null}">
             <h:outputFormat value="#{msg['Glossary.import_successful']}" styleClass="d-block" rendered="#{glossaryBean.importResponse.successful}">
                 <f:param value="#{glossaryBean.importResponse.entryCount}"/>
             </h:outputFormat>

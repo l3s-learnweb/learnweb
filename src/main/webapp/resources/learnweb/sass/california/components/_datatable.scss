@@ -1,0 +1,26 @@
+body {
+  .ui-datatable {
+    table {
+      table-layout: auto;
+    }
+
+    // make datatable always stripped
+    .ui-datatable-data {
+      > tr {
+        &.ui-datatable-odd {
+          background: $datatableBodyRowOddBg;
+
+          &.ui-state-hover {
+            background: $datatableBodyRowHoverBg;
+            color: $datatableBodyRowTextHoverColor;
+          }
+
+          &.ui-state-highlight {
+            background: $highlightBg;
+            color: $highlightTextColor;
+          }
+        }
+      }
+    }
+  }
+}

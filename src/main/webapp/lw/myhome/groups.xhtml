@@ -52,21 +52,18 @@
                 <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
             </p:column>
 
-            <p:column headerText="#{msg.options}" styleClass="td-text-end">
-                <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{groupsBean.canDeleteGroup(group)}">
+            <p:column styleClass="text-end">
+                <p:linkButton styleClass="ui-button-info rounded-button ui-button-flat" icon="fas fa-pencil" title="#{msg.edit}"
+                              href="group/options.jsf" rendered="#{groupsBean.canDeleteGroup(group)}">
                     <f:param name="group_id" value="#{group.id}"/>
-                    <i class="fas fa-fw fa-pencil-alt text-warning" aria-hidden="true"></i>
-                    <h:outputText value="#{msg.edit}"/>
-                </h:outputLink>
+                </p:linkButton>
 
-                <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this" update=":my_groups :sidebar_menu">
+                <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-right-from-bracket" title="#{msg.leave_group}"
+                                 process="@this" action="#{groupsBean.leaveGroup}" update=":my_groups :sidebar_menu">
                     <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                     <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                     <p:confirm message="#{of:format1(msg.leave_group_question, group.title)}"/>
-
-                    <i class="fas fa-fw fa-sign-out-alt text-danger" aria-hidden="true"></i>
-                    <h:outputText value="#{msg.leave_group}"/>
-                </p:commandLink>
+                </p:commandButton>
             </p:column>
         </p:dataTable>
     </h:form>

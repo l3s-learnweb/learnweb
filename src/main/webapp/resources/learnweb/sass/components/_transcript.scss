@@ -1,11 +1,11 @@
 .tran-selection {
   &::selection {
-    background: $yellow;
+    background: var(--warning);
   }
 }
 
 .tran-note { // A selected text
-  background-color: $yellow;
+  background-color: var(--warning);
 
   &.ui-state-hover {
     background-color: #c4fcff !important;
@@ -38,11 +38,11 @@
   }
 
   .ui-selecting {
-    background: $primaryDarkColor;
+    background: var(--primary-dark);
   }
 
   .ui-selected {
-    background: $primaryDarkerColor;
-    color: $white;
+    background: var(--primary-darker);
+    color: var(--white);
   }
 }

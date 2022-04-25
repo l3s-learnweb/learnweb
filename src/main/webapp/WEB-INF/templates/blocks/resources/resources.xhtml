@@ -33,9 +33,8 @@
 
         <div class="ui-panel-content ui-widget-content flex-grow-1">
             <h:form id="group_folders_tree">
-                <p:tree value="#{groupResourcesBean.foldersTree}" var="node" datakey="#{node.id}"
+                <p:tree value="#{groupResourcesBean.foldersTree}" var="node" datakey="#{node.id}" animate="true" styleClass="border-0"
                         selectionMode="single" selection="#{groupResourcesBean.selectedTreeNode}" onNodeClick="openFolder(node.data('datakey'));"
-                        styleClass="ui-tree-responsive ui-tree-no-root-icons" animate="true"
                         rendered="#{not empty groupResourcesBean.group.subFolders}">
 
                     <p:treeNode type="folder" expandedIcon="fas fa-folder-open" collapsedIcon="fas fa-folder">
@@ -158,7 +157,7 @@
                                 <p:inputText value="#{groupResourcesBean.searchQuery}"/>
 
                                 <p:commandButton id="filter_query" actionListener="${groupResourcesBean.onQueryChange()}" process="@form"
-                                                 styleClass="text-body" update=":resourcesWrapper" icon="fas fa-fw fa-search-plus"
+                                                 styleClass="text-body" update=":resourcesWrapper" icon="fas fa-fw fa-search"
                                                  oncomplete="onResourcesUpdated();"/>
                             </div>
                         </li>
@@ -234,7 +233,7 @@
     <h:outputText value="#{msg.add_to}:"/>
 
     <h:form>
-        <p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="ui-tree-responsive ui-tree-limited"
+        <p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="mh-vh50"
                 animate="true" selectionMode="single">
             <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 

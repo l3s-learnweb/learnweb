@@ -9,7 +9,7 @@
     width: 100%;
     opacity: 0;
     transition: $transition-fade;
-    background-color: $white;
+    background-color: var(--white);
   }
 
   &::after {
@@ -22,7 +22,7 @@
     font-size: 6rem;
     width: 6rem;
     height: 6rem;
-    color: $white;
+    color: var(--white);
     text-align: center;
   }
 
@@ -35,7 +35,7 @@
     }
 
     &::after {
-      color: $primaryColor;
+      color: var(--primary);
     }
   }
 
@@ -62,35 +62,35 @@
   }
 
   .completed {
-    background-color: $lightGreen;
-    color: $primaryColor;
-    border-top: 4px solid $primaryColor !important;
+    background-color: scale-color($success, $lightness: 85%);
+    color: var(--success);
+    border-top: 4px solid var(--success) !important;
 
     .ui-steps-title {
-      color: $primaryColor !important;
+      color: var(--success) !important;
       font-weight: 400;
       font-family: sans-serif;
     }
 
     &::before {
-      color: $primaryColor !important;
+      color: var(--success) !important;
       margin-right: 0.5rem;
     }
   }
 
   .not-completed {
-    background-color: $lightBlue;
-    color: $blue;
-    border-top: 4px solid $blue !important;
+    color: var(--info);
+    background-color: scale-color($info, $lightness: 85%);
+    border-top: 4px solid var(--info) !important;
 
     .ui-steps-title {
-      color: $blue !important;
+      color: var(--info) !important;
       font-weight: 400;
       font-family: sans-serif;
     }
 
     &::before {
-      color: $blue !important;
+      color: var(--info) !important;
       margin-right: 0.5rem;
     }
   }

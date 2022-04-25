@@ -89,14 +89,12 @@
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="#{msg.options}" styleClass="td-text-end">
-                <p:commandLink onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()"
-                               actionListener="#{adminBanlistBean.onUnban(ban.addr)}" process="@this" update=":banlist"
-                               styleClass="icon-link" title="#{msg.unban}">
-                    <i class="fas fa-fw fa-ban text-danger" aria-hidden="true"></i>
-                    <h:outputText value="#{msg.unban}"/>
-                    <p:confirm message="#{msg.unban} #{ban.addr}?"/>
-                </p:commandLink>
+            <p:column styleClass="text-end">
+                <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.unban}"
+                                 process="@this" actionListener="#{adminBanlistBean.onUnban(ban.addr)}" update=":banlist"
+                                 onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()">
+                    <p:confirm message="#{msg.unban} #{ban.addr}?" icon="fas fa-triangle-exclamation"/>
+                </p:commandButton>
             </p:column>
         </p:dataTable>
     </h:form>
@@ -160,19 +158,14 @@
                     </h:outputText>
                 </p:column>
 
-                <p:column headerText="#{msg.options}" styleClass="td-text-end">
-                    <p:commandLink onclick="PF('banDialog').show(); updateFormValues('#{entry.IP}');" process="@this"
-                                   update=":suspiciouslistform" styleClass="icon-link">
-                        <i class="fas fa-fw fa-ban text-danger" aria-hidden="true"></i>
-                        <h:outputText value="#{msg.ban}"/>
-                    </p:commandLink>
+                <p:column styleClass="text-end">
+                    <p:commandButton styleClass="ui-button-warning rounded-button ui-button-flat" icon="fas fa-ban" title="#{msg.ban}"
+                                     process="@this" update=":suspiciouslistform" onclick="PF('banDialog').show(); updateFormValues('#{entry.IP}');"/>
 
-                    <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.addr)}"
-                                   update=":suspiciouslistform" styleClass="icon-link">
-                        <p:confirm message="#{msg.remove} #{aggrReqData.addr}?"/>
-                        <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
-                        <h:outputText value="#{msg.remove}"/>
-                    </p:commandLink>
+                    <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.remove}"
+                                     process="@this" actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.addr)}" update=":suspiciouslistform">
+                        <p:confirm message="#{msg.remove} #{aggrReqData.addr}?" icon="fas fa-triangle-exclamation"/>
+                    </p:commandButton>
                 </p:column>
             </p:dataTable>
         </h:form>

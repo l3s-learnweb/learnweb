@@ -1,0 +1,98 @@
+:root {
+  // Note: Custom variable values only support SassScript inside `#{}`.
+
+  // Colors
+  //
+  // Generate palettes for full colors, grays, and theme colors.
+
+  @each $color, $value in $colors {
+    --#{$color}: #{$value};
+  }
+
+  @each $color, $value in $grays {
+    --gray-#{$color}: #{$value};
+  }
+
+  @each $color, $value in $theme-colors {
+    --#{$color}: #{$value};
+  }
+
+  --primary-dark: #{$primary-dark};
+  --primary-darker: #{$primary-darker};
+  --primary-light: #{$primary-light};
+  --primary-lighter: #{$primary-lighter};
+  --primary-text-color: #{$primary-text-color};
+  --primary-lighter-text-color: #{$primary-lighter-text-color};
+
+
+  // Fonts
+
+  // Note: Use `inspect` for lists so that quoted items keep the quotes.
+  // See https://github.com/sass/sass/issues/2383#issuecomment-336349172
+  --font-sans-serif: #{inspect($font-family-sans-serif)};
+  --font-monospace: #{inspect($font-family-monospace)};
+
+  // Root and body
+  // scss-docs-start root-body-variables
+  @if $font-size-root != null {
+    --root-font-size: #{$font-size-root};
+  }
+  --body-font-family: #{$font-family-base};
+  @include rfs($font-size-base, --body-font-size);
+  --body-font-weight: #{$font-weight-base};
+  --body-line-height: #{$line-height-base};
+  --body-color: #{$body-color};
+  @if $body-text-align != null {
+    --body-text-align: #{$body-text-align};
+  }
+  --body-bg: #{$body-bg};
+  // scss-docs-end root-body-variables
+
+  // scss-docs-start root-border-var
+  --border-width: #{$border-width};
+  --border-style: #{$border-style};
+  --border-color: #{$border-color};
+  --border-color-translucent: #{$border-color-translucent};
+
+  --border-radius: #{$border-radius};
+  --border-radius-sm: #{$border-radius-sm};
+  --border-radius-lg: #{$border-radius-lg};
+  --border-radius-xl: #{$border-radius-xl};
+  --border-radius-2xl: #{$border-radius-2xl};
+  --border-radius-pill: #{$border-radius-pill};
+  // scss-docs-end root-border-var
+
+  --heading-color: #{$headings-color};
+  --link-color: #{$link-color};
+  --link-hover-color: #{$link-hover-color};
+
+  --code-color: #{$code-color};
+
+  --highlight-bg: #{$mark-bg};
+  --panel-bg: #{$panel-bg};
+}
+
+:root {
+  // Dark theme variables
+  --dark-body-bg: var(--gray-900);
+  --dark-panel-bg: #2b3035;
+  --dark-body-color: var(--gray-500);
+  --dark-border-color: var(--gray-700);
+  --dark-heading-color: var(--white);
+}
+
+@mixin override-dark() {
+  --dark: var(--gray-200);
+  --light: var(--gray-900);
+  --body-color: var(--dark-body-color);
+  --body-bg: var(--dark-body-bg);
+  --border-color: var(--dark-border-color);
+  --panel-bg: var(--dark-panel-bg);
+  --heading-color: var(--dark-heading-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include override-dark();
+  }
+}

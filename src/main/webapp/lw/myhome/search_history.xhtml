@@ -53,7 +53,7 @@
 								<p:inputText placeholder="#{msg['search_history.query']}" id="sh-query" title="#{msg['search_history.query_tooltip']}" styleClass="w-100" value="#{searchHistoryBean.searchQuery}"/>
 								<p:tooltip id="toolTipFocus" for="sh-query" showEvent="focus" hideEvent="blur" position="top" />
 								<p:commandButton icon="fas fa-search" id="sh-search" ajax="true" update=":sessionsList" actionListener="#{searchHistoryBean.search}"/>
-								<p:commandButton icon="fas fa-times" id="sh-reset" ajax="true" update=":sessionsList @form" actionListener="#{searchHistoryBean.reset}"/>
+								<p:commandButton icon="fas fa-times" styleClass="m-0" id="sh-reset" ajax="true" update=":sessionsList @form" actionListener="#{searchHistoryBean.reset}"/>
 							</div>
 						</h:form>
 					</div>
@@ -140,7 +140,7 @@
 
 								<div class="fg-row">
 									<h:outputText value="#{msg.add_to}:" escape="false"/>
-									<p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="ui-tree-responsive ui-tree-limited"
+									<p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="mh-vh50"
 											animate="true" selectionMode="single">
 										<p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 

@@ -1,5 +1,5 @@
 .landing-header {
-  background-color: $gray-400;
+  background-color: var(--border-color);
   background-size: cover;
   padding: 5rem 0;
 
@@ -32,22 +32,34 @@
   border-top: 1px solid $primaryDarkColor; // to avoid padding collapse
 
   .card-single {
+    margin-bottom: 3 * $spacer;
+    background: var(--panel-bg);
+
     .card-header {
       background-color: $primaryDarkerColor;
       color: $primaryTextColor;
       letter-spacing: 0.1rem;
+      padding: $spacer;
+      margin: 0;
     }
 
     .card-subheader {
-      background-color: $gray-200;
+      background-color: var(--light);
       color: $primaryDarkerColor;
+      padding: $spacer * 0.25 $spacer;
     }
 
     .card-content {
+      padding-bottom: $spacer;
+
       img {
         width: 100%;
         max-width: 7rem;
       }
+    }
+
+    .card-footer {
+      padding-bottom: $spacer;
     }
   }
 }

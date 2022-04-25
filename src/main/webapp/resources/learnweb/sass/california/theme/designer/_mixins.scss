@@ -1,32 +1,32 @@
-@mixin icon-override($icon) {
-    font-family: 'primeicons' !important;
-    font-style: normal;
-    font-weight: normal;
-    display: inline-block;
-    background: none;
+//@mixin icon-override($icon) {
+//    font-family: 'primeicons' !important;
+//    font-style: normal;
+//    font-weight: normal;
+//    display: inline-block;
+//    background: none;
+//
+//    &:before {
+//        content: $icon;
+//    }
+//};
 
-    &:before {
-        content: $icon;
-    }
-}
-
-@mixin icon-override-with-content($icon) {
-    &:before {
-        content: $icon;
-        font-family: 'primeicons' !important;
-        speak: none;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        display: inline-block;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-indent: 0 !important;
-        background-image: none !important;
-        @content
-    }
-}
+//@mixin icon-override-with-content($icon) {
+//    &:before {
+//        content: $icon;
+//        font-family: 'primeicons' !important;
+//        speak: none;
+//        font-style: normal;
+//        font-weight: normal;
+//        font-variant: normal;
+//        text-transform: none;
+//        display: inline-block;
+//        -webkit-font-smoothing: antialiased;
+//        -moz-osx-font-smoothing: grayscale;
+//        text-indent: 0 !important;
+//        background-image: none !important;
+//        @content
+//    }
+//};
 
 @mixin action-icon {
     width: $actionIconWidth;
@@ -37,7 +37,7 @@
     border-radius: $actionIconBorderRadius;
     border: $actionIconBorder;
     text-align: center;
-    line-height: $actionIconHeight;
+    line-height: $actionIconHeight !important;
     padding: 0;
     user-select: none;
 
@@ -155,63 +155,63 @@
 }
 
 @mixin flex() {
-    display: -ms-flexbox;
+    //display: -ms-flexbox;
     display: flex;
 }
 
 @mixin flex-wrap($value) {
-    -ms-flex-wrap: $value;
+    //-ms-flex-wrap: $value;
     flex-wrap: $value;
 }
 
 @mixin flex-direction-row() {
-    -ms-flex-direction: row;
+    //-ms-flex-direction: row;
     flex-direction: row; 
 }
 
 @mixin flex-direction-column() {
-    -ms-flex-direction: column;
+    //-ms-flex-direction: column;
     flex-direction: column; 
 }
 
 @mixin flex-justify-center() {
-    -ms-flex-pack: center;
+    //-ms-flex-pack: center;
     justify-content: center; 
 }
 
 @mixin flex-justify-between() {
-    -ms-flex-pack: justify;
+    //-ms-flex-pack: justify;
     justify-content: space-between; 
 }
 
 @mixin flex-align-center() {
-    -ms-flex-align: center;
+    //-ms-flex-align: center;
     align-items: center;
 }
 
 @mixin flex-align-start() {
-    -ms-flex-align: start;
+    //-ms-flex-align: start;
     align-items: flex-start;
 }
 
 @mixin flex-align-end() {
-    -ms-flex-align: end;
+    //-ms-flex-align: end;
     align-items: flex-end;
 }
 
 @mixin flex-justify-start() {
-    -ms-flex-pack: start;
+    //-ms-flex-pack: start;
     justify-content: flex-start;
 }
 
 @mixin flex-justify-end() {
-    -ms-flex-pack: end;
+    //-ms-flex-pack: end;
     justify-content: flex-end;
 }
 
 @mixin placeholder {
-    ::-webkit-input-placeholder {@content}
-    :-moz-placeholder           {@content; opacity: 1}
-    ::-moz-placeholder          {@content; opacity: 1}
-    :-ms-input-placeholder      {@content}  
+    //::-webkit-input-placeholder {@content}
+    //:-moz-placeholder           {@content; opacity: 1}
+    ::placeholder          {@content; opacity: 1}
+    //:-ms-input-placeholder      {@content}
 }

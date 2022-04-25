@@ -95,8 +95,8 @@
 
                             <p:outputLabel for="@next" value="#{msg.banner_image}:" styleClass="me-2"/>
                             <p:fileUpload listener="#{adminOrganisationBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
-                                          mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(png)$/" sizeLimit="10485760"
-                                          update="@form" auto="true" label="#{msg.choose_file}" cancelLabel="#{msg.cancel}"/>
+                                          mode="simple" skinSimple="true" auto="true" allowTypes="/(\.|\/)(png)$/" sizeLimit="10485760"
+                                          update="@form" label="#{msg.choose_file}" cancelLabel="#{msg.cancel}"/>
                             <p:message for="@previous"/>
                         </div>
 

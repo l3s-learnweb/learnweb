@@ -1,0 +1,7 @@
+body {
+  .ui-dialog {
+    @include media-breakpoint-up(md) {
+      min-width: map-get($grid-breakpoints, 'sm');
+    }
+  }
+}

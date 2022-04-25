@@ -1,34 +1,32 @@
 package de.l3s.learnweb.component;
 
 import jakarta.faces.component.FacesComponent;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UINamingContainer;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.component.UIViewRoot;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.ComponentSystemEvent;
+import jakarta.faces.event.ComponentSystemEventListener;
+import jakarta.faces.event.ListenerFor;
+import jakarta.faces.event.PostAddToViewEvent;
 
 import org.primefaces.component.api.Widget;
 import org.primefaces.component.menu.AbstractMenu;
 import org.primefaces.model.menu.MenuModel;
 
 @FacesComponent(createTag = true, tagName = "menu", namespace = "http://l3s.de/learnweb")
-public class LearnwebMenu extends AbstractMenu implements Widget {
-    public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component";
+@ListenerFor(sourceClass = LearnwebMenu.class, systemEventClass = PostAddToViewEvent.class)
+public class LearnwebMenu extends AbstractMenu implements Widget, ComponentSystemEventListener {
+
     public static final String COMPONENT_TYPE = "de.l3s.learnweb.component.LearnwebMenu";
-    public static final String DEFAULT_RENDERER = "de.l3s.learnweb.component.LearnwebMenuRenderer";
+    public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component";
+    private static final String DEFAULT_RENDERER = "de.l3s.learnweb.component.LearnwebMenuRenderer";
+    private static final String[] REQUIRED_RESOURCES = {"components.css", "jquery/jquery.js", "jquery/jquery-plugins.js", "core.js"};
 
-    public static final String CONTAINER_CLASS = "ui-lwmenu ui-widget";
-
-    public static final String MENUITEM_CLASS = "ui-menuitem";
-    public static final String MENUITEM_LINK_CLASS = "ui-menuitem-link";
-    public static final String MENUITEM_TEXT_CLASS = "ui-menuitem-text";
-    public static final String MENUITEM_ICON_CLASS = "ui-menuitem-icon";
-    public static final String MENUITEM_LINK_WITH_ICON_CLASS = MENUITEM_LINK_CLASS + " ui-menuitem-link-hasicon";
-
-    public static final String DESCENDANT_SUBMENU_CLASS = MENUITEM_CLASS + " ui-menu-parent";
-    public static final String DESCENDANT_SUBMENU_ICON_CLASS = MENUITEM_ICON_CLASS + " ui-menuitem-icon-expand ui-icon ui-icon-carat-1-e";
-    public static final String DESCENDANT_SUBMENU_LIST_CLASS = "ui-menu-list ui-helper-reset ui-helper-hidden";
-
-    public enum PropertyKeys {
-        widgetVar,
-        model,
-        style,
-        styleClass
+    protected enum PropertyKeys {
+        widgetVar, model, style, styleClass;
     }
 
     public LearnwebMenu() {
@@ -48,7 +46,6 @@ public class LearnwebMenu extends AbstractMenu implements Widget {
         getStateHelper().put(PropertyKeys.widgetVar, widgetVar);
     }
 
-    @Override
     public MenuModel getModel() {
         return (MenuModel) getStateHelper().eval(PropertyKeys.model, null);
     }
@@ -71,5 +68,38 @@ public class LearnwebMenu extends AbstractMenu implements Widget {
 
     public void setStyleClass(String styleClass) {
         getStateHelper().put(PropertyKeys.styleClass, styleClass);
+    }
+
+    public String resolveWidgetVar() {
+        FacesContext context = getFacesContext();
+        String userWidgetVar = (String) getAttributes().get("widgetVar");
+
+        if (userWidgetVar != null) {
+            return userWidgetVar;
+        } else {
+            return "widget_" + getClientId(context).replaceAll("-|" + UINamingContainer.getSeparatorChar(context), "_");
+        }
+    }
+
+    @Override
+    public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
+        if (event instanceof PostAddToViewEvent) {
+            FacesContext context = getFacesContext();
+            UIViewRoot root = context.getViewRoot();
+
+            for (String res : REQUIRED_RESOURCES) {
+                UIComponent component = context.getApplication().createComponent(UIOutput.COMPONENT_TYPE);
+                if (res.endsWith("css")) {
+                    component.setRendererType("jakarta.faces.resource.Stylesheet");
+                } else if (res.endsWith("js")) {
+                    component.setRendererType("jakarta.faces.resource.Script");
+                }
+
+                component.getAttributes().put("library", "primefaces");
+                component.getAttributes().put("name", res);
+
+                root.addComponentResource(context, component);
+            }
+        }
     }
 }

@@ -18,35 +18,22 @@
 .member-block {
   display: block;
   position: relative;
-  color: $body-color;
-  background: $gray-200;
+  color: var(--body-color) !important;
+  background: var(--light);
   box-shadow: $box-shadow-sm;
 
-  .member-picture {
-    padding-top: 100%;
-    position: relative;
-
-    img {
-      background-color: $white;
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      left: 0;
-      top: 0;
-    }
-  }
-
   .member-star {
-    @include ui-icon-override($fa-var-trophy);
+    @include fa-icon-override($fa-var-trophy);
     position: absolute;
     right: 3px;
     top: 3px;
     font-size: 1rem;
-    color: $orange;
+    color: $mod;
   }
 
   &:hover {
-    color: $primaryTextColor;
-    background: $primaryColor;
+    background: var(--primary);
+    color: var(--primary-text-color) !important;
+    text-decoration: none !important;
   }
 }

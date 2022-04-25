@@ -68,11 +68,11 @@ body {
         border-radius: $borderRadius;
 
         .ui-selectcheckboxmenu-token-label {
-          padding: 0 $iconSize * 2 0 math.div($iconSize, 2);
+          padding: 0 $iconSize * 2 0 divide($iconSize, 2);
         }
 
         .ui-selectcheckboxmenu-token-icon {
-          margin-top: math.div(-1 * $iconSize, 2);
+          margin-top: divide(-1 * $iconSize, 2);
           position: absolute;
           @include icon_override("\e90b");
         }
@@ -80,7 +80,7 @@ body {
 
       .ui-selectcheckboxmenu-input-token {
         margin: 0;
-        padding: math.div(nth($inputPadding,1), 2) 0;
+        padding: divide(nth($inputPadding,1), 2) 0;
 
         input {
           font-family: $fontFamily;
@@ -148,7 +148,7 @@ body {
           top: 50%;
           right: auto;
           bottom: auto;
-          margin-top: math.div(-1 * $iconSize, 2);
+          margin-top: divide(-1 * $iconSize, 2);
           color: $inputIconColor;
         }
       }

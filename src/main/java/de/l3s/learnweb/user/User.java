@@ -426,8 +426,8 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         this.moderator = moderator;
     }
 
-    private String getFallbackImage() {
-        return ProfileImageHelper.getProfilePicture(StringUtils.firstNonBlank(fullName, username));
+    public String getInitials() {
+        return ProfileImageHelper.getInitialsForProfilePicture(StringUtils.firstNonBlank(fullName, username));
     }
 
     /**
@@ -435,7 +435,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      */
     public String getImageUrl() {
         if (imageUrl == null) {
-            imageUrl = getImageFile().map(File::getSimpleUrl).orElse(getFallbackImage());
+            imageUrl = getImageFile().map(File::getSimpleUrl).orElse("");
         }
         return imageUrl;
     }

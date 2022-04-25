@@ -83,12 +83,12 @@
             <h2 class="text-white text-center mb-3">#{msg.registerLabel}</h2>
             <div class="row align-items-start text-center">
                 <div class="col col-md-6">
-                    <div class="card-single bg-white mb-3 overflow-auto">
-                        <h6 class="card-header py-3 m-0">#{msg.public_courses}</h6>
+                    <div class="card-single">
+                        <h6 class="card-header">#{msg.public_courses}</h6>
 
                         <ui:repeat value="#{frontpageBean.publicCourses}" var="course">
-                            <h5 class="card-subheader py-1 m-0"><h:outputText value="#{course.title}"/></h5>
-                            <div class="card-content row mx-auto my-3">
+                            <h5 class="card-subheader"><h:outputText value="#{course.title}"/></h5>
+                            <div class="card-content row mx-auto">
                                 <div class="col-4 col-lg-3">
                                     <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"
                                                     rendered="#{not empty course.registrationIconFileUrl}"/>
@@ -97,7 +97,7 @@
                                     <h:outputText value="#{lw:msgDef('frontpage.course_description_'.concat(course.registrationWizard), course.registrationDescription)}" escape="false"/>
                                 </div>
                             </div>
-                            <div class="course-footer my-3">
+                            <div class="card-footer">
                                 <h:outputLink styleClass="ui-button ui-button-text-only" value="#{of:getRequestBaseURL()}wizard=#{course.registrationWizard}">
                                     <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
                                 </h:outputLink>
@@ -105,7 +105,7 @@
                         </ui:repeat>
 
                         <ui:fragment rendered="#{empty frontpageBean.publicCourses}">
-                            <h5 class="card-subheader py-1 m-0">#{msg['frontpage.public_courses']}</h5>
+                            <h5 class="card-subheader">#{msg['frontpage.public_courses']}</h5>
                             <div class="card-content row mx-auto py-3">
                                 <div class="col-4 col-lg-3">
                                     <h:graphicImage library="frontpage" name="course_public.png" alt="Public courses"/>
@@ -118,12 +118,12 @@
                     </div>
                 </div>
                 <div class="col col-md-6">
-                    <div class="card-single bg-white mb-3 overflow-auto">
-                        <h6 class="card-header py-3 m-0">#{msg.specific_courses}</h6>
+                    <div class="card-single">
+                        <h6 class="card-header">#{msg.specific_courses}</h6>
 
                         <ui:repeat value="#{frontpageBean.specificCourses}" var="course">
-                            <h5 class="card-subheader py-1 m-0"><h:outputText value="#{course.title}"/></h5>
-                            <div class="card-content row mx-auto my-3">
+                            <h5 class="card-subheader"><h:outputText value="#{course.title}"/></h5>
+                            <div class="card-content row mx-auto">
                                 <div class="col-4 col-lg-3">
                                     <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"/>
                                 </div>
@@ -131,15 +131,15 @@
                                     <h:outputText value="#{lw:msgDef('frontpage.course_description_'.concat(course.registrationWizard), course.registrationDescription)}" escape="false"/>
                                 </div>
                             </div>
-                            <div class="course-footer my-3">
+                            <div class="card-footer">
                                 <h:outputLink styleClass="ui-button ui-button-text-only" value="#{of:getRequestBaseURL()}wizard=#{course.registrationWizard}">
                                     <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
                                 </h:outputLink>
                             </div>
                         </ui:repeat>
 
-                        <h5 class="card-subheader py-1 m-0">#{msg['frontpage.other_courses']}</h5>
-                        <div class="card-content row mx-auto py-3">
+                        <h5 class="card-subheader">#{msg['frontpage.other_courses']}</h5>
+                        <div class="card-content row">
                             <div class="col-4 col-lg-3">
                                 <h:graphicImage library="frontpage" name="course_other.png" alt="Other courses"/>
                             </div>
