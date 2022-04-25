@@ -49,6 +49,14 @@ public class SpotlightBean {
         return annotationUnit;
     }
 
+    public AnnotationUnit get(String text) throws IOException {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("text", text));
+        request.setEntity(new UrlEncodedFormEntity(params));
+
+        return get();
+    }
+
     private String fixPrefixes(String value) {
         if (value != null && !value.isEmpty()) {
             return value.replace("Http", "http").
@@ -82,11 +90,4 @@ public class SpotlightBean {
         return result.toString();
     }
 
-    public AnnotationUnit get(String text) throws IOException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("text", text));
-        request.setEntity(new UrlEncodedFormEntity(params));
-
-        return get();
-    }
 }
