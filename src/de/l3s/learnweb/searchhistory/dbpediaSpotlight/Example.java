@@ -35,10 +35,6 @@ public class Example {
         Comparator<ResourceItem> compareByUri = Comparator
             .comparing(ResourceItem::getUri);
 
-        Comparator<ResourceItem> compareByUriThenSimScore = Comparator
-            .comparing(ResourceItem::getUri)
-            .thenComparing(ResourceItem::getSimilarityScore);
-
         Set<String> nameSet = new HashSet<>();
 
         if (annotationUnit != null) {
