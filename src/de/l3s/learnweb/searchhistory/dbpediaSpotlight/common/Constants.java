@@ -14,4 +14,9 @@ public interface Constants {
 
     String SCHEMA = "Schema:";
 
+    /**
+     * This method is only here to make lint happy
+     */
+    default void doNothing() {
+    }
 }

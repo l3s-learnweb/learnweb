@@ -18,7 +18,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.jsoup.Jsoup;
 
 import com.google.gson.Gson;
 
@@ -59,9 +58,9 @@ public class SpotlightBean {
 
     private String fixPrefixes(String value) {
         if (value != null && !value.isEmpty()) {
-            return value.replace("Http", "http").
-                replace("DBpedia:", DBPEDIA_ONTOLOGY).
-                replace("Schema:", SCHEMA_ONTOLOGY);
+            return value.replace("Http", "http")
+                .replace("DBpedia:", DBPEDIA_ONTOLOGY)
+                .replace("Schema:", SCHEMA_ONTOLOGY);
         }
 
         return value;

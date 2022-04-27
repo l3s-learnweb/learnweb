@@ -46,9 +46,9 @@ public class AnnotationUnit {
 
     public String getTypes() {
         if (types != null && !types.isEmpty()) {
-            return types.replace("Http", HTTP).
-                replace(DBPEDIA, DBPEDIA_ONTOLOGY).
-                replace(SCHEMA, SCHEMA_ONTOLOGY);
+            return types.replace("Http", HTTP)
+                .replace(DBPEDIA, DBPEDIA_ONTOLOGY)
+                .replace(SCHEMA, SCHEMA_ONTOLOGY);
         }
         return types;
     }
