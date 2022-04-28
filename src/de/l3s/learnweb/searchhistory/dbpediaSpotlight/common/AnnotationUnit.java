@@ -8,13 +8,6 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
 public class AnnotationUnit {
     @SerializedName("@text")
     private String text;
@@ -36,6 +29,58 @@ public class AnnotationUnit {
 
     @SerializedName("Resources")
     private List<ResourceItem> resources;
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(final String text) {
+        this.text = text;
+    }
+
+    public String getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(final String confidence) {
+        this.confidence = confidence;
+    }
+
+    public String getSupport() {
+        return support;
+    }
+
+    public void setSupport(final String support) {
+        this.support = support;
+    }
+
+    public void setTypes(final String types) {
+        this.types = types;
+    }
+
+    public String getSparql() {
+        return sparql;
+    }
+
+    public void setSparql(final String sparql) {
+        this.sparql = sparql;
+    }
+
+    public String getPolicy() {
+        return policy;
+    }
+
+    public void setPolicy(final String policy) {
+        this.policy = policy;
+    }
+
+    public List<ResourceItem> getResources() {
+        return resources;
+    }
+
+    public void setResources(final List<ResourceItem> resources) {
+        this.resources = resources;
+    }
 
     public Integer endIndex() {
         if (text != null) {
