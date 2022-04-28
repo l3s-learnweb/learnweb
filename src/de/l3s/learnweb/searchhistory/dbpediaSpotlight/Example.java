@@ -50,7 +50,7 @@ public class Example {
                 counter.incrementAndGet();
             }
 
-            System.out.println ("Total after filtering out: " + counter);
+            System.out.println("Total after filtering out: " + counter);
         }
 
     }
