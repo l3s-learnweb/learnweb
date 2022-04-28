@@ -679,6 +679,7 @@ public class Resource extends AbstractResource implements Serializable {
     public String getShortDescription() {
         return Jsoup.clean(StringHelper.shortnString(description, 200), Safelist.simpleText());
     }
+
     /**
      * @return the query which was used to find this resource
      */
