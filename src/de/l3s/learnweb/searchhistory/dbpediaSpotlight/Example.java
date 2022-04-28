@@ -16,11 +16,11 @@ import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.ResourceItem;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.rest.SpotlightBean;
 
 public class Example {
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
         SpotlightBean spotlight = new SpotlightBean();
 
         URL url = new URL("https://en.wikipedia.org/wiki/Cat");
-        Document doc = Jsoup.parse(url, 3*1000);
+        Document doc = Jsoup.parse(url, 3 * 1000);
         String text = doc.text();
 
         AnnotationUnit annotationUnit = spotlight.get(text);
@@ -38,7 +38,7 @@ public class Example {
         Set<String> nameSet = new HashSet<>();
 
         if (annotationUnit != null) {
-            System.out.println ("Total: " + total);
+            System.out.println("Total: " + total);
 
             List<ResourceItem> resourceItemsList = annotationUnit.getResources().stream()
                 .filter(r -> nameSet.add(r.getSurfaceForm()))
