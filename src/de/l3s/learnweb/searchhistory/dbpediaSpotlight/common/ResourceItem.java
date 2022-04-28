@@ -8,13 +8,6 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
 public class ResourceItem {
     @SerializedName("@URI")
     private String uri;
@@ -31,12 +24,67 @@ public class ResourceItem {
     @SerializedName("@offset")
     private String offSet;
 
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(final String uri) {
+        this.uri = uri;
+    }
+
+    public String getSupport() {
+        return support;
+    }
+
+    public void setSupport(final String support) {
+        this.support = support;
+    }
+
+    public String getTypes() {
+        return types;
+    }
+
+    public void setTypes(final String types) {
+        this.types = types;
+    }
+
+    public String getSurfaceForm() {
+        return surfaceForm;
+    }
+
+    public void setSurfaceForm(final String surfaceForm) {
+        this.surfaceForm = surfaceForm;
+    }
+
+    public String getOffSet() {
+        return offSet;
+    }
+
+    public void setOffSet(final String offSet) {
+        this.offSet = offSet;
+    }
+
+    public String getSimilarityScore() {
+        return similarityScore;
+    }
+
+    public void setSimilarityScore(final String similarityScore) {
+        this.similarityScore = similarityScore;
+    }
+
+    public String getPercentageOfSecondRank() {
+        return percentageOfSecondRank;
+    }
+
+    public void setPercentageOfSecondRank(final String percentageOfSecondRank) {
+        this.percentageOfSecondRank = percentageOfSecondRank;
+    }
+
     @SerializedName("@similarityScore")
     private String similarityScore;
 
     @SerializedName("@percentageOfSecondRank")
     private String percentageOfSecondRank;
-
 
     public Integer beginIndex() {
         try {
