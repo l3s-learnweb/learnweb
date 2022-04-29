@@ -78,13 +78,27 @@ public class SpotlightBean {
 
     private String getContent() throws IOException {
         HttpResponse response = client.execute(request);
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        StringBuffer result = new StringBuffer();
+        try (BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"))) {
+            String line = EMPTY;
+
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        /*HttpResponse response = client.execute(request);
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         StringBuffer result = new StringBuffer();
         String line = EMPTY;
 
         while ((line = rd.readLine()) != null) {
             result.append(line);
-        }
+        }*/
 
         return result.toString();
     }
