@@ -37,7 +37,6 @@ public class Example {
 
         Set<String> nameSet = new HashSet<>();
 
-        if (annotationUnit != null) {
             System.out.println("Total: " + total);
 
             List<ResourceItem> resourceItemsList = annotationUnit.getResources().stream()
@@ -51,7 +50,5 @@ public class Example {
             }
 
             System.out.println("Total after filtering out: " + counter);
-        }
-
     }
 }
