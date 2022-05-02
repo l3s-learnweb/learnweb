@@ -20,7 +20,7 @@
         <maven.dependency.myfaces.version>3.0.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.8.2</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.28.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>8.5.9</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>8.5.10</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.17.2</maven.dependency.log4j.version>
         <maven.dependency.junit.version>5.8.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>4.5.1</maven.dependency.mockito.version>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>4.0-M13</version>
+            <version>4.0-M14</version>
         </dependency>
         <!-- PrimeFaces -->
         <dependency>
@@ -268,7 +268,7 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>3.0.6</version>
+            <version>3.1.0</version>
         </dependency>
         <!-- Converts Java Objects into JSON and back -->
         <dependency>
@@ -407,7 +407,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.1</version>
+                        <version>10.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
