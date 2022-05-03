@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
@@ -20,8 +18,6 @@ import de.l3s.util.HasId;
 public class GlossaryEntry implements HasId, Deletable, Serializable {
     @Serial
     private static final long serialVersionUID = 1251808024273639912L;
-    private static final Logger log = LogManager.getLogger(GlossaryEntry.class);
-
     private int id;
     private int originalEntryId; // When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
     private int resourceId;
@@ -40,10 +36,11 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     private List<GlossaryTerm> terms = new LinkedList<>();
     private String fulltext; // fulltext search in glossary
     private boolean imported; // This value is `true` when the entry has been imported from a file.
+    private int picturesCount;
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
-    private List<File> pictures;
-    private int pictureCount;
+
+    private transient List<File> pictures;
 
     /**
      * do nothing constructor.
@@ -67,6 +64,8 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         setTopicTwo(oldEntry.topicTwo);
         setTopicThree(oldEntry.topicThree);
         setFulltext(oldEntry.fulltext);
+        setPicturesCount(oldEntry.picturesCount);
+        setPictures(oldEntry.pictures);
 
         for (GlossaryTerm oldTerm : oldEntry.terms) {
             this.addTerm(new GlossaryTerm(oldTerm));
@@ -242,6 +241,14 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         this.imported = imported;
     }
 
+    public int getPicturesCount() {
+        return picturesCount;
+    }
+
+    public void setPicturesCount(final int picturesCount) {
+        this.picturesCount = picturesCount;
+    }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
@@ -258,10 +265,6 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         this.createdAt = createdAt;
     }
 
-    public void setPictures(final File picture) {
-        pictures.add(picture);
-    }
-
     public List<File> getPictures() {
         if (pictures == null) {
             pictures = Learnweb.dao().getFileDao().findByGlossaryEntryId(id);
@@ -269,18 +272,14 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         return pictures;
     }
 
-    public int getPictureCount() {
-        return pictureCount;
-    }
-
-    public void setPictureCount(final int pictureCount) {
-        this.pictureCount = pictureCount;
+    public void setPictures(List<File> pictures) {
+        this.pictures = pictures;
     }
 
     /**
      * Convenience function that calls the getter of a given field.
      */
-    public String get(String fieldName) {
+    public String getField(String fieldName) {
         return switch (fieldName) {
             case "description" -> getDescription();
             case "topicOne" -> getTopicOne();
@@ -294,7 +293,7 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     /**
      * Convenience function that calls the setter of a given field.
      */
-    public void set(String fieldName, String toSet) {
+    public void setField(String fieldName, String toSet) {
         switch (fieldName) {
             case "description" -> setDescription(toSet);
             case "topicOne" -> setTopicOne(toSet);

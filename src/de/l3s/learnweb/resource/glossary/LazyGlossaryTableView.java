@@ -31,6 +31,8 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
      * I assume that no GlossaryEntry will have more than 20 GlossaryTerms.
      */
     static final int PAGE_SIZE_MULTIPLICATOR = 20;
+    static final String[] ENTRY_FIELDS = {"topicOne", "topicTwo", "topicThree", "description"};
+    static final String[] TERM_FIELDS = {"term", "acronym", "source", "phraseology"};
 
     private final GlossaryResource glossaryResource;
 
@@ -70,20 +72,20 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
             final String filterField = filterFieldOriginal;
 
             // ignore empty filter
-            String toFilter = String.valueOf(filterValue).toLowerCase();
-            if (StringUtils.isBlank(toFilter)) {
+            final String filterValueStr = String.valueOf(filterValue).toLowerCase();
+            if (StringUtils.isBlank(filterValueStr)) {
                 continue;
             }
 
-            simpleFilters.put(filterField, toFilter);
+            simpleFilters.put(filterField, filterValueStr);
 
             switch (filterField) { // TODO @kemkes: move fields to an ENUM rename topicOne to topic1 and so on
                 case "fulltext", "description", "topicOne", "topicTwo", "topicThree" ->
                     //log.debug("added filter for:" + filterField + " = " + filterValueStr);
-                    allPredicates.add(e -> e.get(filterField).toLowerCase().contains(toFilter));
+                    allPredicates.add(e -> e.getField(filterField).toLowerCase().contains(filterValueStr));
                 case "term", "pronounciation", "acronym", "source", "phraseology" ->
                     //log.debug("added filter for:" + filterField + " = " + filterValueStr);
-                    allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> t.get(filterField).toLowerCase().contains(toFilter)));
+                    allPredicates.add(e -> e.getTerms().stream().anyMatch(t -> t.getField(filterField).toLowerCase().contains(filterValueStr)));
                 default -> log.error("unsupported filter:{}", filterField);
             }
         }
@@ -95,6 +97,7 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
         if (filterBy.get("globalFilter") != null) {
             highlightText(data, filterBy.get("globalFilter").getFilterValue().toString());
         }
+
         // single column sort
         //Collections.sort(data, new LazySorter(field, order));
 
@@ -142,51 +145,45 @@ public class LazyGlossaryTableView extends LazyDataModel<GlossaryTableView> {
         return "<b>" + str + "</b>";
     }
 
-    private Boolean alreadyBold(String str) {
-        return str.length() > 6 && "<b>".equals(str.substring(0, 3)) && "</b>".equals(str.substring(str.length() - 4, str.length()));
+    private boolean isBold(String str) {
+        return str.length() > 6 && str.startsWith("<b>") && str.endsWith("</b>");
     }
 
     private String makeRegular(String str) {
-        if (alreadyBold(str)) {
+        if (isBold(str)) {
             return str.substring(3, str.length() - 4);
         }
+
         return str;
     }
 
-    private void highlightText(List<GlossaryEntry> data, String toFilter) {
-        String[] fieldName = {"topicOne", "topicTwo", "topicThree", "description"};
+    @SuppressWarnings("DuplicatedCode")
+    private void highlightText(final List<GlossaryEntry> data, final String filterValue) {
         for (GlossaryEntry entry : data) {
-            Arrays.stream(fieldName).forEach(field -> {
-                if (toFilter != null && !toFilter.isBlank() && matchesRegion(entry.get(field), toFilter)) {
-                    if (!alreadyBold(entry.get(field))) {
-                        entry.set(field, makeBold(entry.get(field)));
+            Arrays.stream(ENTRY_FIELDS).forEach(field -> {
+                final String fieldValue = entry.getField(field);
+                if (StringUtils.isNotBlank(filterValue) && fieldValue.contains(filterValue)) {
+                    if (!isBold(fieldValue)) {
+                        entry.setField(field, makeBold(fieldValue));
                     }
                 } else {
-                    entry.set(field, makeRegular(entry.get(field)));
+                    entry.setField(field, makeRegular(fieldValue));
                 }
             });
+
             for (GlossaryTerm term : entry.getTerms()) {
-                String[] fieldData = {"term", "acronym", "source", "phraseology"};
-                Arrays.stream(fieldData).forEach(field -> {
-                    if (toFilter != null && !toFilter.isBlank() && matchesRegion(term.get(field), toFilter)) {
-                        if (!alreadyBold(term.get(field))) {
-                            term.set(field, makeBold(term.get(field)));
+                Arrays.stream(TERM_FIELDS).forEach(field -> {
+                    final String fieldValue = term.getField(field);
+                    if (StringUtils.isNotBlank(filterValue) && fieldValue.contains(filterValue)) {
+                        if (!isBold(fieldValue)) {
+                            term.setField(field, makeBold(fieldValue));
                         }
                     } else {
-                        term.set(field, makeRegular(term.get(field)));
+                        term.setField(field, makeRegular(fieldValue));
                     }
                 });
             }
         }
-    }
-
-    private Boolean matchesRegion (String str, String toFilter) {
-        for (int i = 0; i <= (str.length() - toFilter.length()); i++) {
-            if (str.regionMatches(i, toFilter, 0, toFilter.length())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static class LazySorter implements Comparator<GlossaryEntry>, Serializable {

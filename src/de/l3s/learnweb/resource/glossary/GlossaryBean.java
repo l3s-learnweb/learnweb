@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -35,6 +36,7 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.FilesUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
 import com.lowagie.text.Document;
@@ -62,9 +64,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 7104637880221636543L;
     private static final Logger log = LogManager.getLogger(GlossaryBean.class);
-
-    @Inject
-    private FileDao fileDao;
 
     private static final Map<Locale, String> PRONOUNCIATION_VOICES = Map.ofEntries(
         Map.entry(new Locale.Builder().setLanguage("sq").build(), "Albanian Male"),
@@ -133,6 +132,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     private LazyGlossaryTableView lazyTableItems;
 
     private transient List<SelectItem> allowedTermLanguages; // cache for the allowed languages select list
+
+    @Inject
+    private FileDao fileDao;
 
     @PostConstruct
     public void init() {
@@ -469,20 +471,29 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         doc.setPageSize(PageSize.A4.rotate());
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
+    public void handleFileUpload(FilesUploadEvent event) {
         try {
             log.debug("Handle File upload");
-            UploadedFile uploadedFile = event.getFile();
+            for (UploadedFile uploadedFile : event.getFiles().getFiles()) {
+                log.debug("Getting the fileInfo from uploaded file...");
+                FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
 
-            log.debug("Getting the fileInfo from uploaded file...");
-            FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
-
-            log.debug("Saving the file...");
-            File file = new File(File.FileType.MAIN, info.getFileName(), info.getMimeType());
-            fileDao.save(file, uploadedFile.getInputStream());
-            getFormEntry().setPictures(file);
+                log.debug("Saving the file...");
+                File file = new File(File.FileType.GLOSSARY, info.getFileName(), info.getMimeType());
+                fileDao.save(file, uploadedFile.getInputStream());
+                getFormEntry().getPictures().add(file);
+            }
         } catch (IOException e) {
             addErrorMessage(e);
+        }
+    }
+
+    public void handleDeletePicture(File picture) {
+        getFormEntry().getPictures().remove(picture);
+        getFormEntry().setPicturesCount(getFormEntry().getPictures().size());
+
+        if (getFormEntry().getId() != 0) {
+            fileDao.deleteGlossaryEntryFiles(getFormEntry(), Collections.singleton(picture));
         }
     }
 

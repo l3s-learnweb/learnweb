@@ -11,7 +11,6 @@ import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
@@ -84,9 +83,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
                     entry.setLastChangedByUserId(resource.getUserId());
                     entry.setResourceId(resource.getId());
                     entry.getTerms().forEach(term -> term.setId(0));
-                    getGlossaryEntryDao().save(entry);
-
-                    saveTerms(entry);
+                    saveEntry(entry);
                 }
             }
 
@@ -95,9 +92,11 @@ public interface GlossaryDao extends SqlObject, Serializable {
     }
 
     default void saveEntry(GlossaryEntry entry) {
+        entry.setPicturesCount(entry.getPictures().size());
         getGlossaryEntryDao().save(entry);
+
         saveTerms(entry);
-        savePictures(entry);
+        getFileDao().insertGlossaryEntryFiles(entry, entry.getPictures());
     }
 
     default void saveTerms(GlossaryEntry entry) {
@@ -111,13 +110,5 @@ public interface GlossaryDao extends SqlObject, Serializable {
             getGlossaryTermDao().save(term);
         }
         entry.getTerms().removeIf(GlossaryTerm::isDeleted);
-    }
-
-    default void savePictures(GlossaryEntry entry) {
-        for (File file : entry.getPictures()) {
-            getFileDao().save(file);
-            entry.setPictureCount(entry.getPictureCount() + 1);
-        }
-        getGlossaryEntryDao().insertEntryFile(entry, entry.getPictures());
     }
 }

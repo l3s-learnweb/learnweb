@@ -25,6 +25,7 @@ import org.jdbi.v3.sqlobject.customizer.FetchSize;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.resource.glossary.GlossaryEntry;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
@@ -72,22 +73,45 @@ public interface FileDao extends SqlObject, Serializable {
 
     default void insertResourceFiles(Resource resource, Collection<File> files) {
         if (!files.isEmpty()) {
-            PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_resource_file (resource_id, file_id) VALUES (?, ?) ON DUPLICATE KEY "
-                + "UPDATE resource_id = VALUES(resource_id), file_id = VALUES(file_id)");
-            for (File file : files) {
-                batch.bind(0, resource.getId()).bind(1, file.getId()).add();
+            try (PreparedBatch batch = getHandle().prepareBatch("INSERT IGNORE INTO lw_resource_file (resource_id, file_id) VALUES (?, ?)")) {
+                for (File file : files) {
+                    batch.bind(0, resource.getId()).bind(1, file.getId()).add();
+                }
+                batch.execute();
             }
-            batch.execute();
         }
     }
 
     default void deleteResourceFiles(Resource resource, Collection<File> files) {
         if (!files.isEmpty()) {
-            PreparedBatch batch = getHandle().prepareBatch("DELETE FROM lw_resource_file WHERE resource_id = ? AND file_id = ?");
-            for (File file : files) {
-                batch.bind(0, resource.getId()).bind(1, file.getId()).add();
+            try (PreparedBatch batch = getHandle().prepareBatch("DELETE FROM lw_resource_file WHERE resource_id = ? AND file_id = ?")) {
+                for (File file : files) {
+                    batch.bind(0, resource.getId()).bind(1, file.getId()).add();
+                }
+                batch.execute();
             }
-            batch.execute();
+        }
+    }
+
+    default void insertGlossaryEntryFiles(GlossaryEntry entry, Collection<File> files) {
+        if (!files.isEmpty()) {
+            try (PreparedBatch batch = getHandle().prepareBatch("INSERT IGNORE INTO lw_glossary_entry_file (entry_id, file_id) VALUES (?, ?)")) {
+                for (File file : files) {
+                    batch.bind(0, entry.getId()).bind(1, file.getId()).add();
+                }
+                batch.execute();
+            }
+        }
+    }
+
+    default void deleteGlossaryEntryFiles(GlossaryEntry entry, Collection<File> files) {
+        if (!files.isEmpty()) {
+            try (PreparedBatch batch = getHandle().prepareBatch("DELETE FROM lw_glossary_entry_file WHERE entry_id = ? AND file_id = ?")) {
+                for (File file : files) {
+                    batch.bind(0, entry.getId()).bind(1, file.getId()).add();
+                }
+                batch.execute();
+            }
         }
     }
 

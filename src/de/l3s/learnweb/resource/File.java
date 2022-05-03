@@ -32,6 +32,7 @@ public class File implements Serializable, HasId {
         MAIN, // the file that can be downloaded/viewed
         ORIGINAL, // if the file was converted the original file should be moved to this location
         // special resource files
+        GLOSSARY, // glossary entry pictures
         DOC_HISTORY, // previous version of an office resource
         DOC_CHANGES; // zip file with changes for office resource
 

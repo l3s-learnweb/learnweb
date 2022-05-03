@@ -13,7 +13,6 @@ import java.util.Optional;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.result.LinkedHashMapRowReducer;
 import org.jdbi.v3.core.result.RowView;
-import org.jdbi.v3.core.statement.PreparedBatch;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.KeyColumn;
@@ -25,7 +24,6 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.UseRowReducer;
 
 import de.l3s.learnweb.dashboard.glossary.GlossaryDescriptionSummary;
-import de.l3s.learnweb.resource.File;
 import de.l3s.util.SqlHelper;
 
 @RegisterRowMapper(GlossaryEntryDao.GlossaryEntryMapper.class)
@@ -35,7 +33,7 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_glossary_entry WHERE entry_id = ?")
     Optional<GlossaryEntry> findById(int entryId);
 
-    @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_glossary_entry_file f WHERE e.entry_id = f.entry_id) as count_files FROM lw_glossary_entry e JOIN lw_glossary_term t USING (entry_id) WHERE e.resource_id = ? and e.deleted = 0")
+    @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_glossary_entry_file f WHERE e.entry_id = f.entry_id) as pictures_count FROM lw_glossary_entry e JOIN lw_glossary_term t USING (entry_id) WHERE e.resource_id = ? and e.deleted = 0")
     @UseRowReducer(GlossaryEntryTermReducer.class)
     List<GlossaryEntry> findByResourceId(int resourceId);
 
@@ -60,27 +58,6 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT entry_id, resource_id, user_id, description, description_pasted FROM lw_glossary_entry WHERE deleted != 1 AND user_id IN(<userIds>) AND created_at BETWEEN :start AND :end")
     List<GlossaryDescriptionSummary> countGlossaryDescriptionSummary(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
-    default void insertEntryFile(GlossaryEntry entry, Collection<File> files) {
-        if (!files.isEmpty()) {
-            PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_glossary_entry_file (resource_id, entry_id, file_id) VALUES (?, ?, ?) ON DUPLICATE KEY "
-                + "UPDATE resource_id = VALUES(resource_id), entry_id = VALUES(entry_id), file_id = VALUES(file_id)");
-            for (File file : files) {
-                batch.bind(0, entry.getResourceId()).bind(1, entry.getId()).bind(2, file.getId()).add();
-            }
-            batch.execute();
-        }
-    }
-
-    default void deleteEntryFiles(GlossaryEntry entry, Collection<File> files) {
-        if (!files.isEmpty()) {
-            PreparedBatch batch = getHandle().prepareBatch("DELETE FROM lw_glossary_entry_file WHERE resource_id = ? AND entry_id = ? AND file_id = ?");
-            for (File file : files) {
-                batch.bind(0, entry.getResourceId()).bind(1, entry.getId()).bind(2, file.getId()).add();
-            }
-            batch.execute();
-        }
-    }
-
     default void save(GlossaryEntry entry) {
         if (entry.getUserId() == 0) {
             entry.setUserId(entry.getLastChangedByUserId()); // last change by userID == original user ID in insert
@@ -103,6 +80,7 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
         params.put("description", entry.getDescription());
         params.put("description_pasted", entry.isDescriptionPasted());
         params.put("imported", entry.isImported());
+        params.put("pictures_count", entry.getPicturesCount());
         params.put("updated_at", entry.getUpdatedAt());
         params.put("created_at", entry.getCreatedAt());
 
@@ -129,9 +107,9 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
             entry.setDescription(rs.getString("description"));
             entry.setDescriptionPasted(rs.getBoolean("description_pasted"));
             entry.setImported(rs.getBoolean("imported"));
+            entry.setPicturesCount(rs.getInt("pictures_count"));
             entry.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
             entry.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
-            entry.setPictureCount(rs.getInt("count_files"));
             return entry;
         }
     }
