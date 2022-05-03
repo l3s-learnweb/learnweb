@@ -241,7 +241,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         }
 
         for (Resource resource : getResources()) {
-            Resource newResource = new Resource(resource);
+            Resource newResource = resource.cloneResource();
             newResource.setGroupId(groupId);
             newResource.setFolderId(foldersMap.get(newResource.getFolderId()));
             newResource.setUser(user);

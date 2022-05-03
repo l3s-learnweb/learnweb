@@ -165,7 +165,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
                 }
             } else {
                 // create a copy
-                newResource = new Resource(selectedResource.getResource());
+                newResource = selectedResource.getResource().cloneResource();
             }
 
             newResource.setQuery(query);

@@ -36,10 +36,15 @@ public class WebResource extends Resource {
         setService(service);
     }
 
-    public WebResource(final WebResource old) {
-        super(old);
+    protected WebResource(final WebResource other) {
+        super(other);
 
-        setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
+        setArchiveUrls(new LinkedList<>(other.getArchiveUrls()));
+    }
+
+    @Override
+    public WebResource cloneResource() {
+        return new WebResource(this);
     }
 
     @Override

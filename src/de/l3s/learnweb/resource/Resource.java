@@ -145,7 +145,7 @@ public class Resource extends AbstractResource implements Serializable {
     /**
      * Copy constructor.
      */
-    public Resource(Resource old) {
+    protected Resource(Resource old) {
         setGroupId(old.groupId);
         setFolderId(old.folderId);
         setTitle(old.title);
@@ -180,6 +180,10 @@ public class Resource extends AbstractResource implements Serializable {
         }
 
         setMetadata(new HashMap<>(old.getMetadata()));
+    }
+
+    public Resource cloneResource() {
+        return new Resource(this);
     }
 
     /**

@@ -182,7 +182,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
             if (r.getUserId() == specialAdmin.getId()) {
                 copiedResources.add(r);
             } else {
-                Resource resourceCopy = new Resource(r);
+                Resource resourceCopy = r.cloneResource();
 
                 // So that owner of the original resource can view it
                 resourceCopy.setOriginalResourceId(r.getId());

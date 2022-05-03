@@ -366,7 +366,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         int targetFolderId = HasId.getIdOrDefault(targetFolder, 0);
 
         for (Resource resource : items.getResources()) {
-            Resource newResource = new Resource(resource);
+            Resource newResource = resource.cloneResource();
             newResource.setGroupId(targetGroupId);
             newResource.setFolderId(targetFolderId);
             newResource.setUser(getUser());

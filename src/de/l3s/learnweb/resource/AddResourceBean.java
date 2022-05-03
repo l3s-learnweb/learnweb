@@ -96,7 +96,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             log.debug("Saving the file...");
             File file = new File(FileType.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, uploadedFile.getInputStream());
-            Resource res = new Resource(resource);
+            Resource res = resource.cloneResource();
             res.addFile(file);
 
             log.debug("Extracting metadata from the file...");
