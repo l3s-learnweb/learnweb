@@ -116,9 +116,9 @@
                                  immediate="true" ignoreAutoUpdate="true" process="@this" global="false"/>
             </h:form>
 
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}" icon="ui-icon-alert">
-                <p:commandButton value="#{msg.yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
-                <p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+            <p:confirmDialog widgetVar="gConfirmDlg" global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}">
+                <p:commandButton value="#{msg.yes}" type="button" styleClass="ui-confirmdialog-yes" icon="fas fa-check"/>
+                <p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="fas fa-close"/>
             </p:confirmDialog>
 
             <ui:include src="parts/tooltips.xhtml"/>
