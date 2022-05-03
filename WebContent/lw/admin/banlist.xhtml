@@ -19,7 +19,7 @@
     </lw:breadcrumb-item>
 </ui:define>
 
-<ui:define name="center_layout" >
+<ui:define name="center_layout">
     <div class="row">
         <div class="col-12 col-md-10 col-lg-8 col-xl-6">
             <p:panel header="#{msg.manual_ban}">
@@ -135,7 +135,7 @@
         </p:dialog>
 
         <h:form id="suspiciouslistform">
-            <p:dataTable  paginatorPosition="bottom" var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true"
+            <p:dataTable paginatorPosition="bottom" var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true"
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                 <p:column headerText="IP" sortBy="#{aggrReqData.addr}">
                     <h:outputText value="#{aggrReqData.addr}"/>
@@ -177,13 +177,13 @@
         </h:form>
     </p:panel>
 
-    <script type="text/javascript">
+    <h:outputScript>
         function updateFormValues(name) {
             const formObj = document.getElementById('banDialogForm');
             formObj.elements.item(0).value = name;
             formObj.elements.item(2).parentNode.nextSibling.click();
         }
-    </script>
+    </h:outputScript>
 </ui:define>
 
 </ui:composition>

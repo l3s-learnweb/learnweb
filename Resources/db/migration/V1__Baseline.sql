@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `lw_bounces` (
     `email` VARCHAR(64) DEFAULT NULL,
     `received` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `code` VARCHAR(10) NOT NULL,
-    `description` VARCHAR(64) DEFAULT NULL,
+    `description` VARCHAR(100) DEFAULT NULL,
     UNIQUE KEY `lw_bounces_email` (`email`)
 );
 

@@ -20,7 +20,7 @@
 <ui:define name="center_layout">
     <h:form id="yourinformationform">
         <p:dataTable id="groups_tbl" value="#{userBean.user.groups}" var="group" paginator="true" paginatorPosition="bottom" rows="30"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
                 <h:outputText value="#{msg.groupsTitle}"/>
             </f:facet>
@@ -32,12 +32,12 @@
                         <p:dataExporter type="pdf" target="groups_tbl" fileName="groups"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-success float-end p-1">
                         <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="groups_tbl" fileName="groups"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-secondary float-end p-1">
                         <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="groups_tbl" fileName="groups"/>
                     </h:commandLink>

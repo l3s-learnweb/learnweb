@@ -29,7 +29,7 @@
     <h:form>
         <p:dataTable var="userView" value="#{adminUsersBean.userViews}" rows="50" paginator="true" paginatorPosition="bottom" id="users_table"
                      rowsPerPageTemplate="50,100,250,500,1000,1500,2500" rendered="#{adminUsersBean.userViews ne null}"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
 
             <f:facet name="header">
                 <div class="d-flex">
@@ -53,7 +53,7 @@
                         <p:dataExporter type="xls" target="users_table" fileName="users"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray p-1">
+                    <h:commandLink styleClass="text-secondary p-1">
                         <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="users_table" fileName="users"/>
                     </h:commandLink>

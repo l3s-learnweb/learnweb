@@ -43,10 +43,8 @@
 					<h:outputText value="#{msg.username}:"/>
 					<h:outputText value="#{userDetailBean.selectedUser.username}"/>
 
-					<ui:fragment rendered="#{not empty userDetailBean.selectedUser.email}">
-						<h:outputText value="#{msg.email_address}:" />
-						<lw:encryptEmail email="#{userDetailBean.selectedUser.email}"/>
-					</ui:fragment>
+					<h:outputText value="#{msg.email_address}:" rendered="#{not empty userDetailBean.selectedUser.email}"/>
+					<lw:encryptEmail email="#{userDetailBean.selectedUser.email}" rendered="#{not empty userDetailBean.selectedUser.email}"/>
 
 					<h:outputText value="#{msg.gender}:" rendered="#{userDetailBean.selectedUser.gender ne 'UNASSIGNED'}" />
 					<h:outputText value="#{msg['user.gender.' += userDetailBean.selectedUser.gender]}" rendered="#{userDetailBean.selectedUser.gender ne 'UNASSIGNED'}" />
@@ -65,7 +63,7 @@
 						<f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
 					</h:outputText>
 				</p:panelGrid>
-		  </p:panel>
+			</p:panel>
 
 			<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{userDetailBean.selectedUser.username}"
 					 rendered="#{not empty userDetailBean.selectedUser.groups}">

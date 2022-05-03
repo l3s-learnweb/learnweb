@@ -587,14 +587,9 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             return null;
         }
 
-        TreeNode treeNode = new DefaultTreeNode("GroupFolders");
-        TreeNode rootNode = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), treeNode);
-        if (activeFolder == 0) {
-            rootNode.setSelected(true);
-            rootNode.setExpanded(true);
-        }
+        TreeNode rootNode = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), null);
         getChildNodesRecursively(rootNode, group, activeFolder);
-        return treeNode;
+        return rootNode;
     }
 
     public static void getChildNodesRecursively(TreeNode parentNode, ResourceContainer container, int activeFolderId) {

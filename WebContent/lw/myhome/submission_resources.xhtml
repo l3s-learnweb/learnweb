@@ -96,7 +96,7 @@
         </h:form>
     </p:panel>
 
-    <script type="application/javascript">
+    <h:outputScript>
       /* global commandUpdateSelectedItems */
 
       function confirmResourcesSelect() {
@@ -112,6 +112,6 @@
         createSelectable('submitResourcesGrid');
         createSelectableArea('submitResourcesGrid');
       });
-    </script>
+    </h:outputScript>
 </ui:define>
 </ui:composition>

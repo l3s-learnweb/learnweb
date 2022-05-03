@@ -78,7 +78,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.gender}:"/>
                                 <p:selectOneMenu id="usergender" value="#{profileBean.selectedUser.gender}" disabled="#{profileBean.editingDisabled}">
-                                    <f:selectItems value="#{profileBean.genders}" var="gender"  itemLabel="#{msg['user.gender.'+=gender]}" itemValue="#{gender}"/>
+                                    <f:selectItems value="#{profileBean.genders}" var="gender" itemLabel="#{msg['user.gender.'+=gender]}" itemValue="#{gender}"/>
                                 </p:selectOneMenu>
                                 <p:message for="@previous"/>
                             </div>
@@ -229,7 +229,7 @@
         </div>
     </div>
 
-    <h:outputScript type="text/javascript" rendered="#{userBean.guided}">
+    <h:outputScript rendered="#{userBean.guided}">
         let guide, guideFinish;
 
         $(() => {

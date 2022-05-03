@@ -2,7 +2,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-<h:outputScript type="text/javascript">
+<h:outputScript>
   function createTooltip(target, content, position) {
     const targetEl = document.querySelector(target);
     if (targetEl) {
@@ -20,20 +20,20 @@
   }
 </h:outputScript>
 
-<h:outputScript rendered="#{userBean.showMessageJoinGroupInHeader}" type="text/javascript">
+<h:outputScript rendered="#{userBean.showMessageJoinGroupInHeader}">
     createTooltip('.guide-my-groups', "#{msg['TooltipMessage.join_group']}", 'right');
 </h:outputScript>
 
-<h:outputScript rendered="#{userBean.showMessageAddResourceInHeader}" type="text/javascript">
+<h:outputScript rendered="#{userBean.showMessageAddResourceInHeader}">
     createTooltip('.guide-my-resources', "#{msg['TooltipMessage.add_resource']}", 'right');
 </h:outputScript>
 
-<h:outputScript rendered="#{userBean.showMessageJoinGroup}" type="text/javascript">
+<h:outputScript rendered="#{userBean.showMessageJoinGroup}">
     createTooltip('.guide-create-group', "#{msg['TooltipMessage.create_group']}", 'bottom');
     createTooltip('.guide-join-group', "#{msg['TooltipMessage.join_group']}", 'top');
 </h:outputScript>
 
-<h:outputScript rendered="#{userBean.showMessageAddResource}" type="text/javascript">
+<h:outputScript rendered="#{userBean.showMessageAddResource}">
     createTooltip('.guide-add-resource', "#{msg['TooltipMessage.resources']}", 'top');
 </h:outputScript>
 

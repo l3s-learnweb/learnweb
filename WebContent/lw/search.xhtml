@@ -164,10 +164,10 @@
             <script>PrimeFaces.cw('LimitedList', 'me', { id: 'learnweb' });</script>
         </h:form>
 
-        <script type="text/javascript">
+        <h:outputScript>
             const view = '#{searchBean.view}';
             const userId = '#{userBean.user.id}';
-        </script>
+        </h:outputScript>
 
         <h:form prependId="false">
             <div id="searchResults" class="p-2 search-#{searchBean.view}">

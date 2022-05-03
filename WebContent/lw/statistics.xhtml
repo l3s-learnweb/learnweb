@@ -44,15 +44,15 @@
         </p:column>
     </p:dataTable>
 
-    <p:dataTable styleClass="mt-3" var="row" value="#{statisticsBean.resourcesPerSource}">
+    <p:dataTable styleClass="mt-3" var="entry" value="#{statisticsBean.resourcesPerSource}">
         <f:facet name="header">#{msg.resource_count_per_source}</f:facet>
 
         <p:column headerText="#{msg.source}" styleClass="text-start">
-            <h:outputText value="#{row.key}"/>
+            <h:outputText value="#{entry.key}"/>
         </p:column>
 
         <p:column headerText="#{msg.resources}" styleClass="text-end">
-            <h:outputText value="#{row.value}">
+            <h:outputText value="#{entry.value}">
                 <f:convertNumber groupingUsed="true"/>
             </h:outputText>
         </p:column>

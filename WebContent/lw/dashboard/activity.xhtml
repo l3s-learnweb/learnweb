@@ -65,22 +65,22 @@
     </p:panel>
 
     <h:form id="content" styleClass="dashboard">
-        <p:tabView  dynamic="true" cache="true" styleClass="ui-tabs-transparent"
-                    rendered="#{!empty activityDashboardBean.interactionsChart and !empty activityDashboardBean.interactionsTable}">
+        <p:tabView dynamic="true" cache="true" styleClass="ui-tabs-transparent"
+                   rendered="#{!empty activityDashboardBean.interactionsChart and !empty activityDashboardBean.interactionsTable}">
             <p:tab title="#{msg.chart_view}">
                 <p:lineChart model="#{activityDashboardBean.interactionsChart}" />
             </p:tab>
             <p:tab title="#{msg.table_view}">
-                <p:dataTable var="row" value="#{activityDashboardBean.interactionsTable}">
-                    <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
-                        <h:outputText value="#{row[key]}"/>
+                <p:dataTable var="entry" value="#{activityDashboardBean.interactionsTable}">
+                    <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{entry}">
+                        <h:outputText value="#{entry[key]}"/>
                     </p:columns>
                 </p:dataTable>
             </p:tab>
         </p:tabView>
     </h:form>
 
-    <script type="text/javascript">
+    <h:outputScript>
       const allActivities = $('#all_activities');
       const groupedActivities = $('#grouped_activities');
 
@@ -102,7 +102,7 @@
                 $(this).prop('checked', false);
             });
         }
-    </script>
+    </h:outputScript>
 </ui:define>
 
 </ui:composition>

@@ -118,7 +118,7 @@
         </div>
     </div>
 
-    <h:outputScript type="text/javascript" rendered="#{userBean.guided}">
+    <h:outputScript rendered="#{userBean.guided}">
       const guide = groupOverviewPageInitializeGuide("#{msg.join_group}.");
 
       $(function() {

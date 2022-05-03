@@ -27,9 +27,7 @@ public class LearnwebUser extends UIComponentBase {
     }
 
     @Override
-    public void encodeBegin(FacesContext context) throws IOException {
-        String styleClass = (String) getAttributes().get("styleClass");
-        String style = (String) getAttributes().get("style");
+    public void encodeAll(final FacesContext context) throws IOException {
         try {
             user = (User) getAttributes().get("user");
             if (user == null) {
@@ -39,16 +37,29 @@ public class LearnwebUser extends UIComponentBase {
             log.error("IOException while passing User", e);
             return;
         }
-        int userId = user.getId();
-
-        UIViewRoot viewRoot = context.getViewRoot();
-        Locale locale = viewRoot.getLocale();
-        ResponseWriter writer = context.getResponseWriter();
 
         if (user.isDeleted()) {
+            ResponseWriter writer = context.getResponseWriter();
+
+            UIViewRoot viewRoot = context.getViewRoot();
+            Locale locale = viewRoot.getLocale();
+
+            writer.startElement("span", this);
             writer.write(LanguageBundle.getLanguageBundle(locale).getString("deleted_user"));
+            writer.endElement("span");
             return;
         }
+
+        super.encodeAll(context);
+    }
+
+    @Override
+    public void encodeBegin(FacesContext context) throws IOException {
+        String styleClass = (String) getAttributes().get("styleClass");
+        String style = (String) getAttributes().get("style");
+        int userId = user.getId();
+
+        ResponseWriter writer = context.getResponseWriter();
         writer.startElement("a", this);
         writer.writeAttribute("href", ("user/detail.jsf?user_id=" + userId), null);
         if (styleClass != null) {
