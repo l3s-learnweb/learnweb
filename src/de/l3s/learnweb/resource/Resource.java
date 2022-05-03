@@ -576,7 +576,7 @@ public class Resource extends AbstractResource implements Serializable {
             // handle known types of downloadable resources
             this.type = ResourceType.file;
         } else {
-            // if we do not know the format, then  log it and set it to downloadable
+            // if we do not know the format, then log it and set it to downloadable
             log.error("Unknown type for format: {}; resourceId: {}", format, getId(), new Exception());
             this.type = ResourceType.file;
         }
@@ -875,7 +875,7 @@ public class Resource extends AbstractResource implements Serializable {
                 iframeUrl = embeddedUrl;
             } else if (type == ResourceType.video) {
                 iframeUrl = switch (service) {
-                    case ted ->  getUrl().replace("//www.", "//embed.").replace("http://", "https://");
+                    case ted -> getUrl().replace("//www.", "//embed.").replace("http://", "https://");
                     case youtube, teded, tedx -> "https://www.youtube-nocookie.com/embed/" + getIdAtService();
                     case vimeo -> "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
                     default -> null;

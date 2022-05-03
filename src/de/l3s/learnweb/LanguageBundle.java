@@ -105,7 +105,7 @@ public class LanguageBundle extends ResourceBundle {
         }
 
         int beginIndex = 0;
-        int startName; // index of the  constant, if any
+        int startName; // index of the constant, if any
 
         StringBuilder sb = new StringBuilder(value); // build the new value
 

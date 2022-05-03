@@ -61,12 +61,12 @@
                         <div class="d-flex align-items-center justify-content-between w-100">
                             <h4 class="me-1 mb-0">#{userSubmission.user.username}</h4>
                             <h:form prependId="false">
-                                <p:commandButton  value="locked" styleClass="moderator-btn" rendered="#{userSubmission.submitStatus}"
+                                <p:commandButton value="locked" styleClass="moderator-btn" rendered="#{userSubmission.submitStatus}"
                                                 process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
                                     <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
                                 </p:commandButton>
 
-                                <p:commandButton  value="unlocked" styleClass="moderator-btn" rendered="#{not userSubmission.submitStatus}"
+                                <p:commandButton value="unlocked" styleClass="moderator-btn" rendered="#{not userSubmission.submitStatus}"
                                                 process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
                                     <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
                                 </p:commandButton>

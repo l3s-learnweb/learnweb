@@ -56,7 +56,7 @@
     <h:form prependId="false" styleClass="mt-3">
         <p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" value="#{tedTranscriptLogBean.simpleTranscriptLogs}" rows="30"
                      paginator="true" rowsPerPageTemplate="20,25,30"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
             <f:facet name="{Exporters}">
                 <h:commandLink>
                     <i class="fas fa-fw fa-file-excel text-success" aria-hidden="true"></i>

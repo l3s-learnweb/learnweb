@@ -92,7 +92,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
 
     default List<SearchSession> findSessionsByGroupId(int groupId) {
         return getHandle().select("SELECT DISTINCT l.user_id, l.session_id FROM learnweb_large.sl_query q JOIN lw_user_log l ON q.search_id = l.target_id "
-            + "AND q.user_id = l.user_id JOIN lw_group_user ug ON ug.user_id =  l.user_id "
+            + "AND q.user_id = l.user_id JOIN lw_group_user ug ON ug.user_id = l.user_id "
             + "WHERE l.action = 5 AND ug.group_id = ? GROUP BY l.user_id, l.session_id, q.timestamp ORDER BY q.timestamp DESC LIMIT 30", groupId)
             .map((rs, ctx) -> {
                 SearchSession session = new SearchSession(rs.getString("session_id"), rs.getInt("user_id"));

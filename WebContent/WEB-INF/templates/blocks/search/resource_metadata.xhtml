@@ -39,7 +39,7 @@
         <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.resource.author}">
             <h:outputText value="#{msg.author}: " styleClass="fw-bold"/>
             <h:outputText value="#{res.resource.author}" rendered="#{empty res.authorUrl}"/>
-            <h:outputLink value="#{res.authorUrl}"  rendered="#{not empty res.authorUrl}" target="_blank">#{res.resource.author} <i class="fas fa-external-link-alt" aria-hidden="true"></i></h:outputLink>
+            <h:outputLink value="#{res.authorUrl}" rendered="#{not empty res.authorUrl}" target="_blank">#{res.resource.author} <i class="fas fa-external-link-alt" aria-hidden="true"></i></h:outputLink>
         </h:panelGroup>
 
         <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.group}">

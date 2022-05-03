@@ -55,7 +55,7 @@
 
 	<h:form prependId="false" styleClass="mt-3">
 		<p:dataTable paginatorPosition="bottom" id = "transcript_table" var="log" value="#{tedTranscriptLogBean.transcriptLogs}" rows="30" paginator="true"
-					 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+					 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 					 rowsPerPageTemplate="20,25,30,35,40" widgetVar="transcriptLogs">
 			<f:facet name="{Exporters}">
 				<h:commandLink>

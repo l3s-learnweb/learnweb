@@ -18,7 +18,7 @@ public class RegenerateThumbnails extends MaintenanceTask {
     @Override
     protected void run(final boolean dryRun) throws Exception {
         final ResourceDao resourceDao = getLearnweb().getDaoProvider().getResourceDao();
-        List<Resource> imagesWithoutThumbnail = resourceDao.withHandle(handle -> handle.select("SELECT *  FROM lw_resource r "
+        List<Resource> imagesWithoutThumbnail = resourceDao.withHandle(handle -> handle.select("SELECT * FROM lw_resource r "
             + "WHERE deleted = 0 AND max_image_url IS NOT NULL AND storage_type=2 AND type IN ('video', 'image') AND online_status != 'OFFLINE' "
             + "AND NOT EXISTS (SELECT 1 FROM lw_resource_file rf WHERE r.resource_id = rf.resource_id)")
             .map(new ResourceDao.ResourceMapper()).list());

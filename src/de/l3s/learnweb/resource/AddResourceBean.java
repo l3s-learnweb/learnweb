@@ -64,7 +64,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             case "glossary" -> {
                 GlossaryResource glossaryResource = new GlossaryResource();
                 glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
-                yield  glossaryResource;
+                yield glossaryResource;
             }
             case "survey" -> {
                 Survey survey = new Survey();
@@ -74,7 +74,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
                 survey.setDescription("Description placeholder");
                 SurveyResource surveyResource = new SurveyResource();
                 surveyResource.setSurvey(survey);
-                yield  surveyResource;
+                yield surveyResource;
             }
             case "document" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.document, ResourceService.learnweb);
             case "spreadsheet" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.spreadsheet, ResourceService.learnweb);

@@ -33,7 +33,7 @@
             </p:column>
 
             <p:column headerText="#{msg.creation_date}" styleClass="res-row-date" sortBy="#{res.resource.createdAt}">
-                <h:outputText  value="#{res.resource.createdAt}">
+                <h:outputText value="#{res.resource.createdAt}">
                     <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
                 </h:outputText>
             </p:column>

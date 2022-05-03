@@ -54,7 +54,7 @@
     
 	<h:form id="form" rendered="#{surveyBean.resource != null}">
 		<p:panel>
-			<h:panelGroup  rendered="#{surveyBean.formEnabled}">
+			<h:panelGroup rendered="#{surveyBean.formEnabled}">
 				<h:panelGroup id="questions">
 					<h2>#{surveyBean.resource.title}</h2>
 					<c:forEach var="question" items="#{surveyBean.resource.questions}">

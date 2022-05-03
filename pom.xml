@@ -294,7 +294,7 @@
             <artifactId>ffmpeg</artifactId>
             <version>0.7.0</version>
         </dependency>
-        <!-- Used in ExportManager, generates HTML  -->
+        <!-- Used in ExportManager, generates HTML -->
         <dependency>
             <groupId>com.hp.gagawa</groupId>
             <artifactId>gagawa</artifactId>

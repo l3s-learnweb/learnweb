@@ -279,7 +279,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
         }
     }
 
-    // -------------------  Simple getters and setters ---------------------------
+    // ------------------- Simple getters and setters ---------------------------
 
     public String getNewTag() {
         return newTag;

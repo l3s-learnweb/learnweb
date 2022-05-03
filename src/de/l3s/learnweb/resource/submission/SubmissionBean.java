@@ -433,7 +433,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
             }
         } catch (Exception e) {
-            log.error("Error in getting survey resources for  course", e);
+            log.error("Error in getting survey resources for course", e);
         }
     }
 

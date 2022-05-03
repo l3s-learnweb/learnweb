@@ -67,7 +67,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_resource r WHERE group_id = ? and deleted = 0")
     List<Resource> findByGroupId(int groupId);
 
-    @SqlQuery("SELECT * FROM lw_resource r  WHERE folder_id = ? AND deleted = 0")
+    @SqlQuery("SELECT * FROM lw_resource r WHERE folder_id = ? AND deleted = 0")
     List<Resource> findByFolderId(int folderId);
 
     @SqlQuery("SELECT * FROM lw_resource WHERE owner_user_id = ? AND deleted = 0")
@@ -89,7 +89,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_rating USING ( resource_id ) WHERE user_id = ? AND deleted = 0")
     List<Resource> findRatedByUsedId(int userId);
 
-    @SqlQuery("SELECT * FROM lw_resource r  WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?")
+    @SqlQuery("SELECT * FROM lw_resource r WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?")
     List<Resource> findByGroupIdAndFolderIdAndOwnerId(int groupId, int folderId, int userId, int limit);
 
     /**
@@ -124,7 +124,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     /**
      * @return a rate given to the resource by the user.
      */
-    @SqlQuery("SELECT rating FROM lw_resource_rating WHERE resource_id =  ? AND user_id = ?")
+    @SqlQuery("SELECT rating FROM lw_resource_rating WHERE resource_id = ? AND user_id = ?")
     Optional<Integer> findResourceRating(int resourceId, int userId);
 
     default void insertResourceRating(int resourceId, int userId, int value) {
