@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.web;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,6 +18,7 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 
 public class WebResource extends Resource {
+    @Serial
     private static final long serialVersionUID = 8066627820924157401L;
     private static final Logger log = LogManager.getLogger(WebResource.class);
 

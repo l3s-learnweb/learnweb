@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.web;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
@@ -34,6 +35,7 @@ import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
 @Named
 @ViewScoped
 public class WebResourceBean extends ApplicationBean implements Serializable {
+    @Serial
     private static final long serialVersionUID = -655001215017199006L;
     private static final Logger log = LogManager.getLogger(WebResourceBean.class);
 
