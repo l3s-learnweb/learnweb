@@ -135,6 +135,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         // log and show notification
         log(Action.group_creating, newGroup.getId(), newGroup.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
+        getUserBean().setSidebarMenuModel(null);
 
         // reset new group var
         newGroup = new Group();
