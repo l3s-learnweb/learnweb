@@ -256,12 +256,6 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${maven.dependency.log4j.version}</version>
         </dependency>
-        <!-- Integrate log tracking to GitLab dashboard via Sentry.io -->
-        <dependency>
-            <groupId>io.sentry</groupId>
-            <artifactId>sentry-log4j2</artifactId>
-            <version>5.7.3</version>
-        </dependency>
 
         <!-- ################ Other dependencies (usually your dependencies go to this section) ################ -->
         <!-- High performance cache (used in JDBI3, but we can reuse it for our needs) -->

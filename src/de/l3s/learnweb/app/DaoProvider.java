@@ -2,8 +2,11 @@ package de.l3s.learnweb.app;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
+import java.util.Enumeration;
 
 import javax.sql.DataSource;
 
@@ -163,10 +166,21 @@ public class DaoProvider {
 
     public void destroy() {
         try {
-            if (dataSource instanceof Closeable) {
-                ((Closeable) dataSource).close();
+            if (dataSource instanceof Closeable closeable) {
+                closeable.close();
             }
-        } catch (IOException e) {
+
+            // Unregister JDBI drivers (e.g. MaridDB Driver)
+            Enumeration<Driver> drivers = DriverManager.getDrivers();
+            while (drivers.hasMoreElements()) {
+                Driver driver = drivers.nextElement();
+                ClassLoader driverClassLoader = driver.getClass().getClassLoader();
+                ClassLoader thisClassLoader = this.getClass().getClassLoader();
+                if (driverClassLoader != null && driverClassLoader.equals(thisClassLoader)) {
+                    DriverManager.deregisterDriver(driver);
+                }
+            }
+        } catch (IOException | SQLException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -174,7 +188,7 @@ public class DaoProvider {
     public static HikariDataSource createDataSource(final ConfigProvider configProvider) {
         HikariDataSource ds = new HikariDataSource();
         // Configuration docs https://github.com/brettwooldridge/HikariCP
-        ds.setDriverClassName(configProvider.getProperty("mysql_driver"));
+        ds.setDriverClassName("org.mariadb.jdbc.Driver");
         ds.setJdbcUrl(configProvider.getProperty("mysql_url"));
         ds.setUsername(configProvider.getProperty("mysql_user"));
         ds.setPassword(configProvider.getProperty("mysql_password"));
