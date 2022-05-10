@@ -25,6 +25,7 @@ public class File implements Serializable, HasId {
         SYSTEM_FILE, // for example course header images
         ORGANISATION_BANNER,
         PROFILE_PICTURE,
+        GROUP_PICTURE,
         // resource files
         THUMBNAIL_SMALL, // cropped to 160 x 120 px - the smallest thumbnail used on website
         THUMBNAIL_MEDIUM, // resized <= 280 x 210 px - resource preview image size

@@ -11,17 +11,24 @@ import jakarta.inject.Named;
 import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
+import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.Image;
 
 @Named
 @ViewScoped
 public class GroupOptionsBean extends ApplicationBean implements Serializable {
+    private static final Logger log = LogManager.getLogger(GroupOptionsBean.class);
     @Serial
     private static final long serialVersionUID = 7748993079932830367L;
     //private static final Logger log = LogManager.getLogger(GroupOptionsBean.class);
@@ -39,6 +46,9 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private String editedHypothesisLink;
     private String editedHypothesisToken;
     private GroupUser groupUser;
+
+    @Inject
+    private FileDao fileDao;
 
     @Inject
     private GroupDao groupDao;
@@ -110,6 +120,24 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         List<Group> copyableGroups = getUser().getWriteAbleGroups();
         copyableGroups.remove(group);
         return copyableGroups;
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
+            Image img = new Image(event.getFile().getInputStream());
+
+            File file = new File(File.FileType.GROUP_PICTURE, "group_picture.png", "image/png");
+            Image thumbnail = img.getResizedToSquare2(320, 0.0);
+            fileDao.save(file, thumbnail.getInputStream());
+            thumbnail.dispose();
+
+            group.getImageFile().ifPresent(image -> fileDao.deleteHard(image)); // delete old image
+            group.setImageFileId(file.getId());
+            groupDao.save(group);
+        } catch (Exception e) {
+            log.error("Fatal error while processing a user image", e);
+            addMessage(FacesMessage.SEVERITY_FATAL, "Fatal error while processing your image.");
+        }
     }
 
     public String getEditedGroupTitle() {

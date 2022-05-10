@@ -224,12 +224,7 @@ public class Resource extends AbstractResource implements Serializable {
             throw new IllegalArgumentException("tag is to long");
         }
 
-        Tag tag = Learnweb.dao().getTagDao().findByName(tagName).orElseGet(() -> {
-            Tag newTag = new Tag(0, tagName);
-            Learnweb.dao().getTagDao().save(newTag);
-            return newTag;
-        });
-
+        Tag tag = Learnweb.dao().getTagDao().findOrCreate(tagName);
         if (tags != null && !tags.contains(tag)) {
             Learnweb.dao().getResourceDao().insertTag(this, user, tag);
 

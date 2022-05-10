@@ -179,6 +179,7 @@ public interface GroupDao extends SqlObject, Serializable {
         params.put("deleted", group.isDeleted());
         params.put("title", group.getTitle());
         params.put("description", SqlHelper.toNullable(group.getDescription()));
+        params.put("image_file_id", group.getImageFileId());
         params.put("leader_id", group.getLeaderUserId());
         params.put("course_id", group.getCourseId());
         params.put("restriction_forum_category_required", group.isRestrictionForumCategoryRequired());
@@ -211,6 +212,7 @@ public interface GroupDao extends SqlObject, Serializable {
                 group.setDeleted(rs.getBoolean("deleted"));
                 group.setTitle(rs.getString("title"));
                 group.setDescription(rs.getString("description"));
+                group.setImageFileId(rs.getInt("image_file_id"));
                 group.setLeaderUserId(rs.getInt("leader_id"));
                 group.setCourseId(rs.getInt("course_id"));
                 group.setRestrictionForumCategoryRequired(rs.getBoolean("restriction_forum_category_required"));

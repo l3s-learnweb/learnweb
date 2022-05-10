@@ -131,7 +131,7 @@ public final class ArchiveUrlManager {
         }
 
         @Override
-        public String call() throws Exception {
+        public String call() throws InterruptedException, IOException {
             if (resource == null) {
                 return "resource was NULL";
             }

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,6 +11,9 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.jdbi.v3.core.Handle;
 import org.primefaces.model.DashboardColumn;
 import org.primefaces.model.DashboardModel;
@@ -31,7 +35,7 @@ import de.l3s.maintenance.resources.ReindexResources;
 public class AdminSystemBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 1354024417928664741L;
-    //private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
+    private static final Logger log = LogManager.getLogger(AdminSystemBean.class);
 
     private final DashboardModel model;
 
@@ -104,14 +108,18 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         databaseProcesses = null;
     }
 
-    public void reindexResources() throws Exception {
+    public void reindexResources() {
         reindexProgress = 0;
 
-        ReindexResources task = new ReindexResources(getLearnweb(), progress -> reindexProgress = progress);
-        task.run(false);
-
-        indexedResources = null;
-        totalResources = null;
+        try {
+            ReindexResources task = new ReindexResources(getLearnweb(), progress -> reindexProgress = progress);
+            task.run(false);
+        } catch (IOException | SolrServerException e) {
+            log.error("Error reindexing resources", e);
+        } finally {
+            indexedResources = null;
+            totalResources = null;
+        }
     }
 
     public void onReindexComplete() {

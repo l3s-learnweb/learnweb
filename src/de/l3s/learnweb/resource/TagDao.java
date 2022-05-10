@@ -43,6 +43,14 @@ public interface TagDao extends SqlObject, Serializable {
             });
     }
 
+    default Tag findOrCreate(String name) {
+        return findByName(name).orElseGet(() -> {
+            Tag newTag = new Tag(0, name);
+            save(newTag);
+            return newTag;
+        });
+    }
+
     @SqlUpdate("DELETE FROM lw_tag WHERE tag_id = ?")
     void delete(Tag tag);
 

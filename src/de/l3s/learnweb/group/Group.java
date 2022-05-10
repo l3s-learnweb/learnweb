@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -26,6 +27,7 @@ import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
+import de.l3s.util.ProfileImageHelper;
 
 public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer {
     @Serial
@@ -87,6 +89,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private String title;
     @Length(max = 500)
     private String description;
+    private int imageFileId;
     private int maxMemberCount = -1; // defines how many users can join this group
     private boolean restrictionForumCategoryRequired = false;
     private PolicyJoin policyJoin = PolicyJoin.COURSE_MEMBERS;
@@ -100,6 +103,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     // caches
     private transient User leader;
+    private transient String imageUrl;
     protected transient List<User> members;
     protected transient List<Folder> folders;
     private transient Course course;
@@ -286,6 +290,15 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getImageFileId() {
+        return imageFileId;
+    }
+
+    public void setImageFileId(int imageFileId) {
+        this.imageFileId = imageFileId;
+        this.imageUrl = null;
     }
 
     /**
@@ -610,5 +623,22 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             treeNode.getParent().setExpanded(true);
             expandToNode(treeNode.getParent());
         }
+    }
+
+    /**
+     * @return the url of the groups image or a default image if no image has been added
+     */
+    public String getImageUrl() {
+        if (imageUrl == null) {
+            imageUrl = getImageFile().map(File::getSimpleUrl).orElse(ProfileImageHelper.getGroupPicture(title));
+        }
+        return imageUrl;
+    }
+
+    /**
+     * return the File of the profile picture.
+     */
+    public Optional<File> getImageFile() {
+        return Learnweb.dao().getFileDao().findById(imageFileId);
     }
 }

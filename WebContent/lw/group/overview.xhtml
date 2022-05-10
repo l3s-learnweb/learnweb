@@ -59,20 +59,35 @@
                     </h:form>
                 </f:facet>
 
-                <h5>#{groupOverviewBean.group.title}</h5>
-                <p><h:outputText value="#{groupOverviewBean.group.description}" escape="false"/></p>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.resources}: " styleClass="fw-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
-                </p>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.members}: " styleClass="fw-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.memberCount}"/>
-                </p>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.created_by}: " styleClass="fw-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
-                </p>
+                <div class="d-flex">
+                    <img class="me-3 align-self-start" src="${groupOverviewBean.group.imageUrl}" alt="Group picture"/>
+
+                    <div>
+                        <h5>#{groupOverviewBean.group.title}</h5>
+                        <p><h:outputText value="#{groupOverviewBean.group.description}" escape="false"/></p>
+                        <p class="mb-1">
+                            <h:outputText value="#{msg.resources}: " styleClass="fw-bold"/>
+                            <h:outputLink value="group/resources.jsf">
+                                <f:param name="group_id" value="#{groupOverviewBean.groupId}"/>
+                                <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
+                            </h:outputLink>
+                        </p>
+                        <p class="mb-1">
+                            <h:outputText value="#{msg.members}: " styleClass="fw-bold"/>
+                            <h:outputLink value="group/members.jsf">
+                                <f:param name="group_id" value="#{groupOverviewBean.groupId}"/>
+                                <h:outputText value="#{groupOverviewBean.group.memberCount}"/>
+                            </h:outputLink>
+                        </p>
+                        <p class="mb-1">
+                            <h:outputText value="#{msg.created_by}: " styleClass="fw-bold"/>
+                            <h:outputLink value="user/detail.jsf">
+                                <f:param name="user_id" value="#{groupOverviewBean.group.leader.id}"/>
+                                <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
+                            </h:outputLink>
+                        </p>
+                    </div>
+                </div>
             </p:panel>
 
             <p:panel header="#{msg.members}" id="members">
