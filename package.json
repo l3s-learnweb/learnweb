@@ -36,7 +36,7 @@
     "@rollup/plugin-replace": "^4.0.0",
     "autoprefixer": "^10.4.6",
     "browserslist": "^4.20.3",
-    "eslint": "^8.14.0",
+    "eslint": "^8.15.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-compat": "^4.0.2",
     "eslint-plugin-import": "^2.26.0",
