@@ -31,7 +31,7 @@
     <p:panel>
         <f:facet name="header">
             #{msg.choose_options}
-            <p:button icon="ui-icon-help" onclick="return false;"/>
+            <p:button icon="fas fa-circle-question" onclick="return false;"/>
             <p:tooltip for="@previous" value="On this page you can see user activity."/>
         </f:facet>
 
@@ -65,7 +65,7 @@
     </p:panel>
 
     <h:form id="content" styleClass="dashboard">
-        <p:tabView dynamic="true" cache="true" styleClass="ui-tabs-transparent"
+        <p:tabView dynamic="true" cache="true" styleClass="ui-tabs-plaid"
                    rendered="#{!empty activityDashboardBean.interactionsChart and !empty activityDashboardBean.interactionsTable}">
             <p:tab title="#{msg.chart_view}">
                 <p:lineChart model="#{activityDashboardBean.interactionsChart}" />

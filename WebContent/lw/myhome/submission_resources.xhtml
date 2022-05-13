@@ -91,7 +91,7 @@
 
             <p:commandButton value="#{msg.submit}" action="#{submissionBean.actionSubmitItems}"
                              update="@form" rendered="#{not submissionBean.submitted and not empty submissionBean.selectedResources}">
-                    <p:confirm message="#{msg['submission.are_you_sure_you_want_to_submit']}" icon="pi pi-exclamation-triangle"/>
+                    <p:confirm message="#{msg['submission.are_you_sure_you_want_to_submit']}" icon="fas fa-triangle-exclamation"/>
             </p:commandButton>
         </h:form>
     </p:panel>

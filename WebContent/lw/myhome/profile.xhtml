@@ -37,7 +37,7 @@
                     <h:panelGroup id="profile_image">
                         <div class="row flex-column-reverse flex-md-row">
                             <div class="col-md-8">
-                                <div class="form-group">
+                                <div class="field">
                                     <p:outputLabel for="@next" value="#{msg.username}:"/>
                                     <p:inputText id="username" value="#{profileBean.selectedUser.realUsername}" validator="#{profileBean.validateUsername}"
                                                  label="#{msg.username}" required="true">
@@ -46,14 +46,14 @@
                                     <p:message for="@previous"/>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="field">
                                     <p:outputLabel for="@next" value="#{msg.full_name}:"/>
                                     <p:inputText id="userfullname" value="#{profileBean.selectedUser.fullName}" label="#{msg.full_name}:"
                                                  disabled="#{profileBean.editingDisabled}"/>
                                     <p:message for="@previous"/>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="field">
                                     <p:outputLabel for="@next" value="#{msg.email_address}:"/>
                                     <p:inputText id="useremail" value="#{profileBean.email}" label="#{msg.email_address}:"
                                                  required="#{profileBean.mailRequired}" validator="emailValidator"/>
@@ -64,9 +64,9 @@
                                 <img class="d-block w-100 profile-picture m-auto fluent" src="${profileBean.selectedUser.imageUrl}"
                                      alt="Profile image"/>
 
-                                <div class="form-group mt-2 text-center">
+                                <div class="field mt-2 text-center">
                                     <p:outputLabel for="@next" value="#{msg.photo}"/>
-                                    <p:fileUpload id="profilephoto" listener="${profileBean.handleFileUpload}" styleClass="fileupload-minimal"
+                                    <p:fileUpload id="profilephoto" listener="${profileBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
                                                   mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
                                                   update="profile_image" oncomplete="if (#{userBean.guided}) {guideFinish.show();}" auto="true" label="#{msg.choose_file}" cancelLabel="abb"
                                                   disabled="#{profileBean.anonymizeUsername || profileBean.editingDisabled}"/>
@@ -75,7 +75,7 @@
                             </div>
                         </div>
                         <div>
-                            <div class="form-group">
+                            <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.gender}:"/>
                                 <p:selectOneMenu id="usergender" value="#{profileBean.selectedUser.gender}" disabled="#{profileBean.editingDisabled}">
                                     <f:selectItems value="#{profileBean.genders}" var="gender" itemLabel="#{msg['user.gender.'+=gender]}" itemValue="#{gender}"/>
@@ -83,46 +83,46 @@
                                 <p:message for="@previous"/>
                             </div>
 
-                            <div class="form-group">
+                            <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.student_id}:"/>
                                 <p:inputText id="studentId" value="#{profileBean.selectedUser.studentId}" label="#{msg.student_id}:"
                                              required="#{profileBean.studentIdRequired}" disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
-                            <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.studentIdRequired}">
+                            <h:panelGroup layout="block" styleClass="field" rendered="#{profileBean.studentIdRequired}">
                                 <p:outputLabel value="#{msg.consent}:"/>
                                 <p:selectBooleanCheckbox id="accept_terms" value="#{profileBean.selectedUser.acceptTermsAndConditions}" label="#{msg.consent}"
                                                          itemLabel="I've given consent to use my data for the project" validator="#{profileBean.validateConsent}"/>
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 
-                            <div class="form-group">
+                            <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.affiliation}:"/>
                                 <p:inputText id="useraffiliation" value="#{profileBean.selectedUser.affiliation}" required="#{profileBean.affiliationRequired}"
                                              disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
-                            <div class="form-group">
+                            <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.address}:"/>
                                 <p:inputTextarea id="useraddress" value="#{profileBean.selectedUser.address}" disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
-                            <div class="form-group">
+                            <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.profession}:"/>
                                 <p:inputText id="userprofession" value="#{profileBean.selectedUser.profession}" disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
-                            <div class="form-group">
+                            <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.interest}:"/>
                                 <p:inputTextarea id="userinterest" value="#{profileBean.selectedUser.interest}" disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </div>
 
-                            <div class="form-group">
+                            <div class="field">
                                 <p:outputLabel for="@next" value="#{msg.time_zone}:"/>
                                 <p:selectOneMenu converter="timeZoneConverter" value="#{profileBean.selectedUser.timeZone}">
                                     <f:selectItems value="#{profileBean.timeZoneIds}" />
@@ -130,7 +130,7 @@
                                 <p:message for="@previous"/>
                             </div>
 
-                            <h:panelGroup layout="block" styleClass="form-group" rendered="false">
+                            <h:panelGroup layout="block" styleClass="field" rendered="false">
                                 <p:outputLabel for="@next" value="#{msg.dateofbirth}:"/>
                                 <p:datePicker id="userdateofbirth" value="#{profileBean.selectedUser.dateOfBirth}" maxdate="#{profileBean.maxBirthday}"
                                               monthNavigator="true" yearNavigator="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"
@@ -138,7 +138,7 @@
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 
-                            <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.moderatorAccess}">
+                            <h:panelGroup layout="block" styleClass="field" rendered="#{profileBean.moderatorAccess}">
                                 <p:outputLabel for="@next" value="#{msg.awards}:"/>
                                 <p:textEditor id="usercredits" widgetVar="editorWidget" value="#{profileBean.selectedUser.credits}" height="80">
                                     <f:facet name="toolbar">
@@ -190,14 +190,14 @@
             </p:panel>
             <p:panel header="#{msg.change_password}" styleClass="mb-3">
                 <h:form id="passwordform">
-                    <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.selectedUser.password ne null}">
+                    <h:panelGroup layout="block" styleClass="field" rendered="#{profileBean.selectedUser.password ne null}">
                         <p:outputLabel for="@next" value="#{msg.current_password}:"/>
                         <p:password id="current_password" value="#{profileBean.currentPassword}"
                                     validator="#{profileBean.validateCurrentPassword}" autocomplete="off" required="#{!userBean.admin}"/>
                         <p:message for="@previous"/>
                     </h:panelGroup>
 
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg.new_password}:"/>
                         <p:password id="password" value="#{profileBean.password}" autocomplete="off" required="true" feedback="true"
                                     promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
@@ -205,7 +205,7 @@
                         <p:message for="@previous"/>
                     </div>
 
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg.confirm_password}:"/>
                         <p:password id="confirm_password" value="#{profileBean.confirmPassword}" autocomplete="off" required="true"/>
                         <p:message for="@previous"/>
@@ -218,11 +218,11 @@
 
             <p:panel header="#{msg.miscellaneous}" styleClass="mb-3">
                 <h:form id="deleteform">
-                    <p:commandButton action="#{profileBean.onDeleteAccount}" value="#{msg['user.account.deleteSoft.button']}" styleClass="orange-btn">
+                    <p:commandButton action="#{profileBean.onDeleteAccount}" value="#{msg['user.account.deleteSoft.button']}" styleClass="ui-button-danger">
                         <p:confirm message="#{msg['user.account.deleteSoft.confirmDescription']}" escape="false"/>
                     </p:commandButton>
 
-                    <p:commandButton action="#{profileBean.rootLogin}" value="#{msg.loginLabel}" styleClass="moderator-btn"
+                    <p:commandButton action="#{profileBean.rootLogin}" value="#{msg.loginLabel}" styleClass="ui-button-mod"
                                      rendered="#{userBean.canLoginToAccount(profileBean.selectedUser)}"/>
                 </h:form>
             </p:panel>

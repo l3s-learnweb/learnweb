@@ -3,7 +3,7 @@
     border: 0;
   }
 
-  &.ui-widget-content-p-0 > .ui-widget-content {
+  &.ui-widget-content-flat > .ui-widget-content {
     padding: 0;
   }
 
@@ -25,7 +25,7 @@
 }
 
 .ui-button {
-  &.transparent-btn {
+  &.ui-button-flat {
     background-color: transparent;
     border: 1px solid transparent;
 
@@ -82,16 +82,14 @@
 }
 
 .ui-tree {
+  border: 0;
+  padding: 0;
+  background: none;
+  margin-bottom: 1rem;
+
   &.ui-tree-limited {
     max-height: 50vh;
     overflow: auto;
-  }
-
-  &.ui-tree-borderless {
-    border: 0;
-    padding: 0;
-    background: none;
-    margin-bottom: 1rem;
   }
 
   &.ui-tree-responsive {
@@ -149,7 +147,7 @@
 }
 
 .ui-tabs {
-  &.ui-tabs-transparent {
+  &.ui-tabs-plaid {
     &,
     .ui-tabs-nav {
       background: none;
@@ -169,7 +167,7 @@
     }
   }
 
-  &.ui-tabs-full-width {
+  &.ui-tabs-fluid {
     ul.ui-tabs-nav {
       display: flex;
 

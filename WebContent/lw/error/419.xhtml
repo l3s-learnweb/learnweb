@@ -15,7 +15,7 @@
             <h:outputText styleClass="h5 d-block" value="#{msg['error_pages.session_expired_default_description']}"/>
 
             <h:panelGroup styleClass="mt-3" layout="block">
-                <p:linkButton onclick="window.location = window.location.href; return false;" value="#{msg.reload}" styleClass="secondary-btn"/>
+                <p:linkButton onclick="window.location = window.location.href; return false;" value="#{msg.reload}" styleClass="ui-button-secondary"/>
                 <p:linkButton href="#{userBean.bannerLink}" value="#{msg.return_to_welcome_page}"/>
             </h:panelGroup>
         </p:panel>

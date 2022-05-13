@@ -23,7 +23,7 @@
         <section class="container" id="login">
             <div class="row align-items-center">
                 <div class="col-md-6 col-lg-4 mb-4 mb-md-0 highlight">
-                    <div class="bg-white-90 p-3 pb-4">
+                    <div class="p-3 pb-4" style="background-color: rgba(255, 255, 255, 0.9);">
                         <ui:fragment rendered="#{!userBean.loggedIn}">
                             <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
                         </ui:fragment>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-8">
-                    <div class="header-news-list bg-dark-90 text-white">
+                    <div class="header-news-list text-white" style="background-color: rgba(36, 39, 37, 0.9);">
                         <h2 class="m-0 bg-dark">#{msg.announcements}</h2>
 
                         <div class="news-list">

@@ -9,7 +9,7 @@
 <p:remoteCommand name="onUnloadCommand" actionListener="#{resourceDetailBean.releaseResourceIfLocked}"/>
 <p:poll interval="60" listener="#{resourceDetailBean.editActivityListener}"/>
 
-<div class="fg-grid mb-3">
+<div class="fields-grid">
     <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
         <ui:param name="res" value="#{res}"/>
     </ui:decorate>
@@ -26,12 +26,12 @@
 <div class="d-flex">
     <p:defaultCommand target="saveResourceButton"/>
     <div class="me-auto">
-        <p:commandButton styleClass="alt-btn" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
+        <p:commandButton styleClass="ui-button-warning" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
                          update=":resourceDetails" immediate="true" rendered="#{userBean.admin}"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
     </div>
     <div>
-        <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" action="#{resourceDetailBean.cancelEdit}"
+        <p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" action="#{resourceDetailBean.cancelEdit}"
                          update=":resourceDetails" immediate="true"
                          onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
         <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.saveEdit}" update=":resourceDetails" process="@form"

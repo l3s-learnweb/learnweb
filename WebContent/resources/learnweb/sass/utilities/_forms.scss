@@ -1,5 +1,5 @@
-// TODO @astappiev: to be replaced with .fg-grid at some point
-.form-group {
+// TODO @astappiev: to be replaced with .fields-grid at some point
+.field {
   margin-bottom: $spacer;
 
   > p {
@@ -20,9 +20,10 @@
 }
 
 // In case we need backward compatibility for browsers without CSS Grid https://codepen.io/SitePoint/pen/bxVaKK
-.fg-grid {
+.fields-grid {
   display: grid;
   grid-gap: $spacer;
+  margin-bottom: $spacer;
 
   > *:not(.fg-row) {
     min-width: 0;

@@ -2,11 +2,11 @@ package de.l3s.learnweb.resource.web;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -90,6 +90,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
     public String getArchiveCalendarJsonData() {
         JsonObject archiveDates = new JsonObject();
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US);
+        DateTimeFormatter localizedDateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
 
         TreeMap<LocalDate, Integer> dailySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByDays(resource.getId(), resource.getUrl());
         for (final Map.Entry<LocalDate, Integer> entry : dailySeriesData.entrySet()) {
@@ -104,7 +105,7 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
             for (ArchiveUrl archiveUrl : archiveUrlsData) {
                 JsonObject archiveVersion = new JsonObject();
                 archiveVersion.addProperty("url", archiveUrl.archiveUrl());
-                archiveVersion.addProperty("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, getUserBean().getLocale()).format(archiveUrl.timestamp()));
+                archiveVersion.addProperty("time", localizedDateFormat.format(archiveUrl.timestamp()));
                 archiveVersions.add(archiveVersion);
             }
             archiveDay.add("dayEvents", archiveVersions);

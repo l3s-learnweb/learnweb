@@ -99,7 +99,7 @@
     margin-top: -10px;
   }
 
-  &.alt-btn {
+  &.ui-button-warning {
     background-color: $primaryAltButtonBgColor;
     border: 1px solid $primaryAltButtonBgColor;
 
@@ -116,7 +116,7 @@
     }
   }
 
-  &.secondary-btn {
+  &.ui-button-secondary {
     background-color: $secondaryButtonBgColor;
     border: 1px solid $secondaryButtonBgColor;
 
@@ -133,7 +133,7 @@
     }
   }
 
-  &.outline-btn {
+  &.ui-button-outlined {
     background-color: $outlineButtonBgColor;
     border: 1px solid $outlineButtonBorderColor;
     color: $outlineButtonTextColor;
@@ -153,152 +153,7 @@
     }
   }
 
-  &.blue-btn {
-    background-color: $blueButtonBgColor;
-    border: 1px solid $blueButtonBgColor;
-    color: $blueButtonTextColor;
-
-    &:hover,
-    &.ui-state-hover,
-    &.ui-state-focus {
-      background-color: $blueButtonHoverBgColor;
-      border-color: $blueButtonHoverBgColor;
-    }
-
-    &.ui-state-active {
-      background-color: $blueButtonActiveBgColor;
-      border-color: $blueButtonActiveBgColor;
-    }
-  }
-
-  &.cyan-btn {
-    background-color: $cyanButtonBgColor;
-    border: 1px solid $cyanButtonBgColor;
-    color: $cyanButtonTextColor;
-
-    &:hover,
-    &.ui-state-hover,
-    &.ui-state-focus {
-      background-color: $cyanButtonHoverBgColor;
-      border-color: $cyanButtonHoverBgColor;
-    }
-
-    &.ui-state-active,
-    &.ui-state-focus {
-      background-color: $cyanButtonActiveBgColor;
-      border-color: $cyanButtonActiveBgColor;
-    }
-  }
-
-  &.green-btn {
-    background-color: $greenButtonBgColor;
-    border: 1px solid $greenButtonBgColor;
-    color: $greenButtonTextColor;
-
-    &:hover,
-    &.ui-state-hover,
-    &.ui-state-focus {
-      background-color: $greenButtonHoverBgColor;
-      border-color: $greenButtonHoverBgColor;
-    }
-
-    &.ui-state-active {
-      background-color: $greenButtonActiveBgColor;
-      border-color: $greenButtonActiveBgColor;
-    }
-  }
-
-  &.yellow-btn {
-    background-color: $yellowButtonBgColor;
-    border: 1px solid $yellowButtonBgColor;
-    color: $yellowButtonTextColor;
-
-    &:hover,
-    &.ui-state-hover,
-    &.ui-state-focus {
-      background-color: $yellowButtonHoverBgColor;
-      border-color: $yellowButtonHoverBgColor;
-    }
-
-    &.ui-state-active {
-      background-color: $yellowButtonActiveBgColor;
-      border-color: $yellowButtonActiveBgColor;
-    }
-  }
-
-  &.purple-btn {
-    background-color: $purpleButtonBgColor;
-    border: 1px solid $purpleButtonBgColor;
-    color: $purpleButtonTextColor;
-
-    &:hover,
-    &.ui-state-hover,
-    &.ui-state-focus {
-      background-color: $purpleButtonHoverBgColor;
-      border-color: $purpleButtonHoverBgColor;
-    }
-
-    &.ui-state-active {
-      background-color: $purpleButtonActiveBgColor;
-      border-color: $purpleButtonActiveBgColor;
-    }
-  }
-
-  &.pink-btn {
-    background-color: $pinkButtonBgColor;
-    border: 1px solid $pinkButtonBgColor;
-    color: $pinkButtonTextColor;
-
-    &:hover,
-    &.ui-state-hover,
-    &.ui-state-focus {
-      background-color: $pinkButtonHoverBgColor;
-      border-color: $pinkButtonHoverBgColor;
-    }
-
-    &.ui-state-active {
-      background-color: $pinkButtonActiveBgColor;
-      border-color: $pinkButtonActiveBgColor;
-    }
-  }
-
-  &.bluegray-btn {
-    background-color: $bluegrayButtonBgColor;
-    border: 1px solid $bluegrayButtonBgColor;
-    color: $bluegrayButtonTextColor;
-
-    &:hover,
-    &.ui-state-hover,
-    &.ui-state-focus {
-      background-color: $bluegrayButtonHoverBgColor;
-      border-color: $bluegrayButtonHoverBgColor;
-    }
-
-    &.ui-state-active {
-      background-color: $bluegrayButtonActiveBgColor;
-      border-color: $bluegrayButtonActiveBgColor;
-    }
-  }
-
-  &.teal-btn {
-    background-color: $tealButtonBgColor;
-    border: 1px solid $tealButtonBgColor;
-    color: $tealButtonTextColor;
-
-    &:hover,
-    &.ui-state-hover,
-    &.ui-state-focus {
-      background-color: $tealButtonHoverBgColor;
-      border-color: $tealButtonHoverBgColor;
-    }
-
-    &.ui-state-active {
-      background-color: $tealButtonActiveBgColor;
-      border-color: $tealButtonActiveBgColor;
-    }
-  }
-
-  &.orange-btn {
+  &.ui-button-danger {
     background-color: $orangeButtonBgColor;
     border: 1px solid $orangeButtonBgColor;
     color: $orangeButtonTextColor;
@@ -313,24 +168,6 @@
     &.ui-state-active {
       background-color: $orangeButtonActiveBgColor;
       border-color: $orangeButtonActiveBgColor;
-    }
-  }
-
-  &.gray-btn {
-    background-color: $grayButtonBgColor;
-    border: 1px solid $grayButtonBgColor;
-    color: $grayButtonTextColor;
-
-    &:hover,
-    &.ui-state-hover,
-    &.ui-state-focus {
-      background-color: $grayButtonHoverBgColor;
-      border-color: $grayButtonHoverBgColor;
-    }
-
-    &.ui-state-active {
-      background-color: $grayButtonActiveBgColor;
-      border-color: $grayButtonActiveBgColor;
     }
   }
 }

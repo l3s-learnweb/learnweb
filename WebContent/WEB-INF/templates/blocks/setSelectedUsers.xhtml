@@ -33,7 +33,7 @@
             </p:outputPanel>
 
             <p:outputPanel id="usersCountPanel">
-                <p><h:outputText value="#{msg.users_selected} #{cbean.selectedUsersIds.size()}" rendered="#{not empty cbean.selectedUsersIds}"/></p>
+                <h:outputText value="#{msg.users_selected} #{cbean.selectedUsersIds.size()}" rendered="#{not empty cbean.selectedUsersIds}"/>
             </p:outputPanel>
         </p:outputPanel>
 
@@ -56,7 +56,7 @@
             </div>
         </p:outputPanel>
         <p:outputPanel id="submitBtnPanel" styleClass="col-md-4 d-flex justify-content-center align-items-center">
-            <p:commandButton value="#{msg.select}" icon="ui-icon-check" update=":content" action="#{cbean.cleanAndUpdateStoredData}"
+            <p:commandButton value="#{msg.select}" icon="fas fa-check" update=":content" action="#{cbean.cleanAndUpdateStoredData}"
                                      disabled="#{empty cbean.selectedUsersIds or cbean.usersLimitReached}">
             </p:commandButton>
         </p:outputPanel>

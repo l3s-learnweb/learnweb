@@ -41,7 +41,7 @@
                 <ui:fragment rendered="#{userBean.loggedIn}">
                     <li class="nav-item dropdown">
                         <a class="nav-link nav-link-profile" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="${userBean.user.imageUrl}" class="profile-picture rounded-circle" alt="Profile picture" title="#{userBean.user.fullName}"/>
+                            <img src="${userBean.user.imageUrl}" class="profile-picture rounded-circle guide-profile-picture" alt="Profile picture" title="#{userBean.user.fullName}"/>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a href="#{request.contextPath}/lw/user/detail.jsf?user_id=#{userBean.user.id}" class="dropdown-item">

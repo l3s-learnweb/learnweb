@@ -16,8 +16,8 @@
 
 <h:form id="glossary_table_form" prependId="false" styleClass="h-100">
     <p:dataTable id="glossary_table" widgetVar="glossTable" value="#{glossaryBean.lazyTableItems}" var="item"
-                 styleClass="glossary-table" allowUnsorting="true"
-                 paginator="true" rows="200" rowsPerPageTemplate="100,200,400,1000"
+                 styleClass="glossary-table" allowUnsorting="true" rows="200"
+                 paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="100,200,400,1000"
                  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
 
         <p:ajax event="filter" oncomplete="groupRow()"/>
@@ -30,7 +30,7 @@
                     <h:outputText value="#{msg.filter}" styleClass="fw-light me-2"/>
                     <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" placeholder="#{msg['Glossary.search_filter_placeholder']}"/>
                 </p:outputPanel>
-                <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="col-auto alt-btn" process="@this"
+                <p:commandButton value="#{msg['addEntry']}" action="#{glossaryBean.onClearEntryForm}" styleClass="col-auto ui-button-warning" process="@this"
                                  update=":glossary_add" oncomplete="PF('glossaryEditDialog').show();return false;" global="false"/>
             </div>
         </f:facet>
@@ -130,7 +130,7 @@
           modal="true" resizable="false" draggable="false" closeOnEscape="true">
     <h:form id="import_form">
         <h:panelGroup styleClass="p-grid" layout="block" rendered="#{glossaryBean.importResponse == null}">
-            <p:fileUpload mode="advanced" skinSimple="true" listener="#{glossaryBean.onImportXls}" styleClass="fileupload-minimal"
+            <p:fileUpload mode="advanced" skinSimple="true" listener="#{glossaryBean.onImportXls}" styleClass="ui-fileupload-minimal"
                           allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update="@form :glossary_table_form" oncomplete="groupRow();"/>
         </h:panelGroup>
 
@@ -283,13 +283,13 @@
 
         <div class="d-flex mt-3">
             <div class="me-auto">
-                <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}" styleClass="alt-btn"
+                <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}" styleClass="ui-button-warning"
                                  update=":glossary_add :lang_terms" process="@this lang_terms" oncomplete="PF('glossaryEditDialog').resetPosition();">
                 </p:commandButton>
             </div>
             <div>
                 <p:defaultCommand target="save"/>
-                <p:commandButton value="#{msg.cancel}" process="@this" resetValues="true" styleClass="secondary-btn"
+                <p:commandButton value="#{msg.cancel}" process="@this" resetValues="true" styleClass="ui-button-secondary"
                                  oncomplete="PF('glossaryEditDialog').hide();return false;">
                 </p:commandButton>
                 <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave}" update=":glossary_add :glossary_table_form"

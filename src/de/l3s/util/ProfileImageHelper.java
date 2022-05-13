@@ -37,7 +37,7 @@ public final class ProfileImageHelper {
 
     public static String getGroupPicture(final String name) {
         String displayName = name.length() <= 40 ? name : name.substring(0, 40) + "...";
-        final String pictureXml = getProfilePicture(displayName, getColorForProfilePicture(name), (int) Math.max(Math.min(-2.5 * displayName.length() + 95, 90), 10));
+        final String pictureXml = getProfilePicture(displayName, getColorForProfilePicture(name), (int) Math.max(Math.min(-3 * displayName.length() + 95, 90), 10));
         return "data:image/svg+xml;base64," + StringHelper.encodeBase64(pictureXml);
     }
 

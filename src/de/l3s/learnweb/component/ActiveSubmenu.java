@@ -14,7 +14,7 @@ import org.primefaces.component.api.UIOutcomeTarget;
 import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.Submenu;
 
-public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
+public class ActiveSubmenu implements Submenu, UIOutcomeTarget, Serializable {
     @Serial
     private static final long serialVersionUID = -6646980546205592030L;
 
@@ -36,7 +36,7 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
     private Map<String, List<String>> params;
     private List<MenuElement> elements;
 
-    public ActiveSubMenu() {
+    public ActiveSubmenu() {
         this.elements = new ArrayList<>();
     }
 
@@ -233,104 +233,104 @@ public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable {
     }
 
     public static final class Builder {
-        private final ActiveSubMenu subMenu;
+        private final ActiveSubmenu submenu;
 
         private Builder() {
-            this.subMenu = new ActiveSubMenu();
+            this.submenu = new ActiveSubmenu();
         }
 
         public Builder id(String id) {
-            this.subMenu.setId(id);
+            this.submenu.setId(id);
             return this;
         }
 
         public Builder style(String style) {
-            this.subMenu.setStyle(style);
+            this.submenu.setStyle(style);
             return this;
         }
 
         public Builder styleClass(String styleClass) {
-            this.subMenu.setStyleClass(styleClass);
+            this.submenu.setStyleClass(styleClass);
             return this;
         }
 
         public Builder icon(String icon) {
-            this.subMenu.setIcon(icon);
+            this.submenu.setIcon(icon);
             return this;
         }
 
         public Builder iconPos(String iconPos) {
-            this.subMenu.setIconPos(iconPos);
+            this.submenu.setIconPos(iconPos);
             return this;
         }
 
         public Builder label(String label) {
-            this.subMenu.setLabel(label);
+            this.submenu.setLabel(label);
             return this;
         }
 
         public Builder url(String url) {
-            this.subMenu.setHref(url);
+            this.submenu.setHref(url);
             return this;
         }
 
         public Builder target(String target) {
-            this.subMenu.setTarget(target);
+            this.submenu.setTarget(target);
             return this;
         }
 
         public Builder disabled(boolean disabled) {
-            this.subMenu.setDisabled(disabled);
+            this.submenu.setDisabled(disabled);
             return this;
         }
 
         public Builder elements(List<MenuElement> elements) {
-            this.subMenu.setElements(elements);
+            this.submenu.setElements(elements);
             return this;
         }
 
         public Builder addElement(MenuElement element) {
-            this.subMenu.getElements().add(element);
+            this.submenu.getElements().add(element);
             return this;
         }
 
         public Builder rendered(boolean rendered) {
-            this.subMenu.setRendered(rendered);
+            this.submenu.setRendered(rendered);
             return this;
         }
 
         public Builder expanded(boolean expanded) {
-            this.subMenu.setExpanded(expanded);
+            this.submenu.setExpanded(expanded);
             return this;
         }
 
         public Builder outcome(String outcome) {
-            this.subMenu.setOutcome(outcome);
+            this.submenu.setOutcome(outcome);
             return this;
         }
 
         public Builder includeViewParams(boolean includeViewParams) {
-            this.subMenu.setIncludeViewParams(includeViewParams);
+            this.submenu.setIncludeViewParams(includeViewParams);
             return this;
         }
 
         public Builder fragment(String fragment) {
-            this.subMenu.setFragment(fragment);
+            this.submenu.setFragment(fragment);
             return this;
         }
 
         public Builder params(Map<String, List<String>> params) {
-            this.subMenu.setParams(params);
+            this.submenu.setParams(params);
             return this;
         }
 
         public Builder disableClientWindow(boolean disableClientWindow) {
-            this.subMenu.setDisableClientWindow(disableClientWindow);
+            this.submenu.setDisableClientWindow(disableClientWindow);
             return this;
         }
 
-        public ActiveSubMenu build() {
-            return this.subMenu;
+        public ActiveSubmenu build() {
+            return this.submenu;
         }
     }
 }

@@ -29,8 +29,8 @@ import org.primefaces.model.menu.MenuModel;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.app.Learnweb;
-import de.l3s.learnweb.component.ActiveSubMenu;
-import de.l3s.learnweb.component.ActiveSubMenu.Builder;
+import de.l3s.learnweb.component.ActiveSubmenu;
+import de.l3s.learnweb.component.ActiveSubmenu.Builder;
 import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
@@ -330,7 +330,7 @@ public class UserBean implements Serializable {
         BaseMenuModel model = new BaseMenuModel();
 
         // My resources
-        Builder mm = ActiveSubMenu.builder()
+        Builder mySubmenu = ActiveSubmenu.builder()
             .label(msg.getString("myResourcesTitle"))
             .styleClass("guide-my-resources")
             .url("myhome/resources.jsf")
@@ -340,27 +340,27 @@ public class UserBean implements Serializable {
             .addElement(DefaultMenuItem.builder().value(msg.getString("myRatedResourcesTitle")).icon("fas fa-star-half-alt").url("myhome/rated_resources.jsf").build());
 
         if (!user.getActiveSubmissions().isEmpty()) {
-            mm.addElement(DefaultMenuItem.builder().value(msg.getString("Submission.my_submissions")).icon("fas fa-calendar-check").url("myhome/submission_overview.jsf").build());
+            mySubmenu.addElement(DefaultMenuItem.builder().value(msg.getString("Submission.my_submissions")).icon("fas fa-calendar-check").url("myhome/submission_overview.jsf").build());
         }
 
-        model.getElements().add(mm.build());
+        model.getElements().add(mySubmenu.build());
 
         // My groups
-        Builder groups = ActiveSubMenu.builder().label(msg.getString("myGroups")).url("myhome/groups.jsf").styleClass("guide-my-groups");
+        Builder groupsSubmenuBuilder = ActiveSubmenu.builder().label(msg.getString("myGroups")).url("myhome/groups.jsf").styleClass("guide-my-groups");
         for (Group group : user.getGroups()) {
-            Builder gm = ActiveSubMenu.builder().label(group.getTitle()).url("group/overview.jsf?group_id=" + group.getId()).styleClass("ui-menuitem-group");
+            Builder gm = ActiveSubmenu.builder().label(group.getTitle()).url("group/overview.jsf?group_id=" + group.getId()).styleClass("ui-menuitem-group");
             gm.addElement(DefaultMenuItem.builder().value(msg.getString("overview")).icon("fas fa-layer-group").url("group/overview.jsf?group_id=" + group.getId()).build());
             gm.addElement(DefaultMenuItem.builder().value(msg.getString("resources")).icon("fas fa-folder-open").url("group/resources.jsf?group_id=" + group.getId()).build());
             gm.addElement(DefaultMenuItem.builder().value(msg.getString("forum")).icon("fas fa-comment-dots").url("group/forum.jsf?group_id=" + group.getId()).build());
             gm.addElement(DefaultMenuItem.builder().value(msg.getString("members")).icon("fas fa-users").url("group/members.jsf?group_id=" + group.getId()).build());
             gm.addElement(DefaultMenuItem.builder().value(msg.getString("options")).icon("fas fa-sliders-h").url("group/options.jsf?group_id=" + group.getId()).build());
-            groups.addElement(gm.build());
+            groupsSubmenuBuilder.addElement(gm.build());
         }
-        model.getElements().add(groups.build());
+        model.getElements().add(groupsSubmenuBuilder.build());
 
         // Moderator submenu
         if (user.isModerator()) {
-            ActiveSubMenu moderatorMenu = ActiveSubMenu.builder()
+            ActiveSubmenu moderatorSubmenu = ActiveSubmenu.builder()
                 .label(msg.getString("moderator"))
                 .url("moderator.jsf")
                 .addElement(DefaultMenuItem.builder().value(msg.getString("send_notification")).icon("fas fa-envelope-open-text").url("admin/notification.jsf").build())
@@ -374,12 +374,12 @@ public class UserBean implements Serializable {
                 .addElement(DefaultMenuItem.builder().value(msg.getString("Activity.dashboard")).icon("fas fa-chart-line").url("dashboard/activity.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("Tracker.dashboard")).icon("fas fa-mouse-pointer").url("dashboard/tracker.jsf").build())
                 .build();
-            model.getElements().add(moderatorMenu);
+            model.getElements().add(moderatorSubmenu);
         }
 
         // Admin submenu
         if (user.isAdmin()) {
-            ActiveSubMenu adminMenu = ActiveSubMenu.builder()
+            ActiveSubmenu adminSubmenu = ActiveSubmenu.builder()
                 .label(msg.getString("admin"))
                 .url("admin/index.jsf")
                 .addElement(DefaultMenuItem.builder().value(msg.getString("organisations")).icon("fas fa-sitemap").url("admin/organisations.jsf").build())
@@ -390,7 +390,7 @@ public class UserBean implements Serializable {
                 .addElement(DefaultMenuItem.builder().value(msg.getString("survey.survey_overview")).icon("fas fa-poll-h").url("survey/surveys.jsf").build())
                 .addElement(DefaultMenuItem.builder().value("Status (XML)").icon("fas fa-wave-square").url("status.jsf").build())
                 .build();
-            model.getElements().add(adminMenu);
+            model.getElements().add(adminSubmenu);
         }
 
         return model;

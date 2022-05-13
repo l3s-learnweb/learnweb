@@ -33,11 +33,11 @@
 				<img class="profile-picture me-3" src="#{message.senderUser.imageUrl}" alt="Profile picture"/>
 
 				<div class="text-break">
-					<p class="h5">
+					<h5>
 						<h:outputText value="#{message.title}" />
 						<h:outputText rendered="#{not message.seen}" value=" (#{msg.new_word})" />
-					</p>
-					<div class="message-container m-1">
+					</h5>
+					<div class="message-container">
 						<h:outputText value="#{message.text}" escape="false"/>
 					</div>
 					<span class="small fw-light">

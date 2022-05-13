@@ -24,7 +24,7 @@
 			<h:outputText value="#{msg.please_wait}"/>
 		</p:blockUI>
 		<p:panel header="#{msg.select_groups}" styleClass="mb-3">
-			<p:tree value="#{adminStatisticsBean.treeRoot}" var="node" required="true" styleClass="ui-tree-borderless"
+			<p:tree value="#{adminStatisticsBean.treeRoot}" var="node" required="true"
 					selectionMode="checkbox" selection="#{adminStatisticsBean.selectedNodes}">
 				<p:treeNode>
 					<h:outputText value="#{node.title}"/>
@@ -38,7 +38,7 @@
 			</p:tree>
 			<p:message for="@previous"/>
 
-			<div class="form-group">
+			<div class="field">
 				<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" itemLabel="#{msg.statistics_show_detailed}"/>
 			</div>
 

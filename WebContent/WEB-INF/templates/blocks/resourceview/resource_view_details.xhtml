@@ -12,7 +12,7 @@
 
 <div class="d-flex res-details-title mt-0 justify-content-between align-items-end">
 	<h5 class="mb-0">#{msg.info}</h5>
-	<p:commandButton icon="fas fa-pencil-alt" styleClass="secondary-btn" title="#{msg.edit_resource}"
+	<p:commandButton icon="fas fa-pencil-alt" styleClass="ui-button-secondary" title="#{msg.edit_resource}"
 					 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceDetails" form="resourceViewForm"
 					 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"
 					 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
@@ -242,11 +242,11 @@
 		<ul class="list-inline list-unstyled mb-1">
 			<ui:repeat var="tag" value="#{res.tags}">
 				<li class="list-inline-item me-0 mb-1">
-					<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="secondary-btn me-0 rounded-0">
+					<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="ui-button-secondary me-0 rounded-0">
 						<f:param name="action" value="image"/>
 						<f:param name="query" value="#{tag.name}"/>
 					</p:linkButton>
-					<p:commandButton action="#{resourceDetailBean.onDeleteTag(tag)}" icon="fas fa-times" styleClass="secondary-btn rounded-0"
+					<p:commandButton action="#{resourceDetailBean.onDeleteTag(tag)}" icon="fas fa-times" styleClass="ui-button-secondary rounded-0"
 									 update=":tags_list" process="@this"
 									 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
 									 rendered="#{res.canEditResource(userBean.user)}"/>
@@ -273,7 +273,7 @@
 	<h5 class="res-details-title">#{msg.comments}</h5>
 
 	<h:panelGroup styleClass="mb-2" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
-		<div class="form-group mb-1">
+		<div class="field mb-1">
 			<p:inputTextarea id="comment_text_input" rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.new_comment_placeholder}"
 							 pt:data-emoji="true" required="true" styleClass="d-block"/>
 			<p:message for="@previous"/>

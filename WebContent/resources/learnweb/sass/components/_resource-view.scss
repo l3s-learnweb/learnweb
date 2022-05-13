@@ -88,9 +88,9 @@
       border-color: $gray-600;
     }
 
-    .ui-button.secondary-btn:hover,
-    .ui-button.secondary-btn.ui-state-hover,
-    .ui-button.secondary-btn.ui-state-focus {
+    .ui-button.ui-button-secondary:hover,
+    .ui-button.ui-button-secondary.ui-state-hover,
+    .ui-button.ui-button-secondary.ui-state-focus {
       background: $gray-700;
       border-color: $gray-700;
     }

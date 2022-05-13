@@ -6,7 +6,7 @@
 
 <p:dialog id="addTagDialog" widgetVar="addTag" header="#{msg.add_tag}"
           modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true">
-    <div class="fg-grid mb-3">
+    <div class="fields-grid">
         <p:outputLabel for="@next" value="#{msg.name}:"/>
         <div class="fg-col">
             <p:inputText id="modal_tag_name"/>
@@ -19,7 +19,7 @@
         </div>
         <div class="d-flex flex-row-reverse">
             <p:button value="#{msg.save}" styleClass="confirm" onclick="return false;"/>
-            <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('addTagDialog').hide();return false;"/>
+            <p:button value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('addTagDialog').hide();return false;"/>
         </div>
     </div>
 </p:dialog>

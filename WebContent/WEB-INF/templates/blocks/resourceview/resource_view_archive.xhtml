@@ -8,7 +8,7 @@
 
 <ui:fragment rendered="${res.webResource and res.canEditResource(userBean.user)}">
 	<div>
-		<p:button onclick="loadArchiveUrlsModal();return false;" styleClass="secondary-btn" value="#{msg['Archive.change_thumbnail']}"/>
+		<p:button onclick="loadArchiveUrlsModal();return false;" styleClass="ui-button-secondary" value="#{msg['Archive.change_thumbnail']}"/>
 
 		<p:commandButton id="archive_now_btn" process="@this" immediate="true" action="#{webResourceBean.archiveCurrentVersion}"
 						 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" update="archive_view_options"/>
@@ -40,7 +40,7 @@
 					<ul class="archive-snapshot-list list-unstyled mb-0">
 						<ui:repeat var="ay" value="#{res.archiveUrlsAsYears}">
 							<li>
-								<p:button value="#{ay.key.toString()}" styleClass="outline-btn m-0 mb-1" onclick="return false;"/>
+								<p:button value="#{ay.key.toString()}" styleClass="ui-button-outlined m-0 mb-1" onclick="return false;"/>
 								<ul class="list-unstyled ps-3 collapse">
 									<ui:repeat var="au2" value="#{ay.value}">
 										<li style="width: 12rem;">
@@ -68,7 +68,7 @@
 							<h:outputText id="archive_timestamp" value="#{res.lastArchivedObject.timestamp}">
 								<f:convertDateTime timeZone="#{userBean.timeZone}" type="localDateTime"/>
 							</h:outputText>
-							<p:commandButton value="#{msg['Archive.set_thumbnail']}" styleClass="ms-2 alt-btn"
+							<p:commandButton value="#{msg['Archive.set_thumbnail']}" styleClass="ms-2 ui-button-warning"
 											 action="#{resourceDetailBean.setResourceThumbnail(res.lastArchivedObject.archiveUrl)}"
 											 onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
 						</span>
@@ -89,7 +89,7 @@
 	<ul class="archive-snapshot-list list-unstyled">
 		<ui:repeat var="ay" value="#{res.archiveUrlsAsYears}">
 			<li class="row g-0 align-items-baseline">
-				<p:button value="#{ay.key.toString()}" styleClass="outline-btn m-0 mb-1 mt-1 mt-sm-0 col-3 col-md-2 me-3" onclick="return false;"/>
+				<p:button value="#{ay.key.toString()}" styleClass="ui-button-outlined m-0 mb-1 mt-1 mt-sm-0 col-3 col-md-2 me-3" onclick="return false;"/>
 
 				<h:outputFormat value="#{msg.archive_stored}" escape="false" styleClass="col">
 					<f:param value="#{ay.value.size()}"/>

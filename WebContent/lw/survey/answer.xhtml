@@ -46,7 +46,7 @@
 <ui:define name="center_layout">
 	<p:panel header="Survey answer" rendered="#{surveyBean.resource != null}">
 		<h:form id="survey_data">
-			<div class="form-group fw-bold">
+			<div class="field fw-bold">
 				<h:outputText value="Student ID: #{surveyBean.userAnswers.user.studentId}"
 							  rendered="#{userBean.moderator or userBean.user.id eq surveyBean.surveyUserId}"/>
 			</div>
@@ -64,7 +64,7 @@
 					</c:if>
 				</c:if>
 
-				<div class="form-group">
+				<div class="field">
 					<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA' or field.type eq 'AUTOCOMPLETE'}">
 						<p:outputLabel value="#{field.label}"/>
 						<p:outputLabel value="#{surveyBean.userAnswers.answers[field.id]}"/>
@@ -119,7 +119,7 @@
 				</h:outputLink>
 			</div>
 			<div>
-				<p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
+				<p:commandButton value="#{msg.Print}" styleClass="ui-button-warning d-print-none">
 					<p:printer target="survey_data"/>
 				</p:commandButton>
 			</div>

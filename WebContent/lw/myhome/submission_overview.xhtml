@@ -37,13 +37,13 @@
 	<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select"
 			  draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
 		<h:form prependId="false" id="form">
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.title}:"/>
 				<p:inputText value="#{submissionBean.selectedSubmission.title}" required="true"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.course}:"/>
 				<p:selectOneMenu value="#{submissionBean.selectedSubmission.courseId}">
 					<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
@@ -52,20 +52,20 @@
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.description}:"/>
 				<p:inputTextarea autoResize="1" maxHeight="20" rows="2" value="#{submissionBean.selectedSubmission.description}"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
 				<p:datePicker id="editDialogOpenDate" value="#{submissionBean.selectedSubmission.openDatetime}"
 							  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
 				<p:datePicker id="editDialogCloseDate" value="#{submissionBean.selectedSubmission.closeDatetime}"
 							  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
@@ -74,13 +74,13 @@
 								 message="Start date may not be after end date." showMessageFor="editDialogOpenDate" />
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.max_resources']}:"/>
 				<p:inputText value="#{submissionBean.selectedSubmission.noOfResources}" required="true"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:selectBooleanCheckbox value="#{submissionBean.selectedSubmission.surveyMandatory}"
 										 itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="editSurveyCheckBox">
 					<p:ajax update=":edit_dialog_survey_menu"
@@ -88,7 +88,7 @@
 				</p:selectBooleanCheckbox>
 			</div>
 
-			<div class="form-group d-none" id="edit_dialog_survey_text">
+			<div class="field d-none" id="edit_dialog_survey_text">
 				<p:outputLabel for="@next" value="#{msg['survey']}:"/>
 				<p:selectOneMenu id="edit_dialog_survey_menu" value="#{submissionBean.selectedSubmission.surveyResourceId}"
 								 required="#{submissionBean.selectedSubmission.surveyMandatory}"
@@ -116,13 +116,13 @@
 
 		<p:dialog header="#{msg['Submission.create_new_submission']}" id="create_submission_dialog1" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog">
 			<h:form prependId="false">
-				<div class="form-group">
+				<div class="field">
 					<p:outputLabel for="@next" value="#{msg.title}:"/>
 					<p:inputText required="true" value="#{submissionBean.newSubmission.title}"/>
 					<p:message for="@previous"/>
 				</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.course}:"/>
 				<p:selectOneMenu value="#{submissionBean.newSubmission.courseId}" required="true">
 					<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
@@ -131,20 +131,20 @@
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.description}:"/>
 				<p:inputTextarea id="description" autoResize="1" rows="2" maxHeight="20" value="#{submissionBean.newSubmission.description}"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
 				<p:datePicker id="open_date" value="#{submissionBean.newSubmission.openDatetime}"
 							  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
 				<p:datePicker id="close_date" value="#{submissionBean.newSubmission.closeDatetime}"
 							  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
@@ -153,13 +153,13 @@
 								 message="Start date may not be after end date." showMessageFor="open_date" />
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.max_resources']}:"/>
 				<p:inputText id="max_resources" value="#{submissionBean.newSubmission.noOfResources}" required="true"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:selectBooleanCheckbox value="#{submissionBean.newSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}"
 										 widgetVar="surveyCheckBox" id="survey_checkbox">
 					<p:ajax update=":create_dialog_survey_menu"
@@ -167,7 +167,7 @@
 				</p:selectBooleanCheckbox>
 			</div>
 
-			<div class="form-group modal-dialog-select" id="create_dialog_survey_text" style="display: none;">
+			<div class="field modal-dialog-select" id="create_dialog_survey_text" style="display: none;">
 				<p:outputLabel for="@next" value="#{msg['survey']}:"/>
 				<p:selectOneMenu id="create_dialog_survey_menu" value="#{submissionBean.newSubmission.surveyResourceId}"
 								 required="#{submissionBean.newSubmission.surveyMandatory}"
@@ -189,7 +189,7 @@
 				  rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}"
 				  value="#{msg['Submission.no_submissions_message']}"/>
 
-	<p:tabView id="submissions" styleClass="ui-tabs-transparent" pt:data-canSelectResources="true">
+	<p:tabView id="submissions" styleClass="ui-tabs-plaid" pt:data-canSelectResources="true">
 		<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})"
 			   rendered="#{not empty submissionBean.currentSubmissions}">
 			<ui:decorate template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">

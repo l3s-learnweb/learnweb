@@ -18,14 +18,14 @@ function loadArchiveUrlsModal() {
 }
 
 $(document).on('click', '.archive-snapshot-list button', (e) => {
-  $(e.currentTarget).toggleClass('outline-btn');
+  $(e.currentTarget).toggleClass('ui-button-outlined');
   $(e.currentTarget).nextAll('div').slideToggle();
 });
 
 $(document).on('click', '.archive-snapshot-list a.set-thumbnail', (e) => {
   // make button active and reset the previous active element
-  $('.archive-snapshot-list span:not(.outline-btn) a').parent().addClass('outline-btn');
-  $(e.currentTarget).parent().removeClass('outline-btn');
+  $('.archive-snapshot-list span:not(.ui-button-outlined) a').parent().addClass('ui-button-outlined');
+  $(e.currentTarget).parent().removeClass('ui-button-outlined');
 
   // update iframe
   $('#archive_timestamp').text($(e.currentTarget).text());

@@ -30,19 +30,20 @@
 <ui:define name="center_layout">
 	<h:form>
 		<p:panel>
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.title}:"/>
 				<p:inputText value="#{adminAnnouncementBean.announcement.title}" label="#{msg.title}"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.date}:"/>
-				<p:datePicker value="#{adminAnnouncementBean.announcement.createdAt}" label="#{msg.date}" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
+				<p:datePicker value="#{adminAnnouncementBean.announcement.createdAt}" label="#{msg.date}"
+							  locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:textEditor height="200" value="#{adminAnnouncementBean.announcement.text}" label="#{msg.description}">
 					<f:facet name="toolbar">
 						<span class="ql-formats">
@@ -61,7 +62,7 @@
 				</p:textEditor>
 			</div>
 
-			<div class="form-group">
+			<div class="field">
 				<p:selectBooleanCheckbox value="#{adminAnnouncementBean.announcement.hidden}" itemLabel="#{msg.hide}"/>
 			</div>
 

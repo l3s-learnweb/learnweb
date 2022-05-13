@@ -41,7 +41,7 @@
                 <div class="col-6 col-md-3 pe-2">
                     <p:panel header="#{msg['Glossary.total_concepts']}">
                         <f:facet name="actions">
-                            <p:button icon="ui-icon-help" onclick="return false;"/>
+                            <p:button icon="fas fa-circle-question" onclick="return false;"/>
                             <p:tooltip for="@previous" value="#{msg['Glossary.concepts_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
@@ -50,7 +50,7 @@
                 <div class="col-6 col-md-3 ps-2 px-md-2">
                     <p:panel header="#{msg['Glossary.total_terms']}">
                         <f:facet name="actions">
-                            <p:button icon="ui-icon-help" onclick="return false;"/>
+                            <p:button icon="fas fa-circle-question" onclick="return false;"/>
                             <p:tooltip for="@previous" value="#{msg['Glossary.terms_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
@@ -59,7 +59,7 @@
                 <div class="col-6 col-md-3 pe-2 px-md-2">
                     <p:panel header="#{msg['Glossary.total_sources']}">
                         <f:facet name="actions">
-                            <p:button icon="ui-icon-help" onclick="return false;"/>
+                            <p:button icon="fas fa-circle-question" onclick="return false;"/>
                             <p:tooltip for="@previous" value="#{msg['Glossary.sources_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.totalSources}"/>
@@ -68,7 +68,7 @@
                 <div class="col-6 col-md-3 ps-2">
                     <p:panel header="#{msg['Glossary.ratio']}">
                         <f:facet name="actions">
-                            <p:button icon="ui-icon-help" onclick="return false;"/>
+                            <p:button icon="fas fa-circle-question" onclick="return false;"/>
                             <p:tooltip for="@previous" value="#{msg['Glossary.ratio_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.termsToConcepts}"/>
@@ -82,7 +82,7 @@
                                    rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                         <p:panel id="chart_barModel" header="#{msg.activities}">
                             <f:facet name="actions">
-                                <p:button icon="ui-icon-help" onclick="return false;"/>
+                                <p:button icon="fas fa-circle-question" onclick="return false;"/>
                                 <p:tooltip for="@previous" value="#{msg['Glossary.activity_type_description']}" escape="false"/>
                             </f:facet>
                             <p:barChart model="#{glossaryDashboardBean.usersActivityTypesChart}"/>
@@ -94,7 +94,7 @@
                                    rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                         <p:panel id="chart_barModel_stSources" header="#{msg['Glossary.sources']}">
                             <f:facet name="actions">
-                                <p:button icon="ui-icon-help" onclick="return false;"/>
+                                <p:button icon="fas fa-circle-question" onclick="return false;"/>
                                 <p:tooltip for="@previous"
                                            value="#{msg['Glossary.sources_panel_description']}"/>
                             </f:facet>
@@ -108,7 +108,7 @@
                 <div class="col-md-4">
                     <p:panel id="glossary" header="#{msg['Glossary.glossary']}">
                         <f:facet name="actions">
-                            <p:button icon="ui-icon-help" onclick="return false;"/>
+                            <p:button icon="fas fa-circle-question" onclick="return false;"/>
                             <p:tooltip for="@previous" value="#{msg['Glossary.glossary_description']}"/>
                         </f:facet>
                         <p:barChart model="#{glossaryDashboardBean.usersGlossaryChart}"/>
@@ -117,15 +117,13 @@
                 <div class="col-md-8 mb-3">
                     <h:form>
                         <p:dataTable var="glossary" value="#{glossaryDashboardBean.glossaryResources}" rows="10"
-                             paginator="true"
-                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                             rowsPerPageTemplate="10,25,50">
+                             paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="10,25,50" currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
                             <f:facet name="header">
                                 <div class="d-flex">
                                     <div class="me-auto">#{msg['Glossary.location']}</div>
                                     <div>
-                                        <p:button icon="ui-icon-help" onclick="return false;"/>
+                                        <p:button icon="fas fa-circle-question" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.location_description']}"/>
                                     </div>
                                 </div>
@@ -160,7 +158,7 @@
                 <div class="col-md-12">
                     <p:panel id="chart_plot_01" header="#{msg.interactions}">
                         <f:facet name="actions">
-                            <p:button icon="ui-icon-help" onclick="return false;"/>
+                            <p:button icon="fas fa-circle-question" onclick="return false;"/>
                             <p:tooltip for="@previous" value="#{msg['Glossary.interactions_description']}"/>
                         </f:facet>
                         <p:lineChart model="#{glossaryDashboardBean.interactionsChart}"/>
@@ -178,7 +176,7 @@
                                 <div class="d-flex">
                                     <div class="me-auto">#{msg['Glossary.fields']}</div>
                                     <div>
-                                        <p:button icon="ui-icon-help" onclick="return false;"/>
+                                        <p:button icon="fas fa-circle-question" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.fields_description']}"/>
                                     </div>
                                 </div>
@@ -277,17 +275,15 @@
             <div class="row">
                 <div class="col-md-12">
                     <h:form>
-                        <p:dataTable value="#{glossaryDashboardBean.descFieldsStatistic}" var="gds"
-                                     emptyMessage="#{msg.no_data}"
-                                     paginator="true" rows="25"
-                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                     rowsPerPageTemplate="25,50,100">
+                        <p:dataTable value="#{glossaryDashboardBean.descFieldsStatistic}" var="gds" emptyMessage="#{msg.no_data}"
+                                     paginator="true" paginatorPosition="bottom" rows="25" rowsPerPageTemplate="25,50,100"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 
                             <f:facet name="header">
                                 <div class="d-flex">
                                     <div class="me-auto">#{msg['Glossary.Definitions']}</div>
                                     <div>
-                                        <p:button icon="ui-icon-help" onclick="return false;"/>
+                                        <p:button icon="fas fa-circle-question" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.definitions_description']}"/>
                                     </div>
                                 </div>

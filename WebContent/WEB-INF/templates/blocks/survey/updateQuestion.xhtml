@@ -8,7 +8,7 @@
 
 <!--@elvariable id="question" type="de.l3s.learnweb.resource.survey.SurveyQuestion"-->
 <!--@elvariable id="associated" type="java.lang.Boolean"-->
-    <div class="form-group">
+    <div class="mb-3">
         <div class="d-flex justify-content-between flex-nowrap mb-3">
             <div class="d-flex flex-column">
                 <p:outputLabel for="selectTypeWrapper" value="#{msg['survey.question_type']}:" styleClass="fw-bold"/>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="d-flex flex-column mb-3">
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg['survey.question_text']}:" styleClass="fw-bold"/>
                 <p:textEditor id="post_message" value="#{question.label}" required="true">
                     <f:facet name="toolbar">

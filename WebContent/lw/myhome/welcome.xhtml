@@ -23,7 +23,7 @@
                     <f:facet name="header">
                         <div class="d-flex align-items-center justify-content-between">
                             #{msg['guide.getting_started']}
-                            <p:commandButton styleClass="alt-btn" action="#{userBean.user.setGuide('HIDE', true)}" update=":guide" value="#{msg.hide}"/>
+                            <p:commandButton styleClass="ui-button-warning" action="#{userBean.user.setGuide('HIDE', true)}" update=":guide" value="#{msg.hide}"/>
                         </div>
                     </f:facet>
                     <h:form>
@@ -86,7 +86,7 @@
                 </ui:repeat>
             </p:panel>
 
-            <p:tabView styleClass="ui-tabs-transparent" rendered="#{not welcomeBean.hideNewsPanel}" dynamic="true">
+            <p:tabView styleClass="ui-tabs-plaid" rendered="#{not welcomeBean.hideNewsPanel}" dynamic="true">
                 <p:tab rendered="#{not empty welcomeBean.newsForums}">
                     <f:facet name="title">
                         <i class="fas fa-fw fa-comment-dots" aria-hidden="true"></i>
@@ -121,11 +121,11 @@
                             <img class="profile-picture me-3" src="#{message.senderUser.imageUrl}" alt="Profile picture"/>
 
                             <div class="text-break">
-                                <p class="h5">
+                                <h5>
                                     <h:outputText value="#{message.title}"/>
                                     <h:outputText rendered="#{not message.seen}" value=" (#{msg.new_word})"/>
-                                </p>
-                                <div class="message-container m-1">
+                                </h5>
+                                <div class="message-container">
                                     <h:outputText value="#{message.text}" escape="false"/>
                                 </div>
                                 <span class="small fw-light">

@@ -11,7 +11,7 @@
                 <div class="d-flex">
                     <div class="me-auto">#{msg.resources}</div>
                     <div class="d-md-block d-flex flex-column">
-                        <p:commandButton value="#{msg.request_all_data}" styleClass="alt-btn" rendered="#{exportable}" ajax="false"
+                        <p:commandButton value="#{msg.request_all_data}" styleClass="ui-button-warning" rendered="#{exportable}" ajax="false"
                                          onclick="PrimeFaces.monitorDownload(() => PF('ajax-status').trigger('start'), () => PF('ajax-status').trigger('complete'))">
                             <p:fileDownload value="#{dataExporterBean.streamUserResources()}"/>
                         </p:commandButton>

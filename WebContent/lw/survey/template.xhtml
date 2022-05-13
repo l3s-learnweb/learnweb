@@ -36,7 +36,7 @@
 				<p:outputPanel layout="block" class="d-flex">
 					<div class="me-auto">#{msg['survey']}</div>
 					<div>
-						<p:commandButton value="#{msg.show}" onclick="PF('allSurveys').show(); return false;" styleClass="alt-btn ms-2"/>
+						<p:commandButton value="#{msg.show}" onclick="PF('allSurveys').show(); return false;" styleClass="ui-button-warning ms-2"/>
 					</div>
 				</p:outputPanel>
 			</f:facet>-->
@@ -55,7 +55,7 @@
 					<p:toggleSwitch id="copy" value="#{surveyTemplateBean.survey.publicTemplate}"/>
 				</h:panelGroup>
 				<c:forEach var="question" varStatus="questionStatus" items="#{surveyTemplateBean.questions}">
-					<p:outputPanel class="form-group" rendered="#{!question.deleted}">
+					<p:outputPanel class="field" rendered="#{!question.deleted}">
 						<div class="d-flex flex-nowrap">
 							<p:outputPanel class="d-flex flex-column justify-content-center me-2" rendered="#{userBean.admin}">
 								<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-dark fas fa-angle-up align-self-center"
@@ -96,12 +96,12 @@
 	<p:dialog header="#{msg['survey.update_survey']}" styleClass="overflow-hidden" widgetVar="updateSurveyMetadata" modal="true">
 		<h:form id="createSurvey">
 			<div class="d-flex flex-column mb-3">
-				<div class="form-group">
+				<div class="field">
 					<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="fw-bold"/>
 					<p:inputText value="#{surveyTemplateBean.survey.title}" />
 					<p:message for="@previous"/>
 				</div>
-				<div class="form-group">
+				<div class="field">
 					<p:outputLabel for="@next" value="#{msg['description']}:" styleClass="fw-bold"/>
 					<p:textEditor value="#{surveyTemplateBean.survey.description}" height="100">
 						<f:facet name="toolbar">

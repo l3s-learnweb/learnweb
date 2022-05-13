@@ -19,12 +19,12 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <p:tabView styleClass="ui-tabs-transparent">
+    <p:tabView styleClass="ui-tabs-plaid">
         <p:tab title="#{msg.requests}">
             <h:form id="requestform">
-                <p:dataTable id="requestsTable" widgetVar="requestsTable" paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}"
-                             rows="100" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                             currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
+                <p:dataTable id="requestsTable" widgetVar="requestsTable" var="reqData" value="#{adminRequestListBean.requests}" rows="100"
+                             paginator="true" paginatorPosition="bottom" currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column field="addr" headerText="IP" filterMatchMode="contains"/>
 
                     <p:column field="time" headerText="#{msg.time}">
@@ -43,9 +43,9 @@
 
         <p:tab title="#{msg.logins}">
             <h:form id="loginform">
-                <p:dataTable var="login" paginatorPosition="bottom" value="#{adminRequestListBean.logins}" rows="100" paginator="true"
-                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                             currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
+                <p:dataTable var="login" value="#{adminRequestListBean.logins}" rows="100"
+                             paginator="true" paginatorPosition="bottom" currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column headerText="IP" sortBy="#{login.key}" filterBy="#{login.key}" filterMatchMode="contains">
                         <h:outputText value="#{login.key}"/>
                     </p:column>
@@ -75,9 +75,9 @@
                                      action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="ms-3" immediate="true"/>
 				</span>
 
-                <p:dataTable id="aggrRequestsTable" widgetVar="aggrRequestsTable" tableStyleClass="mt-3" var="aRequest" paginatorPosition="bottom"
-                             value="#{adminRequestListBean.aggregatedRequests}"
-                             rows="50" paginator="true" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+                <p:dataTable id="aggrRequestsTable" widgetVar="aggrRequestsTable" tableStyleClass="mt-3" var="aRequest" rows="50"
+                             paginator="true" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column field="addr" headerText="IP" filterMatchMode="contains"/>
 
                     <p:column field="requests" headerText="#{msg.requests_count}" filterMatchMode="contains"/>

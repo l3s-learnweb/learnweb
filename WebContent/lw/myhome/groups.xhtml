@@ -22,8 +22,8 @@
                 <div class="d-flex">
                     <div class="me-auto">#{msg.myGroups}</div>
                     <div class="d-md-block d-flex flex-column guide-groups-controls">
-                        <p:linkButton outcome="groups_search" value="#{msg.search_group}" styleClass="alt-btn me-md-2 me-0" />
-                        <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="alt-btn mt-2 mt-md-0 guide-create-group"/>
+                        <p:linkButton outcome="groups_search" value="#{msg.search_group}" styleClass="ui-button-warning me-md-2 me-0" />
+                        <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="ui-button-warning mt-2 mt-md-0 guide-create-group"/>
                     </div>
                 </div>
             </f:facet>
@@ -74,14 +74,14 @@
     <p:dialog header="#{msg.createGroup}" widgetVar="createGroupDialog"
               modal="true" resizable="false" styleClass="modal-dialog-select" draggable="false" closeOnEscape="true">
         <h:form id="create_group_form">
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
                 <p:inputText value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" label="#{msg.title}"/>
                 <p:message for="@previous"/>
             </div>
 
             <ui:fragment rendered="#{not empty userBean.user.courses}">
-                <div class="form-group">
+                <div class="field">
                     <p:outputLabel for="@next" value="#{msg.course}:"/>
                     <p:selectOneMenu value="#{groupsBean.newGroup.courseId}" required="true" label="#{msg.course}">
                         <f:selectItems value="#{userBean.user.courses}" var="c" itemLabel="#{c.title}" itemValue="#{c.id}"/>
@@ -90,7 +90,7 @@
                 </div>
             </ui:fragment>
 
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg.description}:"/>
                 <p:textEditor widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" label="#{msg.description}" height="200">
                     <f:facet name="toolbar">

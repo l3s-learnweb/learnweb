@@ -7,7 +7,7 @@
 <p:dialog id="editFolderDialog" widgetVar="editFolderDialog" header="#{msg.edit_folder}"
           modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true">
     <h:form id="edit_folder_form">
-        <div class="fg-grid mb-3">
+        <div class="fields-grid">
             <h:outputText value="#{msg.group}:" styleClass="ui-outputlabel"/>
             <h:outputText value="#{editFolderBean.folder.group.title}" styleClass="fg-col"/>
 
@@ -37,7 +37,7 @@
                 <p:commandButton value="#{msg.save}" update=":folderGrid" ajax="true" onsuccess="PF('editFolderDialog').hide();onResourcesUpdated();return false;"
                                  action="#{editFolderBean.saveChanges}"/>
 
-                <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" immediate="true" onclick="PF('editFolderDialog').hide();return false;"/>
+                <p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" immediate="true" onclick="PF('editFolderDialog').hide();return false;"/>
             </div>
         </div>
     </h:form>

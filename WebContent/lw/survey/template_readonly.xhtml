@@ -35,7 +35,7 @@
 				<h:panelGroup id="questions">
 					<h2>#{surveyTemplateBean.survey.title}</h2>
 					<c:forEach var="question" items="#{surveyTemplateBean.survey.questions}">
-						<div class="form-group">
+						<div class="mb-3">
 							<div class="d-flex flex-nowrap">
 								<ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
 									<ui:param name="question" value="#{question}"/>
@@ -47,7 +47,7 @@
 				</h:panelGroup>
 
 				<div class="d-flex mt-3">
-						<p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
+						<p:commandButton value="#{msg.Print}" styleClass="ui-button-warning d-print-none">
 							<p:printer target="questions"/>
 						</p:commandButton>
 				</div>

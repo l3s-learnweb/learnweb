@@ -35,7 +35,7 @@ function welcomePageInitializeGuideSettings(message) {
     {
       text: message,
       attachTo: {
-        element: '.profile-picture',
+        element: '.guide-profile-picture',
         on: 'bottom',
       },
       when: {
@@ -43,7 +43,7 @@ function welcomePageInitializeGuideSettings(message) {
         cancel: commandFinishGuide,
       },
       classes: 'shepherd-arrow-top mt-2',
-      advanceOn: { selector: '.profile-picture', event: 'click' },
+      advanceOn: { selector: '.guide-profile-picture', event: 'click' },
     },
     {
       text: message,
@@ -244,7 +244,7 @@ function guideAfterComplete(finish, congratulations, yes, no, goToResource, goTo
       {
         text: goToSettings,
         attachTo: {
-          element: '.profile-picture',
+          element: '.guide-profile-picture',
           on: 'bottom',
         },
         classes: 'shepherd-arrow-top mt-2',

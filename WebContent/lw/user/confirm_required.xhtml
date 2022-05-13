@@ -32,7 +32,7 @@
     <p:dialog widgetVar="changeMailDialog" header="#{msg.change_email}"
               modal="true" resizable="false" draggable="false" closeOnEscape="true">
         <h:form>
-            <div class="fg-grid mb-3">
+            <div class="fields-grid">
                 <p:outputLabel for="@next" value="#{msg.email_address}:"/>
                 <div class="fg-col">
                     <p:inputText type="email" value="#{confirmRequiredBean.email}" label="#{msg.email_address}" required="true" validator="emailValidator"/>

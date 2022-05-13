@@ -38,7 +38,7 @@
                         styleClass="ui-tree-responsive ui-tree-no-root-icons" animate="true"
                         rendered="#{not empty groupResourcesBean.group.subFolders}">
 
-                    <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                    <p:treeNode type="folder" expandedIcon="fas fa-folder-open" collapsedIcon="fas fa-folder">
                         <h:outputText value="#{node.title}"/>
                     </p:treeNode>
                 </p:tree>
@@ -117,7 +117,7 @@
 
         <h:panelGroup id="resourceOverlay" layout="block" styleClass="ui-panel-content p-0 flex-grow-1 d-flex flex-column ui-loading-spin">
             <h:panelGroup id="resourcesWrapper" layout="block">
-                <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{groupResourcesBean.searchQuery != null || groupResourcesBean.filtersActive || not groupResourcesBean.paginator.isEmpty()}">
+                <h:form id="resourcesFilters" styleClass="bg-light" rendered="#{groupResourcesBean.searchQuery != null || groupResourcesBean.filtersActive || not groupResourcesBean.paginator.isEmpty()}">
                     <ul class="res-filters">
                         <ui:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
                             <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
@@ -209,7 +209,7 @@
     <h:outputText value="#{msg.delete_confirm_dialog_content}"/>
 
     <h:panelGroup layout="block" styleClass="text-end">
-        <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('deleteConfirm').hide(); return false;"/>
+        <p:button value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('deleteConfirm').hide(); return false;"/>
         <p:button value="#{msg.delete}" styleClass="confirm" onclick="return false;"/>
     </h:panelGroup>
 </p:dialog>
@@ -220,7 +220,7 @@
 
     <h:form styleClass="text-end" prependId="false">
         <h:inputHidden id="selectedElements" value="#{groupResourcesBean.selectedElements}"/>
-        <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('downloadConfirm').hide(); return false;"/>
+        <p:button value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('downloadConfirm').hide(); return false;"/>
         <p:commandButton value="#{msg.download}" ajax="false"
                          onclick="document.getElementById('selectedElements').value= JSON.stringify(selected);PrimeFaces.monitorDownload(() => PF('ajax-status').trigger('start'), () => PF('ajax-status').trigger('complete'))">
             <p:fileDownload value="#{groupResourcesBean.downloadResources()}"/>
@@ -242,14 +242,14 @@
                 <h:outputText id="group" value="#{node.title}"/>
             </p:treeNode>
 
-            <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+            <p:treeNode type="folder" expandedIcon="fas fa-folder-open" collapsedIcon="fas fa-folder">
                 <h:outputText value="#{node.title}"/>
             </p:treeNode>
         </p:tree>
     </h:form>
 
     <div class="text-end mt-3">
-        <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('selectDestination').hide();return false;"/>
+        <p:button value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('selectDestination').hide();return false;"/>
         <p:button value="#{msg.save}" styleClass="confirm" onclick="return false;"/>
     </div>
 </p:dialog>
