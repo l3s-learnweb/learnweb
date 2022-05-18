@@ -8,6 +8,7 @@ import static org.apache.http.HttpHeaders.ACCEPT;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,14 @@ public class SpotlightBean {
     public AnnotationUnit get(String text) throws IOException {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("text", text));
+        request.setEntity(new UrlEncodedFormEntity(params));
+
+        return get();
+    }
+
+    public AnnotationUnit get(URL url) throws IOException {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("url", url.toString()));
         request.setEntity(new UrlEncodedFormEntity(params));
 
         return get();
