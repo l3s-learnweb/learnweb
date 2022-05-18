@@ -575,18 +575,6 @@ public class UserBean implements Serializable {
      * Make sure that only admins login to moderator accounts.
      */
     public boolean canLoginToAccount(User targetUser) {
-        if (user.isAdmin()) {
-            return true;
-        }
-
-        if (targetUser.isModerator()) {
-            return false;
-        }
-
-        if (user.isModerator()) {
-            return true;
-        }
-
-        return false;
+        return user.isAdmin();
     }
 }
