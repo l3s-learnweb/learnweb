@@ -77,7 +77,7 @@ function updateSlideDetails() {
 }
 
 function prepareNewResources() {
-  if (view !== 'list') {
+  if (view === 'float') {
     $('.search-float').justifiedGallery('norewind').on('jg.rowflush', () => {
       loading = false;
     });
