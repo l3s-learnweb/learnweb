@@ -1,11 +1,14 @@
 <component name="ArtifactManager">
   <artifact type="war" name="Learnweb:war">
-    <output-path>$PROJECT_DIR$/target/artifacts/Learnweb_war</output-path>
-    <root id="archive" name="Learnweb_war.war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>Learnweb</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="Learnweb.war">
       <element id="artifact" artifact-name="Learnweb:war exploded" />
-      <element id="directory" name="WEB-INF">
-        <element id="directory" name="lib" />
-      </element>
     </root>
   </artifact>
 </component>

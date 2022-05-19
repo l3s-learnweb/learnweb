@@ -2,6 +2,10 @@ package de.l3s.learnweb.resource.search;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -17,10 +21,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
@@ -128,10 +128,14 @@ public class SuggestionLogger
             String suggesterUrl = "http://suggestqueries.google.com/complete/search?output=toolbar&hl=" + market + "&q=" + StringHelper.urlEncode(query);
             try
             {
-                Client client = Client.create();
-                WebResource webResource = client.resource(suggesterUrl);
-                ClientResponse response = webResource.get(ClientResponse.class);
-                String xml = response.getEntity(String.class);
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(suggesterUrl))
+                        .header("Accept", "application/xml")
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                String xml = response.body();
 
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = null;
@@ -183,7 +187,7 @@ public class SuggestionLogger
                 if(suggestion.lastIndexOf(",") != -1)
                     suggestion = suggestion.substring(0, suggestion.lastIndexOf(","));
             }
-            catch(NullPointerException e)
+            catch(NullPointerException | IOException | InterruptedException e)
             {
                 log.error("Google suggestions not retrieved for query: " + query, e);
                 return "";

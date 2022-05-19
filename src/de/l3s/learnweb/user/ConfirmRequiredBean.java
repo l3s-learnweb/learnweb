@@ -8,7 +8,7 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Email;
+import javax.validation.constraints.Email;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 

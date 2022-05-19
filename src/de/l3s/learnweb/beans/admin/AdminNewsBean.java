@@ -8,9 +8,9 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.News;

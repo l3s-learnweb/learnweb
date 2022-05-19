@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 
 import de.l3s.learnweb.beans.ApplicationBean;

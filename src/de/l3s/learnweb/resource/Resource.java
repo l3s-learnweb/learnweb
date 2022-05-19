@@ -671,12 +671,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     @Override
     public void setTitle(String title)
     {
-        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(StringEscapeUtils.unescapeHtml4(Jsoup.clean(title, Whitelist.none())), 980) : "no title";
+        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(Jsoup.clean(title, Whitelist.none()), 980) : "no title";
     }
 
     public void setDescription(String description)
     {
-        this.description = description == null ? "" : StringEscapeUtils.unescapeHtml4(StringHelper.clean(description, Whitelist.simpleText()));
+        this.description = description == null ? "" : StringHelper.clean(description, Whitelist.simpleText());
     }
 
     public void setUrl(String url)

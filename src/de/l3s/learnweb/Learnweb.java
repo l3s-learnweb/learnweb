@@ -2,6 +2,7 @@ package de.l3s.learnweb;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.shared.ConfigException;
 import org.apache.log4j.Logger;
 
-import de.l3s.interwebj.InterWeb;
+import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
@@ -208,10 +209,6 @@ public class Learnweb
             propertiesFileName = "ama_local_philipp";
         else if((new File("C:\\programmieren\\philipp.lw")).exists())
             propertiesFileName = "lw_local_philipp";
-        else if((new File("C:\\programmieren\\philipp_uni.lw")).exists())
-            propertiesFileName = "lw_local_philipp_uni";
-        else if((new File("C:\\Users\\Tetiana").exists()))
-            propertiesFileName = "lw_local_tetiana";
         else if((new File("C:\\Users\\astappiev").exists()))
             propertiesFileName = "lw_local_oleh";
         else if((new File("C:\\Users\\PC").exists()))
@@ -247,7 +244,8 @@ public class Learnweb
 
             log.debug("Load config file: " + propertiesFileName);
 
-            properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propertiesFileName + ".properties"));
+            InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propertiesFileName + ".properties");
+            properties.load(localProperties);
         }
         catch(IOException e)
         {

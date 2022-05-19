@@ -61,7 +61,7 @@ public class RequestFilter implements Filter
                     if(!path.equals("/lw/error-blocked.jsf") && !path.startsWith("/javax.faces.resource/") && !path.startsWith("/resources/"))
                     {
                         HttpServletResponse httpResponse = (HttpServletResponse) response;
-                        httpResponse.sendRedirect(request.getServletContext().getContextPath() + "/lw/error-blocked.jsf");
+                        httpResponse.sendRedirect(req.getContextPath() + "/lw/error-blocked.jsf");
                         httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
                         return;
                     }

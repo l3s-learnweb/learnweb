@@ -1,6 +1,10 @@
 package de.l3s.learnweb.resource.ted;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +16,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.ws.rs.core.MediaType;
-
+import de.l3s.interwebj.client.model.SearchResponse;
 import de.l3s.learnweb.resource.*;
+import de.l3s.learnweb.resource.search.InterwebResultsWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -27,12 +31,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
-import de.l3s.interwebj.IllegalResponseException;
-import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
@@ -416,7 +414,7 @@ public class TedManager
         return resource;
     }
 
-    public void fetchTedX() throws IOException, IllegalResponseException, SQLException
+    public void fetchTedX() throws IOException, SQLException
     {
         ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
 
@@ -428,6 +426,7 @@ public class TedManager
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_resource WHERE url = ?");
 
         TreeMap<String, String> params = new TreeMap<>();
+        params.put("q", "user::TEDEducation");
         params.put("media_types", "video");
         params.put("services", "YouTube");
         params.put("per_page", "50");
@@ -443,9 +442,11 @@ public class TedManager
             //SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDx tedxtrento", params);
 
             //To fetch youtube videos from TED-Ed user
-            SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDEducation", params);
+            SearchResponse interwebResponse = learnweb.getInterweb().search(params);
+            InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(interwebResponse);
             //log.debug(interwebResponse.getResultCountAtService());
-            resources = interwebResponse.getResults();
+            resources = interwebResults.getResources();
+
 
             for(ResourceDecorator decoratedResource : resources)
             {
@@ -518,7 +519,7 @@ public class TedManager
         while(resources.size() > 0 && page < 25);
     }
 
-    public void insertTedXTranscripts(String resourceIdAtService, int resourceId, JSONObject transcriptItem) throws JSONException, SQLException
+    public void insertTedXTranscripts(String resourceIdAtService, int resourceId, JSONObject transcriptItem) throws JSONException, SQLException, IOException, InterruptedException
     {
         String langCode = transcriptItem.getString("lang_code");
         String langName = transcriptItem.getString("lang_translated");
@@ -533,14 +534,14 @@ public class TedManager
             return; // transcript is already part of the database
         }
 
-        ClientResponse resp = getTedxData("http://video.google.com/timedtext?lang=" + langCode + "&v=", resourceIdAtService);
-        if(resp.getStatus() != 200 || resp.getLength() == 0)
+        HttpResponse<String> resp = getTedxData("http://video.google.com/timedtext?lang=" + langCode + "&v=", resourceIdAtService);
+        if(resp.statusCode() != 200 || resp.body().length() == 0)
         {
             log.info("Transcript :" + langCode + " for resource ID: " + resourceIdAtService + " does not exist.");
             return; //no transcript available for this language code
         }
 
-        JSONObject transcriptJSON = XML.toJSONObject(resp.getEntity(String.class));
+        JSONObject transcriptJSON = XML.toJSONObject(resp.body());
 
         PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("REPLACE INTO `ted_transcripts_lang_mapping`(`language_code`,`language`) VALUES (?,?)");
         pStmt2.setString(1, langCode);
@@ -569,17 +570,17 @@ public class TedManager
         pStmt3.close();
     }
 
-    public void fetchTedXTranscripts(String resourceIdAtService, int resourceId) throws SQLException
+    public void fetchTedXTranscripts(String resourceIdAtService, int resourceId) throws SQLException, IOException, InterruptedException
     {
-        ClientResponse resp = getTedxData("http://video.google.com/timedtext?type=list&v=", resourceIdAtService);
+        HttpResponse<String> resp = getTedxData("http://video.google.com/timedtext?type=list&v=", resourceIdAtService);
 
-        if(resp.getStatus() != 200)
+        if(resp.statusCode() != 200)
         {
-            log.error("Failed to get list of transcripts for video: " + resourceIdAtService + "and HTTP error code : " + resp.getStatus());
+            log.error("Failed to get list of transcripts for video: " + resourceIdAtService + "and HTTP error code : " + resp.statusCode());
             return;
         }
 
-        String response = resp.getEntity(String.class);
+        String response = resp.body();
 
         try
         {
@@ -608,14 +609,15 @@ public class TedManager
 
     }
 
-    public ClientResponse getTedxData(String url, String videoId)
+    public HttpResponse<String> getTedxData(String url, String videoId) throws IOException, InterruptedException
     {
-        Client tedxClient = Client.create();
-        WebResource web = tedxClient.resource(url + videoId);
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url + videoId))
+                .header("Accept", "application/xml")
+                .build();
 
-        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-
-        return resp;
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
     //Remove duplicate TED Resources from group 862 starting from the resourceId
@@ -689,7 +691,7 @@ public class TedManager
         pStmt.close();
     }
 
-    public static void main(String[] args) throws IOException, IllegalResponseException, SQLException, ClassNotFoundException
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException
     {
         Learnweb lw = Learnweb.createInstance(null);
         TedManager tm = lw.getTedManager();

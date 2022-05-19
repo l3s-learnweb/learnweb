@@ -11,7 +11,7 @@ import javax.faces.view.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;

@@ -12,12 +12,11 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import de.l3s.interwebj.client.model.SearchResponse;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
-import de.l3s.interwebj.IllegalResponseException;
-import de.l3s.interwebj.InterWeb;
-import de.l3s.interwebj.SearchQuery;
+import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -266,14 +265,16 @@ public class Search implements Serializable
         return newResources;
     }
 
-    private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IOException, IllegalResponseException
+    private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IOException
     {
         long start = System.currentTimeMillis();
 
         // Setup filters
         TreeMap<String, String> params = new TreeMap<>();
+        params.put("q", query);
         params.put("media_types", configMode.name());
         params.put("page", Integer.toString(page));
+        params.put("extras", "duration");
         params.put("timeout", "50");
 
         if(searchFilters.getServiceFilter() != null)
@@ -307,20 +308,20 @@ public class Search implements Serializable
         if(searchFilters.getLanguageFilter() != null)
             params.put("language", searchFilters.getLanguageFilter());
 
-        SearchQuery interwebResponse = interweb.search(query, params);
-        List<ResourceDecorator> interwebResults = interwebResponse.getResults();
-        log.debug("Interweb returned " + interwebResults.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
+        SearchResponse interwebResponse = interweb.search(params);
+        InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(interwebResponse);
+        log.debug("Interweb returned " + interwebResults.getResources().size() + " results in " + (System.currentTimeMillis() - start) + " ms");
 
         if(stopped)
             return null;
 
         if(page == 1)
         {
-            searchFilters.putResourceCounter(FILTERS.service, interwebResponse.getResultCountPerService(), true);
-            searchFilters.setTotalResultsInterweb(interwebResponse.getTotalResultCount());
+            searchFilters.putResourceCounter(FILTERS.service, interwebResults.getResultCountPerService(), true);
+            searchFilters.setTotalResultsInterweb(interwebResults.getTotalResults());
         }
 
-        if(interwebResults.size() == 0)
+        if(interwebResults.getResources().size() == 0)
             hasMoreInterwebResults = false;
 
         int duplicatedUrlCount = 0; // number of resources that already displayed to the user
@@ -328,7 +329,7 @@ public class Search implements Serializable
 
         LinkedList<ResourceDecorator> newResources = new LinkedList<>();
 
-        for(ResourceDecorator decoratedResource : interwebResults)
+        for(ResourceDecorator decoratedResource : interwebResults.getResources())
         {
             if(null == decoratedResource.getUrl())
             {

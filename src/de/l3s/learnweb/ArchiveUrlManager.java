@@ -5,8 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -29,12 +34,7 @@ import java.util.concurrent.TimeoutException;
 import de.l3s.learnweb.resource.*;
 import org.apache.log4j.Logger;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-
 import de.l3s.archiveSearch.CDXClient;
-import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.user.User;
@@ -128,21 +128,29 @@ public class ArchiveUrlManager
             String archiveURL = null, mementoDateString = null;
             try
             {
-                Client client = Client.create();
-                WebResource webResource = client.resource(archiveSaveURL + resource.getUrl());
-                ClientResponse response = webResource.get(ClientResponse.class);
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(archiveSaveURL + resource.getUrl()))
+                        .header("Accept", "application/xml")
+                        .build();
 
-                if(response.getStatus() == HttpURLConnection.HTTP_OK)
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if(response.statusCode() == HttpURLConnection.HTTP_OK)
                 {
-                    if(response.getHeaders().containsKey("Content-Location"))
-                        archiveURL = "http://web.archive.org" + response.getHeaders().getFirst("Content-Location");
-                    else
+                    Optional<String> contentLocation = response.headers().firstValue("Content-Location");
+                    if (contentLocation.isPresent()) {
+                        archiveURL = "http://web.archive.org" + contentLocation.get();
+                    } else {
                         log.debug("Content Location not found");
+                    }
 
-                    if(response.getHeaders().containsKey("X-Archive-Orig-Date"))
-                        mementoDateString = response.getHeaders().getFirst("X-Archive-Orig-Date");
-                    else
+                    Optional<String> archiveOrigDate = response.headers().firstValue("X-Archive-Orig-Date");
+                    if (archiveOrigDate.isPresent()) {
+                        mementoDateString = archiveOrigDate.get();
+                    } else {
                         log.debug("X-Archive-Orig-Date not found");
+                    }
 
                     Date archiveUrlDate = null;
                     if(mementoDateString != null)
@@ -158,15 +166,15 @@ public class ArchiveUrlManager
 
                     resource.addArchiveUrl(null); // TODO
                 }
-                else if(response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN)
+                else if(response.statusCode() == HttpURLConnection.HTTP_FORBIDDEN)
                 {
-                    if(response.getHeaders().containsKey("X-Archive-Wayback-Liveweb-Error"))
-                    {
-                        if(response.getHeaders().getFirst("X-Archive-Wayback-Liveweb-Error").equalsIgnoreCase("RobotAccessControlException: Blocked By Robots"))
+                    Optional<String> livewebError = response.headers().firstValue("X-Archive-Wayback-Liveweb-Error");
+                    if (livewebError.isPresent()) {
+                        if(livewebError.get().equalsIgnoreCase("RobotAccessControlException: Blocked By Robots"))
                             return "ROBOTS_ERROR";
                     }
 
-                    log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId() + "; Response: " + InterWeb.responseToString(response));
+                    log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId() + "; Response: " + response.body());
                     return "GENERIC_ERROR";
                 }
             }

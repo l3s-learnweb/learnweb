@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
