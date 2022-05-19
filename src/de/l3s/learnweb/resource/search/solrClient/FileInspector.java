@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.NamedList;
@@ -51,7 +51,7 @@ public class FileInspector {
     }
 
     private NamedList<Object> requestSolrExtract(MyContentStream contentStream) throws IOException, SolrServerException {
-        HttpSolrClient server = solrClient.getHttpSolrClient();
+        Http2SolrClient server = solrClient.getHttpSolrClient();
 
         ContentStreamUpdateRequest up = new ContentStreamUpdateRequest("/update/extract");
         up.addContentStream(contentStream);

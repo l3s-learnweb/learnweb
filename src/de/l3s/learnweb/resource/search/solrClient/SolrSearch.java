@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.jsoup.Jsoup;
@@ -279,7 +279,7 @@ public class SolrSearch implements Serializable {
 
         // log.debug("solr query: " + solrQuery);
 
-        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getHttpSolrClient();
+        Http2SolrClient server = Learnweb.getInstance().getSolrClient().getHttpSolrClient();
         return server.query(solrQuery);
     }
 

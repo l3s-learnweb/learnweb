@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -21,12 +21,12 @@ import de.l3s.learnweb.resource.Resource;
 public final class SolrClient {
     private static final Logger log = LogManager.getLogger(SolrClient.class);
 
-    private final HttpSolrClient httpSolrClient;
+    private final Http2SolrClient httpSolrClient;
     private final boolean disabled;
 
     public SolrClient(String solrServerUrl) {
         this.disabled = StringUtils.isEmpty(solrServerUrl);
-        this.httpSolrClient = this.disabled ? null : new HttpSolrClient.Builder(solrServerUrl).build();
+        this.httpSolrClient = this.disabled ? null : new Http2SolrClient.Builder(solrServerUrl).build();
 
         if (disabled) {
             log.warn("SolrClient is DISABLED!");
@@ -37,7 +37,7 @@ public final class SolrClient {
         return disabled;
     }
 
-    public HttpSolrClient getHttpSolrClient() {
+    public Http2SolrClient getHttpSolrClient() {
         return httpSolrClient;
     }
 

@@ -55,7 +55,7 @@ public class RequestManager implements Serializable {
     private String adminEmail;
     private int suspiciousAlertsCounter = 0;
 
-    private final Set<String> whitelist = new HashSet<>();
+    private final Set<String> safelist = new HashSet<>();
     private final Map<String, Ban> banlist = new ConcurrentHashMap<>();
 
     // Basic maps/list
@@ -79,23 +79,23 @@ public class RequestManager implements Serializable {
         adminEmail = Learnweb.config().getProperty("admin_mail");
 
         loadBanlist();
-        loadWhitelist();
+        loadSafelist();
     }
 
-    private void loadWhitelist() {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("whitelist.txt")) {
+    private void loadSafelist() {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("safelist.txt")) {
             if (inputStream != null) {
                 try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
                     try (Stream<String> stream = bufferedReader.lines()) {
-                        stream.forEach(whitelist::add);
+                        stream.forEach(safelist::add);
                     }
                 }
             }
         } catch (IOException e) {
-            log.error("Failed to load whitelist. IOException: ", e);
+            log.error("Failed to load safelist. IOException: ", e);
         }
 
-        log.debug("Whitelist loaded. Entries: {}", whitelist.size());
+        log.debug("Safelist loaded. Entries: {}", safelist.size());
     }
 
     /**
@@ -251,7 +251,7 @@ public class RequestManager implements Serializable {
      * Checks whether the currently accessing IP either has a high request rate (over 300).
      */
     private void analyzeAccess(Ban ban) {
-        if (whitelist.contains(ban.getAddr()) && ban.getAttempts() < 300) {
+        if (safelist.contains(ban.getAddr()) && ban.getAttempts() < 300) {
             ban.setAllowedAttempts(ATTEMPTS_STEP);
             return;
         }

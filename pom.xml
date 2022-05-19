@@ -20,7 +20,7 @@
         <maven.dependency.myfaces.version>3.0.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.8.2</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.28.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>8.5.10</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>8.5.11</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.17.2</maven.dependency.log4j.version>
         <maven.dependency.junit.version>5.8.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>4.5.1</maven.dependency.mockito.version>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>4.0-M15</version>
+            <version>4.0-M16</version>
         </dependency>
         <!-- PrimeFaces -->
         <dependency>
@@ -219,7 +219,7 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>8.11.1</version>
+            <version>9.0.0</version>
         </dependency>
         <!-- URL rewrite -->
         <dependency>
@@ -280,7 +280,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.14.3</version>
+            <version>1.15.1</version>
         </dependency>
         <!-- Converting video files, extracting thumbnails (only a wrapper for ffmpeg) -->
         <dependency>
@@ -298,7 +298,7 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>5.0.2.Final</version>
+            <version>5.0.3.Final</version>
         </dependency>
         <!-- Used to make a thumbnail of PDF in ResourcePreviewMaker -->
         <dependency>
