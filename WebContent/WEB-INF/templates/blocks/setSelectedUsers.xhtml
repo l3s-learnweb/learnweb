@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <!--@elvariable id="cbean" type="de.l3s.learnweb.dashboard.CommonDashboardUserBean"-->
-<h:form>
+<h:form id="select_users_form">
     <div class="row">
         <p:outputPanel styleClass="col-md-4 align-items-end border-end" rendered="#{!cbean.singleUser}">
             <p:selectOneButton value="#{cbean.selectedType}" unselectable="false">

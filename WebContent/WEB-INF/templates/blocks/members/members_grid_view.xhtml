@@ -41,16 +41,16 @@
     </ui:repeat>
 </ul>
 
-<script>
-  $(function() {
-    $('.gridder').gridderExpander({
-      scroll: false,
-      showNav: false,
-      animationSpeed: 400,
-      animationEasing: 'easeInOutExpo'
+<h:outputScript>
+    $(function () {
+        $('.gridder').gridderExpander({
+            scroll: false,
+            showNav: false,
+            animationSpeed: 400,
+            animationEasing: 'easeInOutExpo'
+        });
     });
-  });
-</script>
+</h:outputScript>
 
 
 </ui:composition>
