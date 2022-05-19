@@ -50,7 +50,8 @@ public interface OrganisationDao extends SqlObject, Serializable {
         params.put("organisation_id", SqlHelper.toNullable(organisation.getId()));
         params.put("title", organisation.getTitle());
         params.put("welcome_page", organisation.getWelcomePage());
-        params.put("welcome_message", organisation.getWelcomeMessage());
+        params.put("welcome_message", SqlHelper.toNullable(organisation.getWelcomeMessage()));
+        params.put("registration_message", SqlHelper.toNullable(organisation.getRegistrationMessage()));
         params.put("default_search_mode", organisation.getDefaultSearchMode());
         params.put("default_search_text", organisation.getDefaultSearchServiceText());
         params.put("default_search_image", organisation.getDefaultSearchServiceImage());
@@ -81,6 +82,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 organisation.setTitle(rs.getString("title"));
                 organisation.setWelcomePage(rs.getString("welcome_page"));
                 organisation.setWelcomeMessage(rs.getString("welcome_message"));
+                organisation.setRegistrationMessage(rs.getString("registration_message"));
                 organisation.setDefaultSearchMode(SearchMode.valueOf(rs.getString("default_search_mode")));
                 organisation.setDefaultSearchServiceText(rs.getString("default_search_text"));
                 organisation.setDefaultSearchServiceImage(rs.getString("default_search_image"));

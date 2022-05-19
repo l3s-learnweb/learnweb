@@ -84,6 +84,7 @@ class OrganisationDaoTest {
         Organisation testOrganisation = new Organisation(100);
         testOrganisation.setTitle("learnweb");
         testOrganisation.setWelcomeMessage("Hello Philipp & Oleh");
+        testOrganisation.setRegistrationMessage("By registering in the organization you confirm you are not russian");
         testOrganisation.setWelcomePage("/lw/myhome/welcome.jsf");
         testOrganisation.setDefaultLanguage("en");
         testOrganisation.setDefaultSearchServiceImage(ResourceService.flickr);
@@ -98,6 +99,7 @@ class OrganisationDaoTest {
         assertEquals(100, retrieved.get().getId());
         assertEquals("learnweb", retrieved.get().getTitle());
         assertEquals("Hello Philipp & Oleh", retrieved.get().getWelcomeMessage());
+        assertEquals("By registering in the organization you confirm you are not russian", retrieved.get().getRegistrationMessage());
         assertEquals("/lw/myhome/welcome.jsf", retrieved.get().getWelcomePage());
         assertEquals("en", retrieved.get().getDefaultLanguage());
 
