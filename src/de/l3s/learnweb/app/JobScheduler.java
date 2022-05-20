@@ -24,8 +24,7 @@ public class JobScheduler {
 
     @Inject
     public JobScheduler(final ConfigProvider configProvider) {
-        // If started in development (also when no servlet context) or other test instance, do not schedule any jobs.
-        if (configProvider.isDevelopment() || !"https://learnweb.l3s.uni-hannover.de".equals(configProvider.getServerUrl())) {
+        if (!configProvider.isRunScheduler()) {
             return;
         }
 

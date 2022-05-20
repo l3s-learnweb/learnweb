@@ -26,7 +26,7 @@ class LearnwebResource implements ExtensionContext.Store.CloseableResource {
 
     LearnwebResource(final boolean useRealDatabase) {
         ConfigProvider configProvider = new ConfigProvider(false);
-        configProvider.setServerUrl("https://learnweb.l3s.uni-hannover.de");
+        configProvider.setServerUrl("https://learnweb.l3s.uni-hannover.de", "/");
         configProvider.setProperty("solr_server_url", "");
         configProvider.setProperty("file_manager_folder", FileUtils.getTempDirectory().getAbsolutePath());
 

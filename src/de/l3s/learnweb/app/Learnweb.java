@@ -136,7 +136,7 @@ public final class Learnweb {
      */
     public static Learnweb createStatic() {
         ConfigProvider configProvider = new ConfigProvider(false);
-        configProvider.setServerUrl("https://learnweb.l3s.uni-hannover.de");
+        configProvider.setServerUrl("https://learnweb.l3s.uni-hannover.de", "/");
 
         DaoProvider daoProvider = new DaoProvider(configProvider);
         Learnweb learnweb = new Learnweb(configProvider, daoProvider);

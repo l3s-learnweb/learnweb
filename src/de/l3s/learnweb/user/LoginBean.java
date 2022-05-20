@@ -114,9 +114,9 @@ public class LoginBean extends ApplicationBean implements Serializable {
         if (remember) {
             String authToken = RandomStringUtils.randomAlphanumeric(128);
             int tokenId = tokenDao.insert(user.getId(), Token.TokenType.AUTH, HashHelper.sha512(authToken), LocalDateTime.now().plusDays(AUTH_COOKIE_AGE_DAYS));
-            Faces.addResponseCookie(AUTH_COOKIE_NAME, tokenId + ":" + authToken, "/", Math.toIntExact(Duration.ofDays(AUTH_COOKIE_AGE_DAYS).toSeconds()));
+            Faces.addResponseCookie(AUTH_COOKIE_NAME, tokenId + ":" + authToken, config().getContextPath(), Math.toIntExact(Duration.ofDays(AUTH_COOKIE_AGE_DAYS).toSeconds()));
         } else {
-            Faces.removeResponseCookie(AUTH_COOKIE_NAME, "/");
+            Faces.removeResponseCookie(AUTH_COOKIE_NAME, config().getContextPath());
         }
 
         return loginUser(this, user);
@@ -137,7 +137,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         } else {
             log(Action.logout, 0, 0);
             Faces.invalidateSession();
-            Faces.removeResponseCookie(AUTH_COOKIE_NAME, "/");
+            Faces.removeResponseCookie(AUTH_COOKIE_NAME, config().getContextPath());
             return "/lw/index.jsf?faces-redirect=true";
         }
     }

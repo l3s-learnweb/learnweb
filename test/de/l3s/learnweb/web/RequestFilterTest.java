@@ -42,7 +42,7 @@ class RequestFilterTest {
         when(request.getRequestURI()).thenReturn("/lw/group/forum.jsf");
         when(request.getQueryString()).thenReturn("group_id=1157");
         when(request.getHeader("Forwarded")).thenReturn("130.75.236.125");
-        when(configProvider.isServerUrlMissing()).thenReturn(false);
+        when(configProvider.isBaseUrlMissing()).thenReturn(false);
     }
 
     @Test

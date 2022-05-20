@@ -44,10 +44,15 @@ public class ConfigProvider implements Serializable {
     private String version;
 
     /**
-     * A server url, extracted from configuration, set manually or detected automatically.
-     * In general, it is bad practice to use it inside application, except for generating absolute links, e.g. for emails.
+     * Base URL of the application, contains schema and hostname without trailing slash.
+     * Extracted from configuration, set manually or detected automatically.
      */
-    private String serverUrl;
+    private String baseUrl;
+
+    /**
+     * Context path is used to set cookies, and to generate absolute links.
+     */
+    private String contextPath;
 
     /**
      * Indicated whether the application is started in Servlet container with CDI or initialized manually.
@@ -68,6 +73,8 @@ public class ConfigProvider implements Serializable {
 
     private File fileManagerFolder;
 
+    private transient String serverUrl;
+
     @Deprecated
     public ConfigProvider() {
         this(true);
@@ -81,7 +88,7 @@ public class ConfigProvider implements Serializable {
         if (servlet) {
             loadJndiVariables();
 
-            String contextPath = Servlets.getContext().getContextPath();
+            contextPath = Servlets.getContext().getContextPath();
             log.info("Found environment context: {}", contextPath);
             replaceVariablesContext(contextPath);
         } else {
@@ -95,7 +102,7 @@ public class ConfigProvider implements Serializable {
 
         if (!autoServerUrl) {
             if (serverUrl.startsWith("http")) {
-                setServerUrl(serverUrl);
+                setServerUrl(serverUrl, contextPath);
             } else {
                 throw new DeploymentException("Server url should include schema!");
             }
@@ -198,35 +205,51 @@ public class ConfigProvider implements Serializable {
     }
 
     /**
-     * @return Returns the servername + contextPath without trailing slash.
-     * For the default installation this is: https://learnweb.l3s.uni-hannover.de
+     * In general, it is bad practice to use it inside application, except for generating absolute links, e.g. for emails.
+     *
+     * @return Returns the baseUrl + contextPath without trailing slash. For the default installation this is: https://learnweb.l3s.uni-hannover.de
      */
     public String getServerUrl() {
+        if (serverUrl == null) {
+            serverUrl = UrlHelper.removeTrailingSlash(getBaseUrl() + getContextPath());
+        }
+        return serverUrl;
+    }
+
+    public void setServerUrl(String baseUrl, String contextPath) {
+        if (!isBaseUrlMissing()) {
+            return; // ignore new serverUrl
+        }
+
+        baseUrl = UrlHelper.removeTrailingSlash(baseUrl);
+
+        // enforce HTTPS on the production server
+        if (baseUrl.startsWith("http://") && getPropertyBoolean("force_https")) {
+            log.info("Forcing HTTPS schema.");
+            baseUrl = "https://" + baseUrl.substring(7);
+        }
+
+        this.baseUrl = baseUrl;
+        this.contextPath = StringUtils.isEmpty(contextPath) ? "/" : contextPath;
+        log.info("Server url updated: {}", getServerUrl());
+    }
+
+    public boolean isBaseUrlMissing() {
+        return baseUrl == null;
+    }
+
+    public String getBaseUrl() {
         if (serverUrl == null) {
             throw new DeploymentException("Server url requested but not set!");
         }
         return serverUrl;
     }
 
-    public void setServerUrl(String serverUrl) {
-        if (this.serverUrl != null) {
-            return; // ignore new serverUrl
+    public String getContextPath() {
+        if (contextPath == null) {
+            throw new DeploymentException("Context path requested but not set!");
         }
-
-        serverUrl = UrlHelper.removeTrailingSlash(serverUrl);
-
-        // enforce HTTPS on the production server
-        if (serverUrl.startsWith("http://") && getPropertyBoolean("force_https")) {
-            log.info("Forcing HTTPS schema.");
-            serverUrl = "https://" + serverUrl.substring(7);
-        }
-
-        this.serverUrl = serverUrl;
-        log.info("Server url updated: {}", serverUrl);
-    }
-
-    public boolean isServerUrlMissing() {
-        return serverUrl == null;
+        return contextPath;
     }
 
     public boolean isServlet() {
@@ -238,6 +261,13 @@ public class ConfigProvider implements Serializable {
             development = Faces.isDevelopment();
         }
         return development;
+    }
+
+    /**
+     * If started in development (also when no servlet context) or other test instance, do not schedule any jobs.
+     */
+    public boolean isRunScheduler() {
+        return isServlet() && !isDevelopment() && "https://learnweb.l3s.uni-hannover.de".equals(getServerUrl());
     }
 
     public boolean isCollectSearchHistory() {
