@@ -1,0 +1,34 @@
+variables:
+  MAVEN_OPTS: "-DproxySet=true -Dhttp.proxyHost=web-proxy.rrzn.uni-hannover.de -Dhttp.proxyPort=3128 -Dhttp.nonProxyHosts=learnweb.l3s.uni-hannover.de -Dhttps.proxyHost=web-proxy.rrzn.uni-hannover.de -Dhttps.proxyPort=3128 -Dhttps.nonProxyHosts=learnweb.l3s.uni-hannover.de"
+  MAVEN_CLI_OPTS: "-P prod,!local --batch-mode"
+  MAVEN_CLI_QUIET: "--quiet -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.MavenCli=OFF"
+
+stages:
+  - build
+  - deploy
+
+# Build Java sources (includes tests)
+build:
+  stage: build
+  script:
+    - mvn $MAVEN_CLI_OPTS install
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "version2"'
+  cache:
+    paths:
+      - target/Learnweb.war
+
+# Any commit to `master` brunch will be deployed
+deploy:
+  stage: deploy
+  script:
+    - mvn $MAVEN_CLI_OPTS tomcat7:redeploy-only
+  environment:
+    name: prod
+    url: https://learnweb.l3s.uni-hannover.de/v2/
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "version2"'
+  cache:
+    paths:
+      - target/Learnweb.war
+    policy: pull

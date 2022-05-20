@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>2.18.02</version>
+    <version>2.19.00</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -379,13 +379,13 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <url>http://learnweb.l3s.uni-hannover.de:8100/manager/text</url>
+                    <url>http://learnweb.l3s.uni-hannover.de:8040/manager/text</url>
                     <!--suppress UnresolvedMavenProperty -->
                     <username>${env.LEARNWEB_TOMCAT_USERNAME}</username>
                     <!--suppress UnresolvedMavenProperty -->
                     <password>${env.LEARNWEB_TOMCAT_PASSWORD}</password>
                     <!--suppress UnresolvedMavenProperty -->
-                    <path>/${path}##${project.version}</path>
+                    <path>/v2##${project.version}</path>
                 </configuration>
             </plugin>
             <!-- Provides commands to check dependency tree -->
@@ -427,4 +427,31 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Used by default, aimed for local development -->
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>Resources</directory>
+                        <includes>
+                            <include>**/*local*.*</include>
+                        </includes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <!-- Used on GitLab when creating package to deploy -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <javax.faces.project_stage>Production</javax.faces.project_stage>
+            </properties>
+        </profile>
+    </profiles>
 </project>
