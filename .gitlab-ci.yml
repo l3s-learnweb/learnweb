@@ -10,6 +10,8 @@ stages:
 # Build Java sources (includes tests)
 build:
   stage: build
+  tags:
+    - java
   script:
     - mvn $MAVEN_CLI_OPTS install
   rules:
@@ -21,6 +23,8 @@ build:
 # Any commit to `master` brunch will be deployed
 deploy:
   stage: deploy
+  tags:
+    - java
   script:
     - mvn $MAVEN_CLI_OPTS tomcat7:redeploy-only
   environment:
