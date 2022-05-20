@@ -239,10 +239,10 @@ public class ConfigProvider implements Serializable {
     }
 
     public String getBaseUrl() {
-        if (serverUrl == null) {
+        if (baseUrl == null) {
             throw new DeploymentException("Server url requested but not set!");
         }
-        return serverUrl;
+        return baseUrl;
     }
 
     public String getContextPath() {
