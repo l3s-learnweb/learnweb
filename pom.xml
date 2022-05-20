@@ -14,7 +14,7 @@
     <description>Learnweb is a collaborative search and sharing system.</description>
 
     <properties>
-        <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
+        <javax.faces.project_stage>Development</javax.faces.project_stage>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -41,20 +41,25 @@
         <!-- ################ Java EE & JSF (Faces) ################ --><!-- APIs provided by Tomcat -->
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
-            <version>2.2.5</version>
+            <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
         <!-- JSF Base -->
         <dependency>
             <groupId>org.apache.myfaces.core</groupId>
-            <artifactId>myfaces-bundle</artifactId>
+            <artifactId>myfaces-api</artifactId>
+            <version>2.3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-impl</artifactId>
             <version>2.3.9</version>
         </dependency>
         <!-- Required for mails -->
@@ -93,29 +98,10 @@
             <artifactId>commons-csv</artifactId>
             <version>1.9.0</version>
         </dependency>
-        <!-- Required by primefaces (for FileUpload) -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <!-- Required by primefaces (for FileUpload, FileManager) -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
-        </dependency>
-        <!-- Required by myfaces-impl -->
-        <dependency>
-            <groupId>commons-digester</groupId>
-            <artifactId>commons-digester</artifactId>
-            <version>1.8</version>
-        </dependency>
-        <!-- Required by myfaces-impl -->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
         </dependency>
 
         <!-- ################ Dependencies missing in Java 11 (for backward compatibility) ################ -->
@@ -209,7 +195,7 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>4.0.2.Final</version>
+            <version>5.0.2.Final</version>
         </dependency>
         <!-- Required by primefaces (for PDFExported) -->
         <dependency>
@@ -345,6 +331,10 @@
         <resources>
             <resource>
                 <directory>Resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*local*.*</exclude>
+                </excludes>
             </resource>
         </resources>
         <plugins>

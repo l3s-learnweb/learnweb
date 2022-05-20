@@ -11,6 +11,7 @@
         <param-value>Production</param-value>
         <!-- Development Production -->
     </context-param>
+
     <context-param>
         <param-name>facelets.DEVELOPMENT</param-name>
         <param-value>true</param-value>
@@ -25,20 +26,11 @@
     </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
-        <param-value>none</param-value> <!-- california-green -->
-    </context-param>
-    <context-param>
-        <param-name>primefaces.MOVE_SCRIPTS_TO_BOTTOM</param-name>
-        <param-value>false</param-value> <!-- To use it, we need to remove defining JS variables in <script> blocks of xhtml  -->
+        <param-value>none</param-value>
     </context-param>
     <context-param>
         <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
         <param-value>false</param-value> <!-- can't be enabled as long as we use comments on the search page to lazy load content. -->
-    </context-param>
-    <context-param>
-        <description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
-        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-        <param-value>server</param-value>
     </context-param>
 
     <context-param>
@@ -82,14 +74,6 @@
         <filter-name>UrlRewriteFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    <filter>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>
     <session-config>
         <session-timeout>100</session-timeout>
     </session-config>
@@ -104,34 +88,20 @@
     </filter-mapping>
 
     <context-param>
-        <param-name>com.sun.faces.numberOfViewsInSession</param-name>
-        <param-value>300</param-value>
+        <param-name>org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES</param-name>
+        <param-value>1209600000</param-value> <!-- 14 days -->
     </context-param>
     <context-param>
-        <param-name>com.sun.faces.numberOfLogicalViews</param-name>
-        <param-value>300</param-value>
-    </context-param>
-    <context-param>
-        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
-        <param-value>resources.application</param-value>
-    </context-param>
-    <context-param>
-		<description>
-            Scanning for context init parameters not defined. It is not necessary to define 
-            them all into your web.xml, they are just provided here for informative purposes. 
-            To disable this messages set org.apache.myfaces.LOG_WEB_CONTEXT_PARAMS config param to 'false'
-        </description>
-        <param-name>org.apache.myfaces.LOG_WEB_CONTEXT_PARAMS</param-name>
-        <param-value>false</param-value>
+        <param-name>org.apache.myfaces.SUPPORT_JSP_AND_FACES_EL</param-name>
+        <param-value>false</param-value> <!-- Increase startup performance and EL resolution by disable deprecated features -->
     </context-param>
     <context-param>
         <description>
-            If true, rendered HTML code will be formatted, so that it is 'human-readable'
-            i.e. additional line separators and whitespace will be written, that do not
-            influence the HTML code.
-            Default is 'true'
+            Scanning for context init parameters not defined. It is not necessary to define
+            them all into your web.xml, they are just provided here for informative purposes.
+            To disable this messages set org.apache.myfaces.LOG_WEB_CONTEXT_PARAMS config param to 'false'
         </description>
-        <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
+        <param-name>org.apache.myfaces.LOG_WEB_CONTEXT_PARAMS</param-name>
         <param-value>false</param-value>
     </context-param>
 

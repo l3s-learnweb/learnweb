@@ -12,6 +12,11 @@
       <option name="url" value="https://git.l3s.uni-hannover.de/astappiev/maven-repo/-/raw/master/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="Sonatype OSS Snapshots" />
       <option name="name" value="Sonatype OSS Snapshots" />
       <option name="url" value="https://oss.sonatype.org/content/repositories/snapshots/" />

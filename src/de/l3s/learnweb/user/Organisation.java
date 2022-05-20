@@ -11,7 +11,7 @@ import java.util.Locale;
 
 import javax.validation.constraints.Size;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
