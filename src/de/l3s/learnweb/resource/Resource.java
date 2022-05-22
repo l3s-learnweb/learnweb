@@ -17,12 +17,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Learnweb;
@@ -671,12 +670,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     @Override
     public void setTitle(String title)
     {
-        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(Jsoup.clean(title, Whitelist.none()), 980) : "no title";
+        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(Jsoup.clean(title, Safelist.none()), 980) : "no title";
     }
 
     public void setDescription(String description)
     {
-        this.description = description == null ? "" : StringHelper.clean(description, Whitelist.simpleText());
+        this.description = description == null ? "" : StringHelper.clean(description, Safelist.simpleText());
     }
 
     public void setUrl(String url)
@@ -903,7 +902,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public String getShortDescription()
     {
-        return Jsoup.clean(StringHelper.shortnString(description, 200), Whitelist.simpleText());
+        return Jsoup.clean(StringHelper.shortnString(description, 200), Safelist.simpleText());
     }
 
     /**

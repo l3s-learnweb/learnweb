@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import de.l3s.learnweb.Learnweb;
@@ -24,7 +24,7 @@ public class SearchSessionEdgeComputator
 
     private static SearchSessionEdgeComputator instance = null;
 
-    private final HttpSolrClient wikipediaSolrClient;
+    private final Http2SolrClient wikipediaSolrClient;
 
     private Learnweb learnweb;
 
@@ -32,7 +32,7 @@ public class SearchSessionEdgeComputator
     {
         instance = this;
         String wikipediaSolrUrl = learnweb.getProperties().getProperty("WIKIPEDIA_SOLR_URL");
-        this.wikipediaSolrClient = new HttpSolrClient.Builder(wikipediaSolrUrl).build();
+        this.wikipediaSolrClient = new Http2SolrClient.Builder(wikipediaSolrUrl).build();
         this.learnweb = learnweb;
     }
 
@@ -44,7 +44,7 @@ public class SearchSessionEdgeComputator
         return instance;
     }
 
-    private HttpSolrClient getWikipediaSolrClient()
+    private Http2SolrClient getWikipediaSolrClient()
     {
         return wikipediaSolrClient;
     }

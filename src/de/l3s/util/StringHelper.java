@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 public class StringHelper
 {
@@ -378,10 +378,10 @@ public class StringHelper
      * Like Jsoup.clean but it preserves line breaks and spacing
      *
      * @param html
-     * @param whitelist for example: Whitelist.none()
+     * @param Safelist for example: Safelist.none()
      * @return
      */
-    public static String clean(String html, Whitelist whitelist)
+    public static String clean(String html, Safelist safelist)
     {
         if(html == null)
             return html;
@@ -390,7 +390,7 @@ public class StringHelper
         document.select("br").append("\\n");
         document.select("p").prepend("\\n\\n");
         String s = document.html().replaceAll("\\\\n", "\n");
-        return Jsoup.clean(s, "", whitelist, new Document.OutputSettings().prettyPrint(false));
+        return Jsoup.clean(s, "", safelist, new Document.OutputSettings().prettyPrint(false));
     }
 
     /**

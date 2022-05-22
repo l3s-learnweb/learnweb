@@ -39,29 +39,35 @@
           <element id="library" level="project" name="Maven: org.mariadb.jdbc:mariadb-java-client:2.7.5" />
           <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.9.0" />
           <element id="library" level="project" name="Maven: org.tuckey:urlrewritefilter:4.0.4" />
-          <element id="library" level="project" name="Maven: org.jsoup:jsoup:1.12.1" />
+          <element id="library" level="project" name="Maven: org.jsoup:jsoup:1.14.3" />
           <element id="library" level="project" name="Maven: org.json:json:20220320" />
-          <element id="library" level="project" name="Maven: org.apache.solr:solr-solrj:8.2.0" />
+          <element id="library" level="project" name="Maven: org.apache.solr:solr-solrj:9.0.0" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-client:9.4.44.v20210927" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-common:9.4.44.v20210927" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-hpack:9.4.44.v20210927" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-alpn-client:9.4.44.v20210927" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpmime:4.5.13" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.36" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-math3:3.6.1" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.5.6" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.4.10" />
-          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpmime:4.5.6" />
-          <element id="library" level="project" name="Maven: org.apache.zookeeper:zookeeper:3.5.5" />
-          <element id="library" level="project" name="Maven: org.apache.zookeeper:zookeeper-jute:3.5.5" />
-          <element id="library" level="project" name="Maven: org.codehaus.woodstox:stax2-api:3.1.4" />
-          <element id="library" level="project" name="Maven: org.codehaus.woodstox:woodstox-core-asl:4.4.1" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-alpn-client:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-alpn-java-client:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-client:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-http:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-io:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-util:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-client:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-common:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-hpack:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-http-client-transport:9.4.19.v20190610" />
-          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.24" />
-          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.24" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-http-client-transport:9.4.44.v20210927" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-http:9.4.44.v20210927" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-io:9.4.44.v20210927" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-client:9.4.44.v20210927" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-util:9.4.44.v20210927" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.5.13" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.4.15" />
+          <element id="library" level="project" name="Maven: org.apache.zookeeper:zookeeper:3.7.0" />
+          <element id="library" level="project" name="Maven: io.netty:netty-handler:4.1.59.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-common:4.1.59.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-resolver:4.1.59.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-buffer:4.1.59.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-transport:4.1.59.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-codec:4.1.59.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-transport-native-epoll:4.1.59.Final" />
+          <element id="library" level="project" name="Maven: io.netty:netty-transport-native-unix-common:4.1.59.Final" />
+          <element id="library" level="project" name="Maven: org.apache.zookeeper:zookeeper-jute:3.7.0" />
+          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.36" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-alpn-java-client:9.4.44.v20210927" />
           <element id="library" level="project" name="Maven: net.bramp.ffmpeg:ffmpeg:0.7.0" />
           <element id="library" level="project" name="Maven: com.google.guava:guava:31.1-jre" />
           <element id="library" level="project" name="Maven: com.google.guava:failureaccess:1.0.1" />
@@ -71,14 +77,15 @@
           <element id="library" level="project" name="Maven: com.google.errorprone:error_prone_annotations:2.11.0" />
           <element id="library" level="project" name="Maven: com.google.j2objc:j2objc-annotations:1.3" />
           <element id="library" level="project" name="Maven: org.modelmapper:modelmapper:3.1.0" />
-          <element id="library" level="project" name="Maven: com.google.api-client:google-api-client:1.30.4" />
-          <element id="library" level="project" name="Maven: com.google.oauth-client:google-oauth-client:1.30.3" />
-          <element id="library" level="project" name="Maven: com.google.http-client:google-http-client:1.32.1" />
-          <element id="library" level="project" name="Maven: io.opencensus:opencensus-api:0.24.0" />
-          <element id="library" level="project" name="Maven: io.grpc:grpc-context:1.22.1" />
-          <element id="library" level="project" name="Maven: io.opencensus:opencensus-contrib-http-util:0.24.0" />
-          <element id="library" level="project" name="Maven: com.google.http-client:google-http-client-jackson2:1.32.1" />
-          <element id="library" level="project" name="Maven: com.google.apis:google-api-services-drive:v2-rev362-1.25.0" />
+          <element id="library" level="project" name="Maven: com.google.api-client:google-api-client:1.34.1" />
+          <element id="library" level="project" name="Maven: com.google.oauth-client:google-oauth-client:1.33.2" />
+          <element id="library" level="project" name="Maven: com.google.http-client:google-http-client-gson:1.41.8" />
+          <element id="library" level="project" name="Maven: com.google.http-client:google-http-client-apache-v2:1.41.8" />
+          <element id="library" level="project" name="Maven: com.google.http-client:google-http-client:1.41.8" />
+          <element id="library" level="project" name="Maven: io.opencensus:opencensus-api:0.31.0" />
+          <element id="library" level="project" name="Maven: io.grpc:grpc-context:1.27.2" />
+          <element id="library" level="project" name="Maven: io.opencensus:opencensus-contrib-http-util:0.31.0" />
+          <element id="library" level="project" name="Maven: com.google.apis:google-api-services-drive:v2-rev393-1.25.0" />
           <element id="library" level="project" name="Maven: com.googlecode.plist:dd-plist:1.23" />
           <element id="library" level="project" name="Maven: com.hp.gagawa:gagawa:1.0.1" />
           <element id="library" level="project" name="Maven: eu.bitwalker:UserAgentUtils:1.21" />
@@ -89,7 +96,7 @@
           <element id="library" level="project" name="Maven: org.bouncycastle:bctsp-jdk14:1.38" />
           <element id="library" level="project" name="Maven: org.bouncycastle:bcprov-jdk14:1.38" />
           <element id="library" level="project" name="Maven: org.bouncycastle:bcmail-jdk14:1.38" />
-          <element id="library" level="project" name="Maven: com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20181114.1" />
+          <element id="library" level="project" name="Maven: com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20211018.2" />
           <element id="library" level="project" name="Maven: com.github.rjolly:pdf-renderer:140" />
           <element id="library" level="project" name="Maven: it.sauronsoftware.cron4j:cron4j:2.2.5" />
           <element id="library" level="project" name="Maven: org.apache.poi:poi:4.1.2" />
@@ -101,30 +108,30 @@
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-web:2.17.2" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.17.2" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-1.2-api:2.17.2" />
-          <element id="library" level="project" name="Maven: org.hibernate.validator:hibernate-validator:6.0.23.Final" />
-          <element id="library" level="project" name="Maven: javax.validation:validation-api:2.0.1.Final" />
-          <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.3.2.Final" />
-          <element id="library" level="project" name="Maven: com.fasterxml:classmate:1.3.4" />
+          <element id="library" level="project" name="Maven: org.hibernate.validator:hibernate-validator:6.2.3.Final" />
+          <element id="library" level="project" name="Maven: jakarta.validation:jakarta.validation-api:2.0.2" />
+          <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.4.1.Final" />
+          <element id="library" level="project" name="Maven: com.fasterxml:classmate:1.5.1" />
           <element id="library" level="project" name="Maven: de.l3s.boilerpipe:boilerpipe:1.1.0" />
           <element id="library" level="project" name="Maven: me.shib.java.lib:diction:0.1.1" />
-          <element id="library" level="project" name="Maven: org.processing:core:3.3.5" />
-          <element id="library" level="project" name="Maven: xerces:xercesImpl:2.12.0" />
-          <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.4.01" />
-          <element id="library" level="project" name="Maven: net.sourceforge.nekohtml:nekohtml:1.9.22" />
-          <element id="library" level="project" name="Maven: org.apache.jena:jena-core:3.17.0" />
-          <element id="library" level="project" name="Maven: org.apache.jena:jena-base:3.17.0" />
-          <element id="library" level="project" name="Maven: org.apache.jena:jena-shaded-guava:3.17.0" />
-          <element id="library" level="project" name="Maven: org.apache.commons:commons-compress:1.20" />
+          <element id="library" level="project" name="Maven: org.processing:core:3.3.7" />
+          <element id="library" level="project" name="Maven: org.apache.jena:jena-arq:4.4.0" />
+          <element id="library" level="project" name="Maven: org.apache.jena:jena-core:4.4.0" />
+          <element id="library" level="project" name="Maven: org.apache.jena:jena-base:4.4.0" />
+          <element id="library" level="project" name="Maven: org.apache.jena:jena-shaded-guava:4.4.0" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-compress:1.21" />
           <element id="library" level="project" name="Maven: com.github.andrewoma.dexx:collection:0.7" />
-          <element id="library" level="project" name="Maven: org.apache.jena:jena-iri:3.17.0" />
-          <element id="library" level="project" name="Maven: commons-cli:commons-cli:1.4" />
-          <element id="library" level="project" name="Maven: org.apache.jena:jena-arq:3.17.0" />
-          <element id="library" level="project" name="Maven: com.github.jsonld-java:jsonld-java:0.13.2" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.11.3" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.11.3" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.11.3" />
+          <element id="library" level="project" name="Maven: org.apache.jena:jena-iri:4.4.0" />
+          <element id="library" level="project" name="Maven: commons-cli:commons-cli:1.5.0" />
+          <element id="library" level="project" name="Maven: com.github.jsonld-java:jsonld-java:0.13.4" />
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient-cache:4.5.13" />
-          <element id="library" level="project" name="Maven: org.apache.thrift:libthrift:0.13.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.13.1" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.13.1" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.13.1" />
+          <element id="library" level="project" name="Maven: com.apicatalog:titanium-json-ld:1.2.0" />
+          <element id="library" level="project" name="Maven: org.glassfish:jakarta.json:2.0.1" />
+          <element id="library" level="project" name="Maven: com.google.protobuf:protobuf-java:3.19.3" />
+          <element id="library" level="project" name="Maven: org.apache.thrift:libthrift:0.15.0" />
           <element id="library" level="project" name="Maven: javax.annotation:javax.annotation-api:1.3.2" />
           <element id="library" level="project" name="Maven: com.mortennobel:java-image-scaling:0.8.6" />
           <element id="library" level="project" name="Maven: com.jhlabs:filters:2.0.235" />

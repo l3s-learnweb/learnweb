@@ -21,7 +21,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 import org.xml.sax.SAXException;
 
 import de.l3s.boilerpipe.BoilerpipeExtractor;
@@ -173,7 +173,7 @@ public class ResourceMetadataExtractor
                 jsoupDoc.select("p").before("\\n");
                 String str = jsoupDoc.html().replaceAll("\\\\n", "\n");
 
-                resource.setTranscript(Jsoup.clean(str, "", Whitelist.none(), new OutputSettings().prettyPrint(false)));
+                resource.setTranscript(Jsoup.clean(str, "", Safelist.none(), new OutputSettings().prettyPrint(false)));
 
             }
             catch(IOException | BoilerpipeProcessingException | SAXException e)

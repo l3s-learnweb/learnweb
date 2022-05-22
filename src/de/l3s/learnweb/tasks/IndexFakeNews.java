@@ -65,7 +65,7 @@ public class IndexFakeNews
 
     private void indexFullfactFile(String file) throws FileNotFoundException, IOException, SQLException
     {
-        CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.withHeader());
+        CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.Predefined.Excel.getFormat());
 
         logoResource = learnweb.getResourceManager().getResource(217749);
 

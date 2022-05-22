@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -30,7 +31,7 @@ public class SolrClient
     private static SolrClient instance = null;
 
     private final String serverUrl;
-    private final HttpSolrClient server;
+    private final Http2SolrClient server;
 
     private Learnweb learnweb;
 
@@ -38,7 +39,7 @@ public class SolrClient
     {
         instance = this;
         this.serverUrl = learnweb.getProperties().getProperty("SOLR_SERVER_URL");
-        this.server = new HttpSolrClient.Builder(serverUrl).build();
+        this.server = new Http2SolrClient.Builder(serverUrl).build();
         this.learnweb = learnweb;
     }
 
@@ -50,7 +51,7 @@ public class SolrClient
         return instance;
     }
 
-    public HttpSolrClient getSolrServer()
+    public Http2SolrClient getSolrServer()
     {
         return server;
     }

@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.NamedList;
@@ -54,7 +54,7 @@ public class FileInspector
         if(info.mimeType.startsWith("video/")) // solr/tika doesn't work good with videos
             return info;
 
-        HttpSolrClient server = solrClient.getSolrServer();
+        Http2SolrClient server = solrClient.getSolrServer();
 
         ContentStreamUpdateRequest up = new ContentStreamUpdateRequest("/update/extract");
         up.addContentStream(new MyContentStream(info.fileName, info.mimeType, inputStream));

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.group.Group;
@@ -57,7 +57,7 @@ public class ResourceDecorator implements Serializable
 
     public String getShortSnippet()
     {
-        return Jsoup.clean(StringHelper.shortnString(getSnippet(), 80), Whitelist.none());
+        return Jsoup.clean(StringHelper.shortnString(getSnippet(), 80), Safelist.none());
     }
 
     public void setSnippet(String snippet)

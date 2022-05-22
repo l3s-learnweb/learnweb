@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jena.ext.com.google.common.collect.Lists;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
@@ -104,7 +104,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
     {
         try
         {
-            final List<Action> actions = Lists.newArrayList(Action.forum_topic_added, Action.deleting_resource,
+            final List<Action> actions = Arrays.asList(Action.forum_topic_added, Action.deleting_resource,
                     Action.adding_resource, Action.group_joining, Action.group_leaving, Action.forum_post_added, Action.changing_office_resource);
             if(groupSummary == null || groupSummary.isEmpty())
             {

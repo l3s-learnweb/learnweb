@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -163,7 +163,7 @@ public class InterwebResultsWrapper implements Serializable
             // add snippet
             decoratedResource.setSnippet(resource.getDescription());
             // remove search term highlighting from description
-            resource.setDescription(Jsoup.clean(resource.getDescription(), Whitelist.none()));
+            resource.setDescription(Jsoup.clean(resource.getDescription(), Safelist.none()));
         }
 
         if(decoratedResource.getSnippet() == null && resource.getShortDescription() != null)

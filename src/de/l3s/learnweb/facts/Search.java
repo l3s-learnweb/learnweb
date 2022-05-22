@@ -40,7 +40,7 @@ public class Search
     {
         List<String> idList = new ArrayList<>();
         String queryString = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + "SELECT ?item  WHERE {\n" + "  ?item rdfs:label \"" + name + "\"@en .\n" + "}\n";
-        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, queryString))
+        try(QueryExecution qexec = QueryExecution.service(serviceUrl).query(queryString).build())
         {
             ResultSet results = qexec.execSelect();
             for(; results.hasNext(); )
@@ -121,7 +121,7 @@ public class Search
         entity.setWikiId(id);
         String labelString = "PREFIX schema: <http://schema.org/>\n" + "PREFIX entity: <http://www.wikidata.org/entity/>\n" + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + "SELECT ?label1 ?title1 WHERE \n" + "{\n" + "  entity:" + id + " schema:description ?title .\n"
                 + "  entity:" + id + " rdfs:label ?label .\n" + "  FILTER(LANG(?label) = 'en') .\n" + "  FILTER(LANG(?title) = '" + language + "') .\n" + "   BIND(str(?label) AS ?label1) .\n" + "   BIND (str(?title) AS ?title1) .\n" + "}";
-        try(QueryExecution labelExec = QueryExecutionFactory.sparqlService(serviceUrl, labelString))
+        try(QueryExecution labelExec = QueryExecution.service(serviceUrl).query(labelString).build())
         {
             ResultSet res = labelExec.execSelect();
             for(; res.hasNext(); )
@@ -186,7 +186,7 @@ public class Search
         Map<String, String> propList = new HashMap<>();
         List<ImageUrl> image = new ArrayList<>();
         List<String> instance = new ArrayList<>();
-        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, queryString))
+        try(QueryExecution qexec = QueryExecution.service(serviceUrl).query(queryString).build())
         {
             ResultSet results = qexec.execSelect();
             for(; results.hasNext(); )
@@ -290,7 +290,7 @@ public class Search
                 + "   values ?propUrl {wdt:P31 wdt:P131} .\n" + "   <" + placeId + "> rdfs:label ?title1 .\n" + "   FILTER(LANG(?title1)='en') .\n" + "   OPTIONAL {" + "       <" + placeId + "> rdfs:label ?otherTitle1 .\n" + "       FILTER(LANG(?otherTitle1)='" + language
                 + "'). \n" + "       BIND (str(?otherTitle1) AS ?otherTitle) .\n" + "   }\n" + "   BIND (str(?title1) AS ?title) .\n" + "   BIND (str(?propUrl) AS ?propUrl1) .\n" + "}";
         Map<String, List<String>> wikiProp = new HashMap<>();
-        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, query))
+        try(QueryExecution qexec = QueryExecution.service(serviceUrl).query(query).build())
         {
             ResultSet results = qexec.execSelect();
             for(; results.hasNext(); )

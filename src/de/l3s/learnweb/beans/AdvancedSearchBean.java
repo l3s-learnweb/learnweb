@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -275,7 +275,7 @@ public class AdvancedSearchBean implements Serializable
         log.debug("solr query: " + solrQuery);
 
         //get solrServer
-        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
+        Http2SolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
 
         //solrQuery.setHighlight(true).setHighlightSimplePre("<span class='highlighter'").setHighlightSimplePost("</span>").setStart(pageOffset).setRows(pageSize);
         SolrDocumentList sdl;

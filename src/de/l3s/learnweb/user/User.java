@@ -20,7 +20,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.forum.ForumPost;
@@ -767,7 +767,7 @@ public class User implements Comparable<User>, Serializable, HasId
             if(credits.startsWith("<br>"))
                 credits = credits.substring(4);
 
-            credits = Jsoup.clean(credits, Whitelist.basic());
+            credits = Jsoup.clean(credits, Safelist.basic());
         }
         this.credits = credits;
     }

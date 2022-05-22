@@ -14,11 +14,11 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -450,7 +450,7 @@ public class SolrSearch implements Serializable
         // log.debug("solr query: " + solrQuery);
 
         //get solrServer
-        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
+        Http2SolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
 
         //get response
         return server.query(solrQuery);
@@ -588,7 +588,7 @@ public class SolrSearch implements Serializable
             if(snippet.length() < 40) // still no real snippet => use description
             {
                 if(null != resource.getDescription())
-                    snippet.append(Jsoup.clean(StringHelper.shortnString(resource.getDescription(), 180), Whitelist.none()));
+                    snippet.append(Jsoup.clean(StringHelper.shortnString(resource.getDescription(), 180), Safelist.none()));
             }
 
             String oneLineSnippets = snippet.toString().replaceAll("\n", " ");

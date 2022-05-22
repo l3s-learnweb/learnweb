@@ -13,7 +13,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
@@ -30,7 +30,7 @@ public class GoogleDriveManager
     private static HttpTransport HTTP_TRANSPORT;
 
     /** Global instance of the JSON factory. */
-    private static JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+    private static JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
     /** Global instance of the scopes required by Google Drive. */
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
