@@ -33,6 +33,7 @@
         <Logger name="org.apache" level="FATAL"/>
         <Logger name="org.hibernate.validator" level="FATAL"/>
         <Logger name="solr.client" level="FATAL"/>
+        <Logger name="org.eclipse.jetty" level="WARN"/>
         <Logger name="org.jboss.weld" level="WARN"/>
         <Logger name="net.bramp.ffmpeg" level="INFO"/>
         <Logger name="de.l3s.learnweb.resource.ResourceMetadataExtractor" level="INFO"/>
