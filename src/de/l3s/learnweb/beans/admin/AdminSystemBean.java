@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,20 +10,79 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
+
+import org.apache.log4j.Logger;
+
 import javax.enterprise.context.RequestScoped;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.user.User;
+import org.apache.solr.client.solrj.SolrServerException;
 
 @Named
 @RequestScoped
 public class AdminSystemBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 1354024417928664741L;
-    //private static final Logger log = Logger.getLogger(AdminSystemBean.class);
+    private static final Logger log = Logger.getLogger(AdminSystemBean.class);
     private LinkedList<Object> databaseProcessList;
     private String memoryInfo;
+
+    private transient Integer totalResources;
+    private transient Integer indexedResources;
+    private transient Integer reindexProgress;
+
+    public Integer getTotalResources() throws SQLException
+    {
+        if(totalResources == null)
+        {
+            totalResources = getLearnweb().getResourceManager().getResourceCount();
+        }
+        return totalResources;
+    }
+
+    public Integer getIndexedResources() throws SolrServerException, IOException
+    {
+        if(indexedResources == null)
+        {
+            indexedResources = Math.toIntExact(getLearnweb().getSolrClient().countResources("*:*"));
+        }
+        return indexedResources;
+    }
+
+    public void reindexResources()
+    {
+        reindexProgress = 0;
+
+        try
+        {
+            SolrClient solr = getLearnweb().getSolrClient();
+            solr.deleteAllResource();
+            solr.indexAllResources(progress -> reindexProgress = progress);
+            reindexProgress = 100;
+        }
+        catch(IOException | SolrServerException | SQLException e)
+        {
+            log.error("Error reindexing resources", e);
+        }
+        finally
+        {
+            indexedResources = null;
+            totalResources = null;
+        }
+    }
+
+    public void onReindexComplete()
+    {
+        addGrowl(FacesMessage.SEVERITY_INFO, "Reindex completed");
+    }
+
+    public Integer getReindexProgress()
+    {
+        return reindexProgress;
+    }
 
     public AdminSystemBean() throws SQLException
     {

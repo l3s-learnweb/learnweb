@@ -12,11 +12,31 @@
 <ui:define name="center_layout">
 	<h:outputText value="Missing authentication" rendered="#{not userBean.admin}" />
 	<ui:fragment rendered="#{userBean.admin}">
-		<div class="page-header" >
-			<h1>
-				Database connections
-			</h1>
-		</div>
+		<h:form>
+			<p:panel id="solrIndex" header="Solr Index">
+				<p:panelGrid columns="2">
+					<h:outputText value="Total resources:"/>
+					<h:outputText value="#{adminSystemBean.totalResources}"/>
+
+					<h:outputText value="Indexed resources:"/>
+					<h:outputText value="#{adminSystemBean.indexedResources}"/>
+				</p:panelGrid>
+
+				<p:commandButton actionListener="#{adminSystemBean.reindexResources()}" widgetVar="reindexBtn" value="Reindex"
+								 update="solrIndex" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
+
+				<p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true"
+							   labelTemplate="{value}%" global="false" interval="500">
+					<p:ajax event="complete" listener="#{adminSystemBean.onReindexComplete}"
+							oncomplete="PF('reindexBtn').enable();PF('reindexProgress').cancel();"/>
+				</p:progressBar>
+			</p:panel>
+
+			<div class="page_header" >
+				<h1>
+					Database connections
+				</h1>
+			</div>
 
 			<p:dataTable id="processTable" var="process"
 					value="#{adminSystemBean.databaseProcessList}"

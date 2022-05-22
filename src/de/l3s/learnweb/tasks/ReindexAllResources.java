@@ -26,7 +26,7 @@ public class ReindexAllResources
         }
 
         solr.deleteAllResource();
-        solr.indexAllResources();
+        solr.indexAllResources(progress -> {});
 
         learnweb.onDestroy();
 
