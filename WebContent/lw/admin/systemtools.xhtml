@@ -25,7 +25,7 @@
 				<p:commandButton actionListener="#{adminSystemBean.reindexResources()}" widgetVar="reindexBtn" value="Reindex"
 								 update="solrIndex" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
 
-				<p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true"
+				<p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true" style="display: none;"
 							   labelTemplate="{value}%" global="false" interval="500">
 					<p:ajax event="complete" listener="#{adminSystemBean.onReindexComplete}"
 							oncomplete="PF('reindexBtn').enable();PF('reindexProgress').cancel();"/>
