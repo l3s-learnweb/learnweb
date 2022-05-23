@@ -8,12 +8,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 
 import org.apache.log4j.Logger;
-
-import javax.enterprise.context.RequestScoped;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -22,7 +21,7 @@ import de.l3s.learnweb.user.User;
 import org.apache.solr.client.solrj.SolrServerException;
 
 @Named
-@RequestScoped
+@SessionScoped
 public class AdminSystemBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 1354024417928664741L;
@@ -30,9 +29,9 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
     private LinkedList<Object> databaseProcessList;
     private String memoryInfo;
 
+    private Integer reindexProgress;
     private transient Integer totalResources;
     private transient Integer indexedResources;
-    private transient Integer reindexProgress;
 
     public Integer getTotalResources() throws SQLException
     {
