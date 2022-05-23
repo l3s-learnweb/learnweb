@@ -19,7 +19,7 @@ public class ReindexAllResources
         Learnweb learnweb = Learnweb.createInstance(null);
         SolrClient solr = learnweb.getSolrClient();
 
-        if(!learnweb.getProperties().getProperty("SOLR_SERVER_URL").contains("8782")) // make sure to reindex only Learnweb V2
+        if(!learnweb.getProperties().getProperty("SOLR_SERVER_URL").contains("v2")) // make sure to reindex only Learnweb V2
         {
             log.debug("Stopped because unexpected SOLR server was connected");
             return;
