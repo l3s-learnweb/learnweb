@@ -63,7 +63,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
             solr.indexAllResources(progress -> reindexProgress = progress);
             reindexProgress = 100;
         }
-        catch(IOException | SolrServerException | SQLException e)
+        catch(Exception e)
         {
             log.error("Error reindexing resources", e);
         }

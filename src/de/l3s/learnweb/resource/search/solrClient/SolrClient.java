@@ -280,11 +280,13 @@ public class SolrClient
 
             UpdateResponse response = server.addBeans(solrResourceBeans);
             if(response.getStatus() != 0)
-                throw new RuntimeException("invalid response code: " + response.getStatus() + "; desc: " + response);
+                throw new SolrServerException("invalid response code: " + response.getStatus() + "; desc: " + response);
 
             server.commit();
             indexedResources += solrResourceBeans.size();
-            progressCallback.accept((indexedResources * 100) / totalResources);
+            int progress = (indexedResources * 100) / totalResources;
+            progressCallback.accept(progress);
+            log.debug("Processed: " + progress + "%");
         }
     }
 
