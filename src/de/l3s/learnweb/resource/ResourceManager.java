@@ -122,9 +122,9 @@ public class ResourceManager
     /**
      * Returns all resources (that were not deleted)
      */
-    public List<Resource> getResourcesAll(int page, int pageSize) throws SQLException
+    public List<Resource> getResourcesAll(int offset, int pageSize) throws SQLException
     {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id LIMIT " + (page * pageSize) + "," + pageSize + "", null);
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id LIMIT " + offset + "," + pageSize + "", null);
     }
 
     public boolean isResourceRatedByUser(int resourceId, int userId) throws SQLException

@@ -250,7 +250,7 @@ public class SolrClient
      */
     public void indexAllResources(Consumer<Integer> progressCallback) throws SQLException, IOException, SolrServerException
     {
-        final int batchSize = 100;
+        final int batchSize = 1000;
         int indexedResources = 0;
         ResourceManager resourceManager = learnweb.getResourceManager();
         resourceManager.setReindexMode(true);
@@ -261,7 +261,7 @@ public class SolrClient
         for(int i = 0;; i++)
         {
             log.debug("Load page: " + i);
-            List<Resource> resources = resourceManager.getResourcesAll(i, batchSize);
+            List<Resource> resources = resourceManager.getResourcesAll(i * batchSize, batchSize);
 
             if(resources.size() == 0)
             {

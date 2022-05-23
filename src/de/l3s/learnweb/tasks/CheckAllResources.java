@@ -29,7 +29,7 @@ public class CheckAllResources
         for(int i = 0;; i++)
         {
             log.debug("Load page: " + i);
-            List<Resource> resources = resourceManager.getResourcesAll(i, batchSize);
+            List<Resource> resources = resourceManager.getResourcesAll(i * batchSize, batchSize);
 
             if(resources.size() == 0)
             {
