@@ -13,8 +13,8 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -127,8 +127,6 @@ public class IndexFakeNews
 
     private void indexSnopesFile(File file)
     {
-        JSONParser parser = new JSONParser();
-
         try
         {
             Resource resource = new Resource();
@@ -139,24 +137,25 @@ public class IndexFakeNews
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
 
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(file));
+            JSONTokener tokener = new JSONTokener(new FileReader(file));
+            JSONObject jsonObject = new JSONObject(tokener);
 
-            String title = (String) jsonObject.get("Fact Check");
+            String title = jsonObject.getString("Fact Check");
             if(StringUtils.isEmpty(title))
-                title = (String) jsonObject.get("Claim");
+                title = jsonObject.getString("Claim");
             if(StringUtils.isEmpty(title))
-                title = ((String) jsonObject.get("Claim_ID")).replace("-", " ");
+                title = (jsonObject.getString("Claim_ID")).replace("-", " ");
             resource.setTitle(title);
 
-            String Origins = (String) jsonObject.get("Origins");
-            String description = (String) jsonObject.get("Description");
+            String Origins = jsonObject.getString("Origins");
+            String description = jsonObject.getString("Description");
             description += "\n" + Origins;
             resource.setDescription(description);
 
-            String machineDescription = (String) jsonObject.get("Example");
+            String machineDescription = jsonObject.getString("Example");
             resource.setMachineDescription(machineDescription);
 
-            String URL = (String) jsonObject.get("URL");
+            String URL = jsonObject.getString("URL");
             if(!URL.startsWith("http"))
                 URL = "http://" + URL;
             resource.setUrl(URL);
@@ -165,7 +164,7 @@ public class IndexFakeNews
 
             log.debug("Added resource: " + resource);
             /*
-            String tags = (String) jsonObject.get("Tags");
+            String tags = jsonObject.getString("Tags");
             for(String tag : tags.split(";"))
                 resource.addTag(tag, user);
             */

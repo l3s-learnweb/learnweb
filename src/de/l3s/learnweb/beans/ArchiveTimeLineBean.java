@@ -14,8 +14,8 @@ import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.learnweb.Learnweb;
@@ -42,13 +42,13 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
         {
             JSONArray innerArray = new JSONArray();
             //series1.set(rs.getString("date"), rs.getInt("count"));
-            innerArray.add(rs.getTimestamp("timestamp").getTime());
-            innerArray.add(rs.getInt("count"));
-            outerArray.add(innerArray);
+            innerArray.put(rs.getTimestamp("timestamp").getTime());
+            innerArray.put(rs.getInt("count"));
+            outerArray.put(innerArray);
         }
         //outerArray.add(innerArray);
-        log.debug(outerArray.toJSONString());
-        PrimeFaces.current().ajax().addCallbackParam("timelineData", outerArray.toJSONString());
+        log.debug(outerArray.toString());
+        PrimeFaces.current().ajax().addCallbackParam("timelineData", outerArray.toString());
 
     }
 
@@ -64,9 +64,9 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
             while(rs.next())
             {
                 JSONArray innerArray = new JSONArray();
-                innerArray.add(rs.getTimestamp("timestamp").getTime());
-                innerArray.add(rs.getInt("count"));
-                outerArray.add(innerArray);
+                innerArray.put(rs.getTimestamp("timestamp").getTime());
+                innerArray.put(rs.getInt("count"));
+                outerArray.put(innerArray);
             }
         }
         catch(SQLException e)
@@ -74,9 +74,9 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
             log.error("Error while fetching the archive urls as json data for a resource", e);
             addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
         }
-        log.debug(outerArray.toJSONString());
-        PrimeFaces.current().ajax().addCallbackParam("timelineData", outerArray.toJSONString());
-        return outerArray.toJSONString();
+        log.debug(outerArray.toString());
+        PrimeFaces.current().ajax().addCallbackParam("timelineData", outerArray.toString());
+        return outerArray.toString();
     }
 
     public String getCalendarJsonData() throws SQLException
@@ -102,14 +102,14 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
                 JSONObject archiveVersion = new JSONObject();
                 archiveVersion.put("url", rsArchiveVersion.getString("archive_url"));
                 archiveVersion.put("time", rsArchiveVersion.getTimestamp("timestamp").toString());
-                archiveVersions.add(archiveVersion);
+                archiveVersions.put(archiveVersion);
             }
             archiveDay.put("dayEvents", archiveVersions);
             archiveDates.put(rs.getString("day"), archiveDay);
         }
-        log.debug(archiveDates.toJSONString());
-        PrimeFaces.current().ajax().addCallbackParam("calendarData", archiveDates.toJSONString());
-        return archiveDates.toJSONString();
+        log.debug(archiveDates.toString());
+        PrimeFaces.current().ajax().addCallbackParam("calendarData", archiveDates.toString());
+        return archiveDates.toString();
 
     }
 
@@ -126,9 +126,12 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
         JSONArray monthNames = new JSONArray();
-        Collections.addAll(monthNames, symbols.getMonths());
-        monthNames.remove(""); //To remove empty string from the array
-        return monthNames.toJSONString();
+        for (String month : symbols.getMonths()) {
+            if (!month.isBlank()) {
+                monthNames.put(month);
+            }
+        }
+        return monthNames.toString();
     }
 
     public static void main(String[] args) throws SQLException
@@ -154,12 +157,12 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
                 JSONObject archiveVersion = new JSONObject();
                 archiveVersion.put("url", rsArchiveVersion.getString("archive_url"));
                 archiveVersion.put("time", rsArchiveVersion.getTimestamp("timestamp").toString());
-                archiveVersions.add(archiveVersion);
+                archiveVersions.put(archiveVersion);
             }
             archiveDay.put("dayEvents", archiveVersions);
             archiveDates.put(rs.getString("day"), archiveDay);
         }
-        log.debug(archiveDates.toJSONString());
+        log.debug(archiveDates.toString());
     }
 
     public int getResourceId()
