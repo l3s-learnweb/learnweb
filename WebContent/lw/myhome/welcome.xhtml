@@ -21,10 +21,10 @@
             <p:outputPanel id="guide" styleClass="d-block">
                 <p:panel rendered="#{!userBean.user.getGuide('HIDE')}">
                     <f:facet name="header">
-                        <div class="d-flex align-items-center justify-content-between">
+                        <h:form styleClass="d-flex align-items-center justify-content-between">
                             #{msg['guide.getting_started']}
                             <p:commandButton styleClass="ui-button-warning" action="#{userBean.user.setGuide('HIDE', true)}" update=":guide" value="#{msg.hide}"/>
-                        </div>
+                        </h:form>
                     </f:facet>
                     <h:form>
                         <div class="d-flex justify-content-center mb-2">

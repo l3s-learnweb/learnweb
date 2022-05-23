@@ -33,6 +33,14 @@ public final class StringHelper {
         return NEW_LINE_PATTERN.matcher(str).replaceAll(" ");
     }
 
+    public static String replaceNewLineWithBreak(final String str) {
+        if (str == null) {
+            return null;
+        }
+
+        return str.replace("\n", "<br/>");
+    }
+
     public static String trimNotAlphabetical(final String str) {
         Matcher matcher = NOT_ALPHABETICAL_PATTERN.matcher(str);
         if (matcher.lookingAt()) {

@@ -120,10 +120,6 @@ public class ResourceDecorator implements Serializable {
         return resource.getDescription();
     }
 
-    public String getDescriptionHTML() {
-        return resource.getDescriptionHTML();
-    }
-
     public String getEmbeddedCode() {
         return resource.getEmbeddedCode();
     }

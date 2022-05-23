@@ -377,10 +377,6 @@ public class Resource extends AbstractResource implements Serializable {
         this.description = StringUtils.isNotEmpty(description) ? StringHelper.clean(description, Safelist.simpleText()) : null;
     }
 
-    public String getDescriptionHTML() {
-        return description.replace("\n", "<br/>");
-    }
-
     public StorageType getStorageType() {
         return storageType;
     }

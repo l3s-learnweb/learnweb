@@ -4,7 +4,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:of="http://omnifaces.org/functions"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:lw="http://l3s.de/learnweb">
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
 
@@ -27,8 +28,7 @@
 
         <h:panelGroup layout="block" styleClass="field" rendered="#{not empty res.description}">
             <h:outputText value="#{msg.description}: " styleClass="fw-bold"/>
-            <h:outputText value="${res.descriptionHTML}" escape="false"/>
-            <br/>
+            <h:outputText value="#{lw:htmlBreak(res.description)}" escape="false"/>
         </h:panelGroup>
 
         <div class="field">

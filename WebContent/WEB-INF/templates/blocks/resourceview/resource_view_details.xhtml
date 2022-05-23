@@ -232,7 +232,7 @@
 <ui:fragment rendered="#{not empty res.description}">
 	<h5 class="res-details-title">#{msg.description}</h5>
 
-	<h:outputText value="#{res.descriptionHTML}" escape="false"/>
+	<h:outputText value="#{lw:htmlBreak(res.description)}" escape="false"/>
 </ui:fragment>
 
 <ui:fragment rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">

@@ -7,6 +7,12 @@
     <namespace>http://l3s.de/learnweb</namespace>
     <short-name>lw</short-name>
 
+    <function>
+        <function-name>htmlBreak</function-name>
+        <function-class>de.l3s.util.StringHelper</function-class>
+        <function-signature>java.lang.String replaceNewLineWithBreak(java.lang.String)</function-signature>
+    </function>
+
     <tag>
         <description><![CDATA[Menu is a navigation component for Learnweb.]]></description>
         <tag-name>menu</tag-name>
