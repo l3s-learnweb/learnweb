@@ -30,7 +30,7 @@ import de.l3s.util.SqlHelper;
 @RegisterRowMapper(GlossaryTermDao.GlossaryTermMapper.class)
 public interface GlossaryEntryDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT * FROM lw_glossary_entry WHERE entry_id = ?")
+    @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_glossary_entry_file f WHERE e.entry_id = f.entry_id) as pictures_count FROM lw_glossary_entry e WHERE entry_id = ?")
     Optional<GlossaryEntry> findById(int entryId);
 
     @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_glossary_entry_file f WHERE e.entry_id = f.entry_id) as pictures_count FROM lw_glossary_entry e JOIN lw_glossary_term t USING (entry_id) WHERE e.resource_id = ? and e.deleted = 0")
@@ -80,7 +80,6 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
         params.put("description", entry.getDescription());
         params.put("description_pasted", entry.isDescriptionPasted());
         params.put("imported", entry.isImported());
-        params.put("pictures_count", entry.getPicturesCount());
         params.put("updated_at", entry.getUpdatedAt());
         params.put("created_at", entry.getCreatedAt());
 
