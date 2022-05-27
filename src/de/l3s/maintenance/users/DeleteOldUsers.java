@@ -92,7 +92,7 @@ public class DeleteOldUsers extends MaintenanceTask {
 
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<User> users = handle.select("SELECT * FROM lw_user WHERE (organisation_id = ? AND is_moderator = 0 AND is_admin = 0 AND "
-                + "registration_date < ?) OR deleted = 1", organisationId, deadline).map(new UserDao.UserMapper()).list();
+                + "created_at < ?) OR deleted = 1", organisationId, deadline).map(new UserDao.UserMapper()).list();
 
             for (User user : users) {
                 Optional<LocalDateTime> lastLogin = userDao.findLastLoginDate(user.getId());

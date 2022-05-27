@@ -179,7 +179,7 @@ public interface GroupDao extends SqlObject, Serializable {
         params.put("deleted", group.isDeleted());
         params.put("title", group.getTitle());
         params.put("description", SqlHelper.toNullable(group.getDescription()));
-        params.put("image_file_id", group.getImageFileId());
+        params.put("image_file_id", SqlHelper.toNullable(group.getImageFileId()));
         params.put("leader_id", group.getLeaderUserId());
         params.put("course_id", group.getCourseId());
         params.put("restriction_forum_category_required", group.isRestrictionForumCategoryRequired());
