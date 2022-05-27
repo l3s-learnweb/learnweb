@@ -38,11 +38,14 @@ public interface CourseDao extends SqlObject, Serializable {
     /**
      * Returns the course with the specified wizard parameter.
      */
-    @SqlQuery("SELECT * FROM lw_course WHERE wizard_param = ? ORDER BY title")
+    @SqlQuery("SELECT * FROM lw_course WHERE reg_type != 'closed' AND reg_wizard = ?")
     Optional<Course> findByWizard(String wizard);
 
     @SqlQuery("SELECT * FROM lw_course ORDER BY title")
     List<Course> findAll();
+
+    @SqlQuery("SELECT * FROM lw_course WHERE reg_type = ?")
+    List<Course> findByRegistrationType(Course.RegistrationType registrationType);
 
     @SqlQuery("SELECT * FROM lw_course WHERE organisation_id = ? ORDER BY title")
     List<Course> findByOrganisationId(int organisationId);
@@ -70,7 +73,10 @@ public interface CourseDao extends SqlObject, Serializable {
         params.put("title", course.getTitle());
         params.put("organisation_id", course.getOrganisationId());
         params.put("default_group_id", SqlHelper.toNullable(course.getDefaultGroupId()));
-        params.put("wizard_param", SqlHelper.toNullable(course.getWizardParam()));
+        params.put("reg_type", course.getRegistrationType().name());
+        params.put("reg_wizard", SqlHelper.toNullable(course.getRegistrationWizard()));
+        params.put("reg_description", SqlHelper.toNullable(course.getRegistrationDescription()));
+        params.put("reg_icon_file_id", SqlHelper.toNullable(course.getRegistrationIconFileId()));
         params.put("next_x_users_become_moderator", course.getNextXUsersBecomeModerator());
         params.put("welcome_message", SqlHelper.toNullable(course.getWelcomeMessage()));
         SqlHelper.setBitSet(params, Course.Option.values().length, "options_field", course.getOptions());
@@ -120,8 +126,8 @@ public interface CourseDao extends SqlObject, Serializable {
      */
     default List<User> anonymize(Course course) {
         // disable registration wizard
-        course.setWizardParam(null);
-        course.setOption(Course.Option.Users_Disable_wizard, true);
+        course.setRegistrationType(Course.RegistrationType.CLOSED);
+        course.setRegistrationWizard(null);
         save(course);
 
         // anonymize users
@@ -148,7 +154,10 @@ public interface CourseDao extends SqlObject, Serializable {
                 course.setOrganisationId(rs.getInt("organisation_id"));
                 course.setTitle(rs.getString("title"));
                 course.setDefaultGroupId(rs.getInt("default_group_id"));
-                course.setWizardParam(rs.getString("wizard_param"));
+                course.setRegistrationType(Course.RegistrationType.valueOf(rs.getString("reg_type")));
+                course.setRegistrationWizard(rs.getString("reg_wizard"));
+                course.setRegistrationDescription(rs.getString("reg_description"));
+                course.setRegistrationIconFileId(rs.getInt("reg_icon_file_id"));
                 course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
                 course.setWelcomeMessage(rs.getString("welcome_message"));
                 course.setOptions(SqlHelper.getBitSet(rs, Course.Option.values().length, "options_field"));

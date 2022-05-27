@@ -2,7 +2,8 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions">
 
 <ui:param name="pageTitle" value="#{msg['application.name']}"/>
 
@@ -80,87 +81,68 @@
         <div class="container py-5 highlight">
             <h2 class="text-white text-center mb-3">#{msg.registerLabel}</h2>
             <div class="row align-items-start text-center">
-                <div class="col-md-6">
-                    <div class="card-single bg-white h-100 mb-3 pb-4">
+                <div class="col col-md-6">
+                    <div class="card-single bg-white mb-3 overflow-auto">
                         <h6 class="card-header py-3 m-0">#{msg.public_courses}</h6>
-                        <!--
-                        Playground isn't implemented yet.
 
-                        <h5 class="card-subheader py-1 m-0">Playground</h5>
-                        <div class="card-content row mx-auto my-3">
-                            <div class="col-4 col-lg-3">
-                                <h:graphicImage library="frontpage" name="course_playground.png" alt="Playground Logo"/>
+                        <ui:repeat value="#{frontpageBean.publicCourses}" var="course">
+                            <h5 class="card-subheader py-1 m-0"><h:outputText value="#{course.title}"/></h5>
+                            <div class="card-content row mx-auto my-3">
+                                <div class="col-4 col-lg-3">
+                                    <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"/>
+                                </div>
+                                <div class="col-8 col-lg-9 text-start">
+                                    <h:outputText value="#{course.registrationDescription}" escape="false"/>
+                                </div>
                             </div>
-                            <div class="col-8 col-lg-9 text-start">
-                                ​<h:outputText value="Use our playground to take a quick look at the features Learnweb offers. You don't need to register and can directly explore all functionalities"/>
+                            <div class="course-footer my-3">
+                                <h:outputLink styleClass="ui-button ui-button-text-only" value="#{of:getRequestBaseURL()}wizard=#{course.registrationWizard}">
+                                    <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
+                                </h:outputLink>
                             </div>
-                        </div>
-                        <div class="course-footer my-3">
-                            <h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
-                                <h:outputText value="Explore Learnweb (without registration)" styleClass="ui-button-text"/>
-                            </h:outputLink>
-                        </div>
-                         -->
+                        </ui:repeat>
 
-                        <h5 class="card-subheader py-1 m-0">​<h:outputText value="#{msg['frontpage.public_environment']}"/></h5>
-                        <div class="card-content row mx-auto my-3">
-                            <div class="col-4 col-lg-3">
-                                <h:graphicImage library="frontpage" name="course_public.png" alt="​#{msg['frontpage.public_environment']} logo"/>
+                        <ui:fragment rendered="#{empty frontpageBean.publicCourses}">
+                            <h5 class="card-subheader py-1 m-0">#{msg['frontpage.public_courses']}</h5>
+                            <div class="card-content row mx-auto py-3">
+                                <div class="col-4 col-lg-3">
+                                    <h:graphicImage library="frontpage" name="course_public.png" alt="Public courses"/>
+                                </div>
+                                <div class="col-8 col-lg-9 text-start">
+                                    <h:outputText value="#{msg['frontpage.public_courses_description']}"/>
+                                </div>
                             </div>
-                            <div class="col-8 col-lg-9 text-start">
-                                ​<h:outputText value="#{msg['frontpage.public_env_description']}"/>
-                            </div>
-                        </div>
-                        <div class="course-footer mt-3">
-                            <h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
-                                <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
-                            </h:outputLink>
-                        </div>
-                    </div>
-                    <div class="card-single bg-white h-100 mb-5 pb-4">
-                        <h6 class="card-header py-3 m-0">SoMeCliCS</h6>
-                        <h5 class="card-subheader py-1 m-0">Social Media and Climate Change: Usage, Literacies and Interventions from the Perspective of Science Education</h5>
-                        <div class="card-content row mx-auto my-3">
-                            <div class="col-4 col-lg-3">
-                                <h:graphicImage library="frontpage" name="course_someclics.png" alt="SoMeCliCS logo"/>
-                            </div>
-                            <div class="col-8 col-lg-9 text-start">
-                                Im Projekt SoMeCliCs wird anhand des exemplarischen Kontextes Klimawandel untersucht, wie soziale Medien den gesellschaftlichen Diskurs z.B. aufgrund von Fake News oder Echokammern beeinflussen. Zudem werden grundlegende Fähigkeiten in der Nutzung sozialer Medien erforscht und empirisch untersucht, wie diese Fähigkeiten in der formalen Bildung gefördert werden können. Eingesetzt werden dabei moderne digitale Methoden, die ökologisch valide Untersuchung der relevanten Verhaltensweisen in sozialen Medien ermöglichen. Im Rahmen des Projekts wird eine wissenschaftliche Tagung organisiert und ein Sammelband publiziert.
-                            </div>
-                        </div>
-                        <div class="course-footer mt-3">
-                            <h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf?wizard=SoMeCliCS">
-                                <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
-                            </h:outputLink>
-                        </div>
+                        </ui:fragment>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card-single bg-white h-100 mb-5">
+                <div class="col col-md-6">
+                    <div class="card-single bg-white mb-3 overflow-auto">
                         <h6 class="card-header py-3 m-0">#{msg.specific_courses}</h6>
-                        <h5 class="card-subheader py-1 m-0">YELL</h5>
-                        <div class="card-content row mx-auto my-3">
-                            <div class="col-4 col-lg-3">
-                                <h:graphicImage library="frontpage" name="course_yell.png" alt="YELL Logo"/>
+
+                        <ui:repeat value="#{frontpageBean.specificCourses}" var="course">
+                            <h5 class="card-subheader py-1 m-0"><h:outputText value="#{course.title}"/></h5>
+                            <div class="card-content row mx-auto my-3">
+                                <div class="col-4 col-lg-3">
+                                    <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"/>
+                                </div>
+                                <div class="col-8 col-lg-9 text-start">
+                                    <h:outputText value="#{course.registrationDescription}" escape="false"/>
+                                </div>
                             </div>
-                            <div class="col-8 col-lg-9 text-start">
-                                ​<h:outputText value="#{msg.yell_description}"/>
+                            <div class="course-footer my-3">
+                                <h:outputLink styleClass="ui-button ui-button-text-only" value="#{of:getRequestBaseURL()}wizard=#{course.registrationWizard}">
+                                    <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
+                                </h:outputLink>
                             </div>
-                        </div>
-                        <div class="course-footer mb-4">
-                            <h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
-                                <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
-                                <f:param name="wizard" value="yell"/>
-                            </h:outputLink>
-                        </div>
+                        </ui:repeat>
 
                         <h5 class="card-subheader py-1 m-0">#{msg['frontpage.other_courses']}</h5>
                         <div class="card-content row mx-auto py-3">
                             <div class="col-4 col-lg-3">
-                                <h:graphicImage library="frontpage" name="course_other.png" alt="Other courses Logo"/>
+                                <h:graphicImage library="frontpage" name="course_other.png" alt="Other courses"/>
                             </div>
                             <div class="col-8 col-lg-9 text-start">
-                                ​<h:outputText value="#{msg['frontpage.other_courses_description']}"/>
+                                <h:outputText value="#{msg['frontpage.other_courses_description']}"/>
                             </div>
                         </div>
                     </div>

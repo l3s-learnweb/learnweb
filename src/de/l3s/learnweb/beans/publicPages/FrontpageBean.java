@@ -11,6 +11,8 @@ import jakarta.inject.Named;
 import de.l3s.learnweb.Announcement;
 import de.l3s.learnweb.AnnouncementDao;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.Course;
+import de.l3s.learnweb.user.CourseDao;
 
 @Named
 @RequestScoped
@@ -22,9 +24,13 @@ public class FrontpageBean extends ApplicationBean implements Serializable {
 
     // TODO: add some kind of cache
     private List<Announcement> announcements;
+    private List<Course> publicCourses;
+    private List<Course> specificCourses;
 
     @Inject
     private AnnouncementDao announcementDao;
+    @Inject
+    private CourseDao courseDao;
 
     /**
      * @return The {@code MAX_TOP_ANNOUNCEMENTS} newest announcements that are not hidden
@@ -34,5 +40,19 @@ public class FrontpageBean extends ApplicationBean implements Serializable {
             announcements = announcementDao.findLastCreated(MAX_ANNOUNCEMENTS);
         }
         return announcements;
+    }
+
+    public List<Course> getPublicCourses() {
+        if (publicCourses == null) {
+            publicCourses = courseDao.findByRegistrationType(Course.RegistrationType.PUBLIC);
+        }
+        return publicCourses;
+    }
+
+    public List<Course> getSpecificCourses() {
+        if (specificCourses == null) {
+            specificCourses = courseDao.findByRegistrationType(Course.RegistrationType.SPECIFIC);
+        }
+        return specificCourses;
     }
 }

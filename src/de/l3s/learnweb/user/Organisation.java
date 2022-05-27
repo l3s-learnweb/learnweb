@@ -59,7 +59,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     @Length(min = 2, max = 60)
     private String title;
     private String welcomeMessage;
-    private String registrationMessage;
+    private String termsAndConditions;
     private String welcomePage = "myhome/welcome.jsf"; // page to show after login
     private SearchMode defaultSearchMode = SearchMode.text;
     private ResourceService defaultSearchServiceText = ResourceService.bing;
@@ -281,12 +281,12 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         this.welcomeMessage = welcomeMessage;
     }
 
-    public String getRegistrationMessage() {
-        return registrationMessage;
+    public String getTermsAndConditions() {
+        return termsAndConditions;
     }
 
-    public void setRegistrationMessage(final String registrationMessage) {
-        this.registrationMessage = registrationMessage;
+    public void setTermsAndConditions(final String termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
     }
 
     /**

@@ -38,40 +38,46 @@
 <ui:define name="center_layout">
     <ui:fragment rendered="#{null ne adminOrganisationBean.selectedOrganisation}">
         <h:form id="edit_organisation_form">
-            <p:panel styleClass="mb-3" header="#{msg.registration_message}">
-                <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.registrationMessage}">
-                    <f:facet name="toolbar">
-                        <span class="ql-formats">
-                            <select class="ql-font"></select>
-                            <select class="ql-size"></select>
-                        </span>
-                        <span class="ql-formats">
-                            <button class="ql-bold"></button>
-                            <button class="ql-italic"></button>
-                            <button class="ql-underline"></button>
-                            <button class="ql-strike"></button>
-                            <button class="ql-link"></button>
-                        </span>
-                    </f:facet>
-                </p:textEditor>
-            </p:panel>
-            <p:panel styleClass="mb-3" header="#{msg.welcome_message}">
-                <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}">
-                    <f:facet name="toolbar">
-                        <span class="ql-formats">
-                            <select class="ql-font"></select>
-                            <select class="ql-size"></select>
-                        </span>
-                        <span class="ql-formats">
-                            <button class="ql-bold"></button>
-                            <button class="ql-italic"></button>
-                            <button class="ql-underline"></button>
-                            <button class="ql-strike"></button>
-                            <button class="ql-link"></button>
-                        </span>
-                    </f:facet>
-                </p:textEditor>
-            </p:panel>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <p:panel styleClass="mb-3" header="#{msg.welcome_message}">
+                        <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}">
+                            <f:facet name="toolbar">
+                                <span class="ql-formats">
+                                    <select class="ql-font"></select>
+                                    <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                    <button class="ql-link"></button>
+                                </span>
+                            </f:facet>
+                        </p:textEditor>
+                    </p:panel>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p:panel styleClass="mb-3" header="Additional Terms &amp; Conditions">
+                        <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.termsAndConditions}">
+                            <f:facet name="toolbar">
+                                <span class="ql-formats">
+                                    <select class="ql-font"></select>
+                                    <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                    <button class="ql-link"></button>
+                                </span>
+                            </f:facet>
+                        </p:textEditor>
+                    </p:panel>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12 col-md-6">
                     <p:panel header="#{msg.common_settings}">

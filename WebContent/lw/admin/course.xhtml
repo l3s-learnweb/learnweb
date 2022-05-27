@@ -5,7 +5,8 @@
 				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:of="http://omnifaces.org/functions"
-				xmlns:lw="http://l3s.de/learnweb">
+				xmlns:lw="http://l3s.de/learnweb"
+				xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 <ui:param name="pageTitle" value="#{adminCourseBean.course.title}"/>
 
@@ -33,7 +34,6 @@
 		<div class="row">
 			<div class="col-12">
 				<p:panel header="#{msg.welcome_message}">
-					<!-- a dirty fix. we should check old message and remove tables. There is only one course now which uses table in welcome message -->
 					<p:textEditor height="200" value="#{adminCourseBean.course.welcomeMessage}">
 						<f:facet name="toolbar">
 							<span class="ql-formats">
@@ -62,14 +62,6 @@
 								<p:message for="@previous"/>
 							</div>
 
-							<div class="field">
-								<p:outputLabel for="@next" value="#{msg.registration_wizard}:"/>
-								<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}" disabled="#{adminCourseBean.course.wizardDisabled}"/>
-								<p:message for="@previous"/>
-								<p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{adminCourseBean.course.wizardParam}"
-												 rendered="#{not adminCourseBean.course.wizardDisabledOrNull}"/>
-							</div>
-
 							<h:panelGroup layout="block" styleClass="field" rendered="#{userBean.admin}">
 								<p:outputLabel for="@next" value="#{msg.organisation}:"/>
 								<p:selectOneMenu id="c_organisation" value="#{adminCourseBean.course.organisationId}">
@@ -89,6 +81,54 @@
 								</p:selectOneMenu>
 								<p:message for="@previous"/>
 							</h:panelGroup>
+						</p:panel>
+
+						<p:panel header="Registration settings:" id="registration_settings">
+							<div class="field">
+								<p:outputLabel for="@next" value="#{msg.registration_type}:"/>
+								<p:selectOneMenu id="c_type" value="#{adminCourseBean.course.registrationType}" required="true">
+									<p:ajax update=":registration_settings" process="@this"/>
+									<f:selectItems value="#{adminCourseBean.registrationTypes}"/>
+								</p:selectOneMenu>
+								<p:message for="@previous"/>
+							</div>
+
+							<div class="field" jsf:rendered="#{not adminCourseBean.course.registrationClosed}">
+								<p:outputLabel for="@next" value="#{msg.registration_wizard}:"/>
+								<p:inputText id="c_wizard" value="#{adminCourseBean.course.registrationWizard}" required="true"/>
+								<p:message for="@previous"/>
+								<p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{adminCourseBean.course.registrationWizard}"
+												 rendered="#{not empty adminCourseBean.course.registrationWizard}"/>
+							</div>
+
+							<div class="field" jsf:rendered="#{not adminCourseBean.course.registrationClosed}">
+								<p:outputLabel for="@next" value="#{msg.description}"/>
+								<p:textEditor height="200" value="#{adminCourseBean.course.registrationDescription}">
+									<f:facet name="toolbar">
+										<span class="ql-formats">
+											<button class="ql-bold"></button>
+											<button class="ql-italic"></button>
+											<button class="ql-underline"></button>
+										</span>
+									</f:facet>
+								</p:textEditor>
+								<p:message for="@previous"/>
+							</div>
+
+							<div class="field" jsf:id="c_icon_wrapper" jsf:rendered="#{not adminCourseBean.course.registrationClosed}">
+								<div class="row">
+									<div class="col-auto">
+										<img class="d-block w-100 profile-picture m-auto fluent" src="${adminCourseBean.course.registrationIconFileUrl}" alt="Icon picture"/>
+									</div>
+									<div class="col">
+										<p:outputLabel for="@next" value="Registraction icon"/>
+										<p:fileUpload id="c_icon" listener="${adminCourseBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
+													  mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
+													  update=":c_icon_wrapper" auto="true" label="#{msg.choose_file}" cancelLabel="abb"/>
+										<p:message for="@previous"/>
+									</div>
+								</div>
+							</div>
 						</p:panel>
 					</div>
 

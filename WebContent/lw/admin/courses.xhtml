@@ -66,11 +66,11 @@
                 <h:outputText value="#{course.title}"/>
             </p:column>
 
-            <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.wizardParam}" filterBy="#{course.wizardParam}" filterMatchMode="contains">
-                <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.wizardDisabled}"/>
+            <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.registrationWizard}" filterBy="#{course.registrationWizard}" filterMatchMode="contains">
+                <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.registrationClosed}"/>
 
-                <h:outputLink value="#{of:getRequestBaseURL()}wizard=#{course.wizardParam}" rendered="#{not course.wizardDisabled}">
-                    <h:outputText value="#{course.wizardParam}"/>
+                <h:outputLink value="#{of:getRequestBaseURL()}wizard=#{course.registrationWizard}" rendered="#{not course.registrationClosed}">
+                    <h:outputText value="#{course.registrationWizard}"/>
                 </h:outputLink>
 	        </p:column>
 
@@ -131,7 +131,7 @@
             </div>
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.registration_wizard}:"/>
-                <p:inputText value="#{adminCoursesBean.newCourse.wizardParam}"/>
+                <p:inputText value="#{adminCoursesBean.newCourse.registrationWizard}"/>
                 <p:message for="@previous"/>
             </div>
             <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" update="@form :courses_table" process="@form"

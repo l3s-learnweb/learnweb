@@ -24,6 +24,7 @@ public class File implements Serializable, HasId {
         // general files
         SYSTEM_FILE, // for example course header images
         ORGANISATION_BANNER,
+        COURSE_PICTURE,
         PROFILE_PICTURE,
         GROUP_PICTURE,
         // resource files

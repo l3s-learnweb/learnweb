@@ -75,10 +75,10 @@
                                 <p:commandLink title="#{msg.change_leader}" styleClass="fas fa-fw fa-pencil-alt text-decoration-none text-secondary ms-2"
                                                onclick="PF('changeLeader').show(); return false;" style="width: 0;" aria-hidden="true"/>
                             </div>
-                            <ui:fragment rendered="#{not groupOptionsBean.group.course.wizardDisabledOrNull}">
+                            <ui:fragment rendered="#{not groupOptionsBean.group.course.registrationClosed}">
                                 <div class="field">
                                     <h:outputText value="#{msg.registration_wizard}:"/>
-                                    <p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{groupOptionsBean.group.course.wizardParam}/#{groupOptionsBean.group.id}"/>
+                                    <p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{groupOptionsBean.group.course.registrationWizard}/#{groupOptionsBean.group.id}"/>
                                 </div>
                             </ui:fragment>
                             <ui:fragment rendered="#{groupOptionsBean.hypothesisEnabled}">

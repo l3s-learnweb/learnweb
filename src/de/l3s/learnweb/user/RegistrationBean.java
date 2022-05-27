@@ -6,6 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZoneId;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -90,7 +91,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
         if (StringUtils.isNotEmpty(wizard)) {
             course = courseDao.findByWizard(wizard).orElseThrow(() -> new BadRequestHttpException("register_invalid_wizard_error"));
-            BeanAssert.validate(!course.isWizardDisabledOrNull(), "registration.wizard_disabled");
+            BeanAssert.validate(!course.isRegistrationClosed(), "registration.wizard_disabled");
 
             // special message for yell
             if (course.getId() == 505) {
@@ -103,8 +104,12 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
                 return fastLogin();
             }
         } else {
-            course = courseDao.findByWizard("default").orElseThrow(BeanAssert.NOT_FOUND);
+            List<Course> publicCourses = courseDao.findByRegistrationType(Course.RegistrationType.PUBLIC);
+            if (publicCourses.isEmpty()) {
+                throw BeanAssert.NOT_FOUND.get();
+            }
 
+            course = publicCourses.get(0);
             addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
         }
 

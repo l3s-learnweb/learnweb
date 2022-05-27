@@ -6,16 +6,17 @@ import java.time.LocalDateTime;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import jakarta.validation.constraints.NotBlank;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.resource.File;
 import de.l3s.util.HasId;
 
 public class Course implements Serializable, Comparable<Course>, HasId {
@@ -31,10 +32,17 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         Groups_Forum_categories_enabled,
         Groups_Only_moderators_can_create_groups,
         Users_Require_mail_address,
-        Users_Disable_wizard,
         Unused_6,
+        Unused_7,
         Users_Require_affiliation,
         Users_Require_student_id
+    }
+
+    public enum RegistrationType {
+        PUBLIC,
+        SPECIFIC,
+        HIDDEN,
+        CLOSED
     }
 
     private int id;
@@ -43,8 +51,11 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     private String title;
     private int organisationId;
     private int defaultGroupId; // all users who join this course, automatically join this group
+    private RegistrationType registrationType;
     @Length(min = 2, max = 90)
-    private String wizardParam;
+    private String registrationWizard;
+    private String registrationDescription;
+    private int registrationIconFileId;
     private int nextXUsersBecomeModerator;
     @Length(max = 65000)
     private String welcomeMessage;
@@ -53,8 +64,8 @@ public class Course implements Serializable, Comparable<Course>, HasId {
 
     private BitSet options = new BitSet(Option.values().length);
 
-    // derived/cached values:
-    private int memberCount = -1;
+    private transient int memberCount = -1;
+    private transient String registrationIconFileUrl;
 
     public Course() {
         // set default values; They are false by default
@@ -108,12 +119,52 @@ public class Course implements Serializable, Comparable<Course>, HasId {
         this.options = options;
     }
 
-    public boolean isWizardDisabled() {
-        return getOption(Option.Users_Disable_wizard);
+    public RegistrationType getRegistrationType() {
+        return registrationType;
     }
 
-    public boolean isWizardDisabledOrNull() {
-        return getOption(Option.Users_Disable_wizard) || StringUtils.isBlank(wizardParam);
+    public void setRegistrationType(final RegistrationType registrationType) {
+        this.registrationType = registrationType;
+    }
+
+    public boolean isRegistrationClosed() {
+        return registrationType == RegistrationType.CLOSED;
+    }
+
+    public String getRegistrationWizard() {
+        return registrationWizard;
+    }
+
+    public void setRegistrationWizard(String registrationWizard) {
+        this.registrationWizard = registrationWizard;
+    }
+
+    public String getRegistrationDescription() {
+        return registrationDescription;
+    }
+
+    public void setRegistrationDescription(final String registrationDescription) {
+        this.registrationDescription = registrationDescription;
+    }
+
+    public int getRegistrationIconFileId() {
+        return registrationIconFileId;
+    }
+
+    public void setRegistrationIconFileId(final int registrationIconFileId) {
+        this.registrationIconFileId = registrationIconFileId;
+        this.registrationIconFileUrl = null;
+    }
+
+    public String getRegistrationIconFileUrl() {
+        if (registrationIconFileUrl == null && registrationIconFileId > 0) {
+            registrationIconFileUrl = getRegistrationIconFile().map(File::getSimpleUrl).orElse(null);
+        }
+        return registrationIconFileUrl;
+    }
+
+    public Optional<File> getRegistrationIconFile() {
+        return Learnweb.dao().getFileDao().findById(registrationIconFileId);
     }
 
     public int getOrganisationId() {
@@ -138,14 +189,6 @@ public class Course implements Serializable, Comparable<Course>, HasId {
 
     public void setDefaultGroupId(int defaultGroupId) {
         this.defaultGroupId = defaultGroupId;
-    }
-
-    public String getWizardParam() {
-        return wizardParam;
-    }
-
-    public void setWizardParam(String wizardParam) {
-        this.wizardParam = wizardParam;
     }
 
     public synchronized int getNextXUsersBecomeModerator() {

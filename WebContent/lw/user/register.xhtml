@@ -21,14 +21,14 @@
 </ui:define>
 
 <ui:define name="center_layout">
-	<p:panel rendered="#{not empty registrationBean.course.organisation.registrationMessage}">
+	<p:panel rendered="#{not empty registrationBean.course.organisation.termsAndConditions}">
 		<div class="row">
 			<div class="col-auto" jsf:rendered="#{not empty registrationBean.course.organisation.bannerImageUrl}">
 				<h:graphicImage value="${registrationBean.course.organisation.bannerImageUrl}" alt="#{msg.banner_image}"/>
 			</div>
 			<div class="col">
 				<h2>#{registrationBean.course.organisation.title}</h2>
-				<h:outputText value="#{registrationBean.course.organisation.registrationMessage}" escape="false"/>
+				<h:outputText value="#{registrationBean.course.organisation.termsAndConditions}" escape="false"/>
 			</div>
 		</div>
 	</p:panel>

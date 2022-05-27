@@ -31,7 +31,7 @@ class CourseDaoTest {
         assertEquals("Public", course.get().getTitle());
         assertEquals(1, course.get().getOrganisationId());
         assertEquals(0, course.get().getDefaultGroupId());
-        assertEquals("default", course.get().getWizardParam());
+        assertEquals("public", course.get().getRegistrationWizard());
         assertEquals(0, course.get().getNextXUsersBecomeModerator());
         assertEquals("Welcome to the public course", course.get().getWelcomeMessage());
         assertEquals(LocalDateTime.of(2019, 11, 27, 20, 38, 7), course.get().getCreatedAt());
@@ -40,7 +40,7 @@ class CourseDaoTest {
 
     @Test
     void findByWizard() {
-        Optional<Course> courseByWizard = courseDao.findByWizard("default");
+        Optional<Course> courseByWizard = courseDao.findByWizard("public");
         assertTrue(courseByWizard.isPresent());
         assertEquals(1, courseByWizard.get().getId());
         assertEquals("Public", courseByWizard.get().getTitle());
@@ -107,19 +107,19 @@ class CourseDaoTest {
         course.setOrganisationId(1);
         course.setDefaultGroupId(2);
         course.setWelcomeMessage("Welcome to the public course");
-        course.setWizardParam("test");
+        course.setRegistrationWizard("test");
         course.setNextXUsersBecomeModerator(2);
-        course.setOption(Course.Option.Users_Disable_wizard, true);
+        course.setOption(Course.Option.Users_Require_affiliation, true);
         courseDao.save(course);
 
         Optional<Course> retrievedCourse = courseDao.findById(10);
         assertTrue(retrievedCourse.isPresent());
         assertEquals("Test", retrievedCourse.get().getTitle());
         assertEquals(1, retrievedCourse.get().getOrganisationId());
-        assertEquals("test", retrievedCourse.get().getWizardParam());
+        assertEquals("test", retrievedCourse.get().getRegistrationWizard());
         assertEquals(2, retrievedCourse.get().getNextXUsersBecomeModerator());
         assertEquals("Welcome to the public course", retrievedCourse.get().getWelcomeMessage());
-        assertTrue(retrievedCourse.get().getOption(Course.Option.Users_Disable_wizard));
+        assertTrue(retrievedCourse.get().getOption(Course.Option.Users_Require_affiliation));
     }
 
     @Test
