@@ -51,7 +51,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     private String title;
     private int organisationId;
     private int defaultGroupId; // all users who join this course, automatically join this group
-    private RegistrationType registrationType;
+    private RegistrationType registrationType = RegistrationType.CLOSED;
     @Length(min = 2, max = 90)
     private String registrationWizard;
     private String registrationDescription;
