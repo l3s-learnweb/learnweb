@@ -34,7 +34,7 @@
                 <h:outputText value="* #{msg.mandatory_field}"/>
             </div>
             <div class="d-flex flex-row-reverse">
-                <p:commandButton value="#{msg.save}" update=":folderGrid" ajax="true" onsuccess="PF('editFolderDialog').hide();onResourcesUpdated();return false;"
+                <p:commandButton value="#{msg.save}" update=":folderGrid" ajax="true" oncomplete="if(!args.validationFailed){PF('editFolderDialog').hide();onResourcesUpdated();}"
                                  action="#{editFolderBean.saveChanges}"/>
 
                 <p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" immediate="true" onclick="PF('editFolderDialog').hide();return false;"/>

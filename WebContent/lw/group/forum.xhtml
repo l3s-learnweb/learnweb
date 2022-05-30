@@ -162,7 +162,7 @@
 			</div>
 
 			<p:commandButton value="#{msg.save}" action="#{forumBean.onSavePost}" process="@form" update="@form"
-							 oncomplete="if (!args.validationFailed) PF('newTopicDialog').hide();"/>
+							 oncomplete="if(!args.validationFailed){PF('newTopicDialog').hide();}"/>
 		</h:form>
 	</p:dialog>
 </ui:define>

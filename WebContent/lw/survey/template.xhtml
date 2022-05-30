@@ -61,7 +61,7 @@
 								<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-dark fas fa-angle-up align-self-center"
 											   title="#{msg['survey.up']}" update="surveyForm" process="@this"/>
 								<p:commandLink action="#{surveyTemplateBean.setCurrentQuestion(question)}" styleClass="text-dark fas fa-pencil-alt align-self-center"
-											   title="#{msg['edit']}" onsuccess="PF('updateSurvey').show();" update="updateForm" process="@this"/>
+											   title="#{msg['edit']}" oncomplete="PF('updateSurvey').show();" update="updateForm" process="@this"/>
 								<p:commandLink action="#{surveyTemplateBean.onMoveQuestionDown(question)}" rendered="#{!questionStatus.last}" styleClass="text-dark fas fa-angle-down align-self-center"
 											   title="#{msg['survey.down']}" update="surveyForm" process="@this"/>
 							</p:outputPanel>

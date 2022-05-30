@@ -38,7 +38,7 @@
             <div class="d-flex flex-row-reverse">
                 <p:commandButton value="#{msg.create_folder}" update=":group_folders_tree :resourcesView @form" ajax="true"
                                  action="#{addFolderBean.saveFolder}" actionListener="#{groupResourcesBean.clearFoldersCaches}"
-                                 oncomplete="if (!args.validationFailed){PF('createFolderDialog').hide();resourceAddedHook();return false;}"/>
+                                 oncomplete="if(!args.validationFailed){PF('createFolderDialog').hide();resourceAddedHook();}"/>
 
                 <p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" immediate="true" onclick="PF('createFolderDialog').hide();return false;"/>
             </div>

@@ -293,7 +293,7 @@
                                  oncomplete="PF('glossaryEditDialog').hide();return false;">
                 </p:commandButton>
                 <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave}" update=":glossary_add :glossary_table_form"
-                                 binding="#{save}" oncomplete="PF('glossaryEditDialog').hide();groupRow()">
+                                 binding="#{save}" oncomplete="if(!args.validationFailed){PF('glossaryEditDialog').hide();groupRow();}">
                 </p:commandButton>
             </div>
         </div>

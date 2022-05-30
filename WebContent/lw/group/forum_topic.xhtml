@@ -197,7 +197,7 @@
             </div>
 
             <p:commandButton value="#{forumTopicBean.replyDialog ? msg.send : msg.save}" action="#{forumTopicBean.saveDialogPost}"
-                             update="@form :forum_posts_table" oncomplete="if (!args.validationFailed) PF('postDialog').hide();"/>
+                             update="@form :forum_posts_table" oncomplete="if(!args.validationFailed){PF('postDialog').hide();}"/>
         </h:form>
     </p:dialog>
 

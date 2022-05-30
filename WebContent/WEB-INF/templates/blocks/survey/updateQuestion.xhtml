@@ -87,13 +87,6 @@
         <p:commandButton value="#{msg['delete']}" actionListener="#{surveyTemplateBean.onDeleteQuestion(question)}" update="surveyForm" oncomplete="PF('updateSurvey').hide();" styleClass="float-start">
             <p:confirm message="#{msg['survey.are_you_sure']}"/>
         </p:commandButton>
-        <p:commandButton id="saveBtn" value="#{msg['save']}" actionListener="#{surveyTemplateBean.onAddQuestion}" oncomplete="handleDialogSubmit(xhr, status, args)" update="surveyForm @form" process="@form"/>
+        <p:commandButton id="saveBtn" value="#{msg['save']}" actionListener="#{surveyTemplateBean.onAddQuestion}" oncomplete="if(!args.validationFailed){PF('updateSurvey').hide()}" update="surveyForm @form" process="@form"/>
     </div>
-
-    <h:outputScript>
-      function handleDialogSubmit(xhr, status, args) {
-        if (!args.validationFailed)
-          PF('updateSurvey').hide();
-      }
-    </h:outputScript>
 </ui:composition>

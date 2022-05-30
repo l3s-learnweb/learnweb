@@ -111,7 +111,7 @@
                 </div>
                 <div class="col text-end">
                     <p:commandButton value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" process="@form" update="@form :my_groups"
-                                     oncomplete="if (!args.validationFailed) { PF('createGroupDialog').hide(); if (#{userBean.guided}) {guideFinish.show();} }"/>
+                                     oncomplete="if(!args.validationFailed){PF('createGroupDialog').hide(); if (#{userBean.guided}) {guideFinish.show();}}"/>
                 </div>
             </div>
         </h:form>

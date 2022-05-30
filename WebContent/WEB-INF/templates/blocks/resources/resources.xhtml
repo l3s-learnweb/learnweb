@@ -18,7 +18,7 @@
                      onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 
     <p:remoteCommand name="commandEditFolder" actionListener="#{editFolderBean.commandEditFolder}" update=":editFolderDialog"
-                     oncomplete="PF('editFolderDialog').show();return false;"/>
+                     oncomplete="PF('editFolderDialog').show();"/>
 </h:form>
 
 <p:blockUI block="resourceOverlay" widgetVar="resourcesOverlay">
@@ -85,30 +85,30 @@
                     <p:menuButton styleClass="guide-add-resource" value="#{msg.add}" icon="fas fa-plus"
                                   rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
                         <p:menuitem id="menu_create_folder" value="#{msg.create_folder}" icon="fas fa-folder" ajax="true"
-                                    oncomplete="PF('createFolderDialog').show();return false;" update=":createFolderDialog"
+                                    oncomplete="PF('createFolderDialog').show();" update=":createFolderDialog"
                                     actionListener="#{addFolderBean.create(groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:divider/>
                         <p:menuitem id="menu_upload_file" value="#{msg.upload_file}" icon="fas fa-cloud-upload-alt" ajax="true"
-                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('file', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:menuitem id="menu_upload_url" value="#{msg.upload_url}" icon="fas fa-link" ajax="true"
-                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('url', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:divider/>
                         <p:menuitem value="#{msg.office_document}" icon="fas fa-file-word" ajax="true"
-                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('document', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:menuitem value="#{msg.office_spreadsheet}" icon="fas fa-file-excel" ajax="true"
-                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('spreadsheet', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:menuitem value="#{msg.office_presentation}" icon="fas fa-file-powerpoint" ajax="true"
-                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('presentation', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:menuitem value="#{msg['Glossary.glossary']}" icon="fas fa-book" ajax="true"
-                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('glossary', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:menuitem value="#{msg.survey}" icon="fas fa-poll-h" ajax="true" rendered="#{userBean.admin}"
-                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('survey', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                     </p:menuButton>
                 </f:facet>

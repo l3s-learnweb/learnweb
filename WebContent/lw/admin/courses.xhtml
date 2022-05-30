@@ -135,10 +135,10 @@
                 <p:message for="@previous"/>
             </div>
             <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" update="@form :courses_table" process="@form"
-                             onstart="PF('createCourseOverlay').show();" oncomplete="PF('createCourseOverlay').hide();if (!args.validationFailed) {PF('createCourseWidget').hide();}"/>
+                             onstart="PF('createCourseOverlay').show();" oncomplete="PF('createCourseOverlay').hide();if(!args.validationFailed){PF('createCourseWidget').hide();}"/>
             <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourseAndGroup()}" value="Add course and group" styleClass="ui-button-warning ms-1"
                              update="@form :courses_table" process="@form" onstart="PF('createCourseOverlay').show();"
-                             oncomplete="PF('createCourseOverlay').hide();if (!args.validationFailed) {PF('createCourseWidget').hide();}"/>
+                             oncomplete="PF('createCourseOverlay').hide();if(!args.validationFailed){PF('createCourseWidget').hide();}"/>
         </h:form>
     </p:dialog>
 </ui:define>

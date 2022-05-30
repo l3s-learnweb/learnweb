@@ -25,7 +25,7 @@
 				<div class="d-flex">
 					<div class="me-auto">#{msg['templates']}</div>
 					<div class="d-md-block d-flex flex-column">
-						<p:commandButton value="#{msg['survey.create_new_survey']}" action="#{surveyTemplatesBean.onCreateSurvey}" onsuccess="PF('createSurvey').show();" update="createSurvey" styleClass="ui-button-warning mt-2 mt-md-0"/>
+						<p:commandButton value="#{msg['survey.create_new_survey']}" action="#{surveyTemplatesBean.onCreateSurvey}" oncomplete="PF('createSurvey').show();" update="createSurvey" styleClass="ui-button-warning mt-2 mt-md-0"/>
 					</div>
 				</div>
 			</f:facet>
@@ -43,7 +43,7 @@
 
 			<p:column headerText="#{msg['options']}" styleClass="td-text-end">
 				<div class="d-flex justify-content-end">
-					<p:commandLink styleClass="icon-link me-2" onsuccess="PF('createSurvey').show();" action="#{surveyTemplatesBean.onCopySurvey(survey.id)}" update="createSurvey" process="@this">
+					<p:commandLink styleClass="icon-link me-2" oncomplete="PF('createSurvey').show();" action="#{surveyTemplatesBean.onCopySurvey(survey.id)}" update="createSurvey" process="@this">
 						<i class="fas fa-fw fa-copy text-warning" aria-hidden="true"></i>
 						<h:outputText value="#{msg['copy']}"/>
 					</p:commandLink>
