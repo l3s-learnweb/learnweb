@@ -56,12 +56,12 @@
           <element id="library" level="project" name="Maven: com.twelvemonkeys.imageio:imageio-metadata:3.8.2" />
           <element id="library" level="project" name="Maven: com.twelvemonkeys.imageio:imageio-tiff:3.8.2" />
           <element id="library" level="project" name="Maven: com.twelvemonkeys.imageio:imageio-hdr:3.8.2" />
-          <element id="library" level="project" name="Maven: org.mariadb.jdbc:mariadb-java-client:3.0.4" />
+          <element id="library" level="project" name="Maven: org.mariadb.jdbc:mariadb-java-client:3.0.5" />
           <element id="library" level="project" name="Maven: com.zaxxer:HikariCP:5.0.1" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:2.0.0-alpha1" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.28.0" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.29.0" />
           <element id="library" level="project" name="Maven: io.leangen.geantyref:geantyref:1.3.13" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.28.0" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.29.0" />
           <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:8.5.11" />
           <element id="library" level="project" name="Maven: org.flywaydb:flyway-mysql:8.5.11" />
           <element id="library" level="project" name="Maven: org.apache.solr:solr-solrj:9.0.0" />
@@ -95,9 +95,9 @@
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.17.2" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-jakarta-web:2.17.2" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.17.2" />
-          <element id="library" level="project" name="Maven: com.github.ben-manes.caffeine:caffeine:3.1.0" />
-          <element id="library" level="project" name="Maven: org.checkerframework:checker-qual:3.21.4" />
-          <element id="library" level="project" name="Maven: com.google.errorprone:error_prone_annotations:2.13.1" />
+          <element id="library" level="project" name="Maven: com.github.ben-manes.caffeine:caffeine:3.1.1" />
+          <element id="library" level="project" name="Maven: org.checkerframework:checker-qual:3.22.0" />
+          <element id="library" level="project" name="Maven: com.google.errorprone:error_prone_annotations:2.14.0" />
           <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.9.0" />
           <element id="library" level="project" name="Maven: com.google.guava:guava:31.1-jre" />
           <element id="library" level="project" name="Maven: com.google.guava:failureaccess:1.0.1" />

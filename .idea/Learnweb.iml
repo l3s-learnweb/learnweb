@@ -78,12 +78,12 @@
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-metadata:3.8.2" level="project" />
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-tiff:3.8.2" level="project" />
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-hdr:3.8.2" level="project" />
-    <orderEntry type="library" name="Maven: org.mariadb.jdbc:mariadb-java-client:3.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.mariadb.jdbc:mariadb-java-client:3.0.5" level="project" />
     <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:5.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:2.0.0-alpha1" level="project" />
-    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-core:3.28.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-core:3.29.0" level="project" />
     <orderEntry type="library" name="Maven: io.leangen.geantyref:geantyref:1.3.13" level="project" />
-    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-sqlobject:3.28.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-sqlobject:3.29.0" level="project" />
     <orderEntry type="library" name="Maven: org.flywaydb:flyway-core:8.5.11" level="project" />
     <orderEntry type="library" name="Maven: org.flywaydb:flyway-mysql:8.5.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.solr:solr-solrj:9.0.0" level="project" />
@@ -117,9 +117,9 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.17.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-jakarta-web:2.17.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.17.2" level="project" />
-    <orderEntry type="library" name="Maven: com.github.ben-manes.caffeine:caffeine:3.1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.checkerframework:checker-qual:3.21.4" level="project" />
-    <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.13.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.ben-manes.caffeine:caffeine:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.checkerframework:checker-qual:3.22.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.14.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:31.1-jre" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:failureaccess:1.0.1" level="project" />
@@ -142,12 +142,12 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.8.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.8.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.1.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:4.5.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.12.9" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.12.9" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:4.6.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.12.10" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.12.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:3.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-junit-jupiter:4.5.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-inline:4.5.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-junit-jupiter:4.6.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-inline:4.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.h2database:h2:2.1.212" level="project" />
   </component>
 </module>
