@@ -66,23 +66,6 @@ deploy_dev:
       - target/Learnweb.war
     policy: pull
 
-# Any commit to `master` branch will be deployed to /test instance using dev database
-deploy_test:
-  stage: deploy
-  tags:
-    - java
-  script:
-    - mvn $MAVEN_CLI_OPTS tomcat7:redeploy-only -Dpath=test
-  environment:
-    name: test
-    url: https://learnweb.l3s.uni-hannover.de/test/
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
-  cache:
-    paths:
-      - target/Learnweb.war
-    policy: pull
-
 # A commit to `master` brunch with message `chore: version release` will be deployed to ROOT instance
 deploy_prod:
   stage: deploy
