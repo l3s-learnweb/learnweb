@@ -118,6 +118,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         foldersTree = null;
     }
 
+    public void clearCachesAndFilters() {
+        clearCaches();
+        clearFilters();
+    }
+
     public int getGroupId() {
         return groupId;
     }
@@ -306,7 +311,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
                 this.currentFolder = targetFolder;
             }
 
-            clearCaches();
+            clearCachesAndFilters();
         } catch (IllegalArgumentException e) {
             addErrorMessage(e);
         }
