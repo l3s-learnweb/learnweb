@@ -1,11 +1,11 @@
 function groupRow() {
-  const columnsToMerge = 6; // number of first columns to merge
+  const columnsToMerge = 5; // number of first columns to merge
 
   const tableEl = document.getElementById('glossary_table');
   const rows = tableEl.querySelectorAll('.ui-datatable-data > tr');
 
   // if no search result
-  if (rows.length === 2) {
+  if (rows.length === 1) {
     return;
   }
 
