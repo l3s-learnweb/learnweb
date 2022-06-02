@@ -25,8 +25,8 @@
                 </div>
                 <div id="basic_content" class="ui-panel-content ui-widget-content">
                     <div>#{msg.description}: <h:outputText value="#{submission.description}"></h:outputText></div>
-                    <div>#{msg.open_date}: <h:outputText value="#{submission.openDatetime}"><f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/></h:outputText></div>
-                    <div>#{msg.close_date}: <h:outputText value="#{submission.closeDatetime}"><f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/></h:outputText></div>
+                    <div>#{msg.open_date}: <h:outputText value="#{submission.openDatetime}"><f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/></h:outputText></div>
+                    <div>#{msg.close_date}: <h:outputText value="#{submission.closeDatetime}"><f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/></h:outputText></div>
                     <div>#{msg.course}: <h:outputText value="#{submission.course.title}"/></div>
 
                     <br/>

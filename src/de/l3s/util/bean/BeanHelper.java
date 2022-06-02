@@ -1,12 +1,15 @@
 package de.l3s.util.bean;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.StringJoiner;
 import java.util.TreeSet;
 
+import jakarta.faces.model.SelectItem;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -23,21 +26,59 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
+import de.l3s.util.Misc;
 
 public final class BeanHelper {
     private static final Logger log = LogManager.getLogger(BeanHelper.class);
 
+    private static final List<Locale> supportedLocales = Collections.synchronizedList(new ArrayList<>());
+
+    /**
+     * @return Supported frontend locales as defined in faces-config.xml
+     */
+    public static List<Locale> getSupportedLocales() {
+        if (supportedLocales.isEmpty()) {
+            supportedLocales.addAll(Faces.getSupportedLocales());
+        }
+        return Collections.unmodifiableList(supportedLocales);
+    }
+
     public static boolean isMessageExists(String msgKey) {
-        return LanguageBundle.getLanguageBundle(Faces.getLocale()).containsKey(msgKey);
+        return LanguageBundle.getBundle(Faces.getLocale()).containsKey(msgKey);
     }
 
     public static String getMessageOrDefault(String msgKey, String msgDefault) {
-        ResourceBundle bundle = LanguageBundle.getLanguageBundle(Faces.getLocale());
-        return bundle.containsKey(msgKey) ? bundle.getString(msgKey) : msgDefault;
+        LanguageBundle bundle = LanguageBundle.getBundle(Faces.getLocale());
+        return bundle.containsKey(msgKey) ? bundle.getFormatted(msgKey) : msgDefault;
     }
 
-    public static TreeNode<String> createGroupsUsersTree(final User user, final Locale locale, final boolean includeUsers) {
-        TreeNode<String> root = new CheckboxTreeNode<>(LanguageBundle.getLocaleMessage(locale, "msg.courses"), null);
+    /**
+     * Converts a list of Locales to a list of SelectItems. The Locales are translated to the current frontend language
+     */
+    public static List<SelectItem> getLocalesAsSelectItems(List<Locale> locales, LanguageBundle bundle) {
+        ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
+
+        for (Locale locale : locales) {
+            selectItems.add(new SelectItem(locale, bundle.getString("language_" + locale.getLanguage())));
+        }
+        selectItems.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
+
+        return selectItems;
+    }
+
+    public static List<SelectItem> getLanguagesAsSelectItems(String[] languages, LanguageBundle bundle) {
+        ArrayList<SelectItem> selectItems = new ArrayList<>(languages.length);
+
+        for (String language : languages) {
+            selectItems.add(new SelectItem(language, bundle.getString("language_" + language)));
+        }
+        selectItems.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
+
+        return selectItems;
+    }
+
+    public static TreeNode<String> createGroupsUsersTree(final User user, final boolean includeUsers) {
+        TreeNode<String> root = new CheckboxTreeNode<>();
 
         for (Course course : user.getCourses()) {
             TreeNode<Course> courseNode = new CheckboxTreeNode<>("course", course, root);

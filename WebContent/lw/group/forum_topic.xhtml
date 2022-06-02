@@ -66,7 +66,7 @@
                         <p class="mb-0">
                             <h:outputText value="#{msg.registered_since}: " styleClass="d-block"/>
                             <h:outputText value="#{post.user.createdAt}">
-                                <f:convertDateTime dateStyle="default" type="localDate" timeZone="#{userBean.timeZone}"/>
+                                <f:convertDateTime type="localDate" timeZone="#{userBean.timeZone}"/>
                             </h:outputText>
                         </p>
                         <p class="mb-0">

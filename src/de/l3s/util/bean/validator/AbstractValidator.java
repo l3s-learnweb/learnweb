@@ -6,6 +6,8 @@ import jakarta.faces.component.UIInput;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.validator.Validator;
 
+import org.omnifaces.util.FacesLocal;
+
 import de.l3s.learnweb.LanguageBundle;
 
 /**
@@ -28,11 +30,11 @@ public abstract class AbstractValidator<T> implements Validator<T> {
                 label = component.getValueExpression("label");
             }
 
-            validatorMessage = LanguageBundle.getLocaleMessage(context.getViewRoot().getLocale(), message);
+            validatorMessage = LanguageBundle.getBundle(FacesLocal.getLocale(context)).getFormatted(message);
             if (label != null) {
                 validatorMessage = label + ": " + validatorMessage;
             }
         }
-        return new FacesMessage(FacesMessage.SEVERITY_ERROR, validatorMessage, validatorMessage);
+        return new FacesMessage(severity, validatorMessage, validatorMessage);
     }
 }

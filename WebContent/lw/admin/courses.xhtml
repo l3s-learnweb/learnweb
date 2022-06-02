@@ -76,7 +76,7 @@
 
             <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="dd-sm-none" sortBy="#{course.createdAt}">
                 <h:outputText value="#{course.createdAt}">
-                    <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
 

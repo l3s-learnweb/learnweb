@@ -37,7 +37,7 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
+        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), true);
     }
 
     /**

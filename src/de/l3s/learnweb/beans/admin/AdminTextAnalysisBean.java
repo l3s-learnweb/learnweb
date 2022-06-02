@@ -37,7 +37,7 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
 
     @PostConstruct
     public void init() {
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), true);
+        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), true);
     }
 
     public void onAnalyseComments() {

@@ -10,19 +10,38 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
 /**
- * This methods primarily used by maintenance utils and tests to read bundle files one by one.
- *
- * @author Oleh Astappiev
+ * These methods primarily used by maintenance utils and tests to read bundle files one by one.
  */
 public final class MessagesHelper {
     static final String MESSAGES_DIR = "de/l3s/learnweb/lang";
     static final String MESSAGES_PREFIX = "messages";
     public static final String MESSAGES_BUNDLE = MESSAGES_DIR + "/" + MESSAGES_PREFIX;
+    private static final String BASE_NAME = MESSAGES_BUNDLE.replace('/', '.');
+
+    /**
+     * Control that loads only property files and set the empty Locale and hence "messages.properties" as fallback.
+     */
+    private static final ResourceBundle.Control control = new ResourceBundle.Control() {
+        @Override
+        public Locale getFallbackLocale(String baseName, Locale locale) {
+            return new Locale("");
+        }
+
+        @Override
+        public List<String> getFormats(String baseName) {
+            return ResourceBundle.Control.FORMAT_PROPERTIES;
+        }
+    };
+
+    public static ResourceBundle getMessagesBundle(Locale locale) {
+        return ResourceBundle.getBundle(BASE_NAME, locale, control);
+    }
 
     public static Map<String, String> getMessagesFromBundle(final ResourceBundle bundle) {
         final Map<String, String> messages = new HashMap<>();

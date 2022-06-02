@@ -258,13 +258,13 @@
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.avg}" sortable="true">
                                 <f:facet name="header">AVG %</f:facet>
                                 <h:outputText value="#{gfs.avg*100}">
-                                    <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="3" minFractionDigits="3"/>
+                                    <f:convertNumber maxFractionDigits="3" minFractionDigits="3"/>
                                 </h:outputText>%
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.totalPastedPct}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
                                 <f:facet name="header">#{msg['Glossary.total_pasted']}</f:facet>
                                 <h:outputText value="#{gfs.totalPastedPct*100}">
-                                    <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="3" minFractionDigits="3"/>
+                                    <f:convertNumber maxFractionDigits="3" minFractionDigits="3"/>
                                 </h:outputText>%
                             </p:column>
                         </p:dataTable>

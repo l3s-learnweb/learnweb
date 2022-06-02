@@ -1,7 +1,8 @@
 package de.l3s.mail.message;
 
 import java.util.ArrayList;
-import java.util.ResourceBundle;
+
+import de.l3s.learnweb.LanguageBundle;
 
 public class List extends Element {
 
@@ -13,7 +14,7 @@ public class List extends Element {
     }
 
     @Override
-    protected void buildHtml(final StringBuilder sb, final ResourceBundle msg) {
+    protected void buildHtml(final StringBuilder sb, final LanguageBundle msg) {
         sb.append("<ul").append(buildAttributes()).append(">");
         for (Element child : children) {
             sb.append("<li>");
@@ -24,7 +25,7 @@ public class List extends Element {
     }
 
     @Override
-    protected void buildPlainText(final StringBuilder sb, final ResourceBundle msg) {
+    protected void buildPlainText(final StringBuilder sb, final LanguageBundle msg) {
         sb.append("\n");
         for (Element child : children) {
             sb.append("* ");

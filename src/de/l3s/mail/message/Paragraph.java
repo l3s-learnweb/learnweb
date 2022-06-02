@@ -3,7 +3,8 @@ package de.l3s.mail.message;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ResourceBundle;
+
+import de.l3s.learnweb.LanguageBundle;
 
 public class Paragraph extends Element {
 
@@ -37,7 +38,7 @@ public class Paragraph extends Element {
     }
 
     @Override
-    protected void buildHtml(final StringBuilder sb, final ResourceBundle msg) {
+    protected void buildHtml(final StringBuilder sb, final LanguageBundle msg) {
         sb.append("<p").append(buildAttributes()).append(">");
         for (Element child : children) {
             child.buildHtml(sb, msg);
@@ -46,7 +47,7 @@ public class Paragraph extends Element {
     }
 
     @Override
-    protected void buildPlainText(final StringBuilder sb, final ResourceBundle msg) {
+    protected void buildPlainText(final StringBuilder sb, final LanguageBundle msg) {
         for (Element child : children) {
             child.buildPlainText(sb, msg);
         }

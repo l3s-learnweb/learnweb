@@ -61,7 +61,7 @@
 
             <ui:fragment rendered="#{not userBean.loggedIn}">
                 <div class="field mw-r25 overflow-hidden" style="min-height: 78px;">
-                    <p:captcha label="Captcha" language="#{userBean.locale}" />
+                    <p:captcha label="Captcha" language="#{userBean.localeCode}" />
                     <p:message for="@previous" />
                 </div>
             </ui:fragment>

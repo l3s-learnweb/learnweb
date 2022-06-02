@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import jakarta.faces.application.FacesMessage;
@@ -26,7 +25,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -35,7 +33,6 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.util.HashHelper;
 import de.l3s.util.ProfileImageHelper;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -70,7 +67,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private boolean affiliationRequired = false;
     private boolean studentIdRequired = false;
     private String timeZone;
-    private Locale locale;
 
     @Inject
     private CourseDao courseDao;
@@ -82,13 +78,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private ConfirmRequiredBean confirmRequiredBean;
 
     public String onLoad() {
-        locale = Faces.getLocale();
-
-        if (null == locale) {
-            log.warn("locale is null; request: {}", BeanHelper.getRequestSummary());
-            locale = Locale.ENGLISH;
-        }
-
         if (StringUtils.isNotEmpty(wizard)) {
             course = courseDao.findByWizard(wizard).orElseThrow(() -> new BadRequestHttpException("register_invalid_wizard_error"));
             BeanAssert.validate(!course.isRegistrationClosed(), "registration.wizard_disabled");
@@ -135,7 +124,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             user.setEmail(null);
             user.setPassword(null);
             user.setTimeZone(ZoneId.of("Europe/Berlin"));
-            user.setLocale(locale);
+            user.setLocale(getUserBean().getLocale());
 
             registerUser(user);
             return LoginBean.loginUser(this, user);
@@ -163,7 +152,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         user.setEmail(email);
         user.setPassword(password);
         user.setTimeZone(getZoneId());
-        user.setLocale(locale);
+        user.setLocale(getUserBean().getLocale());
 
         if (StringUtils.isNotEmpty(studentId) || StringUtils.isNotEmpty(affiliation)) {
             user.setStudentId(studentId);

@@ -25,7 +25,7 @@
 
     <h:panelGroup layout="block" styleClass="field overflow-hidden" rendered="#{loginBean.captchaRequired}">
         <p:outputLabel for="@next" value="#{msg.captcha}:" styleClass="d-none"/>
-        <p:captcha id="captcha" label="#{msg.captcha}" language="#{userBean.locale}" required="true"/>
+        <p:captcha id="captcha" label="#{msg.captcha}" language="#{userBean.localeCode}" required="true"/>
         <p:message for="@previous"/>
     </h:panelGroup>
 

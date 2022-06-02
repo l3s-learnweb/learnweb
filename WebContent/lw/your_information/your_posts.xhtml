@@ -62,13 +62,13 @@
 
             <p:column styleClass="first-letter-capitalize" headerText="#{msg.posted_on}">
                 <h:outputText value="#{post.createdAt}">
-                    <f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
 
             <p:column headerText="#{msg.last_changes}">
                 <h:outputText value="#{post.updatedAt}">
-                    <f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
         </p:dataTable>

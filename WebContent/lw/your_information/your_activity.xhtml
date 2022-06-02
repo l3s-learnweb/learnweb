@@ -49,7 +49,7 @@
             </p:column>
 
             <p:column headerText="#{msg.action_description}">
-                <h:outputText value="#{action.getDescription(userBean.locale)}" escape="false"/>
+                <h:outputText value="#{action.getDescription(userBean.bundle)}" escape="false"/>
             </p:column>
 
             <p:column headerText="#{msg.group}">
@@ -58,7 +58,7 @@
 
             <p:column headerText="#{msg.action_date}">
                 <h:outputText value="#{action.date}">
-                    <f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
         </p:dataTable>

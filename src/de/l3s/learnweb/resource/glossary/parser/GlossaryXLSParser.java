@@ -16,7 +16,6 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.model.file.UploadedFile;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.resource.glossary.GlossaryEntry;
 
 public class GlossaryXLSParser {
@@ -36,13 +35,13 @@ public class GlossaryXLSParser {
                 return true; // treats also the footer, which shows the entry count, as an empty row
             }
 
-            // another (ugly) way to detect the footer. It seems that the physicalNumberOfCells is chanced when the file is edited with OpenOffice
+            // another (ugly) way to detect the footer. It seems that the physicalNumberOfCells is changed when the file is edited with OpenOffice
             if (row.getCell(0) != null) {
                 String value = GlossaryRowBuilder.getStringValueForCell(row.getCell(0));
                 if (value.contains(" = ")) {
                     String[] parts = value.split(" = ");
 
-                    if (LanguageBundle.isEqualForAnyLocale(parts[0], "Glossary.total_entries")) {
+                    if (GlossaryRowBuilder.isEqualForAnyLocale(parts[0], "Glossary.total_entries")) {
                         return true;
                     }
                 }

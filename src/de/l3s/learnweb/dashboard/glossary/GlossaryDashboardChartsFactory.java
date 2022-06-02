@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +27,7 @@ final class GlossaryDashboardChartsFactory {
     private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap, Locale locale) {
+    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap, LanguageBundle bundle) {
         BarChartModel model = new BarChartModel();
 
         Action[] actionTypes = Action.values();
@@ -58,14 +57,14 @@ final class GlossaryDashboardChartsFactory {
 
         ChartData data = new ChartData();
         List<String> labels = new ArrayList<>();
-        labels.add(LanguageBundle.getLocaleMessage(locale, "glossary"));
-        labels.add(LanguageBundle.getLocaleMessage(locale, "Search"));
-        labels.add(LanguageBundle.getLocaleMessage(locale, "system"));
-        labels.add(LanguageBundle.getLocaleMessage(locale, "resource"));
+        labels.add(bundle.getString("glossary"));
+        labels.add(bundle.getString("Search"));
+        labels.add(bundle.getString("system"));
+        labels.add(bundle.getString("resource"));
         data.setLabels(labels);
 
         BarChartDataSet barDataSet = new BarChartDataSet();
-        barDataSet.setLabel(LanguageBundle.getLocaleMessage(locale, "interactions"));
+        barDataSet.setLabel(bundle.getString("interactions"));
         List<Number> values = new ArrayList<>();
         values.add(glossary);
         values.add(search);

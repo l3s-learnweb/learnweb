@@ -1,11 +1,8 @@
 package de.l3s.learnweb.beans;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import jakarta.faces.application.FacesMessage;
-import jakarta.faces.model.SelectItem;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +10,6 @@ import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.DaoProvider;
 import de.l3s.learnweb.app.Learnweb;
@@ -23,7 +19,6 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
-import de.l3s.util.Misc;
 import de.l3s.util.bean.BeanHelper;
 
 @SuppressWarnings("AbstractClassWithoutAbstractMethods")
@@ -74,29 +69,7 @@ public abstract class ApplicationBean {
      * If the msgKey doesn't exist the msgKey itself will be returned.
      */
     public String getLocaleMessage(String msgKey, Object... args) {
-        // get locale or load default
-        Locale locale;
-        try {
-            locale = getLocale();
-        } catch (Exception e) {
-            locale = Locale.ENGLISH;
-        }
-
-        return LanguageBundle.getLocaleMessage(locale, msgKey, args);
-    }
-
-    /**
-     * Converts a list of Locales to a list of SelectItems. The Locales are translated to the current frontend language
-     */
-    protected List<SelectItem> localesToSelectItems(List<Locale> locales) {
-        ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
-
-        for (Locale locale : locales) {
-            selectItems.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
-        }
-        selectItems.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
-
-        return selectItems;
+        return getUserBean().getBundle().getFormatted(msgKey, args);
     }
 
     // Preferences -----------------------------------------------------------------------------------------------------

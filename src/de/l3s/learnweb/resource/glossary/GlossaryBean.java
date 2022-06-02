@@ -57,6 +57,7 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Image;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -360,9 +361,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
      */
     private Map<String, Locale> getLanguageMap() {
         HashMap<String, Locale> languageMap = new HashMap<>();
-        for (Locale supportedLocale : LanguageBundle.getSupportedLocales()) {
+        for (Locale locale : BeanHelper.getSupportedLocales()) {
+            LanguageBundle bundle = LanguageBundle.getBundle(locale);
+
             for (Locale glossaryLocale : glossaryResource.getAllowedLanguages()) {
-                languageMap.put(LanguageBundle.getLocaleMessage(supportedLocale, "language_" + glossaryLocale.getLanguage()), glossaryLocale);
+                languageMap.put(bundle.getString("language_" + glossaryLocale.getLanguage()), glossaryLocale);
             }
         }
         return languageMap;
@@ -509,7 +512,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public List<GlossaryTableView> getTableItems() {
-        if (null == tableItems && glossaryResource != null) {
+        if (null == tableItems) {
             tableItems = glossaryResource.getGlossaryTableView();
         }
 
@@ -517,7 +520,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public LazyGlossaryTableView getLazyTableItems() {
-        if (null == lazyTableItems && glossaryResource != null) {
+        if (null == lazyTableItems) {
             lazyTableItems = new LazyGlossaryTableView(glossaryResource);
 
         }
@@ -546,8 +549,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public List<SelectItem> getAllowedTermLanguages() {
-        if (null == allowedTermLanguages && glossaryResource != null) {
-            allowedTermLanguages = localesToSelectItems(glossaryResource.getAllowedLanguages());
+        if (null == allowedTermLanguages) {
+            allowedTermLanguages = BeanHelper.getLocalesAsSelectItems(glossaryResource.getAllowedLanguages(), getUserBean().getBundle());
         }
         return allowedTermLanguages;
     }

@@ -3,7 +3,6 @@ package de.l3s.mail.message;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import jakarta.mail.MessagingException;
 
@@ -47,11 +46,11 @@ public class MessageBuilder {
         return footer(new HorizontalRule(), new Text("email.regards"), new LineBreak(), new Text("email.team"));
     }
 
-    public String getSubject(final ResourceBundle msg) {
-        return msg.getString(subject);
+    public String getSubject(final LanguageBundle msg) {
+        return msg.getFormatted(subject);
     }
 
-    public String buildHtmlText(final ResourceBundle msg) {
+    public String buildHtmlText(final LanguageBundle msg) {
         StringBuilder sb = new StringBuilder("<html>");
         sb.append("<head>");
         sb.append("<meta charset=\"UTF-8\">");
@@ -77,7 +76,7 @@ public class MessageBuilder {
         return sb.toString();
     }
 
-    public String buildPlainText(final ResourceBundle msg) {
+    public String buildPlainText(final LanguageBundle msg) {
         StringBuilder sb = new StringBuilder();
         for (Element element : bodyElements) {
             element.buildPlainText(sb, msg);
@@ -89,7 +88,7 @@ public class MessageBuilder {
     }
 
     public Mail build(Locale locale) throws MessagingException {
-        ResourceBundle bundle = LanguageBundle.getLanguageBundle(locale);
+        LanguageBundle bundle = LanguageBundle.getBundle(locale);
 
         Mail mail = new Mail();
         mail.setSubject(getSubject(bundle));

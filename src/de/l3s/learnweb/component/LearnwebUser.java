@@ -1,16 +1,15 @@
 package de.l3s.learnweb.component;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import jakarta.faces.component.FacesComponent;
 import jakarta.faces.component.UIComponentBase;
-import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.FacesLocal;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.user.User;
@@ -41,11 +40,8 @@ public class LearnwebUser extends UIComponentBase {
         if (user.isDeleted()) {
             ResponseWriter writer = context.getResponseWriter();
 
-            UIViewRoot viewRoot = context.getViewRoot();
-            Locale locale = viewRoot.getLocale();
-
             writer.startElement("span", this);
-            writer.write(LanguageBundle.getLocaleMessage(locale, "deleted_user"));
+            writer.write(LanguageBundle.getBundle(FacesLocal.getLocale(context)).getFormatted("deleted_user"));
             writer.endElement("span");
             return;
         }

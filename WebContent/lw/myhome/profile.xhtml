@@ -133,7 +133,7 @@
                             <h:panelGroup layout="block" styleClass="field" rendered="false">
                                 <p:outputLabel for="@next" value="#{msg.dateofbirth}:"/>
                                 <p:datePicker id="userdateofbirth" value="#{profileBean.selectedUser.dateOfBirth}" maxdate="#{profileBean.maxBirthday}"
-                                              monthNavigator="true" yearNavigator="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"
+                                              monthNavigator="true" yearNavigator="true" pattern="dd.MM.yyyy" showIcon="true"
                                               disabled="#{profileBean.editingDisabled}"/>
                                 <p:message for="@previous"/>
                             </h:panelGroup>

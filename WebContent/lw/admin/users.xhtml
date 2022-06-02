@@ -78,7 +78,7 @@
 
             <p:column headerText="Last login" sortBy="#{userView.lastLoginDate}">
                 <h:outputText value="#{userView.lastLoginDate.atZone(userView.timeZone)}" id="last_login">
-                    <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime"/>
+                    <f:convertDateTime timeStyle="short" type="localDateTime"/>
                 </h:outputText>
                 <p:tooltip for="@previous" value="#{of:formatDateWithTimezone(userView.lastLoginDate, 'yyyy-MM-dd HH:mm', userView.timeZone)}" position="top"/>
             </p:column>

@@ -61,14 +61,14 @@
 			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
 				<p:datePicker id="editDialogOpenDate" value="#{submissionBean.selectedSubmission.openDatetime}"
-							  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
+							  required="true" pattern="dd.MM.yyyy" showIcon="true"/>
 				<p:message for="@previous"/>
 			</div>
 
 			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
 				<p:datePicker id="editDialogCloseDate" value="#{submissionBean.selectedSubmission.closeDatetime}"
-							  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
+							  required="true" pattern="dd.MM.yyyy" showIcon="true"/>
 				<p:message for="@previous"/>
 				<o:validateOrder type="lte" components="editDialogOpenDate editDialogCloseDate"
 								 message="Start date may not be after end date." showMessageFor="editDialogOpenDate" />
@@ -140,14 +140,14 @@
 			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
 				<p:datePicker id="open_date" value="#{submissionBean.newSubmission.openDatetime}"
-							  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
+							  required="true" pattern="dd.MM.yyyy" showIcon="true"/>
 				<p:message for="@previous"/>
 			</div>
 
 			<div class="field">
 				<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
 				<p:datePicker id="close_date" value="#{submissionBean.newSubmission.closeDatetime}"
-							  required="true" locale="#{userBean.locale}" pattern="dd.MM.yyyy" showIcon="true"/>
+							  required="true" pattern="dd.MM.yyyy" showIcon="true"/>
 				<p:message for="@previous"/>
 				<o:validateOrder type="lte" components="open_date close_date"
 								 message="Start date may not be after end date." showMessageFor="open_date" />

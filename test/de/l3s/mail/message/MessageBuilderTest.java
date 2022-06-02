@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ class MessageBuilderTest {
     @RegisterExtension
     static final LearnwebExtension learnwebExt = new LearnwebExtension();
 
-    private static final ResourceBundle msg = LanguageBundle.getLanguageBundle(Locale.ENGLISH);
+    private static final LanguageBundle msg = LanguageBundle.getBundle(Locale.ENGLISH);
     private static final java.util.List<Request> suspiciousRequests;
     private static final java.util.List<ForumTopic> userTopics;
     private static final java.util.List<ForumTopic> otherTopics;

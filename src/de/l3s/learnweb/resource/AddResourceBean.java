@@ -31,6 +31,7 @@ import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 import de.l3s.util.UrlHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -212,7 +213,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
     public List<SelectItem> getAvailableGlossaryLanguages() {
         if (null == availableGlossaryLanguages) {
-            availableGlossaryLanguages = localesToSelectItems(getUser().getOrganisation().getGlossaryLanguages());
+            availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(getUser().getOrganisation().getGlossaryLanguages(), getUserBean().getBundle());
         }
         return availableGlossaryLanguages;
     }

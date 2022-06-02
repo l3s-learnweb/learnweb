@@ -90,7 +90,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
     }
 
     public List<SelectItem> getCategories() {
-        return ForumBean.getCategoriesByCourse(group.getCourseId(), getUserBean().getLocale());
+        return ForumBean.getCategoriesByCourse(group.getCourseId(), getUserBean().getBundle());
     }
 
     public void deletePost(ForumPost post) {

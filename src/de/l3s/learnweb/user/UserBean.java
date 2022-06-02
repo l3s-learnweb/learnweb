@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -50,6 +49,7 @@ public class UserBean implements Serializable {
     private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on an other account
 
     private Locale locale;
+    private transient LanguageBundle bundle;
     private transient List<Group> newGroups;
     private boolean cacheShowMessageJoinGroup = true;
     private boolean cacheShowMessageAddResource = true;
@@ -160,6 +160,13 @@ public class UserBean implements Serializable {
         String value = params.get("value");
 
         setPreference(key, value);
+    }
+
+    public LanguageBundle getBundle() {
+        if (bundle == null) {
+            bundle = LanguageBundle.getBundle(locale);
+        }
+        return bundle;
     }
 
     public Locale getLocale() {
@@ -314,7 +321,7 @@ public class UserBean implements Serializable {
 
         if (null == sidebarMenuModel || sidebarMenuModelUpdate.isBefore(Instant.now().minus(Duration.ofMinutes(10)))) {
             long start = System.currentTimeMillis();
-            sidebarMenuModel = createMenuModel(LanguageBundle.getLanguageBundle(getLocale()), getUser());
+            sidebarMenuModel = createMenuModel(getBundle(), getUser());
             sidebarMenuModelUpdate = Instant.now();
             long elapsedMs = System.currentTimeMillis() - start;
 
@@ -326,7 +333,7 @@ public class UserBean implements Serializable {
         return sidebarMenuModel;
     }
 
-    private static BaseMenuModel createMenuModel(ResourceBundle msg, User user) {
+    private static BaseMenuModel createMenuModel(LanguageBundle msg, User user) {
         BaseMenuModel model = new BaseMenuModel();
 
         // My resources

@@ -4,8 +4,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.model.SelectItem;
@@ -89,7 +87,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
     }
 
     public List<SelectItem> getCategories() {
-        return getCategoriesByCourse(group.getCourseId(), getUserBean().getLocale());
+        return getCategoriesByCourse(group.getCourseId(), getUserBean().getBundle());
     }
 
     public List<ForumTopic> getTopics() {
@@ -132,9 +130,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
         this.newTopicCategory = newTopicCategory;
     }
 
-    protected static List<SelectItem> getCategoriesByCourse(int courseId, Locale locale) {
-        ResourceBundle msg = LanguageBundle.getLanguageBundle(locale);
-
+    protected static List<SelectItem> getCategoriesByCourse(int courseId, LanguageBundle msg) {
         SelectItemGroup g1 = new SelectItemGroup(msg.getString("Forum.cell.category.1"));
         g1.setSelectItems(new SelectItem[] {
             new SelectItem("Forum.cell.category.1a", msg.getString("Forum.cell.category.1a")),

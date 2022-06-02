@@ -40,7 +40,7 @@
                 <div class="activity-feed">
                     <ui:repeat value="#{summary.deletedResources}" var="item">
                         <div class="feed-entry-text">
-                            <h:outputText value="#{item.getDescription(userBean.locale)}" escape="false"/>
+                            <h:outputText value="#{item.getDescription(userBean.bundle)}" escape="false"/>
                         </div>
                     </ui:repeat>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="activity-feed activity-feed-forum">
                     <ui:repeat value="#{summary.forumsInfo}" var="item">
                         <div class="feed-entry-text">
-                            <h:outputText value="#{item.getDescription(userBean.locale)}" escape="false"/>
+                            <h:outputText value="#{item.getDescription(userBean.bundle)}" escape="false"/>
                         </div>
                     </ui:repeat>
                 </div>
@@ -90,7 +90,7 @@
                 <div class="activity-feed activity-feed-members">
                     <ui:repeat value="#{summary.membersInfo}" var="item">
                         <div class="feed-entry-text">
-                            <h:outputText value="#{item.getDescription(userBean.locale)}" escape="false"/>
+                            <h:outputText value="#{item.getDescription(userBean.bundle)}" escape="false"/>
                         </div>
                     </ui:repeat>
                 </div>
