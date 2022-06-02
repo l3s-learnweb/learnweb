@@ -3,7 +3,8 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:of="http://omnifaces.org/functions">
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg['application.name']}"/>
 
@@ -92,7 +93,7 @@
                                     <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-start">
-                                    <h:outputText value="#{course.registrationDescription}" escape="false"/>
+                                    <h:outputText value="#{lw:msgDef('frontpage.course_description_'.concat(course.registrationWizard), course.registrationDescription)}" escape="false"/>
                                 </div>
                             </div>
                             <div class="course-footer my-3">
@@ -126,7 +127,7 @@
                                     <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-start">
-                                    <h:outputText value="#{course.registrationDescription}" escape="false"/>
+                                    <h:outputText value="#{lw:msgDef('frontpage.course_description_'.concat(course.registrationWizard), course.registrationDescription)}" escape="false"/>
                                 </div>
                             </div>
                             <div class="course-footer my-3">

@@ -3,6 +3,7 @@ package de.l3s.util.bean;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.StringJoiner;
 import java.util.TreeSet;
 
@@ -25,6 +26,15 @@ import de.l3s.learnweb.user.UserDao;
 
 public final class BeanHelper {
     private static final Logger log = LogManager.getLogger(BeanHelper.class);
+
+    public static boolean isMessageExists(String msgKey) {
+        return LanguageBundle.getLanguageBundle(Faces.getLocale()).containsKey(msgKey);
+    }
+
+    public static String getMessageOrDefault(String msgKey, String msgDefault) {
+        ResourceBundle bundle = LanguageBundle.getLanguageBundle(Faces.getLocale());
+        return bundle.containsKey(msgKey) ? bundle.getString(msgKey) : msgDefault;
+    }
 
     public static TreeNode<String> createGroupsUsersTree(final User user, final Locale locale, final boolean includeUsers) {
         TreeNode<String> root = new CheckboxTreeNode<>(LanguageBundle.getLocaleMessage(locale, "msg.courses"), null);

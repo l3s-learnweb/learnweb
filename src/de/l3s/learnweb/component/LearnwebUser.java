@@ -45,7 +45,7 @@ public class LearnwebUser extends UIComponentBase {
             Locale locale = viewRoot.getLocale();
 
             writer.startElement("span", this);
-            writer.write(LanguageBundle.getLanguageBundle(locale).getString("deleted_user"));
+            writer.write(LanguageBundle.getLocaleMessage(locale, "deleted_user"));
             writer.endElement("span");
             return;
         }
