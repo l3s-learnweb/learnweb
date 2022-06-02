@@ -4,7 +4,6 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -148,42 +147,36 @@ public class Image {
         }
 
         int cutOff = (getWidth() - newWidth) / 2;
-        return crop(cutOff, 0, newWidth + cutOff, newHeight).getResized(maxWidth, maxHeight);
+        return crop(cutOff, 0, newWidth, newHeight).getResized(maxWidth, maxHeight);
     }
 
     /**
      * Generate a new Image object cropped to a new size.
      *
-     * @param x1 Starting x-axis position for crop area
-     * @param y1 Starting y-axis position for crop area
-     * @param x2 Ending x-axis position for crop area
-     * @param y2 Ending y-axis position for crop area
+     * @param x Starting x-axis position for crop area
+     * @param y Starting y-axis position for crop area
+     * @param w The new width of the cropped image
+     * @param h The new height of the cropped image
      * @return Image cropped to new dimensions
      */
-    public Image crop(int x1, int y1, int x2, int y2) {
-        if (x1 < 0 || x2 <= x1 || y1 < 0 || y2 <= y1 || x2 > getWidth() || y2 > getHeight()) {
+    public Image crop(int x, int y, int w, int h) {
+        if (x < 0 || y < 0 || w + x > getWidth() || h + y > getHeight()) {
             throw new IllegalArgumentException("invalid crop coordinates");
         }
 
-        int type = img.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : img.getType();
-        int nNewWidth = x2 - x1;
-        int nNewHeight = y2 - y1;
-        BufferedImage cropped = new BufferedImage(nNewWidth, nNewHeight, type);
-
-        Graphics2D g = cropped.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        g.setComposite(AlphaComposite.Src);
-        g.drawImage(img, 0, 0, nNewWidth, nNewHeight, x1, y1, x2, y2, null);
-        g.dispose();
-
+        BufferedImage cropped = img.getSubimage(x, y, w, h);
         return new Image(cropped);
+    }
+
+    public Image getResizedToSquare(int width) {
+        return getResizedToSquare(width, 0);
     }
 
     /**
      * Useful function to crop and resize an image to a square.
      * This is handy for thumbnail generation.
      *
-     * @param width Width of the resulting square
+     * @param targetSize Width of the resulting square
      * @param cropEdgesPct Specifies how much of an edge all around the square to crop,
      * which creates a zoom-in effect in the center of the resulting square. This may
      * be useful, given that when images are reduced to thumbnails, the detail of the
@@ -192,42 +185,44 @@ public class Image {
      * (representing 0% to 50%)
      * @return Image cropped and resized to a square; returns the same image if image is smaller than width parameter
      */
-    public Image getResizedToSquare2(int width, double cropEdgesPct) {
+    public Image getResizedToSquare(int targetSize, double cropEdgesPct) {
         if (cropEdgesPct < 0 || cropEdgesPct > 0.5) {
             throw new IllegalArgumentException("Crop edges pct must be between 0 and 0.5. " + cropEdgesPct + " was supplied.");
         }
-        if (width > getWidth()) {
+
+        if (targetSize > getWidth()) {
             return new Image(img);
         }
 
-        //crop to square first. determine the coordinates.
+        // crop to square first. determine the coordinates.
         int cropMargin = (int) Math.abs(Math.round(((img.getWidth() - img.getHeight()) / 2.0)));
-        int x1 = 0;
-        int y1 = 0;
-        int x2 = getWidth();
-        int y2 = getHeight();
+        int x = 0;
+        int y = 0;
+        int width = getWidth();
+        int height = getHeight();
         if (getWidth() > getHeight()) {
-            x1 = cropMargin;
-            x2 = x1 + y2;
+            x = cropMargin;
+            //noinspection SuspiciousNameCombination
+            width = height;
         } else {
-            y1 = cropMargin;
-            y2 = y1 + x2;
+            y = cropMargin;
+            //noinspection SuspiciousNameCombination
+            height = width;
         }
 
-        //should there be any edge cropping?
+        // should there be any edge cropping?
         if (cropEdgesPct != 0) {
-            int cropEdgeAmt = (int) ((x2 - x1) * cropEdgesPct);
-            x1 += cropEdgeAmt;
-            x2 -= cropEdgeAmt;
-            y1 += cropEdgeAmt;
-            y2 -= cropEdgeAmt;
+            int cropEdgeAmt = (int) (width * cropEdgesPct);
+            x += cropEdgeAmt;
+            y += cropEdgeAmt;
+            width -= cropEdgeAmt;
+            height -= cropEdgeAmt;
         }
 
         // generate the image cropped to a square
-        Image cropped = crop(x1, y1, x2, y2);
-
+        Image cropped = crop(x, y, width, height);
         // now resize. we do crop first then resize to preserve detail
-        Image resized = cropped.getResizedToWidth(width);
+        Image resized = cropped.getResizedToWidth(targetSize);
         cropped.dispose();
 
         return resized;

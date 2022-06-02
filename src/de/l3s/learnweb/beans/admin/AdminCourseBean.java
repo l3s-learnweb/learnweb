@@ -134,8 +134,8 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
         try {
             Image img = new Image(event.getFile().getInputStream());
 
-            File file = new File(File.FileType.COURSE_PICTURE, "group_picture.png", "image/png");
-            Image thumbnail = img.getResizedToSquare2(120, 0.0);
+            File file = new File(File.FileType.COURSE_PICTURE, "course_picture.png", "image/png");
+            Image thumbnail = img.getResizedToSquare(120);
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
 

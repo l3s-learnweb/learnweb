@@ -53,7 +53,7 @@ class ImageTest {
 
     @Test
     void crop() {
-        Image resized = baseImg.crop(100, 100, 200, 200);
+        Image resized = baseImg.crop(100, 100, 100, 100);
         assertEquals(100, resized.getWidth());
         assertEquals(100, resized.getHeight());
     }

@@ -127,7 +127,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
             Image img = new Image(event.getFile().getInputStream());
 
             File file = new File(File.FileType.GROUP_PICTURE, "group_picture.png", "image/png");
-            Image thumbnail = img.getResizedToSquare2(320, 0.0);
+            Image thumbnail = img.getResizedToSquare(320);
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
 
