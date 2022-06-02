@@ -73,10 +73,10 @@ public interface ResourceDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_resource WHERE owner_user_id = ? AND deleted = 0")
     List<Resource> findByOwnerId(int userId);
 
-    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0")
+    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_tag USING (resource_id) WHERE tag_id = ? AND deleted = 0")
     List<Resource> findByTagId(int tagId);
 
-    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0 LIMIT ?")
+    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_tag USING (resource_id) WHERE tag_id = ? AND deleted = 0 LIMIT ?")
     List<Resource> findByTagId(int tagId, int limit);
 
     /**
@@ -86,7 +86,7 @@ public interface ResourceDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM lw_resource WHERE group_id = ? AND url = ? AND deleted = 0 LIMIT 1")
     Optional<Resource> findByGroupIdAndUrl(int groupId, String url);
 
-    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_rating USING ( resource_id ) WHERE user_id = ? AND deleted = 0")
+    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_resource_rating USING (resource_id) WHERE user_id = ? AND deleted = 0")
     List<Resource> findRatedByUsedId(int userId);
 
     @SqlQuery("SELECT * FROM lw_resource r WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?")

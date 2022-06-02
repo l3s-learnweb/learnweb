@@ -117,7 +117,7 @@ public class LogEntry implements Serializable {
 
     private String getCommentText(int commentId, LanguageBundle bundle) {
         Optional<Comment> comment = Learnweb.dao().getCommentDao().findById(commentId);
-        return comment.map(value -> " " + bundle.getFormatted( "with") + " <b>"
+        return comment.map(value -> " " + bundle.getFormatted("with") + " <b>"
             + StringHelper.shortnString(value.getText(), 100) + "</b>").orElse("");
     }
 
