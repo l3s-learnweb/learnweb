@@ -27,16 +27,6 @@
             <h:outputScript name="learnweb/js/layout.js"/>
             <h:outputScript name="learnweb/js/guide.js"/>
 
-            <ui:fragment rendered="#{userBean.eyesTrackingEnabled}">
-                <script>
-                  if (window.self === window.top) {
-                    // JSF is removing async attribute from script tag, therefore we need to use old-style loader
-                    (function(d,s,u,e,n){e=d.createElement(s);
-                      n=d.getElementsByTagName(s)[0];e.async=true;e.src=u;n.parentNode.insertBefore(e, n)
-                    }(document,'script','https://learnweb.l3s.uni-hannover.de/tracker/js/webgazer.js'));
-                  }
-                </script>
-            </ui:fragment>
             <ui:fragment rendered="#{userBean.trackingEnabled}">
                 <script>
                   if (window.self === window.top) {

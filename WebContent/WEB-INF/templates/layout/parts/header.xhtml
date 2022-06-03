@@ -56,11 +56,6 @@
                             <li><a href="#{request.contextPath}/lw/myhome/search_history.jsf" class="dropdown-item">
                                 <i class="fas fa-fw fa-history" aria-hidden="true"></i> #{msg['search_history.title']}
                             </a></li>
-                            <ui:fragment rendered="#{userBean.eyesTrackingEnabled or config.development}">
-                                <li><a href="#{request.contextPath}/lw/calibrate.jsf" class="dropdown-item">
-                                    <i class="fas fa-fw fa-eye" aria-hidden="true"></i> #{msg['calibrate_eyes_tracker']}
-                                </a></li>
-                            </ui:fragment>
                             <li><h:commandLink action="#{loginBean.logout}" styleClass="dropdown-item">
                                 <i class="fas fa-fw fa-sign-out-alt" aria-hidden="true"></i> #{msg.logout}
                             </h:commandLink></li>

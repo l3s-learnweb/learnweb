@@ -503,8 +503,7 @@ public class UserBean implements Serializable {
             return "https://waps.io/open?c=2" +
                 "&u=" + StringHelper.urlEncode(url) +
                 "&i=" + user.getId() +
-                "&t=" + getTrackerApiKey() +
-                "&e=" + isEyesTrackingEnabled();
+                "&t=" + getTrackerApiKey();
         }
     }
 
@@ -530,10 +529,6 @@ public class UserBean implements Serializable {
 
     public boolean isTrackingEnabled() {
         return !getActiveOrganisation().getOption(Option.Privacy_Tracker_disabled);
-    }
-
-    public boolean isEyesTrackingEnabled() {
-        return getActiveOrganisation().getOption(Option.Privacy_Eyes_Tracking);
     }
 
     public boolean isLanguageSwitchEnabled() {
