@@ -29,7 +29,7 @@
                 <f:facet name="header">
                     <div class="d-flex m-0">
                         <div class="me-auto">#{userDetailBean.selectedUser.username}</div>
-                        <p:linkButton href="myhome/profile.jsf?user_id=#{userDetailBean.userId}" value="#{msg.edit}" styleClass="ui-button-warning"
+                        <p:linkButton href="myhome/profile.jsf?user_id=#{userDetailBean.selectedUser.id}" value="#{msg.edit}" styleClass="ui-button-warning"
                                 rendered="#{userDetailBean.selectedUser eq userBean.user or userBean.moderator}" />
                     </div>
                 </f:facet>
