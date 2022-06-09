@@ -42,7 +42,7 @@ class LogDaoTest {
     @Test
     void findByUserId() {
         List<Integer> actions = Arrays.asList(7, 6, 29, 35);
-        List<LogEntry> retrieved = logDao.findByUserId(1, actions, 10);
+        List<LogEntry> retrieved = logDao.findPublicByUserId(1, actions, 10);
         assertEquals(10, retrieved.size());
         assertEquals("", retrieved.get(0).getParams());
     }
