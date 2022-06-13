@@ -17,13 +17,13 @@
         <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
         <maven.compiler.release>17</maven.compiler.release>
-        <maven.dependency.myfaces.version>3.0.1</maven.dependency.myfaces.version>
+        <maven.dependency.myfaces.version>3.0.2</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.8.2</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.29.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>8.5.11</maven.dependency.flyway.version>
+        <maven.dependency.jdbi3.version>3.30.0</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>8.5.12</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.17.2</maven.dependency.log4j.version>
         <maven.dependency.junit.version>5.8.2</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>4.6.0</maven.dependency.mockito.version>
+        <maven.dependency.mockito.version>4.6.1</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.npm.install.phase>prepare-package</project.npm.install.phase>
@@ -127,7 +127,7 @@
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
             <artifactId>owasp-java-html-sanitizer</artifactId>
-            <version>20211018.2</version>
+            <version>20220608.1</version>
         </dependency>
 
         <!-- ################ Apache commons ################ -->

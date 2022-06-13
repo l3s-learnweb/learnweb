@@ -15,8 +15,8 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: de.l3s.interweb:interwebj-client:3.5.0" />
-          <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-api:3.0.1" />
-          <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-impl:3.0.1" />
+          <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-api:3.0.2" />
+          <element id="library" level="project" name="Maven: org.apache.myfaces.core:myfaces-impl:3.0.2" />
           <element id="library" level="project" name="Maven: commons-beanutils:commons-beanutils:1.9.4" />
           <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.2" />
           <element id="library" level="project" name="Maven: commons-digester:commons-digester:1.8" />
@@ -41,7 +41,7 @@
           <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:5.0.3" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-compress:1.21" />
           <element id="library" level="project" name="Maven: com.github.virtuald:curvesapi:1.07" />
-          <element id="library" level="project" name="Maven: com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20211018.2" />
+          <element id="library" level="project" name="Maven: com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20220608.1" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.12.0" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-collections4:4.4" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-csv:1.9.0" />
@@ -59,11 +59,11 @@
           <element id="library" level="project" name="Maven: org.mariadb.jdbc:mariadb-java-client:3.0.5" />
           <element id="library" level="project" name="Maven: com.zaxxer:HikariCP:5.0.1" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:2.0.0-alpha1" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.29.0" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.30.0" />
           <element id="library" level="project" name="Maven: io.leangen.geantyref:geantyref:1.3.13" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.29.0" />
-          <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:8.5.11" />
-          <element id="library" level="project" name="Maven: org.flywaydb:flyway-mysql:8.5.11" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.30.0" />
+          <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:8.5.12" />
+          <element id="library" level="project" name="Maven: org.flywaydb:flyway-mysql:8.5.12" />
           <element id="library" level="project" name="Maven: org.apache.solr:solr-solrj:9.0.0" />
           <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-client:9.4.44.v20210927" />
           <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-common:9.4.44.v20210927" />
