@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.14.14</version>
+    <version>3.14.15</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -20,7 +20,7 @@
         <maven.dependency.myfaces.version>3.0.2</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.8.2</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.30.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>8.5.12</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>8.5.13</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.17.2</maven.dependency.log4j.version>
         <maven.dependency.junit.version>5.8.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>4.6.1</maven.dependency.mockito.version>
@@ -349,7 +349,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.1.212</version>
+            <version>2.1.214</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -417,7 +417,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.7.0</version>
+                        <version>4.7.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
