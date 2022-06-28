@@ -7,13 +7,13 @@
 <!--@elvariable id="view" type="de.l3s.learnweb.group.GroupResourcesBean.ResourceView"-->
 <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
 <!--@elvariable id="canAddResources" type="java.lang.Boolean"-->
-<!--@elvariable id="canMoveResources" type="java.lang.Boolean"-->
+<!--@elvariable id="canOrganizeResources" type="java.lang.Boolean"-->
 <!--@elvariable id="query" type="java.lang.String"-->
 
 <h:panelGroup id="resourcesView" layout="block" styleClass="res-container res-contextmenu flex-grow-1"
               pt:data-canSelectResources="true"
               pt:data-canAddResources="#{canAddResources}"
-              pt:data-canMoveResources="#{canMoveResources}">
+              pt:data-canOrganizeResources="#{canOrganizeResources}">
 
     <h:panelGroup styleClass="mx-3" layout="block" rendered="#{query != null}">
         <h:outputText value="#{msg.search_results}" styleClass="text-muted"/>

@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -337,6 +338,10 @@ public class Resource extends AbstractResource implements Serializable {
         }
 
         return Learnweb.dao().getResourceDao().findById(originalResourceId).map(Resource::getGroup).orElse(null);
+    }
+
+    public Optional<Resource> getOriginalResource() {
+        return Learnweb.dao().getResourceDao().findById(originalResourceId);
     }
 
     public int getFolderId() {
@@ -1076,46 +1081,18 @@ public class Resource extends AbstractResource implements Serializable {
             return false;
         }
 
-        //admins, moderators and resource owners can always view the resource
-        if (user != null && (user.isModerator() || getUserId() == user.getId())) {
+        if (super.canViewResource(user)) {
             return true;
         }
 
-        switch (policyView) {
-            case WORLD_READABLE:
-                return true;
-            case LEARNWEB_READABLE:
-                return user != null;
-            case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) can view the resource
-                return Learnweb.dao().getResourceDao().findById(originalResourceId).map(resource -> resource.getUserId() == user.getId()).orElse(false);
-            case DEFAULT_RIGHTS: // if the resource is part of the group the group permissions are used
-                Group group = getGroup();
-                if (group != null) {
-                    return group.canViewResources(user);
-                }
-                return false;
-            default:
-                return false;
-        }
-    }
-
-    public boolean canModerateResource(User user) {
-        if (user == null || isDeleted()) {
-            return false;
-        }
-
-        if (user.isAdmin()) {
-            return true;
-        }
-
-        if (user.isModerator()) {
-            if (getGroupId() == 0) { // check permission for a private resource
-                return user.canModerateUser(getUser());
-            } else { // check group access permissions
-                return getGroup().getCourse().isModerator(user);
-            }
-        }
-        return false;
+        return switch (policyView) {
+            case WORLD_READABLE -> true;
+            case LEARNWEB_READABLE -> user != null;
+            // the submitter of the resource (stored in the original resource id) can view the resource
+            case SUBMISSION_READABLE -> user != null && getOriginalResource().map(resource -> resource.getUserId() == user.getId()).orElse(false);
+            // the default rights already applied in the super class
+            case DEFAULT_RIGHTS -> false;
+        };
     }
 
     public boolean canAnnotateResource(User user) {
@@ -1123,14 +1100,17 @@ public class Resource extends AbstractResource implements Serializable {
             return false;
         }
 
-        Group group = getGroup();
-
-        if (group != null) {
-            return group.canAnnotateResources(user);
+        if (canModerateResource(user)) {
+            return true;
         }
 
-        if (user.isAdmin() || ownerUserId == user.getId()) {
-            return true;
+        if (getGroup() != null) {
+            return switch (getGroup().getPolicyAnnotate()) {
+                case ALL_LEARNWEB_USERS -> true;
+                case COURSE_MEMBERS -> getGroup().getCourse().isMember(user) || getGroup().isMember(user);
+                case GROUP_MEMBERS -> getGroup().isMember(user);
+                case GROUP_LEADER -> getGroup().isLeader(user);
+            };
         }
 
         return false;

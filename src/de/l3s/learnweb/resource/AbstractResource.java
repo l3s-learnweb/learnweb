@@ -42,31 +42,68 @@ public abstract class AbstractResource implements HasId, Deletable {
 
     public abstract String getPrettyPath();
 
-    public abstract boolean canViewResource(User user);
-
     public abstract void moveTo(int newGroupId, int newFolderId);
+
+    public boolean canModerateResource(User user) {
+        if (user == null || isDeleted()) {
+            return false;
+        }
+
+        // resource owners and admins can always access the resource
+        if (getUserId() == user.getId() || user.isAdmin()) {
+            return true;
+        }
+
+        if (getGroupId() != 0 && user.isModerator() && getGroup().getCourse().isModerator(user)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean canViewResource(User user) {
+        if (user == null) {
+            return false;
+        }
+
+        if (canModerateResource(user)) {
+            return true;
+        }
+
+        if (getGroup() != null) {
+            return switch (getGroup().getPolicyView()) {
+                case ALL_LEARNWEB_USERS -> true;
+                case COURSE_MEMBERS -> getGroup().getCourse().isMember(user) || getGroup().isMember(user);
+                case GROUP_MEMBERS -> getGroup().isMember(user);
+                case GROUP_LEADER -> getGroup().isLeader(user);
+            };
+        }
+
+        return false;
+    }
 
     public boolean canEditResource(User user) {
         if (user == null) {
             return false; // not logged in
         }
 
-        if (getGroup() != null) {
-            return getGroup().canEditResource(user, this);
+        if (canModerateResource(user)) {
+            return true;
         }
-        return user.isAdmin() || getUserId() == user.getId();
+
+        if (getGroup() != null) {
+            return switch (getGroup().getPolicyEdit()) {
+                case GROUP_MEMBERS -> getGroup().isMember(user);
+                case GROUP_LEADER -> getGroup().isLeader(user);
+                case GROUP_LEADER_AND_FILE_OWNER -> getGroup().isLeader(user) || getUserId() == user.getId();
+            };
+        }
+
+        return false;
     }
 
     public boolean canDeleteResource(User user) {
-        if (user == null) {
-            return false; // not logged in
-        }
-
-        // if the resource is part of a group the group policy has priority
-        if (getGroup() != null) {
-            return getGroup().canDeleteResource(user, this);
-        }
-        return user.isAdmin() || getUserId() == user.getId();
+        return canEditResource(user); // currently, they share the same policy
     }
 
     public boolean lockResource(User user) {

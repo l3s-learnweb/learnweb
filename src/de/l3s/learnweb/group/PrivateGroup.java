@@ -56,7 +56,7 @@ public class PrivateGroup extends Group {
     }
 
     @Override
-    public boolean canViewResources(final User user) {
+    public boolean canViewGroup(final User user) {
         return isLeader(user);
     }
 

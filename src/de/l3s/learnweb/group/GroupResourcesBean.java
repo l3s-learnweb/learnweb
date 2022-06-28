@@ -150,7 +150,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         if (groupId != 0) {
             group = groupDao.findByIdOrElseThrow(groupId);
 
-            BeanAssert.hasPermission(group.canViewResources(getUser()));
+            BeanAssert.hasPermission(group.canViewGroup(getUser()));
             group.setLastVisit(user);
         } else {
             group = new PrivateGroup(getLocaleMessage("myPrivateResources"), getUser());
@@ -357,20 +357,14 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     }
 
     private void copyResources(final ResourceUpdateBatch items, final Group targetGroup, final Folder targetFolder, boolean isRecursion) {
-        if (targetGroup == null) {
-            throw new IllegalArgumentException("Target group does not exist!");
-        }
-        if (!group.canViewResources(getUser())) {
-            throw new IllegalAccessError("Not allowed to copy the resources!");
-        }
-        if (!targetGroup.canAddResources(getUser())) {
-            throw new IllegalAccessError("Not allowed to add resources to target group!");
-        }
+        BeanAssert.notDeleted(targetGroup, "Target group does not exist!");
+        BeanAssert.hasPermission(targetGroup.canAddResources(getUser()), "You are not allowed to add resources to the target group!");
 
         int targetGroupId = HasId.getIdOrDefault(targetGroup, 0);
         int targetFolderId = HasId.getIdOrDefault(targetFolder, 0);
 
         for (Resource resource : items.getResources()) {
+            BeanAssert.hasPermission(resource.canViewResource(getUser()), "You don't have permission to view some of the resources!");
             Resource newResource = resource.cloneResource();
             newResource.setGroupId(targetGroupId);
             newResource.setFolderId(targetFolderId);
@@ -385,6 +379,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         }
 
         for (Folder folder : items.getFolders()) {
+            BeanAssert.hasPermission(folder.canViewResource(getUser()), "You don't have permission to view some of the resources!");
             Folder newFolder = new Folder(folder);
             newFolder.setGroupId(targetGroupId);
             newFolder.setParentFolderId(targetFolderId);

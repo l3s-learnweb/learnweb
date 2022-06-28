@@ -18,7 +18,6 @@ import org.primefaces.model.TreeNode;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
-import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
@@ -26,10 +25,11 @@ import de.l3s.learnweb.resource.ResourceContainer;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 import de.l3s.util.ProfileImageHelper;
 
-public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer {
+public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer, Deletable {
     @Serial
     private static final long serialVersionUID = -6209978709028007958L;
 
@@ -136,6 +136,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.id = id;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }
@@ -463,28 +464,8 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     /**
      * Used for Drag&Drop functionality, using which it is possible to move resource between folders and groups.
      */
-    public boolean canMoveResources(User user) {
+    public boolean canOrganizeResources(User user) {
         return canAddResources(user);
-    }
-
-    public boolean canDeleteResource(User user, AbstractResource resource) {
-        return canEditResource(user, resource); // currently, they share the same policy
-    }
-
-    public boolean canEditResource(User user, AbstractResource resource) {
-        if (user == null || resource == null) {
-            return false;
-        }
-
-        if (getCourse().isModerator(user)) {
-            return true;
-        }
-
-        return switch (policyEdit) {
-            case GROUP_MEMBERS -> isMember(user);
-            case GROUP_LEADER -> isLeader(user);
-            case GROUP_LEADER_AND_FILE_OWNER -> isLeader(user) || resource.getUserId() == user.getId();
-        };
     }
 
     public boolean canDeleteGroup(User user) {
@@ -516,39 +497,20 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         };
     }
 
-    public boolean canViewResources(User user) {
+    public boolean canViewGroup(User user) {
         if (user == null) {
             return false;
         }
 
-        if (user.isAdmin() || getCourse().isModerator(user)) {
+        if (user.isAdmin() || (user.isModerator() && getCourse().isModerator(user))) {
             return true;
         }
 
         return switch (policyView) {
             case ALL_LEARNWEB_USERS -> true;
             case COURSE_MEMBERS -> getCourse().isMember(user) || isMember(user);
-            case GROUP_MEMBERS -> isMember(user);
-            case GROUP_LEADER -> isLeader(user);
+            case GROUP_MEMBERS, GROUP_LEADER -> isMember(user);
         };
-    }
-
-    public boolean canAnnotateResources(User user) {
-        if (user == null) {
-            return false;
-        }
-
-        if (user.isAdmin() || getCourse().isModerator(user)) {
-            return true;
-        }
-
-        return switch (policyAnnotate) {
-            case ALL_LEARNWEB_USERS -> true;
-            case COURSE_MEMBERS -> getCourse().isMember(user) || isMember(user);
-            case GROUP_MEMBERS -> isMember(user);
-            case GROUP_LEADER -> isLeader(user);
-        };
-
     }
 
     public int getMaxMemberCount() {
