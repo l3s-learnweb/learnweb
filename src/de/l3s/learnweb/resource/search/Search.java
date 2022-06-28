@@ -73,7 +73,7 @@ public class Search implements Serializable {
         this.searchFilters = sf;
         this.userId = (null == user) ? 0 : user.getId();
         this.user = user;
-        this.solrSearch = new SolrSearch(query, user);
+        this.solrSearch = new SolrSearch(query, user, false);
 
         if (query.startsWith("source:") || query.startsWith("groups:") || query.startsWith("title:")) {
             hasMoreInterwebResults = false;

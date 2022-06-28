@@ -212,7 +212,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     }
 
     private SolrPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws IOException, SolrServerException {
-        SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
+        boolean onlyOwned = group.getPolicyView() == Group.PolicyView.GROUP_LEADER && !group.isLeader(user);
+        SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user, onlyOwned);
         solrSearch.setFilterGroups(groupId);
         solrSearch.setFilterFolder(folderId, !StringUtils.isEmpty(query));
         solrSearch.setResultsPerPage(PAGE_SIZE);
