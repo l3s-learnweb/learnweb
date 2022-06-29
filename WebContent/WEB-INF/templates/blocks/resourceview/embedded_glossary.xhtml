@@ -210,7 +210,8 @@
                     <p:fileUpload listener="#{glossaryBean.handleFileUpload}" mode="simple" skinSimple="true" multiple="true" auto="true" update=":edit_pictures"/>
                 </div>
 
-                <p:carousel value="#{glossaryBean.formEntry.pictures}" var="pic" numVisible="3" numScroll="3">
+                <p:carousel value="#{glossaryBean.formEntry.pictures}" var="pic" rendered="#{not empty glossaryBean.formEntry.pictures}"
+                            numVisible="#{glossaryBean.formEntry.pictures > 3 ? 3 : glossaryBean.formEntry.pictures}">
                     <div class="d-flex flex-column align-items-center">
                         <img src="#{pic.getResourceUrl(glossaryBean.glossaryResource.id)}" class="d-block w-50 rounded" alt="entry picture"/>
 

@@ -18,8 +18,8 @@
                 </f:facet>
 
                 <div class="activity-feed-slider activity-feed-added-resources">
-                    <p:carousel value="#{summary.addedResources}" var="item" circular="false" numVisible="4" numScroll="#{summary.addedResources.size() / 4}">
-                        <h:outputLink styleClass="text-decoration-none d-block mx-2" value="resource.jsf" pt:data-resview="default">
+                    <p:carousel value="#{summary.addedResources}" var="item" circular="false" numVisible="#{summary.addedResources.size() > 4 ? 4 : summary.addedResources.size()}">
+                        <h:outputLink styleClass="text-decoration-none d-block mx-2 mw-r15" value="resource.jsf" pt:data-resview="default">
                             <f:param name="resource_id" value="#{item.resource.id}"/>
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
@@ -53,8 +53,8 @@
                 </f:facet>
 
                 <div class="activity-feed-slider activity-feed-updated-resources">
-                    <p:carousel value="#{summary.updatedResources.keySet()}" var="res" circular="true" numVisible="4" numScroll="#{summary.updatedResources.size() / 4}">
-                        <h:outputLink styleClass="text-decoration-none d-block mx-2" value="resource.jsf" pt:data-resview="default">
+                    <p:carousel value="#{summary.updatedResources.keySet()}" var="res" circular="true" numVisible="#{summary.addedResources.size() > 4 ? 4 : summary.addedResources.size()}">
+                        <h:outputLink styleClass="text-decoration-none d-block mx-2 mw-r15" value="resource.jsf" pt:data-resview="default">
                             <f:param name="resource_id" value="#{res.id}"/>
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
