@@ -55,7 +55,7 @@ import de.l3s.learnweb.web.BounceDao;
 import de.l3s.learnweb.web.RequestDao;
 
 /**
- * An important class with Bean providers, following Jakarta EE CDI specifications.
+ * An important class with Bean providers, following Jakarta CDI specifications.
  *
  * <h3> Annotation used in this class: </h3>
  * <ul>
