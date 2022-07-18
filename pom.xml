@@ -19,8 +19,8 @@
         <maven.compiler.release>17</maven.compiler.release>
         <maven.dependency.myfaces.version>3.0.2</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.8.2</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.30.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.0.0</maven.dependency.flyway.version>
+        <maven.dependency.jdbi3.version>3.31.0</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>9.0.1</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.18.0</maven.dependency.log4j.version>
         <maven.dependency.junit.version>5.8.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>4.6.1</maven.dependency.mockito.version>
@@ -412,7 +412,7 @@
             <!-- Specifies target Java version for builds -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.0</version>
+                <version>3.10.1</version>
                 <configuration>
                     <release>${maven.compiler.release}</release>
                     <compilerArgs>
@@ -422,7 +422,6 @@
             </plugin>
             <!-- Runs linter on Java sources to check code style -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.1.2</version>
                 <configuration>
@@ -444,7 +443,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.5.3.0</version>
+                <version>4.7.1.0</version>
                 <configuration>
                     <excludeFilterFile>.mvn/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -459,7 +458,7 @@
             <!-- Runs tests before build -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.0.0-M7</version>
             </plugin>
             <!-- Specifies WebARchive configuration -->
             <plugin>
@@ -487,9 +486,9 @@
             </plugin>
             <!-- Builds scss styles as part of maven build process -->
             <plugin>
-                <artifactId>exec-maven-plugin</artifactId>
                 <groupId>org.codehaus.mojo</groupId>
-                <version>3.0.0</version>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>npm install</id>
@@ -540,6 +539,7 @@
             <!-- Set the required class in properties, but avoid committing this change -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.4.1</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -555,13 +555,12 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.9.0</version>
+                <version>2.11.0</version>
             </plugin>
             <!-- Provides commands to check dependency tree -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
             </plugin>
             <!-- Provides commands to check for duplicate classes across dependencies -->
             <plugin>
@@ -571,9 +570,8 @@
             </plugin>
             <!-- A maven component that enforces minimum Java and Maven versions -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>

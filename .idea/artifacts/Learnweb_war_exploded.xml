@@ -60,11 +60,11 @@
           <element id="library" level="project" name="Maven: org.mariadb.jdbc:mariadb-java-client:3.0.6" />
           <element id="library" level="project" name="Maven: com.zaxxer:HikariCP:5.0.1" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:2.0.0-alpha1" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.30.0" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-core:3.31.0" />
           <element id="library" level="project" name="Maven: io.leangen.geantyref:geantyref:1.3.13" />
-          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.30.0" />
-          <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:9.0.0" />
-          <element id="library" level="project" name="Maven: org.flywaydb:flyway-mysql:9.0.0" />
+          <element id="library" level="project" name="Maven: org.jdbi:jdbi3-sqlobject:3.31.0" />
+          <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:9.0.1" />
+          <element id="library" level="project" name="Maven: org.flywaydb:flyway-mysql:9.0.1" />
           <element id="library" level="project" name="Maven: org.apache.solr:solr-solrj:9.0.0" />
           <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-client:9.4.44.v20210927" />
           <element id="library" level="project" name="Maven: org.eclipse.jetty.http2:http2-common:9.4.44.v20210927" />
@@ -88,7 +88,6 @@
           <element id="library" level="project" name="Maven: io.netty:netty-transport-native-epoll:4.1.59.Final" />
           <element id="library" level="project" name="Maven: io.netty:netty-transport-native-unix-common:4.1.59.Final" />
           <element id="library" level="project" name="Maven: org.apache.zookeeper:zookeeper-jute:3.7.0" />
-          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.36" />
           <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-alpn-java-client:9.4.44.v20210927" />
           <element id="library" level="project" name="Maven: org.tuckey:urlrewritefilter:jakarta:4.0.4" />
           <element id="library" level="project" name="Maven: it.sauronsoftware.cron4j:cron4j:2.2.5" />
