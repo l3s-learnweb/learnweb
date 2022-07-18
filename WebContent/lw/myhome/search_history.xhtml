@@ -97,9 +97,9 @@
 										</div>
 
 										<div class="session-time">
-											<h:outputFormat value="#{msg.format_date_and_time_between}" escape="false">
-												<f:param value="#{ss.startTimestamp}"/>
-												<f:param value="#{ss.endTimestamp}"/>
+											<h:outputFormat id="of1" value="#{msg.format_date_and_time_between}" escape="false">
+												<f:param value="#{lw:date(ss.startTimestamp)}"/>
+												<f:param value="#{lw:date(ss.endTimestamp)}"/>
 											</h:outputFormat>
 										</div>
 										<h:outputText value="#{msg.by}: #{ss.user.username}" rendered="#{searchHistoryBean.showGroupHistory}" styleClass="fw-bold"/>

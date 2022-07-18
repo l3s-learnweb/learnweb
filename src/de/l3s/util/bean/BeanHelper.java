@@ -1,8 +1,11 @@
 package de.l3s.util.bean;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -121,6 +124,11 @@ public final class BeanHelper {
             }
         }
         return selectedGroups;
+    }
+
+    @SuppressWarnings("UseOfObsoleteDateTimeApi")
+    public static Date date(final LocalDateTime localDateTime) {
+        return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
     }
 
     /**
