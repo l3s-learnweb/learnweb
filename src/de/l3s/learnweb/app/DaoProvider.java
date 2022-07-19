@@ -185,7 +185,7 @@ public class DaoProvider {
         }
     }
 
-    public static HikariDataSource createDataSource(final ConfigProvider configProvider) {
+    private static HikariDataSource createDataSource(final ConfigProvider configProvider) {
         HikariDataSource ds = new HikariDataSource();
         // Configuration docs https://github.com/brettwooldridge/HikariCP
         ds.setDriverClassName("org.mariadb.jdbc.Driver");

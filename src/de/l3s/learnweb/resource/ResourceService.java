@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  *
  * Used in database ENUMs: lw_resource.source
  */
-public enum ResourceService { // when adding more services remember to update the service column of learnweb_large.sl_query
+public enum ResourceService { // when adding more services remember to update the `service` columns (ENUM values)
     bing("Bing"), // Does not support filtering by date
     flickr("Flickr"),
     giphy("GIPHY"), // The uppercase name is required
