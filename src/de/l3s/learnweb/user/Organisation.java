@@ -244,6 +244,16 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadata.getOptions().add("Young learners");
             metadata.getOptions().add("Pre-school");
             metadataFields.add(metadata);
+        } else if (id == 1604) { // SoMeCliCS
+            metadataFields.add(new MetadataField("title", "title", MetadataType.INPUT_TEXT, true));
+            metadataFields.add(new MetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
+
+            metadata = new MetadataField("someclics_relation", "Climate change relation", MetadataType.ONE_MENU);
+            metadata.setInfo("How the resource related to the climate change?");
+            metadata.getOptions().add("Acceptance");
+            metadata.getOptions().add("Denial");
+            metadata.getOptions().add("Both");
+            metadataFields.add(metadata);
         } else {
             metadataFields.add(new MetadataField("title", "title", MetadataType.INPUT_TEXT, true));
             metadataFields.add(new MetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
