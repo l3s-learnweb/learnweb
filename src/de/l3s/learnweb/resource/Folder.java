@@ -347,16 +347,6 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     }
 
     @Override
-    public boolean canViewResource(User user) {
-        Group group = getGroup();
-        if (group != null) {
-            return group.canViewResources(user);
-        }
-
-        return false;
-    }
-
-    @Override
     public String toString() {
         return this.title;
     }

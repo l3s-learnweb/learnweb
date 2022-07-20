@@ -41,7 +41,7 @@ public class LearnwebTimeAgo extends UIComponentBase {
         writer.startElement("span", this);
         writer.writeAttribute("title", formatter.localizedBy(locale).withZone(timeZone).format(dateTime), null);
         if (styleClass != null) {
-            writer.writeAttribute("styleClass", styleClass, "styleClass");
+            writer.writeAttribute("class", styleClass, "styleClass");
         }
         writer.write(prettyTime.format(dateTime));
         writer.endElement("span");

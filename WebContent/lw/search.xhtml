@@ -33,7 +33,7 @@
                          update=":copy_resource_dialog" onstart="$.fancybox.close();" oncomplete="PF('copyResourceDialog').show();"/>
     </h:form>
 
-    <h:panelGroup id="search_header_panel" layout="block" styleClass="bg-gray200">
+    <h:panelGroup id="search_header_panel" layout="block" styleClass="bg-light">
         <ul class="res-filters">
             <li class="filter #{searchBean.searchMode =='text' ? 'active':''}">
                 <h:link outcome="search">
@@ -64,7 +64,7 @@
             </li>
         </ul>
 
-        <h:form id="search_source_carousel" styleClass="bg-gray400 p-2">
+        <h:form id="search_source_carousel" styleClass="bg-gray400 p-2" rendered="#{searchBean.showAlternativeSources}">
             <p:outputPanel styleClass="text-center mb-2" layout="block" rendered="#{searchBean.searchService != null}">
                 <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1 ? msg.search_groups_header_empty : msg.search_groups_header}" escape="false">
                     <f:param value="#{searchBean.totalFromCurrentService}"/>
@@ -115,7 +115,7 @@
     </h:panelGroup>
 
     <div class="bg-white">
-        <h:form id="resourcesFilters" styleClass="bg-gray200">
+        <h:form id="resourcesFilters" styleClass="bg-light">
             <ul class="res-filters">
                 <ui:repeat value="#{searchBean.availableFilters}" var="filter">
                     <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
@@ -164,10 +164,10 @@
             <script>PrimeFaces.cw('LimitedList', 'me', { id: 'learnweb' });</script>
         </h:form>
 
-        <script type="text/javascript">
+        <h:outputScript>
             const view = '#{searchBean.view}';
             const userId = '#{userBean.user.id}';
-        </script>
+        </h:outputScript>
 
         <h:form prependId="false">
             <div id="searchResults" class="p-2 search-#{searchBean.view}">
@@ -199,7 +199,7 @@
 
         <p:dialog header="#{msg.options}" widgetVar="copyResourceDialog" draggable="true" resizable="false" id="copy_resource_dialog" modal="true">
             <h:form rendered="#{userBean.loggedIn and searchBean.selectedResource ne null}">
-                <div class="fg-grid mb-3">
+                <div class="fields-grid">
                     <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
                         <ui:param name="res" value="#{searchBean.selectedResource.resource}"/>
                     </ui:decorate>
@@ -214,7 +214,7 @@
                                 <h:outputText id="group" value="#{node.title}"/>
                             </p:treeNode>
 
-                            <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                            <p:treeNode type="folder" expandedIcon="fas fa-folder-open" collapsedIcon="fas fa-folder">
                                 <h:outputText value="#{node.title}"/>
                             </p:treeNode>
                         </p:tree>
@@ -224,9 +224,9 @@
 
                 <div class="text-end mt-3">
                     <p:defaultCommand target="addSelectedResourceButton"/>
-                    <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('copyResourceDialog').hide()"/>
+                    <p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('copyResourceDialog').hide()"/>
                     <p:commandButton id="addSelectedResourceButton" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"
-                                     widgetVar="add_button" onclick="PF('add_button').disable()" oncomplete="PF('copyResourceDialog').hide()"/>
+                                     widgetVar="add_button" onclick="PF('add_button').disable()" oncomplete="if(!args.validationFailed){PF('copyResourceDialog').hide()}"/>
                 </div>
             </h:form>
         </p:dialog>

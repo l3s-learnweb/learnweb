@@ -25,7 +25,7 @@
                 <h:outputText value="#{msg.please_wait}"/>
             </p:blockUI>
 
-            <p:tree value="#{adminTextAnalysisBean.treeRoot}" var="node" required="true" styleClass="ui-tree-borderless"
+            <p:tree value="#{adminTextAnalysisBean.treeRoot}" var="node" required="true"
                     selectionMode="checkbox" selection="#{adminTextAnalysisBean.selectedNodes}">
                 <p:treeNode>
                     <h:outputText value="#{node.title}"/>

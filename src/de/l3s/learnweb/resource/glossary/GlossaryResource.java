@@ -33,12 +33,17 @@ public class GlossaryResource extends Resource {
     /**
      * copy constructor.
      */
-    public GlossaryResource(GlossaryResource other) {
+    protected GlossaryResource(GlossaryResource other) {
         super(other);
         setAllowedLanguages(new ArrayList<>(other.allowedLanguages));
         setClonedButNotPersisted(true);
 
         other.getEntries().forEach(entry -> this.entries.add(new GlossaryEntry(entry)));
+    }
+
+    @Override
+    public GlossaryResource cloneResource() {
+        return new GlossaryResource(this);
     }
 
     public List<Locale> getAllowedLanguages() {

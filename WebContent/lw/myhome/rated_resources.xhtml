@@ -32,7 +32,7 @@
 					</p:column>
 
 					<p:column headerText="#{msg.description}">
-						<h:outputText value="#{res.descriptionHTML}" escape="false"/>
+						<h:outputText value="#{lw:htmlBreak(res.description)}" escape="false"/>
 					</p:column>
 
 					<p:column headerText="#{msg.type}">

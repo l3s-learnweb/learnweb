@@ -33,6 +33,14 @@ public final class StringHelper {
         return NEW_LINE_PATTERN.matcher(str).replaceAll(" ");
     }
 
+    public static String replaceNewLineWithBreak(final String str) {
+        if (str == null) {
+            return null;
+        }
+
+        return str.replace("\n", "<br/>");
+    }
+
     public static String trimNotAlphabetical(final String str) {
         Matcher matcher = NOT_ALPHABETICAL_PATTERN.matcher(str);
         if (matcher.lookingAt()) {
@@ -244,9 +252,9 @@ public final class StringHelper {
     /**
      * Like Jsoup.clean but it preserves line breaks and spacing.
      *
-     * @param whitelist for example: Safelist.none()
+     * @param safelist for example: Safelist.none()
      */
-    public static String clean(String html, Safelist whitelist) {
+    public static String clean(String html, Safelist safelist) {
         if (html == null) {
             return null;
         }
@@ -255,7 +263,7 @@ public final class StringHelper {
         document.select("br").append("\\n");
         document.select("p").prepend("\\n\\n");
         String s = document.html().replaceAll("\\\\n", "\n");
-        return Jsoup.clean(s, "", whitelist, new Document.OutputSettings().prettyPrint(false));
+        return Jsoup.clean(s, "", safelist, new Document.OutputSettings().prettyPrint(false));
     }
 
     /**

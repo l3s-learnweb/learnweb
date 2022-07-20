@@ -88,11 +88,11 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         writer.writeAttribute("class", LearnwebMenu.MENUITEM_LINK_CLASS, null);
         writer.writeAttribute("role", "tab", null);
         writer.writeAttribute("tabindex", "0", null);
-        if (!(submenu instanceof ActiveSubMenu) || submenu.isDisabled()) {
+        if (!(submenu instanceof ActiveSubmenu) || submenu.isDisabled()) {
             writer.writeAttribute("href", "#", null);
             writer.writeAttribute("onclick", "return false;", null);
         } else {
-            setAnchorAttributes(context, (ActiveSubMenu) submenu);
+            setAnchorAttributes(context, (ActiveSubmenu) submenu);
         }
 
         //icon
@@ -146,7 +146,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         writer.endElement("span");
     }
 
-    private void setAnchorAttributes(FacesContext context, ActiveSubMenu activeSubMenu) throws IOException {
+    private void setAnchorAttributes(FacesContext context, ActiveSubmenu activeSubMenu) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
 
         if (activeSubMenu.getHref() != null || activeSubMenu.getOutcome() != null) { // GET
@@ -184,8 +184,8 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         writer.startElement("a", null);
         writer.writeAttribute("class", linkClass, null);
 
-        if ((submenu instanceof ActiveSubMenu) && !submenu.isDisabled()) {
-            setAnchorAttributes(context, (ActiveSubMenu) submenu);
+        if ((submenu instanceof ActiveSubmenu) && !submenu.isDisabled()) {
+            setAnchorAttributes(context, (ActiveSubmenu) submenu);
         }
 
         //toggle icon

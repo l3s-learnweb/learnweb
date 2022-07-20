@@ -54,11 +54,11 @@
     
 	<h:form id="form" rendered="#{surveyBean.resource != null}">
 		<p:panel>
-			<h:panelGroup  rendered="#{surveyBean.formEnabled}">
+			<h:panelGroup rendered="#{surveyBean.formEnabled}">
 				<h:panelGroup id="questions">
 					<h2>#{surveyBean.resource.title}</h2>
 					<c:forEach var="question" items="#{surveyBean.resource.questions}">
-						<div class="form-group">
+						<div class="field">
 							<div class="d-flex flex-nowrap">
 								<ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
 									<ui:param name="question" value="#{question}"/>
@@ -81,7 +81,7 @@
 						</p:commandButton>
 					</div>
 					<div>
-						<p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
+						<p:commandButton value="#{msg.Print}" styleClass="ui-button-warning d-print-none">
 							<p:printer target="questions"/>
 						</p:commandButton>
 					</div>

@@ -30,10 +30,10 @@ import de.l3s.util.SqlHelper;
 @RegisterRowMapper(GlossaryTermDao.GlossaryTermMapper.class)
 public interface GlossaryEntryDao extends SqlObject, Serializable {
 
-    @SqlQuery("SELECT * FROM lw_glossary_entry WHERE entry_id = ?")
+    @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_glossary_entry_file f WHERE e.entry_id = f.entry_id) as pictures_count FROM lw_glossary_entry e WHERE entry_id = ?")
     Optional<GlossaryEntry> findById(int entryId);
 
-    @SqlQuery("SELECT * FROM lw_glossary_entry e JOIN lw_glossary_term t USING (entry_id) WHERE e.resource_id = ? and e.deleted = 0")
+    @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_glossary_entry_file f WHERE e.entry_id = f.entry_id) as pictures_count FROM lw_glossary_entry e JOIN lw_glossary_term t USING (entry_id) WHERE e.resource_id = ? and e.deleted = 0")
     @UseRowReducer(GlossaryEntryTermReducer.class)
     List<GlossaryEntry> findByResourceId(int resourceId);
 
@@ -106,6 +106,7 @@ public interface GlossaryEntryDao extends SqlObject, Serializable {
             entry.setDescription(rs.getString("description"));
             entry.setDescriptionPasted(rs.getBoolean("description_pasted"));
             entry.setImported(rs.getBoolean("imported"));
+            entry.setPicturesCount(rs.getInt("pictures_count"));
             entry.setUpdatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("updated_at")));
             entry.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             return entry;

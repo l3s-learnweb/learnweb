@@ -1,7 +1,5 @@
 package de.l3s.mail.message;
 
-import java.util.ResourceBundle;
-
 import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.LanguageBundle;
@@ -26,18 +24,18 @@ public class Text extends Element {
     }
 
     @Override
-    protected void buildHtml(final StringBuilder sb, final ResourceBundle msg) {
+    protected void buildHtml(final StringBuilder sb, final LanguageBundle msg) {
         if (!StringUtils.isAllBlank(getInlineStyle(), getStyleClass())) { // render text inside SPAN element
             sb.append("<span").append(buildAttributes()).append(">");
-            sb.append(LanguageBundle.getLocaleMessage(msg, text, objects));
+            sb.append(msg.getFormatted(text, objects));
             sb.append("</span>");
         } else {
-            sb.append(LanguageBundle.getLocaleMessage(msg, text, objects));
+            sb.append(msg.getFormatted(text, objects));
         }
     }
 
     @Override
-    protected void buildPlainText(final StringBuilder sb, final ResourceBundle msg) {
-        sb.append(LanguageBundle.getLocaleMessage(msg, text, objects));
+    protected void buildPlainText(final StringBuilder sb, final LanguageBundle msg) {
+        sb.append(msg.getFormatted(text, objects));
     }
 }

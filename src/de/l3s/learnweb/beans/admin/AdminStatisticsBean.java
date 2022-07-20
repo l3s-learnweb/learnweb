@@ -42,7 +42,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
     @PostConstruct
     public void init() {
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), getLocale(), false);
+        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), false);
     }
 
     public void fetchStatistics() {

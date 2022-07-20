@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import jakarta.faces.application.FacesMessage;
@@ -31,8 +30,8 @@ import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
 import de.l3s.learnweb.user.Course;
-import de.l3s.util.Misc;
 import de.l3s.util.NlpHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -237,24 +236,12 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         }
 
         if (languageList == null) {
-            Map<String, String> langList;
             languageList = new LinkedList<>();
-            langList = tedTranscriptDao.findLanguages(videoResourceId);
-
+            Map<String, String> langList = tedTranscriptDao.findLanguages(videoResourceId);
             if (langList.isEmpty()) {
                 languageList.add(new SelectItem("NA", "No Transcripts Available"));
             } else {
-                String langFromPropFile;
-
-                for (Entry<String, String> entry : langList.entrySet()) {
-                    langFromPropFile = getLocaleMessage("language_" + entry.getValue());
-                    if (langFromPropFile == null) {
-                        langFromPropFile = entry.getKey();
-                    }
-
-                    languageList.add(new SelectItem(entry.getValue(), langFromPropFile));
-                }
-                languageList.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
+                languageList.addAll(BeanHelper.getLanguagesAsSelectItems(langList.values().toArray(new String[0]), getUserBean().getBundle()));
             }
         }
         return languageList;

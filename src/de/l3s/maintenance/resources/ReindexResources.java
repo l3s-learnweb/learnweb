@@ -36,7 +36,7 @@ public class ReindexResources extends MaintenanceTask {
     }
 
     @Override
-    public void run(final boolean dryRun) throws Exception {
+    public void run(final boolean dryRun) throws IOException, SolrServerException {
         // Reindex resources of single user
         //final List<Resource> resources = learnweb.getResourceManager().getResourcesByUserId(9289);
 

@@ -6,7 +6,7 @@
     <h:graphicImage name="frontpage/videoguide.jpg" alt="Start guide slideshow"/>
 </div>
 
-<script type="application/javascript">
+<h:outputScript>
   $('#guide').on('click', function () {
     $.fancybox.open([
       { src: '#{resource["frontpage/lwGuide/ppt1.svg"]}' },
@@ -15,6 +15,6 @@
       { src: '#{resource["frontpage/lwGuide/ppt4.svg"]}' },
     ], { buttons: ['slideShow', 'close'] });
   });
-</script>
+</h:outputScript>
 
 </ui:composition>

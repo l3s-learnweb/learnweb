@@ -24,6 +24,7 @@
 .idea/**/watcherTasks.xml
 .idea/**/contentModel.xml
 .idea/**/deployment.xml
+.idea/**/jarRepositories.xml
 .idea/**/gradle.xml
 .idea/**/libraries
 

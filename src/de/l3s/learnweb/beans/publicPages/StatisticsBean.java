@@ -72,7 +72,7 @@ public class StatisticsBean extends ApplicationBean implements Serializable {
                 .map((rs, ctx) -> new SimpleEntry<>(SqlHelper.getLocalDateTime(rs.getTimestamp(1)), rs.getInt(2)))
                 .list();
 
-            resourcesPerSource = handle.select("SELECT service, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY service ORDER BY count( * ) DESC")
+            resourcesPerSource = handle.select("SELECT service, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY service ORDER BY count(*) DESC")
                 .map((rs, ctx) -> {
                     String serviceName = rs.getString(1);
                     ResourceService service = ResourceService.valueOf(serviceName);

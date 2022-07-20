@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="CheckStyle-IDEA">
-    <option name="configuration">
-      <map>
-        <entry key="active-configuration" value="PROJECT_RELATIVE:$PROJECT_DIR$/.mvn/checkstyle-config.xml:Learnweb styles (mvn)" />
-        <entry key="checkstyle-version" value="9.0.1" />
-        <entry key="copy-libs" value="false" />
-        <entry key="location-0" value="BUNDLED:(bundled):Sun Checks" />
-        <entry key="location-1" value="BUNDLED:(bundled):Google Checks" />
-        <entry key="location-2" value="PROJECT_RELATIVE:$PROJECT_DIR$/.mvn/checkstyle-config.xml:Learnweb styles (mvn)" />
-        <entry key="property-2.org.checkstyle.sun.suppressionfilter.config" value="" />
-        <entry key="property-2.org.checkstyle.sun.suppressionxpathfilter.config" value="" />
-        <entry key="scan-before-checkin" value="true" />
-        <entry key="scanscope" value="Everything" />
-        <entry key="suppress-errors" value="true" />
-      </map>
+  <component name="CheckStyle-IDEA" serialisationVersion="2">
+    <checkstyleVersion>10.3</checkstyleVersion>
+    <scanScope>Everything</scanScope>
+    <suppressErrors>true</suppressErrors>
+    <scanBeforeCheckin>true</scanBeforeCheckin>
+    <option name="thirdPartyClasspath" />
+    <option name="activeLocationIds">
+      <option value="4416e909-dbd5-40e8-9205-f840b9c3b0e0" />
+    </option>
+    <option name="locations">
+      <list>
+        <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="4416e909-dbd5-40e8-9205-f840b9c3b0e0" type="PROJECT_RELATIVE" scope="All" description="Learnweb styles (mvn)">
+          $PROJECT_DIR$/.mvn/checkstyle-config.xml
+          <option name="properties">
+            <map>
+              <entry key="org.checkstyle.sun.suppressionfilter.config" value="" />
+              <entry key="org.checkstyle.sun.suppressionxpathfilter.config" value="" />
+            </map>
+          </option>
+        </ConfigurationLocation>
+      </list>
     </option>
   </component>
 </project>

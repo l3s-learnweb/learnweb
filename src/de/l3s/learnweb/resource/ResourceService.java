@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  *
  * Used in database ENUMs: lw_resource.source
  */
-public enum ResourceService { // when adding more services remember to update the service column of learnweb_large.sl_query
+public enum ResourceService { // when adding more services remember to update the `service` columns (ENUM values)
     bing("Bing"), // Does not support filtering by date
     flickr("Flickr"),
     giphy("GIPHY"), // The uppercase name is required
@@ -18,7 +18,7 @@ public enum ResourceService { // when adding more services remember to update th
     ted("TED"), // stored in SOLR
     tedx("TEDx"), // stored in SOLR
     loro("LORO"), // stored in SOLR
-    yovisto("Yovisto"), //  stored in SOLR
+    yovisto("Yovisto"), // stored in SOLR
     learnweb("LearnWeb"), // stored in SOLR
     archiveit("Archive-It"), // stored in SOLR
     teded("TED-Ed"), // stored in SOLR

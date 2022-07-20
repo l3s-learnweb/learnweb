@@ -22,7 +22,7 @@
     <h:form>
         <p:dashboard id="board" model="#{adminSystemBean.model}" reordering="false">
             <p:panel id="memory" header="Memory usage">
-                <p:panelGrid columns="2" styleClass="w-100">
+                <p:panelGrid columns="2" layout="flex" contentStyleClass="row" columnClasses="col-6, col-6">
                     <h:outputText value="Free memory:"/>
                     <h:outputText value="#{adminSystemBean.runtimeInfo.freeMemory}"/>
 
@@ -41,7 +41,7 @@
                     <p:column headerText="Size (sec.)"><h:outputText value="#{cache.sizeSecondary}"/></p:column>
                 </p:dataTable>
 
-                <p:commandButton actionListener="#{adminSystemBean.clearAllCaches()}" value="#{msg.clear_caches}" update="cache" styleClass="orange-btn"/>
+                <p:commandButton actionListener="#{adminSystemBean.clearAllCaches()}" value="#{msg.clear_caches}" update="cache" styleClass="ui-button-danger"/>
             </p:panel>
 
             <p:panel id="maintenance" header="Maintenance">
@@ -51,7 +51,7 @@
             </p:panel>
 
             <p:panel id="solrIndex" header="Solr Index">
-                <p:panelGrid columns="2" styleClass="w-100 mb-3">
+                <p:panelGrid columns="2" layout="flex" contentStyleClass="row" columnClasses="col-6, col-6">
                     <h:outputText value="Total resources:"/>
                     <h:outputText value="#{adminSystemBean.totalResources}"/>
 
@@ -59,7 +59,7 @@
                     <h:outputText value="#{adminSystemBean.indexedResources}"/>
                 </p:panelGrid>
 
-                <p:commandButton actionListener="#{adminSystemBean.reindexResources()}" widgetVar="reindexBtn" value="Reindex" styleClass="orange-btn mb-2"
+                <p:commandButton actionListener="#{adminSystemBean.reindexResources()}" widgetVar="reindexBtn" value="Reindex" styleClass="ui-button-danger mb-2"
                                  update="solrIndex" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
 
                 <p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true"
@@ -70,8 +70,6 @@
             </p:panel>
         </p:dashboard>
 
-        <div class="clearfix"></div>
-
         <p:blockUI block="processTable" widgetVar="processTableOverlay">
             <h:outputText value="#{msg.please_wait}"/>
         </p:blockUI>
@@ -81,7 +79,7 @@
                 <div class="d-flex">
                     <div class="me-auto">#{msg.database_connections}</div>
                     <div class="d-md-block d-flex flex-column">
-                        <p:commandButton value="Terminate all" action="#{adminSystemBean.terminateAllProcesses()}" styleClass="alt-btn"/>
+                        <p:commandButton value="Terminate all" action="#{adminSystemBean.terminateAllProcesses()}" styleClass="ui-button-warning"/>
                     </div>
                 </div>
             </f:facet>

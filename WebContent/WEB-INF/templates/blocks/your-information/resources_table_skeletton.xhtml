@@ -6,12 +6,12 @@
 
     <h:form>
         <p:dataTable id="resources_tbl" value="#{resources}" var="item" rows="30" paginator="true" paginatorPosition="bottom"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
                 <div class="d-flex">
                     <div class="me-auto">#{msg.resources}</div>
                     <div class="d-md-block d-flex flex-column">
-                        <p:commandButton value="#{msg.request_all_data}" styleClass="alt-btn" rendered="#{exportable}" ajax="false"
+                        <p:commandButton value="#{msg.request_all_data}" styleClass="ui-button-warning" rendered="#{exportable}" ajax="false"
                                          onclick="PrimeFaces.monitorDownload(() => PF('ajax-status').trigger('start'), () => PF('ajax-status').trigger('complete'))">
                             <p:fileDownload value="#{dataExporterBean.streamUserResources()}"/>
                         </p:commandButton>
@@ -26,12 +26,12 @@
                         <p:dataExporter type="pdf" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-success float-end p-1">
                         <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-secondary float-end p-1">
                         <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
@@ -72,7 +72,7 @@
 
             <p:column headerText="#{msg.creation_date}">
                 <h:outputText value="#{item.creationDate}">
-                	<f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                	<f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
 

@@ -10,7 +10,7 @@
 
 <h:outputScript name="learnweb/js/lib/og-grid.js" target="body"/>
 
-<ul class="gridder clearfix member-grid">
+<ul class="gridder member-grid">
     <ui:repeat var="user" value="#{members}">
         <li class="gridder-list member-item" data-griddercontent="#user${user.id}">
             <p:commandLink onclick="return false;" styleClass="member-block">
@@ -41,16 +41,16 @@
     </ui:repeat>
 </ul>
 
-<script>
-  $(function() {
-    $('.gridder').gridderExpander({
-      scroll: false,
-      showNav: false,
-      animationSpeed: 400,
-      animationEasing: 'easeInOutExpo'
+<h:outputScript>
+    $(function () {
+        $('.gridder').gridderExpander({
+            scroll: false,
+            showNav: false,
+            animationSpeed: 400,
+            animationEasing: 'easeInOutExpo'
+        });
     });
-  });
-</script>
+</h:outputScript>
 
 
 </ui:composition>

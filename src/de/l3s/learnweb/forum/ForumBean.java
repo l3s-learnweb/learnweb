@@ -4,7 +4,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.model.SelectItem;
@@ -54,7 +53,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
         BeanAssert.authorized(isLoggedIn());
 
         group = groupDao.findByIdOrElseThrow(groupId);
-        BeanAssert.hasPermission(group.canViewResources(getUser()));
+        BeanAssert.hasPermission(group.canViewGroup(getUser()));
 
         topics = forumTopicDao.findByGroupId(groupId);
     }
@@ -88,7 +87,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
     }
 
     public List<SelectItem> getCategories() {
-        return getCategoriesByCourse(group.getCourseId(), getUserBean().getLocale());
+        return getCategoriesByCourse(group.getCourseId(), getUserBean().getBundle());
     }
 
     public List<ForumTopic> getTopics() {
@@ -131,32 +130,32 @@ public class ForumBean extends ApplicationBean implements Serializable {
         this.newTopicCategory = newTopicCategory;
     }
 
-    protected static List<SelectItem> getCategoriesByCourse(int courseId, Locale locale) {
-        SelectItemGroup g1 = new SelectItemGroup(LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.1"));
+    protected static List<SelectItem> getCategoriesByCourse(int courseId, LanguageBundle msg) {
+        SelectItemGroup g1 = new SelectItemGroup(msg.getString("Forum.cell.category.1"));
         g1.setSelectItems(new SelectItem[] {
-            new SelectItem("Forum.cell.category.1a", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.1a")),
-            new SelectItem("Forum.cell.category.1b", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.1b")),
-            new SelectItem("Forum.cell.category.1c", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.1c")),
-            new SelectItem("Forum.cell.category.1d", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.1d"))
+            new SelectItem("Forum.cell.category.1a", msg.getString("Forum.cell.category.1a")),
+            new SelectItem("Forum.cell.category.1b", msg.getString("Forum.cell.category.1b")),
+            new SelectItem("Forum.cell.category.1c", msg.getString("Forum.cell.category.1c")),
+            new SelectItem("Forum.cell.category.1d", msg.getString("Forum.cell.category.1d"))
         });
 
-        SelectItemGroup g2 = new SelectItemGroup(LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.2"));
+        SelectItemGroup g2 = new SelectItemGroup(msg.getString("Forum.cell.category.2"));
         g2.setSelectItems(new SelectItem[] {
-            new SelectItem("Forum.cell.category.2a", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.2a")),
-            new SelectItem("Forum.cell.category.2b", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.2b")),
-            new SelectItem("Forum.cell.category.2c", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.2c")),
-            new SelectItem("Forum.cell.category.2d", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.2d")),
-            new SelectItem("Forum.cell.category.2e", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.2e")),
-            new SelectItem("Forum.cell.category.2f", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.2f")),
-            new SelectItem("Forum.cell.category.2g", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.2g")),
-            new SelectItem("Forum.cell.category.2h", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.2h"))
+            new SelectItem("Forum.cell.category.2a", msg.getString("Forum.cell.category.2a")),
+            new SelectItem("Forum.cell.category.2b", msg.getString("Forum.cell.category.2b")),
+            new SelectItem("Forum.cell.category.2c", msg.getString("Forum.cell.category.2c")),
+            new SelectItem("Forum.cell.category.2d", msg.getString("Forum.cell.category.2d")),
+            new SelectItem("Forum.cell.category.2e", msg.getString("Forum.cell.category.2e")),
+            new SelectItem("Forum.cell.category.2f", msg.getString("Forum.cell.category.2f")),
+            new SelectItem("Forum.cell.category.2g", msg.getString("Forum.cell.category.2g")),
+            new SelectItem("Forum.cell.category.2h", msg.getString("Forum.cell.category.2h"))
         });
 
-        SelectItemGroup g3 = new SelectItemGroup(LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.3"));
+        SelectItemGroup g3 = new SelectItemGroup(msg.getString("Forum.cell.category.3"));
         g3.setSelectItems(new SelectItem[] {
-            new SelectItem("Forum.cell.category.3a", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.3a")),
-            new SelectItem("Forum.cell.category.3b", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.3b")),
-            new SelectItem("Forum.cell.category.3c", LanguageBundle.getLocaleMessage(locale, "Forum.cell.category.3c"))
+            new SelectItem("Forum.cell.category.3a", msg.getString("Forum.cell.category.3a")),
+            new SelectItem("Forum.cell.category.3b", msg.getString("Forum.cell.category.3b")),
+            new SelectItem("Forum.cell.category.3c", msg.getString("Forum.cell.category.3c"))
         });
 
         return Arrays.asList(g1, g2, g3);

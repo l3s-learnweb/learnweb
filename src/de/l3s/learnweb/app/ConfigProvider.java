@@ -17,9 +17,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.DeploymentException;
 import jakarta.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
+import org.omnifaces.util.Servlets;
 
 import de.l3s.util.UrlHelper;
 
@@ -29,6 +31,7 @@ public class ConfigProvider implements Serializable {
     @Serial
     private static final long serialVersionUID = 8999792363825397979L;
     private static final Logger log = LogManager.getLogger(ConfigProvider.class);
+    private static final String PROP_KEY_PREFIX = "learnweb_".toLowerCase(Locale.ROOT);
 
     /**
      * All the application configuration stored here.
@@ -41,10 +44,15 @@ public class ConfigProvider implements Serializable {
     private String version;
 
     /**
-     * A server url, extracted from configuration, set manually or detected automatically.
-     * In general, it is bad practice to use it inside application, except for generating absolute links, e.g. for emails.
+     * Base URL of the application, contains schema and hostname without trailing slash.
+     * Extracted from configuration, set manually or detected automatically.
      */
-    private String serverUrl;
+    private String baseUrl;
+
+    /**
+     * Context path is used to set cookies, and to generate absolute links.
+     */
+    private String contextPath;
 
     /**
      * Indicated whether the application is started in Servlet container with CDI or initialized manually.
@@ -65,6 +73,8 @@ public class ConfigProvider implements Serializable {
 
     private File fileManagerFolder;
 
+    private transient String serverUrl;
+
     @Deprecated
     public ConfigProvider() {
         this(true);
@@ -77,6 +87,10 @@ public class ConfigProvider implements Serializable {
         this.servlet = servlet;
         if (servlet) {
             loadJndiVariables();
+
+            contextPath = Servlets.getContext().getContextPath();
+            log.info("Found environment context: {}", contextPath);
+            replaceVariablesContext(contextPath);
         } else {
             development = true;
             version = "dev";
@@ -88,7 +102,7 @@ public class ConfigProvider implements Serializable {
 
         if (!autoServerUrl) {
             if (serverUrl.startsWith("http")) {
-                setServerUrl(serverUrl);
+                setServerUrl(serverUrl, contextPath);
             } else {
                 throw new DeploymentException("Server url should include schema!");
             }
@@ -120,8 +134,8 @@ public class ConfigProvider implements Serializable {
             Map<String, String> env = System.getenv();
             env.forEach((originalKey, propValue) -> {
                 String propKey = originalKey.toLowerCase(Locale.ROOT);
-                if (propKey.startsWith("learnweb_")) {
-                    propKey = propKey.substring(9);
+                if (propKey.startsWith(PROP_KEY_PREFIX)) {
+                    propKey = propKey.substring(PROP_KEY_PREFIX.length());
                     log.debug("Found environment variable {}: {} (original name {})", propKey, propValue, originalKey);
                     properties.setProperty(propKey, propValue);
                 }
@@ -141,8 +155,8 @@ public class ConfigProvider implements Serializable {
                 NameClassPair next = list.next();
                 String namespacedKey = namespace + next.getName();
                 String propKey = next.getName().toLowerCase(Locale.ROOT);
-                if (propKey.startsWith("learnweb_")) {
-                    propKey = propKey.substring(9);
+                if (propKey.startsWith(PROP_KEY_PREFIX)) {
+                    propKey = propKey.substring(PROP_KEY_PREFIX.length());
                     String propValue = ctx.lookup(namespacedKey).toString();
                     log.debug("Found JNDI variable {}: {} (original name {})", propKey, propValue, namespacedKey);
                     properties.setProperty(propKey, propValue);
@@ -153,6 +167,21 @@ public class ConfigProvider implements Serializable {
             ctx.close();
         } catch (Exception e) {
             log.error("Unable to load JNDI variables", e);
+        }
+    }
+
+    private void replaceVariablesContext(String contextPath) {
+        if (StringUtils.isNotBlank(contextPath)) {
+            String prefix = contextPath.replace("/", "") + "_";
+            for (String propKey : properties.stringPropertyNames()) {
+                if (propKey.startsWith(prefix)) {
+                    final String newKey = propKey.substring(prefix.length());
+                    log.debug("Property {} replaced by {}", newKey, propKey);
+                    properties.setProperty(newKey, properties.getProperty(propKey));
+                }
+            }
+        } else {
+            log.debug("No context path specified, skipping variable replacement");
         }
     }
 
@@ -176,35 +205,51 @@ public class ConfigProvider implements Serializable {
     }
 
     /**
-     * @return Returns the servername + contextPath without trailing slash.
-     * For the default installation this is: https://learnweb.l3s.uni-hannover.de
+     * In general, it is bad practice to use it inside application, except for generating absolute links, e.g. for emails.
+     *
+     * @return Returns the baseUrl + contextPath without trailing slash. For the default installation this is: https://learnweb.l3s.uni-hannover.de
      */
     public String getServerUrl() {
         if (serverUrl == null) {
-            throw new DeploymentException("Server url requested but not set!");
+            serverUrl = UrlHelper.removeTrailingSlash(getBaseUrl() + getContextPath());
         }
         return serverUrl;
     }
 
-    public void setServerUrl(String serverUrl) {
-        if (this.serverUrl != null) {
+    public void setServerUrl(String baseUrl, String contextPath) {
+        if (!isBaseUrlMissing()) {
             return; // ignore new serverUrl
         }
 
-        serverUrl = UrlHelper.removeTrailingSlash(serverUrl);
+        baseUrl = UrlHelper.removeTrailingSlash(baseUrl);
 
         // enforce HTTPS on the production server
-        if (serverUrl.startsWith("http://") && getPropertyBoolean("force_https")) {
+        if (baseUrl.startsWith("http://") && getPropertyBoolean("force_https")) {
             log.info("Forcing HTTPS schema.");
-            serverUrl = "https://" + serverUrl.substring(7);
+            baseUrl = "https://" + baseUrl.substring(7);
         }
 
-        this.serverUrl = serverUrl;
-        log.info("Server url updated: {}", serverUrl);
+        this.baseUrl = baseUrl;
+        this.contextPath = StringUtils.isEmpty(contextPath) ? "/" : contextPath;
+        log.info("Server url updated: {}", getServerUrl());
     }
 
-    public boolean isServerUrlMissing() {
-        return serverUrl == null;
+    public boolean isBaseUrlMissing() {
+        return baseUrl == null;
+    }
+
+    public String getBaseUrl() {
+        if (baseUrl == null) {
+            throw new DeploymentException("Server url requested but not set!");
+        }
+        return baseUrl;
+    }
+
+    public String getContextPath() {
+        if (contextPath == null) {
+            throw new DeploymentException("Context path requested but not set!");
+        }
+        return contextPath;
     }
 
     public boolean isServlet() {
@@ -218,8 +263,15 @@ public class ConfigProvider implements Serializable {
         return development;
     }
 
+    /**
+     * If started in development (also when no servlet context) or other test instance, do not schedule any jobs.
+     */
+    public boolean isRunScheduler() {
+        return isServlet() && !isDevelopment() && "https://learnweb.l3s.uni-hannover.de".equals(getServerUrl());
+    }
+
     public boolean isCollectSearchHistory() {
-        return !isDevelopment() || getPropertyBoolean("force_search_history");
+        return !isDevelopment() && "https://learnweb.l3s.uni-hannover.de".equals(getServerUrl()) || getPropertyBoolean("force_search_history");
     }
 
     public boolean isMaintenance() {

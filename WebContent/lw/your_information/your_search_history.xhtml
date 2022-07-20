@@ -19,8 +19,9 @@
 
 <ui:define name="center_layout">
     <h:form>
-        <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" paginator="true" rows="30" paginatorPosition="bottom"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+        <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" rows="30"
+                     paginator="true" paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
                 <h:outputText value="#{msg['search_history.title']}"/>
             </f:facet>
@@ -32,12 +33,12 @@
                         <p:dataExporter type="pdf" target="query_tbl" fileName="queries"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-success float-end p-1">
                         <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="query_tbl" fileName="queries"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-secondary float-end p-1">
                         <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="query_tbl" fileName="queries"/>
                     </h:commandLink>
@@ -54,7 +55,7 @@
 
             <p:column headerText="#{msg.date}">
                 <h:outputText value="#{query.timestamp}">
-                    <f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
         </p:dataTable>

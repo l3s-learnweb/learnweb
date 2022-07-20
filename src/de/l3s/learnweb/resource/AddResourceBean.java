@@ -27,9 +27,11 @@ import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.survey.Survey;
 import de.l3s.learnweb.resource.survey.SurveyResource;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 import de.l3s.util.UrlHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -59,11 +61,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         // Set target view and defaults
         resource = switch (type) {
             case "file" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.file, ResourceService.desktop);
-            case "url", "website" -> new Resource(Resource.StorageType.WEB, ResourceType.website, ResourceService.internet);
+            case "url", "website" -> new WebResource();
             case "glossary" -> {
                 GlossaryResource glossaryResource = new GlossaryResource();
                 glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
-                yield  glossaryResource;
+                yield glossaryResource;
             }
             case "survey" -> {
                 Survey survey = new Survey();
@@ -73,7 +75,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
                 survey.setDescription("Description placeholder");
                 SurveyResource surveyResource = new SurveyResource();
                 surveyResource.setSurvey(survey);
-                yield  surveyResource;
+                yield surveyResource;
             }
             case "document" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.document, ResourceService.learnweb);
             case "spreadsheet" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.spreadsheet, ResourceService.learnweb);
@@ -95,7 +97,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             log.debug("Saving the file...");
             File file = new File(FileType.MAIN, info.getFileName(), info.getMimeType());
             fileDao.save(file, uploadedFile.getInputStream());
-            Resource res = new Resource(resource);
+            Resource res = resource.cloneResource();
             res.addFile(file);
 
             log.debug("Extracting metadata from the file...");
@@ -211,7 +213,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
     public List<SelectItem> getAvailableGlossaryLanguages() {
         if (null == availableGlossaryLanguages) {
-            availableGlossaryLanguages = localesToSelectItems(getUser().getOrganisation().getGlossaryLanguages());
+            availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(getUser().getOrganisation().getGlossaryLanguages(), getUserBean().getBundle());
         }
         return availableGlossaryLanguages;
     }

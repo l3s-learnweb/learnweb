@@ -3,19 +3,20 @@ package de.l3s.mail.message;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
+
+import de.l3s.learnweb.LanguageBundle;
 
 public class Table extends Element {
     private final java.util.List<TableRow> rows = new ArrayList<>();
     private final java.util.List<String> columnClass = new ArrayList<>();
     private final java.util.List<String> titleRowClass = new ArrayList<>();
 
-    public Table addRow(Element...elements) {
+    public Table addRow(Element... elements) {
         rows.add(new TableRow(elements));
         return this;
     }
 
-    public Table addRow(String...elements) {
+    public Table addRow(String... elements) {
         rows.add(new TableRow(elements));
         return this;
     }
@@ -43,7 +44,7 @@ public class Table extends Element {
     }
 
     @Override
-    protected void buildHtml(final StringBuilder sb, final ResourceBundle msg) {
+    protected void buildHtml(final StringBuilder sb, final LanguageBundle msg) {
         if (rows.isEmpty()) {
             return;
         }
@@ -84,7 +85,7 @@ public class Table extends Element {
     }
 
     @Override
-    protected void buildPlainText(final StringBuilder sb, final ResourceBundle msg) {
+    protected void buildPlainText(final StringBuilder sb, final LanguageBundle msg) {
         sb.append("\n");
         for (TableRow textRow : rows) {
             for (Element elem : textRow.getElements()) {

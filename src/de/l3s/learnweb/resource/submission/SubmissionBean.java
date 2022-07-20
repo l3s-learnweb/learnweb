@@ -35,6 +35,7 @@ import de.l3s.learnweb.resource.Resource.PolicyView;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
@@ -181,7 +182,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
             if (r.getUserId() == specialAdmin.getId()) {
                 copiedResources.add(r);
             } else {
-                Resource resourceCopy = new Resource(r);
+                Resource resourceCopy = r.cloneResource();
 
                 // So that owner of the original resource can view it
                 resourceCopy.setOriginalResourceId(r.getId());
@@ -195,7 +196,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 resourceCopy.copyTags(r.getTags());
 
                 if (resourceCopy.getType() == ResourceType.website) {
-                    String response = Beans.getInstance(ArchiveUrlManager.class).addResourceToArchive(resourceCopy);
+                    String response = Beans.getInstance(ArchiveUrlManager.class).addResourceToArchive((WebResource) resourceCopy);
                     if (StringUtils.equalsAny(response, "ROBOTS_ERROR", "GENERIC_ERROR", "PARSE_DATE_ERROR", "SQL_SAVE_ERROR")) {
                         if (resourceCopy.getThumbnailSmall() == null) {
                             try {
@@ -432,7 +433,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable {
                 surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
             }
         } catch (Exception e) {
-            log.error("Error in getting survey resources for  course", e);
+            log.error("Error in getting survey resources for course", e);
         }
     }
 

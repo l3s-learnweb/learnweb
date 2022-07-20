@@ -7,6 +7,30 @@
     <namespace>http://l3s.de/learnweb</namespace>
     <short-name>lw</short-name>
 
+    <function>
+        <function-name>htmlBreak</function-name>
+        <function-class>de.l3s.util.StringHelper</function-class>
+        <function-signature>java.lang.String replaceNewLineWithBreak(java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <function-name>msgExists</function-name>
+        <function-class>de.l3s.util.bean.BeanHelper</function-class>
+        <function-signature>boolean isMessageExists(java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <function-name>msgDef</function-name>
+        <function-class>de.l3s.util.bean.BeanHelper</function-class>
+        <function-signature>java.lang.String getMessageOrDefault(java.lang.String,java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <function-name>date</function-name>
+        <function-class>de.l3s.util.bean.BeanHelper</function-class>
+        <function-signature>java.util.Date date(java.time.LocalDateTime)</function-signature>
+    </function>
+
     <tag>
         <description><![CDATA[Menu is a navigation component for Learnweb.]]></description>
         <tag-name>menu</tag-name>

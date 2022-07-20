@@ -6,7 +6,7 @@
 
     <h:form>
         <p:dataTable id="messages_tbl" value="#{messages}" var="message" rows="20" paginator="true" paginatorPosition="bottom"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
 
             <f:facet name="header">#{table_name}</f:facet>
 
@@ -17,12 +17,12 @@
                         <p:dataExporter type="pdf" target="messages_tbl" fileName="#{name_for_file}"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-success float-end p-1">
                         <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="messages_tbl" fileName="#{name_for_file}"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-secondary float-end p-1">
                         <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="messages_tbl" fileName="#{name_for_file}"/>
                     </h:commandLink>
@@ -47,7 +47,7 @@
 
             <p:column headerText="#{msg.date}">
                 <h:outputText value="#{message.time}">
-                    <f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
         </p:dataTable>

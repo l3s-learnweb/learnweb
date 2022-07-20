@@ -34,7 +34,7 @@
 			<h:outputText value="#{msg.please_wait}"/>
 		</p:blockUI>
 		<p:panel header="#{msg.select_users}">
-			<p:tree value="#{tedTranscriptLogBean.treeRoot}" var="node" required="true" styleClass="ui-tree-borderless"
+			<p:tree value="#{tedTranscriptLogBean.treeRoot}" var="node" required="true"
 					selectionMode="checkbox" selection="#{tedTranscriptLogBean.selectedNodes}">
 				<p:treeNode>
 					<h:outputText value="#{node.title}"/>
@@ -57,9 +57,9 @@
 	</h:form>
 
 	<h:form prependId="false" styleClass="mt-3">
-		<p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" value="#{tedTranscriptLogBean.transcriptSummaries}" rows="30" paginator="true"
-					 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
-					 rowsPerPageTemplate="20,25,30">
+		<p:dataTable id="transcript_table" var="log" value="#{tedTranscriptLogBean.transcriptSummaries}" rows="30"
+					 paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="20,25,30"
+					 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
 			<f:facet name="{Exporters}">
 				<h:commandLink>
 					<i class="fas fa-fw fa-file-excel text-success" aria-hidden="true"></i>

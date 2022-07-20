@@ -1,9 +1,10 @@
 package de.l3s.mail.message;
 
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.Validate;
+
+import de.l3s.learnweb.LanguageBundle;
 
 public class Link extends Element {
     private final String text;
@@ -23,22 +24,22 @@ public class Link extends Element {
     }
 
     @Override
-    protected void buildHtml(final StringBuilder sb, final ResourceBundle msg) {
+    protected void buildHtml(final StringBuilder sb, final LanguageBundle msg) {
         sb.append("<a").append(buildAttributes(Map.of("href", url))).append(">");
         if (null == text) {
             sb.append(this.url);
         } else {
-            sb.append(msg.getString(text));
+            sb.append(msg.getFormatted(text));
         }
         sb.append("</a>");
     }
 
     @Override
-    protected void buildPlainText(final StringBuilder sb, final ResourceBundle msg) {
+    protected void buildPlainText(final StringBuilder sb, final LanguageBundle msg) {
         if (text == null) {
             sb.append(url);
         } else {
-            sb.append(msg.getString(text)).append(" (").append(url).append(")");
+            sb.append(msg.getFormatted(text)).append(" (").append(url).append(")");
         }
     }
 }

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -17,6 +18,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.event.AjaxBehaviorEvent;
 import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.io.IOUtils;
@@ -34,6 +36,8 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.FilesUploadEvent;
+import org.primefaces.model.file.UploadedFile;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
@@ -43,13 +47,17 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.resource.glossary.parser.GlossaryParserResponse;
 import de.l3s.learnweb.resource.glossary.parser.GlossaryXLSParser;
+import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Image;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -125,6 +133,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     private LazyGlossaryTableView lazyTableItems;
 
     private transient List<SelectItem> allowedTermLanguages; // cache for the allowed languages select list
+
+    @Inject
+    private FileDao fileDao;
 
     @PostConstruct
     public void init() {
@@ -350,9 +361,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
      */
     private Map<String, Locale> getLanguageMap() {
         HashMap<String, Locale> languageMap = new HashMap<>();
-        for (Locale supportedLocale : LanguageBundle.getSupportedLocales()) {
+        for (Locale locale : BeanHelper.getSupportedLocales()) {
+            LanguageBundle bundle = LanguageBundle.getBundle(locale);
+
             for (Locale glossaryLocale : glossaryResource.getAllowedLanguages()) {
-                languageMap.put(LanguageBundle.getLocaleMessage(supportedLocale, "language_" + glossaryLocale.getLanguage()), glossaryLocale);
+                languageMap.put(bundle.getString("language_" + glossaryLocale.getLanguage()), glossaryLocale);
             }
         }
         return languageMap;
@@ -461,6 +474,32 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
         doc.setPageSize(PageSize.A4.rotate());
     }
 
+    public void handleFileUpload(FilesUploadEvent event) {
+        try {
+            log.debug("Handle File upload");
+            for (UploadedFile uploadedFile : event.getFiles().getFiles()) {
+                log.debug("Getting the fileInfo from uploaded file...");
+                FileInspector.FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
+
+                log.debug("Saving the file...");
+                File file = new File(File.FileType.GLOSSARY, info.getFileName(), info.getMimeType());
+                fileDao.save(file, uploadedFile.getInputStream());
+                getFormEntry().getPictures().add(file);
+            }
+        } catch (IOException e) {
+            addErrorMessage(e);
+        }
+    }
+
+    public void handleDeletePicture(File picture) {
+        getFormEntry().getPictures().remove(picture);
+        getFormEntry().setPicturesCount(getFormEntry().getPictures().size());
+
+        if (getFormEntry().getId() != 0) {
+            fileDao.deleteGlossaryEntryFiles(getFormEntry(), Collections.singleton(picture));
+        }
+    }
+
     public GlossaryResource getGlossaryResource() {
         return glossaryResource;
     }
@@ -473,7 +512,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public List<GlossaryTableView> getTableItems() {
-        if (null == tableItems && glossaryResource != null) {
+        if (null == tableItems) {
             tableItems = glossaryResource.getGlossaryTableView();
         }
 
@@ -481,7 +520,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public LazyGlossaryTableView getLazyTableItems() {
-        if (null == lazyTableItems && glossaryResource != null) {
+        if (null == lazyTableItems) {
             lazyTableItems = new LazyGlossaryTableView(glossaryResource);
 
         }
@@ -510,8 +549,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
     }
 
     public List<SelectItem> getAllowedTermLanguages() {
-        if (null == allowedTermLanguages && glossaryResource != null) {
-            allowedTermLanguages = localesToSelectItems(glossaryResource.getAllowedLanguages());
+        if (null == allowedTermLanguages) {
+            allowedTermLanguages = BeanHelper.getLocalesAsSelectItems(glossaryResource.getAllowedLanguages(), getUserBean().getBundle());
         }
         return allowedTermLanguages;
     }

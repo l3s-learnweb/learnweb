@@ -23,8 +23,7 @@ public class SurveyResource extends Resource {
     private LocalDateTime end;
     private boolean saveable; // if true users can save their answers before finally submitting them
 
-    private Survey survey;
-
+    private transient Survey survey;
     private transient Cache<SurveyUserAnswers> answerCache;
 
     /**
@@ -37,12 +36,17 @@ public class SurveyResource extends Resource {
     /**
      * Copy constructor.
      */
-    public SurveyResource(SurveyResource other) {
+    protected SurveyResource(SurveyResource other) {
         super(other);
         setSurveyId(other.getSurveyId());
         setStart(other.getStart());
         setEnd(other.getEnd());
         setSaveable(other.isSaveable());
+    }
+
+    @Override
+    public SurveyResource cloneResource() {
+        return new SurveyResource(this);
     }
 
     @Override

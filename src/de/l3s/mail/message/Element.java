@@ -2,9 +2,10 @@ package de.l3s.mail.message;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
+
+import de.l3s.learnweb.LanguageBundle;
 
 public abstract class Element {
 
@@ -24,12 +25,12 @@ public abstract class Element {
     /**
      * Builds an HTML representation of this element and appends it to the given StringBuilder.
      */
-    protected abstract void buildHtml(StringBuilder sb, ResourceBundle msg);
+    protected abstract void buildHtml(StringBuilder sb, LanguageBundle msg);
 
     /**
      * Builds a plain text representation of this element and appends it to the given StringBuilder.
      */
-    protected abstract void buildPlainText(StringBuilder sb, ResourceBundle msg);
+    protected abstract void buildPlainText(StringBuilder sb, LanguageBundle msg);
 
     /**
      * Helper method which stringifies list of attributes for the tag.

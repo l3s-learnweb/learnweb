@@ -5,31 +5,31 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:o="http://omnifaces.org/ui">
 
-<o:form>
-    <div class="form-group">
+<o:form id="login_form">
+    <div class="field">
         <p:outputLabel for="@next" value="#{msg.username}:" indicateRequired="false"/>
         <p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}"/>
 		<p:message for="@previous"/>
     </div>
 
-    <div class="form-group">
+    <div class="field">
         <p:outputLabel for="@next" value="#{msg.password}:" indicateRequired="false"/>
         <p:password id="password" value="#{loginBean.password}" label="#{msg.password}"/>
 		<p:message for="@previous"/>
     </div>
 
-    <div class="form-group">
+    <div class="field">
         <p:selectBooleanCheckbox id="remember" value="#{loginBean.remember}" itemLabel="#{msg.remember_me}" label="#{msg.remember_me}"/>
         <p:message for="@previous"/>
     </div>
 
-    <h:panelGroup layout="block" styleClass="form-group overflow-hidden" rendered="#{loginBean.captchaRequired}">
+    <h:panelGroup layout="block" styleClass="field overflow-hidden" rendered="#{loginBean.captchaRequired}">
         <p:outputLabel for="@next" value="#{msg.captcha}:" styleClass="d-none"/>
-        <p:captcha id="captcha" label="#{msg.captcha}" language="#{userBean.locale}" required="true"/>
+        <p:captcha id="captcha" label="#{msg.captcha}" language="#{userBean.localeCode}" required="true"/>
         <p:message for="@previous"/>
     </h:panelGroup>
 
-	<p:commandButton action="#{loginBean.login}" value="#{msg.loginLabel}" ajax="false"/>
+	<p:commandButton id="login_button" action="#{loginBean.login}" value="#{msg.loginLabel}" ajax="false"/>
 
 	<h:outputLink value="#{request.contextPath}/lw/user/password.jsf" styleClass="d-block mt-2">#{msg.forgotten_password}</h:outputLink>
 </o:form>

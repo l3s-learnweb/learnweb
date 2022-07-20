@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `lw_bounces` (
     `email` VARCHAR(64) DEFAULT NULL,
     `received` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `code` VARCHAR(10) NOT NULL,
-    `description` VARCHAR(64) DEFAULT NULL,
+    `description` VARCHAR(100) DEFAULT NULL,
     UNIQUE KEY `lw_bounces_email` (`email`)
 );
 
@@ -27,11 +27,11 @@ CREATE TABLE IF NOT EXISTS `lw_course` (
     `course_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `organisation_id` INT(10) UNSIGNED NOT NULL,
     `title` VARCHAR(50) NOT NULL,
-    `options_field1` BIGINT(20) NOT NULL DEFAULT 1,
-    `default_group_id` INT(10) UNSIGNED DEFAULT NULL,
     `wizard_param` VARCHAR(100) DEFAULT NULL,
+    `default_group_id` INT(10) UNSIGNED DEFAULT NULL,
     `next_x_users_become_moderator` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
     `welcome_message` TEXT DEFAULT NULL,
+    `options_field1` BIGINT(20) NOT NULL DEFAULT 1,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     UNIQUE KEY `lw_course_wizard_param` (`wizard_param`)
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `lw_forum_post` (
     `user_id` INT(10) UNSIGNED DEFAULT NULL,
     `text` TEXT NOT NULL,
     `category` VARCHAR(70) DEFAULT '',
-    `edit_count` SMALLINT(11) UNSIGNED NOT NULL DEFAULT 0,
+    `edit_count` SMALLINT(6) UNSIGNED NOT NULL DEFAULT 0,
     `edit_user_id` INT(10) UNSIGNED DEFAULT NULL,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),

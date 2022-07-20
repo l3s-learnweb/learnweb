@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -17,7 +18,6 @@ import org.primefaces.model.TreeNode;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
-import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
@@ -25,9 +25,11 @@ import de.l3s.learnweb.resource.ResourceContainer;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
+import de.l3s.util.ProfileImageHelper;
 
-public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer {
+public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer, Deletable {
     @Serial
     private static final long serialVersionUID = -6209978709028007958L;
 
@@ -87,6 +89,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private String title;
     @Length(max = 500)
     private String description;
+    private int imageFileId;
     private int maxMemberCount = -1; // defines how many users can join this group
     private boolean restrictionForumCategoryRequired = false;
     private PolicyJoin policyJoin = PolicyJoin.COURSE_MEMBERS;
@@ -100,6 +103,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     // caches
     private transient User leader;
+    private transient String imageUrl;
     protected transient List<User> members;
     protected transient List<Folder> folders;
     private transient Course course;
@@ -132,6 +136,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.id = id;
     }
 
+    @Override
     public boolean isDeleted() {
         return deleted;
     }
@@ -241,7 +246,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         }
 
         for (Resource resource : getResources()) {
-            Resource newResource = new Resource(resource);
+            Resource newResource = resource.cloneResource();
             newResource.setGroupId(groupId);
             newResource.setFolderId(foldersMap.get(newResource.getFolderId()));
             newResource.setUser(user);
@@ -286,6 +291,15 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getImageFileId() {
+        return imageFileId;
+    }
+
+    public void setImageFileId(int imageFileId) {
+        this.imageFileId = imageFileId;
+        this.imageUrl = null;
     }
 
     /**
@@ -450,28 +464,8 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     /**
      * Used for Drag&Drop functionality, using which it is possible to move resource between folders and groups.
      */
-    public boolean canMoveResources(User user) {
+    public boolean canOrganizeResources(User user) {
         return canAddResources(user);
-    }
-
-    public boolean canDeleteResource(User user, AbstractResource resource) {
-        return canEditResource(user, resource); // currently, they share the same policy
-    }
-
-    public boolean canEditResource(User user, AbstractResource resource) {
-        if (user == null || resource == null) {
-            return false;
-        }
-
-        if (getCourse().isModerator(user)) {
-            return true;
-        }
-
-        return switch (policyEdit) {
-            case GROUP_MEMBERS -> isMember(user);
-            case GROUP_LEADER -> isLeader(user);
-            case GROUP_LEADER_AND_FILE_OWNER -> isLeader(user) || resource.getUserId() == user.getId();
-        };
     }
 
     public boolean canDeleteGroup(User user) {
@@ -503,39 +497,20 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         };
     }
 
-    public boolean canViewResources(User user) {
+    public boolean canViewGroup(User user) {
         if (user == null) {
             return false;
         }
 
-        if (user.isAdmin() || getCourse().isModerator(user)) {
+        if (user.isAdmin() || (user.isModerator() && getCourse().isModerator(user))) {
             return true;
         }
 
         return switch (policyView) {
             case ALL_LEARNWEB_USERS -> true;
             case COURSE_MEMBERS -> getCourse().isMember(user) || isMember(user);
-            case GROUP_MEMBERS -> isMember(user);
-            case GROUP_LEADER -> isLeader(user);
+            case GROUP_MEMBERS, GROUP_LEADER -> isMember(user);
         };
-    }
-
-    public boolean canAnnotateResources(User user) {
-        if (user == null) {
-            return false;
-        }
-
-        if (user.isAdmin() || getCourse().isModerator(user)) {
-            return true;
-        }
-
-        return switch (policyAnnotate) {
-            case ALL_LEARNWEB_USERS -> true;
-            case COURSE_MEMBERS -> getCourse().isMember(user) || isMember(user);
-            case GROUP_MEMBERS -> isMember(user);
-            case GROUP_LEADER -> isLeader(user);
-        };
-
     }
 
     public int getMaxMemberCount() {
@@ -587,14 +562,9 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             return null;
         }
 
-        TreeNode treeNode = new DefaultTreeNode("GroupFolders");
-        TreeNode rootNode = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), treeNode);
-        if (activeFolder == 0) {
-            rootNode.setSelected(true);
-            rootNode.setExpanded(true);
-        }
+        TreeNode rootNode = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), null);
         getChildNodesRecursively(rootNode, group, activeFolder);
-        return treeNode;
+        return rootNode;
     }
 
     public static void getChildNodesRecursively(TreeNode parentNode, ResourceContainer container, int activeFolderId) {
@@ -615,5 +585,22 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
             treeNode.getParent().setExpanded(true);
             expandToNode(treeNode.getParent());
         }
+    }
+
+    /**
+     * @return the url of the groups image or a default image if no image has been added
+     */
+    public String getImageUrl() {
+        if (imageUrl == null) {
+            imageUrl = getImageFile().map(File::getSimpleUrl).orElse(ProfileImageHelper.getGroupPicture(title));
+        }
+        return imageUrl;
+    }
+
+    /**
+     * return the File of the profile picture.
+     */
+    public Optional<File> getImageFile() {
+        return Learnweb.dao().getFileDao().findById(imageFileId);
     }
 }

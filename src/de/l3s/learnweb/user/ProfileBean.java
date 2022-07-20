@@ -117,7 +117,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
             // save image file
             File file = new File(File.FileType.PROFILE_PICTURE, "profile_picture.png", "image/png");
-            Image thumbnail = img.getResizedToSquare2(200, 0.0);
+            Image thumbnail = img.getResizedToSquare(200);
             fileDao.save(file, thumbnail.getInputStream());
             thumbnail.dispose();
 
@@ -343,6 +343,10 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     public User.NotificationFrequency[] getNotificationFrequencies() {
         return User.NotificationFrequency.values();
+    }
+
+    public boolean isEditingDisabled() {
+        return selectedUser.getOrganisation().getOption(Organisation.Option.Privacy_Profile_prevent_edit);
     }
 
     public String rootLogin() {

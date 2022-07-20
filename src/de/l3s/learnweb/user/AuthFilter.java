@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Servlets;
 
+import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.web.RequestManager;
 import de.l3s.util.HashHelper;
 
@@ -38,6 +39,9 @@ public class AuthFilter extends HttpFilter {
     private UserBean userBean;
 
     @Inject
+    private ConfigProvider configProvider;
+
+    @Inject
     private RequestManager requestManager;
 
     @Override
@@ -56,15 +60,12 @@ public class AuthFilter extends HttpFilter {
                         userBean.setUser(user.get(), request);
                     } else {
                         requestManager.recordFailedAttempt(Servlets.getRemoteAddr(request), "auth:" + auth[0]);
-                        Servlets.removeResponseCookie(request, response, LoginBean.AUTH_COOKIE_NAME, "/");
+                        Servlets.removeResponseCookie(request, response, LoginBean.AUTH_COOKIE_NAME, configProvider.getContextPath());
                     }
                 }
             }
-        } catch (NumberFormatException e) {
-            // TODO: remove after some time, needed after migration from long id to int. Just remove old cookie and require login for that time.
-            Servlets.removeResponseCookie(request, response, LoginBean.AUTH_COOKIE_NAME, "/");
         } catch (Exception e) {
-            Servlets.removeResponseCookie(request, response, LoginBean.AUTH_COOKIE_NAME, "/");
+            Servlets.removeResponseCookie(request, response, LoginBean.AUTH_COOKIE_NAME, configProvider.getContextPath());
             log.error("Unable to finish auth verification", e);
         }
 

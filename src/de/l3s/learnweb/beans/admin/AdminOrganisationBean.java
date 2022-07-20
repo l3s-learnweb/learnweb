@@ -20,7 +20,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.File;
@@ -30,6 +29,7 @@ import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.OrganisationDao;
 import de.l3s.util.Image;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -92,8 +92,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
      * @return list of supported languages (codes) of this Learnweb instance
      */
     public List<String> getSupportedLanguages() {
-        List<Locale> locales = LanguageBundle.getSupportedLocales();
-
+        List<Locale> locales = BeanHelper.getSupportedLocales();
         return locales.stream().map(Locale::getLanguage).distinct().collect(Collectors.toList());
     }
 
@@ -101,8 +100,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
      * @return list of supported locale variants. At the time of writing: Archive
      */
     public List<String> getSupportedLanguageVariants() {
-        List<Locale> locales = LanguageBundle.getSupportedLocales();
-
+        List<Locale> locales = BeanHelper.getSupportedLocales();
         return locales.stream().map(Locale::getVariant).filter(StringUtils::isNotEmpty).distinct().collect(Collectors.toList());
     }
 
@@ -157,7 +155,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             List<Locale> glossaryLanguages = Arrays.asList(new Locale("ar"), new Locale("de"), new Locale("el"),
                 new Locale("en"), new Locale("es"), new Locale("fr"), new Locale("it"), new Locale("nl"),
                 new Locale("pt"), new Locale("ru"), new Locale("sv"), new Locale("zh"));
-            availableGlossaryLanguages = localesToSelectItems(glossaryLanguages);
+            availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(glossaryLanguages, getUserBean().getBundle());
         }
         return availableGlossaryLanguages;
     }

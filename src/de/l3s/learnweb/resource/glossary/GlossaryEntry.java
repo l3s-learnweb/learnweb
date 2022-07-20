@@ -10,13 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
+import de.l3s.learnweb.app.Learnweb;
+import de.l3s.learnweb.resource.File;
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
 
 public class GlossaryEntry implements HasId, Deletable, Serializable {
     @Serial
     private static final long serialVersionUID = 1251808024273639912L;
-
     private int id;
     private int originalEntryId; // When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
     private int resourceId;
@@ -35,8 +36,11 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     private List<GlossaryTerm> terms = new LinkedList<>();
     private String fulltext; // fulltext search in glossary
     private boolean imported; // This value is `true` when the entry has been imported from a file.
+    private int picturesCount;
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;
+
+    private transient List<File> pictures;
 
     /**
      * do nothing constructor.
@@ -60,6 +64,8 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         setTopicTwo(oldEntry.topicTwo);
         setTopicThree(oldEntry.topicThree);
         setFulltext(oldEntry.fulltext);
+        setPicturesCount(oldEntry.picturesCount);
+        setPictures(oldEntry.pictures);
 
         for (GlossaryTerm oldTerm : oldEntry.terms) {
             this.addTerm(new GlossaryTerm(oldTerm));
@@ -235,6 +241,14 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         this.imported = imported;
     }
 
+    public int getPicturesCount() {
+        return picturesCount;
+    }
+
+    public void setPicturesCount(final int picturesCount) {
+        this.picturesCount = picturesCount;
+    }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
@@ -251,10 +265,21 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
         this.createdAt = createdAt;
     }
 
+    public List<File> getPictures() {
+        if (pictures == null) {
+            pictures = Learnweb.dao().getFileDao().findByGlossaryEntryId(id);
+        }
+        return pictures;
+    }
+
+    public void setPictures(List<File> pictures) {
+        this.pictures = pictures;
+    }
+
     /**
      * Convenience function that calls the getter of a given field.
      */
-    public String get(String fieldName) {
+    public String getField(String fieldName) {
         return switch (fieldName) {
             case "description" -> getDescription();
             case "topicOne" -> getTopicOne();
@@ -263,5 +288,19 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
             case "fulltext" -> getFulltext();
             default -> throw new IllegalArgumentException(fieldName + " is not implemented");
         };
+    }
+
+    /**
+     * Convenience function that calls the setter of a given field.
+     */
+    public void setField(String fieldName, String toSet) {
+        switch (fieldName) {
+            case "description" -> setDescription(toSet);
+            case "topicOne" -> setTopicOne(toSet);
+            case "topicTwo" -> setTopicTwo(toSet);
+            case "topicThree" -> setTopicThree(toSet);
+            case "fulltext" -> setFulltext(toSet);
+            default -> throw new IllegalArgumentException(fieldName + " is not implemented");
+        }
     }
 }

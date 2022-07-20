@@ -58,11 +58,11 @@ public interface GlossaryTermDao extends SqlObject, Serializable {
     Map<String, Integer> countUsagePerSource(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);
 
     @RegisterRowMapper(GlossaryUserTermsSummaryMapper.class)
-    @SqlQuery("SELECT ge.user_id, COUNT(*) AS total_terms, COUNT(distinct ge.entry_id) AS entries,COUNT( NULLIF( gt.term_pasted, 0 ) ) AS term_pasted, "
-        + "COUNT( NULLIF( gt.pronounciation, '' ) ) AS pronounciation, COUNT( NULLIF( gt.pronounciation_pasted, 0 ) ) AS pronounciation_pasted, "
-        + "COUNT( NULLIF( gt.acronym, '' ) ) AS acronym, COUNT( NULLIF( gt.acronym_pasted, 0 ) ) AS acronym_pasted, "
-        + "COUNT( NULLIF( gt.phraseology, '' ) ) AS phraseology, COUNT( NULLIF( gt.phraseology_pasted, 0 ) ) AS phraseology_pasted, "
-        + "COUNT( NULLIF( gt.uses, '' ) ) AS uses, COUNT( NULLIF( gt.source, '' ) ) AS source "
+    @SqlQuery("SELECT ge.user_id, COUNT(*) AS total_terms, COUNT(distinct ge.entry_id) AS entries,COUNT(NULLIF(gt.term_pasted, 0)) AS term_pasted, "
+        + "COUNT(NULLIF(gt.pronounciation, '')) AS pronounciation, COUNT(NULLIF(gt.pronounciation_pasted, 0)) AS pronounciation_pasted, "
+        + "COUNT(NULLIF(gt.acronym, '')) AS acronym, COUNT(NULLIF(gt.acronym_pasted, 0)) AS acronym_pasted, "
+        + "COUNT(NULLIF(gt.phraseology, '')) AS phraseology, COUNT(NULLIF(gt.phraseology_pasted, 0)) AS phraseology_pasted, "
+        + "COUNT(NULLIF(gt.uses, '')) AS uses, COUNT(NULLIF(gt.source, '')) AS source "
         + "FROM lw_resource r JOIN lw_glossary_entry ge ON r.resource_id = ge.resource_id JOIN lw_glossary_term gt ON ge.entry_id = gt.entry_id "
         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 AND ge.user_id IN(<userIds>) AND ge.created_at BETWEEN :start AND :end GROUP BY ge.user_id")
     List<GlossaryUserTermsSummary> countGlossaryUserTermsSummary(@BindList("userIds") Collection<Integer> userIds, @Bind("start") LocalDate startDate, @Bind("end") LocalDate endDate);

@@ -1,8 +1,9 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:jsf="http://xmlns.jcp.org/jsf"
+				xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="pageTitle" value="#{msg.registerLabel}"/>
 <ui:param name="extraPageClass" value="container"/>
@@ -20,6 +21,18 @@
 </ui:define>
 
 <ui:define name="center_layout">
+	<p:panel rendered="#{not empty registrationBean.course.organisation.termsAndConditions}">
+		<div class="row">
+			<div class="col-auto" jsf:rendered="#{not empty registrationBean.course.organisation.bannerImageUrl}">
+				<h:graphicImage value="${registrationBean.course.organisation.bannerImageUrl}" alt="#{msg.banner_image}"/>
+			</div>
+			<div class="col">
+				<h2>#{registrationBean.course.organisation.title}</h2>
+				<h:outputText value="#{registrationBean.course.organisation.termsAndConditions}" escape="false"/>
+			</div>
+		</div>
+	</p:panel>
+
 	<p:panel header="#{msg.registerLabel}">
 		<h:form id="errorform" rendered="#{userBean.loggedIn}">
 			<p>You are already logged in.</p>
@@ -27,18 +40,7 @@
 		</h:form>
 
 		<h:form id="registerForm" rendered="#{not userBean.loggedIn}" prependId="false">
-                <script>
-                    $(window).on('load', () => {
-                        try {
-                            document.getElementById("timeZone").value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                        }
-                        catch (e) {
-                            console.log(e);
-                        }
-                    });
-                </script>
-
-			<div class="form-group mw-r25">
+			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.username}:"/>
 				<p:inputText value="#{registrationBean.username}" label="#{msg.username}" required="true" validator="#{registrationBean.validateUsername}">
                     <p:ajax update="@next" />
@@ -46,7 +48,7 @@
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group mw-r25">
+			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.password}:"/>
 				<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}" feedback="true"
 							match="repeated_password" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
@@ -54,32 +56,32 @@
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group mw-r25">
+			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.confirm_password}:"/>
 				<p:password id="repeated_password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.confirm_password}"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<h:panelGroup class="form-group mw-r25" rendered="#{registrationBean.affiliationRequired}">
+			<h:panelGroup class="field mw-r25" rendered="#{registrationBean.affiliationRequired}">
 				<p:outputLabel for="@next" value="#{msg.university}"/>
 				<p:inputText value="#{registrationBean.affiliation}" label="#{msg.university}" required="true"/>
 				<p:message for="@previous"/>
 			</h:panelGroup>
 
-			<div class="form-group mw-r25">
+			<div class="field mw-r25">
 				<p:outputLabel for="@next" value="#{msg.email_address}:"/>
 				<p:inputText value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" validator="emailValidator"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<h:panelGroup class="form-group mw-r25" rendered="#{registrationBean.studentIdRequired}">
+			<h:panelGroup class="field mw-r25" rendered="#{registrationBean.studentIdRequired}">
 				<p:outputLabel for="@next" value="#{msg.student_id}"/>
 				<p:inputText value="#{registrationBean.studentId}" label="#{msg.student_id}:"/>
 				<p:message for="@previous"/>
 			</h:panelGroup>
 
-			<div class="form-group mw-r25 overflow-hidden" style="min-height: 78px;">
-				<p:captcha label="Captcha" language="#{userBean.locale}" requiredMessage="Captcha: #{msg['validation.please_confirm']}" />
+			<div class="field mw-r25 overflow-hidden" style="min-height: 78px;">
+				<p:captcha label="Captcha" language="#{userBean.localeCode}" requiredMessage="Captcha: #{msg['validation.please_confirm']}" />
 				<p:message for="@previous"/>
 			</div>
 
@@ -98,11 +100,18 @@
 				<p:message for="accept_privacy_policy"/>
 			</div>
 
-			<div class="form-group small">
+			<div class="field small">
 				<h:outputText value="* #{msg.mandatory_field}"/>
 			</div>
 
 			<h:inputHidden id="timeZone" value="#{registrationBean.timeZone}"/>
+			<h:outputScript>
+				try {
+					document.getElementById('timeZone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+				} catch (e) {
+					console.log(e);
+				}
+			</h:outputScript>
 			<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
 		</h:form>
 

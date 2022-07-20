@@ -41,6 +41,9 @@
                     <ui:include src="parts/footer.xhtml"/>
                 </div>
             </div>
+
+            <!-- This is required to make back button reload the page, after ajax error occured -->
+            <h:outputScript>window.history.pushState(null, null); window.onpopstate = () => window.location.reload();</h:outputScript>
         </h:body>
     </f:view>
 </html>

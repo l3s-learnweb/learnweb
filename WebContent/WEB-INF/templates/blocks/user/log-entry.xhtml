@@ -17,7 +17,7 @@
 
 	<div class="overflow-hidden">
 		<p class="mb-0 log-title">
-			<h:outputText value="#{logEntry.getDescription(userBean.locale)}" escape="false"/>
+			<h:outputText value="#{logEntry.getDescription(userBean.bundle)}" escape="false"/>
 			<h:panelGroup rendered="#{logEntry.queryNeeded}">
 				<h:outputText value=" #{msg.with_query}" escape="false"/>
 				<h:outputLink styleClass="log-query" value="search.jsf">

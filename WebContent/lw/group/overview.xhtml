@@ -43,14 +43,14 @@
             <p:panel header="#{msg.group_details}" styleClass="text-break">
                 <f:facet name="actions">
                     <h:form>
-                        <p:commandButton action="#{groupsBean.joinGroup}" icon="fas fa-sign-in-alt" styleClass="alt-btn guide-join-button"
+                        <p:commandButton action="#{groupsBean.joinGroup}" icon="fas fa-sign-in-alt" styleClass="ui-button-warning guide-join-button"
                                          value="#{msg.join_group}" immediate="true" oncomplete="window.location.replace(window.location.href);"
                                          disabled="#{not groupOverviewBean.group.canJoinGroup(userBean.user)}" rendered="${not groupOverviewBean.group.isMember(userBean.user)}">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
                             <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                         </p:commandButton>
 
-                        <p:commandButton action="#{groupsBean.leaveGroup}" styleClass="secondary-btn" value="#{msg.leave_group}" immediate="true"
+                        <p:commandButton action="#{groupsBean.leaveGroup}" styleClass="ui-button-secondary" value="#{msg.leave_group}" immediate="true"
                                          oncomplete="window.location.replace(window.location.href);" rendered="${groupOverviewBean.group.isMember(userBean.user)}">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
                             <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
@@ -59,20 +59,35 @@
                     </h:form>
                 </f:facet>
 
-                <h5>#{groupOverviewBean.group.title}</h5>
-                <p><h:outputText value="#{groupOverviewBean.group.description}" escape="false"/></p>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.resources}: " styleClass="fw-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
-                </p>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.members}: " styleClass="fw-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.memberCount}"/>
-                </p>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.created_by}: " styleClass="fw-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
-                </p>
+                <div class="d-flex">
+                    <img class="me-3 align-self-start" src="${groupOverviewBean.group.imageUrl}" alt="Group picture"/>
+
+                    <div>
+                        <h5>#{groupOverviewBean.group.title}</h5>
+                        <p><h:outputText value="#{groupOverviewBean.group.description}" escape="false"/></p>
+                        <p class="mb-1">
+                            <h:outputText value="#{msg.resources}: " styleClass="fw-bold"/>
+                            <h:outputLink value="group/resources.jsf">
+                                <f:param name="group_id" value="#{groupOverviewBean.groupId}"/>
+                                <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
+                            </h:outputLink>
+                        </p>
+                        <p class="mb-1">
+                            <h:outputText value="#{msg.members}: " styleClass="fw-bold"/>
+                            <h:outputLink value="group/members.jsf">
+                                <f:param name="group_id" value="#{groupOverviewBean.groupId}"/>
+                                <h:outputText value="#{groupOverviewBean.group.memberCount}"/>
+                            </h:outputLink>
+                        </p>
+                        <p class="mb-1">
+                            <h:outputText value="#{msg.created_by}: " styleClass="fw-bold"/>
+                            <h:outputLink value="user/detail.jsf">
+                                <f:param name="user_id" value="#{groupOverviewBean.group.leader.id}"/>
+                                <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
+                            </h:outputLink>
+                        </p>
+                    </div>
+                </div>
             </p:panel>
 
             <p:panel header="#{msg.members}" id="members">
@@ -83,7 +98,7 @@
                     </ui:decorate>
 
                     <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllMembers}" layout="block">
-                        <p:commandButton id="loadAllMembers" value="#{msg.all_members}" styleClass="secondary-btn" update="@form"
+                        <p:commandButton id="loadAllMembers" value="#{msg.all_members}" styleClass="ui-button-secondary" update="@form"
                                          onstart="PF('membersOverlay').show()" oncomplete="PF('membersOverlay').hide()"
                                          actionListener="#{groupOverviewBean.fetchAllMembers()}"/>
                     </h:panelGroup>
@@ -110,7 +125,7 @@
                     </ui:repeat>
 
                     <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllLogs}" layout="block">
-                        <p:commandButton value="#{msg.full_history}" styleClass="secondary-btn"
+                        <p:commandButton value="#{msg.full_history}" styleClass="ui-button-secondary"
                                          update="@form" actionListener="#{groupOverviewBean.fetchAllLogs()}"/>
                     </h:panelGroup>
                 </h:form>
@@ -118,7 +133,7 @@
         </div>
     </div>
 
-    <h:outputScript type="text/javascript" rendered="#{userBean.guided}">
+    <h:outputScript rendered="#{userBean.guided}">
       const guide = groupOverviewPageInitializeGuide("#{msg.join_group}.");
 
       $(function() {

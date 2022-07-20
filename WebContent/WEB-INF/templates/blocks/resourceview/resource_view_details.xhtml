@@ -12,7 +12,7 @@
 
 <div class="d-flex res-details-title mt-0 justify-content-between align-items-end">
 	<h5 class="mb-0">#{msg.info}</h5>
-	<p:commandButton icon="fas fa-pencil-alt" styleClass="secondary-btn" title="#{msg.edit_resource}"
+	<p:commandButton icon="fas fa-pencil-alt" styleClass="ui-button-secondary" title="#{msg.edit_resource}"
 					 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceDetails" form="resourceViewForm"
 					 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"
 					 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
@@ -54,7 +54,7 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{userBean.starRatingEnabled}">
-		<dt class="col-sm-4">#{msg.relevance}:</dt>
+		<dt class="col-sm-4">#{userBean.user.organisationId == 1604 ? msg.credibility : msg.relevance}:</dt>
 		<dd class="col-sm-8">
 			<h:panelGroup id="relevance" layout="block">
 				<p:rating value="#{res.starRatingRounded}" cancel="false" immediate="true"
@@ -99,7 +99,7 @@
 		<dd class="col-sm-8">
 			<a href="#{userBean.getUrlProxied(res.url)}" target="_top"><h:outputText value="#{res.service.label}"/></a>
 
-			<p:commandButton id="archive_now" process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
+			<p:commandButton id="archive_now" process="@this" immediate="true" action="#{webResourceBean.archiveCurrentVersion}"
 							 icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" styleClass="d-block"
 							 rendered="#{res.type eq 'website'}"/>
 		</dd>
@@ -232,7 +232,7 @@
 <ui:fragment rendered="#{not empty res.description}">
 	<h5 class="res-details-title">#{msg.description}</h5>
 
-	<h:outputText value="#{res.descriptionHTML}" escape="false"/>
+	<h:outputText value="#{lw:htmlBreak(res.description)}" escape="false"/>
 </ui:fragment>
 
 <ui:fragment rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">
@@ -242,11 +242,11 @@
 		<ul class="list-inline list-unstyled mb-1">
 			<ui:repeat var="tag" value="#{res.tags}">
 				<li class="list-inline-item me-0 mb-1">
-					<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="secondary-btn me-0 rounded-0">
+					<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="ui-button-secondary me-0 rounded-0">
 						<f:param name="action" value="image"/>
 						<f:param name="query" value="#{tag.name}"/>
 					</p:linkButton>
-					<p:commandButton action="#{resourceDetailBean.onDeleteTag(tag)}" icon="fas fa-times" styleClass="secondary-btn rounded-0"
+					<p:commandButton action="#{resourceDetailBean.onDeleteTag(tag)}" icon="fas fa-times" styleClass="ui-button-secondary rounded-0"
 									 update=":tags_list" process="@this"
 									 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
 									 rendered="#{res.canEditResource(userBean.user)}"/>
@@ -273,7 +273,7 @@
 	<h5 class="res-details-title">#{msg.comments}</h5>
 
 	<h:panelGroup styleClass="mb-2" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
-		<div class="form-group mb-1">
+		<div class="field mb-1">
 			<p:inputTextarea id="comment_text_input" rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.new_comment_placeholder}"
 							 pt:data-emoji="true" required="true" styleClass="d-block"/>
 			<p:message for="@previous"/>

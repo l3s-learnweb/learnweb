@@ -18,9 +18,9 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <h:form id="yourinformationform">
+    <h:form id="your_posts_form">
         <p:dataTable id="posts_tbl" value="#{yourPostsBean.userPosts}" var="post" paginator="true" paginatorPosition="bottom" rows="30"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
                 <h:outputText value="#{msg['forum.posts']}"/>
             </f:facet>
@@ -32,12 +32,12 @@
                         <p:dataExporter type="pdf" target="posts_tbl" fileName="posts"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-success float-end p-1">
                         <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="posts_tbl" fileName="posts"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray float-end p-1">
+                    <h:commandLink styleClass="text-secondary float-end p-1">
                         <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="posts_tbl" fileName="posts"/>
                     </h:commandLink>
@@ -62,13 +62,13 @@
 
             <p:column styleClass="first-letter-capitalize" headerText="#{msg.posted_on}">
                 <h:outputText value="#{post.createdAt}">
-                    <f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
 
             <p:column headerText="#{msg.last_changes}">
                 <h:outputText value="#{post.updatedAt}">
-                    <f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
         </p:dataTable>

@@ -1,10 +1,8 @@
 package de.l3s.learnweb.resource;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import jakarta.faces.model.SelectItem;
 
@@ -17,7 +15,7 @@ import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
-import de.l3s.util.Misc;
+import de.l3s.util.bean.BeanHelper;
 
 /**
  * This class provides auto completion for selected resource metadata fields of the yell course.
@@ -41,21 +39,13 @@ public class ResourceMetaDataBean {
      * Creates a translated list of all available languages.
      */
     public static List<SelectItem> getLanguageList() {
-        // TODO @kemkes: check if ApplicationBean.localesToSelectItems can be used
-
-        Locale locale = Beans.getInstance(UserBean.class).getLocale();
-        List<SelectItem> languageList = languageLists.get(locale.getLanguage());
+        LanguageBundle bundle = Beans.getInstance(UserBean.class).getBundle();
+        List<SelectItem> languageList = languageLists.get(bundle.getLocale().getLanguage());
 
         if (null == languageList) {
             synchronized (languageLists) {
-                languageList = new ArrayList<>(LANGUAGES.length);
-
-                for (String language : LANGUAGES) {
-                    languageList.add(new SelectItem(language, LanguageBundle.getLocaleMessage(locale, "language_" + language)));
-                }
-                languageList.sort(Misc.SELECT_ITEM_LABEL_COMPARATOR);
-
-                languageLists.put(locale.getLanguage(), languageList);
+                languageList = BeanHelper.getLanguagesAsSelectItems(LANGUAGES, bundle);
+                languageLists.put(bundle.getLocale().getLanguage(), languageList);
             }
         }
 

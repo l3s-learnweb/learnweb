@@ -8,13 +8,13 @@
 
 <!--@elvariable id="question" type="de.l3s.learnweb.resource.survey.SurveyQuestion"-->
 <!--@elvariable id="associated" type="java.lang.Boolean"-->
-    <div class="form-group">
+    <div class="mb-3">
         <div class="d-flex justify-content-between flex-nowrap mb-3">
             <div class="d-flex flex-column">
                 <p:outputLabel for="selectTypeWrapper" value="#{msg['survey.question_type']}:" styleClass="fw-bold"/>
                 <p:tooltip for="selectTypeWrapper" value="#{msg['survey.tooltip_select_type']}" rendered="#{question.id !=0 and associated}" position="left"/>
                 <h:panelGroup id="selectTypeWrapper" layout="block">
-                <p:selectOneMenu  value="#{question.type}" disabled="#{associated and question.id != 0}">
+                <p:selectOneMenu value="#{question.type}" disabled="#{associated and question.id != 0}">
                     <f:selectItems value="#{question.questionTypes}" var="type" itemValue="#{type}" itemLabel="#{msg['question_type.'+=type]}" itemDescription="#{msg['question_type.desc_'+=type]}"/>
                     <p:ajax event="change" update="answers" process="@this answers"/>
                 </p:selectOneMenu>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="d-flex flex-column mb-3">
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg['survey.question_text']}:" styleClass="fw-bold"/>
                 <p:textEditor id="post_message" value="#{question.label}" required="true">
                     <f:facet name="toolbar">
@@ -87,13 +87,6 @@
         <p:commandButton value="#{msg['delete']}" actionListener="#{surveyTemplateBean.onDeleteQuestion(question)}" update="surveyForm" oncomplete="PF('updateSurvey').hide();" styleClass="float-start">
             <p:confirm message="#{msg['survey.are_you_sure']}"/>
         </p:commandButton>
-        <p:commandButton id="saveBtn" value="#{msg['save']}" actionListener="#{surveyTemplateBean.onAddQuestion}" oncomplete="handleDialogSubmit(xhr, status, args)" update="surveyForm @form" process="@form"/>
+        <p:commandButton id="saveBtn" value="#{msg['save']}" actionListener="#{surveyTemplateBean.onAddQuestion}" oncomplete="if(!args.validationFailed){PF('updateSurvey').hide()}" update="surveyForm @form" process="@form"/>
     </div>
-
-<script type="text/javascript">
-  function handleDialogSubmit(xhr, status, args) {
-    if (!args.validationFailed)
-      PF('updateSurvey').hide();
-  }
-</script>
 </ui:composition>

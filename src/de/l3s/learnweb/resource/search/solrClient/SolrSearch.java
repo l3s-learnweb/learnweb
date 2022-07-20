@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.Http2SolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.jsoup.Jsoup;
@@ -43,6 +43,7 @@ public class SolrSearch implements Serializable {
     private static final int DEFAULT_RESULTS_LIMIT = 8;
 
     private final int userId;
+    private final boolean onlyOwned;
     private String query;
 
     // search filters
@@ -82,8 +83,9 @@ public class SolrSearch implements Serializable {
     private List<FacetField> resultsFacetFields;
     private Map<String, Integer> resultsFacetQuery;
 
-    public SolrSearch(String query, User user) {
+    public SolrSearch(String query, User user, boolean onlyOwned) {
         this.userId = user == null ? 0 : user.getId();
+        this.onlyOwned = onlyOwned;
 
         this.query = query;
         String newQuery = removeMyGroupQuery(query);
@@ -234,7 +236,7 @@ public class SolrSearch implements Serializable {
         if (filterGroupIds != null && !filterGroupIds.isEmpty()) {
             solrQuery.addFilterQuery("groupId : (" + StringUtils.join(filterGroupIds, " OR ") + ")");
 
-            if (filterGroupIds.size() == 1 && filterGroupIds.contains(0)) {
+            if (onlyOwned || (filterGroupIds.size() == 1 && filterGroupIds.contains(0))) {
                 solrQuery.addFilterQuery("ownerUserId: " + userId); // show only resources of the user
             }
         } else {
@@ -279,7 +281,7 @@ public class SolrSearch implements Serializable {
 
         // log.debug("solr query: " + solrQuery);
 
-        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getHttpSolrClient();
+        Http2SolrClient server = Learnweb.getInstance().getSolrClient().getHttpSolrClient();
         return server.query(solrQuery);
     }
 

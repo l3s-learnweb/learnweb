@@ -33,11 +33,11 @@ public final class GlossaryXLSXExporter {
     //private static final Logger log = LogManager.getLogger(GlossaryXLSXExporter.class);
 
     private final GlossaryResource glossaryResource;
-    private final Locale language; // language of the exported header fields
+    private final LanguageBundle bundle; // language of the exported header fields
 
-    public GlossaryXLSXExporter(GlossaryResource resource, Locale language) {
+    public GlossaryXLSXExporter(GlossaryResource resource, Locale locale) {
         this.glossaryResource = resource;
-        this.language = language;
+        this.bundle = LanguageBundle.getBundle(locale);
     }
 
     public Workbook convertGlossaryToWorkbook(GlossaryResource resource) {
@@ -68,7 +68,7 @@ public final class GlossaryXLSXExporter {
         int columnIndex = 0;
         for (Column column : Column.values()) {
             Cell cell = headerRow.createCell(columnIndex++);
-            cell.setCellValue(LanguageBundle.getLocaleMessage(language, column.getMsgKey()));
+            cell.setCellValue(bundle.getString(column.getMsgKey()));
             cell.setCellStyle(styles.get("header"));
         }
 
@@ -116,7 +116,7 @@ public final class GlossaryXLSXExporter {
                 cell.setCellStyle(style);
 
                 cell = row.createCell(5);
-                cell.setCellValue(LanguageBundle.getLocaleMessage(language, "language_" + term.getLanguage().toLanguageTag()));
+                cell.setCellValue(bundle.getString("language_" + term.getLanguage().toLanguageTag()));
                 cell.setCellStyle(style);
 
                 cell = row.createCell(6);

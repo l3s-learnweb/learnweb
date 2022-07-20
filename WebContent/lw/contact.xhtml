@@ -39,22 +39,20 @@
     </p:panel>
 
     <p:panel header="#{msg['send_notification']}">
-
         <h:form id="contact-form">
-
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg.username}:"/>
                 <p:inputText id="register_username" value="#{contactBean.name}" label="#{msg.name}" disabled="#{userBean.loggedIn}" />
                 <p:message for="@previous"/>
             </div>
 
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg.email_address}:"/>
                 <p:inputText id="register_email" value="#{contactBean.email}" label="#{msg.email_address}" required="true" type="email" validator="emailValidator"/>
                 <p:message for="@previous"/>
             </div>
 
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg.message}:"/>
                 <p:inputTextarea id="register_description" value="#{contactBean.message}" label="#{msg.description}"
                                  required="true" placeholder="#{msg.message}" rows="4" cols="50"/>
@@ -62,10 +60,10 @@
             </div>
 
             <ui:fragment rendered="#{not userBean.loggedIn}">
-            <div class="form-group mw-r25 overflow-hidden" style="min-height: 78px;">
-                <p:captcha label="Captcha" language="#{userBean.locale}" />
-                <p:message for="@previous" />
-            </div>
+                <div class="field mw-r25 overflow-hidden" style="min-height: 78px;">
+                    <p:captcha label="Captcha" language="#{userBean.localeCode}" />
+                    <p:message for="@previous" />
+                </div>
             </ui:fragment>
 
             <p:commandButton action="#{contactBean.sendMail}" value="#{msg.send}" ajax="false"/>

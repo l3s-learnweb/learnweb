@@ -4,6 +4,8 @@
 @import 'themes/emerald';
 //@import 'themes/noir';
 
+// Font Awesome
+$fa-font-path: './webfonts';
 // remove 'bs-' prefix from variables
 $variable-prefix: '';
 
@@ -133,7 +135,3 @@ $popover-header-color: $white;
 $popover-body-color: $white;
 
 $zindex-sticky: 1002;
-
-// Font Awesome
-
-$fa-font-path: './webfonts';

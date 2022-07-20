@@ -37,7 +37,7 @@ VALUES (1, 1, 1, 'Lets get you into a', '2021-02-19 17:53:56'),
        (10, 6, 6, 'The keys are in the', '2021-02-19 18:40:36');
 
 INSERT INTO `lw_course` (`course_id`, `title`, `options_field1`, `organisation_id`, `default_group_id`, `wizard_param`, `next_x_users_become_moderator`, `welcome_message`, `updated_at`, `created_at`)
-VALUES (1, 'Public', 17, 1, NULL, 'default', 0, 'Welcome to the public course', '2019-11-27 20:38:07', '2019-11-27 20:38:07'),
+VALUES (1, 'Public', 17, 1, NULL, 'public', 0, 'Welcome to the public course', '2019-11-27 20:38:07', '2019-11-27 20:38:07'),
        (2, 'Vel possimus', 53, 2, NULL, NULL, 3, 'Excepturi blanditiis eos veniam ut.', '2021-02-06 14:42:33', '2020-04-16 16:35:42'),
        (3, 'Nulla earum ratione', 53, 2, NULL, 'eius', 0, 'Velit alias asperiores ut in sunt et ratione ut.', '2021-02-04 01:02:29', '2020-06-29 14:47:29'),
        (4, 'Corporis sit', 0, 1, NULL, 'officiis', 1, 'Doloribus fugiat eligendi aliquam aliquam maxime.', '2021-02-01 07:04:25', '2021-02-06 12:59:48'),

@@ -322,7 +322,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
   const $resContainer = $(document.getElementById(resContainerId));
 
   // check if abe to move resources here
-  if (!$resContainer || !$resContainer.data('canmoveresources')) return;
+  if (!$resContainer || !$resContainer.data('canorganizeresources')) return;
 
   $('.res-item', $resContainer).draggable({
     addClasses: false,

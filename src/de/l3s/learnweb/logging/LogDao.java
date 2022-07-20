@@ -40,9 +40,15 @@ public interface LogDao extends SqlObject, Serializable {
     List<LogEntry> findAllByUserId(int userId);
 
     /**
-     * Get logs of the user, excluding logs of private group.
+     * Get public logs of the user. This includes only logs that occurred in a group context.
      */
     @SqlQuery("SELECT * FROM lw_user_log WHERE user_id = :userId AND action IN(<actionIds>) AND group_id != 0 ORDER BY created_at DESC LIMIT :limit")
+    List<LogEntry> findPublicByUserId(@Bind("userId") int userId, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
+
+    /**
+     * Get logs of the user.
+     */
+    @SqlQuery("SELECT * FROM lw_user_log WHERE user_id = :userId AND action IN(<actionIds>) ORDER BY created_at DESC LIMIT :limit")
     List<LogEntry> findByUserId(@Bind("userId") int userId, @DefineList("actionIds") List<Integer> actionIds, @Bind("limit") int limit);
 
     /**

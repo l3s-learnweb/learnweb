@@ -36,17 +36,17 @@
 				<p:outputPanel layout="block" class="d-flex">
 					<div class="me-auto">#{msg['survey']}</div>
 					<div>
-						<p:commandButton value="#{msg.show}" onclick="PF('allSurveys').show(); return false;" styleClass="alt-btn ms-2"/>
+						<p:commandButton value="#{msg.show}" onclick="PF('allSurveys').show(); return false;" styleClass="ui-button-warning ms-2"/>
 					</div>
 				</p:outputPanel>
 			</f:facet>-->
 			<h:panelGroup id="questions">
 				<div class="d-flex flex-nowrap mb-2">
-					<p:commandLink  styleClass="bg-transparent border-0 text-dark fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
+					<p:commandLink styleClass="bg-transparent border-0 text-dark fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
 					<h1><h:outputText value="#{surveyTemplateBean.survey.title}" escape="false"/></h1>
 				</div>
 				<div class="d-flex flex-nowrap mb-2">
-					<p:commandLink  styleClass="bg-transparent border-0 text-dark fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
+					<p:commandLink styleClass="bg-transparent border-0 text-dark fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
 					<h:outputText value="#{surveyTemplateBean.survey.description}" escape="false"/>
 				</div>
 				<h:panelGroup layout="block" rendered="#{userBean.moderator}" class="d-flex flex-column mb-3">
@@ -55,20 +55,20 @@
 					<p:toggleSwitch id="copy" value="#{surveyTemplateBean.survey.publicTemplate}"/>
 				</h:panelGroup>
 				<c:forEach var="question" varStatus="questionStatus" items="#{surveyTemplateBean.questions}">
-					<p:outputPanel class="form-group" rendered="#{!question.deleted}">
+					<p:outputPanel class="field" rendered="#{!question.deleted}">
 						<div class="d-flex flex-nowrap">
 							<p:outputPanel class="d-flex flex-column justify-content-center me-2" rendered="#{userBean.admin}">
 								<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-dark fas fa-angle-up align-self-center"
 											   title="#{msg['survey.up']}" update="surveyForm" process="@this"/>
 								<p:commandLink action="#{surveyTemplateBean.setCurrentQuestion(question)}" styleClass="text-dark fas fa-pencil-alt align-self-center"
-											   title="#{msg['edit']}" onsuccess="PF('updateSurvey').show();" update="updateForm" process="@this"/>
+											   title="#{msg['edit']}" oncomplete="PF('updateSurvey').show();" update="updateForm" process="@this"/>
 								<p:commandLink action="#{surveyTemplateBean.onMoveQuestionDown(question)}" rendered="#{!questionStatus.last}" styleClass="text-dark fas fa-angle-down align-self-center"
 											   title="#{msg['survey.down']}" update="surveyForm" process="@this"/>
 							</p:outputPanel>
 							<ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
 								<ui:param name="question" value="#{question}"/>
 								<ui:param name="update" value="#{true}"/><!-- FIXME this is terrible implementation which doesn't work at all:
-                                in question.xhtml it used  value="#{update ? '' : surveyBean.userAnswers.answers[question.id]}" for all input elements. which can't work. I had to remove it.
+                                in question.xhtml it used value="#{update ? '' : surveyBean.userAnswers.answers[question.id]}" for all input elements. which can't work. I had to remove it.
                                 we need to investigate why it was added and find a proper solution
                                  -->
 							</ui:decorate>
@@ -96,12 +96,12 @@
 	<p:dialog header="#{msg['survey.update_survey']}" styleClass="overflow-hidden" widgetVar="updateSurveyMetadata" modal="true">
 		<h:form id="createSurvey">
 			<div class="d-flex flex-column mb-3">
-				<div class="form-group">
+				<div class="field">
 					<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="fw-bold"/>
 					<p:inputText value="#{surveyTemplateBean.survey.title}" />
 					<p:message for="@previous"/>
 				</div>
-				<div class="form-group">
+				<div class="field">
 					<p:outputLabel for="@next" value="#{msg['description']}:" styleClass="fw-bold"/>
 					<p:textEditor value="#{surveyTemplateBean.survey.description}" height="100">
 						<f:facet name="toolbar">

@@ -88,7 +88,7 @@
 									<h:panelGroup layout="block" class="cursor-pointer" pt:data-sessionId="#{ss.sessionId}" pt:data-userId="#{ss.userId}">
 										<div class="session-queries">
 											<ui:repeat var="query" value="#{ss.queries}">
-												<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="white-space-normal p-1">
+												<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="text-wrap p-1">
 													<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{query}"/>
 
 													<span class="search-source-icon source-#{query.service} mode-#{query.mode} py-2">#{query.query}</span>
@@ -97,9 +97,9 @@
 										</div>
 
 										<div class="session-time">
-											<h:outputFormat value="#{msg.format_date_and_time_between}" escape="false">
-												<f:param value="#{ss.startTimestamp}"/>
-												<f:param value="#{ss.endTimestamp}"/>
+											<h:outputFormat id="of1" value="#{msg.format_date_and_time_between}" escape="false">
+												<f:param value="#{lw:date(ss.startTimestamp)}"/>
+												<f:param value="#{lw:date(ss.endTimestamp)}"/>
 											</h:outputFormat>
 										</div>
 										<h:outputText value="#{msg.by}: #{ss.user.username}" rendered="#{searchHistoryBean.showGroupHistory}" styleClass="fw-bold"/>
@@ -133,7 +133,7 @@
 
 					<p:dialog header="#{msg.options}" widgetVar="copyResourceDialog" draggable="true" resizable="false" id="copy_resource_dialog" modal="true">
 						<h:form rendered="#{userBean.loggedIn and searchBean.selectedResource ne null}">
-							<div class="fg-grid mb-3">
+							<div class="fields-grid">
 								<ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
 									<ui:param name="res" value="#{searchBean.selectedResource.resource}"/>
 								</ui:decorate>
@@ -148,7 +148,7 @@
 											<h:outputText id="group" value="#{node.title}"/>
 										</p:treeNode>
 
-										<p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+										<p:treeNode type="folder" expandedIcon="fas fa-folder-open" collapsedIcon="fas fa-folder">
 											<h:outputText value="#{node.title}"/>
 										</p:treeNode>
 									</p:tree>
@@ -158,9 +158,9 @@
 
 							<div class="text-end mt-3">
 								<p:defaultCommand target="addSelectedResourceButton"/>
-								<p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('copyResourceDialog').hide()"/>
+								<p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('copyResourceDialog').hide()"/>
 								<p:commandButton id="addSelectedResourceButton" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"
-												 widgetVar="add_button" onclick="PF('add_button').disable()" oncomplete="PF('copyResourceDialog').hide()"/>
+												 widgetVar="add_button" onclick="PF('add_button').disable()" oncomplete="if(!args.validationFailed){PF('copyResourceDialog').hide()}"/>
 							</div>
 						</h:form>
 					</p:dialog>

@@ -49,7 +49,7 @@ public final class BeanAssert {
      * @param message is shown instead of default error description
      */
     public static void notDeleted(final Deletable object, final String message) {
-        if (object.isDeleted()) {
+        if (object == null || object.isDeleted()) {
             throw new GoneHttpException(message);
         }
     }

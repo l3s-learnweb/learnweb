@@ -49,8 +49,8 @@ public class RequestFilter extends HttpFilter {
         request.setCharacterEncoding("UTF-8");
 
         // try to set server url
-        if (configProvider.isServerUrlMissing()) {
-            configProvider.setServerUrl(Servlets.getRequestBaseURL(request));
+        if (configProvider.isBaseUrlMissing()) {
+            configProvider.setServerUrl(Servlets.getRequestDomainURL(request), request.getContextPath());
         }
 
         // validate ip address

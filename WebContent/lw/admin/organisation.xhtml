@@ -38,46 +38,69 @@
 <ui:define name="center_layout">
     <ui:fragment rendered="#{null ne adminOrganisationBean.selectedOrganisation}">
         <h:form id="edit_organisation_form">
-            <p:panel styleClass="mb-3" header="#{msg.welcome_message}">
-                <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}">
-                    <f:facet name="toolbar">
-                        <span class="ql-formats">
-                            <select class="ql-font"></select>
-                            <select class="ql-size"></select>
-                        </span>
-                        <span class="ql-formats">
-                            <button class="ql-bold"></button>
-                            <button class="ql-italic"></button>
-                            <button class="ql-underline"></button>
-                            <button class="ql-strike"></button>
-                            <button class="ql-link"></button>
-                        </span>
-                    </f:facet>
-                </p:textEditor>
-            </p:panel>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <p:panel styleClass="mb-3" header="#{msg.welcome_message}">
+                        <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}">
+                            <f:facet name="toolbar">
+                                <span class="ql-formats">
+                                    <select class="ql-font"></select>
+                                    <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                    <button class="ql-link"></button>
+                                </span>
+                            </f:facet>
+                        </p:textEditor>
+                    </p:panel>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p:panel styleClass="mb-3" header="Additional Terms &amp; Conditions">
+                        <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.termsAndConditions}">
+                            <f:facet name="toolbar">
+                                <span class="ql-formats">
+                                    <select class="ql-font"></select>
+                                    <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                    <button class="ql-link"></button>
+                                </span>
+                            </f:facet>
+                        </p:textEditor>
+                    </p:panel>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12 col-md-6">
                     <p:panel header="#{msg.common_settings}">
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg.title}:"/>
                             <p:inputText id="c_title" value="#{adminOrganisationBean.selectedOrganisation.title}"/>
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
-                            <h:panelGroup layout="block" styleClass="d-block bg-gray400" rendered="#{adminOrganisationBean.selectedOrganisation.bannerImageFileId != 0}">
+                        <div class="field">
+                            <h:panelGroup layout="block" styleClass="d-block" rendered="#{adminOrganisationBean.selectedOrganisation.bannerImageFileId != 0}">
                                 <h:graphicImage value="${adminOrganisationBean.selectedOrganisation.bannerImageUrl}" alt="#{msg.banner_image}"/>
-                                <p:commandButton action="#{adminOrganisationBean.removeBannerImage}" update="@form" styleClass="m-1 alt-btn" value="#{msg.delete}"/>
+                                <p:commandButton action="#{adminOrganisationBean.removeBannerImage}" update="@form" styleClass="m-1 ui-button-warning" value="#{msg.delete}"/>
                             </h:panelGroup>
 
-                            <p:outputLabel for="@next" value="#{msg.banner_image}:"/>
-                            <p:fileUpload listener="#{adminOrganisationBean.handleFileUpload}" styleClass="fileupload-minimal"
+                            <p:outputLabel for="@next" value="#{msg.banner_image}:" styleClass="me-2"/>
+                            <p:fileUpload listener="#{adminOrganisationBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
                                           mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(png)$/" sizeLimit="10485760"
                                           update="@form" auto="true" label="#{msg.choose_file}" cancelLabel="#{msg.cancel}"/>
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg.welcome_page}:"/>
                             <p:selectOneMenu id="welcomePage" value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
                                 <f:selectItem itemValue="myhome/welcome.jsf" itemLabel="myhome/welcome.jsf"/>
@@ -87,7 +110,7 @@
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg.default_lang}:"/>
                             <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
                                 <f:selectItem itemLabel="#{msg.no_default_lang}" itemValue="#{null}"/>
@@ -97,7 +120,7 @@
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg.lang_variant}:"/>
                             <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.languageVariant}">
                                 <f:selectItem itemValue="" itemLabel="#{msg.no_lang_variant}"/>
@@ -107,7 +130,7 @@
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg.glossary_languages}:"/>
                             <p:selectCheckboxMenu value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" required="true"
                                                   requiredMessage="#{msg.mandatory_field}"
@@ -125,7 +148,7 @@
                             <c:forEach items="#{adminOrganisationBean.optionGroups}" var="group" varStatus="status">
                                 <p:tab title="${adminOrganisationBean.optionGroups[status.index].title}">
                                     <ui:repeat value="${adminOrganisationBean.optionGroups[status.index].options}" var="option">
-                                        <div class="form-group">
+                                        <div class="field">
                                             <p:selectBooleanCheckbox value="#{option.value}" itemLabel="#{option.name}" id="checkbox"/>
                                         </div>
                                     </ui:repeat>

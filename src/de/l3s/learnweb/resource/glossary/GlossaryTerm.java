@@ -72,7 +72,7 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
     /**
      * Convenience function that calls the getter of a given field.
      */
-    public String get(String fieldName) {
+    public String getField(String fieldName) {
         return switch (fieldName) {
             case "term" -> getTerm();
             case "pronounciation" -> getPronounciation();
@@ -81,6 +81,20 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
             case "phraseology" -> getPhraseology();
             default -> throw new IllegalArgumentException(fieldName + " is not implemented");
         };
+    }
+
+    /**
+     * Convenience function that calls the setter of a given field.
+     */
+    public void setField(String fieldName, String toSet) {
+        switch (fieldName) {
+            case "term" -> setTerm(toSet);
+            case "pronounciation" -> setPronounciation(toSet);
+            case "acronym" -> setAcronym(toSet);
+            case "source" -> setSource(toSet);
+            case "phraseology" -> setPhraseology(toSet);
+            default -> throw new IllegalArgumentException(fieldName + " is not implemented");
+        }
     }
 
     public String getTerm() {

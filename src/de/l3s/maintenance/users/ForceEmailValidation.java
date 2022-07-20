@@ -19,7 +19,7 @@ public class ForceEmailValidation extends MaintenanceTask {
     protected void run(final boolean dryRun) {
         try (Handle handle = getLearnweb().openJdbiHandle()) {
             List<User> users = handle.select("SELECT * FROM lw_user WHERE is_email_confirmed = 0 and organisation_id != 478 and email != '' "
-                + "ORDER BY registration_date DESC").map(new UserDao.UserMapper()).list();
+                + "ORDER BY created_at DESC").map(new UserDao.UserMapper()).list();
 
             for (User user : users) {
                 /*

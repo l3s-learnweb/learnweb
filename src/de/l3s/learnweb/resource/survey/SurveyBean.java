@@ -32,7 +32,7 @@ public class SurveyBean extends ApplicationBean implements Serializable {
 
     private String goBackPage; // contains a link the user should go to after filling in a survey
     private String goBackPageLink; // link to the go back page derived from goBackPage name
-    private String goBackPageTitle; //  title of the go back link
+    private String goBackPageTitle; // title of the go back link
 
     @Inject
     private SurveyDao surveyDao;

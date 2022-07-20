@@ -9,6 +9,7 @@ import org.jsoup.safety.Safelist;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.searchhistory.SearchAnnotation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -119,10 +120,6 @@ public class ResourceDecorator implements Serializable {
         return resource.getDescription();
     }
 
-    public String getDescriptionHTML() {
-        return resource.getDescriptionHTML();
-    }
-
     public String getEmbeddedCode() {
         return resource.getEmbeddedCode();
     }
@@ -160,15 +157,24 @@ public class ResourceDecorator implements Serializable {
     }
 
     public boolean isArchived() {
-        return resource.isArchived();
+        if (resource instanceof WebResource web) {
+            return web.isArchived();
+        }
+        return false;
     }
 
     public ArchiveUrl getFirstArchivedObject() {
-        return resource.getFirstArchivedObject();
+        if (resource instanceof WebResource web) {
+            return web.getFirstArchivedObject();
+        }
+        return null;
     }
 
     public ArchiveUrl getLastArchivedObject() {
-        return resource.getLastArchivedObject();
+        if (resource instanceof WebResource web) {
+            return web.getLastArchivedObject();
+        }
+        return null;
     }
 
     public User getUser() {

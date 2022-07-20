@@ -30,11 +30,11 @@
                 <div class="d-flex">
                     <div class="me-auto">
                         #{msg.courses}
-                        <p:button icon="ui-icon-help" onclick="return false;"/>
+                        <p:button icon="fas fa-circle-question" onclick="return false;"/>
                         <p:tooltip for="@previous" value="On this page you can add, delete and edit courses as well as view user submissions."/>
                     </div>
                     <div class="d-md-block d-flex flex-column">
-                        <p:commandButton value="#{msg.create}" styleClass="float-end alt-btn" onclick="PF('createCourseWidget').show();"/>
+                        <p:commandButton value="#{msg.create}" styleClass="float-end ui-button-warning" onclick="PF('createCourseWidget').show();"/>
                     </div>
                 </div>
             </f:facet>
@@ -51,14 +51,14 @@
                         <p:dataExporter type="xls" target="courses" fileName="users"/>
                     </h:commandLink>
 
-                    <h:commandLink styleClass="text-gray p-1">
+                    <h:commandLink styleClass="text-secondary p-1">
                         <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="courses" fileName="users"/>
                     </h:commandLink>
                 </h:panelGroup>
             </f:facet>
 
-            <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none" filterBy="#{course.id}">
+            <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="dd-sm-none" filterBy="#{course.id}">
                 <h:outputText value="#{course.id}"/>
             </p:column>
 
@@ -66,17 +66,17 @@
                 <h:outputText value="#{course.title}"/>
             </p:column>
 
-            <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.wizardParam}" filterBy="#{course.wizardParam}" filterMatchMode="contains">
-                <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.wizardDisabled}"/>
+            <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.registrationWizard}" filterBy="#{course.registrationWizard}" filterMatchMode="contains">
+                <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.registrationClosed}"/>
 
-                <h:outputLink value="#{of:getRequestBaseURL()}wizard=#{course.wizardParam}" rendered="#{not course.wizardDisabled}">
-                    <h:outputText value="#{course.wizardParam}"/>
+                <h:outputLink value="#{of:getRequestBaseURL()}wizard=#{course.registrationWizard}" rendered="#{not course.registrationClosed}">
+                    <h:outputText value="#{course.registrationWizard}"/>
                 </h:outputLink>
 	        </p:column>
 
-            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center dd-sm-none" sortBy="#{course.createdAt}">
+            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="dd-sm-none" sortBy="#{course.createdAt}">
                 <h:outputText value="#{course.createdAt}">
-                    <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                    <f:convertDateTime timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
 
@@ -84,7 +84,7 @@
                 <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
             </p:column>
 
-            <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}" styleClass="td-text-center dd-xs-none">
+            <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}" styleClass="dd-xs-none">
                 <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
             </p:column>
 
@@ -124,21 +124,21 @@
                 <h:outputText value="#{msg.please_wait}"/>
             </p:blockUI>
 
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg.course_title}:"/>
                 <p:inputText value="#{adminCoursesBean.newCourse.title}" required="true"/>
                 <p:message for="@previous"/>
             </div>
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg.registration_wizard}:"/>
-                <p:inputText value="#{adminCoursesBean.newCourse.wizardParam}"/>
+                <p:inputText value="#{adminCoursesBean.newCourse.registrationWizard}"/>
                 <p:message for="@previous"/>
             </div>
             <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" update="@form :courses_table" process="@form"
-                             onstart="PF('createCourseOverlay').show();" oncomplete="PF('createCourseOverlay').hide();if (!args.validationFailed) {PF('createCourseWidget').hide();}"/>
-            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourseAndGroup()}" value="Add course and group" styleClass="alt-btn ms-1"
+                             onstart="PF('createCourseOverlay').show();" oncomplete="PF('createCourseOverlay').hide();if(!args.validationFailed){PF('createCourseWidget').hide();}"/>
+            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourseAndGroup()}" value="Add course and group" styleClass="ui-button-warning ms-1"
                              update="@form :courses_table" process="@form" onstart="PF('createCourseOverlay').show();"
-                             oncomplete="PF('createCourseOverlay').hide();if (!args.validationFailed) {PF('createCourseWidget').hide();}"/>
+                             oncomplete="PF('createCourseOverlay').hide();if(!args.validationFailed){PF('createCourseWidget').hide();}"/>
         </h:form>
     </p:dialog>
 </ui:define>

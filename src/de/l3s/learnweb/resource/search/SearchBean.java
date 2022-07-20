@@ -37,6 +37,8 @@ import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.resource.web.WebResource;
+import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
@@ -80,7 +82,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         log.debug("mode/action: {}; filter: {} - service: {}; query:{}", queryMode, queryFilters, queryService, query);
 
         if (null == queryMode) {
-            queryMode = getPreference("SEARCH_ACTION", "text");
+            queryMode = getPreference("SEARCH_ACTION", getUser().getOrganisation().getDefaultSearchMode().name());
         }
 
         if ("text".equals(queryMode) || "web".equals(queryMode)) {
@@ -159,11 +161,11 @@ public class SearchBean extends ApplicationBean implements Serializable {
             if (selectedResource.getId() == 0) { // resource is not yet stored at the database
                 newResource = selectedResource.getResource();
                 if (newResource.getService() == ResourceService.bing) { // resource which is already saved in database already has wayback captures stored
-                    Beans.getInstance(WaybackCapturesLogger.class).logWaybackCaptures(newResource);
+                    Beans.getInstance(WaybackCapturesLogger.class).logWaybackCaptures((WebResource) newResource);
                 }
             } else {
                 // create a copy
-                newResource = new Resource(selectedResource.getResource());
+                newResource = selectedResource.getResource().cloneResource();
             }
 
             newResource.setQuery(query);
@@ -271,13 +273,19 @@ public class SearchBean extends ApplicationBean implements Serializable {
             }
             searchService = ResourceService.valueOf(service);
         } catch (Exception e) {
-            if (searchMode == SearchMode.text) {
-                searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_TEXT", "bing"));
-            } else if (searchMode == SearchMode.image) {
-                searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_IMAGE", "flickr"));
-            } else if (searchMode == SearchMode.video) {
-                searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_VIDEO", "youtube"));
-            }
+            String prefService = switch (searchMode) {
+                case text -> "SEARCH_SERVICE_TEXT";
+                case image -> "SEARCH_SERVICE_IMAGE";
+                case video -> "SEARCH_SERVICE_VIDEO";
+                case group -> null;
+            };
+            String defService = switch (searchMode) {
+                case text -> getUser().getOrganisation().getDefaultSearchServiceText().name();
+                case image -> getUser().getOrganisation().getDefaultSearchServiceImage().name();
+                case video -> getUser().getOrganisation().getDefaultSearchServiceVideo().name();
+                case group -> "learnweb";
+            };
+            searchService = ResourceService.valueOf(isShowAlternativeSources() ? getPreference(prefService, defService) : defService);
         }
 
         queryService = searchService.name();
@@ -388,6 +396,10 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
     public int getCounter() {
         return counter++;
+    }
+
+    public boolean isShowAlternativeSources() {
+        return !getUser().getOrganisation().getOption(Organisation.Option.Search_Disable_alternative_sources);
     }
 
     @Serial

@@ -381,7 +381,9 @@ public class ResourcePreviewMaker implements Serializable {
                 resource.setOnlineStatus(Resource.OnlineStatus.PROCESSING);
                 Learnweb.getInstance().getResourcePreviewMaker().processResource(resource);
                 resource.setOnlineStatus(Resource.OnlineStatus.ONLINE);
-                resource.save();
+                if (resource.getId() > 0) {
+                    resource.save();
+                }
             } catch (Exception e) {
                 log.error("Error in CreateThumbnailThread", e);
             }

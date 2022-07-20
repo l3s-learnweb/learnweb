@@ -19,7 +19,7 @@
                     <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
                                    update=":copy_resource_dialog" process="@this" oncomplete="PF('copyResourceDialog').show();"
                                    styleClass="fas fa-fw fa-copy mb-1 text-decoration-none text-secondary"/>
-                    <p:tooltip for="@previous" value="#{msg.addToMyResources}" position="right"  hideEffect="clip"/>
+                    <p:tooltip for="@previous" value="#{msg.addToMyResources}" position="right" hideEffect="clip"/>
                 </ui:fragment>
 
                 <ui:fragment rendered="${res.clicked}">

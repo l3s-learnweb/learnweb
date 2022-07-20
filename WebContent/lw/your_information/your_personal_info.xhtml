@@ -18,7 +18,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <h:form id="yourinformationform">
+    <h:form id="your_personal_info_form">
         <div class="dashboard flex-center">
             <div class="ui-panel ui-widget ui-widget-content ui-corner-all profile-details">
                 <div class="ui-panel-content ui-widget-content">
@@ -38,7 +38,7 @@
                                     <div class="stats-numbers"><h:outputText value="#{msg.dateofbirth}"/></div>
                                     <div class="stats-title">
                                         <h:outputText value="#{of:coalesce(userBean.user.dateOfBirth, 'N/D')}">
-                                            <f:convertDateTime dateStyle="default" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                                            <f:convertDateTime type="localDateTime" timeZone="#{userBean.timeZone}"/>
                                         </h:outputText>
                                     </div>
                                 </div>

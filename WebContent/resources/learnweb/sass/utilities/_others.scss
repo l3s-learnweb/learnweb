@@ -92,10 +92,6 @@ section:target .highlight {
   }
 }
 
-.white-space-normal {
-  white-space: normal !important;
-}
-
 .links-list {
   flex-wrap: wrap;
   display: flex;
@@ -151,4 +147,8 @@ section:target .highlight {
 
 .encrypt-email::after {
   content: attr(data-name) '@' attr(data-domain) '.' attr(data-tld);
+}
+
+.sticky-top {
+  z-index: 1000 !important;
 }

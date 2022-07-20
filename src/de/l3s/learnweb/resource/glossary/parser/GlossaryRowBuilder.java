@@ -14,6 +14,7 @@ import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.resource.glossary.Column;
 import de.l3s.learnweb.resource.glossary.GlossaryEntry;
 import de.l3s.learnweb.resource.glossary.GlossaryTerm;
+import de.l3s.util.bean.BeanHelper;
 
 public class GlossaryRowBuilder {
     protected int topicOneHeaderPosition = -1;
@@ -83,7 +84,21 @@ public class GlossaryRowBuilder {
      * Check if the given value is equal to any translated name of the given column.
      */
     private boolean isEqualForAnyLocale(String value, Column column) {
-        return LanguageBundle.isEqualForAnyLocale(value, column.getMsgKey());
+        return isEqualForAnyLocale(value, column.getMsgKey());
+    }
+
+    /**
+     * True if the given value is equal to any translation of the given msg key.
+     */
+    static boolean isEqualForAnyLocale(String value, String msgKey) {
+        for (Locale localeToCheck : BeanHelper.getSupportedLocales()) {
+            String translation = LanguageBundle.getBundle(localeToCheck).getString(msgKey);
+
+            if (value.equalsIgnoreCase(translation)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static String getStringValueForCell(Cell cell) {

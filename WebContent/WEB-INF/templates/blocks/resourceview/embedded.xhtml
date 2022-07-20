@@ -2,6 +2,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
@@ -46,15 +47,8 @@
                 <iframe src="#{fn:replace(res.url, 'http://', 'https://')}" title="#{res.title}"></iframe>
             </p:tab>
             <p:tab title="${msg['resource.tab.ARCHIVED']}">
-                <h:form>
-                    <p:commandButton process="@this" immediate="true" action="#{resourceDetailBean.archiveCurrentVersion}"
-                                     icon="fas fas fa-camera-retro" value="#{msg['Archive.now']}" styleClass="d-block position-absolute top-0 end-0 mx-3 my-1"
-                                     rendered="#{res.type eq 'website'}"/>
-                    <ui:fragment rendered="#{not empty res.archiveUrls}">
-                        <iframe src="#{res.archiveUrls[0].archiveUrl}" title="#{res.title}"></iframe>
-                    </ui:fragment>
-                    <h:outputText rendered="#{empty res.archiveUrls}">This page has no archived yet</h:outputText>
-                </h:form>
+                <iframe src="#{res.archiveUrls[0].archiveUrl}" title="#{res.title}" jsf:rendered="#{not empty res.archiveUrls}"></iframe>
+                <p class="d-block text-white m-3" jsf:rendered="#{empty res.archiveUrls}">This page has not been archived yet.</p>
             </p:tab>
         </p:tabView>
     </c:when>
@@ -71,18 +65,18 @@
         <!-- quick and dirty solution to link to surveys need complete refactoring -->
         <div style="position: absolute; top: 50%; transform: translateY(-50%); text-align: center; width: 100%;">
             <ui:fragment rendered="#{userBean.admin}">
-                <p:linkButton outcome="/lw/survey/template" icon="fas fa-window-maximize" styleClass="secondary-btn" value="Edit Template"
+                <p:linkButton outcome="/lw/survey/template" icon="fas fa-window-maximize" styleClass="ui-button-secondary" value="Edit Template"
                               target="_top" rendered="#{res.type eq 'survey'}">
                     <f:param name="resource_id" value="#{res.id}"/>
                 </p:linkButton>
 
-                <p:linkButton outcome="/lw/survey/results" icon="fas fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open_results']}"
+                <p:linkButton outcome="/lw/survey/results" icon="fas fa-list-alt" styleClass="ui-button-secondary" value="#{msg['survey.open_results']}"
                               target="_top" rendered="#{res.type eq 'survey' and userBean.user.moderator}">
                     <f:param name="resource_id" value="#{res.id}"/>
                 </p:linkButton>
             </ui:fragment>
 
-            <p:linkButton outcome="/lw/survey/survey" icon="fas fa-list-alt" styleClass="secondary-btn" value="#{msg['survey.open']}" target="_top" >
+            <p:linkButton outcome="/lw/survey/survey" icon="fas fa-list-alt" styleClass="ui-button-secondary" value="#{msg['survey.open']}" target="_top" >
                 <f:param name="resource_id" value="#{res.id}"/>
             </p:linkButton>
         </div>

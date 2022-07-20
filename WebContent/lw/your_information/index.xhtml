@@ -14,7 +14,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-	<h:form id="yourinformationform">
+	<h:form id="your_information_form">
 		<div class="w-100 p-0">
 			<div class="ui-panel ui-widget ui-widget-content ui-corner-all">
 				<div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
@@ -25,106 +25,104 @@
 				<div class="ui-panel-content ui-widget-content">
 					<h:outputFormat value="#{msg['your_info.intro_msg']}"/>
 				</div>
-				<div class="ui-fluid">
-					<div class="card">
-						<div class="ui-menu ui-widget ui-widget-content ui-corner-all ui-helper-clearfix" role="menu">
-							<ul class="ui-menu-list ui-helper-reset">
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_personal_info.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-user"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['personal_info']}"/>
-										</span>
-									</a>
-								</li>
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_courses.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-graduation-cap"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['your_info.courses_msg']}">
-												<f:param value="#{userBean.user.coursesCount}"/>
-											</h:outputFormat>
-										</span>
-									</a>
-								</li>
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_groups.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-users"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['your_info.groups_msg']}">
-												<f:param value="#{userBean.user.groupCount}"/>
-											</h:outputFormat>
-										</span>
-									</a>
-								</li>
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_posts.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-comment-dots"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['your_info.posts_msg']}">
-												<f:param value="#{userBean.user.forumPostCount}"/>
-											</h:outputFormat>
-										</span>
-									</a>
-								</li>
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_resources.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-folder-open"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['your_info.resources_msg']}">
-												<f:param value="#{userBean.user.resourceCount}"/>
-											</h:outputFormat>
-										</span>
-									</a>
-								</li>
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_messages.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-envelope"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['your_info.received_messages_msg']}">
-												<f:param value="#{yourGeneralInfoBean.receivedMessagesCount}"/>
-											</h:outputFormat>
-										</span>
-									</a>
-								</li>
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_messages.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-reply"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['your_info.sent_messages_msg']}">
-												<f:param value="#{yourGeneralInfoBean.sentMessagesCount}"/>
-											</h:outputFormat>
-										</span>
-									</a>
-								</li>
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_submissions.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-edit"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['your_info.submissions_msg']}">
-												<f:param value="#{yourGeneralInfoBean.submissionsCount}"/>
-											</h:outputFormat>
-										</span>
-									</a>
-								</li>
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_search_history.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-history"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['your_info.history_msg']}"/>
-										</span>
-									</a>
-								</li>
-								<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
-									<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_activity.jsf">
-										<span class="ui-menuitem-icon fas fa-fw fa-database"></span>
-										<span class="ui-menuitem-text">
-											<h:outputFormat value="#{msg['your_info.activity_msg']}"/>
-										</span>
-									</a>
-								</li>
-							</ul>
-						</div>
+				<div class="card">
+					<div class="ui-menu ui-widget ui-widget-content ui-corner-all ui-helper-clearfix" role="menu">
+						<ul class="ui-menu-list ui-helper-reset">
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_personal_info.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-user"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['personal_info']}"/>
+									</span>
+								</a>
+							</li>
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_courses.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-graduation-cap"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['your_info.courses_msg']}">
+											<f:param value="#{userBean.user.coursesCount}"/>
+										</h:outputFormat>
+									</span>
+								</a>
+							</li>
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_groups.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-users"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['your_info.groups_msg']}">
+											<f:param value="#{userBean.user.groupCount}"/>
+										</h:outputFormat>
+									</span>
+								</a>
+							</li>
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_posts.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-comment-dots"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['your_info.posts_msg']}">
+											<f:param value="#{userBean.user.forumPostCount}"/>
+										</h:outputFormat>
+									</span>
+								</a>
+							</li>
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_resources.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-folder-open"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['your_info.resources_msg']}">
+											<f:param value="#{userBean.user.resourceCount}"/>
+										</h:outputFormat>
+									</span>
+								</a>
+							</li>
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_messages.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-envelope"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['your_info.received_messages_msg']}">
+											<f:param value="#{yourGeneralInfoBean.receivedMessagesCount}"/>
+										</h:outputFormat>
+									</span>
+								</a>
+							</li>
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_messages.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-reply"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['your_info.sent_messages_msg']}">
+											<f:param value="#{yourGeneralInfoBean.sentMessagesCount}"/>
+										</h:outputFormat>
+									</span>
+								</a>
+							</li>
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_submissions.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-edit"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['your_info.submissions_msg']}">
+											<f:param value="#{yourGeneralInfoBean.submissionsCount}"/>
+										</h:outputFormat>
+									</span>
+								</a>
+							</li>
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_search_history.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-history"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['your_info.history_msg']}"/>
+									</span>
+								</a>
+							</li>
+							<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+								<a class="ui-menuitem-link ui-corner-all" href="#{request.contextPath}/lw/your_information/your_activity.jsf">
+									<span class="ui-menuitem-icon fas fa-fw fa-database"></span>
+									<span class="ui-menuitem-text">
+										<h:outputFormat value="#{msg['your_info.activity_msg']}"/>
+									</span>
+								</a>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>

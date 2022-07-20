@@ -25,7 +25,7 @@
 				<div class="d-flex">
 					<div class="me-auto">#{msg.organisations}</div>
 					<div class="d-md-block d-flex flex-column">
-						<p:commandButton value="#{msg.create}" styleClass="float-end alt-btn" onclick="PF('createOrgWidget').show();"/>
+						<p:commandButton value="#{msg.create}" styleClass="float-end ui-button-warning" onclick="PF('createOrgWidget').show();"/>
 					</div>
 				</div>
 			</f:facet>
@@ -50,7 +50,7 @@
 
 	<p:dialog header="#{msg.add_new_organisation}" styleClass="overflow-hidden" widgetVar="createOrgWidget">
 		<h:form id="addorganisation">
-			<div class="form-group">
+			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.organisation_title}:"/>
 				<p:inputText value="#{adminOrganisationsBean.newOrganisationTitle}"/>
 				<p:message for="@previous"/>

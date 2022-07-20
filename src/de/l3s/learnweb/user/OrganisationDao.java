@@ -14,6 +14,7 @@ import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
+import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.util.Cache;
 import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
@@ -49,7 +50,9 @@ public interface OrganisationDao extends SqlObject, Serializable {
         params.put("organisation_id", SqlHelper.toNullable(organisation.getId()));
         params.put("title", organisation.getTitle());
         params.put("welcome_page", organisation.getWelcomePage());
-        params.put("welcome_message", organisation.getWelcomeMessage());
+        params.put("welcome_message", SqlHelper.toNullable(organisation.getWelcomeMessage()));
+        params.put("terms_and_conditions", SqlHelper.toNullable(organisation.getTermsAndConditions()));
+        params.put("default_search_mode", organisation.getDefaultSearchMode());
         params.put("default_search_text", organisation.getDefaultSearchServiceText());
         params.put("default_search_image", organisation.getDefaultSearchServiceImage());
         params.put("default_search_video", organisation.getDefaultSearchServiceVideo());
@@ -58,7 +61,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
         params.put("banner_image_file_id", SqlHelper.toNullable(organisation.getBannerImageFileId()));
         params.put("tracker_api_key", SqlHelper.toNullable(organisation.getTrackerApiKey()));
         params.put("glossary_languages", StringHelper.join(organisation.getGlossaryLanguages()));
-        SqlHelper.setBitSet(params, "options_field", organisation.getOptions());
+        SqlHelper.setBitSet(params, Organisation.Option.values().length, "options_field", organisation.getOptions());
 
         Optional<Integer> organisationId = SqlHelper.handleSave(getHandle(), "lw_organisation", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -79,6 +82,8 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 organisation.setTitle(rs.getString("title"));
                 organisation.setWelcomePage(rs.getString("welcome_page"));
                 organisation.setWelcomeMessage(rs.getString("welcome_message"));
+                organisation.setTermsAndConditions(rs.getString("terms_and_conditions"));
+                organisation.setDefaultSearchMode(SearchMode.valueOf(rs.getString("default_search_mode")));
                 organisation.setDefaultSearchServiceText(rs.getString("default_search_text"));
                 organisation.setDefaultSearchServiceImage(rs.getString("default_search_image"));
                 organisation.setDefaultSearchServiceVideo(rs.getString("default_search_video"));
@@ -87,7 +92,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 organisation.setBannerImageFileId(rs.getInt("banner_image_file_id"));
                 organisation.setTrackerApiKey(rs.getString("tracker_api_key"));
                 organisation.setGlossaryLanguages(StringHelper.splitLocales(rs.getString("glossary_languages")));
-                organisation.setOptions(SqlHelper.getBitSet(rs, "options_field", Organisation.Option.values().length));
+                organisation.setOptions(SqlHelper.getBitSet(rs, Organisation.Option.values().length, "options_field"));
                 cache.put(organisation);
             }
             return organisation;

@@ -27,6 +27,7 @@ import de.l3s.learnweb.resource.MetadataField;
 import de.l3s.learnweb.resource.MetadataField.MetadataType;
 import de.l3s.learnweb.resource.ResourceMetaDataBean;
 import de.l3s.learnweb.resource.ResourceService;
+import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.util.HasId;
 
 public class Organisation implements HasId, Serializable, Comparable<Organisation> {
@@ -42,14 +43,15 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         Groups_Hide_public_groups,
         Privacy_Proxy_enabled,
         Privacy_Anonymize_usernames,
-        Resource_Show_Content_Annotation_Field, // not used any more
+        Privacy_Profile_prevent_edit,
         Privacy_Logging_disabled,
         Privacy_Tracker_disabled,
         Users_Hide_language_switch,
         Glossary_Add_Watermark,
         Glossary_Mandatory_Description,
         Glossary_Enable_Import, // enables the glossary file import
-        Privacy_Eyes_Tracking
+        Unused_1,
+        Search_Disable_alternative_sources
     }
 
     private int id;
@@ -57,7 +59,9 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     @Length(min = 2, max = 60)
     private String title;
     private String welcomeMessage;
+    private String termsAndConditions;
     private String welcomePage = "myhome/welcome.jsf"; // page to show after login
+    private SearchMode defaultSearchMode = SearchMode.text;
     private ResourceService defaultSearchServiceText = ResourceService.bing;
     private ResourceService defaultSearchServiceImage = ResourceService.flickr;
     private ResourceService defaultSearchServiceVideo = ResourceService.youtube;
@@ -240,6 +244,16 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadata.getOptions().add("Young learners");
             metadata.getOptions().add("Pre-school");
             metadataFields.add(metadata);
+        } else if (id == 1604) { // SoMeCliCS
+            metadataFields.add(new MetadataField("title", "title", MetadataType.INPUT_TEXT, true));
+            metadataFields.add(new MetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
+
+            metadata = new MetadataField("someclics_relation", "Climate change relation", MetadataType.ONE_MENU);
+            metadata.setInfo("How the resource related to the climate change?");
+            metadata.getOptions().add("Acceptance");
+            metadata.getOptions().add("Denial");
+            metadata.getOptions().add("Both");
+            metadataFields.add(metadata);
         } else {
             metadataFields.add(new MetadataField("title", "title", MetadataType.INPUT_TEXT, true));
             metadataFields.add(new MetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
@@ -277,6 +291,14 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         this.welcomeMessage = welcomeMessage;
     }
 
+    public String getTermsAndConditions() {
+        return termsAndConditions;
+    }
+
+    public void setTermsAndConditions(final String termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
+    }
+
     /**
      * The page that will be displayed after a user logs in.
      */
@@ -302,6 +324,14 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
 
     protected void setOptions(BitSet options) {
         this.options = options;
+    }
+
+    public SearchMode getDefaultSearchMode() {
+        return defaultSearchMode;
+    }
+
+    public void setDefaultSearchMode(final SearchMode defaultSearchMode) {
+        this.defaultSearchMode = defaultSearchMode;
     }
 
     public ResourceService getDefaultSearchServiceText() {

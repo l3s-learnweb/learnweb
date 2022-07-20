@@ -1,16 +1,15 @@
 package de.l3s.learnweb.component;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import jakarta.faces.component.FacesComponent;
 import jakarta.faces.component.UIComponentBase;
-import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.FacesLocal;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.user.User;
@@ -27,9 +26,7 @@ public class LearnwebUser extends UIComponentBase {
     }
 
     @Override
-    public void encodeBegin(FacesContext context) throws IOException {
-        String styleClass = (String) getAttributes().get("styleClass");
-        String style = (String) getAttributes().get("style");
+    public void encodeAll(final FacesContext context) throws IOException {
         try {
             user = (User) getAttributes().get("user");
             if (user == null) {
@@ -39,16 +36,26 @@ public class LearnwebUser extends UIComponentBase {
             log.error("IOException while passing User", e);
             return;
         }
-        int userId = user.getId();
-
-        UIViewRoot viewRoot = context.getViewRoot();
-        Locale locale = viewRoot.getLocale();
-        ResponseWriter writer = context.getResponseWriter();
 
         if (user.isDeleted()) {
-            writer.write(LanguageBundle.getLanguageBundle(locale).getString("deleted_user"));
+            ResponseWriter writer = context.getResponseWriter();
+
+            writer.startElement("span", this);
+            writer.write(LanguageBundle.getBundle(FacesLocal.getLocale(context)).getFormatted("deleted_user"));
+            writer.endElement("span");
             return;
         }
+
+        super.encodeAll(context);
+    }
+
+    @Override
+    public void encodeBegin(FacesContext context) throws IOException {
+        String styleClass = (String) getAttributes().get("styleClass");
+        String style = (String) getAttributes().get("style");
+        int userId = user.getId();
+
+        ResponseWriter writer = context.getResponseWriter();
         writer.startElement("a", this);
         writer.writeAttribute("href", ("user/detail.jsf?user_id=" + userId), null);
         if (styleClass != null) {

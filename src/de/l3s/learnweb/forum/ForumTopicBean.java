@@ -51,7 +51,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
         BeanAssert.notDeleted(topic);
 
         group = groupDao.findByIdOrElseThrow(topic.getGroupId());
-        BeanAssert.hasPermission(group.canViewResources(getUser()));
+        BeanAssert.hasPermission(group.canViewGroup(getUser()));
 
         posts = forumPostDao.findByTopicId(topicId);
         forumTopicDao.updateIncreaseViews(topicId);
@@ -90,7 +90,7 @@ public class ForumTopicBean extends ApplicationBean implements Serializable {
     }
 
     public List<SelectItem> getCategories() {
-        return ForumBean.getCategoriesByCourse(group.getCourseId(), getUserBean().getLocale());
+        return ForumBean.getCategoriesByCourse(group.getCourseId(), getUserBean().getBundle());
     }
 
     public void deletePost(ForumPost post) {

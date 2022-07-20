@@ -94,9 +94,9 @@ public class LogEntry implements Serializable {
         return action == Action.adding_resource && getResource() != null && getResource().getQuery() != null;
     }
 
-    private String getGroupLink(Locale locale) {
+    private String getGroupLink(LanguageBundle bundle) {
         if (getGroupId() == 0) {
-            return "<a href=\"myhome/resources.jsf\" >" + LanguageBundle.getLocaleMessage(locale, "myPrivateResources") + "</a> ";
+            return "<a href=\"myhome/resources.jsf\" >" + bundle.getFormatted("myPrivateResources") + "</a> ";
         }
 
         Group group = getGroup();
@@ -108,27 +108,27 @@ public class LogEntry implements Serializable {
         }
     }
 
-    private String getUsernameLink(Locale locale) {
+    private String getUsernameLink(LanguageBundle bundle) {
         if (getUser() == null || getUser().isDeleted()) {
             return "<b>Deleted user</b>";
         }
         return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getUsername() + "</a>";
     }
 
-    private String getCommentText(int commentId, Locale locale) {
+    private String getCommentText(int commentId, LanguageBundle bundle) {
         Optional<Comment> comment = Learnweb.dao().getCommentDao().findById(commentId);
-        return comment.map(value -> " " + LanguageBundle.getLocaleMessage(locale, "with") + " <b>"
+        return comment.map(value -> " " + bundle.getFormatted("with") + " <b>"
             + StringHelper.shortnString(value.getText(), 100) + "</b>").orElse("");
     }
 
-    private String getResourceLink(Locale locale) {
+    private String getResourceLink(LanguageBundle bundle) {
         if (getResource() != null) {
             return "<a href=\"resource.jsf?resource_id=" + getResource().getId() + "\" target=\"_top\"><b>" + StringHelper.shortnString(getResource().getTitle(), 40) + "</b></a> ";
         }
-        return LanguageBundle.getLocaleMessage(locale, "log_a_resource");
+        return bundle.getFormatted("log_a_resource");
     }
 
-    private String getForumLink(Locale locale) {
+    private String getForumLink(LanguageBundle bundle) {
         return "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" target=\"_top\"><b>" + getParams() + "</b></a> ";
     }
 
@@ -139,117 +139,117 @@ public class LogEntry implements Serializable {
         };
     }
 
-    public String getDescription(Locale locale) {
+    public String getDescription(LanguageBundle bundle) {
         // create description cache if it doesn't exist yet
         if (null == descriptions) {
             descriptions = new HashMap<>();
         }
 
         // try to get description from cache
-        String description = descriptions.get(locale);
+        String description = descriptions.get(bundle.getLocale());
         if (description != null) {
             return description;
         }
 
-        String usernameLink = getUsernameLink(locale) + " ";
+        String usernameLink = getUsernameLink(bundle) + " ";
 
         description = switch (getAction()) {
             case adding_resource:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_adding_resource", getResourceLink(locale), getGroupLink(locale));
+                yield usernameLink + bundle.getFormatted("log_adding_resource", getResourceLink(bundle), getGroupLink(bundle));
             case deleting_resource:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_deleting_resource", "<b>" + getParams() + "</b>");
+                yield usernameLink + bundle.getFormatted("log_deleting_resource", "<b>" + getParams() + "</b>");
             case edit_resource:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_edit_resource", getResourceLink(locale));
+                yield usernameLink + bundle.getFormatted("log_edit_resource", getResourceLink(bundle));
             case move_resource:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_move_resource", getResourceLink(locale));
+                yield usernameLink + bundle.getFormatted("log_move_resource", getResourceLink(bundle));
             case opening_resource:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_opening_resource", getResourceLink(locale));
+                yield usernameLink + bundle.getFormatted("log_opening_resource", getResourceLink(bundle));
             case tagging_resource:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_tagging_resource", getResourceLink(locale), getParams());
+                yield usernameLink + bundle.getFormatted("log_tagging_resource", getResourceLink(bundle), getParams());
             case commenting_resource:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_commenting_resource", getResourceLink(locale))
-                    + getCommentText(NumberUtils.toInt(getParams()), locale);
+                yield usernameLink + bundle.getFormatted("log_commenting_resource", getResourceLink(bundle))
+                    + getCommentText(NumberUtils.toInt(getParams()), bundle);
             case deleting_comment:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_deleting_comment", getResourceLink(locale));
+                yield usernameLink + bundle.getFormatted("log_deleting_comment", getResourceLink(bundle));
             case rating_resource, thumb_rating_resource:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_thumb_rating_resource", getResourceLink(locale));
+                yield usernameLink + bundle.getFormatted("log_thumb_rating_resource", getResourceLink(bundle));
             case searching:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_searching_resource", getParams());
+                yield usernameLink + bundle.getFormatted("log_searching_resource", getParams());
             case downloading:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_downloading", getResourceLink(locale));
+                yield usernameLink + bundle.getFormatted("log_downloading", getResourceLink(bundle));
             case changing_office_resource:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_document_changing", getResourceLink(locale));
+                yield usernameLink + bundle.getFormatted("log_document_changing", getResourceLink(bundle));
             case adding_resource_metadata:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_add_resource_metadata", getParams()) + getResourceLink(locale);
+                yield usernameLink + bundle.getFormatted("log_add_resource_metadata", getParams()) + getResourceLink(bundle);
 
-                // Folder actions
+            // Folder actions
             case add_folder:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_add_folder", getParams());
+                yield usernameLink + bundle.getFormatted("log_add_folder", getParams());
             case deleting_folder:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_deleting_folder", getParams());
+                yield usernameLink + bundle.getFormatted("log_deleting_folder", getParams());
             case move_folder:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_move_folder", getParams());
+                yield usernameLink + bundle.getFormatted("log_move_folder", getParams());
             case opening_folder:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_open_folder", getParams());
+                yield usernameLink + bundle.getFormatted("log_open_folder", getParams());
 
-                // Group actions
+            // Group actions
             case group_joining:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_joining", getGroupLink(locale));
+                yield usernameLink + bundle.getFormatted("log_group_joining", getGroupLink(bundle));
             case group_leaving:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_leaving", getGroupLink(locale));
+                yield usernameLink + bundle.getFormatted("log_group_leaving", getGroupLink(bundle));
             case group_creating:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_creating", getGroupLink(locale));
+                yield usernameLink + bundle.getFormatted("log_group_creating", getGroupLink(bundle));
             case group_deleting:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_deleting", getParams());
+                yield usernameLink + bundle.getFormatted("log_group_deleting", getParams());
             case group_changing_title:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_changing_title", getGroupLink(locale));
+                yield usernameLink + bundle.getFormatted("log_group_changing_title", getGroupLink(bundle));
             case group_changing_description:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_changing_description", getGroupLink(locale));
+                yield usernameLink + bundle.getFormatted("log_group_changing_description", getGroupLink(bundle));
             case group_changing_leader:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_changing_leader", getGroupLink(locale));
+                yield usernameLink + bundle.getFormatted("log_group_changing_leader", getGroupLink(bundle));
             case group_deleting_link:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_group_deleting_link", getGroupLink(locale));
+                yield usernameLink + bundle.getFormatted("log_group_deleting_link", getGroupLink(bundle));
             case forum_topic_added:
-                yield usernameLink + "has added " + "<b>" + getForumLink(locale) + "</b>" + " post";
+                yield usernameLink + "has added " + "<b>" + getForumLink(bundle) + "</b>" + " post";
             case forum_post_added:
-                yield usernameLink + "has replied to " + "<b>" + getForumLink(locale) + "</b>" + " topic";
+                yield usernameLink + "has replied to " + "<b>" + getForumLink(bundle) + "</b>" + " topic";
 
-                // General actions
+            // General actions
             case login:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_login");
+                yield usernameLink + bundle.getFormatted("log_login");
             case logout:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_logout");
+                yield usernameLink + bundle.getFormatted("log_logout");
             case register:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_register");
+                yield usernameLink + bundle.getFormatted("log_register");
             case changing_profile:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_change_profile");
+                yield usernameLink + bundle.getFormatted("log_change_profile");
             case submission_view_resources:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_submission_view_resources");
+                yield usernameLink + bundle.getFormatted("log_submission_view_resources");
             case submission_submitted:
-                yield usernameLink + LanguageBundle.getLocaleMessage(locale, "log_submission_submit");
+                yield usernameLink + bundle.getFormatted("log_submission_submit");
             case glossary_entry_edit:
-                yield usernameLink + " has edited an entry of " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + " has edited an entry of " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
             case glossary_entry_delete:
-                yield usernameLink + "has deleted an entry from " + getResourceLink(locale); // TODO @kemkes: incorporate details of entry, translate
+                yield usernameLink + "has deleted an entry from " + getResourceLink(bundle); // TODO @kemkes: incorporate details of entry, translate
             case glossary_entry_add:
-                yield usernameLink + "has added an entry to " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + "has added an entry to " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
             case glossary_term_edit:
-                yield usernameLink + "has edited a term in " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + "has edited a term in " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
             case glossary_term_add:
-                yield usernameLink + "has added a term to " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + "has added a term to " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
             case glossary_term_delete:
-                yield usernameLink + "has removed a term from " + getResourceLink(locale); // TODO @kemkes: incorporate link to entry, translate
+                yield usernameLink + "has removed a term from " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
 
             default:
                 if (getAction().getTargetId() == ActionTargetId.RESOURCE_ID) {
-                    yield usernameLink + " has executed action <i>" + getAction().name() + "</i> on " + getResourceLink(locale);
+                    yield usernameLink + " has executed action <i>" + getAction().name() + "</i> on " + getResourceLink(bundle);
                 } else {
                     yield "Performed action <i>" + getAction().name() + "</i>"; // should never happen;
                 }
         };
         // unused translations that might become useful again: log_opening_url_resource, log_group_removing_resource
 
-        this.descriptions.put(locale, description);
+        this.descriptions.put(bundle.getLocale(), description);
 
         return description;
     }

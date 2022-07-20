@@ -20,7 +20,7 @@
 <ui:define name="center_layout">
 	<h:form>
 		<p:dataTable id="courses_tbl" value="#{userBean.user.courses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
-					 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+					 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
 			<f:facet name="header">
 				<h:outputText value="#{msg['courses']}"/>
 			</f:facet>
@@ -32,12 +32,12 @@
 						<p:dataExporter type="pdf" target="courses_tbl" fileName="courses"/>
 					</h:commandLink>
 
-					<h:commandLink styleClass="text-gray float-end p-1">
+					<h:commandLink styleClass="text-success float-end p-1">
 						<i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
 						<p:dataExporter type="xls" target="courses_tbl" fileName="courses"/>
 					</h:commandLink>
 
-					<h:commandLink styleClass="text-gray float-end p-1">
+					<h:commandLink styleClass="text-secondary float-end p-1">
 						<i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
 						<p:dataExporter type="csv" target="courses_tbl" fileName="courses"/>
 					</h:commandLink>

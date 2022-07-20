@@ -24,7 +24,9 @@ public class File implements Serializable, HasId {
         // general files
         SYSTEM_FILE, // for example course header images
         ORGANISATION_BANNER,
+        COURSE_PICTURE,
         PROFILE_PICTURE,
+        GROUP_PICTURE,
         // resource files
         THUMBNAIL_SMALL, // cropped to 160 x 120 px - the smallest thumbnail used on website
         THUMBNAIL_MEDIUM, // resized <= 280 x 210 px - resource preview image size
@@ -32,6 +34,7 @@ public class File implements Serializable, HasId {
         MAIN, // the file that can be downloaded/viewed
         ORIGINAL, // if the file was converted the original file should be moved to this location
         // special resource files
+        GLOSSARY, // glossary entry pictures
         DOC_HISTORY, // previous version of an office resource
         DOC_CHANGES; // zip file with changes for office resource
 

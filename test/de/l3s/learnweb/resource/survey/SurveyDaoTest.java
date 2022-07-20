@@ -20,7 +20,7 @@ class SurveyDaoTest {
 
     @Test
     void findResourceById() {
-        Optional<SurveyResource> surveyResource =  surveyDao.findResourceById(10);
+        Optional<SurveyResource> surveyResource = surveyDao.findResourceById(10);
         assertTrue(surveyResource.isPresent());
         assertEquals(1, surveyResource.get().getSurveyId());
     }
@@ -108,7 +108,7 @@ class SurveyDaoTest {
 
     @Test
     void loadSurveyResource() {
-        Optional<SurveyResource> surveyResource =  surveyDao.findResourceById(10);
+        Optional<SurveyResource> surveyResource = surveyDao.findResourceById(10);
         assertTrue(surveyResource.isPresent());
         surveyDao.loadSurveyResource(surveyResource.get());
     }

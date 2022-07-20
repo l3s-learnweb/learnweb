@@ -6,7 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZoneId;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 import java.util.Optional;
 
 import jakarta.faces.application.FacesMessage;
@@ -25,7 +25,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -34,7 +33,6 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.util.HashHelper;
 import de.l3s.util.ProfileImageHelper;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -69,7 +67,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private boolean affiliationRequired = false;
     private boolean studentIdRequired = false;
     private String timeZone;
-    private Locale locale;
 
     @Inject
     private CourseDao courseDao;
@@ -81,16 +78,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
     private ConfirmRequiredBean confirmRequiredBean;
 
     public String onLoad() {
-        locale = Faces.getLocale();
-
-        if (null == locale) {
-            log.warn("locale is null; request: {}", BeanHelper.getRequestSummary());
-            locale = Locale.ENGLISH;
-        }
-
         if (StringUtils.isNotEmpty(wizard)) {
             course = courseDao.findByWizard(wizard).orElseThrow(() -> new BadRequestHttpException("register_invalid_wizard_error"));
-            BeanAssert.validate(!course.isWizardDisabledOrNull(), "registration.wizard_disabled");
+            BeanAssert.validate(!course.isRegistrationClosed(), "registration.wizard_disabled");
 
             // special message for yell
             if (course.getId() == 505) {
@@ -103,8 +93,12 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
                 return fastLogin();
             }
         } else {
-            course = courseDao.findByWizard("default").orElseThrow(BeanAssert.NOT_FOUND);
+            List<Course> publicCourses = courseDao.findByRegistrationType(Course.RegistrationType.PUBLIC);
+            if (publicCourses.isEmpty()) {
+                throw BeanAssert.NOT_FOUND.get();
+            }
 
+            course = publicCourses.get(0);
             addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
         }
 
@@ -130,7 +124,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             user.setEmail(null);
             user.setPassword(null);
             user.setTimeZone(ZoneId.of("Europe/Berlin"));
-            user.setLocale(locale);
+            user.setLocale(getUserBean().getLocale());
 
             registerUser(user);
             return LoginBean.loginUser(this, user);
@@ -158,7 +152,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
         user.setEmail(email);
         user.setPassword(password);
         user.setTimeZone(getZoneId());
-        user.setLocale(locale);
+        user.setLocale(getUserBean().getLocale());
 
         if (StringUtils.isNotEmpty(studentId) || StringUtils.isNotEmpty(affiliation)) {
             user.setStudentId(studentId);

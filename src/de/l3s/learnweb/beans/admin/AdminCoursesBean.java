@@ -81,7 +81,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
     private Course createCourse() {
         User user = getUser();
 
-        if (StringUtils.isNotBlank(newCourse.getWizardParam()) && courseDao.findByWizard(newCourse.getWizardParam()).isPresent()) {
+        if (StringUtils.isNotBlank(newCourse.getRegistrationWizard()) && courseDao.findByWizard(newCourse.getRegistrationWizard()).isPresent()) {
             throw new IllegalArgumentException("This wizard param is already used!");
         }
 
@@ -91,8 +91,8 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
 
         course.addUser(user);
         addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
-        if (StringUtils.isNotEmpty(course.getWizardParam())) {
-            addMessage(FacesMessage.SEVERITY_INFO, "The wizard is: " + Faces.getRequestBaseURL() + course.getWizardParam());
+        if (StringUtils.isNotEmpty(course.getRegistrationWizard())) {
+            addMessage(FacesMessage.SEVERITY_INFO, "The wizard is: " + Faces.getRequestBaseURL() + course.getRegistrationWizard());
         }
 
         newCourse = new Course(); // reset input values

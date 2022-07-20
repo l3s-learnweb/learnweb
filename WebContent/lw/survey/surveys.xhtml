@@ -25,7 +25,7 @@
 				<div class="d-flex">
 					<div class="me-auto">#{msg['templates']}</div>
 					<div class="d-md-block d-flex flex-column">
-						<p:commandButton value="#{msg['survey.create_new_survey']}" action="#{surveyTemplatesBean.onCreateSurvey}" onsuccess="PF('createSurvey').show();" update="createSurvey" styleClass="alt-btn mt-2 mt-md-0"/>
+						<p:commandButton value="#{msg['survey.create_new_survey']}" action="#{surveyTemplatesBean.onCreateSurvey}" oncomplete="PF('createSurvey').show();" update="createSurvey" styleClass="ui-button-warning mt-2 mt-md-0"/>
 					</div>
 				</div>
 			</f:facet>
@@ -43,7 +43,7 @@
 
 			<p:column headerText="#{msg['options']}" styleClass="td-text-end">
 				<div class="d-flex justify-content-end">
-					<p:commandLink styleClass="icon-link me-2" onsuccess="PF('createSurvey').show();" action="#{surveyTemplatesBean.onCopySurvey(survey.id)}" update="createSurvey" process="@this">
+					<p:commandLink styleClass="icon-link me-2" oncomplete="PF('createSurvey').show();" action="#{surveyTemplatesBean.onCopySurvey(survey.id)}" update="createSurvey" process="@this">
 						<i class="fas fa-fw fa-copy text-warning" aria-hidden="true"></i>
 						<h:outputText value="#{msg['copy']}"/>
 					</p:commandLink>
@@ -57,7 +57,7 @@
 					<p:tooltip for="@next" rendered="#{survey.associated}" value="#{msg['survey.template_already_associated']}." position="left"/>
 					<h:panelGroup id="delete" layout="block">
 						<p:commandLink styleClass="icon-link" disabled="#{survey.associated}" action="#{surveyTemplatesBean.onDeleteSurvey(survey)}" update="@form" process="@this">
-							<p:confirm header="#{msg['delete']}" message="#{msg['survey.delete_template']}" icon="ui-icon-alert"/>
+							<p:confirm header="#{msg['delete']}" message="#{msg['survey.delete_template']}" icon="fas fa-triangle-exclamation"/>
 							<i class="fas fa-fw fa-trash-alt text-warning" aria-hidden="true"></i>
 							<h:outputText value="#{msg['delete']}"/>
 						</p:commandLink>
@@ -70,12 +70,12 @@
 	<p:dialog header="#{msg['survey.create_new_survey']}" styleClass="overflow-hidden" widgetVar="createSurvey" modal="true">
 		<h:form id="createSurvey">
 			<div class="d-flex flex-column mb-3">
-				<div class="form-group">
+				<div class="field">
 					<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="fw-bold"/>
 					<p:inputText value="#{surveyTemplatesBean.selectedSurvey.title}" label="#{msg['title']}" />
 					<p:message for="@previous"/>
 				</div>
-				<div class="form-group">
+				<div class="field">
 					<p:outputLabel for="@next" value="#{msg['description']}:" styleClass="fw-bold"/>
 					<p:textEditor value="#{surveyTemplatesBean.selectedSurvey.description}" height="100">
 						<f:facet name="toolbar">

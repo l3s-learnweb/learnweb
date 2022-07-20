@@ -6,21 +6,18 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -34,9 +31,9 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.FileType;
-import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
+import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Expirable;
 import de.l3s.util.HasId;
@@ -128,7 +125,6 @@ public class Resource extends AbstractResource implements Serializable {
     private transient OwnerList<Tag, User> tags;
     private transient List<Comment> comments;
     private transient User owner;
-    private transient LinkedList<ArchiveUrl> archiveUrls; //To store the archived URLs
     private transient String path;
     private transient String prettyPath;
     private transient MetadataMapWrapper metadataWrapper; // includes static fields like title, description and author into the map
@@ -150,7 +146,7 @@ public class Resource extends AbstractResource implements Serializable {
     /**
      * Copy constructor.
      */
-    public Resource(Resource old) {
+    protected Resource(Resource old) {
         setGroupId(old.groupId);
         setFolderId(old.folderId);
         setTitle(old.title);
@@ -177,9 +173,6 @@ public class Resource extends AbstractResource implements Serializable {
         setCreatedAt(LocalDateTime.now());
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
-        if (old.getArchiveUrls() != null) {
-            setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
-        }
         // sets the originalResourceId to the id of the source resource
         if (old.originalResourceId == 0) {
             setOriginalResourceId(old.id);
@@ -188,6 +181,10 @@ public class Resource extends AbstractResource implements Serializable {
         }
 
         setMetadata(new HashMap<>(old.getMetadata()));
+    }
+
+    public Resource cloneResource() {
+        return new Resource(this);
     }
 
     /**
@@ -200,6 +197,7 @@ public class Resource extends AbstractResource implements Serializable {
         return switch (resourceType) {
             case survey -> new SurveyResource();
             case glossary -> new GlossaryResource();
+            case website -> new WebResource();
             default -> new Resource(StorageType.valueOf(storageType), resourceType, ResourceService.valueOf(source));
         };
     }
@@ -227,12 +225,7 @@ public class Resource extends AbstractResource implements Serializable {
             throw new IllegalArgumentException("tag is to long");
         }
 
-        Tag tag = Learnweb.dao().getTagDao().findByName(tagName).orElseGet(() -> {
-            Tag newTag = new Tag(0, tagName);
-            Learnweb.dao().getTagDao().save(newTag);
-            return newTag;
-        });
-
+        Tag tag = Learnweb.dao().getTagDao().findOrCreate(tagName);
         if (tags != null && !tags.contains(tag)) {
             Learnweb.dao().getResourceDao().insertTag(this, user, tag);
 
@@ -347,6 +340,10 @@ public class Resource extends AbstractResource implements Serializable {
         return Learnweb.dao().getResourceDao().findById(originalResourceId).map(Resource::getGroup).orElse(null);
     }
 
+    public Optional<Resource> getOriginalResource() {
+        return Learnweb.dao().getResourceDao().findById(originalResourceId);
+    }
+
     public int getFolderId() {
         return folderId;
     }
@@ -383,10 +380,6 @@ public class Resource extends AbstractResource implements Serializable {
 
     public void setDescription(String description) {
         this.description = StringUtils.isNotEmpty(description) ? StringHelper.clean(description, Safelist.simpleText()) : null;
-    }
-
-    public String getDescriptionHTML() {
-        return description.replace("\n", "<br/>");
     }
 
     public StorageType getStorageType() {
@@ -551,17 +544,6 @@ public class Resource extends AbstractResource implements Serializable {
     @Override
     public Resource save() {
         Learnweb.dao().getResourceDao().save(this);
-
-        // TODO @astappiev: this has to be moved to the save method of WebResource.class, which has to be created
-        if (CollectionUtils.isNotEmpty(getArchiveUrls())) {
-            try {
-                // To copy archive versions of a resource if it exists
-                Learnweb.dao().getArchiveUrlDao().insertArchiveUrl(getId(), getArchiveUrls());
-            } catch (Exception e) {
-                log.error("Can't save archiveUrls", e);
-            }
-        }
-
         return this;
     }
 
@@ -594,7 +576,7 @@ public class Resource extends AbstractResource implements Serializable {
             // handle known types of downloadable resources
             this.type = ResourceType.file;
         } else {
-            // if we do not know the format, then  log it and set it to downloadable
+            // if we do not know the format, then log it and set it to downloadable
             log.error("Unknown type for format: {}; resourceId: {}", format, getId(), new Exception());
             this.type = ResourceType.file;
         }
@@ -893,7 +875,7 @@ public class Resource extends AbstractResource implements Serializable {
                 iframeUrl = embeddedUrl;
             } else if (type == ResourceType.video) {
                 iframeUrl = switch (service) {
-                    case ted ->  getUrl().replace("//www.", "//embed.").replace("http://", "https://");
+                    case ted -> getUrl().replace("//www.", "//embed.").replace("http://", "https://");
                     case youtube, teded, tedx -> "https://www.youtube-nocookie.com/embed/" + getIdAtService();
                     case vimeo -> "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
                     default -> null;
@@ -974,47 +956,6 @@ public class Resource extends AbstractResource implements Serializable {
 
     public void setIdAtService(String idAtService) {
         this.idAtService = idAtService;
-    }
-
-    public LinkedList<ArchiveUrl> getArchiveUrls() {
-        if (archiveUrls == null && id != 0) {
-            archiveUrls = new LinkedList<>(Learnweb.dao().getArchiveUrlDao().findByResourceId(id));
-            archiveUrls.addAll(Learnweb.dao().getWaybackUrlDao().findByUrl(url));
-        }
-
-        return archiveUrls;
-    }
-
-    public void setArchiveUrls(LinkedList<ArchiveUrl> archiveUrls) {
-        this.archiveUrls = archiveUrls;
-    }
-
-    public HashMap<Integer, List<ArchiveUrl>> getArchiveUrlsAsYears() {
-        HashMap<Integer, List<ArchiveUrl>> versions = new LinkedHashMap<>();
-        for (ArchiveUrl url : archiveUrls) {
-            int year = url.timestamp().getYear();
-            if (!versions.containsKey(year)) {
-                versions.put(year, new ArrayList<>());
-            }
-            versions.get(year).add(url);
-        }
-        return versions;
-    }
-
-    public void addArchiveUrl(ArchiveUrl archiveUrl) {
-        archiveUrls = null;
-    }
-
-    public boolean isArchived() {
-        return getArchiveUrls() != null && !archiveUrls.isEmpty();
-    }
-
-    public ArchiveUrl getFirstArchivedObject() {
-        return archiveUrls.getFirst();
-    }
-
-    public ArchiveUrl getLastArchivedObject() {
-        return archiveUrls.getLast();
     }
 
     public String getDownloadUrl() {
@@ -1130,7 +1071,6 @@ public class Resource extends AbstractResource implements Serializable {
         tags = null;
         comments = null;
         owner = null;
-        archiveUrls = null;
         metadataWrapper = null;
         metadataMultiValue = null;
     }
@@ -1141,46 +1081,18 @@ public class Resource extends AbstractResource implements Serializable {
             return false;
         }
 
-        //admins, moderators and resource owners can always view the resource
-        if (user != null && (user.isModerator() || getUserId() == user.getId())) {
+        if (super.canViewResource(user)) {
             return true;
         }
 
-        switch (policyView) {
-            case WORLD_READABLE:
-                return true;
-            case LEARNWEB_READABLE:
-                return user != null;
-            case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) can view the resource
-                return Learnweb.dao().getResourceDao().findById(originalResourceId).map(resource -> resource.getUserId() == user.getId()).orElse(false);
-            case DEFAULT_RIGHTS: // if the resource is part of the group the group permissions are used
-                Group group = getGroup();
-                if (group != null) {
-                    return group.canViewResources(user);
-                }
-                return false;
-            default:
-                return false;
-        }
-    }
-
-    public boolean canModerateResource(User user) {
-        if (user == null || isDeleted()) {
-            return false;
-        }
-
-        if (user.isAdmin()) {
-            return true;
-        }
-
-        if (user.isModerator()) {
-            if (getGroupId() == 0) { // check permission for a private resource
-                return user.canModerateUser(getUser());
-            } else { // check group access permissions
-                return getGroup().getCourse().isModerator(user);
-            }
-        }
-        return false;
+        return switch (policyView) {
+            case WORLD_READABLE -> true;
+            case LEARNWEB_READABLE -> user != null;
+            // the submitter of the resource (stored in the original resource id) can view the resource
+            case SUBMISSION_READABLE -> user != null && getOriginalResource().map(resource -> resource.getUserId() == user.getId()).orElse(false);
+            // the default rights already applied in the super class
+            case DEFAULT_RIGHTS -> false;
+        };
     }
 
     public boolean canAnnotateResource(User user) {
@@ -1188,14 +1100,17 @@ public class Resource extends AbstractResource implements Serializable {
             return false;
         }
 
-        Group group = getGroup();
-
-        if (group != null) {
-            return group.canAnnotateResources(user);
+        if (canModerateResource(user)) {
+            return true;
         }
 
-        if (user.isAdmin() || ownerUserId == user.getId()) {
-            return true;
+        if (getGroup() != null) {
+            return switch (getGroup().getPolicyAnnotate()) {
+                case ALL_LEARNWEB_USERS -> true;
+                case COURSE_MEMBERS -> getGroup().getCourse().isMember(user) || getGroup().isMember(user);
+                case GROUP_MEMBERS -> getGroup().isMember(user);
+                case GROUP_LEADER -> getGroup().isLeader(user);
+            };
         }
 
         return false;

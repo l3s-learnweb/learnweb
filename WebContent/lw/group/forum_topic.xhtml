@@ -41,19 +41,19 @@
 
 <ui:define name="center_layout">
     <h:form prependId="false">
-        <p:panel styleClass="ui-widget-content-p-0 ui-widget-content-border-0">
+        <p:panel styleClass="ui-widget-content-flat ui-widget-content-border-0">
             <f:facet name="header">
                 #{msg['ForumIndex.topic']}: #{forumTopicBean.topic.title}
             </f:facet>
             <f:facet name="actions">
-                <p:commandButton value="#{msg['ForumIndex.post_reply']}" update=":post_dialog" styleClass="alt-btn" immediate="true"
+                <p:commandButton value="#{msg['ForumIndex.post_reply']}" update=":post_dialog" styleClass="ui-button-warning" immediate="true"
                                  action="#{forumTopicBean.replyPost}" oncomplete="PF('postDialog').show();"
                                  rendered="#{forumTopicBean.group.isMember(userBean.user)}">
                 </p:commandButton>
             </f:facet>
 
-            <p:dataTable id="forum_posts_table" var="post" value="#{forumTopicBean.posts}" rows="10" paginator="true"
-                         tableStyleClass="h-100" styleClass="text-break" paginatorPosition="bottom"
+            <p:dataTable id="forum_posts_table" var="post" value="#{forumTopicBean.posts}" rows="10"
+                         paginator="true" paginatorPosition="bottom" tableStyleClass="h-100" styleClass="text-break"
                          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
                 <p:column headerText="#{msg.author}" styleClass="py-2 text-center align-baseline w-15">
@@ -66,7 +66,7 @@
                         <p class="mb-0">
                             <h:outputText value="#{msg.registered_since}: " styleClass="d-block"/>
                             <h:outputText value="#{post.user.createdAt}">
-                                <f:convertDateTime dateStyle="default" type="localDate" timeZone="#{userBean.timeZone}"/>
+                                <f:convertDateTime type="localDate" timeZone="#{userBean.timeZone}"/>
                             </h:outputText>
                         </p>
                         <p class="mb-0">
@@ -134,7 +134,7 @@
               modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true">
         <h:form id="post_form">
             <ui:fragment rendered="#{forumTopicBean.group.restrictionForumCategoryEnabled}">
-                <div class="form-group">
+                <div class="field">
                     <p:outputLabel for="@next" value="#{msg.category}:"/>
                     <p:selectOneMenu id="post_category" value="#{forumTopicBean.dialogPost.category}" editable="true" label="#{msg.category}"
                                      required="#{forumTopicBean.group.restrictionForumCategoryRequired}">
@@ -144,7 +144,7 @@
                 </div>
             </ui:fragment>
 
-            <div class="form-group">
+            <div class="field">
                 <p:outputLabel for="@next" value="#{msg.message}:" styleClass="d-none"/>
                 <p:textEditor value="#{forumTopicBean.dialogPost.text}" height="200">
                     <f:facet name="toolbar">
@@ -197,7 +197,7 @@
             </div>
 
             <p:commandButton value="#{forumTopicBean.replyDialog ? msg.send : msg.save}" action="#{forumTopicBean.saveDialogPost}"
-                             update="@form :forum_posts_table" oncomplete="if (!args.validationFailed) PF('postDialog').hide();"/>
+                             update="@form :forum_posts_table" oncomplete="if(!args.validationFailed){PF('postDialog').hide();}"/>
         </h:form>
     </p:dialog>
 

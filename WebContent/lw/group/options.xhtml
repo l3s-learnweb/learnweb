@@ -2,6 +2,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:of="http://omnifaces.org/functions"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
@@ -39,88 +40,101 @@
 <ui:define name="center_layout">
     <div class="row">
         <div class="col-md-6">
-            <p:outputPanel rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}">
+            <ui:fragment rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}">
                 <p:panel header="#{msg.edit_group}">
-                    <h:form id="group_moderator_form">
-                        <div class="form-group">
-                            <p:outputLabel for="@next" value="#{msg.title}:"/>
-                            <p:inputText id="edit_group_title" value="#{groupOptionsBean.editedGroupTitle}" required="true"/>
-                            <p:message for="@previous"/>
-                        </div>
-
-                        <div class="form-group">
-                            <p:outputLabel for="@next" value="#{msg.description}:"/>
-                            <p:textEditor id="edit_group_description" widgetVar="editorWidget" value="#{groupOptionsBean.editedGroupDescription}" height="150">
-                                <f:facet name="toolbar">
-										<span class="ql-formats">
-											<button class="ql-bold"></button>
-											<button class="ql-italic"></button>
-											<button class="ql-underline"></button>
-											<button class="ql-strike"></button>
-											<button class="ql-list" value="ordered"></button>
-											<button class="ql-list" value="bullet"></button>
-											<button class="ql-link"></button>
-										</span>
-                                </f:facet>
-                            </p:textEditor>
-                            <p:message for="@previous"/>
-                        </div>
-                        <div class="form-group">
-                            <p:outputLabel for="@next" value="#{msg.leader}:"/>
-                            <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.username}">
-                                <f:param name="user_id" value="#{groupOptionsBean.group.leader.id}"/>
-                            </p:link>
-                            <p:commandLink title="#{msg.change_leader}" styleClass="fas fa-fw fa-pencil-alt text-decoration-none text-secondary ms-2"
-                                           onclick="PF('changeLeader').show(); return false;" style="width: 0;" aria-hidden="true"/>
-                        </div>
-                        <ui:fragment rendered="#{not groupOptionsBean.group.course.wizardDisabledOrNull}">
-                            <div class="form-group">
-                                <h:outputText value="#{msg.registration_wizard}:"/>
-                                <p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{groupOptionsBean.group.course.wizardParam}/#{groupOptionsBean.group.id}"/>
-                            </div>
-                        </ui:fragment>
-                        <ui:fragment rendered="#{groupOptionsBean.hypothesisEnabled}">
-                            <div class="form-group">
-                                <p:outputLabel for="@next">
-                                    #{msg.hypothesis_group_link}:
-                                    <h:outputLink value="discussion_help.jsf" target="_blank">
-                                        <f:param name="type" value="admin"/>[?]
-                                    </h:outputLink>
-                                </p:outputLabel>
-                                <p:inputText id="set_hypothesis_link" value="#{groupOptionsBean.newHypothesisLink}"/>
+                    <h:form id="group_moderator_form" styleClass="row">
+                        <div class="col-12 col-md-8">
+                            <div class="field">
+                                <p:outputLabel for="@next" value="#{msg.title}:"/>
+                                <p:inputText id="edit_group_title" value="#{groupOptionsBean.editedGroupTitle}" required="true"/>
                                 <p:message for="@previous"/>
                             </div>
 
-                            <ui:fragment rendered="#{not empty groupOptionsBean.newHypothesisLink}">
-                                <div class="form-group">
+                            <div class="field">
+                                <p:outputLabel for="@next" value="#{msg.description}:"/>
+                                <p:textEditor id="edit_group_description" widgetVar="editorWidget" value="#{groupOptionsBean.editedGroupDescription}" height="150">
+                                    <f:facet name="toolbar">
+                                            <span class="ql-formats">
+                                                <button class="ql-bold"></button>
+                                                <button class="ql-italic"></button>
+                                                <button class="ql-underline"></button>
+                                                <button class="ql-strike"></button>
+                                                <button class="ql-list" value="ordered"></button>
+                                                <button class="ql-list" value="bullet"></button>
+                                                <button class="ql-link"></button>
+                                            </span>
+                                    </f:facet>
+                                </p:textEditor>
+                                <p:message for="@previous"/>
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="@next" value="#{msg.leader}:"/>
+                                <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.username}">
+                                    <f:param name="user_id" value="#{groupOptionsBean.group.leader.id}"/>
+                                </p:link>
+                                <p:commandLink title="#{msg.change_leader}" styleClass="fas fa-fw fa-pencil-alt text-decoration-none text-secondary ms-2"
+                                               onclick="PF('changeLeader').show(); return false;" style="width: 0;" aria-hidden="true"/>
+                            </div>
+                            <ui:fragment rendered="#{not groupOptionsBean.group.course.registrationClosed}">
+                                <div class="field">
+                                    <h:outputText value="#{msg.registration_wizard}:"/>
+                                    <p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{groupOptionsBean.group.course.registrationWizard}/#{groupOptionsBean.group.id}"/>
+                                </div>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{groupOptionsBean.hypothesisEnabled}">
+                                <div class="field">
                                     <p:outputLabel for="@next">
-                                        #{msg.hypothesis_token}:
-                                        <h:outputLink value="discussion_help.jsf" target="_blank" rendered="#{empty groupOptionsBean.newHypothesisToken}">
+                                        #{msg.hypothesis_group_link}:
+                                        <h:outputLink value="discussion_help.jsf" target="_blank">
                                             <f:param name="type" value="admin"/>[?]
                                         </h:outputLink>
                                     </p:outputLabel>
-                                    <p:inputText id="set_hypothesis_token" value="#{groupOptionsBean.newHypothesisToken}"/>
+                                    <p:inputText id="set_hypothesis_link" value="#{groupOptionsBean.newHypothesisLink}"/>
                                     <p:message for="@previous"/>
                                 </div>
 
-                                <div class="form-group">
-                                    <h:outputLink value="admin/group_discussion_activity.jsf" rendered="#{not empty groupOptionsBean.newHypothesisToken}">
-                                        <f:param name="group_id" value="#{groupOptionsBean.groupId}"/>
-                                        Discussion Activity
-                                    </h:outputLink>
-                                </div>
-                            </ui:fragment>
-                        </ui:fragment>
+                                <ui:fragment rendered="#{not empty groupOptionsBean.newHypothesisLink}">
+                                    <div class="field">
+                                        <p:outputLabel for="@next">
+                                            #{msg.hypothesis_token}:
+                                            <h:outputLink value="discussion_help.jsf" target="_blank" rendered="#{empty groupOptionsBean.newHypothesisToken}">
+                                                <f:param name="type" value="admin"/>[?]
+                                            </h:outputLink>
+                                        </p:outputLabel>
+                                        <p:inputText id="set_hypothesis_token" value="#{groupOptionsBean.newHypothesisToken}"/>
+                                        <p:message for="@previous"/>
+                                    </div>
 
-                        <div class="d-flex justify-content-end">
-                            <p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":group_moderator_form"/>
+                                    <div class="field">
+                                        <h:outputLink value="admin/group_discussion_activity.jsf" rendered="#{not empty groupOptionsBean.newHypothesisToken}">
+                                            <f:param name="group_id" value="#{groupOptionsBean.groupId}"/>
+                                            Discussion Activity
+                                        </h:outputLink>
+                                    </div>
+                                </ui:fragment>
+                            </ui:fragment>
+
+                            <div class="d-flex justify-content-end">
+                                <p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":group_moderator_form"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4" jsf:id="group_picture">
+                            <img class="d-block w-100 profile-picture m-auto fluent" src="${groupOptionsBean.group.imageUrl}" alt="Group picture"/>
+
+                            <div class="field mt-2 text-center">
+                                <p:outputLabel for="@next" value="#{msg.photo}"/>
+                                <p:fileUpload id="profilephoto" listener="${groupOptionsBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
+                                              mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
+                                              update="group_picture" auto="true" label="#{msg.choose_file}" cancelLabel="abb"/>
+                                <p:message for="@previous"/>
+                            </div>
                         </div>
                     </h:form>
                 </p:panel>
 
                 <p:panel header="#{msg.options}">
                     <h:form id="group_security_form">
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.join']}" styleClass="h5"/>
                             <p:selectOneRadio value="#{groupOptionsBean.group.policyJoin}" layout="grid" columns="1">
                                 <c:if test="#{userBean.admin}">
@@ -136,10 +150,10 @@
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg['Limit_number_of_members']}:" styleClass="h5"/>
                             <p:selectBooleanButton value="#{groupOptionsBean.group.memberCountLimited}" style="max-width: 5rem;" styleClass="d-block"
-                                                   onLabel="#{msg.yes}" offLabel="#{msg.no}" onIcon="ui-icon-check" offIcon="ui-icon-close">
+                                                   onLabel="#{msg.yes}" offLabel="#{msg.no}" onIcon="fas fa-check" offIcon="fas fa-xmark">
                                 <p:ajax update="member_limit_input"/>
                             </p:selectBooleanButton>
                             <h:panelGroup id="member_limit_input">
@@ -152,7 +166,7 @@
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.add']}" styleClass="h5"/>
                             <p:selectOneRadio value="#{groupOptionsBean.group.policyAdd}" layout="grid" columns="1">
                                 <f:selectItems value="#{groupOptionsBean.group.policyAddOptions}" var="option" itemValue="#{option}"
@@ -161,7 +175,7 @@
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.edit']}" styleClass="h5"/>
                             <p:selectOneRadio value="#{groupOptionsBean.group.policyEdit}" layout="grid" columns="1">
                                 <f:selectItems value="#{groupOptionsBean.group.policyEditOptions}" var="option" itemValue="#{option}"
@@ -170,7 +184,7 @@
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.view']}" styleClass="h5"/>
                             <p:selectOneRadio value="#{groupOptionsBean.group.policyView}" layout="grid" columns="1">
                                 <f:selectItems value="#{groupOptionsBean.group.policyViewOptions}" var="option" itemValue="#{option}"
@@ -179,7 +193,7 @@
                             <p:message for="@previous"/>
                         </div>
 
-                        <div class="form-group">
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg['policy.title.annotate']}" styleClass="h5"/>
                             <p:selectOneRadio value="#{groupOptionsBean.group.policyAnnotate}" layout="grid" columns="1">
                                 <f:selectItems value="#{groupOptionsBean.group.policyAnnotateOptions}" var="option" itemValue="#{option}"
@@ -189,7 +203,7 @@
                         </div>
 
                         <ui:fragment rendered="#{groupOptionsBean.group.restrictionForumCategoryEnabled}">
-                            <div class="form-group">
+                            <div class="field">
                                 <p:outputLabel for="@next" value="#{msg['Miscellaneous']}" styleClass="h5"/>
                                 <p:selectBooleanCheckbox id="restriction_mandatory_forum_category"
                                                          value="#{groupOptionsBean.group.restrictionForumCategoryRequired}"
@@ -203,43 +217,43 @@
                         </div>
                     </h:form>
                 </p:panel>
-            </p:outputPanel>
+            </ui:fragment>
 
             <p:panel header="#{msg.options}"
                      rendered="${groupOptionsBean.group.isMember(userBean.user) and !groupOptionsBean.group.course.isModerator(userBean.user)}">
                 <h:form>
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg['policy.title.join']}" styleClass="h5"/>
                         <h:outputText value="#{msg['policy.option.' +=groupOptionsBean.group.policyJoin]}"/>
                     </div>
 
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg['Limit_number_of_members']}:" styleClass="h5"/>
                         <h:outputText value="#{groupOptionsBean.group.maxMemberCount}" rendered="#{groupOptionsBean.group.maxMemberCount ge 0}"/>
                         <h:outputText value="-" rendered="#{groupOptionsBean.group.maxMemberCount lt 0}"/>
                     </div>
 
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg['policy.title.add']}" styleClass="h5"/>
                         <h:outputText value="#{msg['policy.option.' +=groupOptionsBean.group.policyAdd]}"/>
                     </div>
 
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg['policy.title.edit']}" styleClass="h5"/>
                         <h:outputText value="#{msg['policy.option.' +=groupOptionsBean.group.policyEdit]}"/>
                     </div>
 
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg['policy.title.view']}" styleClass="h5"/>
                         <h:outputText value="#{msg['policy.option.' +=groupOptionsBean.group.policyView]}"/>
                     </div>
 
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg['policy.title.annotate']}" styleClass="h5"/>
                         <h:outputText value="#{msg['policy.option.' +=groupOptionsBean.group.policyAnnotate]}"/>
                     </div>
 
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg.leader}:" styleClass="h5"/>
                         <p:link outcome="/lw/user/detail" value="#{groupOptionsBean.group.leader.username}">
                             <f:param name="user_id" value="#{groupOptionsBean.group.leader.id}"/>
@@ -254,7 +268,7 @@
 						   				groupOptionsBean.group.isMember(userBean.user)) and not empty groupOptionsBean.userCopyableGroups}">
             <p:panel header="#{msg.copy_resources}">
                 <h:form id="group_copy_form">
-                    <div class="form-group">
+                    <div class="field">
                         <p:outputLabel for="@next" value="#{msg.copy_all_resources}"/>
                         <p:selectOneMenu value="#{groupOptionsBean.selectedResourceTargetGroupId}">
                             <f:selectItems var="g" value="#{groupOptionsBean.userCopyableGroups}" itemLabel="#{g.title}" itemValue="#{g.id}"/>
@@ -291,6 +305,7 @@
                                      title="#{msg.delete}" action="#{groupsBean.deleteGroup}" process="@this">
                         <p:confirm message="#{of:format1(msg.group_delete_question, groupOptionsBean.group.title)}"/>
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOptionsBean.group}"/>
+                        <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                     </p:commandButton>
                     <p:commandButton action="#{groupsBean.leaveGroup}" value="#{msg.leave_group}" immediate="true"
                                      oncomplete="window.location.replace(window.location.href);" rendered="${groupOptionsBean.group.isMember(userBean.user)}">

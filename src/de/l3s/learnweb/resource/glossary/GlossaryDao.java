@@ -11,6 +11,7 @@ import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceType;
@@ -21,6 +22,9 @@ public interface GlossaryDao extends SqlObject, Serializable {
 
     @CreateSqlObject
     ResourceDao getResourceDao();
+
+    @CreateSqlObject
+    FileDao getFileDao();
 
     @CreateSqlObject
     GlossaryEntryDao getGlossaryEntryDao();
@@ -79,9 +83,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
                     entry.setLastChangedByUserId(resource.getUserId());
                     entry.setResourceId(resource.getId());
                     entry.getTerms().forEach(term -> term.setId(0));
-                    getGlossaryEntryDao().save(entry);
-
-                    saveTerms(entry);
+                    saveEntry(entry);
                 }
             }
 
@@ -90,8 +92,11 @@ public interface GlossaryDao extends SqlObject, Serializable {
     }
 
     default void saveEntry(GlossaryEntry entry) {
+        entry.setPicturesCount(entry.getPictures().size());
         getGlossaryEntryDao().save(entry);
+
         saveTerms(entry);
+        getFileDao().insertGlossaryEntryFiles(entry, entry.getPictures());
     }
 
     default void saveTerms(GlossaryEntry entry) {
