@@ -38,6 +38,7 @@
         <Logger name="com.zaxxer.hikari" level="INFO"/>
         <Logger name="org.flywaydb.core" level="INFO"/>
         <Logger name="org.mariadb.jdbc" level="INFO"/>
+        <Logger name="org.eclipse.jetty" level="INFO"/>
 
         <Root level="DEBUG">
             <appender-ref ref="console"/>

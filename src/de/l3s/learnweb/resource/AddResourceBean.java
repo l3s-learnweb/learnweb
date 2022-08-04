@@ -185,6 +185,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         res.setGroupId(targetGroup.getId());
         res.setFolderId(HasId.getIdOrDefault(targetFolder, 0));
         res.save();
+
+        log.debug("addResource; saved={}", res.getId());
         getUser().setGuide(User.Guide.ADD_RESOURCE, true);
 
         log(Action.adding_resource, res.getGroupId(), res.getId());
