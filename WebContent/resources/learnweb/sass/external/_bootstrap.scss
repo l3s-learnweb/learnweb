@@ -1,7 +1,7 @@
 /*!
- * Bootstrap v5.0.0-beta1 (https://getbootstrap.com/)
- * Copyright 2011-2020 The Bootstrap Authors
- * Copyright 2011-2020 Twitter, Inc.
+ * Bootstrap v5.2.0 (https://getbootstrap.com/)
+ * Copyright 2011-2022 The Bootstrap Authors
+ * Copyright 2011-2022 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
@@ -9,6 +9,7 @@
 // Configuration
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/maps';
 @import '~bootstrap/scss/mixins';
 @import '~bootstrap/scss/utilities';
 
@@ -42,6 +43,8 @@
 @import '~bootstrap/scss/popover';
 //@import '~bootstrap/scss/carousel';
 //@import '~bootstrap/scss/spinners';
+//@import '~bootstrap/scss/offcanvas';
+//@import '~bootstrap/scss/placeholders';
 
 // Helpers
 @import '~bootstrap/scss/helpers';

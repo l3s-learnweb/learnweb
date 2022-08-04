@@ -276,7 +276,7 @@
             </p:column>
             <p:column width="20" rendered="#{not term.deleted}">
                 <p:commandLink id="delete_term" actionListener="#{glossaryBean.onDeleteTerm(term)}" title="#{msg.delete}"
-                               update=":glossary_add :lang_terms" process="@this lang_terms" oncomplete="PF('glossaryEditDialog').resetPosition();">
+                               update=":glossary_add :lang_terms" process="@this lang_terms">
                     <i class="fas fa-fw fa-trash-alt text-danger" aria-hidden="true"></i>
                 </p:commandLink>
             </p:column>
@@ -285,7 +285,7 @@
         <div class="d-flex mt-3">
             <div class="me-auto">
                 <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.onAddTerm}" styleClass="ui-button-warning"
-                                 update=":glossary_add :lang_terms" process="@this lang_terms" oncomplete="PF('glossaryEditDialog').resetPosition();">
+                                 update=":glossary_add :lang_terms" process="@this lang_terms">
                 </p:commandButton>
             </div>
             <div>

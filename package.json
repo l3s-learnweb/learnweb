@@ -4,9 +4,8 @@
   "version": "1.0.0",
   "browserslist": [
     "> 0.5% in DE",
-    "not safari < 10.3",
-    "not ios_saf < 10.3",
-    "not ie >= 0",
+    "not safari < 13.1",
+    "not ios_saf < 13.4",
     "not op_mini all",
     "not dead"
   ],
@@ -20,31 +19,31 @@
   },
   "dependencies": {
     "@fancyapps/fancybox": "^3.5.7",
-    "@fortawesome/fontawesome-free": "^6.1.1",
+    "@fortawesome/fontawesome-free": "^6.1.2",
     "@simonwep/pickr": "^1.8.2",
     "@popperjs/core": "^2.11.5",
-    "bootstrap": "^5.1.3",
+    "bootstrap": "^5.2.0",
     "highcharts": "^8.2.2",
     "jquery-contextmenu": "^2.9.2",
     "justifiedGallery": "^3.8.1",
-    "shepherd.js": "^10.0.0",
-    "video.js": "^7.19.2"
+    "shepherd.js": "^10.0.1",
+    "video.js": "^7.20.1"
   },
   "devDependencies": {
     "rollup-plugin-scss": "^3.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-replace": "^4.0.0",
-    "autoprefixer": "^10.4.7",
-    "browserslist": "^4.21.0",
-    "eslint": "^8.18.0",
+    "autoprefixer": "^10.4.8",
+    "browserslist": "^4.21.3",
+    "eslint": "^8.21.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-compat": "^4.0.2",
     "eslint-plugin-import": "^2.26.0",
     "postcss": "^8.4.14",
-    "rollup": "^2.75.7",
+    "rollup": "^2.77.2",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-terser": "^7.0.2",
-    "sass": "^1.53.0",
+    "sass": "^1.54.2",
     "stylelint": "^14.9.1",
     "stylelint-config-sass-guidelines": "^9.0.1",
     "stylelint-no-unsupported-browser-features": "^5.0.3"
@@ -118,7 +117,6 @@
         true,
         {
           "ignore": [
-            "css-masks",
             "css-gradients",
             "multicolumn"
           ]

@@ -312,13 +312,102 @@ $(() => {
 });
 
 /**
- * Reset center position of Dialog after content is loaded.
- * Override original show method and call `resetPosition` at the end of it.
+ * Reset center position of Dialog after content is modified.
  */
 PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
   _show.call(this);
-  this.resetPosition();
+
+  const $this = this;
+  if (!this.contentResizeObserver) {
+    this.contentResizeObserver = new ResizeObserver(() => {
+      if ($this.cfg.fitViewport) {
+        $this.fitViewport();
+      }
+
+      if ($this.isVisible()) {
+        // instant reinit position
+        $this.initPosition();
+      } else {
+        // reset, so the dialog will be positioned again when showing the dialog next time
+        $this.positionInitialized = false;
+      }
+    });
+  }
+
+  this.contentResizeObserver.observe(this.content[0]);
 })(PrimeFaces.widget.Dialog.prototype.show));
+
+PrimeFaces.widget.Dialog.prototype.hide = (((_hide) => function () {
+  _hide.call(this);
+
+  if (this.contentResizeObserver) {
+    this.contentResizeObserver.disconnect();
+  }
+})(PrimeFaces.widget.Dialog.prototype.hide));
+
+/**
+ * Fixes errors of the positioning.
+ *
+ * @type {(function(): void)|*}
+ */
+PrimeFaces.widget.BlockUI.prototype.render = (((_render) => function () {
+  const widgetId = this.id;
+  const shouldClone = this.hasMultipleTargets() && this.hasContent();
+  // there can be 1 to N targets
+  for (let i = 0; i < this.target.length; i++) {
+    const currentTarget = $(this.target[i]);
+    const currentTargetId = currentTarget.attr('id') || this.id;
+    let currentContent = this.jq;
+
+    // create a specific blocker for this target
+    const currentBlocker = $(`<div id="${currentTargetId}_blocker" class="ui-blockui ui-widget-overlay ui-helper-hidden"></div>`);
+
+    // style the blocker
+    if (this.cfg.styleClass) {
+      currentBlocker.addClass(this.cfg.styleClass);
+    }
+    if (currentTarget.hasClass('ui-corner-all')) {
+      currentBlocker.addClass('ui-corner-all');
+    }
+
+    // when more than 1 target need to clone the content for each target
+    if (shouldClone) {
+      currentContent = currentContent.clone();
+      currentContent.attr('id', `${currentTargetId}_blockcontent`);
+    }
+
+    // assign data ids to this widget
+    currentBlocker.attr('data-bui-overlay', widgetId);
+    currentContent.attr('data-bui-content', widgetId);
+
+    // configure the target positioning
+    const position = currentTarget.css('position');
+    if (position !== 'fixed' && position !== 'absolute') {
+      currentTarget.css('position', 'relative');
+    }
+
+    currentTarget.attr('aria-busy', this.cfg.blocked);
+
+    // set the size and position to match the target
+    const height = currentTarget.height();
+    const width = currentTarget.width();
+    const offset = currentTarget.offset();
+    const sizeAndPosition = {
+      height: `${height}px`,
+      width: `${width}px`,
+      left: `${offset.left}px`,
+      top: `${offset.top}px`,
+    };
+    currentBlocker.css(sizeAndPosition);
+
+    // append the blocker to the document
+    $(document.body).append(currentBlocker).append(currentContent);
+  }
+
+  // assign all matching blockers to widget
+  this.blocker = $(`[data-bui-overlay~="${widgetId}"]`);
+  this.content = $(`[data-bui-content~="${widgetId}"]`);
+})(PrimeFaces.widget.BlockUI.prototype.render));
 
 /**
  * This is a new implementation of old script which changes size of filters list.

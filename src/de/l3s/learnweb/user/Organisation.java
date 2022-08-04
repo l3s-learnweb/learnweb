@@ -244,7 +244,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
             metadata.getOptions().add("Young learners");
             metadata.getOptions().add("Pre-school");
             metadataFields.add(metadata);
-        } else if (id == 1604) { // SoMeCliCS
+        } else if (id == 1604) { // SoMeCliCS Literacy
             metadataFields.add(new MetadataField("title", "title", MetadataType.INPUT_TEXT, true));
             metadataFields.add(new MetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
 

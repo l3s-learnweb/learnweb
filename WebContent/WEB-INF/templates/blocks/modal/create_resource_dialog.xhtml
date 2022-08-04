@@ -40,7 +40,7 @@
                 <p:outputLabel for="@next" value="#{msg.file}:"/>
                 <p:fileUpload id="fileUploadInput" listener="#{addResourceBean.handleFileUpload}" styleClass="ui-fileupload-minimal" required="true"
                               mode="advanced" sizeLimit="10000000000" multiple="true" label="#{msg.choose_file}" cancelLabel="#{msg.cancel}" uploadLabel="#{msg.uploadFiles}"
-                              oncomplete="PF('createResourceDialog').hide();resourceAddedHook();"/>
+                              oncomplete="if (!this.files.length) {PF('createResourceDialog').hide();resourceAddedHook();}"/>
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.thumbnailSmall != null}">
@@ -128,7 +128,7 @@
             </div>
             <div class="d-flex flex-row-reverse">
                 <p:commandButton id="next_step_btn" value="#{msg.next_step}" action="#{addResourceBean.handleUrlInput}" update="@form"
-                                 onstart="PF('createResourceOverlay').show();" oncomplete="PF('createResourceOverlay').hide();PF('createResourceDialog').resetPosition();"
+                                 onstart="PF('createResourceOverlay').show();" oncomplete="PF('createResourceOverlay').hide();"
                                  rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}">
                 </p:commandButton>
 

@@ -18,7 +18,7 @@
             <DefaultRolloverStrategy max="30"/>
         </RollingFile>
 
-        <SMTP name="email" subject="${env:LEARNWEB_MAIL_SUBJECT}" to="astappiev@l3s.de,kemkes@l3s.de"
+        <SMTP name="email" subject="${env:LEARNWEB_MAIL_SUBJECT}" to="astappiev@l3s.de"
               from="no-reply@l3s.de" smtpHost="l3s.de" smtpPort="587" bufferSize="10">
             <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
             <Filters>
