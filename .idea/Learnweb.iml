@@ -79,7 +79,7 @@
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-metadata:3.8.2" level="project" />
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-tiff:3.8.2" level="project" />
     <orderEntry type="library" name="Maven: com.twelvemonkeys.imageio:imageio-hdr:3.8.2" level="project" />
-    <orderEntry type="library" name="Maven: org.mariadb.jdbc:mariadb-java-client:3.0.6" level="project" />
+    <orderEntry type="library" name="Maven: org.mariadb.jdbc:mariadb-java-client:3.0.7" level="project" />
     <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:5.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:2.0.0-alpha1" level="project" />
     <orderEntry type="library" name="Maven: org.jdbi:jdbi3-core:3.32.0" level="project" />

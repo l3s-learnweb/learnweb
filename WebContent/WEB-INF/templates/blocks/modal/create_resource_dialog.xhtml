@@ -38,9 +38,10 @@
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'file'}">
                 <p:outputLabel for="@next" value="#{msg.file}:"/>
-                <p:fileUpload id="fileUploadInput" listener="#{addResourceBean.handleFileUpload}" styleClass="ui-fileupload-minimal" required="true"
+                <p:fileUpload id="fileUploadInput" listener="#{fileUploadView.handleFileUpload}" styleClass="ui-fileupload-minimal" required="true"
                               mode="advanced" sizeLimit="10000000000" multiple="true" label="#{msg.choose_file}" cancelLabel="#{msg.cancel}" uploadLabel="#{msg.uploadFiles}"
-                              oncomplete="if (!this.files.length) {PF('createResourceDialog').hide();resourceAddedHook();}"/>
+                              oncomplete="if(!this.files.length){PF('createResourceDialog').hide();resourceAddedHook();}"/>
+                <p:message for="@previous"/>
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.thumbnailSmall != null}">

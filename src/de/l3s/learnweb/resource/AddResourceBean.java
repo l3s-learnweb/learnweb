@@ -15,8 +15,6 @@ import jakarta.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.file.UploadedFile;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
@@ -86,36 +84,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         resource.setUser(getUser());
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
-        try {
-            log.debug("Handle File upload");
-            UploadedFile uploadedFile = event.getFile();
-
-            log.debug("Getting the fileInfo from uploaded file...");
-            FileInfo info = getLearnweb().getResourceMetadataExtractor().getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
-
-            log.debug("Saving the file...");
-            File file = new File(FileType.MAIN, info.getFileName(), info.getMimeType());
-            fileDao.save(file, uploadedFile.getInputStream());
-            Resource res = resource.cloneResource();
-            res.addFile(file);
-
-            log.debug("Extracting metadata from the file...");
-            getLearnweb().getResourceMetadataExtractor().processFileResource(res, info);
-            addResource(res);
-
-            log.debug("Creating thumbnails from the file...");
-            Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(res);
-            createThumbnailThread.start();
-            createThumbnailThread.join(1000);
-
-            log.debug("Next step");
-            formStep++;
-        } catch (InterruptedException | IOException e) {
-            addErrorMessage(e);
-        }
-    }
-
     public void handleUrlInput() {
         try {
             log.debug("Handle Url input");
@@ -173,7 +141,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         addResource(resource);
     }
 
-    private void addResource(Resource res) {
+    public void addResource(Resource res) {
         if (!targetGroup.canAddResources(getUser())) {
             addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
             return;
