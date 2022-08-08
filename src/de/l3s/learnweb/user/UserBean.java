@@ -528,11 +528,17 @@ public class UserBean implements Serializable {
     }
 
     public boolean isTrackingEnabled() {
-        return !getActiveOrganisation().getOption(Option.Privacy_Tracker_disabled);
+        if (getActiveOrganisation() != null) {
+            return !getActiveOrganisation().getOption(Option.Privacy_Tracker_disabled);
+        }
+        return false;
     }
 
     public boolean isLanguageSwitchEnabled() {
-        return !getActiveOrganisation().getOption(Option.Users_Hide_language_switch);
+        if (getActiveOrganisation() != null) {
+            return !getActiveOrganisation().getOption(Option.Users_Hide_language_switch);
+        }
+        return false;
     }
 
     public boolean isHideSidebarMenu() {

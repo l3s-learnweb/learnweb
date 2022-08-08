@@ -1,7 +1,10 @@
 package de.l3s.learnweb.searchhistory;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +18,12 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -45,6 +54,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     @Inject
     private SearchHistoryDao searchHistoryDao;
 
+    private JsonQuery jsonQuery;
+    private static String PATTERN_DATE = "yyyy-MM-dd";
+    private static String PATTERN_TIME = "HH:mm:ss";
+    private static String PATTERN_DATETIME = String.format("%s %s", PATTERN_DATE, PATTERN_TIME);
+
     /**
      * Load the variables that needs values before the view is rendered.
      */
@@ -70,7 +84,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         } else if (sessions == null && !showGroupHistory) {
             sessions = searchHistoryDao.findSessionsByUserId(selectedUserId);
         }
-
         return sessions;
     }
 
@@ -191,5 +204,31 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
     public void setSearchQuery(final String searchQuery) {
         this.searchQuery = searchQuery;
+    }
+
+    static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern(PATTERN_DATETIME);
+
+        @Override
+        public void write(JsonWriter out, LocalDateTime value) throws IOException {
+            if(value != null)
+                out.value(value.format(format));
+        }
+
+        @Override
+        public LocalDateTime read(JsonReader in) throws IOException {
+            return LocalDateTime.parse(in.nextString(), format);
+        }
+    }
+
+    public String getQueriesJson() {
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
+            .create();
+        //Create new json
+        jsonQuery = new JsonQuery();
+        if (sessions != null) {
+            jsonQuery.processQuery(sessions);
+        }
+        return gson.toJson(jsonQuery);
     }
 }
