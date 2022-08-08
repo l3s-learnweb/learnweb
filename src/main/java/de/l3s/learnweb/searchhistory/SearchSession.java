@@ -3,6 +3,7 @@ package de.l3s.learnweb.searchhistory;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class SearchSession implements Serializable {
     private LinkedList<SearchQuery> queries;
 
     private transient User user;
+
 
     public SearchSession(String sessionId, int userId) {
         this.sessionId = sessionId;
