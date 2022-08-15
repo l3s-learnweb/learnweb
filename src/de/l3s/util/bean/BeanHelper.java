@@ -13,12 +13,14 @@ import java.util.StringJoiner;
 import java.util.TreeSet;
 
 import jakarta.faces.model.SelectItem;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
+import org.omnifaces.util.Exceptions;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
 import org.primefaces.model.CheckboxTreeNode;
@@ -185,5 +187,9 @@ public final class BeanHelper {
             joiner.add(entry.getKey() + "=[" + value + "]");
         }
         return joiner.toString();
+    }
+
+    public static Throwable unwrap(Throwable exception) {
+        return Exceptions.unwrap(exception, ServletException.class);
     }
 }

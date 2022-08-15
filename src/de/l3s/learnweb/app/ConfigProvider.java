@@ -31,7 +31,7 @@ public class ConfigProvider implements Serializable {
     @Serial
     private static final long serialVersionUID = 8999792363825397979L;
     private static final Logger log = LogManager.getLogger(ConfigProvider.class);
-    private static final String PROP_KEY_PREFIX = "learnweb_".toLowerCase(Locale.ROOT);
+    private static final String PROP_KEY_PREFIX = "learnweb_";
 
     /**
      * All the application configuration stored here.
