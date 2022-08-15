@@ -18,13 +18,10 @@ public class Mail {
     public static final Authenticator AUTHENTICATOR = new PasswordAuthenticator("learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
 
     public static Session createSession() throws MessagingException {
-        System.setProperty("mail.mime.charset", "UTF-8");
-        System.setProperty("https.protocols", "TLSv1.2,TLSv1.3");
-
         Properties props = new Properties();
         props.setProperty("mail.smtp.host", "mail.kbs.uni-hannover.de");
-        props.setProperty("mail.smtp.port", "465");
-        props.setProperty("mail.smtp.socketFactory.port", "465");
+        props.setProperty("mail.smtp.port", "587");
+        props.setProperty("mail.smtp.socketFactory.port", "587");
         props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.setProperty("mail.smtp.auth", "true");
         props.setProperty("mail.smtp.starttls.enable", "true");

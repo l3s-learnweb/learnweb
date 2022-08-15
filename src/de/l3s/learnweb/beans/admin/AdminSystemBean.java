@@ -3,6 +3,7 @@ package de.l3s.learnweb.beans.admin;
 import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import org.primefaces.model.DefaultDashboardColumn;
 import org.primefaces.model.DefaultDashboardModel;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.FolderDao;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.resource.FileDao;
@@ -56,6 +59,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
 
         DashboardColumn column2 = new DefaultDashboardColumn();
         column2.addWidget("maintenance");
+        column2.addWidget("error_handling");
         model.addColumn(column2);
 
         DashboardColumn column3 = new DefaultDashboardColumn();
@@ -199,5 +203,18 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
                 FileUtils.byteCountToDisplaySize(runtime.maxMemory())
             );
         }
+    }
+
+    @SuppressWarnings("ProhibitedExceptionThrown")
+    public void throwRuntimeException() {
+        throw new RuntimeException("peek-a-boo");
+    }
+
+    public void throwSQLException() throws SQLException {
+        throw new SQLException("DB fail");
+    }
+
+    public void throwHttpException() throws HttpException {
+        throw new BadRequestHttpException("Demo error");
     }
 }

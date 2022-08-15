@@ -52,9 +52,13 @@ public final class Learnweb {
     private final ResourceMetadataExtractor resourceMetadataExtractor;
 
     @Inject
+    @SuppressWarnings("AccessOfSystemProperties")
     public Learnweb(ConfigProvider configProvider, DaoProvider daoProvider) {
         this.configProvider = configProvider;
         this.daoProvider = daoProvider;
+
+        System.setProperty("mail.mime.charset", "UTF-8");
+        System.setProperty("mail.smtp.starttls.enable", "true");
 
         solrClient = new SolrClient(configProvider.getProperty("solr_server_url"));
         interweb = new InterWeb(configProvider.getProperty("interwebj_api_url"), configProvider.getProperty("interwebj_api_key"),

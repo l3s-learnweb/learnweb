@@ -3,6 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.system_tools}"/>
@@ -50,6 +51,29 @@
                 </p:toggleSwitch>
             </p:panel>
 
+            <p:panel id="error_handling" header="Test Errors Handling">
+                <p class="mb-2">
+                    <h:commandButton value="throw runtime exception" action="#{adminSystemBean.throwRuntimeException}" styleClass="me-1"/>
+                    <p:commandButton value="throw runtime exception on ajax" action="#{adminSystemBean.throwRuntimeException}"
+                                     ajax="true" process="@this" update="@this"/>
+                </p>
+                <p class="mb-2">
+                    <h:commandButton value="throw SQL exception" action="#{adminSystemBean.throwSQLException}" styleClass="me-1"/>
+                    <p:commandButton value="throw SQL exception on ajax" action="#{adminSystemBean.throwSQLException}"
+                                     ajax="true" process="@this" update="@this"/>
+                </p>
+                <p class="mb-2" jsf:id="render_error">
+                    <h:commandButton value="throw exception during render" styleClass="me-1"/>
+                    <p:commandButton value="throw exception during render on ajax" ajax="true" process="@form" update="render_error"/>
+                    <h:outputText value="#{adminSystemBean.throwRuntimeException()}" rendered="#{component.namingContainer.submitted}"/>
+                </p>
+                <p class="mb-0">
+                    <h:commandButton value="cause http error" action="#{adminSystemBean.throwHttpException}" styleClass="me-1"/>
+                    <p:commandButton value="cause http error on ajax" action="#{adminSystemBean.throwHttpException}"
+                                     ajax="true" process="@this" update="@this"/>
+                </p>
+            </p:panel>
+
             <p:panel id="solrIndex" header="Solr Index">
                 <p:panelGrid columns="2" layout="flex" contentStyleClass="row" columnClasses="col-6, col-6">
                     <h:outputText value="Total resources:"/>
@@ -59,8 +83,8 @@
                     <h:outputText value="#{adminSystemBean.indexedResources}"/>
                 </p:panelGrid>
 
-                <p:commandButton actionListener="#{adminSystemBean.reindexResources()}" widgetVar="reindexBtn" value="Reindex" styleClass="ui-button-danger mb-2"
-                                 update="solrIndex" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
+                <p:commandButton widgetVar="reindexBtn" actionListener="#{adminSystemBean.reindexResources()}" value="Reindex" update="solrIndex"
+                                 styleClass="ui-button-danger mb-2" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
 
                 <p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true"
                                labelTemplate="{value}%" styleClass="p-mt-3 collapse" global="false" interval="500">
