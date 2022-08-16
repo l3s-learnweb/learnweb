@@ -53,6 +53,21 @@
 		</dd>
 	</ui:fragment>
 
+	<ui:fragment rendered="#{userBean.user.organisationId == 1604 or true}">
+		<dt class="col-sm-4">Climate change relation:</dt>
+		<dd class="col-sm-8">
+			<h:panelGroup id="relation" layout="block">
+				<p:selectOneButton value="#{res.metadataWrapper['someclics_relation']}">
+					<p:ajax listener="#{res.save}" />
+
+					<f:selectItem itemLabel="Acceptance" itemValue="acceptance"/>
+					<f:selectItem itemLabel="Denial" itemValue="denial"/>
+					<f:selectItem itemLabel="Both" itemValue="Both"/>
+				</p:selectOneButton>
+			</h:panelGroup>
+		</dd>
+	</ui:fragment>
+
 	<ui:fragment rendered="#{userBean.starRatingEnabled}">
 		<dt class="col-sm-4">#{userBean.user.organisationId == 1604 ? msg.credibility : msg.relevance}:</dt>
 		<dd class="col-sm-8">
@@ -137,7 +152,7 @@
 	</ui:fragment>
 
 	<ui:repeat var="entry" value="#{res.metadataEntries}">
-		<ui:fragment rendered="#{not empty entry.value}">
+		<ui:fragment rendered="#{not empty entry.value and not entry.key == 'someclics_relation'}">
 			<dt class="col-sm-4"><h:outputText value="#{msg[entry.key]}"/>:</dt>
 
 			<dd class="col-sm-8">
