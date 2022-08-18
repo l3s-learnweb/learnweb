@@ -97,6 +97,11 @@ function attachEditor(elementId, editorType, configValues) {
         saveUrl: configValues.document.url,
         toolbarDocked: 'top',
       },
+      customization: {
+        compactHeader: true,
+        compatibleFeatures: true,
+        toolbarHideFileName: true,
+      },
     },
     events: {
       onAppReady() {
