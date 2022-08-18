@@ -90,7 +90,8 @@
                             <h5 class="card-subheader py-1 m-0"><h:outputText value="#{course.title}"/></h5>
                             <div class="card-content row mx-auto my-3">
                                 <div class="col-4 col-lg-3">
-                                    <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"/>
+                                    <h:graphicImage value="#{course.registrationIconFileUrl}" alt="#{course.title} icon"
+                                                    rendered="#{not empty course.registrationIconFileUrl}"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-start">
                                     <h:outputText value="#{lw:msgDef('frontpage.course_description_'.concat(course.registrationWizard), course.registrationDescription)}" escape="false"/>

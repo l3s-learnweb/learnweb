@@ -145,7 +145,7 @@ public interface SurveyDao extends SqlObject, Serializable {
         params.put("survey_id", SqlHelper.toNullable(survey.getId()));
         params.put("organisation_id", SqlHelper.toNullable(survey.getOrganisationId()));
         params.put("title", survey.getTitle());
-        params.put("description", survey.getDescription());
+        params.put("description", SqlHelper.toNullable(survey.getDescription()));
         params.put("user_id", SqlHelper.toNullable(survey.getUserId()));
         params.put("public_template", survey.isPublicTemplate());
 
