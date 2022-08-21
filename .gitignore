@@ -39,7 +39,7 @@ files
 
 ## Local files
 learnweb_local.properties
-WebContent/resources/bundle
+**/webapp/resources/bundle
 
 ## lock files not actually used in production, so makes no sense to keep them
 package-lock.json

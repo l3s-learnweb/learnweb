@@ -13,8 +13,8 @@
     "build": "rollup -c",
     "build:dev": "rollup -c --environment NODE_ENV:development",
     "watch": "rollup -c -w",
-    "scss:lint": "stylelint WebContent/resources/learnweb/sass",
-    "js:lint": "eslint WebContent/resources/learnweb/js/**",
+    "scss:lint": "stylelint src/main/webapp/resources/learnweb/sass",
+    "js:lint": "eslint src/main/webapp/resources/learnweb/js/**",
     "lint": "npm run scss:lint && npm run js:lint"
   },
   "dependencies": {

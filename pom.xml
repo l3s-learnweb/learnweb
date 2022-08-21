@@ -18,7 +18,7 @@
 
         <maven.compiler.release>17</maven.compiler.release>
         <maven.dependency.myfaces.version>3.0.2</maven.dependency.myfaces.version>
-        <maven.dependency.imageio.version>3.8.2</maven.dependency.imageio.version>
+        <maven.dependency.imageio.version>3.8.3</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.32.0</maven.dependency.jdbi3.version>
         <maven.dependency.flyway.version>9.1.6</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.18.0</maven.dependency.log4j.version>
@@ -391,11 +391,9 @@
 
     <build>
         <finalName>${project.name}</finalName>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
         <resources>
             <resource>
-                <directory>Resources</directory>
+                <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
                     <exclude>**/*local*.*</exclude>
@@ -404,7 +402,7 @@
         </resources>
         <testResources>
             <testResource>
-                <directory>testResources</directory>
+                <directory>src/test/resources</directory>
                 <filtering>false</filtering>
             </testResource>
         </testResources>
@@ -465,17 +463,16 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
                 <configuration>
-                    <warSourceDirectory>WebContent</warSourceDirectory>
                     <webResources>
                         <resource>
-                            <directory>WebContent</directory>
+                            <directory>src/main/webapp</directory>
                             <filtering>false</filtering>
                             <excludes>
                                 <include>**/web.xml</include>
                             </excludes>
                         </resource>
                         <resource>
-                            <directory>WebContent</directory>
+                            <directory>src/main/webapp</directory>
                             <filtering>true</filtering>
                             <includes>
                                 <include>**/web.xml</include>
@@ -604,7 +601,7 @@
             <build>
                 <resources>
                     <resource>
-                        <directory>Resources</directory>
+                        <directory>src/main/resources</directory>
                         <includes>
                             <include>**/*local*.*</include>
                         </includes>
