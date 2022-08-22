@@ -289,5 +289,11 @@ body {
         }
       }
     }
+
+    .ui-divider.ui-widget {
+      &.ui-divider-horizontal {
+        margin: 0;
+      }
+    }
   }
 }

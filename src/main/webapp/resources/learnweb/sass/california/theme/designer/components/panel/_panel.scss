@@ -50,7 +50,6 @@ body {
       background: $panelContentBg;
       color: $panelContentTextColor;
       padding: $panelContentPadding;
-      @include border-radius-bottom($borderRadius);
     }
 
     .ui-panel-footer {
@@ -60,6 +59,18 @@ body {
       padding: $panelFooterPadding;
       margin: 0;
       border-top: 0 none;
+    }
+
+    > div {
+      &:last-of-type {
+        @include border-radius-bottom($borderRadius);
+      }
+    }
+
+    &.ui-panel-collapsed {
+      .ui-panel-titlebar {
+        @include border-radius-bottom($borderRadius);
+      }
     }
 
     &.ui-panel-collapsed-h {

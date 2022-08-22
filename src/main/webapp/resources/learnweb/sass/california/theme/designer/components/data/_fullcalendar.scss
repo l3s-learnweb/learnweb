@@ -13,7 +13,10 @@ body {
       background: $panelHeaderBg;
       border: $panelHeaderBorder;
       color: $panelHeaderTextColor;
-      padding: $panelHeaderPadding;
+
+      > .fc-scrollgrid-sync-inner {
+        padding: $panelHeaderPadding;
+      }
     }
 
     td {

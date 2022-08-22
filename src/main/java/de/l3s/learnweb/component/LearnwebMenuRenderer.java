@@ -1,7 +1,6 @@
 package de.l3s.learnweb.component;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,6 +18,7 @@ import org.primefaces.component.menu.AbstractMenu;
 import org.primefaces.component.menu.BaseMenuRenderer;
 import org.primefaces.component.menuitem.UIMenuItem;
 import org.primefaces.component.submenu.UISubmenu;
+import org.primefaces.context.PrimeRequestContext;
 import org.primefaces.expression.SearchExpressionFacade;
 import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.MenuItem;
@@ -220,7 +220,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         ResponseWriter writer = context.getResponseWriter();
         String title = menuitem.getTitle();
         boolean disabled = menuitem.isDisabled();
-        Object value = menuitem.getValue();
+        // Object value = menuitem.getValue();
         String style = menuitem.getStyle();
         String styleClass = menuitem.getStyleClass();
 
@@ -262,9 +262,9 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
                     String menuClientId = menu.getClientId(context);
                     Map<String, List<String>> params = menuitem.getParams();
                     if (params == null) {
-                        params = new LinkedHashMap<String, List<String>>();
+                        params = new LinkedHashMap<>();
                     }
-                    List<String> idParams = new ArrayList<String>();
+                    List<String> idParams = new ArrayList<>();
                     idParams.add(menuitem.getId());
                     params.put(menuClientId + "_menuid", idParams);
 
@@ -307,9 +307,8 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
     @Override
     protected void encodeScript(FacesContext context, AbstractMenu abstractMenu) throws IOException {
         LearnwebMenu menu = (LearnwebMenu) abstractMenu;
-        String clientId = menu.getClientId(context);
         WidgetBuilder wb = getWidgetBuilder(context);
-        wb.init("LearnwebMenu", menu.resolveWidgetVar(), clientId);
+        wb.init("LearnwebMenu", menu);
         wb.finish();
     }
 
@@ -317,7 +316,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         UIComponent component = (UIComponent) source;
         String clientId = component.getClientId(context);
 
-        AjaxRequestBuilder builder = getAjaxRequestBuilder();
+        AjaxRequestBuilder builder = PrimeRequestContext.getCurrentInstance(context).getAjaxRequestBuilder();
 
         builder.init()
             .source(clientId)
@@ -351,7 +350,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
 
         String clientId = menu.getClientId(context);
 
-        AjaxRequestBuilder builder = getAjaxRequestBuilder();
+        AjaxRequestBuilder builder = PrimeRequestContext.getCurrentInstance(context).getAjaxRequestBuilder();
 
         builder.init()
             .source(clientId)
@@ -377,33 +376,5 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
         builder.preventDefault();
 
         return builder.build();
-    }
-
-    protected AjaxRequestBuilder getAjaxRequestBuilder() {
-        Class rootContext;
-        Object requestContextInstance;
-        AjaxRequestBuilder builder;
-
-        try {
-            rootContext = Class.forName("org.primefaces.context.PrimeRequestContext");
-        } catch (ClassNotFoundException ignored) {
-            try {
-                rootContext = Class.forName("org.primefaces.context.RequestContext");
-            } catch (ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
-        try {
-            Method method = rootContext.getMethod("getCurrentInstance");
-            requestContextInstance = method.invoke(null);
-
-            method = requestContextInstance.getClass().getMethod("getAjaxRequestBuilder");
-            builder = (AjaxRequestBuilder) method.invoke(requestContextInstance);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-
-        return builder;
     }
 }

@@ -38,14 +38,14 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-8">
-                    <div class="header-news-list text-white" style="background-color: rgba(36, 39, 37, 0.9);">
-                        <h2 class="m-0 bg-dark">#{msg.announcements}</h2>
+                    <div class="header-news-list" style="background-color: rgba(36, 39, 37, 0.9);">
+                        <h2 class="m-0 bg-dark text-white">#{msg.announcements}</h2>
 
                         <div class="news-list">
                             <ul class="px-3 pt-3 list-unstyled">
                                 <ui:repeat var="news" value="#{frontpageBean.announcements}">
-                                    <li class="news mb-3">
-                                        <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>
+                                    <li class="news mb-3 text-white">
+                                        <h4 class="text-white"><h:outputText value="#{news.title}"/></h4>
 
                                         <h:outputText value="#{news.createdAt}" styleClass="news-date mb-1">
                                             <f:convertDateTime type="localDate" timeZone="#{userBean.timeZone}"/>

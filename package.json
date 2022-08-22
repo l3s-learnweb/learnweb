@@ -5,8 +5,8 @@
   "type": "module",
   "browserslist": [
     "> 0.5% in DE",
-    "not safari < 13.1",
-    "not ios_saf < 13.4",
+    "not safari < 15.4",
+    "not ios_saf < 15.4",
     "not op_mini all",
     "not dead"
   ],

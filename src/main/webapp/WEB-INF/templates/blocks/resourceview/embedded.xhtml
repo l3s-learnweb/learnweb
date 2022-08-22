@@ -58,7 +58,7 @@
     </c:when>
 
     <c:when test="${res.type eq 'text' and res.downloadUrl ne null}">
-        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-panel p-1"></iframe>
+        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-surface p-1"></iframe>
     </c:when>
 
     <c:when test="${res.type eq 'survey'}">

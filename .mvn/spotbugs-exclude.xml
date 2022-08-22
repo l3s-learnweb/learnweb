@@ -22,6 +22,11 @@
         </Or>
         <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
     </Match>
+    <!-- The MenuElement is not serializable in the class, but it will in the implementation -->
+    <Match>
+        <Class name="de.l3s.learnweb.component.ActiveSubmenu"/>
+        <Bug pattern="SE_BAD_FIELD"/>
+    </Match>
     <!-- No deserialization methods -->
     <Match>
         <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>

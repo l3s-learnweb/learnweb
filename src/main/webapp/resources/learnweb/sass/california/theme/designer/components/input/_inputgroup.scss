@@ -23,6 +23,7 @@ body {
 
     .ui-float-label:first-child input,
     .ui-float-label:first-child textarea {
+      border-right-width: 0px;
       @include border-radius-left($borderRadius);
     }
 
@@ -32,6 +33,7 @@ body {
 
     .ui-float-label:last-child input,
     .ui-float-label:last-child textarea {
+      border-left-width: 0px;
       @include border-radius-right($borderRadius);
     }
 

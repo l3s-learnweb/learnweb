@@ -17,7 +17,7 @@
       .news-date {
         display: block;
         font-size: $font-size-sm;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--gray-500);
       }
 
       .news-content {
@@ -33,7 +33,7 @@
 
   .card-single {
     margin-bottom: 3 * $spacer;
-    background: var(--panel-bg);
+    background: var(--surface-ground);
 
     .card-header {
       background-color: $primaryDarkerColor;

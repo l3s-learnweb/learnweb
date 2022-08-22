@@ -39,8 +39,6 @@ $primary-lighter-text-color: var(--gray-700) !default;
 $body-bg: #f2f5fa !default;
 $body-color: #212121 !default;
 
-$panel-bg: var(--white) !default;
-
 $border-color: var(--gray-400) !default;
 
 $colors: (
@@ -83,6 +81,12 @@ $box-shadow: 0 0.125rem 0.5rem rgba($black, 0.2);
 $box-shadow-lg: 0 0.5rem 1rem rgba($black, 0.25);
 
 $spacer: 1rem;
+$inline-spacer: $spacer * 0.5 !default;
+
+$surface-ground: var(--white) !default;
+$surface-section: var(--white) !default;
+$surface-card: var(--white) !default;
+$surface-overlay: var(--white) !default;
 
 $headings-color: var(--body-color) !default;
 

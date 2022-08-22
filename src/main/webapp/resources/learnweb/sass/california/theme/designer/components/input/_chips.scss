@@ -5,7 +5,7 @@ body {
 
       .ui-chips-token {
         padding: 1px 0;
-        margin: 0 $inlineSpacing 0 0;
+        margin: divide($inlineSpacing, 4);
         background: $chipBg;
         color: $chipTextColor;
         border-radius: $borderRadius;
@@ -29,7 +29,7 @@ body {
           font-family: $fontFamily;
           font-size: $inputTextFontSize;
           color: $inputTextColor;
-          //-webkit-appearance: none;
+          -webkit-appearance: none;
           appearance: none;
           padding: 0;
           margin: 0;

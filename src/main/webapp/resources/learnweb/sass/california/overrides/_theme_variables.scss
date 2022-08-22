@@ -1,6 +1,6 @@
 /* Add your variable customizations of theme here */
 //shades of gray
-$shade000: var(--panel-bg); //surface
+$shade000: var(--surface-ground); //surface
 $shade100: var(--gray-100); //header background
 $shade200: var(--gray-200); //hover background
 $shade300: var(--border-color); //content border
@@ -37,8 +37,8 @@ $tabletBreakpoint: 991px !default;
 $phoneBreakpoint: 576px !default;
 $divider: 1px solid $shade300 !default;
 $disabledOpacity: 0.6 !default;
-$maskBg: rgba($gray-700, 0.8);
-$inlineSpacing: 0.5rem !default;
+$maskBg: rgba($gray-700, 0.8); /* stylelint-disable-line */
+$inlineSpacing: $inline-spacer;
 $iconSize: 1rem !default;
 $errorColor: #f44336 !default;
 
@@ -98,6 +98,7 @@ $inputListItemHighlightTextColor: $highlightTextColor !default;
 $inputListItemBorder: 0 none !default;
 $inputListItemBorderRadius: 0 !default;
 $inputListItemMargin: 0 !default;
+$inputListItemFocusShadow: inset 0 0 0 0.15rem $focusOutlineColor !default;
 
 $inputListHeaderPadding: 0.5rem 1rem !default;
 $inputListHeaderBg: $shade100 !default;
@@ -344,7 +345,7 @@ $panelHeaderPadding: $spacer * 0.25 $spacer;
 $panelContentBorder: 1px solid $shade300 !default;
 $panelContentBg: $shade000 !default;
 $panelContentTextColor: var(--body-color);
-$panelContentPadding: 1rem !default;
+$panelContentPadding: var(--spacer);
 $panelFooterBorder: 1px solid $shade300 !default;
 $panelFooterBg: $shade000 !default;
 $panelFooterTextColor: $shade700 !default;
@@ -363,11 +364,11 @@ $accordionHeaderTextColor: $shade700;
 $accordionHeaderFontWeight: $panelHeaderFontWeight !default;
 $accordionHeaderPadding: $panelHeaderPadding !default;
 
-$accordionHeaderHoverBg: $shade300 !default;
+$accordionHeaderHoverBg: $panelHeaderBg !default;
 $accordionHeaderHoverBorderColor: $shade300 !default;
-$accordionHeaderTextHoverColor: $shade700 !default;
+$accordionHeaderTextHoverColor: $white !default;
 
-$accordionHeaderActiveBg: $shade600;
+$accordionHeaderActiveBg: $panelHeaderBg;
 $accordionHeaderActiveBorderColor: $shade300 !default;
 $accordionHeaderTextActiveColor: $white;
 
@@ -485,6 +486,10 @@ $dataViewContentPadding: 0 !default;
 $dataViewContentBorder: 0 none !default;
 $dataViewListItemBorder: solid $shade200 !default;
 $dataViewListItemBorderWidth: 0 0 1px 0 !default;
+
+//orderlist, picklist
+$orderListDropPlaceholderBg: scale-color($primary-lighter, $lightness: -20%) !default;
+$pickListDropPlaceholderBg: scale-color($primary-lighter, $lightness: -20%) !default;
 
 //schedule
 $scheduleCellBorderColor: $shade300 !default;

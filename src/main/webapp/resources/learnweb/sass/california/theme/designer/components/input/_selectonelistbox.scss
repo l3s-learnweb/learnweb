@@ -71,6 +71,10 @@ body {
             padding: $datatableBodyCellPadding;
           }
         }
+
+        .ui-listbox-outline {
+          @include focused-listitem();
+        }
       }
     }
   }

@@ -89,6 +89,10 @@ body {
             border-color: $calendarCellDateHoverBorderColor;
           }
 
+          &:focus {
+            @include focused();
+          }
+
           &.ui-state-active {
             background: $calendarCellDateSelectedBg;
             color: $calendarCellDateSelectedTextColor;
@@ -143,6 +147,37 @@ body {
       }
     }
 
+    .ui-timepicker-timeinput {
+      input {
+        color: $inputTextColor;
+        background: $inputBg;
+        padding: $inputPadding;
+        border: $inputBorder;
+        outline: 0 none;
+        font-size: $inputTextFontSize;
+        border-radius: $borderRadius;
+        transition: $transition;
+        -webkit-appearance: none;
+        appearance: none;
+        width: auto;
+
+        &:hover {
+          border-color: $inputHoverBorderColor;
+        }
+
+        &:focus {
+          @include focused-input();
+        }
+      }
+
+      .ui-separator {
+        > span {
+          padding: $inputPadding;
+          font-size: $inputTextFontSize;
+        }
+      }
+    }
+
     .ui-datepicker-buttonpane,
     .ui-datepicker-buttonbar {
       button {
@@ -175,6 +210,10 @@ body {
       &:hover {
         background: $calendarCellDateHoverBg;
         border-color: $calendarCellDateHoverBorderColor;
+      }
+
+      &:focus {
+        @include focused();
       }
 
       &.ui-state-active {

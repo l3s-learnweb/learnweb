@@ -1,6 +1,6 @@
 .breadcrumb {
   display: none;
-  background-color: var(--panel-bg);
+  background-color: var(--surface-ground);
   border: 1px solid var(--primary);
   border-left: 0;
   border-right: 0;
@@ -92,7 +92,7 @@
         right: -1.2rem;
         transform: scale(0.707) rotate(45deg);
         z-index: 1;
-        background: var(--panel-bg);
+        background: var(--surface-ground);
         box-shadow: 1px -1px 0 0 var(--primary);
         padding-right: 0;
 

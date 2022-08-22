@@ -69,13 +69,20 @@
   --code-color: #{$code-color};
 
   --highlight-bg: #{$mark-bg};
-  --panel-bg: #{$panel-bg};
+
+  --spacer: #{$spacer};
+  --inline-spacer: #{$inline-spacer};
+
+  --surface-ground: #{$surface-ground};
+  --surface-section: #{$surface-section};
+  --surface-card: #{$surface-card};
+  --surface-overlay: #{$surface-overlay};
 }
 
 :root {
   // Dark theme variables
   --dark-body-bg: var(--gray-900);
-  --dark-panel-bg: #2b3035;
+  --dark-surface-ground: #2b3035;
   --dark-body-color: var(--gray-500);
   --dark-border-color: var(--gray-700);
   --dark-heading-color: var(--white);
@@ -87,12 +94,12 @@
   --body-color: var(--dark-body-color);
   --body-bg: var(--dark-body-bg);
   --border-color: var(--dark-border-color);
-  --panel-bg: var(--dark-panel-bg);
+  --surface-ground: var(--dark-surface-ground);
   --heading-color: var(--dark-heading-color);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    @include override-dark();
-  }
-}
+//@media (prefers-color-scheme: dark) {
+//  :root {
+//    @include override-dark();
+//  }
+//}

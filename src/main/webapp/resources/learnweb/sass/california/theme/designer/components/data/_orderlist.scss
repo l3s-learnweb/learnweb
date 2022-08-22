@@ -73,7 +73,17 @@ body {
           color: $inputListItemHighlightTextColor;
 
           &.ui-sortable-placeholder {
-            background-color: var(--primary-light);
+            background: $orderListDropPlaceholderBg;
+          }
+        }
+      }
+    }
+
+    &.ui-orderlist-controls-right {
+      .ui-g {
+        > div {
+          &.ui-orderlist-controls {
+            padding: 0 0 0 $inlineSpacing;
           }
         }
       }

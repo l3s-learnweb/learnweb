@@ -37,14 +37,14 @@ body {
       }
 
       &.ui-state-active {
-        border-color: $accordionHeaderActiveBorderColor;
         background: $accordionHeaderActiveBg;
+        border-color: $accordionHeaderActiveBorderColor;
         color: $accordionHeaderTextActiveColor;
 
         &:hover {
           border-color: $accordionHeaderActiveHoverBorderColor;
           background: $accordionHeaderActiveHoverBg;
-          color: $accordionHeaderActiveTextHoverColor;
+          color: $accordionHeaderTextHoverColor;
         }
       }
 
@@ -68,10 +68,10 @@ body {
     }
 
     .ui-accordion-content {
-      border: $panelContentBorder;
-      background: $panelContentBg;
-      color: $panelContentTextColor;
-      padding: $panelContentPadding;
+      border: $accordionContentBorder;
+      background: $accordionContentBg;
+      color: $accordionContentTextColor;
+      padding: $accordionContentPadding;
       margin: 0;
       position: static;
       border-top: 0 none;
