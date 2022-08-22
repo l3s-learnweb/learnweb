@@ -15,7 +15,9 @@
     "watch": "rollup -c -w",
     "scss:lint": "stylelint src/main/webapp/resources/learnweb/sass",
     "js:lint": "eslint src/main/webapp/resources/learnweb/js/**",
-    "lint": "npm run scss:lint && npm run js:lint"
+    "lint": "npm run scss:lint && npm run js:lint",
+    "visual": "node src/test/visual/test.js",
+    "percy": "percy exec -- node src/test/visual/test.js"
   },
   "dependencies": {
     "@fancyapps/fancybox": "^3.5.7",
@@ -47,6 +49,11 @@
     "stylelint": "^14.9.1",
     "stylelint-config-sass-guidelines": "^9.0.1",
     "stylelint-no-unsupported-browser-features": "^5.0.3"
+  },
+  "peerDependencies": {
+    "@percy/cli": "^1.9.1",
+    "@percy/puppeteer": "^2.0.2",
+    "puppeteer": "^16.2.0"
   },
   "eslintConfig": {
     "extends": [
