@@ -38,11 +38,11 @@
   }
 
   .ui-selecting {
-    background: $themePrimaryColorDarker;
+    background: $primaryDarkColor;
   }
 
   .ui-selected {
-    background: $themePrimaryDarkest;
+    background: $primaryDarkerColor;
     color: $white;
   }
 }

@@ -66,7 +66,7 @@
     }
 
     .res-view-controls {
-      background: $themePrimaryColor;
+      background: $primaryColor;
       min-height: 2.9rem;
 
       .ui-button {
@@ -170,8 +170,8 @@
 .archive-snapshot-list {
   a {
     background-color: transparent;
-    border: 1px solid $themePrimaryColor;
-    color: $themePrimaryColor;
+    border: 1px solid $primaryColor;
+    color: $primaryColor;
     border-radius: $btn-border-radius;
     font-size: $font-size-sm;
     font-weight: $font-weight-bold;
@@ -185,8 +185,8 @@
 
     &:hover {
       background-color: transparent;
-      border-color: $themePrimaryColorDarker;
-      color: $themePrimaryColorDarker;
+      border-color: $primaryDarkColor;
+      color: $primaryDarkColor;
     }
   }
 }
@@ -241,26 +241,26 @@
         &:last-child {
           border-top-left-radius: 0;
           border-bottom-left-radius: 0;
-          border-color: $secondaryButtonBgColor;
-          background: $secondaryButtonBgColor;
+          border-color: $secondaryButtonBg;
+          background: $secondaryButtonBg;
         }
       }
     }
 
     .ui-inplace-cancel {
-      border-color: $secondaryButtonBgColor;
-      background: $secondaryButtonBgColor;
+      border-color: $secondaryButtonBg;
+      background: $secondaryButtonBg;
 
       &:hover,
       &.ui-state-hover,
       &.ui-state-focus {
-        background-color: $secondaryButtonHoverBgColor;
-        border-color: $secondaryButtonHoverBgColor;
+        background-color: $secondaryButtonHoverBg;
+        border-color: $secondaryButtonHoverBg;
       }
 
       &.ui-state-active {
-        background-color: $secondaryButtonActiveBgColor;
-        border-color: $secondaryButtonActiveBgColor;
+        background-color: $secondaryButtonActiveBg;
+        border-color: $secondaryButtonActiveBg;
       }
     }
   }

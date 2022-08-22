@@ -17,108 +17,85 @@ $lightGreen: #e7f4e4;
 $lightRed: #f9dede;
 $lightPurple: #dbd4e9;
 
-$red: #cd2026;
-$indigo: #514a9d;
-
-// DO NOT USE $green, $greenDarker, $greenDarkerAlt, $greenDarkest (and other) COLORS!
-// Use $themePrimaryColor, $themePrimaryColorDarker, $themePrimaryDarkerAlt and other starting from $theme... instead! (see variables.scss)
+// DO NOT USE $green, $greenDark, $greenDarker (and other) COLORS!
+// Use $primaryColor, $primaryDarkColor, $primaryDarkerColor instead! (see variables.scss)
 
 $blue: #0071bc;
-$blueDarker: #205493;
-$blueDarkerAlt: #1a4172;
-$blueDarkest: #112e51;
+$blueDark: #205493;
+$blueDarker: #112e51;
 
 $purple: #6a4aa5;
-$purpleDarker: #4b2f7f;
-$purpleDarkerAlt: #4a376d;
-$purpleDarkest: #36215d;
+$purpleDark: #4b2f7f;
+$purpleDarker: #36215d;
 
 $pink: #9f4488;
-$pinkDarker: #8d3c79;
-$pinkDarkerAlt: #78426a;
-$pinkDarkest: #692d5a;
+$pinkDark: #8d3c79;
+$pinkDarker: #692d5a;
 
 $orange: #fe875d;
-$orangeDarker: #e26134;
-$orangeDarkerAlt: #ba5837;
-$orangeDarkest: #b34621;
+$orangeDark: #e26134;
+$orangeDarker: #b34621;
 
 $yellow: #f9c642;
-$yellowDarker: #fdb81e;
-$yellowDarkerAlt: #eaa200;
-$yellowDarkest: #eaa200;
+$yellowDark: #fdb81e;
+$yellowDarker: #eaa200;
 
 $green: #4aa564;
-$greenDarker: #378d4f;
-$greenDarkerAlt: #337747;
-$greenDarkest: #1d6833;
+$greenDark: #378d4f;
+$greenDarker: #1d6833;
 
 $teal: #07a089;
-$tealDarker: #067e6c;
-$tealDarkerAlt: #1d5b52;
-$tealDarkest: #04493f;
+$tealDark: #067e6c;
+$tealDarker: #04493f;
 
 $cyan: #00bfe7;
-$cyanDarker: #00a6d2;
-$cyanDarkerAlt: #1d79a3;
-$cyanDarkest: #046b99;
+$cyanDark: #00a6d2;
+$cyanDarker: #046b99;
 
 $bluegray: #4b6d7e;
-$bluegrayDarker: #365361;
-$bluegrayDarkerAlt: #384c56;
-$bluegrayDarkest: #233944;
+$bluegrayDark: #365361;
+$bluegrayDarker: #233944;
 
 $ash: #606c88;
-$ashDarker: #434f6a;
-$ashDarkerAlt: #40495c;
-$ashDarkest: #2b354a;
+$ashDark: #434f6a;
+$ashDarker: #2b354a;
 
 $mantle: #514a9d;
-$mantleDarker: #3e387d;
-$mantleDarkerAlt: #4a4579;
-$mantleDarkest: #36316b;
+$mantleDark: #3e387d;
+$mantleDarker: #36316b;
 
 $cappuccino: #684c4e;
-$cappuccinoDarker: #503739;
-$cappuccinoDarkerAlt: #4f3b3d;
-$cappuccinoDarkest: #3c2628;
+$cappuccinoDark: #503739;
+$cappuccinoDarker: #3c2628;
 
 $alive: #85344e;
-$aliveDarker: #6a293e;
-$aliveDarkerAlt: #5d2436;
-$aliveDarkest: #4f1f2e;
+$aliveDark: #6a293e;
+$aliveDarker: #4f1f2e;
 
 $emerald: #4aa382;
-$emeraldDarker: #348f6d;
-$emeraldDarkerAlt: #387e64;
-$emeraldDarkest: #227053;
+$emeraldDark: #348f6d;
+$emeraldDarker: #227053;
 
 $gray: #5b616b;
-$grayDarker: #43474e;
-$grayDarkerAlt: #313438;
-$grayDarkest: #1b1e22;
+$grayDark: #43474e;
+$grayDarker: #1b1e22;
 
 $hollywood: #514a9d;
-$hollywoodDarker: #3e387d;
-$hollywoodDarkerAlt: #4a4579;
-$hollywoodDarkest: #36316b;
+$hollywoodDark: #3e387d;
+$hollywoodDarker: #36316b;
 
 $montreal: #8f3b4f;
-$montrealDarker: #772d3f;
-$montrealDarkerAlt: #6a3844;
-$montrealDarkest: #5a2330;
+$montrealDark: #772d3f;
+$montrealDarker: #5a2330;
 
 $noir: #4b6cb7;
-$noirDarker: #38569c;
-$noirDarkerAlt: #415688;
-$noirDarkest: #2c447b;
+$noirDark: #38569c;
+$noirDarker: #2c447b;
 
 $peak: #31827b;
-$peakDarker: #256b65;
-$peakDarkerAlt: #34615d;
-$peakDarkest: #1e504c;
+$peakDark: #256b65;
+$peakDarker: #1e504c;
 
 $predawn: #4a505d;
-$predawnDarker: #303644;
-$predawnDarkerAlt: #2b303c;
-$predawnDarkest: #20242d;
+$predawnDark: #303644;
+$predawnDarker: #20242d;

@@ -28,19 +28,19 @@
 }
 
 .landing-cards {
-  background-color: $themePrimaryColorDarker;
-  border-top: 1px solid $themePrimaryColorDarker; // to avoid padding collapse
+  background-color: $primaryDarkColor;
+  border-top: 1px solid $primaryDarkColor; // to avoid padding collapse
 
   .card-single {
     .card-header {
-      background-color: $themePrimaryDarkest;
-      color: $themeElementTextColor;
+      background-color: $primaryDarkerColor;
+      color: $primaryTextColor;
       letter-spacing: 0.1rem;
     }
 
     .card-subheader {
       background-color: $gray-200;
-      color: $themePrimaryDarkest;
+      color: $primaryDarkerColor;
     }
 
     .card-content {

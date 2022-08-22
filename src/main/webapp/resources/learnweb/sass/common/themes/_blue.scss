@@ -1,13 +1,7 @@
 @import '../colors';
 
-$themeDarkBgColor: #122e51;
-$themeLightBgColor: #295b89;
+$primaryColor: $blue;
+$primaryDarkColor: $blueDark;
+$primaryDarkerColor: $blueDarker;
 
-$themePrimaryColor: $blue;
-$themePrimaryColorDarker: $blueDarker;
-$themePrimaryDarkerAlt: $blueDarkerAlt;
-$themePrimaryDarkest: $blueDarkest;
-
-$themePrimaryAltColor: $cyan;
-$themePrimaryAltColorDarker: $cyanDarker;
-$themePrimaryAltDarkerAlt: $cyanDarkerAlt;
+$highlightBg: scale-color($primaryColor, $lightness: 85%) !default;

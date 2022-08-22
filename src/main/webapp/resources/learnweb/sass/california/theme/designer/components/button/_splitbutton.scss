@@ -1,0 +1,38 @@
+body {
+  .ui-splitbutton {
+    padding: 0;
+
+    .ui-button:first-child {
+      position: relative;
+      margin: 0;
+      border-top-left-radius: $borderRadius;
+      border-bottom-left-radius: $borderRadius;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+
+      &.ui-state-focus {
+        z-index: 1;
+      }
+    }
+
+    .ui-splitbuttonmenu {
+      min-width: 100%;
+    }
+
+    .ui-button.ui-splitbutton-menubutton {
+      cursor: pointer;
+      height: auto;
+      padding: 0;
+      position: relative;
+      margin: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-right-radius: $borderRadius;
+      border-bottom-right-radius: $borderRadius;
+
+      .ui-icon.ui-icon-triangle-1-s {
+        @include icon_override("\e902");
+      }
+    }
+  }
+}

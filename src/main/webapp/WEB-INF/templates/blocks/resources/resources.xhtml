@@ -82,7 +82,7 @@
                 </f:facet>
 
                 <f:facet name="right">
-                    <p:menuButton styleClass="guide-add-resource" value="#{msg.add}" icon="fas fa-plus"
+                    <p:menuButton styleClass="guide-add-resource" buttonStyleClass="ui-button-warning" value="#{msg.add}" icon="fas fa-plus"
                                   rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
                         <p:menuitem id="menu_create_folder" value="#{msg.create_folder}" icon="fas fa-folder" ajax="true"
                                     oncomplete="PF('createFolderDialog').show();" update=":createFolderDialog"

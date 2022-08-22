@@ -1,6 +1,6 @@
 .ui-button-mod {
-  color: $themeElementTextColor;
-  border: 1px solid $themePrimaryColorDarker !important;
+  color: $primaryTextColor;
+  border: 1px solid $primaryDarkColor !important;
 
   .ui-button-text {
     position: relative;
@@ -10,7 +10,7 @@
 
       content: fa-content($fa-var-cog);
       padding-right: 0.5rem;
-      color: $themePrimaryAltColor;
+      color: $yellow;
     }
   }
 }

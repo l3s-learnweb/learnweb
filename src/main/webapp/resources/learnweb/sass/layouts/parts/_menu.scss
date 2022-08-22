@@ -33,9 +33,9 @@
 
     &:hover,
     &.ui-state-active {
-      color: $themeElementTextColor;
-      background-color: $themePrimaryDarkest !important;
-      border-left-color: $themePrimaryColor;
+      color: $primaryTextColor;
+      background-color: $primaryDarkerColor !important;
+      border-left-color: $primaryColor;
     }
   }
 
@@ -44,8 +44,8 @@
       margin-top: 2px;
       font-weight: 700;
       padding: 0.5em 0.375rem 0.5em 0.125rem;
-      color: $themeElementTextColor;
-      background-color: $themePrimaryColor;
+      color: $primaryTextColor;
+      background-color: $primaryColor;
 
       &.ui-state-disabled {
         cursor: default;
@@ -60,13 +60,13 @@
   }
 
   > .ui-menu-parent > .ui-menu-list > .ui-menu-parent.ui-state-expand {
-    background: lighten($themePrimaryColor, 40%);
-    border-left-color: $themePrimaryColor;
+    background: lighten($primaryColor, 40%);
+    border-left-color: $primaryColor;
 
     > .ui-menuitem-link {
-      color: $themeElementTextColor !important;
-      background-color: $themePrimaryColorDarker !important;
-      border-left-color: $themePrimaryColor !important;
+      color: $primaryTextColor !important;
+      background-color: $primaryDarkColor !important;
+      border-left-color: $primaryColor !important;
     }
   }
 

@@ -26,7 +26,7 @@ $contactIconColor: $white;
 
 /*Chat*/
 $messagefromBorderColor: $green;
-$messageownBorderColor: $red;
+$messageownBorderColor: $danger;
 $messageBgColor: $gray-200;
 $messageTimeTextColor: $gray-500;
 $messageBorderColor: $gray-400;
@@ -38,16 +38,16 @@ $salesHoverBgColor: $gray-200;
 $salesColumnHeaderColor: $gray-700;
 $salesRowTextColor: $gray-900;
 $salesUpIconColor: $green;
-$salesDownIconColor: $red;
+$salesDownIconColor: $danger;
 
 /*Timeline*/
 $timelineSeparatorColor: $gray-300;
 $loveNotificationBgColor: $lightRed;
-$loveNotificationTextColor: $red;
+$loveNotificationTextColor: $danger;
 $checkedNotificationBgColor: $lightBlue;
 $checkedNotificationTextColor: $cyanDarker;
 $eventNotificationBgColor: $lightYellow;
-$eventNotificationTextColor: $yellowDarkerAlt;
+$eventNotificationTextColor: #f39f19;
 $notificationTimeColor: $gray-600;
 
 /* Profile */
@@ -128,7 +128,7 @@ $profileTextColor: $gray-900;
     background-color: $statsBgColor;
     position: relative;
     margin-top: 29px;
-    border-top: 7px solid $themePrimaryColor;
+    border-top: 7px solid $primaryColor;
     border-bottom: solid 1px $statsBorderColor;
     border-right: solid 1px $statsBorderColor;
     border-left: solid 1px $statsBorderColor;
@@ -289,7 +289,7 @@ $profileTextColor: $gray-900;
 
         &:hover {
           background-color: $teamContentHoverBgColor;
-          border-color: $themePrimaryColor;
+          border-color: $primaryColor;
         }
 
         .team-box {

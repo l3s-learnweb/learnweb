@@ -35,7 +35,7 @@
     }
 
     &::after {
-      color: $themePrimaryColor;
+      color: $primaryColor;
     }
   }
 
@@ -63,17 +63,17 @@
 
   .completed {
     background-color: $lightGreen;
-    color: $themePrimaryColor;
-    border-top: 4px solid $themePrimaryColor !important;
+    color: $primaryColor;
+    border-top: 4px solid $primaryColor !important;
 
     .ui-steps-title {
-      color: $themePrimaryColor !important;
+      color: $primaryColor !important;
       font-weight: 400;
       font-family: sans-serif;
     }
 
     &::before {
-      color: $themePrimaryColor !important;
+      color: $primaryColor !important;
       margin-right: 0.5rem;
     }
   }

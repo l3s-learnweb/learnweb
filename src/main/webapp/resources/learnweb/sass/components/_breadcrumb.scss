@@ -1,7 +1,7 @@
 .breadcrumb {
   display: none;
   background-color: $white;
-  border: 1px solid $themePrimaryColor;
+  border: 1px solid $primaryColor;
   border-left: 0;
   border-right: 0;
   align-items: center;
@@ -59,7 +59,7 @@
       cursor: pointer;
 
       &:hover {
-        background: $themePrimaryColor;
+        background: $primaryColor;
 
         a {
           color: $white !important;
@@ -71,7 +71,7 @@
         }
 
         .breadcrumb-toggle {
-          background: $themePrimaryColor;
+          background: $primaryColor;
         }
       }
 
@@ -93,13 +93,13 @@
         transform: scale(0.707) rotate(45deg);
         z-index: 1;
         background: $white;
-        box-shadow: 1px -1px 0 0 $themePrimaryColor;
+        box-shadow: 1px -1px 0 0 $primaryColor;
         padding-right: 0;
 
         &:hover,
         &:focus {
           color: $white;
-          background: $themePrimaryColorDarker !important;
+          background: $primaryDarkColor !important;
         }
 
         i {
@@ -118,7 +118,7 @@
       position: absolute;
       color: $white;
       z-index: 10;
-      background: $themePrimaryColor;
+      background: $primaryColor;
       box-shadow: $box-shadow;
       list-style: none;
       padding: 0;
@@ -135,7 +135,7 @@
           text-decoration: none;
 
           &:hover {
-            background: $themePrimaryColorDarker;
+            background: $primaryDarkColor;
           }
         }
       }

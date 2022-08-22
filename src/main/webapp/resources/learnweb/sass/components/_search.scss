@@ -84,7 +84,7 @@
     }
 
     &:visited .item-origin {
-      color: $blueDarkest;
+      color: $blueDarker;
     }
 
     &:hover .item-title {
@@ -130,8 +130,8 @@
     top: auto;
     left: auto;
     opacity: 0.75;
-    background-color: $themeDarkBgColor;
-    color: $themeElementTextColor;
+    background-color: $highlightBg;
+    color: $primaryTextColor;
     border-radius: $btn-border-radius;
     font-size: $font-size-sm;
     padding: 0 0.2rem;
@@ -139,8 +139,8 @@
 
   &:hover {
     text-decoration: none;
-    color: $themeElementTextColor;
-    background: $themePrimaryColor;
+    color: $primaryTextColor;
+    background: $primaryColor;
 
     .item-thumbnail {
       img {
@@ -311,7 +311,7 @@
     left: auto;
     width: $search-lightbox-caption-width;
     padding: 0;
-    background: $themeDarkBgColor;
+    background: $highlightBg;
 
     .fancybox-caption__body {
       max-height: 100%;
@@ -326,7 +326,7 @@
 
   /* Align buttons at the right side  */
   .fancybox-toolbar {
-    background: $themeDarkBgColor;
+    background: $highlightBg;
     max-height: $search-lightbox-toolbar-height;
     width: $search-lightbox-caption-width;
     border-bottom: 1px solid $gray-900;
@@ -362,7 +362,7 @@
 
     .fancybox-inner::before {
       content: '';
-      background: $themeDarkBgColor;
+      background: $highlightBg;
       right: 0;
       top: 0;
       width: $search-lightbox-caption-width;
@@ -372,7 +372,7 @@
 
     /* Change arrow color */
     .fancybox-navigation button {
-      color: $themeDarkBgColor !important;
+      color: $highlightBg !important;
       top: calc(50% - #{$search-lightbox-toolbar-height * 0.5});
       padding: 0;
     }

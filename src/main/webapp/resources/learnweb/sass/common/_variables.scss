@@ -13,25 +13,18 @@ $variable-prefix: '';
 * Theme color schema (This is NOT bootstrap colors)
 * These colors are defined by a California theme imported above.
 * !default means that if the variable already defined, it would not be overridden. Also these variables used by IDE to show colors of elements.
-* Not all themes includes all these variables (for example only 4 color themes use different value of $themeSidebarDividerColor), do not remove them!
+* Not all themes includes all these variables (for example only 4 color themes use different value of $primaryTextColor), do not remove them!
 *
-* DO NOT USE $green, $greenDarker, $greenDarkerAlt, etc use these (like $themePrimaryColor) variables instead!
+* DO NOT USE $green, $greenDark, $greenDarker, etc use these (like $primaryColor) variables instead!
 */
-$themeSidebarDividerColor: $gray-400 !default; // $sidebarMenuitemDividerColor, #e4e2e0
-$themeSidebarHoverBgColor: $gray-500 !default; // $sidebarMenuitemHoverBgColor, #f1f1f1
-$themeElementTextColor: $white !default; // $primaryTextColor, #ffffff
+$primaryColor: $green !default;
+$primaryLightColor: scale-color($primaryColor, $lightness: 60%) !default;
+$primaryDarkColor: $greenDark !default;
+$primaryDarkerColor: $greenDarker !default;
+$primaryTextColor: $white !default;
 
-$themeDarkBgColor: #242725 !default; // $gradientSidebarTopBgColor
-$themeLightBgColor: #446a51 !default; // $gradientSidebarBottomBgColor
-
-$themePrimaryColor: $green !default; // $primaryColor
-$themePrimaryColorDarker: $greenDarker !default; // $primaryColorDarker
-$themePrimaryDarkerAlt: $greenDarkerAlt !default; // $primaryDarkerAlt
-$themePrimaryDarkest: $greenDarkest !default; // $primaryDarkest
-
-$themePrimaryAltColor: $yellow !default; // $primaryAltButtonBgColor
-$themePrimaryAltColorDarker: $yellowDarker !default; // $primaryAltButtonHoverBgColor
-$themePrimaryAltDarkerAlt: $yellowDarkerAlt !default; // $primaryAltButtonActiveBgColor
+$highlightBg: scale-color($primaryColor, $lightness: 80%) !default;
+$highlightTextColor: $gray-700 !default;
 
 // layout variables
 $min-width: 320px;
@@ -53,20 +46,27 @@ $body-color: $gray-900;
 $border-color: $gray-400;
 $emphasized-link-hover-darken-percentage: 7.5%;
 
-$primary: $themePrimaryColor;
-$secondary: $themePrimaryAltColor;
-$success: $greenDarkest;
-$info: $cyan;
-$warning: $yellowDarker;
-$danger: $red;
+$primary: $primaryColor;
+$secondary: #607d8b;
+$success: #689f38;
+$info: #0288d1;
+$warning: #fbc02d;
+$help: #9c27b0;
+$danger: #d32f2f;
 $light: $gray-200;
-$dark: $themeDarkBgColor;
+$dark: #242725;
 
 $link-decoration: none;
 
 $font-size-sm: 0.75rem; // 12px
 $font-size-base: 0.875rem; // Assuming the browser's default (typically `16px`), then base font size is `14px`.
 $font-size-lg: 1rem; // 16px
+
+$font-weight-lighter: lighter !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-bold: 700 !default;
+$font-weight-bolder: bolder !default;
 
 $box-shadow-sm: 0 0 1px rgba($black, 0.15);
 $box-shadow: 0 0.125rem 0.5rem rgba($black, 0.2);
@@ -91,23 +91,27 @@ $position-values: (
   100: 100%
 );
 
+// Buttons
+
+$btn-font-weight: $font-weight-bold;
+
 // Navbar
 
 $navbar-padding-y: 0;
 $navbar-padding-x: null;
 $navbar-nav-link-padding-x: 1rem;
 $navbar-nav-link-padding-y: 0.7rem;
-$navbar-dark-color: $themeElementTextColor;
-$navbar-dark-hover-color: $themeElementTextColor;
+$navbar-dark-color: $primaryTextColor;
+$navbar-dark-hover-color: $primaryTextColor;
 $navbar-brand-padding-y: 0;
 $navbar-brand-padding-y: 0;
 
 // Dropdown
 
 $dropdown-dark-link-color: $white;
-$dropdown-dark-bg: $themePrimaryColor;
-$dropdown-dark-link-hover-bg: $themePrimaryDarkerAlt;
-$dropdown-dark-link-active-bg: $themePrimaryDarkerAlt;
+$dropdown-dark-bg: $primaryColor;
+$dropdown-dark-link-hover-bg: $primaryDarkColor;
+$dropdown-dark-link-active-bg: $primaryDarkColor;
 $dropdown-spacer: 0;
 $dropdown-border-width: 0;
 $dropdown-padding-y: 0;
@@ -118,14 +122,14 @@ $dropdown-item-padding-x: 1rem;
 
 $tooltip-font-size: $font-size-base;
 $tooltip-color: $white;
-$tooltip-bg: $themePrimaryColor;
+$tooltip-bg: $primaryColor;
 $tooltip-border-radius: $btn-border-radius;
 $tooltip-opacity: 1;
 
 // Popovers
 
 $popover-font-size: $font-size-base;
-$popover-bg: $themePrimaryColor;
+$popover-bg: $primaryColor;
 $popover-border-width: 1px;
 $popover-border-color: $black;
 $popover-border-radius: $btn-border-radius * 2;

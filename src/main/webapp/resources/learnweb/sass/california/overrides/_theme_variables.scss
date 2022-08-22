@@ -1,0 +1,15 @@
+/* Add your variable customizations of theme here */
+@mixin ui-icon-content($icon) {
+  &::before {
+    content: fa-content($icon);
+  }
+}
+
+@mixin ui-icon-override($icon) {
+  @extend .fas;
+
+  @include ui-icon-content($icon);
+  text-indent: 0 !important;
+  text-align: center;
+  background: none;
+}

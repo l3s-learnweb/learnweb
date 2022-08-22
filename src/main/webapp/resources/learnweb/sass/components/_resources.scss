@@ -17,42 +17,42 @@
   @include ui-icon-content($fa-var-file);
 
   .res-t-text & {
-    color: $blueDarker;
+    color: $blueDark;
     @include ui-icon-content($fa-var-file-alt);
   }
 
   .res-t-video & {
-    color: $red;
+    color: $danger;
     @include ui-icon-content($fa-var-file-video);
   }
 
   .res-t-image & {
-    color: $red;
+    color: $danger;
     @include ui-icon-content($fa-var-file-image);
   }
 
   .res-t-audio & {
-    color: $red;
+    color: $danger;
     @include ui-icon-content($fa-var-file-audio);
   }
 
   .res-t-pdf & {
-    color: $red;
+    color: $danger;
     @include ui-icon-content($fa-var-file-pdf);
   }
 
   .res-t-website & {
-    color: $cyanDarker;
+    color: $cyanDark;
     @include ui-icon-content($fa-var-link);
   }
 
   .res-t-spreadsheet & {
-    color: $greenDarker;
+    color: $greenDark;
     @include ui-icon-content($fa-var-file-excel);
   }
 
   .res-t-presentation & {
-    color: $yellowDarkest;
+    color: $yellowDarker;
     @include ui-icon-content($fa-var-file-powerpoint);
   }
 
@@ -128,7 +128,7 @@ img.res-image-simple {
   max-width: 100%;
   border-radius: $btn-border-radius;
   animation: fadein $transition-duration;
-  border: $border-width solid $themeSidebarDividerColor;
+  border: $border-width solid $gray-400;
   transition: max-height $transition-duration ease, max-width $transition-duration ease;
   transform-origin: center;
 }
@@ -148,14 +148,14 @@ ul.res-breadcrumbs {
     border: $border-width solid transparent;
 
     &.ui-droppable-active {
-      background: lighten($themePrimaryAltColor, 30%);
-      border-color: $themePrimaryAltColor;
+      background: lighten($yellow, 30%);
+      border-color: $yellow;
       border-style: dashed;
     }
 
     &.ui-droppable-hover {
-      border-color: $themePrimaryAltColorDarker;
-      background: $themePrimaryAltColorDarker;
+      border-color: $yellowDark;
+      background: $yellowDark;
     }
 
     a {
@@ -363,7 +363,7 @@ ul.res-filters {
     &::before {
       opacity: 1;
       transform: scale(0.7);
-      color: $themePrimaryColor;
+      color: $primaryColor;
       //font-weight: 900 !important;
     }
   }
@@ -372,7 +372,7 @@ ul.res-filters {
 .res-li {
   display: flex;
   padding: $grid-gutter-width * 0.5;
-  border-bottom: $border-width solid $themeSidebarDividerColor;
+  border-bottom: $border-width solid $gray-400;
 
   &:hover {
     background: $gray-200;
@@ -398,7 +398,7 @@ ul.res-filters {
 
 .res-datatable {
   padding: $grid-gutter-width * 0.5;
-  border-bottom: $border-width solid $themeSidebarDividerColor;
+  border-bottom: $border-width solid $gray-400;
 
   @include media-breakpoint-up(sm) {
     .res-row-type {
@@ -468,13 +468,13 @@ ul.res-filters {
         background: none !important;
 
         span {
-          color: $themePrimaryColor !important;
+          color: $primaryColor !important;
         }
       }
 
       &:hover {
         background: none !important;
-        color: lighten($themePrimaryColor, 10%) !important;
+        color: lighten($primaryColor, 10%) !important;
       }
 
       .ui-icon-carat-2-n-s::before {
@@ -506,7 +506,7 @@ ul.res-filters {
       }
 
       &:hover {
-        background: lighten($themePrimaryColor, 40%) !important;
+        background: lighten($primaryColor, 40%) !important;
       }
     }
   }
@@ -544,7 +544,7 @@ ul.res-filters {
       content: '';
       z-index: 9;
       background: $light;
-      border: 3px dashed $themePrimaryColor;
+      border: 3px dashed $primaryColor;
     }
 
     &::after {
@@ -552,7 +552,7 @@ ul.res-filters {
 
       content: fa-content($fa-var-cloud-upload-alt);
       z-index: 10;
-      color: $themePrimaryColor;
+      color: $primaryColor;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -654,8 +654,8 @@ ul.res-filters {
   }
 
   &:hover {
-    color: $themeElementTextColor;
-    background: $themePrimaryColor;
+    color: $primaryTextColor;
+    background: $primaryColor;
 
     .res-selector {
       opacity: 1;
@@ -672,30 +672,30 @@ ul.res-filters {
     }
 
     .res-bl-icon {
-      color: $themePrimaryColor;
+      color: $primaryColor;
     }
 
     .res-bl-author,
     .res-bl-menu {
-      color: $themeElementTextColor !important;
+      color: $primaryTextColor !important;
     }
   }
 
   .ui-draggable-helper &, // When dragging an element which was not selected before
   .ui-selecting &, // when the lasso includes this element
   .ui-selected & { // after a successful selection
-    color: $themeElementTextColor;
-    background: $themePrimaryDarkerAlt;
+    color: $primaryTextColor;
+    background: $primaryDarkColor;
 
     .res-bl-preview:empty {
       &::before {
-        background-color: lighten($themePrimaryColor, 40%);
+        background-color: lighten($primaryColor, 40%);
       }
     }
 
     .res-bl-preview:not(:empty) {
       &::before {
-        background-color: $themePrimaryColor;
+        background-color: $primaryColor;
       }
 
       img {
@@ -704,12 +704,12 @@ ul.res-filters {
     }
 
     .res-bl-icon {
-      color: $themePrimaryDarkerAlt;
+      color: $primaryDarkColor;
     }
 
     .res-bl-menu,
     .res-bl-author {
-      color: $themeElementTextColor !important;
+      color: $primaryTextColor !important;
     }
   }
 
@@ -720,35 +720,35 @@ ul.res-filters {
   }
 
   .ui-droppable-active & { // When a draggable that can be dropped on this droppable is activated
-    border-color: $themePrimaryAltColor;
+    border-color: $yellow;
     border-style: dashed;
 
     .res-bl-icon {
-      background: lighten($themePrimaryAltColor, 30%);
+      background: lighten($yellow, 30%);
     }
   }
 
   .ui-droppable-hover & { // When dragging a draggable over this droppable
-    color: $themeElementTextColor;
-    background: $themePrimaryAltColorDarker;
-    border-color: $themePrimaryAltColorDarker;
+    color: $primaryTextColor;
+    background: $yellowDark;
+    border-color: $yellowDark;
 
     .res-bl-preview { // actually not used, folders don't have preview
-      border-color: $themePrimaryAltColorDarker;
+      border-color: $yellowDark;
     }
 
     .res-bl-icon {
-      color: $themeElementTextColor;
-      background: $themePrimaryAltColorDarker;
+      color: $primaryTextColor;
+      background: $yellowDark;
     }
 
     .res-bl-author {
-      color: $themeElementTextColor !important;
+      color: $primaryTextColor !important;
     }
   }
 
   .ui-draggable-helper & { // The floating element
-    background-color: $themePrimaryColor;
+    background-color: $primaryColor;
     color: $white;
     box-shadow: $box-shadow;
     opacity: 1;
@@ -783,14 +783,14 @@ ul.res-filters {
 
   .ui-panel .ui-panel-content {
     border-top: 0;
-    background-color: $contentBgColor;
+    background: $panelContentBg;
   }
 
   .ui-toolbar {
     border: 0;
     padding: 0.1875rem 1rem;
-    background: $themePrimaryColor;
-    color: $themeElementTextColor;
+    background: $primaryColor;
+    color: $primaryTextColor;
 
     .ui-separator {
       pointer-events: none;
@@ -803,13 +803,13 @@ ul.res-filters {
       justify-content: flex-end;
 
       .ui-button {
-        background-color: $themePrimaryAltColor;
-        border: $border-width solid $themePrimaryAltColor;
+        background-color: $yellow;
+        border: $border-width solid $yellow;
 
         &.ui-state-hover,
         &.ui-state-focus {
-          background-color: $themePrimaryAltColorDarker;
-          border-color: $themePrimaryAltColorDarker;
+          background-color: $yellowDarker;
+          border-color: $yellowDarker;
         }
 
         &:last-child {

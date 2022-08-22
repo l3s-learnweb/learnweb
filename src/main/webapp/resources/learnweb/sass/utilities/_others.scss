@@ -6,8 +6,8 @@
   min-height: $pictureMinSize;
   max-width: $pictureMaxSize;
   max-height: $pictureMaxSize;
-  background: $themeElementTextColor;
-  border: 1px solid $themePrimaryColor;
+  background: $primaryTextColor;
+  border: 1px solid $primaryColor;
 
   &:not(.square) {
     border-radius: 50%;
@@ -31,15 +31,15 @@
     padding: 0.5em;
     border-radius: 50%;
     line-height: 0.75em;
-    color: $themeElementTextColor;
-    background: rgba($red, 0.85);
+    color: $primaryTextColor;
+    background: rgba($danger, 0.85);
     text-align: center;
     min-width: 1.75em;
     font-weight: bold;
   }
 
   &.ui-draggable-helper::after {
-    background: $red;
+    background: $danger;
     right: -0.5rem;
     top: -0.5rem;
     font-size: 0.875rem;

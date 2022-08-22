@@ -20,7 +20,7 @@ $topbar-button-padding: 1rem;
 
   &:hover {
     color: $white;
-    background: $themePrimaryDarkerAlt;
+    background: $primaryDarkColor;
   }
 }
 
@@ -42,12 +42,12 @@ $topbar-button-padding: 1rem;
     display: flex;
     align-items: center;
     height: $topbar-button-size;
-    background: $themeElementTextColor;
-    color: $themeSidebarHoverBgColor;
+    background: $primaryTextColor;
+    color: $gray-500;
 
     &:hover {
-      background: $themePrimaryDarkerAlt;
-      color: $themeElementTextColor;
+      background: $primaryDarkColor;
+      color: $primaryTextColor;
     }
   }
 }
@@ -58,7 +58,7 @@ $topbar-button-padding: 1rem;
   font-size: $font-size-lg;
 
   &:hover {
-    background: $themePrimaryDarkerAlt;
+    background: $primaryDarkColor;
   }
 
   &.nav-link-flag {
@@ -69,7 +69,7 @@ $topbar-button-padding: 1rem;
     @include transition(background-color $transition-duration);
 
     &:hover {
-      background-color: $themePrimaryDarkerAlt;
+      background-color: $primaryDarkColor;
     }
 
     img {

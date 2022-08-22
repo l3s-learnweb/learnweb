@@ -1,13 +1,5 @@
 @import '../colors';
 
-$themeDarkBgColor: #272624;
-$themeLightBgColor: #84452e;
-
-$themePrimaryColor: $orange;
-$themePrimaryColorDarker: $orangeDarker;
-$themePrimaryDarkerAlt: $orangeDarkerAlt;
-$themePrimaryDarkest: $orangeDarkest;
-
-$themePrimaryAltColor: $green;
-$themePrimaryAltColorDarker: $greenDarker;
-$themePrimaryAltDarkerAlt: $greenDarkerAlt;
+$primaryColor: $orange;
+$primaryDarkColor: $orangeDark;
+$primaryDarkerColor: $orangeDarker;

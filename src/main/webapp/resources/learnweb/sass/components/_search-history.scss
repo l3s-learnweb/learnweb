@@ -11,7 +11,7 @@
     display: block;
     width: 0;
     height: 100%;
-    border: 1px dashed $themePrimaryColor;
+    border: 1px dashed $primaryColor;
     position: absolute;
     top: 0;
     left: -5px;
@@ -21,12 +21,12 @@
     margin: 2rem 1rem 3rem;
     position: relative;
     padding: 0.5rem;
-    background: $themePrimaryColor;
+    background: $primaryColor;
     color: $white;
     border-radius: 10px;
 
     &.active {
-      background: $themePrimaryColorDarker;
+      background: $primaryDarkColor;
     }
 
     > span {
@@ -34,7 +34,7 @@
       display: block;
       width: 0;
       height: 100%;
-      border: 1px solid $themePrimaryColor;
+      border: 1px solid $primaryColor;
       position: absolute;
       top: 0;
       left: -15px;
@@ -46,7 +46,7 @@
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background: $themePrimaryColor;
+        background: $primaryColor;
         border: 1px solid $white;
         position: absolute;
         left: -5px;
@@ -73,7 +73,7 @@
 
         &:hover,
         &.active {
-          background: $themePrimaryColorDarker;
+          background: $primaryDarkColor;
         }
       }
     }
@@ -138,7 +138,7 @@
     }
 
     &:visited .snippet-link {
-      color: $blueDarkest;
+      color: $blueDarker;
     }
 
     &:hover .snippet-title {
