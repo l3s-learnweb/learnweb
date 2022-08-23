@@ -62,7 +62,7 @@ const privatePages = [
     {url: '/lw/resource.jsf?resource_id=530', name: '508_resource_presentation'},
     {url: '/lw/resource.jsf?resource_id=426', name: '509_resource_pdf'},
     {url: '/lw/resource.jsf?resource_id=533', name: '510_resource_file'},
-    {url: '/lw/resource.jsf?resource_id=78', name: '511_resource_glossary'},
+    {url: '/lw/resource.jsf?resource_id=303', name: '511_resource_glossary'},
     {url: '/lw/resource.jsf?resource_id=59', name: '512_resource_survey'},
     {url: '/lw/survey/survey.jsf?resource_id=59', name: '513_resource_survey_open'},
 
@@ -126,11 +126,12 @@ const privatePages = [
 async function takeScreenshot(page, url, options) {
     console.log('Navigating to ' + url);
     await page.goto(url, {waitUntil: 'networkidle2'});
+    await timeout(page);
 
     if (options.script) {
         console.log('Executing page script...');
         await page.evaluate(options.script);
-        await page.waitForNetworkIdle({timeout: 30000});
+        await timeout(page, 30000);
     }
 
     console.log('Taking snapshot of ' + options.name);
@@ -139,5 +140,13 @@ async function takeScreenshot(page, url, options) {
     }
     if (percyScreenshot) {
         await percySnapshot(page, options.name, {widths: percyWidths});
+    }
+}
+
+async function timeout(page, timeout = 10000) {
+    try {
+        await page.waitForNetworkIdle({timeout: timeout});
+    } catch (ignored) {
+        console.log('Timeout waiting for network idle');
     }
 }
