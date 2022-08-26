@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -81,7 +82,7 @@ public class InterwebResultsWrapper implements Serializable {
         resource.setIdAtService(searchResult.getIdAtService());
         resource.setAuthor(searchResult.getAuthor());
 
-        if (!resource.getTitle().equals(resource.getDescription())) {
+        if (!StringUtils.equals(resource.getTitle(), resource.getDescription())) {
             resource.setDescription(searchResult.getDescription());
         }
 

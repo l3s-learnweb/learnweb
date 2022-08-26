@@ -53,7 +53,7 @@ public final class UrlHelper {
             if (!url.startsWith("http")) {
                 url = "http://" + url;
             }
-            url = toAscii(url.trim());
+            url = toAscii(StringHelper.urlDecode(url.trim()));
 
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setInstanceFollowRedirects(false);
