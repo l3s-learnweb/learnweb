@@ -3,6 +3,8 @@ const url = '../resources/dataExample.json';
 const onLoad = (graph) => {
   console.log('G: ', graph);
   // eslint-disable-next-line no-undef
+  d3.select('svg').selectAll('*').remove();
+  // eslint-disable-next-line no-undef
   const svg = d3.select('svg')
     // eslint-disable-next-line no-undef
     .call(d3.zoom().on('zoom', (event) => {
@@ -21,13 +23,13 @@ const onLoad = (graph) => {
   // eslint-disable-next-line no-undef
   const forceLayout = d3.forceSimulation()
     // eslint-disable-next-line no-undef
-    .force('link', d3.forceLink().distance(125))
+    .force('link', d3.forceLink().distance(175))
     // eslint-disable-next-line no-undef
     .force('charge', d3.forceManyBody().strength(-1250))
     // eslint-disable-next-line no-undef
-    .force('center', d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2))
-    // eslint-disable-next-line no-undef
-    .force('collision', d3.forceCollide().radius(50));
+    .force('center', d3.forceCenter(1000 / 2, 1000 / 2))
+    // eslint-disable-next-line no-undef,no-use-before-define
+    .force('collision', d3.forceCollide().radius((d) => fibonacci(d.frequency + 4) * 7 + 25));
 
   init();
 
@@ -54,10 +56,11 @@ const onLoad = (graph) => {
     nodes.selectAll('circle')
       .data((d) => [d])
       .join('circle')
-      .attr('r', (d) => d.frequency * 9)
+      // eslint-disable-next-line no-use-before-define
+      .attr('r', (d) => fibonacci(d.frequency + 4) * 7)
       .style('fill', (d) => {
         console.log('d: ', d);
-        return color(d.group);
+        return color(d.users);
       });
 
     nodes.selectAll('text')
@@ -67,15 +70,21 @@ const onLoad = (graph) => {
       .attr('text-anchor', 'middle')
       .attr('id', (d) => `text${d.id}`)
       .attr('pointer-events', 'none')
+      .style('font-size', '14px')
       .text((d) => d.query);
 
     nodes.append('text')
-      .attr('dx', 50)
-      .attr('dy', 50)
+      // eslint-disable-next-line no-use-before-define
+      .attr('dx', (d) => fibonacci(d.frequency + 4) * 7 * Math.sin(45) + 3)
+      // eslint-disable-next-line no-use-before-define
+      .attr('dy', (d) => fibonacci(d.frequency + 4) * 7 * Math.sin(45) + 3)
       .attr('cx', 250)
       .attr('cy', 100)
+      .attr('pointer-events', 'none')
       .text((d) => d.users)
-      .style('fill', (d) => colorLabel(d.users));
+      .style('fill', (d) => colorLabel(d.users))
+      // eslint-disable-next-line no-use-before-define
+      .style('font-size', '12px');
 
     forceLayout
       .nodes(graph.record.nodes)
@@ -117,10 +126,22 @@ const onLoad = (graph) => {
 
 // eslint-disable-next-line no-shadow
 function SetUrl(url) {
-  if (url != null) {
-    this.url = url;
-  }
+  if (!url) return;
+  this.url = url;
   const root = JSON.parse(url);
   // eslint-disable-next-line no-undef
   onLoad(root);
 }
+
+const fibonacci = (n) => {
+  let a = 0; let b = 1; let
+    c = n;
+
+  for (let i = 2; i <= n; i++) {
+    c = a + b;
+    a = b;
+    b = c;
+  }
+
+  return c;
+};
