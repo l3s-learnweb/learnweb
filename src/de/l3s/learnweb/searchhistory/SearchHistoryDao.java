@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+import java.util.Optional;
 
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.PreparedBatch;
@@ -41,6 +42,13 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT a.user_id, a.text, a.quote, a.target_uri FROM learnweb_annotations.annotation a "
         + "WHERE a.user_id = ? AND a.target_uri_normalized = ? ORDER BY a.created")
     List<SearchAnnotation> findAnnotationsByUserIdAndUrl(int userId, String url);
+
+    @SqlQuery("SELECT url FROM learnweb_large.sl_resource JOIN learnweb_large.sl_action "
+        + "ON learnweb_large.sl_action.search_id = learnweb_large.sl_resource.search_id "
+        + "AND learnweb_large.sl_resource.rank = learnweb_large.sl_action.rank"
+        + " JOIN learnweb_large.sl_query ON learnweb_large.sl_query.search_id = learnweb_large.sl_action.search_id \n"
+        + "WHERE learnweb_large.sl_action.action = 'resource_clicked' AND query = ?")
+    List<String> findClickedUrl(String query);
 
     default List<ResourceDecorator> findSearchResultsByQuery(SearchQuery query, int limit) {
         ResourceDao resourceDao = getHandle().attach(ResourceDao.class);
@@ -100,6 +108,16 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 return session;
             }).list();
     }
+
+    @RegisterRowMapper(AnnotationCountMapper.class)
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri = ?")
+    Optional<AnnotationCount> findByUri(String uri);
+
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (uri_id, type, uri, frequency, created_at, surface_form, similarity_score) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?)")
+    void insertQueryToAnnotation(int id, String type, String uri, int frequency, String surface_form, double similarity_score);
+
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET frequency = ? WHERE uri = ?")
+    void updateQueryAnnotation(int frequency, String uri);
 
     @SqlUpdate("INSERT INTO learnweb_large.sl_query (query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3)")
     @GetGeneratedKeys("search_id")
@@ -173,4 +191,18 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             return annotation;
         }
     }
+
+    class AnnotationCountMapper implements RowMapper<AnnotationCount> {
+        @Override
+        public AnnotationCount map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            AnnotationCount annotation = new AnnotationCount();
+            annotation.setUri(rs.getString("uri"));
+            annotation.setFrequency(rs.getInt("frequency"));
+            annotation.setSimilarityScore(rs.getDouble("similarity_score"));
+            annotation.setSurfaceForm(rs.getString("surface_form"));
+            annotation.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            return annotation;
+        }
+    }
+
 }

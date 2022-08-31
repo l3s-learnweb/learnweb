@@ -1,8 +1,13 @@
 package de.l3s.learnweb.searchhistory;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,6 +32,7 @@ import com.google.gson.stream.JsonWriter;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
@@ -52,9 +58,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private UserDao userDao;
 
     @Inject
+    private GroupDao groupDao;
+
+    @Inject
     private SearchHistoryDao searchHistoryDao;
 
-    private JsonQuery jsonQuery;
     private static String PATTERN_DATE = "yyyy-MM-dd";
     private static String PATTERN_TIME = "HH:mm:ss";
     private static String PATTERN_DATETIME = String.format("%s %s", PATTERN_DATE, PATTERN_TIME);
@@ -221,14 +229,37 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public String getQueriesJson() {
+    public String getQueriesJson() throws Exception {
+        if (sessions == null || selectedGroupId <= 0) return null;
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
             .create();
+        //Create new filePath
+        String path = System.getProperty("user.dir") + "\\" + selectedGroupId + "_" + getSessionId() + "_"
+            + selectedUserId + ".json";
+        File file = new File(path);
         //Create new json
-        jsonQuery = new JsonQuery();
-        if (sessions != null) {
-            jsonQuery.processQuery(sessions);
+        JsonQuery jsonQuery = new JsonQuery();
+        jsonQuery.processQuery(sessions, searchHistoryDao, selectedGroupId, userDao, groupDao);
+        //TODO
+        //Find a way to detect new searches
+        if (!file.exists()) {
+            if (file.createNewFile()) {
+                Writer writer = new FileWriter(path);
+                gson.toJson(jsonQuery, writer);
+                writer.close();
+                return gson.toJson(jsonQuery);
+            }
         }
-        return gson.toJson(jsonQuery);
+        else {
+            String fileContent = Files.readString(Path.of(path));
+            if (gson.toJson(jsonQuery) != fileContent) {
+                Writer writer = new FileWriter(path);
+                gson.toJson(jsonQuery, writer);
+                writer.close();
+                return gson.toJson(jsonQuery);
+            }
+            else return Files.readString(Path.of(path));
+        }
+        return null;
     }
 }
