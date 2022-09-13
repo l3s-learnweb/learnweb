@@ -1,32 +1,28 @@
-# .idea
+# IDEs
 
-## Plugins
-.idea/**/sonarlint
-.idea/**/checkstyleidea-libs
-.idea/**/checkstyleidea.tmp
+## InteliJ IDEA
+*.iml
+.idea/*
+!.idea/codeStyles
+!.idea/dictionaries
+!.idea/inspectionProfiles
+!.idea/runConfigurations
+!.idea/scopes
+!.idea/.name
+!.idea/checkstyle-idea.xml
+!.idea/dataSources.xml
+!.idea/encodings.xml
+!.idea/findbugs-idea.xml
+!.idea/misc.xml
+!.idea/resourceBundles.xml
+!.idea/sqldialects.xml
+!.idea/vcs.xml
 
-## User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-#.idea/**/dictionaries
-.idea/**/shelf
-
-## Sensitive or high-churn files
-.idea/**/dataSources
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/jsLibraryMappings.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
-.idea/**/watcherTasks.xml
-.idea/**/contentModel.xml
-.idea/**/deployment.xml
-.idea/**/jarRepositories.xml
-.idea/**/gradle.xml
-.idea/**/libraries
+# Eclipse
+.metadata
+.settings
+.classpath
+.project
 
 # Project files/folders
 
