@@ -27,7 +27,7 @@
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column field="addr" headerText="IP" filterMatchMode="contains"/>
 
-                    <p:column field="time" headerText="#{msg.time}">
+                    <p:column field="createdAt" headerText="#{msg.time}">
                         <f:facet name="filter">
                             <p:datePicker onchange="PF('requestsTable').filter()"/>
                         </f:facet>
@@ -86,7 +86,7 @@
 
                     <p:column field="usernames" headerText="#{msg.request_usernames}" filterMatchMode="contains"/>
 
-                    <p:column field="time" headerText="#{msg.time_stamp}">
+                    <p:column field="createdAt" headerText="#{msg.time_stamp}">
                         <f:facet name="filter">
                             <p:datePicker onchange="PF('aggrRequestsTable').filter()"/>
                         </f:facet>
