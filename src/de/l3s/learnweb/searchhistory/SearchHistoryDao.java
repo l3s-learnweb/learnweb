@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import de.l3s.learnweb.Announcement;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -110,14 +113,20 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     }
 
     @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri = ?")
-    Optional<AnnotationCount> findByUri(String uri);
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri = ? AND type = ?")
+    Optional<AnnotationCount> findByUriAndType(String uri, String type);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (uri_id, type, uri, frequency, created_at, surface_form, similarity_score) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?)")
-    void insertQueryToAnnotation(int id, String type, String uri, int frequency, String surface_form, double similarity_score);
+    @RegisterRowMapper(AnnotationCountMapper.class)
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count ORDER BY created_at DESC")
+    List<AnnotationCount> findAllAnnotationCounts();
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET frequency = ? WHERE uri = ?")
-    void updateQueryAnnotation(int frequency, String uri);
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET repetition = ? AND session_id = ? WHERE uri = ? AND type = ? ")
+    void updateQueryAnnotation(int repetition, String sessionId, String uri, String type);
+
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (id, type, uri, created_at, surface_form, session_id, users, confidence, repetition) "
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)")
+    @GetGeneratedKeys("uri_id")
+    int insertQueryToAnnotation(int id, String type, String uri, LocalDateTime createdAt, String surface_form, String sessionId, String users, double confidence);
 
     @SqlUpdate("INSERT INTO learnweb_large.sl_query (query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3)")
     @GetGeneratedKeys("search_id")
@@ -197,10 +206,12 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         public AnnotationCount map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             AnnotationCount annotation = new AnnotationCount();
             annotation.setUri(rs.getString("uri"));
-            annotation.setFrequency(rs.getInt("frequency"));
-            annotation.setSimilarityScore(rs.getDouble("similarity_score"));
+            annotation.setConfidence(rs.getDouble("confidence"));
             annotation.setSurfaceForm(rs.getString("surface_form"));
+            annotation.setType(rs.getString("type"));
             annotation.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+            annotation.setSessionId(rs.getString("session_id"));
+            annotation.setUsers(rs.getString("users"));
             return annotation;
         }
     }
