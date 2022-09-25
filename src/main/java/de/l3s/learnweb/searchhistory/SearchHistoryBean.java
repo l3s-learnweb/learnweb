@@ -67,12 +67,12 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private static String PATTERN_TIME = "HH:mm:ss";
     private static String PATTERN_DATETIME = String.format("%s %s", PATTERN_DATE, PATTERN_TIME);
 
+    private List<AnnotationCount> annotationCounts;
     /**
      * Load the variables that needs values before the view is rendered.
      */
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
-
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
         }
@@ -103,7 +103,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         } else if ("video".equals(selectedQuery.mode())) {
             return "grid";
         }
-
         return null;
     }
 
@@ -113,7 +112,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
             if (!snippets.containsKey(selectedQuery.searchId())) {
                 snippets.put(selectedQuery.searchId(), dao().getSearchHistoryDao().findSearchResultsByQuery(selectedQuery, 100));
             }
-
             searchResults.addAll(snippets.get(selectedQuery.searchId()));
         }
         return searchResults;
@@ -140,7 +138,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         return showGroupHistory;
     }
 
-    public User getCurrentUser() {
+    public User getCurrentUser() throws Exception {
         return userDao.findById(selectedUserId).orElse(getUser());
     }
 
@@ -230,33 +228,34 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public String getQueriesJson() throws Exception {
+        //annotationCounts = searchHistoryDao.findAllAnnotationCounts();
+
         if (sessions == null || selectedGroupId <= 0) return null;
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
             .create();
         //Create new filePath
-        String path = System.getProperty("user.dir") + "\\" + selectedGroupId + "_" + getSessionId() + "_"
-            + selectedUserId + ".json";
+        String path = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
+            + "_Summary_" + getSessionId() + ".json";
         File file = new File(path);
         //Create new json
-        JsonQuery jsonQuery = new JsonQuery();
-        jsonQuery.processQuery(sessions, searchHistoryDao, selectedGroupId, userDao, groupDao);
-        //TODO
-        //Find a way to detect new searches
+        JsonQuery.processQuery(sessions, searchHistoryDao, selectedGroupId, userDao, groupDao);
+        JsonQuery calculatedQuery = new JsonQuery(new ArrayList<>(), new ArrayList<>())
+            .calculateTopEntries(searchHistoryDao.findAllAnnotationCounts());
         if (!file.exists()) {
             if (file.createNewFile()) {
                 Writer writer = new FileWriter(path);
-                gson.toJson(jsonQuery, writer);
+                gson.toJson(calculatedQuery, writer);
                 writer.close();
-                return gson.toJson(jsonQuery);
+                return gson.toJson(calculatedQuery);
             }
         }
         else {
             String fileContent = Files.readString(Path.of(path));
-            if (gson.toJson(jsonQuery) != fileContent) {
+            if (gson.toJson(calculatedQuery) != fileContent) {
                 Writer writer = new FileWriter(path);
-                gson.toJson(jsonQuery, writer);
+                gson.toJson(calculatedQuery, writer);
                 writer.close();
-                return gson.toJson(jsonQuery);
+                return gson.toJson(calculatedQuery);
             }
             else return Files.readString(Path.of(path));
         }
