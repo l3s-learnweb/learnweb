@@ -34,6 +34,7 @@
         <Logger name="org.hibernate.validator" level="FATAL"/>
         <Logger name="solr.client" level="FATAL"/>
         <Logger name="org.jboss.weld" level="WARN"/>
+        <Logger name="org.apache.myfaces" level="WARN"/>
         <Logger name="net.bramp.ffmpeg" level="INFO"/>
         <Logger name="com.zaxxer.hikari" level="INFO"/>
         <Logger name="org.flywaydb.core" level="INFO"/>

@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -324,7 +325,7 @@ public class ResourcePreviewMaker implements Serializable {
     }
 
     public void processPdf(Resource resource, InputStream inputStream) throws IOException {
-        PDDocument pdfDocument = PDDocument.load(inputStream);
+        PDDocument pdfDocument = Loader.loadPDF(inputStream);
         PDFRenderer pdfRenderer = new PDFRenderer(pdfDocument);
 
         // try page by page to get an image

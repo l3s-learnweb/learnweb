@@ -1,11 +1,9 @@
 package de.l3s.learnweb.component;
 
-import java.beans.FeatureDescriptor;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.RecordComponent;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -101,16 +99,5 @@ public class RecordELResolver extends ELResolver {
 
         getRecordPropertyDescriptor(base, property); // Forces PropertyNotFoundException if necessary.
         throw new PropertyNotWritableException("Java Records are immutable");
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    @Override
-    public Iterator<FeatureDescriptor> getFeatureDescriptors(ELContext context, Object base) {
-        if (!isRecord(base)) {
-            return null;
-        }
-
-        Map rawDescriptors = getRecordPropertyDescriptors(base);
-        return rawDescriptors.values().iterator();
     }
 }
