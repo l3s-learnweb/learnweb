@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration packages="org.apache.logging.log4j.core">
+<Configuration packages="org.apache.logging.log4j.core,io.sentry.log4j2">
     <Properties>
         <Property name="LEARNWEB_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{9}:%line - %msg%n</Property>
         <Property name="LEARNWEB_LOG_PATH">${sys:catalina.home:-.}/logs/${web:contextPath:-}learnweb</Property>
-        <Property name="LEARNWEB_MAIL_SUBJECT">[Log4J][${web:contextPath:-console}] Error detected on Learnweb</Property>
-        <Property name="LEARNWEB_MAIL_LOGLEVEL">OFF</Property>
     </Properties>
 
     <Appenders>
@@ -18,15 +16,8 @@
             <DefaultRolloverStrategy max="30"/>
         </RollingFile>
 
-        <SMTP name="email" subject="${env:LEARNWEB_MAIL_SUBJECT}" to="astappiev@l3s.de" from="no-reply@l3s.de" bufferSize="10"
-              smtpHost="mailgate.uni-hannover.de" smtpPort="25">
-            <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
-            <Filters>
-                <ThresholdFilter level="${env:LEARNWEB_MAIL_LOGLEVEL}" onMismatch="DENY"/>
-                <!-- Rate is a number of events per second, current value is 2 messages per 1 hour (1/60/60 * maxBurst) -->
-                <BurstFilter level="ERROR" rate="0.00056" maxBurst="2"/>
-            </Filters>
-        </SMTP>
+        <Sentry name="sentry" dsn="https://3b3136e07926401b8ec84c95803f88bc@sentry.kbs.uni-hannover.de/2/"
+                minimumBreadcrumbLevel="DEBUG" minimumEventLevel="ERROR"/>
     </Appenders>
 
     <Loggers>
@@ -44,7 +35,7 @@
         <Root level="DEBUG">
             <appender-ref ref="console"/>
             <appender-ref ref="file"/>
-            <appender-ref ref="email"/>
+            <appender-ref ref="sentry"/>
         </Root>
     </Loggers>
 </Configuration>
