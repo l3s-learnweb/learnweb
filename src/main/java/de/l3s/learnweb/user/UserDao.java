@@ -20,6 +20,7 @@ import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogDao;
@@ -135,7 +136,9 @@ public interface UserDao extends SqlObject, Serializable {
     }
 
     default void deleteHard(User user) {
-        // FIXME: delete restricted if the user used as leader of a group
+        if (user.getGroups().stream().anyMatch(group -> group.isLeader(user))) {
+            throw new BadRequestHttpException("Please, transfer the leadership of your groups before deleting your account.");
+        }
 
         for (Resource resource : user.getResources()) {
             getResourceDao().deleteHard(resource);

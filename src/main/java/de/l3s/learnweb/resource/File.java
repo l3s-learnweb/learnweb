@@ -11,9 +11,9 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.logging.log4j.LogManager;
 
 import de.l3s.learnweb.app.Learnweb;
+import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.util.HasId;
 
 public class File implements Serializable, HasId {
@@ -116,8 +116,7 @@ public class File implements Serializable, HasId {
 
     public String getSimpleUrl() {
         if (getType().isResourceFile()) {
-            LogManager.getLogger(File.class).error("getSimpleUrl called for a resource file", new Exception()); // FIXME: remove after a while and replace with an exception
-            return null;
+            throw new BadRequestHttpException("Unable to verify resource access permission for the given file, invalid URL");
         }
         return "../download/" + getUrlSuffix();
     }
@@ -131,8 +130,7 @@ public class File implements Serializable, HasId {
 
     public String getResourceUrl(int resourceId) {
         if (resourceId == 0) {
-            LogManager.getLogger(File.class).error("getResourceUrl called with resourceId == 0", new Exception()); // FIXME: remove after a while and replace with an exception
-            return null;
+            throw new BadRequestHttpException("Redundant resource used for the given file, invalid URL");
         }
         return "../download/" + resourceId + "/" + getUrlSuffix();
     }

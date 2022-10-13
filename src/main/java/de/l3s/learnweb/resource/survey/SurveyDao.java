@@ -22,7 +22,6 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
-import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.util.SqlHelper;
 import de.l3s.util.bean.BeanHelper;
 
@@ -41,13 +40,13 @@ public interface SurveyDao extends SqlObject, Serializable {
             return Optional.empty();
         }
 
-        if (resource.getType() != ResourceType.survey) {
+        if (resource instanceof SurveyResource survey) {
+            return Optional.of(survey);
+        } else {
             LogManager.getLogger(SurveyDao.class)
                 .error("Survey resource requested but the resource is of type {}; {}", resource.getType(), BeanHelper.getRequestSummary());
             return Optional.empty();
         }
-
-        return Optional.of((SurveyResource) resource);
     }
 
     @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_survey_resource sr WHERE sr.survey_id = s.survey_id) as res_count FROM lw_survey s WHERE survey_id = ?")

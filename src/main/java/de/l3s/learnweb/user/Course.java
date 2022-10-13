@@ -64,7 +64,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
 
     private BitSet options = new BitSet(Option.values().length);
 
-    private transient int memberCount = -1;
+    private transient Integer memberCount;
     private transient String registrationIconFileUrl;
 
     public Course() {
@@ -200,7 +200,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     }
 
     public int getMemberCount() {
-        if (memberCount == -1) {
+        if (memberCount == null) {
             memberCount = Learnweb.dao().getUserDao().countByCourseId(id);
         }
         return memberCount;
@@ -218,7 +218,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     }
 
     public synchronized void addUser(User user) {
-        if (memberCount != -1) {
+        if (memberCount != null) {
             memberCount++;
         }
 
@@ -236,9 +236,10 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     }
 
     public void removeUser(User user) {
-        if (memberCount != -1) {
+        if (memberCount != null) {
             memberCount--;
         }
+
         Learnweb.dao().getCourseDao().deleteUser(this, user);
         user.clearCaches();
     }

@@ -47,13 +47,13 @@ public interface GlossaryDao extends SqlObject, Serializable {
             return Optional.empty();
         }
 
-        if (resource.getType() != ResourceType.glossary) {
+        if (resource instanceof GlossaryResource glossary) {
+            return Optional.of(glossary);
+        } else {
             LogManager.getLogger(GlossaryDao.class)
                 .error("Glossary resource requested but the resource is of type {}; {}", resource.getType(), BeanHelper.getRequestSummary());
             return Optional.empty();
         }
-
-        return Optional.of((GlossaryResource) resource);
     }
 
     default List<GlossaryResource> findByOwnerIds(List<Integer> userIds) {

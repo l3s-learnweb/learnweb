@@ -8,7 +8,7 @@
     <h:panelGroup id="folderList" styleClass="res-container-table" layout="block" rendered="#{groupResourcesBean.searchQuery == null}">
     </h:panelGroup>
 
-    <h:panelGroup styleClass="res-container-table" layout="block">
+    <h:form styleClass="res-container-table">
         <p:dataTable tableStyleClass="table-responsive res-datatable" var="res" value="#{groupResourcesBean.paginator.currentPage}" reflow="true"
                      rows="100" paginator="true" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -38,6 +38,6 @@
                 </h:outputText>
             </p:column>
         </p:dataTable>
-    </h:panelGroup>
+    </h:form>
 
 </ui:composition>

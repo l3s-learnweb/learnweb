@@ -557,20 +557,20 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         this.createdAt = createdAt;
     }
 
-    public static TreeNode getFoldersTree(Group group, int activeFolder) {
+    public static TreeNode<ResourceContainer> getFoldersTree(Group group, int activeFolder) {
         if (group == null) {
             return null;
         }
 
-        TreeNode rootNode = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), null);
+        TreeNode<ResourceContainer> rootNode = new DefaultTreeNode<>("folder", new Folder(0, group.getId(), group.getTitle()), null);
         getChildNodesRecursively(rootNode, group, activeFolder);
         return rootNode;
     }
 
-    public static void getChildNodesRecursively(TreeNode parentNode, ResourceContainer container, int activeFolderId) {
+    public static void getChildNodesRecursively(TreeNode<ResourceContainer> parentNode, ResourceContainer container, int activeFolderId) {
         List<Folder> folders = container.getSubFolders();
         for (Folder folder : folders) {
-            TreeNode folderNode = new DefaultTreeNode("folder", folder, parentNode);
+            TreeNode<ResourceContainer> folderNode = new DefaultTreeNode<>("folder", folder, parentNode);
             if (folder.getId() == activeFolderId) {
                 folderNode.setSelected(true);
                 folderNode.setExpanded(true);
@@ -580,7 +580,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         }
     }
 
-    private static void expandToNode(TreeNode treeNode) {
+    private static void expandToNode(TreeNode<ResourceContainer> treeNode) {
         if (treeNode.getParent() != null) {
             treeNode.getParent().setExpanded(true);
             expandToNode(treeNode.getParent());

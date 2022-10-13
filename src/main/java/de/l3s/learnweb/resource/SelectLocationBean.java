@@ -30,9 +30,8 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
     private Group targetGroup;
     private Folder targetFolder;
 
-    private TreeNode targetNode;
-    private transient DefaultTreeNode groupsTree;
-    private Instant groupsTreeUpdate;
+    private transient TreeNode<Object> groupsTree;
+    private transient Instant groupsTreeUpdate;
 
     @PostConstruct
     public void init() {
@@ -49,24 +48,8 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
         return targetGroup;
     }
 
-    public void setTargetGroup(final Group targetGroup) {
-        this.targetGroup = targetGroup;
-    }
-
     public Folder getTargetFolder() {
         return targetFolder;
-    }
-
-    public void setTargetFolder(final Folder targetFolder) {
-        this.targetFolder = targetFolder;
-    }
-
-    public TreeNode getTargetNode() {
-        return targetNode;
-    }
-
-    public void setTargetNode(TreeNode targetNode) {
-        this.targetNode = targetNode;
     }
 
     public void onTargetNodeSelect(NodeSelectEvent event) {
@@ -81,21 +64,21 @@ public class SelectLocationBean extends ApplicationBean implements Serializable 
         }
     }
 
-    public TreeNode getGroupsAndFoldersTree() {
+    public TreeNode<Object> getGroupsAndFoldersTree() {
         User user = getUser();
         if (user == null) {
             return null;
         }
 
         if (groupsTree == null || groupsTreeUpdate.isBefore(Instant.now().minus(Duration.ofSeconds(30)))) {
-            DefaultTreeNode treeNode = new DefaultTreeNode("WriteAbleGroups");
+            DefaultTreeNode<Object> treeNode = new DefaultTreeNode<>();
 
-            TreeNode privateGroupNode = new DefaultTreeNode("group", privateGroup, treeNode);
+            TreeNode<ResourceContainer> privateGroupNode = new DefaultTreeNode<>("group", privateGroup, treeNode);
             targetGroup = privateGroup;
             privateGroupNode.setSelected(true);
 
             for (Group group : user.getWriteAbleGroups()) {
-                TreeNode groupNode = new DefaultTreeNode("group", group, treeNode);
+                TreeNode<ResourceContainer> groupNode = new DefaultTreeNode<>("group", group, treeNode);
                 Group.getChildNodesRecursively(groupNode, group, 0);
             }
 

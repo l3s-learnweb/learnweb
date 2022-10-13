@@ -1,10 +1,7 @@
 package de.l3s.learnweb.resource.archive;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.io.Serial;
 import java.net.HttpCookie;
 import java.net.ProtocolException;
@@ -256,7 +253,6 @@ public final class WaybackUrlManager {
             } catch (SocketException e) {
                 log.warn("SocketException: {}; URL: {}", e.getMessage(), urlStr);
                 responseCode = 602;
-                logUrlInFile(urlStr);
                 break;
             } catch (SocketTimeoutException e) {
                 log.warn("SocketTimeoutException: {}; URL: {}", e.getMessage(), urlStr);
@@ -265,7 +261,6 @@ public final class WaybackUrlManager {
             } catch (SSLException e) {
                 log.warn("SSLException: {}; URL: {}", e.getMessage(), urlStr);
                 responseCode = 650;
-                logUrlInFile(urlStr);
                 break;
             } catch (Exception e) {
                 //this exception is thrown but not declared in the try block so we can't easily catch it
@@ -352,15 +347,6 @@ public final class WaybackUrlManager {
 
     public UrlRecord getHtmlContent(String url) throws IOException, URISyntaxException {
         return getStatusCode(new UrlRecord(new URL(url)));
-    }
-
-    public void logUrlInFile(String url) {
-        String filename = "/home/learnweb_user/searchlog_html_url_exceptions.txt";
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename, StandardCharsets.UTF_8, true)))) {
-            out.println(url);
-        } catch (IOException e) {
-            log.error("Exception while writing url exception to file {}", e.getMessage());
-        }
     }
 
     private static class RecordNotFoundException extends Exception {

@@ -139,8 +139,8 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
             } else {
                 writer.write(value.toString());
             }
-        } else if (menuitem.shouldRenderChildren()) {
-            renderChildren(context, (UIComponent) menuitem);
+        } else if (menuitem.shouldRenderChildren() && menuitem instanceof UIComponent component) {
+            renderChildren(context, component);
         }
 
         writer.endElement("span");

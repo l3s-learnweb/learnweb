@@ -207,7 +207,7 @@
                     <div class="fg-row">
                         <h:outputText value="#{msg.add_to}:" escape="false"/>
                         <p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="ui-tree-responsive ui-tree-limited"
-                                animate="true" selectionMode="single" selection="#{selectLocationBean.targetNode}">
+                                animate="true" selectionMode="single">
                             <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 
                             <p:treeNode type="group">
