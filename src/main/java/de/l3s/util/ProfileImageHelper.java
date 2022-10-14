@@ -71,6 +71,12 @@ public final class ProfileImageHelper {
      * @return 1-2 letters (or numbers if no letters in username) string
      */
     public static String getInitialsForProfilePicture(String name) {
+        if (StringUtils.isBlank(name)) {
+            return "";
+        } else {
+            name = name.trim();
+        }
+
         // if less than 3 characters, use as is
         if (name.length() < 3) {
             return name;

@@ -43,6 +43,7 @@ class ProfileImageHelperTest {
     @Test
     void getInitialsForProfilePicture() {
         assertEquals("HW", ProfileImageHelper.getInitialsForProfilePicture("HW"));
+        assertEquals("hw", ProfileImageHelper.getInitialsForProfilePicture("hello.world"));
         assertEquals("hw", ProfileImageHelper.getInitialsForProfilePicture("hello world"));
         assertEquals("h6", ProfileImageHelper.getInitialsForProfilePicture("hello 156"));
         assertEquals("HW", ProfileImageHelper.getInitialsForProfilePicture("Hello World"));
@@ -51,5 +52,6 @@ class ProfileImageHelperTest {
         assertEquals("HW", ProfileImageHelper.getInitialsForProfilePicture("HelloWorld"));
         assertEquals("H", ProfileImageHelper.getInitialsForProfilePicture("Hello"));
         assertEquals("46", ProfileImageHelper.getInitialsForProfilePicture("14584546"));
+        assertEquals("hW", ProfileImageHelper.getInitialsForProfilePicture(" hello World"));
     }
 }
