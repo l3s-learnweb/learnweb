@@ -555,7 +555,7 @@ public class Resource extends AbstractResource implements Serializable {
 
         if (format.equals("text/html") || format.equals("application/xhtml+xml")) {
             this.type = ResourceType.website;
-        } else if (format.startsWith("text/")) {
+        } else if (format.startsWith("text/") || StringUtils.equalsAny(format,"application/json", "application/xml")) {
             this.type = ResourceType.text;
         } else if (format.startsWith("image/")) {
             this.type = ResourceType.image;
@@ -572,8 +572,7 @@ public class Resource extends AbstractResource implements Serializable {
         } else if (StringUtils.containsAny(format, "msword", "ms-word", "wordprocessing", "opendocument.text", "application/rtf")) {
             this.type = ResourceType.document;
         } else if (StringUtils.equalsAny(format, "application/x-msdownload", "application/x-ms-dos-executable", "application/octet-stream",
-            "application/x-gzip", "application/gzip", "application/x-rar-compressed", "application/zip", "application/json", "application/x-shockwave-flash",
-            "message/rfc822")) {
+            "application/x-gzip", "application/gzip", "application/x-rar-compressed", "application/zip", "application/x-shockwave-flash", "message/rfc822")) {
             // handle known types of downloadable resources
             this.type = ResourceType.file;
         } else {
