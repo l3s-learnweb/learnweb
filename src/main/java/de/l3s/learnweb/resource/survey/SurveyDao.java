@@ -23,7 +23,6 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.util.SqlHelper;
-import de.l3s.util.bean.BeanHelper;
 
 @RegisterRowMapper(SurveyDao.SurveyMapper.class)
 public interface SurveyDao extends SqlObject, Serializable {
@@ -43,8 +42,7 @@ public interface SurveyDao extends SqlObject, Serializable {
         if (resource instanceof SurveyResource survey) {
             return Optional.of(survey);
         } else {
-            LogManager.getLogger(SurveyDao.class)
-                .error("Survey resource requested but the resource is of type {}; {}", resource.getType(), BeanHelper.getRequestSummary());
+            LogManager.getLogger(SurveyDao.class).error("Survey resource requested but the resource is of type {}", resource.getType());
             return Optional.empty();
         }
     }

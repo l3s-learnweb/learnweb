@@ -39,8 +39,8 @@ class RequestFilterTest {
     void beforeEach() {
         lenient().when(requestManager.isBanned(anyString())).thenReturn(false);
         lenient().when(request.getRequestURL()).thenReturn(new StringBuffer("https://learnweb.l3s.uni-hannover.de/"));
-        when(request.getRequestURI()).thenReturn("/lw/group/forum.jsf");
-        when(request.getQueryString()).thenReturn("group_id=1157");
+        lenient().when(request.getRequestURI()).thenReturn("/lw/group/forum.jsf");
+        lenient().when(request.getQueryString()).thenReturn("group_id=1157");
         when(request.getHeader("Forwarded")).thenReturn("130.75.236.125");
         when(configProvider.isBaseUrlMissing()).thenReturn(false);
     }

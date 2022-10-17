@@ -44,6 +44,11 @@ public class ConfigProvider implements Serializable {
     private String version;
 
     /**
+     * An environment of the application, based on the configuration used.
+     */
+    private String environment;
+
+    /**
      * Base URL of the application, contains schema and hostname without trailing slash.
      * Extracted from configuration, set manually or detected automatically.
      */
@@ -117,7 +122,8 @@ public class ConfigProvider implements Serializable {
             InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties");
             if (localProperties != null) {
                 properties.load(localProperties);
-                log.warn("Local properties loaded.");
+                environment = "local";
+                log.info("Local properties loaded.");
             }
         } catch (IOException e) {
             log.error("Unable to load properties file(s)", e);
@@ -195,6 +201,20 @@ public class ConfigProvider implements Serializable {
 
     public boolean getPropertyBoolean(final String key) {
         return "true".equalsIgnoreCase(properties.getProperty(key));
+    }
+
+    public String getEnvironment() {
+        if (environment == null) {
+            if (!development) {
+                if ("/".equals(contextPath)) {
+                    return "production";
+                } else if ("/dev".equals(contextPath)) {
+                    return "development";
+                }
+            }
+            environment = "local";
+        }
+        return environment;
     }
 
     public String getVersion() {

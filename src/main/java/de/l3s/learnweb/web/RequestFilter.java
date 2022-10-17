@@ -21,7 +21,6 @@ import com.google.common.net.InetAddresses;
 import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.user.UserBean;
-import de.l3s.util.bean.BeanHelper;
 
 /**
  * Logs incoming requests by IPs.
@@ -60,7 +59,7 @@ public class RequestFilter extends HttpFilter {
              * This rule should ban threats like:
              * - Joomla Unserialize Vulnerability (https://blog.cloudflare.com/the-joomla-unserialize-vulnerability/)
              */
-            log.error("Suspicious IP address restricted: {}. Request summary: {}", ipAddr, BeanHelper.getRequestSummary(request));
+            log.error("Suspicious IP address restricted: {}", ipAddr);
 
             // We can't ban them, because their IP address is not an address, but a string, likely long string...
             response.sendError(HttpException.FORBIDDEN, "error_pages.forbidden_blocked_description");

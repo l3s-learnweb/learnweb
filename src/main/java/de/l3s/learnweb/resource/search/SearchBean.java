@@ -25,6 +25,7 @@ import org.primefaces.PrimeFaces;
 import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -202,8 +203,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
         } catch (RuntimeException | IOException e) {
-            String details = "resource: " + newResource + "; selectedResource: " + selectedResource;
-            addErrorMessage(details, e);
+            throw new HttpException("Failed to store resource: " + newResource + "; selectedResource: " + selectedResource, e);
         }
     }
 

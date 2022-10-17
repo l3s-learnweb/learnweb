@@ -13,6 +13,7 @@ import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.FolderDao;
 import de.l3s.learnweb.logging.Action;
 
@@ -35,7 +36,7 @@ public class EditFolderBean extends ApplicationBean implements Serializable {
             folder = folderDao.findByIdOrElseThrow(itemId);
             BeanAssert.validate(folder.canEditResource(getUser()), "You don't have permission to edit target folder.");
         } catch (IllegalArgumentException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to edit folder", e);
         }
     }
 

@@ -18,6 +18,7 @@ import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
@@ -190,7 +191,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             releaseResourceIfLocked();
             viewAction = ViewAction.viewResource;
         } catch (IOException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to update thumbnail", e);
         }
     }
 
@@ -275,7 +276,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             log(Action.resource_thumbnail_update, resource.getGroupId(), resource.getId(), "");
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
         } catch (RuntimeException | IOException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to set thumbnail", e);
         }
     }
 
@@ -375,7 +376,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public List<LogEntry> getLogs() {
         if (null == logs) {
-            logs = getResource().getLogs();
+            logs = resource.getLogs();
         }
         return logs;
     }

@@ -33,7 +33,6 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogDao;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
-import de.l3s.util.bean.BeanHelper;
 
 /**
  * Servlet for Streaming Files to the Clients Browser.
@@ -129,7 +128,7 @@ public class DownloadServlet extends HttpServlet {
         } catch (IllegalArgumentException e) {
             // only log the error if the referrer is uni-hannover.de. Otherwise, we have no chance to fix the link
             Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
-            log.log(logLevel, "Invalid download URL: {}; {}", requestURI, BeanHelper.getRequestSummary(request));
+            log.log(logLevel, "Invalid download URL: {}", requestURI);
             throw new HttpException(HttpServletResponse.SC_BAD_REQUEST, "Download URL is invalid", e);
         }
     }
@@ -144,7 +143,7 @@ public class DownloadServlet extends HttpServlet {
 
         // Files which are attached to a resource should have the resourceId in the URL but there exist many old links on the web that don't include the resourceId
         if (resource.isEmpty()) {
-            log.debug("A resource file accessed without resourceId in the URL; {}", BeanHelper.getRequestSummary(request));
+            log.debug("A resource file accessed without resourceId in the URL");
 
             // TODO: When implementing access control remember that some files have to be accessed by our converter and other services. See File.getAbsoluteUrl()
             return;
@@ -155,12 +154,11 @@ public class DownloadServlet extends HttpServlet {
 
         // TODO block invalid requests. But for a while we will only log them
         if (!file.getName().equals(requestData.fileName)) {
-            log.error("A resource file accessed invalid file name; db name: {}; request name: {}; request: {}",
-                file.getName(), requestData.fileName, BeanHelper.getRequestSummary(request));
+            log.error("A resource file accessed invalid file name; db name: {}; request name: {}", file.getName(), requestData.fileName);
         }
 
         if (!resource.get().getFiles().containsValue(file)) {
-            log.error("A resource file accessed with an invalid resource id; request: {}", BeanHelper.getRequestSummary(request));
+            log.error("A resource file accessed with an invalid resource id");
         }
         //BeanAssert.validate(file.getEncodedName().equals(requestData.fileName)); // validate file name
         //BeanAssert.validate(resource.get().getFiles().containsValue(file)); // validate the file belongs to the resource
@@ -297,7 +295,7 @@ public class DownloadServlet extends HttpServlet {
         try {
             ifModifiedSince = request.getDateHeader("If-Modified-Since");
         } catch (IllegalArgumentException e) {
-            log.error("Illegal If-Modified-Since header: {}; {}", e.getMessage(), BeanHelper.getRequestSummary(request));
+            log.error("Illegal If-Modified-Since header: {}", e.getMessage());
         }
 
         if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {

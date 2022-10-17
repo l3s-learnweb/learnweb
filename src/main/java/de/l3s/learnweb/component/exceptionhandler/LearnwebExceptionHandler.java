@@ -17,7 +17,6 @@ import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
-import de.l3s.util.bean.BeanHelper;
 
 public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
     private static final Logger log = LogManager.getLogger(LearnwebExceptionHandler.class);
@@ -39,21 +38,19 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
             return;
         }
 
-        String requestSummary = BeanHelper.getRequestSummary(request);
-
         if (rootCause instanceof HttpException && ((HttpException) rootCause).isSilent()) {
-            log.warn("Bean exception {} ", requestSummary, rootCause);
+            log.warn("Bean exception", rootCause);
             return;
         }
 
         if (rootCause instanceof ForbiddenHttpException) {
-            log.error("Illegal access {} ", requestSummary, rootCause);
+            log.error("Illegal access", rootCause);
         } else if (rootCause instanceof BadRequestHttpException) {
-            log.log(isBotUserAgent(request) ? Level.WARN : Level.ERROR, "Bad request {} ", requestSummary, rootCause);
+            log.log(isBotUserAgent(request) ? Level.WARN : Level.ERROR, "Bad request", rootCause);
         } else if (rootCause instanceof ViewExpiredException) {
-            log.debug("View expired {}", requestSummary, rootCause);
+            log.debug("View expired", rootCause);
         } else {
-            log.error("Unhandled error on {}", requestSummary, rootCause);
+            log.error("Unhandled error", rootCause);
         }
     }
 

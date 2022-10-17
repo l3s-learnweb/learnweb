@@ -7,14 +7,12 @@ import de.l3s.learnweb.forum.ForumTopic;
 import de.l3s.learnweb.web.Request;
 import de.l3s.mail.message.DateTime;
 import de.l3s.mail.message.Heading;
-import de.l3s.mail.message.HorizontalRule;
 import de.l3s.mail.message.LineBreak;
 import de.l3s.mail.message.Link;
 import de.l3s.mail.message.MessageBuilder;
 import de.l3s.mail.message.Paragraph;
 import de.l3s.mail.message.Table;
 import de.l3s.mail.message.Text;
-import de.l3s.util.bean.BeanHelper;
 
 public final class MailFactory {
     public static MessageBuilder buildForumNotificationEmail(String username, List<ForumTopic> userTopics, List<ForumTopic> otherTopics, String unsubscribeHash) {
@@ -117,9 +115,7 @@ public final class MailFactory {
         return new MessageBuilder("Contact form message")
             .add(new Paragraph(new Text("Name")).append(": ").append(name).append(new LineBreak())
                 .append(new Text("Email")).append(": ").append(email).append(new LineBreak())
-                .append(new Text("Message")).append(": ").append(message))
-            .add(new HorizontalRule())
-            .add(new Text(BeanHelper.getRequestSummary()));
+                .append(new Text("Message")).append(": ").append(message));
     }
 
     public static MessageBuilder buildNotificationEmail(String title, String text, String username) {

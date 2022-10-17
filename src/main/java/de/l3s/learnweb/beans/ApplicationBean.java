@@ -14,12 +14,10 @@ import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.DaoProvider;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
-import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
-import de.l3s.util.bean.BeanHelper;
 
 @SuppressWarnings("AbstractClassWithoutAbstractMethods")
 public abstract class ApplicationBean {
@@ -171,22 +169,6 @@ public abstract class ApplicationBean {
      */
     protected void addGrowl(FacesMessage.Severity severity, String msgKey, Object... args) {
         Messages.add("growl", getFacesMessage(severity, msgKey, args));
-    }
-
-    /**
-     * Shows a default fatal_error message.
-     */
-    protected void addErrorMessage(Throwable exception) {
-        addErrorMessage(null, exception);
-    }
-
-    /**
-     * @param desc A descriptive message that is shown to the user. If null a default fatal_error message will be shown
-     */
-    protected void addErrorMessage(String desc, Throwable exception) {
-        log.error("{}; {}", desc != null ? desc : "Fatal lazy error", BeanHelper.getRequestSummary(), exception);
-
-        throw new HttpException(desc, exception);
     }
 
     // Helper ----------------------------------------------------------------------------------------------------------

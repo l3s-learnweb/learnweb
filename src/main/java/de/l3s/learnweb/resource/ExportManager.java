@@ -152,6 +152,7 @@ public final class ExportManager {
             if (mainFile != null) {
                 files.put(folderName + mainFile.getName(), mainFile.getInputStream());
             } else {
+                // TODO: export glossary as table
                 log.error("Can't get main file for resource {}", resource.getId());
             }
         }

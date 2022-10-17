@@ -14,6 +14,7 @@ import jakarta.mail.MessagingException;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.mail.Mail;
 import de.l3s.mail.MailFactory;
 import de.l3s.util.HashHelper;
@@ -52,7 +53,7 @@ public class PasswordBean extends ApplicationBean implements Serializable {
 
             addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_sent");
         } catch (MessagingException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to handle change password", e);
         }
     }
 

@@ -15,6 +15,7 @@ import jakarta.mail.MessagingException;
 import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.web.Ban;
 import de.l3s.learnweb.web.BounceManager;
 import de.l3s.learnweb.web.Request;
@@ -71,7 +72,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable {
             try {
                 Beans.getInstance(BounceManager.class).parseInbox();
             } catch (MessagingException | IOException e) {
-                addErrorMessage(e);
+                throw new HttpException("Failed to parse inbox", e);
             }
 
             requestManager.updateAggregatedRequests();

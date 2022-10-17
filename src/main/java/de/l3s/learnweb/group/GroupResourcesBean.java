@@ -31,6 +31,7 @@ import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
@@ -180,7 +181,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
             try {
                 paginator = getResourcesFromSolr(group.getId(), HasId.getIdOrDefault(currentFolder, 0), searchQuery, getUser());
             } catch (IOException | SolrServerException e) {
-                addErrorMessage(e);
+                throw new HttpException("Failed to retrieve current page", e);
             }
         }
 
@@ -314,7 +315,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
 
             clearCachesAndFilters();
         } catch (IllegalArgumentException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to open folder", e);
         }
     }
 
@@ -353,7 +354,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
                 addGrowl(FacesMessage.SEVERITY_WARN, "For some reason, {0, choice, 1#{0} resource|1<{0} of resources} can not be processed.", items.failed());
             }
         } catch (IllegalArgumentException | IllegalAccessError | JsonParseException e) { // these exceptions will have user-friendly messages
-            addErrorMessage(e.getMessage(), e);
+            throw new HttpException("Failed to update resources", e);
         }
     }
 

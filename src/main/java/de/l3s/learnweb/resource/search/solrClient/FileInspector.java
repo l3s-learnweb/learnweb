@@ -19,7 +19,6 @@ import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.NamedList;
 
 import de.l3s.util.MimeTypes;
-import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
 
 public class FileInspector {
@@ -44,7 +43,7 @@ public class FileInspector {
             NamedList<Object> result = requestSolrExtract(new MyContentStream(fileInfo.getFileName(), fileInfo.getMimeType(), inputStream));
             saveSolrMetadata(result, fileInfo);
         } catch (SolrServerException | IOException e) {
-            log.error("FileInspector: Can't extract Text from File; {}", Misc.getSystemDescription(), e);
+            log.error("FileInspector: Can't extract Text from File", e);
         }
 
         return fileInfo;

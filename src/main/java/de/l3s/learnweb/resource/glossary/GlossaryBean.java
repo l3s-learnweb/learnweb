@@ -46,6 +46,7 @@ import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
@@ -464,8 +465,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 sheet.protectSheet(Learnweb.SALT_1); // use SALT as password
             }
         } catch (RuntimeException | IOException e) {
-            log.error("Error in postprocessing Glossary xls for resource: {}", glossaryResource.getId(), e);
-            addErrorMessage(e);
+            throw new HttpException("Error in postprocessing Glossary XLS for resource: " + glossaryResource.getId(), e);
         }
     }
 
@@ -487,7 +487,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable {
                 getFormEntry().getPictures().add(file);
             }
         } catch (IOException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to handle file upload", e);
         }
     }
 

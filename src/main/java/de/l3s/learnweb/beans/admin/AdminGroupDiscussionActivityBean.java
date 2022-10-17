@@ -28,6 +28,7 @@ import com.google.gson.JsonParser;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 
@@ -83,7 +84,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
                 groupAnnotations.add(processJson(row.getAsJsonObject()));
             }
         } catch (IOException | JsonParseException | InterruptedException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to load hypothesis discussion", e);
         }
     }
 

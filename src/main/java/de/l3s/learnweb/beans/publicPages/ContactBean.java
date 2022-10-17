@@ -11,8 +11,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.user.User;
 import de.l3s.mail.Mail;
 import de.l3s.mail.MailFactory;
@@ -22,6 +25,7 @@ import de.l3s.mail.MailFactory;
 public class ContactBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 1506604546829332647L;
+    private static final Logger log = LogManager.getLogger(ContactBean.class);
 
     @NotBlank
     private String name;
@@ -52,9 +56,10 @@ public class ContactBean extends ApplicationBean implements Serializable {
             mail.setReplyTo(email);
             mail.send();
 
+            log.error("Contact form mail sent to {}", adminEmail); // required to collect more data about the user
             clearForm();
-        } catch (MessagingException mex) {
-            addErrorMessage(mex);
+        } catch (MessagingException e) {
+            throw new HttpException("Failed to send email", e);
         }
     }
 

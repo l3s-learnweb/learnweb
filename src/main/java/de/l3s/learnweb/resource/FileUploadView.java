@@ -13,6 +13,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 
 @Named
@@ -48,7 +49,7 @@ public class FileUploadView extends ApplicationBean {
             createThumbnailThread.start();
             createThumbnailThread.join(1000);
         } catch (InterruptedException | IOException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to upload file", e);
         }
     }
 }

@@ -16,8 +16,6 @@ import java.util.Locale;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.forum.ForumTopic;
@@ -25,7 +23,6 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.web.Request;
 import de.l3s.mail.MailFactory;
 import de.l3s.test.LearnwebExtension;
-import de.l3s.util.bean.BeanHelper;
 
 class MessageBuilderTest {
 
@@ -38,9 +35,6 @@ class MessageBuilderTest {
     private static final java.util.List<ForumTopic> otherTopics;
 
     static {
-        MockedStatic<BeanHelper> beanHelper = Mockito.mockStatic(BeanHelper.class);
-        beanHelper.when(BeanHelper::getRequestSummary).thenReturn("#requestSummary");
-
         Request req = mock(Request.class);
         when(req.getAddr()).thenReturn("127.0.0.1");
         when(req.getUrl()).thenReturn("https://learnweb/");
@@ -132,10 +126,9 @@ class MessageBuilderTest {
             Email: testmail@gmx.de
             Message: ABC
 
-            _____________________________________
-            #requestSummary""", builder.buildPlainText(msg));
+            """, builder.buildPlainText(msg));
         assertEquals("<html><head><meta charset=\"UTF-8\"></head><body><p>Name: testuser<br/>Email: testmail@gmx.de<br/>Message: ABC</p>"
-            + "<hr/>#requestSummary</body></html>", builder.buildHtmlText(msg));
+            + "</body></html>", builder.buildHtmlText(msg));
     }
 
     @Test

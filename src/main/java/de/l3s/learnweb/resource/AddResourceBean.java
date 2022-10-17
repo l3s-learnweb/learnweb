@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File.FileType;
@@ -100,7 +101,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
             log.debug("Next step");
             formStep++;
         } catch (InterruptedException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to process URL input", e);
         }
     }
 
@@ -124,7 +125,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
 
             log.debug("Next step");
         } catch (InterruptedException | URISyntaxException | IOException e) {
-            addErrorMessage(e);
+            throw new HttpException("Failed to create document", e);
         }
     }
 

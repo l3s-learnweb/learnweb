@@ -16,7 +16,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.util.StringHelper;
-import de.l3s.util.bean.BeanHelper;
 
 public interface GlossaryDao extends SqlObject, Serializable {
 
@@ -50,8 +49,7 @@ public interface GlossaryDao extends SqlObject, Serializable {
         if (resource instanceof GlossaryResource glossary) {
             return Optional.of(glossary);
         } else {
-            LogManager.getLogger(GlossaryDao.class)
-                .error("Glossary resource requested but the resource is of type {}; {}", resource.getType(), BeanHelper.getRequestSummary());
+            LogManager.getLogger(GlossaryDao.class).error("Glossary resource requested but the resource is of type {}", resource.getType());
             return Optional.empty();
         }
     }
