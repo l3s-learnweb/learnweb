@@ -205,7 +205,7 @@ public class ConfigProvider implements Serializable {
 
     public String getEnvironment() {
         if (environment == null) {
-            if (!development) {
+            if (!isDevelopment()) {
                 if ("/".equals(contextPath)) {
                     return "production";
                 } else if ("/dev".equals(contextPath)) {
