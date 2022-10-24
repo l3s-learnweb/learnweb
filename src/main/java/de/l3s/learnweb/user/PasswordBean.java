@@ -34,11 +34,6 @@ public class PasswordBean extends ApplicationBean implements Serializable {
     public void onGetPassword() {
         try {
             List<User> users = tokenDao.getUserDao().findByEmail(email);
-            if (users.isEmpty()) {
-                addMessage(FacesMessage.SEVERITY_ERROR, "unknown_email");
-                return;
-            }
-
 
             String url = config().getServerUrl() + "/lw/user/change_password.jsf?token=";
             for (User user : users) {

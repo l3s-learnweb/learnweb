@@ -30,7 +30,7 @@ final class SentryRequestHttpServletRequestProcessor implements EventProcessor {
     private static final Logger log = LogManager.getLogger(SentryRequestHttpServletRequestProcessor.class);
 
     private static final List<String> SENSITIVE_HEADERS = Arrays.asList("X-FORWARDED-FOR", "AUTHORIZATION", "COOKIE");
-    private static final List<String> SENSITIVE_PARAMS = Arrays.asList("password", "secret", "jakarta.faces.viewstate");
+    private static final List<String> SENSITIVE_PARAMS = Arrays.asList("password", "secret");
     private final HttpServletRequest httpRequest;
 
     SentryRequestHttpServletRequestProcessor(HttpServletRequest httpRequest) {
