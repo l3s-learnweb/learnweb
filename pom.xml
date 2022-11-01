@@ -17,12 +17,12 @@
         <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
         <maven.compiler.release>17</maven.compiler.release>
-        <maven.dependency.myfaces.version>4.0.0-RC1</maven.dependency.myfaces.version>
+        <maven.dependency.myfaces.version>4.0.0-RC2</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.9.3</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.34.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.5.1</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>9.6.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.19.0</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>6.5.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>6.6.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.9.1</maven.dependency.junit.version>
         <maven.dependency.mockito.version>4.8.1</maven.dependency.mockito.version>
 
@@ -304,7 +304,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.9.1</version>
+            <version>2.10</version>
         </dependency>
         <!-- A dependency of several other packages, but as we anyway need to include it, feel free to use it -->
         <dependency>
@@ -334,7 +334,7 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>5.0.4.Final</version>
+            <version>5.0.6.Final</version>
         </dependency>
         <!-- Used to make a thumbnail of PDF in ResourcePreviewMaker -->
         <dependency>
@@ -434,7 +434,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.3.4</version>
+                        <version>10.4</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -442,7 +442,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.7.2.0</version>
+                <version>4.7.2.1</version>
                 <configuration>
                     <excludeFilterFile>.mvn/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
