@@ -409,7 +409,7 @@ public class Search implements Serializable {
                     resGroup.addResource(res);
                 }
             } else {
-                resGroup.setTotalResources(Math.toIntExact(searchFilters.getTotalResults(FilterType.service, resGroup.getGroupAlias())));
+                resGroup.setTotalResources(searchFilters.getTotalResults(FilterType.service, resGroup.getGroupAlias()));
                 resGroup.addResource(res);
                 resourcesByGroups.add(resGroup);
             }
@@ -496,7 +496,7 @@ public class Search implements Serializable {
 
         String groupName;
         String groupAlias;
-        Integer totalResources;
+        Long totalResources;
         LinkedList<ResourceDecorator> resources;
 
         @Override
@@ -544,11 +544,11 @@ public class Search implements Serializable {
             return groupAlias;
         }
 
-        public Integer getTotalResources() {
+        public Long getTotalResources() {
             return totalResources > resources.size() ? totalResources : resources.size();
         }
 
-        public void setTotalResources(Integer totalResources) {
+        public void setTotalResources(Long totalResources) {
             this.totalResources = totalResources;
         }
 
