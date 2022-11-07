@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +17,6 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import de.l3s.learnweb.Announcement;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -120,13 +118,26 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count ORDER BY created_at DESC")
     List<AnnotationCount> findAllAnnotationCounts();
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET repetition = ? AND session_id = ? WHERE uri = ? AND type = ? ")
+    @RegisterRowMapper(JsonSharedObjectMapper.class)
+    @SqlQuery("SELECT shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND user_id = ?")
+    List<JsonSharedObject> findObjectByGroupId(int groupId, int userId);
+
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_objects SET shared_object = ?, created_at = ? WHERE user_id = ? AND group_id = ?")
+    void updateSharedObject(String sharedObject, LocalDateTime createdAt, int userId, int groupId);
+
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_objects (user_id, group_id, application, shared_object, created_at) "
+        + "VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP())")
+    @GetGeneratedKeys("id")
+    int insertSharedObject(int userId, int groupId, String application, String sharedObject);
+
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET repetition = ?, session_id = ? WHERE uri = ? AND type = ? ")
     void updateQueryAnnotation(int repetition, String sessionId, String uri, String type);
 
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (id, type, uri, created_at, surface_form, session_id, users, confidence, repetition) "
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)")
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
     @GetGeneratedKeys("uri_id")
-    int insertQueryToAnnotation(int id, String type, String uri, LocalDateTime createdAt, String surface_form, String sessionId, String users, double confidence);
+    int insertQueryToAnnotation(String id, String type, String uri, LocalDateTime createdAt, String surface_form, String sessionId, String users, double confidence
+        , int repetition);
 
     @SqlUpdate("INSERT INTO learnweb_large.sl_query (query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3)")
     @GetGeneratedKeys("search_id")
@@ -206,14 +217,23 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         public AnnotationCount map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             AnnotationCount annotation = new AnnotationCount();
             annotation.setUri(rs.getString("uri"));
+            annotation.setId(rs.getString("id"));
             annotation.setConfidence(rs.getDouble("confidence"));
             annotation.setSurfaceForm(rs.getString("surface_form"));
             annotation.setType(rs.getString("type"));
             annotation.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             annotation.setSessionId(rs.getString("session_id"));
             annotation.setUsers(rs.getString("users"));
+            annotation.setRepetition(rs.getInt("repetition"));
             return annotation;
         }
     }
 
+    class JsonSharedObjectMapper implements RowMapper<JsonSharedObject> {
+        @Override
+        public JsonSharedObject map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            JsonSharedObject sharedObject = new JsonSharedObject(rs.getString("shared_object"));
+            return sharedObject;
+        }
+    }
 }

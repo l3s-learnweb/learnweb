@@ -14,10 +14,12 @@ public class AnnotationCount implements Serializable {
     private int repetition;
     private String uri;
     private String type;
-    private int id;
+    private String id;
     private int uri_id;
     private String sessionId;
     private String users;
+    //Specifically for web results
+    private String keywords;
 
     public String getUsers() {
         return users;
@@ -47,16 +49,16 @@ public class AnnotationCount implements Serializable {
         this.type = type;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(final int id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
-    public AnnotationCount(final int id, final double confidence, final String surfaceForm, final String uri, final String type
-        , final String users, final String sessionId) {
+    public AnnotationCount(final String id, final double confidence, final String surfaceForm, final String uri, final String type
+        , final String users, final String sessionId, final String keywords) {
         this.id = id;
         this.confidence = confidence;
         this.surfaceForm = surfaceForm;
@@ -66,6 +68,7 @@ public class AnnotationCount implements Serializable {
         this.createdAt = LocalDateTime.now();
         this.repetition = 1;
         this.sessionId = sessionId;
+        this.keywords = keywords;
     }
 
     public AnnotationCount() {
@@ -122,5 +125,17 @@ public class AnnotationCount implements Serializable {
 
     public void addSessionId(final String sessionId) {
         this.sessionId += "," + sessionId;
+    }
+
+    public void addId(final String Id) {
+        this.id += "," + Id;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(final String keywords) {
+        this.keywords = keywords;
     }
 }
