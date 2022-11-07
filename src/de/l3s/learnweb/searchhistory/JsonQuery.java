@@ -3,6 +3,7 @@ package de.l3s.learnweb.searchhistory;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.*;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -38,6 +40,11 @@ public class JsonQuery implements Serializable {
 
     private static AnnotationUnit annotationUnit;
 
+    public class JsonUser {
+        private int id;
+        private String name;
+    }
+
     public class Node {
         private String uri;
         private String query;
@@ -46,9 +53,10 @@ public class JsonQuery implements Serializable {
         private String sessionId;
         private double confidence;
         private int repetition;
+        private double weight;
 
         //Node class. Receives the input from DB to be visualized
-        public Node(String query, String uri, String users, double confidence, int repetition, String sessionId) {
+        public Node(String query, String uri, String users, double confidence, int repetition, String sessionId, double weight) {
             this.sessionId = sessionId;
             this.query = query;
             this.uri = uri;
@@ -56,6 +64,7 @@ public class JsonQuery implements Serializable {
             this.confidence = confidence;
             this.frequency = 1;
             this.repetition = repetition;
+            this.weight = weight;
         }
 
         public String getQuery() {
@@ -70,6 +79,7 @@ public class JsonQuery implements Serializable {
             return frequency;
         }
 
+        public void setFrequency(int frequency) { this.frequency = frequency; }
         public String getUsers() {
             return users;
         }
@@ -86,13 +96,19 @@ public class JsonQuery implements Serializable {
             this.uri = uri;
         }
 
-        public void increaseFrequency(String sessionId){
+        public void increaseFrequency(){
             this.frequency++;
-            List<String> sessionIdSplit = Arrays.stream(sessionId.split(",")).toList();
-            for (String id : sessionIdSplit)
-                if (!this.sessionId.contains(id)) this.sessionId += "," + id;
         }
 
+        public void combineUsers(String sessionId) {
+            List<String> sessionIdSplit = Arrays.stream(sessionId.split(",")).toList();
+            for (String id : sessionIdSplit)
+                if (!this.sessionId.contains(id))
+                {
+                    if (this.sessionId.isEmpty()) this.sessionId = id;
+                    else this.sessionId += "," + id;
+                }
+        }
         public double getConfidence() {
             return confidence;
         }
@@ -115,6 +131,14 @@ public class JsonQuery implements Serializable {
 
         public void setSessionId(final String sessionId) {
             this.sessionId = sessionId;
+        }
+
+        public double getWeight() {
+            return weight;
+        }
+
+        public void setWeight(final double weight) {
+            this.weight = weight;
         }
     }
 
@@ -178,7 +202,7 @@ public class JsonQuery implements Serializable {
 
     //Getting resources of dbpedia-spotlight results
     private static void annotate(List<AnnotationCount> annotationCounts, AnnotationUnit annotationUnit, int id, String type, List<String> users
-        , String sessionId) {
+        , String sessionId, String keywords) {
 
         List<ResourceItem> resources = new ArrayList<>();
 
@@ -211,9 +235,10 @@ public class JsonQuery implements Serializable {
                     tmp.get().setUsers(tmpList.stream().collect(joining(",")));
                     tmp.get().setRepetition(tmp.get().getRepetition() + 1);
                     if (!tmp.get().getSessionId().contains(sessionId)) tmp.get().addSessionId(sessionId);
+                    if (!tmp.get().getId().contains(String.valueOf(id))) tmp.get().addId(String.valueOf(id));
                 } else {
-                    annotationCounts.add(new AnnotationCount(id, resource.score(), resource.getSurfaceForm(), resource.getUri(), type,
-                        users.stream().collect(joining(",")), sessionId));
+                    annotationCounts.add(new AnnotationCount(String.valueOf(id), resource.score(), resource.getSurfaceForm(), resource.getUri(), type,
+                        users.stream().collect(joining(",")), sessionId, keywords));
                 }
             }
     }
@@ -230,12 +255,13 @@ public class JsonQuery implements Serializable {
         }
         return newWebText.toString();
     }
+
     private void AddNode(List<Node> nodes, String uri, String username, int frequency, double confidence, int repetition
-        , String sessionId) {
+        , String sessionId, double weight) {
             //Get the Node name as uri minus domain root - dbpedia.org/resource
             String nameQuery = uri.replaceAll("http://dbpedia.org/resource/", "")
                 .replaceAll("_"," ");
-            Node node = new Node(nameQuery, uri, username, confidence, repetition, sessionId);
+            Node node = new Node(nameQuery, uri, username, confidence, repetition, sessionId, weight);
             if (!nodes.contains(node)) nodes.add(node);
     }
 
@@ -244,44 +270,156 @@ public class JsonQuery implements Serializable {
         int days = (int) DAYS.between(LocalDateTime.now(), annotationCount.getCreatedAt());
         switch (annotationCount.getType()) {
             case "user": return 3 * Math.exp(-days);
-            case "group": return 4 * Math.exp(-days);
-            case "web": return Math.exp(-days);
-            case "snippet_clicked":
-            case "query":
-                return 2 * Math.exp(-days);
-            case "snippet_notClicked": return -2 * Math.exp(-days);
+            case "group": return 0.5 * Math.exp(-days);
+            case "web": return 1 * Math.exp(-days);
+            case "snippet_clicked": return 5 * Math.exp(-days);
+            case "query": return 11 * Math.exp(-days);
+            case "snippet_notClicked": return -Math.exp(-days);
             default: break;
         }
         return 0;
     }
 
-    //Implement Algorithm
-    public JsonQuery calculateTopEntries(List<AnnotationCount> annotationCounts) {
+    public Record removeDuplicatingNodesAndLinks(Record record) {
+        Record calculatedRecord = record;
+        //Remove duplicating nodes by merging nodes with the same uri
+        for (int i = 0; i < calculatedRecord.nodes.size() - 1; i++) {
+            if (!calculatedRecord.nodes.get(i).getUri().isEmpty())
+                for (int j = i + 1; j < calculatedRecord.nodes.size(); j++) {
+                    if (calculatedRecord.nodes.get(i).getUri().equals(calculatedRecord.nodes.get(j).getUri())) {
+                        for (Link link : calculatedRecord.links) {
+                            if (link.target == j) {
+                                link.target = i;
+                            }
+                            else if (link.source == j) {
+                                link.source = i;
+                            }
+                            if (link.source > j) link.source--;
+                            if (link.target > j) link.target--;
+                        }
+                        List<String> userList = new ArrayList<>(Arrays.stream(calculatedRecord.nodes.get(i).getUsers().split(",")).toList());
+                        userList.removeAll(Arrays.stream(calculatedRecord.nodes.get(j).getUsers().split(",")).toList());
+                        userList.addAll(Arrays.stream(calculatedRecord.nodes.get(j).getUsers().split(",")).toList());
+                        calculatedRecord.nodes.get(i).setUsers(userList.stream().collect(joining(",")));
+                        calculatedRecord.nodes.get(i).combineUsers(calculatedRecord.nodes.get(j).getSessionId());
+                        calculatedRecord.nodes.get(i).setRepetition(calculatedRecord.nodes.get(i).getRepetition() + calculatedRecord.nodes.get(j).getRepetition());
+                        calculatedRecord.nodes.remove(j);
+                        j--;
+                        calculatedRecord.nodes.get(i).increaseFrequency();
+                    }
+                }
+        }
 
-        List<AnnotationCount> currentGroupAnnotation = new ArrayList<>();
+        //Remove duplicating edges by merging edges with same sources & targets and vice versa
+        //Set redundant sources of edges to -1
+        for (int i = 0; i < calculatedRecord.links.size() - 1; i++) {
+            if (calculatedRecord.links.get(i).source != -1)
+                for (int j = i + 1; j < calculatedRecord.links.size(); j++) {
+                    if ((calculatedRecord.links.get(i).source == calculatedRecord.links.get(j).source && calculatedRecord.links.get(i).target == calculatedRecord.links.get(j).target)
+                        ||(calculatedRecord.links.get(i).source == calculatedRecord.links.get(j).target && calculatedRecord.links.get(i).target == calculatedRecord.links.get(j).source)) {
+                        calculatedRecord.links.get(i).setWeight(calculatedRecord.links.get(i).getWeight() + calculatedRecord.links.get(j).getWeight());
+                        calculatedRecord.nodes.get(calculatedRecord.links.get(i).source).setWeight(
+                            calculatedRecord.nodes.get(calculatedRecord.links.get(i).source).getWeight()
+                            + calculatedRecord.nodes.get(calculatedRecord.links.get(j).source).getWeight()
+                        );
+                        calculatedRecord.links.get(j).setSource(-1);
+                    }
+                }
+        }
+        //Remove edges with sources equal to -1
+        calculatedRecord.links.removeIf(link -> link.getSource() == -1);
+        return calculatedRecord;
+    }
+
+    //Implement Algorithm
+    public List<JsonSharedObject> calculateTopEntries(List<AnnotationCount> annotationCounts, List<User> users,
+        Group group, List<SearchSession> sessions, int numberTopEntities) throws IOException {
+
         //Preparation sort
         annotationCounts.sort(Comparator.comparing(AnnotationCount::getType));
 
         //Add default node. Any group that has only 1 node will be connected to default node
-        AddNode(record.nodes, "default", "", 1, 0, 1, "");
+        AddNode(record.nodes, "default", "", 1, 0, 1, "", 0.0);
 
+        //Create rdf graph model list
+        List<RdfModel> rdfGraphs = new ArrayList<>();
+        for (User user : users)
+            rdfGraphs.add(new RdfModel(user, group, sessions));
+        
         AnnotationCount tmp = new AnnotationCount();
+        int currentIndex = 0;
+        List<AnnotationCount> currentGroupAnnotation = new ArrayList<>();
+        List<String> groupUsers = new ArrayList<>();
+        List<Boolean> isUserActive = new ArrayList<>();
+
+        for (User user : users) {
+            groupUsers.add(user.getUsername());
+            isUserActive.add(false);
+        }
+        //Create nodes and edges in (original) graph
+        //TODO: modify to be RDF graph
         for (AnnotationCount annotationCount : annotationCounts) {
+            boolean isContain = false;
+
+            for (String groupUser : groupUsers)
+                for (String annotationUser : Arrays.stream(annotationCount.getUsers().split(",")).toList())
+                    if (groupUser.equals(annotationUser)) isContain = true;
+
+            if (!isContain) continue;
+
             double weight = calculateWeight(annotationCount);
+            for (User user : users) {
+                if (annotationCount.getType().contains("snippet") && annotationCount.getUsers().contains(user.getUsername())) {
+                    rdfGraphs.get(users.indexOf(user)).addStatement("Snippet/" + annotationCount.getUri().replaceAll("http://dbpedia.org/resource/",
+                        ""), "title", annotationCount.getSurfaceForm(), "literal");
+                    rdfGraphs.get(users.indexOf(user)).addStatement("Snippet/" + annotationCount.getUri().replaceAll("http://dbpedia.org/resource/",
+                        ""), "url", annotationCount.getUri(), "literal");
+                    for (String session : annotationCount.getSessionId().split(",")) {
+                        rdfGraphs.get(users.indexOf(user)).addStatement("SearchSession/" + session, "contains", "Snippet/" + annotationCount.getUri().replaceAll("http://dbpedia.org/resource/", ""), "resource");
+                    }
+                    for (SearchSession session : sessions) {
+                        for (SearchQuery searchQuery : session.getQueries()) {
+                            if (annotationCount.getId().contains(String.valueOf(searchQuery.searchId()))) {
+                                rdfGraphs.get(users.indexOf(user)).addStatement("SearchQuery/" + searchQuery.query(), "generatesResult",
+                                    "Snippet/" + annotationCount.getUri().replaceAll("http://dbpedia.org/resource/", ""), "resource");
+                            }
+                        }
+                    }
+                }
+
+                if (annotationCount.getType().equals("web")) {
+                    for (String userActive : annotationCount.getUsers().split(",")) isUserActive.set(groupUsers.indexOf(userActive), true);
+                    if (annotationCount.getUsers().contains(user.getUsername())) {
+                        rdfGraphs.get(users.indexOf(user)).addStatement("WebPage/" + annotationCount.getUri().replaceAll("http://dbpedia.org/resource/", ""), "title", annotationCount.getSurfaceForm(), "literal");
+                        rdfGraphs.get(users.indexOf(user)).addStatement("WebPage/" + annotationCount.getUri().replaceAll("http://dbpedia.org/resource/", ""), "url", annotationCount.getUri(), "literal");
+                        for (String session : annotationCount.getSessionId().split(",")) {
+                            rdfGraphs.get(users.indexOf(user)).addStatement("SearchSession/" + session, "contains", "WebPage/" + annotationCount.getUri().replaceAll("http://dbpedia.org/resource/", ""), "resource");
+                        }
+                        for (SearchSession session : sessions) {
+                            for (SearchQuery searchQuery : session.getQueries()) {
+                                if (annotationCount.getId().contains(String.valueOf(searchQuery.searchId()))) {
+                                    rdfGraphs.get(users.indexOf(user)).addStatement("SearchQuery/" + searchQuery.query(), "generatesResult", "WebPage/" + annotationCount.getUri().replaceAll("http://dbpedia.org/resource/", ""), "resource");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             AddNode(record.nodes, annotationCount.getUri(), annotationCount.getUsers(), 1, annotationCount.getConfidence()
-                , annotationCount.getRepetition(), annotationCount.getSessionId());
+                , annotationCount.getRepetition(), annotationCount.getSessionId(), weight);
+
             if (tmp.getType() != null && !tmp.getType().equals(annotationCount.getType())) {
                 //Connect with default with this weight
                 if (currentGroupAnnotation.size() == 1) {
-                    setLink(0, annotationCounts.indexOf(tmp) + 1, weight);
+                    setLink(0, currentIndex, weight);
                 }
                 currentGroupAnnotation = new ArrayList<>();
-
-            }
-            else {
+                currentIndex = record.nodes.size() - 1;
+            } else {
                 //Connect to all previous nodes in the list with weight
-                for (AnnotationCount annotation : currentGroupAnnotation) {
-                    setLink(annotationCounts.indexOf(annotationCount) + 1, annotationCounts.indexOf(annotation) + 1, weight);
+                for (int i = currentIndex; i < record.nodes.size() - 1; i++) {
+                    if (i != 0) setLink(i, record.nodes.size() - 1, weight);
                 }
             }
             currentGroupAnnotation.add(annotationCount);
@@ -289,48 +427,10 @@ public class JsonQuery implements Serializable {
         }
 
         if (currentGroupAnnotation.size() == 1)
-            setLink(0, annotationCounts.indexOf(tmp) + 1, calculateWeight(tmp));
+            setLink(0, record.nodes.size() - 1, calculateWeight(tmp));
 
         //Remove duplications
-
-        //Remove duplicating nodes by merging nodes with the same uri
-        for (int i = 1; i < record.nodes.size() - 1; i++) {
-            if (!record.nodes.get(i).getUri().isEmpty())
-            for (int j = i + 1; j < record.nodes.size(); j++) {
-                if (record.nodes.get(i).getUri().equals(record.nodes.get(j).getUri())) {
-                    for (Link link : record.links) {
-                        if (link.target == j) {
-                            link.target = i;
-                        }
-                        else if (link.source == j) {
-                            link.source = i;
-                        }
-                        if (link.source > j) link.source--;
-                        if (link.target > j) link.target--;
-                    }
-
-                    record.nodes.get(i).increaseFrequency(record.nodes.get(j).getSessionId());
-                    record.nodes.get(i).setRepetition(record.nodes.get(i).getRepetition() + record.nodes.get(j).getRepetition());
-                    record.nodes.remove(j);
-                    j--;
-                }
-            }
-        }
-
-        //Remove duplicating edges by merging edges with same sources & targets and vice versa
-        //Set redundant sources of edges to -1
-        for (int i = 0; i < record.links.size() - 1; i++) {
-            if (record.links.get(i).source != -1)
-            for (int j = i + 1; j < record.links.size(); j++) {
-                if ((record.links.get(i).source == record.links.get(j).source && record.links.get(i).target == record.links.get(j).target)
-                    ||(record.links.get(i).source == record.links.get(j).target && record.links.get(i).target == record.links.get(j).source)) {
-                    record.links.get(i).setWeight(record.links.get(i).getWeight() + record.links.get(j).getWeight());
-                    record.links.get(j).setSource(-1);
-                }
-            }
-        }
-        //Remove edges with sources equal to -1
-        record.links.removeIf(link -> link.getSource() == -1);
+        record = removeDuplicatingNodesAndLinks(record);
 
         HashMap<Integer, Double> results = new HashMap<>();
         //Calculate top entities from the formula:
@@ -341,10 +441,11 @@ public class JsonQuery implements Serializable {
             for (Link link : record.links) {
                 if (link.source == i || link.target == i) {
                     sumWeight += link.weight;
-                    sumConfidence += link.source == i ? (link.target == 0 ? 0 : 0.5) : (link.source == 0 ? 0 : 0.5);
+                    sumConfidence += link.source == i ? (link.target == 0 ? 0 : record.nodes.get(link.target).getConfidence())
+                        : (link.source == 0 ? 0 : record.nodes.get(link.source).getConfidence());
                 }
             }
-            results.put(i, 0.5 * sumConfidence * sumWeight);
+            results.put(i, record.nodes.get(i).getConfidence() * sumConfidence * sumWeight);
         }
         //Sorting the entities by the results
         List<Map.Entry<Integer, Double>> entries
@@ -356,73 +457,124 @@ public class JsonQuery implements Serializable {
             }
         });
 
+        for (User user : users)
+            for (Node node: record.nodes) {
+                if (node.getUsers().contains(user.getUsername()))
+                    rdfGraphs.get(users.indexOf(user)).addEntity(node.getUri(), node.getQuery(), node.getWeight(), node.getConfidence());
+            }
+         for (RdfModel graph : rdfGraphs)
+             graph.printModel(group.getTitle(), rdfGraphs.indexOf(graph));
         //PREPARING COLLABGRAPH:
-        //1 - Get users
-        //If we have group node -> the results are from group node, if not then we must take from every other nodes
-        List<String> users;
-        Optional<AnnotationCount> userRef = annotationCounts.stream().filter(s -> s.getType().equals("group")).findAny();
-        if (userRef.isPresent()) users = Arrays.stream(userRef.get().getUsers().split(",")).toList();
-        else {
-            users = new ArrayList<>();
-            for (AnnotationCount annotationCount : annotationCounts) {
-                List<String> usersToAdd = Arrays.stream(annotationCount.getUsers().split(",")).toList();
-                for (String user : usersToAdd)
-                    if (!users.contains(user)) users.add(user);
-            }
-        }
-        List<Node> newNodes = new ArrayList<>();
-        List<Link> newLinks = new ArrayList<>();
-        //2 - List new nodes after users' top 4
-        for (String user : users) {
+
+        List<Node> newNodes;
+        List<Link> newLinks;
+        //1 - List new nodes after users' top 4
+
+        List<JsonSharedObject> sharedObjects = new ArrayList<>();
+        for (String user : groupUsers) {
             int index = 0;
-            for (Map.Entry<Integer, Double> entry : entries) {
-                Node chosenNode = record.nodes.get(entry.getKey());
-                if (chosenNode.users.contains(user)) {
-                    if (!newNodes.contains(chosenNode)) newNodes.add(chosenNode);
-                    index++;
-                    if (index >= 4) break;
+                if (isUserActive.get(groupUsers.indexOf(user))) {
+                    newNodes = new ArrayList<>();
+                    newLinks = new ArrayList<>();
+                    for (Map.Entry<Integer, Double> entry : entries) {
+                        if (record.nodes.get(entry.getKey()).users.contains(user)) {
+                            //PSEUDO- after RDF completes this will change
+                            Node chosenNode = new Node(record.nodes.get(entry.getKey()).getQuery(), record.nodes.get(entry.getKey()).getUri()
+                                , user, record.nodes.get(entry.getKey()).getConfidence(), record.nodes.get(entry.getKey()).getRepetition(),
+                                record.nodes.get(entry.getKey()).getSessionId(), entry.getValue());
+                            newNodes.add(chosenNode);
+                            index++;
+                            if (index >= numberTopEntities) break;
+                        }
+                    }
+                    List<Integer> nodesChild = new ArrayList<>();
+                    List<Integer> indexImportantNodes = new ArrayList<>();
+                    for (int i = 0; i < newNodes.size(); i++) {
+                        nodesChild.add(0);
+                        indexImportantNodes.add(i);
+                    }
+                    for (int i = 0; i < newNodes.size() - 1; i++) {
+                        for (int j = i + 1; j < newNodes.size(); j++) {
+                            Set<String> result = Arrays.stream(newNodes.get(i).getSessionId().split(",")).toList().stream()
+                                .distinct()
+                                .filter(Arrays.stream(newNodes.get(j).getSessionId().split(",")).toList()::contains)
+                                .collect(toSet());
+                            if (!result.isEmpty()) {
+                                newLinks.add(new Link(i, j, 0));
+                                nodesChild.set(i, nodesChild.get(i) + 1);
+                                nodesChild.set(j, nodesChild.get(j) + 1);
+                            }
+                        }
+                    }
+                    final List<Node> finalNewNodes = newNodes;
+                    indexImportantNodes.sort((o1, o2) -> {
+                        if (Float.compare(nodesChild.get(o2), nodesChild.get(o1)) == 0) {
+                            if (annotationCounts.stream().anyMatch(s -> Objects.equals(s.getUri(), finalNewNodes.get(o2).getUri())
+                                && s.getType().equals("query"))) return 1;
+                            if (annotationCounts.stream().anyMatch(s -> Objects.equals(s.getUri(), finalNewNodes.get(o1).getUri())
+                                && s.getType().equals("query"))) return -1;
+                            return 0;
+                        }
+                        else return Float.compare(nodesChild.get(o2), nodesChild.get(o1));
+                    });
+                    List<Node> calculatedNodes = new ArrayList<>();
+                    List<Link> calculatedLinks = new ArrayList<>();
+
+                    //Trimming the user's individual graph
+
+                    calculatedNodes.add(newNodes.get(indexImportantNodes.get(0)));
+
+                    for (int indexNode: indexImportantNodes) {
+                        if (!calculatedNodes.contains(newNodes.get(indexNode)))
+                            calculatedNodes.add(newNodes.get(indexNode));
+                        for (Link link : newLinks) {
+                            if (link.source == indexNode && !calculatedNodes.contains(newNodes.get(link.target))){
+                                calculatedNodes.add(newNodes.get(link.target));
+                                calculatedLinks.add(link);
+                            }
+                            else if (link.target == indexNode && !calculatedNodes.contains(newNodes.get(link.source))) {
+                                calculatedNodes.add(newNodes.get(link.source));
+                                calculatedLinks.add(link);
+                            }
+                        }
+                    }
+                    JsonSharedObject object = new JsonSharedObject();
+                    for (Link link : calculatedLinks) {
+                        object.getLinks().add(new JsonSharedObject.Link(link.source, link.target));
+                    }
+                    object.setUser(new JsonSharedObject.User(users.stream().filter(s -> s.getUsername().equals(user)).findFirst().get().getId(), user));
+                    for (Node node: newNodes) {
+                        object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getQuery(), node.getWeight()));
+                    }
+                    sharedObjects.add(object);
                 }
-            }
         }
 
-        //3 - Visualize the new links
-        for (int i = 0; i < newNodes.size() - 1; i++) {
-            for (int j = i + 1; j < newNodes.size(); j++) {
-                Set<String> result =  Arrays.stream(newNodes.get(i).getSessionId().split(",")).toList().stream()
-                    .distinct()
-                    .filter(newNodes.get(j).getSessionId()::contains)
-                    .collect(toSet());
-                if (!result.isEmpty()) {
-                    newLinks.add(new Link(i, j, 0));
-                }
+        return sharedObjects;
+    }
+
+    public JsonQuery createCollabGraph(List<JsonSharedObject> sharedObjects) {
+
+        Record calculatedRecord = new Record(new ArrayList<>(), new ArrayList<>());
+        for (JsonSharedObject sharedObject : sharedObjects) {
+            //Add all new entities
+            for (JsonSharedObject.Link link : sharedObject.getLinks()) {
+                calculatedRecord.links.add(new Link(link.getSource() + calculatedRecord.nodes.size(),
+                    link.getTarget() + calculatedRecord.nodes.size(), 0));
             }
-        }
-
-        //4 - Remake spanning trees for all disjointing subgraphs
-        List<Integer> parents = new ArrayList<>(newNodes.size());
-        for (int i = 0; i < newNodes.size(); i++) parents.add(-2);
-        List<Link> minimumLinks = new ArrayList<>();
-
-        for (Node node: newNodes) {
-            for (Link link : newLinks) {
-                if (link.source == newNodes.indexOf(node) && parents.get(link.target) == -2) {
-                     parents.set(link.target, link.source);
-                     minimumLinks.add(link);
-                }
-                else if (link.target == newNodes.indexOf(node) && parents.get(link.source) == -2) {
-                    parents.set(link.source, link.target);
-                    minimumLinks.add(link);
-                }
+            for (JsonSharedObject.Entity nodeToAdd : sharedObject.getEntities()) {
+                calculatedRecord.nodes.add(new Node(nodeToAdd.getQuery(), nodeToAdd.getUri(), sharedObject.getUser().getName(), 0, 0, "", 0.0));
             }
-            if (parents.get(newNodes.indexOf(node)) == -2)
-                parents.set(newNodes.indexOf(node), -1);
+            //Add links, modify it to be logical with current nodes of collabgraph
         }
+        calculatedRecord = removeDuplicatingNodesAndLinks(calculatedRecord);
 
-        return new JsonQuery(newNodes, minimumLinks);
+        return new JsonQuery(calculatedRecord.nodes, calculatedRecord.links);
     }
 
     public static void processQuery(List<SearchSession> searchSession, SearchHistoryDao searchHistoryDao, int selectedGroupId,
         UserDao userDao, GroupDao groupDao) throws Exception {
+
         SpotlightBean spotlight = new SpotlightBean();
         List<AnnotationCount> annotationCounts = new ArrayList<>();
 
@@ -433,13 +585,13 @@ public class JsonQuery implements Serializable {
             annotationUnit = spotlight.get(group.get().getTitle());
             if (annotationUnit.getResources() != null) {
                 annotate(annotationCounts, annotationUnit, selectedGroupId, "group", userDao.findByGroupId(selectedGroupId)
-                    .stream().map(User::getUsername).collect(toList()),"");
+                    .stream().map(User::getUsername).collect(toList()),"", "");
             }
             if (group.get().getDescription() != null) {
                 annotationUnit = spotlight.get(group.get().getDescription());
                 if (annotationUnit.getResources() != null)
                     annotate(annotationCounts, annotationUnit, selectedGroupId, "group", userDao.findByGroupId(selectedGroupId)
-                        .stream().map(User::getUsername).collect(toList()),"");
+                        .stream().map(User::getUsername).collect(toList()),"", "");
             }
         }
 
@@ -447,23 +599,24 @@ public class JsonQuery implements Serializable {
             for (SearchQuery searchQuery : session.getQueries()) {
                 //2- Users side
                 Optional<User> user =  userDao.findById(session.getUserId());
-                if (annotationCounts.stream().filter(s -> s.getId() == session.getUserId() && s.getType().equals("user")).findFirst().isEmpty()) {
+                if (annotationCounts.stream().filter(s -> s.getId().contains(String.valueOf(session.getUserId())) && s.getType().equals("user")).findFirst().isEmpty()) {
                     String interest = user.get().getInterest();
                     if (interest != null) {
                         annotationUnit = spotlight.get(interest);
                         if (annotationUnit.getResources() != null)
                             annotate(annotationCounts, annotationUnit, session.getUserId(), "user", Arrays.asList((user.get().getUsername())),
-                                session.getSessionId());
+                                session.getSessionId(), "");
                     }
                 }
                 //3, 4 - Snippets side
                 //Clicked and not clicked
                 List<ResourceDecorator> snippets = searchHistoryDao.findSearchResultsByQuery(searchQuery, 32);
                 for (ResourceDecorator snippet : snippets) {
-                    annotationUnit = spotlight.get(snippet.getTitle());
+                    String s = snippet.getTitle().split("\\|")[0].split("-")[0];
+                    annotationUnit = spotlight.get(s);
                     if (annotationUnit.getResources() != null) {
                         annotate(annotationCounts, annotationUnit, searchQuery.searchId(), snippet.getClicked() ? "snippet_clicked" : "snippet_notClicked"
-                            , Arrays.asList((user.get().getUsername())), session.getSessionId());
+                            , Arrays.asList((user.get().getUsername())), session.getSessionId(), "");
                     }
                 }
 
@@ -471,7 +624,7 @@ public class JsonQuery implements Serializable {
                 annotationUnit = spotlight.get(searchQuery.query());
                 if (annotationUnit.getResources() != null)
                     annotate(annotationCounts, annotationUnit, searchQuery.searchId(), "query"
-                        , List.of((user.get().getUsername())), session.getSessionId());
+                        , List.of((user.get().getUsername())), session.getSessionId(), "");
                 List<String> urlList = searchHistoryDao.findClickedUrl(searchQuery.query());
                 //5 - webpages side
                 //Get webpage from clicked snippets
@@ -483,7 +636,7 @@ public class JsonQuery implements Serializable {
                         annotationUnit = spotlight.get(filterWebsite(doc));
                         if (annotationUnit.getResources() == null) continue;
                         annotate(annotationCounts, annotationUnit, searchQuery.searchId(), "web"
-                            , Arrays.asList((user.get().getUsername())), session.getSessionId());
+                            , Arrays.asList((user.get().getUsername())), session.getSessionId(), "");
                     }
                 }
             }
@@ -494,19 +647,19 @@ public class JsonQuery implements Serializable {
 
         //Update DB for existing annotationCount (same uri + type), else add new tuple to DB
         for (AnnotationCount annotationCount : annotationCounts) {
-            if (searchHistoryDao.findByUriAndType(annotationCount.getUri(), annotationCount.getType()).isPresent()) {
+            Optional<AnnotationCount> foundAnnotation = searchHistoryDao.findByUriAndType(annotationCount.getUri(), annotationCount.getType());
+            if (foundAnnotation.isPresent()) {
+                annotationCount.setCreatedAt(foundAnnotation.get().getCreatedAt());
                 searchHistoryDao.updateQueryAnnotation(annotationCount.getRepetition(), annotationCount.getUri()
                     , annotationCount.getType(), annotationCount.getSessionId());
             }
             else {
                 searchHistoryDao.insertQueryToAnnotation(annotationCount.getId(),
                     annotationCount.getType(), annotationCount.getUri(), annotationCount.getCreatedAt(), annotationCount.getSurfaceForm()
-                    , annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence());
+                    , annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence(), annotationCount.getRepetition());
             }
         }
     }
-
-    public Metadata metadata;
     public Record record;
 
     public JsonQuery(final List<Node> nodes, final List<Link> links) {

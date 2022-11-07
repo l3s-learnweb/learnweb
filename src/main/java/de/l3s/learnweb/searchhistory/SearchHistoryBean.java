@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ import com.google.gson.stream.JsonWriter;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.user.User;
@@ -67,14 +67,16 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private static String PATTERN_TIME = "HH:mm:ss";
     private static String PATTERN_DATETIME = String.format("%s %s", PATTERN_DATE, PATTERN_TIME);
 
-    private List<AnnotationCount> annotationCounts;
     /**
      * Load the variables that needs values before the view is rendered.
      */
-    public void onLoad() {
+    public void onLoad() throws Exception {
         BeanAssert.authorized(isLoggedIn());
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
+        }
+        for (Group group : groupDao.findByUserId(selectedUserId)) {
+            JsonQuery.processQuery(searchHistoryDao.findSessionsByGroupId(group.getId()), searchHistoryDao, group.getId(), userDao, groupDao);
         }
     }
 
@@ -228,37 +230,47 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public String getQueriesJson() throws Exception {
-        //annotationCounts = searchHistoryDao.findAllAnnotationCounts();
-
-        if (sessions == null || selectedGroupId <= 0) return null;
+        if (sessions == null || sessions.isEmpty() || selectedGroupId <= 0) return null;
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
             .create();
         //Create new filePath
-        String path = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
-            + "_Summary_" + getSessionId() + ".json";
-        File file = new File(path);
+        String localPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
+            + "_Summary_" + userDao.findById(selectedUserId).get().getUsername() + "_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
+        String collabPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
+            + "_Summary_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
+        File file = new File(localPath);
+        //Calculates and returns a list of top entries for each user belonging to the group
+        //Also exports a rdf turtle file for every user in the group
+        List<JsonSharedObject> sharedObjects = new JsonQuery(new ArrayList<>(),
+            new ArrayList<>()).calculateTopEntries(searchHistoryDao.findAllAnnotationCounts(),
+            userDao.findByGroupId(selectedGroupId), groupDao.findById(selectedGroupId).get(), sessions, 3);
+        //Results of SharedObjects to DB
+        for (JsonSharedObject sharedObject : sharedObjects) {
+            if (searchHistoryDao.findObjectByGroupId(selectedGroupId, sharedObject.getUser().getId()).isEmpty()) {
+                searchHistoryDao.insertSharedObject(sharedObject.getUser().getId(), selectedGroupId, "sharedObject",
+                    gson.toJson(sharedObject));
+            }
+            else {
+                searchHistoryDao.updateSharedObject(gson.toJson(sharedObject), LocalDateTime.now(), sharedObject.getUser().getId(),selectedGroupId);
+            }
+        }
         //Create new json
-        JsonQuery.processQuery(sessions, searchHistoryDao, selectedGroupId, userDao, groupDao);
-        JsonQuery calculatedQuery = new JsonQuery(new ArrayList<>(), new ArrayList<>())
-            .calculateTopEntries(searchHistoryDao.findAllAnnotationCounts());
-        if (!file.exists()) {
-            if (file.createNewFile()) {
-                Writer writer = new FileWriter(path);
-                gson.toJson(calculatedQuery, writer);
+
+        JsonQuery calculatedQuery = new JsonQuery(new ArrayList<>(),
+            new ArrayList<>()).createCollabGraph(sharedObjects);
+        if (file.createNewFile()) {
+                Writer writer = new FileWriter(localPath, StandardCharsets.UTF_8);
+                if (sharedObjects.stream().anyMatch(s -> s.getUser().getId() == selectedUserId))
+                    gson.toJson(sharedObjects.stream().filter(s -> s.getUser().getId() == selectedUserId).findFirst().get() , writer);
                 writer.close();
-                return gson.toJson(calculatedQuery);
-            }
         }
-        else {
-            String fileContent = Files.readString(Path.of(path));
-            if (gson.toJson(calculatedQuery) != fileContent) {
-                Writer writer = new FileWriter(path);
-                gson.toJson(calculatedQuery, writer);
-                writer.close();
-                return gson.toJson(calculatedQuery);
-            }
-            else return Files.readString(Path.of(path));
+        file = new File(collabPath);
+        if (file.createNewFile()) {
+            Writer writer = new FileWriter(collabPath, StandardCharsets.UTF_8);
+            gson.toJson(calculatedQuery , writer);
+            writer.close();
         }
-        return null;
+
+        return gson.toJson(calculatedQuery);
     }
 }
