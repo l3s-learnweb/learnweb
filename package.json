@@ -2,6 +2,7 @@
   "name": "learnweb",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "browserslist": [
     "> 0.5% in DE",
     "not safari < 13.1",
@@ -21,7 +22,7 @@
   },
   "dependencies": {
     "@fancyapps/fancybox": "^3.5.7",
-    "@fortawesome/fontawesome-free": "^6.2.0",
+    "@fortawesome/fontawesome-free": "^6.2.1",
     "@simonwep/pickr": "^1.8.2",
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.2",
@@ -33,27 +34,27 @@
   },
   "devDependencies": {
     "rollup-plugin-scss": "^3.0.0",
-    "@rollup/plugin-node-resolve": "^14.1.0",
-    "@rollup/plugin-replace": "^4.0.0",
-    "autoprefixer": "^10.4.12",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-replace": "^5.0.1",
+    "autoprefixer": "^10.4.13",
     "browserslist": "^4.21.4",
-    "eslint": "^8.24.0",
+    "eslint": "^8.27.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-compat": "^4.0.2",
     "eslint-plugin-import": "^2.26.0",
-    "postcss": "^8.4.17",
-    "rollup": "^2.79.1",
+    "postcss": "^8.4.19",
+    "rollup": "^3.3.0",
     "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "sass": "^1.55.0",
-    "stylelint": "^14.13.0",
+    "@rollup/plugin-terser": "^0.1.0",
+    "sass": "^1.56.1",
+    "stylelint": "^14.15.0",
     "stylelint-config-sass-guidelines": "^9.0.1",
     "stylelint-no-unsupported-browser-features": "^6.0.1"
   },
   "peerDependencies": {
-    "@percy/cli": "^1.10.4",
+    "@percy/cli": "^1.14.0",
     "@percy/puppeteer": "^2.0.2",
-    "puppeteer": "^19.2.0"
+    "puppeteer": "^19.2.2"
   },
   "eslintConfig": {
     "extends": [

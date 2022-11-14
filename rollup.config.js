@@ -1,11 +1,10 @@
-import path from 'path';
 import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
 import copy from 'rollup-plugin-copy';
 import replace from '@rollup/plugin-replace';
 import scss from 'rollup-plugin-scss';
 import resolve from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 
 const production = !process.env.ROLLUP_WATCH && process.env.NODE_ENV !== 'development';
 
@@ -39,7 +38,7 @@ export default [
       scss({
         outputStyle: production ? 'compressed' : 'expanded',
         sourceMap: true,
-        watch: path.resolve(__dirname, 'src/main/webapp/resources/learnweb/sass'),
+        watch: 'src/main/webapp/resources/learnweb/sass',
         importer: [
           function (url) {
             return url.startsWith('~') ? { file: `node_modules/${url.substring(1)}` } : null;
