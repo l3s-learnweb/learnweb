@@ -63,13 +63,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         OTHER
     }
 
-    public enum Guide {
-        HIDE,
-        ADD_RESOURCE,
-        JOIN_GROUP,
-        ADD_PHOTO,
-    }
-
     public enum NotificationFrequency {
         NEVER(-1),
         DAILY(1),
@@ -136,7 +129,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private int forumPostCount = -1;
     private transient Organisation organisation;
     private transient List<Submission> activeSubmissions;
-    private BitSet guides = new BitSet(Guide.values().length);
+    private BitSet guideSteps = new BitSet(Long.SIZE);
 
     public void clearCaches() {
         courses = null;
@@ -663,34 +656,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         return activeSubmissions;
     }
 
-    public boolean getGuide(Guide guide) {
-        boolean value = guides.get(guide.ordinal());
-        if (!value) {
-            value = getComputedGuide(guide);
-            setGuide(guide, value);
-        }
-        return value;
+    protected BitSet getGuideSteps() {
+        return guideSteps;
     }
 
-    private boolean getComputedGuide(Guide guide) {
-        return switch (guide) {
-            case ADD_RESOURCE -> getResourceCount() > 0;
-            case JOIN_GROUP -> getGroupCount() > 0;
-            case ADD_PHOTO -> getImageFileId() != 0;
-            default -> false;
-        };
+    protected void setGuideSteps(BitSet guideSteps) {
+        this.guideSteps = guideSteps;
     }
-
-    public void setGuide(Guide option, boolean value) {
-        guides.set(option.ordinal(), value);
-    }
-
-    protected BitSet getGuides() {
-        return guides;
-    }
-
-    protected void setGuides(BitSet guides) {
-        this.guides = guides;
-    }
-
 }

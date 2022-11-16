@@ -170,7 +170,7 @@
         </h:outputScript>
 
         <h:form prependId="false">
-            <div id="searchResults" class="p-2 search-#{searchBean.view}">
+            <div id="searchResults" class="p-2 search-#{searchBean.view} guide-search-results">
                 <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                     <ui:param name="view" value="#{searchBean.view}"/>
                     <ui:param name="resources" value="#{searchBean.search.resources}"/>

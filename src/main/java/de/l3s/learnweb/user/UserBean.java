@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -51,16 +52,12 @@ public class UserBean implements Serializable {
     private Locale locale;
     private transient LanguageBundle bundle;
     private transient List<Group> newGroups;
-    private boolean cacheShowMessageJoinGroup = true;
-    private boolean cacheShowMessageAddResource = true;
 
     private transient BaseMenuModel sidebarMenuModel;
     private transient Instant sidebarMenuModelUpdate;
     private final HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private transient Organisation activeOrganisation;
-
-    private boolean guided; // indicates that the user has started one of the guides
 
     @PostConstruct
     public void init() {
@@ -75,7 +72,7 @@ public class UserBean implements Serializable {
      * @return userName | ipAddress | userAgent for the current request;
      */
     public String storeMetadataInSession(HttpServletRequest request) {
-        String userName = user == null ? "logged_out" : user.getRealUsername();
+        String userName = getUser() == null ? "logged_out" : getUser().getRealUsername();
         String info = userName + " | " + Servlets.getRemoteAddr(request) + " | " + request.getHeader("User-Agent");
 
         // store the user also in the session so that it is accessible by DownloadServlet and TomcatManager
@@ -91,7 +88,7 @@ public class UserBean implements Serializable {
     }
 
     /**
-     * The currently logged in user.
+     * The currently logged-in user.
      */
     public User getUser() {
         if (user == null && userId != 0) {
@@ -118,8 +115,6 @@ public class UserBean implements Serializable {
         // clear caches
         this.sidebarMenuModel = null;
         this.newGroups = null;
-        this.cacheShowMessageJoinGroup = true;
-        this.cacheShowMessageAddResource = true;
 
         refreshLocale();
         String clientInfo = storeMetadataInSession(request);
@@ -407,65 +402,31 @@ public class UserBean implements Serializable {
         this.sidebarMenuModel = sidebarMenuModel;
     }
 
-    /**
-     * Returns true when there is any tooltip message to show.
-     */
-    public boolean isShowMessageAny() {
-        if (!isLoggedIn()) {
-            return false;
-        }
-
-        String viewId = Faces.getViewId();
-        if (viewId.contains("register.xhtml")) { // don't show any tooltips on the registration page
-            return false;
-        }
-
-        return isShowMessageJoinGroup() || isShowMessageAddResource();
-    }
-
-    public boolean isShowMessageJoinGroup() {
-        if (cacheShowMessageJoinGroup) { // check until the user has joined a group
-            User user = getUser();
-            if (null == user) {
-                return false;
+    public String getGuideStepsCompleted() {
+        if (isLoggedIn()) {
+            BitSet steps = getUser().getGuideSteps();
+            int j = steps.nextSetBit(0);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < steps.length(); ++i) {
+                if (i == j) {
+                    j = steps.nextSetBit(j + 1);
+                    sb.append('1');
+                } else {
+                    sb.append('0');
+                }
             }
-            cacheShowMessageJoinGroup = getUser().getGroupCount() == 0;
+            return sb.toString();
         }
-        return cacheShowMessageJoinGroup;
+        return "";
     }
 
-    public boolean isShowMessageJoinGroupInHeader() {
-        String viewId = Faces.getViewId();
-        if (viewId.contains("groups.xhtml")) {
-            return false;
+    public void commandGuideStepComplete() {
+        if (isLoggedIn()) {
+            int bitIndex = Faces.getRequestParameter("step", Integer.class);
+
+            getUser().getGuideSteps().set(bitIndex, true);
+            Learnweb.dao().getUserDao().save(getUser());
         }
-
-        return isShowMessageJoinGroup();
-    }
-
-    public boolean isShowMessageAddResourceInHeader() {
-        String viewId = Faces.getViewId();
-        if (viewId.contains("overview.xhtml") || viewId.contains("resources.xhtml") || viewId.contains("welcome.xhtml")) {
-            return false;
-        }
-
-        return isShowMessageAddResource();
-    }
-
-    public boolean isShowMessageAddResource() {
-        if (cacheShowMessageAddResource) { // check until the user has added a resource
-            if (isShowMessageJoinGroup()) {
-                return false;
-            }
-
-            User user = getUser();
-            if (null == user) {
-                return false;
-            }
-
-            cacheShowMessageAddResource = getUser().getResourceCount() == 0;
-        }
-        return cacheShowMessageAddResource;
     }
 
     /**
@@ -558,18 +519,10 @@ public class UserBean implements Serializable {
         }
     }
 
-    public boolean isGuided() {
-        return guided;
-    }
-
-    public void setGuided(final boolean guided) {
-        this.guided = guided;
-    }
-
     /**
      * Make sure that only admins login to moderator accounts.
      */
     public boolean canLoginToAccount(User targetUser) {
-        return user.isAdmin();
+        return getUser().isAdmin();
     }
 }

@@ -68,7 +68,6 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         }
 
         user.joinGroup(selectedGroup);
-        user.setGuide(User.Guide.JOIN_GROUP, true);
         myGroups = getUser().getGroups();
         joinAbleGroups = groupDao.findJoinAble(getUser());
         log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
@@ -128,7 +127,6 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         }
         groupDao.save(newGroup);
         user.joinGroup(newGroup);
-        user.setGuide(User.Guide.JOIN_GROUP, true);
         // refresh group list
         myGroups = user.getGroups();
 

@@ -68,7 +68,7 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{userBean.starRatingEnabled}">
+	<h:panelGroup layout="block" styleClass="guide-resource-rating" rendered="#{userBean.starRatingEnabled}">
 		<dt class="col-sm-4">#{userBean.user.organisationId == 1604 ? msg.credibility : msg.relevance}:</dt>
 		<dd class="col-sm-8">
 			<h:panelGroup id="relevance" layout="block">
@@ -83,7 +83,7 @@
 				(<h:outputFormat value="#{msg.votes}"><f:param value="#{res.rateNumber}"/></h:outputFormat>)
 			</h:panelGroup>
 		</dd>
-	</ui:fragment>
+	</h:panelGroup>
 
 	<ui:fragment rendered="#{userBean.thumbRatingEnabled}">
 		<dt class="col-sm-4">#{msg.reliability}:</dt>
@@ -250,7 +250,7 @@
 	<h:outputText value="#{lw:htmlBreak(res.description)}" escape="false"/>
 </ui:fragment>
 
-<ui:fragment rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">
+<h:panelGroup layout="block" styleClass="guide-resource-tags" rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">
 	<h5 class="res-details-title">#{msg.tags}</h5>
 
 	<h:panelGroup id="tags_list" layout="block">
@@ -282,9 +282,9 @@
 			</p:commandButton>
 		</div>
 	</h:panelGroup>
-</ui:fragment>
+</h:panelGroup>
 
-<ui:fragment rendered="#{not empty res.comments or res.canAnnotateResource(userBean.user)}">
+<h:panelGroup layout="block" styleClass="guide-resource-comments" rendered="#{not empty res.comments or res.canAnnotateResource(userBean.user)}">
 	<h5 class="res-details-title">#{msg.comments}</h5>
 
 	<h:panelGroup styleClass="mb-2" layout="block" rendered="#{res.canAnnotateResource(userBean.user)}">
@@ -328,6 +328,6 @@
 			</div>
 		</ui:repeat>
 	</h:panelGroup>
-</ui:fragment>
+</h:panelGroup>
 
 </ui:composition>

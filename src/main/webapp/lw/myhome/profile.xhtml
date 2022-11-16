@@ -4,8 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:o="http://omnifaces.org/ui"
-                xmlns:lw="http://l3s.de/learnweb"
-                xmlns:of="http://omnifaces.org/functions">
+                xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
 <ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
@@ -68,7 +67,7 @@
                                     <p:outputLabel for="@next" value="#{msg.photo}"/>
                                     <p:fileUpload id="profilephoto" listener="${profileBean.handleFileUpload}" styleClass="ui-fileupload-minimal"
                                                   mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
-                                                  update="profile_image" oncomplete="if (#{userBean.guided}) {guideFinish.show();}" auto="true" label="#{msg.choose_file}" cancelLabel="abb"
+                                                  update="profile_image" auto="true" label="#{msg.choose_file}" cancelLabel="abb"
                                                   disabled="#{profileBean.anonymizeUsername || profileBean.editingDisabled}"/>
                                     <p:message for="@previous"/>
                                 </div>
@@ -217,7 +216,10 @@
             </p:panel>
 
             <p:panel header="#{msg.miscellaneous}" styleClass="mb-3">
-                <h:form id="deleteform">
+                <h:form id="miscellaneous_form">
+                    <p:commandButton action="#{profileBean.onGuideReset}" value="#{msg['user.account.guideReset.button']}"/>
+                    <p:commandButton action="#{profileBean.onGuideSkip}" value="#{msg['user.account.guideSkip.button']}" styleClass="ui-button-warning"/>
+
                     <p:commandButton action="#{profileBean.onDeleteAccount}" value="#{msg['user.account.deleteSoft.button']}" styleClass="ui-button-danger">
                         <p:confirm message="#{msg['user.account.deleteSoft.confirmDescription']}" escape="false"/>
                     </p:commandButton>
@@ -228,17 +230,6 @@
             </p:panel>
         </div>
     </div>
-
-    <h:outputScript rendered="#{userBean.guided}">
-        let guide, guideFinish;
-
-        $(() => {
-            guide = profilePageInitializeGuide("#{msg['guide.add_photo']}");
-            guideFinish = guideAfterComplete("#{msg['guide.finish']}", "#{msg['guide.congratulations']}", "#{msg.yes}", "#{msg.no}", '#{of:format1(msg['guide.go_to'], msg.myResourcesTitle)}', '#{of:format1(msg['guide.go_to'], msg.myGroups)}', '#{of:format1(msg['guide.go_to'], msg.myProfileTitle)}', [#{userBean.user.getGuide("ADD_RESOURCE")}, #{userBean.user.getGuide("JOIN_GROUP")}, #{userBean.user.getGuide("ADD_PHOTO")}]);
-            guide.show();
-            overlayClickCancelGuide(guide);
-        });
-    </h:outputScript>
 </ui:define>
 
 </ui:composition>

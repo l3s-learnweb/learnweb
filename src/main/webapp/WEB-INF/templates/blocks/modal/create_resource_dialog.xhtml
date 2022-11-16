@@ -134,8 +134,8 @@
                 </p:commandButton>
 
                 <p:commandButton value="#{msg.addResource}" action="#{addResourceBean.createResource}" update="create_resource_form"
-                                 onstart="PF('createResourceOverlay').show();"
-                                 oncomplete="PF('createResourceOverlay').hide();if(!args.validationFailed){PF('createResourceDialog').hide();resourceAddedHook(); if (#{userBean.guided}) {guideFinish.show();}}"
+                                 styleClass="guide-create-resource-save" onstart="PF('createResourceOverlay').show();"
+                                 oncomplete="PF('createResourceOverlay').hide();if(!args.validationFailed){PF('createResourceDialog').hide();resourceAddedHook();}"
                                  rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'survey' or addResourceBean.resource.officeResource}">
                 </p:commandButton>
 

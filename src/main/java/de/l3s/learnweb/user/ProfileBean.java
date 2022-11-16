@@ -123,7 +123,6 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
             selectedUser.getImageFile().ifPresent(image -> fileDao.deleteHard(image)); // delete old image
             selectedUser.setImageFileId(file.getId());
-            selectedUser.setGuide(User.Guide.ADD_PHOTO, true);
             userDao.save(selectedUser);
         } catch (IllegalArgumentException e) { // image is smaller than 100px
             log.error("unhandled error", e);
@@ -191,6 +190,18 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         // a user deletes himself
         Faces.invalidateSession();
         return "/lw/user/login.xhtml?faces-redirect=true";
+    }
+
+    public void onGuideReset() {
+        selectedUser.getGuideSteps().clear();
+        userDao.save(selectedUser);
+        addGrowl(FacesMessage.SEVERITY_INFO, "guide.reset");
+    }
+
+    public void onGuideSkip() {
+        selectedUser.getGuideSteps().set(0, Long.SIZE, true);
+        userDao.save(selectedUser);
+        addGrowl(FacesMessage.SEVERITY_INFO, "guide.skipped");
     }
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException {

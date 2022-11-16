@@ -42,8 +42,8 @@
         <div class="col-md-6">
             <p:panel header="#{msg.group_details}" styleClass="text-break">
                 <f:facet name="actions">
-                    <h:form>
-                        <p:commandButton action="#{groupsBean.joinGroup}" icon="fas fa-sign-in-alt" styleClass="ui-button-warning guide-join-button"
+                    <h:form styleClass="guide-join-button">
+                        <p:commandButton action="#{groupsBean.joinGroup}" icon="fas fa-sign-in-alt" styleClass="ui-button-warning"
                                          value="#{msg.join_group}" immediate="true" oncomplete="window.location.replace(window.location.href);"
                                          disabled="#{not groupOverviewBean.group.canJoinGroup(userBean.user)}" rendered="${not groupOverviewBean.group.isMember(userBean.user)}">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
@@ -133,12 +133,5 @@
         </div>
     </div>
 
-    <h:outputScript rendered="#{userBean.guided}">
-      const guide = groupOverviewPageInitializeGuide("#{msg.join_group}.");
-
-      $(function() {
-        guide.start();
-      });
-    </h:outputScript>
 </ui:define>
 </ui:composition>

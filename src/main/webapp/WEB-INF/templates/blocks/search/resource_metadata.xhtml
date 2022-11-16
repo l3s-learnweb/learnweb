@@ -11,13 +11,13 @@
 
     <h:panelGroup layout="block" styleClass="metadata text-start" rendered="#{res ne null}">
         <h:form styleClass="mb-2">
-            <p:linkButton href="${userBean.getUrlProxied(res.url)}" styleClass="ui-button-secondary me-2" target="_blank"
+            <p:linkButton href="${userBean.getUrlProxied(res.url)}" styleClass="ui-button-secondary me-2 guide-search-open-link" target="_blank"
                           value="#{res.service == 'internet' ? msg.search_resource_visit : of:format1(msg.search_resource_visit_service, res.service.label)}"/>
 
             <p:linkButton href="${res.thumbnailLargest}" value="#{msg.search_resource_image}" styleClass="ui-button-secondary me-2" target="_blank"
                           rendered="#{res.type == 'image' and res.thumbnailLargest ne null}"/>
 
-            <p:commandButton styleClass="me-2" value="#{msg.save}"
+            <p:commandButton styleClass="me-2 guide-search-save-resource" value="#{msg.save}"
                              onclick="commandOnResourceSelect([{ name: 'resourceRank', value: this.dataset.resourcerank }]);" pt:data-resourceRank="#{res.rank}"/>
         </h:form>
 

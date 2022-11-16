@@ -27,7 +27,6 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.survey.Survey;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.web.WebResource;
-import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 import de.l3s.util.UrlHelper;
 import de.l3s.util.bean.BeanHelper;
@@ -156,8 +155,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
         res.save();
 
         log.debug("addResource; saved={}", res.getId());
-        getUser().setGuide(User.Guide.ADD_RESOURCE, true);
-
         log(Action.adding_resource, res.getGroupId(), res.getId());
 
         // create temporal thumbnails

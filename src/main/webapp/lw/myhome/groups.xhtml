@@ -23,7 +23,7 @@
                     <div class="me-auto">#{msg.myGroups}</div>
                     <div class="d-md-block d-flex flex-column guide-groups-controls">
                         <p:linkButton outcome="groups_search" value="#{msg.search_group}" styleClass="ui-button-warning me-md-2 me-0" />
-                        <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="ui-button-warning mt-2 mt-md-0 guide-create-group"/>
+                        <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="ui-button-warning mt-2 mt-md-0"/>
                     </div>
                 </div>
             </f:facet>
@@ -111,22 +111,11 @@
                 </div>
                 <div class="col text-end">
                     <p:commandButton value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" process="@form" update="@form :my_groups"
-                                     oncomplete="if(!args.validationFailed){PF('createGroupDialog').hide(); if (#{userBean.guided}) {guideFinish.show();}}"/>
+                                     oncomplete="if(!args.validationFailed){PF('createGroupDialog').hide();}"/>
                 </div>
             </div>
         </h:form>
     </p:dialog>
-
-    <h:outputScript rendered="#{userBean.guided}">
-        let guide, guideFinish;
-
-        $(() => {
-            guide = groupsPageInitializeGuide("#{msg['guide.groups_create_or_join']}");
-            guideFinish = guideAfterComplete("#{msg['guide.finish']}", "#{msg['guide.congratulations']}", "#{msg.yes}", "#{msg.no}", '#{of:format1(msg['guide.go_to'], msg.myResourcesTitle)}', '#{of:format1(msg['guide.go_to'], msg.myGroups)}', '#{of:format1(msg['guide.go_to'], msg.myProfileTitle)}', [#{userBean.user.getGuide("ADD_RESOURCE")}, #{userBean.user.getGuide("JOIN_GROUP")}, #{userBean.user.getGuide("ADD_PHOTO")}]);
-            guide.show();
-            overlayClickCancelGuide(guide);
-        });
-    </h:outputScript>
 </ui:define>
 
 </ui:composition>
