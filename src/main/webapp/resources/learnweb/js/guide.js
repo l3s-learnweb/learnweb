@@ -39,7 +39,11 @@ tour.on('complete', () => {
 });
 
 const guideCompleted = guideBits.split('');
-const guideCurrentPage = window.location.pathname;
+const guideBasePath = new URL(document.baseURI).pathname;
+let guideCurrentPage = window.location.pathname;
+if (guideBasePath.length > 0 && guideCurrentPage.startsWith(guideBasePath)) {
+  guideCurrentPage = guideCurrentPage.substring(guideBasePath.length);
+}
 Array.from(guideSteps).forEach((step) => {
   // check if not completed before
   if (guideCompleted[step.id] !== undefined && guideCompleted[step.id] === '1') {
