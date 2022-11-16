@@ -126,7 +126,7 @@
     top: auto;
     left: auto;
     opacity: 0.75;
-    background-color: var(--primary-lighter);
+    background-color: var(--gray-800);
     color: var(--primary-text-color);
     border-radius: var(--border-radius);
     font-size: $font-size-sm;
@@ -307,7 +307,7 @@
     left: auto;
     width: $search-lightbox-caption-width;
     padding: 0;
-    background: var(--primary-lighter);
+    background: var(--gray-800);
 
     .fancybox-caption__body {
       max-height: 100%;
@@ -317,7 +317,7 @@
 
   /* Align buttons at the right side  */
   .fancybox-toolbar {
-    background: var(--primary-lighter);
+    background: var(--gray-800);
     max-height: $search-lightbox-toolbar-height;
     width: $search-lightbox-caption-width;
     border-bottom: 1px solid var(--gray-900);
@@ -353,7 +353,7 @@
 
     .fancybox-inner::before {
       content: '';
-      background: var(--primary-lighter);
+      background: var(--gray-800);
       right: 0;
       top: 0;
       width: $search-lightbox-caption-width;
@@ -363,7 +363,7 @@
 
     /* Change arrow color */
     .fancybox-navigation button {
-      color: var(--primary-lighter) !important;
+      color: var(--heading-color) !important;
       top: calc(50% - #{$search-lightbox-toolbar-height * 0.5});
       padding: 0;
     }
