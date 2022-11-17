@@ -241,9 +241,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         File file = new File(localPath);
         //Calculates and returns a list of top entries for each user belonging to the group
         //Also exports a rdf turtle file for every user in the group
+        //For runtime calculation only: startTime & endTime
+        long startTime = System.nanoTime();
         List<JsonSharedObject> sharedObjects = new JsonQuery(new ArrayList<>(),
             new ArrayList<>()).calculateTopEntries(searchHistoryDao.findAllAnnotationCounts(),
-            userDao.findByGroupId(selectedGroupId), groupDao.findById(selectedGroupId).get(), sessions, 3);
+            userDao.findByGroupId(selectedGroupId), groupDao.findById(selectedGroupId).get(), sessions, searchHistoryDao, 3);
         //Results of SharedObjects to DB
         for (JsonSharedObject sharedObject : sharedObjects) {
             if (searchHistoryDao.findObjectByGroupId(selectedGroupId, sharedObject.getUser().getId()).isEmpty()) {
@@ -254,6 +256,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
                 searchHistoryDao.updateSharedObject(gson.toJson(sharedObject), LocalDateTime.now(), sharedObject.getUser().getId(),selectedGroupId);
             }
         }
+        long endTime = System.nanoTime();
+        System.out.println(endTime - startTime);
         //Create new json
 
         JsonQuery calculatedQuery = new JsonQuery(new ArrayList<>(),

@@ -2,6 +2,7 @@ package de.l3s.learnweb.searchhistory;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.*;
+import static org.apache.commons.math3.util.Precision.round;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -333,7 +334,7 @@ public class JsonQuery implements Serializable {
 
     //Implement Algorithm
     public List<JsonSharedObject> calculateTopEntries(List<AnnotationCount> annotationCounts, List<User> users,
-        Group group, List<SearchSession> sessions, int numberTopEntities) throws IOException {
+        Group group, List<SearchSession> sessions, SearchHistoryDao searchHistoryDao, int numberTopEntities) throws IOException {
 
         //Preparation sort
         annotationCounts.sort(Comparator.comparing(AnnotationCount::getType));
@@ -357,7 +358,7 @@ public class JsonQuery implements Serializable {
             isUserActive.add(false);
         }
         //Create nodes and edges in (original) graph
-        //TODO: modify to be RDF graph
+        //TODO: complete the RDF graph
         for (AnnotationCount annotationCount : annotationCounts) {
             boolean isContain = false;
 
@@ -457,18 +458,22 @@ public class JsonQuery implements Serializable {
             }
         });
 
-        for (User user : users)
-            for (Node node: record.nodes) {
+        for (User user : users) {
+            for (Node node : record.nodes) {
                 if (node.getUsers().contains(user.getUsername()))
-                    rdfGraphs.get(users.indexOf(user)).addEntity(node.getUri(), node.getQuery(), node.getWeight(), node.getConfidence());
+                    rdfGraphs.get(users.indexOf(user)).addEntity(node.getUri(), node.getQuery(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
             }
-         for (RdfModel graph : rdfGraphs)
-             graph.printModel(group.getTitle(), rdfGraphs.indexOf(graph));
+            String value = rdfGraphs.get(users.indexOf(user)).printModel(group.getTitle(), user.getUsername());
+            if (searchHistoryDao.findRdfById(user.getId()).isEmpty())
+                searchHistoryDao.insertRdf(user.getId(), value);
+            else
+                searchHistoryDao.updateRdf(value, user.getId());
+        }
         //PREPARING COLLABGRAPH:
 
         List<Node> newNodes;
         List<Link> newLinks;
-        //1 - List new nodes after users' top 4
+        //1 - List new nodes after users' top 3
 
         List<JsonSharedObject> sharedObjects = new ArrayList<>();
         for (String user : groupUsers) {
@@ -630,7 +635,7 @@ public class JsonQuery implements Serializable {
                 //Get webpage from clicked snippets
                 if (!urlList.isEmpty()) {
                     for (String url : urlList) {
-                        Document doc = Jsoup.connect(url).timeout(10 * 1000).
+                        Document doc = Jsoup.connect(url).timeout(10 * 1000).ignoreHttpErrors(true).
                             userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
                             .get();
                         annotationUnit = spotlight.get(filterWebsite(doc));
@@ -647,6 +652,7 @@ public class JsonQuery implements Serializable {
 
         //Update DB for existing annotationCount (same uri + type), else add new tuple to DB
         for (AnnotationCount annotationCount : annotationCounts) {
+            annotationCount.setConfidence(round(annotationCount.getConfidence(),2));
             Optional<AnnotationCount> foundAnnotation = searchHistoryDao.findByUriAndType(annotationCount.getUri(), annotationCount.getType());
             if (foundAnnotation.isPresent()) {
                 annotationCount.setCreatedAt(foundAnnotation.get().getCreatedAt());
@@ -658,6 +664,16 @@ public class JsonQuery implements Serializable {
                     annotationCount.getType(), annotationCount.getUri(), annotationCount.getCreatedAt(), annotationCount.getSurfaceForm()
                     , annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence(), annotationCount.getRepetition());
             }
+        }
+    }
+
+    public static void processQuery(SearchSession searchSession, SearchHistoryDao searchHistoryDao, String type,
+        UserDao userDao, GroupDao groupDao) throws Exception {
+        AnnotationCount annotationCount = new AnnotationCount();
+        switch (type) {
+            case "snippet_clicked": break;
+            case "web": break;
+            default: break;
         }
     }
     public Record record;

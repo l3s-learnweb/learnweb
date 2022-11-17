@@ -5,8 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -18,6 +20,8 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+
+import com.hp.gagawa.java.elements.S;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
@@ -41,6 +45,8 @@ public class RdfModel {
         model.setNsPrefix("schema", prefixSchema);
         this.group = group;
         readOntologyModel();
+
+        model.createResource("SharedObject/Negativity_Exponential_Algorithm");
         addStatement("Group/" + group.getTitle(), "description", PATTERN.matcher(group.getDescription()).replaceAll(""), "literal");
         addStatement("Group/" + group.getTitle(), "name", group.getTitle(), "literal");
         addStatement("Group/" + group.getTitle(), "dateCreated", group.getCreatedAt().format(DateTimeFormatter.ISO_DATE), "literal");
@@ -84,20 +90,21 @@ public class RdfModel {
         }
     }
 
-    public void addEntity(String uri, String surfaceForm, double weight, double score) {
+    public void addEntity(String uri, String surfaceForm, double weight, double score, LocalDateTime time) {
         if (uri == "default") return;
         addStatement("RecognizedEntities/" + surfaceForm, "identifier", uri, "literal");
         addStatement("RecognizedEntities/" + surfaceForm, "surfaceForm", surfaceForm, "literal");
         addStatement("RecognizedEntities/" + surfaceForm, "weight", String.valueOf(weight), "literal");
         addStatement("RecognizedEntities/" + surfaceForm, "confidenceScore", String.valueOf(score), "literal");
         addStatement("RecognizedEntities/" + surfaceForm, "processes", "InputStream/" + group.getTitle(), "resource");
+        addStatement("RecognizedEntities/" + surfaceForm, "dateCreated", time.format(DateTimeFormatter.ISO_DATE), "literal");
     }
 
-    public void printModel(String groupName, int index) throws IOException {
+    public String printModel(String groupName, String user) throws IOException {
         // list the statements in the Model
         StmtIterator iter = model.listStatements();
 
-        String localPath = System.getProperty("user.dir") + "\\" + "group_summary_" + groupName + "_no" + index + ".ttl";
+        String localPath = System.getProperty("user.dir") + "\\" + "group_summary_" + groupName + "_" + user + ".ttl";
 
         //print out the predicate, subject and object of each statement
         while (iter.hasNext()) {
@@ -118,8 +125,11 @@ public class RdfModel {
         }
         File file = new File(localPath);
         Writer writer = new FileWriter(localPath, StandardCharsets.UTF_8);
+        StringWriter out = new StringWriter();
+        model.write(out, "TTL", prefixBase);
         model.write(writer, "TTL", prefixBase);
         writer.close();
+        return out.toString();
     }
 
     public Model getModel() {

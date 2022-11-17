@@ -12,6 +12,7 @@ import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +39,7 @@ import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.web.WebResource;
+import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -70,6 +72,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
     private int counter = 0;
     private List<GroupedResources> resourcesGroupedBySource;
+
+    @Inject
+    private SearchHistoryDao searchHistoryDao;
 
     @PostConstruct
     public void init() {
@@ -239,7 +244,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         try {
             Map<String, String> params = Faces.getRequestParameterMap();
             int tempResourceId = Integer.parseInt(params.get("resourceId"));
-
+           // search.getResources();
             search.logResourceClicked(tempResourceId, getUser());
         } catch (Exception e) {
             log.error("Can't log resource opened event", e);

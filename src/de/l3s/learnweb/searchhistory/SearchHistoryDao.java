@@ -139,6 +139,17 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     int insertQueryToAnnotation(String id, String type, String uri, LocalDateTime createdAt, String surface_form, String sessionId, String users, double confidence
         , int repetition);
 
+    @RegisterRowMapper(RdfObjectMapper.class)
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_rdf WHERE user_id = ?")
+    Optional<RdfObject> findRdfById(int userId);
+
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_rdf (user_id, rdf_value) VALUES (?, ?)")
+    @GetGeneratedKeys("id")
+    int insertRdf(int user_id, String rdfValue);
+
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_rdf SET rdf_value = ? WHERE user_id = ?")
+    void updateRdf(String rdfValue, int userId);
+
     @SqlUpdate("INSERT INTO learnweb_large.sl_query (query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3)")
     @GetGeneratedKeys("search_id")
     int insertQuery(String query, SearchMode searchMode, ResourceService searchService, String language, String searchFilters, User user);
@@ -234,6 +245,14 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         public JsonSharedObject map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             JsonSharedObject sharedObject = new JsonSharedObject(rs.getString("shared_object"));
             return sharedObject;
+        }
+    }
+
+    class RdfObjectMapper implements RowMapper<RdfObject> {
+        @Override
+        public RdfObject map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            RdfObject obj = new RdfObject(rs.getInt("user_id"), rs.getString("rdf_value"));
+            return obj;
         }
     }
 }

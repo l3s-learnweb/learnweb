@@ -16,6 +16,7 @@ public class AnnotationCount implements Serializable {
     private String type;
     private String id;
     private int uri_id;
+    private int group_id;
     private String sessionId;
     private String users;
     //Specifically for web results
