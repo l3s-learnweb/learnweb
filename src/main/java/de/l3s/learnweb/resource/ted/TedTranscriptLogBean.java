@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource.ted;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
@@ -62,6 +63,10 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
      */
     public List<SimpleTranscriptLog> getSimpleTranscriptLogs() {
         if (simpleTranscriptLogs == null) {
+            if (selectedUsers.isEmpty()) {
+                return new ArrayList<>();
+            }
+
             simpleTranscriptLogs = tedTranscriptDao.findSimpleTranscriptLogs(selectedUsers);
         }
         return simpleTranscriptLogs;
@@ -72,6 +77,10 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
      */
     public List<TranscriptSummary> getTranscriptSummaries() {
         if (transcriptSummaries == null) {
+            if (selectedUsers.isEmpty()) {
+                return new ArrayList<>();
+            }
+
             transcriptSummaries = tedTranscriptDao.findTranscriptSummariesByUserIds(selectedUsers);
         }
         return transcriptSummaries;
