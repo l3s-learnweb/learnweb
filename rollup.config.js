@@ -36,6 +36,7 @@ export default [
         },
       }),
       scss({
+        fileName: 'learnweb.main.css',
         outputStyle: production ? 'compressed' : 'expanded',
         sourceMap: true,
         watch: 'src/main/webapp/resources/learnweb/sass',
