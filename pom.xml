@@ -348,7 +348,13 @@
             <artifactId>diction</artifactId>
             <version>0.1.1</version>
         </dependency>
-
+        <!-- RDF model -->
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>apache-jena-libs</artifactId>
+            <type>pom</type>
+            <version>4.6.1</version>
+        </dependency>
         <!-- ################ Test dependencies ################ -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
