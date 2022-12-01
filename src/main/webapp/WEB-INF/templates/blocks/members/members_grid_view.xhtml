@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<!--@elvariable id="members" type="java.util.List<de.l3s.learnweb.user.User>"-->
+<!--@elvariable id="userDetailsHidden" type="java.lang.Boolean"-->
+<!--@elvariable id="showMembersBeanCounts" type="java.lang.Boolean"-->
+
+<h:outputScript name="learnweb/js/lib/og-grid.js" target="body"/>
+
+<ul class="gridder member-grid">
+    <ui:repeat var="user" value="#{members}">
+        <li class="gridder-list member-item" data-griddercontent="#user${user.id}">
+            <p:commandLink onclick="return false;" styleClass="member-block">
+                <p:avatar label="${user.initials}" styleClass="ui-avatar-fluid" dynamicColor="true" saturation="50" lightness="50">
+                    <h:graphicImage value="#{user.imageUrl}" alt="#{user.fullName}" rendered="#{not empty user.imageUrl}"/>
+                </p:avatar>
+
+                <ui:fragment rendered="#{not empty user.credits}">
+                    <div class="member-star"></div>
+                </ui:fragment>
+
+                <div class="member-username text-center text-truncate p-1">#{user.username}</div>
+            </p:commandLink>
+        </li>
+
+        <div id="user${user.id}" class="gridder-content">
+            <ui:fragment rendered="#{userDetailsHidden}">
+                <h:outputText value="This information is hidden due to the privacy settings of your organisation." styleClass="m-2 d-block"/>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{not userDetailsHidden}">
+                <ui:decorate template="/WEB-INF/templates/blocks/user/member-details.xhtml">
+                    <ui:param name="user" value="#{user}"/>
+                    <ui:param name="showMembersBeanCounts" value="#{showMembersBeanCounts}"/>
+                </ui:decorate>
+            </ui:fragment>
+        </div>
+    </ui:repeat>
+</ul>
+
+<h:outputScript>
+    $(function () {
+        $('.gridder').gridderExpander({
+            scroll: false,
+            showNav: false,
+            animationSpeed: 400,
+            animationEasing: 'easeInOutExpo'
+        });
+    });
+</h:outputScript>
+
+
+</ui:composition>

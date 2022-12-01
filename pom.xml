@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.14.15</version>
+    <version>3.18.02</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -17,13 +17,14 @@
         <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
         <maven.compiler.release>17</maven.compiler.release>
-        <maven.dependency.myfaces.version>3.0.2</maven.dependency.myfaces.version>
-        <maven.dependency.imageio.version>3.8.2</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.31.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.0.1</maven.dependency.flyway.version>
-        <maven.dependency.log4j.version>2.18.0</maven.dependency.log4j.version>
-        <maven.dependency.junit.version>5.8.2</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>4.6.1</maven.dependency.mockito.version>
+        <maven.dependency.myfaces.version>4.0.0-RC2</maven.dependency.myfaces.version>
+        <maven.dependency.imageio.version>3.9.3</maven.dependency.imageio.version>
+        <maven.dependency.jdbi3.version>3.34.0</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>9.8.1</maven.dependency.flyway.version>
+        <maven.dependency.log4j.version>2.19.0</maven.dependency.log4j.version>
+        <maven.dependency.sentry.version>6.7.0</maven.dependency.sentry.version>
+        <maven.dependency.junit.version>5.9.1</maven.dependency.junit.version>
+        <maven.dependency.mockito.version>4.9.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.npm.install.phase>prepare-package</project.npm.install.phase>
@@ -52,14 +53,14 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>5.0.0</version>
+            <version>6.0.0</version>
             <scope>provided</scope>
         </dependency>
         <!-- Jakarta EL API (provided by Tomcat) -->
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
-            <version>4.0.0</version>
+            <version>5.0.1</version>
             <scope>provided</scope>
         </dependency>
         <!-- Jakarta Faces API & Impl -->
@@ -77,13 +78,13 @@
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-shaded</artifactId>
-            <version>4.0.3.Final</version>
+            <version>5.1.0.Final</version>
         </dependency>
         <!-- Jakarta Validator API & Impl -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>7.0.4.Final</version>
+            <version>8.0.0.Final</version>
             <exclusions>
                 <!-- Added as part of org.jboss.weld.servlet:weld-servlet-shaded -->
                 <exclusion>
@@ -104,32 +105,32 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>4.0-M16</version>
+            <version>4.0</version>
         </dependency>
         <!-- PrimeFaces -->
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>11.0.0</version>
+            <version>12.0.0</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
-            <version>1.3.29</version>
+            <version>1.3.30</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (Excel or XML)) -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>5.2.2</version>
+            <version>5.2.3</version>
         </dependency>
         <!-- poi XLSX support used for Glossary exporter -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.2.2</version>
+            <version>5.2.3</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for TextEditor) -->
         <dependency>
@@ -187,13 +188,18 @@
             <artifactId>imageio-hdr</artifactId>
             <version>${maven.dependency.imageio.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-webp</artifactId>
+            <version>${maven.dependency.imageio.version}</version>
+        </dependency>
 
         <!-- ################ Core dependencies ################ -->
         <!-- Database client -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>3.0.6</version>
+            <version>3.1.0</version>
         </dependency>
         <!-- Connection pool -->
         <dependency>
@@ -267,7 +273,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j18-impl</artifactId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
             <version>${maven.dependency.log4j.version}</version>
         </dependency>
         <dependency>
@@ -276,20 +282,15 @@
             <version>${maven.dependency.log4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-jakarta-smtp</artifactId>
-            <version>${maven.dependency.log4j.version}</version>
-            <exclusions>
-                <!-- Added as part of org.eclipse.angus:angus-mail -->
-                <exclusion>
-                    <groupId>com.sun.activation</groupId>
-                    <artifactId>jakarta.activation</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.mail</groupId>
-                    <artifactId>smtp</artifactId>
-                </exclusion>
-            </exclusions>
+            <!-- Remove after HikariCP updated -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-log4j2</artifactId>
+            <version>${maven.dependency.sentry.version}</version>
         </dependency>
 
         <!-- ################ Other dependencies (usually your dependencies go to this section) ################ -->
@@ -303,7 +304,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.9.0</version>
+            <version>2.10</version>
         </dependency>
         <!-- A dependency of several other packages, but as we anyway need to include it, feel free to use it -->
         <dependency>
@@ -315,7 +316,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.15.2</version>
+            <version>1.15.3</version>
         </dependency>
         <!-- Converting video files, extracting thumbnails (only a wrapper for ffmpeg) -->
         <dependency>
@@ -333,13 +334,13 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>5.0.3.Final</version>
+            <version>5.0.6.Final</version>
         </dependency>
         <!-- Used to make a thumbnail of PDF in ResourcePreviewMaker -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.26</version>
+            <version>3.0.0-RC1</version>
         </dependency>
         <!-- RiTa WordNet (used to retrieve Definitions for TedTranscript) -->
         <!-- We are using an unofficial package from https://github.com/shibme/diction, the original repository
@@ -397,11 +398,9 @@
 
     <build>
         <finalName>${project.name}</finalName>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
         <resources>
             <resource>
-                <directory>Resources</directory>
+                <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
                     <exclude>**/*local*.*</exclude>
@@ -410,7 +409,7 @@
         </resources>
         <testResources>
             <testResource>
-                <directory>testResources</directory>
+                <directory>src/test/resources</directory>
                 <filtering>false</filtering>
             </testResource>
         </testResources>
@@ -429,7 +428,7 @@
             <!-- Runs linter on Java sources to check code style -->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.0</version>
                 <configuration>
                     <configLocation>.mvn/checkstyle-config.xml</configLocation>
                     <consoleOutput>false</consoleOutput>
@@ -441,7 +440,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.3.1</version>
+                        <version>10.4</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -449,7 +448,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.7.1.0</version>
+                <version>4.7.2.1</version>
                 <configuration>
                     <excludeFilterFile>.mvn/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -457,7 +456,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.7.1</version>
+                        <version>4.7.3</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -471,17 +470,16 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
                 <configuration>
-                    <warSourceDirectory>WebContent</warSourceDirectory>
                     <webResources>
                         <resource>
-                            <directory>WebContent</directory>
+                            <directory>src/main/webapp</directory>
                             <filtering>false</filtering>
                             <excludes>
                                 <include>**/web.xml</include>
                             </excludes>
                         </resource>
                         <resource>
-                            <directory>WebContent</directory>
+                            <directory>src/main/webapp</directory>
                             <filtering>true</filtering>
                             <includes>
                                 <include>**/web.xml</include>
@@ -545,7 +543,7 @@
             <!-- Set the required class in properties, but avoid committing this change -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -561,7 +559,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.11.0</version>
+                <version>2.13.0</version>
             </plugin>
             <!-- Provides commands to check dependency tree -->
             <plugin>
@@ -586,7 +584,6 @@
                         </goals>
                         <configuration>
                             <rules>
-                                <!--<dependencyConvergence/>-->
                                 <requireMavenVersion>
                                     <version>[3.6,)</version>
                                 </requireMavenVersion>
@@ -611,7 +608,7 @@
             <build>
                 <resources>
                     <resource>
-                        <directory>Resources</directory>
+                        <directory>src/main/resources</directory>
                         <includes>
                             <include>**/*local*.*</include>
                         </includes>

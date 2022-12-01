@@ -1,0 +1,99 @@
+$icons-map: (
+  '\e900' : $fa-var-chevron-left,
+  '\e901' : $fa-var-chevron-right,
+  '\e902' : $fa-var-chevron-down,
+  '\e903' : $fa-var-chevron-up,
+  '\e904' : $fa-var-chevron-left,
+  '\e908' : $fa-var-search,
+  '\e909' : $fa-var-check,
+  '\e90b' : $fa-var-xmark,
+  '\e90c' : $fa-var-times-circle,
+  '\e90d' : $fa-var-plus,
+  '\e90f' : $fa-var-minus,
+  '\e919' : $fa-var-arrow-down,
+  '\e91a' : $fa-var-arrow-left,
+  '\e91b' : $fa-var-arrow-right,
+  '\e91c' : $fa-var-arrow-up,
+  '\e91f' : $fa-var-arrow-circle-left,
+  '\e920' : $fa-var-arrow-circle-right,
+  '\e922' : $fa-var-exclamation-triangle,
+  '\e924' : $fa-var-info-circle,
+  '\e925' : $fa-var-home,
+  '\e927' : $fa-var-calendar,
+  '\e92c' : $fa-var-angle-double-down,
+  '\e92d' : $fa-var-angle-double-left,
+  '\e92e' : $fa-var-angle-double-right,
+  '\e92f' : $fa-var-angle-double-up,
+  '\e930' : $fa-var-angle-down,
+  '\e931' : $fa-var-angle-left,
+  '\e932' : $fa-var-angle-right,
+  '\e933' : $fa-var-angle-up,
+  '\e934' : $fa-var-upload,
+  '\e936' : $fa-var-star,
+  '\e937' : $fa-var-star, // filled
+  '\e93a' : $fa-var-window-minimize,
+  '\e93b' : $fa-var-window-maximize,
+  '\e93d' : $fa-var-trash,
+  '\e942' : $fa-var-pen,
+  '\e94a' : $fa-var-cog,
+  '\e965' : $fa-var-eye-slash,
+  '\e966' : $fa-var-eye,
+  '\e989' : $fa-var-exclamation-circle,
+  '\e98f' : $fa-var-search-plus,
+  '\e990' : $fa-var-search-minus,
+  '\e99e' : $fa-var-arrows-up-down,
+  '\e99f' : $fa-var-arrow-up-wide-short,
+  '\e9a0' : $fa-var-arrow-up-short-wide,
+  '\e9a8' : $fa-var-file,
+);
+
+@function pi-to-fa($pi-code) {
+  @if map-has-key($icons-map, $pi-code) {
+    @return map-get($icons-map, $pi-code);
+  } @else {
+    @error 'ERROR: #{$pi-code} does not exist in the icons mapping';
+  }
+}
+
+@mixin fa-icon-content($icon) {
+  &::before {
+    content: fa-content($icon);
+  }
+}
+
+@mixin icon-override($icon) {
+  @include fa-icon-override(pi-to-fa($icon));
+}
+
+@mixin fa-icon-override($icon) {
+  //noinspection CssNoGenericFontName
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-style: normal;
+  line-height: 1;
+  min-width: 1rem;
+  display: inline-block;
+  background: none;
+
+  &::before {
+    content: fa-content($icon);
+  }
+}
+
+@mixin icon-override-with-content($icon) {
+  &::before {
+    content: pi-to-fa($icon);
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-style: normal;
+    speak: none;
+    font-variant: normal;
+    text-transform: none;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-indent: 0 !important;
+    background-image: none !important;
+    @content;
+  }
+}

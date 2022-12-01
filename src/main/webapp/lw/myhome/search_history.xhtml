@@ -1,0 +1,213 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="pageTitle" value="#{msg['search_history.title']}"/>
+
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="user_id" value="#{searchHistoryBean.selectedUserId}"/>
+		<f:viewParam name="group_id" value="#{searchHistoryBean.selectedGroupId}"/>
+		<f:viewAction action="#{searchHistoryBean.onLoad}"/>
+	</f:metadata>
+</ui:define>
+
+<ui:define name="breadcrumb">
+	<lw:breadcrumb-item link="myhome/search_history.jsf" title="#{msg['search_history.title']}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
+</ui:define>
+
+<ui:define name="center_layout">
+	<script src="https://d3js.org/d3.v6.min.js"/>
+	<script src="https://cdn.jsdelivr.net/npm/d3-color@3"/>
+	<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"/>
+	<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"/>
+    <h:outputScript name="learnweb/js/annotation.js" target="body"/>
+	<h:form class="d-none">
+		<p:remoteCommand name="commandOnResourceSelect" actionListener="${searchBean.commandOnResourceSelect}" immediate="true"
+						 update=":copy_resource_dialog" onstart="$.fancybox.close();" oncomplete="PF('copyResourceDialog').show();"/>
+	</h:form>
+
+	<p:panel header="#{msg['search_history.sessions']}">
+		<div class="row">
+			<div class="col-12 col-xl-4" id="col_sessions">
+				<div class="row d-flex justify-content-between align-items-center pb-2">
+					<div class="col-4">
+						<h:form id="search_mode_select">
+							<p:commandButton id="selected_group_id_button" value="#{msg.groupsTitle}"
+											 actionListener="#{searchHistoryBean.actionSetShowGroupHistory}" update=":sessionsList @form :sh_nav_desc"
+											 rendered="#{not searchHistoryBean.showGroupHistory}"/>
+
+							<p:tooltip id="toolTipSelectedGroupIdButton" for="selected_group_id_button" value="#{msg['search_history.groups_title_tooltip']}" position="right"/>
+
+							<p:commandButton id="group_unselected_button" value="#{msg['search_history.my_history']}"
+											 actionListener="#{searchHistoryBean.actionSetShowUserHistory}" update=":sessionsList @form :sh_nav_desc"
+											 rendered="#{searchHistoryBean.showGroupHistory}"/>
+
+							<p:tooltip id="toolTipGroupUnselectedButton" for="group_unselected_button" value="#{msg['search_history.my_history_tooltip']}" position="right"/>
+						</h:form>
+					</div>
+					<div class="col-6">
+						<h:form id="search_in_history" styleClass="ms-auto">
+							<div class="ui-inputgroup">
+								<p:inputText placeholder="#{msg['search_history.query']}" id="sh-query" title="#{msg['search_history.query_tooltip']}" styleClass="w-100" value="#{searchHistoryBean.searchQuery}"/>
+								<p:tooltip id="toolTipFocus" for="sh-query" showEvent="focus" hideEvent="blur" position="top" />
+								<p:commandButton icon="fas fa-search" id="sh-search" ajax="true" update=":sessionsList" actionListener="#{searchHistoryBean.search}"/>
+								<p:commandButton icon="fas fa-times" styleClass="m-0" id="sh-reset" ajax="true" update=":sessionsList @form" actionListener="#{searchHistoryBean.reset}"/>
+							</div>
+						</h:form>
+					</div>
+				</div>
+
+				<div class="row d-flex justify-content-between align-items-center my-2">
+					<div class="col-12">
+						<h:panelGroup id="sh_nav_desc" layout="block">
+							<div id="select-groups">
+								<h:form rendered="#{searchHistoryBean.showGroupHistory}" id="select_group_form">
+									<h:outputText value="#{msg['search_history.show_history_for_group']}"/>
+									<p:selectOneMenu id="select-group-menu" styleClass="ms-2" value="#{searchHistoryBean.selectedGroupId}">
+										<f:selectItem itemLabel="---------------" itemValue="-1"/>
+										<f:selectItems var="group" value="#{searchHistoryBean.currentUser.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
+										<p:ajax listener="#{searchHistoryBean.onChangeGroup}" update=":sessionsList @form "/>
+									</p:selectOneMenu>
+								</h:form>
+							</div>
+						</h:panelGroup>
+					</div>
+				</div>
+				<h:panelGroup id="sessionsList" layout="block">
+					<h:outputText value="#{msg['search_history.no_sessions_recorded']}" rendered="#{empty searchHistoryBean.sessions}"/>
+					<h:form>
+						<ul class="sh-sessions-list #{searchHistoryBean.showGroupHistory == false ? '' : 'sh-session-group'} overflow-auto vh-100">
+							<h:outputScript>
+								var query = '#{searchHistoryBean.queriesJson}';
+								if (!query) document.getElementById('graph').style.display = 'none';
+                				else {
+                          			document.getElementById('graph').style.display = 'block';
+                                	console.log(query);
+								}
+								document.getElementById('snippetsList').style.display = 'none';
+								SetUrl(query);
+							</h:outputScript>
+							<ui:repeat var="ss" value="#{searchHistoryBean.sessions}">
+								<li class="session-single">
+									<span></span>
+									<h:panelGroup layout="block" class="cursor-pointer" pt:data-sessionId="#{ss.sessionId}" pt:data-userId="#{ss.userId}">
+										<div class="session-queries">
+											<ui:repeat var="query" value="#{ss.queries}">
+												<p:commandLink update=":snippetsList" process="@this" global="false" styleClass="text-wrap p-1">
+													<f:setPropertyActionListener target="#{searchHistoryBean.selectedQuery}" value="#{query}"/>
+													<span class="search-source-icon source-#{query.service} mode-#{query.mode} py-2">#{query.query}</span>
+												</p:commandLink>
+											</ui:repeat>
+										</div>
+
+										<div class="session-time">
+											<h:outputFormat id="of1" value="#{msg.format_date_and_time_between}" escape="false">
+												<f:param value="#{lw:date(ss.startTimestamp)}"/>
+												<f:param value="#{lw:date(ss.endTimestamp)}"/>
+											</h:outputFormat>
+										</div>
+										<h:outputText value="#{msg.by}: #{ss.user.username}" rendered="#{searchHistoryBean.showGroupHistory}" styleClass="fw-bold"/>
+									</h:panelGroup>
+								</li>
+							</ui:repeat>
+						</ul>
+					</h:form>
+				</h:panelGroup>
+			</div>
+			<h:panelGroup styleClass="col-12 col-xl-8 mt-5 mt-xl-0 my-3" layout="block" id="graph">
+				<svg width="100%" height="100%" />
+			</h:panelGroup>
+			<h:panelGroup id="snippetsList" styleClass="col-12 col-xl-8 mt-5 mt-xl-0 my-3" layout="block">
+				<h:panelGroup styleClass="sh-snippets-list overflow-auto pe-3 vh-100 w-100" rendered="#{searchHistoryBean.selectedQuery ne null}" layout="block">
+					<div>
+						<h:outputFormat value="#{msg['search_history.results_for_query']}" escape="false">
+							<f:param value="#{searchHistoryBean.selectedQuery.query}"/>
+							<f:param value="#{searchHistoryBean.selectedQuery.timestamp}"/>
+						</h:outputFormat>
+
+						<h:outputText id="snippetsDescription" styleClass="fas fa-question-circle text-primary ms-2"></h:outputText>
+						<p:tooltip id="toolTipSnippetsDescription" for="snippetsDescription" value="#{msg['search_history.results_for_query_tooltip']}" position="left"/>
+					</div>
+					<div class="d-flex justify-content-start">
+						<h:form id="snippets_filter">
+							<h:panelGrid columns="2">
+								<h:outputText value="#{msg['search_history.show_only_clicked']}" />
+								<p:toggleSwitch onchange="toggleFilter(event);" />
+							</h:panelGrid>
+						</h:form>
+					</div>
+
+					<p:dialog header="#{msg.options}" widgetVar="copyResourceDialog" draggable="true" resizable="false" id="copy_resource_dialog" modal="true">
+						<h:form rendered="#{userBean.loggedIn and searchBean.selectedResource ne null}">
+							<div class="fields-grid">
+								<ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
+									<ui:param name="res" value="#{searchBean.selectedResource.resource}"/>
+								</ui:decorate>
+
+								<div class="fg-row">
+									<h:outputText value="#{msg.add_to}:" escape="false"/>
+									<p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="mh-vh50"
+											animate="true" selectionMode="single">
+										<p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
+
+										<p:treeNode type="group">
+											<h:outputText id="group" value="#{node.title}"/>
+										</p:treeNode>
+
+										<p:treeNode type="folder" expandedIcon="fas fa-folder-open" collapsedIcon="fas fa-folder">
+											<h:outputText value="#{node.title}"/>
+										</p:treeNode>
+									</p:tree>
+									<p:message for="@previous"/>
+								</div>
+							</div>
+
+							<div class="text-end mt-3">
+								<p:defaultCommand target="addSelectedResourceButton"/>
+								<p:commandButton value="#{msg.cancel}" styleClass="ui-button-secondary" onclick="PF('copyResourceDialog').hide()"/>
+								<p:commandButton id="addSelectedResourceButton" value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form"
+												 widgetVar="add_button" onclick="PF('add_button').disable()" oncomplete="if(!args.validationFailed){PF('copyResourceDialog').hide()}"/>
+							</div>
+						</h:form>
+					</p:dialog>
+
+					<h:form id="snippets_results" prependId="false" styleClass="search-#{searchHistoryBean.searchResultsView}">
+						<ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
+							<ui:param name="view" value="#{searchHistoryBean.searchResultsView}"/>
+							<ui:param name="resources" value="#{searchHistoryBean.searchResults}"/>
+						</ui:decorate>
+					</h:form>
+				</h:panelGroup>
+			</h:panelGroup>
+		</div>
+	</p:panel>
+
+	<h:outputScript>
+		function toggleFilter(e) {
+  			console.log("Toggle only clicked snippets");
+			if (e.target.checked) {
+				$('#snippets_results .search-item:not(.snippet-clicked)').addClass('snippet-filtered');
+				$('#snippets_results .search-page-sep').hide();
+			} else {
+				$('#snippets_results .search-item.snippet-filtered').removeClass('snippet-filtered');
+				$('#snippets_results .search-page-sep').show();
+			}
+		}
+
+		$(document).on('click', '.session-queries a', (e) => {
+			$('.session-queries a.active').removeClass('active');
+			$(e.currentTarget).addClass('active');
+			document.getElementById('snippetsList').style.display = 'block';
+			document.getElementById('graph').style.display = 'none';
+		});
+	</h:outputScript>
+</ui:define>
+
+</ui:composition>

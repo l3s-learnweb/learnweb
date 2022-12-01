@@ -1,0 +1,65 @@
+.landing-header {
+  background-color: var(--border-color);
+  background-size: cover;
+  padding: 5rem 0;
+
+  .header-news-list {
+    > h2 {
+      font-size: $font-size-base;
+      padding: 0.5rem 1rem;
+    }
+
+    .news-list {
+      min-height: 13.5rem;
+      max-height: 24rem;
+      overflow: auto;
+
+      .news-date {
+        display: block;
+        font-size: $font-size-sm;
+        color: var(--gray-500);
+      }
+
+      .news-content {
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.landing-cards {
+  background-color: $primaryDarkColor;
+  border-top: 1px solid $primaryDarkColor; // to avoid padding collapse
+
+  .card-single {
+    margin-bottom: 3 * $spacer;
+    background: var(--surface-ground);
+
+    .card-header {
+      background-color: $primaryDarkerColor;
+      color: $primaryTextColor;
+      letter-spacing: 0.1rem;
+      padding: $spacer;
+      margin: 0;
+    }
+
+    .card-subheader {
+      background-color: var(--light);
+      color: $primaryDarkerColor;
+      padding: $spacer * 0.25 $spacer;
+    }
+
+    .card-content {
+      padding-bottom: $spacer;
+
+      img {
+        width: 100%;
+        max-width: 7rem;
+      }
+    }
+
+    .card-footer {
+      padding-bottom: $spacer;
+    }
+  }
+}

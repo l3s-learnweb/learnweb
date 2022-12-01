@@ -1,0 +1,294 @@
+$topbar-button-lg-size: 2.5rem;
+$topbar-button-padding: 1rem;
+
+.navbar-brand {
+  img {
+    height: 3rem;
+  }
+}
+
+.navbar-menu {
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+  padding: 0 $navbar-nav-link-padding-x;
+  margin-right: $navbar-nav-link-padding-x * 0.5;
+
+  &:hover {
+    color: var(--white);
+    background: $primaryDarkColor;
+  }
+}
+
+.navbar-search {
+  max-width: 30rem;
+  font-size: $font-size-base;
+
+  input {
+    width: 100%;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    border: 0 !important;
+  }
+
+  button {
+    border: 0 !important;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    display: flex;
+    align-items: center;
+    background: var(--surface-ground);
+    color: var(--gray-500);
+
+    &:hover {
+      background: $primaryDarkColor;
+      color: $primaryTextColor;
+    }
+  }
+}
+
+.navbar-nav .nav-link {
+  padding-right: $nav-link-padding-x;
+  padding-left: $nav-link-padding-x;
+  font-size: $font-size-lg;
+
+  &:hover {
+    background: $primaryDarkColor;
+  }
+
+  &.nav-link-flag {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 0;
+    @include transition(background-color $transition-duration);
+
+    &:hover {
+      background-color: $primaryDarkColor;
+    }
+
+    img {
+      height: 1.875rem;
+      border-radius: var(--border-radius);
+    }
+  }
+}
+
+// scss-docs-start navbar-expand-loop
+// Generate series of `.navbar-expand-*` responsive classes for configuring
+// where your navbar collapses.
+.navbar-main,
+.navbar-expand {
+  @each $breakpoint in map-keys($grid-breakpoints) {
+    $next: breakpoint-next($breakpoint, $grid-breakpoints);
+    $infix: breakpoint-infix($next, $grid-breakpoints);
+
+    // stylelint-disable-next-line scss/selector-no-union-class-name
+    &#{$infix} {
+      @include media-breakpoint-up($next) {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+
+        .navbar-expand-hide {
+          display: none;
+        }
+
+        .navbar-nav {
+          min-height: 100%;
+          flex-direction: row;
+
+          .nav-link {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0 $navbar-nav-link-padding-x;
+            border-bottom: 0.2rem solid transparent;
+
+            &:hover {
+              border-color: $navbar-dark-hover-color;
+            }
+
+            &.nav-link-profile {
+              padding-top: 0.2rem !important;
+              padding-bottom: 0 !important;
+            }
+
+            &.nav-link-flag {
+              padding-top: 0 !important;
+              padding-bottom: 0 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.navbar-main {
+  @include media-breakpoint-down(md) {
+    .container-fluid {
+      height: auto;
+      flex-wrap: wrap;
+    }
+
+    .navbar-search {
+      max-width: initial;
+      width: 100%;
+      order: 1;
+      padding: 0.625rem 0;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    .layout-combined-loader,
+    .navbar-nav {
+      max-width: 50%;
+    }
+
+    .navbar-menu,
+    .navbar-brand {
+      margin-right: 0.3rem;
+    }
+
+    .navbar-brand {
+      img {
+        width: 100%;
+        height: initial;
+      }
+    }
+
+    .navbar-menu,
+    .navbar-nav .nav-link {
+      padding-right: 0.3rem;
+      padding-left: 0.3rem;
+    }
+  }
+}
+
+.layout-combined-loader {
+  .content-element,
+  .loader-element {
+    animation: fadeIn 0.2s;
+  }
+
+  &.loading {
+    .content-element {
+      display: none;
+    }
+
+    .loader-element {
+      display: block;
+    }
+  }
+}
+
+.la-ball-clip-rotate-pulse {
+  $spinner-size: 2rem;
+
+  display: block;
+  font-size: 0;
+  color: var(--secondary);
+  width: $spinner-size;
+  height: $spinner-size;
+  position: relative;
+  box-sizing: border-box;
+
+  > span {
+    box-sizing: border-box;
+    display: inline-block;
+    float: none;
+    background-color: currentColor;
+    border: 0 solid currentColor;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 100%;
+
+    &:first-child {
+      position: absolute;
+      width: $spinner-size;
+      height: $spinner-size;
+      background: transparent;
+      border-style: solid;
+      border-width: $spinner-size * 0.0625;
+      border-right-color: transparent;
+      border-left-color: transparent;
+      animation: ball-clip-rotate-pulse-rotate 1s cubic-bezier(0.09, 0.57, 0.49, 0.9) infinite;
+    }
+
+    &:last-child {
+      width: $spinner-size * 0.5;
+      height: $spinner-size * 0.5;
+      animation: ball-clip-rotate-pulse-scale 1s cubic-bezier(0.09, 0.57, 0.49, 0.9) infinite;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ball-clip-rotate-pulse-rotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes ball-clip-rotate-pulse-scale {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  30% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.15);
+  }
+}
+
+body {
+  .ui-menu.ui-menu-navbar {
+    width: auto;
+    max-width: 15em;
+    background: var(--primary-dark);
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    padding: 0;
+    overflow: hidden;
+
+    .ui-menu-list .ui-menuitem .ui-menuitem-link {
+      &.ui-state-hover {
+        background: var(--primary-darker);
+      }
+
+      .ui-menuitem-text,
+      .ui-menuitem-icon {
+        color: var(--primary-text-color);
+      }
+
+      .ui-menuitem-text {
+        img {
+          height: 1.5rem;
+          border-radius: var(--border-radius);
+          margin-right: 0.3rem;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+     xmlns:h="http://xmlns.jcp.org/jsf/html"
+     xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<f:view contentType="text/xml" transient="true">
+    <app>
+        <startup>#{startup}</startup>
+    </app>
+    <config>
+        <property key="environment" value="#{config.environment}"/>
+        <property key="version" value="#{config.version}"/>
+        <property key="base_url" value="#{config.baseUrl}"/>
+        <property key="context_path" value="#{config.contextPath}"/>
+        <property key="server_url" value="#{config.serverUrl}"/>
+        <property key="development" value="#{config.development}"/>
+        <property key="maintenance" value="#{config.maintenance}"/>
+    </config>
+    <services>
+        <ui:repeat var="service" value="#{statusBean.services}">
+            <service>
+                <name><h:outputText value="#{service.name}" escape="false"/></name>
+                <healthy><h:outputText value="#{service.healthy}" escape="false"/></healthy>
+                <description><h:outputText value="#{service.description}" escape="false"/></description>
+            </service>
+        </ui:repeat>
+    </services>
+</f:view>
+
+</xml>

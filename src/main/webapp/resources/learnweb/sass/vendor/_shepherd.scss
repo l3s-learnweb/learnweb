@@ -1,0 +1,220 @@
+.shepherd-element {
+  background: var(--surface-ground);
+  border-radius: var(--border-radius);
+  box-shadow: $box-shadow;
+  border: var(--border-width) var(--border-style) var(--border-color);
+  max-width: 400px;
+  opacity: 0;
+  outline: none;
+  transition: opacity 0.3s, visibility 0.3s;
+  visibility: hidden;
+  width: 100%;
+  z-index: 9999;
+
+  &[data-popper-reference-hidden]:not(.shepherd-centered) {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  &.shepherd-enabled {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &.shepherd-centered > .shepherd-arrow {
+    opacity: 0;
+  }
+
+  &[data-popper-placement^=top] > .shepherd-arrow {
+    bottom: -8px;
+
+    &::before {
+      border-right: var(--border-width) var(--border-style) var(--border-color);
+      border-bottom: var(--border-width) var(--border-style) var(--border-color);
+    }
+  }
+
+  &[data-popper-placement^=bottom] > .shepherd-arrow {
+    top: -8px;
+
+    &::before {
+      border-left: var(--border-width) var(--border-style) var(--border-color);
+      border-top: var(--border-width) var(--border-style) var(--border-color);
+    }
+  }
+
+  &[data-popper-placement^=left] > .shepherd-arrow {
+    right: -8px;
+
+    &::before {
+      border-right: var(--border-width) var(--border-style) var(--border-color);
+      border-top: var(--border-width) var(--border-style) var(--border-color);
+    }
+  }
+
+  &[data-popper-placement^=right] > .shepherd-arrow {
+    left: -8px;
+
+    &::before {
+      border-left: var(--border-width) var(--border-style) var(--border-color);
+      border-bottom: var(--border-width) var(--border-style) var(--border-color);
+    }
+  }
+
+  &.shepherd-has-title[data-popper-placement^=bottom] > .shepherd-arrow::before {
+    background-color: var(--gray-300);
+  }
+}
+
+.shepherd-arrow {
+  height: 16px;
+  position: absolute;
+  width: 16px;
+  z-index: -1;
+
+  &::before {
+    height: 14px;
+    position: absolute;
+    width: 14px;
+    z-index: -1;
+    background: var(--surface-ground);
+    content: '';
+    transform: rotate(45deg);
+  }
+}
+
+.shepherd-has-title .shepherd-content .shepherd-cancel-icon {
+  color: hsla(0, 0%, 50%, 0.75);
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.75);
+  }
+}
+
+.shepherd-has-title .shepherd-content .shepherd-header {
+  background: var(--gray-300);
+  padding: 1em;
+}
+
+.shepherd-header {
+  align-items: center;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  display: flex;
+  justify-content: flex-end;
+  line-height: 2em;
+  padding: 0.75rem 0.75rem 0;
+}
+
+.shepherd-text {
+  font-size: $font-size-lg;
+  line-height: 1.3em;
+  padding: 0.75em;
+
+  p {
+    margin-top: 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.shepherd-button {
+  background: var(--primary);
+  border: 0;
+  border-radius: var(--border-radius);
+  color: var(--primary-text-color);
+  cursor: pointer;
+  margin-right: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.5s ease;
+
+  &:not(:disabled):hover {
+    background: var(--primary-dark);
+  }
+
+  &.shepherd-button-secondary {
+    background: transparent;
+    color: var(--secondary);
+
+    &:not(:disabled):hover {
+      background: var(--gray-200);
+    }
+  }
+
+  &:disabled {
+    pointer-events: none;
+  }
+}
+
+.shepherd-footer {
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 0.75rem 0.75rem;
+
+  .shepherd-button:last-child {
+    margin-right: 0;
+  }
+}
+
+.shepherd-cancel-icon {
+  background: transparent;
+  border: 0;
+  color: hsla(0, 0%, 50%, 0.75);
+  cursor: pointer;
+  font-size: 2em;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  transition: color 0.5s ease;
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.75);
+  }
+}
+
+.shepherd-title {
+  color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  flex: 1 0 auto;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+}
+
+.shepherd-target-click-disabled.shepherd-enabled.shepherd-target {
+  pointer-events: none;
+
+  * {
+    pointer-events: none;
+  }
+}
+
+.shepherd-modal-overlay-container {
+  height: 0;
+  left: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transition: all 0.3s ease-out, height 0ms 0.3s, opacity 0.3s 0ms;
+  width: 100vw;
+  z-index: 9997;
+
+  &.shepherd-modal-is-visible {
+    height: 100vh;
+    opacity: 0.5;
+    transform: translateZ(0);
+    transition: all 0.3s ease-out, height 0s 0s, opacity 0.3s 0s;
+
+    path {
+      pointer-events: all;
+    }
+  }
+}

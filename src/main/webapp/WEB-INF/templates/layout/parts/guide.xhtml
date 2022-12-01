@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:outputScript name="bundle/shepherd.min.js" target="body"/>
+<h:outputScript name="learnweb/js/guide.js" target="body"/>
+
+<h:outputScript>
+    const guideBits = "#{userBean.guideStepsCompleted}";
+    const guideDismissBtn = '#{msg['guide.dismiss']}';
+    const guideGotchaBtn = '#{msg['guide.gotcha']}';
+</h:outputScript>
+
+<h:outputScript rendered="#{userBean.user.organisationId != 1604}">
+    const guideSteps = [
+        {
+            id: 1,
+            page: 'myhome/welcome.jsf',
+            text: '#{msg['guide.my_resources']}',
+            attachTo: { element: '.guide-my-resources', on: 'right-start' },
+            advanceOn: { selector: '.guide-my-resources', event: 'click' }
+        },
+        {
+            id: 2,
+            page: 'myhome/welcome.jsf',
+            text: '#{msg['guide.my_groups']}',
+            attachTo: { element: '.guide-my-groups', on: 'right-start' },
+            advanceOn: { selector: '.guide-my-groups', event: 'click' }
+        },
+        {
+            id: 3,
+            page: 'myhome/welcome.jsf',
+            text: '#{msg['guide.profile_menu']}',
+            attachTo: { element: '.guide-link-profile', on: 'auto' },
+            advanceOn: { selector: '.guide-link-profile', event: 'click' }
+        },
+        {
+            id: 4,
+            page: ['myhome/resources.jsf', 'group/resources.jsf'],
+            text: '#{msg['guide.add_resource']}',
+            attachTo: { element: '.guide-add-resource', on: 'auto' },
+            advanceOn: { selector: '.guide-add-resource', event: 'click' }
+        },
+        {
+            id: 5,
+            page: 'myhome/groups.jsf',
+            text: '#{msg['guide.groups_controls']}',
+            attachTo: { element: '.guide-groups-controls', on: 'auto' }
+        },
+        {
+            id: 6,
+            page: 'myhome/groups_search.jsf',
+            text: '#{msg['guide.filter_groups']}',
+            attachTo: { element: '.guide-search-groups', on: 'auto' }
+        },
+        {
+            id: 7,
+            page: 'group/overview.jsf',
+            text: '#{msg['guide.join_group']}',
+            attachTo: { element: '.guide-join-button', on: 'auto' },
+            advanceOn: { selector: '.guide-join-button', event: 'click' }
+        }
+    ];
+</h:outputScript>
+
+<h:outputScript rendered="#{userBean.user.organisationId == 1604}">
+    const guideSteps = [
+        {
+            id: 32,
+            page: 'myhome/welcome.jsf',
+            text: 'Lese Dir zunächst den Aufgabentext einmal sorgfältig durch.',
+            attachTo: { element: '.guide-organisation-welcome', on: 'right-start' }
+        },
+        {
+            id: 33,
+            page: 'myhome/welcome.jsf',
+            text: 'Unter „My resources“ findest Du später Deine gespeicherten YouTube-Videos für die Bewertung wieder. Diese kannst Du durch Doppelklicken für die Bewertung öffnen.',
+            attachTo: { element: '.guide-my-resources', on: 'right' }
+        },
+        {
+            id: 34,
+            page: 'myhome/welcome.jsf',
+            text: 'Hier kannst Du mit Deiner Video-Suche in YouTube beginnen. Gib einfach Deine(n) Suchbegriff(e) ein und drücke die ENTER-Taste.',
+            attachTo: { element: '.guide-search', on: 'right' }
+        },
+        {
+            id: 35,
+            page: 'search.jsf',
+            text: 'Die YouTube-Suchergebnisse kannst Du durch Anklicken öffnen.',
+            attachTo: { element: '.guide-search-results', on: 'right' }
+        },
+        {
+            id: 36,
+            page: 'search.jsf',
+            text: 'Um das Video später zu speichern, kannst Du a) den YouTube-Tab schließen und hier „Save“ oder b) direkt in der Kopfzeile im YouTube-Tab auf das Plus (+) klicken.',
+            attachTo: { element: '.guide-search-save-resource', on: 'right' }
+        },
+        {
+            id: 37,
+            page: 'search.jsf',
+            text: 'Öffne das ausgewählte Video nun zuerst in YouTube. Es öffnet sich automatisch ein zweiter Browser-Tab mit der YouTube- Platform.',
+            attachTo: { element: '.guide-search-open-link', on: 'right' }
+        },
+        {
+            id: 38,
+            page: 'myhome/resources.jsf',
+            text: 'Zum Speichern des Videos in „My resources“ klicke hier auf „Add Resource“. Danach du kannst den Browser-Tab schließen und mit Deiner Recherche fortfahren.',
+            attachTo: { element: '.guide-create-resource-save', on: 'right' }
+        },
+        {
+            id: 39,
+            page: 'resource.jsf',
+            text: 'Beginne nun mit Deiner Bewertung der Glaubwürdigkeit des Videoinhalts-.',
+            attachTo: { element: '.guide-resource-rating', on: 'right' }
+        },
+        {
+            id: 40,
+            page: 'resource.jsf',
+            text: 'Verfasse einen Tag zur im Video dargestellten Perspektive der „Klimawandel-Akzeptanz“ oder „Klimawandel-Leugnung“.',
+            attachTo: { element: '.guide-resource-tags', on: 'right' }
+        },
+        {
+            id: 41,
+            page: 'resource.jsf',
+            text: 'Schreibe einen Kommentar in dem Du Deine Bewertung und Deinen Tag anhand der Videomerkmale begründest.',
+            attachTo: { element: '.guide-resource-comments', on: 'right' }
+        }
+    ];
+</h:outputScript>
+
+</ui:composition>

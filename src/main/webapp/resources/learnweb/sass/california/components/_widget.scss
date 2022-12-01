@@ -1,0 +1,19 @@
+body {
+  .ui-widget {
+    &.ui-widget-danger {
+      .ui-widget-header {
+        background-color: var(--danger);
+      }
+    }
+
+    &.ui-widget-warning {
+      .ui-widget-header {
+        background-color: var(--warning);
+      }
+    }
+
+    &.ui-widget-content-flat {
+      padding: 0;
+    }
+  }
+}

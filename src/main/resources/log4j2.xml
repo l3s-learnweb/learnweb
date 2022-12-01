@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration packages="org.apache.logging.log4j.core,io.sentry.log4j2">
+    <Properties>
+        <Property name="LEARNWEB_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{9}:%line - %msg%n</Property>
+        <Property name="LEARNWEB_LOG_PATH">${sys:catalina.home:-.}/logs/${web:contextPath:-}learnweb</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
+        </Console>
+
+        <RollingFile name="file" fileName="${env:LEARNWEB_LOG_PATH}.log" filePattern="${env:LEARNWEB_LOG_PATH}-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
+            <TimeBasedTriggeringPolicy/>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+
+        <Sentry name="sentry" dsn="https://3b3136e07926401b8ec84c95803f88bc@sentry.kbs.uni-hannover.de/2/"
+                minimumBreadcrumbLevel="DEBUG" minimumEventLevel="ERROR"/>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.apache" level="FATAL"/>
+        <Logger name="org.hibernate.validator" level="FATAL"/>
+        <Logger name="solr.client" level="FATAL"/>
+        <Logger name="org.jboss.weld" level="WARN"/>
+        <Logger name="org.apache.myfaces" level="WARN"/>
+        <Logger name="net.bramp.ffmpeg" level="INFO"/>
+        <Logger name="com.zaxxer.hikari" level="INFO"/>
+        <Logger name="org.flywaydb.core" level="INFO"/>
+        <Logger name="org.mariadb.jdbc" level="INFO"/>
+        <Logger name="org.eclipse.jetty" level="INFO"/>
+
+        <Root level="DEBUG">
+            <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
+            <appender-ref ref="sentry"/>
+        </Root>
+    </Loggers>
+</Configuration>

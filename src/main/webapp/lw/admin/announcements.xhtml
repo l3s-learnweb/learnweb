@@ -1,0 +1,75 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:lw="http://l3s.de/learnweb">
+
+
+<ui:param name="pageTitle" value="#{msg.announcements}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.admin}"/>
+
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="admin/index.jsf" title="#{msg.admin}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="admin/announcements.jsf" title="#{msg.announcements}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
+    </lw:breadcrumb-item>
+</ui:define>
+
+<ui:define name="center_layout">
+    <h:form id="news_form" styleClass="mt-3">
+        <p:blockUI block="news_form" widgetVar="newsOverlay">
+            <h:outputText value="#{msg.please_wait}"/>
+        </p:blockUI>
+
+        <p:dataTable var="news" value="#{adminAnnouncementsBean.announcements}">
+            <f:facet name="header">
+                <div class="d-flex">
+                    <div class="me-auto">#{msg.announcements}</div>
+                    <div class="d-md-block d-flex flex-column">
+                        <h:outputLink value="admin/announcement.jsf?"
+                                      styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-button-warning mt-2 mt-md-0 px-2">
+                            <f:param name="announcement_id" value="0"/>
+                            #{msg.add}
+                        </h:outputLink>
+                    </div>
+                </div>
+            </f:facet>
+
+            <p:column headerText="#{msg.title}" sortBy="#{news.title}">
+                <h:outputText value="#{news.title}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.date}" sortBy="#{news.createdAt}">
+                <h:outputText value="#{news.createdAt}">
+                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="localDate"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="#{msg.hide}" sortBy="#{news.hidden}">
+                <p:selectBooleanCheckbox value="#{news.hidden}">
+                    <p:ajax listener="#{adminAnnouncementsBean.onSave(news)}"
+                            onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()"/>
+                </p:selectBooleanCheckbox>
+            </p:column>
+
+            <p:column styleClass="text-end">
+                <p:linkButton styleClass="ui-button-info rounded-button ui-button-flat" icon="fas fa-pencil" title="#{msg.edit}" href="admin/announcement.jsf">
+                    <f:param name="announcement_id" value="#{news.id}"/>
+                </p:linkButton>
+
+                <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.delete}"
+                                 process="@this" actionListener="#{adminAnnouncementsBean.onDelete(news)}" update="@form"
+                                 onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()">
+                    <p:confirm message="#{of:format1(msg.delete_entry_confirm_message, news.title)}" icon="fas fa-triangle-exclamation"/>
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</ui:define>
+
+</ui:composition>

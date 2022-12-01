@@ -1,0 +1,89 @@
+.justified-gallery {
+  padding: 0 !important;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  > a,
+  > div,
+  > figure {
+    position: absolute;
+    display: inline-block;
+    overflow: hidden;
+    /* background: #888888; To have gray placeholders while the gallery is loading with waitThumbnailsLoad = false */
+    opacity: 0.1;
+    margin: 0;
+    padding: 0;
+
+    > img,
+    > a > img,
+    > svg,
+    > a > svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      opacity: 0;
+    }
+
+    > .jg-caption {
+      display: none;
+      position: absolute;
+      bottom: 0;
+      padding: 5px;
+      background-color: var(--black);
+      left: 0;
+      right: 0;
+      margin: 0;
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 300;
+      font-family: sans-serif;
+
+      &.jg-caption-visible {
+        display: initial;
+        opacity: 0.7;
+        transition: opacity 500ms ease-in;
+      }
+    }
+  }
+
+  > .jg-entry-visible {
+    opacity: 1;
+    background: none;
+
+    > img,
+    > a > img,
+    > svg,
+    > a > svg {
+      opacity: 1;
+      transition: opacity 500ms ease-in;
+    }
+  }
+
+  > .jg-filtered {
+    display: none;
+  }
+
+  > .jg-spinner {
+    position: absolute;
+    bottom: 0;
+    margin-left: -24px;
+    padding: 10px 0;
+    left: 50%;
+    opacity: 1;
+    overflow: initial;
+
+    > span {
+      display: inline-block;
+      opacity: 0;
+      width: 8px;
+      height: 8px;
+      margin: 0 4px;
+      background-color: #000;
+      border-radius: 6px;
+    }
+  }
+}

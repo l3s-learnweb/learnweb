@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      lang="#{userBean.localeCode}" data-theme="emerald">
+
+    <!--@elvariable id="pageTitle" type="java.lang.String"-->
+
+    <f:view locale="#{userBean.locale}" contentType="text/html" transient="true">
+        <ui:insert name="metadata"/>
+
+        <h:head>
+            <ui:include src="parts/head.xhtml"/>
+            <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{!empty pageTitle}"/>#{msg['application.name']}</title>
+
+            <h:outputScript library="primefaces" name="jquery/jquery.js"/>
+            <h:outputScript name="bundle/learnweb.main.js"/>
+        </h:head>
+
+        <h:body styleClass="layout-body template-page">
+            <f:facet name="last">
+                <h:outputStylesheet name="bundle/learnweb.main.css"/>
+            </f:facet>
+
+            <div class="layout-wrapper layout-wrapper-sidebar-inactive">
+                <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary shadow">
+                    <h:form id="navbar_form" styleClass="container align-items-stretch">
+                        <a href="#{userBean.bannerLink}" class="navbar-brand">
+                            <h:graphicImage library="images" name="learnweb_logo.png" alt="#{msg['application.name']}"/>
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerMenu" aria-controls="navbarTogglerMenu" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarTogglerMenu">
+                            <ul class="navbar-nav navbar-nav-scroll ms-auto mb-2 mb-lg-0">
+                                <ui:insert name="header_right"/>
+                                <ui:include src="parts/language_switch.xhtml"/>
+                            </ul>
+                        </div>
+                    </h:form>
+                </nav>
+
+                <div class="layout-main d-flex flex-column" id="main">
+                    <noscript>
+                        <p:panel header="#{msg['error']}" styleClass="ui-widget-danger mb-0">
+                            <h:outputText styleClass="h5 d-block" value="#{msg['javascript_disabled']}" escape="false"/>
+                        </p:panel>
+                    </noscript>
+
+                    <main class="layout-main-content ui-fluid p-0">
+                        <ui:insert name="center_layout">
+                            <div class="container my-3">
+                                <ui:insert name="container_layout"/>
+                            </div>
+                        </ui:insert>
+                    </main>
+
+                    <ui:include src="parts/footer.xhtml"/>
+                </div>
+            </div>
+        </h:body>
+    </f:view>
+</html>

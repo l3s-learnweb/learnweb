@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+	<ui:fragment rendered="#{userBean.languageSwitchEnabled}">
+		<li class="nav-item">
+			<h:outputLink id="languageDropdown" value="#" styleClass="nav-link nav-link-flag" onclick="return false;">
+				<h:graphicImage name="images/flags/flag_#{userBean.localeCode}.svg" alt="Language switch"/>
+			</h:outputLink>
+
+			<p:menu overlay="true" trigger="languageDropdown" my="right top" at="right bottom" collision="fit" styleClass="ui-menu-navbar">
+				<p:menuitem action="#{userBean.setLocaleCode('de')}" immediate="true" process="@this">
+					<h:graphicImage name="images/flags/flag_de.svg" alt="#{msg.language_de}"/>
+					<span>Deutsch</span>
+				</p:menuitem>
+				<p:menuitem action="#{userBean.setLocaleCode('en')}" immediate="true" process="@this">
+					<h:graphicImage name="images/flags/flag_en.svg" alt="#{msg.language_en}"/>
+					<span>English</span>
+				</p:menuitem>
+				<p:menuitem action="#{userBean.setLocaleCode('es')}" immediate="true" process="@this">
+					<h:graphicImage name="images/flags/flag_es.svg" alt="#{msg.language_es}"/>
+					<span>Español</span>
+				</p:menuitem>
+				<p:menuitem action="#{userBean.setLocaleCode('it')}" immediate="true" process="@this">
+					<h:graphicImage name="images/flags/flag_it.svg" alt="#{msg.language_it}"/>
+					<span>Italiano</span>
+				</p:menuitem>
+				<p:menuitem action="#{userBean.setLocaleCode('pt')}" immediate="true" process="@this">
+					<h:graphicImage name="images/flags/flag_pt.svg" alt="#{msg.language_pt}"/>
+					<span>Português</span>
+				</p:menuitem>
+				<p:menuitem action="#{userBean.setLocaleCode('uk')}" immediate="true" process="@this">
+					<h:graphicImage name="images/flags/flag_uk.svg" alt="#{msg.language_uk}"/>
+					<span>Українська</span>
+				</p:menuitem>
+				<p:menuitem action="#{userBean.setLocaleCode('xx')}" immediate="true" process="@this" rendered="#{userBean.admin}">
+					<h:graphicImage name="images/flags/flag_xx.svg" alt="Show message keys"/>
+					<span>Developer</span>
+				</p:menuitem>
+			</p:menu>
+		</li>
+	</ui:fragment>
+
+</ui:composition>

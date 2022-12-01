@@ -1,0 +1,122 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="pageTitle" value="#{msg.users}"/>
+
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="course_id" value="#{adminUsersBean.courseId}"/>
+        <f:viewAction action="#{adminUsersBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
+
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="admin/users.jsf" title="#{msg.users}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+    </lw:breadcrumb-item>
+</ui:define>
+
+<ui:define name="center_layout">
+    <h:form>
+        <p:dataTable var="userView" value="#{adminUsersBean.userViews}" rows="50" paginator="true" paginatorPosition="bottom" id="users_table"
+                     rowsPerPageTemplate="50,100,250,500,1000,1500,2500" rendered="#{adminUsersBean.userViews ne null}"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
+
+            <f:facet name="header">
+                <div class="d-flex">
+                    <div class="me-auto">#{msg.users}</div>
+                    <div>
+                        <p:commandButton id="toggler" type="button" value="#{msg.columns}" icon="fas fa-bars"/>
+                        <p:columnToggler datasource="users_table" trigger="@previous"/>
+                    </div>
+                </div>
+            </f:facet>
+
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink styleClass="text-danger p-1">
+                        <i class="fas fa-fw fa-file-pdf" aria-hidden="true"></i>
+                        <p:dataExporter type="pdf" target="users_table" fileName="users"/>
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="text-success p-1">
+                        <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
+                        <p:dataExporter type="xls" target="users_table" fileName="users"/>
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="text-secondary p-1">
+                        <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
+                        <p:dataExporter type="csv" target="users_table" fileName="users"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>         
+
+            <p:column filterBy="#{userView.id}" filterMatchMode="exact" headerText="ID" sortBy="#{userView.id}" rendered="#{userBean.admin}">
+                <h:outputText value="#{userView.id}"/>
+            </p:column>
+
+            <p:column filterBy="#{userView.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{userView.realUsername}">
+                <p:link outcome="/lw/myhome/profile" value="#{userView.realUsername}" id="username">
+                    <f:param name="user_id" value="#{userView.id}"/>
+                </p:link>
+                <p:tooltip for="@previous" value="#{userView.realUsername}" position="top"/>
+            </p:column>
+
+            <p:column headerText="#{msg.email_address}" sortBy="#{userView.email}" filterBy="#{userView.email}" filterMatchMode="contains">
+                <h:outputText value="#{userView.email}" id="email"/>
+                <p:tooltip for="@previous" value="#{userView.email}" position="top"/>
+            </p:column>
+
+            <p:column headerText="Last login" sortBy="#{userView.lastLoginDate}">
+                <h:outputText value="#{userView.lastLoginDate.atZone(userView.timeZone)}" id="last_login">
+                    <f:convertDateTime timeStyle="short" type="localDateTime"/>
+                </h:outputText>
+                <p:tooltip for="@previous" value="#{of:formatDateWithTimezone(userView.lastLoginDate, 'yyyy-MM-dd HH:mm', userView.timeZone)}" position="top"/>
+            </p:column>
+
+            <p:column headerText="#{msg.student_id}" sortBy="#{userView.studentId}" filterBy="#{userView.studentId}" filterMatchMode="contains" visible="false">
+                <h:outputText value="#{userView.studentId}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.groupsTitle}" sortBy="#{userView.groupsTitles}" filterBy="#{userView.groupsTitles}" filterMatchMode="contains" visible="false" styleClass="text-truncate mw-r10">
+                <h:outputText value="#{userView.groupsTitles}" id="group"/>
+                <p:tooltip for="@previous" value="#{userView.groupsTitles}" position="top"/>
+            </p:column>
+
+            <p:column headerText="#{msg.courses}" sortBy="#{userView.coursesTitles}" filterBy="#{userView.coursesTitles}" filterMatchMode="contains" visible="false" styleClass="text-truncate mw-r10">
+                <h:outputText value="#{userView.coursesTitles}" id="course"/>
+                <p:tooltip for="@previous" value="#{userView.coursesTitles}" position="top"/>
+            </p:column>
+
+            <p:column headerText="#{msg.organisation}" sortBy="#{userView.organisation.title}" filterBy="#{userView.organisation.title}" filterMatchMode="contains"
+                      visible="false" styleClass="text-truncate mw-r10" rendered="#{adminUsersBean.courseId == 0}">
+                <h:outputText value="#{userView.organisation.title}" id="organisation"/>
+                <p:tooltip for="@previous" value="#{userView.organisation.title}" position="top"/>
+            </p:column>
+
+            <p:column headerText="#{msg.moderator}" sortBy="#{userView.moderator}" visible="#{userViewBean.admin}">
+                <p:selectBooleanCheckbox value="#{userView.user.moderator}">
+                    <p:ajax listener="#{adminUsersBean.updateUser(userView.user)}"/>
+                </p:selectBooleanCheckbox>
+            </p:column>
+
+            <p:column styleClass="text-end">
+                <p:commandButton title="#{msg.loginLabel}" styleClass="ui-button-success rounded-button ui-button-flat" action="#{adminUsersBean.rootLogin(userView.user)}"
+                                 process="@this" icon="fas fa-arrow-right-to-bracket" rendered="#{userBean.canLoginToAccount(userView.user)}"/>
+                <p:linkButton styleClass="ui-button-secondary rounded-button ui-button-flat" icon="fas fa-arrow-pointer" target="_blank"
+                              title="#{msg.mouse_tracker}" href="https://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{userView.id}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,144 @@
+.breadcrumb {
+  display: none;
+  background-color: var(--surface-ground);
+  border: 1px solid var(--primary);
+  border-left: 0;
+  border-right: 0;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @include media-breakpoint-up(md) {
+    display: flex;
+  }
+
+  .breadcrumb-menu {
+    margin: 0;
+
+    &:first-child .breadcrumb-title {
+      padding-left: 1rem;
+    }
+
+    &.ui-state-active {
+      .breadcrumb-title {
+        color: var(--white);
+      }
+    }
+
+    &.breadcrumb-menu-no-link {
+      div {
+        cursor: default;
+
+        &:hover {
+          background: none;
+
+          a {
+            color: var(--heading-color) !important;
+          }
+        }
+
+        a {
+          pointer-events: none;
+
+          &:hover {
+            color: var(--heading-color) !important;
+          }
+        }
+
+        .breadcrumb-toggle {
+          display: none;
+        }
+      }
+    }
+
+    div {
+      display: flex;
+      color: var(--heading-color);
+      text-decoration: none;
+      height: 2.4rem;
+      position: relative;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--primary);
+
+        a {
+          color: var(--white) !important;
+          text-decoration: none;
+
+          i {
+            color: var(--white);
+          }
+        }
+
+        .breadcrumb-toggle {
+          background: var(--primary);
+        }
+      }
+
+      a {
+        color: var(--heading-color);
+        height: 100%;
+        padding: 0 10px 0 30px;
+        display: flex;
+        align-items: center;
+        outline: none;
+      }
+
+      .breadcrumb-toggle {
+        content: '';
+        position: absolute;
+        width: 2.4rem;
+        height: 2.4rem;
+        right: -1.2rem;
+        transform: scale(0.707) rotate(45deg);
+        z-index: 1;
+        background: var(--surface-ground);
+        box-shadow: 1px -1px 0 0 var(--primary);
+        padding-right: 0;
+
+        &:hover,
+        &:focus {
+          color: var(--white);
+          background: var(--primary-dark) !important;
+        }
+
+        i {
+          margin-left: -18px;
+          transform: scale(1.6) rotate(317deg);
+        }
+      }
+
+      span {
+        font-weight: $font-weight-bold;
+        padding-right: 1rem;
+      }
+    }
+
+    ul {
+      position: absolute;
+      color: var(--white);
+      z-index: 10;
+      background: var(--primary);
+      box-shadow: $box-shadow;
+      list-style: none;
+      padding: 0;
+      display: none;
+      overflow-y: auto;
+      max-height: 100vh;
+
+      li {
+        a {
+          display: block;
+          border: 0;
+          padding: 0.5rem 0.8rem;
+          color: #fff;
+          text-decoration: none;
+
+          &:hover {
+            background: var(--primary-dark);
+          }
+        }
+      }
+    }
+  }
+}

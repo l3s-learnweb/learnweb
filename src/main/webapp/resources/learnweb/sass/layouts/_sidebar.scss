@@ -1,0 +1,208 @@
+.layout-menu {
+  --menu-icon-size: 1.25rem;
+  --menu-icon-padding: 0.5rem;
+  --menu-icon-width: calc(var(--menu-icon-size) + var(--menu-icon-padding) * 2);
+  --menu-child-offset: calc(var(--menu-icon-width) / 2);
+
+  list-style-type: none;
+  padding: 0 0 150px;
+  margin: 0;
+
+  .text-badge {
+    .menuitem-badge {
+      width: 40px;
+      margin-right: 22px;
+    }
+  }
+
+  li {
+    > a {
+      display: flex;
+      color: var(--heading-color);
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+
+      .menuitem-badge {
+        margin-right: 25px;
+        float: right;
+        color: $primaryTextColor;
+        background-color: $primaryColor;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        margin-left: 0;
+        border-radius: 50px;
+      }
+
+      i {
+        color: var(--dark);
+        vertical-align: middle;
+        position: absolute;
+        left: 0;
+        top: 0;
+        line-height: 1.5;
+        width: var(--menu-icon-size);
+        padding: var(--menu-icon-padding) 0;
+        text-align: center;
+
+        &.layout-menuitem-toggler {
+          @include transition(transform $transitionDuration);
+        }
+      }
+
+      &.rotated-icon {
+        .layout-menuitem-icon {
+          transform: rotate(90deg);
+        }
+      }
+
+      span {
+        padding: var(--menu-icon-padding);
+        margin-left: var(--menu-icon-size);
+        margin-right: 6px;
+        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &:hover {
+        background-color: var(--light);
+      }
+    }
+
+    > ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+      display: none;
+
+      li {
+        > a {
+          padding-left: var(--menu-child-offset);
+
+          i {
+            left: var(--menu-child-offset);
+          }
+        }
+
+        ul {
+          li {
+            > a {
+              padding-left: calc(var(--menu-child-offset) * 2);
+
+              i {
+                left: calc(var(--menu-child-offset) * 2);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &.active-menuitem {
+      > a {
+        font-weight: $font-weight-bold;
+        background: var(--light);
+
+        i.layout-menuitem-toggler {
+          transform: rotate(-90deg);
+        }
+      }
+    }
+
+    &.ui-menuitem-submenu {
+      > a {
+        span {
+          margin-left: var(--menu-icon-width);
+        }
+
+        i {
+          width: var(--menu-icon-width);
+        }
+      }
+    }
+  }
+
+  > li {
+    > a {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    &.active-menuitem {
+      > a {
+        color: $primaryColor;
+        background: var(--primary-lighter);
+
+        i {
+          color: $primaryColor;
+        }
+      }
+
+      > ul {
+        border-bottom: 1px solid var(--border-color);
+      }
+    }
+
+    &:first-child {
+      > a {
+        border-top: 1px solid var(--border-color);
+      }
+    }
+
+    &.ui-menuitem-submenu {
+      &.active-menuitem {
+        > a {
+          border-bottom-color: transparent;
+        }
+      }
+    }
+  }
+}
+
+.layout-wrapper {
+  .layout-sidebar {
+    width: $sidebar-width;
+    background-color: var(--surface-ground);
+    border-right: var(--border-width) var(--border-style) var(--border-color);
+    position: fixed;
+    z-index: 997;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding-top: $topbar-height;
+    @include transition();
+
+    @include media-breakpoint-down($topbar-two-row-display) {
+      padding-top: 2 * $topbar-height;
+    }
+
+    @include media-breakpoint-down($sidebar-hide-display) {
+      left: -$sidebar-width;
+      box-shadow: 2px 0 1px 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .sidebar-scroll-content {
+      display: block;
+      height: 100%;
+      position: relative;
+      overflow-y: auto;
+    }
+  }
+
+  &.layout-wrapper-sidebar-inactive {
+    .layout-sidebar {
+      left: -$sidebar-width;
+    }
+  }
+
+  &.layout-wrapper-sidebar-mobile-active {
+    @include media-breakpoint-down($sidebar-hide-display) {
+      .layout-sidebar {
+        left: 0;
+      }
+    }
+  }
+}

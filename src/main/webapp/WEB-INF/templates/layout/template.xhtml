@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      lang="#{userBean.localeCode}" data-theme="emerald">
+
+    <!--@elvariable id="pageTitle" type="java.lang.String"-->
+    <!--@elvariable id="helpText" type="java.lang.String"-->
+    <!--@elvariable id="extraPageClass" type="java.lang.String"-->
+    <!--@elvariable id="hideBreadcrumbs" type="java.lang.Boolean"-->
+    <!--@elvariable id="hasAccessPermission" type="java.lang.Boolean"-->
+
+    <f:view locale="#{userBean.locale}" contentType="text/html">
+        <c:set var="ignored" value="#{userBean.checkAccessPermission(hasAccessPermission)}" scope="request"/>
+        <ui:insert name="metadata"/>
+
+        <h:head>
+            <ui:include src="parts/head.xhtml"/>
+            <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{not empty pageTitle}"/>#{msg['application.name']}</title>
+
+            <h:outputScript library="primefaces" name="jquery/jquery.js"/>
+            <h:outputScript name="bundle/learnweb.main.js"/>
+            <h:outputScript name="learnweb/js/layout.js"/>
+
+            <ui:fragment rendered="#{userBean.trackingEnabled}">
+                <script>
+                  if (window.self === window.top) {
+                    window.wapsTrackerData = {
+                      start: new Date(),
+                      apiKey: '#{userBean.trackerApiKey}',
+                      externalUserId: '#{userBean.getUser().getId()}'
+                    };
+
+                    // JSF is removing async attribute from script tag, therefore we need to use old-style loader
+                    (function(d,s,u,e,n){e=d.createElement(s);
+                      n=d.getElementsByTagName(s)[0];e.async=true;e.src=u;n.parentNode.insertBefore(e, n)
+                    }(document,'script','https://learnweb.l3s.uni-hannover.de/tracker/js/init.js'));
+                  }
+                </script>
+            </ui:fragment>
+        </h:head>
+
+        <h:body styleClass="layout-body ui-loading">
+            <f:facet name="last">
+                <h:outputStylesheet name="bundle/learnweb.main.css"/>
+            </f:facet>
+
+            <ui:insert name="body_content">
+                <div class="layout-wrapper #{userBean.loggedIn and not userBean.hideSidebarMenu ? null : 'layout-wrapper-sidebar-inactive'}">
+                    <ui:include src="parts/header.xhtml"/>
+
+                    <ui:fragment rendered="#{userBean.loggedIn}">
+                        <ui:include src="parts/sidebar.xhtml"/>
+                    </ui:fragment>
+
+                    <div class="layout-main ui-fluid d-flex flex-column" id="main">
+                        <main class="layout-main-content #{extraPageClass}">
+                            <p:messages id="message" showDetail="false" showSummary="true" escape="false" globalOnly="true">
+                                <p:autoUpdate />
+                            </p:messages>
+
+                            <ui:fragment rendered="#{not hideBreadcrumbs}">
+                                <h:outputScript name="learnweb/js/breadcrumb.js" target="body"/>
+
+                                <div class="breadcrumb mb-3">
+                                    <ui:insert name="breadcrumb"/>
+
+                                    <div class="ms-auto">
+                                        <ui:insert name="breadcrumb_right"/>
+                                    </div>
+                                </div>
+                            </ui:fragment>
+
+                            <noscript>
+                                <p:panel header="#{msg['error']}" styleClass="ui-widget-danger">
+                                    <h:outputText styleClass="h5 d-block" value="#{msg['javascript_disabled']}" escape="false"/>
+                                </p:panel>
+                            </noscript>
+
+                            <ui:insert name="center_layout"/>
+                        </main>
+
+                        <ui:include src="parts/footer.xhtml"/>
+                    </div>
+                </div>
+            </ui:insert>
+
+            <p:growl id="growl" escape="false" life="4000" for="growl" showDetail="true" skipDetailIfEqualsSummary="true">
+                <p:autoUpdate />
+            </p:growl>
+
+            <p:ajaxStatus onstart="$('.layout-combined-loader').addClass('loading');" delay="100" widgetVar="ajax-status"
+                          oncomplete="$('.layout-combined-loader').removeClass('loading');"/>
+
+            <h:form id="global_commands" styleClass="d-none">
+                <p:remoteCommand name="commandSetPreference" actionListener="#{userBean.commandSetPreference}"
+                                 immediate="true" ignoreAutoUpdate="true" process="@this" global="false" />
+                <p:remoteCommand name="commandGuideStepComplete" actionListener="#{userBean.commandGuideStepComplete}"
+                                 immediate="true" ignoreAutoUpdate="true" process="@this" global="false"/>
+            </h:form>
+
+            <p:confirmDialog widgetVar="gConfirmDlg" global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}">
+                <p:commandButton value="#{msg.yes}" type="button" styleClass="ui-confirmdialog-yes" icon="fas fa-check"/>
+                <p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no ui-button-outlined ui-button-secondary" icon="fas fa-xmark"/>
+            </p:confirmDialog>
+
+            <ui:include src="parts/guide.xhtml"/>
+        </h:body>
+    </f:view>
+</html>

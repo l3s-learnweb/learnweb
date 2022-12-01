@@ -1,0 +1,142 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
+                xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="pageTitle" value="#{msg.courses}"/>
+<ui:param name="hasAccessPermission" value="#{userBean.moderator}"/>
+
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="admin/courses.jsf" title="#{msg.courses}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+    </lw:breadcrumb-item>
+</ui:define>
+
+<ui:define name="center_layout">
+    <h:form id="courses_table">
+        <p:blockUI block="courses" widgetVar="coursesOverlay">
+            <h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
+        </p:blockUI>
+
+        <p:dataTable id="courses" var="course" value="#{adminCoursesBean.courses}">
+            <f:facet name="header">
+                <div class="d-flex">
+                    <div class="me-auto">
+                        #{msg.courses}
+                        <p:button icon="fas fa-circle-question" onclick="return false;"/>
+                        <p:tooltip for="@previous" value="On this page you can add, delete and edit courses as well as view user submissions."/>
+                    </div>
+                    <div class="d-md-block d-flex flex-column">
+                        <p:commandButton value="#{msg.create}" styleClass="float-end ui-button-warning" onclick="PF('createCourseWidget').show();"/>
+                    </div>
+                </div>
+            </f:facet>
+
+            <f:facet name="footer">
+                <h:panelGroup>
+                    <h:commandLink styleClass="text-danger p-1">
+                        <i class="fas fa-fw fa-file-pdf" aria-hidden="true"></i>
+                        <p:dataExporter type="pdf" target="courses" fileName="users"/>
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="text-success p-1">
+                        <i class="fas fa-fw fa-file-excel" aria-hidden="true"></i>
+                        <p:dataExporter type="xls" target="courses" fileName="users"/>
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="text-secondary p-1">
+                        <i class="fas fa-fw fa-file-csv" aria-hidden="true"></i>
+                        <p:dataExporter type="csv" target="courses" fileName="users"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+
+            <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="dd-sm-none" filterBy="#{course.id}">
+                <h:outputText value="#{course.id}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.title}" sortBy="#{course.title}" filterBy="#{course.title}" filterMatchMode="contains">
+                <h:outputText value="#{course.title}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.registration_wizard}" sortBy="#{course.registrationWizard}" filterBy="#{course.registrationWizard}" filterMatchMode="contains">
+                <h:outputText value="Disabled" styleClass="font-italic" rendered="#{course.registrationClosed}"/>
+
+                <h:outputLink value="#{of:getRequestBaseURL()}wizard=#{course.registrationWizard}" rendered="#{not course.registrationClosed}">
+                    <h:outputText value="#{course.registrationWizard}"/>
+                </h:outputLink>
+	        </p:column>
+
+            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="dd-sm-none" sortBy="#{course.createdAt}">
+                <h:outputText value="#{course.createdAt}">
+                    <f:convertDateTime timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="#{msg.organisation}" rendered="#{userBean.admin}" sortBy="#{course.organisation.title}" filterBy="#{course.organisation.title}" filterMatchMode="contains">
+                <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}" styleClass="dd-xs-none">
+                <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
+            </p:column>
+
+            <p:column styleClass="text-end mw-r15">
+                <p:linkButton styleClass="ui-button-info rounded-button ui-button-flat" icon="fas fa-pencil" title="#{msg.edit}" href="admin/course.jsf">
+                    <f:param name="course_id" value="#{course.id}"/>
+                </p:linkButton>
+
+                <p:commandButton styleClass="ui-button-danger rounded-button ui-button-flat" icon="fas fa-trash" title="#{msg.delete}"
+                                 process="@this" actionListener="#{adminCoursesBean.onDeleteCourse(course)}" update="@form"
+                                 rendered="#{course.memberCount == 0 || userBean.admin}"
+                                 onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
+                    <p:confirm message="#{of:format1(msg.courses_delete_question, course.title)}"/>
+                </p:commandButton>
+
+                <p:commandButton styleClass="ui-button-secondary rounded-button ui-button-flat" icon="fas fa-eye-slash" title="#{msg.anonymise}"
+                                 process="@this" actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" update="@form" rendered="#{userBean.admin}"
+                                 onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
+                    <p:confirm message="#{of:format1(msg.courses_anonymise_question, course.title)}"/>
+                </p:commandButton>
+
+                <p:linkButton styleClass="ui-button-success rounded-button ui-button-flat" icon="fas fa-check-double"
+                              title="#{msg['Submission.view_user_submissions']}" href="admin/users_submissions.jsf">
+                    <f:param name="course_id" value="#{course.id}"/>
+                </p:linkButton>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <p:dialog widgetVar="createCourseWidget" header="#{msg.add_new_course}" styleClass="overflow-hidden">
+        <h:form id="addcourse">
+            <p:blockUI block="addcourse" widgetVar="createCourseOverlay">
+                <h:outputText value="#{msg.please_wait}"/>
+            </p:blockUI>
+
+            <div class="field">
+                <p:outputLabel for="@next" value="#{msg.course_title}:"/>
+                <p:inputText value="#{adminCoursesBean.newCourse.title}" required="true"/>
+                <p:message for="@previous"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="@next" value="#{msg.registration_wizard}:"/>
+                <p:inputText value="#{adminCoursesBean.newCourse.registrationWizard}"/>
+                <p:message for="@previous"/>
+            </div>
+            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" update="@form :courses_table" process="@form"
+                             onstart="PF('createCourseOverlay').show();" oncomplete="PF('createCourseOverlay').hide();if(!args.validationFailed){PF('createCourseWidget').hide();}"/>
+            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourseAndGroup()}" value="Add course and group" styleClass="ui-button-warning ms-1"
+                             update="@form :courses_table" process="@form" onstart="PF('createCourseOverlay').show();"
+                             oncomplete="PF('createCourseOverlay').hide();if(!args.validationFailed){PF('createCourseWidget').hide();}"/>
+        </h:form>
+    </p:dialog>
+</ui:define>
+
+</ui:composition>

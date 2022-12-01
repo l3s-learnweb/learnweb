@@ -1,0 +1,39 @@
+.member-grid {
+  display: grid;
+  grid-gap: 0;
+  grid-auto-flow: row dense;
+  grid-template-columns: repeat(auto-fill, minmax(6.25rem, 1fr));
+
+  .member-item {
+    box-shadow: $box-shadow-sm;
+    width: auto !important;
+  }
+
+  .gridder-show {
+    grid-column-start: 1;
+    grid-column-end: -1;
+  }
+}
+
+.member-block {
+  display: block;
+  position: relative;
+  color: var(--body-color) !important;
+  background: var(--light);
+  box-shadow: $box-shadow-sm;
+
+  .member-star {
+    @include fa-icon-override($fa-var-trophy);
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    font-size: 1rem;
+    color: $mod;
+  }
+
+  &:hover {
+    background: var(--primary);
+    color: var(--primary-text-color) !important;
+    text-decoration: none !important;
+  }
+}

@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:lw="http://l3s.de/learnweb"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:p="http://primefaces.org/ui">
+
+<!--@elvariable id="showPreview" type="java.lang.Boolean"-->
+<!--@elvariable id="status" type="jakarta.servlet.jsp.jstl.core.LoopTagStatus"-->
+<!--@elvariable id="logEntry" type="de.l3s.learnweb.logging.LogEntry"-->
+
+<div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') }">
+	<h:outputStylesheet name="bundle/jquery.fancybox.min.css"/>
+	<h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
+
+	<p:avatar label="${logEntry.user.initials}" styleClass="mt-1 me-3 align-self-start" shape="circle" dynamicColor="true" saturation="50" lightness="50">
+		<h:graphicImage value="#{logEntry.user.imageUrl}" alt="#{logEntry.user.fullName}" rendered="#{not empty logEntry.user.imageUrl}"/>
+	</p:avatar>
+
+	<div class="overflow-hidden">
+		<p class="mb-0 log-title">
+			<h:outputText value="#{logEntry.getDescription(userBean.bundle)}" escape="false"/>
+			<h:panelGroup rendered="#{logEntry.queryNeeded}">
+				<h:outputText value=" #{msg.with_query}" escape="false"/>
+				<h:outputLink styleClass="log-query" value="search.jsf">
+					<h:outputText value=" #{logEntry.resource.query}" escape="false"/>
+					<f:param name="query" value="#{logEntry.resource.query}"/>
+					<f:param name="action" value="web"/>
+				</h:outputLink>
+				<h:outputText value=" #{msg.from_source} #{logEntry.resource.service.label} " escape="false"/>
+			</h:panelGroup>
+		</p>
+		<p class="small fw-light mb-0 log-date">
+			<lw:timeAgo date="#{logEntry.date}" timeZone="#{userBean.timeZone}"/>
+		</p>
+
+		<h:panelGroup rendered="#{showPreview and logEntry.resource != null}" layout="block" styleClass="resource-log-snippet mt-2">
+			<h:outputLink styleClass="resource-preview text-decoration-none mx-auto mw-r10" value="resource.jsf" pt:data-resview="single">
+				<f:param name="resource_id" value="#{logEntry.resource.id}"/>
+
+				<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+					<ui:param name="res" value="#{logEntry.resource}"/>
+					<ui:param name="showSelectIcon" value="false"/>
+				</ui:decorate>
+			</h:outputLink>
+
+			<div class="resource-details ps-3">
+				<h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>
+			</div>
+		</h:panelGroup>
+	</div>
+</div>
+
+</ui:composition>

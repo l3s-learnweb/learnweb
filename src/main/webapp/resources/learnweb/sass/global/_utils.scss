@@ -1,0 +1,126 @@
+.mw-r10 {
+  max-width: 10rem;
+}
+
+.mw-r15 {
+  max-width: 15rem;
+}
+
+.mw-r25 {
+  max-width: 25rem;
+}
+
+.mw-r30 {
+  max-width: 30rem;
+}
+
+.mh-vh50 {
+  max-height: 50vh;
+  overflow: auto;
+}
+
+.mh-vh30 {
+  max-height: 30vh;
+  overflow: auto;
+}
+
+// fix position of sticky-md-top, considering height of our navbar
+@include media-breakpoint-up(md) {
+  .sticky-md-top {
+    top: $topbar-height + $spacer;
+  }
+}
+
+.bg-highlight {
+  color: var(--white);
+  background-color: var(--gray-600);
+  border: 1px solid var(--gray-600);
+  border-radius: var(--border-radius);
+  padding: 0 var(--border-radius);
+}
+
+.text-truncate-multiline {
+  @include text-truncate();
+
+  // if this feature is supported, it would show two lines, if not, just single line
+  @supports (display: -webkit-box) {
+    white-space: initial;
+    display: -webkit-box; /* stylelint-disable-line */
+    -webkit-line-clamp: 2; /* stylelint-disable-line */
+    -webkit-box-orient: vertical; /* stylelint-disable-line */
+  }
+}
+
+.modal-dialog-select {
+  max-width: 365px;
+  width: 100% !important;
+
+  .ui-selectonemenu-label {
+    max-width: 254px;
+  }
+}
+
+@keyframes highlight {
+  50% {
+    transform: scale(1.025);
+  }
+}
+
+section:target .highlight {
+  @include media-breakpoint-up(md) {
+    animation: highlight 1s ease;
+  }
+}
+
+.links-list {
+  flex-wrap: wrap;
+  display: flex;
+
+  a {
+    white-space: nowrap;
+    width: 18rem;
+    padding: 1rem;
+    font-size: 1.15rem;
+    text-decoration: none;
+    margin: 0.5rem 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0);
+    transition: 0.35s;
+    background: rgba(253, 253, 253, 0.6);
+    display: inline-block;
+    vertical-align: middle;
+
+    &:hover {
+      background: rgba(247, 247, 247, 0.7);
+
+      i {
+        font-size: larger;
+      }
+    }
+
+    i {
+      transition: 0.15s;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.first-letter-capitalize {
+  &::first-letter {
+    text-transform: capitalize;
+  }
+}
+
+// Utilities for hiding content on smaller displays. Similar to existing .d-#{}-none utils, but using max-width (down) instead of min-width
+// For example, instead of .d-none.d-md-block, you can use .dd-sm-none class.
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-down($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+    .dd#{$infix}-none {
+      display: none !important;
+    }
+  }
+}
+
+.encrypt-email::after {
+  content: attr(data-name) '@' attr(data-domain) '.' attr(data-tld);
+}

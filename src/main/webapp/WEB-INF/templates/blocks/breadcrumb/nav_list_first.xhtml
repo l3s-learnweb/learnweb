@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+<li><a href="#{request.contextPath}/lw/myhome/welcome.jsf">#{msg.homeLabel}</a></li>
+<li><a href="#{request.contextPath}/lw/myhome/groups.jsf">#{msg.myGroups}</a></li>
+<li><a href="#{request.contextPath}/lw/myhome/resources.jsf">#{msg.myResourcesTitle}</a></li>
+<li><a href="#{request.contextPath}/lw/myhome/notification.jsf">#{msg.notifications}</a></li>
+<li><a href="#{request.contextPath}/lw/user/detail.jsf">#{msg.myProfileTitle}</a></li>
+<li><a href="#{request.contextPath}/lw/myhome/profile.jsf">#{msg.settings}</a></li>
+<li><a href="#{request.contextPath}/lw/dashboard/index.jsf">#{msg.dashboard}</a></li>
+<li><a href="#{request.contextPath}/lw/your_information/index.jsf">#{msg.your_information}</a></li>
+<ui:fragment rendered="#{userBean.moderator}">
+    <li><a href="#{request.contextPath}/lw/moderator.jsf">#{msg.moderator}</a></li>
+</ui:fragment>
+<ui:fragment rendered="#{userBean.admin}">
+    <li><a href="#{request.contextPath}/lw/admin/index.jsf">#{msg.admin}</a></li>
+    <li><a href="#{request.contextPath}/lw/myhome/search_history.jsf">#{msg['search_history.title']}</a></li>
+</ui:fragment>
+</ui:composition>

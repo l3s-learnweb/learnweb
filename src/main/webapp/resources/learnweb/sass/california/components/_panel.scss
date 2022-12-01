@@ -1,0 +1,19 @@
+body {
+  .ui-panel,
+  .ui-panelgrid,
+  .ui-tabs,
+  .ui-tree {
+    margin-bottom: $spacer;
+  }
+
+  .ui-panel .ui-panel-titlebar,
+  .ui-datatable .ui-datatable-header,
+  .ui-accordion .ui-accordion-header,
+  .ui-tabs .ui-tabs-nav li.ui-tabs-header a {
+    line-height: 2;
+  }
+
+  .ui-panelgrid .ui-panelgrid-cell {
+    padding: $spacer * 0.5;
+  }
+}

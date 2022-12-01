@@ -2,11 +2,7 @@
 <FindBugsFilter
         xmlns="https://github.com/spotbugs/filter/3.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
-    <!-- We ignore return value of many executeQuery() calls -->
-    <Match>
-        <Bug pattern="RV_RETURN_VALUE_IGNORED"/>
-    </Match>
+        xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/master/spotbugs/etc/findbugsfilter.xsd">
     <!-- We do not preform check if file was deleted -->
     <Match>
         <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
@@ -18,44 +14,22 @@
             <Bug pattern="EI_EXPOSE_REP2"/>
         </Or>
     </Match>
-    <!-- TODO @astappiev: WaybackUrlManager has hardcoded path to log file -->
-    <Match>
-        <Bug pattern="DMI_HARDCODED_ABSOLUTE_FILENAME"/>
-    </Match>
-    <!-- TODO @astappiev: unsafe cast of Resource to GlossaryResource -->
-    <Match>
-        <Bug pattern="BC_UNCONFIRMED_CAST"/>
-    </Match>
-    <!-- We do not want to put locale to each .toLowerCase, .toUpperCase methods -->
-    <Match>
-        <Bug pattern="DM_CONVERT_CASE"/>
-    </Match>
-    <!-- It is OK to have uncalled private methods -->
-    <Match>
-        <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
-    </Match>
-    <!-- FIXME: Allow return null from methods returning array -->
-    <Match>
-        <Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS"/>
-    </Match>
-    <!-- No deserialization methods -->
-    <Match>
-        <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>
-    </Match>
-    <!-- It doesn't check that values is written in onLoad method -->
-    <Match>
-        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
-    </Match>
-    <!-- FIXME: Capture of runtime exception -->
-    <Match>
-        <Bug pattern="REC_CATCH_EXCEPTION"/>
-    </Match>
+    <!-- The equals method is redundant for the classes as we compare only ID -->
     <Match>
         <Or>
             <Class name="de.l3s.learnweb.resource.glossary.GlossaryResource"/>
             <Class name="de.l3s.learnweb.resource.survey.SurveyResource"/>
         </Or>
         <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    </Match>
+    <!-- The MenuElement is not serializable in the class, but it will in the implementation -->
+    <Match>
+        <Class name="de.l3s.learnweb.component.ActiveSubmenu"/>
+        <Bug pattern="SE_BAD_FIELD"/>
+    </Match>
+    <!-- No deserialization methods -->
+    <Match>
+        <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>
     </Match>
     <!-- This class use methods from parent class and can be static -->
     <Match>
@@ -66,14 +40,6 @@
     <Match>
         <Class name="de.l3s.maintenance.MaintenanceTask"/>
         <Bug pattern="DM_EXIT"/>
-    </Match>
-    <!-- Suggests to refactor lambdas to inner static classes -->
-    <Match>
-        <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
-    </Match>
-    <!-- Suggests to refactor lambdas to inner static classes -->
-    <Match>
-        <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
     </Match>
     <!-- Gives false positive results -->
     <Match>

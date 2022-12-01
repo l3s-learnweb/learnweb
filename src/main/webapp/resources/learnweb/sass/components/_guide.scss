@@ -1,0 +1,98 @@
+.guide-slideshow {
+  position: relative;
+  width: 100%;
+
+  &::before {
+    position: absolute;
+    content: '';
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: $transition-fade;
+    background-color: var(--white);
+  }
+
+  &::after {
+    @extend .fas;
+
+    content: fa-content($fa-var-play-circle);
+    position: absolute;
+    top: calc(50% - 3rem);
+    left: calc(50% - 3rem);
+    font-size: 6rem;
+    width: 6rem;
+    height: 6rem;
+    color: var(--white);
+    text-align: center;
+  }
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+
+    &::before {
+      opacity: 0.5;
+    }
+
+    &::after {
+      color: var(--primary);
+    }
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.ui-guide {
+  border: 0 !important;
+
+  ul {
+    li {
+      border-top: 0 !important;
+    }
+  }
+
+  .ui-steps-item.ui-state-highlight {
+    border-top: 0 !important;
+
+    ~ .ui-steps-item {
+      border-top: 0 !important;
+    }
+  }
+
+  .completed {
+    background-color: scale-color($success, $lightness: 85%);
+    color: var(--success);
+    border-top: 4px solid var(--success) !important;
+
+    .ui-steps-title {
+      color: var(--success) !important;
+      font-weight: 400;
+      font-family: sans-serif;
+    }
+
+    &::before {
+      color: var(--success) !important;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .not-completed {
+    color: var(--info);
+    background-color: scale-color($info, $lightness: 85%);
+    border-top: 4px solid var(--info) !important;
+
+    .ui-steps-title {
+      color: var(--info) !important;
+      font-weight: 400;
+      font-family: sans-serif;
+    }
+
+    &::before {
+      color: var(--info) !important;
+      margin-right: 0.5rem;
+    }
+  }
+}
+

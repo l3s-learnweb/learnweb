@@ -1,0 +1,33 @@
+@use 'sass:meta';
+
+@use 'themes/alive';
+@use 'themes/ash';
+@use 'themes/blue';
+@use 'themes/bluegray';
+@use 'themes/cappuccino';
+@use 'themes/cyan';
+@use 'themes/emerald';
+@use 'themes/gray';
+@use 'themes/green';
+@use 'themes/hollywood';
+@use 'themes/mantle';
+@use 'themes/montreal';
+@use 'themes/noir';
+@use 'themes/orange';
+@use 'themes/peak';
+@use 'themes/pink';
+@use 'themes/predawn';
+@use 'themes/purple';
+@use 'themes/teal';
+@use 'themes/yellow';
+
+$themes: 'alive', 'ash', 'blue', 'bluegray', 'cappuccino', 'cyan', 'emerald', 'gray', 'green', 'hollywood',
+  'mantle', 'montreal', 'noir', 'orange', 'peak', 'pink', 'predawn', 'purple', 'teal', 'yellow';
+
+@each $theme in $themes {
+  [data-theme=#{$theme}] {
+    @each $name, $value in meta.module-variables(#{$theme}) {
+      --#{$name}: #{$value};
+    }
+  }
+}

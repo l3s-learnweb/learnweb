@@ -1,0 +1,14 @@
+body {
+  .ui-blockui {
+    background-image: url('../images/blockui-spinner.svg');
+    background-size: 6rem;
+    background-repeat: no-repeat;
+    background-position: center 4rem;
+  }
+
+  .ui-blockui-content {
+    box-shadow: none;
+    color: #fff;
+    top: 7rem !important;
+  }
+}

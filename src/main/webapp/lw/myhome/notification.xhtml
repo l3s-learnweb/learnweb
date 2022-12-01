@@ -1,0 +1,59 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="pageTitle" value="#{msg.notifications}"/>
+
+<f:metadata>
+	<f:viewAction action="#{messageBean.onLoad}" if="#{userBean.user ne null}"/>
+</f:metadata>
+
+<ui:define name="breadcrumb">
+	<lw:breadcrumb-item link="myhome/notification.jsf" title="#{msg.notifications}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
+</ui:define>
+
+<ui:define name="center_layout">
+	<p:panel header="#{msg.notifications}">
+		<h:panelGroup layout="block" styleClass="w-100 mb-3" rendered="#{userBean.moderator}">
+			<h:outputText value="#{msg.moderator}: "/>
+			<a href="#{request.contextPath}/lw/admin/notification.jsf">
+				<h:outputText value="#{msg.send_notification}"/>
+			</a>
+		</h:panelGroup>
+
+		<h:outputText value="#{msg.no_notifications}" rendered="#{empty messageBean.receivedMessages}"/>
+
+		<ui:repeat var="message" value="#{messageBean.receivedMessages}" varStatus="status">
+			<div class="d-flex #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
+				<p:avatar label="${message.senderUser.initials}" styleClass="me-3" shape="circle" dynamicColor="true" saturation="50" lightness="50">
+					<h:graphicImage value="#{message.senderUser.imageUrl}" alt="#{message.senderUser.fullName}" rendered="#{not empty message.senderUser.imageUrl}"/>
+				</p:avatar>
+
+				<div class="text-break">
+					<h5>
+						<h:outputText value="#{message.title}" />
+						<h:outputText rendered="#{not message.seen}" value=" (#{msg.new_word})" />
+					</h5>
+					<div class="message-container">
+						<h:outputText value="#{message.text}" escape="false"/>
+					</div>
+					<span class="small fw-light">
+						<h:outputText value="#{msg.from_user} " escape="false"/>
+						<h:outputText value="#{message.senderUser.username} " styleClass="fw-bold" escape="false"/>
+						<h:outputText value="#{msg.on_date} " escape="false" styleClass="fw-light"/>
+						<h:outputText value="#{message.createdAt}">
+							<f:convertDateTime type="localDateTime" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+						</h:outputText>
+					</span>
+				</div>
+			</div>
+		</ui:repeat>
+	</p:panel>
+</ui:define>
+
+</ui:composition>

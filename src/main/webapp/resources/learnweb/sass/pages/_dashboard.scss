@@ -1,0 +1,90 @@
+.dashboard {
+  .stats {
+    background-color: var(--surface-ground);
+    position: relative;
+    margin-top: 29px;
+    border-top: 7px solid var(--primary);
+    border-bottom: solid 1px var(--border-color);
+    border-right: solid 1px var(--border-color);
+    border-left: solid 1px var(--border-color);
+    text-align: center;
+
+    .stats-numbers {
+      line-height: 25px;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px;
+    }
+
+    .stats-title {
+      line-height: 21px;
+      font-size: 17px;
+      margin: 10px;
+    }
+  }
+
+  .ui-panel {
+    .ui-panel-title {
+      margin: 0;
+    }
+
+    .ui-panel-content {
+      padding: 17px;
+    }
+  }
+
+  .profile-details {
+    .ui-panel-content {
+      padding: 0;
+      text-align: center;
+    }
+
+    img {
+      width: 100%;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      top: -60px;
+      position: relative;
+    }
+
+    .profile-name {
+      font-weight: 600;
+      color: var(--dark);
+      text-align: center;
+      display: block;
+      margin-top: -60px;
+    }
+
+    .profile-role {
+      color: var(--dark);
+      text-align: center;
+      display: block;
+    }
+
+    .ui-button {
+      margin-top: 1rem;
+      padding: 0 35px;
+      margin-right: 0;
+    }
+
+    .profile-statistics-panel {
+      text-align: center;
+      display: inline-block;
+      position: relative;
+
+      .profile-statistics {
+        font-weight: 600;
+        font-size: 1rem;
+        display: block;
+      }
+
+      .statistics-title {
+        border-bottom: 4px solid transparent;
+        padding-bottom: 10px;
+      }
+    }
+  }
+}

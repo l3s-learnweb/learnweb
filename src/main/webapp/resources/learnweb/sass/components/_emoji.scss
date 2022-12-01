@@ -1,0 +1,125 @@
+.emoji-picker-trigger {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  box-shadow: none;
+  border: 0;
+  opacity: 0.5;
+  cursor: pointer;
+  outline: none !important;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.emoji-picker-container {
+  position: relative;
+
+  textarea {
+    width: 100%;
+  }
+}
+
+.emoji-picker-open {
+  .emoji-picker-trigger {
+    > svg {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &::before {
+      content: '\00D7'; // &times;
+      position: absolute;
+      font-size: 1.8rem;
+      background: #fff;
+      top: -0.3rem;
+      right: 0;
+      line-height: 1;
+    }
+  }
+
+  .emoji-picker {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 1.8rem;
+  }
+}
+
+.emoji-picker {
+  display: none;
+  z-index: 999;
+  max-width: 16.5rem;
+  overflow: hidden;
+  background: var(--surface-ground);
+  border: 1px solid var(--border-color);
+  box-shadow: $box-shadow-sm;
+  margin-top: 8px;
+  outline: none;
+
+  .emoji-picker-tabs {
+    padding: 0;
+    margin: 0;
+    display: table;
+    width: 100%;
+    background: var(--gray-300);
+    list-style: none;
+
+    > li {
+      display: table-cell;
+    }
+
+    .emoji-picker-anchor {
+      display: block;
+      padding: 0.25rem 0.25rem 0.5rem;
+      text-align: center;
+      text-decoration: none;
+      font-size: 1.5rem;
+      position: initial;
+      opacity: 0.75;
+      line-height: 1;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--border-color);
+        opacity: 1;
+      }
+
+      &.active {
+        background: var(--gray-500);
+      }
+    }
+  }
+
+  .emoji-picker-list {
+    padding: 0.4rem;
+    margin: 0;
+    list-style: none;
+    text-align: left;
+    max-height: 20rem;
+    overflow: auto;
+    scrollbar-width: thin;
+
+    > li {
+      display: inline-block;
+    }
+
+    .emoji-picker-emoji {
+      display: inline-block;
+      padding: 0.4rem 0.2rem 0.55rem;
+      font-size: 1.5rem;
+      line-height: 1;
+      width: 2.5rem;
+      height: 2.5rem;
+      text-align: center;
+      cursor: pointer;
+      color: var(--body-color);
+
+      &:hover {
+        background: var(--gray-300);
+      }
+    }
+  }
+}

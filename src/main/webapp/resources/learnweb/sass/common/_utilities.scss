@@ -1,0 +1,40 @@
+@function varify-map($map) {
+  $_map: ();
+  @each $key, $value in $map {
+    $_map: map-merge($_map, ($key: var(--#{$key})));
+  }
+  @return $_map;
+}
+
+$utilities: (
+  'gradient': (),
+  'text-opacity': (),
+  'bg-opacity': (),
+  'border-opacity': (),
+  'color': (
+    property: color,
+    class: text,
+    values: map-merge(varify-map($theme-colors), (
+      'body': $body-color, // $gray-900
+      'muted': $text-muted, // $gray-600
+      'white': $white,
+      'reset': inherit,
+    ))
+  ),
+  'background-color': (
+    property: background-color,
+    class: bg,
+    values: map-merge(varify-map($theme-colors), (
+      'body': $body-bg,
+      'surface': $surface-ground,
+      'transparent': transparent,
+    ))
+  ),
+  'border-color': (
+    property: border-color,
+    class: border,
+    values: map-merge(varify-map($theme-colors), (
+      'white': $white,
+    ))
+  )
+);

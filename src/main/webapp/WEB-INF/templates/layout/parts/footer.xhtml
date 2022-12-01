@@ -1,0 +1,15 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <footer class="layout-footer bg-dark text-muted">
+        <div class="container p-3">
+            <a href="#{request.contextPath}/lw/imprint.jsf">#{msg['imprint.title']}</a> -
+			<a href="#{request.contextPath}/lw/privacy_statement.jsf">#{msg['privacy_statement']}</a> - 
+			<a href="#{request.contextPath}/lw/contact.jsf">#{msg['contact']}</a> -
+			<h:outputText value="#{msg.index_footer_text} "/>
+        </div>
+    </footer>
+
+</ui:composition>

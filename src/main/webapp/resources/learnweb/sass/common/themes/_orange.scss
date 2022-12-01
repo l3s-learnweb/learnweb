@@ -1,0 +1,7 @@
+$primary: #fe875d;
+
+$primary-dark: #e26134;
+$primary-darker: #b34621;
+
+$primary-light: scale-color($primary, $lightness: 60%);
+$primary-lighter: scale-color($primary, $lightness: 80%);

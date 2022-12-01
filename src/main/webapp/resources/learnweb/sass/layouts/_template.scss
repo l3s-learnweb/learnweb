@@ -1,0 +1,73 @@
+@import 'header';
+@import 'sidebar';
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  min-width: $min-width;
+}
+
+.layout-wrapper {
+  .layout-main {
+    position: relative;
+    margin-left: $sidebar-width;
+    min-height: calc(100vh - 52px);
+    @include transition(margin-left $transition-duration);
+
+    @include media-breakpoint-down($sidebar-hide-display) {
+      margin-left: 0;
+    }
+
+    .layout-main-content {
+      padding: $grid-gutter-width;
+      flex: 1 0 auto;
+    }
+
+    .layout-footer {
+      flex-shrink: 1;
+    }
+  }
+
+  &.layout-wrapper-sidebar-inactive {
+    .layout-main {
+      margin-left: 0;
+    }
+  }
+}
+
+// adds before element so that the target of anchor links isn't hidden by the menu. Important for example for the privacy statement
+:target::before {
+  content: '';
+  display: block;
+  height: #{2*$topbar-height};
+  margin: -#{2*$topbar-height} 0 0;
+}
+
+@include media-breakpoint-up(md) {
+  :target::before {
+    content: '';
+    display: block;
+    height: $topbar-height;
+    margin: -$topbar-height 0 0;
+  }
+}
+
+.ui-loading .ui-loading-spin {
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    background: var(--surface-ground) url('../images/blockui-spinner.svg') no-repeat center 4rem;
+    background-size: 6rem;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 990 !important;
+  }
+}

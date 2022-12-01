@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
+<c:choose>
+    <c:when test="${res.officeResource and not res.offline}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded_office.xhtml">
+            <ui:param name="res" value="#{res}"/>
+        </ui:decorate>
+    </c:when>
+
+    <c:when test="${res.type eq 'video' and res.embeddedCode ne null}">
+        <h:outputText value="#{res.embeddedCode}" escape="false"/>
+    </c:when>
+
+    <c:when test="${res.type eq 'video'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded_video.xhtml">
+            <ui:param name="res" value="#{res}"/>
+        </ui:decorate>
+    </c:when>
+
+    <c:when test="${res.type eq 'audio'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded_audio.xhtml">
+            <ui:param name="res" value="#{res}"/>
+        </ui:decorate>
+    </c:when>
+
+    <c:when test="${res.type eq 'glossary'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded_glossary.xhtml">
+            <ui:param name="res" value="#{res}"/>
+        </ui:decorate>
+    </c:when>
+
+    <c:when test="${res.type eq 'website'}">
+        <p:tabView styleClass="res-embedded-tabs" activeIndex="#{res.defaultTab.ordinal()}">
+            <p:tab title="${msg['resource.tab.SCREENSHOT']}">
+                <img src="#{res.thumbnailLargest}" alt="#{res.title}" class="d-block"/>
+            </p:tab>
+            <p:tab title="${msg['resource.tab.LIVE']}">
+                <iframe src="#{fn:replace(res.url, 'http://', 'https://')}" title="#{res.title}"></iframe>
+            </p:tab>
+            <p:tab title="${msg['resource.tab.ARCHIVED']}">
+                <iframe src="#{res.archiveUrls[0].archiveUrl}" title="#{res.title}" jsf:rendered="#{not empty res.archiveUrls}"></iframe>
+                <p class="d-block text-white m-3" jsf:rendered="#{empty res.archiveUrls}">This page has not been archived yet.</p>
+            </p:tab>
+        </p:tabView>
+    </c:when>
+
+    <c:when test="${res.type eq 'pdf' and res.downloadUrl ne null}">
+        <iframe src="#{res.downloadUrl}" title="#{res.title}"></iframe>
+    </c:when>
+
+    <c:when test="${res.type eq 'text' and res.downloadUrl ne null}">
+        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-surface p-1"></iframe>
+    </c:when>
+
+    <c:when test="${res.type eq 'survey'}">
+        <!-- quick and dirty solution to link to surveys need complete refactoring -->
+        <div style="position: absolute; top: 50%; transform: translateY(-50%); text-align: center; width: 100%;">
+            <ui:fragment rendered="#{userBean.admin}">
+                <p:linkButton outcome="/lw/survey/template" icon="fas fa-window-maximize" styleClass="ui-button-secondary" value="Edit Template"
+                              target="_top" rendered="#{res.type eq 'survey'}">
+                    <f:param name="resource_id" value="#{res.id}"/>
+                </p:linkButton>
+
+                <p:linkButton outcome="/lw/survey/results" icon="fas fa-list-alt" styleClass="ui-button-secondary" value="#{msg['survey.open_results']}"
+                              target="_top" rendered="#{res.type eq 'survey' and userBean.user.moderator}">
+                    <f:param name="resource_id" value="#{res.id}"/>
+                </p:linkButton>
+            </ui:fragment>
+
+            <p:linkButton outcome="/lw/survey/survey" icon="fas fa-list-alt" styleClass="ui-button-secondary" value="#{msg['survey.open']}" target="_top" >
+                <f:param name="resource_id" value="#{res.id}"/>
+            </p:linkButton>
+        </div>
+    </c:when>
+
+    <c:when test="${not empty res.thumbnailLargest}">
+        <img src="#{res.thumbnailLargest}" alt="#{res.title}" class="d-block"/>
+    </c:when>
+
+    <c:otherwise>
+        <div class="bg-dark text-center text-white align-self-center p-4 px-5 m-3">
+            <h:outputText value="#{msg['resource.no_preview']}" styleClass="fs-4 d-block mb-4"/>
+            <p:linkButton icon="fas fa-download" value="#{msg.download}" href="#{resourceDetailBean.resource.downloadUrl}"
+                          rendered="#{resourceDetailBean.resource.downloadUrl ne null}"/>
+        </div>
+    </c:otherwise>
+</c:choose>
+
+</ui:composition>
