@@ -66,7 +66,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private static String PATTERN_DATE = "yyyy-MM-dd";
     private static String PATTERN_TIME = "HH:mm:ss";
     private static String PATTERN_DATETIME = String.format("%s %s", PATTERN_DATE, PATTERN_TIME);
-
+    private List<JsonSharedObject> sharedObjects = new ArrayList<>();
+    private Gson gson;
     /**
      * Load the variables that needs values before the view is rendered.
      */
@@ -75,9 +76,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
         }
+        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
+            .create();
         for (Group group : groupDao.findByUserId(selectedUserId)) {
             JsonQuery.processQuery(searchHistoryDao.findSessionsByGroupId(group.getId()), searchHistoryDao, group.getId(), userDao, groupDao);
+            calculateEntities(searchHistoryDao.findSessionsByGroupId(group.getId()), group.getId());
         }
+
     }
 
     public SearchQuery getSelectedQuery() {
@@ -229,21 +234,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public String getQueriesJson() throws Exception {
-        if (sessions == null || sessions.isEmpty() || selectedGroupId <= 0) return null;
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
-            .create();
-        //Create new filePath
-        String localPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
-            + "_Summary_" + userDao.findById(selectedUserId).get().getUsername() + "_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
-        String collabPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
-            + "_Summary_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
-        File file = new File(localPath);
+    private void calculateEntities(List<SearchSession> sessions, int selectedGroupId) throws IOException {
+
         //Calculates and returns a list of top entries for each user belonging to the group
         //Also exports a rdf turtle file for every user in the group
         //For runtime calculation only: startTime & endTime
-        long startTime = System.nanoTime();
-        List<JsonSharedObject> sharedObjects = new JsonQuery(new ArrayList<>(),
+
+        sharedObjects = new JsonQuery(new ArrayList<>(),
             new ArrayList<>()).calculateTopEntries(searchHistoryDao.findAllAnnotationCounts(),
             userDao.findByGroupId(selectedGroupId), groupDao.findById(selectedGroupId).get(), sessions, searchHistoryDao, 3);
         //Results of SharedObjects to DB
@@ -256,10 +253,17 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
                 searchHistoryDao.updateSharedObject(gson.toJson(sharedObject), LocalDateTime.now(), sharedObject.getUser().getId(),selectedGroupId);
             }
         }
-        long endTime = System.nanoTime();
-        System.out.println(endTime - startTime);
-        //Create new json
+    }
 
+    public String getQueriesJson() throws Exception {
+        if (sessions == null || sessions.isEmpty() || selectedGroupId <= 0) return null;
+        //Create new filePath
+        String localPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
+            + "_Summary_" + userDao.findById(selectedUserId).get().getUsername() + "_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
+        String collabPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
+            + "_Summary_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
+        File file = new File(localPath);
+        //Create new json
         JsonQuery calculatedQuery = new JsonQuery(new ArrayList<>(),
             new ArrayList<>()).createCollabGraph(sharedObjects);
         if (file.createNewFile()) {
@@ -274,7 +278,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
             gson.toJson(calculatedQuery , writer);
             writer.close();
         }
-
         return gson.toJson(calculatedQuery);
     }
 }

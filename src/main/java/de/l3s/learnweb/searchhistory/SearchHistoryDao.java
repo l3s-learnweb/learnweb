@@ -130,13 +130,13 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @GetGeneratedKeys("id")
     int insertSharedObject(int userId, int groupId, String application, String sharedObject);
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET repetition = ?, session_id = ? WHERE uri = ? AND type = ? ")
-    void updateQueryAnnotation(int repetition, String sessionId, String uri, String type);
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET repetition = ?, session_id = ?, users = ? WHERE uri = ? AND type = ? ")
+    void updateQueryAnnotation(int repetition, String sessionId, String user, String uri, String type);
 
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (id, type, uri, created_at, surface_form, session_id, users, confidence, repetition) "
         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
     @GetGeneratedKeys("uri_id")
-    int insertQueryToAnnotation(String id, String type, String uri, LocalDateTime createdAt, String surface_form, String sessionId, String users, double confidence
+    int insertQueryToAnnotation(String id, String type, String uri, LocalDateTime createdAt, String surfaceForm, String sessionId, String users, double confidence
         , int repetition);
 
     @RegisterRowMapper(RdfObjectMapper.class)
@@ -145,7 +145,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
 
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_rdf (user_id, rdf_value) VALUES (?, ?)")
     @GetGeneratedKeys("id")
-    int insertRdf(int user_id, String rdfValue);
+    int insertRdf(int userId, String rdfValue);
 
     @SqlUpdate("UPDATE learnweb_annotations.annotation_rdf SET rdf_value = ? WHERE user_id = ?")
     void updateRdf(String rdfValue, int userId);
