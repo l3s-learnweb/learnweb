@@ -4,23 +4,31 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.faces.application.FacesMessage;
-import jakarta.faces.view.ViewScoped;
+//import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
+import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.interwebj.client.InterWeb;
@@ -39,6 +47,7 @@ import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.web.WebResource;
+import de.l3s.learnweb.searchhistory.JsonQuery;
 import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
@@ -72,6 +81,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
     private int counter = 0;
     private List<GroupedResources> resourcesGroupedBySource;
+    private Boolean isUserActive;
 
     @Inject
     private SearchHistoryDao searchHistoryDao;
@@ -104,6 +114,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
         onSearch();
 
         Servlets.setNoCacheHeaders(Faces.getResponse());
+
+        isUserActive = false;
     }
 
     // -------------------------------------------------------------------------
@@ -237,6 +249,19 @@ public class SearchBean extends ApplicationBean implements Serializable {
         setSelectedResource(resource);
     }
 
+    private static String filterWebsite(Document webDoc) {
+        StringBuilder newWebText = new StringBuilder();
+        List<String> tagLists = Arrays.asList("title", "p", "h1", "h2", "span");
+        for (String tag : tagLists) {
+            Elements elements = webDoc.select(tag);
+            for (Element e : elements) {
+                String text = e.ownText();
+                newWebText.append(text).append(" ");
+            }
+        }
+        return newWebText.toString();
+    }
+
     /**
      * This method logs a resource click event.
      */
@@ -244,10 +269,30 @@ public class SearchBean extends ApplicationBean implements Serializable {
         try {
             Map<String, String> params = Faces.getRequestParameterMap();
             int tempResourceId = Integer.parseInt(params.get("resourceId"));
-           // search.getResources();
+            isUserActive = true;
+            Resource resource = search.getResources().get(tempResourceId).getResource();
+            String url = resource.getUrl();
+            Document doc = Jsoup.connect(url).timeout(10 * 1000).ignoreHttpErrors(true).
+                userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
+                .get();
+            JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", filterWebsite(doc), searchHistoryDao);
+
             search.logResourceClicked(tempResourceId, getUser());
         } catch (Exception e) {
             log.error("Can't log resource opened event", e);
+        }
+    }
+
+    @PreDestroy
+    public void destroy() throws Exception {
+        if (isUserActive) {
+            for (ResourceDecorator snippet : search.getResources()) {
+                String s = snippet.getTitle().split("\\|")[0].split("-")[0];
+                JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
+                    snippet.getClicked() ? "snippet_clicked" : "snippet_notClicked", s, searchHistoryDao);
+                JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
+                    snippet.getClicked() ? "snippet_clicked" : "snippet_notClicked", snippet.getDescription(), searchHistoryDao);
+            }
         }
     }
 

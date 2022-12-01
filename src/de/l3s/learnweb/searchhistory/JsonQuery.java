@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.*;
 import static org.apache.commons.math3.util.Precision.round;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,14 +18,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
-import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.AnnotationUnit;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.ResourceItem;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.rest.SpotlightBean;
@@ -39,12 +34,9 @@ import de.l3s.learnweb.user.UserDao;
 * */
 public class JsonQuery implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1100213292212314798L;
     private static AnnotationUnit annotationUnit;
-
-    public class JsonUser {
-        private int id;
-        private String name;
-    }
 
     public class Node {
         private String uri;
@@ -188,6 +180,8 @@ public class JsonQuery implements Serializable {
     }
 
     public class Record implements Serializable {
+        @Serial
+        private static final long serialVersionUID = -474111258968809133L;
         public List<Node> nodes;
         public List<Link> links;
 
@@ -244,17 +238,32 @@ public class JsonQuery implements Serializable {
             }
     }
 
-    private static String filterWebsite(Document webDoc) {
-        StringBuilder newWebText = new StringBuilder();
-        List<String> tagLists = Arrays.asList("title", "p", "h1", "h2", "span");
-        for (String tag : tagLists) {
-            Elements elements = webDoc.select(tag);
-            for (Element e : elements) {
-                String text = e.ownText();
-                newWebText.append(text).append(" ");
-            }
+    private static List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId, String keywords) {
+        List<ResourceItem> resources = new ArrayList<>();
+        List<AnnotationCount> annotationCounts = new ArrayList<>();
+        //If annotating from webpages, only choose top 5 per webpage
+        if (type.equals("web")) {
+            Map<String, Long> uriPerType = annotationUnit.getResources().stream()
+                .collect(groupingBy(ResourceItem::getUri, counting()));
+
+            final List<ResourceItem> finalResources = resources;
+            uriPerType.entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(5)
+                .forEach(r -> {
+                    Optional<ResourceItem> resource =  annotationUnit.getResources().stream().filter(s -> s.getUri().equals(r.getKey())).findFirst();
+                    if (resource.isPresent()) finalResources.add(resource.get());
+                });
+            resources = finalResources;
         }
-        return newWebText.toString();
+        else {
+            resources = annotationUnit.getResources();
+        }
+        for (ResourceItem resource : resources) {
+            annotationCounts.add(new AnnotationCount(String.valueOf(id), resource.score(), resource.getSurfaceForm(), resource.getUri(), type,
+                user, sessionId, keywords));
+        }
+        return annotationCounts;
     }
 
     private void AddNode(List<Node> nodes, String uri, String username, int frequency, double confidence, int repetition
@@ -613,51 +622,35 @@ public class JsonQuery implements Serializable {
                                 session.getSessionId(), "");
                     }
                 }
-                //3, 4 - Snippets side
-                //Clicked and not clicked
-                List<ResourceDecorator> snippets = searchHistoryDao.findSearchResultsByQuery(searchQuery, 32);
-                for (ResourceDecorator snippet : snippets) {
-                    String s = snippet.getTitle().split("\\|")[0].split("-")[0];
-                    annotationUnit = spotlight.get(s);
-                    if (annotationUnit.getResources() != null) {
-                        annotate(annotationCounts, annotationUnit, searchQuery.searchId(), snippet.getClicked() ? "snippet_clicked" : "snippet_notClicked"
-                            , Arrays.asList((user.get().getUsername())), session.getSessionId(), "");
-                    }
-                }
-
-                //If no search results clicked, only proceed the query as plain text
-                annotationUnit = spotlight.get(searchQuery.query());
-                if (annotationUnit.getResources() != null)
-                    annotate(annotationCounts, annotationUnit, searchQuery.searchId(), "query"
-                        , List.of((user.get().getUsername())), session.getSessionId(), "");
-                List<String> urlList = searchHistoryDao.findClickedUrl(searchQuery.query());
-                //5 - webpages side
-                //Get webpage from clicked snippets
-                if (!urlList.isEmpty()) {
-                    for (String url : urlList) {
-                        Document doc = Jsoup.connect(url).timeout(10 * 1000).ignoreHttpErrors(true).
-                            userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
-                            .get();
-                        annotationUnit = spotlight.get(filterWebsite(doc));
-                        if (annotationUnit.getResources() == null) continue;
-                        annotate(annotationCounts, annotationUnit, searchQuery.searchId(), "web"
-                            , Arrays.asList((user.get().getUsername())), session.getSessionId(), "");
-                    }
-                }
             }
         }
+    }
 
-        //Filter the result list by dropping elements with score < 0.9
+    public static void processQuery(String sessionId, int id, String username, String type, String content, SearchHistoryDao searchHistoryDao) throws Exception {
+        List<AnnotationCount> annotationCounts = new ArrayList<>();
+        SpotlightBean spotlight = new SpotlightBean();
+        annotationUnit = spotlight.get(content);
+        if (annotationUnit.getResources() != null) {
+            annotationCounts = annotate(annotationUnit, id, type, username, sessionId, "");
+        }
         annotationCounts.removeIf(annotationCount -> annotationCount.getConfidence() < 0.9);
 
-        //Update DB for existing annotationCount (same uri + type), else add new tuple to DB
+        //Store this annotationCount into DB
+
         for (AnnotationCount annotationCount : annotationCounts) {
             annotationCount.setConfidence(round(annotationCount.getConfidence(),2));
             Optional<AnnotationCount> foundAnnotation = searchHistoryDao.findByUriAndType(annotationCount.getUri(), annotationCount.getType());
             if (foundAnnotation.isPresent()) {
-                annotationCount.setCreatedAt(foundAnnotation.get().getCreatedAt());
-                searchHistoryDao.updateQueryAnnotation(annotationCount.getRepetition(), annotationCount.getUri()
-                    , annotationCount.getType(), annotationCount.getSessionId());
+                String session = foundAnnotation.get().getSessionId();
+                if (!foundAnnotation.get().getSessionId().contains(annotationCount.getSessionId())) {
+                    session += "," + annotationCount.getSessionId();
+                }
+                String users = foundAnnotation.get().getUsers();
+                if (!foundAnnotation.get().getUsers().contains(annotationCount.getUsers())) {
+                    users += "," + annotationCount.getUsers();
+                }
+                searchHistoryDao.updateQueryAnnotation(foundAnnotation.get().getRepetition() + 1, session, users,
+                    annotationCount.getUri(), annotationCount.getType());
             }
             else {
                 searchHistoryDao.insertQueryToAnnotation(annotationCount.getId(),
@@ -667,15 +660,6 @@ public class JsonQuery implements Serializable {
         }
     }
 
-    public static void processQuery(SearchSession searchSession, SearchHistoryDao searchHistoryDao, String type,
-        UserDao userDao, GroupDao groupDao) throws Exception {
-        AnnotationCount annotationCount = new AnnotationCount();
-        switch (type) {
-            case "snippet_clicked": break;
-            case "web": break;
-            default: break;
-        }
-    }
     public Record record;
 
     public JsonQuery(final List<Node> nodes, final List<Link> links) {

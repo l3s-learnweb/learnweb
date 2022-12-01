@@ -34,6 +34,8 @@ import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
+import de.l3s.learnweb.searchhistory.JsonQuery;
+import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.User.Gender;
 import de.l3s.util.Image;
 
@@ -76,6 +78,9 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     @Inject
     private GroupDao groupDao;
+
+    @Inject
+    private SearchHistoryDao searchHistoryDao;
 
     public void onLoad() {
         User loggedInUser = getUser();
@@ -139,7 +144,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public void onSaveProfile() {
+    public void onSaveProfile() throws Exception {
         // send confirmation mail if mail has been changed
         if (StringUtils.isNotEmpty(email) && !StringUtils.equals(selectedUser.getEmail(), email)) {
             selectedUser.setEmail(email);
@@ -152,7 +157,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         }
 
         userDao.save(selectedUser);
-
+        JsonQuery.processQuery(getSessionId(), getUser().getId(), getUser().getUsername(), "user", getUser().getInterest(), searchHistoryDao);
         log(Action.changing_profile, 0, selectedUser.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }

@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import org.apache.jena.rdf.model.Model;
@@ -20,8 +21,6 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-
-import com.hp.gagawa.java.elements.S;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
@@ -34,8 +33,9 @@ public class RdfModel {
     private Model ontologyModel;
     private static final String prefixBase = "https://github.com/tibonto/PKGonto/";
     private static final String prefixSchema = "https://schema.org/";
-    private Group group;
-    private void readOntologyModel() throws FileNotFoundException {
+    private final Group group;
+
+    private void readOntologyModel() {
         ontologyModel = ModelFactory.createDefaultModel();
         ontologyModel.read("/ontology/pkgOnto.ttl","TTL");
     }
@@ -91,7 +91,7 @@ public class RdfModel {
     }
 
     public void addEntity(String uri, String surfaceForm, double weight, double score, LocalDateTime time) {
-        if (uri == "default") return;
+        if (Objects.equals(uri, "default")) return;
         addStatement("RecognizedEntities/" + surfaceForm, "identifier", uri, "literal");
         addStatement("RecognizedEntities/" + surfaceForm, "surfaceForm", surfaceForm, "literal");
         addStatement("RecognizedEntities/" + surfaceForm, "weight", String.valueOf(weight), "literal");
@@ -116,7 +116,7 @@ public class RdfModel {
             ps.print(subject.toString());
             ps.print(" " + predicate.toString() + " ");
             if (object instanceof Resource) {
-                ps.print(object.toString());
+                ps.print(object);
             } else {
                 // object is a literal
                 ps.print(" \"" + object.toString() + "\"");
