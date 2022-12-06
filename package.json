@@ -1,5 +1,5 @@
 {
-  "name": "learnweb",
+  "name": "learnweb-frontend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -14,18 +14,18 @@
     "build": "rollup -c",
     "build:dev": "rollup -c --environment NODE_ENV:development",
     "watch": "rollup -c -w",
-    "scss:lint": "stylelint src/main/webapp/resources/learnweb/sass",
-    "js:lint": "eslint src/main/webapp/resources/learnweb/js/**",
-    "lint": "npm run scss:lint && npm run js:lint",
-    "visual": "node src/test/visual/test.js",
-    "percy": "percy exec -- node src/test/visual/test.js"
+    "lint": "npm run lint:scss && npm run lint:js",
+    "lint:scss": "stylelint src/main/webapp/resources/learnweb/sass",
+    "lint:js": "eslint src/main/webapp/resources/learnweb/js/**",
+    "test:visual": "node src/test/visual/test.js",
+    "test:percy": "percy exec -- node src/test/visual/test.js"
   },
   "dependencies": {
     "@fancyapps/fancybox": "^3.5.7",
     "@fortawesome/fontawesome-free": "^6.2.1",
-    "@simonwep/pickr": "^1.8.2",
     "@popperjs/core": "^2.11.6",
-    "bootstrap": "^5.2.2",
+    "@simonwep/pickr": "^1.8.2",
+    "bootstrap": "^5.2.3",
     "highcharts": "^8.2.2",
     "jquery-contextmenu": "^2.9.2",
     "justifiedGallery": "^3.8.1",
@@ -33,9 +33,9 @@
     "video.js": "^7.20.3"
   },
   "devDependencies": {
-    "rollup-plugin-scss": "^4.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-replace": "^5.0.1",
+    "@rollup/plugin-terser": "^0.1.0",
     "autoprefixer": "^10.4.13",
     "browserslist": "^4.21.4",
     "eslint": "^8.29.0",
@@ -45,7 +45,7 @@
     "postcss": "^8.4.19",
     "rollup": "^3.5.1",
     "rollup-plugin-copy": "^3.4.0",
-    "@rollup/plugin-terser": "^0.1.0",
+    "rollup-plugin-scss": "^4.0.0",
     "sass": "^1.56.1",
     "stylelint": "^14.16.0",
     "stylelint-config-sass-guidelines": "^9.0.1",
@@ -61,13 +61,9 @@
       "airbnb-base",
       "plugin:compat/recommended"
     ],
-    "parserOptions": {
-      "ecmaVersion": 6,
-      "sourceType": "module"
-    },
     "env": {
+      "es6": true,
       "browser": true,
-      "node": true,
       "jquery": true
     },
     "globals": {
@@ -76,18 +72,12 @@
     },
     "rules": {
       "linebreak-style": "off",
-      "no-underscore-dangle": "off",
       "func-names": "off",
       "no-plusplus": "off",
       "consistent-return": "off",
       "no-console": "off",
       "no-param-reassign": "off",
       "no-unused-vars": "off",
-      "prefer-object-spread": "off",
-      "comma-dangle": [
-        "error",
-        "always-multiline"
-      ],
       "no-use-before-define": [
         "error",
         {
@@ -112,13 +102,11 @@
       "stylelint-no-unsupported-browser-features"
     ],
     "rules": {
-      "selector-max-id": null,
-      "selector-class-pattern": null,
-      "scss/at-extend-no-missing-placeholder": null,
-      "max-nesting-depth": 7,
-      "selector-max-compound-selectors": 8,
+      "max-nesting-depth": 5,
+      "selector-max-compound-selectors": 6,
       "selector-no-qualifying-type": null,
       "scss/dollar-variable-pattern": null,
+      "scss/at-extend-no-missing-placeholder": null,
       "order/order": null,
       "order/properties-alphabetical-order": null,
       "plugin/no-unsupported-browser-features": [
@@ -132,14 +120,13 @@
       ]
     },
     "ignoreFiles": [
-      "**/node_modules/**",
-      "**/bundle/**",
       "**/california/theme/**",
       "**/california/variables/**"
     ],
     "overrides": [
       {
         "files": [
+          "*.xhtml",
           "**/*.xhtml"
         ],
         "syntax": "html",

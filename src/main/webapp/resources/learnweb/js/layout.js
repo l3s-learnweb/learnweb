@@ -9,6 +9,7 @@
 PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
   init(cfg) {
+    // eslint-disable-next-line no-underscore-dangle
     this._super(cfg);
     this.wrapper = $('.layout-wrapper');
 
@@ -19,11 +20,11 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
     this.sidebarMenuClick = false;
 
-    this._bindEvents();
-    this._autoComplete();
+    this.bindEvents();
+    this.autoComplete();
   },
 
-  _bindEvents() {
+  bindEvents() {
     // Used for expanding resource filters on devices without hover
     $(document).on('click', '.res-filters .filter', (e) => {
       const $target = $(e.currentTarget);
@@ -78,7 +79,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     });
   },
 
-  _autoComplete() {
+  autoComplete() {
     const searchField = this.header.find('#searchfield');
 
     if (typeof URLSearchParams === 'function') {
@@ -121,7 +122,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
   },
 
   isTouchDevice() {
-    return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));// eslint-disable-line compat/compat
+    return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));
   },
 
   resize() {
@@ -141,16 +142,17 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 
   init(cfg) {
+    // eslint-disable-next-line no-underscore-dangle
     this._super(cfg);
 
     this.menu = this.jq;
     this.menulinks = this.menu.find('a');
 
-    this._bindEvents();
-    this._expandActiveItems();
+    this.bindEvents();
+    this.expandActiveItems();
   },
 
-  _bindEvents() {
+  bindEvents() {
     this.menulinks.off('click.menu').on('click.menu', (e) => {
       const link = $(e.currentTarget);
       const item = link.parent('li');
@@ -230,7 +232,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     }
   },
 
-  _expandActiveItems() {
+  expandActiveItems() {
     let currentPath = window.location.href;
     if (currentPath.includes('groups_')) {
       const replace = currentPath.substring(currentPath.indexOf('_'), currentPath.indexOf('.'));
@@ -378,14 +380,15 @@ PrimeFaces.widget.Dialog.prototype.hide = (((_hide) => function () {
  */
 PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
   init(cfg) {
+    // eslint-disable-next-line no-underscore-dangle
     this._super(cfg);
 
     this.defaultVisibleItems = 5;
     this.targetLists = $('.js-limited-list');
-    this.targetLists.each(this._init);
+    this.targetLists.each(this.initList);
   },
 
-  _init(index, element) {
+  initList(index, element) {
     const $list = $(element);
     const visibleItems = $list.data('visible-items') || this.defaultVisibleItems;
     const $items = $list.find('li:not(.expand-list)');
@@ -415,6 +418,7 @@ if (PrimeFaces.widget.InputSwitch) {
   PrimeFaces.widget.InputSwitch = PrimeFaces.widget.InputSwitch.extend({
 
     init(cfg) {
+      // eslint-disable-next-line no-underscore-dangle
       this._super(cfg);
 
       if (this.input.prop('checked')) {

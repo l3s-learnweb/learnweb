@@ -64,7 +64,6 @@ function loadTimeline(dataVar) {
       text: msgTimelineTitle,
     },
     subtitle: {
-      // eslint-disable-next-line camelcase
       text: document.ontouchstart === undefined ? msgTimelineClickZoom : msgTimelineTouchZoom,
     },
     xAxis: {

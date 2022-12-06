@@ -16,7 +16,7 @@ lint:
     - javascript
     - java
   script:
-    - npm install --no-audit
+    - npm ci
     - npm run lint --silent
     - mvn $MAVEN_CLI_OPTS $MAVEN_CLI_QUIET checkstyle:check
   cache:

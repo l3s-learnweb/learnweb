@@ -37,7 +37,8 @@ $tabletBreakpoint: 991px !default;
 $phoneBreakpoint: 576px !default;
 $divider: 1px solid $shade300 !default;
 $disabledOpacity: 0.6 !default;
-$maskBg: rgba($gray-700, 0.8); /* stylelint-disable-line */
+// stylelint-disable-next-line plugin/no-unsupported-browser-features
+$maskBg: rgba($gray-700, 0.8);
 $inlineSpacing: $inline-spacer;
 $iconSize: 1rem !default;
 $errorColor: #f44336 !default;

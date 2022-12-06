@@ -118,7 +118,7 @@ $(() => {
     html: true,
     trigger: 'hover',
     selector: '[data-bs-toggle="tooltip"]',
-    // eslint-disable-next-line
+    // eslint-disable-next-line object-shorthand
     title: function () {
       return $(this).attr('data-title');
     },
@@ -126,11 +126,11 @@ $(() => {
     html: true,
     trigger: 'hover',
     selector: '[data-bs-toggle="popover"]',
-    // eslint-disable-next-line
+    // eslint-disable-next-line object-shorthand
     title: function () {
       return $(this).attr('data-title') || '';
     },
-    // eslint-disable-next-line
+    // eslint-disable-next-line object-shorthand
     content: function () {
       return $(this).attr('data-content');
     },
@@ -216,11 +216,11 @@ function openColorPicker(elId, el) {
   const background = el.css('background-color') || '#ffff00';
   el.css('background-color', background);
 
-  // eslint-disable-next-line
-  const pickr = new Pickr(Object.assign({
+  const pickr = new Pickr({
     default: background,
     el: el[0],
-  }, pickrConfig)).show();
+    ...pickrConfig,
+  }).show();
 
   pickr.on('change', (color) => {
     el.css('background-color', color.toHEXA().toString());

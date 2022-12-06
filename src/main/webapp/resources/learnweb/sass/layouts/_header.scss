@@ -97,27 +97,27 @@ $topbar-button-padding: 1rem;
         .navbar-nav {
           min-height: 100%;
           flex-direction: row;
+        }
 
-          .nav-link {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            padding: 0 $navbar-nav-link-padding-x;
-            border-bottom: 0.2rem solid transparent;
+        .nav-link {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          padding: 0 $navbar-nav-link-padding-x;
+          border-bottom: 0.2rem solid transparent;
 
-            &:hover {
-              border-color: $navbar-dark-hover-color;
-            }
+          &:hover {
+            border-color: $navbar-dark-hover-color;
+          }
 
-            &.nav-link-profile {
-              padding-top: 0.2rem !important;
-              padding-bottom: 0 !important;
-            }
+          &.nav-link-profile {
+            padding-top: 0.2rem !important;
+            padding-bottom: 0 !important;
+          }
 
-            &.nav-link-flag {
-              padding-top: 0 !important;
-              padding-bottom: 0 !important;
-            }
+          &.nav-link-flag {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
           }
         }
       }
@@ -282,12 +282,10 @@ body {
         color: var(--primary-text-color);
       }
 
-      .ui-menuitem-text {
-        img {
-          height: 1.5rem;
-          border-radius: var(--border-radius);
-          margin-right: 0.3rem;
-        }
+      img {
+        height: 1.5rem;
+        border-radius: var(--border-radius);
+        margin-right: 0.3rem;
       }
     }
   }

@@ -37,6 +37,5 @@ files
 learnweb_local.properties
 **/webapp/resources/bundle
 
-## lock files not actually used in production, so makes no sense to keep them
-package-lock.json
+## We don't use Yarn in production
 yarn.lock

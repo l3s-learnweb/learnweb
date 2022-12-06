@@ -309,6 +309,7 @@
     padding: 0;
     background: var(--gray-800);
 
+    // stylelint-disable-next-line selector-class-pattern
     .fancybox-caption__body {
       max-height: 100%;
       padding: $grid-gutter-width;
@@ -369,10 +370,12 @@
     }
 
     /* Reposition arrows */
+    // stylelint-disable-next-line selector-class-pattern
     .fancybox-button--arrow_left {
       left: 0 !important;
     }
 
+    // stylelint-disable-next-line selector-class-pattern
     .fancybox-button--arrow_right {
       right: $search-lightbox-caption-width !important;
     }
@@ -405,6 +408,7 @@
       padding: 0;
     }
 
+    // stylelint-disable-next-line selector-class-pattern
     .fancybox-button--arrow_right {
       right: auto;
       left: $search-lightbox-toolbar-height;

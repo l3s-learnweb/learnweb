@@ -43,12 +43,14 @@
   @include text-truncate();
 
   // if this feature is supported, it would show two lines, if not, just single line
+  // stylelint-disable value-no-vendor-prefix
   @supports (display: -webkit-box) {
     white-space: initial;
-    display: -webkit-box; /* stylelint-disable-line */
-    -webkit-line-clamp: 2; /* stylelint-disable-line */
-    -webkit-box-orient: vertical; /* stylelint-disable-line */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
+  // stylelint-enable value-no-vendor-prefix
 }
 
 .modal-dialog-select {

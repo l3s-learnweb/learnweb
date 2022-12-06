@@ -9,23 +9,15 @@ class SelectResource {
     if (el.length > 0) {
       for (let i = 0, l = el.length; i < l; ++i) {
         if (!el[i].classList.contains('ui-draggable-helper')) {
-          this._selectElement(el[i]);
+          this.selectElement(el[i]);
         }
       }
-    } else if (el.length !== 0) {
-      this._selectElement(el);
-    }
-  }
-
-  _addContainerClass() {
-    if (this.items.length > 0) {
-      $('.res-container').addClass('res-highlight-select');
     } else {
-      $('.res-container').removeClass('res-highlight-select');
+      this.selectElement(el);
     }
   }
 
-  _selectElement(el) {
+  selectElement(el) {
     const itemType = el.dataset.itemtype;
     const itemId = el.dataset.itemid;
 
@@ -38,10 +30,18 @@ class SelectResource {
           type: itemType,
           element: el,
         });
-        this._addContainerClass();
+        this.updateContainerClass();
       }
     } else {
       console.error('Element type or ID is unknown', el);
+    }
+  }
+
+  updateContainerClass() {
+    if (this.items.length > 0) {
+      $('.res-container').addClass('res-highlight-select');
+    } else {
+      $('.res-container').removeClass('res-highlight-select');
     }
   }
 
@@ -54,7 +54,7 @@ class SelectResource {
       if (index !== -1) {
         this.items[index].element.classList.remove('ui-selected');
         this.items.splice(index, 1);
-        this._addContainerClass();
+        this.updateContainerClass();
       }
     }
   }
@@ -63,7 +63,7 @@ class SelectResource {
     $('.res-item.ui-selected').removeClass('ui-selected');
     $('.res-item.ui-draggable-dragging').removeClass('ui-draggable-dragging');
     this.items = [];
-    this._addContainerClass();
+    this.updateContainerClass();
   }
 
   selectOnly(element) {
@@ -259,7 +259,6 @@ function createSelectable(resContainerId) {
       const lastSelected = selected.getItem(selected.size() - 1);
       if (prevSelected.id !== lastSelected.id) {
         let selectAll = false;
-        // eslint-disable-next-line consistent-return
         $('.res-item').each((i, el) => {
           const itemType = el.dataset.itemtype;
           const itemId = Number(el.dataset.itemid);
@@ -559,7 +558,6 @@ function doAction(action, extraAttr1, extraAttr2) {
   }
 }
 
-// eslint-disable-next-line
 function openItems() {
   const itemId = this.dataset.itemid;
   const itemType = this.dataset.itemtype;

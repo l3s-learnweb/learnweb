@@ -80,24 +80,22 @@
       display: none;
 
       li {
-        > a {
+        a {
           padding-left: var(--menu-child-offset);
-
-          i {
-            left: var(--menu-child-offset);
-          }
         }
 
-        ul {
-          li {
-            > a {
-              padding-left: calc(var(--menu-child-offset) * 2);
+        i {
+          left: var(--menu-child-offset);
+        }
+      }
 
-              i {
-                left: calc(var(--menu-child-offset) * 2);
-              }
-            }
-          }
+      ul li {
+        a {
+          padding-left: calc(var(--menu-child-offset) * 2);
+        }
+
+        i {
+          left: calc(var(--menu-child-offset) * 2);
         }
       }
     }

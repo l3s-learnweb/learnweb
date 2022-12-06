@@ -663,4 +663,8 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     protected void setGuideSteps(BitSet guideSteps) {
         this.guideSteps = guideSteps;
     }
+
+    protected void fillGuideSteps() {
+        this.guideSteps.set(0, this.guideSteps.size(), true);
+    }
 }

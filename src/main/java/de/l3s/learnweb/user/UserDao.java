@@ -188,7 +188,7 @@ public interface UserDao extends SqlObject, Serializable {
         params.put("preferred_notification_frequency", user.getPreferredNotificationFrequency().toString());
         params.put("time_zone", user.getTimeZone().getId());
         params.put("language", user.getLocale().toString());
-        SqlHelper.setBitSet(params, user.getGuideSteps().length(), "guide_field", user.getGuideSteps());
+        SqlHelper.setBitSet(params, user.getGuideSteps().size(), "guide_field", user.getGuideSteps());
 
         Optional<Integer> userId = SqlHelper.handleSave(getHandle(), "lw_user", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -241,7 +241,7 @@ public interface UserDao extends SqlObject, Serializable {
                 user.setCredits(rs.getString("credits"));
                 user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
                 user.setPreferredNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("preferred_notification_frequency")));
-                user.setGuideSteps(SqlHelper.getBitSet(rs, user.getGuideSteps().length(), "guide_field"));
+                user.setGuideSteps(SqlHelper.getBitSet(rs, user.getGuideSteps().size(), "guide_field"));
                 user.setTimeZone(ZoneId.of(rs.getString("time_zone")));
                 user.setLocale(Locale.forLanguageTag(rs.getString("language").replace("_", "-")));
                 user.setAdmin(rs.getBoolean("is_admin"));

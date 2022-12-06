@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /*!
   # Responsive Celendar widget script
   # by w3widgets
@@ -28,7 +29,6 @@
       this.initialDraw();
     }
 
-    // eslint-disable-next-line class-methods-use-this
     addLeadingZero(num) {
       if (num < 10) {
         return `0${num}`;
@@ -36,22 +36,18 @@
       return `${num}`;
     }
 
-    // eslint-disable-next-line class-methods-use-this
     applyTransition(el, transition) {
       return el.css('transition', transition);
     }
 
-    // eslint-disable-next-line class-methods-use-this
     applyBackfaceVisibility(el) {
       return el.css('backface-visibility', 'hidden');
     }
 
-    // eslint-disable-next-line class-methods-use-this
     applyTransform(el, transform) {
       return el.css('transform', transform);
     }
 
-    // eslint-disable-next-line class-methods-use-this
     splitDateString(dateString) {
       const time = dateString.split('-');
       const year = parseInt(time[0], 10);
@@ -71,8 +67,7 @@
 
     editDays(events) {
       const results = [];
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [dateString, dayEvents] of Object.entries(events)) {
+      Object.entries(events).forEach(([dateString, dayEvents]) => {
         this.options.events[dateString] = events[dateString];
         const time = this.splitDateString(dateString);
         const day = this.$element.find(`[data-year="${time.year}"][data-month="${time.month + 1}"][data-day="${time.day}"]`).parent('.day');
@@ -84,7 +79,7 @@
         } else {
           results.push(undefined);
         }
-      }
+      });
       return results;
     }
 
@@ -159,7 +154,6 @@
       }
     }
 
-    // eslint-disable-next-line class-methods-use-this
     addOthers(day, dayEvents) {
       // if events word is an object (array)
       // create badge with the number of events
@@ -200,7 +194,6 @@
       return day;
     }
 
-    // eslint-disable-next-line class-methods-use-this
     getDaysInMonth(year, month) {
       return new Date(year, month + 1, 0).getDate();
     }

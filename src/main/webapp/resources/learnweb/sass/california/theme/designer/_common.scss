@@ -25,7 +25,6 @@ body {
     }
 
     .ui-widget-overlay {
-        //-webkit-animation-name: modal-in;
         animation-name: modal-in;
         animation-duration: $animationDuration;
         animation-timing-function: $animationTimingFunction;

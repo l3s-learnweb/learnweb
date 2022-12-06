@@ -199,7 +199,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     }
 
     public void onGuideSkip() {
-        selectedUser.getGuideSteps().set(0, Long.SIZE, true);
+        selectedUser.fillGuideSteps();
         userDao.save(selectedUser);
         addGrowl(FacesMessage.SEVERITY_INFO, "guide.skipped");
     }
