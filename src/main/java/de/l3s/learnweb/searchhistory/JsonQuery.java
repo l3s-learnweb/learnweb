@@ -19,12 +19,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.AnnotationUnit;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.ResourceItem;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.rest.SpotlightBean;
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserDao;
 
 /*
 * Create a Json file of the search history from within a specific group.
@@ -196,48 +194,6 @@ public class JsonQuery implements Serializable {
     }
 
     //Getting resources of dbpedia-spotlight results
-    private static void annotate(List<AnnotationCount> annotationCounts, AnnotationUnit annotationUnit, int id, String type, List<String> users
-        , String sessionId, String keywords) {
-
-        List<ResourceItem> resources = new ArrayList<>();
-
-        //If annotating from webpages, only choose top 5 per webpage
-        if (type.equals("web")) {
-            Map<String, Long> uriPerType = annotationUnit.getResources().stream()
-                .collect(groupingBy(ResourceItem::getUri, counting()));
-
-            final List<ResourceItem> finalResources = resources;
-            uriPerType.entrySet().stream()
-                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .limit(5)
-                .forEach(r -> {
-                    Optional<ResourceItem> resource =  annotationUnit.getResources().stream().filter(s -> s.getUri().equals(r.getKey())).findFirst();
-                    if (resource.isPresent()) finalResources.add(resource.get());
-                });
-            resources = finalResources;
-        }
-        else {
-            resources = annotationUnit.getResources();
-        }
-        for (ResourceItem resource : resources) {
-                //Similarity != confidence
-                Optional<AnnotationCount> tmp = annotationCounts.stream().filter(s -> s.getUri().equals(resource.getUri()) && s.getType().equals(type))
-                    .findAny();
-                if (tmp.isPresent()) {
-                    List<String> tmpList = new ArrayList<>(Arrays.stream(tmp.get().getUsers().split(",")).toList());
-                    tmpList.removeAll(users);
-                    tmpList.addAll(users);
-                    tmp.get().setUsers(tmpList.stream().collect(joining(",")));
-                    tmp.get().setRepetition(tmp.get().getRepetition() + 1);
-                    if (!tmp.get().getSessionId().contains(sessionId)) tmp.get().addSessionId(sessionId);
-                    if (!tmp.get().getId().contains(String.valueOf(id))) tmp.get().addId(String.valueOf(id));
-                } else {
-                    annotationCounts.add(new AnnotationCount(String.valueOf(id), resource.score(), resource.getSurfaceForm(), resource.getUri(), type,
-                        users.stream().collect(joining(",")), sessionId, keywords));
-                }
-            }
-    }
-
     private static List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId, String keywords) {
         List<ResourceItem> resources = new ArrayList<>();
         List<AnnotationCount> annotationCounts = new ArrayList<>();
@@ -280,9 +236,9 @@ public class JsonQuery implements Serializable {
         int days = (int) DAYS.between(LocalDateTime.now(), annotationCount.getCreatedAt());
         switch (annotationCount.getType()) {
             case "user": return 3 * Math.exp(-days);
-            case "group": return 0.5 * Math.exp(-days);
-            case "web": return 1 * Math.exp(-days);
-            case "snippet_clicked": return 5 * Math.exp(-days);
+            case "group": return 1 * Math.exp(-days);
+            case "web": return 1.5 * Math.exp(-days);
+            case "snippet_clicked": return 6 * Math.exp(-days);
             case "query": return 11 * Math.exp(-days);
             case "snippet_notClicked": return -Math.exp(-days);
             default: break;
@@ -328,10 +284,11 @@ public class JsonQuery implements Serializable {
                     if ((calculatedRecord.links.get(i).source == calculatedRecord.links.get(j).source && calculatedRecord.links.get(i).target == calculatedRecord.links.get(j).target)
                         ||(calculatedRecord.links.get(i).source == calculatedRecord.links.get(j).target && calculatedRecord.links.get(i).target == calculatedRecord.links.get(j).source)) {
                         calculatedRecord.links.get(i).setWeight(calculatedRecord.links.get(i).getWeight() + calculatedRecord.links.get(j).getWeight());
-                        calculatedRecord.nodes.get(calculatedRecord.links.get(i).source).setWeight(
-                            calculatedRecord.nodes.get(calculatedRecord.links.get(i).source).getWeight()
-                            + calculatedRecord.nodes.get(calculatedRecord.links.get(j).source).getWeight()
-                        );
+                        //Why do I set the nodes???
+                        // calculatedRecord.nodes.get(calculatedRecord.links.get(i).source).setWeight(
+                        //     calculatedRecord.nodes.get(calculatedRecord.links.get(i).source).getWeight()
+                        //     + calculatedRecord.nodes.get(calculatedRecord.links.get(j).source).getWeight()
+                        // );
                         calculatedRecord.links.get(j).setSource(-1);
                     }
                 }
@@ -584,46 +541,6 @@ public class JsonQuery implements Serializable {
         calculatedRecord = removeDuplicatingNodesAndLinks(calculatedRecord);
 
         return new JsonQuery(calculatedRecord.nodes, calculatedRecord.links);
-    }
-
-    public static void processQuery(List<SearchSession> searchSession, SearchHistoryDao searchHistoryDao, int selectedGroupId,
-        UserDao userDao, GroupDao groupDao) throws Exception {
-
-        SpotlightBean spotlight = new SpotlightBean();
-        List<AnnotationCount> annotationCounts = new ArrayList<>();
-
-        //Create nodes by retrieving information from DBPedia-spotlight
-        //1 - Groups side
-        Optional<Group> group = groupDao.findById(selectedGroupId);
-        if (group.isPresent()) {
-            annotationUnit = spotlight.get(group.get().getTitle());
-            if (annotationUnit.getResources() != null) {
-                annotate(annotationCounts, annotationUnit, selectedGroupId, "group", userDao.findByGroupId(selectedGroupId)
-                    .stream().map(User::getUsername).collect(toList()),"", "");
-            }
-            if (group.get().getDescription() != null) {
-                annotationUnit = spotlight.get(group.get().getDescription());
-                if (annotationUnit.getResources() != null)
-                    annotate(annotationCounts, annotationUnit, selectedGroupId, "group", userDao.findByGroupId(selectedGroupId)
-                        .stream().map(User::getUsername).collect(toList()),"", "");
-            }
-        }
-
-        for (SearchSession session : searchSession) {
-            for (SearchQuery searchQuery : session.getQueries()) {
-                //2- Users side
-                Optional<User> user =  userDao.findById(session.getUserId());
-                if (annotationCounts.stream().filter(s -> s.getId().contains(String.valueOf(session.getUserId())) && s.getType().equals("user")).findFirst().isEmpty()) {
-                    String interest = user.get().getInterest();
-                    if (interest != null) {
-                        annotationUnit = spotlight.get(interest);
-                        if (annotationUnit.getResources() != null)
-                            annotate(annotationCounts, annotationUnit, session.getUserId(), "user", Arrays.asList((user.get().getUsername())),
-                                session.getSessionId(), "");
-                    }
-                }
-            }
-        }
     }
 
     public static void processQuery(String sessionId, int id, String username, String type, String content, SearchHistoryDao searchHistoryDao) throws Exception {

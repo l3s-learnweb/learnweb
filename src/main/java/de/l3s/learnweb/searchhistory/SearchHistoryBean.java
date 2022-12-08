@@ -79,7 +79,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
             .create();
         for (Group group : groupDao.findByUserId(selectedUserId)) {
-            JsonQuery.processQuery(searchHistoryDao.findSessionsByGroupId(group.getId()), searchHistoryDao, group.getId(), userDao, groupDao);
             calculateEntities(searchHistoryDao.findSessionsByGroupId(group.getId()), group.getId());
         }
 
