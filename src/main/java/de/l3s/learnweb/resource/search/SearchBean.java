@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,6 +63,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(SearchBean.class);
 
     private static final int MIN_RESOURCES_PER_GROUP = 2;
+    private static final int RESULT_LIMIT = 32;
 
     // Values from views are stored here
     private String query = "";
@@ -83,6 +85,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private int counter = 0;
     private List<GroupedResources> resourcesGroupedBySource;
     private Boolean isUserActive;
+    private List<Boolean> snippetClicked;
 
     @Inject
     private SearchHistoryDao searchHistoryDao;
@@ -117,6 +120,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
         Servlets.setNoCacheHeaders(Faces.getResponse());
 
         isUserActive = false;
+        snippetClicked = new ArrayList<>();
+        for (int i = 0; i < RESULT_LIMIT; i++) snippetClicked.add(false);
     }
 
     // -------------------------------------------------------------------------
@@ -276,7 +281,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
                 userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
                 .get();
             JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", filterWebsite(doc), searchHistoryDao);
-
+            snippetClicked.set(search.getResources().indexOf(search.getResources().get(tempResourceId)), true);
             search.logResourceClicked(tempResourceId, getUser());
         } catch (Exception e) {
             log.error("Can't log resource opened event", e);
@@ -286,12 +291,13 @@ public class SearchBean extends ApplicationBean implements Serializable {
     @PreDestroy
     public void destroy() throws Exception {
         if (isUserActive) {
+            JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "query", search.getQuery(), searchHistoryDao);
             for (ResourceDecorator snippet : search.getResources()) {
                 String s = snippet.getTitle().split("\\|")[0].split("-")[0];
                 JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
-                    snippet.getClicked() ? "snippet_clicked" : "snippet_notClicked", s, searchHistoryDao);
+                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", s, searchHistoryDao);
                 JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
-                    snippet.getClicked() ? "snippet_clicked" : "snippet_notClicked", snippet.getDescription(), searchHistoryDao);
+                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", snippet.getDescription(), searchHistoryDao);
             }
         }
     }

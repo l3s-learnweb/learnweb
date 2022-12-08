@@ -21,8 +21,11 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
+import de.l3s.learnweb.searchhistory.JsonQuery;
+import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserDao;
 import de.l3s.util.Image;
 
 @Named
@@ -52,6 +55,10 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
 
     @Inject
     private GroupDao groupDao;
+    @Inject
+    private UserDao userDao;
+    @Inject
+    private SearchHistoryDao searchHistoryDao;
 
     public void onLoad() {
         User user = getUser();
@@ -80,7 +87,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         return group;
     }
 
-    public void onGroupEdit() {
+    public void onGroupEdit() throws Exception {
         if (!StringUtils.equals(editedGroupDescription, group.getDescription())) {
             group.setDescription(editedGroupDescription);
             log(Action.group_changing_description, group.getId(), group.getId());
@@ -104,6 +111,11 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         if (!StringUtils.equals(editedHypothesisToken, group.getHypothesisToken())) {
             group.setHypothesisToken(editedHypothesisToken);
         }
+        for (User user : userDao.findByGroupId(group.getId())) {
+            JsonQuery.processQuery(getSessionId(), getGroupId(), user.getUsername(), "group", editedGroupDescription, searchHistoryDao);
+            JsonQuery.processQuery(getSessionId(), getGroupId(), user.getUsername(), "group", editedGroupTitle, searchHistoryDao);
+        }
+
         groupDao.save(group);
         //getLearnweb().getGroupManager().resetCache();
         getUser().clearCaches();
