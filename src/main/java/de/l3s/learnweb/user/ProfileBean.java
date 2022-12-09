@@ -156,6 +156,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         }
 
         userDao.save(selectedUser);
+        //Call dbpedia-spotlight recognition
         JsonQuery.processQuery(getSessionId(), getUser().getId(), getUser().getUsername(), "user", getUser().getInterest(), searchHistoryDao);
         log(Action.changing_profile, 0, selectedUser.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");

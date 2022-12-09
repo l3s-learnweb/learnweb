@@ -41,10 +41,10 @@ public class JsonQuery implements Serializable {
         private String query;
         private int frequency;
         private String users;
-        private String sessionId;
-        private double confidence;
-        private int repetition;
-        private double weight;
+        private transient String sessionId;
+        private transient double confidence;
+        private transient int repetition;
+        private transient double weight;
 
         //Node class. Receives the input from DB to be visualized
         public Node(String query, String uri, String users, double confidence, int repetition, String sessionId, double weight) {
@@ -162,7 +162,7 @@ public class JsonQuery implements Serializable {
             this.weight = weight;
         }
 
-        public double weight;
+        public transient double weight;
 
         public Link(int source, int target, double weight) {
             this.source = source;
@@ -225,6 +225,7 @@ public class JsonQuery implements Serializable {
     private void AddNode(List<Node> nodes, String uri, String username, int frequency, double confidence, int repetition
         , String sessionId, double weight) {
             //Get the Node name as uri minus domain root - dbpedia.org/resource
+            //TODO: rename the variable "query" -> "uriName"
             String nameQuery = uri.replaceAll("http://dbpedia.org/resource/", "")
                 .replaceAll("_"," ");
             Node node = new Node(nameQuery, uri, username, confidence, repetition, sessionId, weight);
@@ -236,9 +237,9 @@ public class JsonQuery implements Serializable {
         int days = (int) DAYS.between(LocalDateTime.now(), annotationCount.getCreatedAt());
         switch (annotationCount.getType()) {
             case "user": return 3 * Math.exp(-days);
-            case "group": return 1 * Math.exp(-days);
-            case "web": return 1.5 * Math.exp(-days);
-            case "snippet_clicked": return 6 * Math.exp(-days);
+            case "group": return 0.5 * Math.exp(-days);
+            case "web": return 1 * Math.exp(-days);
+            case "snippet_clicked": return 5 * Math.exp(-days);
             case "query": return 11 * Math.exp(-days);
             case "snippet_notClicked": return -Math.exp(-days);
             default: break;
@@ -312,11 +313,13 @@ public class JsonQuery implements Serializable {
         List<RdfModel> rdfGraphs = new ArrayList<>();
         for (User user : users)
             rdfGraphs.add(new RdfModel(user, group, sessions));
-        
+        //TODO: add comments on initialization steps
         AnnotationCount tmp = new AnnotationCount();
         int currentIndex = 0;
         List<AnnotationCount> currentGroupAnnotation = new ArrayList<>();
+        //
         List<String> groupUsers = new ArrayList<>();
+        //TODO: Use the DB sl_action
         List<Boolean> isUserActive = new ArrayList<>();
 
         for (User user : users) {
@@ -417,12 +420,7 @@ public class JsonQuery implements Serializable {
         //Sorting the entities by the results
         List<Map.Entry<Integer, Double>> entries
             = new ArrayList<>(results.entrySet());
-        entries.sort(new Comparator<Map.Entry<Integer, Double>>() {
-            @Override
-            public int compare(final Map.Entry<Integer, Double> o1, final Map.Entry<Integer, Double> o2) {
-                return o2.getValue().compareTo(o1.getValue());
-            }
-        });
+        entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
         for (User user : users) {
             for (Node node : record.nodes) {
@@ -431,7 +429,7 @@ public class JsonQuery implements Serializable {
             }
             String value = rdfGraphs.get(users.indexOf(user)).printModel(group.getTitle(), user.getUsername());
             if (searchHistoryDao.findRdfById(user.getId()).isEmpty())
-                searchHistoryDao.insertRdf(user.getId(), value);
+                searchHistoryDao.insertRdf(user.getId(), group.getId(), value);
             else
                 searchHistoryDao.updateRdf(value, user.getId());
         }
@@ -449,7 +447,6 @@ public class JsonQuery implements Serializable {
                     newLinks = new ArrayList<>();
                     for (Map.Entry<Integer, Double> entry : entries) {
                         if (record.nodes.get(entry.getKey()).users.contains(user)) {
-                            //PSEUDO- after RDF completes this will change
                             Node chosenNode = new Node(record.nodes.get(entry.getKey()).getQuery(), record.nodes.get(entry.getKey()).getUri()
                                 , user, record.nodes.get(entry.getKey()).getConfidence(), record.nodes.get(entry.getKey()).getRepetition(),
                                 record.nodes.get(entry.getKey()).getSessionId(), entry.getValue());
@@ -509,6 +506,8 @@ public class JsonQuery implements Serializable {
                             }
                         }
                     }
+                    //Create the sharedObject
+                    //TODO: separate class(!)
                     JsonSharedObject object = new JsonSharedObject();
                     for (Link link : calculatedLinks) {
                         object.getLinks().add(new JsonSharedObject.Link(link.source, link.target));
@@ -544,6 +543,7 @@ public class JsonQuery implements Serializable {
     }
 
     public static void processQuery(String sessionId, int id, String username, String type, String content, SearchHistoryDao searchHistoryDao) throws Exception {
+        if (content == null) return;
         List<AnnotationCount> annotationCounts = new ArrayList<>();
         SpotlightBean spotlight = new SpotlightBean();
         annotationUnit = spotlight.get(content);
