@@ -143,9 +143,9 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT * FROM learnweb_annotations.annotation_rdf WHERE user_id = ?")
     Optional<RdfObject> findRdfById(int userId);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_rdf (user_id, rdf_value) VALUES (?, ?)")
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_rdf (user_id, group_id, rdf_value) VALUES (?, ?, ?)")
     @GetGeneratedKeys("id")
-    int insertRdf(int userId, String rdfValue);
+    int insertRdf(int userId, int groupId, String rdfValue);
 
     @SqlUpdate("UPDATE learnweb_annotations.annotation_rdf SET rdf_value = ? WHERE user_id = ?")
     void updateRdf(String rdfValue, int userId);

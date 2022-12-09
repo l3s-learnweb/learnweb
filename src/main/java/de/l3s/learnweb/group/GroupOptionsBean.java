@@ -111,6 +111,8 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         if (!StringUtils.equals(editedHypothesisToken, group.getHypothesisToken())) {
             group.setHypothesisToken(editedHypothesisToken);
         }
+        //Call dbpedia-spotlight recognition
+        //Add group resources
         for (User user : userDao.findByGroupId(group.getId())) {
             JsonQuery.processQuery(getSessionId(), getGroupId(), user.getUsername(), "group", editedGroupDescription, searchHistoryDao);
             JsonQuery.processQuery(getSessionId(), getGroupId(), user.getUsername(), "group", editedGroupTitle, searchHistoryDao);
