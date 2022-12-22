@@ -1,12 +1,7 @@
 package de.l3s.learnweb.searchhistory;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.StringWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -19,7 +14,6 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
@@ -49,7 +43,6 @@ public class RdfModel {
         addStatement("Group/" + group.getTitle(), "description", PATTERN.matcher(group.getDescription()).replaceAll(""), "literal");
         addStatement("Group/" + group.getTitle(), "name", group.getTitle(), "literal");
         addStatement("Group/" + group.getTitle(), "dateCreated", group.getCreatedAt().format(DateTimeFormatter.ISO_DATE), "literal");
-        addStatement("Group/" + group.getTitle(), "createInputStream", "InputStream/" + group.getTitle(), "resource");
 
         addStatement("User/" + user.getUsername(), "email", user.getEmail(), "literal");
         addStatement("User/" + user.getUsername(), "hasProfile", "UserProfile/" + user.getUsername(), "resource");
@@ -99,35 +92,11 @@ public class RdfModel {
         addStatement("RecognizedEntities/" + surfaceForm, "dateCreated", time.format(DateTimeFormatter.ISO_DATE), "literal");
     }
 
-    public String printModel(String groupName, String user) throws IOException {
+    public String printModel() {
         // list the statements in the Model
-        StmtIterator iter = model.listStatements();
-
-        String localPath = System.getProperty("user.dir") + "\\" + "group_summary_" + groupName + "_" + user + ".ttl";
-
-        //print out the predicate, subject and object of each statement
-        while (iter.hasNext()) {
-            Statement stmt = iter.nextStatement();  // get next statement
-            Resource subject = stmt.getSubject();     // get the subject
-            Property predicate = stmt.getPredicate();   // get the predicate
-            RDFNode object = stmt.getObject();      // get the object
-            PrintStream ps = new PrintStream(System.out, true, "UTF-8");
-            ps.print(subject.toString());
-            ps.print(" " + predicate.toString() + " ");
-            if (object instanceof Resource) {
-                ps.print(object);
-            } else {
-                // object is a literal
-                ps.print(" \"" + object.toString() + "\"");
-            }
-            ps.println(" .");
-        }
-        File file = new File(localPath);
-        Writer writer = new FileWriter(localPath, StandardCharsets.UTF_8);
         StringWriter out = new StringWriter();
         model.write(out, "TTL", prefixBase);
-        model.write(writer, "TTL", prefixBase);
-        writer.close();
+        //model.write(writer, "TTL", prefixBase);
         return out.toString();
     }
 

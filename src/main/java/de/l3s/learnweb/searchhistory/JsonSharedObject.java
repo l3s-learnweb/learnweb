@@ -137,5 +137,4 @@ public class JsonSharedObject {
     public void setUser(final User user) {
         this.user = user;
     }
-
 }

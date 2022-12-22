@@ -38,7 +38,7 @@ public class RdfObject {
         this.rdf_value = rdf_value;
     }
 
-    public List<String> findResourceWithTopWeight(int n) {
+    public List<String> findResourceWithTopWeight(JsonSharedObject sharedObject) {
         Model model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(rdf_value, "UTF-8"), null,"TTL");
         Map<String, Integer> weightedResource;
         //Get the statements from the rdf model first

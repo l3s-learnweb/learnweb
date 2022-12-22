@@ -230,6 +230,10 @@
                 </div>
             </h:form>
         </p:dialog>
+        <p:dialog header="Recommendation" widgetVar="recommendationDialog" minHeight="40" visible="#{searchBean.hasRecommendation()}" position="right,bottom">
+            <h:outputText value="Do you want to search for this: " />
+            <h:link value="#{searchBean.recommendationString}" onclick="window.location.href = 'search.jsf?query=' + '#{searchBean.recommendationString}';return false;" />
+        </p:dialog>
     </div>
 </ui:define>
 </ui:composition>

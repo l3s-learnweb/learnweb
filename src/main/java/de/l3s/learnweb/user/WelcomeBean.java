@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.EnumSet;
@@ -16,6 +17,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.submission.Submission;
+import de.l3s.learnweb.searchhistory.Pkg;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
@@ -71,7 +73,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
     private MessageDao messageDao;
 
     @PostConstruct
-    public void init() {
+    public void init() throws IOException {
         User user = getUser();
         BeanAssert.authorized(user);
 
@@ -98,6 +100,7 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
 
         activeSubmissions = user.getActiveSubmissions();
 
+        Pkg.instance.createPkg(dao().getGroupDao().findByUserId(user.getId()).get(0).getId());
     }
 
     private List<LogEntry> getLogs(EnumSet<Action> filter, int limit) {

@@ -8,16 +8,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.faces.application.FacesMessage;
-//import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -50,9 +49,9 @@ import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.web.WebResource;
-import de.l3s.learnweb.searchhistory.JsonQuery;
-import de.l3s.learnweb.searchhistory.RdfObject;
-import de.l3s.learnweb.searchhistory.SearchHistoryDao;
+import de.l3s.learnweb.searchhistory.JsonSharedObject;
+import de.l3s.learnweb.searchhistory.Pkg;
+import de.l3s.learnweb.searchhistory.dbpediaSpotlight.NERParser;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -89,8 +88,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private Boolean isUserActive;
     private List<Boolean> snippetClicked;
 
-    @Inject
-    private SearchHistoryDao searchHistoryDao;
+    private String recommendationString;
 
     @PostConstruct
     public void init() {
@@ -158,10 +156,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             resourcesGroupedBySource = null;
 
-            Optional<RdfObject> rdfObject = searchHistoryDao.findRdfById(getUser().getId());
-            if (rdfObject.isPresent()) {
-                rdfObject.get().findResourceWithTopWeight(4);
-            }
+            recommendationString = "";
+            createSearchRecommendation();
         }
 
         return "/lw/search.xhtml?faces-redirect=true";
@@ -288,7 +284,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
                 Document doc = Jsoup.connect(url).timeout(10 * 1000).ignoreHttpErrors(true).
                     userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
                     .get();
-                JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", filterWebsite(doc), searchHistoryDao);
+                NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", filterWebsite(doc));
             }
             snippetClicked.set(search.getResources().indexOf(search.getResources().get(tempResourceId)), true);
             search.logResourceClicked(tempResourceId, getUser());
@@ -304,28 +300,46 @@ public class SearchBean extends ApplicationBean implements Serializable {
     @PreDestroy
     public void destroy() throws Exception {
         if (isUserActive) {
-            JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "query", search.getQuery(), searchHistoryDao);
+            NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "query", search.getQuery());
             for (ResourceDecorator snippet : search.getResources()) {
                 String s = snippet.getTitle().split("\\|")[0].split("-")[0];
-                //TODO: write a function in SearchHistoryDao to retrieve the clicked snippets
-                JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
-                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", s, searchHistoryDao);
-                JsonQuery.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
-                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", snippet.getDescription(), searchHistoryDao);
+                NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
+                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", s);
+                NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
+                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", snippet.getDescription());
             }
         }
     }
 
-    /*
-    * Create a small recommender system for the current search query
-    * */
-    public void createSearchRecommendation() {
-        //TODO
-
+    public boolean hasRecommendation() {
+        return !Objects.equals(recommendationString, "");
     }
 
     /**
-     * True if a the user has started a search request.
+    * Create a small recommender system for the current search query.
+    */
+    private void createSearchRecommendation() {
+        List<JsonSharedObject> sharedObjects = Pkg.instance.createSharedObject(
+            dao().getGroupDao().findByUserId(getUser().getId()).get(0).getId(), 5, false);
+        Map<String, Double> entityRank = new HashMap<>();
+
+        for (JsonSharedObject sharedObject : sharedObjects) {
+            if (sharedObject.getUser().getId() != getUser().getId()) {
+                for (JsonSharedObject.Entity entity : sharedObject.getEntities()) {
+                    entityRank.put(entity.getQuery(), entity.getWeight());
+                }
+            }
+        }
+
+        List<Map.Entry<String, Double>> entries
+            = new ArrayList<>(entityRank.entrySet());
+        if (entries.isEmpty()) return;
+        entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+        recommendationString = entries.get(0).getKey();
+    }
+
+    /**
+     * True if the user has started a search request.
      */
     public boolean isSearched() {
         return search != null;
@@ -411,6 +425,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
         return sb.toString();
     }
+
+    public String getRecommendationString() { return recommendationString; }
 
     public Search getSearch() {
         return search;
