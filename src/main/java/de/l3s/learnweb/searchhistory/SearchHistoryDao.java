@@ -44,13 +44,6 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         + "WHERE a.user_id = ? AND a.target_uri_normalized = ? ORDER BY a.created")
     List<SearchAnnotation> findAnnotationsByUserIdAndUrl(int userId, String url);
 
-    @SqlQuery("SELECT url FROM learnweb_large.sl_resource JOIN learnweb_large.sl_action "
-        + "ON learnweb_large.sl_action.search_id = learnweb_large.sl_resource.search_id "
-        + "AND learnweb_large.sl_resource.rank = learnweb_large.sl_action.rank"
-        + " JOIN learnweb_large.sl_query ON learnweb_large.sl_query.search_id = learnweb_large.sl_action.search_id \n"
-        + "WHERE learnweb_large.sl_action.action = 'resource_clicked' AND query = ?")
-    List<String> findClickedUrl(String query);
-
     default List<ResourceDecorator> findSearchResultsByQuery(SearchQuery query, int limit) {
         ResourceDao resourceDao = getHandle().attach(ResourceDao.class);
 
@@ -119,8 +112,15 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     List<AnnotationCount> findAllAnnotationCounts();
 
     @RegisterRowMapper(JsonSharedObjectMapper.class)
-    @SqlQuery("SELECT shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND user_id = ?")
-    List<JsonSharedObject> findObjectByGroupId(int groupId, int userId);
+    @SqlQuery("SELECT shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND user_id = ? AND application = ?")
+    List<JsonSharedObject> findObjectByIdAndType(int groupId, int userId, String application);
+
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_inputStream (user_id, type, content, date_created) VALUES(?, ?, ?, CURRENT_TIMESTAMP())")
+    @GetGeneratedKeys("id")
+    int insertInputStream(int userId, String type, String content);
+
+    @SqlQuery("SELECT content FROM learnweb_annotations.annotation_inputStream WHERE id = ?")
+    Optional<String> findInputStreamById(int id);
 
     @SqlUpdate("UPDATE learnweb_annotations.annotation_objects SET shared_object = ?, created_at = ? WHERE user_id = ? AND group_id = ?")
     void updateSharedObject(String sharedObject, LocalDateTime createdAt, int userId, int groupId);
@@ -130,13 +130,12 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @GetGeneratedKeys("id")
     int insertSharedObject(int userId, int groupId, String application, String sharedObject);
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET repetition = ?, session_id = ?, users = ? WHERE uri = ? AND type = ? ")
-    void updateQueryAnnotation(int repetition, String sessionId, String user, String uri, String type);
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET repetition = ?, session_id = ?, users = ?, input_id = ? WHERE uri = ? AND type = ? ")
+    void updateQueryAnnotation(int repetition, String sessionId, String user, String inputStreams, String uri, String type);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (id, type, uri, created_at, surface_form, session_id, users, confidence, repetition) "
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
-    @GetGeneratedKeys("uri_id")
-    int insertQueryToAnnotation(String id, String type, String uri, LocalDateTime createdAt, String surfaceForm, String sessionId, String users, double confidence
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (input_id, id, type, uri, created_at, surface_form, session_id, users, confidence, repetition) "
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    int insertQueryToAnnotation(String inputId, String id, String type, String uri, LocalDateTime createdAt, String surfaceForm, String sessionId, String users, double confidence
         , int repetition);
 
     @RegisterRowMapper(RdfObjectMapper.class)
@@ -236,6 +235,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             annotation.setSessionId(rs.getString("session_id"));
             annotation.setUsers(rs.getString("users"));
             annotation.setRepetition(rs.getInt("repetition"));
+            annotation.setInputStreams(rs.getString("input_id"));
             return annotation;
         }
     }

@@ -21,7 +21,7 @@ public class AnnotationCount implements Serializable {
     private String users;
     //Specifically for web results
     private String keywords;
-
+    private String inputStreams;
     public String getUsers() {
         return users;
     }
@@ -32,14 +32,6 @@ public class AnnotationCount implements Serializable {
 
     public void addUser(String user) {
         this.users += "," + user;
-    }
-
-    public int getUri_id() {
-        return uri_id;
-    }
-
-    public void setUri_id(final int uri_id) {
-        this.uri_id = uri_id;
     }
 
     public String getType() {
@@ -124,12 +116,12 @@ public class AnnotationCount implements Serializable {
         this.sessionId = sessionId;
     }
 
-    public void addSessionId(final String sessionId) {
-        this.sessionId += "," + sessionId;
+    public String getInputStreams() {
+        return inputStreams;
     }
 
-    public void addId(final String Id) {
-        this.id += "," + Id;
+    public void setInputStreams(final String inputStreams) {
+        this.inputStreams = inputStreams;
     }
 
     public String getKeywords() {

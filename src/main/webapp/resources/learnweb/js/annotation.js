@@ -71,7 +71,7 @@ const onLoad = (graph) => {
       .attr('id', (d) => `text${d.id}`)
       .attr('pointer-events', 'none')
       .style('font-size', '14px')
-      .text((d) => d.query);
+      .text((d) => d.name);
 
     nodes.append('text')
       // eslint-disable-next-line no-use-before-define

@@ -71,7 +71,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     /**
      * Load the variables that needs values before the view is rendered.
      */
-    public void onLoad() throws Exception {
+    public void onLoad() throws IOException {
         BeanAssert.authorized(isLoggedIn());
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
@@ -79,7 +79,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
             .create();
         for (Group group : groupDao.findByUserId(selectedUserId)) {
-            calculateEntities(searchHistoryDao.findSessionsByGroupId(group.getId()), group.getId());
+            calculateEntities(group.getId());
         }
 
     }
@@ -233,19 +233,17 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         }
     }
 
-    private void calculateEntities(List<SearchSession> sessions, int selectedGroupId) throws IOException {
-
-        //Calculates and returns a list of top entries for each user belonging to the group
-        //Also exports a rdf turtle file for every user in the group
-        //For runtime calculation only: startTime & endTime
-
-        sharedObjects = new JsonQuery(new ArrayList<>(),
-            new ArrayList<>()).calculateTopEntries(searchHistoryDao.findAllAnnotationCounts(),
-            userDao.findByGroupId(selectedGroupId), groupDao.findById(selectedGroupId).get(), sessions, searchHistoryDao, 3);
+    /*
+    * Calculates and returns a list of top entries for each user belonging to the group
+    * Also exports a rdf turtle file for every user in the group
+    * @param selectedGroupId    the id of this user's group
+    * */
+    private void calculateEntities(int selectedGroupId) throws IOException {
+        sharedObjects = Pkg.instance.createSharedObject(selectedGroupId, 3, false);
         //Results of SharedObjects to DB
         for (JsonSharedObject sharedObject : sharedObjects) {
-            if (searchHistoryDao.findObjectByGroupId(selectedGroupId, sharedObject.getUser().getId()).isEmpty()) {
-                searchHistoryDao.insertSharedObject(sharedObject.getUser().getId(), selectedGroupId, "sharedObject",
+            if (searchHistoryDao.findObjectByIdAndType(selectedGroupId, sharedObject.getUser().getId(), "collabGraph").isEmpty()) {
+                searchHistoryDao.insertSharedObject(sharedObject.getUser().getId(), selectedGroupId, "collabGraph",
                     gson.toJson(sharedObject));
             }
             else {
@@ -254,17 +252,22 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         }
     }
 
+    /*
+    * Create the CollabGraph file, export it to visualisation
+    * @return   the Json string of the CollabGraph
+    * */
     public String getQueriesJson() throws Exception {
         if (sessions == null || sessions.isEmpty() || selectedGroupId <= 0) return null;
-        //Create new filePath
+        //Create new localPath - json sharedObject for this user
         String localPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
             + "_Summary_" + userDao.findById(selectedUserId).get().getUsername() + "_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
+        //Create new collabPath - json CollabGraph for this group
         String collabPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
             + "_Summary_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
         File file = new File(localPath);
-        //Create new json
-        JsonQuery calculatedQuery = new JsonQuery(new ArrayList<>(),
-            new ArrayList<>()).createCollabGraph(sharedObjects);
+        //Get the CollabGraph
+        CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>()).createCollabGraph(sharedObjects);
+        //Export file
         if (file.createNewFile()) {
                 Writer writer = new FileWriter(localPath, StandardCharsets.UTF_8);
                 if (sharedObjects.stream().anyMatch(s -> s.getUser().getId() == selectedUserId))
