@@ -108,6 +108,10 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     Optional<AnnotationCount> findByUriAndType(String uri, String type);
 
     @RegisterRowMapper(AnnotationCountMapper.class)
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri_id = ?")
+    Optional<AnnotationCount> findAnnotationById(int id);
+
+    @RegisterRowMapper(AnnotationCountMapper.class)
     @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count ORDER BY created_at DESC")
     List<AnnotationCount> findAllAnnotationCounts();
 
@@ -135,6 +139,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
 
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (input_id, id, type, uri, created_at, surface_form, session_id, users, confidence, repetition) "
         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    @GetGeneratedKeys("uri_id")
     int insertQueryToAnnotation(String inputId, String id, String type, String uri, LocalDateTime createdAt, String surfaceForm, String sessionId, String users, double confidence
         , int repetition);
 
@@ -226,6 +231,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         @Override
         public AnnotationCount map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             AnnotationCount annotation = new AnnotationCount();
+            annotation.setUriId(rs.getInt("uri_id"));
             annotation.setUri(rs.getString("uri"));
             annotation.setId(rs.getString("id"));
             annotation.setConfidence(rs.getDouble("confidence"));

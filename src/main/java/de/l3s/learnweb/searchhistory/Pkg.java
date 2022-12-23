@@ -2,7 +2,7 @@ package de.l3s.learnweb.searchhistory;
 
 import static de.l3s.learnweb.app.Learnweb.dao;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -20,9 +20,9 @@ import java.util.regex.Pattern;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
-/*
+/**
 * Main calculation class for annotation. Create a static Pkg list.
-* For communication with
+* For communication with other applications: collabGraph and Recommender system
 * */
 public class Pkg {
 
@@ -35,10 +35,11 @@ public class Pkg {
     public static Pkg instance = new Pkg(new ArrayList<>(), new ArrayList<>());
 
     private List<RdfModel> rdfGraphs;
-    /*
+    /**
      * The Node class. Has all values of an entity
      * */
     public class Node {
+        private transient int id;
         private String uri;
         private String name;
         private int frequency;
@@ -50,7 +51,8 @@ public class Pkg {
         private String type;
 
         //Node class. Receives the input from DB to be visualized
-        public Node(String name, String uri, String users, double confidence, String sessionId, double weight, String type) {
+        public Node(int id, String name, String uri, String users, double confidence, String sessionId, double weight, String type) {
+            this.id = id;
             this.sessionId = sessionId;
             this.name = name;
             this.uri = uri;
@@ -59,6 +61,14 @@ public class Pkg {
             this.frequency = 1;
             this.weight = weight;
             this.type = type;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(final int id) {
+            this.id = id;
         }
 
         public String getName() {
@@ -137,7 +147,7 @@ public class Pkg {
         }
     }
 
-    /*
+    /**
      * The link class. Represents the weighted link between two entities
      * */
     public class Link {
@@ -182,26 +192,25 @@ public class Pkg {
         links.add(new Pkg.Link(source, target, weight));
     }
 
-    /*
+    /**
      * Add this node into nodes List
-     * @param nodes  the node container, will be used for node addition
      * @param uri    the new node's uri
      * @param username   the new node's username
      * @param confidence the new node's confidence
      * @param sessionId  the new nodes' session id
      * @param weight     the new node's weight
      * */
-    private void AddNode(String uri, String username, double confidence, String sessionId, double weight, String type) {
+    private void AddNode(int id, String uri, String username, double confidence, String sessionId, double weight, String type) {
         //Get the Node name as uri minus domain root - dbpedia.org/resource
         String nameQuery = PATTERN.matcher(uri).replaceAll("")
             .replaceAll("_", " ");
-        Node node = new Node(nameQuery, uri, username, confidence, sessionId, weight, type);
+        Node node = new Node(id, nameQuery, uri, username, confidence, sessionId, weight, type);
         if (!nodes.contains(node)) {
             nodes.add(node);
         }
     }
 
-    /*
+    /**
      * Calculate the weight to be connected from a node with the function values based on the algorithm
      * @param   annotationCount  the new entity
      * @return  the weight of this entity, based on its group type and how many days since the input into DB
@@ -233,12 +242,10 @@ public class Pkg {
         return 0;
     }
 
-    /*
+    /**
      * Remove the duplicating nodes (same uri) and their corresponding links
      * The duplicating nodes will be removed first, with their links' sources and targets changed into the first node's values
      * Then the duplicating links will be removed
-     * @param record     the record to be trimmed
-     * @return the newly trimmed record with all duplicating nodes and links removed
      * */
     private void removeDuplicatingNodesAndLinks() {
         //Remove duplicating nodes by merging nodes with the same uri
@@ -291,7 +298,7 @@ public class Pkg {
         links.removeIf(link -> link.getSource() == -1);
     }
 
-    /*
+    /**
      * Create the PKG for all users in the specific group
      * @param    groupId     the id of the group
      * @return   a List of Shared Object in Json form
@@ -306,7 +313,7 @@ public class Pkg {
         //Find the group
         Group group = dao().getGroupDao().findByIdOrElseThrow(groupId);
         //Add default node. Any group that has only 1 node will be connected to default node
-        AddNode("default", "", 1, "", 0.0, "");
+        AddNode(0,"default", "", 1, "", 0.0, "");
 
         //Initialize rdf graph model list
         rdfGraphs = new ArrayList<>();
@@ -324,12 +331,12 @@ public class Pkg {
         }
     }
 
-    /*
+    /**
     * @param annotationCount
     * */
     public void updatePkg(AnnotationCount annotationCount, User user) {
         double weight = calculateWeight(annotationCount);
-        AddNode(annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence()
+        AddNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence()
             , annotationCount.getSessionId(), weight, annotationCount.getType());
         for (int i = 1; i < nodes.size() - 1; i++) {
             if (nodes.get(i).getType().equals(annotationCount.getType())) {
@@ -382,6 +389,9 @@ public class Pkg {
         }
     }
 
+    /**
+     * Calculate the sum_weight of each node with the formula of NEA
+     */
     private void calculateSumWeight() {
         //Calculate top entities from the formula:
         //Confidence(Node i) * sum(Confidence(Node j)) * Fsum(t)
@@ -399,10 +409,11 @@ public class Pkg {
         }
     }
 
-    /*
+    /**
      * Create shared objects based on the result of pkg graph calculation
-     * @param    users   the users in this group
-     * @param    numberTopEntities   how many entities per user the shared Object will show
+     * @param groupId   The group id
+     * @param numberEntities   how many entities per user the shared Object will show
+     * @param isAscending show if the sharedObject will get the result from top or bottom
      * @return   the list of shared object in Json form
      * */
     public List<JsonSharedObject> createSharedObject(int groupId, int numberEntities, boolean isAscending) {
@@ -435,7 +446,7 @@ public class Pkg {
                 for (Map.Entry<Integer, Double> entry : entries) {
                     //Find from the top of the results numberTopEntities entities, break after reaching the number
                     if (nodes.get(entry.getKey()).users.contains(user.getUsername())) {
-                        Node chosenNode = new Node(nodes.get(entry.getKey()).getName(), nodes.get(entry.getKey()).getUri()
+                        Node chosenNode = new Node(nodes.get(entry.getKey()).getId(), nodes.get(entry.getKey()).getName(), nodes.get(entry.getKey()).getUri()
                             , user.getUsername(), nodes.get(entry.getKey()).getConfidence(),
                             nodes.get(entry.getKey()).getSessionId(), entry.getValue(), nodes.get(entry.getKey()).getType());
                         newNodes.add(chosenNode);
@@ -531,6 +542,13 @@ public class Pkg {
             for (Node node : nodes) {
                 if (node.getUsers().contains(user.getUsername())) {
                     rdfGraphs.get(users.indexOf(user)).addEntity(node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
+                    Optional<AnnotationCount> annotationCount = dao().getSearchHistoryDao().findAnnotationById(node.getId());
+                    if (annotationCount.isPresent()) {
+                        for (String inputId : annotationCount.get().getInputStreams().split(",")) {
+                            rdfGraphs.get(users.indexOf(user)).
+                                addStatement("RecognizedEntities/" + node.getName(), "processes", "InputStream/" + inputId, "resource");
+                        }
+                    }
                 }
             }
             //Print the Rdf graphs both to DB and local directories as files
