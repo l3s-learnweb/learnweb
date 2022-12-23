@@ -15,13 +15,22 @@ public class AnnotationCount implements Serializable {
     private String uri;
     private String type;
     private String id;
-    private int uri_id;
+    private int uriId;
     private int group_id;
     private String sessionId;
     private String users;
     //Specifically for web results
     private String keywords;
     private String inputStreams;
+
+    public int getUriId() {
+        return uriId;
+    }
+
+    public void setUriId(final int uriId) {
+        this.uriId = uriId;
+    }
+
     public String getUsers() {
         return users;
     }

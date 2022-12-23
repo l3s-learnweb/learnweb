@@ -35,7 +35,7 @@ public final class NERParser {
     private static List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId, String keywords) {
         List<ResourceItem> resources = new ArrayList<>();
         List<AnnotationCount> annotationCounts = new ArrayList<>();
-        //If annotating from webpages, only choose top 5 per webpage
+        //If annotating from webpages, only choose top 10 per webpage
         if (type.equals("web")) {
             Map<String, Long> uriPerType = annotationUnit.getResources().stream()
                 .collect(groupingBy(ResourceItem::getUri, counting()));
@@ -112,7 +112,8 @@ public final class NERParser {
             }
             //Insert directly new annotationCount into DB
             else {
-                dao().getSearchHistoryDao().insertQueryToAnnotation(String.valueOf(inputId), annotationCount.getId(),
+                annotationCount.setInputStreams(String.valueOf(inputId));
+                dao().getSearchHistoryDao().insertQueryToAnnotation(annotationCount.getInputStreams(), annotationCount.getId(),
                     annotationCount.getType(), annotationCount.getUri(), annotationCount.getCreatedAt(), annotationCount.getSurfaceForm()
                     , annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence(), annotationCount.getRepetition());
                 Pkg.instance.updatePkg(annotationCount, dao().getUserDao().findByUsername(username).get());

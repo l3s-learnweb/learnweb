@@ -238,7 +238,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     * Also exports a rdf turtle file for every user in the group
     * @param selectedGroupId    the id of this user's group
     * */
-    private void calculateEntities(int selectedGroupId) throws IOException {
+    private void calculateEntities(int selectedGroupId) {
         sharedObjects = Pkg.instance.createSharedObject(selectedGroupId, 3, false);
         //Results of SharedObjects to DB
         for (JsonSharedObject sharedObject : sharedObjects) {
