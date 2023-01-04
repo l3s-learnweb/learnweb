@@ -17,6 +17,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
@@ -304,7 +307,8 @@ public class Pkg {
      * @return   a List of Shared Object in Json form
      * */
     public void createPkg(int groupId) throws IOException {
-
+        long startTime = System.nanoTime();
+        System.out.println("Creating Pkg, estimate time: ");
         this.annotationCounts = dao().getSearchHistoryDao().findAllAnnotationCounts();
         //Find the search sessions in this group
         List<SearchSession> sessions = dao().getSearchHistoryDao().findSessionsByGroupId(groupId);
@@ -324,11 +328,13 @@ public class Pkg {
         //TODO: complete the RDF graph
         for (AnnotationCount annotationCount : this.annotationCounts) {
             for (User user : users) {
-                if (annotationCount.getUsers().contains(user.getUsername())) {
+                if (annotationCount.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
                     updatePkg(annotationCount, user);
                 }
             }
         }
+        long endTime = System.nanoTime();
+        System.out.println(endTime - startTime);
     }
 
     /**
@@ -380,12 +386,12 @@ public class Pkg {
                 }
             }
         }
-        for (String inputStreamId : annotationCount.getInputStreams().split(",")) {
-            Optional<String> inputStream = dao().getSearchHistoryDao().findInputStreamById(Integer.parseInt(inputStreamId));
-            if (inputStream.isPresent()) {
-                rdfGraphs.get(users.indexOf(user)).
-                    addStatement("InputStream/" + inputStreamId, "text", inputStream.get(), "literal");
-            }
+         for (InputStreamRdf inputStream : dao().getSearchHistoryDao().findInputContentById(annotationCount.getUriId())) {
+             rdfGraphs.get(users.indexOf(user)).addStatement("InputStream/" + inputStream.getId(), "text", inputStream.getContent(), "literal");
+             rdfGraphs.get(users.indexOf(user)).addStatement("InputStream/" + inputStream.getId(), "text",
+                 inputStream.getDateCreated().toString(), "literal");
+             rdfGraphs.get(users.indexOf(user)).addStatement("RecognizedEntities/" + annotationCount.getUriId(), "processes",
+                 "InputStream/" + inputStream.getId(), "resource");
         }
     }
 
@@ -416,7 +422,7 @@ public class Pkg {
      * @param isAscending show if the sharedObject will get the result from top or bottom
      * @return   the list of shared object in Json form
      * */
-    public List<JsonSharedObject> createSharedObject(int groupId, int numberEntities, boolean isAscending) {
+    public List<JsonSharedObject> createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
         //Initialization
         results = new HashMap<>();
 
@@ -519,14 +525,14 @@ public class Pkg {
                 }
 
                 //Create the sharedObject
-                JsonSharedObject object = new JsonSharedObject();
+                JsonSharedObject object = new JsonSharedObject(application, false);
                 for (Link link : calculatedLinks) {
                     object.getLinks().add(new JsonSharedObject.Link(link.source, link.target));
                 }
                 object.setUser(new JsonSharedObject.User(users.stream().filter(s -> s.getUsername().equals(user.getUsername()))
                     .findFirst().get().getId(), user.getUsername()));
                 for (Node node : newNodes) {
-                    object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), node.getWeight()));
+                    object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), node.getWeight(), node.getType()));
                 }
                 sharedObjects.add(object);
 
@@ -541,13 +547,9 @@ public class Pkg {
             //Final rdf touch - insert RecognizedEntities
             for (Node node : nodes) {
                 if (node.getUsers().contains(user.getUsername())) {
-                    rdfGraphs.get(users.indexOf(user)).addEntity(node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
+                    rdfGraphs.get(users.indexOf(user)).addEntity(node.getId(), node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
                     Optional<AnnotationCount> annotationCount = dao().getSearchHistoryDao().findAnnotationById(node.getId());
                     if (annotationCount.isPresent()) {
-                        for (String inputId : annotationCount.get().getInputStreams().split(",")) {
-                            rdfGraphs.get(users.indexOf(user)).
-                                addStatement("RecognizedEntities/" + node.getName(), "processes", "InputStream/" + inputId, "resource");
-                        }
                     }
                 }
             }
@@ -559,7 +561,17 @@ public class Pkg {
                 dao().getSearchHistoryDao().updateRdf(value, user.getId());
             }
         }
-
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new SearchHistoryBean.LocalDateTimeAdapter().nullSafe())
+            .create();
+        for (JsonSharedObject sharedObject : sharedObjects) {
+            if (dao().getSearchHistoryDao().findObjectByIdAndType(groupId, sharedObject.getUser().getId(), application).isEmpty()) {
+                dao().getSearchHistoryDao().insertSharedObject(sharedObject.getUser().getId(), groupId, application,
+                    gson.toJson(sharedObject));
+            }
+            else {
+                dao().getSearchHistoryDao().updateSharedObject(gson.toJson(sharedObject), LocalDateTime.now(), sharedObject.getUser().getId(), groupId);
+            }
+        }
         return sharedObjects;
     }
 

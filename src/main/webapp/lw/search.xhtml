@@ -231,10 +231,12 @@
             </h:form>
         </p:dialog>
         <p:dialog header="Recommendation" widgetVar="recommendationDialog" minHeight="40" visible="#{searchBean.hasRecommendation()}" position="right,bottom">
-            <h:outputText value="Do you want to search for this: " />
-            <h:outputLink value="search.jsf?query=#{searchBean.recommendationString}">
-                <h:outputText value="#{searchBean.recommendationString}"/>
-            </h:outputLink>
+            <h:outputText value="#{msg.search_for_this}"/>
+            <ui:repeat value="search.jsf?query=#{searchBean.recommendationString}" var="selectItem">
+                <h:outputLink value="search.jsf?query=#{selectItem}">
+                    <h:outputText value="#{searchBean.recommendationString}"/>
+                </h:outputLink>
+            </ui:repeat>
         </p:dialog>
     </div>
 </ui:define>

@@ -38,11 +38,13 @@ public class JsonSharedObject {
         private String uri;
         private String query;
         private double weight;
+        private transient String type;
 
-        public Entity(final String uri, final String query, final double weight) {
+        public Entity(final String uri, final String query, final double weight, final String type) {
             this.uri = uri;
             this.query = query;
             this.weight = weight;
+            this.type = type;
         }
 
         public String getUri() {
@@ -67,6 +69,14 @@ public class JsonSharedObject {
 
         public void setWeight(final double weight) {
             this.weight = weight;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(final String type) {
+            this.type = type;
         }
     }
 
@@ -99,19 +109,24 @@ public class JsonSharedObject {
     private List<Entity> entities;
     private List<Link> links;
     private User user;
+    private String application;
 
-    public JsonSharedObject(final String sharedObject) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new SearchHistoryBean.LocalDateTimeAdapter().nullSafe())
-            .create();
-        JsonSharedObject object = gson.fromJson(sharedObject, JsonSharedObject.class);
-        this.entities = object.getEntities();
-        this.links = object.getLinks();
-        this.user = object.user;
-    }
+    public JsonSharedObject(final String content, boolean isJson) {
+        if (isJson) {
+            Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new SearchHistoryBean.LocalDateTimeAdapter().nullSafe())
+                .create();
+            JsonSharedObject object = gson.fromJson(content, JsonSharedObject.class);
 
-    public JsonSharedObject() {
-        this.entities = new ArrayList<>();
-        this.links = new ArrayList<>();
+            this.entities = object.getEntities();
+            this.links = object.getLinks();
+            this.user = object.user;
+            this.application = object.getApplication();
+        }
+        else {
+            this.entities = new ArrayList<>();
+            this.links = new ArrayList<>();
+            this.application = content;
+        }
     }
 
     public List<Entity> getEntities() {
@@ -136,5 +151,13 @@ public class JsonSharedObject {
 
     public void setUser(final User user) {
         this.user = user;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(final String application) {
+        this.application = application;
     }
 }

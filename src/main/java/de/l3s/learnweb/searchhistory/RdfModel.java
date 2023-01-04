@@ -82,14 +82,13 @@ public class RdfModel {
         }
     }
 
-    public void addEntity(String uri, String surfaceForm, double weight, double score, LocalDateTime time) {
+    public void addEntity(int id, String uri, String surfaceForm, double weight, double score, LocalDateTime time) {
         if (Objects.equals(uri, "default")) return;
-        addStatement("RecognizedEntities/" + surfaceForm, "identifier", uri, "literal");
-        addStatement("RecognizedEntities/" + surfaceForm, "surfaceForm", surfaceForm, "literal");
-        addStatement("RecognizedEntities/" + surfaceForm, "weight", String.valueOf(weight), "literal");
-        addStatement("RecognizedEntities/" + surfaceForm, "confidenceScore", String.valueOf(score), "literal");
-        addStatement("RecognizedEntities/" + surfaceForm, "processes", "InputStream/" + group.getTitle(), "resource");
-        addStatement("RecognizedEntities/" + surfaceForm, "dateCreated", time.format(DateTimeFormatter.ISO_DATE), "literal");
+        addStatement("RecognizedEntities/" + id, "identifier", uri, "literal");
+        addStatement("RecognizedEntities/" + id, "surfaceForm", surfaceForm, "literal");
+        addStatement("RecognizedEntities/" + id, "weight", String.valueOf(weight), "literal");
+        addStatement("RecognizedEntities/" + id, "confidenceScore", String.valueOf(score), "literal");
+        addStatement("RecognizedEntities/" + id, "dateCreated", time.format(DateTimeFormatter.ISO_DATE), "literal");
     }
 
     public String printModel() {
