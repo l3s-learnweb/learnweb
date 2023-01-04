@@ -43,7 +43,7 @@ public final class NERParser {
             final List<ResourceItem> finalResources = resources;
             uriPerType.entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .limit(10)
+                .limit(5)
                 .forEach(r -> {
                     Optional<ResourceItem> resource =  annotationUnit.getResources().stream().filter(s -> s.getUri().equals(r.getKey())).findFirst();
                     if (resource.isPresent()) finalResources.add(resource.get());
@@ -84,6 +84,7 @@ public final class NERParser {
 
         //Insert inputStream into DB
         int userId = dao().getUserDao().findByUsername(username).get().getId();
+        int uriId;
         int inputId = dao().getSearchHistoryDao().insertInputStream(userId, type, content);
         //Store this annotationCount into DB
         for (AnnotationCount annotationCount : annotationCounts) {
@@ -91,6 +92,7 @@ public final class NERParser {
             Optional<AnnotationCount> foundAnnotation = dao().getSearchHistoryDao().findByUriAndType(annotationCount.getUri(), annotationCount.getType());
             //If already an annotationCount is found in DB, update its columns
             if (foundAnnotation.isPresent()) {
+                uriId = foundAnnotation.get().getUriId();
                 //Update the sessionId
                 String session = foundAnnotation.get().getSessionId();
                 if (!session.contains(annotationCount.getSessionId())) {
@@ -101,23 +103,20 @@ public final class NERParser {
                 if (!users.contains(annotationCount.getUsers())) {
                     users += "," + annotationCount.getUsers();
                 }
-                //Update the InputStream
-                String inputStreams = foundAnnotation.get().getInputStreams();
-                if (!inputStreams.contains(String.valueOf(inputId))) {
-                    inputStreams += "," + inputId;
-                }
                 //Update the repetition
                 dao().getSearchHistoryDao().updateQueryAnnotation(foundAnnotation.get().getRepetition() + 1, session, users,
-                    inputStreams, annotationCount.getUri(), annotationCount.getType());
+                    annotationCount.getUri(), annotationCount.getType());
             }
             //Insert directly new annotationCount into DB
             else {
                 annotationCount.setInputStreams(String.valueOf(inputId));
-                dao().getSearchHistoryDao().insertQueryToAnnotation(annotationCount.getInputStreams(), annotationCount.getId(),
-                    annotationCount.getType(), annotationCount.getUri(), annotationCount.getCreatedAt(), annotationCount.getSurfaceForm()
-                    , annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence(), annotationCount.getRepetition());
+                uriId = dao().getSearchHistoryDao().insertQueryToAnnotation(annotationCount.getId(), annotationCount.getType(),
+                    annotationCount.getUri(), annotationCount.getCreatedAt(), annotationCount.getSurfaceForm(),
+                    annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence(), annotationCount.getRepetition());
+                annotationCount.setUriId(uriId);
                 Pkg.instance.updatePkg(annotationCount, dao().getUserDao().findByUsername(username).get());
             }
+            dao().getSearchHistoryDao().insertInputStreamKey(uriId, inputId);
         }
 
     }

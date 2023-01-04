@@ -83,14 +83,12 @@
 				<h:panelGroup id="sessionsList" layout="block">
 					<h:outputText value="#{msg['search_history.no_sessions_recorded']}" rendered="#{empty searchHistoryBean.sessions}"/>
 					<h:form>
-						<ul class="sh-sessions-list #{searchHistoryBean.showGroupHistory == false ? '' : 'sh-session-group'} overflow-auto vh-100">
+						<ul class="sh-sessions-list #{searchHistoryBean.showGroupHistory ? 'sh-session-group' : ''} overflow-auto vh-100">
 							<h:outputScript>
-								var query = '#{searchHistoryBean.queriesJson}';
-								if (!query) document.getElementById('graph').style.display = 'none';
-                				else {
-                          			document.getElementById('graph').style.display = 'block';
-                                	console.log(query);
-								}
+								var query;
+								if ('#{searchHistoryBean.showGroupHistory}' == 'true') query = '#{searchHistoryBean.queriesJson}';
+                				else query = '#{searchHistoryBean.singleQueryJson}';
+								document.getElementById('graph').style.display = query ? 'block' : 'none';
 								document.getElementById('snippetsList').style.display = 'none';
 								SetUrl(query);
 							</h:outputScript>

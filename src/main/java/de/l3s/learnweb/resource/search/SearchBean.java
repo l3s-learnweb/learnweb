@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 import jakarta.annotation.PostConstruct;
@@ -88,7 +89,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private Boolean isUserActive;
     private List<Boolean> snippetClicked;
 
-    private String recommendationString;
+    private List<String> recommendationString;
 
     @PostConstruct
     public void init() {
@@ -156,7 +157,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             resourcesGroupedBySource = null;
 
-            recommendationString = "";
             createSearchRecommendation();
         }
 
@@ -312,30 +312,50 @@ public class SearchBean extends ApplicationBean implements Serializable {
     }
 
     public boolean hasRecommendation() {
-        return !Objects.equals(recommendationString, "");
+        return !recommendationString.isEmpty();
     }
 
     /**
-    * Create a small recommender system for the current search query.
+     * Create a small recommender system for the current search query.
+     * Find the top 3 entities from other users in shared object form, exclude the results from this user, based on
+     * their weight in Pkg.
     */
     private void createSearchRecommendation() {
-        List<JsonSharedObject> sharedObjects = Pkg.instance.createSharedObject(
-            dao().getGroupDao().findByUserId(getUser().getId()).get(0).getId(), 5, false);
-        Map<String, Double> entityRank = new HashMap<>();
+        System.out.println("Creating search Recommendation, estimated time: ");
+        long startTime = System.nanoTime();
+        //Initialization
+        recommendationString = new ArrayList<>();
 
+        int groupId = dao().getGroupDao().findByUserId(getUser().getId()).get(0).getId();
+        List<JsonSharedObject> sharedObjects = Pkg.instance.createSharedObject(
+            groupId, 5, false, "recommendation");
+        Map<String, Double> entityRank = new HashMap<>();
+        List<JsonSharedObject.Entity> chosenEntities = new ArrayList<>();
         for (JsonSharedObject sharedObject : sharedObjects) {
             if (sharedObject.getUser().getId() != getUser().getId()) {
+
+                chosenEntities.addAll(sharedObject.getEntities());
+            }
+        }
+        for (JsonSharedObject sharedObject : sharedObjects) {
+            if (sharedObject.getUser().getId() == getUser().getId()) {
                 for (JsonSharedObject.Entity entity : sharedObject.getEntities()) {
-                    entityRank.put(entity.getQuery(), entity.getWeight());
+                    chosenEntities.removeIf(s -> (Objects.equals(s.getUri(), entity.getUri())));
                 }
             }
         }
+        for (JsonSharedObject.Entity entity : chosenEntities) entityRank.put(entity.getQuery(), entity.getWeight());
 
-        List<Map.Entry<String, Double>> entries
-            = new ArrayList<>(entityRank.entrySet());
+        //entries list will be used to store and sort the entities based on their weights
+        List<Map.Entry<String, Double>> entries = new ArrayList<>(entityRank.entrySet());
+        //No entries are found then we don't need to display the results
         if (entries.isEmpty()) return;
         entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-        recommendationString = entries.get(0).getKey();
+
+        //Get the first 3 entities of the results, or the whole results if entries has less than 3 elements
+        recommendationString = entries.stream().map(entry -> entry.getKey()).collect(Collectors.toList()).subList(0, Math.min(3, entries.size()));
+        long endTime = System.nanoTime();
+        System.out.println(endTime - startTime);
     }
 
     /**
@@ -426,7 +446,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         return sb.toString();
     }
 
-    public String getRecommendationString() { return recommendationString; }
+    public List<String> getRecommendationString() { return recommendationString; }
 
     public Search getSearch() {
         return search;
