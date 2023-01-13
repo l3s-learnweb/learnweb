@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.faces.application.FacesMessage;
@@ -79,10 +78,10 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         }
         gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
             .create();
+        Pkg.instance.calculateSumWeight();
         for (Group group : groupDao.findByUserId(selectedUserId)) {
             calculateEntities(group.getId());
         }
-
     }
 
     public SearchQuery getSelectedQuery() {
@@ -241,6 +240,9 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     * */
     private void calculateEntities(int selectedGroupId) {
         sharedObjects = Pkg.instance.createSharedObject(selectedGroupId, 3, false, "collabGraph");
+        //For testing only
+        Pkg.instance.createSharedObject(selectedGroupId, 5, true, "negative5SharedObject");
+        Pkg.instance.createSharedObject(selectedGroupId, 10, false, "positive10SharedObject");
     }
 
     /**
@@ -275,14 +277,11 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public String getSingleQueryJson() {
-        Optional<JsonSharedObject> obj = sharedObjects.stream().filter(s -> s.getUser().getId() == selectedUserId).findFirst();
-        if (obj.isPresent()) {
+        JsonSharedObject obj = Pkg.instance.createSingleGraph(selectedUserId);
+        //Optional<JsonSharedObject> obj = sharedObjects.stream().filter(s -> s.getUser().getId() == selectedUserId).findFirst();
+        if (obj == null) return "";
         CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>())
-            .createSingleGraph(obj.get());
+            .createSingleGraph(obj);
         return gson.toJson(calculatedQuery);
-        }
-        else {
-            return null;
-        }
     }
 }

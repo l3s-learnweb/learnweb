@@ -304,9 +304,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             for (ResourceDecorator snippet : search.getResources()) {
                 String s = snippet.getTitle().split("\\|")[0].split("-")[0];
                 NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
-                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", s);
-                NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
-                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", snippet.getDescription());
+                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", s + " " + snippet.getDescription());
             }
         }
     }
@@ -329,6 +327,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         int groupId = dao().getGroupDao().findByUserId(getUser().getId()).get(0).getId();
         List<JsonSharedObject> sharedObjects = Pkg.instance.createSharedObject(
             groupId, 5, false, "recommendation");
+        if (sharedObjects == null) return;
         Map<String, Double> entityRank = new HashMap<>();
         List<JsonSharedObject.Entity> chosenEntities = new ArrayList<>();
         for (JsonSharedObject sharedObject : sharedObjects) {

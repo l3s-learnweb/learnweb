@@ -1,7 +1,6 @@
 const url = '../resources/dataExample.json';
 
 const onLoad = (graph) => {
-  console.log('G: ', graph);
   // eslint-disable-next-line no-undef
   d3.select('svg').selectAll('*').remove();
   // eslint-disable-next-line no-undef

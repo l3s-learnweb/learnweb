@@ -8,19 +8,16 @@ public class AnnotationCount implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 5389844250794875603L;
+    private int uriId;
     private LocalDateTime createdAt;
     private double confidence;
     private String surfaceForm;
-    private int repetition;
     private String uri;
     private String type;
-    private String id;
-    private int uriId;
-    private int group_id;
+    private int sourceId;
     private String sessionId;
     private String users;
     //Specifically for web results
-    private String keywords;
     private String inputStreams;
 
     public int getUriId() {
@@ -51,26 +48,17 @@ public class AnnotationCount implements Serializable {
         this.type = type;
     }
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public AnnotationCount(final String id, final double confidence, final String surfaceForm, final String uri, final String type
-        , final String users, final String sessionId, final String keywords) {
-        this.id = id;
+    public AnnotationCount(final int id, final double confidence, final String surfaceForm, final String uri, final String type
+        , final String users, final String sessionId) {
         this.confidence = confidence;
         this.surfaceForm = surfaceForm;
         this.uri = uri;
         this.type = type;
         this.users = users;
         this.createdAt = LocalDateTime.now();
-        this.repetition = 1;
         this.sessionId = sessionId;
-        this.keywords = keywords;
+        this.sourceId = id;
     }
 
     public AnnotationCount() {
@@ -81,6 +69,13 @@ public class AnnotationCount implements Serializable {
         return confidence;
     }
 
+    public int getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(final int sourceId) {
+        this.sourceId = sourceId;
+    }
     public void setConfidence(final double confidence) {
         this.confidence = confidence;
     }
@@ -99,14 +94,6 @@ public class AnnotationCount implements Serializable {
 
     public void setUri(final String uri) {
         this.uri = uri;
-    }
-
-    public int getRepetition() {
-        return repetition;
-    }
-
-    public void setRepetition(final int repetition) {
-        this.repetition = repetition;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -131,13 +118,5 @@ public class AnnotationCount implements Serializable {
 
     public void setInputStreams(final String inputStreams) {
         this.inputStreams = inputStreams;
-    }
-
-    public String getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(final String keywords) {
-        this.keywords = keywords;
     }
 }

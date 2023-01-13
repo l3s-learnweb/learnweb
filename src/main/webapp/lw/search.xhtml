@@ -232,10 +232,12 @@
         </p:dialog>
         <p:dialog header="Recommendation" widgetVar="recommendationDialog" minHeight="40" visible="#{searchBean.hasRecommendation()}" position="right,bottom">
             <h:outputText value="#{msg.search_for_this}"/>
-            <ui:repeat value="search.jsf?query=#{searchBean.recommendationString}" var="selectItem">
-                <h:outputLink value="search.jsf?query=#{selectItem}">
-                    <h:outputText value="#{searchBean.recommendationString}"/>
-                </h:outputLink>
+            <ui:repeat value="#{searchBean.recommendationString}" varStatus="loop" var="selectItem">
+                <div>
+                    <h:outputLink value="search.jsf?query=#{selectItem}">
+                        <h:outputText value="#{selectItem}"/>
+                    </h:outputLink>
+                </div>
             </ui:repeat>
         </p:dialog>
     </div>

@@ -16,23 +16,23 @@ import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.AnnotationUnit;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.ResourceItem;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.rest.SpotlightBean;
 
-/*
+/**
  * Specific class for calling Named Entity Recognition (NER)
  * @author Trung Tran
  * */
 public final class NERParser {
     private static AnnotationUnit annotationUnit;
 
-    /*
+    /**
      * Getting resources of dbpedia-spotlight result
-     * @param AnnotationUnit    the dbpedia-spotlight process
+     * @param annotationUnit    the dbpedia-spotlight process
      * @param id    the source's id
      * @param type  the type of the annotation (user, group, web, snippet_clicked, snippet_notClicked, query)
      * @param user  the user's username
      * @param sessionId     the session id of the current annotation
      * @return  the list of annotationCount with its newly created values
      */
-    private static List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId, String keywords) {
+    private static List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId) {
         List<ResourceItem> resources = new ArrayList<>();
         List<AnnotationCount> annotationCounts = new ArrayList<>();
         //If annotating from webpages, only choose top 10 per webpage
@@ -54,13 +54,13 @@ public final class NERParser {
             resources = annotationUnit.getResources();
         }
         for (ResourceItem resource : resources) {
-            annotationCounts.add(new AnnotationCount(String.valueOf(id), resource.score(), resource.getSurfaceForm(), resource.getUri(), type,
-                user, sessionId, keywords));
+            annotationCounts.add(new AnnotationCount(id, resource.score(), resource.getSurfaceForm(), resource.getUri(), type,
+                user, sessionId));
         }
         return annotationCounts;
     }
 
-    /*
+    /**
      * Main function of the class
      * @param sessionId     the session id of the current annotation
      * @param id    the id of the source (user, group)
@@ -76,23 +76,25 @@ public final class NERParser {
         annotationUnit = spotlight.get(content);
         //Parse the results to the function
         if (annotationUnit.getResources() != null) {
-            annotationCounts = annotate(annotationUnit, id, type, username, sessionId, "");
+            annotationCounts = annotate(annotationUnit, id, type, username, sessionId);
         }
         //Remove all annotations with confidence < 0.9
         annotationCounts.removeIf(annotationCount -> annotationCount.getConfidence() < 0.9);
 
-
         //Insert inputStream into DB
         int userId = dao().getUserDao().findByUsername(username).get().getId();
-        int uriId;
         int inputId = dao().getSearchHistoryDao().insertInputStream(userId, type, content);
+
+
+
         //Store this annotationCount into DB
         for (AnnotationCount annotationCount : annotationCounts) {
+            //Round the confidence
             annotationCount.setConfidence(round(annotationCount.getConfidence(),2));
+
             Optional<AnnotationCount> foundAnnotation = dao().getSearchHistoryDao().findByUriAndType(annotationCount.getUri(), annotationCount.getType());
             //If already an annotationCount is found in DB, update its columns
             if (foundAnnotation.isPresent()) {
-                uriId = foundAnnotation.get().getUriId();
                 //Update the sessionId
                 String session = foundAnnotation.get().getSessionId();
                 if (!session.contains(annotationCount.getSessionId())) {
@@ -103,22 +105,24 @@ public final class NERParser {
                 if (!users.contains(annotationCount.getUsers())) {
                     users += "," + annotationCount.getUsers();
                 }
+                //Update the InputId
+                String input = foundAnnotation.get().getInputStreams();
+                if (!input.contains(String.valueOf(inputId))) {
+                    input += "," + inputId;
+                }
+                //Update the inputId
                 //Update the repetition
-                dao().getSearchHistoryDao().updateQueryAnnotation(foundAnnotation.get().getRepetition() + 1, session, users,
+                dao().getSearchHistoryDao().updateQueryAnnotation(session, users, input,
                     annotationCount.getUri(), annotationCount.getType());
             }
             //Insert directly new annotationCount into DB
             else {
                 annotationCount.setInputStreams(String.valueOf(inputId));
-                uriId = dao().getSearchHistoryDao().insertQueryToAnnotation(annotationCount.getId(), annotationCount.getType(),
-                    annotationCount.getUri(), annotationCount.getCreatedAt(), annotationCount.getSurfaceForm(),
-                    annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence(), annotationCount.getRepetition());
-                annotationCount.setUriId(uriId);
+                dao().getSearchHistoryDao().insertQueryToAnnotation(annotationCount.getType(), annotationCount.getUri(), String.valueOf(inputId),
+                    annotationCount.getCreatedAt(), annotationCount.getSurfaceForm(),
+                    annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence());
                 Pkg.instance.updatePkg(annotationCount, dao().getUserDao().findByUsername(username).get());
             }
-            dao().getSearchHistoryDao().insertInputStreamKey(uriId, inputId);
         }
-
     }
-
 }

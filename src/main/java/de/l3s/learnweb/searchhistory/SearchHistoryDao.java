@@ -104,7 +104,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     }
 
     @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri = ? AND type = ?")
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri = ? AND type LIKE ?")
     Optional<AnnotationCount> findByUriAndType(String uri, String type);
 
     @RegisterRowMapper(AnnotationCountMapper.class)
@@ -112,11 +112,11 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     Optional<AnnotationCount> findAnnotationById(int id);
 
     @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count ORDER BY created_at DESC")
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count ORDER BY created_at")
     List<AnnotationCount> findAllAnnotationCounts();
 
     @RegisterRowMapper(JsonSharedObjectMapper.class)
-    @SqlQuery("SELECT shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND user_id = ? AND application = ?")
+    @SqlQuery("SELECT id, shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND user_id = ? AND application = ?")
     List<JsonSharedObject> findObjectByIdAndType(int groupId, int userId, String application);
 
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_inputStream (user_id, type, content, date_created) VALUES(?, ?, ?, CURRENT_TIMESTAMP())")
@@ -124,29 +124,24 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     int insertInputStream(int userId, String type, String content);
 
     @RegisterRowMapper(InputStreamRdfMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_inputStream JOIN learnweb_annotations.annotation_input_annotation_count "
-        + "ON annotation_inputStream.id = annotation_input_annotation_count.input_id WHERE uri_id = ?")
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_inputStream WHERE id = ?")
     List<InputStreamRdf> findInputContentById(int id);
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_objects SET shared_object = ?, created_at = ? WHERE user_id = ? AND group_id = ?")
-    void updateSharedObject(String sharedObject, LocalDateTime createdAt, int userId, int groupId);
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_objects SET shared_object = ?, created_at = ? WHERE user_id = ? AND group_id = ? AND application = ?")
+    void updateSharedObject(String sharedObject, LocalDateTime createdAt, int userId, int groupId, String application);
 
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_objects (user_id, group_id, application, shared_object, created_at) "
         + "VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP())")
     @GetGeneratedKeys("id")
     int insertSharedObject(int userId, int groupId, String application, String sharedObject);
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET repetition = ?, session_id = ?, users = ? WHERE uri = ? AND type = ? ")
-    void updateQueryAnnotation(int repetition, String sessionId, String user, String uri, String type);
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET session_id = ?, users = ?, input_id = ? WHERE uri = ? AND type = ? ")
+    void updateQueryAnnotation(String sessionId, String user, String inputId, String uri, String type);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (id, type, uri, created_at, surface_form, session_id, users, confidence, repetition) "
-        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (type, uri, input_id, created_at, surface_form, session_id, users, confidence) "
+        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
     @GetGeneratedKeys("uri_id")
-    int insertQueryToAnnotation(String id, String type, String uri, LocalDateTime createdAt, String surfaceForm, String sessionId, String users, double confidence
-        , int repetition);
-
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_input_annotation_count (uri_id, input_id) VALUES (?, ?)")
-    int insertInputStreamKey(int uriId, int inputId);
+    int insertQueryToAnnotation(String type, String uri, String input, LocalDateTime createdAt, String surfaceForm, String sessionId, String users, double confidence);
 
     @RegisterRowMapper(RdfObjectMapper.class)
     @SqlQuery("SELECT * FROM learnweb_annotations.annotation_rdf WHERE user_id = ?")
@@ -238,14 +233,13 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             AnnotationCount annotation = new AnnotationCount();
             annotation.setUriId(rs.getInt("uri_id"));
             annotation.setUri(rs.getString("uri"));
-            annotation.setId(rs.getString("id"));
             annotation.setConfidence(rs.getDouble("confidence"));
             annotation.setSurfaceForm(rs.getString("surface_form"));
             annotation.setType(rs.getString("type"));
             annotation.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             annotation.setSessionId(rs.getString("session_id"));
             annotation.setUsers(rs.getString("users"));
-            annotation.setRepetition(rs.getInt("repetition"));
+            annotation.setInputStreams(rs.getString("input_id"));
             return annotation;
         }
     }
@@ -253,7 +247,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     class JsonSharedObjectMapper implements RowMapper<JsonSharedObject> {
         @Override
         public JsonSharedObject map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            JsonSharedObject sharedObject = new JsonSharedObject(rs.getString("shared_object"), false);
+            JsonSharedObject sharedObject = new JsonSharedObject(rs.getString("shared_object"), true);
+            sharedObject.setId(rs.getInt("id"));
             return sharedObject;
         }
     }
@@ -267,10 +262,9 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     }
 
     class InputStreamRdfMapper implements RowMapper<InputStreamRdf> {
-
         @Override
         public InputStreamRdf map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            InputStreamRdf obj = new InputStreamRdf(rs.getInt("id"), rs.getString("content"), rs.getString("type")
+            InputStreamRdf obj = new InputStreamRdf(rs.getInt("id"), rs.getInt("user_id"), rs.getString("content"), rs.getString("type")
                 , rs.getDate("date_created"));
             return obj;
         }
