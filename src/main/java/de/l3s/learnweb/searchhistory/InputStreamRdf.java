@@ -8,8 +8,9 @@ public class InputStreamRdf {
     private String content;
     private String type;
     private Date dateCreated;
-
-    public InputStreamRdf(final int id, final String content, final String type, final Date dateCreated) {
+    private int userId;
+    public InputStreamRdf(final int id, final int userId, final String content, final String type, final Date dateCreated) {
+        this.userId = userId;
         this.id = id;
         this.content = content;
         this.type = type;
@@ -22,6 +23,14 @@ public class InputStreamRdf {
 
     public void setId(final int id) {
         this.id = id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(final int userId) {
+        this.userId = userId;
     }
 
     public String getContent() {
