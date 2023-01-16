@@ -26,8 +26,13 @@ import de.l3s.learnweb.user.User;
 /**
  * <p>This is the main calculation class for annotation. Based on what user searches for, it will create a Personal
  * knowledge graph (PKG) system for all users in the same group. The system can gather important entities that each
- * user has looked into to show the interests of members in group, as well as creating recommendations for others.
- * The workflow is conceptually described as follows:</p>
+ * user has looked into to show the interests of members in group, as well as creating recommendations for others.</p>
+ * <h3>Basic structure of Pkg class:</h3>
+ * <ul>
+ *     <li>A graph represented by list of nodes and edges</li>
+ *     <li>A list of recognized entities retrieved from Database</li>
+ * </ul>
+ * <p>The workflow is conceptually described as follows:</p>
  * =====================================================================================================================
  * <p>1 - createPkg() initializes the Pkg, gets all recognized entities from DB and makes them as nodes. </p>
  * <p>2 - Which query the user searches for, clicks on which links and vice versa, will be fed from
@@ -43,13 +48,14 @@ import de.l3s.learnweb.user.User;
  *
 * */
 public class Pkg {
+    private List<Node> nodes;
+    private List<Link> links;
     private transient List<AnnotationCount> annotationCounts;
     private List<User> users;
     private transient HashMap<Integer, Double> results;
     private static final Pattern PATTERN = Pattern.compile("http://dbpedia.org/resource/");
 
     public static Pkg instance = new Pkg(new ArrayList<>(), new ArrayList<>());
-
     private List<RdfModel> rdfGraphs;
     /**
      * The Node class. Has all values of an entity
@@ -210,9 +216,6 @@ public class Pkg {
         }
     }
 
-    private List<Node> nodes;
-    private List<Link> links;
-
     private void setLink(int source, int target, double weight) {
         links.add(new Pkg.Link(source, target, weight));
     }
@@ -320,7 +323,7 @@ public class Pkg {
             boolean isUnique = true;
             for (int j = i + 1; j < nodes.size(); j++) {
                 List<String> commonTypes = Arrays.stream(nodes.get(i).getType().split(",")).filter(
-                    Arrays.stream(nodes.get(j).getType().split(",")).toList()::contains).collect(toList());
+                    Arrays.stream(nodes.get(j).getType().split(",")).toList()::contains).toList();
                 if (!commonTypes.isEmpty()) {
                     double weight = 0;
                     isUnique = false;
@@ -423,7 +426,7 @@ public class Pkg {
 
                     }
                     for (String inputId : annotationCount.getInputStreams().split(",")) {
-                        for (InputStreamRdf inputStream : dao().getSearchHistoryDao().findInputContentById(Integer.valueOf(inputId))) {
+                        for (InputStreamRdf inputStream : dao().getSearchHistoryDao().findInputContentById(Integer.parseInt(inputId))) {
                             //Add createsInputStream statement based on the entities' type
                             if (inputStream.getUserId() == user.getId()) {
                                 Group group = dao().getGroupDao().findByUserId(user.getId()).get(0);
@@ -485,9 +488,12 @@ public class Pkg {
      * */
     public JsonSharedObject createSingleGraph(int userId) {
         Optional<User> optUser = dao().getUserDao().findById(userId);
-        if (!optUser.isPresent() || !dao().getUserDao().findActiveUsers().contains(optUser.get())) {
+        if (optUser.isEmpty() || !dao().getUserDao().findActiveUsers().contains(optUser.get())) {
             return null;
         }
+        JsonSharedObject object = new JsonSharedObject("singleGraph", false);
+        List<Node> newNodes = new ArrayList<>();
+        List<Link> newLinks = new ArrayList<>();
 
         Map<String, String> typeMap = new HashMap<>();
         //HARDCODED lines - need alternatives
@@ -497,28 +503,29 @@ public class Pkg {
         typeMap.put("snippet_clicked", "session");
         typeMap.put("query", "session");
         typeMap.put("web", "session");
-        JsonSharedObject object = new JsonSharedObject("singleGraph", false);
-        List<Node> newNodes = new ArrayList<>();
-        List<Link> newLinks = new ArrayList<>();
-        Map<String, Integer> occurences = new HashMap<>();
-        occurences.put("user", 0);
-        occurences.put("group", 0);
-        occurences.put("session", 0);
+
+        Map<String, Integer> occurrences = new HashMap<>();
+        occurrences.put("user", 0);
+        occurrences.put("group", 0);
+        occurrences.put("session", 0);
+
+        //Find occurrences of each source as nodes - if the total of one source exceeds 10 then stop
         for (Map.Entry<Integer, Double> entry : results.entrySet()) {
             Node node = nodes.get(entry.getKey());
             for (Map.Entry<String, String> type : typeMap.entrySet()) {
                 if (node.getUsers().matches(".*\\b" + Pattern.quote(optUser.get().getUsername()) +"\\b.*")
-                && occurences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
+                && occurrences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
                     String nodeType = type.getValue();
                     Node chosenNode = new Node(node.getId(), node.getName(), node.getUri(), "User", entry.getValue(),
                         node.getConfidence(), node.getSessionId(), nodeType, node.getDate());
                     if (newNodes.stream().noneMatch(s -> s.getType().equals(chosenNode.getType()) && s.getUri().equals(chosenNode.getUri()))) {
                         newNodes.add(chosenNode);
-                        occurences.put(type.getValue(), occurences.get(type.getValue()) + 1);
+                        occurrences.put(type.getValue(), occurrences.get(type.getValue()) + 1);
                     }
                 }
             }
         }
+        //Create links
         for (int i = 0; i < newNodes.size() - 1; i++) {
             for (int j = i + 1; j < newNodes.size(); j++) {
                 Node node1 = newNodes.get(i);
@@ -528,10 +535,10 @@ public class Pkg {
                 }
             }
         }
-
-        object.getLinks().addAll(newLinks.stream().map(l -> new JsonSharedObject.Link(l.source, l.target)).collect(toList()));
+        //Add this new graph (newLinks, newNodes) into a shared object, so that it can be stored later on
+        object.getLinks().addAll(newLinks.stream().map(l -> new JsonSharedObject.Link(l.source, l.target)).toList());
         object.getEntities().addAll(newNodes.stream().map(n -> new JsonSharedObject.Entity(n.getUri(), n.getName(), n.getWeight(),
-            n.getType(), n.getId())).collect(toList()));
+            n.getType(), n.getId())).toList());
         return object;
     }
 

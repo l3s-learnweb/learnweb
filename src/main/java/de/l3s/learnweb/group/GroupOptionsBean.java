@@ -111,8 +111,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         //Call dbpedia-spotlight recognition
         //Add group resources
         for (User user : userDao.findByGroupId(group.getId())) {
-            NERParser.processQuery(getSessionId(), getGroupId(), user.getUsername(), "group", editedGroupDescription);
-            NERParser.processQuery(getSessionId(), getGroupId(), user.getUsername(), "group", editedGroupTitle);
+            NERParser.processQuery(getSessionId(), getGroupId(), user.getUsername(), "group", editedGroupDescription + " " + editedGroupTitle);
         }
 
         groupDao.save(group);
