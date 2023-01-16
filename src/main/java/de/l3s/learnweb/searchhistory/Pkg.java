@@ -8,16 +8,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,12 +26,27 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
 /**
-* Main calculation class for annotation. Create a static Pkg list.
-* For communication with other applications: collabGraph and Recommender system
+ * <p>This is the main calculation class for annotation. Based on what user searches for, it will create a Personal
+ * knowledge graph (PKG) system for all users in the same group. The system can gather important entities that each
+ * user has looked into to show the interests of members in group, as well as creating recommendations for others.
+ * The workflow is conceptually described as follows:</p>
+ * =====================================================================================================================
+ * <p>1 - createPkg() initializes the Pkg, gets all recognized entities from DB and makes them as nodes. </p>
+ * <p>2 - Which query the user searches for, clicks on which links and vice versa, will be fed from
+ * SearchBean.commandOnResourceClick() and SearchBean.destroy() to dbpedia-spotlight api in class NERParser. </p>
+ * <p>3 - class NERParser will annotate the input content with its source (from group description, user profile or search),
+ * return as a list of recognized entities and store it in DB (learnweb_annotations.annotationCount). The input is also
+ * stored in another DB table.</p>
+ * <p>4 - Pkg then updates by receiving those entities as nodes - with function updatePkg().</p>
+ * <p>5 - Shared objects will be the product of Pkg system. Before creating shared objects, Pkg will merge all duplicating
+ * nodes and edges, then calculates every node based on their connections.</p>
+ * <p>6 - Depending on user's purpose, Pkg then exports the shared objects for that purpose, e.g. top 3 entities with the
+ * highest weights for the collaborative graph, or 5 for recommender system etc.</p>
+ *
 * */
 public class Pkg {
 
-    private List<String> typeList = Arrays.asList("query", "web", "snippet_clicked", "snippet_notClicked", "profile", "group");
+    private final List<String> typeList = Arrays.asList("session", "profile", "group");
     private transient List<AnnotationCount> annotationCounts;
     private List<User> users;
     private transient HashMap<Integer, Double> results;
@@ -207,11 +222,15 @@ public class Pkg {
     }
 
     /**
-     * Add this node into nodes List
+     * Add this node into the list of nodes.
+     * @param id the new node's id from DB
      * @param uri    the new node's uri
-     * @param username   the new node's username
+     * @param username   the new node's username string. Multiple usernames is divided by commas.
      * @param confidence the new node's confidence
-     * @param sessionId  the new nodes' session id
+     * @param sessionId  the new node's session id
+     * @param weight the weight of the new node (can actually be excluded in future updates)
+     * @param type the type of the new node.
+     * @param date the created time of the node.
      * */
     private void AddNode(int id, String uri, String username, double confidence, double weight, String sessionId, String type, LocalDateTime date) {
         //Get the Node name as uri minus domain root - dbpedia.org/resource
@@ -223,12 +242,20 @@ public class Pkg {
         }
     }
 
-    public void addRdfStatement(String subject, String pre, String object, String mode, User user) {
+    /**
+    * Add one RDF statement to the user's RDF graph.
+     * @param subject the statement's subject
+     * @param pre the statement's predicate
+     * @param object the statement's object
+     * @param mode either "literal" or "resource"
+     * @param user the user whom RDF Graph gets this statement added
+    * */
+    private void addRdfStatement(String subject, String pre, String object, String mode, User user) {
         rdfGraphs.get(users.indexOf(user)).addStatement(subject, pre, object, mode);
     }
 
     /**
-     * Calculate the weight to be connected from a node with the function values based on the algorithm
+     * Calculate the weight to be connected from a node with the function values based on the algorithm.
      * @param   date  the date of the entity's creation
      * @param   type  the type of this entity
      * @return  the weight of this entity, based on its group type and how many days since the input into DB
@@ -261,15 +288,15 @@ public class Pkg {
     }
 
     /**
-     * Remove the duplicating nodes (same uri) and their corresponding links
-     * The duplicating nodes will be removed first, with their links' sources and targets changed into the first node's values
-     * Then the duplicating links will be removed
+     * <p>Merge the duplicating nodes (same uri) and their corresponding links.
+     * Two nodes with the same uri are called duplicates, so the function will remove one of
+     * the two duplicates in each pair of nodes. The remaining gets its usernames, types and session id
+     * combined from both of them. </p>
+     * <p>The function then creates the links between each of these nodes. Based on which types they have in common,
+     * the link between them will get their weight calculated based on the formula in calculateWeight(date, type).
+     * The nodes that have no connections will then be connected to the DEFAULT node.</p>
      * */
     private void removeDuplicatingNodesAndLinks() {
-        // Count the occurrences of each type of node
-        Map<String, Long> typeCounts = nodes.stream()
-            .collect(groupingBy(Node::getType, counting()));
-
         //Remove duplicating nodes by merging nodes with the same uri
         for (int i = 0; i < nodes.size() - 1; i++) {
             if (!nodes.get(i).getUri().isEmpty()) {
@@ -294,24 +321,26 @@ public class Pkg {
             }
         }
         for (int i = 1; i < nodes.size() - 1; i++) {
+            boolean isUnique = true;
             for (int j = i + 1; j < nodes.size(); j++) {
                 List<String> commonTypes = Arrays.stream(nodes.get(i).getType().split(",")).filter(
                     Arrays.stream(nodes.get(j).getType().split(",")).toList()::contains).collect(toList());
                 if (!commonTypes.isEmpty()) {
                     double weight = 0;
+                    isUnique = false;
                     for (String s : commonTypes) {
                         weight += calculateWeight(nodes.get(i).getDate(), s);
                     }
                     setLink(i, j, weight);
                 }
             }
+            if (isUnique) setLink(0, i, calculateWeight(nodes.get(i).getDate(), nodes.get(i).getType()));
         }
     }
 
     /**
-     * Create the PKG for all users in the specific group
+     * Initializes the PKG for all users in the specific group.
      * @param    groupId     the id of the group
-     * @return   a List of Shared Object in Json form
      * */
     public void createPkg(int groupId) {
         long startTime = System.nanoTime();
@@ -334,7 +363,6 @@ public class Pkg {
             }
         }
         //Create nodes and edges in (original) graph
-        //TODO: finish the RDF-Graph
         for (AnnotationCount annotationCount : this.annotationCounts) {
             for (User user : users) {
                 if (annotationCount.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
@@ -347,7 +375,8 @@ public class Pkg {
         removeDuplicatingNodesAndLinks();
     }
 
-    /**
+    /** Add this recognized entity into the node list as a Node.
+     * Then add RDF-statement to this user's RDF graph based on the parameters from the entity.
      * @param annotationCount The recognized entity to be added to the PKG
      * @param user the current user
     * */
@@ -355,7 +384,8 @@ public class Pkg {
         AddNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence(), 0
             , annotationCount.getSessionId(), annotationCount.getType(), annotationCount.getCreatedAt());
 
-//----------------------------------Rdf-insert-model--------------------------------------
+    //----------------------------------Rdf-insert-model--------------------------------------
+        Pattern keywordPattern = Pattern.compile("<b>" + "(.*?)" + "</b>");
         List<SearchSession> sessions = dao().getSearchHistoryDao().findSessionsByUserId(user.getId());
         for (String session : annotationCount.getSessionId().split(",")) {
             for (SearchSession searchSession : sessions) {
@@ -380,14 +410,19 @@ public class Pkg {
                         addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
                         addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal", user);
                         addRdfStatement("SearchSession/" + session, "contains", "Snippet/" + annotationCount.getUriId(), "resource", user);
-                        //addRdfStatement("SearchQuery/" + query.searchId(), "generatesResult","Snippet/" + annotationCount.getUriId() , "resource", user);
+                        for (int searchId : dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId()))
+                            addRdfStatement("SearchQuery/" + searchId,
+                            "generatesResult","Snippet/" + annotationCount.getUriId(), "resource", user);
+
                     }
 
                     if ("web".equals(annotationCount.getType())) {
                         addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
                         addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal", user);
                         addRdfStatement("SearchSession/" + session, "contains", "schema:WebPage/" + annotationCount.getUriId(), "resource", user);
-                        //addRdfStatement("SearchQuery/" + query.searchId(), "generatesResult","WebPage/" + annotationCount.getUriId() , "resource", user);
+                        for (int searchId : dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId()))
+                            addRdfStatement("SearchQuery/" + searchId,
+                                "generatesResult","WebPage/" + annotationCount.getUriId(), "resource", user);
 
                     }
                     for (String inputId : annotationCount.getInputStreams().split(",")) {
@@ -403,18 +438,24 @@ public class Pkg {
                                         "InputStream/" + inputId, "resource", user);
                                 } else addRdfStatement("SearchSession/" + session, "createsInputStream",
                                  "InputStream/" + inputId, "resource", user);
+                                addRdfStatement("InputStream/" + inputStream.getId(), "schema:text", inputStream.getContent(), "literal", user);
+                                addRdfStatement("InputStream/" + inputStream.getId(), "schema:dateCreated",
+                                    inputStream.getDateCreated().toString(), "literal", user);
+                                addRdfStatement("RecognizedEntities/" + PATTERN.matcher(annotationCount.getUri())
+                                    .replaceAll(""), "processes","InputStream/" + inputStream.getId(), "resource", user);
+                                Matcher matcher = keywordPattern.matcher(inputStream.getContent());
+                                if ("web".equals(annotationCount.getType())) {
+                                    while (matcher.find()) {
+                                        addRdfStatement("WebPage/" + annotationCount.getUriId(), "keywords", matcher.group(1), "literal", user);
+                                    }
+                                }
                             }
-                            addRdfStatement("InputStream/" + inputStream.getId(), "schema:text", inputStream.getContent(), "literal", user);
-                            addRdfStatement("InputStream/" + inputStream.getId(), "schema:dateCreated",
-                                inputStream.getDateCreated().toString(), "literal", user);
-                            addRdfStatement("RecognizedEntities/" + PATTERN.matcher(annotationCount.getUri())
-                                .replaceAll(""), "processes","InputStream/" + inputStream.getId(), "resource", user);
                         }
                     }
                 }
             }
         }
-//--------------------------------RDF-Insert-Model-End----------------------------------
+    //--------------------------------RDF-Insert-Model-End----------------------------------
     }
 
     /**
@@ -426,92 +467,63 @@ public class Pkg {
         results = new HashMap<>();
         //Calculate top entities from the formula:
         //Confidence(Node i) * sum(Confidence(Node j)) * Fsum(t)
-        for (int i = 1; i < nodes.size() - 1; i++) {
-            double sumWeight = 0;
-            double sumConfidence = 0;
-            for (Link link : links) {
-                if (link.source == i || link.target == i) {
-                    sumWeight += link.weight;
-                    sumConfidence += link.source == i ? (link.target == 0 ? 0 : nodes.get(link.target).getConfidence())
-                        : (link.source == 0 ? 0 : nodes.get(link.source).getConfidence());
-                }
-            }
-            results.put(i, nodes.get(i).getConfidence() * sumConfidence * sumWeight);
-        }
+        IntStream.range(1,nodes.size()-1).forEach(i -> {
+            double sumWeight = links.stream()
+                .filter(link -> link.source == i || link.target == i)
+                .mapToDouble(link -> link.weight + (link.source == i ? nodes.get(link.target).getConfidence() : nodes.get(link.source).getConfidence()))
+                .sum();
+
+            results.put(i, sumWeight * nodes.get(i).getConfidence());
+        });
+
         long endTime = System.nanoTime();
         System.out.println(endTime - startTime);
     }
 
-    private void calculatePkgAsync() {
-        ScheduledExecutorService ses = Executors.newScheduledThreadPool(10);
-        ses.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Removing duplications, estimated time:");
-                long startTime = System.nanoTime();
-                //Remove duplications
-                long endTime = System.nanoTime();
-                System.out.println(endTime - startTime);
-            }
-        }, 0, 30, TimeUnit.SECONDS);
-    }
-
+    /** Create a single graph of the current user, which contains node from 3 different sources (user, group and session)
+     * @param userId the current user id
+     * @return the shared object of a single graph
+     * */
     public JsonSharedObject createSingleGraph(int userId) {
-        User user = null;
-        Optional<User> obj = dao().getUserDao().findById(userId);
-        if (obj.isPresent()) user = obj.get();
-        if (!dao().getUserDao().findActiveUsers().contains(user)) return null;
-        //The list to be returned
-        //Create the sharedObject
+        Optional<User> optUser = dao().getUserDao().findById(userId);
+        if (!optUser.isPresent() || !dao().getUserDao().findActiveUsers().contains(optUser.get())) {
+            return null;
+        }
+
         JsonSharedObject object = new JsonSharedObject("singleGraph", false);
         List<Node> newNodes = new ArrayList<>();
         List<Link> newLinks = new ArrayList<>();
-        //Sort the calculated results to get entities' ranking
-        List<Map.Entry<Integer, Double>> entries
-            = new ArrayList<>(results.entrySet());
-        entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-        int index;
-        for (String type : typeList) {
-            index = 0;
-            for (Map.Entry<Integer, Double> entry : entries) {
-            //Find from the top of the results numberTopEntities entities, break after reaching the number
-            if (nodes.get(entry.getKey()).getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")
-                && nodes.get(entry.getKey()).getType().matches(".*\\b" + Pattern.quote(type) + "\\b.*")
-                && !newNodes.stream().anyMatch(s -> s.getUri().equals(nodes.get(entry.getKey()).getUri()))) {
-                Node chosenNode = new Node(nodes.get(entry.getKey()).getId(), nodes.get(entry.getKey()).getName(), nodes.get(entry.getKey()).getUri()
-                    , "User", entry.getValue(), nodes.get(entry.getKey()).getConfidence(),
-                    nodes.get(entry.getKey()).getSessionId(), nodes.get(entry.getKey()).getType(), nodes.get(entry.getKey()).getDate());
-                newNodes.add(chosenNode);
-                index++;
-                if (index >= 3) {
-                    break;
+
+        results.entrySet().stream()
+            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+            .forEach(entry -> {
+                Node node = nodes.get(entry.getKey());
+                if (node.getUsers().contains(optUser.get().getUsername())
+                    && typeList.contains(node.getType())
+                    && newNodes.stream().noneMatch(n -> n.getUri().equals(node.getUri()))) {
+                    newNodes.add(new Node(node.getId(), node.getName(), node.getUri(), "User", entry.getValue(),
+                        node.getConfidence(), node.getSessionId(), node.getType(), node.getDate()));
                 }
-            }
-        }
-        }
-        //Links initialization
+            });
+
         for (int i = 0; i < newNodes.size() - 1; i++) {
             for (int j = i + 1; j < newNodes.size(); j++) {
-                Set<String> result = Arrays.stream(newNodes.get(i).getType().split(",")).toList().stream()
-                    .distinct()
-                    .filter(Arrays.stream(newNodes.get(j).getType().split(",")).toList()::contains)
-                    .collect(toSet());
-                if (!result.isEmpty()) {
+                Node node1 = newNodes.get(i);
+                Node node2 = newNodes.get(j);
+                if (Arrays.stream(node1.getType().split(",")).anyMatch(node2.getType()::contains)) {
                     newLinks.add(new Link(i, j, 0));
                 }
             }
         }
-        for (Link link : newLinks) {
-            object.getLinks().add(new JsonSharedObject.Link(link.source, link.target));
-        }
-        for (Node node : newNodes) {
-            object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), node.getWeight(), node.getType(), node.getId()));
-        }
+
+        object.getLinks().addAll(newLinks.stream().map(l -> new JsonSharedObject.Link(l.source, l.target)).collect(toList()));
+        object.getEntities().addAll(newNodes.stream().map(n -> new JsonSharedObject.Entity(n.getUri(), n.getName(), n.getWeight(), n.getType(), n.getId())).collect(toList()));
         return object;
     }
 
     /**
-     * Create shared objects based on the result of pkg graph calculation
+     * Create shared objects based on the result of pkg graph calculation.
+     *
      * @param groupId   The group id
      * @param numberEntities   how many entities per user the shared Object will show
      * @param isAscending show if the sharedObject will get the result from top or bottom
@@ -653,7 +665,7 @@ public class Pkg {
                 rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "dependsOn", "RecognizedEntities/" + entity.getId(), "resource");
                 Optional<AnnotationCount> annotationObj = annotationCounts.stream().filter(s -> s.getUriId() == entity.getId()).findFirst();
                 if (annotationObj.isPresent())
-                for (String inputId : annotationObj.get().getInputStreams().split(",")) {
+                    for (String inputId : annotationObj.get().getInputStreams().split(",")) {
                     rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "dependsOn", "InputStream/" + inputId, "resource");
                 }
             }
@@ -663,14 +675,10 @@ public class Pkg {
         //Add the entities after calculation to Rdf List
         Group group = dao().getGroupDao().findByIdOrElseThrow(groupId);
         for (User user : users) {
-            //Final rdf touch - insert RecognizedEntities
             for (Node node : nodes) {
                 if (node.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
                     rdfGraphs.get(users.indexOf(user)).addEntity(PATTERN.matcher(node.getUri()).replaceAll("")
                         , node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
-                    Optional<AnnotationCount> annotationCount = dao().getSearchHistoryDao().findAnnotationById(node.getId());
-                    if (annotationCount.isPresent()) {
-                    }
                 }
             }
             //Print the Rdf graphs both to DB and local directories as files

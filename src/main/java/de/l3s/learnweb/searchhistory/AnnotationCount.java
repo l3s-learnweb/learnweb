@@ -14,7 +14,6 @@ public class AnnotationCount implements Serializable {
     private String surfaceForm;
     private String uri;
     private String type;
-    private int sourceId;
     private String sessionId;
     private String users;
     //Specifically for web results
@@ -49,7 +48,7 @@ public class AnnotationCount implements Serializable {
     }
 
 
-    public AnnotationCount(final int id, final double confidence, final String surfaceForm, final String uri, final String type
+    public AnnotationCount(final String id, final double confidence, final String surfaceForm, final String uri, final String type
         , final String users, final String sessionId) {
         this.confidence = confidence;
         this.surfaceForm = surfaceForm;
@@ -58,7 +57,6 @@ public class AnnotationCount implements Serializable {
         this.users = users;
         this.createdAt = LocalDateTime.now();
         this.sessionId = sessionId;
-        this.sourceId = id;
     }
 
     public AnnotationCount() {
@@ -69,13 +67,6 @@ public class AnnotationCount implements Serializable {
         return confidence;
     }
 
-    public int getSourceId() {
-        return sourceId;
-    }
-
-    public void setSourceId(final int sourceId) {
-        this.sourceId = sourceId;
-    }
     public void setConfidence(final double confidence) {
         this.confidence = confidence;
     }

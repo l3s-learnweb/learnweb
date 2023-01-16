@@ -293,7 +293,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         }
     }
 
-    /*
+    /**
      * Calls when the user unloads the page.
      * If the user is active searching, call the dbpedia-spotlight recognition on: query, web and all snippets
      */
@@ -304,7 +304,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
             for (ResourceDecorator snippet : search.getResources()) {
                 String s = snippet.getTitle().split("\\|")[0].split("-")[0];
                 NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
-                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked", s + " " + snippet.getDescription());
+                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked",
+                    "<title>" + s + "</title> " + snippet.getDescription());
             }
         }
     }
@@ -319,7 +320,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
      * their weight in Pkg.
     */
     private void createSearchRecommendation() {
-        System.out.println("Creating search Recommendation, estimated time: ");
+        System.out.println("Creating search recommendation, estimated time: ");
         long startTime = System.nanoTime();
         //Initialization
         recommendationString = new ArrayList<>();

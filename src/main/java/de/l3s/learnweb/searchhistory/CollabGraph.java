@@ -147,10 +147,11 @@ public class CollabGraph implements Serializable {
     /**
     * Create the collaborative Graph (collabGraph) file + visualisation based on the shared objects as inputs
     * @param    sharedObjects   the list of Shared Objects in Json form
-    * @return   the collabGraph
+    * @return   the collabGraph object to be visualized by annotation.js
     * */
     public CollabGraph createCollabGraph(List<JsonSharedObject> sharedObjects) {
         Record calculatedRecord = new Record(new ArrayList<>(), new ArrayList<>());
+        if (sharedObjects.isEmpty()) return null;
         for (JsonSharedObject sharedObject : sharedObjects) {
             //Add all new entities
             for (JsonSharedObject.Link link : sharedObject.getLinks()) {
@@ -168,6 +169,11 @@ public class CollabGraph implements Serializable {
         return new CollabGraph(calculatedRecord.nodes, calculatedRecord.links);
     }
 
+    /**
+     * Create the user's single graph, which shows the top entities in 3 sources: profile, group, session (query, web and snippets)
+     * @param sharedObject the sharedObject json file gotten from Pkg
+     * @return the collabGraph object to be visualized by annotation.js
+     * */
     public CollabGraph createSingleGraph(JsonSharedObject sharedObject) {
         Record calculatedRecord = new Record(new ArrayList<>(), new ArrayList<>());
         for (JsonSharedObject.Entity node : sharedObject.getEntities()) {
