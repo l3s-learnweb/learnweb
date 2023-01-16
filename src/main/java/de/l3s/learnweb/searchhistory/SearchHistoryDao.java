@@ -138,6 +138,12 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET session_id = ?, users = ?, input_id = ? WHERE uri = ? AND type = ? ")
     void updateQueryAnnotation(String sessionId, String user, String inputId, String uri, String type);
 
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_query_count SET search_id = ?, uri_id = ?")
+    int insertQueryResult(int searchId, int uriId);
+
+    @SqlQuery("SELECT search_id FROM learnweb_annotations.annotation_query_count WHERE uri_id = ?")
+    List<Integer> findSearchIdByResult(int uriId);
+
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (type, uri, input_id, created_at, surface_form, session_id, users, confidence) "
         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
     @GetGeneratedKeys("uri_id")

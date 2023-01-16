@@ -54,7 +54,7 @@ public final class NERParser {
             resources = annotationUnit.getResources();
         }
         for (ResourceItem resource : resources) {
-            annotationCounts.add(new AnnotationCount(id, resource.score(), resource.getSurfaceForm(), resource.getUri(), type,
+            annotationCounts.add(new AnnotationCount(String.valueOf(id), resource.score(), resource.getSurfaceForm(), resource.getUri(), type,
                 user, sessionId));
         }
         return annotationCounts;
@@ -114,13 +114,16 @@ public final class NERParser {
                 //Update the repetition
                 dao().getSearchHistoryDao().updateQueryAnnotation(session, users, input,
                     annotationCount.getUri(), annotationCount.getType());
+                if (!"user".equals(type) && !"profile".equals(type) && !dao().getSearchHistoryDao().findSearchIdByResult(foundAnnotation.get().getUriId()).contains(id))
+                    dao().getSearchHistoryDao().insertQueryResult(id, foundAnnotation.get().getUriId());
             }
             //Insert directly new annotationCount into DB
             else {
                 annotationCount.setInputStreams(String.valueOf(inputId));
-                dao().getSearchHistoryDao().insertQueryToAnnotation(annotationCount.getType(), annotationCount.getUri(), String.valueOf(inputId),
+                int uriId = dao().getSearchHistoryDao().insertQueryToAnnotation(annotationCount.getType(), annotationCount.getUri(), String.valueOf(inputId),
                     annotationCount.getCreatedAt(), annotationCount.getSurfaceForm(),
                     annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence());
+                if (!"user".equals(type) && !"profile".equals(type)) dao().getSearchHistoryDao().insertQueryResult(id, uriId);
                 Pkg.instance.updatePkg(annotationCount, dao().getUserDao().findByUsername(username).get());
             }
         }
