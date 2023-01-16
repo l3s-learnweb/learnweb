@@ -28,7 +28,7 @@ const onLoad = (graph) => {
     // eslint-disable-next-line no-undef
     .force('center', d3.forceCenter(1000 / 2, 1000 / 2))
     // eslint-disable-next-line no-undef,no-use-before-define
-    .force('collide', d3.forceCollide().radius((d) => fibonacci(d.frequency + 4) * 18));
+    .force('collide', d3.forceCollide().radius((d) => fibonacci(d.frequency + 4) * 16));
 
   init();
 
@@ -39,7 +39,7 @@ const onLoad = (graph) => {
       .attr('class', 'link')
       .attr('marker-end', 'url(#arrowhead)')
       .style('stroke', 'black')
-      .text((d) => d.users);
+      .text((d) => d.user);
 
     nodes = nodeContainer.selectAll('.node')
       .data(graph.record.nodes, (d) => d.id)
@@ -52,6 +52,7 @@ const onLoad = (graph) => {
         .on('drag', dragged)
         .on('end', dragEnded));
 
+    // eslint-disable-next-line no-undef
     nodes.selectAll('circle')
       .data((d) => [d])
       .join('circle')
@@ -59,9 +60,10 @@ const onLoad = (graph) => {
       .attr('r', (d) => fibonacci(d.frequency + 4) * 7)
       .style('fill', (d) => {
         console.log('d: ', d);
-        return color(d.users);
+        return color(d.user);
       });
 
+    // eslint-disable-next-line no-undef
     nodes.selectAll('text')
       .data((d) => [d])
       .join('text')
@@ -80,8 +82,8 @@ const onLoad = (graph) => {
       .attr('cx', 250)
       .attr('cy', 100)
       .attr('pointer-events', 'none')
-      .text((d) => d.users)
-      .style('fill', (d) => colorLabel(d.users))
+      .text((d) => d.user)
+      .style('fill', (d) => colorLabel(d.user))
       // eslint-disable-next-line no-use-before-define
       .style('font-size', '12px');
 

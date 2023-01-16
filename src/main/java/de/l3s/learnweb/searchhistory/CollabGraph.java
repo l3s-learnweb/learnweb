@@ -4,34 +4,30 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
 
-/*
+/**
+ * Create the visualisation graph of the top results for the current user, as well as the group it belongs to.
 * @author Trung Tran
 * */
 public class CollabGraph implements Serializable {
-
     @Serial
     private static final long serialVersionUID = 1100213292212314798L;
-    private static final Pattern PATTERN = Pattern.compile("http://dbpedia.org/resource/");
-    private transient HashMap<Integer, Double> results;
 
-    /*
-    * The Node class. Has all values of an entity
+    /**
+    * The Node class. Has the variables to be visualized
     * */
     public class Node {
         private String uri;
         private String name;
         private int frequency;
-        private String users;
-
-        //Node class. Receives the input from DB to be visualized
+        private transient List<String> users;
+        private String user;
+        transient Node parent = null;
         public Node(String name, String uri, String users) {
             this.name = name;
             this.uri = uri;
-            this.users = users;
+            this.users = Arrays.stream(users.split(",")).toList();
             this.frequency = 1;
         }
 
@@ -49,12 +45,20 @@ public class CollabGraph implements Serializable {
 
         public void setFrequency(int frequency) {this.frequency = frequency;}
 
-        public String getUsers() {
+        public List<String> getUsers() {
             return users;
         }
 
-        public void setUsers(final String users) {
+        public void setUsers(final List<String> users) {
             this.users = users;
+        }
+
+        public String getUser() {
+            return user;
+        }
+
+        public void setUser() {
+            this.user = String.join(",", users);
         }
 
         public String getUri() {
@@ -65,13 +69,21 @@ public class CollabGraph implements Serializable {
             this.uri = uri;
         }
 
+        public Node getParent() {
+            return parent;
+        }
+
+        public void setParent(final Node parent) {
+            this.parent = parent;
+        }
+
         public void increaseFrequency() {
             this.frequency++;
         }
     }
 
-    /*
-    * The link class. Represents the weighted link between two entities
+    /**
+    * The link class. Represents the link between entities
     * */
     public class Link {
         private int source;
@@ -110,38 +122,44 @@ public class CollabGraph implements Serializable {
         }
     }
 
-    private void removeDuplicatingNodesAndLinks(List<Node> nodes, List<Link> links) {
+    /**
+     * @param nodes the nodes in the combined shared objects
+     * @return the CollabGraph after merging nodes
+     * */
+    private CollabGraph removeDuplicatingNodesAndLinks(List<Node> nodes) {
         //Remove duplicating nodes by merging nodes with the same uri
-        for (int i = 0; i < nodes.size() - 1; i++) {
+        for (int i = 0; i < nodes.size(); i++) {
             if (!nodes.get(i).getUri().isEmpty()) {
                 for (int j = i + 1; j < nodes.size(); j++) {
                     if (nodes.get(i).getUri().equals(nodes.get(j).getUri())) {
-                        for (Link link : links) {
-                            if (link.target == j) {
-                                link.target = i;
-                            } else if (link.source == j) {
-                                link.source = i;
-                            }
-                            if (link.source > j) {
-                                link.source--;
-                            }
-                            if (link.target > j) {
-                                link.target--;
-                            }
-                        }
                         //Join the users and sessionId of the first node
-                        List<String> userList = new ArrayList<>(Arrays.stream(nodes.get(i).getUsers().split(",")).toList());
-                        userList.removeAll(Arrays.stream(nodes.get(j).getUsers().split(",")).toList());
-                        userList.addAll(Arrays.stream(nodes.get(j).getUsers().split(",")).toList());
-                        nodes.get(i).setUsers(String.join(",", userList));
+                        List<String> userList = new ArrayList<>(nodes.get(i).getUsers());
+                        userList.removeAll(nodes.get(j).getUsers());
+                        userList.addAll(nodes.get(j).getUsers());
+                        nodes.get(i).setUsers(userList);
                         //Remove the duplicating node
                         nodes.remove(j);
                         j--;
                         nodes.get(i).increaseFrequency();
                     }
                 }
+                nodes.get(i).setUser();
             }
         }
+        //Create the link after finaliziing the nodes
+        //-> The links in shared objects seem to be redundant
+        List<Link> links = new ArrayList<>();
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            for (int j = i + 1; j < nodes.size(); j++) {
+                List<String> commonUser = nodes.get(i).getUsers().stream().filter(
+                    nodes.get(j).getUsers().stream().toList()::contains).toList();
+                if (!commonUser.isEmpty() && nodes.get(j).getParent() == null) {
+                    links.add(new Link(i, j));
+                    nodes.get(j).setParent(nodes.get(i));
+                }
+            }
+        }
+        return new CollabGraph(nodes, links);
     }
 
     /**
@@ -163,10 +181,7 @@ public class CollabGraph implements Serializable {
             }
             //Add links, modify it to be logical with current nodes of collabGraph
         }
-
-        removeDuplicatingNodesAndLinks(calculatedRecord.nodes, calculatedRecord.links);
-
-        return new CollabGraph(calculatedRecord.nodes, calculatedRecord.links);
+        return removeDuplicatingNodesAndLinks(calculatedRecord.nodes);
     }
 
     /**
@@ -182,7 +197,7 @@ public class CollabGraph implements Serializable {
         for (JsonSharedObject.Link link : sharedObject.getLinks()) {
             calculatedRecord.links.add(new Link(link.getSource(), link.getTarget()));
         }
-        return new CollabGraph(calculatedRecord.nodes, calculatedRecord.links);
+        return removeDuplicatingNodesAndLinks(calculatedRecord.nodes);
     }
 
     public Record record;
