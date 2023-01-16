@@ -76,10 +76,6 @@ public class CollabGraph implements Serializable {
         public void setParent(final Node parent) {
             this.parent = parent;
         }
-
-        public void increaseFrequency() {
-            this.frequency++;
-        }
     }
 
     /**
@@ -122,6 +118,18 @@ public class CollabGraph implements Serializable {
         }
     }
 
+    private int calculateFrequencyRatio(double weight) {
+        if (weight < 150) {
+            return 1;
+        } else if (weight >= 150 && weight < 400) {
+            return 2;
+        } else if (weight >= 400 && weight < 700) {
+            return 3;
+        } else if (weight >= 700) {
+            return 4;
+        }
+        throw new IllegalStateException("Unexpected value: " + true);
+    }
     /**
      * @param nodes the nodes in the combined shared objects
      * @return the CollabGraph after merging nodes
@@ -140,7 +148,6 @@ public class CollabGraph implements Serializable {
                         //Remove the duplicating node
                         nodes.remove(j);
                         j--;
-                        nodes.get(i).increaseFrequency();
                     }
                 }
                 nodes.get(i).setUser();
@@ -181,7 +188,10 @@ public class CollabGraph implements Serializable {
             }
             //Add links, modify it to be logical with current nodes of collabGraph
         }
-        return removeDuplicatingNodesAndLinks(calculatedRecord.nodes);
+        CollabGraph graph = removeDuplicatingNodesAndLinks(calculatedRecord.nodes);
+        for (Node node : graph.record.nodes)
+            node.setFrequency(node.getUsers().size());
+        return graph;
     }
 
     /**
@@ -193,6 +203,7 @@ public class CollabGraph implements Serializable {
         Record calculatedRecord = new Record(new ArrayList<>(), new ArrayList<>());
         for (JsonSharedObject.Entity node : sharedObject.getEntities()) {
             calculatedRecord.nodes.add(new Node(node.getQuery(), node.getUri(), node.getType()));
+            calculatedRecord.nodes.get(calculatedRecord.nodes.size() - 1).setFrequency(calculateFrequencyRatio(node.getWeight()));
         }
         for (JsonSharedObject.Link link : sharedObject.getLinks()) {
             calculatedRecord.links.add(new Link(link.getSource(), link.getTarget()));
