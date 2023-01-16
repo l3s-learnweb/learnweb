@@ -8,11 +8,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -45,8 +43,6 @@ import de.l3s.learnweb.user.User;
  *
 * */
 public class Pkg {
-
-    private final List<String> typeList = Arrays.asList("session", "profile", "group");
     private transient List<AnnotationCount> annotationCounts;
     private List<User> users;
     private transient HashMap<Integer, Double> results;
@@ -386,6 +382,7 @@ public class Pkg {
 
     //----------------------------------Rdf-insert-model--------------------------------------
         Pattern keywordPattern = Pattern.compile("<b>" + "(.*?)" + "</b>");
+        Pattern headlinePattern = Pattern.compile("<title>" + "(.*?)" + "</title>");
         List<SearchSession> sessions = dao().getSearchHistoryDao().findSessionsByUserId(user.getId());
         for (String session : annotationCount.getSessionId().split(",")) {
             for (SearchSession searchSession : sessions) {
@@ -443,11 +440,13 @@ public class Pkg {
                                     inputStream.getDateCreated().toString(), "literal", user);
                                 addRdfStatement("RecognizedEntities/" + PATTERN.matcher(annotationCount.getUri())
                                     .replaceAll(""), "processes","InputStream/" + inputStream.getId(), "resource", user);
-                                Matcher matcher = keywordPattern.matcher(inputStream.getContent());
                                 if ("web".equals(annotationCount.getType())) {
-                                    while (matcher.find()) {
+                                    Matcher matcher = keywordPattern.matcher(inputStream.getContent());
+                                    while (matcher.find())
                                         addRdfStatement("WebPage/" + annotationCount.getUriId(), "keywords", matcher.group(1), "literal", user);
-                                    }
+                                    matcher = headlinePattern.matcher(inputStream.getContent());
+                                    while (matcher.find())
+                                        addRdfStatement("WebPage/" + annotationCount.getUriId(), "headline", matcher.group(1), "literal", user);
                                 }
                             }
                         }
@@ -490,22 +489,36 @@ public class Pkg {
             return null;
         }
 
+        Map<String, String> typeMap = new HashMap<>();
+        //HARDCODED lines - need alternatives
+        typeMap.put("profile", "user");
+        typeMap.put("group", "group");
+        typeMap.put("snippet_notClicked", "session");
+        typeMap.put("snippet_clicked", "session");
+        typeMap.put("query", "session");
+        typeMap.put("web", "session");
         JsonSharedObject object = new JsonSharedObject("singleGraph", false);
         List<Node> newNodes = new ArrayList<>();
         List<Link> newLinks = new ArrayList<>();
-
-        results.entrySet().stream()
-            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-            .forEach(entry -> {
-                Node node = nodes.get(entry.getKey());
-                if (node.getUsers().contains(optUser.get().getUsername())
-                    && typeList.contains(node.getType())
-                    && newNodes.stream().noneMatch(n -> n.getUri().equals(node.getUri()))) {
-                    newNodes.add(new Node(node.getId(), node.getName(), node.getUri(), "User", entry.getValue(),
-                        node.getConfidence(), node.getSessionId(), node.getType(), node.getDate()));
+        Map<String, Integer> occurences = new HashMap<>();
+        occurences.put("user", 0);
+        occurences.put("group", 0);
+        occurences.put("session", 0);
+        for (Map.Entry<Integer, Double> entry : results.entrySet()) {
+            Node node = nodes.get(entry.getKey());
+            for (Map.Entry<String, String> type : typeMap.entrySet()) {
+                if (node.getUsers().matches(".*\\b" + Pattern.quote(optUser.get().getUsername()) +"\\b.*")
+                && occurences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
+                    String nodeType = type.getValue();
+                    Node chosenNode = new Node(node.getId(), node.getName(), node.getUri(), "User", entry.getValue(),
+                        node.getConfidence(), node.getSessionId(), nodeType, node.getDate());
+                    if (newNodes.stream().noneMatch(s -> s.getType().equals(chosenNode.getType()) && s.getUri().equals(chosenNode.getUri()))) {
+                        newNodes.add(chosenNode);
+                        occurences.put(type.getValue(), occurences.get(type.getValue()) + 1);
+                    }
                 }
-            });
-
+            }
+        }
         for (int i = 0; i < newNodes.size() - 1; i++) {
             for (int j = i + 1; j < newNodes.size(); j++) {
                 Node node1 = newNodes.get(i);
@@ -517,7 +530,8 @@ public class Pkg {
         }
 
         object.getLinks().addAll(newLinks.stream().map(l -> new JsonSharedObject.Link(l.source, l.target)).collect(toList()));
-        object.getEntities().addAll(newNodes.stream().map(n -> new JsonSharedObject.Entity(n.getUri(), n.getName(), n.getWeight(), n.getType(), n.getId())).collect(toList()));
+        object.getEntities().addAll(newNodes.stream().map(n -> new JsonSharedObject.Entity(n.getUri(), n.getName(), n.getWeight(),
+            n.getType(), n.getId())).collect(toList()));
         return object;
     }
 
@@ -563,14 +577,7 @@ public class Pkg {
                         }
                     }
                 }
-                //Retrieve "important" nodes - nodes that appear directly in the query will be displayed with more connections
-                //Initialization
-                List<Integer> nodesChild = new ArrayList<>();
-                List<Integer> indexImportantNodes = new ArrayList<>();
-                for (int i = 0; i < newNodes.size(); i++) {
-                    nodesChild.add(0);
-                    indexImportantNodes.add(i);
-                }
+
                 //Links initialization
                 for (int i = 0; i < newNodes.size() - 1; i++) {
                     for (int j = i + 1; j < newNodes.size(); j++) {
@@ -580,54 +587,13 @@ public class Pkg {
                             .collect(toSet());
                         if (!result.isEmpty()) {
                             newLinks.add(new Link(i, j, 0));
-                            nodesChild.set(i, nodesChild.get(i) + 1);
-                            nodesChild.set(j, nodesChild.get(j) + 1);
-                        }
-                    }
-                }
-                //Sort the graph with more important nodes coming in first rank
-                final List<Node> finalNewNodes = newNodes;
-                indexImportantNodes.sort((o1, o2) -> {
-                    if (Float.compare(nodesChild.get(o2), nodesChild.get(o1)) == 0) {
-                        if (annotationCounts.stream().anyMatch(s -> Objects.equals(s.getUri(), finalNewNodes.get(o2).getUri())
-                            && "query".equals(s.getType()))) {
-                            return 1;
-                        }
-                        if (annotationCounts.stream().anyMatch(s -> Objects.equals(s.getUri(), finalNewNodes.get(o1).getUri())
-                            && "query".equals(s.getType()))) {
-                            return -1;
-                        }
-                        return 0;
-                    } else {
-                        return Float.compare(nodesChild.get(o2), nodesChild.get(o1));
-                    }
-                });
-
-                List<Node> calculatedNodes = new ArrayList<>();
-                List<Link> calculatedLinks = new ArrayList<>();
-
-                //Trimming the user's individual graph
-
-                calculatedNodes.add(newNodes.get(indexImportantNodes.get(0)));
-
-                for (int indexNode : indexImportantNodes) {
-                    if (!calculatedNodes.contains(newNodes.get(indexNode))) {
-                        calculatedNodes.add(newNodes.get(indexNode));
-                    }
-                    for (Link link : newLinks) {
-                        if (link.source == indexNode && !calculatedNodes.contains(newNodes.get(link.target))) {
-                            calculatedNodes.add(newNodes.get(link.target));
-                            calculatedLinks.add(link);
-                        } else if (link.target == indexNode && !calculatedNodes.contains(newNodes.get(link.source))) {
-                            calculatedNodes.add(newNodes.get(link.source));
-                            calculatedLinks.add(link);
                         }
                     }
                 }
 
                 //Create the sharedObject
                 JsonSharedObject object = new JsonSharedObject(application, false);
-                for (Link link : calculatedLinks) {
+                for (Link link : newLinks) {
                     object.getLinks().add(new JsonSharedObject.Link(link.source, link.target));
                 }
                 object.setUser(new JsonSharedObject.User(users.stream().filter(s -> s.getUsername().equals(user.getUsername()))
