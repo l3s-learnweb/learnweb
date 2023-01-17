@@ -3,6 +3,7 @@ package de.l3s.learnweb.searchhistory;
 import static de.l3s.learnweb.app.Learnweb.dao;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.stream.Collectors.*;
+import static org.apache.commons.math3.util.Precision.round;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,7 +47,7 @@ import de.l3s.learnweb.user.User;
  * highest weights for the collaborative graph, or 5 for recommender system etc.</p>
  *
 * */
-public class Pkg {
+public final class Pkg {
     private List<Node> nodes;
     private List<Link> links;
     private transient List<AnnotationCount> annotationCounts;
@@ -59,6 +60,7 @@ public class Pkg {
     /**
      * The Node class. Has all values of an entity
      * */
+
     public static class Node {
         private transient int id;
         private String uri;
@@ -105,7 +107,9 @@ public class Pkg {
             return frequency;
         }
 
-        public void setFrequency(int frequency) {this.frequency = frequency;}
+        public void setFrequency(int frequency) {
+            this.frequency = frequency;
+        }
 
         public String getUsers() {
             return users;
@@ -184,6 +188,7 @@ public class Pkg {
         private int source;
         private int target;
         private transient double weight;
+
         public int getSource() {
             return source;
         }
@@ -230,7 +235,7 @@ public class Pkg {
      * @param type the type of the new node.
      * @param date the created time of the node.
      * */
-    private void AddNode(int id, String uri, String username, double confidence, double weight, String sessionId, String type, LocalDateTime date) {
+    private void addNode(int id, String uri, String username, double confidence, double weight, String sessionId, String type, LocalDateTime date) {
         //Get the Node name as uri minus domain root - dbpedia.org/resource
         String nameQuery = PATTERN.matcher(uri).replaceAll("")
             .replaceAll("_", " ");
@@ -332,7 +337,9 @@ public class Pkg {
                     setLink(i, j, weight);
                 }
             }
-            if (isUnique) setLink(0, i, calculateWeight(nodes.get(i).getDate(), nodes.get(i).getType()));
+            if (isUnique) {
+                setLink(0, i, calculateWeight(nodes.get(i).getDate(), nodes.get(i).getType()));
+            }
         }
     }
 
@@ -349,7 +356,7 @@ public class Pkg {
         //Find the users in this group
         users = dao().getUserDao().findByGroupId(groupId);
         //Add default node. Any group that has only 1 node will be connected to default node
-        AddNode(0,"default", "", 1, 0.0,"", "", null);
+        addNode(0, "default", "", 1, 0.0, "", "", null);
 
         //Initialize rdf graph model list
         rdfGraphs = new ArrayList<>();
@@ -379,23 +386,23 @@ public class Pkg {
      * @param user the current user
     * */
     public void updatePkg(AnnotationCount annotationCount, User user) {
-        AddNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence(), 0
-            , annotationCount.getSessionId(), annotationCount.getType(), annotationCount.getCreatedAt());
+        addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence(),
+            round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 2), annotationCount.getSessionId(),
+            annotationCount.getType(), annotationCount.getCreatedAt());
 
-    //----------------------------------Rdf-insert-model--------------------------------------
+        //----------------------------------Rdf-insert-model--------------------------------------
         Pattern keywordPattern = Pattern.compile("<b>" + "(.*?)" + "</b>");
         Pattern headlinePattern = Pattern.compile("<title>" + "(.*?)" + "</title>");
         List<SearchSession> sessions = dao().getSearchHistoryDao().findSessionsByUserId(user.getId());
         for (String session : annotationCount.getSessionId().split(",")) {
             for (SearchSession searchSession : sessions) {
                 if (searchSession.getSessionId().equals(session)) {
-                    addRdfStatement("educor:User/" + user.getId(),"educor:generatesLogs","SearchSession/" + session, "resource", user);
+                    addRdfStatement("educor:User/" + user.getId(), "educor:generatesLogs", "SearchSession/" + session, "resource", user);
                     addRdfStatement("SearchSession/" + session, "schema:startTime",
                         searchSession.getStartTimestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
                     addRdfStatement("SearchSession/" + session, "schema:endTime",
                         searchSession.getEndTimestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
-                    for (SearchQuery query : searchSession.getQueries())
-                    {
+                    for (SearchQuery query : searchSession.getQueries()) {
                         addRdfStatement("SearchQuery/" + query.searchId(),
                             "schema:dateCreated", query.timestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
                         if ("query".equals(annotationCount.getType())) {
@@ -409,9 +416,10 @@ public class Pkg {
                         addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
                         addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal", user);
                         addRdfStatement("SearchSession/" + session, "contains", "Snippet/" + annotationCount.getUriId(), "resource", user);
-                        for (int searchId : dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId()))
+                        for (int searchId : dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId())) {
                             addRdfStatement("SearchQuery/" + searchId,
-                            "generatesResult","Snippet/" + annotationCount.getUriId(), "resource", user);
+                                "generatesResult", "Snippet/" + annotationCount.getUriId(), "resource", user);
+                        }
 
                     }
 
@@ -419,9 +427,10 @@ public class Pkg {
                         addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
                         addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal", user);
                         addRdfStatement("SearchSession/" + session, "contains", "schema:WebPage/" + annotationCount.getUriId(), "resource", user);
-                        for (int searchId : dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId()))
+                        for (int searchId : dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId())) {
                             addRdfStatement("SearchQuery/" + searchId,
-                                "generatesResult","WebPage/" + annotationCount.getUriId(), "resource", user);
+                                "generatesResult", "WebPage/" + annotationCount.getUriId(), "resource", user);
+                        }
 
                     }
                     for (String inputId : annotationCount.getInputStreams().split(",")) {
@@ -435,20 +444,24 @@ public class Pkg {
                                 } else if ("group".equals(annotationCount.getType())) {
                                     addRdfStatement("foaf:Group/" + group.getId(), "createsInputStream",
                                         "InputStream/" + inputId, "resource", user);
-                                } else addRdfStatement("SearchSession/" + session, "createsInputStream",
-                                 "InputStream/" + inputId, "resource", user);
+                                } else {
+                                    addRdfStatement("SearchSession/" + session, "createsInputStream",
+                                        "InputStream/" + inputId, "resource", user);
+                                }
                                 addRdfStatement("InputStream/" + inputStream.getId(), "schema:text", inputStream.getContent(), "literal", user);
                                 addRdfStatement("InputStream/" + inputStream.getId(), "schema:dateCreated",
                                     inputStream.getDateCreated().toString(), "literal", user);
                                 addRdfStatement("RecognizedEntities/" + PATTERN.matcher(annotationCount.getUri())
-                                    .replaceAll(""), "processes","InputStream/" + inputStream.getId(), "resource", user);
+                                    .replaceAll(""), "processes", "InputStream/" + inputStream.getId(), "resource", user);
                                 if ("web".equals(annotationCount.getType())) {
                                     Matcher matcher = keywordPattern.matcher(inputStream.getContent());
-                                    while (matcher.find())
+                                    while (matcher.find()) {
                                         addRdfStatement("WebPage/" + annotationCount.getUriId(), "keywords", matcher.group(1), "literal", user);
+                                    }
                                     matcher = headlinePattern.matcher(inputStream.getContent());
-                                    while (matcher.find())
+                                    while (matcher.find()) {
                                         addRdfStatement("WebPage/" + annotationCount.getUriId(), "headline", matcher.group(1), "literal", user);
+                                    }
                                 }
                             }
                         }
@@ -456,11 +469,11 @@ public class Pkg {
                 }
             }
         }
-    //--------------------------------RDF-Insert-Model-End----------------------------------
+        //--------------------------------RDF-Insert-Model-End----------------------------------
     }
 
     /**
-     * Calculate the sum_weight of each node with the formula of NEA
+     * Calculate the sum_weight of each node with the formula of NEA.
      */
     public void calculateSumWeight() {
         results = new HashMap<>();
@@ -478,7 +491,7 @@ public class Pkg {
         }
     }
 
-    /** Create a single graph of the current user, which contains node from 3 different sources (user, group and session)
+    /** Create a single graph of the current user, which contains node from 3 different sources (user, group and session).
      * @param userId the current user id
      * @return the shared object of a single graph
      * */
@@ -509,8 +522,8 @@ public class Pkg {
         for (Map.Entry<Integer, Double> entry : results.entrySet()) {
             Node node = nodes.get(entry.getKey());
             for (Map.Entry<String, String> type : typeMap.entrySet()) {
-                if (node.getUsers().matches(".*\\b" + Pattern.quote(optUser.get().getUsername()) +"\\b.*")
-                && occurrences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
+                if (node.getUsers().matches(".*\\b" + Pattern.quote(optUser.get().getUsername()) + "\\b.*")
+                    && occurrences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
                     String nodeType = type.getValue();
                     Node chosenNode = new Node(node.getId(), node.getName(), node.getUri(), "User", entry.getValue(),
                         node.getConfidence(), node.getSessionId(), nodeType, node.getDate());
@@ -554,12 +567,17 @@ public class Pkg {
         List<Link> newLinks;
         //Get from DB the active users
         List<User> activeUsers = dao().getUserDao().findActiveUsers();
-        if (activeUsers.isEmpty()) return null;
+        if (activeUsers.isEmpty()) {
+            return null;
+        }
         //Sort the calculated results to get entities' ranking
         List<Map.Entry<Integer, Double>> entries
             = new ArrayList<>(results.entrySet());
-        if (!isAscending) entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
-        else entries.sort(Map.Entry.comparingByValue());
+        if (isAscending) {
+            entries.sort(Map.Entry.comparingByValue());
+        } else {
+            entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+        }
         //List new nodes after users' top 3
         for (User user : users) {
             int index = 0;
@@ -570,8 +588,8 @@ public class Pkg {
                 for (Map.Entry<Integer, Double> entry : entries) {
                     //Find from the top of the results numberTopEntities entities, break after reaching the number
                     if (nodes.get(entry.getKey()).users.matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
-                        Node chosenNode = new Node(nodes.get(entry.getKey()).getId(), nodes.get(entry.getKey()).getName(), nodes.get(entry.getKey()).getUri()
-                            , user.getUsername(), entry.getValue(), nodes.get(entry.getKey()).getConfidence(),
+                        Node chosenNode = new Node(nodes.get(entry.getKey()).getId(), nodes.get(entry.getKey()).getName(), nodes.get(entry.getKey()).getUri(),
+                            user.getUsername(), entry.getValue(), nodes.get(entry.getKey()).getConfidence(),
                             nodes.get(entry.getKey()).getSessionId(), nodes.get(entry.getKey()).getType(), nodes.get(entry.getKey()).getDate());
                         newNodes.add(chosenNode);
                         index++;
@@ -605,7 +623,6 @@ public class Pkg {
                     object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), node.getWeight(), node.getType(), node.getId()));
                 }
                 sharedObjects.add(object);
-
             }
         }
 
@@ -618,8 +635,7 @@ public class Pkg {
             if (obj.isEmpty()) {
                 sharedObjectId = dao().getSearchHistoryDao().insertSharedObject(sharedObject.getUser().getId(), groupId, application,
                     gson.toJson(sharedObject));
-            }
-            else {
+            } else {
                 dao().getSearchHistoryDao().updateSharedObject(gson.toJson(sharedObject), LocalDateTime.now(), sharedObject.getUser().getId(), groupId, application);
                 sharedObjectId = obj.get(0).getId();
             }
@@ -633,9 +649,10 @@ public class Pkg {
             for (JsonSharedObject.Entity entity: sharedObject.getEntities()) {
                 rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "dependsOn", "RecognizedEntities/" + entity.getId(), "resource");
                 Optional<AnnotationCount> annotationObj = annotationCounts.stream().filter(s -> s.getUriId() == entity.getId()).findFirst();
-                if (annotationObj.isPresent())
+                if (annotationObj.isPresent()) {
                     for (String inputId : annotationObj.get().getInputStreams().split(",")) {
-                    rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "dependsOn", "InputStream/" + inputId, "resource");
+                        rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "dependsOn", "InputStream/" + inputId, "resource");
+                    }
                 }
             }
             //--------------------End RDF ----------------------
@@ -646,8 +663,8 @@ public class Pkg {
         for (User user : users) {
             for (Node node : nodes) {
                 if (node.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
-                    rdfGraphs.get(users.indexOf(user)).addEntity(PATTERN.matcher(node.getUri()).replaceAll("")
-                        , node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
+                    rdfGraphs.get(users.indexOf(user)).addEntity(PATTERN.matcher(node.getUri()).replaceAll(""),
+                        node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
                 }
             }
             //Print the Rdf graphs both to DB and local directories as files

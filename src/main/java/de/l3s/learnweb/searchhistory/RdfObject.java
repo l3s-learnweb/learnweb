@@ -1,60 +1,29 @@
 package de.l3s.learnweb.searchhistory;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
 
 public class RdfObject {
 
-    private int user_id;
-    private String rdf_value;
+    private int userId;
+    private String rdfValue;
 
-    public RdfObject(final int user_id, final String rdf_value) {
-        this.user_id = user_id;
-        this.rdf_value = rdf_value;
+    public RdfObject(final int userId, final String rdfValue) {
+        this.userId = userId;
+        this.rdfValue = rdfValue;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(final int user_id) {
-        this.user_id = user_id;
+    public void setUserId(final int userId) {
+        this.userId = userId;
     }
 
-    public String getRdf_value() {
-        return rdf_value;
+    public String getRdfValue() {
+        return rdfValue;
     }
 
-    public void setRdf_value(final String rdf_value) {
-        this.rdf_value = rdf_value;
-    }
-
-    public List<String> findResourceWithTopWeight(JsonSharedObject sharedObject) {
-        Model model = ModelFactory.createDefaultModel().read(IOUtils.toInputStream(rdf_value, "UTF-8"), null,"TTL");
-        Map<String, Integer> weightedResource;
-        //Get the statements from the rdf model first
-        StmtIterator iter = model.listStatements();
-        while (iter.hasNext()) {
-            Statement stmt = iter.nextStatement();  // get next statement
-            Resource subject = stmt.getSubject();     // get the subject
-            Property predicate = stmt.getPredicate();   // get the predicate
-            RDFNode object = stmt.getObject();      // get the object
-            if (predicate.equals(model.getProperty("schema:weight"))) {
-                //TODO
-                //Build a Map with K = resource name, V = weight of the resource
-                //Sort after the value
-                //Get the first n
-            }
-        }
-        return null;
+    public void setRdfValue(final String rdfValue) {
+        this.rdfValue = rdfValue;
     }
 }

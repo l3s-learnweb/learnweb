@@ -4,6 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,6 +14,8 @@ import java.util.List;
 public class CollabGraph implements Serializable {
     @Serial
     private static final long serialVersionUID = 1100213292212314798L;
+
+    private transient List<Double> weightValues;
 
     /**
     * The Node class. Has the variables to be visualized
@@ -26,6 +29,7 @@ public class CollabGraph implements Serializable {
         private transient List<String> users;
         private String user;
         transient Node parent;
+
         public Node(String name, String uri, String users) {
             this.name = name;
             this.uri = uri;
@@ -45,7 +49,9 @@ public class CollabGraph implements Serializable {
             return frequency;
         }
 
-        public void setFrequency(int frequency) {this.frequency = frequency;}
+        public void setFrequency(int frequency) {
+            this.frequency = frequency;
+        }
 
         public List<String> getUsers() {
             return users;
@@ -81,13 +87,14 @@ public class CollabGraph implements Serializable {
     }
 
     /**
-    * The link class. Represents the link between entities
+    * The link class. Represents the link between entities.
     * */
     public static class Link implements Serializable {
         @Serial
         private static final long serialVersionUID = 843826821498615667L;
         private int source;
         private int target;
+
         public int getSource() {
             return source;
         }
@@ -123,6 +130,7 @@ public class CollabGraph implements Serializable {
     }
 
     private int calculateFrequencyRatio(double weight) {
+        //TODO: median & avg
         if (weight < 500) {
             return 1;
         } else if (weight >= 500 && weight < 1000) {
@@ -134,6 +142,7 @@ public class CollabGraph implements Serializable {
         }
         throw new IllegalStateException("Unexpected value: " + true);
     }
+
     /**
      * @param nodes the nodes in the combined shared objects
      * @return the CollabGraph after merging nodes
@@ -174,13 +183,15 @@ public class CollabGraph implements Serializable {
     }
 
     /**
-    * Create the collaborative Graph (collabGraph) file + visualisation based on the shared objects as inputs
+    * Create the collaborative Graph (collabGraph) file + visualisation based on the shared objects as inputs.
     * @param    sharedObjects   the list of Shared Objects in Json form
     * @return   the collabGraph object to be visualized by annotation.js
     * */
     public CollabGraph createCollabGraph(List<JsonSharedObject> sharedObjects) {
         Record calculatedRecord = new Record(new ArrayList<>(), new ArrayList<>());
-        if (sharedObjects.isEmpty()) return null;
+        if (sharedObjects.isEmpty()) {
+            return null;
+        }
         for (JsonSharedObject sharedObject : sharedObjects) {
             //Add all new entities
             for (JsonSharedObject.Link link : sharedObject.getLinks()) {
@@ -193,22 +204,26 @@ public class CollabGraph implements Serializable {
             //Add links, modify it to be logical with current nodes of collabGraph
         }
         CollabGraph graph = removeDuplicatingNodesAndLinks(calculatedRecord.nodes);
-        for (Node node : graph.record.nodes)
+        for (Node node : graph.record.nodes) {
             node.setFrequency(node.getUsers().size());
+        }
         return graph;
     }
 
     /**
-     * Create the user's single graph, which shows the top entities in 3 sources: profile, group, session (query, web and snippets)
+     * Create the user's single graph, which shows the top entities in 3 sources: profile, group, session (query, web and snippets).
      * @param sharedObject the sharedObject json file gotten from Pkg
      * @return the collabGraph object to be visualized by annotation.js
      * */
     public CollabGraph createSingleGraph(JsonSharedObject sharedObject) {
         Record calculatedRecord = new Record(new ArrayList<>(), new ArrayList<>());
+        weightValues = new ArrayList<>();
         for (JsonSharedObject.Entity node : sharedObject.getEntities()) {
             calculatedRecord.nodes.add(new Node(node.getQuery(), node.getUri(), node.getType()));
-            calculatedRecord.nodes.get(calculatedRecord.nodes.size() - 1).setFrequency(calculateFrequencyRatio(node.getWeight()));
+            weightValues.add(node.getWeight());
+            //calculatedRecord.nodes.get(calculatedRecord.nodes.size() - 1).setFrequency(calculateFrequencyRatio(node.getWeight()));
         }
+        Collections.sort(weightValues);
         for (JsonSharedObject.Link link : sharedObject.getLinks()) {
             calculatedRecord.links.add(new Link(link.getSource(), link.getTarget()));
         }

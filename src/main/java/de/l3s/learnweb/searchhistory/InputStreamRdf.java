@@ -9,6 +9,7 @@ public class InputStreamRdf {
     private String type;
     private Date dateCreated;
     private int userId;
+
     public InputStreamRdf(final int id, final int userId, final String content, final String type, final Date dateCreated) {
         this.userId = userId;
         this.id = id;

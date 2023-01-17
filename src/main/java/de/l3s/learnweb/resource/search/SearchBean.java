@@ -27,10 +27,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.omnifaces.cdi.ViewScoped;
 import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
-import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.PrimeFaces;
 
 import de.l3s.interwebj.client.InterWeb;
@@ -122,7 +122,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
         isUserActive = false;
         snippetClicked = new ArrayList<>();
-        for (int i = 0; i < RESULT_LIMIT; i++) snippetClicked.add(false);
+        for (int i = 0; i < RESULT_LIMIT; i++) {
+            snippetClicked.add(false);
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -281,8 +283,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
             if (!snippetClicked.get(search.getResources().indexOf(search.getResources().get(tempResourceId)))) {
                 Resource resource = search.getResources().get(tempResourceId).getResource();
                 String url = resource.getUrl();
-                Document doc = Jsoup.connect(url).timeout(10 * 1000).ignoreHttpErrors(true).
-                    userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
+                Document doc = Jsoup.connect(url).timeout(10 * 1000).ignoreHttpErrors(true)
+                    .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
                     .get();
                 NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", filterWebsite(doc));
             }
@@ -327,7 +329,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
         int groupId = dao().getGroupDao().findByUserId(getUser().getId()).get(0).getId();
         List<JsonSharedObject> sharedObjects = Pkg.instance.createSharedObject(
             groupId, 5, false, "recommendation");
-        if (sharedObjects == null) return;
+        if (sharedObjects == null) {
+            return;
+        }
         Map<String, Double> entityRank = new HashMap<>();
         List<JsonSharedObject.Entity> chosenEntities = new ArrayList<>();
         for (JsonSharedObject sharedObject : sharedObjects) {
@@ -343,12 +347,16 @@ public class SearchBean extends ApplicationBean implements Serializable {
                 }
             }
         }
-        for (JsonSharedObject.Entity entity : chosenEntities) entityRank.put(entity.getQuery(), entity.getWeight());
+        for (JsonSharedObject.Entity entity : chosenEntities) {
+            entityRank.put(entity.getQuery(), entity.getWeight());
+        }
 
         //entries list will be used to store and sort the entities based on their weights
         List<Map.Entry<String, Double>> entries = new ArrayList<>(entityRank.entrySet());
         //No entries are found then we don't need to display the results
-        if (entries.isEmpty()) return;
+        if (entries.isEmpty()) {
+            return;
+        }
         entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
         //Get the first 3 entities of the results, or the whole results if entries has less than 3 elements
@@ -445,7 +453,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
         return sb.toString();
     }
 
-    public List<String> getRecommendationString() { return recommendationString; }
+    public List<String> getRecommendationString() {
+        return recommendationString;
+    }
 
     public Search getSearch() {
         return search;

@@ -102,7 +102,9 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
         //
         List<Group> groups = dao().getGroupDao().findByUserId(user.getId());
         int groupId = 0;
-        if (!groups.isEmpty()) groupId = groups.get(0).getId();
+        if (!groups.isEmpty()) {
+            groupId = groups.get(0).getId();
+        }
         Pkg.instance.createPkg(groupId);
 
     }
