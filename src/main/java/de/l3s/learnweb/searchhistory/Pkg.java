@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -55,12 +54,12 @@ public class Pkg {
     private transient HashMap<Integer, Double> results;
     private static final Pattern PATTERN = Pattern.compile("http://dbpedia.org/resource/");
 
-    public static Pkg instance = new Pkg(new ArrayList<>(), new ArrayList<>());
+    public static final Pkg instance = new Pkg(new ArrayList<>(), new ArrayList<>());
     private List<RdfModel> rdfGraphs;
     /**
      * The Node class. Has all values of an entity
      * */
-    public class Node {
+    public static class Node {
         private transient int id;
         private String uri;
         private String name;
@@ -181,7 +180,7 @@ public class Pkg {
     /**
      * The link class. Represents the weighted link between two entities
      * */
-    public class Link {
+    public static class Link {
         private int source;
         private int target;
         private transient double weight;
@@ -217,7 +216,7 @@ public class Pkg {
     }
 
     private void setLink(int source, int target, double weight) {
-        links.add(new Pkg.Link(source, target, weight));
+        links.add(new Link(source, target, weight));
     }
 
     /**
@@ -464,22 +463,18 @@ public class Pkg {
      * Calculate the sum_weight of each node with the formula of NEA
      */
     public void calculateSumWeight() {
-        System.out.println("Calculating sumWeight, estimated time:");
-        long startTime = System.nanoTime();
-        results = new HashMap<>();
-        //Calculate top entities from the formula:
-        //Confidence(Node i) * sum(Confidence(Node j)) * Fsum(t)
-        IntStream.range(1,nodes.size()-1).forEach(i -> {
-            double sumWeight = links.stream()
-                .filter(link -> link.source == i || link.target == i)
-                .mapToDouble(link -> link.weight + (link.source == i ? nodes.get(link.target).getConfidence() : nodes.get(link.source).getConfidence()))
-                .sum();
-
-            results.put(i, sumWeight * nodes.get(i).getConfidence());
-        });
-
-        long endTime = System.nanoTime();
-        System.out.println(endTime - startTime);
+        for (int i = 1; i < nodes.size() - 1; i++) {
+            double sumWeight = 0;
+            double sumConfidence = 0;
+            for (Link link : links) {
+                if (link.source == i || link.target == i) {
+                    sumWeight += link.weight;
+                    sumConfidence += link.source == i ? (link.target == 0 ? 0 : nodes.get(link.target).getConfidence())
+                        : (link.source == 0 ? 0 : nodes.get(link.source).getConfidence());
+                }
+            }
+            results.put(i, nodes.get(i).getConfidence() * sumConfidence * sumWeight);
+        }
     }
 
     /** Create a single graph of the current user, which contains node from 3 different sources (user, group and session)
