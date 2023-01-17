@@ -29,7 +29,7 @@ public class RdfModel {
 
     private void readOntologyModel() {
         ontologyModel = ModelFactory.createDefaultModel();
-        ontologyModel.read("/ontology/pkgOnto.ttl","TTL");
+        ontologyModel.read("/ontology/pkgOnto.ttl", "TTL");
     }
 
     public RdfModel(final User user) {
@@ -52,7 +52,9 @@ public class RdfModel {
 
         switch (type) {
             case "literal" -> {
-                if (obj == null) obj = "";
+                if (obj == null) {
+                    obj = "";
+                }
                 subject.addProperty(model.createProperty(pre), obj);
             }
             case "resource" -> {
@@ -74,7 +76,9 @@ public class RdfModel {
     }
 
     public void addEntity(String name, String uri, String surfaceForm, double weight, double score, LocalDateTime time) {
-        if (Objects.equals(uri, "default")) return;
+        if (Objects.equals(uri, "default")) {
+            return;
+        }
         addStatement("RecognizedEntities/" + name, "schema:identifier", uri, "literal");
         addStatement("RecognizedEntities/" + name, "surfaceForm", surfaceForm, "literal");
         addStatement("RecognizedEntities/" + name, "confidenceScore", String.valueOf(score), "literal");

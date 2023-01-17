@@ -40,6 +40,7 @@ public class JsonSharedObject {
         private double weight;
         private transient String type;
         private transient int id;
+
         public Entity(final String uri, final String query, final double weight, final String type, final int id) {
             this.uri = uri;
             this.query = query;
@@ -120,6 +121,7 @@ public class JsonSharedObject {
     private User user;
     private String application;
     private int id;
+
     public JsonSharedObject(final String content, boolean isJson) {
         if (isJson) {
             Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new SearchHistoryBean.LocalDateTimeAdapter().nullSafe())
@@ -130,8 +132,7 @@ public class JsonSharedObject {
             this.links = object.getLinks();
             this.user = object.user;
             this.application = object.getApplication();
-        }
-        else {
+        } else {
             this.entities = new ArrayList<>();
             this.links = new ArrayList<>();
             this.application = content;

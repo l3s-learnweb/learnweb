@@ -270,8 +270,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     class InputStreamRdfMapper implements RowMapper<InputStreamRdf> {
         @Override
         public InputStreamRdf map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            InputStreamRdf obj = new InputStreamRdf(rs.getInt("id"), rs.getInt("user_id"), rs.getString("content"), rs.getString("type")
-                , rs.getDate("date_created"));
+            InputStreamRdf obj = new InputStreamRdf(rs.getInt("id"), rs.getInt("user_id"), rs.getString("content"), rs.getString("type"),
+                rs.getDate("date_created"));
             return obj;
         }
     }

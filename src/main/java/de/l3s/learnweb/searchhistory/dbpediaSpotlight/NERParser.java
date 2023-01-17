@@ -17,14 +17,14 @@ import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.ResourceItem;
 import de.l3s.learnweb.searchhistory.dbpediaSpotlight.rest.SpotlightBean;
 
 /**
- * Specific class for calling Named Entity Recognition (NER)
+ *  Specific class for calling Named Entity Recognition (NER).
  * @author Trung Tran
  * */
 public final class NERParser {
     private static AnnotationUnit annotationUnit;
 
     /**
-     * Getting resources of dbpedia-spotlight result
+     * Getting resources of dbpedia-spotlight result.
      * @param annotationUnit    the dbpedia-spotlight process
      * @param id    the source's id
      * @param type  the type of the annotation (user, group, web, snippet_clicked, snippet_notClicked, query)
@@ -46,11 +46,12 @@ public final class NERParser {
                 .limit(5)
                 .forEach(r -> {
                     Optional<ResourceItem> resource =  annotationUnit.getResources().stream().filter(s -> s.getUri().equals(r.getKey())).findFirst();
-                    if (resource.isPresent()) finalResources.add(resource.get());
+                    if (resource.isPresent()) {
+                        finalResources.add(resource.get());
+                    }
                 });
             resources = finalResources;
-        }
-        else {
+        } else {
             resources = annotationUnit.getResources();
         }
         for (ResourceItem resource : resources) {
@@ -61,7 +62,7 @@ public final class NERParser {
     }
 
     /**
-     * Main function of the class
+     * Main function of the class.
      * @param sessionId     the session id of the current annotation
      * @param id    the id of the source (user, group)
      * @param username  the user's username
@@ -69,7 +70,9 @@ public final class NERParser {
      * @param content   the content to be recognized
      * */
     public static void processQuery(String sessionId, int id, String username, String type, String content) throws Exception {
-        if (content == null) return;
+        if (content == null) {
+            return;
+        }
         List<AnnotationCount> annotationCounts = new ArrayList<>();
         SpotlightBean spotlight = new SpotlightBean();
         //Parse the content to dbpedia-spotlight
@@ -90,7 +93,7 @@ public final class NERParser {
         //Store this annotationCount into DB
         for (AnnotationCount annotationCount : annotationCounts) {
             //Round the confidence
-            annotationCount.setConfidence(round(annotationCount.getConfidence(),2));
+            annotationCount.setConfidence(round(annotationCount.getConfidence(), 2));
 
             Optional<AnnotationCount> foundAnnotation = dao().getSearchHistoryDao().findByUriAndType(annotationCount.getUri(), annotationCount.getType());
             //If already an annotationCount is found in DB, update its columns
@@ -114,16 +117,18 @@ public final class NERParser {
                 //Update the repetition
                 dao().getSearchHistoryDao().updateQueryAnnotation(session, users, input,
                     annotationCount.getUri(), annotationCount.getType());
-                if (!"user".equals(type) && !"profile".equals(type) && !dao().getSearchHistoryDao().findSearchIdByResult(foundAnnotation.get().getUriId()).contains(id))
+                if (!"user".equals(type) && !"profile".equals(type) && !dao().getSearchHistoryDao().findSearchIdByResult(foundAnnotation.get().getUriId()).contains(id)) {
                     dao().getSearchHistoryDao().insertQueryResult(id, foundAnnotation.get().getUriId());
-            }
-            //Insert directly new annotationCount into DB
-            else {
+                }
+            } else {
+                //Insert directly new annotationCount into DB
                 annotationCount.setInputStreams(String.valueOf(inputId));
                 int uriId = dao().getSearchHistoryDao().insertQueryToAnnotation(annotationCount.getType(), annotationCount.getUri(), String.valueOf(inputId),
                     annotationCount.getCreatedAt(), annotationCount.getSurfaceForm(),
                     annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence());
-                if (!"user".equals(type) && !"profile".equals(type)) dao().getSearchHistoryDao().insertQueryResult(id, uriId);
+                if (!"user".equals(type) && !"profile".equals(type)) {
+                    dao().getSearchHistoryDao().insertQueryResult(id, uriId);
+                }
                 Pkg.instance.updatePkg(annotationCount, dao().getUserDao().findByUsername(username).get());
             }
         }

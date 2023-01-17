@@ -48,8 +48,8 @@ public class AnnotationCount implements Serializable {
     }
 
 
-    public AnnotationCount(final String id, final double confidence, final String surfaceForm, final String uri, final String type
-        , final String users, final String sessionId) {
+    public AnnotationCount(final String id, final double confidence, final String surfaceForm, final String uri, final String type,
+        final String users, final String sessionId) {
         this.confidence = confidence;
         this.surfaceForm = surfaceForm;
         this.uri = uri;

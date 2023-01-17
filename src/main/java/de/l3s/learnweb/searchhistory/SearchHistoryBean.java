@@ -63,11 +63,12 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     @Inject
     private SearchHistoryDao searchHistoryDao;
 
-    private static String PATTERN_DATE = "yyyy-MM-dd";
-    private static String PATTERN_TIME = "HH:mm:ss";
-    private static String PATTERN_DATETIME = String.format("%s %s", PATTERN_DATE, PATTERN_TIME);
+    private static final String patternDate = "yyyy-MM-dd";
+    private static final String patternTime = "HH:mm:ss";
+    private static final String patternDateTime = String.format("%s %s", patternDate, patternTime);
     private transient List<JsonSharedObject> sharedObjects = new ArrayList<>();
     private transient Gson gson;
+
     /**
      * Load the variables that needs values before the view is rendered.
      */
@@ -219,12 +220,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public static class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern(PATTERN_DATETIME);
+        DateTimeFormatter format = DateTimeFormatter.ofPattern(patternDateTime);
 
         @Override
         public void write(JsonWriter out, LocalDateTime value) throws IOException {
-            if(value != null)
+            if (value != null) {
                 out.value(value.format(format));
+            }
         }
 
         @Override
@@ -234,7 +236,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     /**
-    * Calculates and returns a list of top entries for each user belonging to the group
+    * Calculates and returns a list of top entries for each user belonging to the group.
     * Also exports a rdf turtle file for every user in the group
     * @param selectedGroupId    the id of this user's group
     * */
@@ -246,11 +248,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     /**
-    * Create the CollabGraph file, export it to visualisation
+    * Create the CollabGraph file, export it to visualisation.
     * @return   the Json string of the collabGraph
     * */
     public String getQueriesJson() throws Exception {
-        if (sessions == null || sessions.isEmpty() || selectedGroupId <= 0) return null;
+        if (sessions == null || sessions.isEmpty() || selectedGroupId <= 0) {
+            return null;
+        }
         //Create new localPath - json sharedObject for this user
         String localPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
             + "_Summary_" + userDao.findById(selectedUserId).get().getUsername() + "_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
@@ -262,15 +266,16 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>()).createCollabGraph(sharedObjects);
         //Export file
         if (file.createNewFile()) {
-                Writer writer = new FileWriter(localPath, StandardCharsets.UTF_8);
-                if (sharedObjects.stream().anyMatch(s -> s.getUser().getId() == selectedUserId))
-                    gson.toJson(sharedObjects.stream().filter(s -> s.getUser().getId() == selectedUserId).findFirst().get() , writer);
-                writer.close();
+            Writer writer = new FileWriter(localPath, StandardCharsets.UTF_8);
+            if (sharedObjects.stream().anyMatch(s -> s.getUser().getId() == selectedUserId)) {
+                gson.toJson(sharedObjects.stream().filter(s -> s.getUser().getId() == selectedUserId).findFirst().get(), writer);
+            }
+            writer.close();
         }
         file = new File(collabPath);
         if (file.createNewFile()) {
             Writer writer = new FileWriter(collabPath, StandardCharsets.UTF_8);
-            gson.toJson(calculatedQuery , writer);
+            gson.toJson(calculatedQuery, writer);
             writer.close();
         }
         return gson.toJson(calculatedQuery);
@@ -279,7 +284,9 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     public String getSingleQueryJson() {
         JsonSharedObject obj = Pkg.instance.createSingleGraph(selectedUserId);
         //Optional<JsonSharedObject> obj = sharedObjects.stream().filter(s -> s.getUser().getId() == selectedUserId).findFirst();
-        if (obj == null) return "";
+        if (obj == null) {
+            return "";
+        }
         CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>())
             .createSingleGraph(obj);
         return gson.toJson(calculatedQuery);
