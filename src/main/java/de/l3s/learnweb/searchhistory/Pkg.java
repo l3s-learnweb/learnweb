@@ -463,6 +463,7 @@ public class Pkg {
      * Calculate the sum_weight of each node with the formula of NEA
      */
     public void calculateSumWeight() {
+        results = new HashMap<>();
         for (int i = 1; i < nodes.size() - 1; i++) {
             double sumWeight = 0;
             double sumConfidence = 0;

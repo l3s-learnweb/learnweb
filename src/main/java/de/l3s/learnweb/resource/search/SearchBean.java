@@ -311,7 +311,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     }
 
     public boolean hasRecommendation() {
-        return !recommendationString.isEmpty();
+        return (recommendationString != null);
     }
 
     /**
@@ -324,7 +324,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
         long startTime = System.nanoTime();
         //Initialization
         recommendationString = new ArrayList<>();
-
         int groupId = dao().getGroupDao().findByUserId(getUser().getId()).get(0).getId();
         List<JsonSharedObject> sharedObjects = Pkg.instance.createSharedObject(
             groupId, 5, false, "recommendation");

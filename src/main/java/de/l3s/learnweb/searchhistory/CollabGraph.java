@@ -123,13 +123,13 @@ public class CollabGraph implements Serializable {
     }
 
     private int calculateFrequencyRatio(double weight) {
-        if (weight < 150) {
+        if (weight < 500) {
             return 1;
-        } else if (weight >= 150 && weight < 400) {
+        } else if (weight >= 500 && weight < 1000) {
             return 2;
-        } else if (weight >= 400 && weight < 700) {
+        } else if (weight >= 1000 && weight < 2000) {
             return 3;
-        } else if (weight >= 700) {
+        } else if (weight >= 2000) {
             return 4;
         }
         throw new IllegalStateException("Unexpected value: " + true);

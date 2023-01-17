@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.searchhistory.dbpediaSpotlight.NERParser;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
@@ -118,7 +119,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         return group.canDeleteGroup(getUser());
     }
 
-    public void onCreateGroup() {
+    public void onCreateGroup() throws Exception {
         User user = getUser();
         newGroup.setLeader(user);
 
@@ -129,7 +130,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         user.joinGroup(newGroup);
         // refresh group list
         myGroups = user.getGroups();
-
+        NERParser.processQuery(getSessionId(), newGroup.getId(), user.getUsername(), "group", newGroup.getTitle() + " " + newGroup.getDescription());
         // log and show notification
         log(Action.group_creating, newGroup.getId(), newGroup.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
