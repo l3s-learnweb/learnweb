@@ -1,5 +1,6 @@
 const url = '../resources/dataExample.json';
-
+let links;
+let nodes;
 const onLoad = (graph) => {
   // eslint-disable-next-line no-undef
   d3.select('svg').selectAll('*').remove();
@@ -126,7 +127,7 @@ const onLoad = (graph) => {
 };
 
 // eslint-disable-next-line no-shadow
-function SetUrl(url) {
+function setUrl(url) {
   if (!url) return;
   this.url = url;
   const root = JSON.parse(url);

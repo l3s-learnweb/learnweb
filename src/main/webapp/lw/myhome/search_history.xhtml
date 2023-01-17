@@ -90,7 +90,7 @@
                 				else query = '#{searchHistoryBean.singleQueryJson}';
 								document.getElementById('graph').style.display = query ? 'block' : 'none';
 								document.getElementById('snippetsList').style.display = 'none';
-								SetUrl(query);
+								setUrl(query);
 							</h:outputScript>
 							<ui:repeat var="ss" value="#{searchHistoryBean.sessions}">
 								<li class="session-single">
