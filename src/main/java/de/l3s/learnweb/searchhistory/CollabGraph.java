@@ -1,5 +1,8 @@
 package de.l3s.learnweb.searchhistory;
 
+import static com.google.common.math.Quantiles.median;
+import static com.google.common.math.Quantiles.percentiles;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,12 +32,14 @@ public class CollabGraph implements Serializable {
         private transient List<String> users;
         private String user;
         transient Node parent;
+        private final transient double weight;
 
-        public Node(String name, String uri, String users) {
+        public Node(String name, String uri, String users, double weight) {
             this.name = name;
             this.uri = uri;
             this.users = Arrays.stream(users.split(",")).toList();
             this.frequency = 1;
+            this.weight = weight;
         }
 
         public String getName() {
@@ -84,6 +89,10 @@ public class CollabGraph implements Serializable {
         public void setParent(final Node parent) {
             this.parent = parent;
         }
+
+        public double getWeight() {
+            return weight;
+        }
     }
 
     /**
@@ -130,14 +139,16 @@ public class CollabGraph implements Serializable {
     }
 
     private int calculateFrequencyRatio(double weight) {
-        //TODO: median & avg
-        if (weight < 500) {
+        double median = median().compute(weightValues);
+        double q1 = percentiles().index(75).compute(weightValues);
+        double q3 = percentiles().index(25).compute(weightValues);
+        if (weight < q1) {
             return 1;
-        } else if (weight >= 500 && weight < 1000) {
+        } else if (weight >= q1 && weight < median) {
             return 2;
-        } else if (weight >= 1000 && weight < 2000) {
+        } else if (weight >= median && weight < q3) {
             return 3;
-        } else if (weight >= 2000) {
+        } else if (weight >= q3) {
             return 4;
         }
         throw new IllegalStateException("Unexpected value: " + true);
@@ -164,6 +175,7 @@ public class CollabGraph implements Serializable {
                     }
                 }
                 nodes.get(i).setUser();
+                nodes.get(i).setFrequency(calculateFrequencyRatio(nodes.get(i).getWeight()));
             }
         }
         //Create the link after finaliziing the nodes
@@ -199,7 +211,7 @@ public class CollabGraph implements Serializable {
                     link.getTarget() + calculatedRecord.nodes.size()));
             }
             for (JsonSharedObject.Entity node : sharedObject.getEntities()) {
-                calculatedRecord.nodes.add(new Node(node.getQuery(), node.getUri(), sharedObject.getUser().getName()));
+                calculatedRecord.nodes.add(new Node(node.getQuery(), node.getUri(), sharedObject.getUser().getName(), node.getWeight()));
             }
             //Add links, modify it to be logical with current nodes of collabGraph
         }
@@ -219,9 +231,8 @@ public class CollabGraph implements Serializable {
         Record calculatedRecord = new Record(new ArrayList<>(), new ArrayList<>());
         weightValues = new ArrayList<>();
         for (JsonSharedObject.Entity node : sharedObject.getEntities()) {
-            calculatedRecord.nodes.add(new Node(node.getQuery(), node.getUri(), node.getType()));
+            calculatedRecord.nodes.add(new Node(node.getQuery(), node.getUri(), node.getType(), node.getWeight()));
             weightValues.add(node.getWeight());
-            //calculatedRecord.nodes.get(calculatedRecord.nodes.size() - 1).setFrequency(calculateFrequencyRatio(node.getWeight()));
         }
         Collections.sort(weightValues);
         for (JsonSharedObject.Link link : sharedObject.getLinks()) {
