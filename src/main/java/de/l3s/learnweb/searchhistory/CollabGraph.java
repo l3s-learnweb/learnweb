@@ -17,13 +17,15 @@ public class CollabGraph implements Serializable {
     /**
     * The Node class. Has the variables to be visualized
     * */
-    public class Node {
+    public static class Node implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 5501000537036189064L;
         private String uri;
         private String name;
         private int frequency;
         private transient List<String> users;
         private String user;
-        transient Node parent = null;
+        transient Node parent;
         public Node(String name, String uri, String users) {
             this.name = name;
             this.uri = uri;
@@ -81,7 +83,9 @@ public class CollabGraph implements Serializable {
     /**
     * The link class. Represents the link between entities
     * */
-    public class Link {
+    public static class Link implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 843826821498615667L;
         private int source;
         private int target;
         public int getSource() {
@@ -106,7 +110,7 @@ public class CollabGraph implements Serializable {
         }
     }
 
-    public class Record implements Serializable {
+    public static class Record implements Serializable {
         @Serial
         private static final long serialVersionUID = -474111258968809133L;
         public List<Node> nodes;

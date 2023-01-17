@@ -66,8 +66,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private static String PATTERN_DATE = "yyyy-MM-dd";
     private static String PATTERN_TIME = "HH:mm:ss";
     private static String PATTERN_DATETIME = String.format("%s %s", PATTERN_DATE, PATTERN_TIME);
-    private List<JsonSharedObject> sharedObjects = new ArrayList<>();
-    private Gson gson;
+    private transient List<JsonSharedObject> sharedObjects = new ArrayList<>();
+    private transient Gson gson;
     /**
      * Load the variables that needs values before the view is rendered.
      */
