@@ -175,7 +175,6 @@ public class CollabGraph implements Serializable {
                     }
                 }
                 nodes.get(i).setUser();
-                nodes.get(i).setFrequency(calculateFrequencyRatio(nodes.get(i).getWeight()));
             }
         }
         //Create the link after finaliziing the nodes
@@ -235,6 +234,9 @@ public class CollabGraph implements Serializable {
             weightValues.add(node.getWeight());
         }
         Collections.sort(weightValues);
+        for (Node node : calculatedRecord.nodes) {
+            node.setFrequency(calculateFrequencyRatio(node.getWeight()));
+        }
         for (JsonSharedObject.Link link : sharedObject.getLinks()) {
             calculatedRecord.links.add(new Link(link.getSource(), link.getTarget()));
         }
