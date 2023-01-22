@@ -178,15 +178,16 @@ public class CollabGraph implements Serializable {
             }
         }
         //Create the link after finaliziing the nodes
-        //-> The links in shared objects seem to be redundant
         List<Link> links = new ArrayList<>();
         for (int i = 0; i < nodes.size() - 1; i++) {
             for (int j = i + 1; j < nodes.size(); j++) {
                 List<String> commonUser = nodes.get(i).getUsers().stream().filter(
                     nodes.get(j).getUsers().stream().toList()::contains).toList();
-                if (!commonUser.isEmpty() && nodes.get(j).getParent() == null) {
-                    links.add(new Link(i, j));
-                    nodes.get(j).setParent(nodes.get(i));
+                if (!commonUser.isEmpty()) {
+                    if (nodes.get(j).getParent() == null || nodes.get(i).getWeight() == nodes.get(i).getParent().getWeight()) {
+                        links.add(new Link(i, j));
+                        nodes.get(j).setParent(nodes.get(i));
+                    }
                 }
             }
         }
