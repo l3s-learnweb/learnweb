@@ -1,12 +1,8 @@
 package de.l3s.learnweb.searchhistory;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -251,33 +247,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     * Create the CollabGraph file, export it to visualisation.
     * @return   the Json string of the collabGraph
     * */
-    public String getQueriesJson() throws Exception {
+    public String getQueriesJson() {
         if (sessions == null || sessions.isEmpty() || selectedGroupId <= 0) {
             return null;
         }
-        //Create new localPath - json sharedObject for this user
-        String localPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
-            + "_Summary_" + userDao.findById(selectedUserId).get().getUsername() + "_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
-        //Create new collabPath - json CollabGraph for this group
-        String collabPath = System.getProperty("user.dir") + "\\" + groupDao.findById(selectedGroupId).get().getTitle()
-            + "_Summary_" + LocalDateTime.now().format(DateTimeFormatter.ISO_DATE) + ".json";
-        File file = new File(localPath);
         //Get the CollabGraph
         CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>()).createCollabGraph(sharedObjects);
         //Export file
-        if (file.createNewFile()) {
-            Writer writer = new FileWriter(localPath, StandardCharsets.UTF_8);
-            if (sharedObjects.stream().anyMatch(s -> s.getUser().getId() == selectedUserId)) {
-                gson.toJson(sharedObjects.stream().filter(s -> s.getUser().getId() == selectedUserId).findFirst().get(), writer);
-            }
-            writer.close();
-        }
-        file = new File(collabPath);
-        if (file.createNewFile()) {
-            Writer writer = new FileWriter(collabPath, StandardCharsets.UTF_8);
-            gson.toJson(calculatedQuery, writer);
-            writer.close();
-        }
         return gson.toJson(calculatedQuery);
     }
 
