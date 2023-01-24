@@ -49,7 +49,12 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
      * Listener to trigger modal close, when clicked on dialog overlay.
      */
     $(document).on('click', '.ui-dialog-mask', (e) => {
-      getWidgetVarById(e.currentTarget.id.replace('_modal', '')).hide();
+      const widget = getWidgetVarById(e.currentTarget.id.replace('_modal', ''));
+      if (widget) {
+        widget.hide();
+      } else {
+        e.currentTarget.remove();
+      }
     });
 
     this.menuButton.off('click').on('click', (e) => {
@@ -81,6 +86,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
   autoComplete() {
     const searchField = this.header.find('#navbar_form\\:searchfield');
+    if (!searchField.length) return;
 
     if (typeof URLSearchParams === 'function') {
       const reqQuery = new URLSearchParams(window.location.search).get('query');
@@ -324,17 +330,17 @@ function openResourceView(items, target, isEdit = false) {
   window.addEventListener('popstate', handlePopstateResView, false);
 }
 
-const setTheme = (theme) => {
+function setTheme(theme) {
   if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.documentElement.setAttribute('data-bs-theme', 'dark');
   } else {
     document.documentElement.setAttribute('data-bs-theme', theme);
   }
-};
+}
 
-const setColorTheme = (theme) => {
+function setColorTheme(theme) {
   document.documentElement.setAttribute('data-color-theme', theme);
-};
+}
 
 (() => {
   const getStoredTheme = () => localStorage.getItem('theme');

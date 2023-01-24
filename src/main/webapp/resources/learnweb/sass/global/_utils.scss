@@ -24,6 +24,16 @@
   overflow: auto;
 }
 
+.min-h-100 {
+  min-height: 100%;
+}
+
+.no-margin {
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
 // fix position of sticky-md-top, considering height of our navbar
 @include media-breakpoint-up(md) {
   .sticky-md-top {

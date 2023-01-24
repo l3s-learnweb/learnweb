@@ -106,7 +106,7 @@
                         <p:menuitem value="#{msg['Glossary.glossary']}" icon="fas fa-book" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('glossary', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
-                        <p:menuitem value="#{msg.survey}" icon="fas fa-poll-h" ajax="true" rendered="#{userBean.admin}"
+                        <p:menuitem value="#{msg.survey}" icon="fas fa-poll-h" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('survey', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                     </p:menuButton>

@@ -362,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `lw_survey_resource_user` (
     `submitted` BOOLEAN NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`resource_id`, `user_id`)
-) COMMENT = 'Contains submission status for a particular user';
+) COMMENT = 'Contains survey state for a particular user';
 
 CREATE TABLE IF NOT EXISTS `lw_tag` (
     `tag_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

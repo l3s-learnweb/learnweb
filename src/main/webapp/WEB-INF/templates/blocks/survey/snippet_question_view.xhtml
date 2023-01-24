@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:p="http://primefaces.org/ui">
+
+<!--@elvariable id="question" type="de.l3s.learnweb.resource.survey.SurveyQuestion"-->
+<!--@elvariable id="response" type="de.l3s.learnweb.resource.survey.SurveyResponse"-->
+<!--@elvariable id="readOnly" type="java.lang.Boolean"-->
+
+<ui:fragment rendered="#{question.type eq 'FULLWIDTH_HEADER'}">
+    <h3 class="mb-0" jsf:rendered="#{not empty question.question}">
+        <h:outputText value="${question.question}"/>
+    </h3>
+    <div class="no-margin" jsf:rendered="#{not empty question.description}">
+        <h:outputText value="${question.description}" escape="false"/>
+    </div>
+</ui:fragment>
+
+<ui:fragment rendered="#{question.type ne 'FULLWIDTH_HEADER'}">
+    <p:outputLabel for="@next:@next" value="#{question.question}" styleClass="fw-bold"/>
+    <div class="no-margin text-muted" jsf:rendered="#{not empty question.description}">
+        <h:outputText value="${question.description}" escape="false"/>
+    </div>
+
+    <p:inputText styleClass="mt-2" rendered="#{question.type eq 'INPUT_TEXT'}" placeholder="#{msg['survey.your_answer']}" readonly="#{readOnly}"
+                 required="#{question.required}" value="#{response.answers[question.id]}">
+        <f:validateLength minimum="#{question.minLength}" maximum="#{question.maxLength}"/>
+        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    </p:inputText>
+
+    <p:inputTextarea styleClass="mt-2" rendered="#{question.type eq 'INPUT_TEXTAREA'}" placeholder="#{msg['survey.your_answer']}" readonly="#{readOnly}"
+                     required="#{question.required}" value="#{response.answers[question.id]}" rows="4" >
+        <f:validateLength minimum="#{question.minLength}" maximum="#{question.maxLength}" />
+        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    </p:inputTextarea>
+
+    <p:selectOneMenu styleClass="mt-2" rendered="#{question.type eq 'ONE_MENU' or question.type eq 'ONE_MENU_EDITABLE'}" readonly="#{readOnly}"
+                     required="#{question.required}" value="#{response.answers[question.id]}" editable="#{question.type eq 'ONE_MENU_EDITABLE'}">
+        <f:selectItems value="#{question.actualAnswers}"/>
+        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    </p:selectOneMenu>
+
+    <p:selectCheckboxMenu styleClass="mt-2" rendered="#{question.type eq 'MULTIPLE_MENU'}" readonly="#{readOnly}"
+                          required="#{question.required}" value="#{response.multipleAnswers[question.id]}"
+                          filter="#{question.options.size() gt 8}" filterMatchMode="startsWith" multiple="true">
+        <f:selectItems value="#{question.actualAnswers}"/>
+        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    </p:selectCheckboxMenu>
+
+    <p:selectOneRadio styleClass="mt-2" rendered="#{question.type eq 'ONE_RADIO'}" readonly="#{readOnly}"
+                      required="#{question.required}" value="#{response.answers[question.id]}" layout="responsive" columns="1"
+                      filter="#{question.options.size() gt 8}" filterMatchMode="startsWith" multiple="true">
+        <f:selectItems value="#{question.actualAnswers}"/>
+        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    </p:selectOneRadio>
+
+    <p:selectManyCheckbox styleClass="mt-2" rendered="#{question.type eq 'MANY_CHECKBOX'}" readonly="#{readOnly}"
+                          required="#{question.required}" value="#{response.multipleAnswers[question.id]}" layout="responsive" columns="1"
+                          filter="#{question.options.size() gt 8}" filterMatchMode="startsWith" multiple="true">
+        <f:selectItems value="#{question.actualAnswers}"/>
+        <p:ajax event="change" listener="#{surveyAnswerBean.onQuestionAnswer(question)}"/>
+    </p:selectManyCheckbox>
+</ui:fragment>
+
+</ui:composition>

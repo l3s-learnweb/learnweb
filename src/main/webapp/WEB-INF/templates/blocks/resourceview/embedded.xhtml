@@ -44,6 +44,12 @@
         </ui:decorate>
     </c:when>
 
+    <c:when test="${res.type eq 'survey'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded_survey.xhtml">
+            <ui:param name="res" value="#{res}"/>
+        </ui:decorate>
+    </c:when>
+
     <c:when test="${res.type eq 'website'}">
         <p:tabView styleClass="res-embedded-tabs" activeIndex="#{res.defaultTab.ordinal()}">
             <p:tab title="${msg['resource.tab.SCREENSHOT']}">
@@ -65,27 +71,6 @@
 
     <c:when test="${res.type eq 'text' and res.downloadUrl ne null}">
         <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-body p-1"></iframe>
-    </c:when>
-
-    <c:when test="${res.type eq 'survey'}">
-        <!-- quick and dirty solution to link to surveys need complete refactoring -->
-        <div style="position: absolute; top: 50%; transform: translateY(-50%); text-align: center; width: 100%;">
-            <ui:fragment rendered="#{userBean.admin}">
-                <p:linkButton outcome="/lw/survey/template" icon="fas fa-window-maximize" styleClass="ui-button-secondary" value="Edit Template"
-                              target="_top" rendered="#{res.type eq 'survey'}">
-                    <f:param name="resource_id" value="#{res.id}"/>
-                </p:linkButton>
-
-                <p:linkButton outcome="/lw/survey/results" icon="fas fa-list-alt" styleClass="ui-button-secondary" value="#{msg['survey.open_results']}"
-                              target="_top" rendered="#{res.type eq 'survey' and userBean.user.moderator}">
-                    <f:param name="resource_id" value="#{res.id}"/>
-                </p:linkButton>
-            </ui:fragment>
-
-            <p:linkButton outcome="/lw/survey/survey" icon="fas fa-list-alt" styleClass="ui-button-secondary" value="#{msg['survey.open']}" target="_top" >
-                <f:param name="resource_id" value="#{res.id}"/>
-            </p:linkButton>
-        </div>
     </c:when>
 
     <c:when test="${not empty res.thumbnailLargest}">

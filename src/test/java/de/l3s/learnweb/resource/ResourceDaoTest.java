@@ -86,12 +86,6 @@ class ResourceDaoTest {
     }
 
     @Test
-    void findSurveysByCourseId() {
-        List<Resource> resources = resourceDao.findSurveysByCourseId(1);
-        assertTrue(resources.isEmpty());
-    }
-
-    @Test
     void findByOwnerIdsAndType() {
         ResourceType type = ResourceType.image;
         List<Resource> resources = resourceDao.findByOwnerIdsAndType(Collections.singletonList(4), type);

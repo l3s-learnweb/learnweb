@@ -35,6 +35,7 @@ import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.i18n.MessagesBundle;
+import de.l3s.learnweb.resource.survey.SurveyResponse;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
@@ -57,6 +58,7 @@ public class UserBean implements Serializable {
     private transient List<Group> newGroups;
     private transient BaseMenuModel sidebarMenuModel;
     private transient Instant sidebarMenuModelUpdate;
+    private final HashMap<Integer, SurveyResponse> surveyResponses = new HashMap<>();
 
     @PostConstruct
     public void init() {
@@ -159,6 +161,10 @@ public class UserBean implements Serializable {
         HashMap<String, String> preferences = isLoggedIn() ? getUser().getPreferences() : anonymousPreferences;
 
         preferences.put(key, value);
+    }
+
+    public HashMap<Integer, SurveyResponse> getSurveyResponses() {
+        return surveyResponses;
     }
 
     public void commandSetPreference() {
@@ -381,7 +387,6 @@ public class UserBean implements Serializable {
                 .addElement(DefaultMenuItem.builder().value("Requests").icon("fas fa-chart-area").url("admin/requests.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("system_tools")).icon("fas fa-tools").url("admin/systemtools.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("announcements")).icon("fas fa-bullhorn").url("admin/announcements.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("survey.survey_overview")).icon("fas fa-poll-h").url("survey/surveys.jsf").build())
                 .addElement(DefaultMenuItem.builder().value("Status (XML)").icon("fas fa-wave-square").url("status.jsf").build())
                 .build();
             model.getElements().add(adminSubmenu);

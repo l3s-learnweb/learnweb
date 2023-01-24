@@ -24,7 +24,6 @@ import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
-import de.l3s.learnweb.resource.survey.Survey;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.util.HasId;
@@ -65,16 +64,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
                 glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
                 yield glossaryResource;
             }
-            case "survey" -> {
-                Survey survey = new Survey();
-                survey.setOrganisationId(getUser().getOrganisationId());
-                survey.setUserId(getUser().getId());
-                survey.setTitle("Title placeholder"); // these values are overridden in addResource method
-                survey.setDescription("Description placeholder");
-                SurveyResource surveyResource = new SurveyResource();
-                surveyResource.setSurvey(survey);
-                yield surveyResource;
-            }
+            case "survey" -> new SurveyResource();
             case "document" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.document, ResourceService.learnweb);
             case "spreadsheet" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.spreadsheet, ResourceService.learnweb);
             case "presentation" -> new Resource(Resource.StorageType.LEARNWEB, ResourceType.presentation, ResourceService.learnweb);
@@ -131,11 +121,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable {
     public void createResource() {
         if (resource.isOfficeResource() && resource.getService() != ResourceService.desktop) {
             this.createDocument();
-        }
-
-        if (resource.getType() == ResourceType.survey && resource instanceof SurveyResource surveyResource) {
-            surveyResource.getSurvey().setTitle(resource.getTitle());
-            surveyResource.getSurvey().setDescription(resource.getDescription());
         }
 
         addResource(resource);

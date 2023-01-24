@@ -62,4 +62,24 @@
         <from>/lw/group/resources.jsf?(.*)resource_id=([\d]+)(.*)</from>
         <to type="permanent-redirect">%{context-path}/lw/resource.jsf?resource_id=$2</to>
     </rule>
+    <rule>
+        <name>All survey pages were merged 16.01.2023</name>
+        <from>/lw/survey/template.jsf?(.*)resource_id=([\d]+)(.*)</from>
+        <to type="permanent-redirect">%{context-path}/lw/resource.jsf?resource_id=$2</to>
+    </rule>
+    <rule>
+        <name>All survey pages were merged 16.01.2023</name>
+        <from>/lw/survey/results.jsf?(.*)resource_id=([\d]+)(.*)</from>
+        <to type="permanent-redirect">%{context-path}/lw/resource.jsf?resource_id=$2</to>
+    </rule>
+    <rule>
+        <name>All survey pages were merged 16.01.2023</name>
+        <from>/lw/survey/survey.jsf?(.*)resource_id=([\d]+)(.*)</from>
+        <to type="permanent-redirect">%{context-path}/lw/resource.jsf?resource_id=$2</to>
+    </rule>
+    <rule>
+        <name>All survey pages were merged 16.01.2023</name>
+        <from>/lw/survey/answer.jsf?(.*)resource_id=([\d]+)(.*)</from>
+        <to type="permanent-redirect">%{context-path}/lw/resource.jsf?resource_id=$2</to>
+    </rule>
 </urlrewrite>

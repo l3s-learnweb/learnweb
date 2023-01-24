@@ -1144,6 +1144,18 @@ public class Resource extends AbstractResource implements Serializable {
         return metadata.get(key);
     }
 
+    public void setMetadataValueBoolean(String key, boolean value) {
+        if (value) {
+            setMetadataValue(key, "true");
+        } else {
+            metadata.remove(key);
+        }
+    }
+
+    public boolean getMetadataValueBoolean(String key) {
+        return "true".equals(metadata.getOrDefault(key, "false"));
+    }
+
     public HashMap<String, String> getMetadata() {
         return metadata;
     }

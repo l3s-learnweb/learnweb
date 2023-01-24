@@ -44,9 +44,8 @@
                 <div class="me-auto">
                     <h:outputText value="* #{msg.mandatory_field}"/>
                 </div>
-                <div class="d-flex flex-row-reverse">
-                    <p:commandButton action="#{confirmRequiredBean.onSubmitNewEmail}" value="#{msg.send_email}" ajax="false"/>
-                </div>
+
+                <p:commandButton action="#{confirmRequiredBean.onSubmitNewEmail}" value="#{msg.send_email}" ajax="false"/>
             </div>
         </h:form>
     </p:dialog>

@@ -604,9 +604,9 @@ $breadcrumbSeparatorColor: $menuitemTextColor !default;
 
 $submenuHeaderMargin: 0 !default;
 $submenuHeaderPadding: 0.75rem 1rem !default;
-$submenuHeaderBg: $white;
+$submenuHeaderBg: var(--secondary-bg);
 $submenuHeaderBorder: 0 none !default;
-$submenuHeaderTextColor: $shade700 !default;
+$submenuHeaderTextColor: var(--secondary-color);
 $submenuHeaderFontWeight: 700 !default;
 $submenuHeaderFontSize: 1rem !default;
 

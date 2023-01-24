@@ -4,32 +4,48 @@ import java.io.Serial;
 import java.io.Serializable;
 
 import de.l3s.util.Deletable;
+import de.l3s.util.HasId;
 
 /**
  * A predefined answer that a user can select for a SurveyQuestion.
  */
-public class SurveyQuestionOption implements Deletable, Serializable {
+public class SurveyQuestionOption implements HasId, Deletable, Serializable {
     @Serial
     private static final long serialVersionUID = -6330747546265218917L;
 
-    private String value;
-    private boolean deleted;
     private int id;
+    private int questionId;
+    private boolean deleted;
+    private String value;
 
-    public SurveyQuestionOption() {
-        this("");
+    public SurveyQuestionOption(int questionId) {
+        this.questionId = questionId;
     }
 
-    public SurveyQuestionOption(String value) {
-        this.value = value;
-    }
-
+    @Override
     public int getId() {
         return id;
     }
 
-    public void setId(final int id) {
-        this.id = id;
+    public void setId(final int optionId) {
+        this.id = optionId;
+    }
+
+    public int getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(final int questionId) {
+        this.questionId = questionId;
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(final boolean deleted) {
+        this.deleted = deleted;
     }
 
     public String getValue() {
@@ -43,14 +59,5 @@ public class SurveyQuestionOption implements Deletable, Serializable {
     @Override
     public String toString() {
         return value;
-    }
-
-    @Override
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(final boolean deleted) {
-        this.deleted = deleted;
     }
 }
