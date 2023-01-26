@@ -443,8 +443,7 @@ function pushHistoryStateOnOpenFolder(folderId) {
     window.history.replaceState({ folder_id: oldFolderId }, null);
   }
 
-  const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${sp.toString()}`;
-  window.history.pushState({ folder_id: folderId }, null, newUrl);
+  window.history.pushState({ folder_id: folderId }, null, `${window.location.pathname}?${sp}`);
 }
 
 window.addEventListener('popstate', (e) => {

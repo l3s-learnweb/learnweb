@@ -5,11 +5,14 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:o="http://omnifaces.org/ui">
 
+<ui:param name="hasAccessPermission" value="true"/>
 <ui:param name="pageTitle" value="#{resourceDetailBean.resource.title}"/>
 
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true" converter="idConverter"/>
+        <f:viewParam name="tab" value="#{resourceDetailBean.tab}" required="false"/>
+        <f:viewParam name="aside" value="#{resourceDetailBean.aside}" required="false" converter="BitConverter"/>
         <f:viewParam name="edit" value="#{resourceDetailBean.editResource}" required="false"/>
         <f:viewAction action="#{resourceDetailBean.onLoad}"/>
     </f:metadata>
@@ -19,8 +22,8 @@
     <h:outputScript name="learnweb/js/resource-view.js" target="body"/>
 
     <div class="res-view ui-fluid res-t-#{resourceDetailBean.resource.type}">
-        <div class="row g-0">
-            <div class="col res-view-embedded d-flex flex-column">
+        <div class="row h-100 g-0">
+            <div class="col h-100 res-view-embedded d-flex flex-column">
                 <div class="res-view-navbar d-flex flex-row align-items-center w-100 p-2">
                     <div class="res-buttons-left pe-3">
                         <p:linkButton icon="fas fa-arrow-left" styleClass="ui-button-flat ui-button-plain navbar-back" title="#{msg.close}" outcome="group/resources.jsf">
@@ -36,8 +39,11 @@
                         <p:linkButton href="#{resourceDetailBean.resource.downloadUrl}" title="#{resourceDetailBean.resource.title}" icon="fas fa-download" target="_blank"
                                       styleClass="ui-button-flat ui-button-plain" rendered="#{resourceDetailBean.resource.type eq 'text' or resourceDetailBean.resource.type eq 'pdf' or resourceDetailBean.resource.type eq 'file'}"/>
 
-                        <p:button icon="fas fa-toggle-on" styleClass="ui-button-flat ui-button-plain" title="#{msg.toggle_details}"
-                                  onclick="$('.res-view-details').toggleClass('collapse');$('.ui-icon', this).toggleClass('fa-toggle-off fa-toggle-on');return false;"/>
+                        <p:button icon="fas #{resourceDetailBean.aside ? 'fa-toggle-on' : 'fa-toggle-off'}" styleClass="ui-button-flat ui-button-plain" title="#{msg.toggle_details}"
+                                  onclick="$('.res-view-details').toggleClass('collapse');
+                                           $('.ui-icon', this).toggleClass('fa-toggle-off fa-toggle-on');
+                                           updateSearchQuery('aside', $('.ui-icon', this).hasClass('fa-toggle-on') ? 1 : 0);
+                                           return false;"/>
                     </div>
                 </div>
 
@@ -47,7 +53,7 @@
                     </ui:decorate>
                 </div>
             </div>
-            <div class="col-12 col-lg-4 col-xl-3 res-view-details">
+            <div class="col-12 col-lg-4 col-xl-3 res-view-details #{not resourceDetailBean.aside ? 'collapse' : null}">
                 <div class="res-view-panel">
                     <o:form id="resourceViewForm" prependId="false" styleClass="resource-details">
                         <p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">

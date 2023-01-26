@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
+import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
@@ -49,7 +49,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable {
         } else if (getUser().isModerator()) {
             courses = new ArrayList<>(getUser().getOrganisation().getCourses());
         } else {
-            throw new UnauthorizedHttpException();
+            throw new ForbiddenHttpException();
         }
 
         Collections.sort(courses);

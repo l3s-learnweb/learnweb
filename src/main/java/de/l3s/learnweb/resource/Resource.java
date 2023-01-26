@@ -422,6 +422,10 @@ public class Resource extends AbstractResource implements Serializable {
         this.policyView = policyView;
     }
 
+    public PolicyView[] getPolicyViews() {
+        return PolicyView.values();
+    }
+
     public ResourceType getType() {
         return type;
     }

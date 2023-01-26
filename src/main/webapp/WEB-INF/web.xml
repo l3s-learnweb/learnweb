@@ -118,7 +118,7 @@
     <context-param>
         <description>Helps to show en error if it is occurred during RENDER_RESPONSE phase</description>
         <param-name>jakarta.faces.FACELETS_BUFFER_SIZE</param-name>
-        <param-value>65535</param-value>
+        <param-value>500000</param-value>
     </context-param>
     <context-param>
         <description>Removes HTML comments from the output like <!--@elvariable id="pageTitle" type="java.lang.String"--></description>

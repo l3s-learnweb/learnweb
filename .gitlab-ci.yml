@@ -38,8 +38,10 @@ test:
 build:
   stage: build
   tags:
+    - javascript
     - java
   script:
+    - npm run build
     - mvn $MAVEN_CLI_OPTS $MAVEN_CLI_QUIET spotbugs:check
     - mvn $MAVEN_CLI_OPTS install
   rules:

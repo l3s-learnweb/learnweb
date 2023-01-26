@@ -249,6 +249,12 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
   },
 });
 
+function updateSearchQuery(param, value) {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.set(param, value);
+  window.history.pushState({ [param]: value }, null, `${window.location.pathname}?${urlParams}`);
+}
+
 /*
  * Returns the PrimefacesWidget from element ID
  * @param elementId

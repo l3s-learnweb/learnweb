@@ -18,7 +18,9 @@ import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.HttpException;
+import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
@@ -44,6 +46,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     // Url params
     private int resourceId = 0;
+    private int tab = 0;
+    private boolean aside = true;
     private boolean editResource = false;
 
     private Resource resource;
@@ -57,11 +61,16 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     private CommentDao commentDao;
 
     public void onLoad() {
-        BeanAssert.authorized(isLoggedIn());
-
         resource = resourceDao.findByIdOrElseThrow(resourceId);
         BeanAssert.notDeleted(resource);
-        BeanAssert.hasPermission(resource.canViewResource(getUser()));
+
+        if (!resource.canViewResource(getUser())) {
+            if (isLoggedIn()) {
+                throw new ForbiddenHttpException();
+            } else {
+                throw new UnauthorizedHttpException();
+            }
+        }
 
         log(Action.opening_resource, this.resource.getGroupId(), this.resource.getId());
 
@@ -76,6 +85,22 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public int getTab() {
+        return tab;
+    }
+
+    public void setTab(final int tab) {
+        this.tab = tab;
+    }
+
+    public boolean getAside() {
+        return aside;
+    }
+
+    public void setAside(final boolean aside) {
+        this.aside = aside;
     }
 
     public boolean isEditResource() {

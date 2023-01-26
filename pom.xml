@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.18.03</version>
+    <version>3.18.04</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -17,18 +17,16 @@
         <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
         <maven.compiler.release>17</maven.compiler.release>
-        <maven.dependency.myfaces.version>4.0.0-RC2</maven.dependency.myfaces.version>
+        <maven.dependency.myfaces.version>4.0.0-RC3</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.9.4</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.35.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.10.2</maven.dependency.flyway.version>
+        <maven.dependency.jdbi3.version>3.36.0</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>9.12.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.19.0</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>6.10.0</maven.dependency.sentry.version>
-        <maven.dependency.junit.version>5.9.1</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>4.11.0</maven.dependency.mockito.version>
+        <maven.dependency.sentry.version>6.12.1</maven.dependency.sentry.version>
+        <maven.dependency.junit.version>5.9.2</maven.dependency.junit.version>
+        <maven.dependency.mockito.version>5.0.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.npm.install.phase>prepare-package</project.npm.install.phase>
-        <project.npm.build.phase>prepare-package</project.npm.build.phase>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
     </properties>
 
@@ -97,7 +95,7 @@
         <dependency>
             <groupId>org.eclipse.angus</groupId>
             <artifactId>angus-mail</artifactId>
-            <version>1.0.0</version>
+            <version>2.0.1</version>
         </dependency>
 
         <!-- ################ JSF Libraries ################ -->
@@ -199,7 +197,7 @@
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.2</version>
         </dependency>
         <!-- Connection pool -->
         <dependency>
@@ -233,7 +231,7 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>9.1.0</version>
+            <version>9.1.1</version>
             <exclusions>
                 <!-- We use alternative binding to Log4j-->
                 <exclusion>
@@ -304,7 +302,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.10</version>
+            <version>2.10.1</version>
         </dependency>
         <!-- A dependency of several other packages, but as we anyway need to include it, feel free to use it -->
         <dependency>
@@ -422,7 +420,7 @@
             <!-- Runs linter on Java sources to check code style -->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.2.1</version>
                 <configuration>
                     <configLocation>.mvn/checkstyle-config.xml</configLocation>
                     <consoleOutput>false</consoleOutput>
@@ -434,7 +432,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.5.0</version>
+                        <version>10.6.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -442,7 +440,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.7.2.1</version>
+                <version>4.7.3.0</version>
                 <configuration>
                     <excludeFilterFile>.mvn/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -457,7 +455,7 @@
             <!-- Runs tests before build -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M7</version>
+                <version>3.0.0-M8</version>
             </plugin>
             <!-- Specifies WebARchive configuration -->
             <plugin>
@@ -481,42 +479,6 @@
                         </resource>
                     </webResources>
                 </configuration>
-            </plugin>
-            <!-- Builds scss styles as part of maven build process -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>npm install</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>${project.npm.install.phase}</phase>
-                        <configuration>
-                            <executable>npm</executable>
-                            <arguments>
-                                <argument>install</argument>
-                                <argument>--no-audit</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm run build</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>${project.npm.build.phase}</phase>
-                        <configuration>
-                            <executable>npm</executable>
-                            <arguments>
-                                <argument>run</argument>
-                                <argument>build</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <!-- Used to deploy application to Tomcat instance -->
             <plugin>
@@ -553,12 +515,12 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.13.0</version>
+                <version>2.14.2</version>
             </plugin>
             <!-- Provides commands to check dependency tree -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.5.0</version>
             </plugin>
             <!-- Provides commands to check for duplicate classes across dependencies -->
             <plugin>
@@ -615,7 +577,6 @@
             <id>prod</id>
             <properties>
                 <jakarta.faces.project_stage>Production</jakarta.faces.project_stage>
-                <project.npm.install.phase>none</project.npm.install.phase>
             </properties>
         </profile>
     </profiles>

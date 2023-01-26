@@ -19,11 +19,18 @@
             <h:outputText value="#{msg.location}:" styleClass="ui-outputlabel"/>
             <h:outputText value="#{addResourceBean.currentPath}" styleClass="fg-col"/>
 
-            <ui:fragment rendered="#{addResourceBean.resource.officeResource}">
+            <ui:fragment rendered="#{addResourceBean.resource.officeResource or addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'survey'}">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
                 <div class="fg-col">
-                    <p:inputText value="#{addResourceBean.resource.title}" required="true" />
+                    <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"/>
                     <p:message for="@previous"/>
+                </div>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{addResourceBean.resource.officeResource or addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'survey'}">
+                <p:outputLabel for="@next" value="#{msg.description}:"/>
+                <div class="fg-col">
+                    <p:inputTextarea value="#{addResourceBean.resource.description}"/>
                 </div>
             </ui:fragment>
 
@@ -50,11 +57,6 @@
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary'}">
-                <p:outputLabel for="@next" value="#{msg.title}:"/>
-                <div class="fg-col">
-                    <p:inputText value="#{addResourceBean.resource.title}" required="true" />
-                    <p:message for="@previous"/>
-                </div>
                 <p:outputLabel for="@next" value="Allowed languages:"/>
                 <p:selectCheckboxMenu value="#{addResourceBean.resource.allowedLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
                                       label="#{msg.language}" multiple="true" converter="localeConverter">
@@ -63,17 +65,6 @@
             </ui:fragment>
 
             <ui:fragment rendered="#{addResourceBean.resource.type eq 'survey'}">
-                <p:outputLabel for="@next" value="#{msg.title}:"/>
-                <div class="fg-col">
-                    <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"/>
-                    <p:message for="@previous"/>
-                </div>
-
-                <p:outputLabel for="@next" value="#{msg.description}:"/>
-                <div class="fg-col">
-                    <p:inputText value="#{addResourceBean.resource.description}"/>
-                </div>
-
                 <p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
                 <div class="fg-col">
                     <p:datePicker id="editDialogOpenDate" value="#{addResourceBean.resource.start}"

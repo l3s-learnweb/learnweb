@@ -135,7 +135,10 @@ public abstract class ApplicationBean {
      * Look at the code of LogEntry.Action for explanation.
      */
     protected void log(Action action, Integer groupId, Integer targetId, String params, User user) {
-        dao().getLogDao().insert(user, action, groupId, targetId, params, getSessionId());
+        if (null != user) {
+            // TODO: anonymous logging
+            dao().getLogDao().insert(user, action, groupId, targetId, params, getSessionId());
+        }
     }
 
     // Messaging -------------------------------------------------------------------------------------------------------
@@ -154,7 +157,8 @@ public abstract class ApplicationBean {
     }
 
     /**
-     * adds a global message to the jsf context. this will be displayed by the p:messages component
+     * Adds a global message to the JSF context. Which will be displayed by the p:messages component.
+     * Use if for errors and persistent messages, like expires resources, mistakes, etc.
      */
     protected void addMessage(FacesMessage.Severity severity, String msgKey, Object... args) {
         Messages.add(null, getFacesMessage(severity, msgKey, args));
@@ -165,7 +169,8 @@ public abstract class ApplicationBean {
     }
 
     /**
-     * adds a global message to the jsf context. this will be displayed for a minute by the p:growl component.
+     * Adds a global message to the JSF context. Which will be displayed aside for 5 seconds by the p:growl component.
+     * Use it to notify users about saved data, loaded results, etc. Use it for things, that isn't necessary to read.
      */
     protected void addGrowl(FacesMessage.Severity severity, String msgKey, Object... args) {
         Messages.add("growl", getFacesMessage(severity, msgKey, args));

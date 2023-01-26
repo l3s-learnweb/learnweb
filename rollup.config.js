@@ -71,7 +71,7 @@ export default [
     watchJs: 'src/main/webapp/resources/learnweb/**',
     watchScss: 'src/main/webapp/resources/learnweb/sass/**',
     copyTargets: [
-      // { src: 'node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-*', dest: 'src/main/webapp/resources/bundle/webfonts' },
+      { src: 'node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-*', dest: 'src/main/webapp/resources/bundle/webfonts' },
       { src: 'node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-*', dest: 'src/main/webapp/resources/bundle/webfonts' },
       { src: 'node_modules/video.js/dist/video-js.min.css', dest: 'src/main/webapp/resources/bundle' },
       { src: 'node_modules/video.js/dist/alt/video.core.novtt.min.js', dest: 'src/main/webapp/resources/bundle', rename: 'video-js.min.js' },

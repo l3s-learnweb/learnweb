@@ -192,6 +192,7 @@ public class UserBean implements Serializable {
         setSidebarMenuModel(null);
         //log.debug("set locale " + localeCode);
         locale = getLocaleByLocaleCode(localeCode);
+        bundle = null;
 
         FacesContext fc = FacesContext.getCurrentInstance();
         if (fc == null || fc.getViewRoot() == null) {

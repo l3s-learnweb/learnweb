@@ -40,7 +40,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
         try {
             chain.doFilter(request, response);
         } catch (FileNotFoundException exception) {
-            // Ignoring thrown exception; this is a JSF quirk and it should be interpreted as 404.
+            // Ignoring thrown exception; this is a JSF quirk, and it should be interpreted as 404.
             response.sendError(HttpException.NOT_FOUND, request.getRequestURI());
         } catch (ServletException exception) {
             // get unwrapped exception
@@ -63,7 +63,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
                 throw exception;
             }
         } catch (Throwable throwable) {
-            // Theoretically should never happens, all errors should be of type ServletException
+            // Theoretically should never happen, all errors should be of type ServletException
             LearnwebExceptionHandler.logException(throwable, request);
             throw new ServletException(throwable);
         } finally {

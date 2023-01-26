@@ -15,10 +15,20 @@
         <ui:param name="res" value="#{res}"/>
     </ui:decorate>
 
-    <div class="fg-col" jsf:rendered="#{res.type eq 'website'}">
+    <ui:fragment rendered="#{res.type eq 'website'}">
         <p:outputLabel for="@next" value="#{msg['resource.defaultTab']}:"/>
-        <p:selectOneRadio value="#{res.defaultTab}" layout="grid" columns="1">
-            <f:selectItems value="#{res.defaultTabs}" var="defaultTab" itemLabel="#{msg['resource.tab.'+=defaultTab]}" itemValue="#{defaultTab}"/>
+        <div class="fg-col">
+            <p:selectOneRadio value="#{res.defaultTab}" layout="grid" columns="1">
+                <f:selectItems value="#{res.defaultTabs}" var="defaultTab" itemLabel="#{msg['resource.tab.'+=defaultTab]}" itemValue="#{defaultTab}"/>
+            </p:selectOneRadio>
+            <p:message for="@previous"/>
+        </div>
+    </ui:fragment>
+
+    <p:outputLabel for="@next" value="#{msg['resource.policy_view']}:"/>
+    <div class="fg-col">
+        <p:selectOneRadio value="#{res.policyView}" layout="grid" columns="1">
+            <f:selectItems value="#{res.policyViews}" var="policyView" itemLabel="#{msg['resource.policy_view.'+=policyView]}" itemValue="#{policyView}"/>
         </p:selectOneRadio>
         <p:message for="@previous"/>
     </div>

@@ -1,7 +1,5 @@
 body .res-view {
-  &,
-  .row,
-  .col {
+  & {
     height: 100%;
   }
 
@@ -13,6 +11,7 @@ body .res-view {
     .preview-wrapper {
       width: 100%;
       height: 100%;
+      padding: 0;
       overflow: auto;
 
       > iframe,
@@ -56,11 +55,6 @@ body .res-view {
       overflow: auto;
       flex-grow: 1;
     }
-
-    .ui-tabs-panel:not(.ui-helper-hidden) {
-      display: flex;
-      padding: 0 !important;
-    }
   }
 
   .res-view-details {
@@ -84,6 +78,10 @@ body .res-view {
 
       > form {
         position: initial !important;
+      }
+
+      .ui-inputfield {
+        background: var(--gray-500);
       }
     }
 
@@ -157,10 +155,6 @@ body .res-view {
         color: inherit;
       }
     }
-  }
-
-  .ui-inputfield {
-    background: var(--gray-500);
   }
 
   .ui-inplace {
