@@ -9,12 +9,11 @@
 				xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg['Submission.overview']}"/>
-<ui:param name="helpText" value=""/>
 
 <ui:define name="metadata">
 	<f:metadata>
-		<f:viewParam name="course_id" value="#{submissionBean.courseId}" converter="idConverter"/>
-		<f:viewParam name="user_id" value="#{submissionBean.userId}" converter="idConverter"/>
+		<f:viewParam name="course_id" value="#{submissionBean.courseId}"/>
+		<f:viewParam name="user_id" value="#{submissionBean.userId}"/>
 		<f:viewAction action="#{submissionBean.onLoad}"/>
 	</f:metadata>
 </ui:define>
