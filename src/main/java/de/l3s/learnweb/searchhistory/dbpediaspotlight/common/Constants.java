@@ -1,4 +1,4 @@
-package de.l3s.learnweb.searchhistory.dbpediaSpotlight.common;
+package de.l3s.learnweb.searchhistory.dbpediaspotlight.common;
 
 public interface Constants {
 
@@ -15,7 +15,7 @@ public interface Constants {
     String SCHEMA = "Schema:";
 
     /**
-     * This method is only here to make lint happy
+     * This method is only here to make lint happy.
      */
     default void doNothing() {
     }

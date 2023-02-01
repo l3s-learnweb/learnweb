@@ -119,12 +119,12 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT id, shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND user_id = ? AND application = ?")
     List<JsonSharedObject> findObjectByIdAndType(int groupId, int userId, String application);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_inputStream (user_id, type, content, date_created) VALUES(?, ?, ?, CURRENT_TIMESTAMP())")
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_input_stream (user_id, type, content, date_created) VALUES(?, ?, ?, CURRENT_TIMESTAMP())")
     @GetGeneratedKeys("id")
     int insertInputStream(int userId, String type, String content);
 
     @RegisterRowMapper(InputStreamRdfMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_inputStream WHERE id = ?")
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_input_stream WHERE id = ?")
     List<InputStreamRdf> findInputContentById(int id);
 
     @SqlUpdate("UPDATE learnweb_annotations.annotation_objects SET shared_object = ?, created_at = ? WHERE user_id = ? AND group_id = ? AND application = ?")

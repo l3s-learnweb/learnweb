@@ -23,11 +23,8 @@
 </ui:define>
 
 <ui:define name="center_layout">
-	<script src="https://d3js.org/d3.v6.min.js"/>
-	<script src="https://cdn.jsdelivr.net/npm/d3-color@3"/>
-	<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"/>
-	<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"/>
     <h:outputScript name="learnweb/js/annotation.js" target="body"/>
+	<h:outputScript name="bundle/d3.js" target="body"/>
 	<h:form class="d-none">
 		<p:remoteCommand name="commandOnResourceSelect" actionListener="${searchBean.commandOnResourceSelect}" immediate="true"
 						 update=":copy_resource_dialog" onstart="$.fancybox.close();" oncomplete="PF('copyResourceDialog').show();"/>
@@ -73,7 +70,7 @@
 									<p:selectOneMenu id="select-group-menu" styleClass="ms-2" value="#{searchHistoryBean.selectedGroupId}">
 										<f:selectItem itemLabel="---------------" itemValue="-1"/>
 										<f:selectItems var="group" value="#{searchHistoryBean.currentUser.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
-										<p:ajax listener="#{searchHistoryBean.onChangeGroup}" update=":sessionsList @form "/>
+										<p:ajax listener="#{searchHistoryBean.onChangeGroup}" update=":sessionsList @form"/>
 									</p:selectOneMenu>
 								</h:form>
 							</div>
@@ -104,7 +101,6 @@
 												</p:commandLink>
 											</ui:repeat>
 										</div>
-
 										<div class="session-time">
 											<h:outputFormat id="of1" value="#{msg.format_date_and_time_between}" escape="false">
 												<f:param value="#{lw:date(ss.startTimestamp)}"/>
@@ -119,7 +115,7 @@
 					</h:form>
 				</h:panelGroup>
 			</div>
-			<h:panelGroup styleClass="col-12 col-xl-8 mt-5 mt-xl-0 my-3" layout="block" id="graph">
+			<h:panelGroup id="graph" styleClass="col-12 col-xl-8 mt-5 mt-xl-0 my-3" layout="block" >
 				<svg width="100%" height="100%" onload="setUrl('#{searchHistoryBean.singleQueryJson}')"/>
 			</h:panelGroup>
 			<h:panelGroup id="snippetsList" styleClass="col-12 col-xl-8 mt-5 mt-xl-0 my-3" layout="block">

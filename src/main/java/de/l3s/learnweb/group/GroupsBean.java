@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.searchhistory.dbpediaSpotlight.NERParser;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.NERParser;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;

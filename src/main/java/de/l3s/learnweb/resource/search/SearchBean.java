@@ -5,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,10 +22,6 @@ import jakarta.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.omnifaces.cdi.ViewScoped;
 import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
@@ -52,7 +47,7 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.searchhistory.JsonSharedObject;
 import de.l3s.learnweb.searchhistory.Pkg;
-import de.l3s.learnweb.searchhistory.dbpediaSpotlight.NERParser;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.NERParser;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -89,7 +84,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private Boolean isUserActive;
     private List<Boolean> snippetClicked;
 
-    private List<String> recommendationString;
+    private List<String> recommendations;
 
     @PostConstruct
     public void init() {
@@ -259,19 +254,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
         setSelectedResource(resource);
     }
 
-    private static String filterWebsite(Document webDoc) {
-        StringBuilder newWebText = new StringBuilder();
-        List<String> tagLists = Arrays.asList("title", "p", "h1", "h2", "span");
-        for (String tag : tagLists) {
-            Elements elements = webDoc.select(tag);
-            for (Element e : elements) {
-                String text = e.ownText();
-                newWebText.append(text).append(" ");
-            }
-        }
-        return newWebText.toString();
-    }
-
     /**
      * This method logs a resource click event.
      */
@@ -282,11 +264,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             isUserActive = true;
             if (!snippetClicked.get(search.getResources().indexOf(search.getResources().get(tempResourceId)))) {
                 Resource resource = search.getResources().get(tempResourceId).getResource();
-                String url = resource.getUrl();
-                Document doc = Jsoup.connect(url).timeout(10 * 1000).ignoreHttpErrors(true)
-                    .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
-                    .get();
-                NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", filterWebsite(doc));
+                NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", resource.getUrl());
             }
             snippetClicked.set(search.getResources().indexOf(search.getResources().get(tempResourceId)), true);
             search.logResourceClicked(tempResourceId, getUser());
@@ -306,14 +284,14 @@ public class SearchBean extends ApplicationBean implements Serializable {
             for (ResourceDecorator snippet : search.getResources()) {
                 String s = snippet.getTitle().split("\\|")[0].split("-")[0];
                 NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
-                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_notClicked",
+                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_not_clicked",
                     "<title>" + s + "</title> " + snippet.getDescription());
             }
         }
     }
 
     public boolean hasRecommendation() {
-        return (recommendationString != null);
+        return (recommendations != null);
     }
 
     /**
@@ -322,10 +300,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
      * their weight in Pkg.
     */
     private void createSearchRecommendation() {
-        System.out.println("Creating search recommendation, estimated time: ");
-        long startTime = System.nanoTime();
         //Initialization
-        recommendationString = new ArrayList<>();
+        recommendations = new ArrayList<>();
         int groupId = dao().getGroupDao().findByUserId(getUser().getId()).get(0).getId();
         List<JsonSharedObject> sharedObjects = Pkg.instance.createSharedObject(
             groupId, 5, false, "recommendation");
@@ -360,9 +336,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
         //Get the first 3 entities of the results, or the whole results if entries has less than 3 elements
-        recommendationString = entries.stream().map(entry -> entry.getKey()).collect(Collectors.toList()).subList(0, Math.min(3, entries.size()));
-        long endTime = System.nanoTime();
-        System.out.println(endTime - startTime);
+        recommendations = entries.stream().map(entry -> entry.getKey()).collect(Collectors.toList()).subList(0, Math.min(3, entries.size()));
     }
 
     /**
@@ -453,8 +427,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
         return sb.toString();
     }
 
-    public List<String> getRecommendationString() {
-        return recommendationString;
+    public List<String> getRecommendations() {
+        return recommendations;
     }
 
     public Search getSearch() {

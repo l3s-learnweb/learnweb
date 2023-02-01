@@ -30,6 +30,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.searchhistory.Graph.CollabGraph;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 
@@ -258,8 +259,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public String getSingleQueryJson() {
-        JsonSharedObject obj = Pkg.instance.createSingleGraph(selectedUserId);
-        //Optional<JsonSharedObject> obj = sharedObjects.stream().filter(s -> s.getUser().getId() == selectedUserId).findFirst();
+        List<Group> groups = groupDao.findByUserId(selectedUserId);
+        int groupId = 0;
+        //Assume one user is in only one group
+        if (!groups.isEmpty()) {
+            groupId = groups.get(0).getId();
+        }
+        JsonSharedObject obj = Pkg.instance.createSingleGraph(selectedUserId, groupId);
         if (obj == null) {
             return "";
         }

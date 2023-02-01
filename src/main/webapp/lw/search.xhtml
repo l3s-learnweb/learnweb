@@ -230,9 +230,9 @@
                 </div>
             </h:form>
         </p:dialog>
-        <p:dialog header="Recommendation" widgetVar="recommendationDialog" minHeight="40" visible="#{searchBean.hasRecommendation()}" position="right,bottom">
+        <p:dialog header="#{msg.recommendation}" widgetVar="recommendationDialog" minHeight="40" visible="#{not empty searchBean.recommendations}" position="right,bottom">
             <h:outputText value="#{msg.search_for_this}"/>
-            <ui:repeat value="#{searchBean.recommendationString}" varStatus="loop" var="selectItem">
+            <ui:repeat value="#{searchBean.recommendations}" varStatus="loop" var="selectItem">
                 <div>
                     <h:outputLink value="search.jsf?query=#{selectItem}">
                         <h:outputText value="#{selectItem}"/>

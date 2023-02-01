@@ -1,7 +1,4 @@
-package de.l3s.learnweb.searchhistory;
-
-import static com.google.common.math.Quantiles.median;
-import static com.google.common.math.Quantiles.percentiles;
+package de.l3s.learnweb.searchhistory.Graph;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -9,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import com.github.jsonldjava.shaded.com.google.common.math.Quantiles;
+
+import de.l3s.learnweb.searchhistory.JsonSharedObject;
 
 /**
  * Create the visualisation graph of the top results for the current user, as well as the group it belongs to.
@@ -19,6 +20,9 @@ public class CollabGraph implements Serializable {
     private static final long serialVersionUID = 1100213292212314798L;
 
     private transient List<Double> weightValues;
+
+    private List<Node> nodes;
+    private List<Link> links;
 
     /**
     * The Node class. Has the variables to be visualized
@@ -126,22 +130,10 @@ public class CollabGraph implements Serializable {
         }
     }
 
-    public static class Record implements Serializable {
-        @Serial
-        private static final long serialVersionUID = -474111258968809133L;
-        public List<Node> nodes;
-        public List<Link> links;
-
-        public Record(final List<Node> nodes, final List<Link> links) {
-            this.nodes = nodes;
-            this.links = links;
-        }
-    }
-
     private int calculateFrequencyRatio(double weight) {
-        double median = median().compute(weightValues);
-        double q1 = percentiles().index(75).compute(weightValues);
-        double q3 = percentiles().index(25).compute(weightValues);
+        double median = Quantiles.median().compute(weightValues);
+        double q1 = Quantiles.percentiles().index(75).compute(weightValues);
+        double q3 = Quantiles.percentiles().index(25).compute(weightValues);
         if (weight < q1) {
             return 1;
         } else if (weight >= q1 && weight < median) {
@@ -158,7 +150,7 @@ public class CollabGraph implements Serializable {
      * @param nodes the nodes in the combined shared objects
      * @return the CollabGraph after merging nodes
      * */
-    private CollabGraph removeDuplicatingNodesAndLinks(List<Node> nodes) {
+    private CollabGraph getTrimmedGraph(List<Node> nodes) {
         //Remove duplicating nodes by merging nodes with the same uri
         for (int i = 0; i < nodes.size(); i++) {
             if (!nodes.get(i).getUri().isEmpty()) {
@@ -200,23 +192,23 @@ public class CollabGraph implements Serializable {
     * @return   the collabGraph object to be visualized by annotation.js
     * */
     public CollabGraph createCollabGraph(List<JsonSharedObject> sharedObjects) {
-        Record calculatedRecord = new Record(new ArrayList<>(), new ArrayList<>());
+        CollabGraph graph = new CollabGraph(new ArrayList<>(), new ArrayList<>());
         if (sharedObjects.isEmpty()) {
             return null;
         }
         for (JsonSharedObject sharedObject : sharedObjects) {
             //Add all new entities
             for (JsonSharedObject.Link link : sharedObject.getLinks()) {
-                calculatedRecord.links.add(new Link(link.getSource() + calculatedRecord.nodes.size(),
-                    link.getTarget() + calculatedRecord.nodes.size()));
+                graph.links.add(new Link(link.getSource() + graph.nodes.size(),
+                    link.getTarget() + graph.nodes.size()));
             }
             for (JsonSharedObject.Entity node : sharedObject.getEntities()) {
-                calculatedRecord.nodes.add(new Node(node.getQuery(), node.getUri(), sharedObject.getUser().getName(), node.getWeight()));
+                graph.nodes.add(new Node(node.getQuery(), node.getUri(), sharedObject.getUser().getName(), node.getWeight()));
             }
             //Add links, modify it to be logical with current nodes of collabGraph
         }
-        CollabGraph graph = removeDuplicatingNodesAndLinks(calculatedRecord.nodes);
-        for (Node node : graph.record.nodes) {
+        graph = getTrimmedGraph(graph.nodes);
+        for (Node node : graph.nodes) {
             node.setFrequency(node.getUsers().size());
         }
         return graph;
@@ -228,25 +220,24 @@ public class CollabGraph implements Serializable {
      * @return the collabGraph object to be visualized by annotation.js
      * */
     public CollabGraph createSingleGraph(JsonSharedObject sharedObject) {
-        Record calculatedRecord = new Record(new ArrayList<>(), new ArrayList<>());
+        CollabGraph graph = new CollabGraph(new ArrayList<>(), new ArrayList<>());
         weightValues = new ArrayList<>();
         for (JsonSharedObject.Entity node : sharedObject.getEntities()) {
-            calculatedRecord.nodes.add(new Node(node.getQuery(), node.getUri(), node.getType(), node.getWeight()));
+            graph.nodes.add(new Node(node.getQuery(), node.getUri(), node.getType(), node.getWeight()));
             weightValues.add(node.getWeight());
         }
         Collections.sort(weightValues);
-        for (Node node : calculatedRecord.nodes) {
+        for (Node node : graph.nodes) {
             node.setFrequency(calculateFrequencyRatio(node.getWeight()));
         }
         for (JsonSharedObject.Link link : sharedObject.getLinks()) {
-            calculatedRecord.links.add(new Link(link.getSource(), link.getTarget()));
+            graph.links.add(new Link(link.getSource(), link.getTarget()));
         }
-        return removeDuplicatingNodesAndLinks(calculatedRecord.nodes);
+        return getTrimmedGraph(graph.nodes);
     }
 
-    public Record record;
-
-    CollabGraph(final List<Node> nodes, final List<Link> links) {
-        this.record = new Record(nodes, links);
+    public CollabGraph(final List<Node> nodes, final List<Link> links) {
+        this.nodes = nodes;
+        this.links = links;
     }
 }

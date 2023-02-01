@@ -21,23 +21,16 @@ public class RdfModel {
     private static final Pattern COMPILE = Pattern.compile(" ");
     private static final Pattern PATTERN = Pattern.compile("\\<[^>]*>");
     private final Model model;
-    private Model ontologyModel;
     private static final String prefixBase = "https://github.com/tibonto/PKGonto/";
     private static final String prefixSchema = "https://schema.org/";
     private static final String prefixEducor = "https://github.com/tibonto/educor#";
     private static final String prefixFoaf = "http://xmlns.com/foaf/spec/";
-
-    private void readOntologyModel() {
-        ontologyModel = ModelFactory.createDefaultModel();
-        ontologyModel.read("/ontology/pkgOnto.ttl", "TTL");
-    }
 
     public RdfModel(final User user) {
         model = ModelFactory.createDefaultModel();
         model.setNsPrefix("schema", prefixSchema);
         model.setNsPrefix("educor", prefixEducor);
         model.setNsPrefix("foaf", prefixFoaf);
-        readOntologyModel();
 
         model.createResource("SharedObject/Negativity_Exponential_Algorithm");
 

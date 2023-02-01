@@ -1,23 +1,28 @@
-package de.l3s.learnweb.searchhistory.dbpediaSpotlight;
+package de.l3s.learnweb.searchhistory.dbpediaspotlight;
 
 import static de.l3s.learnweb.app.Learnweb.dao;
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
-import static org.apache.commons.math3.util.Precision.round;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.math3.util.Precision;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.l3s.learnweb.searchhistory.AnnotationCount;
 import de.l3s.learnweb.searchhistory.Pkg;
-import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.AnnotationUnit;
-import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.ResourceItem;
-import de.l3s.learnweb.searchhistory.dbpediaSpotlight.rest.SpotlightBean;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.AnnotationUnit;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.ResourceItem;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.rest.SpotlightBean;
 
 /**
- *  Specific class for calling Named Entity Recognition (NER).
+ * Specific class for calling Named Entity Recognition (NER).
  * @author Trung Tran
  * */
 public final class NERParser {
@@ -25,12 +30,12 @@ public final class NERParser {
 
     /**
      * Getting resources of dbpedia-spotlight result.
-     * @param annotationUnit    the dbpedia-spotlight process
-     * @param id    the source's id
-     * @param type  the type of the annotation (user, group, web, snippet_clicked, snippet_notClicked, query)
-     * @param user  the user's username
-     * @param sessionId     the session id of the current annotation
-     * @return  the list of annotationCount with its newly created values
+     * @param annotationUnit the dbpedia-spotlight process
+     * @param id the source's id
+     * @param type the type of the annotation (user, group, web, snippet_clicked, snippet_not_clicked, query)
+     * @param user the user's username
+     * @param sessionId the session id of the current annotation
+     * @return the list of annotationCount with its newly created values
      */
     private static List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId) {
         List<ResourceItem> resources = new ArrayList<>();
@@ -38,7 +43,7 @@ public final class NERParser {
         //If annotating from webpages, only choose top 10 per webpage
         if (type.equals("web")) {
             Map<String, Long> uriPerType = annotationUnit.getResources().stream()
-                .collect(groupingBy(ResourceItem::getUri, counting()));
+                .collect(Collectors.groupingBy(ResourceItem::getUri, Collectors.counting()));
 
             final List<ResourceItem> finalResources = resources;
             uriPerType.entrySet().stream()
@@ -61,13 +66,26 @@ public final class NERParser {
         return annotationCounts;
     }
 
+    private static String filterWebsite(Document webDoc) {
+        StringBuilder newWebText = new StringBuilder();
+        List<String> tagLists = Arrays.asList("title", "p", "h1", "h2", "span");
+        for (String tag : tagLists) {
+            Elements elements = webDoc.select(tag);
+            for (Element e : elements) {
+                String text = e.ownText();
+                newWebText.append(text).append(" ");
+            }
+        }
+        return newWebText.toString();
+    }
+
     /**
      * Main function of the class.
-     * @param sessionId     the session id of the current annotation
-     * @param id    the id of the source (user, group)
-     * @param username  the user's username
-     * @param type  the type of the annotation (user, group, web, snippet_clicked, snippet_notClicked, query)
-     * @param content   the content to be recognized
+     * @param sessionId the session id of the current annotation
+     * @param id the id of the source (user, group)
+     * @param username the user's username
+     * @param type the type of the annotation (user, group, web, snippet_clicked, snippet_not_clicked, query)
+     * @param content the content to be recognized
      * */
     public static void processQuery(String sessionId, int id, String username, String type, String content) throws Exception {
         if (content == null) {
@@ -76,6 +94,12 @@ public final class NERParser {
         List<AnnotationCount> annotationCounts = new ArrayList<>();
         SpotlightBean spotlight = new SpotlightBean();
         //Parse the content to dbpedia-spotlight
+        if (type.equals("web")) {
+            Document doc = Jsoup.connect(content).timeout(10 * 1000).ignoreHttpErrors(true)
+                .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
+                .get();
+            content = filterWebsite(doc);
+        }
         annotationUnit = spotlight.get(content);
         //Parse the results to the function
         if (annotationUnit.getResources() != null) {
@@ -88,12 +112,10 @@ public final class NERParser {
         int userId = dao().getUserDao().findByUsername(username).get().getId();
         int inputId = dao().getSearchHistoryDao().insertInputStream(userId, type, content);
 
-
-
         //Store this annotationCount into DB
         for (AnnotationCount annotationCount : annotationCounts) {
             //Round the confidence
-            annotationCount.setConfidence(round(annotationCount.getConfidence(), 2));
+            annotationCount.setConfidence(Precision.round(annotationCount.getConfidence(), 2));
 
             Optional<AnnotationCount> foundAnnotation = dao().getSearchHistoryDao().findByUriAndType(annotationCount.getUri(), annotationCount.getType());
             //If already an annotationCount is found in DB, update its columns

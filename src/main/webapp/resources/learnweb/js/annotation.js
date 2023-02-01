@@ -1,4 +1,5 @@
-const url = '../resources/dataExample.json';
+const url = '';
+
 let links;
 let nodes;
 const onLoad = (graph) => {
@@ -35,7 +36,7 @@ const onLoad = (graph) => {
 
   function init() {
     links = linkContainer.selectAll('.link')
-      .data(graph.record.links)
+      .data(graph.links)
       .join('line')
       .attr('class', 'link')
       .attr('marker-end', 'url(#arrowhead)')
@@ -43,7 +44,7 @@ const onLoad = (graph) => {
       .text((d) => d.user);
 
     nodes = nodeContainer.selectAll('.node')
-      .data(graph.record.nodes, (d) => d.id)
+      .data(graph.nodes, (d) => d.id)
       .join('g')
       .attr('class', 'node')
       .attr('id', (d) => `node${d.id}`)
@@ -89,11 +90,11 @@ const onLoad = (graph) => {
       .style('font-size', '12px');
 
     forceLayout
-      .nodes(graph.record.nodes)
+      .nodes(graph.nodes)
       .on('tick', outerTick);
 
     forceLayout
-      .force('link').links(graph.record.links);
+      .force('link').links(graph.links);
   }
 
   function outerTick() {

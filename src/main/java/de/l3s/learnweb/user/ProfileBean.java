@@ -34,7 +34,7 @@ import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
-import de.l3s.learnweb.searchhistory.dbpediaSpotlight.NERParser;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.NERParser;
 import de.l3s.learnweb.user.User.Gender;
 import de.l3s.util.Image;
 

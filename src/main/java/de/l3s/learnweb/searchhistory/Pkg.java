@@ -1,12 +1,10 @@
 package de.l3s.learnweb.searchhistory;
 
 import static de.l3s.learnweb.app.Learnweb.dao;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static java.util.stream.Collectors.*;
-import static org.apache.commons.math3.util.Precision.round;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +14,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.apache.commons.math3.util.Precision;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -264,7 +265,7 @@ public final class Pkg {
      * @return  the weight of this entity, based on its group type and how many days since the input into DB
      * */
     private double calculateWeight(LocalDateTime date, String type) {
-        int days = (int) DAYS.between(LocalDateTime.now(), date);
+        int days = (int) ChronoUnit.DAYS.between(LocalDateTime.now(), date);
         switch (type) {
             case "user" -> {
                 return 3 * Math.exp(days);
@@ -281,7 +282,7 @@ public final class Pkg {
             case "query" -> {
                 return 12 * Math.exp(days);
             }
-            case "snippet_notClicked" -> {
+            case "snippet_not_clicked" -> {
                 return -0.6 * Math.exp(days);
             }
             default -> {
@@ -387,7 +388,7 @@ public final class Pkg {
     * */
     public void updatePkg(AnnotationCount annotationCount, User user) {
         addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence(),
-            round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 2), annotationCount.getSessionId(),
+            Precision.round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 2), annotationCount.getSessionId(),
             annotationCount.getType(), annotationCount.getCreatedAt());
 
         //----------------------------------Rdf-insert-model--------------------------------------
@@ -495,9 +496,9 @@ public final class Pkg {
      * @param userId the current user id
      * @return the shared object of a single graph
      * */
-    public JsonSharedObject createSingleGraph(int userId) {
+    public JsonSharedObject createSingleGraph(int userId, int groupId) {
         Optional<User> optUser = dao().getUserDao().findById(userId);
-        if (optUser.isEmpty() || !dao().getUserDao().findActiveUsers().contains(optUser.get())) {
+        if (optUser.isEmpty() || !dao().getUserDao().isActiveUser(userId, groupId)) {
             return null;
         }
         JsonSharedObject object = new JsonSharedObject("singleGraph", false);
@@ -508,7 +509,7 @@ public final class Pkg {
         //HARDCODED lines - need alternatives
         typeMap.put("profile", "user");
         typeMap.put("group", "group");
-        typeMap.put("snippet_notClicked", "session");
+        typeMap.put("snippet_not_clicked", "session");
         typeMap.put("snippet_clicked", "session");
         typeMap.put("query", "session");
         typeMap.put("web", "session");
@@ -553,7 +554,6 @@ public final class Pkg {
 
     /**
      * Create shared objects based on the result of pkg graph calculation.
-     *
      * @param groupId   The group id
      * @param numberEntities   how many entities per user the shared Object will show
      * @param isAscending show if the sharedObject will get the result from top or bottom
@@ -565,9 +565,7 @@ public final class Pkg {
         List<JsonSharedObject> sharedObjects = new ArrayList<>();
         List<Node> newNodes;
         List<Link> newLinks;
-        //Get from DB the active users
-        List<User> activeUsers = dao().getUserDao().findActiveUsers();
-        if (activeUsers.isEmpty()) {
+        if (results == null) {
             return null;
         }
         //Sort the calculated results to get entities' ranking
@@ -582,7 +580,7 @@ public final class Pkg {
         for (User user : users) {
             int index = 0;
             //Choose only the active users to create the shared object
-            if (activeUsers.contains(user)) {
+            if (dao().getUserDao().isActiveUser(user.getId(), groupId)) {
                 newNodes = new ArrayList<>();
                 newLinks = new ArrayList<>();
                 for (Map.Entry<Integer, Double> entry : entries) {
@@ -605,7 +603,7 @@ public final class Pkg {
                         Set<String> result = Arrays.stream(newNodes.get(i).getSessionId().split(",")).toList().stream()
                             .distinct()
                             .filter(Arrays.stream(newNodes.get(j).getSessionId().split(",")).toList()::contains)
-                            .collect(toSet());
+                            .collect(Collectors.toSet());
                         if (!result.isEmpty()) {
                             newLinks.add(new Link(i, j, 0));
                         }

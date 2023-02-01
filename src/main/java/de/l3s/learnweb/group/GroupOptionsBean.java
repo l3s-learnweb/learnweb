@@ -21,7 +21,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
-import de.l3s.learnweb.searchhistory.dbpediaSpotlight.NERParser;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.NERParser;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
