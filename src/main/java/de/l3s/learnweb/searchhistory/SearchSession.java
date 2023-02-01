@@ -19,6 +19,7 @@ public class SearchSession implements Serializable {
 
     private transient User user;
 
+
     public SearchSession(String sessionId, int userId) {
         this.sessionId = sessionId;
         this.userId = userId;
