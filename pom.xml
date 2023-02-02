@@ -327,12 +327,6 @@
             <artifactId>prettytime</artifactId>
             <version>5.0.6.Final</version>
         </dependency>
-        <!-- Used to make a thumbnail of PDF in ResourcePreviewMaker -->
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-            <version>3.0.0-RC1</version>
-        </dependency>
         <!-- RiTa WordNet (used to retrieve Definitions for TedTranscript) -->
         <!-- We are using an unofficial package from https://github.com/shibme/diction, the original repository
              is https://github.com/dhowe/RiTa, but they don't provide maven repository and don't include data to JAR -->

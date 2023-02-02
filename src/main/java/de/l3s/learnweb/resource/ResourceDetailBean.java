@@ -25,7 +25,6 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.UrlHelper;
 
 @Named
 @ViewScoped
@@ -292,9 +291,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
             }
 
             if (type.equalsIgnoreCase("pdf")) {
-                getLearnweb().getResourcePreviewMaker().processPdf(resource, UrlHelper.getInputStream(archiveUrl));
+                getLearnweb().getResourcePreviewMaker().processDocument(resource, archiveUrl);
             } else {
-                getLearnweb().getResourcePreviewMaker().processArchivedVersion(resource, archiveUrl);
+                getLearnweb().getResourcePreviewMaker().processWebsite(resource, archiveUrl);
             }
 
             resource.save();
