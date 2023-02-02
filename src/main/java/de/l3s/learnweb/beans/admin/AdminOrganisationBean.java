@@ -155,7 +155,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             List<Locale> glossaryLanguages = Arrays.asList(new Locale("ar"), new Locale("de"), new Locale("el"),
                 new Locale("en"), new Locale("es"), new Locale("fr"), new Locale("it"), new Locale("nl"),
                 new Locale("pt"), new Locale("ru"), new Locale("sv"), new Locale("zh"));
-            availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(glossaryLanguages, getUserBean().getBundle());
+            availableGlossaryLanguages = BeanHelper.getLocalesAsSelectItems(glossaryLanguages, getBundle());
         }
         return availableGlossaryLanguages;
     }

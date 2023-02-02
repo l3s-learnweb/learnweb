@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.resource.glossary.Column;
 import de.l3s.learnweb.resource.glossary.GlossaryEntry;
 import de.l3s.learnweb.resource.glossary.GlossaryTerm;
@@ -91,8 +91,8 @@ public class GlossaryRowBuilder {
      * True if the given value is equal to any translation of the given msg key.
      */
     static boolean isEqualForAnyLocale(String value, String msgKey) {
-        for (Locale localeToCheck : BeanHelper.getSupportedLocales()) {
-            String translation = LanguageBundle.getBundle(localeToCheck).getString(msgKey);
+        for (Locale locale : BeanHelper.getSupportedLocales()) {
+            String translation = MessagesBundle.format(locale, msgKey);
 
             if (value.equalsIgnoreCase(translation)) {
                 return true;

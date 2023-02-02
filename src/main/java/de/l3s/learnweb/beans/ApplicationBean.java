@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans;
 
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import jakarta.faces.application.FacesMessage;
 
@@ -14,6 +15,7 @@ import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.DaoProvider;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
@@ -62,12 +64,16 @@ public abstract class ApplicationBean {
 
     // i18n ------------------------------------------------------------------------------------------------------------
 
+    public ResourceBundle getBundle() {
+        return MessagesBundle.of(getLocale());
+    }
+
     /**
      * Get a message from the messages bundle depending on the currently used local.
      * If the msgKey doesn't exist the msgKey itself will be returned.
      */
     public String getLocaleMessage(String msgKey, Object... args) {
-        return getUserBean().getBundle().getFormatted(msgKey, args);
+        return MessagesBundle.format(getBundle(), msgKey, args);
     }
 
     // Preferences -----------------------------------------------------------------------------------------------------

@@ -241,7 +241,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             if (langList.isEmpty()) {
                 languageList.add(new SelectItem("NA", "No Transcripts Available"));
             } else {
-                languageList.addAll(BeanHelper.getLanguagesAsSelectItems(langList.values().toArray(new String[0]), getUserBean().getBundle()));
+                languageList.addAll(BeanHelper.getLanguagesAsSelectItems(langList.values().toArray(new String[0]), getBundle()));
             }
         }
         return languageList;

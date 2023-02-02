@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +18,6 @@ import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.pie.PieChartDataSet;
 import org.primefaces.model.charts.pie.PieChartModel;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.util.ColorHelper;
@@ -27,7 +27,7 @@ final class GlossaryDashboardChartsFactory {
     private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap, LanguageBundle bundle) {
+    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap, ResourceBundle bundle) {
         BarChartModel model = new BarChartModel();
 
         Action[] actionTypes = Action.values();

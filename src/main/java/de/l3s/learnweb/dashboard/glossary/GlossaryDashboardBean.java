@@ -123,7 +123,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
             if (actionsWithCounters == null) {
                 actionsWithCounters = logDao.countUsagePerAction(getSelectedUsersIds(), startDate, endDate);
             }
-            usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters, getUserBean().getBundle());
+            usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters, getBundle());
         }
         return usersActivityTypesChart;
     }

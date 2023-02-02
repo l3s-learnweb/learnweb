@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -27,13 +28,13 @@ import org.primefaces.model.menu.BaseMenuModel;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.MenuModel;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.component.ActiveSubmenu;
 import de.l3s.learnweb.component.ActiveSubmenu.Builder;
 import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
@@ -46,18 +47,15 @@ public class UserBean implements Serializable {
     private static final Logger log = LogManager.getLogger(UserBean.class);
 
     private int userId = 0;
-    private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
-    private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on an other account
-
     private Locale locale;
-    private transient LanguageBundle bundle;
-    private transient List<Group> newGroups;
-
-    private transient BaseMenuModel sidebarMenuModel;
-    private transient Instant sidebarMenuModelUpdate;
     private final HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
+    private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
+    private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on another account
     private transient Organisation activeOrganisation;
+    private transient List<Group> newGroups;
+    private transient BaseMenuModel sidebarMenuModel;
+    private transient Instant sidebarMenuModelUpdate;
 
     @PostConstruct
     public void init() {
@@ -157,13 +155,6 @@ public class UserBean implements Serializable {
         setPreference(key, value);
     }
 
-    public LanguageBundle getBundle() {
-        if (bundle == null) {
-            bundle = LanguageBundle.getBundle(locale);
-        }
-        return bundle;
-    }
-
     public Locale getLocale() {
         return locale;
     }
@@ -192,7 +183,6 @@ public class UserBean implements Serializable {
         setSidebarMenuModel(null);
         //log.debug("set locale " + localeCode);
         locale = getLocaleByLocaleCode(localeCode);
-        bundle = null;
 
         FacesContext fc = FacesContext.getCurrentInstance();
         if (fc == null || fc.getViewRoot() == null) {
@@ -317,7 +307,7 @@ public class UserBean implements Serializable {
 
         if (null == sidebarMenuModel || sidebarMenuModelUpdate.isBefore(Instant.now().minus(Duration.ofMinutes(10)))) {
             long start = System.currentTimeMillis();
-            sidebarMenuModel = createMenuModel(getBundle(), getUser());
+            sidebarMenuModel = createMenuModel(MessagesBundle.of(getLocale()), getUser());
             sidebarMenuModelUpdate = Instant.now();
             long elapsedMs = System.currentTimeMillis() - start;
 
@@ -329,7 +319,7 @@ public class UserBean implements Serializable {
         return sidebarMenuModel;
     }
 
-    private static BaseMenuModel createMenuModel(LanguageBundle msg, User user) {
+    private static BaseMenuModel createMenuModel(ResourceBundle msg, User user) {
         BaseMenuModel model = new BaseMenuModel();
 
         // My resources

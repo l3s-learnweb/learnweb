@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.glossary;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -21,7 +22,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 
 /**
  * Allows to export a glossary into an Excel file.
@@ -33,11 +34,11 @@ public final class GlossaryXLSXExporter {
     //private static final Logger log = LogManager.getLogger(GlossaryXLSXExporter.class);
 
     private final GlossaryResource glossaryResource;
-    private final LanguageBundle bundle; // language of the exported header fields
+    private final ResourceBundle bundle; // language of the exported header fields
 
     public GlossaryXLSXExporter(GlossaryResource resource, Locale locale) {
         this.glossaryResource = resource;
-        this.bundle = LanguageBundle.getBundle(locale);
+        this.bundle = MessagesBundle.of(locale);
     }
 
     public Workbook convertGlossaryToWorkbook(GlossaryResource resource) {

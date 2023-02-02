@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 
 public abstract class Element {
 
@@ -25,12 +25,12 @@ public abstract class Element {
     /**
      * Builds an HTML representation of this element and appends it to the given StringBuilder.
      */
-    protected abstract void buildHtml(StringBuilder sb, LanguageBundle msg);
+    protected abstract void buildHtml(StringBuilder sb, MessagesBundle msg);
 
     /**
      * Builds a plain text representation of this element and appends it to the given StringBuilder.
      */
-    protected abstract void buildPlainText(StringBuilder sb, LanguageBundle msg);
+    protected abstract void buildPlainText(StringBuilder sb, MessagesBundle msg);
 
     /**
      * Helper method which stringifies list of attributes for the tag.

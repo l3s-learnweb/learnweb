@@ -8,7 +8,7 @@ import jakarta.faces.validator.Validator;
 
 import org.omnifaces.util.FacesLocal;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 
 /**
  * Adds a helper method to the Validator interface.
@@ -30,7 +30,7 @@ public abstract class AbstractValidator<T> implements Validator<T> {
                 label = component.getValueExpression("label");
             }
 
-            validatorMessage = LanguageBundle.getBundle(FacesLocal.getLocale(context)).getFormatted(message);
+            validatorMessage = MessagesBundle.format(FacesLocal.getLocale(context), message);
             if (label != null) {
                 validatorMessage = label + ": " + validatorMessage;
             }

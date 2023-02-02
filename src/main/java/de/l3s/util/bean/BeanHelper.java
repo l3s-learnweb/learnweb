@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import jakarta.faces.model.SelectItem;
@@ -18,8 +19,8 @@ import org.omnifaces.util.Faces;
 import org.primefaces.model.CheckboxTreeNode;
 import org.primefaces.model.TreeNode;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Misc;
@@ -38,18 +39,18 @@ public final class BeanHelper {
     }
 
     public static boolean isMessageExists(String msgKey) {
-        return LanguageBundle.getBundle(Faces.getLocale()).containsKey(msgKey);
+        return MessagesBundle.of(Faces.getLocale()).containsKey(msgKey);
     }
 
     public static String getMessageOrDefault(String msgKey, String msgDefault) {
-        LanguageBundle bundle = LanguageBundle.getBundle(Faces.getLocale());
-        return bundle.containsKey(msgKey) ? bundle.getFormatted(msgKey) : msgDefault;
+        ResourceBundle bundle = MessagesBundle.of(Faces.getLocale());
+        return bundle.containsKey(msgKey) ? bundle.getString(msgKey) : msgDefault;
     }
 
     /**
      * Converts a list of Locales to a list of SelectItems. The Locales are translated to the current frontend language
      */
-    public static List<SelectItem> getLocalesAsSelectItems(List<Locale> locales, LanguageBundle bundle) {
+    public static List<SelectItem> getLocalesAsSelectItems(List<Locale> locales, ResourceBundle bundle) {
         ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
 
         for (Locale locale : locales) {
@@ -60,7 +61,7 @@ public final class BeanHelper {
         return selectItems;
     }
 
-    public static List<SelectItem> getLanguagesAsSelectItems(String[] languages, LanguageBundle bundle) {
+    public static List<SelectItem> getLanguagesAsSelectItems(String[] languages, ResourceBundle bundle) {
         ArrayList<SelectItem> selectItems = new ArrayList<>(languages.length);
 
         for (String language : languages) {

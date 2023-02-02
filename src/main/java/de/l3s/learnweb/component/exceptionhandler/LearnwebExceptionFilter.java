@@ -1,6 +1,7 @@
 package de.l3s.learnweb.component.exceptionhandler;
 
-import static jakarta.servlet.RequestDispatcher.*;
+import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
+import static jakarta.servlet.RequestDispatcher.ERROR_MESSAGE;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -15,7 +15,6 @@
         <locale-config>
             <default-locale>en</default-locale>
             <supported-locale>de</supported-locale>
-            <supported-locale>en</supported-locale>
             <supported-locale>it</supported-locale>
             <supported-locale>pt</supported-locale>
             <supported-locale>es</supported-locale>
@@ -23,7 +22,7 @@
         </locale-config>
 
         <resource-bundle>
-            <base-name>de.l3s.learnweb.LanguageBundle</base-name>
+            <base-name>de.l3s.learnweb.i18n.MessagesBundle</base-name>
             <var>msg</var>
         </resource-bundle>
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 
 public class Table extends Element {
     private final java.util.List<TableRow> rows = new ArrayList<>();
@@ -44,7 +44,7 @@ public class Table extends Element {
     }
 
     @Override
-    protected void buildHtml(final StringBuilder sb, final LanguageBundle msg) {
+    protected void buildHtml(final StringBuilder sb, final MessagesBundle msg) {
         if (rows.isEmpty()) {
             return;
         }
@@ -85,7 +85,7 @@ public class Table extends Element {
     }
 
     @Override
-    protected void buildPlainText(final StringBuilder sb, final LanguageBundle msg) {
+    protected void buildPlainText(final StringBuilder sb, final MessagesBundle msg) {
         sb.append("\n");
         for (TableRow textRow : rows) {
             for (Element elem : textRow.getElements()) {

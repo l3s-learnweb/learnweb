@@ -2,7 +2,7 @@ package de.l3s.mail.message;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 
 public class Text extends Element {
 
@@ -24,18 +24,18 @@ public class Text extends Element {
     }
 
     @Override
-    protected void buildHtml(final StringBuilder sb, final LanguageBundle msg) {
+    protected void buildHtml(final StringBuilder sb, final MessagesBundle msg) {
         if (!StringUtils.isAllBlank(getInlineStyle(), getStyleClass())) { // render text inside SPAN element
             sb.append("<span").append(buildAttributes()).append(">");
-            sb.append(msg.getFormatted(text, objects));
+            sb.append(msg.format(text, objects));
             sb.append("</span>");
         } else {
-            sb.append(msg.getFormatted(text, objects));
+            sb.append(msg.format(text, objects));
         }
     }
 
     @Override
-    protected void buildPlainText(final StringBuilder sb, final LanguageBundle msg) {
-        sb.append(msg.getFormatted(text, objects));
+    protected void buildPlainText(final StringBuilder sb, final MessagesBundle msg) {
+        sb.append(msg.format(text, objects));
     }
 }
