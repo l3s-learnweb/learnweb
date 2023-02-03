@@ -30,7 +30,7 @@
     "jquery-contextmenu": "^2.9.2",
     "justifiedGallery": "^3.8.1",
     "shepherd.js": "^10.0.1",
-    "video.js": "^7.20.3"
+    "video.js": "^8.0.3"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.1",

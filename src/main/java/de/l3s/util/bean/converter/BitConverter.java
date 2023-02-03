@@ -14,7 +14,7 @@ public class BitConverter implements Converter<Boolean> {
     @Override
     public Boolean getAsObject(FacesContext context, UIComponent component, String submittedValue) {
         if (StringUtils.isEmpty(submittedValue)) {
-            return null;
+            return false;
         }
 
         return "1".equals(submittedValue) || "true".equals(submittedValue);
