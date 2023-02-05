@@ -75,21 +75,20 @@
         <!-- Jakarta CDI API & Impl for Servlet container (Tomcat) -->
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
-            <artifactId>weld-servlet-shaded</artifactId>
+            <artifactId>weld-servlet-core</artifactId>
             <version>5.1.0.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Jakarta Validator API & Impl -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.0.Final</version>
-            <exclusions>
-                <!-- Added as part of org.jboss.weld.servlet:weld-servlet-shaded -->
-                <exclusion>
-                    <groupId>org.jboss.logging</groupId>
-                    <artifactId>jboss-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- Jakarta Mail API & Impl -->
         <dependency>

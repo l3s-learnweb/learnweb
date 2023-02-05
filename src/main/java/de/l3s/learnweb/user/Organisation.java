@@ -13,12 +13,12 @@ import java.util.Optional;
 
 import jakarta.faces.model.SelectItem;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -56,7 +56,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
 
     private int id;
     @NotBlank
-    @Length(min = 2, max = 60)
+    @Size(min = 2, max = 60)
     private String title;
     private String welcomeMessage;
     private String termsAndConditions;

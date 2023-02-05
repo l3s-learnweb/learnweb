@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import jakarta.validation.constraints.Size;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.hibernate.validator.constraints.Length;
 
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
@@ -25,15 +26,15 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
     private int entryId;
     private int userId; // the user who created this term
     private int lastChangedByUserId;
-    @Length(max = 100)
+    @Size(max = 100)
     private String term;
     private List<String> uses;
-    @Length(max = 200)
+    @Size(max = 200)
     private String pronounciation;
-    @Length(max = 100)
+    @Size(max = 100)
     private String acronym;
     private String source;
-    @Length(max = 1500)
+    @Size(max = 1500)
     private String phraseology;
     private Locale language;
     private boolean termPasted = false;

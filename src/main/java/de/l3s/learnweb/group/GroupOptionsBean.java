@@ -9,11 +9,11 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.validator.constraints.Length;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -39,9 +39,9 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private int selectedResourceTargetGroupId;
 
     @NotBlank
-    @Length(min = 3, max = 60)
+    @Size(min = 3, max = 60)
     private String editedGroupTitle;
-    @Length(max = 500)
+    @Size(max = 500)
     private String editedGroupDescription; // Group edit fields (Required for editing group)
     private String editedHypothesisLink;
     private String editedHypothesisToken;

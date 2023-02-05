@@ -26,7 +26,6 @@ import de.l3s.learnweb.user.UserBean;
  * Logs incoming requests by IPs.
  * Records IP, time and URL, then at the end of the day stores it into a log file.
  */
-@SuppressWarnings("UnstableApiUsage")
 @WebFilter(filterName = "RequestFilter", urlPatterns = "/*", asyncSupported = true)
 public class RequestFilter extends HttpFilter {
     @Serial
