@@ -308,7 +308,7 @@ public final class Pkg {
      * the link between them will get their weight calculated based on the formula in calculateWeight(date, type).
      * The nodes that have no connections will then be connected to the DEFAULT node.</p>
      * */
-    private void removeDuplicatingNodesAndLinks() {
+    public void removeDuplicatingNodesAndLinks() {
         //Remove duplicating nodes by merging nodes with the same uri
         for (int i = 0; i < nodes.size() - 1; i++) {
             if (!nodes.get(i).getUri().isEmpty()) {
@@ -383,11 +383,6 @@ public final class Pkg {
                 }
             }
         }
-        removeDuplicatingNodesAndLinks();
-        // executor.submit(() -> {
-        //
-        //     latch.countDown();
-        // });
     }
 
     /** Add this recognized entity into the node list as a Node.
@@ -485,7 +480,7 @@ public final class Pkg {
     /**
      * Calculate the sum_weight of each node with the formula of NEA.
      */
-    public void calculateSumWeight() throws InterruptedException {
+    public void calculateSumWeight() {
         //latch.await();
         results = new HashMap<>();
         for (int i = 1; i < nodes.size() - 1; i++) {

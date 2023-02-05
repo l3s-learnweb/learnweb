@@ -47,7 +47,7 @@ public class AnnotationBean implements Serializable {
      * @param sessionId the session id of the current annotation
      * @return the list of annotationCount with its newly created values
      */
-    private static List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId) {
+    private List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId) {
         List<ResourceItem> resources = new ArrayList<>();
         List<AnnotationCount> annotationCounts = new ArrayList<>();
         //If annotating from webpages, only choose top 10 per webpage
@@ -161,8 +161,8 @@ public class AnnotationBean implements Serializable {
                 if (!"user".equals(type) && !"profile".equals(type)) {
                     searchHistoryDao.insertQueryResult(id, uriId);
                 }
-                getPkgBean().updatePkg(annotationCount, userDao.findByUsername(username).get());
             }
+            getPkgBean().updatePkg(annotationCount, userDao.findByUsername(username).get());
         }
     }
 
