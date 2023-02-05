@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.faces.application.FacesMessage;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +33,7 @@ import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
+import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -46,8 +48,8 @@ import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.searchhistory.JsonSharedObject;
-import de.l3s.learnweb.searchhistory.Pkg;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.NERParser;
+import de.l3s.learnweb.searchhistory.PkgBean;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.AnnotationBean;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -83,8 +85,11 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private List<GroupedResources> resourcesGroupedBySource;
     private Boolean isUserActive;
     private List<Boolean> snippetClicked;
-
     private List<String> recommendations;
+    private transient PkgBean pkgBean;
+    private transient AnnotationBean annotationBean;
+    @Inject
+    private GroupDao groupDao;
 
     @PostConstruct
     public void init() {
@@ -264,7 +269,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             isUserActive = true;
             if (!snippetClicked.get(search.getResources().indexOf(search.getResources().get(tempResourceId)))) {
                 Resource resource = search.getResources().get(tempResourceId).getResource();
-                NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", resource.getUrl());
+                getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", resource.getUrl());
             }
             snippetClicked.set(search.getResources().indexOf(search.getResources().get(tempResourceId)), true);
             search.logResourceClicked(tempResourceId, getUser());
@@ -280,18 +285,14 @@ public class SearchBean extends ApplicationBean implements Serializable {
     @PreDestroy
     public void destroy() throws Exception {
         if (isUserActive) {
-            NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(), "query", search.getQuery());
+            getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getUsername(), "query", search.getQuery());
             for (ResourceDecorator snippet : search.getResources()) {
                 String s = snippet.getTitle().split("\\|")[0].split("-")[0];
-                NERParser.processQuery(getSessionId(), search.getId(), getUser().getUsername(),
+                getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getUsername(),
                     snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_not_clicked",
                     "<title>" + s + "</title> " + snippet.getDescription());
             }
         }
-    }
-
-    public boolean hasRecommendation() {
-        return (recommendations != null);
     }
 
     /**
@@ -302,8 +303,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private void createSearchRecommendation() {
         //Initialization
         recommendations = new ArrayList<>();
-        int groupId = dao().getGroupDao().findByUserId(getUser().getId()).get(0).getId();
-        List<JsonSharedObject> sharedObjects = Pkg.instance.createSharedObject(
+        int groupId = groupDao.findByUserId(getUser().getId()).get(0).getId();
+        List<JsonSharedObject> sharedObjects = getPkgBean().createSharedObject(
             groupId, 5, false, "recommendation");
         if (sharedObjects == null) {
             return;
@@ -518,5 +519,19 @@ public class SearchBean extends ApplicationBean implements Serializable {
             Collections.sort(resourcesGroupedBySource);
         }
         return resourcesGroupedBySource;
+    }
+
+    private PkgBean getPkgBean() {
+        if (null == pkgBean) {
+            pkgBean = Beans.getInstance(PkgBean.class);
+        }
+        return pkgBean;
+    }
+
+    private AnnotationBean getAnnotationBean() {
+        if (null == annotationBean) {
+            annotationBean = Beans.getInstance(AnnotationBean.class);
+        }
+        return annotationBean;
     }
 }

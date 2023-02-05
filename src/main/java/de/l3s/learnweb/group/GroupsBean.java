@@ -16,11 +16,12 @@ import jakarta.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.NERParser;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.AnnotationBean;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
@@ -31,14 +32,12 @@ public class GroupsBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(GroupsBean.class);
     @Serial
     private static final long serialVersionUID = 5364340827474357098L;
-
     private List<Group> joinAbleGroups;
     private List<Group> myGroups;
     private Group selectedGroup;
-
     private Group newGroup;
     private List<Course> editAbleCourses; // courses to which the user can add groups to
-
+    private transient AnnotationBean annotationBean;
     @Inject
     private GroupDao groupDao;
 
@@ -130,7 +129,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         user.joinGroup(newGroup);
         // refresh group list
         myGroups = user.getGroups();
-        NERParser.processQuery(getSessionId(), newGroup.getId(), user.getUsername(), "group", newGroup.getTitle() + " " + newGroup.getDescription());
+        getAnnotationBean().processQuery(getSessionId(), newGroup.getId(), user.getUsername(), "group", newGroup.getTitle() + " " + newGroup.getDescription());
         // log and show notification
         log(Action.group_creating, newGroup.getId(), newGroup.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
@@ -170,5 +169,12 @@ public class GroupsBean extends ApplicationBean implements Serializable {
 
     public List<Course> getEditAbleCourses() {
         return editAbleCourses;
+    }
+
+    private AnnotationBean getAnnotationBean() {
+        if (null == annotationBean) {
+            annotationBean = Beans.getInstance(AnnotationBean.class);
+        }
+        return annotationBean;
     }
 }

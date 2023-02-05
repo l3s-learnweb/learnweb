@@ -1,7 +1,7 @@
 package de.l3s.learnweb.searchhistory.dbpediaspotlight;
 
-import static de.l3s.learnweb.app.Learnweb.dao;
-
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,24 +9,34 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+
 import org.apache.commons.math3.util.Precision;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.searchhistory.AnnotationCount;
-import de.l3s.learnweb.searchhistory.Pkg;
+import de.l3s.learnweb.searchhistory.PkgBean;
+import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.AnnotationUnit;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.ResourceItem;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.rest.SpotlightBean;
+import de.l3s.learnweb.user.UserDao;
 
-/**
- * Specific class for calling Named Entity Recognition (NER).
- * @author Trung Tran
- * */
-public final class NERParser {
+@RequestScoped
+public class AnnotationBean implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -1169917559922779411L;
     private static AnnotationUnit annotationUnit;
+    private transient PkgBean pkgBean;
+    @Inject
+    private UserDao userDao;
+    @Inject
+    private SearchHistoryDao searchHistoryDao;
 
     /**
      * Getting resources of dbpedia-spotlight result.
@@ -87,7 +97,7 @@ public final class NERParser {
      * @param type the type of the annotation (user, group, web, snippet_clicked, snippet_not_clicked, query)
      * @param content the content to be recognized
      * */
-    public static void processQuery(String sessionId, int id, String username, String type, String content) throws Exception {
+    public void processQuery(String sessionId, int id, String username, String type, String content) throws Exception {
         if (content == null) {
             return;
         }
@@ -109,15 +119,15 @@ public final class NERParser {
         annotationCounts.removeIf(annotationCount -> annotationCount.getConfidence() < 0.9);
 
         //Insert inputStream into DB
-        int userId = dao().getUserDao().findByUsername(username).get().getId();
-        int inputId = dao().getSearchHistoryDao().insertInputStream(userId, type, content);
+        int userId = userDao.findByUsername(username).get().getId();
+        int inputId = searchHistoryDao.insertInputStream(userId, type, content);
 
         //Store this annotationCount into DB
         for (AnnotationCount annotationCount : annotationCounts) {
             //Round the confidence
             annotationCount.setConfidence(Precision.round(annotationCount.getConfidence(), 2));
 
-            Optional<AnnotationCount> foundAnnotation = dao().getSearchHistoryDao().findByUriAndType(annotationCount.getUri(), annotationCount.getType());
+            Optional<AnnotationCount> foundAnnotation = searchHistoryDao.findByUriAndType(annotationCount.getUri(), annotationCount.getType());
             //If already an annotationCount is found in DB, update its columns
             if (foundAnnotation.isPresent()) {
                 //Update the sessionId
@@ -137,22 +147,29 @@ public final class NERParser {
                 }
                 //Update the inputId
                 //Update the repetition
-                dao().getSearchHistoryDao().updateQueryAnnotation(session, users, input,
+                searchHistoryDao.updateQueryAnnotation(session, users, input,
                     annotationCount.getUri(), annotationCount.getType());
-                if (!"user".equals(type) && !"profile".equals(type) && !dao().getSearchHistoryDao().findSearchIdByResult(foundAnnotation.get().getUriId()).contains(id)) {
-                    dao().getSearchHistoryDao().insertQueryResult(id, foundAnnotation.get().getUriId());
+                if (!"user".equals(type) && !"profile".equals(type) && !searchHistoryDao.findSearchIdByResult(foundAnnotation.get().getUriId()).contains(id)) {
+                    searchHistoryDao.insertQueryResult(id, foundAnnotation.get().getUriId());
                 }
             } else {
                 //Insert directly new annotationCount into DB
                 annotationCount.setInputStreams(String.valueOf(inputId));
-                int uriId = dao().getSearchHistoryDao().insertQueryToAnnotation(annotationCount.getType(), annotationCount.getUri(), String.valueOf(inputId),
+                int uriId = searchHistoryDao.insertQueryToAnnotation(annotationCount.getType(), annotationCount.getUri(), String.valueOf(inputId),
                     annotationCount.getCreatedAt(), annotationCount.getSurfaceForm(),
                     annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence());
                 if (!"user".equals(type) && !"profile".equals(type)) {
-                    dao().getSearchHistoryDao().insertQueryResult(id, uriId);
+                    searchHistoryDao.insertQueryResult(id, uriId);
                 }
-                Pkg.instance.updatePkg(annotationCount, dao().getUserDao().findByUsername(username).get());
+                getPkgBean().updatePkg(annotationCount, userDao.findByUsername(username).get());
             }
         }
+    }
+
+    private PkgBean getPkgBean() {
+        if (null == pkgBean) {
+            pkgBean = Beans.getInstance(PkgBean.class);
+        }
+        return pkgBean;
     }
 }

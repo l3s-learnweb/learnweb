@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -51,13 +54,18 @@ import de.l3s.learnweb.user.User;
 public final class Pkg {
     private List<Node> nodes;
     private List<Link> links;
-    private transient List<AnnotationCount> annotationCounts;
+    public transient List<AnnotationCount> annotationCounts;
     private List<User> users;
     private transient HashMap<Integer, Double> results;
     private static final Pattern PATTERN = Pattern.compile("http://dbpedia.org/resource/");
-
-    public static final Pkg instance = new Pkg(new ArrayList<>(), new ArrayList<>());
     private List<RdfModel> rdfGraphs;
+
+    //Parallel thread
+    private static final int THREAD_POOL_SIZE = 2;
+    private static ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+    private static CountDownLatch latch = new CountDownLatch(1);
+
+
     /**
      * The Node class. Has all values of an entity
      * */
@@ -349,8 +357,6 @@ public final class Pkg {
      * @param    groupId     the id of the group
      * */
     public void createPkg(int groupId) {
-        long startTime = System.nanoTime();
-        System.out.println("Creating Pkg, estimate time: ");
         this.annotationCounts = dao().getSearchHistoryDao().findAllAnnotationCounts();
         nodes = new ArrayList<>();
         links = new ArrayList<>();
@@ -369,16 +375,19 @@ public final class Pkg {
             }
         }
         //Create nodes and edges in (original) graph
-        for (AnnotationCount annotationCount : this.annotationCounts) {
+        for (AnnotationCount annotationCount : annotationCounts) {
             for (User user : users) {
                 if (annotationCount.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
-                    updatePkg(annotationCount, user);
+                    //Call the DB update here
+                    updatePkg(annotationCount, user, dao().getSearchHistoryDao().findSessionsByUserId(user.getId()));
                 }
             }
         }
-        long endTime = System.nanoTime();
-        System.out.println(endTime - startTime);
         removeDuplicatingNodesAndLinks();
+        // executor.submit(() -> {
+        //
+        //     latch.countDown();
+        // });
     }
 
     /** Add this recognized entity into the node list as a Node.
@@ -386,15 +395,15 @@ public final class Pkg {
      * @param annotationCount The recognized entity to be added to the PKG
      * @param user the current user
     * */
-    public void updatePkg(AnnotationCount annotationCount, User user) {
+    public void updatePkg(AnnotationCount annotationCount, User user, List<SearchSession> sessions) {
         addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence(),
             Precision.round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 2), annotationCount.getSessionId(),
             annotationCount.getType(), annotationCount.getCreatedAt());
-
         //----------------------------------Rdf-insert-model--------------------------------------
+
         Pattern keywordPattern = Pattern.compile("<b>" + "(.*?)" + "</b>");
         Pattern headlinePattern = Pattern.compile("<title>" + "(.*?)" + "</title>");
-        List<SearchSession> sessions = dao().getSearchHistoryDao().findSessionsByUserId(user.getId());
+
         for (String session : annotationCount.getSessionId().split(",")) {
             for (SearchSession searchSession : sessions) {
                 if (searchSession.getSessionId().equals(session)) {
@@ -476,7 +485,8 @@ public final class Pkg {
     /**
      * Calculate the sum_weight of each node with the formula of NEA.
      */
-    public void calculateSumWeight() {
+    public void calculateSumWeight() throws InterruptedException {
+        //latch.await();
         results = new HashMap<>();
         for (int i = 1; i < nodes.size() - 1; i++) {
             double sumWeight = 0;
@@ -519,8 +529,10 @@ public final class Pkg {
         occurrences.put("group", 0);
         occurrences.put("session", 0);
 
+        List<Map.Entry<Integer, Double>> entries = new ArrayList<>(results.entrySet());
+        entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         //Find occurrences of each source as nodes - if the total of one source exceeds 10 then stop
-        for (Map.Entry<Integer, Double> entry : results.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : entries) {
             Node node = nodes.get(entry.getKey());
             for (Map.Entry<String, String> type : typeMap.entrySet()) {
                 if (node.getUsers().matches(".*\\b" + Pattern.quote(optUser.get().getUsername()) + "\\b.*")
@@ -676,7 +688,7 @@ public final class Pkg {
         return sharedObjects;
     }
 
-    private Pkg(List<Node> nodes, List<Link> links) {
+    public Pkg(List<Node> nodes, List<Link> links) {
         this.nodes = nodes;
         this.links = links;
     }

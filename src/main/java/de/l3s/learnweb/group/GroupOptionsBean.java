@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
+import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -21,7 +22,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.NERParser;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.AnnotationBean;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
@@ -48,10 +49,9 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private String editedHypothesisLink;
     private String editedHypothesisToken;
     private GroupUser groupUser;
-
+    private transient AnnotationBean annotationBean;
     @Inject
     private FileDao fileDao;
-
     @Inject
     private GroupDao groupDao;
     @Inject
@@ -111,7 +111,7 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         //Call dbpedia-spotlight recognition
         //Add group resources
         for (User user : userDao.findByGroupId(group.getId())) {
-            NERParser.processQuery(getSessionId(), getGroupId(), user.getUsername(), "group", editedGroupDescription + " " + editedGroupTitle);
+            getAnnotationBean().processQuery(getSessionId(), getGroupId(), user.getUsername(), "group", editedGroupDescription + " " + editedGroupTitle);
         }
 
         groupDao.save(group);
@@ -204,5 +204,12 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
 
     public GroupUser getGroupUser() {
         return groupUser;
+    }
+
+    private AnnotationBean getAnnotationBean() {
+        if (null == annotationBean) {
+            annotationBean = Beans.getInstance(AnnotationBean.class);
+        }
+        return annotationBean;
     }
 }

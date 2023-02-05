@@ -18,6 +18,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.omnifaces.util.Beans;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -65,18 +66,19 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private static final String patternDateTime = String.format("%s %s", patternDate, patternTime);
     private transient List<JsonSharedObject> sharedObjects = new ArrayList<>();
     private transient Gson gson;
+    private transient PkgBean pkgBean;
 
     /**
      * Load the variables that needs values before the view is rendered.
      */
-    public void onLoad() throws IOException {
+    public void onLoad() throws IOException, InterruptedException {
         BeanAssert.authorized(isLoggedIn());
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
         }
         gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
             .create();
-        Pkg.instance.calculateSumWeight();
+        getPkgBean().calculateGraph();
         for (Group group : groupDao.findByUserId(selectedUserId)) {
             calculateEntities(group.getId());
         }
@@ -238,10 +240,10 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     * @param selectedGroupId    the id of this user's group
     * */
     private void calculateEntities(int selectedGroupId) {
-        sharedObjects = Pkg.instance.createSharedObject(selectedGroupId, 3, false, "collabGraph");
+        sharedObjects = getPkgBean().createSharedObject(selectedGroupId, 3, false, "collabGraph");
         //For testing only
-        Pkg.instance.createSharedObject(selectedGroupId, 5, true, "negative5SharedObject");
-        Pkg.instance.createSharedObject(selectedGroupId, 10, false, "positive10SharedObject");
+        getPkgBean().createSharedObject(selectedGroupId, 5, true, "negative5SharedObject");
+        getPkgBean().createSharedObject(selectedGroupId, 10, false, "positive10SharedObject");
     }
 
     /**
@@ -265,12 +267,19 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         if (!groups.isEmpty()) {
             groupId = groups.get(0).getId();
         }
-        JsonSharedObject obj = Pkg.instance.createSingleGraph(selectedUserId, groupId);
+        JsonSharedObject obj = getPkgBean().createSingleGraph(selectedUserId, groupId);
         if (obj == null) {
             return "";
         }
         CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>())
             .createSingleGraph(obj);
         return gson.toJson(calculatedQuery);
+    }
+
+    private PkgBean getPkgBean() {
+        if (null == pkgBean) {
+            pkgBean = Beans.getInstance(PkgBean.class);
+        }
+        return pkgBean;
     }
 }

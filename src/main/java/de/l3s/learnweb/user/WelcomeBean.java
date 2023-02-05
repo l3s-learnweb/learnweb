@@ -13,11 +13,9 @@ import jakarta.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
-import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.submission.Submission;
-import de.l3s.learnweb.searchhistory.Pkg;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
@@ -99,14 +97,6 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
             .collect(Collectors.toList());
 
         activeSubmissions = user.getActiveSubmissions();
-        //
-        List<Group> groups = dao().getGroupDao().findByUserId(user.getId());
-        int groupId = 0;
-        if (!groups.isEmpty()) {
-            groupId = groups.get(0).getId();
-        }
-        Pkg.instance.createPkg(groupId);
-
     }
 
     private List<LogEntry> getLogs(EnumSet<Action> filter, int limit) {

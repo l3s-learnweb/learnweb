@@ -24,6 +24,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
 import org.primefaces.event.FileUploadEvent;
 
@@ -34,7 +35,7 @@ import de.l3s.learnweb.group.GroupUser;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.NERParser;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.AnnotationBean;
 import de.l3s.learnweb.user.User.Gender;
 import de.l3s.util.Image;
 
@@ -68,6 +69,8 @@ public class ProfileBean extends ApplicationBean implements Serializable {
     private List<GroupUser> userGroups;
 
     private transient List<SelectItem> timeZoneIds; // A list of all available time zone ids
+
+    private transient AnnotationBean annotationBean;
 
     @Inject
     private UserDao userDao;
@@ -153,7 +156,7 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
         userDao.save(selectedUser);
         //Call dbpedia-spotlight recognition
-        NERParser.processQuery(getSessionId(), getUser().getId(), getUser().getUsername(), "user", getUser().getInterest());
+        getAnnotationBean().processQuery(getSessionId(), getUser().getId(), getUser().getUsername(), "user", getUser().getInterest());
         log(Action.changing_profile, 0, selectedUser.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
@@ -364,5 +367,12 @@ public class ProfileBean extends ApplicationBean implements Serializable {
 
     public String rootLogin() {
         return LoginBean.rootLogin(this, selectedUser);
+    }
+
+    private AnnotationBean getAnnotationBean() {
+        if (null == annotationBean) {
+            annotationBean = Beans.getInstance(AnnotationBean.class);
+        }
+        return annotationBean;
     }
 }
