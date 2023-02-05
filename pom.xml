@@ -495,6 +495,19 @@
                     <path>/${path}##${project.version}</path>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>11.0.13</version>
+                <configuration>
+                    <!-- see https://www.eclipse.org/jetty/documentation/jetty-11/programming-guide/index.html#pg-configuration-6 -->
+                    <webApp>
+                        <contextPath>/</contextPath>
+                        <jettyEnvXml>src/main/conf/jetty-env.xml</jettyEnvXml>
+                    </webApp>
+                    <scan>5</scan>
+                </configuration>
+            </plugin>
             <!-- Can be used to create JAR archive and set specific class as entry point -->
             <!-- Set the required class in properties, but avoid committing this change -->
             <plugin>
