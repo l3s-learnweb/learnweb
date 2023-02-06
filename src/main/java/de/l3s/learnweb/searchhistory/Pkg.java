@@ -377,9 +377,10 @@ public final class Pkg {
         //Create nodes and edges in (original) graph
         for (AnnotationCount annotationCount : annotationCounts) {
             for (User user : users) {
+                List<SearchSession> sessions = dao().getSearchHistoryDao().findSessionsByUserId(user.getId());
                 if (annotationCount.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
                     //Call the DB update here
-                    updatePkg(annotationCount, user, dao().getSearchHistoryDao().findSessionsByUserId(user.getId()));
+                    updatePkg(annotationCount, user, sessions);
                 }
             }
         }

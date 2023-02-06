@@ -8,14 +8,12 @@ import java.util.List;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.user.User;
 
-@Named
 @SessionScoped
 public class PkgBean extends ApplicationBean implements Serializable {
     @Serial
@@ -43,20 +41,20 @@ public class PkgBean extends ApplicationBean implements Serializable {
         pkg.calculateSumWeight();
     }
 
-    public List<JsonSharedObject> createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
+    public void trimPkg() {
         pkg.removeDuplicatingNodesAndLinks();
         pkg.calculateSumWeight();
+    }
+
+    public List<JsonSharedObject> createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
         return pkg.createSharedObject(groupId, numberEntities, isAscending, application);
     }
 
     public void updatePkg(AnnotationCount annotationCount, User user) {
-
         pkg.updatePkg(annotationCount, user, searchHistoryDao.findSessionsByUserId(user.getId()));
     }
 
     public JsonSharedObject createSingleGraph(int userId, int groupId) {
-        pkg.removeDuplicatingNodesAndLinks();
-        pkg.calculateSumWeight();
         return pkg.createSingleGraph(userId, groupId);
     }
 }

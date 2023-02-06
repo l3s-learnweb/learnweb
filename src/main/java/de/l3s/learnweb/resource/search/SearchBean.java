@@ -304,6 +304,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         //Initialization
         recommendations = new ArrayList<>();
         int groupId = groupDao.findByUserId(getUser().getId()).get(0).getId();
+        getPkgBean().trimPkg();
         List<JsonSharedObject> sharedObjects = getPkgBean().createSharedObject(
             groupId, 5, false, "recommendation");
         if (sharedObjects == null) {
