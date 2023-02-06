@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -50,7 +51,8 @@ public class AuthFilter extends HttpFilter {
 
         // Inject user into session
         try {
-            if (!userBean.isLoggedIn()) {
+            HttpSession session = request.getSession(false);
+            if ((session == null || session.getAttribute("UserName") == null)) {
                 String authValue = Servlets.getRequestCookie(request, LoginBean.AUTH_COOKIE_NAME);
 
                 if (StringUtils.isNotEmpty(authValue)) {

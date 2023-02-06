@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
-import org.omnifaces.util.Servlets;
 import org.primefaces.model.menu.BaseMenuModel;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.MenuModel;
@@ -59,26 +58,31 @@ public class UserBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        // get preferred language
-        locale = Faces.getLocale();
+        //noinspection ProhibitedExceptionCaught
+        try {
+            // There is an issue, that sometimes it can be called before FacesContext is initialized (e.g. from @WebFilter)
+            // in the case there is no ViewRoot available and default locale used. But because it happens only for existing users, we used saved locale.
+            locale = Faces.getViewRoot().getLocale();
+            log.debug("UserBean initialized with locale {}", locale);
+        } catch (NullPointerException e) {
+            log.debug("UserBean initialized without FacesContext, use default locale");
+            locale = Locale.getDefault();
+        }
     }
 
     /**
      * This method sets values which are required by the Download Servlet
      * and provides data which is shown on the Tomcat manager session page.
-     *
-     * @return userName | ipAddress | userAgent for the current request;
      */
-    public String storeMetadataInSession(HttpServletRequest request) {
-        String userName = getUser() == null ? "logged_out" : getUser().getRealUsername();
-        String info = userName + " | " + Servlets.getRemoteAddr(request) + " | " + request.getHeader("User-Agent");
-
-        // store the user also in the session so that it is accessible by DownloadServlet and TomcatManager
-        HttpSession session = request.getSession(true);
-        session.setAttribute("userName", info); // set only to display it in Tomcat manager app
-        session.setAttribute("Locale", locale); // set only to display it in Tomcat manager app
-        session.setAttribute("learnweb_user_id", userId); // required by DownloadServlet
-        return info;
+    private void updateSessionMetadata(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            session.setAttribute("Locale", locale);
+            if (getUser() != null) {
+                session.setAttribute("UserId", getUser().getId());
+                session.setAttribute("UserName", getUser().getRealUsername());
+            }
+        }
     }
 
     public boolean isLoggedIn() {
@@ -115,8 +119,8 @@ public class UserBean implements Serializable {
         this.newGroups = null;
 
         refreshLocale();
-        String clientInfo = storeMetadataInSession(request);
-        log.debug("Session started: {}", clientInfo);
+        updateSessionMetadata(request);
+        log.debug("Session started: {}", user.getUsername());
     }
 
     @PreDestroy

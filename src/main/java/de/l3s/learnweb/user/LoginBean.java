@@ -6,11 +6,11 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -18,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
+import org.omnifaces.util.Servlets;
+import org.omnifaces.util.Utils;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -31,12 +33,9 @@ import de.l3s.util.HashHelper;
 public class LoginBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 7980062591522267111L;
-
     private static final Logger log = LogManager.getLogger(LoginBean.class);
     public static final String AUTH_COOKIE_NAME = "auth_uuid";
     private static final int AUTH_COOKIE_AGE_DAYS = 30;
-
-    private String remoteAddr;
 
     @NotBlank
     private String username;
@@ -56,9 +55,22 @@ public class LoginBean extends ApplicationBean implements Serializable {
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
-    @PostConstruct
-    public void init() {
-        remoteAddr = Faces.getRemoteAddr();
+    private transient String remoteAddr;
+
+    public String onLoad() {
+        String redirectUrl = Faces.getRequestParameter("redirect");
+        if (isLoggedIn() && StringUtils.isNotEmpty(redirectUrl)) {
+            return redirect(getUser().getId(), redirectUrl);
+        }
+
+        return null;
+    }
+
+    private String getRemoteAddr() {
+        if (remoteAddr == null) {
+            remoteAddr = Faces.getRemoteAddr();
+        }
+        return remoteAddr;
     }
 
     public String getUsername() {
@@ -86,12 +98,12 @@ public class LoginBean extends ApplicationBean implements Serializable {
     }
 
     public boolean isCaptchaRequired() {
-        return requestManager.isCaptchaRequired(remoteAddr);
+        return requestManager.isCaptchaRequired(getRemoteAddr());
     }
 
     public String login() {
         // Gets the ip and username info from protection manager
-        BeanAssert.hasPermission(!requestManager.isBanned(remoteAddr), "ip_banned");
+        BeanAssert.hasPermission(!requestManager.isBanned(getRemoteAddr()), "ip_banned");
         BeanAssert.hasPermission(!requestManager.isBanned(username), "username_banned");
 
         // USER AUTHORIZATION HAPPENS HERE
@@ -99,12 +111,12 @@ public class LoginBean extends ApplicationBean implements Serializable {
 
         if (userOptional.isEmpty()) {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
-            requestManager.recordFailedAttempt(remoteAddr, username);
+            requestManager.recordFailedAttempt(getRemoteAddr(), username);
             return "/lw/user/login.xhtml";
         }
 
         final User user = userOptional.get();
-        requestManager.recordSuccessfulAttempt(remoteAddr, username);
+        requestManager.recordSuccessfulAttempt(getRemoteAddr(), username);
 
         if (!user.isEmailConfirmed() && user.isEmailRequired()) {
             confirmRequiredBean.setLoggedInUser(user);
@@ -142,14 +154,6 @@ public class LoginBean extends ApplicationBean implements Serializable {
         }
     }
 
-    public ConfirmRequiredBean getConfirmRequiredBean() {
-        return confirmRequiredBean;
-    }
-
-    public void setConfirmRequiredBean(ConfirmRequiredBean confirmRequiredBean) {
-        this.confirmRequiredBean = confirmRequiredBean;
-    }
-
     public static String rootLogin(ApplicationBean bean, User targetUser) {
         UserBean userBean = bean.getUserBean();
         // validate permission
@@ -176,7 +180,7 @@ public class LoginBean extends ApplicationBean implements Serializable {
         Organisation userOrganisation = user.getOrganisation();
         String redirect = Faces.getRequestParameter("redirect");
         if (StringUtils.isNotEmpty(redirect)) {
-            return redirect(user, redirect);
+            return redirect(user.getId(), redirect);
         }
 
         if (userOrganisation.getId() == 1249) {
@@ -193,22 +197,26 @@ public class LoginBean extends ApplicationBean implements Serializable {
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 
-    public static String redirect(User user, String redirectUrl) {
-        if (StringUtils.isEmpty(redirectUrl)) {
-            redirectUrl = Faces.getRequestParameter("redirect");
+    private static String redirect(int userId, String redirectUrl) {
+        // this `grant` parameter is used by annotation client/waps proxy to receive grant token for user auth
+        String grant = Faces.getRequestParameter("grant");
+        if (StringUtils.isNotEmpty(grant)) {
+            String token = Learnweb.dao().getTokenDao().findOrCreate(Token.TokenType.GRANT, userId);
+            log.debug("Grant token [{}] requested for user [{}], redirect to {}", token, userId, redirectUrl);
+            Faces.redirect(redirectUrl + "?token=" + token);
         }
 
-        if (user != null && StringUtils.isNotEmpty(redirectUrl)) {
-            // this `grant` parameter is used by annotation client/waps proxy to receive grant token for user auth
-            String grant = Faces.getRequestParameter("grant");
-            if (StringUtils.isNotEmpty(grant)) {
-                String token = Learnweb.dao().getTokenDao().findOrCreate(Token.TokenType.GRANT, user.getId());
-                log.debug("Grant token [{}] requested for user [{}], redirect to {}", token, user.getId(), redirectUrl);
-                Faces.redirect(redirectUrl + "?token=" + token);
-            }
-
-            return redirectUrl + (redirectUrl.contains("?") ? "&" : "?") + "faces-redirect=true";
+        if ("/lw/".equals(redirectUrl)) {
+            redirectUrl = "/lw/index.jsf"; // redirect to view id
         }
-        return null;
+
+        return redirectUrl + (redirectUrl.contains("?") ? "&" : "?") + "faces-redirect=true";
+    }
+
+    public static String prepareLoginURL(HttpServletRequest request) {
+        String requestURI = Servlets.getRequestURI(request).substring(request.getContextPath().length());
+        String queryString = Servlets.getRequestQueryString(request);
+        String redirectToUrl = (queryString == null) ? requestURI : (requestURI + "?" + queryString);
+        return request.getContextPath() + "/lw/user/login.jsf?redirect=" + Utils.encodeURL(redirectToUrl);
     }
 }

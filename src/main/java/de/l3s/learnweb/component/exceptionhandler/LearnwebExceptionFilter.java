@@ -20,11 +20,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.jboss.weld.exceptions.WeldException;
 import org.omnifaces.util.Exceptions;
-import org.omnifaces.util.Servlets;
-import org.omnifaces.util.Utils;
 
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
+import de.l3s.learnweb.user.LoginBean;
 
 /**
  * The filter uses the idea of {@link org.omnifaces.filter.FacesExceptionFilter}.
@@ -55,7 +54,7 @@ public class LearnwebExceptionFilter extends HttpFilter {
                 response.sendError(HttpException.SESSION_EXPIRED, request.getRequestURI());
             } else if (throwable instanceof UnauthorizedHttpException) {
                 // In case of unauthorized user, redirect to login page
-                response.sendRedirect(prepareLoginURL(request));
+                response.sendRedirect(LoginBean.prepareLoginURL(request));
             } else if (throwable instanceof HttpException httpException) {
                 // Show an appropriate error page, these exceptions usually expected
                 response.sendError(httpException.getStatus(), httpException.getReason());
@@ -71,12 +70,5 @@ public class LearnwebExceptionFilter extends HttpFilter {
             // same workaround as in FullAjaxExceptionHandler
             request.removeAttribute(ERROR_EXCEPTION);
         }
-    }
-
-    private String prepareLoginURL(HttpServletRequest request) {
-        String requestURI = Servlets.getRequestURI(request).substring(request.getContextPath().length());
-        String queryString = Servlets.getRequestQueryString(request);
-        String redirectToUrl = (queryString == null) ? requestURI : (requestURI + "?" + queryString);
-        return request.getContextPath() + "/lw/user/login.jsf?redirect=" + Utils.encodeURL(redirectToUrl);
     }
 }

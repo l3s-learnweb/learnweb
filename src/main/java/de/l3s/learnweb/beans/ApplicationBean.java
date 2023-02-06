@@ -4,10 +4,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import jakarta.faces.application.FacesMessage;
+import jakarta.inject.Inject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 
@@ -27,7 +27,9 @@ public abstract class ApplicationBean {
 
     private transient Learnweb learnweb;
     private transient String sessionId;
-    private transient UserBean userBean;
+
+    @Inject
+    private UserBean userBean;
 
     // User ------------------------------------------------------------------------------------------------------------
 
@@ -38,27 +40,24 @@ public abstract class ApplicationBean {
      */
     protected User getUser() {
         // This value shall not be cached. The value would not be updated if the user logs out.
-        return getUserBean().getUser();
+        return userBean.getUser();
     }
 
     /**
      * Returns the current locale.
      */
     protected Locale getLocale() {
-        return getUserBean().getLocale();
+        return userBean.getLocale();
     }
 
     /**
      * @return true if the user is logged in
      */
     protected boolean isLoggedIn() {
-        return getUserBean().isLoggedIn();
+        return userBean.isLoggedIn();
     }
 
     public UserBean getUserBean() {
-        if (null == userBean) {
-            userBean = Beans.getInstance(UserBean.class);
-        }
         return userBean;
     }
 
@@ -83,7 +82,7 @@ public abstract class ApplicationBean {
      * @return defaultValue if no corresponding value is found for the key.
      */
     public String getPreference(String key, String defaultValue) {
-        String obj = getUserBean().getPreference(key);
+        String obj = userBean.getPreference(key);
         return obj == null ? defaultValue : obj;
     }
 
@@ -91,7 +90,7 @@ public abstract class ApplicationBean {
      * Stores an object in the session.
      */
     public void setPreference(String key, String value) {
-        getUserBean().setPreference(key, value);
+        userBean.setPreference(key, value);
     }
 
     // Logging ---------------------------------------------------------------------------------------------------------
