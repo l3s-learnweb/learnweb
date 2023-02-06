@@ -1,8 +1,8 @@
-package de.l3s.learnweb.searchhistory.dbpediaSpotlight.rest;
+package de.l3s.learnweb.searchhistory.dbpediaspotlight.rest;
 
-import static de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.Constants.EMPTY;
-import static de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.Prefixes.DBPEDIA_ONTOLOGY;
-import static de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.Prefixes.SCHEMA_ONTOLOGY;
+import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Constants.EMPTY;
+import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Prefixes.DBPEDIA_ONTOLOGY;
+import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Prefixes.SCHEMA_ONTOLOGY;
 import static org.apache.http.HttpHeaders.ACCEPT;
 
 import java.io.BufferedReader;
@@ -22,8 +22,8 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.google.gson.Gson;
 
-import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.AnnotationUnit;
-import de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.ResourceItem;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.AnnotationUnit;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.ResourceItem;
 
 public class SpotlightBean {
     private static final String URL = "https://api.dbpedia-spotlight.org/en/annotate";

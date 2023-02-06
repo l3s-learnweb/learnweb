@@ -1,6 +1,6 @@
-package de.l3s.learnweb.searchhistory.dbpediaSpotlight.common;
+package de.l3s.learnweb.searchhistory.dbpediaspotlight.common;
 
-import static de.l3s.learnweb.searchhistory.dbpediaSpotlight.common.Constants.COMMA;
+import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Constants.COMMA;
 
 import java.util.ArrayList;
 import java.util.Arrays;
