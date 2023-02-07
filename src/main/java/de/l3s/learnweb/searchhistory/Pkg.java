@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -54,17 +51,10 @@ import de.l3s.learnweb.user.User;
 public final class Pkg {
     private List<Node> nodes;
     private List<Link> links;
-    public transient List<AnnotationCount> annotationCounts;
-    private List<User> users;
+    private transient List<AnnotationCount> annotationCounts;
     private transient HashMap<Integer, Double> results;
     private static final Pattern PATTERN = Pattern.compile("http://dbpedia.org/resource/");
-    private List<RdfModel> rdfGraphs;
-
-    //Parallel thread
-    private static final int THREAD_POOL_SIZE = 2;
-    private static ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-    private static CountDownLatch latch = new CountDownLatch(1);
-
+    private RdfModel rdfGraph;
 
     /**
      * The Node class. Has all values of an entity
@@ -236,10 +226,10 @@ public final class Pkg {
     /**
      * Add this node into the list of nodes.
      * @param id the new node's id from DB
-     * @param uri    the new node's uri
-     * @param username   the new node's username string. Multiple usernames is divided by commas.
+     * @param uri the new node's uri
+     * @param username the new node's username string. Multiple usernames is divided by commas.
      * @param confidence the new node's confidence
-     * @param sessionId  the new node's session id
+     * @param sessionId the new node's session id
      * @param weight the weight of the new node (can actually be excluded in future updates)
      * @param type the type of the new node.
      * @param date the created time of the node.
@@ -263,14 +253,14 @@ public final class Pkg {
      * @param user the user whom RDF Graph gets this statement added
     * */
     private void addRdfStatement(String subject, String pre, String object, String mode, User user) {
-        rdfGraphs.get(users.indexOf(user)).addStatement(subject, pre, object, mode);
+        rdfGraph.addStatement(subject, pre, object, mode);
     }
 
     /**
      * Calculate the weight to be connected from a node with the function values based on the algorithm.
-     * @param   date  the date of the entity's creation
-     * @param   type  the type of this entity
-     * @return  the weight of this entity, based on its group type and how many days since the input into DB
+     * @param date the date of the entity's creation
+     * @param type the type of this entity
+     * @return the weight of this entity, based on its group type and how many days since the input into DB
      * */
     private double calculateWeight(LocalDateTime date, String type) {
         int days = (int) ChronoUnit.DAYS.between(LocalDateTime.now(), date);
@@ -354,34 +344,28 @@ public final class Pkg {
 
     /**
      * Initializes the PKG for all users in the specific group.
-     * @param    groupId     the id of the group
+     * @param user the current User
+     * @param groupId the id of the group
      * */
-    public void createPkg(int groupId) {
-        this.annotationCounts = dao().getSearchHistoryDao().findAllAnnotationCounts();
+    public void createPkg(User user, int groupId) {
+        this.annotationCounts = dao().getSearchHistoryDao().findAnnotationCountByUsername(user.getUsername());
         nodes = new ArrayList<>();
         links = new ArrayList<>();
-        //Find the users in this group
-        users = dao().getUserDao().findByGroupId(groupId);
         //Add default node. Any group that has only 1 node will be connected to default node
         addNode(0, "default", "", 1, 0.0, "", "", null);
 
-        //Initialize rdf graph model list
-        rdfGraphs = new ArrayList<>();
-        for (User user : users) {
-            rdfGraphs.add(new RdfModel(user));
-            if (groupId != 0) {
-                Group group = dao().getGroupDao().findById(groupId).get();
-                rdfGraphs.get(rdfGraphs.size() - 1).addGroup(user, group);
-            }
+        //Initialize rdf graph model
+        rdfGraph = new RdfModel(user);
+        if (groupId != 0) {
+            Group group = dao().getGroupDao().findById(groupId).get();
+            rdfGraph.addGroup(user, group);
         }
-        //Create nodes and edges in (original) graph
+
         for (AnnotationCount annotationCount : annotationCounts) {
-            for (User user : users) {
-                List<SearchSession> sessions = dao().getSearchHistoryDao().findSessionsByUserId(user.getId());
-                if (annotationCount.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
-                    //Call the DB update here
-                    updatePkg(annotationCount, user, sessions);
-                }
+            List<SearchSession> sessions = dao().getSearchHistoryDao().findSessionsByUserId(user.getId());
+            if (annotationCount.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
+                //Call the DB update here
+                updatePkg(annotationCount, user, sessions);
             }
         }
     }
@@ -390,6 +374,7 @@ public final class Pkg {
      * Then add RDF-statement to this user's RDF graph based on the parameters from the entity.
      * @param annotationCount The recognized entity to be added to the PKG
      * @param user the current user
+     * @param sessions the search sessions that this user has done
     * */
     public void updatePkg(AnnotationCount annotationCount, User user, List<SearchSession> sessions) {
         addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence(),
@@ -439,34 +424,36 @@ public final class Pkg {
                         }
 
                     }
-                    for (String inputId : annotationCount.getInputStreams().split(",")) {
-                        for (InputStreamRdf inputStream : dao().getSearchHistoryDao().findInputContentById(Integer.parseInt(inputId))) {
-                            //Add createsInputStream statement based on the entities' type
-                            if (inputStream.getUserId() == user.getId()) {
-                                Group group = dao().getGroupDao().findByUserId(user.getId()).get(0);
-                                if ("profile".equals(annotationCount.getType())) {
-                                    addRdfStatement("educor:UserProfile/" + user.getId(), "createsInputStream",
-                                        "InputStream/" + inputId, "resource", user);
-                                } else if ("group".equals(annotationCount.getType())) {
-                                    addRdfStatement("foaf:Group/" + group.getId(), "createsInputStream",
-                                        "InputStream/" + inputId, "resource", user);
-                                } else {
-                                    addRdfStatement("SearchSession/" + session, "createsInputStream",
-                                        "InputStream/" + inputId, "resource", user);
-                                }
-                                addRdfStatement("InputStream/" + inputStream.getId(), "schema:text", inputStream.getContent(), "literal", user);
-                                addRdfStatement("InputStream/" + inputStream.getId(), "schema:dateCreated",
-                                    inputStream.getDateCreated().toString(), "literal", user);
-                                addRdfStatement("RecognizedEntities/" + PATTERN.matcher(annotationCount.getUri())
-                                    .replaceAll(""), "processes", "InputStream/" + inputStream.getId(), "resource", user);
-                                if ("web".equals(annotationCount.getType())) {
-                                    Matcher matcher = keywordPattern.matcher(inputStream.getContent());
-                                    while (matcher.find()) {
-                                        addRdfStatement("WebPage/" + annotationCount.getUriId(), "keywords", matcher.group(1), "literal", user);
+                    if (annotationCount.getInputStreams() != null) {
+                        for (String inputId : annotationCount.getInputStreams().split(",")) {
+                            for (InputStreamRdf inputStream : dao().getSearchHistoryDao().findInputContentById(Integer.parseInt(inputId))) {
+                                //Add createsInputStream statement based on the entities' type
+                                if (inputStream.getUserId() == user.getId()) {
+                                    Group group = dao().getGroupDao().findByUserId(user.getId()).get(0);
+                                    if ("profile".equals(annotationCount.getType())) {
+                                        addRdfStatement("educor:UserProfile/" + user.getId(), "createsInputStream",
+                                            "InputStream/" + inputId, "resource", user);
+                                    } else if ("group".equals(annotationCount.getType())) {
+                                        addRdfStatement("foaf:Group/" + group.getId(), "createsInputStream",
+                                            "InputStream/" + inputId, "resource", user);
+                                    } else {
+                                        addRdfStatement("SearchSession/" + session, "createsInputStream",
+                                            "InputStream/" + inputId, "resource", user);
                                     }
-                                    matcher = headlinePattern.matcher(inputStream.getContent());
-                                    while (matcher.find()) {
-                                        addRdfStatement("WebPage/" + annotationCount.getUriId(), "headline", matcher.group(1), "literal", user);
+                                    addRdfStatement("InputStream/" + inputStream.getId(), "schema:text", inputStream.getContent(), "literal", user);
+                                    addRdfStatement("InputStream/" + inputStream.getId(), "schema:dateCreated",
+                                        inputStream.getDateCreated().toString(), "literal", user);
+                                    addRdfStatement("RecognizedEntities/" + PATTERN.matcher(annotationCount.getUri())
+                                        .replaceAll(""), "processes", "InputStream/" + inputStream.getId(), "resource", user);
+                                    if ("web".equals(annotationCount.getType())) {
+                                        Matcher matcher = keywordPattern.matcher(inputStream.getContent());
+                                        while (matcher.find()) {
+                                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "keywords", matcher.group(1), "literal", user);
+                                        }
+                                        matcher = headlinePattern.matcher(inputStream.getContent());
+                                        while (matcher.find()) {
+                                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "headline", matcher.group(1), "literal", user);
+                                        }
                                     }
                                 }
                             }
@@ -498,8 +485,10 @@ public final class Pkg {
         }
     }
 
-    /** Create a single graph of the current user, which contains node from 3 different sources (user, group and session).
+    /** Create a shared object for the single graph of the current user, which contains nodes from 3 different sources (user, group and session).
+     * Usually each sources will have a maximum of 10 nodes.
      * @param userId the current user id
+     * @param groupId the group id of this user
      * @return the shared object of a single graph
      * */
     public JsonSharedObject createSingleGraph(int userId, int groupId) {
@@ -561,16 +550,18 @@ public final class Pkg {
     }
 
     /**
-     * Create shared objects based on the result of pkg graph calculation.
-     * @param groupId   The group id
-     * @param numberEntities   how many entities per user the shared Object will show
+     * Create shared object based on the result of pkg graph calculation.
+     * @param user the current user
+     * @param groupId The group id
+     * @param numberEntities how many entities per user the shared Object will show
      * @param isAscending show if the sharedObject will get the result from top or bottom
-     * @return   the list of shared object in Json form
+     * @param application the application of this shared object (can be "recommendation", "collabGraph" or "negative" + "positive"
+     * @return the list of shared object in Json form
      * */
-    public List<JsonSharedObject> createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
+    public JsonSharedObject createSharedObject(User user, int groupId, int numberEntities, boolean isAscending, String application) {
         //Initialization
         //The list to be returned
-        List<JsonSharedObject> sharedObjects = new ArrayList<>();
+        JsonSharedObject sharedObject = new JsonSharedObject(application, false);
         List<Node> newNodes;
         List<Link> newLinks;
         if (results == null) {
@@ -584,104 +575,94 @@ public final class Pkg {
         } else {
             entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         }
-        //List new nodes after users' top 3
-        for (User user : users) {
-            int index = 0;
-            //Choose only the active users to create the shared object
-            if (dao().getUserDao().isActiveUser(user.getId(), groupId)) {
-                newNodes = new ArrayList<>();
-                newLinks = new ArrayList<>();
-                for (Map.Entry<Integer, Double> entry : entries) {
-                    //Find from the top of the results numberTopEntities entities, break after reaching the number
-                    if (nodes.get(entry.getKey()).users.matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
-                        Node chosenNode = new Node(nodes.get(entry.getKey()).getId(), nodes.get(entry.getKey()).getName(), nodes.get(entry.getKey()).getUri(),
-                            user.getUsername(), entry.getValue(), nodes.get(entry.getKey()).getConfidence(),
-                            nodes.get(entry.getKey()).getSessionId(), nodes.get(entry.getKey()).getType(), nodes.get(entry.getKey()).getDate());
-                        newNodes.add(chosenNode);
-                        index++;
-                        if (index >= numberEntities) {
-                            break;
-                        }
+        int index = 0;
+        //Choose only the active users to create the shared object
+        if (!dao().getUserDao().isActiveUser(user.getId(), groupId)) {
+            return null;
+        } else {
+            newNodes = new ArrayList<>();
+            newLinks = new ArrayList<>();
+            for (Map.Entry<Integer, Double> entry : entries) {
+                //Find from the top of the results numberTopEntities entities, break after reaching the number
+                if (nodes.get(entry.getKey()).users.matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
+                    Node chosenNode = new Node(nodes.get(entry.getKey()).getId(), nodes.get(entry.getKey()).getName(), nodes.get(entry.getKey()).getUri(),
+                        user.getUsername(), entry.getValue(), nodes.get(entry.getKey()).getConfidence(),
+                        nodes.get(entry.getKey()).getSessionId(), nodes.get(entry.getKey()).getType(), nodes.get(entry.getKey()).getDate());
+                    newNodes.add(chosenNode);
+                    index++;
+                    if (index >= numberEntities) {
+                        break;
                     }
                 }
+            }
 
-                //Links initialization
-                for (int i = 0; i < newNodes.size() - 1; i++) {
-                    for (int j = i + 1; j < newNodes.size(); j++) {
-                        Set<String> result = Arrays.stream(newNodes.get(i).getSessionId().split(",")).toList().stream()
-                            .distinct()
-                            .filter(Arrays.stream(newNodes.get(j).getSessionId().split(",")).toList()::contains)
-                            .collect(Collectors.toSet());
-                        if (!result.isEmpty()) {
-                            newLinks.add(new Link(i, j, 0));
-                        }
+            //Links initialization
+            for (int i = 0; i < newNodes.size() - 1; i++) {
+                for (int j = i + 1; j < newNodes.size(); j++) {
+                    Set<String> result = Arrays.stream(newNodes.get(i).getSessionId().split(",")).toList().stream()
+                        .distinct()
+                        .filter(Arrays.stream(newNodes.get(j).getSessionId().split(",")).toList()::contains)
+                        .collect(Collectors.toSet());
+                    if (!result.isEmpty()) {
+                        newLinks.add(new Link(i, j, 0));
                     }
                 }
+            }
 
-                //Create the sharedObject
-                JsonSharedObject object = new JsonSharedObject(application, false);
-                for (Link link : newLinks) {
-                    object.getLinks().add(new JsonSharedObject.Link(link.source, link.target));
-                }
-                object.setUser(new JsonSharedObject.User(users.stream().filter(s -> s.getUsername().equals(user.getUsername()))
-                    .findFirst().get().getId(), user.getUsername()));
-                for (Node node : newNodes) {
-                    object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), node.getWeight(), node.getType(), node.getId()));
-                }
-                sharedObjects.add(object);
+            //Create the sharedObject
+            for (Link link : newLinks) {
+                sharedObject.getLinks().add(new JsonSharedObject.Link(link.source, link.target));
+            }
+            sharedObject.setUser(new JsonSharedObject.User(user.getId(), user.getUsername()));
+            for (Node node : newNodes) {
+                sharedObject.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), node.getWeight(), node.getType(), node.getId()));
             }
         }
 
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new SearchHistoryBean.LocalDateTimeAdapter().nullSafe())
             .create();
         //Export shared object to DB
-        for (JsonSharedObject sharedObject : sharedObjects) {
-            int sharedObjectId;
-            List<JsonSharedObject> obj = dao().getSearchHistoryDao().findObjectByIdAndType(groupId, sharedObject.getUser().getId(), application);
-            if (obj.isEmpty()) {
-                sharedObjectId = dao().getSearchHistoryDao().insertSharedObject(sharedObject.getUser().getId(), groupId, application,
-                    gson.toJson(sharedObject));
-            } else {
-                dao().getSearchHistoryDao().updateSharedObject(gson.toJson(sharedObject), LocalDateTime.now(), sharedObject.getUser().getId(), groupId, application);
-                sharedObjectId = obj.get(0).getId();
-            }
-            //--------------------RDF---------------------------
-            int userIndex = users.stream().mapToInt(users::indexOf).filter(i -> users.get(i).getUsername().equals(sharedObject.getUser().getName())
-            ).findFirst().getAsInt();
-            rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "schema:dateCreated",
-                LocalDateTime.now().format(DateTimeFormatter.ISO_DATE), "literal");
-            rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "schema:application", sharedObject.getApplication(), "literal");
-            rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "schema:text", gson.toJson(sharedObject), "literal");
-            for (JsonSharedObject.Entity entity: sharedObject.getEntities()) {
-                rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "dependsOn", "RecognizedEntities/" + entity.getId(), "resource");
-                Optional<AnnotationCount> annotationObj = annotationCounts.stream().filter(s -> s.getUriId() == entity.getId()).findFirst();
-                if (annotationObj.isPresent()) {
-                    for (String inputId : annotationObj.get().getInputStreams().split(",")) {
-                        rdfGraphs.get(userIndex).addStatement("SharedObject/" + sharedObjectId, "dependsOn", "InputStream/" + inputId, "resource");
-                    }
+        int sharedObjectId;
+        List<JsonSharedObject> obj = dao().getSearchHistoryDao().findObjectsByUserId(groupId, sharedObject.getUser().getId(), application);
+        if (obj.isEmpty()) {
+            sharedObjectId = dao().getSearchHistoryDao().insertSharedObject(sharedObject.getUser().getId(), groupId, application,
+                gson.toJson(sharedObject));
+        } else {
+            dao().getSearchHistoryDao().updateSharedObject(gson.toJson(sharedObject), LocalDateTime.now(), sharedObject.getUser().getId(), groupId, application);
+            sharedObjectId = obj.get(0).getId();
+        }
+        //--------------------RDF---------------------------
+        rdfGraph.addStatement("SharedObject/" + sharedObjectId, "schema:dateCreated",
+            LocalDateTime.now().format(DateTimeFormatter.ISO_DATE), "literal");
+        rdfGraph.addStatement("SharedObject/" + sharedObjectId, "schema:application", sharedObject.getApplication(), "literal");
+        rdfGraph.addStatement("SharedObject/" + sharedObjectId, "schema:text", gson.toJson(sharedObject), "literal");
+        for (JsonSharedObject.Entity entity: sharedObject.getEntities()) {
+            rdfGraph.addStatement("SharedObject/" + sharedObjectId, "dependsOn", "RecognizedEntities/" + entity.getId(), "resource");
+            Optional<AnnotationCount> annotationObj = annotationCounts.stream().filter(s -> s.getUriId() == entity.getId()).findFirst();
+            if (annotationObj.isPresent()) {
+                for (String inputId : annotationObj.get().getInputStreams().split(",")) {
+                    rdfGraph.addStatement("SharedObject/" + sharedObjectId, "dependsOn", "InputStream/" + inputId, "resource");
                 }
             }
-            //--------------------End RDF ----------------------
         }
+        //--------------------End RDF ----------------------
 
         //Add the entities after calculation to Rdf List
         Group group = dao().getGroupDao().findByIdOrElseThrow(groupId);
-        for (User user : users) {
-            for (Node node : nodes) {
-                if (node.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
-                    rdfGraphs.get(users.indexOf(user)).addEntity(PATTERN.matcher(node.getUri()).replaceAll(""),
-                        node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
-                }
-            }
-            //Print the Rdf graphs both to DB and local directories as files
-            String value = rdfGraphs.get(users.indexOf(user)).printModel();
-            if (dao().getSearchHistoryDao().findRdfById(user.getId()).isEmpty()) {
-                dao().getSearchHistoryDao().insertRdf(user.getId(), group.getId(), value);
-            } else {
-                dao().getSearchHistoryDao().updateRdf(value, user.getId());
+        for (Node node : nodes) {
+            if (node.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
+                rdfGraph.addEntity(PATTERN.matcher(node.getUri()).replaceAll(""),
+                    node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
             }
         }
-        return sharedObjects;
+        //Print the Rdf graphs both to DB and local directories as files
+        String value = rdfGraph.printModel();
+        if (dao().getSearchHistoryDao().findRdfById(user.getId()).isEmpty()) {
+            dao().getSearchHistoryDao().insertRdf(user.getId(), group.getId(), value);
+        } else {
+            dao().getSearchHistoryDao().updateRdf(value, user.getId());
+        }
+        return sharedObject;
     }
 
     public Pkg(List<Node> nodes, List<Link> links) {

@@ -108,16 +108,16 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     Optional<AnnotationCount> findByUriAndType(String uri, String type);
 
     @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri_id = ?")
-    Optional<AnnotationCount> findAnnotationById(int id);
-
-    @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count ORDER BY created_at")
-    List<AnnotationCount> findAllAnnotationCounts();
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE CONCAT(',', users, ',') LIKE CONCAT('%,', ?, ',%') ORDER BY created_at")
+    List<AnnotationCount> findAnnotationCountByUsername(String username);
 
     @RegisterRowMapper(JsonSharedObjectMapper.class)
     @SqlQuery("SELECT id, shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND user_id = ? AND application = ?")
-    List<JsonSharedObject> findObjectByIdAndType(int groupId, int userId, String application);
+    List<JsonSharedObject> findObjectsByUserId(int groupId, int userId, String application);
+
+    @RegisterRowMapper(JsonSharedObjectMapper.class)
+    @SqlQuery("SELECT id, shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND application = ?")
+    List<JsonSharedObject> findObjectsByGroupIdAndType(int groupId, String application);
 
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_input_stream (user_id, type, content, date_created) VALUES(?, ?, ?, CURRENT_TIMESTAMP())")
     @GetGeneratedKeys("id")

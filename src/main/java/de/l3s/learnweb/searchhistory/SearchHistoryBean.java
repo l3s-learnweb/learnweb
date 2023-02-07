@@ -144,7 +144,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         return showGroupHistory;
     }
 
-    public User getCurrentUser() throws Exception {
+    public User getCurrentUser() {
         return userDao.findById(selectedUserId).orElse(getUser());
     }
 
@@ -237,18 +237,18 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     /**
     * Calculates and returns a list of top entries for each user belonging to the group.
     * Also exports a rdf turtle file for every user in the group
-    * @param selectedGroupId    the id of this user's group
+    * @param selectedGroupId the id of this user's group
     * */
     private void calculateEntities(int selectedGroupId) {
-        sharedObjects = getPkgBean().createSharedObject(selectedGroupId, 3, false, "collabGraph");
         //For testing only
         getPkgBean().createSharedObject(selectedGroupId, 5, true, "negative5SharedObject");
         getPkgBean().createSharedObject(selectedGroupId, 10, false, "positive10SharedObject");
+        sharedObjects = searchHistoryDao.findObjectsByGroupIdAndType(selectedGroupId, "collabGraph");
     }
 
     /**
     * Create the CollabGraph file, export it to visualisation.
-    * @return   the Json string of the collabGraph
+    * @return the Json string of the collabGraph
     * */
     public String getQueriesJson() {
         if (sessions == null || sessions.isEmpty() || selectedGroupId <= 0) {

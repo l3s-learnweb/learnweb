@@ -33,6 +33,7 @@ import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
+import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
@@ -49,6 +50,7 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.web.WebResource;
 import de.l3s.learnweb.searchhistory.JsonSharedObject;
 import de.l3s.learnweb.searchhistory.PkgBean;
+import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.AnnotationBean;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
@@ -90,6 +92,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private transient AnnotationBean annotationBean;
     @Inject
     private GroupDao groupDao;
+    @Inject
+    private SearchHistoryDao searchHistoryDao;
 
     @PostConstruct
     public void init() {
@@ -97,7 +101,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         searchFilters = new SearchFilters(SearchMode.text);
     }
 
-    public void onLoad() {
+    public void onLoad() throws InterruptedException {
         BeanAssert.authorized(isLoggedIn());
         log.debug("mode/action: {}; filter: {} - service: {}; query:{}", queryMode, queryFilters, queryService, query);
 
@@ -129,7 +133,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
     // -------------------------------------------------------------------------
 
-    public String onSearch() {
+    private String onSearch() throws InterruptedException {
         // search if a query is given and (it was not searched before or the query or search mode has been changed)
         if (!StringUtils.isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !queryService.equals(searchService.name()))) {
             if (null != search) {
@@ -292,6 +296,12 @@ public class SearchBean extends ApplicationBean implements Serializable {
                     snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_not_clicked",
                     "<title>" + s + "</title> " + snippet.getDescription());
             }
+            getPkgBean().trimPkg();
+            //Update one for recommendation, one for collabGraph which marks the user's active state.
+            getPkgBean().createSharedObject(groupDao.findByUserId(getUser().getId()).get(0).getId(),
+                3, false, "recommendation");
+            getPkgBean().createSharedObject(groupDao.findByUserId(getUser().getId()).get(0).getId(),
+                3, false, "collabGraph");
         }
     }
 
@@ -303,15 +313,21 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private void createSearchRecommendation() {
         //Initialization
         recommendations = new ArrayList<>();
-        int groupId = groupDao.findByUserId(getUser().getId()).get(0).getId();
+        int groupId;
+        List<Group> groups = groupDao.findByUserId(getUser().getId());
+        if (!groups.isEmpty()) {
+            groupId = groups.get(0).getId();
+        } else {
+            return;
+        }
         getPkgBean().trimPkg();
-        List<JsonSharedObject> sharedObjects = getPkgBean().createSharedObject(
-            groupId, 5, false, "recommendation");
+        List<JsonSharedObject> sharedObjects =  searchHistoryDao.findObjectsByGroupIdAndType(groupId, "recommendation");
         if (sharedObjects == null) {
             return;
         }
         Map<String, Double> entityRank = new HashMap<>();
         List<JsonSharedObject.Entity> chosenEntities = new ArrayList<>();
+
         for (JsonSharedObject sharedObject : sharedObjects) {
             if (sharedObject.getUser().getId() != getUser().getId()) {
 

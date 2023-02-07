@@ -8,6 +8,7 @@ import java.util.List;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
@@ -15,6 +16,7 @@ import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.user.User;
 
 @SessionScoped
+@Named
 public class PkgBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = 9067603779789276428L;
@@ -26,6 +28,7 @@ public class PkgBean extends ApplicationBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        System.out.println("Calling pkg");
         User user = getUser();
         List<Group> groups = groupDao.findByUserId(user.getId());
         int groupId = 0;
@@ -34,11 +37,7 @@ public class PkgBean extends ApplicationBean implements Serializable {
         }
         pkg = new Pkg(new ArrayList<>(), new ArrayList<>());
         //Find the users in this group
-        pkg.createPkg(groupId);
-    }
-
-    public void calculateGraph() {
-        pkg.calculateSumWeight();
+        pkg.createPkg(user, groupId);
     }
 
     public void trimPkg() {
@@ -46,8 +45,8 @@ public class PkgBean extends ApplicationBean implements Serializable {
         pkg.calculateSumWeight();
     }
 
-    public List<JsonSharedObject> createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
-        return pkg.createSharedObject(groupId, numberEntities, isAscending, application);
+    public JsonSharedObject createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
+        return pkg.createSharedObject(getUser(), groupId, numberEntities, isAscending, application);
     }
 
     public void updatePkg(AnnotationCount annotationCount, User user) {
@@ -57,4 +56,7 @@ public class PkgBean extends ApplicationBean implements Serializable {
     public JsonSharedObject createSingleGraph(int userId, int groupId) {
         return pkg.createSingleGraph(userId, groupId);
     }
+
+    public void doSomething() {}
+
 }
