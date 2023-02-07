@@ -31,7 +31,7 @@ import de.l3s.learnweb.user.UserDao;
 public class AnnotationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -1169917559922779411L;
-    private static AnnotationUnit annotationUnit;
+    private AnnotationUnit annotationUnit;
     private transient PkgBean pkgBean;
     @Inject
     private UserDao userDao;
