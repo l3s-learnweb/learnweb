@@ -7,12 +7,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
@@ -94,9 +95,9 @@ public class LogEntry implements Serializable {
         return action == Action.adding_resource && getResource() != null && getResource().getQuery() != null;
     }
 
-    private String getGroupLink(LanguageBundle bundle) {
+    private String getGroupLink(ResourceBundle bundle) {
         if (getGroupId() == 0) {
-            return "<a href=\"myhome/resources.jsf\" >" + bundle.getFormatted("myPrivateResources") + "</a> ";
+            return "<a href=\"myhome/resources.jsf\" >" + bundle.getString("myPrivateResources") + "</a> ";
         }
 
         Group group = getGroup();
@@ -108,27 +109,27 @@ public class LogEntry implements Serializable {
         }
     }
 
-    private String getUsernameLink(LanguageBundle bundle) {
+    private String getUsernameLink(ResourceBundle bundle) {
         if (getUser() == null || getUser().isDeleted()) {
             return "<b>Deleted user</b>";
         }
         return "<a href=\"user/detail.jsf?user_id=" + getUserId() + "\" target=\"_top\">" + getUser().getUsername() + "</a>";
     }
 
-    private String getCommentText(int commentId, LanguageBundle bundle) {
+    private String getCommentText(int commentId, ResourceBundle bundle) {
         Optional<Comment> comment = Learnweb.dao().getCommentDao().findById(commentId);
-        return comment.map(value -> " " + bundle.getFormatted("with") + " <b>"
+        return comment.map(value -> " " + bundle.getString("with") + " <b>"
             + StringHelper.shortnString(value.getText(), 100) + "</b>").orElse("");
     }
 
-    private String getResourceLink(LanguageBundle bundle) {
+    private String getResourceLink(ResourceBundle bundle) {
         if (getResource() != null) {
             return "<a href=\"resource.jsf?resource_id=" + getResource().getId() + "\" target=\"_top\"><b>" + StringHelper.shortnString(getResource().getTitle(), 40) + "</b></a> ";
         }
-        return bundle.getFormatted("log_a_resource");
+        return bundle.getString("log_a_resource");
     }
 
-    private String getForumLink(LanguageBundle bundle) {
+    private String getForumLink(ResourceBundle bundle) {
         return "<a href=\"group/forum_topic.jsf?topic_id=" + targetId + "\" target=\"_top\"><b>" + getParams() + "</b></a> ";
     }
 
@@ -139,14 +140,15 @@ public class LogEntry implements Serializable {
         };
     }
 
-    public String getDescription(LanguageBundle bundle) {
+    public String getDescription(Locale locale) {
+        ResourceBundle bundle = MessagesBundle.of(locale);
         // create description cache if it doesn't exist yet
         if (null == descriptions) {
             descriptions = new HashMap<>();
         }
 
         // try to get description from cache
-        String description = descriptions.get(bundle.getLocale());
+        String description = descriptions.get(locale);
         if (description != null) {
             return description;
         }
@@ -155,60 +157,60 @@ public class LogEntry implements Serializable {
 
         description = switch (getAction()) {
             case adding_resource:
-                yield usernameLink + bundle.getFormatted("log_adding_resource", getResourceLink(bundle), getGroupLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_adding_resource", getResourceLink(bundle), getGroupLink(bundle));
             case deleting_resource:
-                yield usernameLink + bundle.getFormatted("log_deleting_resource", "<b>" + getParams() + "</b>");
+                yield usernameLink + MessagesBundle.format(bundle, "log_deleting_resource", "<b>" + getParams() + "</b>");
             case edit_resource:
-                yield usernameLink + bundle.getFormatted("log_edit_resource", getResourceLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_edit_resource", getResourceLink(bundle));
             case move_resource:
-                yield usernameLink + bundle.getFormatted("log_move_resource", getResourceLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_move_resource", getResourceLink(bundle));
             case opening_resource:
-                yield usernameLink + bundle.getFormatted("log_opening_resource", getResourceLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_opening_resource", getResourceLink(bundle));
             case tagging_resource:
-                yield usernameLink + bundle.getFormatted("log_tagging_resource", getResourceLink(bundle), getParams());
+                yield usernameLink + MessagesBundle.format(bundle, "log_tagging_resource", getResourceLink(bundle), getParams());
             case commenting_resource:
-                yield usernameLink + bundle.getFormatted("log_commenting_resource", getResourceLink(bundle))
+                yield usernameLink + MessagesBundle.format(bundle, "log_commenting_resource", getResourceLink(bundle))
                     + getCommentText(NumberUtils.toInt(getParams()), bundle);
             case deleting_comment:
-                yield usernameLink + bundle.getFormatted("log_deleting_comment", getResourceLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_deleting_comment", getResourceLink(bundle));
             case rating_resource, thumb_rating_resource:
-                yield usernameLink + bundle.getFormatted("log_thumb_rating_resource", getResourceLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_thumb_rating_resource", getResourceLink(bundle));
             case searching:
-                yield usernameLink + bundle.getFormatted("log_searching_resource", getParams());
+                yield usernameLink + MessagesBundle.format(bundle, "log_searching_resource", getParams());
             case downloading:
-                yield usernameLink + bundle.getFormatted("log_downloading", getResourceLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_downloading", getResourceLink(bundle));
             case changing_office_resource:
-                yield usernameLink + bundle.getFormatted("log_document_changing", getResourceLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_document_changing", getResourceLink(bundle));
             case adding_resource_metadata:
-                yield usernameLink + bundle.getFormatted("log_add_resource_metadata", getParams()) + getResourceLink(bundle);
+                yield usernameLink + MessagesBundle.format(bundle, "log_add_resource_metadata", getParams()) + getResourceLink(bundle);
 
             // Folder actions
             case add_folder:
-                yield usernameLink + bundle.getFormatted("log_add_folder", getParams());
+                yield usernameLink + MessagesBundle.format(bundle, "log_add_folder", getParams());
             case deleting_folder:
-                yield usernameLink + bundle.getFormatted("log_deleting_folder", getParams());
+                yield usernameLink + MessagesBundle.format(bundle, "log_deleting_folder", getParams());
             case move_folder:
-                yield usernameLink + bundle.getFormatted("log_move_folder", getParams());
+                yield usernameLink + MessagesBundle.format(bundle, "log_move_folder", getParams());
             case opening_folder:
-                yield usernameLink + bundle.getFormatted("log_open_folder", getParams());
+                yield usernameLink + MessagesBundle.format(bundle, "log_open_folder", getParams());
 
             // Group actions
             case group_joining:
-                yield usernameLink + bundle.getFormatted("log_group_joining", getGroupLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_group_joining", getGroupLink(bundle));
             case group_leaving:
-                yield usernameLink + bundle.getFormatted("log_group_leaving", getGroupLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_group_leaving", getGroupLink(bundle));
             case group_creating:
-                yield usernameLink + bundle.getFormatted("log_group_creating", getGroupLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_group_creating", getGroupLink(bundle));
             case group_deleting:
-                yield usernameLink + bundle.getFormatted("log_group_deleting", getParams());
+                yield usernameLink + MessagesBundle.format(bundle, "log_group_deleting", getParams());
             case group_changing_title:
-                yield usernameLink + bundle.getFormatted("log_group_changing_title", getGroupLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_group_changing_title", getGroupLink(bundle));
             case group_changing_description:
-                yield usernameLink + bundle.getFormatted("log_group_changing_description", getGroupLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_group_changing_description", getGroupLink(bundle));
             case group_changing_leader:
-                yield usernameLink + bundle.getFormatted("log_group_changing_leader", getGroupLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_group_changing_leader", getGroupLink(bundle));
             case group_deleting_link:
-                yield usernameLink + bundle.getFormatted("log_group_deleting_link", getGroupLink(bundle));
+                yield usernameLink + MessagesBundle.format(bundle, "log_group_deleting_link", getGroupLink(bundle));
             case forum_topic_added:
                 yield usernameLink + "has added " + "<b>" + getForumLink(bundle) + "</b>" + " post";
             case forum_post_added:
@@ -216,17 +218,17 @@ public class LogEntry implements Serializable {
 
             // General actions
             case login:
-                yield usernameLink + bundle.getFormatted("log_login");
+                yield usernameLink + bundle.getString("log_login");
             case logout:
-                yield usernameLink + bundle.getFormatted("log_logout");
+                yield usernameLink + bundle.getString("log_logout");
             case register:
-                yield usernameLink + bundle.getFormatted("log_register");
+                yield usernameLink + bundle.getString("log_register");
             case changing_profile:
-                yield usernameLink + bundle.getFormatted("log_change_profile");
+                yield usernameLink + bundle.getString("log_change_profile");
             case submission_view_resources:
-                yield usernameLink + bundle.getFormatted("log_submission_view_resources");
+                yield usernameLink + bundle.getString("log_submission_view_resources");
             case submission_submitted:
-                yield usernameLink + bundle.getFormatted("log_submission_submit");
+                yield usernameLink + bundle.getString("log_submission_submit");
             case glossary_entry_edit:
                 yield usernameLink + " has edited an entry of " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
             case glossary_entry_delete:
@@ -249,7 +251,7 @@ public class LogEntry implements Serializable {
         };
         // unused translations that might become useful again: log_opening_url_resource, log_group_removing_resource
 
-        this.descriptions.put(bundle.getLocale(), description);
+        this.descriptions.put(locale, description);
 
         return description;
     }

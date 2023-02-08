@@ -9,10 +9,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -47,17 +47,17 @@ public class Course implements Serializable, Comparable<Course>, HasId {
 
     private int id;
     @NotBlank
-    @Length(min = 2, max = 40)
+    @Size(min = 2, max = 40)
     private String title;
     private int organisationId;
     private int defaultGroupId; // all users who join this course, automatically join this group
     private RegistrationType registrationType = RegistrationType.CLOSED;
-    @Length(min = 2, max = 90)
+    @Size(min = 2, max = 90)
     private String registrationWizard;
     private String registrationDescription;
     private int registrationIconFileId;
     private int nextXUsersBecomeModerator;
-    @Length(max = 65000)
+    @Size(max = 65000)
     private String welcomeMessage;
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;

@@ -10,8 +10,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Length;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -85,9 +85,9 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private int leaderUserId;
     private boolean deleted;
     @NotBlank
-    @Length(min = 3, max = 60)
+    @Size(min = 3, max = 60)
     private String title;
-    @Length(max = 500)
+    @Size(max = 500)
     private String description;
     private int imageFileId;
     private int maxMemberCount = -1; // defines how many users can join this group

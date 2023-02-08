@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CheckStyle-IDEA" serialisationVersion="2">
-    <checkstyleVersion>10.3</checkstyleVersion>
+    <checkstyleVersion>10.6.0</checkstyleVersion>
     <scanScope>Everything</scanScope>
     <suppressErrors>true</suppressErrors>
     <scanBeforeCheckin>true</scanBeforeCheckin>
     <option name="thirdPartyClasspath" />
     <option name="activeLocationIds">
-      <option value="4416e909-dbd5-40e8-9205-f840b9c3b0e0" />
+      <option value="eb4a6952-0db3-428c-a0a8-e416dd86de95" />
     </option>
     <option name="locations">
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
-        <ConfigurationLocation id="4416e909-dbd5-40e8-9205-f840b9c3b0e0" type="PROJECT_RELATIVE" scope="All" description="Learnweb styles (mvn)">
-          $PROJECT_DIR$/.mvn/checkstyle-config.xml
+        <ConfigurationLocation id="eb4a6952-0db3-428c-a0a8-e416dd86de95" type="PROJECT_RELATIVE" scope="All" description="Learnweb">
+          $PROJECT_DIR$/src/main/conf/checkstyle-config.xml
           <option name="properties">
             <map>
               <entry key="org.checkstyle.sun.suppressionfilter.config" value="" />

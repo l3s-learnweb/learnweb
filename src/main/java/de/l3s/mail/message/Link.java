@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 
 public class Link extends Element {
     private final String text;
@@ -24,22 +24,22 @@ public class Link extends Element {
     }
 
     @Override
-    protected void buildHtml(final StringBuilder sb, final LanguageBundle msg) {
+    protected void buildHtml(final StringBuilder sb, final MessagesBundle msg) {
         sb.append("<a").append(buildAttributes(Map.of("href", url))).append(">");
         if (null == text) {
             sb.append(this.url);
         } else {
-            sb.append(msg.getFormatted(text));
+            sb.append(msg.format(text));
         }
         sb.append("</a>");
     }
 
     @Override
-    protected void buildPlainText(final StringBuilder sb, final LanguageBundle msg) {
+    protected void buildPlainText(final StringBuilder sb, final MessagesBundle msg) {
         if (text == null) {
             sb.append(url);
         } else {
-            sb.append(msg.getFormatted(text)).append(" (").append(url).append(")");
+            sb.append(msg.format(text)).append(" (").append(url).append(")");
         }
     }
 }

@@ -17,9 +17,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.forum.ForumTopic;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.web.Request;
 import de.l3s.mail.MailFactory;
 import de.l3s.test.LearnwebExtension;
@@ -29,7 +29,7 @@ class MessageBuilderTest {
     @RegisterExtension
     static final LearnwebExtension learnwebExt = new LearnwebExtension();
 
-    private static final LanguageBundle msg = LanguageBundle.getBundle(Locale.ENGLISH);
+    private static final MessagesBundle msg = new MessagesBundle(Locale.ENGLISH);
     private static final java.util.List<Request> suspiciousRequests;
     private static final java.util.List<ForumTopic> userTopics;
     private static final java.util.List<ForumTopic> otherTopics;

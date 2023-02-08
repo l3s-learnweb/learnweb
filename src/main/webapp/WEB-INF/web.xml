@@ -169,11 +169,11 @@
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
 
-    <!--
-    Because the ImageIO plugin registry (the IIORegistry) is "VM global", it doesn't by default work well with servlet contexts.
-    https://github.com/haraldk/TwelveMonkeys#deploying-the-plugins-in-a-web-app
-     -->
     <listener>
+        <description>
+            Because the ImageIO plugin registry (the IIORegistry) is "VM global", it doesn't by default work well with servlet contexts.
+            https://github.com/haraldk/TwelveMonkeys#deploying-the-plugins-in-a-web-app
+        </description>
         <display-name>ImageIO service provider loader/unloader</display-name>
         <listener-class>com.twelvemonkeys.servlet.image.IIOProviderContextListener</listener-class>
     </listener>

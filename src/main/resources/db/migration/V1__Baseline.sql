@@ -198,7 +198,6 @@ CREATE TABLE IF NOT EXISTS `lw_news` (
 
 CREATE TABLE IF NOT EXISTS `lw_organisation` (
     `organisation_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `default` BOOLEAN DEFAULT NULL,
     `title` VARCHAR(60) NOT NULL,
     `logo` LONGTEXT DEFAULT NULL,
     `welcome_page` VARCHAR(255) DEFAULT NULL,
@@ -210,8 +209,7 @@ CREATE TABLE IF NOT EXISTS `lw_organisation` (
     `default_language` CHAR(2) DEFAULT NULL,
     `language_variant` VARCHAR(10) DEFAULT NULL,
     `banner_image_file_id` INT(10) UNSIGNED DEFAULT NULL,
-    `glossary_languages` VARCHAR(1000) DEFAULT NULL,
-    UNIQUE KEY `lw_organisation_default` (`default`)
+    `glossary_languages` VARCHAR(1000) DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `lw_requests` ( -- TODO: flush data on destroy

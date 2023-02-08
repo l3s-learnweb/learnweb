@@ -10,16 +10,15 @@ import java.util.Map;
 import java.util.Objects;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
 
-import de.l3s.learnweb.app.ConfigProvider;
-import de.l3s.learnweb.user.UserBean;
+import de.l3s.learnweb.app.Learnweb;
 import io.sentry.EventProcessor;
 import io.sentry.Hint;
 import io.sentry.SentryEvent;
@@ -48,10 +47,9 @@ final class SentryRequestHttpServletRequestProcessor implements EventProcessor {
         event.setRequest(sentryRequest);
 
         try {
-            ConfigProvider config = Beans.getInstance(ConfigProvider.class);
-            event.setEnvironment(config.getEnvironment());
+            event.setEnvironment(Learnweb.config().getEnvironment());
             if (!"local".equals(event.getEnvironment())) {
-                event.setRelease("learnweb@" + config.getVersion());
+                event.setRelease("learnweb@" + Learnweb.config().getVersion());
             }
         } catch (Exception e) {
             log.error("Failed to resolve environment and release", e);
@@ -59,13 +57,18 @@ final class SentryRequestHttpServletRequestProcessor implements EventProcessor {
 
         try {
             User user = new User();
-            UserBean userBean = Beans.getInstance(UserBean.class);
-            if (userBean.isLoggedIn()) {
-                user.setId(String.valueOf(userBean.getUser().getId()));
-                user.setUsername(userBean.getUser().getUsername());
-                user.setEmail(userBean.getUser().getEmail());
-            }
             user.setIpAddress(Servlets.getRemoteAddr(this.httpRequest));
+            HttpSession session = this.httpRequest.getSession();
+            if (session != null) {
+                Object userId = session.getAttribute("UserId");
+                if (userId != null) {
+                    user.setId(userId.toString());
+                }
+                Object userName = session.getAttribute("UserName");
+                if (userName != null) {
+                    user.setUsername(userName.toString());
+                }
+            }
             event.setUser(user);
         } catch (Exception e) {
             log.error("Failed to resolve user", e);

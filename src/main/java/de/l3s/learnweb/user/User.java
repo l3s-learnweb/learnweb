@@ -17,13 +17,13 @@ import java.util.Optional;
 import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.validator.constraints.Length;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
@@ -84,12 +84,12 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private boolean deleted;
     private int imageFileId; // profile image
     private int organisationId;
-    @Length(max = 100)
+    @Size(max = 100)
     private String fullName;
-    @Length(max = 100)
+    @Size(max = 100)
     private String affiliation; //affiliated with which institute
     @NotBlank
-    @Length(min = 2, max = 50)
+    @Size(min = 2, max = 50)
     private String username;
     @Email
     private String email; // it is important to set null instead of empty string
@@ -101,15 +101,15 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     private Gender gender = Gender.UNASSIGNED;
     private LocalDate dateOfBirth;
-    @Length(max = 250)
+    @Size(max = 250)
     private String address;
-    @Length(max = 100)
+    @Size(max = 100)
     private String profession;
-    @Length(max = 250)
+    @Size(max = 250)
     private String interest;
-    @Length(max = 50)
+    @Size(max = 50)
     private String studentId;
-    @Length(max = 250)
+    @Size(max = 250)
     private String credits;
     private boolean acceptTermsAndConditions = false;
 
@@ -117,7 +117,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private boolean moderator;
 
     private HashMap<String, String> preferences = new HashMap<>();
-    private ZoneId timeZone;
+    private ZoneId timeZone = ZoneId.systemDefault();
     private LocalDateTime createdAt;
 
     // caches
@@ -315,6 +315,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     public void setOrganisationId(int organisationId) {
         this.organisationId = organisationId;
         this.organisation = null;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+        this.organisationId = organisation.getId();
     }
 
     public Organisation getOrganisation() {

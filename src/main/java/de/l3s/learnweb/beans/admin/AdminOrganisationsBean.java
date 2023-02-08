@@ -10,8 +10,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.validation.constraints.NotBlank;
-
-import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.Size;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -26,7 +25,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     //private static final Logger log = LogManager.getLogger(AdminOrganisationsBean.class);
 
     @NotBlank
-    @Length(min = 2, max = 50)
+    @Size(min = 2, max = 50)
     private String newOrganisationTitle;
 
     private List<Organisation> organisations;

@@ -10,9 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Beans;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
 import de.l3s.util.bean.BeanHelper;
@@ -39,7 +39,7 @@ public class ResourceMetaDataBean {
      * Creates a translated list of all available languages.
      */
     public static List<SelectItem> getLanguageList() {
-        LanguageBundle bundle = Beans.getInstance(UserBean.class).getBundle();
+        MessagesBundle bundle = new MessagesBundle();
         List<SelectItem> languageList = languageLists.get(bundle.getLocale().getLanguage());
 
         if (null == languageList) {

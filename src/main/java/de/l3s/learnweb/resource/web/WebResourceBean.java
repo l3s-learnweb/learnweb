@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Arrays;
@@ -73,11 +75,10 @@ public class WebResourceBean extends ApplicationBean implements Serializable {
      */
     public String getArchiveTimelineJsonData() {
         TreeMap<LocalDate, Integer> monthlySeriesData = dao().getWaybackUrlDao().countSnapshotsGroupedByMonths(resource.getId(), resource.getUrl());
-
         JsonArray highChartsData = new JsonArray();
         monthlySeriesData.forEach((key, value) -> {
             JsonArray innerArray = new JsonArray();
-            innerArray.add(key.toEpochDay());
+            innerArray.add(key.toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.UTC) * 1000);
             innerArray.add(value);
             highChartsData.add(innerArray);
         });

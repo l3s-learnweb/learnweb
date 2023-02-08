@@ -8,7 +8,7 @@ import jakarta.mail.MessagingException;
 
 import org.apache.solr.common.StringUtils;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.mail.Mail;
 
 public class MessageBuilder {
@@ -46,11 +46,11 @@ public class MessageBuilder {
         return footer(new HorizontalRule(), new Text("email.regards"), new LineBreak(), new Text("email.team"));
     }
 
-    public String getSubject(final LanguageBundle msg) {
-        return msg.getFormatted(subject);
+    public String getSubject(final MessagesBundle msg) {
+        return msg.format(subject);
     }
 
-    public String buildHtmlText(final LanguageBundle msg) {
+    public String buildHtmlText(final MessagesBundle msg) {
         StringBuilder sb = new StringBuilder("<html>");
         sb.append("<head>");
         sb.append("<meta charset=\"UTF-8\">");
@@ -76,7 +76,7 @@ public class MessageBuilder {
         return sb.toString();
     }
 
-    public String buildPlainText(final LanguageBundle msg) {
+    public String buildPlainText(final MessagesBundle msg) {
         StringBuilder sb = new StringBuilder();
         for (Element element : bodyElements) {
             element.buildPlainText(sb, msg);
@@ -88,7 +88,7 @@ public class MessageBuilder {
     }
 
     public Mail build(Locale locale) throws MessagingException {
-        LanguageBundle bundle = LanguageBundle.getBundle(locale);
+        MessagesBundle bundle = new MessagesBundle(locale);
 
         Mail mail = new Mail();
         mail.setSubject(getSubject(bundle));

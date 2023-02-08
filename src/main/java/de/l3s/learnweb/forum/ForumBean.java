@@ -4,6 +4,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.model.SelectItem;
@@ -12,14 +14,13 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Length;
-
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.logging.Action;
 
 @Named
@@ -34,7 +35,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
     private List<ForumTopic> topics;
 
     @NotBlank
-    @Length(max = 100)
+    @Size(max = 100)
     private String newTopicTitle;
     @NotBlank
     private String newTopicText;
@@ -87,7 +88,7 @@ public class ForumBean extends ApplicationBean implements Serializable {
     }
 
     public List<SelectItem> getCategories() {
-        return getCategoriesByCourse(group.getCourseId(), getUserBean().getBundle());
+        return getCategoriesByCourse(group.getCourseId(), getLocale());
     }
 
     public List<ForumTopic> getTopics() {
@@ -130,17 +131,18 @@ public class ForumBean extends ApplicationBean implements Serializable {
         this.newTopicCategory = newTopicCategory;
     }
 
-    protected static List<SelectItem> getCategoriesByCourse(int courseId, LanguageBundle msg) {
+    protected static List<SelectItem> getCategoriesByCourse(int courseId, Locale locale) {
+        ResourceBundle msg = MessagesBundle.of(locale);
         SelectItemGroup g1 = new SelectItemGroup(msg.getString("Forum.cell.category.1"));
-        g1.setSelectItems(new SelectItem[] {
+        g1.setSelectItems(
             new SelectItem("Forum.cell.category.1a", msg.getString("Forum.cell.category.1a")),
             new SelectItem("Forum.cell.category.1b", msg.getString("Forum.cell.category.1b")),
             new SelectItem("Forum.cell.category.1c", msg.getString("Forum.cell.category.1c")),
             new SelectItem("Forum.cell.category.1d", msg.getString("Forum.cell.category.1d"))
-        });
+        );
 
         SelectItemGroup g2 = new SelectItemGroup(msg.getString("Forum.cell.category.2"));
-        g2.setSelectItems(new SelectItem[] {
+        g2.setSelectItems(
             new SelectItem("Forum.cell.category.2a", msg.getString("Forum.cell.category.2a")),
             new SelectItem("Forum.cell.category.2b", msg.getString("Forum.cell.category.2b")),
             new SelectItem("Forum.cell.category.2c", msg.getString("Forum.cell.category.2c")),
@@ -149,14 +151,14 @@ public class ForumBean extends ApplicationBean implements Serializable {
             new SelectItem("Forum.cell.category.2f", msg.getString("Forum.cell.category.2f")),
             new SelectItem("Forum.cell.category.2g", msg.getString("Forum.cell.category.2g")),
             new SelectItem("Forum.cell.category.2h", msg.getString("Forum.cell.category.2h"))
-        });
+        );
 
         SelectItemGroup g3 = new SelectItemGroup(msg.getString("Forum.cell.category.3"));
-        g3.setSelectItems(new SelectItem[] {
+        g3.setSelectItems(
             new SelectItem("Forum.cell.category.3a", msg.getString("Forum.cell.category.3a")),
             new SelectItem("Forum.cell.category.3b", msg.getString("Forum.cell.category.3b")),
             new SelectItem("Forum.cell.category.3c", msg.getString("Forum.cell.category.3c"))
-        });
+        );
 
         return Arrays.asList(g1, g2, g3);
     }

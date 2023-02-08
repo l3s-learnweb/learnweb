@@ -10,11 +10,12 @@
 
 <ui:define name="metadata">
     <f:metadata>
-        <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true" converter="idConverter"/>
-        <f:viewParam name="tab" value="#{resourceDetailBean.tab}" required="false"/>
-        <f:viewParam name="aside" value="#{resourceDetailBean.aside}" required="false" converter="BitConverter"/>
-        <f:viewParam name="edit" value="#{resourceDetailBean.editResource}" required="false"/>
+        <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true"/>
+        <f:viewParam name="tab" value="#{resourceDetailBean.tab}"/>
+        <f:viewParam name="aside" value="#{resourceDetailBean.aside}" converter="BitConverter"/>
+        <f:viewParam name="edit" value="#{resourceDetailBean.editResource}"/>
         <f:viewAction action="#{resourceDetailBean.onLoad}"/>
+        <o:viewParamValidationFailed sendError="400" message="#{null}"/>
     </f:metadata>
 </ui:define>
 

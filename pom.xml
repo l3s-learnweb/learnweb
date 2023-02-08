@@ -17,14 +17,14 @@
         <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
         <maven.compiler.release>17</maven.compiler.release>
-        <maven.dependency.myfaces.version>4.0.0-RC3</maven.dependency.myfaces.version>
+        <maven.dependency.myfaces.version>4.0.0-RC4</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.9.4</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.36.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.12.0</maven.dependency.flyway.version>
+        <maven.dependency.jdbi3.version>3.37.0</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>9.14.1</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.19.0</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>6.12.1</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>6.13.1</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.9.2</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>5.0.0</maven.dependency.mockito.version>
+        <maven.dependency.mockito.version>5.1.1</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -75,21 +75,20 @@
         <!-- Jakarta CDI API & Impl for Servlet container (Tomcat) -->
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
-            <artifactId>weld-servlet-shaded</artifactId>
+            <artifactId>weld-servlet-core</artifactId>
             <version>5.1.0.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Jakarta Validator API & Impl -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.0.Final</version>
-            <exclusions>
-                <!-- Added as part of org.jboss.weld.servlet:weld-servlet-shaded -->
-                <exclusion>
-                    <groupId>org.jboss.logging</groupId>
-                    <artifactId>jboss-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- Jakarta Mail API & Impl -->
         <dependency>
@@ -151,7 +150,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>1.9.0</version>
+            <version>1.10.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -428,7 +427,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.2.1</version>
                 <configuration>
-                    <configLocation>.mvn/checkstyle-config.xml</configLocation>
+                    <configLocation>src/main/conf/checkstyle-config.xml</configLocation>
                     <consoleOutput>false</consoleOutput>
                     <logViolationsToConsole>true</logViolationsToConsole>
                     <failOnViolation>true</failOnViolation>
@@ -438,7 +437,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.6.0</version>
+                        <version>10.7.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -448,7 +447,7 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.7.3.0</version>
                 <configuration>
-                    <excludeFilterFile>.mvn/spotbugs-exclude.xml</excludeFilterFile>
+                    <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -499,6 +498,19 @@
                     <password>${env.LEARNWEB_TOMCAT_PASSWORD}</password>
                     <!--suppress UnresolvedMavenProperty -->
                     <path>/${path}##${project.version}</path>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>11.0.13</version>
+                <configuration>
+                    <!-- see https://www.eclipse.org/jetty/documentation/jetty-11/programming-guide/index.html#pg-configuration-6 -->
+                    <webApp>
+                        <contextPath>/</contextPath>
+                        <jettyEnvXml>src/main/conf/jetty-env.xml</jettyEnvXml>
+                    </webApp>
+                    <scan>5</scan>
                 </configuration>
             </plugin>
             <!-- Can be used to create JAR archive and set specific class as entry point -->

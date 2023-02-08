@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.FacesLocal;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.user.User;
 
 @FacesComponent(createTag = true, tagName = "user", namespace = "http://l3s.de/learnweb")
@@ -41,7 +41,7 @@ public class LearnwebUser extends UIComponentBase {
             ResponseWriter writer = context.getResponseWriter();
 
             writer.startElement("span", this);
-            writer.write(LanguageBundle.getBundle(FacesLocal.getLocale(context)).getFormatted("deleted_user"));
+            writer.write(MessagesBundle.format(FacesLocal.getLocale(context), "deleted_user"));
             writer.endElement("span");
             return;
         }

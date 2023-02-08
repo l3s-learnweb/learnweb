@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.i18n.MessagesBundle;
 
 public class Paragraph extends Element {
 
@@ -38,7 +38,7 @@ public class Paragraph extends Element {
     }
 
     @Override
-    protected void buildHtml(final StringBuilder sb, final LanguageBundle msg) {
+    protected void buildHtml(final StringBuilder sb, final MessagesBundle msg) {
         sb.append("<p").append(buildAttributes()).append(">");
         for (Element child : children) {
             child.buildHtml(sb, msg);
@@ -47,7 +47,7 @@ public class Paragraph extends Element {
     }
 
     @Override
-    protected void buildPlainText(final StringBuilder sb, final LanguageBundle msg) {
+    protected void buildPlainText(final StringBuilder sb, final MessagesBundle msg) {
         for (Element child : children) {
             child.buildPlainText(sb, msg);
         }

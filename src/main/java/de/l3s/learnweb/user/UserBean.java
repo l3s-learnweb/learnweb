@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -22,18 +24,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
-import org.omnifaces.util.Servlets;
 import org.primefaces.model.menu.BaseMenuModel;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.MenuModel;
 
-import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.component.ActiveSubmenu;
 import de.l3s.learnweb.component.ActiveSubmenu.Builder;
 import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
@@ -46,41 +47,43 @@ public class UserBean implements Serializable {
     private static final Logger log = LogManager.getLogger(UserBean.class);
 
     private int userId = 0;
-    private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
-    private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on an other account
-
     private Locale locale;
-    private transient LanguageBundle bundle;
-    private transient List<Group> newGroups;
-
-    private transient BaseMenuModel sidebarMenuModel;
-    private transient Instant sidebarMenuModelUpdate;
     private final HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
+    private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
+    private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on another account
     private transient Organisation activeOrganisation;
+    private transient List<Group> newGroups;
+    private transient BaseMenuModel sidebarMenuModel;
+    private transient Instant sidebarMenuModelUpdate;
 
     @PostConstruct
     public void init() {
-        // get preferred language
-        locale = Faces.getLocale();
+        //noinspection ProhibitedExceptionCaught
+        try {
+            // There is an issue, that sometimes it can be called before FacesContext is initialized (e.g. from @WebFilter)
+            // in the case there is no ViewRoot available and default locale used. But because it happens only for existing users, we used saved locale.
+            locale = Faces.getViewRoot().getLocale();
+            log.debug("UserBean initialized with locale {}", locale);
+        } catch (NullPointerException e) {
+            log.debug("UserBean initialized without FacesContext, use default locale");
+            locale = Locale.getDefault();
+        }
     }
 
     /**
      * This method sets values which are required by the Download Servlet
      * and provides data which is shown on the Tomcat manager session page.
-     *
-     * @return userName | ipAddress | userAgent for the current request;
      */
-    public String storeMetadataInSession(HttpServletRequest request) {
-        String userName = getUser() == null ? "logged_out" : getUser().getRealUsername();
-        String info = userName + " | " + Servlets.getRemoteAddr(request) + " | " + request.getHeader("User-Agent");
-
-        // store the user also in the session so that it is accessible by DownloadServlet and TomcatManager
-        HttpSession session = request.getSession(true);
-        session.setAttribute("userName", info); // set only to display it in Tomcat manager app
-        session.setAttribute("Locale", locale); // set only to display it in Tomcat manager app
-        session.setAttribute("learnweb_user_id", userId); // required by DownloadServlet
-        return info;
+    private void updateSessionMetadata(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if (session != null) {
+            session.setAttribute("Locale", locale);
+            if (getUser() != null) {
+                session.setAttribute("UserId", getUser().getId());
+                session.setAttribute("UserName", getUser().getRealUsername());
+            }
+        }
     }
 
     public boolean isLoggedIn() {
@@ -117,8 +120,8 @@ public class UserBean implements Serializable {
         this.newGroups = null;
 
         refreshLocale();
-        String clientInfo = storeMetadataInSession(request);
-        log.debug("Session started: {}", clientInfo);
+        updateSessionMetadata(request);
+        log.debug("Session started: {}", user.getUsername());
     }
 
     @PreDestroy
@@ -157,13 +160,6 @@ public class UserBean implements Serializable {
         setPreference(key, value);
     }
 
-    public LanguageBundle getBundle() {
-        if (bundle == null) {
-            bundle = LanguageBundle.getBundle(locale);
-        }
-        return bundle;
-    }
-
     public Locale getLocale() {
         return locale;
     }
@@ -182,9 +178,8 @@ public class UserBean implements Serializable {
         if (isLoggedIn() && getUser().getLocale() != null) {
             setLocaleCode(getUser().getLocale().getLanguage());
         } else {
-            String defaultLanguage = getActiveOrganisation().getDefaultLanguage();
-            String localeCode = defaultLanguage != null ? defaultLanguage : locale.getLanguage();
-            setLocaleCode(localeCode);
+            String language = getActiveOrganisation().map(Organisation::getDefaultLanguage).orElse(locale.getLanguage());
+            setLocaleCode(language);
         }
     }
 
@@ -192,7 +187,6 @@ public class UserBean implements Serializable {
         setSidebarMenuModel(null);
         //log.debug("set locale " + localeCode);
         locale = getLocaleByLocaleCode(localeCode);
-        bundle = null;
 
         FacesContext fc = FacesContext.getCurrentInstance();
         if (fc == null || fc.getViewRoot() == null) {
@@ -203,7 +197,7 @@ public class UserBean implements Serializable {
     }
 
     private Locale getLocaleByLocaleCode(String localeCode) {
-        String languageVariant = getActiveOrganisation().getLanguageVariant();
+        String languageVariant = getActiveOrganisation().map(Organisation::getLanguageVariant).orElse("");
 
         return switch (localeCode) {
             case "de" -> new Locale("de", "DE", languageVariant);
@@ -279,20 +273,12 @@ public class UserBean implements Serializable {
      * Returns the css code for the banner image of the active organisation or an empty string if no image is defined.
      */
     public String getBannerImage() {
-        String bannerImage = null;
-        if (isLoggedIn()) {
-            bannerImage = getActiveOrganisation().getBannerImageUrl();
-        }
-
+        String bannerImage = getActiveOrganisation().map(Organisation::getBannerImageUrl).orElse(null);
         return StringUtils.firstNonBlank(bannerImage, "/resources/images/learnweb_logo.png");
     }
 
     public String getBannerLink() {
-        if (isLoggedIn()) {
-            return "./" + getActiveOrganisation().getWelcomePage();
-        } else {
-            return "./";
-        }
+        return getActiveOrganisation().map(o -> "./" + o.getWelcomePage()).orElse("./");
     }
 
     /**
@@ -317,7 +303,7 @@ public class UserBean implements Serializable {
 
         if (null == sidebarMenuModel || sidebarMenuModelUpdate.isBefore(Instant.now().minus(Duration.ofMinutes(10)))) {
             long start = System.currentTimeMillis();
-            sidebarMenuModel = createMenuModel(getBundle(), getUser());
+            sidebarMenuModel = createMenuModel(MessagesBundle.of(getLocale()), getUser());
             sidebarMenuModelUpdate = Instant.now();
             long elapsedMs = System.currentTimeMillis() - start;
 
@@ -329,7 +315,7 @@ public class UserBean implements Serializable {
         return sidebarMenuModel;
     }
 
-    private static BaseMenuModel createMenuModel(LanguageBundle msg, User user) {
+    private static BaseMenuModel createMenuModel(ResourceBundle msg, User user) {
         BaseMenuModel model = new BaseMenuModel();
 
         // My resources
@@ -470,48 +456,37 @@ public class UserBean implements Serializable {
     }
 
     public String getTrackerApiKey() {
-        if (StringUtils.isNotEmpty(getActiveOrganisation().getTrackerApiKey())) {
-            return getActiveOrganisation().getTrackerApiKey();
-        }
-
-        return Learnweb.config().getProperty("tracker_api_key");
+        return getActiveOrganisation().map(Organisation::getTrackerApiKey)
+            .filter(StringUtils::isNotEmpty)
+            .orElse(Learnweb.config().getProperty("tracker_api_key"));
     }
 
     public boolean isStarRatingEnabled() {
-        return !getActiveOrganisation().getOption(Option.Resource_Hide_Star_rating);
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Resource_Hide_Star_rating)).orElse(false);
     }
 
     public boolean isThumbRatingEnabled() {
-        return !getActiveOrganisation().getOption(Option.Resource_Hide_Thumb_rating);
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Resource_Hide_Thumb_rating)).orElse(true);
     }
 
     public boolean isLoggingEnabled() {
-        return !getActiveOrganisation().getOption(Option.Privacy_Logging_disabled);
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Privacy_Logging_disabled)).orElse(true);
     }
 
     public boolean isTrackingEnabled() {
-        if (getActiveOrganisation() != null) {
-            return !getActiveOrganisation().getOption(Option.Privacy_Tracker_disabled);
-        }
-        return false;
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Privacy_Tracker_disabled)).orElse(true);
     }
 
     public boolean isLanguageSwitchEnabled() {
-        if (getActiveOrganisation() != null) {
-            return !getActiveOrganisation().getOption(Option.Users_Hide_language_switch);
-        }
-        return false;
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Users_Hide_language_switch)).orElse(false);
     }
 
     public boolean isHideSidebarMenu() {
         return "true".equals(getPreference("HIDE_SIDEBAR"));
     }
 
-    private Organisation getActiveOrganisation() {
-        if (null == activeOrganisation) {
-            activeOrganisation = Learnweb.dao().getOrganisationDao().findDefault();
-        }
-        return activeOrganisation;
+    private Optional<Organisation> getActiveOrganisation() {
+        return Optional.ofNullable(activeOrganisation);
     }
 
     /**

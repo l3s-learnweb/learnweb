@@ -6,8 +6,9 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
+import jakarta.validation.constraints.Size;
+
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
 import de.l3s.learnweb.app.Learnweb;
@@ -24,14 +25,14 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     private boolean deleted;
     private int userId; // the user who created this entry
     private int lastChangedByUserId;
-    @Length(max = 900)
+    @Size(max = 900)
     private String description;
     private boolean descriptionPasted = false;
-    @Length(max = 90)
+    @Size(max = 90)
     private String topicOne;
-    @Length(max = 90)
+    @Size(max = 90)
     private String topicTwo;
-    @Length(max = 90)
+    @Size(max = 90)
     private String topicThree;
     private List<GlossaryTerm> terms = new LinkedList<>();
     private String fulltext; // fulltext search in glossary

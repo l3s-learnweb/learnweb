@@ -44,7 +44,7 @@ public class LearnwebExceptionHandler extends FullAjaxExceptionHandler {
         }
 
         if (rootCause instanceof ForbiddenHttpException) {
-            log.error("Illegal access", rootCause);
+            log.warn("Illegal access", rootCause);
         } else if (rootCause instanceof BadRequestHttpException) {
             log.log(isBotUserAgent(request) ? Level.WARN : Level.ERROR, "Bad request", rootCause);
         } else if (rootCause instanceof ViewExpiredException) {
