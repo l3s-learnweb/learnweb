@@ -45,10 +45,13 @@ import de.l3s.learnweb.resource.submission.SubmissionDao;
 import de.l3s.learnweb.resource.survey.SurveyDao;
 import de.l3s.learnweb.resource.ted.TedTranscriptDao;
 import de.l3s.learnweb.searchhistory.SearchHistoryDao;
+import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.CourseDao;
 import de.l3s.learnweb.user.MessageDao;
+import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.OrganisationDao;
 import de.l3s.learnweb.user.TokenDao;
+import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
 import de.l3s.learnweb.web.BanDao;
 import de.l3s.learnweb.web.BounceDao;
@@ -110,6 +113,7 @@ public class DaoProvider {
         this(configProvider, createDataSource(configProvider));
 
         migrateDatabase();
+        seedDatabase();
     }
 
     public DaoProvider(final ConfigProvider configProvider, final DataSource dataSource) {
@@ -164,13 +168,36 @@ public class DaoProvider {
         flyway.migrate();
     }
 
+    private void seedDatabase() {
+        // Seed database with default organisation, course, user if empty
+        if (organisationDao.findAll().isEmpty()) {
+            Organisation organisation = new Organisation(0);
+            organisation.setTitle("Learnweb Demo");
+            organisationDao.save(organisation);
+
+            Course course = new Course();
+            course.setTitle("Demo Course");
+            course.setOrganisationId(organisation.getId());
+            courseDao.save(course);
+
+            User user = new User();
+            user.setUsername("admin");
+            user.setPassword("admin");
+            user.setEmailConfirmed(true);
+            user.setAdmin(true);
+            user.setOrganisation(organisation);
+            userDao.save(user);
+            courseDao.insertUser(course, user);
+        }
+    }
+
     public void destroy() {
         try {
             if (dataSource instanceof Closeable closeable) {
                 closeable.close();
             }
 
-            // Unregister JDBI drivers (e.g. MaridDB Driver)
+            // Unregister JDBI drivers (e.g. MariaDB Driver)
             Enumeration<Driver> drivers = DriverManager.getDrivers();
             while (drivers.hasMoreElements()) {
                 Driver driver = drivers.nextElement();
