@@ -117,7 +117,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private boolean moderator;
 
     private HashMap<String, String> preferences = new HashMap<>();
-    private ZoneId timeZone;
+    private ZoneId timeZone = ZoneId.systemDefault();
     private LocalDateTime createdAt;
 
     // caches
@@ -315,6 +315,11 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     public void setOrganisationId(int organisationId) {
         this.organisationId = organisationId;
         this.organisation = null;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+        this.organisationId = organisation.getId();
     }
 
     public Organisation getOrganisation() {

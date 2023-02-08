@@ -42,22 +42,6 @@ class OrganisationDaoTest {
     }
 
     @Test
-    void findDefault() {
-        Organisation organisationDefault = organisationDao.findDefault();
-
-        assertEquals(1, organisationDefault.getId());
-        assertEquals("Public", organisationDefault.getTitle());
-        assertEquals("Hello world", organisationDefault.getWelcomeMessage());
-        assertEquals("myhome/welcome.jsf", organisationDefault.getWelcomePage());
-        assertEquals("en", organisationDefault.getDefaultLanguage());
-        assertEquals(3, organisationDefault.getGlossaryLanguages().size());
-        assertEquals(SearchMode.text, organisationDefault.getDefaultSearchMode());
-        assertEquals(ResourceService.bing, organisationDefault.getDefaultSearchServiceText());
-        assertEquals(ResourceService.flickr, organisationDefault.getDefaultSearchServiceImage());
-        assertEquals(ResourceService.youtube, organisationDefault.getDefaultSearchServiceVideo());
-    }
-
-    @Test
     void findAll() {
         List<Organisation> allOrganisation = organisationDao.findAll();
         assertFalse(allOrganisation.isEmpty());

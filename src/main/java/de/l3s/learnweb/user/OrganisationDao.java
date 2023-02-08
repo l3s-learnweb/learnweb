@@ -33,9 +33,6 @@ public interface OrganisationDao extends SqlObject, Serializable {
         return findById(organisationId).orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_group_description"));
     }
 
-    @SqlQuery("SELECT * FROM lw_organisation WHERE `default` = 1")
-    Organisation findDefault();
-
     @SqlQuery("SELECT * FROM lw_organisation ORDER BY title")
     List<Organisation> findAll();
 

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import jakarta.annotation.PostConstruct;
@@ -177,9 +178,8 @@ public class UserBean implements Serializable {
         if (isLoggedIn() && getUser().getLocale() != null) {
             setLocaleCode(getUser().getLocale().getLanguage());
         } else {
-            String defaultLanguage = getActiveOrganisation().getDefaultLanguage();
-            String localeCode = defaultLanguage != null ? defaultLanguage : locale.getLanguage();
-            setLocaleCode(localeCode);
+            String language = getActiveOrganisation().map(Organisation::getDefaultLanguage).orElse(locale.getLanguage());
+            setLocaleCode(language);
         }
     }
 
@@ -197,7 +197,7 @@ public class UserBean implements Serializable {
     }
 
     private Locale getLocaleByLocaleCode(String localeCode) {
-        String languageVariant = getActiveOrganisation().getLanguageVariant();
+        String languageVariant = getActiveOrganisation().map(Organisation::getLanguageVariant).orElse("");
 
         return switch (localeCode) {
             case "de" -> new Locale("de", "DE", languageVariant);
@@ -273,20 +273,12 @@ public class UserBean implements Serializable {
      * Returns the css code for the banner image of the active organisation or an empty string if no image is defined.
      */
     public String getBannerImage() {
-        String bannerImage = null;
-        if (isLoggedIn()) {
-            bannerImage = getActiveOrganisation().getBannerImageUrl();
-        }
-
+        String bannerImage = getActiveOrganisation().map(Organisation::getBannerImageUrl).orElse(null);
         return StringUtils.firstNonBlank(bannerImage, "/resources/images/learnweb_logo.png");
     }
 
     public String getBannerLink() {
-        if (isLoggedIn()) {
-            return "./" + getActiveOrganisation().getWelcomePage();
-        } else {
-            return "./";
-        }
+        return getActiveOrganisation().map(o -> "./" + o.getWelcomePage()).orElse("./");
     }
 
     /**
@@ -464,42 +456,37 @@ public class UserBean implements Serializable {
     }
 
     public String getTrackerApiKey() {
-        if (StringUtils.isNotEmpty(getActiveOrganisation().getTrackerApiKey())) {
-            return getActiveOrganisation().getTrackerApiKey();
-        }
-
-        return Learnweb.config().getProperty("tracker_api_key");
+        return getActiveOrganisation().map(Organisation::getTrackerApiKey)
+            .filter(StringUtils::isNotEmpty)
+            .orElse(Learnweb.config().getProperty("tracker_api_key"));
     }
 
     public boolean isStarRatingEnabled() {
-        return !getActiveOrganisation().getOption(Option.Resource_Hide_Star_rating);
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Resource_Hide_Star_rating)).orElse(false);
     }
 
     public boolean isThumbRatingEnabled() {
-        return !getActiveOrganisation().getOption(Option.Resource_Hide_Thumb_rating);
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Resource_Hide_Thumb_rating)).orElse(true);
     }
 
     public boolean isLoggingEnabled() {
-        return !getActiveOrganisation().getOption(Option.Privacy_Logging_disabled);
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Privacy_Logging_disabled)).orElse(true);
     }
 
     public boolean isTrackingEnabled() {
-        return !getActiveOrganisation().getOption(Option.Privacy_Tracker_disabled);
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Privacy_Tracker_disabled)).orElse(true);
     }
 
     public boolean isLanguageSwitchEnabled() {
-        return !getActiveOrganisation().getOption(Option.Users_Hide_language_switch);
+        return !getActiveOrganisation().map(o -> o.getOption(Option.Users_Hide_language_switch)).orElse(false);
     }
 
     public boolean isHideSidebarMenu() {
         return "true".equals(getPreference("HIDE_SIDEBAR"));
     }
 
-    private Organisation getActiveOrganisation() {
-        if (null == activeOrganisation) {
-            activeOrganisation = Learnweb.dao().getOrganisationDao().findDefault();
-        }
-        return activeOrganisation;
+    private Optional<Organisation> getActiveOrganisation() {
+        return Optional.ofNullable(activeOrganisation);
     }
 
     /**
