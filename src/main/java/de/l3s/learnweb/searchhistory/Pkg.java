@@ -349,11 +349,7 @@ public final class Pkg {
      * */
     public void createPkg(User user, int groupId) {
         //Get the entities from DB for this user
-        long startTime = System.nanoTime();
-        System.out.println("Start selecting from DB");
         this.annotationCounts = dao().getSearchHistoryDao().findAnnotationCountByUsername(user.getUsername());
-        long endTime = System.nanoTime();
-        System.out.println(annotationCounts.size() + " annotations in: " + (endTime - startTime));
         nodes = new ArrayList<>();
         links = new ArrayList<>();
         //Add default node. Any group that has only 1 node will be connected to default node
@@ -385,14 +381,10 @@ public final class Pkg {
                     "schema:dateCreated", query.timestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
             }
         }
-        startTime = System.nanoTime();
-        System.out.println("Creating the graph nodes");
         for (AnnotationCount annotationCount : annotationCounts) {
             //Call the DB update here
             updatePkg(annotationCount);
         }
-        endTime = System.nanoTime();
-        System.out.println(annotationCounts.size() + " annotations in: " + (endTime - startTime));
     }
 
     /**
