@@ -14,7 +14,6 @@ import jakarta.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.validator.constraints.Length;
 import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
 
