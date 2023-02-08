@@ -273,7 +273,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             isUserActive = true;
             if (!snippetClicked.get(search.getResources().indexOf(search.getResources().get(tempResourceId)))) {
                 Resource resource = search.getResources().get(tempResourceId).getResource();
-                getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getUsername(), "web", resource.getUrl());
+                getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(), "web", resource.getUrl());
             }
             snippetClicked.set(search.getResources().indexOf(search.getResources().get(tempResourceId)), true);
             search.logResourceClicked(tempResourceId, getUser());
@@ -289,10 +289,10 @@ public class SearchBean extends ApplicationBean implements Serializable {
     @PreDestroy
     public void destroy() throws Exception {
         if (isUserActive) {
-            getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getUsername(), "query", search.getQuery());
+            getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(), "query", search.getQuery());
             for (ResourceDecorator snippet : search.getResources()) {
                 String s = snippet.getTitle().split("\\|")[0].split("-")[0];
-                getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getUsername(),
+                getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(),
                     snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_not_clicked",
                     "<title>" + s + "</title> " + snippet.getDescription());
             }
@@ -300,8 +300,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
             //Update one for recommendation, one for collabGraph which marks the user's active state.
             getPkgBean().createSharedObject(groupDao.findByUserId(getUser().getId()).get(0).getId(),
                 3, false, "recommendation");
-            getPkgBean().createSharedObject(groupDao.findByUserId(getUser().getId()).get(0).getId(),
-                3, false, "collabGraph");
         }
     }
 

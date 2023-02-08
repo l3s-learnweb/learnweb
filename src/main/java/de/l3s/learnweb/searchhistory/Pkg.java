@@ -65,7 +65,7 @@ public final class Pkg {
         private String uri;
         private String name;
         private int frequency;
-        private String users;
+        private int userId;
         private transient String sessionId;
         private transient double confidence;
         private transient double weight;
@@ -73,12 +73,12 @@ public final class Pkg {
         private String type;
 
         //Node class. Receives the input from DB to be visualized
-        public Node(int id, String name, String uri, String users, double weight, double confidence, String sessionId, String type, LocalDateTime date) {
+        public Node(int id, String name, String uri, int userId, double weight, double confidence, String sessionId, String type, LocalDateTime date) {
             this.id = id;
             this.sessionId = sessionId;
             this.name = name;
             this.uri = uri;
-            this.users = users;
+            this.userId = userId;
             this.confidence = confidence;
             this.frequency = 1;
             this.type = type;
@@ -110,12 +110,12 @@ public final class Pkg {
             this.frequency = frequency;
         }
 
-        public String getUsers() {
-            return users;
+        public int getUserId() {
+            return userId;
         }
 
-        public void setUsers(final String users) {
-            this.users = users;
+        public void setUserId(final int userId) {
+            this.userId = userId;
         }
 
         public String getUri() {
@@ -227,18 +227,18 @@ public final class Pkg {
      * Add this node into the list of nodes.
      * @param id the new node's id from DB
      * @param uri the new node's uri
-     * @param username the new node's username string. Multiple usernames is divided by commas.
+     * @param userId the user's id.
      * @param confidence the new node's confidence
      * @param sessionId the new node's session id
      * @param weight the weight of the new node (can actually be excluded in future updates)
      * @param type the type of the new node.
      * @param date the created time of the node.
      * */
-    private void addNode(int id, String uri, String username, double confidence, double weight, String sessionId, String type, LocalDateTime date) {
+    private void addNode(int id, String uri, int userId, double confidence, double weight, String sessionId, String type, LocalDateTime date) {
         //Get the Node name as uri minus domain root - dbpedia.org/resource
         String nameQuery = PATTERN.matcher(uri).replaceAll("")
             .replaceAll("_", " ");
-        Node node = new Node(id, nameQuery, uri, username, weight, confidence, sessionId, type, date);
+        Node node = new Node(id, nameQuery, uri, userId, weight, confidence, sessionId, type, date);
         if (!nodes.contains(node)) {
             nodes.add(node);
         }
@@ -305,13 +305,9 @@ public final class Pkg {
                 for (int j = i + 1; j < nodes.size(); j++) {
                     if (nodes.get(i).getUri().equals(nodes.get(j).getUri())) {
                         //Join the users and sessionId of the first node
-                        List<String> userList = new ArrayList<>(Arrays.stream(nodes.get(i).getUsers().split(",")).toList());
                         List<String> types = new ArrayList<>(Arrays.stream(nodes.get(i).getType().split(",")).toList());
-                        userList.removeAll(Arrays.stream(nodes.get(j).getUsers().split(",")).toList());
-                        userList.addAll(Arrays.stream(nodes.get(j).getUsers().split(",")).toList());
                         types.removeAll(Arrays.stream(nodes.get(j).getType().split(",")).toList());
                         types.addAll(Arrays.stream(nodes.get(j).getType().split(",")).toList());
-                        nodes.get(i).setUsers(String.join(",", userList));
                         nodes.get(i).combineUsers(nodes.get(j).getSessionId());
                         nodes.get(i).setType(String.join(",", types));
                         //Remove the duplicating node
@@ -349,11 +345,11 @@ public final class Pkg {
      * */
     public void createPkg(User user, int groupId) {
         //Get the entities from DB for this user
-        this.annotationCounts = dao().getSearchHistoryDao().findAnnotationCountByUsername(user.getUsername());
+        this.annotationCounts = dao().getSearchHistoryDao().findAnnotationCountByUser(user.getId());
         nodes = new ArrayList<>();
         links = new ArrayList<>();
         //Add default node. Any group that has only 1 node will be connected to default node
-        addNode(0, "default", "", 1, 0.0, "", "", null);
+        addNode(0, "default", 0, 1, 0.0, "", "", null);
 
         //Initialize rdf graph model
         Optional<RdfObject> rdfObject = dao().getSearchHistoryDao().findRdfById(user.getId());
@@ -466,7 +462,7 @@ public final class Pkg {
      * @param annotationCount The recognized entity to be added to the PKG
     * */
     public void updatePkg(AnnotationCount annotationCount) {
-        addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence(),
+        addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUserId(), annotationCount.getConfidence(),
             Precision.round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 2), annotationCount.getSessionId(),
             annotationCount.getType(), annotationCount.getCreatedAt());
     }
@@ -526,13 +522,12 @@ public final class Pkg {
         for (Map.Entry<Integer, Double> entry : entries) {
             Node node = nodes.get(entry.getKey());
             for (Map.Entry<String, String> type : typeMap.entrySet()) {
-                if (node.getUsers().matches(".*\\b" + Pattern.quote(optUser.get().getUsername()) + "\\b.*")
-                    && occurrences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
-                    String nodeType = type.getValue();
-                    Node chosenNode = new Node(node.getId(), node.getName(), node.getUri(), "User", entry.getValue(),
-                        node.getConfidence(), node.getSessionId(), nodeType, node.getDate());
+                if (occurrences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
+                    Node chosenNode = node;
                     if (newNodes.stream().noneMatch(s -> s.getType().equals(chosenNode.getType()) && s.getUri().equals(chosenNode.getUri()))) {
                         newNodes.add(chosenNode);
+                        object.getEntities().add(new JsonSharedObject.Entity(chosenNode.getUri(), chosenNode.getName(), chosenNode.getWeight(),
+                            type.getValue(), chosenNode.getId()));
                         occurrences.put(type.getValue(), occurrences.get(type.getValue()) + 1);
                     }
                 }
@@ -544,14 +539,11 @@ public final class Pkg {
                 Node node1 = newNodes.get(i);
                 Node node2 = newNodes.get(j);
                 if (Arrays.stream(node1.getType().split(",")).anyMatch(node2.getType()::contains)) {
-                    newLinks.add(new Link(i, j, 0));
+                    object.getLinks().add(new JsonSharedObject.Link(i, j));
                 }
             }
         }
         //Add this new graph (newLinks, newNodes) into a shared object, so that it can be stored later on
-        object.getLinks().addAll(newLinks.stream().map(l -> new JsonSharedObject.Link(l.source, l.target)).toList());
-        object.getEntities().addAll(newNodes.stream().map(n -> new JsonSharedObject.Entity(n.getUri(), n.getName(), n.getWeight(),
-            n.getType(), n.getId())).toList());
         return object;
     }
 
@@ -569,13 +561,11 @@ public final class Pkg {
         //The list to be returned
         JsonSharedObject sharedObject = new JsonSharedObject(application, false);
         List<Node> newNodes;
-        List<Link> newLinks;
         if (results == null) {
             return null;
         }
         //Sort the calculated results to get entities' ranking
-        List<Map.Entry<Integer, Double>> entries
-            = new ArrayList<>(results.entrySet());
+        List<Map.Entry<Integer, Double>> entries = new ArrayList<>(results.entrySet());
         if (isAscending) {
             entries.sort(Map.Entry.comparingByValue());
         } else {
@@ -587,18 +577,15 @@ public final class Pkg {
             return null;
         } else {
             newNodes = new ArrayList<>();
-            newLinks = new ArrayList<>();
             for (Map.Entry<Integer, Double> entry : entries) {
                 //Find from the top of the results numberTopEntities entities, break after reaching the number
-                if (nodes.get(entry.getKey()).users.matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
-                    Node chosenNode = new Node(nodes.get(entry.getKey()).getId(), nodes.get(entry.getKey()).getName(), nodes.get(entry.getKey()).getUri(),
-                        user.getUsername(), entry.getValue(), nodes.get(entry.getKey()).getConfidence(),
-                        nodes.get(entry.getKey()).getSessionId(), nodes.get(entry.getKey()).getType(), nodes.get(entry.getKey()).getDate());
-                    newNodes.add(chosenNode);
-                    index++;
-                    if (index >= numberEntities) {
-                        break;
-                    }
+                Node chosenNode = nodes.get(entry.getKey());
+                newNodes.add(chosenNode);
+                sharedObject.getEntities().add(new JsonSharedObject.Entity(chosenNode.getUri(), chosenNode.getName(),
+                    chosenNode.getWeight(), chosenNode.getType(), chosenNode.getId()));
+                index++;
+                if (index >= numberEntities) {
+                    break;
                 }
             }
 
@@ -610,19 +597,12 @@ public final class Pkg {
                         .filter(Arrays.stream(newNodes.get(j).getSessionId().split(",")).toList()::contains)
                         .collect(Collectors.toSet());
                     if (!result.isEmpty()) {
-                        newLinks.add(new Link(i, j, 0));
+                        sharedObject.getLinks().add(new JsonSharedObject.Link(i, j));
                     }
                 }
             }
 
-            //Create the sharedObject
-            for (Link link : newLinks) {
-                sharedObject.getLinks().add(new JsonSharedObject.Link(link.source, link.target));
-            }
             sharedObject.setUser(new JsonSharedObject.User(user.getId(), user.getUsername()));
-            for (Node node : newNodes) {
-                sharedObject.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), node.getWeight(), node.getType(), node.getId()));
-            }
         }
 
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new SearchHistoryBean.LocalDateTimeAdapter().nullSafe())
@@ -656,10 +636,8 @@ public final class Pkg {
         //Add the entities after calculation to Rdf List
         Group group = dao().getGroupDao().findByIdOrElseThrow(groupId);
         for (Node node : nodes) {
-            if (node.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
-                rdfGraph.addEntity(PATTERN.matcher(node.getUri()).replaceAll(""),
-                    node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
-            }
+            rdfGraph.addEntity(PATTERN.matcher(node.getUri()).replaceAll(""),
+                node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
         }
         //Print the Rdf graphs both to DB and local directories as files
         String value = rdfGraph.printModel();

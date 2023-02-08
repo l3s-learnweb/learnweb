@@ -105,12 +105,12 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     }
 
     @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri = ? AND type LIKE ?")
-    Optional<AnnotationCount> findByUriAndType(String uri, String type);
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri = ? AND type = ? AND user_id = ?")
+    Optional<AnnotationCount> findByUriAndType(String uri, String type, int userId);
 
     @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE users REGEXP CONCAT('.*(^|,)', ?, '(,|$).*') ORDER BY created_at")
-    List<AnnotationCount> findAnnotationCountByUsername(String username);
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE user_id = ? ORDER BY created_at")
+    List<AnnotationCount> findAnnotationCountByUser(int userId);
 
     @RegisterRowMapper(JsonSharedObjectMapper.class)
     @SqlQuery("SELECT id, shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND user_id = ? AND application = ?")
@@ -136,8 +136,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @GetGeneratedKeys("id")
     int insertSharedObject(int userId, int groupId, String application, String sharedObject);
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET session_id = ?, users = ?, input_id = ? WHERE uri = ? AND type = ? ")
-    void updateQueryAnnotation(String sessionId, String user, String inputId, String uri, String type);
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET session_id = ?, user_id = ?, input_id = ? WHERE uri = ? AND type = ? ")
+    void updateQueryAnnotation(String sessionId, int userId, String inputId, String uri, String type);
 
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_query_count SET search_id = ?, uri_id = ?")
     int insertQueryResult(int searchId, int uriId);
@@ -145,10 +145,10 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @SqlQuery("SELECT search_id FROM learnweb_annotations.annotation_query_count WHERE uri_id = ?")
     List<Integer> findSearchIdByResult(int uriId);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (type, uri, input_id, created_at, surface_form, session_id, users, confidence) "
+    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (type, uri, input_id, created_at, surface_form, session_id, user_id, confidence) "
         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
     @GetGeneratedKeys("uri_id")
-    int insertQueryToAnnotation(String type, String uri, String input, LocalDateTime createdAt, String surfaceForm, String sessionId, String users, double confidence);
+    int insertQueryToAnnotation(String type, String uri, String input, LocalDateTime createdAt, String surfaceForm, String sessionId, int userId, double confidence);
 
     @RegisterRowMapper(RdfObjectMapper.class)
     @SqlQuery("SELECT * FROM learnweb_annotations.annotation_rdf WHERE user_id = ?")
@@ -245,7 +245,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
             annotation.setType(rs.getString("type"));
             annotation.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
             annotation.setSessionId(rs.getString("session_id"));
-            annotation.setUsers(rs.getString("users"));
+            annotation.setUserId(rs.getInt("user_id"));
             annotation.setInputStreams(rs.getString("input_id"));
             return annotation;
         }

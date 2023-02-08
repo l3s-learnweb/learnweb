@@ -129,7 +129,7 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         user.joinGroup(newGroup);
         // refresh group list
         myGroups = user.getGroups();
-        getAnnotationBean().processQuery(getSessionId(), newGroup.getId(), user.getUsername(), "group", newGroup.getTitle() + " " + newGroup.getDescription());
+        getAnnotationBean().processQuery(getSessionId(), newGroup.getId(), user.getId(), "group", newGroup.getTitle() + " " + newGroup.getDescription());
         // log and show notification
         log(Action.group_creating, newGroup.getId(), newGroup.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());

@@ -43,11 +43,11 @@ public class AnnotationBean implements Serializable {
      * @param annotationUnit the dbpedia-spotlight process
      * @param id the source's id
      * @param type the type of the annotation (user, group, web, snippet_clicked, snippet_not_clicked, query)
-     * @param user the user's username
+     * @param userId the user's id
      * @param sessionId the session id of the current annotation
      * @return the list of annotationCount with its newly created values
      */
-    private List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId) {
+    private List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, int userId, String sessionId) {
         List<ResourceItem> resources = new ArrayList<>();
         List<AnnotationCount> annotationCounts = new ArrayList<>();
         //If annotating from webpages, only choose top 5 per webpage
@@ -71,7 +71,7 @@ public class AnnotationBean implements Serializable {
         }
         for (ResourceItem resource : resources) {
             annotationCounts.add(new AnnotationCount(String.valueOf(id), resource.score(), resource.getSurfaceForm(), resource.getUri(), type,
-                user, sessionId));
+                userId, sessionId));
         }
         return annotationCounts;
     }
@@ -99,11 +99,11 @@ public class AnnotationBean implements Serializable {
      * Main function of the class.
      * @param sessionId the session id of the current annotation
      * @param id the id of the source (user, group)
-     * @param username the user's username
+     * @param userId the user's username
      * @param type the type of the annotation (user, group, web, snippet_clicked, snippet_not_clicked, query)
      * @param content the content to be recognized
      * */
-    public void processQuery(String sessionId, int id, String username, String type, String content) throws Exception {
+    public void processQuery(String sessionId, int id, int userId, String type, String content) throws Exception {
         if (content == null) {
             return;
         }
@@ -119,13 +119,12 @@ public class AnnotationBean implements Serializable {
         annotationUnit = spotlight.get(content);
         //Parse the results to the function
         if (annotationUnit.getResources() != null) {
-            annotationCounts = annotate(annotationUnit, id, type, username, sessionId);
+            annotationCounts = annotate(annotationUnit, id, type, userId, sessionId);
         }
         //Remove all annotations with confidence < 0.9
         annotationCounts.removeIf(annotationCount -> annotationCount.getConfidence() < 0.9);
 
         //Insert inputStream into DB
-        int userId = userDao.findByUsername(username).get().getId();
         int inputId = searchHistoryDao.insertInputStream(userId, type, content);
 
         //Store this annotationCount into DB
@@ -133,18 +132,14 @@ public class AnnotationBean implements Serializable {
             //Round the confidence
             annotationCount.setConfidence(Precision.round(annotationCount.getConfidence(), 2));
 
-            Optional<AnnotationCount> foundAnnotation = searchHistoryDao.findByUriAndType(annotationCount.getUri(), annotationCount.getType());
+            Optional<AnnotationCount> foundAnnotation = searchHistoryDao.findByUriAndType(annotationCount.getUri(), annotationCount.getType(),
+                annotationCount.getUserId());
             //If already an annotationCount is found in DB, update its columns
             if (foundAnnotation.isPresent()) {
                 //Update the sessionId
                 String session = foundAnnotation.get().getSessionId();
                 if (!session.contains(annotationCount.getSessionId())) {
                     session += "," + annotationCount.getSessionId();
-                }
-                //Update the User
-                String users = foundAnnotation.get().getUsers();
-                if (!users.contains(annotationCount.getUsers())) {
-                    users += "," + annotationCount.getUsers();
                 }
                 //Update the InputId
                 String input = foundAnnotation.get().getInputStreams();
@@ -153,7 +148,7 @@ public class AnnotationBean implements Serializable {
                 }
                 //Update the inputId
                 //Update the repetition
-                searchHistoryDao.updateQueryAnnotation(session, users, input,
+                searchHistoryDao.updateQueryAnnotation(session, userId, input,
                     annotationCount.getUri(), annotationCount.getType());
                 if (!"user".equals(type) && !"profile".equals(type) && !searchHistoryDao.findSearchIdByResult(foundAnnotation.get().getUriId()).contains(id)) {
                     searchHistoryDao.insertQueryResult(id, foundAnnotation.get().getUriId());
@@ -163,12 +158,12 @@ public class AnnotationBean implements Serializable {
                 annotationCount.setInputStreams(String.valueOf(inputId));
                 int uriId = searchHistoryDao.insertQueryToAnnotation(annotationCount.getType(), annotationCount.getUri(), String.valueOf(inputId),
                     annotationCount.getCreatedAt(), annotationCount.getSurfaceForm(),
-                    annotationCount.getSessionId(), annotationCount.getUsers(), annotationCount.getConfidence());
+                    annotationCount.getSessionId(), annotationCount.getUserId(), annotationCount.getConfidence());
                 if (!"user".equals(type) && !"profile".equals(type)) {
                     searchHistoryDao.insertQueryResult(id, uriId);
                 }
             }
-            getPkgBean().updateGraphContent(annotationCount, userDao.findByUsername(username).get());
+            getPkgBean().updateGraphContent(annotationCount, userDao.findById(userId).get());
         }
     }
 

@@ -18,9 +18,7 @@ import de.l3s.learnweb.searchhistory.JsonSharedObject;
 public class CollabGraph implements Serializable {
     @Serial
     private static final long serialVersionUID = 1100213292212314798L;
-
     private transient List<Double> weightValues;
-
     private List<Node> nodes;
     private List<Link> links;
 

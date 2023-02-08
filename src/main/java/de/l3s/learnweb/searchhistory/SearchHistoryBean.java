@@ -243,6 +243,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         //For testing only
         getPkgBean().createSharedObject(selectedGroupId, 5, true, "negative5SharedObject");
         getPkgBean().createSharedObject(selectedGroupId, 10, false, "positive10SharedObject");
+        getPkgBean().createSharedObject(selectedGroupId, 3, false, "collabGraph");
         sharedObjects = searchHistoryDao.findObjectsByGroupIdAndType(selectedGroupId, "collabGraph");
     }
 
