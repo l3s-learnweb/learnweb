@@ -28,7 +28,6 @@ public class PkgBean extends ApplicationBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        System.out.println("Calling pkg");
         User user = getUser();
         List<Group> groups = groupDao.findByUserId(user.getId());
         int groupId = 0;
@@ -45,8 +44,8 @@ public class PkgBean extends ApplicationBean implements Serializable {
         pkg.calculateSumWeight();
     }
 
-    public JsonSharedObject createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
-        return pkg.createSharedObject(getUser(), groupId, numberEntities, isAscending, application);
+    public void createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
+        pkg.createSharedObject(getUser(), groupId, numberEntities, isAscending, application);
     }
 
     public void updatePkg(AnnotationCount annotationCount, User user) {
@@ -57,6 +56,9 @@ public class PkgBean extends ApplicationBean implements Serializable {
         return pkg.createSingleGraph(userId, groupId);
     }
 
+    /**
+     *  * A blank function to trigger init() from PkgBean.
+     * */
     public void doSomething() {}
 
 }

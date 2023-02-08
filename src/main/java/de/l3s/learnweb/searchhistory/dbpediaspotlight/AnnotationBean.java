@@ -31,7 +31,7 @@ import de.l3s.learnweb.user.UserDao;
 public class AnnotationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -1169917559922779411L;
-    private AnnotationUnit annotationUnit;
+    private transient AnnotationUnit annotationUnit;
     private transient PkgBean pkgBean;
     @Inject
     private UserDao userDao;
@@ -50,7 +50,7 @@ public class AnnotationBean implements Serializable {
     private List<AnnotationCount> annotate(AnnotationUnit annotationUnit, int id, String type, String user, String sessionId) {
         List<ResourceItem> resources = new ArrayList<>();
         List<AnnotationCount> annotationCounts = new ArrayList<>();
-        //If annotating from webpages, only choose top 10 per webpage
+        //If annotating from webpages, only choose top 5 per webpage
         if (type.equals("web")) {
             Map<String, Long> uriPerType = annotationUnit.getResources().stream()
                 .collect(Collectors.groupingBy(ResourceItem::getUri, Collectors.counting()));
@@ -76,7 +76,13 @@ public class AnnotationBean implements Serializable {
         return annotationCounts;
     }
 
-    private static String filterWebsite(Document webDoc) {
+    /**
+     * Filter the input website to extract only the important text from html page.
+     * Further development can focus on extracting from div tags with "content" in id.
+     * @param webDoc the input html document
+     * @return the filtered text
+     * */
+    private String filterWebsite(Document webDoc) {
         StringBuilder newWebText = new StringBuilder();
         List<String> tagLists = Arrays.asList("title", "p", "h1", "h2", "span");
         for (String tag : tagLists) {
