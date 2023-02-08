@@ -22,6 +22,11 @@
         </Or>
         <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
     </Match>
+    <!-- The catch is required to check is locale is loaded -->
+    <Match>
+        <Class name="de.l3s.learnweb.user.UserBean"/>
+        <Bug pattern="DCN_NULLPOINTER_EXCEPTION"/>
+    </Match>
     <!-- The MenuElement is not serializable in the class, but it will in the implementation -->
     <Match>
         <Class name="de.l3s.learnweb.component.ActiveSubmenu"/>

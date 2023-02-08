@@ -4,7 +4,7 @@
     <analysisEffort>max</analysisEffort>
     <minPriority>Low</minPriority>
     <excludeFilterFiles>
-      <filter file="$PROJECT_DIR$/.mvn/spotbugs-exclude.xml" enabled="true" />
+      <filter file="$PROJECT_DIR$/src/main/conf/spotbugs-exclude.xml" enabled="true" />
     </excludeFilterFiles>
   </component>
 </project>
