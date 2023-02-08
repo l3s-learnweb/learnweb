@@ -1,5 +1,6 @@
 package de.l3s.learnweb.searchhistory;
 
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +13,8 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
@@ -20,7 +23,7 @@ public class RdfModel {
 
     private static final Pattern COMPILE = Pattern.compile(" ");
     private static final Pattern PATTERN = Pattern.compile("\\<[^>]*>");
-    private final Model model;
+    private Model model;
     private static final String prefixBase = "https://github.com/tibonto/PKGonto/";
     private static final String prefixSchema = "https://schema.org/";
     private static final String prefixEducor = "https://github.com/tibonto/educor#";
@@ -72,7 +75,7 @@ public class RdfModel {
         if (Objects.equals(uri, "default")) {
             return;
         }
-        addStatement("RecognizedEntities/" + name, "schema:identifier", uri, "literal");
+        addStatement("RecognizedEntities/" + name, "schema:identifier", uri, "resource");
         addStatement("RecognizedEntities/" + name, "surfaceForm", surfaceForm, "literal");
         addStatement("RecognizedEntities/" + name, "confidenceScore", String.valueOf(score), "literal");
         addStatement("RecognizedEntities/" + name, "schema:dateCreated", time.format(DateTimeFormatter.ISO_DATE), "literal");
@@ -90,5 +93,9 @@ public class RdfModel {
 
     public Model getModel() {
         return model;
+    }
+
+    public void makeModelFromString(final String inputStream) {
+        RDFDataMgr.read(model, new StringReader(inputStream), null, Lang.TURTLE);
     }
 }

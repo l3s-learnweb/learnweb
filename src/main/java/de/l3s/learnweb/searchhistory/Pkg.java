@@ -348,121 +348,135 @@ public final class Pkg {
      * @param groupId the id of the group
      * */
     public void createPkg(User user, int groupId) {
+        //Get the entities from DB for this user
+        long startTime = System.nanoTime();
+        System.out.println("Start selecting from DB");
         this.annotationCounts = dao().getSearchHistoryDao().findAnnotationCountByUsername(user.getUsername());
+        long endTime = System.nanoTime();
+        System.out.println(annotationCounts.size() + " annotations in: " + (endTime - startTime));
         nodes = new ArrayList<>();
         links = new ArrayList<>();
         //Add default node. Any group that has only 1 node will be connected to default node
         addNode(0, "default", "", 1, 0.0, "", "", null);
 
         //Initialize rdf graph model
+        Optional<RdfObject> rdfObject = dao().getSearchHistoryDao().findRdfById(user.getId());
         rdfGraph = new RdfModel(user);
-        if (groupId != 0) {
-            Group group = dao().getGroupDao().findById(groupId).get();
-            rdfGraph.addGroup(user, group);
-        }
-
-        for (AnnotationCount annotationCount : annotationCounts) {
-            List<SearchSession> sessions = dao().getSearchHistoryDao().findSessionsByUserId(user.getId());
-            if (annotationCount.getUsers().matches(".*\\b" + Pattern.quote(user.getUsername()) + "\\b.*")) {
-                //Call the DB update here
-                updatePkg(annotationCount, user, sessions);
+        if (rdfObject.isPresent()) {
+            rdfGraph.makeModelFromString(rdfObject.get().getRdfValue());
+        } else {
+            //If the user belongs to a group
+            if (groupId != 0) {
+                Group group = dao().getGroupDao().findById(groupId).get();
+                rdfGraph.addGroup(user, group);
             }
         }
+        for (SearchSession session : dao().getSearchHistoryDao().findSessionsByUserId(user.getId())) {
+            addRdfStatement("SearchSession/" + session.getSessionId(), "schema:startTime",
+                session.getStartTimestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
+            addRdfStatement("SearchSession/" + session.getSessionId(), "schema:endTime",
+                session.getEndTimestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
+            for (SearchQuery query : session.getQueries()) {
+                addRdfStatement("SearchSession/" + session.getSessionId(), "contains",
+                    "SearchQuery/" + query.searchId(), "resource", user);
+                addRdfStatement("SearchQuery/" + query.searchId(), "query",
+                    query.query(), "literal", user);
+                addRdfStatement("SearchQuery/" + query.searchId(),
+                    "schema:dateCreated", query.timestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
+            }
+        }
+        startTime = System.nanoTime();
+        System.out.println("Creating the graph nodes");
+        for (AnnotationCount annotationCount : annotationCounts) {
+            //Call the DB update here
+            updatePkg(annotationCount);
+        }
+        endTime = System.nanoTime();
+        System.out.println(annotationCounts.size() + " annotations in: " + (endTime - startTime));
     }
 
-    /** Add this recognized entity into the node list as a Node.
-     * Then add RDF-statement to this user's RDF graph based on the parameters from the entity.
-     * @param annotationCount The recognized entity to be added to the PKG
+    /**
+     * Add RDF-statements to this user's RDF graph based on the parameters from the entity.
+     * @param annotationCount the entity
      * @param user the current user
-     * @param sessions the search sessions that this user has done
-    * */
-    public void updatePkg(AnnotationCount annotationCount, User user, List<SearchSession> sessions) {
-        addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence(),
-            Precision.round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 2), annotationCount.getSessionId(),
-            annotationCount.getType(), annotationCount.getCreatedAt());
+     * @param session the user's current search session
+     * */
+    public void updateRdfModel(AnnotationCount annotationCount, User user, String session) {
         //----------------------------------Rdf-insert-model--------------------------------------
-
         Pattern keywordPattern = Pattern.compile("<b>" + "(.*?)" + "</b>");
         Pattern headlinePattern = Pattern.compile("<title>" + "(.*?)" + "</title>");
+        //Get the session id list from entity
+        Group group = dao().getGroupDao().findByUserId(user.getId()).get(0);
+        List<Integer> searchIds = dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId());
 
-        for (String session : annotationCount.getSessionId().split(",")) {
-            for (SearchSession searchSession : sessions) {
-                if (searchSession.getSessionId().equals(session)) {
-                    addRdfStatement("educor:User/" + user.getId(), "educor:generatesLogs", "SearchSession/" + session, "resource", user);
-                    addRdfStatement("SearchSession/" + session, "schema:startTime",
-                        searchSession.getStartTimestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
-                    addRdfStatement("SearchSession/" + session, "schema:endTime",
-                        searchSession.getEndTimestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
-                    for (SearchQuery query : searchSession.getQueries()) {
-                        addRdfStatement("SearchQuery/" + query.searchId(),
-                            "schema:dateCreated", query.timestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
-                        if ("query".equals(annotationCount.getType())) {
-                            addRdfStatement("SearchSession/" + searchSession.getSessionId(), "contains",
-                                "SearchQuery/" + query.searchId(), "resource", user);
-                            addRdfStatement("SearchQuery/" + query.searchId(), "query",
-                                query.query(), "literal", user);
-                        }
+        if (annotationCount.getType().contains("snippet")) {
+            addRdfStatement("SearchSession/" + session, "contains", "Snippet/" + annotationCount.getUriId(), "resource", user);
+        } else if ("web".equals(annotationCount.getType())) {
+            addRdfStatement("SearchSession/" + session, "contains", "schema:WebPage/" + annotationCount.getUriId(), "resource", user);
+        }
+        addRdfStatement("educor:User/" + user.getId(), "educor:generatesLogs", "SearchSession/" + session, "resource", user);
+
+
+        if (annotationCount.getType().contains("snippet")) {
+            addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
+            addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal", user);
+            for (int searchId : searchIds) {
+                addRdfStatement("SearchQuery/" + searchId,
+                    "generatesResult", "Snippet/" + annotationCount.getUriId(), "resource", user);
+            }
+        } else if ("web".equals(annotationCount.getType())) {
+            addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
+            addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "resource", user);
+            for (int searchId : searchIds) {
+                addRdfStatement("SearchQuery/" + searchId,
+                    "generatesResult", "WebPage/" + annotationCount.getUriId(), "resource", user);
+            }
+        }
+
+        //Input stream statements
+        if (annotationCount.getInputStreams() != null) {
+            List<InputStreamRdf> inputStreamRdfs = dao().getSearchHistoryDao().findInputContentById(annotationCount.getInputStreams());
+            for (InputStreamRdf inputStream : inputStreamRdfs) {
+                //Add createsInputStream statement based on the entities' type
+                if (inputStream.getUserId() == user.getId()) {
+                    if ("profile".equals(annotationCount.getType())) {
+                        addRdfStatement("educor:UserProfile/" + user.getId(), "createsInputStream",
+                            "InputStream/" + inputStream.getId(), "resource", user);
+                    } else if ("group".equals(annotationCount.getType())) {
+                        addRdfStatement("foaf:Group/" + group.getId(), "createsInputStream",
+                            "InputStream/" + inputStream.getId(), "resource", user);
+                    } else {
+                        addRdfStatement("SearchSession/" + session, "createsInputStream",
+                            "InputStream/" + inputStream.getUserId(), "resource", user);
                     }
-                    if (annotationCount.getType().contains("snippet")) {
-                        addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
-                        addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal", user);
-                        addRdfStatement("SearchSession/" + session, "contains", "Snippet/" + annotationCount.getUriId(), "resource", user);
-                        for (int searchId : dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId())) {
-                            addRdfStatement("SearchQuery/" + searchId,
-                                "generatesResult", "Snippet/" + annotationCount.getUriId(), "resource", user);
-                        }
-
-                    }
-
+                    addRdfStatement("InputStream/" + inputStream.getId(), "schema:text", inputStream.getContent(), "literal", user);
+                    addRdfStatement("InputStream/" + inputStream.getId(), "schema:dateCreated",
+                        inputStream.getDateCreated().toString(), "literal", user);
+                    addRdfStatement("RecognizedEntities/" + PATTERN.matcher(annotationCount.getUri())
+                        .replaceAll(""), "processes", "InputStream/" + inputStream.getId(), "resource", user);
                     if ("web".equals(annotationCount.getType())) {
-                        addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
-                        addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal", user);
-                        addRdfStatement("SearchSession/" + session, "contains", "schema:WebPage/" + annotationCount.getUriId(), "resource", user);
-                        for (int searchId : dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId())) {
-                            addRdfStatement("SearchQuery/" + searchId,
-                                "generatesResult", "WebPage/" + annotationCount.getUriId(), "resource", user);
+                        Matcher matcher = keywordPattern.matcher(inputStream.getContent());
+                        while (matcher.find()) {
+                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "keywords", matcher.group(1), "literal", user);
                         }
-
-                    }
-                    if (annotationCount.getInputStreams() != null) {
-                        for (String inputId : annotationCount.getInputStreams().split(",")) {
-                            for (InputStreamRdf inputStream : dao().getSearchHistoryDao().findInputContentById(Integer.parseInt(inputId))) {
-                                //Add createsInputStream statement based on the entities' type
-                                if (inputStream.getUserId() == user.getId()) {
-                                    Group group = dao().getGroupDao().findByUserId(user.getId()).get(0);
-                                    if ("profile".equals(annotationCount.getType())) {
-                                        addRdfStatement("educor:UserProfile/" + user.getId(), "createsInputStream",
-                                            "InputStream/" + inputId, "resource", user);
-                                    } else if ("group".equals(annotationCount.getType())) {
-                                        addRdfStatement("foaf:Group/" + group.getId(), "createsInputStream",
-                                            "InputStream/" + inputId, "resource", user);
-                                    } else {
-                                        addRdfStatement("SearchSession/" + session, "createsInputStream",
-                                            "InputStream/" + inputId, "resource", user);
-                                    }
-                                    addRdfStatement("InputStream/" + inputStream.getId(), "schema:text", inputStream.getContent(), "literal", user);
-                                    addRdfStatement("InputStream/" + inputStream.getId(), "schema:dateCreated",
-                                        inputStream.getDateCreated().toString(), "literal", user);
-                                    addRdfStatement("RecognizedEntities/" + PATTERN.matcher(annotationCount.getUri())
-                                        .replaceAll(""), "processes", "InputStream/" + inputStream.getId(), "resource", user);
-                                    if ("web".equals(annotationCount.getType())) {
-                                        Matcher matcher = keywordPattern.matcher(inputStream.getContent());
-                                        while (matcher.find()) {
-                                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "keywords", matcher.group(1), "literal", user);
-                                        }
-                                        matcher = headlinePattern.matcher(inputStream.getContent());
-                                        while (matcher.find()) {
-                                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "headline", matcher.group(1), "literal", user);
-                                        }
-                                    }
-                                }
-                            }
+                        matcher = headlinePattern.matcher(inputStream.getContent());
+                        while (matcher.find()) {
+                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "headline", matcher.group(1), "literal", user);
                         }
                     }
                 }
             }
         }
         //--------------------------------RDF-Insert-Model-End----------------------------------
+    }
+
+    /** Add this recognized entity into the node list as a Node.
+     * @param annotationCount The recognized entity to be added to the PKG
+    * */
+    public void updatePkg(AnnotationCount annotationCount) {
+        addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUsers(), annotationCount.getConfidence(),
+            Precision.round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 2), annotationCount.getSessionId(),
+            annotationCount.getType(), annotationCount.getCreatedAt());
     }
 
     /**

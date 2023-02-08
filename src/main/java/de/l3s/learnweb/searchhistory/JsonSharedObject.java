@@ -44,7 +44,7 @@ public class JsonSharedObject {
         public Entity(final String uri, final String query, final double weight, final String type, final int id) {
             this.uri = uri;
             this.query = query;
-            this.weight = weight;
+            this.weight = Math.round(weight);
             this.type = type;
             this.id = id;
         }

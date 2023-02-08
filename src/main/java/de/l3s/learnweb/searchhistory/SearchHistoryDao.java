@@ -13,6 +13,7 @@ import org.jdbi.v3.core.statement.PreparedBatch;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -108,7 +109,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     Optional<AnnotationCount> findByUriAndType(String uri, String type);
 
     @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE CONCAT(',', users, ',') LIKE CONCAT('%,', ?, ',%') ORDER BY created_at")
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE users REGEXP CONCAT('.*(^|,)', ?, '(,|$).*') ORDER BY created_at")
     List<AnnotationCount> findAnnotationCountByUsername(String username);
 
     @RegisterRowMapper(JsonSharedObjectMapper.class)
@@ -124,8 +125,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     int insertInputStream(int userId, String type, String content);
 
     @RegisterRowMapper(InputStreamRdfMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_input_stream WHERE id = ?")
-    List<InputStreamRdf> findInputContentById(int id);
+    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_input_stream WHERE id IN (<inputIds>)")
+    List<InputStreamRdf> findInputContentById(@Define("inputIds") String inputIds);
 
     @SqlUpdate("UPDATE learnweb_annotations.annotation_objects SET shared_object = ?, created_at = ? WHERE user_id = ? AND group_id = ? AND application = ?")
     void updateSharedObject(String sharedObject, LocalDateTime createdAt, int userId, int groupId, String application);

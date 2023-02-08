@@ -48,8 +48,9 @@ public class PkgBean extends ApplicationBean implements Serializable {
         pkg.createSharedObject(getUser(), groupId, numberEntities, isAscending, application);
     }
 
-    public void updatePkg(AnnotationCount annotationCount, User user) {
-        pkg.updatePkg(annotationCount, user, searchHistoryDao.findSessionsByUserId(user.getId()));
+    public void updateGraphContent(AnnotationCount annotationCount, User user) {
+        pkg.updatePkg(annotationCount);
+        pkg.updateRdfModel(annotationCount, user, getSessionId());
     }
 
     public JsonSharedObject createSingleGraph(int userId, int groupId) {

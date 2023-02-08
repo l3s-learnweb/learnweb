@@ -168,7 +168,7 @@ public class AnnotationBean implements Serializable {
                     searchHistoryDao.insertQueryResult(id, uriId);
                 }
             }
-            getPkgBean().updatePkg(annotationCount, userDao.findByUsername(username).get());
+            getPkgBean().updateGraphContent(annotationCount, userDao.findByUsername(username).get());
         }
     }
 
