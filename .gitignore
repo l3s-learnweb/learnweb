@@ -24,11 +24,11 @@
 # Project files/folders
 
 ## Output folders
+node_modules
 target
 build
 logs
-node_modules
-files
+data
 
 ## Local files
 learnweb_local.properties
