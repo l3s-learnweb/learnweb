@@ -2,7 +2,6 @@ package de.l3s.learnweb.sentry;
 
 import java.util.Objects;
 
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletRequestEvent;
 import jakarta.servlet.ServletRequestListener;
 import jakarta.servlet.annotation.WebListener;
@@ -29,8 +28,8 @@ public class SentryServletRequestListener implements ServletRequestListener {
     @Override
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
         this.hub.pushScope();
-        ServletRequest servletRequest = servletRequestEvent.getServletRequest();
-        if (servletRequest instanceof HttpServletRequest httpRequest) {
+
+        if (servletRequestEvent.getServletRequest() instanceof HttpServletRequest httpRequest) {
             Hint hint = new Hint();
             hint.set("servlet:request", httpRequest);
             this.hub.clearBreadcrumbs();

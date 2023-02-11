@@ -20,10 +20,10 @@ import jakarta.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
 
 import de.l3s.util.UrlHelper;
+import io.sentry.Sentry;
 
 @Named("config")
 @ApplicationScoped
@@ -94,7 +94,7 @@ public class ConfigProvider implements Serializable {
             loadJndiVariables();
 
             contextPath = Servlets.getContext().getContextPath();
-            log.info("Found environment context: {}", contextPath);
+            log.info("Found servlet context: '{}'", contextPath);
             replaceVariablesContext(contextPath);
         } else {
             development = true;
@@ -108,28 +108,39 @@ public class ConfigProvider implements Serializable {
         if (!autoServerUrl) {
             if (serverUrl.startsWith("http")) {
                 setServerUrl(serverUrl, contextPath);
+                log.info("Server URL set to {} (from config)", serverUrl);
             } else {
                 throw new DeploymentException("Server url should include schema!");
             }
         }
+
+        if (StringUtils.isNotEmpty(properties.getProperty("sentry_dsn"))) {
+            Sentry.init(options -> {
+                options.setDsn(properties.getProperty("sentry_dsn"));
+                options.setEnvironment(getEnvironment());
+                if (!isDevelopment()) {
+                    options.setRelease("learnweb@" + getVersion());
+                }
+                log.info("Sentry initialized with environment '{}' and release '{}'", options.getEnvironment(), options.getRelease());
+            });
+        }
     }
 
     private void loadProperties() {
-        try {
-            InputStream defaultProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb.properties");
+        try (InputStream defaultProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb.properties")) {
             properties.load(defaultProperties);
 
-            InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties");
-            if (localProperties != null) {
-                properties.load(localProperties);
-                environment = "local";
-                log.info("Local properties loaded.");
+            try (InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties")) {
+                if (localProperties != null) {
+                    properties.load(localProperties);
+                    environment = "local";
+                    log.info("Local properties loaded.");
+                }
             }
         } catch (IOException e) {
             log.error("Unable to load properties file(s)", e);
         }
     }
-
 
     /**
      * Because Tomcat always removes per-application context config file, we have to add context-prefix.
@@ -219,7 +230,19 @@ public class ConfigProvider implements Serializable {
 
     public String getVersion() {
         if (version == null) {
-            version = Faces.getInitParameterOrDefault("project.version", "dev");
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream("release.properties")) {
+                Properties properties = new Properties();
+                properties.load(is);
+
+                development = !"Production".equals(properties.getProperty("project.stage"));
+                if (!development) {
+                    version = properties.getProperty("project.version");
+                    log.info("Learnweb version: {}", version);
+                }
+            } catch (IOException e) {
+                log.error("Unable to load release.properties", e);
+                development = true;
+            }
         }
         return version;
     }
@@ -278,7 +301,7 @@ public class ConfigProvider implements Serializable {
 
     public boolean isDevelopment() {
         if (development == null) {
-            development = Faces.isDevelopment();
+            getVersion(); // reads release.properties
         }
         return development;
     }
