@@ -16,7 +16,7 @@ public class Paragraph extends Element {
     public Paragraph(String... texts) {
         if (texts != null) {
             for (String text : texts) {
-                children.add(new Text(text));
+                children.add(new RawText(text));
             }
         }
     }
@@ -33,7 +33,7 @@ public class Paragraph extends Element {
     }
 
     public Paragraph append(String element) {
-        children.add(new Text(element));
+        children.add(new RawText(element));
         return this;
     }
 
