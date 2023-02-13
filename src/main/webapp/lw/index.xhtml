@@ -6,14 +6,14 @@
                 xmlns:of="http://omnifaces.org/functions"
                 xmlns:lw="http://l3s.de/learnweb">
 
-<ui:param name="pageTitle" value="#{msg['application.name']}"/>
+<ui:param name="pageTitle" value="#{config.appName}"/>
 
 <ui:define name="header_right">
     <li class="nav-item">
         <a class="nav-link" href="#login">#{msg.loginLabel}</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#about">#{msg['frontpage.about_learnweb']}</a>
+        <a class="nav-link" href="#about">#{of:format1(msg['frontpage.about_platform'], config.appName)}</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#courses">#{msg.registerLabel}</a>
@@ -66,8 +66,8 @@
         <div class="container py-5 highlight">
             <div class="row">
                 <div class="col-lg-6">
-                    <h2 class="text-center text-primary">#{msg['frontpage.about_learnweb']}</h2>
-                    <p><h:outputText value="#{msg.homepage}"/></p>
+                    <h2 class="text-center text-primary"><h:outputFormat value="#{msg['frontpage.about_platform']}"><f:param value="#{config.appName}"/></h:outputFormat></h2>
+                    <p><h:outputFormat value="#{msg.homepage}"><f:param value="#{config.appName}"/></h:outputFormat></p>
                 </div>
                 <!--
                 <div class="col-lg-6">

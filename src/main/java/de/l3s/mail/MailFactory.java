@@ -96,7 +96,7 @@ public final class MailFactory {
     }
 
     public static MessageBuilder buildConfirmEmail(String username, String confirmUrl) {
-        return new MessageBuilder("email.confirm_address_subject")
+        return new MessageBuilder("email.confirm_address_subject", Learnweb.config().getAppName())
             .add(new Paragraph(new Text("greeting")).append(" ").append(username).append(","))
             .add(new Paragraph(new Text("email.confirm_address"), new LineBreak(), new Link(confirmUrl)))
             .add(new Paragraph(new Text("email.you_can_ignore")))
@@ -104,9 +104,9 @@ public final class MailFactory {
     }
 
     public static MessageBuilder buildPasswordChangeEmail(String username, String changeUrl) {
-        return new MessageBuilder("email_password.retrieve_title")
+        return new MessageBuilder("email_password.retrieve_title", Learnweb.config().getAppName())
             .add(new Paragraph(new Text("greeting")).append(" ").append(username).append(","))
-            .add(new Paragraph(new Text("email_password.change", username)).append(new LineBreak()).append(new Link(changeUrl)))
+            .add(new Paragraph(new Text("email_password.change", Learnweb.config().getAppName(), username)).append(new LineBreak()).append(new Link(changeUrl)))
             .add(new Paragraph(new Text("email_password.expired_warning")).append(new LineBreak()).append(new Text("email.you_can_ignore")))
             .defaultFooter();
     }

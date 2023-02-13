@@ -12,7 +12,7 @@
 
         <h:head>
             <ui:include src="parts/head.xhtml"/>
-            <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{!empty pageTitle}"/>#{msg['application.name']}</title>
+            <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{!empty pageTitle}"/>#{config.appName}</title>
         </h:head>
 
         <h:body styleClass="layout-body template-page">
@@ -24,7 +24,7 @@
                 <nav class="navbar sticky-top navbar-expand-sm navbar-dark bg-primary shadow">
                     <h:form id="navbar_form" styleClass="container">
                         <a href="#{request.contextPath}/" class="navbar-brand">
-                            <h:graphicImage library="images" name="learnweb_logo.png" alt="#{msg['application.name']}"/>
+                            <h:graphicImage library="images" name="learnweb_logo.png" alt="#{config.appName}"/>
                         </a>
                     </h:form>
                 </nav>

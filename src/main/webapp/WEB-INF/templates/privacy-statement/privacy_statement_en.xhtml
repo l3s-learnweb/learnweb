@@ -72,7 +72,7 @@
                     <p>
                         Tel. <a href="tel:+49 511 762 17715">+49 511 762 - 17715</a><br />
                         Fax <a href="tel:+49 511 762 17719">+49 511 762 - 17779</a><br />
-                        E-Mail: <lw:encryptEmail email="#{msg['application.serverAdmin']}"/><br />
+                        E-Mail: <lw:encryptEmail email="#{config.supportEmail}"/><br />
                         <a href="http://www.l3s.de" target="_blank">www.l3s.de</a>
                     </p>
 
@@ -104,9 +104,9 @@
 
                 <div class="c-section-text">
                     <p>
-                        #{msg['application.name']} is a learning platform for collaboratively finding, sharing and editing resources (websites, images, videos, etc.). In order to use the system it is
+                        #{config.appName} is a learning platform for collaboratively finding, sharing and editing resources (websites, images, videos, etc.). In order to use the system it is
                         necessary to provide some personal data. <br /> The legal basis for the processing of personal data is the consent pursuant to Article 6 paragraph 1 lit. a), Article 7 General
-                        Data Protection Regulation (GDPR)). Below is a list of all personal data stored in the database during the use of #{msg['application.name']} and the reason for storage or
+                        Data Protection Regulation (GDPR)). Below is a list of all personal data stored in the database during the use of #{config.appName} and the reason for storage or
                         processing. Who can view the stored data can be found under
                         <h:link includeViewParams="true" outcome="privacy_statement" fragment="item-5" value="5 Roles and access rights"></h:link>
                         . How long the data are kept is described in section
@@ -133,7 +133,7 @@
                     <h5 class="my-2">4.2 Contents</h5>
 
                     <div class="c-section-text">
-                        <p>Data created or uploaded to #{msg['application.name']}:</p>
+                        <p>Data created or uploaded to #{config.appName}:</p>
 
                         <ul>
                             <li>Photos, Videos</li>
@@ -150,7 +150,7 @@
                     <h5 class="my-2">4.3 User behaviour</h5>
 
                     <div class="c-section-text">
-                        <p>In order to provide and improve its functionality, #{msg['application.name']} needs to record general user actions such as login and logout, but especially actions that
+                        <p>In order to provide and improve its functionality, #{config.appName} needs to record general user actions such as login and logout, but especially actions that
                             occur when dealing with resources and groups. This includes creating, editing, viewing, commenting and searching, but also any other actions that can be applied to
                             resources and groups. It is stored in each case which user, at which time, which action has executed. This serves to ensure the traceability of changes. The information is
                             also used to notify users of changes to their groups and resources.</p>
@@ -194,7 +194,7 @@
 
                 <div class="c-section-text">
                     <p>In principle, user data is kept in the database until the user account is deleted. This happens automatically two years after completion of a course or upon request by the
-                        user. The data in the #{msg['application.name']} system is backed up at regular intervals (usually daily) and remains there for a period of 60 days.</p>
+                        user. The data in the #{config.appName} system is backed up at regular intervals (usually daily) and remains there for a period of 60 days.</p>
                 </div>
             </div>
 
@@ -228,8 +228,8 @@
                 <h3>8 Integration of external content</h3>
 
                 <div class="c-section-text">
-                    <p>We embed third-party images and videos (Youtube, Vimeo, Flickr, GIPHY, Ipernity, Bing, TED) into #{msg['application.name']}. The third party provider receives at least the
-                        following information about the #{msg['application.name']} user:</p>
+                    <p>We embed third-party images and videos (Youtube, Vimeo, Flickr, GIPHY, Ipernity, Bing, TED) into #{config.appName}. The third party provider receives at least the
+                        following information about the #{config.appName} user:</p>
 
                     <ul>
                         <li>Visited page</li>

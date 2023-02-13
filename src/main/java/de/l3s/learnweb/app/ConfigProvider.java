@@ -210,6 +210,10 @@ public class ConfigProvider implements Serializable {
         return properties.getProperty(key);
     }
 
+    public String getProperty(final String key, final String defaultValue) {
+        return properties.getProperty(key, defaultValue);
+    }
+
     public boolean getPropertyBoolean(final String key) {
         return "true".equalsIgnoreCase(properties.getProperty(key));
     }
@@ -304,6 +308,14 @@ public class ConfigProvider implements Serializable {
             getVersion(); // reads release.properties
         }
         return development;
+    }
+
+    public String getAppName() {
+        return getProperty("app_name", "Learnweb");
+    }
+
+    public String getSupportEmail() {
+        return getProperty("app_support_email", "learnweb-support@l3s.de");
     }
 
     /**

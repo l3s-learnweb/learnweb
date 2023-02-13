@@ -13,18 +13,26 @@ class MessagesBundleTest {
 
     @Test
     void getString() {
-        ResourceBundle bundleEn = new MessagesBundle(new Locale("en", "US", ""));
-        assertEquals("Welcome to Learnweb", bundleEn.getString("homepageTitle"));
+        MessagesBundle bundleEn = new MessagesBundle(new Locale("en", "US", ""));
+        assertEquals("Welcome to Learnweb", bundleEn.format("homepageTitle", "Learnweb"));
 
         // not existing language, fallback to default
-        ResourceBundle bundleYY = new MessagesBundle(new Locale("yy"));
-        assertEquals("Welcome to Learnweb", bundleYY.getString("homepageTitle"));
+        MessagesBundle bundleYY = new MessagesBundle(new Locale("yy"));
+        assertEquals("Welcome to Learnweb", bundleYY.format("homepageTitle", "Learnweb"));
 
-        ResourceBundle bundleDe = new MessagesBundle(new Locale("de"));
-        assertEquals("Willkommen bei Learnweb", bundleDe.getString("homepageTitle"));
+        MessagesBundle bundleDe = new MessagesBundle(new Locale("de"));
+        assertEquals("Willkommen bei Learnweb", bundleDe.format("homepageTitle", "Learnweb"));
 
-        ResourceBundle bundlePt = new MessagesBundle(new Locale("pt"));
-        assertEquals("Bem-vindo ao Learnweb", bundlePt.getString("homepageTitle"));
+        MessagesBundle bundlePt = new MessagesBundle(new Locale("pt"));
+        assertEquals("Bem-vindo ao Learnweb", bundlePt.format("homepageTitle", "Learnweb"));
+    }
+
+    @Test
+    void testLanguageVariants() {
+        assertEquals("Hallo", new MessagesBundle(new Locale("de")).format("greeting"));
+        assertEquals("Hallo", new MessagesBundle(new Locale("de", "AT")).format("greeting"));
+        assertEquals("Hallo", new MessagesBundle(new Locale("de", "DE")).format("greeting"));
+        assertEquals("Hallo", new MessagesBundle(new Locale("de", "DE")).format("greeting"));
     }
 
     @Test
