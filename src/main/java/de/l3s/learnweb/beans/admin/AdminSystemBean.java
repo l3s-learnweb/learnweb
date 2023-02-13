@@ -26,6 +26,8 @@ import de.l3s.learnweb.exceptions.BadRequestHttpException;
 import de.l3s.learnweb.exceptions.HttpException;
 import de.l3s.learnweb.group.FolderDao;
 import de.l3s.learnweb.group.GroupDao;
+import de.l3s.learnweb.i18n.MessagesBundle;
+import de.l3s.learnweb.i18n.bundles.SizedResourceBundle;
 import de.l3s.learnweb.resource.FileDao;
 import de.l3s.learnweb.resource.ResourceDao;
 import de.l3s.learnweb.user.CourseDao;
@@ -45,6 +47,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
     private transient RuntimeInfo runtimeInfo;
     private transient List<DatabaseProcess> databaseProcesses;
     private transient List<CacheObject> cacheObjects;
+    private transient List<LocaleObject> localeObjects;
     private transient Integer totalResources;
     private transient Integer indexedResources;
     private transient Integer reindexProgress;
@@ -59,11 +62,12 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
 
         DashboardColumn column2 = new DefaultDashboardColumn();
         column2.addWidget("maintenance");
-        column2.addWidget("error_handling");
+        column2.addWidget("i18n");
         model.addColumn(column2);
 
         DashboardColumn column3 = new DefaultDashboardColumn();
         column3.addWidget("solrIndex");
+        column2.addWidget("error_handling");
         model.addColumn(column3);
     }
 
@@ -147,6 +151,13 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         cacheObjects = null;
     }
 
+    public void clearLocales() {
+        MessagesBundle.clearLocaleCache();
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "Locales cleared");
+        localeObjects = null;
+    }
+
     public void onMaintenanceUpdate() {
         if (config().isMaintenance()) {
             addGrowl(FacesMessage.SEVERITY_WARN, "Maintenance enabled");
@@ -191,9 +202,29 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         return cacheObjects;
     }
 
+    public List<LocaleObject> getLocaleObjects() {
+        if (localeObjects == null) {
+            localeObjects = new ArrayList<>();
+            MessagesBundle.getLocaleCache().forEach(entry -> {
+                String locale = entry.getValue().getLocale().toString();
+                int size = entry.getValue().keySet().size();
+                if (locale.isEmpty()) {
+                    locale = "[default]";
+                }
+                if (entry.getValue() instanceof SizedResourceBundle bundle) {
+                    size = bundle.size();
+                }
+                localeObjects.add(new LocaleObject(entry.getKey().toString(), locale, size));
+            });
+        }
+        return localeObjects;
+    }
+
     public record DatabaseProcess(int id, String user, String host, String db, String command, String time, String state, String info, String progress) {}
 
     public record CacheObject(String name, int size, long sizeSecondary) {}
+
+    public record LocaleObject(String locale, String bundleLocale, int bundleSize) {}
 
     public record RuntimeInfo(String totalMemory, String freeMemory, String maxMemory) {
         private RuntimeInfo(Runtime runtime) {
