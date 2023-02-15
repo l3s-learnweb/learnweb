@@ -250,9 +250,8 @@ public final class Pkg {
      * @param pre the statement's predicate
      * @param object the statement's object
      * @param mode either "literal" or "resource"
-     * @param user the user whom RDF Graph gets this statement added
     * */
-    private void addRdfStatement(String subject, String pre, String object, String mode, User user) {
+    private void addRdfStatement(String subject, String pre, String object, String mode) {
         rdfGraph.addStatement(subject, pre, object, mode);
     }
 
@@ -365,16 +364,16 @@ public final class Pkg {
         }
         for (SearchSession session : dao().getSearchHistoryDao().findSessionsByUserId(user.getId())) {
             addRdfStatement("SearchSession/" + session.getSessionId(), "schema:startTime",
-                session.getStartTimestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
+                session.getStartTimestamp().format(DateTimeFormatter.ISO_DATE), "literal");
             addRdfStatement("SearchSession/" + session.getSessionId(), "schema:endTime",
-                session.getEndTimestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
+                session.getEndTimestamp().format(DateTimeFormatter.ISO_DATE), "literal");
             for (SearchQuery query : session.getQueries()) {
                 addRdfStatement("SearchSession/" + session.getSessionId(), "contains",
-                    "SearchQuery/" + query.searchId(), "resource", user);
+                    "SearchQuery/" + query.searchId(), "resource");
                 addRdfStatement("SearchQuery/" + query.searchId(), "query",
-                    query.query(), "literal", user);
+                    query.query(), "literal");
                 addRdfStatement("SearchQuery/" + query.searchId(),
-                    "schema:dateCreated", query.timestamp().format(DateTimeFormatter.ISO_DATE), "literal", user);
+                    "schema:dateCreated", query.timestamp().format(DateTimeFormatter.ISO_DATE), "literal");
             }
         }
         for (AnnotationCount annotationCount : annotationCounts) {
@@ -398,26 +397,26 @@ public final class Pkg {
         List<Integer> searchIds = dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId());
 
         if (annotationCount.getType().contains("snippet")) {
-            addRdfStatement("SearchSession/" + session, "contains", "Snippet/" + annotationCount.getUriId(), "resource", user);
+            addRdfStatement("SearchSession/" + session, "contains", "Snippet/" + annotationCount.getUriId(), "resource");
         } else if ("web".equals(annotationCount.getType())) {
-            addRdfStatement("SearchSession/" + session, "contains", "schema:WebPage/" + annotationCount.getUriId(), "resource", user);
+            addRdfStatement("SearchSession/" + session, "contains", "schema:WebPage/" + annotationCount.getUriId(), "resource");
         }
-        addRdfStatement("educor:User/" + user.getId(), "educor:generatesLogs", "SearchSession/" + session, "resource", user);
+        addRdfStatement("educor:User/" + user.getId(), "educor:generatesLogs", "SearchSession/" + session, "resource");
 
 
         if (annotationCount.getType().contains("snippet")) {
-            addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
-            addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal", user);
+            addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal");
+            addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal");
             for (int searchId : searchIds) {
                 addRdfStatement("SearchQuery/" + searchId,
-                    "generatesResult", "Snippet/" + annotationCount.getUriId(), "resource", user);
+                    "generatesResult", "Snippet/" + annotationCount.getUriId(), "resource");
             }
         } else if ("web".equals(annotationCount.getType())) {
-            addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal", user);
-            addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "resource", user);
+            addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal");
+            addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "resource");
             for (int searchId : searchIds) {
                 addRdfStatement("SearchQuery/" + searchId,
-                    "generatesResult", "WebPage/" + annotationCount.getUriId(), "resource", user);
+                    "generatesResult", "WebPage/" + annotationCount.getUriId(), "resource");
             }
         }
 
@@ -429,27 +428,27 @@ public final class Pkg {
                 if (inputStream.getUserId() == user.getId()) {
                     if ("profile".equals(annotationCount.getType())) {
                         addRdfStatement("educor:UserProfile/" + user.getId(), "createsInputStream",
-                            "InputStream/" + inputStream.getId(), "resource", user);
+                            "InputStream/" + inputStream.getId(), "resource");
                     } else if ("group".equals(annotationCount.getType())) {
                         addRdfStatement("foaf:Group/" + group.getId(), "createsInputStream",
-                            "InputStream/" + inputStream.getId(), "resource", user);
+                            "InputStream/" + inputStream.getId(), "resource");
                     } else {
                         addRdfStatement("SearchSession/" + session, "createsInputStream",
-                            "InputStream/" + inputStream.getUserId(), "resource", user);
+                            "InputStream/" + inputStream.getUserId(), "resource");
                     }
-                    addRdfStatement("InputStream/" + inputStream.getId(), "schema:text", inputStream.getContent(), "literal", user);
+                    addRdfStatement("InputStream/" + inputStream.getId(), "schema:text", inputStream.getContent(), "literal");
                     addRdfStatement("InputStream/" + inputStream.getId(), "schema:dateCreated",
-                        inputStream.getDateCreated().toString(), "literal", user);
+                        inputStream.getDateCreated().toString(), "literal");
                     addRdfStatement("RecognizedEntities/" + PATTERN.matcher(annotationCount.getUri())
-                        .replaceAll(""), "processes", "InputStream/" + inputStream.getId(), "resource", user);
+                        .replaceAll(""), "processes", "InputStream/" + inputStream.getId(), "resource");
                     if ("web".equals(annotationCount.getType())) {
                         Matcher matcher = keywordPattern.matcher(inputStream.getContent());
                         while (matcher.find()) {
-                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "keywords", matcher.group(1), "literal", user);
+                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "keywords", matcher.group(1), "literal");
                         }
                         matcher = headlinePattern.matcher(inputStream.getContent());
                         while (matcher.find()) {
-                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "headline", matcher.group(1), "literal", user);
+                            addRdfStatement("WebPage/" + annotationCount.getUriId(), "headline", matcher.group(1), "literal");
                         }
                     }
                 }
@@ -500,7 +499,6 @@ public final class Pkg {
         }
         JsonSharedObject object = new JsonSharedObject("singleGraph", false);
         List<Node> newNodes = new ArrayList<>();
-        List<Link> newLinks = new ArrayList<>();
 
         Map<String, String> typeMap = new HashMap<>();
         //HARDCODED lines - need alternatives
@@ -523,11 +521,10 @@ public final class Pkg {
             Node node = nodes.get(entry.getKey());
             for (Map.Entry<String, String> type : typeMap.entrySet()) {
                 if (occurrences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
-                    Node chosenNode = node;
-                    if (newNodes.stream().noneMatch(s -> s.getType().equals(chosenNode.getType()) && s.getUri().equals(chosenNode.getUri()))) {
-                        newNodes.add(chosenNode);
-                        object.getEntities().add(new JsonSharedObject.Entity(chosenNode.getUri(), chosenNode.getName(), chosenNode.getWeight(),
-                            type.getValue(), chosenNode.getId()));
+                    if (newNodes.stream().noneMatch(s -> s.getType().equals(node.getType()) && s.getUri().equals(node.getUri()))) {
+                        newNodes.add(node);
+                        object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), node.getWeight(),
+                            type.getValue(), node.getId()));
                         occurrences.put(type.getValue(), occurrences.get(type.getValue()) + 1);
                     }
                 }
