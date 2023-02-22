@@ -16,8 +16,7 @@
             <DefaultRolloverStrategy max="30"/>
         </RollingFile>
 
-        <Sentry name="sentry" dsn="https://3b3136e07926401b8ec84c95803f88bc@sentry.kbs.uni-hannover.de/2/"
-                minimumBreadcrumbLevel="DEBUG" minimumEventLevel="ERROR"/>
+        <Sentry name="sentry" minimumBreadcrumbLevel="DEBUG" minimumEventLevel="ERROR"/>
     </Appenders>
 
     <Loggers>

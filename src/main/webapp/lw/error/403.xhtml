@@ -13,6 +13,8 @@
 	<p:panel header="#{msg['error']} 403: #{msg['error_pages.forbidden']}" styleClass="ui-widget-danger">
 		<h:outputText styleClass="h5 d-block" value="#{msg['error_pages.forbidden_default_description']}" rendered="#{empty message}"/>
 		<h:outputText styleClass="h5 d-block" value="#{msg[message]}" rendered="#{not empty message}"/>
+		<h:outputText styleClass="text-muted" value="#{msg['error_pages.contact_administrator']}"/>
+		<a href="#{request.contextPath}/lw/contact.jsf">#{msg['contact']}</a>
 	</p:panel>
 </ui:define>
 

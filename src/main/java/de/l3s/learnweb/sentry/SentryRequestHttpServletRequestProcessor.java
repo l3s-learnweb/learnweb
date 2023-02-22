@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
 
-import de.l3s.learnweb.app.Learnweb;
 import io.sentry.EventProcessor;
 import io.sentry.Hint;
 import io.sentry.SentryEvent;
@@ -45,15 +44,6 @@ final class SentryRequestHttpServletRequestProcessor implements EventProcessor {
         sentryRequest.setHeaders(this.resolveHeadersMap(this.httpRequest));
         sentryRequest.setEnvs(this.resolveParametersMap(this.httpRequest.getParameterMap()));
         event.setRequest(sentryRequest);
-
-        try {
-            event.setEnvironment(Learnweb.config().getEnvironment());
-            if (!"local".equals(event.getEnvironment())) {
-                event.setRelease("learnweb@" + Learnweb.config().getVersion());
-            }
-        } catch (Exception e) {
-            log.error("Failed to resolve environment and release", e);
-        }
 
         try {
             User user = new User();

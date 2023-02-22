@@ -99,7 +99,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
             }
 
             course = publicCourses.get(0);
-            addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
+            addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning", config().getAppName());
         }
 
         mailRequired = course.getOption(Course.Option.Users_Require_mail_address);

@@ -33,7 +33,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
     public String onLoad() {
         BeanAssert.validate(!StringUtils.isAnyEmpty(email, token), "error_pages.bad_request_email_link");
         String[] splits = token.split(":");
-        BeanAssert.validate(splits.length == 2 && !StringUtils.isAnyEmpty(splits), "confirm_token_to_short");
+        BeanAssert.validate(splits.length == 2 && !StringUtils.isAnyEmpty(splits), "error_pages.bad_request_email_link");
 
         try {
             user = tokenDao.findUserByToken(Integer.parseInt(splits[0]), splits[1]).orElseThrow();

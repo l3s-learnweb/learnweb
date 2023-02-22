@@ -52,7 +52,6 @@ public class RequestManager implements Serializable {
     private static final int MINUTES_ANALYZED = 10;
     private static final int BAN_THRESHOLD = 100;
 
-    private String adminEmail;
     private int suspiciousAlertsCounter = 0;
 
     private final Set<String> safelist = new HashSet<>();
@@ -76,8 +75,6 @@ public class RequestManager implements Serializable {
 
     @PostConstruct
     public void init() {
-        adminEmail = Learnweb.config().getProperty("admin_mail");
-
         loadBanlist();
         loadSafelist();
     }
@@ -292,7 +289,7 @@ public class RequestManager implements Serializable {
             List<Request> suspiciousTemp = suspiciousRequests.size() > 10 ? suspiciousRequests.subList(0, 10) : suspiciousRequests;
 
             Mail mail = MailFactory.buildSuspiciousAlertEmail(suspiciousTemp).build(Locale.ENGLISH);
-            mail.setRecipient(adminEmail);
+            mail.setRecipient(Learnweb.config().getSupportEmail());
             mail.send();
         } catch (MessagingException e) {
             log.error("Failed to send admin alert mail. Error: ", e);

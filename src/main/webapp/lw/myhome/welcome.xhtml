@@ -34,7 +34,7 @@
                     <div>
                         <p class="mb-0">
                             <h:outputText value="#{msg.greeting} #{userBean.user.username},"/><br/>
-                            <h:outputText value="#{msg.homepageTitle}"/>
+                            <h:outputFormat value="#{msg.homepageTitle}"><f:param value="#{config.appName}"/></h:outputFormat>
                         </p>
                     </div>
                 </div>

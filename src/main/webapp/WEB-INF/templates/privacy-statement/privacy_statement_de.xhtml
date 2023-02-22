@@ -73,7 +73,7 @@
                     <p>
                         Tel. <a href="tel:+49 511 762 17715">+49 511 762 - 17715</a><br />
                         Fax <a href="tel:+49 511 762 17719">+49 511 762 - 17779</a><br />
-                        E-Mail: <lw:encryptEmail email="#{msg['application.serverAdmin']}"/><br />
+                        E-Mail: <lw:encryptEmail email="#{config.supportEmail}"/><br />
                         <a href="http://www.l3s.de" target="_blank">www.l3s.de</a>
                     </p>
 
@@ -105,9 +105,9 @@
 
                 <div class="c-section-text">
                     <p>
-                        #{msg['application.name']} ist eine Lernplattform zum kollaborativen Finden, Teilen und Bearbeiten von Ressourcen (Webseiten, Bilder, Videos usw.). Um das System verwenden zu
+                        #{config.appName} ist eine Lernplattform zum kollaborativen Finden, Teilen und Bearbeiten von Ressourcen (Webseiten, Bilder, Videos usw.). Um das System verwenden zu
                         können ist die Angabe einiger personenbezogener Daten erforderlich. <br /> Die Rechtsgrundlage zur Verarbeitung der personenbezogenen Daten ist die Einwilligung gemäß Art. 6
-                        Abs. 1lit. a), Art. 7 Datenschutzgrundverordnung (DSGVO). Im Folgenden sind alle personenbezogenen Daten, die bei der Nutzung von #{msg['application.name']} in der Datenbank
+                        Abs. 1lit. a), Art. 7 Datenschutzgrundverordnung (DSGVO). Im Folgenden sind alle personenbezogenen Daten, die bei der Nutzung von #{config.appName} in der Datenbank
                         gespeichert werden, und der Grund der Speicherung bzw. Verarbeitung gelistet. Wer die gespeicherten Daten einsehen kann ist unter
                         <h:link includeViewParams="true" outcome="privacy_statement" fragment="item-5" value="5 Rollen und Zugriffsrechte"></h:link>
                         zu erfahren. Wie lange die Daten vorgehalten werden wird unter
@@ -135,7 +135,7 @@
                     <h5 class="my-2">4.2 Inhalte</h5>
 
                     <div class="c-section-text">
-                        <p>Daten die auf #{msg['application.name']} erstellt oder hochgeladen werden:</p>
+                        <p>Daten die auf #{config.appName} erstellt oder hochgeladen werden:</p>
 
                         <ul>
                             <li>Fotos, Videos</li>
@@ -152,7 +152,7 @@
                     <h5 class="my-2">4.3 Nutzerverhalten</h5>
 
                     <div class="c-section-text">
-                        <p>Zur Bereitstellung und zur Verbesserung seiner Funktionalitäten ist es notwendig, dass #{msg['application.name']} allgemeine Benutzeraktionen wie Login und Logout aber
+                        <p>Zur Bereitstellung und zur Verbesserung seiner Funktionalitäten ist es notwendig, dass #{config.appName} allgemeine Benutzeraktionen wie Login und Logout aber
                             vor allem Aktionen, die im Umgang mit Ressourcen und Gruppen erfolgen aufzeichnet. Dazu zählt das Erstellen, Bearbeiten, Ansehen, Kommentieren und Suchen, aber auch alle
                             weiteren Aktionen, die auf Ressourcen und Gruppen angewendet werden können. Es wird jeweils gespeichert welcher Benutzer, zu welchem Zeitpunkt, welche Aktion ausgeführt
                             hat. Dies dient dazu die Nachverfolgbarkeit von Änderungen sicherzustellen. Außerdem werden die Informationen benutzt, um Benutzer über Änderungen an ihren Gruppen und
@@ -197,7 +197,7 @@
 
                 <div class="c-section-text">
                     <p>Grundsätzlich werden die Nutzerdaten solange in der Datenbank vorgehalten, bis das Nutzerkonto gelöscht wird. Dies geschieht automatisiert zwei Jahre nach Beendigung eines
-                        Kurses oder nach Anfrage durch den Benutzer. Die Datenbestände des #{msg['application.name']}-Systems werden in regelmäßigen Abständen (i.d.R. täglich) gesichert und verbleiben
+                        Kurses oder nach Anfrage durch den Benutzer. Die Datenbestände des #{config.appName}-Systems werden in regelmäßigen Abständen (i.d.R. täglich) gesichert und verbleiben
                         dort für einen Zeitraum von 60 Tagen.</p>
                 </div>
             </div>
@@ -233,8 +233,8 @@
                 <h3>8 Einbindung von fremden Inhalten</h3>
 
                 <div class="c-section-text">
-                    <p>Wir betten Bilder und Videos von Drittanbietern (Youtube, Vimeo, Flickr, GIPHY, Ipernity, Bing, TED) in #{msg['application.name']} ein. Dabei erhält der Drittanbieter mindestens
-                        folgende Informationen über den #{msg['application.name']} Benutzer:</p>
+                    <p>Wir betten Bilder und Videos von Drittanbietern (Youtube, Vimeo, Flickr, GIPHY, Ipernity, Bing, TED) in #{config.appName} ein. Dabei erhält der Drittanbieter mindestens
+                        folgende Informationen über den #{config.appName} Benutzer:</p>
 
                     <ul>
                         <li>Besuchte Seite</li>

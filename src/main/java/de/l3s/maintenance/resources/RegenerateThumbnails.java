@@ -61,7 +61,7 @@ public class RegenerateThumbnails extends MaintenanceTask {
         if (resource.getThumbnailSmall() == null) {
             log.debug("create thumbnail");
             try {
-                getLearnweb().getResourcePreviewMaker().processWebsite(resource);
+                getLearnweb().getResourcePreviewMaker().processWebsite(resource, resource.getUrl());
                 resource.setFormat("text/html");
             } catch (Throwable t) {
                 log.warn("Can't create thumbnail for url: {}", url, t);

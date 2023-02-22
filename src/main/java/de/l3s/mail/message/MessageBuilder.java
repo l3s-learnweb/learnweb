@@ -8,12 +8,14 @@ import jakarta.mail.MessagingException;
 
 import org.apache.solr.common.StringUtils;
 
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.mail.Mail;
 
 public class MessageBuilder {
 
     private String subject;
+    private Object[] subjectArgs;
     private String headStyle;
     private final java.util.List<Element> bodyElements = new ArrayList<>();
     private final java.util.List<Element> footerElements = new ArrayList<>();
@@ -23,6 +25,11 @@ public class MessageBuilder {
 
     public MessageBuilder(final String subject) {
         this.subject = subject;
+    }
+
+    public MessageBuilder(final String subject, Object... args) {
+        this.subject = subject;
+        this.subjectArgs = args;
     }
 
     public MessageBuilder add(Element element) {
@@ -43,11 +50,11 @@ public class MessageBuilder {
     }
 
     public MessageBuilder defaultFooter() {
-        return footer(new HorizontalRule(), new Text("email.regards"), new LineBreak(), new Text("email.team"));
+        return footer(new HorizontalRule(), new Text("email.regards"), new LineBreak(), new Text("email.team", Learnweb.config().getAppName()));
     }
 
     public String getSubject(final MessagesBundle msg) {
-        return msg.format(subject);
+        return msg.format(subject, subjectArgs);
     }
 
     public String buildHtmlText(final MessagesBundle msg) {
