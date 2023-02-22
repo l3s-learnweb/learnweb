@@ -1,3 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS `learnweb_annotations`;
+
 CREATE TABLE IF NOT EXISTS `learnweb_annotations`.`annotation_count` (
     `uri_id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `uri` varchar(250) NOT NULL,
