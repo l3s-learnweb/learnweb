@@ -399,7 +399,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     }
 
     public List<LogEntry> getLogs() {
-        if (null == logs) {
+        if (null == logs && resource != null) {
             logs = resource.getLogs();
         }
         return logs;
