@@ -136,8 +136,8 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @GetGeneratedKeys("id")
     int insertSharedObject(int userId, int groupId, String application, String sharedObject);
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET session_id = ?, user_id = ?, input_id = ? WHERE uri = ? AND type = ? ")
-    void updateQueryAnnotation(String sessionId, int userId, String inputId, String uri, String type);
+    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET session_id = ?, input_id = ? WHERE uri = ? AND type = ? AND user_id = ?")
+    void updateQueryAnnotation(String sessionId, String inputId, String uri, String type, int userId);
 
     @SqlUpdate("INSERT INTO learnweb_annotations.annotation_query_count SET search_id = ?, uri_id = ?")
     int insertQueryResult(int searchId, int uriId);

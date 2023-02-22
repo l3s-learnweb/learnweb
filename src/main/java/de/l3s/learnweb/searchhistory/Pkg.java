@@ -255,6 +255,23 @@ public final class Pkg {
         rdfGraph.addStatement(subject, pre, object, mode);
     }
 
+    private void addSearchSessionStatement(User user) {
+        for (SearchSession session : dao().getSearchHistoryDao().findSessionsByUserId(user.getId())) {
+            addRdfStatement("SearchSession/" + session.getSessionId(), "schema:startTime",
+                session.getStartTimestamp().format(DateTimeFormatter.ISO_DATE), "literal");
+            addRdfStatement("SearchSession/" + session.getSessionId(), "schema:endTime",
+                session.getEndTimestamp().format(DateTimeFormatter.ISO_DATE), "literal");
+            for (SearchQuery query : session.getQueries()) {
+                addRdfStatement("SearchSession/" + session.getSessionId(), "contains",
+                    "SearchQuery/" + query.searchId(), "resource");
+                addRdfStatement("SearchQuery/" + query.searchId(), "query",
+                    query.query(), "literal");
+                addRdfStatement("SearchQuery/" + query.searchId(),
+                    "schema:dateCreated", query.timestamp().format(DateTimeFormatter.ISO_DATE), "literal");
+            }
+        }
+    }
+
     /**
      * Calculate the weight to be connected from a node with the function values based on the algorithm.
      * @param date the date of the entity's creation
@@ -362,20 +379,8 @@ public final class Pkg {
                 rdfGraph.addGroup(user, group);
             }
         }
-        for (SearchSession session : dao().getSearchHistoryDao().findSessionsByUserId(user.getId())) {
-            addRdfStatement("SearchSession/" + session.getSessionId(), "schema:startTime",
-                session.getStartTimestamp().format(DateTimeFormatter.ISO_DATE), "literal");
-            addRdfStatement("SearchSession/" + session.getSessionId(), "schema:endTime",
-                session.getEndTimestamp().format(DateTimeFormatter.ISO_DATE), "literal");
-            for (SearchQuery query : session.getQueries()) {
-                addRdfStatement("SearchSession/" + session.getSessionId(), "contains",
-                    "SearchQuery/" + query.searchId(), "resource");
-                addRdfStatement("SearchQuery/" + query.searchId(), "query",
-                    query.query(), "literal");
-                addRdfStatement("SearchQuery/" + query.searchId(),
-                    "schema:dateCreated", query.timestamp().format(DateTimeFormatter.ISO_DATE), "literal");
-            }
-        }
+        //Add some statements from search sessions
+        addSearchSessionStatement(user);
         for (AnnotationCount annotationCount : annotationCounts) {
             //Call the DB update here
             updatePkg(annotationCount);
@@ -523,7 +528,7 @@ public final class Pkg {
                 if (occurrences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
                     if (newNodes.stream().noneMatch(s -> s.getType().equals(node.getType()) && s.getUri().equals(node.getUri()))) {
                         newNodes.add(node);
-                        object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), node.getWeight(),
+                        object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), entry.getValue(),
                             type.getValue(), node.getId()));
                         occurrences.put(type.getValue(), occurrences.get(type.getValue()) + 1);
                     }
@@ -579,7 +584,7 @@ public final class Pkg {
                 Node chosenNode = nodes.get(entry.getKey());
                 newNodes.add(chosenNode);
                 sharedObject.getEntities().add(new JsonSharedObject.Entity(chosenNode.getUri(), chosenNode.getName(),
-                    chosenNode.getWeight(), chosenNode.getType(), chosenNode.getId()));
+                    entry.getValue(), chosenNode.getType(), chosenNode.getId()));
                 index++;
                 if (index >= numberEntities) {
                     break;

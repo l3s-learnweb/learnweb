@@ -1,22 +1,22 @@
 package de.l3s.learnweb.searchhistory.dbpediaspotlight.common;
 
-public interface Constants {
+public class Constants {
 
-    String EMPTY = "";
+    public static String EMPTY = "";
 
-    String SLASH = "/";
+    public static String SLASH = "/";
 
-    String COMMA = ", ";
+    public static String COMMA = ", ";
 
-    String HTTP = "http";
+    public static String HTTP = "http";
+    public static String HTTPBIG = "Http";
+    public static String DBPEDIA = "DBpedia:";
 
-    String DBPEDIA = "DBpedia:";
-
-    String SCHEMA = "Schema:";
+    public static String SCHEMA = "Schema:";
 
     /**
-     * This method is only here to make lint happy
+     * This method is only here to make lint happy.
      */
-    default void doNothing() {
+    void doNothing() {
     }
 }

@@ -148,8 +148,8 @@ public class AnnotationBean implements Serializable {
                 }
                 //Update the inputId
                 //Update the repetition
-                searchHistoryDao.updateQueryAnnotation(session, userId, input,
-                    annotationCount.getUri(), annotationCount.getType());
+                searchHistoryDao.updateQueryAnnotation(session, input,
+                    annotationCount.getUri(), annotationCount.getType(), userId);
                 if (!"user".equals(type) && !"profile".equals(type) && !searchHistoryDao.findSearchIdByResult(foundAnnotation.get().getUriId()).contains(id)) {
                     searchHistoryDao.insertQueryResult(id, foundAnnotation.get().getUriId());
                 }

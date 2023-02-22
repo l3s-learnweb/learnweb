@@ -1,14 +1,12 @@
 package de.l3s.learnweb.searchhistory.dbpediaspotlight.rest;
 
-import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Constants.EMPTY;
-import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Prefixes.DBPEDIA_ONTOLOGY;
-import static de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Prefixes.SCHEMA_ONTOLOGY;
 import static org.apache.http.HttpHeaders.ACCEPT;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +21,8 @@ import org.apache.http.message.BasicNameValuePair;
 import com.google.gson.Gson;
 
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.AnnotationUnit;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Constants;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Prefixes;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.ResourceItem;
 
 public class SpotlightBean {
@@ -33,7 +33,6 @@ public class SpotlightBean {
     public SpotlightBean() {
         client = HttpClientBuilder.create().build();
         request = new HttpPost(URL);
-
         init();
     }
 
@@ -53,7 +52,6 @@ public class SpotlightBean {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("text", text));
         request.setEntity(new UrlEncodedFormEntity(params));
-
         return get();
     }
 
@@ -61,17 +59,15 @@ public class SpotlightBean {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("url", url.toString()));
         request.setEntity(new UrlEncodedFormEntity(params));
-
         return get();
     }
 
     private String fixPrefixes(String value) {
         if (value != null && !value.isEmpty()) {
-            return value.replace("Http", "http")
-                .replace("DBpedia:", DBPEDIA_ONTOLOGY)
-                .replace("Schema:", SCHEMA_ONTOLOGY);
+            return value.replace(Constants.HTTPBIG, Constants.HTTP)
+                .replace(Constants.DBPEDIA, Prefixes.DBPEDIA_ONTOLOGY)
+                .replace(Constants.SCHEMA, Prefixes.SCHEMA_ONTOLOGY);
         }
-
         return value;
     }
 
@@ -87,9 +83,9 @@ public class SpotlightBean {
 
     private String getContent() throws IOException {
         HttpResponse response = client.execute(request);
-        StringBuffer result = new StringBuffer();
-        try (BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"))) {
-            String line = EMPTY;
+        StringBuilder result = new StringBuilder();
+        try (BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8))) {
+            String line;
 
             while ((line = rd.readLine()) != null) {
                 result.append(line);
@@ -99,15 +95,6 @@ public class SpotlightBean {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-
-        /*HttpResponse response = client.execute(request);
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-        StringBuffer result = new StringBuffer();
-        String line = EMPTY;
-
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }*/
 
         return result.toString();
     }
