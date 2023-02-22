@@ -4,10 +4,11 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:o="http://omnifaces.org/ui"
+                xmlns:of="http://omnifaces.org/functions"
                 xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
-<ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
+<ui:param name="helpText" value="#{of:format1(msg.myhomeProfileHelp, config.appName)}"/>
 
 <ui:define name="metadata">
     <f:metadata>

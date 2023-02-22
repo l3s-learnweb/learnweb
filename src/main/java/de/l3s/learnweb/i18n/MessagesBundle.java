@@ -3,18 +3,32 @@ package de.l3s.learnweb.i18n;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.collections4.map.UnmodifiableEntrySet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
 
 public class MessagesBundle extends ResourceBundle {
+    private static final Logger log = LogManager.getLogger(MessagesBundle.class);
     private static final ResourceBundle.Control control = new DynamicControl();
     private static final ConcurrentHashMap<Locale, ResourceBundle> cache = new ConcurrentHashMap<>();
 
     public static ResourceBundle of(Locale locale) {
-        return cache.computeIfAbsent(locale, local -> ResourceBundle.getBundle("lang", local, control));
+        return cache.computeIfAbsent(locale, local -> ResourceBundle.getBundle("i18n.auto", local, control));
+    }
+
+    public static void clearLocaleCache() {
+        cache.clear();
+    }
+
+    public static Set<Map.Entry<Locale, ResourceBundle>> getLocaleCache() {
+        return UnmodifiableEntrySet.unmodifiableEntrySet(cache.entrySet());
     }
 
     private final Locale locale;
@@ -30,7 +44,13 @@ public class MessagesBundle extends ResourceBundle {
 
     @Override
     protected Object handleGetObject(String key) {
-        return parent.getObject(key);
+        try {
+            return parent.getObject(key);
+        } catch (MissingResourceException e) {
+            // to make sure we do not show questions marks on frontend like "??? key ???", show key instead
+            log.debug("Unknown key requested: {}", key);
+            return key;
+        }
     }
 
     @Override

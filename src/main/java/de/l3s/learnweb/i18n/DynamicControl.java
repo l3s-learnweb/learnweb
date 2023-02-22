@@ -1,9 +1,6 @@
 package de.l3s.learnweb.i18n;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -12,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.l3s.learnweb.i18n.bundles.DebugResourceBundle;
-import de.l3s.learnweb.i18n.bundles.RecursiveResourceBundle;
+import de.l3s.learnweb.i18n.bundles.SizedResourceBundle;
 
 /**
  * Control that loads property files and set the empty Locale and hence "messages.properties" as fallback.
@@ -27,24 +24,32 @@ public class DynamicControl extends ResourceBundle.Control {
     }
 
     @Override
-    public List<String> getFormats(String baseName) {
-        return ResourceBundle.Control.FORMAT_PROPERTIES;
+    public List<String> getFormats(final String baseName) {
+        return FORMAT_PROPERTIES;
+    }
+
+    @Override
+    public long getTimeToLive(final String baseName, final Locale locale) {
+        return TTL_DONT_CACHE;
     }
 
     @Override
     public ResourceBundle newBundle(final String baseName, final Locale locale, final String format, final ClassLoader loader, final boolean reload)
         throws IllegalAccessException, InstantiationException, IOException {
-        log.debug("Bundle requested: {} {} {} {}", baseName, locale, format, reload);
+        log.debug("Bundle requested: '{}' {}", locale, reload);
 
         if ("xx".equals(locale.getLanguage())) {
             return new DebugResourceBundle();
         }
 
-        ResourceBundle source = ResourceBundle.getBundle(BASE_NAME, locale);
-        log.debug("Bundle loaded: {} {}", source.getLocale(), source.getBaseBundleName());
-        ArrayList<String> keys = Collections.list(source.getKeys());
-        HashMap<String, Object> lookup = new HashMap<>(keys.size());
-        keys.forEach(key -> lookup.put(key, source.getObject(key)));
-        return new RecursiveResourceBundle(lookup);
+        ResourceBundle bundle = super.newBundle(BASE_NAME, locale, format, loader, reload);
+        if (bundle == null) {
+            log.debug("Bundle not found: '{}'", locale);
+            return null;
+        }
+
+        log.debug("Bundle loaded: '{}', keys {}", locale, bundle.keySet().size());
+        ResourceBundle result = new SizedResourceBundle(bundle);
+        return result;
     }
 }

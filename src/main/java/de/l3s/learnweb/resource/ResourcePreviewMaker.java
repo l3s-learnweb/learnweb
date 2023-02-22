@@ -1,12 +1,10 @@
 package de.l3s.learnweb.resource;
 
-import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serial;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
@@ -14,14 +12,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
 
 import de.l3s.learnweb.app.ConfigProvider;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.File.FileType;
-import de.l3s.learnweb.resource.office.ConverterService;
+import de.l3s.thumbmaker.ThumbMaker;
+import de.l3s.thumbmaker.ThumbOptions;
 import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
 import de.l3s.util.UrlHelper;
@@ -54,21 +50,16 @@ public class ResourcePreviewMaker implements Serializable {
 
     private final String ffmpegPath;
     private final String ffprobePath;
-    private final String websiteThumbnailService;
-    private final String archiveThumbnailService;
-    private final String officeConverterService;
-
+    private final ThumbMaker thumbMaker;
     private transient FFprobe ffprobe;
     private transient FFmpegExecutor ffmpegExecutor;
 
     public ResourcePreviewMaker(final FileDao fileDao, final ConfigProvider configProvider) {
         this.fileDao = fileDao;
 
+        this.thumbMaker = new ThumbMaker(configProvider.getProperty("thumbmaker_server_url"));
         this.ffmpegPath = configProvider.getProperty("ffmpeg_path");
         this.ffprobePath = configProvider.getProperty("ffprobe_path");
-        this.archiveThumbnailService = configProvider.getProperty("archive_website_thumbnail_service");
-        this.websiteThumbnailService = configProvider.getProperty("website_thumbnail_service");
-        this.officeConverterService = configProvider.getProperty("onlyoffice_server_url") + "/ConvertService.ashx";
     }
 
     private FFprobe getFFprobe() throws IOException {
@@ -96,7 +87,7 @@ public class ResourcePreviewMaker implements Serializable {
             }
 
             if (resource.getType() == ResourceType.website) {
-                processWebsite(resource);
+                processWebsite(resource, resource.getUrl());
             } else if (resource.getFile(FileType.MAIN) != null) {
                 inputStream = resource.getFile(FileType.MAIN).getInputStream();
                 processFile(resource, inputStream);
@@ -119,16 +110,14 @@ public class ResourcePreviewMaker implements Serializable {
             case image:
                 processImage(resource, inputStream);
                 break;
-            case pdf:
-                processPdf(resource, inputStream);
-                break;
             case video:
                 processVideo(resource);
                 break;
+            case pdf:
             case document:
             case presentation:
             case spreadsheet:
-                processOfficeDocument(resource);
+                processDocument(resource, resource.getFile(FileType.MAIN).getAbsoluteUrl());
                 break;
             case text:
             case audio:
@@ -139,30 +128,24 @@ public class ResourcePreviewMaker implements Serializable {
         }
     }
 
-    private void processOfficeDocument(Resource resource) {
-        try {
-            String thumbnailUrl = ConverterService.convert(officeConverterService, resource.getFile(FileType.MAIN));
-            InputStream thumbnailStream = UrlHelper.getInputStream(thumbnailUrl);
-            if (thumbnailStream == null) {
-                throw new IllegalStateException("Error during conversion : stream is null");
-            }
+    public void processDocument(Resource resource, String url) {
+        try (InputStream stream = thumbMaker.makeFilePreview(url, ThumbOptions.file().width(1680).shrink().thumbnail())) {
+            Image img = new Image(stream);
 
-            createThumbnails(resource, new Image(thumbnailStream), false);
-            thumbnailStream.close();
+            createThumbnails(resource, img, false);
         } catch (Exception e) {
             log.error("An error occurs during creating thumbnail for document: resource_id={}", resource.getId(), e);
         }
     }
 
     public void processImage(Resource resource, InputStream inputStream) throws IOException {
-        // process image
         Image img = new Image(inputStream);
 
         resource.setWidth(img.getWidth());
         resource.setHeight(img.getHeight());
 
         Image thumbnail = img.getResized(THUMBNAIL_LARGE_WIDTH, THUMBNAIL_LARGE_HEIGHT);
-        File file = new File(FileType.THUMBNAIL_LARGE, "thumbnail4.png", "image/png");
+        File file = new File(FileType.THUMBNAIL_LARGE, "thumbnail4.jpg", "image/jpeg");
         fileDao.save(file, thumbnail.getInputStream());
         thumbnail.dispose();
 
@@ -170,30 +153,16 @@ public class ResourcePreviewMaker implements Serializable {
         createThumbnails(resource, img, false);
     }
 
-    public void processWebsite(Resource resource) throws IOException {
-        URL thumbnailUrl = new URL(websiteThumbnailService + StringHelper.urlEncode(resource.getUrl()));
+    public void processWebsite(Resource resource, String url) throws IOException {
+        try (InputStream stream = thumbMaker.makeScreenshot(url, ThumbOptions.screenshot().width(1920).format("jpg").fullPage(true))) {
+            Image img = new Image(stream);
 
-        // process image
-        Image img = new Image(thumbnailUrl.openStream());
+            File file = new File(FileType.THUMBNAIL_LARGE, "website.jpg", "image/jpeg");
+            fileDao.save(file, img.getInputStream());
 
-        File file = new File(FileType.THUMBNAIL_LARGE, "website.png", "image/png");
-        fileDao.save(file, img.getInputStream());
-
-        resource.addFile(file);
-        createThumbnails(resource, img, true);
-    }
-
-    public void processArchivedVersion(Resource resource, String archiveUrl) throws IOException {
-        URL thumbnailUrl = new URL(archiveThumbnailService + StringHelper.urlEncode(archiveUrl));
-
-        // process image
-        Image img = new Image(thumbnailUrl.openStream());
-
-        File file = new File(FileType.THUMBNAIL_LARGE, "wayback_thumbnail.png", "image/png");
-        fileDao.save(file, img.getInputStream());
-
-        resource.addFile(file);
-        createThumbnails(resource, img, true);
+            resource.addFile(file);
+            createThumbnails(resource, img, true);
+        }
     }
 
     public void processVideo(Resource resource) {
@@ -322,25 +291,6 @@ public class ResourcePreviewMaker implements Serializable {
 
         getFFmpegExecutor().createJob(builder).run();
         log.info("Creating thumbnail done.");
-    }
-
-    public void processPdf(Resource resource, InputStream inputStream) throws IOException {
-        PDDocument pdfDocument = Loader.loadPDF(inputStream);
-        PDFRenderer pdfRenderer = new PDFRenderer(pdfDocument);
-
-        // try page by page to get an image
-        for (int p = 0, t = pdfDocument.getNumberOfPages(); p <= t; p++) {
-            try {
-                BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(p, 300);
-                Image image = new Image(bufferedImage);
-
-                createThumbnails(resource, image, false);
-                return; // stop as soon as we got one image
-            } catch (IOException e) {
-                // some PDFs with special graphics cause errors
-                log.debug("Skip PDF page with errors; page: {}; resource: {}", p, resource);
-            }
-        }
     }
 
     private void createThumbnails(Resource resource, Image img, boolean croppedToAspectRatio) throws IOException {

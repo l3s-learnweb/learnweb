@@ -23,7 +23,9 @@ else
   <lib dir="${solr.install.dir:..\/..\/..}\/modules\/extraction\/lib" regex=".*\\.jar" \/>' /var/solr/data/$core_name/conf/solrconfig.xml
 
     # start a Solr so we can use the Schema API, but only on localhost
-    start-local-solr
+    echo "starting local solr"
+    start-local-solr &
+    echo "waiting 10 seconds for solr to start"
     sleep 10
 
     # Now configure with the Schema API
