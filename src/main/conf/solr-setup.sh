@@ -24,7 +24,7 @@ else
 
     # start a Solr so we can use the Schema API, but only on localhost
     echo "starting local solr"
-    start-local-solr
+    start-local-solr &
     echo "waiting 10 seconds for solr to start"
     sleep 10
 
