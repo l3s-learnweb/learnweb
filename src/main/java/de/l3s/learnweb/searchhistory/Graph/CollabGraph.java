@@ -148,12 +148,26 @@ public class CollabGraph implements Serializable {
      * @param nodes the nodes in the combined shared objects
      * @return the CollabGraph after merging nodes
      * */
-    private CollabGraph getTrimmedGraph(List<Node> nodes) {
+    private CollabGraph getTrimmedGraph(List<Node> nodes, List<Link> links) {
         //Remove duplicating nodes by merging nodes with the same uri
         for (int i = 0; i < nodes.size(); i++) {
+            nodes.get(i).setParent(null);
             if (!nodes.get(i).getUri().isEmpty()) {
                 for (int j = i + 1; j < nodes.size(); j++) {
                     if (nodes.get(i).getUri().equals(nodes.get(j).getUri())) {
+                        for (Link link : links) {
+                            if (link.target == j) {
+                                link.target = i;
+                            } else if (link.source == j) {
+                                link.source = i;
+                            }
+                            if (link.source > j) {
+                                link.source--;
+                            }
+                            if (link.target > j) {
+                                link.target--;
+                            }
+                        }
                         //Join the users and sessionId of the first node
                         List<String> userList = new ArrayList<>(nodes.get(i).getUsers());
                         userList.removeAll(nodes.get(j).getUsers());
@@ -164,30 +178,28 @@ public class CollabGraph implements Serializable {
                         j--;
                     }
                 }
-                nodes.get(i).setUser();
+            }
+            nodes.get(i).setUser();
+        }
+        List<Link> newLinks = new ArrayList<>();
+        for (Link link : links) {
+            if (nodes.get(link.getTarget()).getParent() == null
+                || (nodes.get(link.getSource()).getParent() != null && nodes.get(link.getTarget()).getParent() != nodes.get(link.getSource()).getParent())) {
+                newLinks.add(link);
+                nodes.get(link.getTarget()).setParent(nodes.get(link.getSource()));
+            } else if (nodes.get(link.getSource()).getParent() == null
+                || (nodes.get(link.getTarget()).getParent() != null && nodes.get(link.getTarget()).getParent() != nodes.get(link.getSource()).getParent())) {
+                newLinks.add(link);
+                nodes.get(link.getSource()).setParent(nodes.get(link.getTarget()));
             }
         }
-        //Create the link after finaliziing the nodes
-        List<Link> links = new ArrayList<>();
-        for (int i = 0; i < nodes.size() - 1; i++) {
-            for (int j = i + 1; j < nodes.size(); j++) {
-                List<String> commonUser = nodes.get(i).getUsers().stream().filter(
-                    nodes.get(j).getUsers().stream().toList()::contains).toList();
-                if (!commonUser.isEmpty()) {
-                    if (nodes.get(j).getParent() == null || nodes.get(i).getWeight() == nodes.get(i).getParent().getWeight()) {
-                        links.add(new Link(i, j));
-                        nodes.get(j).setParent(nodes.get(i));
-                    }
-                }
-            }
-        }
-        return new CollabGraph(nodes, links);
+        return new CollabGraph(nodes, newLinks);
     }
 
     /**
     * Create the collaborative Graph (collabGraph) file + visualisation based on the shared objects as inputs.
-    * @param    sharedObjects   the list of Shared Objects in Json form
-    * @return   the collabGraph object to be visualized by annotation.js
+    * @param sharedObjects the list of Shared Objects in Json form
+    * @return the collabGraph object to be visualized by annotation.js
     * */
     public CollabGraph createCollabGraph(List<JsonSharedObject> sharedObjects) {
         CollabGraph graph = new CollabGraph(new ArrayList<>(), new ArrayList<>());
@@ -205,7 +217,7 @@ public class CollabGraph implements Serializable {
             }
             //Add links, modify it to be logical with current nodes of collabGraph
         }
-        graph = getTrimmedGraph(graph.nodes);
+        graph = getTrimmedGraph(graph.nodes, graph.links);
         for (Node node : graph.nodes) {
             node.setFrequency(node.getUsers().size());
         }
@@ -228,10 +240,7 @@ public class CollabGraph implements Serializable {
         for (Node node : graph.nodes) {
             node.setFrequency(calculateFrequencyRatio(node.getWeight()));
         }
-        for (JsonSharedObject.Link link : sharedObject.getLinks()) {
-            graph.links.add(new Link(link.getSource(), link.getTarget()));
-        }
-        return getTrimmedGraph(graph.nodes);
+        return getTrimmedGraph(graph.nodes, graph.links);
     }
 
     public CollabGraph(final List<Node> nodes, final List<Link> links) {

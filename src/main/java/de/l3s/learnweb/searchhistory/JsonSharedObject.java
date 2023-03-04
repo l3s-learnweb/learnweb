@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
 
 public class JsonSharedObject {
     public static class User {
-        private int id;
+        private transient int id;
         private String name;
 
         public User(final int id, final String name) {

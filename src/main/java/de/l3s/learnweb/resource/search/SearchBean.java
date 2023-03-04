@@ -299,7 +299,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             getPkgBean().trimPkg();
             //Update one for recommendation, one for collabGraph which marks the user's active state.
             getPkgBean().createSharedObject(groupDao.findByUserId(getUser().getId()).get(0).getId(),
-                3, false, "recommendation");
+                5, false, "recommendation");
         }
     }
 
@@ -328,8 +328,17 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
         for (JsonSharedObject sharedObject : sharedObjects) {
             if (sharedObject.getUser().getId() != getUser().getId()) {
-
-                chosenEntities.addAll(sharedObject.getEntities());
+                for (JsonSharedObject.Entity entity : sharedObject.getEntities()) {
+                    if (chosenEntities.stream().anyMatch(s -> s.getQuery().equals(entity.getQuery()))) {
+                        chosenEntities.stream()
+                            .filter(s -> s.getQuery().equals(entity.getQuery()))
+                            .findFirst()
+                            .filter(s -> s.getWeight() < entity.getWeight())
+                            .ifPresent(s -> s.setWeight(entity.getWeight()));
+                    } else {
+                        chosenEntities.add(entity);
+                    }
+                }
             }
         }
         for (JsonSharedObject sharedObject : sharedObjects) {

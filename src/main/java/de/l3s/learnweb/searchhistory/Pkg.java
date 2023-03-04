@@ -362,14 +362,16 @@ public final class Pkg {
     public void createPkg(User user, int groupId) {
         //Get the entities from DB for this user
         this.annotationCounts = dao().getSearchHistoryDao().findAnnotationCountByUser(user.getId());
+        //Initialize the graph
         nodes = new ArrayList<>();
         links = new ArrayList<>();
         //Add default node. Any group that has only 1 node will be connected to default node
         addNode(0, "default", 0, 1, 0.0, "", "", null);
 
+        //New RDF-Model initialization
+        rdfGraph = new RdfModel(user);
         //Initialize rdf graph model
         Optional<RdfObject> rdfObject = dao().getSearchHistoryDao().findRdfById(user.getId());
-        rdfGraph = new RdfModel(user);
         if (rdfObject.isPresent()) {
             rdfGraph.makeModelFromString(rdfObject.get().getRdfValue());
         } else {
@@ -379,7 +381,7 @@ public final class Pkg {
                 rdfGraph.addGroup(user, group);
             }
         }
-        //Add some statements from search sessions
+        //Add statements which search sessions are the subject
         addSearchSessionStatement(user);
         for (AnnotationCount annotationCount : annotationCounts) {
             //Call the DB update here
@@ -389,6 +391,7 @@ public final class Pkg {
 
     /**
      * Add RDF-statements to this user's RDF graph based on the parameters from the entity.
+     * Calls after DBPedia-spotlight is used
      * @param annotationCount the entity
      * @param user the current user
      * @param session the user's current search session
@@ -398,7 +401,7 @@ public final class Pkg {
         Pattern keywordPattern = Pattern.compile("<b>" + "(.*?)" + "</b>");
         Pattern headlinePattern = Pattern.compile("<title>" + "(.*?)" + "</title>");
         //Get the session id list from entity
-        Group group = dao().getGroupDao().findByUserId(user.getId()).get(0);
+        List<Group> groupList = dao().getGroupDao().findByUserId(user.getId());
         List<Integer> searchIds = dao().getSearchHistoryDao().findSearchIdByResult(annotationCount.getUriId());
 
         if (annotationCount.getType().contains("snippet")) {
@@ -434,8 +437,8 @@ public final class Pkg {
                     if ("profile".equals(annotationCount.getType())) {
                         addRdfStatement("educor:UserProfile/" + user.getId(), "createsInputStream",
                             "InputStream/" + inputStream.getId(), "resource");
-                    } else if ("group".equals(annotationCount.getType())) {
-                        addRdfStatement("foaf:Group/" + group.getId(), "createsInputStream",
+                    } else if ("group".equals(annotationCount.getType()) && !groupList.isEmpty()) {
+                        addRdfStatement("foaf:Group/" + groupList.get(0).getId(), "createsInputStream",
                             "InputStream/" + inputStream.getId(), "resource");
                     } else {
                         addRdfStatement("SearchSession/" + session, "createsInputStream",
@@ -478,16 +481,16 @@ public final class Pkg {
         //latch.await();
         results = new HashMap<>();
         for (int i = 1; i < nodes.size() - 1; i++) {
-            double sumWeight = 0;
+            double weight = 0;
             double sumConfidence = 0;
             for (Link link : links) {
                 if (link.source == i || link.target == i) {
-                    sumWeight += link.weight;
+                    weight += link.weight;
                     sumConfidence += link.source == i ? (link.target == 0 ? 0 : nodes.get(link.target).getConfidence())
                         : (link.source == 0 ? 0 : nodes.get(link.source).getConfidence());
                 }
             }
-            results.put(i, nodes.get(i).getConfidence() * sumConfidence * sumWeight);
+            results.put(i, nodes.get(i).getConfidence() * sumConfidence * weight);
         }
     }
 

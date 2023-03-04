@@ -24,9 +24,9 @@ const onLoad = (graph) => {
   // eslint-disable-next-line no-undef
   const forceLayout = d3.forceSimulation()
     // eslint-disable-next-line no-undef,no-use-before-define
-    .force('link', d3.forceLink().distance(300))
+    .force('link', d3.forceLink().distance(100))
     // eslint-disable-next-line no-undef
-    .force('charge', d3.forceManyBody().strength(-700))
+    .force('charge', d3.forceManyBody().strength(-550))
     // eslint-disable-next-line no-undef
     .force('center', d3.forceCenter(1000 / 2, 1000 / 2))
     // eslint-disable-next-line no-undef,no-use-before-define
