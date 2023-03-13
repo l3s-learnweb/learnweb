@@ -17,14 +17,14 @@
         <jakarta.faces.project_stage>Development</jakarta.faces.project_stage>
 
         <maven.compiler.release>17</maven.compiler.release>
-        <maven.dependency.myfaces.version>4.0.0-RC5</maven.dependency.myfaces.version>
+        <maven.dependency.myfaces.version>4.0.0</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.9.4</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.37.1</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.15.0</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>9.15.2</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.20.0</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>6.14.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>6.15.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.9.2</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>5.1.1</maven.dependency.mockito.version>
+        <maven.dependency.mockito.version>5.2.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>4.0.1</version>
+            <version>4.1</version>
         </dependency>
         <!-- PrimeFaces -->
         <dependency>
@@ -289,7 +289,7 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>3.1.4</version>
+            <version>3.1.5</version>
         </dependency>
         <!-- Converts Java Objects into JSON and back -->
         <dependency>
@@ -427,7 +427,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.7.0</version>
+                        <version>10.8.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -549,7 +549,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>[3.6,)</version>
+                                    <version>[3.8,)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>[17,)</version>
