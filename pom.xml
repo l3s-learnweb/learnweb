@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.19.01</version>
+    <version>3.20.00</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -20,9 +20,9 @@
         <maven.dependency.myfaces.version>4.0.0</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.9.4</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.37.1</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.15.2</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>9.16.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.20.0</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>6.15.0</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>6.16.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.9.2</maven.dependency.junit.version>
         <maven.dependency.mockito.version>5.2.0</maven.dependency.mockito.version>
 
@@ -276,7 +276,7 @@
             <!-- Remove after HikariCP updated -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.6</version>
+            <version>2.0.7</version>
         </dependency>
         <dependency>
             <groupId>io.sentry</groupId>
@@ -427,7 +427,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.8.1</version>
+                        <version>10.9.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
