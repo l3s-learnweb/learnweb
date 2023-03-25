@@ -47,9 +47,9 @@ public class StatusBean extends ApplicationBean {
     private Service getDatabaseIntegrity() {
         try {
             if (getLearnweb().getDaoProvider().getOrganisationDao().findAll().isEmpty()) {
-                return new Service("Database Integrity", true, null);
-            } else {
                 return new Service("Database Integrity", false, "No organisations found");
+            } else {
+                return new Service("Database Integrity", true, null);
             }
         } catch (Exception e) {
             return new Service("Database Integrity", false, e.getMessage());
