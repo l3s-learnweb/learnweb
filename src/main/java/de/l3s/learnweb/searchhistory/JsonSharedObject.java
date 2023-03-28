@@ -120,7 +120,7 @@ public class JsonSharedObject {
     private List<Link> links;
     private User user;
     private String application;
-    private int id;
+    private transient int id;
 
     public JsonSharedObject(final String content, boolean isJson) {
         if (isJson) {
