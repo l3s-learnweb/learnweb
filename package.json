@@ -4,11 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "browserslist": [
+    "defaults",
     "> 0.5% in DE",
-    "not safari < 15.4",
-    "not ios_saf < 15.4",
-    "not op_mini all",
-    "not dead"
+    "not op_mini all"
   ],
   "scripts": {
     "build": "rollup -c",
@@ -44,18 +42,18 @@
     "eslint-plugin-compat": "^4.1.2",
     "eslint-plugin-import": "^2.27.5",
     "postcss": "^8.4.21",
-    "rollup": "^3.19.1",
+    "rollup": "^3.20.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-scss": "^4.0.0",
-    "sass": "^1.59.2",
-    "stylelint": "^14.16.1",
-    "stylelint-config-sass-guidelines": "^9.0.1",
+    "sass": "^1.59.3",
+    "stylelint": "^15.3.0",
+    "stylelint-config-sass-guidelines": "^10.0.0",
     "stylelint-no-unsupported-browser-features": "^6.1.0"
   },
   "peerDependencies": {
-    "@percy/cli": "^1.20.3",
+    "@percy/cli": "^1.21.0",
     "@percy/puppeteer": "^2.0.2",
-    "puppeteer": "^19.7.4"
+    "puppeteer": "^19.7.5"
   },
   "eslintConfig": {
     "extends": [
@@ -107,9 +105,8 @@
       "selector-max-compound-selectors": 6,
       "selector-no-qualifying-type": null,
       "scss/dollar-variable-pattern": null,
+      "scss/no-global-function-names": null,
       "scss/at-extend-no-missing-placeholder": null,
-      "order/order": null,
-      "order/properties-alphabetical-order": null,
       "plugin/no-unsupported-browser-features": [
         true,
         {
