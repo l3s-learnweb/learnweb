@@ -30,7 +30,7 @@ const onLoad = (graph) => {
     // eslint-disable-next-line no-undef
     .force('center', d3.forceCenter(1000 / 2, 1000 / 2))
     // eslint-disable-next-line no-undef,no-use-before-define
-    .force('collide', d3.forceCollide().radius((d) => fibonacci(d.frequency + 3) * 15));
+    .force('collide', d3.forceCollide().radius((d) => fibonacci(d.frequency + 2) * 14));
 
   init();
 
@@ -59,7 +59,7 @@ const onLoad = (graph) => {
       .data((d) => [d])
       .join('circle')
       // eslint-disable-next-line no-use-before-define
-      .attr('r', (d) => fibonacci(d.frequency + 3) * 15)
+      .attr('r', (d) => fibonacci(d.frequency + 3) * 14)
       .style('fill', (d) => color(d.user));
 
     // eslint-disable-next-line no-undef
@@ -75,9 +75,9 @@ const onLoad = (graph) => {
 
     nodes.append('text')
       // eslint-disable-next-line no-use-before-define
-      .attr('dx', (d) => fibonacci(d.frequency + 3) * 15 * Math.sin(45) + 3)
+      .attr('dx', (d) => fibonacci(d.frequency + 2) * 14 * Math.sin(45) + 3)
       // eslint-disable-next-line no-use-before-define
-      .attr('dy', (d) => fibonacci(d.frequency + 3) * 15 * Math.sin(45) + 3)
+      .attr('dy', (d) => fibonacci(d.frequency + 2) * 14 * Math.sin(45) + 3)
       .attr('cx', 250)
       .attr('cy', 100)
       .attr('pointer-events', 'none')
