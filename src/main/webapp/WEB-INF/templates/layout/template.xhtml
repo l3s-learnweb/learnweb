@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="jakarta.faces.core"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:c="jakarta.tags.core"
       xmlns:p="http://primefaces.org/ui"
       lang="#{userBean.localeCode}" data-theme="emerald">
 
@@ -33,13 +33,9 @@
                       apiKey: '#{userBean.trackerApiKey}',
                       externalUserId: '#{userBean.getUser().getId()}'
                     };
-
-                    // JSF is removing async attribute from script tag, therefore we need to use old-style loader
-                    (function(d,s,u,e,n){e=d.createElement(s);
-                      n=d.getElementsByTagName(s)[0];e.async=true;e.src=u;n.parentNode.insertBefore(e, n)
-                    }(document,'script','https://learnweb.l3s.uni-hannover.de/tracker/js/init.js'));
                   }
                 </script>
+                <script src="https://learnweb.l3s.uni-hannover.de/tracker/js/init.js" async="async"></script>
             </ui:fragment>
         </h:head>
 

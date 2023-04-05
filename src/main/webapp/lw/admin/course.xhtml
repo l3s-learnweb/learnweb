@@ -1,12 +1,12 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:h="jakarta.faces.html"
+				xmlns:f="jakarta.faces.core"
+				xmlns:c="jakarta.tags.core"
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:of="http://omnifaces.org/functions"
 				xmlns:lw="http://l3s.de/learnweb"
-				xmlns:jsf="http://xmlns.jcp.org/jsf">
+				xmlns:faces="jakarta.faces">
 
 <ui:param name="pageTitle" value="#{adminCourseBean.course.title}"/>
 
@@ -93,7 +93,7 @@
 								<p:message for="@previous"/>
 							</div>
 
-							<div class="field" jsf:rendered="#{not adminCourseBean.course.registrationClosed}">
+							<div class="field" faces:rendered="#{not adminCourseBean.course.registrationClosed}">
 								<p:outputLabel for="@next" value="#{msg.registration_wizard}:"/>
 								<p:inputText id="c_wizard" value="#{adminCourseBean.course.registrationWizard}" required="true"/>
 								<p:message for="@previous"/>
@@ -101,7 +101,7 @@
 												 rendered="#{not empty adminCourseBean.course.registrationWizard}"/>
 							</div>
 
-							<div class="field" jsf:rendered="#{not adminCourseBean.course.registrationClosed}">
+							<div class="field" faces:rendered="#{not adminCourseBean.course.registrationClosed}">
 								<p:outputLabel for="@next" value="#{msg.description}"/>
 								<p:textEditor height="200" value="#{adminCourseBean.course.registrationDescription}"
 											  placeholder="#{lw:msgDef('frontpage.course_description_'.concat(adminCourseBean.course.registrationWizard), adminCourseBean.course.registrationDescription)}"
@@ -117,7 +117,7 @@
 								<p:message for="@previous"/>
 							</div>
 
-							<div class="field" jsf:id="c_icon_wrapper" jsf:rendered="#{not adminCourseBean.course.registrationClosed}">
+							<div class="field" faces:id="c_icon_wrapper" faces:rendered="#{not adminCourseBean.course.registrationClosed}">
 								<div class="row">
 									<div class="col-auto">
 										<img class="d-block w-100 profile-picture m-auto fluent" src="${adminCourseBean.course.registrationIconFileUrl}" alt="Icon picture"/>

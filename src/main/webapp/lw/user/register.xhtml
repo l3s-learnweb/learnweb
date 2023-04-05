@@ -1,8 +1,8 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:jsf="http://xmlns.jcp.org/jsf"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:h="jakarta.faces.html"
+				xmlns:f="jakarta.faces.core"
+				xmlns:faces="jakarta.faces"
 				xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="pageTitle" value="#{msg.registerLabel}"/>
@@ -23,7 +23,7 @@
 <ui:define name="center_layout">
 	<p:panel rendered="#{not empty registrationBean.course.organisation.termsAndConditions}">
 		<div class="row">
-			<div class="col-auto" jsf:rendered="#{not empty registrationBean.course.organisation.bannerImageUrl}">
+			<div class="col-auto" faces:rendered="#{not empty registrationBean.course.organisation.bannerImageUrl}">
 				<h:graphicImage value="${registrationBean.course.organisation.bannerImageUrl}" alt="#{msg.banner_image}"/>
 			</div>
 			<div class="col">

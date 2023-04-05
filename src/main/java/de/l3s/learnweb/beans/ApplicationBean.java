@@ -162,7 +162,7 @@ public abstract class ApplicationBean {
     }
 
     /**
-     * Adds a global message to the JSF context. Which will be displayed by the p:messages component.
+     * Adds a global message to the Faces context. Which will be displayed by the p:messages component.
      * Use if for errors and persistent messages, like expires resources, mistakes, etc.
      */
     protected void addMessage(FacesMessage.Severity severity, String msgKey, Object... args) {
@@ -174,7 +174,7 @@ public abstract class ApplicationBean {
     }
 
     /**
-     * Adds a global message to the JSF context. Which will be displayed aside for 5 seconds by the p:growl component.
+     * Adds a global message to the Faces context. Which will be displayed aside for 5 seconds by the p:growl component.
      * Use it to notify users about saved data, loaded results, etc. Use it for things, that isn't necessary to read.
      */
     protected void addGrowl(FacesMessage.Severity severity, String msgKey, Object... args) {
