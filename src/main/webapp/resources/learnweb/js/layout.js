@@ -80,7 +80,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
   },
 
   autoComplete() {
-    const searchField = this.header.find('#searchfield');
+    const searchField = this.header.find('#navbar_form\\:searchfield');
 
     if (typeof URLSearchParams === 'function') {
       const reqQuery = new URLSearchParams(window.location.search).get('query');
