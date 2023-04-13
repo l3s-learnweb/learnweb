@@ -80,7 +80,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
   },
 
   autoComplete() {
-    const searchField = this.header.find('#searchfield');
+    const searchField = this.header.find('#navbar_form\\:searchfield');
 
     if (typeof URLSearchParams === 'function') {
       const reqQuery = new URLSearchParams(window.location.search).get('query');
@@ -89,31 +89,10 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
       }
     }
 
-    let currentRequest;
-    const myMarket = PrimeFaces.settings.locale;
-    searchField.autoComplete({
-      source(term, response) {
-        currentRequest = $.ajax({
-          url: 'https://api.bing.com/osjson.aspx?JsonType=callback&JsonCallback=?',
-          data: {
-            query: term,
-            market: myMarket,
-          },
-          dataType: 'jsonp',
-          beforeSend() {
-            if (currentRequest != null) {
-              currentRequest.abort();
-            }
-          },
-          success(data) {
-            const suggestions = [];
-            $.each(data[1], (i, val) => {
-              suggestions.push(val);
-            });
-            response(suggestions);
-          },
-        });
-      },
+    searchField.on('focus', () => {
+      if (searchField.val() && !searchField.data.bypass) {
+        $('#commandSuggestQueries').click();
+      }
     });
   },
 
