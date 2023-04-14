@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class JsonSharedObject {
+    // use Java Records if possible
     public static class User {
         private transient int id;
         private String name;

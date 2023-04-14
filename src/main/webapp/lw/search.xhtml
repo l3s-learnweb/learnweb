@@ -32,7 +32,7 @@
         <p:remoteCommand name="commandOnResourceSelect" actionListener="${searchBean.commandOnResourceSelect}" immediate="true"
                          update=":copy_resource_dialog" onstart="$.fancybox.close();" oncomplete="PF('copyResourceDialog').show();"/>
 
-        <p:commandButton id="commandSuggestQueries" actionListener="${searchBean.suggestQueries}" immediate="true" async="true">
+        <p:commandButton id="commandSuggestQueries" actionListener="${searchBean.suggestQueries}" immediate="true" async="true" rendered="#{searchBean.showRelatedQueries}">
             <p:ajax event="dialogReturn" listener="#{searchBean.onSuggestedQuerySelected}"/>
         </p:commandButton>
     </h:form>
@@ -234,7 +234,8 @@
                 </div>
             </h:form>
         </p:dialog>
-        <p:dialog header="#{msg.recommendation}" widgetVar="recommendationDialog" minHeight="40" visible="#{not empty searchBean.recommendations}" position="right,bottom">
+        <p:dialog header="#{msg.recommendation}" widgetVar="recommendationDialog" minHeight="40" position="right,bottom"
+                  visible="#{searchBean.showRecommendations and not empty searchBean.recommendations}">
             <h:outputText value="#{msg.search_for_this}"/>
             <ui:repeat value="#{searchBean.recommendations}" varStatus="loop" var="selectItem">
                 <div>

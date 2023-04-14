@@ -91,7 +91,10 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
     searchField.on('focus', () => {
       if (searchField.val() && !searchField.data.bypass) {
-        $('#commandSuggestQueries').click();
+        const command = $('#commandSuggestQueries');
+        if (command.length) {
+          command.click();
+        }
       }
     });
   },

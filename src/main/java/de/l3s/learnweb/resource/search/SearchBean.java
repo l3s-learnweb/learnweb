@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -21,13 +20,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.faces.application.FacesMessage;
-import jakarta.inject.Inject;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
@@ -105,8 +103,11 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private Boolean isUserActive;
     private List<Boolean> snippetClicked;
     private List<String> recommendations;
+    private boolean showRecommendations;
+    private boolean showRelatedQueries;
     private transient PkgBean pkgBean;
     private transient AnnotationBean annotationBean;
+
     @Inject
     private GroupDao groupDao;
     @Inject
@@ -140,6 +141,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
         onSearch();
 
         Servlets.setNoCacheHeaders(Faces.getResponse());
+        showRecommendations = !getUser().getOrganisation().getOption(Organisation.Option.Search_Disable_recommendations);
+        showRelatedQueries = !getUser().getOrganisation().getOption(Organisation.Option.Search_Disable_related_searches);
 
         isUserActive = false;
         snippetClicked = new ArrayList<>();
@@ -180,7 +183,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             resourcesGroupedBySource = null;
 
-            createSearchRecommendation();
+            if (showRecommendations) {
+                createSearchRecommendation();
+            }
         }
 
         return "/lw/search.xhtml?faces-redirect=true";
@@ -326,14 +331,25 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private List<String> getEduRecSuggestQueries(String query) throws IOException, InterruptedException {
         final String requestUrl = "https://demo3.kbs.uni-hannover.de/recommend/10/items/for/dbpedia100k/with/transE";
 
+        JsonArray nodesArray = new JsonArray();
         JsonObject nodeObject = new JsonObject();
         nodeObject.addProperty("query", query);
-        JsonArray nodesArray = new JsonArray();
         nodesArray.add(nodeObject);
         JsonObject recordObject = new JsonObject();
         recordObject.add("nodes", nodesArray);
         JsonObject rootObject = new JsonObject();
         rootObject.add("record", recordObject);
+
+        JsonSharedObject request = getPkgBean().createSharedObject(
+            groupDao.findByUserId(getUser().getId()).get(0).getId(), 5, false, "recommendation");
+
+        if (request != null) {
+            for (JsonSharedObject.Entity entity : request.getEntities()) {
+                JsonObject graphNode = new JsonObject();
+                graphNode.addProperty("query", entity.getQuery());
+                nodesArray.add(graphNode);
+            }
+        }
 
         HttpClient client = HttpClient.newHttpClient();
 
@@ -412,6 +428,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             return;
         }
         getPkgBean().trimPkg();
+        // TODO: all groups should be used, not only the first one
         List<JsonSharedObject> sharedObjects =  searchHistoryDao.findObjectsByGroupIdAndType(groupId, "recommendation");
         if (sharedObjects == null) {
             return;
@@ -650,5 +667,13 @@ public class SearchBean extends ApplicationBean implements Serializable {
             annotationBean = Beans.getInstance(AnnotationBean.class);
         }
         return annotationBean;
+    }
+
+    public boolean isShowRecommendations() {
+        return showRecommendations;
+    }
+
+    public boolean isShowRelatedQueries() {
+        return showRelatedQueries;
     }
 }
