@@ -1,8 +1,8 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+                xmlns:ui="jakarta.faces.facelets">
 
 <ui:param name="pageTitle" value="#{msg.searchTitle}"/>
 <ui:param name="helpText" value="#{msg.searchHelp}"/>
@@ -23,7 +23,7 @@
     <h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
     <h:outputScript name="learnweb/js/search.js" target="body"/>
 
-    <h:form class="d-none">
+    <h:form class="d-none" prependId="false">
         <p:remoteCommand name="commandLoadNextPage" actionListener="${searchBean.commandLoadNextPage}" update=":searchResultsNext" immediate="true"
                          onstart="console.log('loadingNextPage')" oncomplete="displayNextPage(xhr, status, args);"/>
         <p:remoteCommand name="commandOnResourceClick" actionListener="${searchBean.commandOnResourceClick}" immediate="true" async="true"/>
@@ -31,6 +31,10 @@
                          update=":search_item_meta" oncomplete="updateSlideDetails(xhr, status, args);"/>
         <p:remoteCommand name="commandOnResourceSelect" actionListener="${searchBean.commandOnResourceSelect}" immediate="true"
                          update=":copy_resource_dialog" onstart="$.fancybox.close();" oncomplete="PF('copyResourceDialog').show();"/>
+
+        <p:commandButton id="commandSuggestQueries" actionListener="${searchBean.suggestQueries}" immediate="true" async="true">
+            <p:ajax event="dialogReturn" listener="#{searchBean.onSuggestedQuerySelected}"/>
+        </p:commandButton>
     </h:form>
 
     <h:panelGroup id="search_header_panel" layout="block" styleClass="bg-light">

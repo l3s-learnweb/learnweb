@@ -37,6 +37,10 @@
         <param-value>partial</param-value> <!-- Enable partial submit in PrimeFaces - this reduces the network traffic -->
     </context-param>
     <context-param>
+        <param-name>primefaces.MOVE_SCRIPTS_TO_BOTTOM</param-name>
+        <param-value>false</param-value> <!-- TODO: test and enable. This is a huge improvement of the visible rendering and removes flickering between navigations. -->
+    </context-param>
+    <context-param>
         <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
         <param-value>***REMOVED***</param-value>
     </context-param>
@@ -52,8 +56,8 @@
         <param-value>#{config.version}</param-value>
     </context-param>
 
-    <!-- Check these recommendations https://primefaces.github.io/primefaces/8_0/#/core/performance?id=recommended-configuration -->
-    <!-- Also this page provides description for everything https://myfaces.apache.org/#/core23 -->
+    <!-- Check these recommendations https://primefaces.github.io/primefaces/12_0_0/#/core/performance?id=recommended-configuration -->
+    <!-- Also this page provides description for everything https://myfaces.apache.org/#/core40 -->
     <context-param>
         <param-name>org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES</param-name>
         <param-value>1209600000</param-value> <!-- 14 days -->
@@ -73,30 +77,6 @@
     <context-param>
         <param-name>org.apache.myfaces.COMPRESS_STATE_IN_SESSION</param-name>
         <param-value>false</param-value> <!-- Disable ViewState compression (better performance but more memory usage) -->
-    </context-param>
-    <context-param>
-        <param-name>org.apache.myfaces.CHECK_ID_PRODUCTION_MODE</param-name>
-        <param-value>false</param-value>
-    </context-param>
-    <context-param>
-        <param-name>org.apache.myfaces.SUPPORT_JSP_AND_FACES_EL</param-name>
-        <param-value>false</param-value> <!-- Increase startup performance and EL resolution by disable deprecated features -->
-    </context-param>
-    <context-param>
-        <param-name>org.apache.myfaces.SUPPORT_JSP</param-name>
-        <param-value>false</param-value> <!-- Because Faces EL was completely removed from myfaces-2.3-next, the config property above was renamed -->
-    </context-param>
-    <context-param>
-        <param-name>org.apache.myfaces.SUPPORT_MANAGED_BEANS</param-name>
-        <param-value>false</param-value>
-    </context-param>
-    <context-param>
-        <param-name>org.apache.myfaces.CACHE_EL_EXPRESSIONS</param-name>
-        <param-value>alwaysRecompile</param-value> <!-- Let's try, if not cause any issues, should speed up page build -->
-    </context-param>
-    <context-param>
-        <param-name>org.apache.myfaces.VIEW_UNIQUE_IDS_CACHE_ENABLED</param-name>
-        <param-value>true</param-value> <!-- Increase cache -->
     </context-param>
     <context-param>
         <param-name>org.apache.myfaces.COMPONENT_UNIQUE_IDS_CACHE_SIZE</param-name>
@@ -120,22 +100,6 @@
         <description>Removes HTML comments from the output like <!--@elvariable id="pageTitle" type="java.lang.String"--></description>
         <param-name>jakarta.faces.FACELETS_SKIP_COMMENTS</param-name>
         <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>jakarta.faces.validator.ENABLE_VALIDATE_WHOLE_BEAN</param-name>
-        <param-value>false</param-value> <!-- Enable if you want to use f:validateWholeBean -->
-    </context-param>
-    <context-param>
-        <param-name>jakarta.faces.ENABLE_CDI_RESOLVER_CHAIN</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>jakarta.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>jakarta.faces.DEFAULT_SUFFIX</param-name>
-        <param-value>.xhtml</param-value>
     </context-param>
     <context-param>
         <param-name>jakarta.faces.FACELETS_LIBRARIES</param-name>
