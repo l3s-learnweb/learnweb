@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.search;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -24,15 +25,22 @@ public class SuggestQueryDialog implements Serializable {
     private final List<SuggestedQuery> queries = new ArrayList<>();
 
     @PostConstruct
-    public void init(){
+    public void init() {
         List<String> bing = (List<String>) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("bing");
+        List<String> edurec = (List<String>) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("edurec");
         if (bing != null) {
+            bing = bing.subList(0, Math.min(5, bing.size()));
             for (String query : bing) {
-                if (queries.size() < 6) {
-                    queries.add(new SuggestedQuery("bing", query));
-                }
+                queries.add(new SuggestedQuery("bing", query));
             }
         }
+        if (edurec != null) {
+            edurec = edurec.subList(0, Math.min(5, edurec.size()));
+            for (String query : edurec) {
+                queries.add(new SuggestedQuery("edurec", query));
+            }
+        }
+        Collections.shuffle(queries);
     }
 
     public void setQuery(final SuggestedQuery query) {
