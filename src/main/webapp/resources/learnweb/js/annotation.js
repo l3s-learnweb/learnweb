@@ -75,9 +75,9 @@ const onLoad = (graph) => {
 
     nodes.append('text')
       // eslint-disable-next-line no-use-before-define
-      .attr('dx', (d) => fibonacci(d.frequency + 2) * 14 * Math.sin(45) + 3)
+      .attr('dx', (d) => fibonacci(d.frequency + 3) * 14 * Math.sin(45) + 3)
       // eslint-disable-next-line no-use-before-define
-      .attr('dy', (d) => fibonacci(d.frequency + 2) * 14 * Math.sin(45) + 3)
+      .attr('dy', (d) => fibonacci(d.frequency + 3) * 14 * Math.sin(45) + 3)
       .attr('cx', 250)
       .attr('cy', 100)
       .attr('pointer-events', 'none')
