@@ -128,9 +128,6 @@ CREATE TABLE IF NOT EXISTS `learnweb_large`.`wb_url_content` (
     KEY `wb_url_content_url_id` (`url_id`)
     );
 
-ALTER TABLE `learnweb_large`.`sl_action` ADD CONSTRAINT `fk_sl_action_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large`.`sl_query` (`search_id`) ON DELETE CASCADE;
-ALTER TABLE `learnweb_large`.`sl_resource` ADD CONSTRAINT `fk_sl_resource_sl_query` FOREIGN KEY (`search_id`) REFERENCES `learnweb_large`.`sl_query` (`search_id`) ON DELETE CASCADE;
-
 /*=======================Annotation=================================*/
 CREATE TABLE IF NOT EXISTS `learnweb_large`.`sl_recognised_entity` (
     `entity_uri` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -171,9 +168,5 @@ CREATE TABLE IF NOT EXISTS `learnweb_large`.`sl_input_string` (
 CREATE TABLE IF NOT EXISTS `learnweb_large`.`sl_search_entity` (
     `search_id` int NOT NULL,
     `entity_uri` int NOT NULL
-)
+);
 
-ALTER TABLE `learnweb_large`.`sl_search_entity` ADD CONSTRAINT `fk_sl_entity_sl_search` FOREIGN KEY (`entity_uri`) REFERENCES `learnweb_large`.`sl_recognised_entity`
-    (`entity_uri`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `learnweb_large`.`sl_search_entity` ADD CONSTRAINT `fk_sl_input_sl_search` FOREIGN KEY
-    (`search_id`) REFERENCES `learnweb_large`.`sl_input_string` (`search_id`) ON DELETE CASCADE ON UPDATE CASCADE;
