@@ -76,9 +76,9 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
                 rd.setSaved(rs.getInt("saved") > 0);
 
                 // quick fix to not show annotations for each result of same url
-                if (rd.getClicked()) {
-                    rd.setAnnotations(findAnnotationsByUserIdAndUrl(res.getUserId(), res.getUrl()));
-                }
+                // if (rd.getClicked()) {
+                //     rd.setAnnotations(findAnnotationsByUserIdAndUrl(res.getUserId(), res.getUrl()));
+                // }
                 return rd;
             }).list();
     }
@@ -105,60 +105,60 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     }
 
     @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE uri = ? AND type = ? AND user_id = ?")
+    @SqlQuery("SELECT * FROM learnweb_large.sl_recognised_entity WHERE uri = ? AND type = ? AND user_id = ?")
     Optional<AnnotationCount> findByUriAndType(String uri, String type, int userId);
 
     @RegisterRowMapper(AnnotationCountMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_count WHERE user_id = ? ORDER BY created_at")
+    @SqlQuery("SELECT * FROM learnweb_large.sl_recognised_entity WHERE user_id = ? ORDER BY created_at")
     List<AnnotationCount> findAnnotationCountByUser(int userId);
 
     @RegisterRowMapper(JsonSharedObjectMapper.class)
-    @SqlQuery("SELECT id, shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND user_id = ? AND application = ?")
+    @SqlQuery("SELECT id, shared_object FROM learnweb_large.sl_shared_object WHERE group_id = ? AND user_id = ? AND application = ?")
     List<JsonSharedObject> findObjectsByUserId(int groupId, int userId, String application);
 
     @RegisterRowMapper(JsonSharedObjectMapper.class)
-    @SqlQuery("SELECT id, shared_object FROM learnweb_annotations.annotation_objects WHERE group_id = ? AND application = ?")
+    @SqlQuery("SELECT id, shared_object FROM learnweb_large.sl_shared_object WHERE group_id = ? AND application = ?")
     List<JsonSharedObject> findObjectsByGroupIdAndType(int groupId, String application);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_input_stream (user_id, type, content, date_created) VALUES(?, ?, ?, CURRENT_TIMESTAMP())")
+    @SqlUpdate("INSERT INTO learnweb_large.sl_input_string (user_id, type, content, date_created) VALUES(?, ?, ?, CURRENT_TIMESTAMP())")
     @GetGeneratedKeys("id")
     int insertInputStream(int userId, String type, String content);
 
     @RegisterRowMapper(InputStreamRdfMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_input_stream WHERE id IN (<inputIds>)")
+    @SqlQuery("SELECT * FROM learnweb_large.sl_input_string WHERE id IN (<inputIds>)")
     List<InputStreamRdf> findInputContentById(@Define("inputIds") String inputIds);
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_objects SET shared_object = ?, created_at = ? WHERE user_id = ? AND group_id = ? AND application = ?")
+    @SqlUpdate("UPDATE learnweb_large.sl_shared_object SET shared_object = ?, created_at = ? WHERE user_id = ? AND group_id = ? AND application = ?")
     void updateSharedObject(String sharedObject, LocalDateTime createdAt, int userId, int groupId, String application);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_objects (user_id, group_id, application, shared_object, created_at) "
+    @SqlUpdate("INSERT INTO learnweb_large.sl_shared_object (user_id, group_id, application, shared_object, created_at) "
         + "VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP())")
     @GetGeneratedKeys("id")
     int insertSharedObject(int userId, int groupId, String application, String sharedObject);
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_count SET session_id = ?, input_id = ? WHERE uri = ? AND type = ? AND user_id = ?")
+    @SqlUpdate("UPDATE learnweb_large.sl_recognised_entity SET session_id = ?, input_id = ? WHERE uri = ? AND type = ? AND user_id = ?")
     void updateQueryAnnotation(String sessionId, String inputId, String uri, String type, int userId);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_query_count SET search_id = ?, uri_id = ?")
+    @SqlUpdate("INSERT INTO learnweb_large.sl_search_entity SET search_id = ?, entity_uri = ?")
     int insertQueryResult(int searchId, int uriId);
 
-    @SqlQuery("SELECT search_id FROM learnweb_annotations.annotation_query_count WHERE uri_id = ?")
+    @SqlQuery("SELECT search_id FROM learnweb_large.sl_search_entity WHERE entity_uri = ?")
     List<Integer> findSearchIdByResult(int uriId);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_count (type, uri, input_id, created_at, surface_form, session_id, user_id, confidence) "
+    @SqlUpdate("INSERT INTO learnweb_large.sl_recognised_entity (type, uri, input_id, created_at, surface_form, session_id, user_id, confidence) "
         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
-    @GetGeneratedKeys("uri_id")
+    @GetGeneratedKeys("entity_uri")
     int insertQueryToAnnotation(String type, String uri, String input, LocalDateTime createdAt, String surfaceForm, String sessionId, int userId, double confidence);
 
     @RegisterRowMapper(RdfObjectMapper.class)
-    @SqlQuery("SELECT * FROM learnweb_annotations.annotation_rdf WHERE user_id = ?")
+    @SqlQuery("SELECT * FROM learnweb_large.sl_rdf WHERE user_id = ?")
     Optional<RdfObject> findRdfById(int userId);
 
-    @SqlUpdate("INSERT INTO learnweb_annotations.annotation_rdf (user_id, group_id, rdf_value) VALUES (?, ?, ?)")
+    @SqlUpdate("INSERT INTO learnweb_large.sl_rdf (user_id, group_id, rdf_value) VALUES (?, ?, ?)")
     @GetGeneratedKeys("id")
     int insertRdf(int userId, int groupId, String rdfValue);
 
-    @SqlUpdate("UPDATE learnweb_annotations.annotation_rdf SET rdf_value = ? WHERE user_id = ?")
+    @SqlUpdate("UPDATE learnweb_large.sl_rdf SET rdf_value = ? WHERE user_id = ?")
     void updateRdf(String rdfValue, int userId);
 
     @SqlUpdate("INSERT INTO learnweb_large.sl_query (query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, 3)")
@@ -238,7 +238,7 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
         @Override
         public AnnotationCount map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             AnnotationCount annotation = new AnnotationCount();
-            annotation.setUriId(rs.getInt("uri_id"));
+            annotation.setUriId(rs.getInt("entity_uri"));
             annotation.setUri(rs.getString("uri"));
             annotation.setConfidence(rs.getDouble("confidence"));
             annotation.setSurfaceForm(rs.getString("surface_form"));

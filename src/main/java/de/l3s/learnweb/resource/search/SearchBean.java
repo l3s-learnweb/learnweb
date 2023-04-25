@@ -4,6 +4,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,21 +20,29 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.cdi.ViewScoped;
 import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DialogFrameworkOptions;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -88,8 +103,11 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private Boolean isUserActive;
     private List<Boolean> snippetClicked;
     private List<String> recommendations;
+    private boolean showRecommendations;
+    private boolean showRelatedQueries;
     private transient PkgBean pkgBean;
     private transient AnnotationBean annotationBean;
+
     @Inject
     private GroupDao groupDao;
     @Inject
@@ -123,6 +141,8 @@ public class SearchBean extends ApplicationBean implements Serializable {
         onSearch();
 
         Servlets.setNoCacheHeaders(Faces.getResponse());
+        showRecommendations = !getUser().getOrganisation().getOption(Organisation.Option.Search_Disable_recommendations);
+        showRelatedQueries = !getUser().getOrganisation().getOption(Organisation.Option.Search_Disable_related_searches);
 
         isUserActive = false;
         snippetClicked = new ArrayList<>();
@@ -163,7 +183,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             resourcesGroupedBySource = null;
 
-            createSearchRecommendation();
+            if (showRecommendations) {
+                createSearchRecommendation();
+            }
         }
 
         return "/lw/search.xhtml?faces-redirect=true";
@@ -263,6 +285,93 @@ public class SearchBean extends ApplicationBean implements Serializable {
         setSelectedResource(resource);
     }
 
+    public void suggestQueries() throws IOException, InterruptedException {
+        DialogFrameworkOptions options = DialogFrameworkOptions.builder()
+            .modal(true)
+            .draggable(false)
+            .resizable(false)
+            .closeOnEscape(true)
+            .onHide("const f = $('#navbar_form\\\\:searchfield'); if (f) {f.data.bypass=1};")
+            .build();
+
+        List<String> suggestedBing = getBingSuggestQueries(query);
+        List<String> suggestedEduRec = getEduRecSuggestQueries(query);
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("bing", suggestedBing);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("edurec", suggestedEduRec);
+        PrimeFaces.current().dialog().openDynamic("/dialogs/suggestQueries.jsf", options, null);
+    }
+
+    public void onSuggestedQuerySelected(SelectEvent<SuggestQueryDialog.SuggestedQuery> event) {
+        SuggestQueryDialog.SuggestedQuery query = event.getObject();
+        log.debug("Selected suggested query: {}", query);
+
+        Faces.redirect("/lw/search.jsf?action=" + queryMode + "&service=" + queryService + "&query=" + URLEncoder.encode(query.query(), StandardCharsets.UTF_8));
+    }
+
+    private List<String> getBingSuggestQueries(String query) throws IOException, InterruptedException {
+        final URI requestUri = URI.create("https://api.bing.com/osjson.aspx?query=" + URLEncoder.encode(query, StandardCharsets.UTF_8));
+
+        HttpRequest request = HttpRequest.newBuilder().GET().header("Content-type", "application/json").uri(requestUri).build();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() == HttpURLConnection.HTTP_OK) {
+            JsonArray jsonObject = JsonParser.parseString(response.body()).getAsJsonArray();
+            JsonArray jsonArray = jsonObject.get(1).getAsJsonArray();
+            List<String> queries = new ArrayList<>();
+            for (JsonElement jsonElement : jsonArray) {
+                queries.add(jsonElement.getAsString());
+            }
+            return queries;
+        }
+
+        return null;
+    }
+
+    private List<String> getEduRecSuggestQueries(String query) throws IOException, InterruptedException {
+        final String requestUrl = "https://demo3.kbs.uni-hannover.de/recommend/10/items/for/dbpedia100k/with/transE";
+
+        JsonArray nodesArray = new JsonArray();
+        JsonObject nodeObject = new JsonObject();
+        nodeObject.addProperty("query", query);
+        nodesArray.add(nodeObject);
+        JsonObject recordObject = new JsonObject();
+        recordObject.add("nodes", nodesArray);
+        JsonObject rootObject = new JsonObject();
+        rootObject.add("record", recordObject);
+
+        JsonSharedObject request = getPkgBean().createSharedObject(
+            groupDao.findByUserId(getUser().getId()).get(0).getId(), 5, false, "recommendation");
+
+        if (request != null) {
+            for (JsonSharedObject.Entity entity : request.getEntities()) {
+                JsonObject graphNode = new JsonObject();
+                graphNode.addProperty("query", entity.getQuery());
+                nodesArray.add(graphNode);
+            }
+        }
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
+        requestBuilder.uri(URI.create(requestUrl));
+        requestBuilder.header("Content-Type", "application/json");
+        requestBuilder.POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(rootObject)));
+
+        HttpResponse<String> response = client.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
+
+        JsonObject jsonRoot = JsonParser.parseString(response.body()).getAsJsonObject();
+        JsonArray suggestions = jsonRoot.getAsJsonArray("list");
+
+        List<String> queries = new ArrayList<>();
+        for (JsonElement suggestion : suggestions) {
+            final String value = suggestion.getAsJsonObject().get("iri").getAsString();
+            queries.add(value.substring(value.lastIndexOf('/') + 1).replace('_', ' '));
+        }
+
+        return queries;
+    }
+
     /**
      * This method logs a resource click event.
      */
@@ -319,6 +428,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
             return;
         }
         getPkgBean().trimPkg();
+        // TODO: all groups should be used, not only the first one
         List<JsonSharedObject> sharedObjects =  searchHistoryDao.findObjectsByGroupIdAndType(groupId, "recommendation");
         if (sharedObjects == null) {
             return;
@@ -557,5 +667,13 @@ public class SearchBean extends ApplicationBean implements Serializable {
             annotationBean = Beans.getInstance(AnnotationBean.class);
         }
         return annotationBean;
+    }
+
+    public boolean isShowRecommendations() {
+        return showRecommendations;
+    }
+
+    public boolean isShowRelatedQueries() {
+        return showRelatedQueries;
     }
 }

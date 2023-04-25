@@ -44,8 +44,8 @@ public class PkgBean extends ApplicationBean implements Serializable {
         pkg.calculateSumWeight();
     }
 
-    public void createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
-        pkg.createSharedObject(getUser(), groupId, numberEntities, isAscending, application);
+    public JsonSharedObject createSharedObject(int groupId, int numberEntities, boolean isAscending, String application) {
+        return pkg.createSharedObject(getUser(), groupId, numberEntities, isAscending, application);
     }
 
     public void updateGraphContent(AnnotationCount annotationCount, User user) {

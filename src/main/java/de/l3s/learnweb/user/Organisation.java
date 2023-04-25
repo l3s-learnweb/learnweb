@@ -51,7 +51,9 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         Glossary_Mandatory_Description,
         Glossary_Enable_Import, // enables the glossary file import
         Unused_1,
-        Search_Disable_alternative_sources
+        Search_Disable_alternative_sources,
+        Search_Disable_recommendations,
+        Search_Disable_related_searches,
     }
 
     private int id;

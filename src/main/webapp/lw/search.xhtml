@@ -23,7 +23,7 @@
     <h:outputScript name="bundle/jquery.fancybox.min.js" target="body"/>
     <h:outputScript name="learnweb/js/search.js" target="body"/>
 
-    <h:form class="d-none">
+    <h:form class="d-none" prependId="false">
         <p:remoteCommand name="commandLoadNextPage" actionListener="${searchBean.commandLoadNextPage}" update=":searchResultsNext" immediate="true"
                          onstart="console.log('loadingNextPage')" oncomplete="displayNextPage(xhr, status, args);"/>
         <p:remoteCommand name="commandOnResourceClick" actionListener="${searchBean.commandOnResourceClick}" immediate="true" async="true"/>
@@ -31,6 +31,10 @@
                          update=":search_item_meta" oncomplete="updateSlideDetails(xhr, status, args);"/>
         <p:remoteCommand name="commandOnResourceSelect" actionListener="${searchBean.commandOnResourceSelect}" immediate="true"
                          update=":copy_resource_dialog" onstart="$.fancybox.close();" oncomplete="PF('copyResourceDialog').show();"/>
+
+        <p:commandButton id="commandSuggestQueries" actionListener="${searchBean.suggestQueries}" immediate="true" async="true" rendered="#{searchBean.showRelatedQueries}">
+            <p:ajax event="dialogReturn" listener="#{searchBean.onSuggestedQuerySelected}"/>
+        </p:commandButton>
     </h:form>
 
     <h:panelGroup id="search_header_panel" layout="block" styleClass="bg-light">
@@ -230,7 +234,8 @@
                 </div>
             </h:form>
         </p:dialog>
-        <p:dialog header="#{msg.recommendation}" widgetVar="recommendationDialog" minHeight="40" visible="#{not empty searchBean.recommendations}" position="right,bottom">
+        <p:dialog header="#{msg.recommendation}" widgetVar="recommendationDialog" minHeight="40" position="right,bottom"
+                  visible="#{searchBean.showRecommendations and not empty searchBean.recommendations}">
             <h:outputText value="#{msg.search_for_this}"/>
             <ui:repeat value="#{searchBean.recommendations}" varStatus="loop" var="selectItem">
                 <div>
