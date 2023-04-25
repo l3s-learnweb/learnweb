@@ -4,11 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "browserslist": [
+    "defaults",
     "> 0.5% in DE",
-    "not safari < 15.4",
-    "not ios_saf < 15.4",
-    "not op_mini all",
-    "not dead"
+    "not op_mini all"
   ],
   "scripts": {
     "build": "rollup -c",
@@ -22,40 +20,40 @@
   },
   "dependencies": {
     "@fancyapps/fancybox": "^3.5.7",
-    "@fortawesome/fontawesome-free": "^6.2.1",
-    "@popperjs/core": "^2.11.6",
+    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@popperjs/core": "^2.11.7",
     "@simonwep/pickr": "^1.8.2",
     "bootstrap": "^5.2.3",
     "d3": "^7.8.2",
     "highcharts": "^8.2.2",
     "jquery-contextmenu": "^2.9.2",
     "justifiedGallery": "^3.8.1",
-    "shepherd.js": "^10.0.1",
-    "video.js": "^8.0.3"
+    "shepherd.js": "^11.1.1",
+    "video.js": "^8.0.4"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.0.1",
-    "@rollup/plugin-replace": "^5.0.1",
-    "@rollup/plugin-terser": "^0.4.0",
-    "autoprefixer": "^10.4.13",
-    "browserslist": "^4.21.4",
-    "eslint": "^8.30.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-replace": "^5.0.2",
+    "@rollup/plugin-terser": "^0.4.1",
+    "autoprefixer": "^10.4.14",
+    "browserslist": "^4.21.5",
+    "eslint": "^8.39.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-compat": "^4.0.2",
-    "eslint-plugin-import": "^2.26.0",
-    "postcss": "^8.4.20",
-    "rollup": "^3.9.0",
+    "eslint-plugin-compat": "^4.1.4",
+    "eslint-plugin-import": "^2.27.5",
+    "postcss": "^8.4.23",
+    "rollup": "^3.21.0",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-scss": "^4.0.0",
-    "sass": "^1.57.1",
-    "stylelint": "^14.16.1",
-    "stylelint-config-sass-guidelines": "^9.0.1",
-    "stylelint-no-unsupported-browser-features": "^6.0.1"
+    "sass": "^1.62.0",
+    "stylelint": "^15.6.0",
+    "stylelint-config-sass-guidelines": "^10.0.0",
+    "stylelint-no-unsupported-browser-features": "^6.1.0"
   },
   "peerDependencies": {
-    "@percy/cli": "^1.16.0",
+    "@percy/cli": "^1.24.0",
     "@percy/puppeteer": "^2.0.2",
-    "puppeteer": "^19.4.1"
+    "puppeteer": "^19.11.0"
   },
   "eslintConfig": {
     "extends": [
@@ -107,9 +105,8 @@
       "selector-max-compound-selectors": 6,
       "selector-no-qualifying-type": null,
       "scss/dollar-variable-pattern": null,
+      "scss/no-global-function-names": null,
       "scss/at-extend-no-missing-placeholder": null,
-      "order/order": null,
-      "order/properties-alphabetical-order": null,
       "plugin/no-unsupported-browser-features": [
         true,
         {

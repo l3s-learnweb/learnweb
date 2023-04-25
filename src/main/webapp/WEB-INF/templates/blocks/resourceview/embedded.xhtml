@@ -1,11 +1,11 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-                xmlns:jsf="http://xmlns.jcp.org/jsf"
-                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:c="jakarta.tags.core"
+                xmlns:faces="jakarta.faces"
+                xmlns:fn="jakarta.tags.functions"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+                xmlns:ui="jakarta.faces.facelets">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
@@ -47,8 +47,8 @@
                 <iframe src="#{fn:replace(res.url, 'http://', 'https://')}" title="#{res.title}"></iframe>
             </p:tab>
             <p:tab title="${msg['resource.tab.ARCHIVED']}">
-                <iframe src="#{res.archiveUrls[0].archiveUrl}" title="#{res.title}" jsf:rendered="#{not empty res.archiveUrls}"></iframe>
-                <p class="d-block text-white m-3" jsf:rendered="#{empty res.archiveUrls}">This page has not been archived yet.</p>
+                <iframe src="#{res.archiveUrls[0].archiveUrl}" title="#{res.title}" faces:rendered="#{not empty res.archiveUrls}"></iframe>
+                <p class="d-block text-white m-3" faces:rendered="#{empty res.archiveUrls}">This page has not been archived yet.</p>
             </p:tab>
         </p:tabView>
     </c:when>

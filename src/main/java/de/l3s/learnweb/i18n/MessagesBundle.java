@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.collections4.map.UnmodifiableEntrySet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnifaces.util.Faces;
@@ -28,12 +27,12 @@ public class MessagesBundle extends ResourceBundle {
     }
 
     public static Set<Map.Entry<Locale, ResourceBundle>> getLocaleCache() {
-        return UnmodifiableEntrySet.unmodifiableEntrySet(cache.entrySet());
+        return Set.copyOf(cache.entrySet());
     }
 
     private final Locale locale;
 
-    public MessagesBundle() { // this is required by JSF because we can't pass arguments to the default constructor
+    public MessagesBundle() { // this is required by Faces because we can't pass arguments to the default constructor
         this(Faces.getLocale());
     }
 

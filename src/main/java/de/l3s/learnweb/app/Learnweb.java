@@ -118,7 +118,7 @@ public final class Learnweb {
 
     public static Learnweb getInstance() {
         if (null == learnweb) {
-            throw new DeploymentException("Learnweb is not initialized correctly. You should call createInstance() first");
+            throw new DeploymentException("Learnweb is not initialized correctly!");
         }
         return learnweb;
     }

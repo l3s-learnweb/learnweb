@@ -2,7 +2,8 @@
 <Configuration packages="org.apache.logging.log4j.core,io.sentry.log4j2">
     <Properties>
         <Property name="LEARNWEB_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{9}:%line - %msg%n</Property>
-        <Property name="LEARNWEB_LOG_PATH">${sys:catalina.home:-.}/logs/${web:contextPath:-}learnweb</Property>
+        <Property name="LEARNWEB_LOG_PATH">${sys:catalina.home:-.}/logs</Property>
+        <Property name="LEARNWEB_LOG_BASENAME">${web:contextPath:-}learnweb</Property>
     </Properties>
 
     <Appenders>
@@ -10,10 +11,16 @@
             <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
         </Console>
 
-        <RollingFile name="file" fileName="${env:LEARNWEB_LOG_PATH}.log" filePattern="${env:LEARNWEB_LOG_PATH}-%d{yyyy-MM-dd}.log">
+        <RollingFile name="file" fileName="${env:LEARNWEB_LOG_PATH}/${env:LEARNWEB_LOG_BASENAME}.log"
+                     filePattern="${env:LEARNWEB_LOG_PATH}/${env:LEARNWEB_LOG_BASENAME}-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="${LEARNWEB_LOG_PATTERN}"/>
             <TimeBasedTriggeringPolicy/>
-            <DefaultRolloverStrategy max="30"/>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${env:LEARNWEB_LOG_PATH}" maxDepth="2">
+                    <IfFileName glob="*/${env:LEARNWEB_LOG_BASENAME}*.log" />
+                    <IfLastModified age="P14D" />
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
 
         <Sentry name="sentry" minimumBreadcrumbLevel="DEBUG" minimumEventLevel="ERROR"/>

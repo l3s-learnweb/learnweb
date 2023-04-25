@@ -29,6 +29,12 @@ public class StatusBean extends ApplicationBean {
         // very simple database integrity test
         services.add(getDatabaseIntegrity());
 
+        // test solr connection
+        services.add(getSolrConnection());
+
+        // very simple solr integrity test
+        services.add(getSolrIntegrity());
+
         // if any not healthy, set status code to 503
         if (services.stream().anyMatch(service -> !service.healthy)) {
             Faces.setResponseStatus(HttpURLConnection.HTTP_UNAVAILABLE);
@@ -46,13 +52,37 @@ public class StatusBean extends ApplicationBean {
 
     private Service getDatabaseIntegrity() {
         try {
-            if (getLearnweb().getDaoProvider().getOrganisationDao().findAll().isEmpty()) {
+            if (!getLearnweb().getDaoProvider().getOrganisationDao().findAll().isEmpty()) {
                 return new Service("Database Integrity", true, null);
             } else {
                 return new Service("Database Integrity", false, "No organisations found");
             }
         } catch (Exception e) {
             return new Service("Database Integrity", false, e.getMessage());
+        }
+    }
+
+    private Service getSolrConnection() {
+        try {
+            if (getLearnweb().getSolrClient().getHttpSolrClient().ping().getStatus() == 0) {
+                return new Service("Solr Connection", true, null);
+            } else {
+                return new Service("Solr Connection", false, "Unexpected status");
+            }
+        } catch (Exception e) {
+            return new Service("Solr Connection", false, e.getMessage());
+        }
+    }
+
+    private Service getSolrIntegrity() {
+        try {
+            if (getLearnweb().getSolrClient().countResources("*:*") >= 0) {
+                return new Service("Solr Integrity", true, null);
+            } else {
+                return new Service("Solr Integrity", false, "Negative amount of resources o_O");
+            }
+        } catch (Exception e) {
+            return new Service("Solr Integrity", false, e.getMessage());
         }
     }
 

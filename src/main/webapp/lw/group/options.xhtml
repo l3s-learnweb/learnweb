@@ -1,9 +1,9 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:c="jakarta.tags.core"
+                xmlns:faces="jakarta.faces"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:o="http://omnifaces.org/ui"
                 xmlns:of="http://omnifaces.org/functions"
@@ -120,7 +120,7 @@
                                 <p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":group_moderator_form"/>
                             </div>
                         </div>
-                        <div class="col-12 col-md-4" jsf:id="group_picture">
+                        <div class="col-12 col-md-4" faces:id="group_picture">
                             <img class="d-block w-100 profile-picture m-auto fluent" src="${groupOptionsBean.group.imageUrl}" alt="Group picture"/>
 
                             <div class="field mt-2 text-center">
