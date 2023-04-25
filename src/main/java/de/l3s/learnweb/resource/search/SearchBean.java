@@ -108,6 +108,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private transient PkgBean pkgBean;
     private transient AnnotationBean annotationBean;
 
+    private transient String edurecRequest;
+    private transient String suggestedEntries;
+
     @Inject
     private GroupDao groupDao;
     @Inject
@@ -297,14 +300,37 @@ public class SearchBean extends ApplicationBean implements Serializable {
         List<String> suggestedBing = getBingSuggestQueries(query);
         List<String> suggestedEduRec = getEduRecSuggestQueries(query);
 
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("bing", suggestedBing);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("edurec", suggestedEduRec);
+        final List<SuggestedQuery> queries = new ArrayList<>();
+        if (suggestedBing != null) {
+            int index = 1;
+            suggestedBing = suggestedBing.subList(0, Math.min(5, suggestedBing.size()));
+            for (String query : suggestedBing) {
+                queries.add(new SuggestedQuery(index++, "bing", query));
+            }
+        }
+        if (suggestedEduRec != null) {
+            int index = 101;
+            suggestedEduRec = suggestedEduRec.subList(0, Math.min(5, suggestedEduRec.size()));
+            for (String query : suggestedEduRec) {
+                queries.add(new SuggestedQuery(index++, "edurec", query));
+            }
+        }
+        Collections.shuffle(queries);
+        final List<SuggestedQuery> randQueries = new ArrayList<>();
+        int index = 1;
+        for (SuggestedQuery query : queries) {
+            randQueries.add(new SuggestedQuery(query.id(), index++, query.source(), query.query()));
+        }
+        suggestedEntries = new Gson().toJson(randQueries);
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("queries", randQueries);
         PrimeFaces.current().dialog().openDynamic("/dialogs/suggestQueries.jsf", options, null);
     }
 
-    public void onSuggestedQuerySelected(SelectEvent<SuggestQueryDialog.SuggestedQuery> event) {
-        SuggestQueryDialog.SuggestedQuery query = event.getObject();
+    public void onSuggestedQuerySelected(SelectEvent<SuggestedQuery> event) {
+        SuggestedQuery query = event.getObject();
         log.debug("Selected suggested query: {}", query);
+        searchHistoryDao.insertSuggestedQuery(getUser(), getQuery(), query.query(), query.source(), query.index(), suggestedEntries, edurecRequest);
 
         Faces.redirect("/lw/search.jsf?action=" + queryMode + "&service=" + queryService + "&query=" + URLEncoder.encode(query.query(), StandardCharsets.UTF_8));
     }
@@ -353,13 +379,14 @@ public class SearchBean extends ApplicationBean implements Serializable {
                 nodesArray.add(graphNode);
             }
         }
+        edurecRequest = new Gson().toJson(rootObject);
 
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder();
         requestBuilder.uri(URI.create(requestUrl));
         requestBuilder.header("Content-Type", "application/json");
-        requestBuilder.POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(rootObject)));
+        requestBuilder.POST(HttpRequest.BodyPublishers.ofString(edurecRequest));
 
         HttpResponse<String> response = client.send(requestBuilder.build(), HttpResponse.BodyHandlers.ofString());
 

@@ -165,6 +165,9 @@ public interface SearchHistoryDao extends SqlObject, Serializable {
     @GetGeneratedKeys("search_id")
     int insertQuery(String query, SearchMode searchMode, ResourceService searchService, String language, String searchFilters, User user);
 
+    @SqlUpdate("INSERT INTO learnweb_large.sl_suggested_query (user_id, reference_query, query, source, `index`, options, graph) VALUES (?, ?, ?, ?, ?, ?, ?)")
+    void insertSuggestedQuery(User user, String referenceQuery, String query, String source, int index, String options, String graph);
+
     @SqlUpdate("INSERT INTO learnweb_large.sl_query (group_id, query, mode, service, language, filters, user_id, timestamp, learnweb_version) VALUES (?, ?, 'group', 'learnweb', ?, ?, ?, CURRENT_TIMESTAMP, 3)")
     @GetGeneratedKeys("search_id")
     int insertGroupQuery(int groupId, String query, String language, String searchFilters, int userId);
