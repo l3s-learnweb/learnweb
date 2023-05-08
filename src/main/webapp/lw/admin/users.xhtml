@@ -110,10 +110,15 @@
             </p:column>
 
             <p:column styleClass="text-end">
-                <p:commandButton title="#{msg.loginLabel}" styleClass="ui-button-success rounded-button ui-button-flat" action="#{adminUsersBean.rootLogin(userView.user)}"
-                                 process="@this" icon="fas fa-arrow-right-to-bracket" rendered="#{userBean.canLoginToAccount(userView.user)}"/>
-                <p:linkButton styleClass="ui-button-secondary rounded-button ui-button-flat" icon="fas fa-arrow-pointer" target="_blank"
-                              title="#{msg.mouse_tracker}" href="https://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{userView.id}"/>
+                <p:commandButton title="#{msg.loginLabel}"  action="#{adminUsersBean.rootLogin(userView.user)}" process="@this"
+                                 styleClass="ui-button-success rounded-button ui-button-flat" icon="fas fa-fw fa-arrow-right-to-bracket"
+                                 rendered="#{userBean.canLoginToAccount(userView.user)}"/>
+                <p:linkButton title="#{msg.mouse_tracker}" outcome="/lw/myhome/profile"
+                              styleClass="ui-button-info rounded-button ui-button-flat" icon="fas fa-fw fa-edit">
+                    <f:param name="user_id" value="#{userView.id}"/>
+                </p:linkButton>
+                <p:linkButton title="#{msg.mouse_tracker}" href="https://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{userView.id}" target="_blank"
+                              styleClass="ui-button-help rounded-button ui-button-flat" icon="fas fa-fw fa-arrow-pointer"/>
             </p:column>
         </p:dataTable>
     </h:form>
