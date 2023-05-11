@@ -285,7 +285,7 @@ public final class Pkg {
                 return 3 * Math.exp(days);
             }
             case "group" -> {
-                return 0.5 * Math.exp(days);
+                return 1 * Math.exp(days);
             }
             case "web" -> {
                 return 1 * Math.exp(days);
@@ -294,7 +294,7 @@ public final class Pkg {
                 return 4 * Math.exp(days);
             }
             case "query" -> {
-                return 12 * Math.exp(days);
+                return 11 * Math.exp(days);
             }
             case "snippet_not_clicked" -> {
                 return -0.6 * Math.exp(days);
@@ -434,7 +434,7 @@ public final class Pkg {
             for (InputStreamRdf inputStream : inputStreamRdfs) {
                 //Add createsInputStream statement based on the entities' type
                 if (inputStream.getUserId() == user.getId()) {
-                    if ("profile".equals(annotationCount.getType())) {
+                    if ("user".equals(annotationCount.getType())) {
                         addRdfStatement("educor:UserProfile/" + user.getId(), "createsInputStream",
                             "InputStream/" + inputStream.getId(), "resource");
                     } else if ("group".equals(annotationCount.getType()) && !groupList.isEmpty()) {
@@ -470,7 +470,7 @@ public final class Pkg {
     * */
     public void updatePkg(AnnotationCount annotationCount) {
         addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUserId(), annotationCount.getConfidence(),
-            Precision.round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 2), annotationCount.getSessionId(),
+            Precision.round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 3), annotationCount.getSessionId(),
             annotationCount.getType(), annotationCount.getCreatedAt());
     }
 
@@ -510,7 +510,7 @@ public final class Pkg {
 
         Map<String, String> typeMap = new HashMap<>();
         //HARDCODED lines - need alternatives
-        typeMap.put("profile", "user");
+        typeMap.put("user", "user");
         typeMap.put("group", "group");
         typeMap.put("snippet_not_clicked", "session");
         typeMap.put("snippet_clicked", "session");
@@ -529,7 +529,7 @@ public final class Pkg {
             Node node = nodes.get(entry.getKey());
             for (Map.Entry<String, String> type : typeMap.entrySet()) {
                 if (occurrences.get(type.getValue()) < 10 && node.getType().contains(type.getKey())) {
-                    if (newNodes.stream().noneMatch(s -> s.getType().equals(node.getType()) && s.getUri().equals(node.getUri()))) {
+                    if (object.getEntities().stream().noneMatch(s -> s.getType().equals(type.getValue()) && s.getUri().equals(node.getUri()))) {
                         newNodes.add(node);
                         object.getEntities().add(new JsonSharedObject.Entity(node.getUri(), node.getName(), entry.getValue(),
                             type.getValue(), node.getId()));

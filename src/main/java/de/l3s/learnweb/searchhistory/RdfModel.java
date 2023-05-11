@@ -51,6 +51,7 @@ public class RdfModel {
                 if (obj == null) {
                     obj = "";
                 }
+                subject.removeAll(model.createProperty(pre));
                 subject.addProperty(model.createProperty(pre), obj);
             }
             case "resource" -> {
