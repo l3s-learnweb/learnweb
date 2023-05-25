@@ -29,15 +29,15 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
     private int usersCount = 0;
     private int commentCount = 0;
     private List<Comment> comments;
-    private TreeNode treeRoot;
-    private TreeNode[] selectedNodes;
+    private TreeNode<?> treeRoot;
+    private TreeNode<?>[] selectedNodes;
 
     @Inject
     private CommentDao commentDao;
 
     @PostConstruct
     public void init() {
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), true);
+        treeRoot = BeanHelper.createHierarchicalGroupsTree(getUser(), true);
     }
 
     public void onAnalyseComments() {
@@ -84,15 +84,15 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
         return commentCount;
     }
 
-    public TreeNode getTreeRoot() {
+    public TreeNode<?> getTreeRoot() {
         return treeRoot;
     }
 
-    public TreeNode[] getSelectedNodes() {
+    public TreeNode<?>[] getSelectedNodes() {
         return selectedNodes;
     }
 
-    public void setSelectedNodes(final TreeNode[] selectedNodes) {
+    public void setSelectedNodes(final TreeNode<?>[] selectedNodes) {
         this.selectedNodes = selectedNodes;
     }
 

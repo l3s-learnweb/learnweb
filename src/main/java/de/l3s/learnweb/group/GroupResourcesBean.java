@@ -86,8 +86,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     private transient AbstractPaginator paginator;
     private transient List<Folder> folders;
     private transient List<Folder> breadcrumbs;
-    private transient TreeNode foldersTree;
-    private TreeNode selectedTreeNode; // Selected node in the left Folder's panel
+    private transient TreeNode<?> foldersTree;
+    private TreeNode<?> selectedTreeNode; // Selected node in the left Folder's panel
     private String selectedElements;
 
     @Inject
@@ -279,7 +279,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         return folders;
     }
 
-    public TreeNode getFoldersTree() {
+    public TreeNode<?> getFoldersTree() {
         if (foldersTree == null) {
             foldersTree = Group.getFoldersTree(group, HasId.getIdOrDefault(currentFolder, 0));
         }
@@ -536,11 +536,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         return currentFolder;
     }
 
-    public TreeNode getSelectedTreeNode() {
+    public TreeNode<?> getSelectedTreeNode() {
         return selectedTreeNode;
     }
 
-    public void setSelectedTreeNode(TreeNode selectedTreeNode) {
+    public void setSelectedTreeNode(TreeNode<?> selectedTreeNode) {
         this.selectedTreeNode = selectedTreeNode;
     }
 

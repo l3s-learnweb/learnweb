@@ -30,11 +30,11 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
     @Serial
     private static final long serialVersionUID = 5584983377737726111L;
 
-    private TreeNode[] selectedNodes;
+    private TreeNode<?>[] selectedNodes;
     private boolean showDetails = true;
     private String detailedDescription = "";
 
-    private TreeNode treeRoot;
+    private TreeNode<?> treeRoot;
     private List<Map<String, String>> groupStatistics;
 
     @Inject
@@ -42,7 +42,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
     @PostConstruct
     public void init() {
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), false);
+        treeRoot = BeanHelper.createHierarchicalGroupsTree(getUser(), false);
     }
 
     public void fetchStatistics() {
@@ -154,15 +154,15 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
         }
     }
 
-    public TreeNode getTreeRoot() {
+    public TreeNode<?> getTreeRoot() {
         return treeRoot;
     }
 
-    public TreeNode[] getSelectedNodes() {
+    public TreeNode<?>[] getSelectedNodes() {
         return selectedNodes;
     }
 
-    public void setSelectedNodes(final TreeNode[] selectedNodes) {
+    public void setSelectedNodes(final TreeNode<?>[] selectedNodes) {
         this.selectedNodes = selectedNodes;
     }
 
