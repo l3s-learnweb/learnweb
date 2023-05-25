@@ -14,6 +14,7 @@ import jakarta.inject.Named;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.CommentDao;
 import de.l3s.util.bean.BeanHelper;
@@ -37,6 +38,9 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
 
     @PostConstruct
     public void init() {
+        BeanAssert.authorized(getUser());
+        BeanAssert.hasPermission(getUser().isModerator());
+
         treeRoot = BeanHelper.createHierarchicalGroupsTree(getUser(), true);
     }
 
