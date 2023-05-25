@@ -16,7 +16,6 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.interwebj.client.InterWeb;
 import de.l3s.interwebj.client.model.SearchResponse;
@@ -136,7 +135,7 @@ public class Search implements Serializable {
     /**
      * Load resources from SOLR.
      */
-    private LinkedList<ResourceDecorator> getLearnwebResults(int page) throws IOException, SolrServerException {
+    private LinkedList<ResourceDecorator> getLearnwebResults(int page) throws IOException {
         //long start = System.currentTimeMillis();
 
         // Setup filters

@@ -7,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.solr.client.solrj.SolrServerException;
-
 public abstract class AbstractPaginator implements Serializable {
     @Serial
     private static final long serialVersionUID = 2495539559727294482L;
@@ -29,7 +27,7 @@ public abstract class AbstractPaginator implements Serializable {
         this.pageSize = pageSize;
     }
 
-    public abstract List<ResourceDecorator> getCurrentPage() throws IOException, SolrServerException;
+    public abstract List<ResourceDecorator> getCurrentPage() throws IOException;
 
     public int getTotalResults() {
         return totalResults;
