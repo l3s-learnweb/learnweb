@@ -251,7 +251,7 @@ public final class Pkg {
      * @param object the statement's object
      * @param mode either "literal" or "resource"
     * */
-    private void addRdfStatement(String subject, String pre, String object, String mode) {
+    public void addRdfStatement(String subject, String pre, String object, String mode) {
         rdfGraph.addStatement(subject, pre, object, mode);
     }
 
@@ -410,23 +410,6 @@ public final class Pkg {
             addRdfStatement("SearchSession/" + session, "contains", "schema:WebPage/" + annotationCount.getUriId(), "resource");
         }
         addRdfStatement("educor:User/" + user.getId(), "educor:generatesLogs", "SearchSession/" + session, "resource");
-
-
-        if (annotationCount.getType().contains("snippet")) {
-            addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal");
-            addRdfStatement("Snippet/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "literal");
-            for (int searchId : searchIds) {
-                addRdfStatement("SearchQuery/" + searchId,
-                    "generatesResult", "Snippet/" + annotationCount.getUriId(), "resource");
-            }
-        } else if ("web".equals(annotationCount.getType())) {
-            addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:title", annotationCount.getSurfaceForm(), "literal");
-            addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "resource");
-            for (int searchId : searchIds) {
-                addRdfStatement("SearchQuery/" + searchId,
-                    "generatesResult", "schema:WebPage/" + annotationCount.getUriId(), "resource");
-            }
-        }
 
         //Input stream statements
         if (annotationCount.getInputStreams() != null) {

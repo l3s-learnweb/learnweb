@@ -48,6 +48,10 @@ public class PkgBean extends ApplicationBean implements Serializable {
         return pkg.createSharedObject(getUser(), groupId, numberEntities, isAscending, application);
     }
 
+    public void writeRdfStatement(String sbj, String pre, String obj, String mode) {
+        pkg.addRdfStatement(sbj, pre, obj, mode);
+    }
+
     public void updateGraphContent(AnnotationCount annotationCount, User user) {
         pkg.updatePkg(annotationCount);
         pkg.updateRdfModel(annotationCount, user, getSessionId());

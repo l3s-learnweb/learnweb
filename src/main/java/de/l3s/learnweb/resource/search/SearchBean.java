@@ -416,7 +416,11 @@ public class SearchBean extends ApplicationBean implements Serializable {
             isUserActive = true;
             if (!snippetClicked.get(search.getResources().indexOf(search.getResources().get(tempResourceId)))) {
                 Resource resource = search.getResources().get(tempResourceId).getResource();
-                getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(), "web", resource.getUrl());
+                int inputId = getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(), "web", resource.getUrl());
+                getPkgBean().writeRdfStatement("schema:WebPage/" + inputId, "schema:title", resource.getTitle(), "literal");
+                getPkgBean().writeRdfStatement("schema:WebPage/" + inputId, "schema:url", resource.getUrl(), "resource");
+                getPkgBean().writeRdfStatement("SearchQuery/" + search.getId(),
+                    "generatesResult", "schema:WebPage/" + inputId, "resource");
             }
             snippetClicked.set(search.getResources().indexOf(search.getResources().get(tempResourceId)), true);
             search.logResourceClicked(tempResourceId, getUser());
@@ -435,9 +439,13 @@ public class SearchBean extends ApplicationBean implements Serializable {
             getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(), "query", search.getQuery());
             for (ResourceDecorator snippet : search.getResources()) {
                 String s = snippet.getTitle().split("\\|")[0].split("-")[0];
-                getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(),
+                int inputId = getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(),
                     snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_not_clicked",
                     "<title>" + s + "</title> " + snippet.getDescription());
+                getPkgBean().writeRdfStatement("Snippet/" + inputId, "schema:title", s, "literal");
+                getPkgBean().writeRdfStatement("Snippet/" + inputId, "schema:url", snippet.getUrl(), "literal");
+                getPkgBean().writeRdfStatement("SearchQuery/" + search.getId(),
+                    "generatesResult", "Snippet/" + inputId, "resource");
             }
             getPkgBean().trimPkg();
             //Update one for recommendation, one for collabGraph which marks the user's active state.

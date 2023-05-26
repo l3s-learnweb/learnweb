@@ -103,9 +103,9 @@ public class AnnotationBean implements Serializable {
      * @param type the type of the annotation (user, group, web, snippet_clicked, snippet_not_clicked, query)
      * @param content the content to be recognized
      * */
-    public void processQuery(String sessionId, int id, int userId, String type, String content) throws Exception {
+    public int processQuery(String sessionId, int id, int userId, String type, String content) throws Exception {
         if (content == null) {
-            return;
+            return 0;
         }
         List<AnnotationCount> annotationCounts = new ArrayList<>();
         SpotlightBean spotlight = new SpotlightBean();
@@ -167,6 +167,7 @@ public class AnnotationBean implements Serializable {
             }
             getPkgBean().updateGraphContent(annotationCount, userDao.findById(userId).get());
         }
+        return inputId;
     }
 
     private PkgBean getPkgBean() {
