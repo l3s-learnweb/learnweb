@@ -262,9 +262,9 @@ public final class Pkg {
             addRdfStatement("SearchSession/" + session.getSessionId(), "schema:endTime",
                 session.getEndTimestamp().format(DateTimeFormatter.ISO_DATE), "literal");
             for (SearchQuery query : session.getQueries()) {
-                addRdfStatement("SearchSession/" + session.getSessionId(), "contains",
+                addRdfStatement("SearchSession/" + session.getSessionId(), RdfModel.prefixBase + "contains",
                     "SearchQuery/" + query.searchId(), "resource");
-                addRdfStatement("SearchQuery/" + query.searchId(), "query",
+                addRdfStatement("SearchQuery/" + query.searchId(), RdfModel.prefixBase + "query",
                     query.query(), "literal");
                 addRdfStatement("SearchQuery/" + query.searchId(),
                     "schema:dateCreated", query.timestamp().format(DateTimeFormatter.ISO_DATE), "literal");
@@ -369,7 +369,7 @@ public final class Pkg {
         addNode(0, "default", 0, 1, 0.0, "", "", null);
 
         //New RDF-Model initialization
-        rdfGraph = new RdfModel(user);
+        rdfGraph = new RdfModel();
         //Initialize rdf graph model
         Optional<RdfObject> rdfObject = dao().getSearchHistoryDao().findRdfById(user.getId());
         if (rdfObject.isPresent()) {
@@ -424,7 +424,7 @@ public final class Pkg {
             addRdfStatement("schema:WebPage/" + annotationCount.getUriId(), "schema:url", annotationCount.getUri(), "resource");
             for (int searchId : searchIds) {
                 addRdfStatement("SearchQuery/" + searchId,
-                    "generatesResult", "WebPage/" + annotationCount.getUriId(), "resource");
+                    "generatesResult", "schema:WebPage/" + annotationCount.getUriId(), "resource");
             }
         }
 
@@ -642,7 +642,7 @@ public final class Pkg {
         Group group = dao().getGroupDao().findByIdOrElseThrow(groupId);
         for (Node node : nodes) {
             rdfGraph.addEntity(PATTERN.matcher(node.getUri()).replaceAll(""),
-                node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), LocalDateTime.now());
+                node.getUri(), node.getName(), node.getWeight(), node.getConfidence(), node.getDate());
         }
         //Print the Rdf graphs both to DB and local directories as files
         String value = rdfGraph.printModel();
