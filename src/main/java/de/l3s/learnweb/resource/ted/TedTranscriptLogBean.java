@@ -24,8 +24,8 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
     private static final long serialVersionUID = -1803725556672379697L;
 
     //private int selectedCourseId;
-    private TreeNode treeRoot;
-    private TreeNode[] selectedNodes;
+    private TreeNode<?> treeRoot;
+    private TreeNode<?>[] selectedNodes;
     private Collection<Integer> selectedUsers = new TreeSet<>();
 
     private transient List<SimpleTranscriptLog> simpleTranscriptLogs;
@@ -38,7 +38,7 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
 
-        treeRoot = BeanHelper.createGroupsUsersTree(getUser(), true);
+        treeRoot = BeanHelper.createHierarchicalGroupsTree(getUser(), true);
     }
 
     /**
@@ -95,15 +95,15 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
         transcriptSummaries = null;
     }
 
-    public TreeNode getTreeRoot() {
+    public TreeNode<?> getTreeRoot() {
         return treeRoot;
     }
 
-    public TreeNode[] getSelectedNodes() {
+    public TreeNode<?>[] getSelectedNodes() {
         return selectedNodes;
     }
 
-    public void setSelectedNodes(final TreeNode[] selectedNodes) {
+    public void setSelectedNodes(final TreeNode<?>[] selectedNodes) {
         this.selectedNodes = selectedNodes;
     }
 }

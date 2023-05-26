@@ -191,7 +191,7 @@
             </p:panel>
             <p:panel header="#{msg.change_password}" styleClass="mb-3">
                 <h:form id="passwordform">
-                    <h:panelGroup layout="block" styleClass="field" rendered="#{profileBean.selectedUser.password ne null}">
+                    <h:panelGroup layout="block" styleClass="field" rendered="#{profileBean.selectedUser.password ne null and not userBean.admin}">
                         <p:outputLabel for="@next" value="#{msg.current_password}:"/>
                         <p:password id="current_password" value="#{profileBean.currentPassword}"
                                     validator="#{profileBean.validateCurrentPassword}" autocomplete="off" required="#{!userBean.admin}"/>

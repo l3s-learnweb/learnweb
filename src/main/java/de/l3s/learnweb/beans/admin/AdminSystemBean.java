@@ -1,6 +1,5 @@
 package de.l3s.learnweb.beans.admin;
 
-import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -14,7 +13,6 @@ import jakarta.inject.Named;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.jdbi.v3.core.Handle;
 import org.primefaces.model.DashboardColumn;
 import org.primefaces.model.DashboardModel;
@@ -122,7 +120,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
         try {
             ReindexResources task = new ReindexResources(getLearnweb(), progress -> reindexProgress = progress);
             task.run(false);
-        } catch (IOException | SolrServerException e) {
+        } catch (Exception e) {
             log.error("Error reindexing resources", e);
         } finally {
             indexedResources = null;

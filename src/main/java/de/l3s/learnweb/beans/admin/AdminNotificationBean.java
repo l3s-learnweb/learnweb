@@ -35,12 +35,12 @@ public class AdminNotificationBean extends ApplicationBean {
     private String text;
     @NotBlank
     private String title;
-    private TreeNode[] selectedNodes;
+    private TreeNode<?>[] selectedNodes;
     private boolean sendEmail = false; // send the message also per mail
     private boolean moderatorCanSendMail = false;
 
     private User user;
-    private TreeNode treeRoot;
+    private TreeNode<?> treeRoot;
 
     @Inject
     private UserDao userDao;
@@ -58,7 +58,7 @@ public class AdminNotificationBean extends ApplicationBean {
             moderatorCanSendMail = user.isEmailConfirmed();
         }
 
-        treeRoot = BeanHelper.createGroupsUsersTree(user, true);
+        treeRoot = BeanHelper.createHierarchicalGroupsTree(user, true);
     }
 
     public void send() {
@@ -118,7 +118,7 @@ public class AdminNotificationBean extends ApplicationBean {
         }
     }
 
-    public TreeNode getTreeRoot() {
+    public TreeNode<?> getTreeRoot() {
         return treeRoot;
     }
 
@@ -142,11 +142,11 @@ public class AdminNotificationBean extends ApplicationBean {
         this.title = title;
     }
 
-    public TreeNode[] getSelectedNodes() {
+    public TreeNode<?>[] getSelectedNodes() {
         return selectedNodes;
     }
 
-    public void setSelectedNodes(final TreeNode[] selectedNodes) {
+    public void setSelectedNodes(final TreeNode<?>[] selectedNodes) {
         this.selectedNodes = selectedNodes;
     }
 
