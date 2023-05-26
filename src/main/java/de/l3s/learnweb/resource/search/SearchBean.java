@@ -374,12 +374,18 @@ public class SearchBean extends ApplicationBean implements Serializable {
         JsonSharedObject request = getPkgBean().createSharedObject(
             groupDao.findByUserId(getUser().getId()).get(0).getId(), 10, false, "recommendation");
 
+        int weight = 10;
+        double oldWeight = 0;
         if (request != null) {
             for (JsonSharedObject.Entity entity : request.getEntities()) {
                 JsonObject graphNode = new JsonObject();
                 graphNode.addProperty("uri", entity.getUri());
                 graphNode.addProperty("query", entity.getQuery());
-                graphNode.addProperty("weight", entity.getWeight());
+                if (Math.abs(oldWeight - entity.getWeight()) < 0.01) {
+                    weight--;
+                    oldWeight = entity.getWeight();
+                }
+                graphNode.addProperty("weight", weight);
                 nodesArray.add(graphNode);
             }
         }
