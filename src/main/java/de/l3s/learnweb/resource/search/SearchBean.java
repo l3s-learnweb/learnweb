@@ -177,7 +177,11 @@ public class SearchBean extends ApplicationBean implements Serializable {
             searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());
 
             if (config().isCollectSearchHistory()) {
-                search.logQuery(query, searchService, searchFilters.getFilterValue(FilterType.language), queryFilters);
+                try {
+                    search.logQuery(query, searchService, searchFilters.getFilterValue(FilterType.language), queryFilters);
+                } catch (Exception e) {
+                    log.error("Could not log search query", e);
+                }
             }
 
             search.getResourcesByPage(1); // load first page

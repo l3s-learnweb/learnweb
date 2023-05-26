@@ -72,8 +72,8 @@ public final class BeanHelper {
         return selectItems;
     }
 
-    public static TreeNode<String> createGroupsUsersTree(final User user, final boolean includeUsers) {
-        TreeNode<String> root = new CheckboxTreeNode<>();
+    public static TreeNode<?> createHierarchicalGroupsTree(final User user, final boolean includeUsers) {
+        TreeNode<Object> root = new CheckboxTreeNode<>();
 
         for (Course course : user.getCourses()) {
             TreeNode<Course> courseNode = new CheckboxTreeNode<>("course", course, root);
@@ -92,11 +92,11 @@ public final class BeanHelper {
         return root;
     }
 
-    public static Collection<Integer> getSelectedUsers(final TreeNode[] selectedNodes) {
+    public static Collection<Integer> getSelectedUsers(final TreeNode<?>[] selectedNodes) {
         // Set is used to make sure that every user gets the message only once
         TreeSet<Integer> selectedUsers = new TreeSet<>();
-        if (selectedNodes != null && selectedNodes.length > 0) {
-            for (TreeNode node : selectedNodes) {
+        if (selectedNodes != null) {
+            for (TreeNode<?> node : selectedNodes) {
                 if ("user".equals(node.getType()) && node.getData() instanceof User) {
                     selectedUsers.add(((User) node.getData()).getId());
                 }
@@ -105,11 +105,11 @@ public final class BeanHelper {
         return selectedUsers;
     }
 
-    public static Collection<Integer> getSelectedGroups(final TreeNode[] selectedNodes) {
+    public static Collection<Integer> getSelectedGroups(final TreeNode<?>[] selectedNodes) {
         // Set is used to make sure that every user gets the message only once
         TreeSet<Integer> selectedGroups = new TreeSet<>();
-        if (selectedNodes != null && selectedNodes.length > 0) {
-            for (TreeNode node : selectedNodes) {
+        if (selectedNodes != null) {
+            for (TreeNode<?> node : selectedNodes) {
                 if ("group".equals(node.getType()) && node.getData() instanceof Group) {
                     selectedGroups.add(((Group) node.getData()).getId());
                 }

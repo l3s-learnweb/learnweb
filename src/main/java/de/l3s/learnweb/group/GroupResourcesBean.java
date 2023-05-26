@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
 import org.primefaces.model.StreamedContent;
@@ -87,8 +86,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
     private transient AbstractPaginator paginator;
     private transient List<Folder> folders;
     private transient List<Folder> breadcrumbs;
-    private transient TreeNode foldersTree;
-    private TreeNode selectedTreeNode; // Selected node in the left Folder's panel
+    private transient TreeNode<?> foldersTree;
+    private TreeNode<?> selectedTreeNode; // Selected node in the left Folder's panel
     private String selectedElements;
 
     @Inject
@@ -180,7 +179,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         if (null == paginator) {
             try {
                 paginator = getResourcesFromSolr(group.getId(), HasId.getIdOrDefault(currentFolder, 0), searchQuery, getUser());
-            } catch (IOException | SolrServerException e) {
+            } catch (IOException e) {
                 throw new HttpException("Failed to retrieve current page", e);
             }
         }
@@ -212,7 +211,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         return searchFilters.isFiltersActive();
     }
 
-    private SolrPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws IOException, SolrServerException {
+    private SolrPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws IOException {
         boolean onlyOwned = group.getPolicyView() == Group.PolicyView.GROUP_LEADER && !group.isLeader(user);
         SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user, onlyOwned);
         solrSearch.setFilterGroups(groupId);
@@ -280,7 +279,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         return folders;
     }
 
-    public TreeNode getFoldersTree() {
+    public TreeNode<?> getFoldersTree() {
         if (foldersTree == null) {
             foldersTree = Group.getFoldersTree(group, HasId.getIdOrDefault(currentFolder, 0));
         }
@@ -537,11 +536,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable 
         return currentFolder;
     }
 
-    public TreeNode getSelectedTreeNode() {
+    public TreeNode<?> getSelectedTreeNode() {
         return selectedTreeNode;
     }
 
-    public void setSelectedTreeNode(TreeNode selectedTreeNode) {
+    public void setSelectedTreeNode(TreeNode<?> selectedTreeNode) {
         this.selectedTreeNode = selectedTreeNode;
     }
 

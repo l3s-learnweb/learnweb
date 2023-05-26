@@ -3,10 +3,10 @@ package de.l3s.learnweb.dashboard.glossary;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +27,7 @@ final class GlossaryDashboardChartsFactory {
     private static final Logger log = LogManager.getLogger(GlossaryDashboardChartsFactory.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap, ResourceBundle bundle) {
+    public static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap) {
         BarChartModel model = new BarChartModel();
 
         Action[] actionTypes = Action.values();
@@ -55,25 +55,14 @@ final class GlossaryDashboardChartsFactory {
             }
         }
 
-        ChartData data = new ChartData();
-        List<String> labels = new ArrayList<>();
-        labels.add(bundle.getString("glossary"));
-        labels.add(bundle.getString("Search"));
-        labels.add(bundle.getString("system"));
-        labels.add(bundle.getString("resource"));
-        data.setLabels(labels);
-
         BarChartDataSet barDataSet = new BarChartDataSet();
-        barDataSet.setLabel(bundle.getString("interactions"));
-        List<Number> values = new ArrayList<>();
-        values.add(glossary);
-        values.add(search);
-        values.add(system);
-        values.add(resource);
-        barDataSet.setData(values);
+        barDataSet.setLabel("Interactions");
+        barDataSet.setData(Arrays.asList(glossary, search, system, resource));
         barDataSet.setBackgroundColor(ColorHelper.getColorList(4));
-        data.addChartDataSet(barDataSet);
 
+        ChartData data = new ChartData();
+        data.setLabels(Arrays.asList("Glossary", "Search", "System", "Resources"));
+        data.addChartDataSet(barDataSet);
         model.setData(data);
         return model;
     }

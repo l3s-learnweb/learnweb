@@ -229,7 +229,7 @@ public class SolrSearch implements Serializable {
         this.facetQueries = facetQueries;
     }
 
-    private QueryResponse getQueryResourcesByPage(int page) throws SolrServerException, IOException {
+    private QueryResponse getQueryResourcesByPage(int page) throws IOException {
         SolrQuery solrQuery = new SolrQuery(query);
         solrQuery.set("qt", "/LearnwebQuery");
 
@@ -279,10 +279,12 @@ public class SolrSearch implements Serializable {
             applyFacets(solrQuery, facetFields, facetQueries);
         }
 
-        // log.debug("solr query: " + solrQuery);
-
-        Http2SolrClient server = Learnweb.getInstance().getSolrClient().getHttpSolrClient();
-        return server.query(solrQuery);
+        try (Http2SolrClient server = Learnweb.getInstance().getSolrClient().getHttpSolrClient()) {
+            // log.debug("solr query: " + solrQuery);
+            return server.query(solrQuery);
+        } catch (SolrServerException e) {
+            throw new IOException(e);
+        }
     }
 
     private void applySearchFilters(final SolrQuery solrQuery) {
@@ -348,7 +350,7 @@ public class SolrSearch implements Serializable {
         }
     }
 
-    public List<ResourceDecorator> getResourcesByPage(int page) throws IOException, SolrServerException {
+    public List<ResourceDecorator> getResourcesByPage(int page) throws IOException {
         List<ResourceDecorator> resources = new LinkedList<>();
 
         QueryResponse queryResponse = getQueryResourcesByPage(page);

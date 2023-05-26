@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField;
 
 import de.l3s.learnweb.app.Learnweb;
@@ -42,7 +41,7 @@ public class SolrPaginator extends AbstractPaginator {
     }
 
     @Override
-    public synchronized List<ResourceDecorator> getCurrentPage() throws IOException, SolrServerException {
+    public synchronized List<ResourceDecorator> getCurrentPage() throws IOException {
         if (getCurrentPageCache() != null) {
             return getCurrentPageCache();
         }
@@ -63,7 +62,7 @@ public class SolrPaginator extends AbstractPaginator {
         return results;
     }
 
-    public List<FacetField> getFacetFields() throws IOException, SolrServerException {
+    public List<FacetField> getFacetFields() throws IOException {
         if (facetFieldsResults == null) {
             getCurrentPage();
         }
@@ -71,7 +70,7 @@ public class SolrPaginator extends AbstractPaginator {
         return facetFieldsResults;
     }
 
-    public Map<String, Integer> getFacetQueries() throws IOException, SolrServerException {
+    public Map<String, Integer> getFacetQueries() throws IOException {
         if (facetQueriesResults == null) {
             getCurrentPage();
         }
