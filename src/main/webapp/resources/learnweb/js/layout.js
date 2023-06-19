@@ -347,40 +347,6 @@ $(() => {
 });
 
 /**
- * Reset center position of Dialog after content is modified.
- */
-PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
-  _show.call(this);
-
-  const $this = this;
-  if (!this.contentResizeObserver) {
-    this.contentResizeObserver = new ResizeObserver(() => {
-      if ($this.cfg.fitViewport) {
-        $this.fitViewport();
-      }
-
-      if ($this.isVisible()) {
-        // instant reinit position
-        $this.initPosition();
-      } else {
-        // reset, so the dialog will be positioned again when showing the dialog next time
-        $this.positionInitialized = false;
-      }
-    });
-  }
-
-  this.contentResizeObserver.observe(this.content[0]);
-})(PrimeFaces.widget.Dialog.prototype.show));
-
-PrimeFaces.widget.Dialog.prototype.hide = (((_hide) => function () {
-  _hide.call(this);
-
-  if (this.contentResizeObserver) {
-    this.contentResizeObserver.disconnect();
-  }
-})(PrimeFaces.widget.Dialog.prototype.hide));
-
-/**
  * This is a new implementation of old script which changes size of filters list.
  * If list contains more than N items, then all after N will be hidden and 'Show more' will be displayed instead.
  */
@@ -419,37 +385,3 @@ PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
     }
   },
 });
-
-if (PrimeFaces.widget.InputSwitch) {
-  PrimeFaces.widget.InputSwitch = PrimeFaces.widget.InputSwitch.extend({
-
-    init(cfg) {
-      // eslint-disable-next-line no-underscore-dangle
-      this._super(cfg);
-
-      if (this.input.prop('checked')) {
-        this.jq.addClass('ui-inputswitch-checked');
-      }
-    },
-
-    toggle() {
-      if (this.input.prop('checked')) {
-        this.uncheck();
-        setTimeout(() => {
-          this.jq.removeClass('ui-inputswitch-checked');
-        }, 100);
-      } else {
-        this.check();
-        setTimeout(() => {
-          this.jq.addClass('ui-inputswitch-checked');
-        }, 100);
-      }
-    },
-  });
-}
-
-if (PrimeFaces.widget.Menu) {
-  PrimeFaces.widget.Menu.prototype.align = ((() => function () {
-    this.jq.css({ left: 0, top: 0, 'transform-origin': 'center top' }).position(this.cfg.pos);
-  })(PrimeFaces.widget.Menu.prototype.align));
-}

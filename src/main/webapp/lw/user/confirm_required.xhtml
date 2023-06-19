@@ -29,8 +29,8 @@
         </h:form>
     </p:panel>
 
-    <p:dialog widgetVar="changeMailDialog" header="#{msg.change_email}"
-              modal="true" resizable="false" draggable="false" closeOnEscape="true">
+    <p:dialog widgetVar="changeMailDialog" header="#{msg.change_email}" modal="true" closeOnEscape="true"
+              resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
         <h:form>
             <div class="fields-grid">
                 <p:outputLabel for="@next" value="#{msg.email_address}:"/>

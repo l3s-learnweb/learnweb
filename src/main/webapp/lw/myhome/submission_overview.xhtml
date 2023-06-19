@@ -34,7 +34,8 @@
 	<h:outputScript name="learnweb/js/group-resources.js" target="body"/>
 
 	<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select"
-			  draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
+			  modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog"
+			  resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
 		<h:form prependId="false" id="form">
 			<div class="field">
 				<p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -113,7 +114,8 @@
 			</h:form>
 		</p:dialog>
 
-		<p:dialog header="#{msg['Submission.create_new_submission']}" id="create_submission_dialog1" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog">
+		<p:dialog header="#{msg['Submission.create_new_submission']}" id="create_submission_dialog1" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog"
+				  resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
 			<h:form prependId="false">
 				<div class="field">
 					<p:outputLabel for="@next" value="#{msg.title}:"/>

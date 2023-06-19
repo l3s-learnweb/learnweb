@@ -68,8 +68,8 @@
         </p:dataTable>
     </h:form>
 
-    <p:dialog header="#{msg.createGroup}" widgetVar="createGroupDialog"
-              modal="true" resizable="false" styleClass="modal-dialog-select" draggable="false" closeOnEscape="true">
+    <p:dialog header="#{msg.createGroup}" widgetVar="createGroupDialog" modal="true" styleClass="modal-dialog-select" closeOnEscape="true"
+              resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
         <h:form id="create_group_form">
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -89,7 +89,7 @@
 
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.description}:"/>
-                <p:textEditor widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" label="#{msg.description}" height="200">
+                <p:textEditor widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" label="#{msg.description}" height="200px">
                     <f:facet name="toolbar">
                         <span class="ql-formats">
                             <button class="ql-bold"></button>

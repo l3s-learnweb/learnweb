@@ -136,7 +136,8 @@
     </h:form>
 
     <p:dialog id="post_dialog" widgetVar="postDialog" header="#{forumTopicBean.replyDialog ? msg['ForumIndex.reply'] : msg['edit']}"
-              modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true">
+              modal="true" closeOnEscape="true" dynamic="true"
+              resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
         <h:form id="post_form">
             <ui:fragment rendered="#{forumTopicBean.group.restrictionForumCategoryEnabled}">
                 <div class="field">
@@ -151,7 +152,7 @@
 
             <div class="field">
                 <p:outputLabel for="@next" value="#{msg.message}:" styleClass="d-none"/>
-                <p:textEditor value="#{forumTopicBean.dialogPost.text}" height="200">
+                <p:textEditor value="#{forumTopicBean.dialogPost.text}" height="200px">
                     <f:facet name="toolbar">
                         <span class="ql-formats">
                             <select class="ql-font"/>

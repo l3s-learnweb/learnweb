@@ -4,8 +4,8 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-<p:dialog id="editFolderDialog" widgetVar="editFolderDialog" header="#{msg.edit_folder}"
-          modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true">
+<p:dialog id="editFolderDialog" widgetVar="editFolderDialog" header="#{msg.edit_folder}" modal="true" closeOnEscape="true" dynamic="true"
+          resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
     <h:form id="edit_folder_form">
         <div class="fields-grid">
             <h:outputText value="#{msg.group}:" styleClass="ui-outputlabel"/>

@@ -103,7 +103,7 @@
 				</div>
 				<div class="field">
 					<p:outputLabel for="@next" value="#{msg['description']}:" styleClass="fw-bold"/>
-					<p:textEditor value="#{surveyTemplateBean.survey.description}" height="100">
+					<p:textEditor value="#{surveyTemplateBean.survey.description}" height="100px">
 						<f:facet name="toolbar">
 						<span class="ql-formats">
 							<button class="ql-bold"></button>
@@ -131,7 +131,6 @@
 	<p:dialog widgetVar="allSurveys">
 		<h:form id="allSurveysForm">
 			<p:dataTable id="allSurveys" var="survey" rowKey="#{survey.id}" value="#{surveyTemplateBean.surveys}" selection="#{surveyTemplateBean.selectedSurvey}">
-				<p:column selectionMode="single"/>
 				<p:column headerText="#{msg.title}">
 					<h:outputText value="#{survey.title}" />
 				</p:column>

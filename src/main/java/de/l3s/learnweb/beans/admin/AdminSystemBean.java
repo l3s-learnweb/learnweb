@@ -14,10 +14,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
-import org.primefaces.model.DashboardColumn;
-import org.primefaces.model.DashboardModel;
-import org.primefaces.model.DefaultDashboardColumn;
-import org.primefaces.model.DefaultDashboardModel;
+import org.primefaces.model.dashboard.DashboardModel;
+import org.primefaces.model.dashboard.DefaultDashboardColumn;
+import org.primefaces.model.dashboard.DefaultDashboardModel;
+import org.primefaces.model.dashboard.DefaultDashboardWidget;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.exceptions.BadRequestHttpException;
@@ -52,21 +52,13 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
 
     public AdminSystemBean() {
         model = new DefaultDashboardModel();
-
-        DashboardColumn column1 = new DefaultDashboardColumn();
-        column1.addWidget("memory");
-        column1.addWidget("cache");
-        model.addColumn(column1);
-
-        DashboardColumn column2 = new DefaultDashboardColumn();
-        column2.addWidget("maintenance");
-        column2.addWidget("i18n");
-        model.addColumn(column2);
-
-        DashboardColumn column3 = new DefaultDashboardColumn();
-        column3.addWidget("solrIndex");
-        column2.addWidget("error_handling");
-        model.addColumn(column3);
+        model.addWidget(new DefaultDashboardColumn("memory", "col-12 col-lg-6 col-xl-4"));
+        model.addWidget(new DefaultDashboardWidget("solr_index", "col-12 col-lg-6 col-xl-4"));
+        model.addWidget(new DefaultDashboardWidget("maintenance", "col-12 col-lg-6 col-xl-4"));
+        model.addWidget(new DefaultDashboardColumn("cache", "col-12 col-lg-6 col-xl-4"));
+        model.addWidget(new DefaultDashboardWidget("i18n", "col-12 col-lg-6 col-xl-4"));
+        model.addWidget(new DefaultDashboardWidget("error_handling", "col-12 col-lg-6 col-xl-4"));
+        model.addWidget(new DefaultDashboardWidget("db_connections", "col-12"));
     }
 
     public DashboardModel getModel() {

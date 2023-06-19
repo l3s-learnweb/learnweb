@@ -39,8 +39,8 @@
                          update=":submissionsWrapper" oncomplete="PF('selectDlg').hide();"/>
     </h:form>
 
-    <p:dialog widgetVar="selectDlg" header="#{msg['Submission.select_resources_header']}" styleClass="ui-dialog-sticky-footer"
-              modal="true" resizable="false" draggable="false" closeOnEscape="true">
+    <p:dialog widgetVar="selectDlg" header="#{msg['Submission.select_resources_header']}" styleClass="ui-dialog-sticky-footer" modal="true" closeOnEscape="true"
+              resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
 
         <h:panelGroup id="submitResourcesGrid" styleClass="res-container dynamic-content" layout="block" rendered="#{!empty submissionBean.resources}"
                       pt:data-canSelectResources="true">

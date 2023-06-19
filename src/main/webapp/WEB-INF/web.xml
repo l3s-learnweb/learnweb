@@ -33,6 +33,10 @@
         <param-value>false</param-value>
     </context-param>
     <context-param>
+        <param-name>primefaces.HTML5_COMPLIANCE</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
         <param-name>primefaces.SUBMIT</param-name>
         <param-value>partial</param-value> <!-- Enable partial submit in PrimeFaces - this reduces the network traffic -->
     </context-param>
