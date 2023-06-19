@@ -18,7 +18,6 @@ body {
 
       .ui-panel-titlebar-icon {
         margin: 0;
-        margin-left: $inlineSpacing;
         @include action-icon();
         margin-top: divide(-1 * $actionIconHeight, 8);
         margin-bottom: divide(-1 * $actionIconHeight, 4);

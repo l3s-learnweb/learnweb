@@ -259,8 +259,9 @@ body {
 
     .ui-selection-column {
       .ui-chkbox-all {
-        width: auto;
-        height: auto;
+        margin: 0 auto;
+        width: $checkboxWidth;
+        height: $checkboxHeight;
       }
     }
 
@@ -399,6 +400,13 @@ body {
       &.ui-sticky {
         box-shadow: $overlayContainerShadow;
       }
+
+      > table {
+        > thead,
+        > tfoot {
+          background: $datatableHeaderCellBg;
+        }
+      }
     }
   }
 
@@ -452,7 +460,6 @@ body {
           display: block;
           width: 100%;
         }
-
       }
     }
   }

@@ -8,10 +8,6 @@ body {
     display: none;
   }
 
-  .ui-selectonemenu .ui-selectonemenu-label {
-    min-height: inherit;
-  }
-
   .ui-inplace {
     .ui-inplace-cancel {
       @extend .ui-button-secondary;

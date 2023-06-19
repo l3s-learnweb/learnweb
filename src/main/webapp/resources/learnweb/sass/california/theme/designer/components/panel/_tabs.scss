@@ -69,6 +69,16 @@ body {
             }
           }
 
+          &.ui-state-error {
+            a {
+              color: $errorColor;
+            }
+
+            .ui-icon {
+              color: $errorColor;
+            }
+          }
+
           &.ui-tabs-outline {
             @include focused-inset();
           }
@@ -124,6 +134,10 @@ body {
           &.ui-state-active {
             border-color: $tabsHeaderActiveBorderColor;
           }
+
+          &.ui-state-error {
+            border-color: $errorColor;
+          }
         }
       }
 
@@ -160,6 +174,10 @@ body {
 
           &.ui-state-active {
             border-color: $tabsHeaderActiveBorderColor;
+          }
+
+          &.ui-state-error {
+            border-color: $errorColor;
           }
         }
       }
@@ -205,6 +223,10 @@ body {
           &.ui-state-active {
             border-color: $tabsHeaderActiveBorderColor;
           }
+
+          &.ui-state-error {
+            border-color: $errorColor;
+          }
         }
       }
 
@@ -230,6 +252,10 @@ body {
 
           &.ui-state-active {
             border-color: $tabsHeaderActiveBorderColor;
+          }
+
+          &.ui-state-error {
+            border-color: $errorColor;
           }
         }
       }

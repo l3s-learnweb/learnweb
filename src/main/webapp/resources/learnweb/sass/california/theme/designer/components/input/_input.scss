@@ -3,7 +3,8 @@ body {
     color: $inputPlaceholderTextColor;
   }
 
-  .p-field {
+  .p-field,
+  .field {
     small.ui-state-error {
       color: $inputErrorBorderColor;
     }

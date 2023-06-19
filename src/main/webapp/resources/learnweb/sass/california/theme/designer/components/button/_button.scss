@@ -287,11 +287,15 @@ body {
     }
   }
 
-  .ui-button.ui-button-secondary, .ui-splitbutton.ui-button-secondary > .ui-button {
+  .ui-button.ui-button-secondary,
+  .ui-splitbutton.ui-button-secondary > .ui-button,
+  .ui-menubutton.ui-button-secondary > .ui-button {
     @include secondary-button();
   }
 
-  .ui-button.ui-button-success, .ui-splitbutton.ui-button-success > .ui-button {
+  .ui-button.ui-button-success,
+  .ui-splitbutton.ui-button-success > .ui-button,
+  .ui-menubutton.ui-button-success > .ui-button {
     background:$successButtonBg;
     color: $successButtonTextColor;
     border: $successButtonBorder;
@@ -348,7 +352,9 @@ body {
     }
   }
 
-  .ui-button.ui-button-warning, .ui-splitbutton.ui-button-warning > .ui-button {
+  .ui-button.ui-button-warning,
+  .ui-splitbutton.ui-button-warning > .ui-button,
+  .ui-menubutton.ui-button-warning > .ui-button {
     background: $warningButtonBg;
     color: $warningButtonTextColor;
     border: $warningButtonBorder;
@@ -406,7 +412,9 @@ body {
     }
   }
 
-  .ui-button.ui-button-help, .ui-splitbutton.ui-button-help > .ui-button {
+  .ui-button.ui-button-help,
+  .ui-splitbutton.ui-button-help > .ui-button,
+  .ui-menubutton.ui-button-help > .ui-button {
     background: $helpButtonBg;
     color: $helpButtonTextColor;
     border: $helpButtonBorder;
@@ -464,7 +472,9 @@ body {
     }
   }
 
-  .ui-button.ui-button-info, .ui-splitbutton.ui-button-info > .ui-button {
+  .ui-button.ui-button-info,
+  .ui-splitbutton.ui-button-info > .ui-button,
+  .ui-menubutton.ui-button-info > .ui-button {
     background: $infoButtonBg;
     color: $infoButtonTextColor;
     border: $infoButtonBorder;
@@ -522,7 +532,9 @@ body {
     }
   }
 
-  .ui-button.ui-button-danger, .ui-splitbutton.ui-button-danger > .ui-button {
+  .ui-button.ui-button-danger,
+  .ui-splitbutton.ui-button-danger > .ui-button,
+  .ui-menubutton.ui-button-danger > .ui-button {
     background: $dangerButtonBg;
     color: $dangerButtonTextColor;
     border: $dangerButtonBorder;

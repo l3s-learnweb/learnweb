@@ -29,7 +29,9 @@ body {
         }
 
         &.ui-state-disabled {
-          display: none;
+          &:not(.ui-fileupload-choose) {
+            display: none;
+          }
         }
       }
     }
@@ -59,6 +61,23 @@ body {
   .ui-fileupload-simple {
     .ui-icon-plusthick {
       @include icon_override ("\e90d");
+    }
+  }
+
+  @media screen and (max-width: 40em) {
+    .ui-fileupload {
+      .ui-fileupload-buttonbar {
+        .ui-button {
+          &.ui-fileupload-choose,
+          &.ui-fileupload-upload,
+          &.ui-fileupload-cancel {
+            .ui-icon {
+              left: 50%;
+              margin-left: divide(-1 * $iconSize, 2);
+            }
+          }
+        }
+      }
     }
   }
 }

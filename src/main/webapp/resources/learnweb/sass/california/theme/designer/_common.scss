@@ -31,6 +31,10 @@ body {
         animation-fill-mode: forwards;
     }
 
+    .ui-resizable-handle {
+        position: absolute;
+    }
+
     .ui-helper-reset {
         line-height: normal;
     }

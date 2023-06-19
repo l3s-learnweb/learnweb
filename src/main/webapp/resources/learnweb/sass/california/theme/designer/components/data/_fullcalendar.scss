@@ -37,8 +37,7 @@ body {
       border-right: $panelHeaderBorder;
     }
 
-    .fc-event,
-    .fc-event .fc-event-main{
+    .fc-event {
       background: $scheduleEventBg;
       border: $scheduleEventBorder;
       color: $scheduleEventTextColor;
