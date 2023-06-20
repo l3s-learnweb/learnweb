@@ -190,9 +190,9 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
             resourcesGroupedBySource = null;
 
-            if (showRecommendations) {
-                createSearchRecommendation();
-            }
+            //if (showRecommendations) {
+            createSearchRecommendation();
+            // }
         }
 
         return "/lw/search.xhtml?faces-redirect=true";
