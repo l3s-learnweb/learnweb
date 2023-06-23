@@ -16,7 +16,7 @@
               pt:data-canOrganizeResources="#{canOrganizeResources}">
 
     <h:panelGroup styleClass="mx-3" layout="block" rendered="#{query != null}">
-        <h:outputText value="#{msg.search_results}" styleClass="text-muted"/>
+        <h:outputText value="#{msg.search_results}" styleClass="text-body-secondary"/>
     </h:panelGroup>
 
     <ui:fragment rendered="#{view == 'grid'}">
@@ -31,10 +31,10 @@
         <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_list_view.xhtml"></ui:decorate>
     </ui:fragment>
 
-    <h:outputText value="${msg['group_resources.no_resources_found']}" class="text-muted p-2 d-flex"
+    <h:outputText value="${msg['group_resources.no_resources_found']}" class="text-body-secondary p-2 d-flex"
                   rendered="#{paginator.isEmpty() and query eq null}"/>
 
-    <h:outputText value="#{msg.no_results_found}" class="text-muted p-2 d-flex"
+    <h:outputText value="#{msg.no_results_found}" class="text-body-secondary p-2 d-flex"
                   rendered="#{paginator.isEmpty() and query ne null}"/>
 </h:panelGroup>
 

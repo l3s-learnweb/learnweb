@@ -8,7 +8,7 @@
 
     <ui:repeat value="#{resources}" var="res">
         <h:panelGroup layout="block" styleClass="search-page-sep m-3" rendered="#{res.rank gt 1 and res.rank % 10 eq 1}">
-            <h:outputFormat value="#{msg.page_number}" styleClass="text-muted fw-bold">
+            <h:outputFormat value="#{msg.page_number}" styleClass="text-body-secondary fw-bold">
                 <f:param value="#{(res.rank + 9) / 10}"/>
             </h:outputFormat>
         </h:panelGroup>
