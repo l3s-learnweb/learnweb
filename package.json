@@ -9,9 +9,9 @@
     "not op_mini all"
   ],
   "scripts": {
-    "build": "rollup -c",
-    "build:dev": "rollup -c --environment NODE_ENV:development",
-    "watch": "rollup -c -w",
+    "build": "node esbuild.js",
+    "build:dev": "node esbuild.js dev",
+    "watch": "node esbuild.js watch",
     "lint": "npm run lint:scss && npm run lint:js",
     "lint:scss": "stylelint src/main/webapp/resources/learnweb/sass",
     "lint:js": "eslint src/main/webapp/resources/learnweb/js/**",
@@ -31,20 +31,13 @@
     "video.js": "^8.3.0"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.1.0",
-    "@rollup/plugin-replace": "^5.0.2",
-    "@rollup/plugin-terser": "^0.4.3",
-    "autoprefixer": "^10.4.14",
+    "esbuild": "^0.18.7",
+    "esbuild-sass-plugin": "^2.10.0",
     "browserslist": "^4.21.9",
     "eslint": "^8.43.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-compat": "^4.1.4",
     "eslint-plugin-import": "^2.27.5",
-    "postcss": "^8.4.24",
-    "rollup": "^3.25.1",
-    "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-scss": "^4.0.0",
-    "sass": "^1.63.6",
     "stylelint": "^15.8.0",
     "stylelint-config-sass-guidelines": "^10.0.0",
     "stylelint-no-unsupported-browser-features": "^6.1.0"
