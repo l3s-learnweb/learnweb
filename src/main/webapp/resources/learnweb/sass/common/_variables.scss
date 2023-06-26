@@ -1,6 +1,5 @@
 // remove 'bs-' prefix from variables
 $prefix: '';
-$color-mode-type: media-query;
 
 $white: #fff;
 $gray-100: #f8f9fa;
@@ -75,6 +74,8 @@ $body-emphasis-color: $black !default;
 $body-emphasis-color-dark: $white !default;
 
 $border-color: var(--gray-400) !default;
+$headings-color: var(--tertiary-color);
+$headings-color-dark: var(--tertiary-color);
 
 $colors: (
   'black': $black,

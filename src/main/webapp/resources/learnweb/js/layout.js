@@ -324,6 +324,42 @@ function openResourceView(items, target, isEdit = false) {
   window.addEventListener('popstate', handlePopstateResView, false);
 }
 
+const setTheme = (theme) => {
+  if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+  }
+};
+
+const setColorTheme = (theme) => {
+  document.documentElement.setAttribute('data-color-theme', theme);
+};
+
+(() => {
+  const getStoredTheme = () => localStorage.getItem('theme');
+  const setStoredTheme = (theme) => localStorage.setItem('theme', theme);
+
+  const getPreferredTheme = () => {
+    const storedTheme = getStoredTheme();
+    if (storedTheme) {
+      return storedTheme;
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
+
+  setStoredTheme(document.documentElement.getAttribute('data-bs-theme'));
+  setTheme(getPreferredTheme());
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    const storedTheme = getStoredTheme();
+    if (storedTheme !== 'light' && storedTheme !== 'dark') {
+      setTheme(getPreferredTheme());
+    }
+  });
+})();
+
 /**
  * On document ready events
  */

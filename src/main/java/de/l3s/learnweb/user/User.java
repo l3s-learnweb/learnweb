@@ -96,6 +96,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private boolean emailConfirmed = true;
     private String password;
     private PasswordHashing hashing;
+    private Theme preferredTheme = Theme.auto;
     private NotificationFrequency preferredNotificationFrequency = NotificationFrequency.NEVER; // how often will users get updates by mail
     private Locale locale = Locale.forLanguageTag("en-US"); // preferred interface language
 
@@ -298,6 +299,14 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
      */
     public void setEmailRaw(String email) {
         this.email = email;
+    }
+
+    public Theme getPreferredTheme() {
+        return preferredTheme;
+    }
+
+    public void setPreferredTheme(final Theme preferredTheme) {
+        this.preferredTheme = preferredTheme;
     }
 
     public NotificationFrequency getPreferredNotificationFrequency() {

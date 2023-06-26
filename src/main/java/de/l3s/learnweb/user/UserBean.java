@@ -48,7 +48,7 @@ public class UserBean implements Serializable {
 
     private int userId = 0;
     private Locale locale;
-    private Theme theme = Theme.emerald;
+    private ColorTheme colorTheme = ColorTheme.emerald;
     private final HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
@@ -115,7 +115,6 @@ public class UserBean implements Serializable {
         this.userId = user.getId();
         this.user = user;
         this.activeOrganisation = user.getOrganisation();
-        this.theme = this.activeOrganisation.getTheme();
 
         // clear caches
         this.sidebarMenuModel = null;
@@ -136,7 +135,11 @@ public class UserBean implements Serializable {
     }
 
     public Theme getTheme() {
-        return theme;
+        return user != null ? user.getPreferredTheme() : Theme.auto;
+    }
+
+    public ColorTheme getColorTheme() {
+        return activeOrganisation != null ? activeOrganisation.getTheme() : colorTheme;
     }
 
     public String getPreference(String key, String defaultValue) {

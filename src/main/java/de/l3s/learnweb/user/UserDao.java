@@ -185,6 +185,7 @@ public interface UserDao extends SqlObject, Serializable {
         params.put("affiliation", SqlHelper.toNullable(user.getAffiliation()));
         params.put("accept_terms_and_conditions", user.isAcceptTermsAndConditions());
         params.put("deleted", user.isDeleted());
+        params.put("preferred_theme", user.getPreferredTheme().toString());
         params.put("preferred_notification_frequency", user.getPreferredNotificationFrequency().toString());
         params.put("time_zone", user.getTimeZone().getId());
         params.put("language", user.getLocale().toString());
@@ -240,6 +241,7 @@ public interface UserDao extends SqlObject, Serializable {
                 user.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
                 user.setCredits(rs.getString("credits"));
                 user.setAcceptTermsAndConditions(rs.getBoolean("accept_terms_and_conditions"));
+                user.setPreferredTheme(Theme.valueOf(rs.getString("preferred_theme")));
                 user.setPreferredNotificationFrequency(User.NotificationFrequency.valueOf(rs.getString("preferred_notification_frequency")));
                 user.setGuideSteps(SqlHelper.getBitSet(rs, user.getGuideSteps().size(), "guide_field"));
                 user.setTimeZone(ZoneId.of(rs.getString("time_zone")));

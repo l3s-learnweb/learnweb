@@ -3,7 +3,7 @@
       xmlns:f="jakarta.faces.core"
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets"
-      lang="en" data-theme="emerald">
+      lang="en" data-bs-theme="auto" data-color-theme="emerald">
 
     <!--@elvariable id="pageTitle" type="java.lang.String"-->
 
@@ -13,6 +13,9 @@
         <h:head>
             <ui:include src="parts/head.xhtml"/>
             <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{!empty pageTitle}"/>#{config.appName}</title>
+
+            <h:outputScript library="primefaces" name="jquery/jquery.js"/>
+            <h:outputScript name="learnweb/js/layout.js"/>
         </h:head>
 
         <h:body styleClass="layout-body template-page">

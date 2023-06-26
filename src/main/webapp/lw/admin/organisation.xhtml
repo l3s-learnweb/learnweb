@@ -111,6 +111,21 @@
                         </div>
 
                         <div class="field">
+                            <p:outputLabel for="@next" value="#{msg.theme}:"/>
+                            <h:panelGroup styleClass="ui-inputgroup">
+                                <h:panelGroup id="icon" styleClass="ui-inputgroup-addon">
+                                    <i class="fas fa-square fa-lg text-primary" data-color-theme="#{adminOrganisationBean.selectedOrganisation.theme}"/>
+                                </h:panelGroup>
+                                <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.theme}" var="item" styleClass="text-capitalize" onchange="setColorTheme(this.value)">
+                                    <f:selectItems value="#{adminOrganisationBean.availableThemes}" var="item" itemLabel="#{item}" itemValue="#{item}" />
+                                    <p:column styleClass="text-capitalize"><i class="fas fa-square fa-lg text-primary" data-color-theme="#{item}"/> #{item} </p:column>
+                                    <p:ajax update="@parent:@parent:icon" />
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <p:message for="@previous"/>
+                        </div>
+
+                        <div class="field">
                             <p:outputLabel for="@next" value="#{msg.default_lang}:"/>
                             <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
                                 <f:selectItem itemLabel="#{msg.no_default_lang}" itemValue="#{null}"/>

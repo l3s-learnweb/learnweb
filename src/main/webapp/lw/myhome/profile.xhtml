@@ -162,6 +162,15 @@
             </p:panel>
         </div>
         <div class="col-12 col-lg-6">
+            <p:panel header="#{msg['theme']}" styleClass="mb-3">
+                <h:form prependId="false">
+                    <p:selectOneRadio id="theme_value" value="#{profileBean.selectedUser.preferredTheme}" layout="responsive" columns="3" unselectable="true"
+                        onchange="setTheme(this.value);">
+                        <f:selectItems value="#{profileBean.availableThemes}" var="t" itemLabel="#{msg['theme.'+=t]}" itemValue="#{t}"/>
+                        <p:ajax listener="#{profileBean.onSaveProfile()}"/>
+                    </p:selectOneRadio>
+                </h:form>
+            </p:panel>
             <p:panel header="#{msg['notifications']}" styleClass="mb-3" rendered="#{not empty profileBean.userGroups}">
                 <h:form>
                     <p:dataTable var="group" styleClass="mb-3" value="#{profileBean.userGroups}" dynamic="false">

@@ -61,7 +61,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private String welcomeMessage;
     private String termsAndConditions;
     private String welcomePage = "myhome/welcome.jsf"; // page to show after login
-    private Theme theme = Theme.emerald;
+    private ColorTheme theme = ColorTheme.emerald;
     private SearchMode defaultSearchMode = SearchMode.text;
     private ResourceService defaultSearchServiceText = ResourceService.bing;
     private ResourceService defaultSearchServiceImage = ResourceService.flickr;
@@ -317,11 +317,11 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         this.options = options;
     }
 
-    public Theme getTheme() {
+    public ColorTheme getTheme() {
         return theme;
     }
 
-    public void setTheme(final Theme theme) {
+    public void setTheme(final ColorTheme theme) {
         this.theme = theme;
     }
 

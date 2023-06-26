@@ -81,7 +81,7 @@ public interface OrganisationDao extends SqlObject, Serializable {
                 organisation.setWelcomePage(rs.getString("welcome_page"));
                 organisation.setWelcomeMessage(rs.getString("welcome_message"));
                 organisation.setTermsAndConditions(rs.getString("terms_and_conditions"));
-                organisation.setTheme(Theme.valueOf(rs.getString("theme")));
+                organisation.setTheme(ColorTheme.valueOf(rs.getString("theme")));
                 organisation.setDefaultSearchMode(SearchMode.valueOf(rs.getString("default_search_mode")));
                 organisation.setDefaultSearchServiceText(rs.getString("default_search_text"));
                 organisation.setDefaultSearchServiceImage(rs.getString("default_search_image"));

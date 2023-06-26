@@ -23,7 +23,7 @@ $themes: (
 );
 
 @each $theme, $value in $themes {
-  [data-theme=#{$theme}] {
+  [data-color-theme=#{$theme}] {
     --primary: #{$value};
     --primary-rgb: #{to-rgb($value)};
 
