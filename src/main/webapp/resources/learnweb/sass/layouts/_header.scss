@@ -38,8 +38,8 @@ $topbar-button-padding: 1rem;
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
     display: flex;
     align-items: center;
-    background: var(--surface-ground);
-    color: var(--gray-500);
+    background: var(--body-bg);
+    color: var(--secondary-text-emphasis);
 
     &:hover {
       background: $primaryDarkColor;
@@ -266,7 +266,7 @@ body {
   .ui-menu.ui-menu-navbar {
     width: auto;
     max-width: 15em;
-    background: var(--primary-dark);
+    background: var(--primary);
     border-top-right-radius: 0;
     border-top-left-radius: 0;
     padding: 0;
@@ -274,12 +274,12 @@ body {
 
     .ui-menu-list .ui-menuitem .ui-menuitem-link {
       &.ui-state-hover {
-        background: var(--primary-darker);
+        background: var(--primary-hover);
       }
 
       .ui-menuitem-text,
       .ui-menuitem-icon {
-        color: var(--primary-text-color);
+        color: var(--primary-color);
       }
 
       img {

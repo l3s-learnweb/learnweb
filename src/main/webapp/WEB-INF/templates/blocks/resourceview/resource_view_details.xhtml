@@ -302,7 +302,7 @@
 	</h:panelGroup>
 	<h:panelGroup layout="block" id="comments_list">
 		<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
-			<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
+			<div class="d-flex comment-entry p-2 #{!status.last ? 'mb-2' : ''}">
 				<p:avatar label="${comment.user.initials}" styleClass="mt-1 me-3" shape="circle" dynamicColor="true" saturation="50" lightness="50">
 					<h:graphicImage value="#{comment.user.imageUrl}" alt="#{comment.user.fullName}" rendered="#{not empty comment.user.imageUrl}"/>
 				</p:avatar>

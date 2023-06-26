@@ -1,33 +1,70 @@
 @use 'sass:meta';
 
-@use 'themes/alive';
-@use 'themes/ash';
-@use 'themes/blue';
-@use 'themes/bluegray';
-@use 'themes/cappuccino';
-@use 'themes/cyan';
-@use 'themes/emerald';
-@use 'themes/gray';
-@use 'themes/green';
-@use 'themes/hollywood';
-@use 'themes/mantle';
-@use 'themes/montreal';
-@use 'themes/noir';
-@use 'themes/orange';
-@use 'themes/peak';
-@use 'themes/pink';
-@use 'themes/predawn';
-@use 'themes/purple';
-@use 'themes/teal';
-@use 'themes/yellow';
+$themes: (
+  'alive': #85344e,
+  'ash': #606c88,
+  'blue': #0071bc,
+  'bluegray': #4b6d7e,
+  'cappuccino': #684c4e,
+  'cerulean': #00809a,
+  'emerald': #4aa382,
+  'green': #3c8450,
+  'hollywood': #514a9d,
+  'mantle': #514a9d,
+  'montreal': #8f3b4f,
+  'noir': #4b6cb7,
+  'rust': #ae6145,
+  'peak': #31827b,
+  'pink': #9f4488,
+  'predawn': #4a505d,
+  'purple': #6a4aa5,
+  //'turquoise': #23ddc1, they need black text, doesn't work good with links
+  //'yellow': #f9c642,
+);
 
-$themes: 'alive', 'ash', 'blue', 'bluegray', 'cappuccino', 'cyan', 'emerald', 'gray', 'green', 'hollywood',
-  'mantle', 'montreal', 'noir', 'orange', 'peak', 'pink', 'predawn', 'purple', 'teal', 'yellow';
-
-@each $theme in $themes {
+@each $theme, $value in $themes {
   [data-theme=#{$theme}] {
-    @each $name, $value in meta.module-variables(#{$theme}) {
-      --#{$name}: #{$value};
+    --primary: #{$value};
+    --primary-rgb: #{to-rgb($value)};
+
+    $primary-color: color-contrast($value);
+
+    $primary-hover: if($primary-color == $color-contrast-light, shade-color($value, $btn-hover-bg-shade-amount), tint-color($value, $btn-hover-bg-tint-amount));
+    $primary-hover-color: color-contrast($primary-hover);
+    $primary-active: if($primary-color == $color-contrast-light, shade-color($value, $btn-active-bg-shade-amount), tint-color($value, $btn-active-bg-tint-amount));
+    $primary-active-color: color-contrast($primary-active);
+
+    $link-color: $value;
+    $link-hover-color: shift-color($link-color, $link-shade-percentage);
+
+    --primary-color: #{$primary-color};
+    --primary-hover: #{$primary-hover};
+    --primary-hover-color: #{$primary-hover-color};
+    --primary-active: #{$primary-active};
+    --primary-active-color: #{$primary-active-color};
+    --primary-text-emphasis: #{shade-color($value, 60%)};
+    --primary-bg-subtle: #{tint-color($value, 80%)};
+    --primary-border-subtle: #{tint-color($value, 60%)};
+    --link-color: #{$link-color};
+    --link-hover-color: #{$link-hover-color};
+    --link-color-rgb: #{to-rgb($link-color)};
+    --link-hover-color-rgb: #{to-rgb($link-hover-color)};
+
+    @include color-mode(dark) {
+      $link-color-dark: tint-color($value, 40%);
+      $link-hover-color-dark: shift-color($link-color-dark, -$link-shade-percentage);
+
+      --primary-hover: #{$primary-active};
+      --primary-hover-color: #{$primary-active-color};
+      --primary-active: #{$primary-hover};
+      --primary-active-color: #{$primary-hover-color};
+      --primary-text-emphasis: #{tint-color($value, 40%)};
+      --primary-bg-subtle: #{shade-color($value, 80%)};
+      --primary-border-subtle: #{shade-color($value, 40%)};
+      --link-color: #{$link-color-dark};
+      --link-hover-color: #{$link-hover-color-dark};
+      --link-color-rgb: #{to-rgb($link-color-dark)};
+      --link-hover-color-rgb: #{to-rgb($link-hover-color-dark)};
     }
   }
 }

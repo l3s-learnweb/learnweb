@@ -19,7 +19,7 @@
   display: block;
   position: relative;
   color: var(--body-color) !important;
-  background: var(--light);
+  background: var(--tertiary-bg);
   box-shadow: $box-shadow-sm;
 
   .member-star {
@@ -33,7 +33,7 @@
 
   &:hover {
     background: var(--primary);
-    color: var(--primary-text-color) !important;
+    color: var(--primary-color) !important;
     text-decoration: none !important;
   }
 }

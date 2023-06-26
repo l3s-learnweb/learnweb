@@ -48,7 +48,7 @@
             </p:tab>
             <p:tab title="${msg['resource.tab.ARCHIVED']}">
                 <iframe src="#{res.archiveUrls[0].archiveUrl}" title="#{res.title}" faces:rendered="#{not empty res.archiveUrls}"></iframe>
-                <p class="d-block text-white m-3" faces:rendered="#{empty res.archiveUrls}">This page has not been archived yet.</p>
+                <p class="d-block m-3" faces:rendered="#{empty res.archiveUrls}">This page has not been archived yet.</p>
             </p:tab>
         </p:tabView>
     </c:when>
@@ -58,7 +58,7 @@
     </c:when>
 
     <c:when test="${res.type eq 'text' and res.downloadUrl ne null}">
-        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-surface p-1"></iframe>
+        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-body p-1"></iframe>
     </c:when>
 
     <c:when test="${res.type eq 'survey'}">
@@ -87,7 +87,7 @@
     </c:when>
 
     <c:otherwise>
-        <div class="bg-dark text-center text-white align-self-center p-4 px-5 m-3">
+        <div class="bg-dark text-center align-self-center p-4 px-5 m-3">
             <h:outputText value="#{msg['resource.no_preview']}" styleClass="fs-4 d-block mb-4"/>
             <p:linkButton icon="fas fa-download" value="#{msg.download}" href="#{resourceDetailBean.resource.downloadUrl}"
                           rendered="#{resourceDetailBean.resource.downloadUrl ne null}"/>

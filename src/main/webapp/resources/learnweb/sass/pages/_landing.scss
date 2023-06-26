@@ -33,7 +33,7 @@
 
   .card-single {
     margin-bottom: 3 * $spacer;
-    background: var(--surface-ground);
+    background: var(--body-bg);
 
     .card-header {
       background-color: $primaryDarkerColor;
@@ -44,7 +44,7 @@
     }
 
     .card-subheader {
-      background-color: var(--light);
+      background-color: var(--tertiary-bg);
       color: $primaryDarkerColor;
       padding: $spacer * 0.25 $spacer;
     }

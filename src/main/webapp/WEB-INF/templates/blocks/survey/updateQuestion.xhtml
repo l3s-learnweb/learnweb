@@ -71,13 +71,13 @@
                             <p:inputText value="#{answer.value}" placeholder="#{question.type eq 'AUTOCOMPLETE' ? msg['survey.auto_complete'] : msg['survey.option']}"/>
                             <p:tooltip for="@next" value="#{msg['survey.delete_answer']}" position="right"/>
                             <p:outputPanel>
-                                <p:commandButton styleClass="bg-transparent border-0 text-dark fas fa-minus align-self-center" style="vertical-align: sub;"
+                                <p:commandButton styleClass="bg-transparent border-0 text-body-secondary fas fa-minus align-self-center" style="vertical-align: sub;"
                                                  action="#{surveyTemplateBean.onDeleteAnswer(answer)}" update="updateForm:answers" value="" process="@form"/>
                             </p:outputPanel>
                         </h:panelGroup>
                     </ui:repeat>
                     <p:tooltip for="@next" value="#{msg['survey.add_answer']}" position="left"/>
-                    <p:commandButton styleClass="bg-transparent border-0 text-dark fas fa-plus align-self-center mt-2"
+                    <p:commandButton styleClass="bg-transparent border-0 text-body-secondary fas fa-plus align-self-center mt-2"
                                      action="#{surveyTemplateBean.onAddEmptyAnswer}" update="@form" value="" process="@form"/>
                 </div>
             </p:outputPanel>

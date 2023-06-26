@@ -42,11 +42,11 @@
 			</f:facet>-->
 			<h:panelGroup id="questions">
 				<div class="d-flex flex-nowrap mb-2">
-					<p:commandLink styleClass="bg-transparent border-0 text-dark fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
+					<p:commandLink styleClass="bg-transparent border-0 text-body-secondary fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
 					<h1><h:outputText value="#{surveyTemplateBean.survey.title}" escape="false"/></h1>
 				</div>
 				<div class="d-flex flex-nowrap mb-2">
-					<p:commandLink styleClass="bg-transparent border-0 text-dark fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
+					<p:commandLink styleClass="bg-transparent border-0 text-body-secondary fas fa-pencil-alt align-self-center me-2" title="#{msg['edit']}" onclick="PF('updateSurveyMetadata').show();" process="@this"/>
 					<h:outputText value="#{surveyTemplateBean.survey.description}" escape="false"/>
 				</div>
 				<h:panelGroup layout="block" rendered="#{userBean.moderator}" class="d-flex flex-column mb-3">
@@ -58,11 +58,11 @@
 					<p:outputPanel class="field" rendered="#{!question.deleted}">
 						<div class="d-flex flex-nowrap">
 							<p:outputPanel class="d-flex flex-column justify-content-center me-2" rendered="#{userBean.admin}">
-								<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-dark fas fa-angle-up align-self-center"
+								<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-body-secondary fas fa-angle-up align-self-center"
 											   title="#{msg['survey.up']}" update="surveyForm" process="@this"/>
-								<p:commandLink action="#{surveyTemplateBean.setCurrentQuestion(question)}" styleClass="text-dark fas fa-pencil-alt align-self-center"
+								<p:commandLink action="#{surveyTemplateBean.setCurrentQuestion(question)}" styleClass="text-body-secondary fas fa-pencil-alt align-self-center"
 											   title="#{msg['edit']}" oncomplete="PF('updateSurvey').show();" update="updateForm" process="@this"/>
-								<p:commandLink action="#{surveyTemplateBean.onMoveQuestionDown(question)}" rendered="#{!questionStatus.last}" styleClass="text-dark fas fa-angle-down align-self-center"
+								<p:commandLink action="#{surveyTemplateBean.onMoveQuestionDown(question)}" rendered="#{!questionStatus.last}" styleClass="text-body-secondary fas fa-angle-down align-self-center"
 											   title="#{msg['survey.down']}" update="surveyForm" process="@this"/>
 							</p:outputPanel>
 							<ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">

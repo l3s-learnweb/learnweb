@@ -10,6 +10,10 @@ body {
   min-width: $min-width;
 }
 
+.layout-body {
+  background: var(--secondary-bg);
+}
+
 .layout-wrapper {
   .layout-main {
     position: relative;
@@ -62,7 +66,7 @@ body {
     content: '';
     display: block;
     position: absolute;
-    background: var(--surface-ground) url('../images/blockui-spinner.svg') no-repeat center 4rem;
+    background: var(--body-bg) url('../images/blockui-spinner.svg') no-repeat center 4rem;
     background-size: 6rem;
     top: 0;
     left: 0;

@@ -1,8 +1,8 @@
 /* Add your variable customizations of theme here */
 //shades of gray
-$shade000: var(--surface-ground); //surface
-$shade100: var(--gray-100); //header background
-$shade200: var(--gray-200); //hover background
+$shade000: var(--body-bg); //surface
+$shade100: var(--secondary-bg); //header background
+$shade200: var(--tertiary-bg); //hover background
 $shade300: var(--border-color); //content border
 $shade400: var(--gray-400); //input border
 $shade500: var(--gray-500); //input border
@@ -12,13 +12,13 @@ $shade800: var(--gray-800); //unused
 $shade900: var(--gray-900); //unused
 
 $primaryColor: var(--primary);
-$primaryLightColor: var(--primary-light);
-$primaryDarkColor: var(--primary-dark);
-$primaryDarkerColor: var(--primary-darker);
-$primaryTextColor: var(--primary-text-color);
+$primaryLightColor: var(--primary-text-emphasis);
+$primaryDarkColor: var(--primary-hover);
+$primaryDarkerColor: var(--primary-active);
+$primaryTextColor: var(--primary-color);
 
-$highlightBg: var(--primary-lighter);
-$highlightTextColor: var(--primary-lighter-text-color);
+$highlightBg: var(--primary-bg-subtle);
+$highlightTextColor: var(--gray-700);
 
 //general
 $fontSize: 1rem !default;
@@ -403,7 +403,7 @@ $tabsHeaderTextHoverColor: $shade600 !default;
 
 $tabsHeaderActiveBg: $shade000 !default;
 $tabsHeaderActiveBorderColor: $primaryColor !default;
-$tabsHeaderTextActiveColor: $primaryColor !default;
+$tabsHeaderTextActiveColor: var(--link-color) !default;
 
 $tabsContentBorder: 0 none !default;
 $tabsContentBg: $shade000 !default;
@@ -460,7 +460,7 @@ $datatableSortableColumnBadgeSize: 1.143rem !default;
 $datatableBodyRowBg: $shade000 !default;
 $datatableBodyRowTextColor: $shade700 !default;
 $datatableBodyRowBorder: 1px solid rgba(0, 0, 0, 0.08) !default;
-$datatableBodyRowOddBg: $shade100 !default;
+$datatableBodyRowOddBg: rgba(var(--body-color-rgb), 0.05);
 $datatableBodyRowHoverBg: $shade200 !default;
 $datatableBodyRowTextHoverColor: $shade700 !default;
 $datatableBodyCellPadding: 0.25rem 1rem;
@@ -493,8 +493,8 @@ $dataViewListItemBorder: solid $shade200 !default;
 $dataViewListItemBorderWidth: 0 0 1px 0 !default;
 
 //orderlist, picklist
-$orderListDropPlaceholderBg: scale-color($primary-lighter, $lightness: -20%) !default;
-$pickListDropPlaceholderBg: scale-color($primary-lighter, $lightness: -20%) !default;
+$orderListDropPlaceholderBg: scale-color($primary, $lightness: 60%) !default;
+$pickListDropPlaceholderBg: scale-color($primary, $lightness: 60%) !default;
 
 //schedule
 $scheduleCellBorderColor: $shade300 !default;

@@ -32,7 +32,7 @@
                             <f:param name="folder_id" value="#{resourceDetailBean.resource.folderId}"/>
                         </p:linkButton>
                     </div>
-                    <h4 class="text-white me-auto m-0">#{resourceDetailBean.resource.title}</h4>
+                    <h4 class="me-auto m-0">#{resourceDetailBean.resource.title}</h4>
                     <div class="res-buttons-right ps-3">
                         <p:linkButton href="#{userBean.getUrlProxied(resourceDetailBean.resource.url)}" icon="fas fa-external-link-alt" styleClass="ui-button-flat ui-button-plain"
                                       title="#{resourceDetailBean.resource.url}" target="_blank" rendered="#{resourceDetailBean.resource.type eq 'website'}"/>

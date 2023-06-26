@@ -1,6 +1,6 @@
 .dashboard {
   .stats {
-    background-color: var(--surface-ground);
+    background-color: var(--body-bg);
     position: relative;
     margin-top: 29px;
     border-top: 7px solid var(--primary);
@@ -52,14 +52,14 @@
 
     .profile-name {
       font-weight: 600;
-      color: var(--dark);
+      color: var(--tertiary-color);
       text-align: center;
       display: block;
       margin-top: -60px;
     }
 
     .profile-role {
-      color: var(--dark);
+      color: var(--tertiary-color);
       text-align: center;
       display: block;
     }

@@ -116,7 +116,7 @@
 
         <h:panelGroup id="resourceOverlay" layout="block" styleClass="ui-panel-content p-0 flex-grow-1 d-flex flex-column ui-loading-spin">
             <h:panelGroup id="resourcesWrapper" layout="block">
-                <h:form id="resourcesFilters" styleClass="bg-light" rendered="#{groupResourcesBean.searchQuery != null || groupResourcesBean.filtersActive || not groupResourcesBean.paginator.isEmpty()}">
+                <h:form id="resourcesFilters" rendered="#{groupResourcesBean.searchQuery != null || groupResourcesBean.filtersActive || not groupResourcesBean.paginator.isEmpty()}">
                     <ul class="res-filters">
                         <ui:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
                             <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">

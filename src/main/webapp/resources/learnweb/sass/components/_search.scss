@@ -96,11 +96,11 @@
   flex-direction: column;
   word-wrap: break-word;
   color: var(--body-color);
-  background-color: var(--light);
+  background-color: var(--tertiary-bg);
 
   .item-thumbnail {
     &::before {
-      background: var(--gray-900);
+      background: var(--tertiary-color);
     }
 
     img {
@@ -126,8 +126,8 @@
     top: auto;
     left: auto;
     opacity: 0.75;
-    background-color: var(--gray-800);
-    color: var(--primary-text-color);
+    background-color: var(--tertiary-color);
+    color: var(--tertiary-bg);
     border-radius: var(--border-radius);
     font-size: $font-size-sm;
     padding: 0 0.2rem;
@@ -135,7 +135,7 @@
 
   &:hover {
     text-decoration: none;
-    color: var(--primary-text-color);
+    color: var(--primary-color);
     background: var(--primary);
 
     .item-thumbnail {
@@ -259,7 +259,7 @@
   .fancybox-outer {
     margin: auto;
     overflow: visible;
-    background: var(--surface-ground);
+    background: var(--body-bg);
     box-shadow: $box-shadow-lg;
     transition: opacity 0.3s;
   }
@@ -271,7 +271,7 @@
 
   /* Set color for background element */
   .fancybox-bg {
-    background-color: var(--gray-700);
+    background-color: var(--dark);
   }
 
   &.fancybox-is-open .fancybox-bg {
@@ -307,21 +307,26 @@
     left: auto;
     width: $search-lightbox-caption-width;
     padding: 0;
-    background: var(--gray-800);
+    background: var(--secondary-bg);
+    color: var(--body-color);
 
     // stylelint-disable-next-line selector-class-pattern
     .fancybox-caption__body {
       max-height: 100%;
       padding: $grid-gutter-width;
     }
+
+    a, a:link, a:visited {
+      color: var(--secondary-color);
+    }
   }
 
   /* Align buttons at the right side  */
   .fancybox-toolbar {
-    background: var(--gray-800);
+    background: var(--secondary-bg);
     max-height: $search-lightbox-toolbar-height;
     width: $search-lightbox-caption-width;
-    border-bottom: 1px solid var(--gray-900);
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     flex-direction: row-reverse;
   }
@@ -354,7 +359,7 @@
 
     .fancybox-inner::before {
       content: '';
-      background: var(--gray-800);
+      background: var(--secondary-bg);
       right: 0;
       top: 0;
       width: $search-lightbox-caption-width;
