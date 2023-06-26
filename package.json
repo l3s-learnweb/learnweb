@@ -33,19 +33,16 @@
   "devDependencies": {
     "esbuild": "^0.18.7",
     "esbuild-sass-plugin": "^2.10.0",
-    "browserslist": "^4.21.9",
     "eslint": "^8.43.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-compat": "^4.1.4",
-    "eslint-plugin-import": "^2.27.5",
     "stylelint": "^15.8.0",
     "stylelint-config-sass-guidelines": "^10.0.0",
     "stylelint-no-unsupported-browser-features": "^6.1.0"
   },
   "peerDependencies": {
     "@percy/cli": "^1.26.0",
-    "@percy/puppeteer": "^2.0.2",
-    "puppeteer": "^20.7.3"
+    "@percy/puppeteer": "^2.0.2"
   },
   "eslintConfig": {
     "extends": [

@@ -8,10 +8,8 @@ public enum ColorTheme {
     cappuccino,
     cerulean,
     emerald, // default
-    gray,
     green,
     hollywood,
-    mantle,
     montreal,
     noir,
     rust,
