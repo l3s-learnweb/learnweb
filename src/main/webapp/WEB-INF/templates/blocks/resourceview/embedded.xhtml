@@ -16,6 +16,12 @@
         </ui:decorate>
     </c:when>
 
+    <c:when test="${res.type eq 'video' and !userBean.videoPreviewEnabled}">
+        <div class="bg-dark text-center align-self-center p-4 px-5 m-3">
+            <h:outputText value="#{msg['resource.no_preview']}" styleClass="fs-4 d-block mb-4"/>
+        </div>
+    </c:when>
+
     <c:when test="${res.type eq 'video' and res.embeddedCode ne null}">
         <h:outputText value="#{res.embeddedCode}" escape="false"/>
     </c:when>

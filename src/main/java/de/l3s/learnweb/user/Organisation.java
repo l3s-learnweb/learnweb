@@ -53,6 +53,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         Resource_Hide_Tags,
         Search_Disable_alternative_sources,
         Resource_Disallow_editing,
+        Resource_Disable_video_preview,
     }
 
     private int id;
