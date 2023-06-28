@@ -15,7 +15,7 @@
 	<p:commandButton icon="fas fa-pencil-alt" styleClass="ui-button-secondary" title="#{msg.edit_resource}"
 					 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceDetails" form="resourceViewForm"
 					 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"
-					 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
+					 rendered="#{userBean.editingAllowed and resourceDetailBean.resource.canEditResource(userBean.user)}"/>
 </div>
 
 <dl class="row">
@@ -250,7 +250,7 @@
 	<h:outputText value="#{lw:htmlBreak(res.description)}" escape="false"/>
 </ui:fragment>
 
-<h:panelGroup layout="block" styleClass="guide-resource-tags" rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">
+<h:panelGroup layout="block" styleClass="guide-resource-tags" rendered="#{userBean.tagsEnabled and (not empty res.tags or res.canAnnotateResource(userBean.user))}">
 	<h5 class="res-details-title">#{msg.tags}</h5>
 
 	<h:panelGroup id="tags_list" layout="block">

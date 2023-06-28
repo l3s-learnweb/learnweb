@@ -50,8 +50,9 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         Glossary_Add_Watermark,
         Glossary_Mandatory_Description,
         Glossary_Enable_Import, // enables the glossary file import
-        Unused_1,
-        Search_Disable_alternative_sources
+        Resource_Hide_Tags,
+        Search_Disable_alternative_sources,
+        Resource_Disallow_editing,
     }
 
     private int id;

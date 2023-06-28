@@ -471,11 +471,19 @@ public class UserBean implements Serializable {
     }
 
     public boolean isStarRatingEnabled() {
-        return !getActiveOrganisation().map(o -> o.getOption(Option.Resource_Hide_Star_rating)).orElse(false);
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Hide_Star_rating)).orElse(true);
     }
 
     public boolean isThumbRatingEnabled() {
-        return !getActiveOrganisation().map(o -> o.getOption(Option.Resource_Hide_Thumb_rating)).orElse(true);
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Hide_Thumb_rating)).orElse(false);
+    }
+
+    public boolean isTagsEnabled() {
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Hide_Tags)).orElse(true);
+    }
+
+    public boolean isEditingAllowed() {
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Disallow_editing)).orElse(true);
     }
 
     public boolean isLoggingEnabled() {
