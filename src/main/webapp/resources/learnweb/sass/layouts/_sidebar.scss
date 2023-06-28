@@ -131,7 +131,8 @@
 
     &.active-menuitem {
       > a {
-        background: var(--primary-bg-subtle);
+        background: var(--primary-active);
+        color: var(--primary-active-color);
       }
 
       > ul {
