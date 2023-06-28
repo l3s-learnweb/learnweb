@@ -49,8 +49,7 @@ public abstract class AbstractResource implements HasId, Deletable {
             return false;
         }
 
-        // resource owners and admins can always access the resource
-        if (getUserId() == user.getId() || user.isAdmin()) {
+        if (user.isAdmin()) {
             return true;
         }
 
@@ -94,8 +93,8 @@ public abstract class AbstractResource implements HasId, Deletable {
         if (getGroup() != null) {
             return switch (getGroup().getPolicyEdit()) {
                 case GROUP_MEMBERS -> getGroup().isMember(user);
-                case GROUP_LEADER -> getGroup().isLeader(user);
                 case GROUP_LEADER_AND_FILE_OWNER -> getGroup().isLeader(user) || getUserId() == user.getId();
+                case GROUP_LEADER -> getGroup().isLeader(user);
             };
         }
 
