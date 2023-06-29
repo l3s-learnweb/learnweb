@@ -252,7 +252,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
             } else { //POST
                 writer.writeAttribute("href", "#", null);
 
-                UIComponent form = ComponentTraversalUtils.closestForm(context, menu);
+                UIComponent form = ComponentTraversalUtils.closestForm(menu);
                 if (form == null) {
                     throw new FacesException("MenuItem must be inside a form element");
                 }
@@ -268,9 +268,11 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer {
                     idParams.add(menuitem.getId());
                     params.put(menuClientId + "_menuid", idParams);
 
-                    command = menuitem.isAjax() ? createAjaxRequest(context, menu, (AjaxSource) menuitem, form, params) : buildNonAjaxRequest(context, menu, form, menuClientId, params, true);
+                    command = menuitem.isAjax() ? createAjaxRequest(context, menu, (AjaxSource) menuitem, form, params)
+                        : buildNonAjaxRequest(context, menu, form, menuClientId, params, true);
                 } else {
-                    command = menuitem.isAjax() ? createAjaxRequest(context, (AjaxSource) menuitem, form) : buildNonAjaxRequest(context, ((UIComponent) menuitem), form, ((UIComponent) menuitem).getClientId(context), true);
+                    command = menuitem.isAjax() ? createAjaxRequest(context, (AjaxSource) menuitem, form)
+                        : buildNonAjaxRequest(context, ((UIComponent) menuitem), form, ((UIComponent) menuitem).getClientId(context), true);
                 }
 
                 onclick = (onclick == null) ? command : onclick + ";" + command;

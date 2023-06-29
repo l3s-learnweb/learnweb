@@ -15,7 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdbi.v3.core.Handle;
 import org.primefaces.model.dashboard.DashboardModel;
-import org.primefaces.model.dashboard.DefaultDashboardColumn;
 import org.primefaces.model.dashboard.DefaultDashboardModel;
 import org.primefaces.model.dashboard.DefaultDashboardWidget;
 
@@ -52,10 +51,10 @@ public class AdminSystemBean extends ApplicationBean implements Serializable {
 
     public AdminSystemBean() {
         model = new DefaultDashboardModel();
-        model.addWidget(new DefaultDashboardColumn("memory", "col-12 col-lg-6 col-xl-4"));
+        model.addWidget(new DefaultDashboardWidget("memory", "col-12 col-lg-6 col-xl-4"));
         model.addWidget(new DefaultDashboardWidget("solr_index", "col-12 col-lg-6 col-xl-4"));
         model.addWidget(new DefaultDashboardWidget("maintenance", "col-12 col-lg-6 col-xl-4"));
-        model.addWidget(new DefaultDashboardColumn("cache", "col-12 col-lg-6 col-xl-4"));
+        model.addWidget(new DefaultDashboardWidget("cache", "col-12 col-lg-6 col-xl-4"));
         model.addWidget(new DefaultDashboardWidget("i18n", "col-12 col-lg-6 col-xl-4"));
         model.addWidget(new DefaultDashboardWidget("error_handling", "col-12 col-lg-6 col-xl-4"));
         model.addWidget(new DefaultDashboardWidget("db_connections", "col-12"));
