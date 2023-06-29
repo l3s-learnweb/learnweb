@@ -15,7 +15,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
-import de.l3s.learnweb.resource.submission.Submission;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
@@ -65,8 +64,6 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
 
     private List<Course> coursesWithWelcomeMessage;
 
-    private List<Submission> activeSubmissions;
-
     @Inject
     private MessageDao messageDao;
 
@@ -96,8 +93,6 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
             .filter(course -> !StringHelper.isBlankDisregardingHTML(course.getWelcomeMessage()))
             .collect(Collectors.toList());
 
-        activeSubmissions = user.getActiveSubmissions();
-
     }
 
     private List<LogEntry> getLogs(EnumSet<Action> filter, int limit) {
@@ -124,10 +119,6 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
 
     public List<Course> getCoursesWithWelcomeMessage() {
         return coursesWithWelcomeMessage;
-    }
-
-    public List<Submission> getActiveSubmissions() {
-        return activeSubmissions;
     }
 
     public List<Message> getReceivedMessages() {

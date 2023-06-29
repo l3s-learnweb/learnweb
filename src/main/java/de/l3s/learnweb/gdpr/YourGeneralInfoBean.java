@@ -12,7 +12,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.user.MessageDao;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.HasId;
 
 /**
  * GeneralInfoBean is responsible for displaying user statistics on index page, e.g. amount of groups, in which user is a
@@ -27,7 +26,6 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
 
     private int receivedMessagesCount;
     private int sentMessagesCount;
-    private int submissionsCount;
 
     @Inject
     private MessageDao messageDao;
@@ -39,7 +37,6 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
 
         this.receivedMessagesCount = messageDao.findIncoming(user).size();
         this.sentMessagesCount = messageDao.findOutgoing(user).size();
-        this.submissionsCount = dao().getSubmissionDao().countByCourseIds(HasId.collectIds(user.getCourses()));
     }
 
     public int getReceivedMessagesCount() {
@@ -48,9 +45,5 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
 
     public int getSentMessagesCount() {
         return this.sentMessagesCount;
-    }
-
-    public int getSubmissionsCount() {
-        return this.submissionsCount;
     }
 }

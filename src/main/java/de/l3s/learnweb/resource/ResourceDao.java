@@ -93,12 +93,6 @@ public interface ResourceDao extends SqlObject, Serializable {
     List<Resource> findByGroupIdAndFolderIdAndOwnerId(int groupId, int folderId, int userId, int limit);
 
     /**
-     * Retrieves submitted resources of a user for a particular submission.
-     */
-    @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_submission_resource sr USING (resource_id) WHERE sr.submission_id = ? AND sr.user_id = ?")
-    List<Resource> findBySubmissionIdAndUserId(int submissionId, int userId);
-
-    /**
      * Returns all survey resources that exists in the groups of the given course.
      */
     @SqlQuery("SELECT r.* FROM lw_resource r JOIN lw_group g USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND g.course_id=? ORDER BY r.title")

@@ -225,10 +225,6 @@ public class LogEntry implements Serializable {
                 yield usernameLink + bundle.getString("log_register");
             case changing_profile:
                 yield usernameLink + bundle.getString("log_change_profile");
-            case submission_view_resources:
-                yield usernameLink + bundle.getString("log_submission_view_resources");
-            case submission_submitted:
-                yield usernameLink + bundle.getString("log_submission_submit");
             case glossary_entry_edit:
                 yield usernameLink + " has edited an entry of " + getResourceLink(bundle); // TODO @kemkes: incorporate link to entry, translate
             case glossary_entry_delete:

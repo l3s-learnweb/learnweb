@@ -337,10 +337,6 @@ public class UserBean implements Serializable {
             .addElement(DefaultMenuItem.builder().value(msg.getString("myTags")).icon("fas fa-tags").url("myhome/tags.jsf").build())
             .addElement(DefaultMenuItem.builder().value(msg.getString("myRatedResourcesTitle")).icon("fas fa-star-half-alt").url("myhome/rated_resources.jsf").build());
 
-        if (!user.getActiveSubmissions().isEmpty()) {
-            mySubmenu.addElement(DefaultMenuItem.builder().value(msg.getString("Submission.my_submissions")).icon("fas fa-calendar-check").url("myhome/submission_overview.jsf").build());
-        }
-
         model.getElements().add(mySubmenu.build());
 
         // My groups

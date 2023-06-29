@@ -34,7 +34,6 @@ import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
-import de.l3s.learnweb.resource.submission.Submission;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.mail.Mail;
 import de.l3s.mail.MailFactory;
@@ -129,7 +128,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     private transient LocalDateTime lastLoginDate;
     private int forumPostCount = -1;
     private transient Organisation organisation;
-    private transient List<Submission> activeSubmissions;
     private BitSet guideSteps = new BitSet(Long.SIZE);
 
     public void clearCaches() {
@@ -138,7 +136,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
         organisation = null;
         imageUrl = null;
         forumPostCount = -1;
-        activeSubmissions = null;
     }
 
     public List<Course> getCourses() {
@@ -658,16 +655,6 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
-    }
-
-    /**
-     * Retrieves current submissions for a user to be displayed in the homepage.
-     */
-    public List<Submission> getActiveSubmissions() {
-        if (null == activeSubmissions) {
-            activeSubmissions = Learnweb.dao().getSubmissionDao().findActiveByCourseIds(HasId.collectIds(getCourses()));
-        }
-        return activeSubmissions;
     }
 
     protected BitSet getGuideSteps() {

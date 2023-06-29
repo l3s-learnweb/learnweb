@@ -69,7 +69,7 @@ public class Resource extends AbstractResource implements Serializable {
      */
     public enum PolicyView { // be careful when adding options. The new option must be added to the lw_resource table too
         DEFAULT_RIGHTS, // inherits group rights
-        SUBMISSION_READABLE, // the submitter of the resource (stored in the original resource id) and assessors can view the resource
+        OWNER_READABLE, // the submitter of the resource (stored in the original resource id) and assessors can view the resource
         LEARNWEB_READABLE, // all learnweb users can view resource given url
         WORLD_READABLE, // all internet users with access to url can view resource
     }
@@ -1092,8 +1092,8 @@ public class Resource extends AbstractResource implements Serializable {
         return switch (policyView) {
             case WORLD_READABLE -> true;
             case LEARNWEB_READABLE -> user != null;
-            // the submitter of the resource (stored in the original resource id) can view the resource
-            case SUBMISSION_READABLE -> user != null && getOriginalResource().map(resource -> resource.getUserId() == user.getId()).orElse(false);
+            // only the owner of the resource can view the resource
+            case OWNER_READABLE -> user != null && ownerUserId == user.getId();
             // the default rights already applied in the super class
             case DEFAULT_RIGHTS -> false;
         };

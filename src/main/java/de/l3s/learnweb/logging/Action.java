@@ -18,7 +18,7 @@ public enum Action implements Argument {
     rating_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = rate
     commenting_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // param = comment id
     opening_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    submission_view_resources(ActionTargetId.OTHER, ActionCategory.OTHER), // target_id = submission_id; param = user_id of the submission
+    unused0(ActionTargetId.NONE, ActionCategory.OTHER),
     searching(ActionTargetId.NONE, ActionCategory.SEARCH), // param = search query
     group_joining(ActionTargetId.GROUP_ID, ActionCategory.GROUP),
     group_creating(ActionTargetId.GROUP_ID, ActionCategory.GROUP),
@@ -60,7 +60,7 @@ public enum Action implements Argument {
     glossary_term_add(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary id
     glossary_term_delete(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // param = glossary_term_id
     resource_thumbnail_update(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
-    submission_submitted(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), //target_id = resource_id
+    unused1(ActionTargetId.NONE, ActionCategory.OTHER), //target_id = resource_id
     unused8(ActionTargetId.NONE, ActionCategory.OTHER),
     unused2(ActionTargetId.NONE, ActionCategory.OTHER),
     adding_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // was added by chloe . can be reused
