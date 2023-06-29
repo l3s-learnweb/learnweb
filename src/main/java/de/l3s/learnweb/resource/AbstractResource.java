@@ -53,6 +53,10 @@ public abstract class AbstractResource implements HasId, Deletable {
             return true;
         }
 
+        if (getGroupId() == 0 && getUserId() == user.getId()) {
+            return true;
+        }
+
         if (getGroupId() != 0 && user.isModerator() && getGroup().getCourse().isModerator(user)) {
             return true;
         }
@@ -63,6 +67,10 @@ public abstract class AbstractResource implements HasId, Deletable {
     public boolean canViewResource(User user) {
         if (user == null) {
             return false;
+        }
+
+        if (getUserId() == user.getId()) {
+            return true;
         }
 
         if (canModerateResource(user)) {
