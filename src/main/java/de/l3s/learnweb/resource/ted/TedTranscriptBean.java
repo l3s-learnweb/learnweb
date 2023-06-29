@@ -186,7 +186,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         int wordCount = SPACES.split(words.trim()).length;
 
         if (wordCount <= 5) {
-            ArrayList<String> definitions = NlpHelper.getRitaWordnetDefinitions(words);
+            ArrayList<String> definitions = NlpHelper.getWordnetDefinitions(words);
 
             for (String definition : definitions) {
                 synonymsList.append(definition).append("&lt;br/&gt;");

@@ -325,13 +325,17 @@
             <artifactId>prettytime</artifactId>
             <version>5.0.7.Final</version>
         </dependency>
-        <!-- RiTa WordNet (used to retrieve Definitions for TedTranscript) -->
-        <!-- We are using an unofficial package from https://github.com/shibme/diction, the original repository
-             is https://github.com/dhowe/RiTa, but they don't provide maven repository and don't include data to JAR -->
+        <!-- Extended Java WordNet Library (used to retrieve Definitions for TedTranscript) -->
         <dependency>
-            <groupId>me.shib.java.lib</groupId>
-            <artifactId>diction</artifactId>
-            <version>0.1.1</version>
+            <groupId>net.sf.extjwnl</groupId>
+            <artifactId>extjwnl</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+        <!-- Princeton WordNet 3.1 data dependency -->
+        <dependency>
+            <groupId>net.sf.extjwnl</groupId>
+            <artifactId>extjwnl-data-wn31</artifactId>
+            <version>1.2</version>
         </dependency>
 
         <!-- ################ Test dependencies ################ -->
