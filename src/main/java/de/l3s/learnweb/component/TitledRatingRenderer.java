@@ -16,7 +16,7 @@ import de.l3s.learnweb.i18n.MessagesBundle;
 /**
  * This renderer, adds title to the stars' icons in the rating component.
  */
-public class RatingRenderer extends org.primefaces.component.rating.RatingRenderer {
+public class TitledRatingRenderer extends org.primefaces.component.rating.RatingRenderer {
     @Override
     protected void encodeMarkup(final FacesContext context, final Rating rating) throws IOException {
         ResponseWriter writer = context.getResponseWriter();
@@ -60,9 +60,17 @@ public class RatingRenderer extends org.primefaces.component.rating.RatingRender
         };
 
         // TODO: send PR to primefaces or remove this hack
-        for (int i = 0; i < customRateNames.length; i++) {
-            String starClass = (value != null && i < value) ? Rating.STAR_ON_CLASS : Rating.STAR_CLASS;
-            encodeIcon(context, starClass, customRateNames[i]);
+        //noinspection ConstantValue
+        if (customRateNames.length != 0) {
+            for (int i = 0, len = customRateNames.length; i < len; i++) {
+                String starClass = (value != null && i < value) ? Rating.STAR_ON_CLASS : Rating.STAR_CLASS;
+                encodeIcon(context, starClass, customRateNames[i]);
+            }
+        } else {
+            for (int i = 0; i < stars; i++) {
+                String starClass = (value != null && i < value) ? Rating.STAR_ON_CLASS : Rating.STAR_CLASS;
+                encodeIcon(context, starClass, null);
+            }
         }
 
         writer.endElement("div");

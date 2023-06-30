@@ -44,7 +44,7 @@
         <renderer>
             <component-family>org.primefaces.component</component-family>
             <renderer-type>org.primefaces.component.RatingRenderer</renderer-type>
-            <renderer-class>de.l3s.learnweb.component.RatingRenderer</renderer-class>
+            <renderer-class>de.l3s.learnweb.component.TitledRatingRenderer</renderer-class>
         </renderer>
     </render-kit>
 
