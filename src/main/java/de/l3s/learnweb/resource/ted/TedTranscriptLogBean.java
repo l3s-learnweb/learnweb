@@ -14,6 +14,8 @@ import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
+import de.l3s.learnweb.resource.AnnotationDao;
+import de.l3s.learnweb.resource.Annotation;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
@@ -27,8 +29,11 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
     private transient TreeNode<?>[] selectedNodes;
     private transient TreeSet<Integer> selectedUsers = new TreeSet<>();
     private transient List<SimpleTranscriptLog> simpleTranscriptLogs;
-    private transient List<TranscriptLog> detailedTranscriptLogs;
+    private transient List<Annotation> detailedTranscriptLogs;
     private transient List<TranscriptSummary> transcriptSummaries;
+
+    @Inject
+    private AnnotationDao annotationDao;
 
     @Inject
     private TedTranscriptDao tedTranscriptDao;
@@ -42,9 +47,9 @@ public class TedTranscriptLogBean extends ApplicationBean implements Serializabl
     /**
      * Returns detailed transcript logs for selected users.
      */
-    public List<TranscriptLog> getTranscriptLogs() {
+    public List<Annotation> getTranscriptLogs() {
         if (detailedTranscriptLogs == null) {
-            detailedTranscriptLogs = tedTranscriptDao.findTranscriptLogsByUserIds(selectedUsers);
+            detailedTranscriptLogs = annotationDao.findLogsByUserIds(selectedUsers);
         }
         return detailedTranscriptLogs;
     }

@@ -1,47 +1,37 @@
-package de.l3s.learnweb.resource.ted;
+package de.l3s.learnweb.resource;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
 import de.l3s.learnweb.app.Learnweb;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 
-public class TranscriptLog implements Serializable {
+public class Annotation implements Serializable {
     @Serial
     private static final long serialVersionUID = 6321296603254649454L;
 
-    private int userId;
     private int resourceId;
+    private int userId;
+    private String action;
     private String selection;
     private String annotation;
-    private String action;
     private Instant timestamp;
 
     // cached values
     private transient User user;
     private transient Resource resource;
 
-    public TranscriptLog() {
-
+    public Annotation() {
     }
 
-    public TranscriptLog(int userId, int resourceId, String selection, String annotation, String action, Instant timestamp) {
-        this.userId = userId;
+    public Annotation(int resourceId, int userId, String action, String selection, String annotation) {
         this.resourceId = resourceId;
+        this.userId = userId;
+        this.action = action;
         this.selection = selection;
         this.annotation = annotation;
-        this.action = action;
-        this.timestamp = timestamp;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+        this.timestamp = Instant.now();
     }
 
     public int getResourceId() {
@@ -52,11 +42,19 @@ public class TranscriptLog implements Serializable {
         this.resourceId = resourceId;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public String getSelection() {
         return selection;
     }
 
-    public void setSelection(String selection) {
+    public void setSelection(final String selection) {
         this.selection = selection;
     }
 
@@ -64,7 +62,7 @@ public class TranscriptLog implements Serializable {
         return annotation;
     }
 
-    public void setAnnotation(String annotation) {
+    public void setAnnotation(final String annotation) {
         this.annotation = annotation;
     }
 
@@ -83,8 +81,6 @@ public class TranscriptLog implements Serializable {
     public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
-
-    // ------------ convenience functions -----------------
 
     public User getUser() {
         if (null == user) {

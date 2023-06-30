@@ -25,10 +25,10 @@
 
 <ui:define name="center_layout">
 	<h:form styleClass="d-none">
-		<p:remoteCommand name="commandSaveLog" actionListener="${tedTranscriptBean.commandSaveLog()}" immediate="true" process="@this" update="@none"/>
-		<p:remoteCommand name="commandSaveResource" actionListener="${tedTranscriptBean.commandSaveResource()}" immediate="true" process="@this"/>
-		<p:remoteCommand name="commandGetDefinition" actionListener="${tedTranscriptBean.commandGetDefinition()}" immediate="true" process="@this" oncomplete="annotator.saveDefinition(xhr,status,args);" async="false"/>
+		<p:remoteCommand name="commandSaveLog" actionListener="${resourceAnnotationBean.commandLogAnnotation(tedTranscriptBean.tedResource)}" immediate="true" process="@this" update="@none"/>
+		<p:remoteCommand name="commandSaveResource" actionListener="${resourceAnnotationBean.commandSaveAnnotation(tedTranscriptBean.tedResource)}" immediate="true" process="@this"/>
 		<p:remoteCommand name="commandSubmitResource" actionListener="${tedTranscriptBean.commandSubmitResource()}" immediate="true" process="@this" update=":transcript_column"/>
+		<p:remoteCommand name="commandGetDefinition" actionListener="${resourceAnnotationBean.commandGetDefinition()}" immediate="true" process="@this" oncomplete="annotator.saveDefinition(xhr,status,args);" async="false"/>
 	</h:form>
 
 	<h:outputStylesheet name="bundle/pickr.min.css"/>
