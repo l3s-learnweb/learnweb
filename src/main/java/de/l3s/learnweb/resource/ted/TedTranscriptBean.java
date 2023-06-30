@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
@@ -31,10 +29,7 @@ import de.l3s.learnweb.resource.ResourceAnnotationBean;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
-import de.l3s.learnweb.user.Course;
-import de.l3s.util.NlpHelper;
 import de.l3s.util.bean.BeanHelper;
-import de.l3s.util.Misc;
 
 @Named
 @ViewScoped

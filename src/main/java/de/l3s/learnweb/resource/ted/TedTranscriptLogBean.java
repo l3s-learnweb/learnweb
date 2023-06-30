@@ -14,8 +14,8 @@ import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
-import de.l3s.learnweb.resource.AnnotationDao;
 import de.l3s.learnweb.resource.Annotation;
+import de.l3s.learnweb.resource.AnnotationDao;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
