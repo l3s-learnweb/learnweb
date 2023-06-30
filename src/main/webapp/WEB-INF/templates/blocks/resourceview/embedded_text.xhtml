@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
+<h:form styleClass="d-none">
+    <p:remoteCommand name="commandSaveLog" actionListener="${resourceAnnotationBean.commandLogAnnotation(resourceDetailBean.resource)}" immediate="true" process="@this" update="@none"/>
+    <p:remoteCommand name="commandSaveResource" actionListener="${resourceAnnotationBean.commandSaveAnnotation(resourceDetailBean.resource)}" immediate="true" process="@this"/>
+    <p:remoteCommand name="commandGetDefinition" actionListener="${resourceAnnotationBean.commandGetDefinition()}" immediate="true" process="@this" oncomplete="annotator.saveDefinition(xhr,status,args);" async="false"/>
+</h:form>
+
+<h:outputStylesheet name="bundle/pickr.min.css"/>
+<h:outputScript name="bundle/pickr.min.js" target="body"/>
+<h:outputScript name="bundle/jquery.contextMenu.min.js" target="body"/>
+<h:outputScript name="learnweb/js/lib/annotator.js" target="body"/>
+
+<p:tabView styleClass="res-view-tabs res-embedded-tabs">
+    <p:tab title="Normal">
+        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-white p-1"></iframe>
+    </p:tab>
+    <p:tab title="Annotated">
+        <h:form>
+            <div class="d-block position-absolute top-0 end-0 mx-3 my-1">
+                <p:commandButton styleClass="me-2" value="#{msg.save}" onclick="annotator.saveAnnotatedText();"/>
+                <p:tooltip for="@previous" value="#{msg.save_tooltip}" position="left"/>
+            </div>
+        </h:form>
+
+        <div id="annotated_text" class="w-100 bg-white" style="padding: 12px;">
+            <pre style="height: 100%">
+                <h:outputText value="testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" escape="false"/>
+            </pre>
+        </div>
+    </p:tab>
+</p:tabView>
+
+<p:dialog widgetVar="updateNote" header="#{msg.userAnnotation}"
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
+    <h:form id="update_note_form" prependId="false" styleClass="d-flex flex-column">
+        <p:outputLabel for="@next" value="#{msg.justify_selection}:"/>
+        <p:inputText/>
+
+        <div class="d-flex flex-row-reverse mt-2">
+            <p:commandButton value="#{msg['save']}" onclick="annotator.saveAnnotation(); return false;"/>
+            <p:commandButton styleClass="secondary-btn" value="#{msg.cancel}" onclick="annotator.cancelAnnotation(); return false;"/>
+        </div>
+    </h:form>
+</p:dialog>
+
+<h:outputScript target="body">
+    const annotator = new Annotator('#annotated_text', {
+        readOnly: false,
+        lastNoteId: 0,
+        editNoteFormSelector: '#update_note_form',
+        noteContextMenu: [
+            { action: 'add-annotation', icon: 'fa-plus', name: '#{msg.add_annotation}' },
+            { action: 'edit-annotation', icon: 'fa-pencil-alt', name: '#{msg.edit_annotation}' },
+            { action: 'delete-annotation', icon: 'fa-minus', name: '#{msg.delete_annotation}' },
+            { action: 'add-wordnet-definition', icon: 'fa-language', name: '#{msg.add_wordnet_definition}' },
+            { action: 'delete-selection', icon: 'fa-trash', name: '#{msg.delete_selection}' },
+            { action: 'colorpicker', icon: 'fa-folder', name: '#{msg.color}' }
+        ],
+        locale: {
+          deleteSelection: '#{msg.delete_selection}'
+        }
+    });
+</h:outputScript>
+
+</ui:composition>
