@@ -2,14 +2,10 @@ package de.l3s.learnweb.resource.ted;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Pattern;
 
-import jakarta.faces.application.FacesMessage;
 import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -22,17 +18,15 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.omnifaces.util.Faces;
-import org.omnifaces.util.Messages;
-import org.primefaces.PrimeFaces;
+import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceAnnotationBean;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
-import de.l3s.util.NlpHelper;
 import de.l3s.util.bean.BeanHelper;
 
 @Named
@@ -41,8 +35,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -1803725556672379697L;
     private static final Logger log = LogManager.getLogger(TedTranscriptBean.class);
-
-    private static final Pattern SPACES = Pattern.compile("\\s+");
 
     private Resource tedResource;
     private String transcriptLanguage;
@@ -126,25 +118,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         });
 
         // TODO: but why do we need this (two lines below)?
-        String transcript = sb.toString().replaceAll("\n", "<br/><br/>");
+        String transcript = sb.toString().replace("\n", "<br/><br/>");
         Document doc = Jsoup.parse(transcript);
         tedResource.setTranscript(doc.getElementsByTag("body").html());
-    }
-
-    /**
-     * Saves the changes in the TED transcript such as selections and user annotations;
-     * Also logs the 'save' event.
-     */
-    public void commandSaveResource() {
-        String transcript = Faces.getRequestParameter("annotatedText");
-
-        tedResource.setTranscript(transcript);
-        tedResource.save();
-        TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), "", "", "save transcript", Instant.now());
-        tedTranscriptDao.saveTranscriptLog(transcriptLog);
-
-        getUser().clearCaches();
-        addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     /**
@@ -152,55 +128,8 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
      * Saves the 'submit' event and also the final selections in lw_transcript_selections.
      */
     public void commandSubmitResource() {
-        String transcript = Faces.getRequestParameter("transcript");
-        tedResource.setTranscript(transcript);
-        tedResource.setReadOnlyTranscript(true);
-
-        tedResource.save();
-        TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), "", "", "submit transcript", Instant.now());
-        tedTranscriptDao.saveTranscriptLog(transcriptLog);
-        tedTranscriptDao.saveTranscriptSelection(transcript, tedResource.getId());
-
-        getUser().clearCaches();
-        addGrowl(FacesMessage.SEVERITY_INFO, "ted_transcript.submitted_successfully");
-    }
-
-    /**
-     * Stores a transcript action such as selection, de-selection, user annotation.
-     */
-    public void commandSaveLog() {
-        Map<String, String> params = Faces.getRequestParameterMap();
-        String word = params.get("selection");
-        String userAnnotation = params.get("annotation");
-        String action = params.get("action");
-
-        TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), word, userAnnotation, action, Instant.now());
-        tedTranscriptDao.saveTranscriptLog(transcriptLog);
-    }
-
-    /**
-     * Retrieves the set of synonyms from WordNet for given selection of word.
-     */
-    public void commandGetDefinition() {
-        String words = Faces.getRequestParameter("term");
-        StringBuilder synonymsList = new StringBuilder();
-        int wordCount = SPACES.split(words.trim()).length;
-
-        if (wordCount <= 5) {
-            ArrayList<String> definitions = NlpHelper.getWordnetDefinitions(words);
-
-            for (String definition : definitions) {
-                synonymsList.append(definition).append("&lt;br/&gt;");
-            }
-
-            if (definitions.isEmpty()) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "transcript.no_definition");
-            } else {
-                PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList.toString());
-            }
-        } else {
-            Messages.addError("growl", "Too many words selected");
-        }
+        Beans.getInstance(ResourceAnnotationBean.class).commandCommitAnnotation(tedResource);
+        tedTranscriptDao.saveTranscriptSelection(tedResource.getTranscript(), tedResource.getId());
     }
 
     public void submitShortSummary() {

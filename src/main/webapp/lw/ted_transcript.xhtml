@@ -26,10 +26,10 @@
 
 <ui:define name="center_layout">
 	<h:form styleClass="d-none">
-		<p:remoteCommand name="commandSaveLog" actionListener="${tedTranscriptBean.commandSaveLog()}" immediate="true" process="@this" update="@none"/>
-		<p:remoteCommand name="commandSaveResource" actionListener="${tedTranscriptBean.commandSaveResource()}" immediate="true" process="@this"/>
-		<p:remoteCommand name="commandGetDefinition" actionListener="${tedTranscriptBean.commandGetDefinition()}" immediate="true" process="@this" oncomplete="annotator.saveDefinition(xhr,status,args);" async="false"/>
+		<p:remoteCommand name="commandSaveLog" actionListener="${resourceAnnotationBean.commandLogAnnotation(tedTranscriptBean.tedResource)}" immediate="true" process="@this" update="@none"/>
+		<p:remoteCommand name="commandSaveResource" actionListener="${resourceAnnotationBean.commandSaveAnnotation(tedTranscriptBean.tedResource)}" immediate="true" process="@this"/>
 		<p:remoteCommand name="commandSubmitResource" actionListener="${tedTranscriptBean.commandSubmitResource()}" immediate="true" process="@this" update=":transcript_column"/>
+		<p:remoteCommand name="commandGetDefinition" actionListener="${resourceAnnotationBean.commandGetDefinition()}" immediate="true" process="@this" oncomplete="annotator.saveDefinition(xhr,status,args);" async="false"/>
 	</h:form>
 
 	<h:outputStylesheet name="bundle/pickr.min.css"/>
@@ -91,7 +91,7 @@
 			</a>
 		</div>
 		<h:form>
-			<p:tabView widgetVar="transcriptTabView" styleClass="ui-tabs-full-width ui-tabs-fluid">
+			<p:tabView widgetVar="transcriptTabView" styleClass="ui-tabs-fluid">
 				<p:tab title="#{msg.tags}">
 					<ol id="selectable" class="tran-tabs-selectable"></ol>
 				</p:tab>
@@ -129,8 +129,8 @@
 			<p:inputText/>
 
 			<div class="d-flex flex-row-reverse mt-2">
-				<p:commandButton value="#{msg['save']}" onclick="annotator.saveAnnotation(); return false;"/>
-				<p:commandButton styleClass="secondary-btn" value="#{msg.cancel}" onclick="annotator.cancelAnnotation(); return false;"/>
+				<p:commandButton value="#{msg['save']}" styleClass="ms-1" onclick="annotator.saveAnnotation(); return false;"/>
+				<p:commandButton styleClass="ui-button-secondary" value="#{msg.cancel}" onclick="annotator.cancelAnnotation(); return false;"/>
 			</div>
 		</h:form>
 	</p:dialog>

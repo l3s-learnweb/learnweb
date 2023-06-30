@@ -70,7 +70,9 @@
     </c:when>
 
     <c:when test="${res.type eq 'text' and res.downloadUrl ne null}">
-        <iframe src="#{res.downloadUrl}" title="#{res.title}" class="bg-body p-1"></iframe>
+        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/embedded_text.xhtml">
+            <ui:param name="res" value="#{res}"/>
+        </ui:decorate>
     </c:when>
 
     <c:when test="${not empty res.thumbnailLargest}">

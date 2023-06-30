@@ -52,7 +52,7 @@ const defaultOptions = {
 
 class Annotator {
   constructor(elSelector, options) {
-    this.options = Object.assign({}, defaultOptions, options);
+    this.options = { ...defaultOptions, ...options };
     console.trace('Annotator initialized with options', this.options);
 
     // store nodeIds
@@ -63,16 +63,16 @@ class Annotator {
     this.isEditAnnotation = false; // stores whether current input is for new node or edit existing one
     this.tags = {}; // stores all the texts entered for nodes
 
-    this._initTooltips();
-    this._initTagsOverlay();
+    this.initTooltips();
+    this.initTagsOverlay();
 
     if (!this.options.readOnly) {
-      this._initJQueryContextMenu();
-      this._initSelectable();
+      this.initJQueryContextMenu();
+      this.initSelectable();
     }
   }
 
-  _initSelectable() {
+  initSelectable() {
     this.containerEl.addEventListener('mouseup', () => {
       const selection = window.getSelection();
       const selectionString = selection.toString().trim();
@@ -137,7 +137,7 @@ class Annotator {
     this.containerEl.addEventListener('mouseleave', () => window.getSelection().removeAllRanges());
   }
 
-  _initTooltips() {
+  initTooltips() {
     const self = this;
 
     // add hover effect for all notes inside the container
@@ -152,10 +152,10 @@ class Annotator {
       }
     }, true);
 
-    // Initializing toggle only on the elements which has a data-title or data-content
+    // Initializing toggle only on the elements, which has a data-title or data-content
     document.querySelectorAll(this.options.noteSelector).forEach((selectedElement) => {
       if (selectedElement.hasAttribute(this.options.noteContentAttribute)) {
-        const content = selectedElement.getAttribute(this.options.noteContentAttribute).replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>');
+        const content = selectedElement.getAttribute(this.options.noteContentAttribute).replace(/&lt;br\/&gt;/g, '<br/>');
         selectedElement.setAttribute(this.options.noteContentAttribute, content);
         selectedElement.setAttribute('data-bs-toggle', 'popover');
       } else if (selectedElement.hasAttribute(this.options.noteTitleAttribute)) {
@@ -163,7 +163,6 @@ class Annotator {
       }
     });
 
-    // Thanks to Bootstrap team, it doesn't work as expected anymore https://github.com/twbs/bootstrap/issues/34736
     const tooltip = new bootstrap.Tooltip(this.containerEl, {
       html: true,
       trigger: 'hover',
@@ -189,16 +188,17 @@ class Annotator {
     });
   }
 
-  _initTagsOverlay() {
+  initTagsOverlay() {
     const self = this;
 
-    // Initializing tags list with already existing tags
+    // Initializing tag list with already existing tags
     document.querySelectorAll(this.options.noteSelector).forEach((selectedElement) => {
       if (selectedElement.hasAttribute(this.options.noteTitleAttribute)) {
         this.tags[selectedElement.id] = selectedElement.getAttribute(this.options.noteTitleAttribute);
       }
     });
 
+    // noinspection JSUnusedGlobalSymbols
     $('#selectable').selectable({
       stop() {
         $('.ui-selected', this).each((i, el) => {
@@ -215,7 +215,7 @@ class Annotator {
     this.updateTagList();
   }
 
-  _initJQueryContextMenu() {
+  initJQueryContextMenu() {
     const self = this;
     $.contextMenu({
       selector: this.options.noteSelector,
@@ -297,7 +297,8 @@ class Annotator {
     });
   }
 
-  // To reset tags list on selecting a new language
+  // To reset a tag list on selecting a new language
+  // noinspection JSUnusedGlobalSymbols
   clearTagList() {
     this.tags = {};
     this.updateTagList();
@@ -331,7 +332,7 @@ class Annotator {
     const background = el.css('background-color') || this.options.defaultBackground;
     el.css('background-color', background);
 
-    const pickr = new Pickr(Object.assign({ default: background, el: el[0] }, pickrConfig)).show();
+    const pickr = new Pickr({ default: background, el: el[0], ...pickrConfig }).show();
     pickr.on('change', (color) => {
       el.css('background-color', color.toHEXA().toString());
     }).on('hide', () => {
@@ -351,7 +352,7 @@ class Annotator {
     const { synonyms } = args;
     if (synonyms) {
       const selectedNote = this.containerEl.querySelector(`span#${CSS.escape(this.selectedNoteId)}`);
-      selectedNote.setAttribute(this.options.noteContentAttribute, synonyms.replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>'));
+      selectedNote.setAttribute(this.options.noteContentAttribute, synonyms.replace(/&lt;br\/&gt;/g, '<br/>'));
       selectedNote.setAttribute('data-bs-toggle', 'popover');
 
       this.logAction(selectedNote.textContent, '', 'display definition');
