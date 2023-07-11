@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "browserslist": [
-    "defaults",
+    "Firefox ESR",
     "> 0.5% in DE",
     "not op_mini all"
   ],
@@ -38,7 +38,7 @@
     "eslint-plugin-compat": "^4.1.4",
     "stylelint": "^15.8.0",
     "stylelint-config-sass-guidelines": "^10.0.0",
-    "stylelint-no-unsupported-browser-features": "^6.1.0"
+    "stylelint-no-unsupported-browser-features": "^7.0.0"
   },
   "peerDependencies": {
     "@percy/cli": "^1.26.0",
@@ -100,8 +100,14 @@
         true,
         {
           "ignore": [
-            "css-gradients",
-            "multicolumn"
+            "css-when-else",
+            "css-nesting",
+            "css-color-function",
+            "css-overflow",
+            "css-overflow-overlay",
+            "css-scrollbar",
+            "css-selection",
+            "css-text-indent"
           ]
         }
       ]
