@@ -125,8 +125,8 @@
 			<p:inputText/>
 
 			<div class="d-flex flex-row-reverse mt-2">
-				<p:commandButton value="#{msg['save']}" onclick="annotator.saveAnnotation(); return false;"/>
-				<p:commandButton styleClass="secondary-btn" value="#{msg.cancel}" onclick="annotator.cancelAnnotation(); return false;"/>
+				<p:commandButton value="#{msg['save']}" styleClass="ms-1" onclick="annotator.saveAnnotation(); return false;"/>
+				<p:commandButton styleClass="ui-button-secondary" value="#{msg.cancel}" onclick="annotator.cancelAnnotation(); return false;"/>
 			</div>
 		</h:form>
 	</p:dialog>

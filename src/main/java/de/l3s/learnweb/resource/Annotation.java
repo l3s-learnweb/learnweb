@@ -11,12 +11,13 @@ public class Annotation implements Serializable {
     @Serial
     private static final long serialVersionUID = 6321296603254649454L;
 
+    private int annotationId;
     private int resourceId;
     private int userId;
     private String action;
     private String selection;
     private String annotation;
-    private Instant timestamp;
+    private Instant createdAt;
 
     // cached values
     private transient User user;
@@ -25,13 +26,12 @@ public class Annotation implements Serializable {
     public Annotation() {
     }
 
-    public Annotation(int resourceId, int userId, String action, String selection, String annotation) {
-        this.resourceId = resourceId;
-        this.userId = userId;
-        this.action = action;
-        this.selection = selection;
-        this.annotation = annotation;
-        this.timestamp = Instant.now();
+    public int getAnnotationId() {
+        return annotationId;
+    }
+
+    public void setAnnotationId(final int annotationId) {
+        this.annotationId = annotationId;
     }
 
     public int getResourceId() {
@@ -74,17 +74,17 @@ public class Annotation implements Serializable {
         this.action = action;
     }
 
-    public Instant getTimestamp() {
-        return timestamp;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     public User getUser() {
         if (null == user) {
-            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(getUserId());
+            user = Learnweb.dao().getUserDao().findByIdOrElseThrow(userId);
         }
         return user;
     }

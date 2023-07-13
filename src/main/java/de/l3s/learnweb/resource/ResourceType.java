@@ -14,9 +14,9 @@ public enum ResourceType {
     audio,
     pdf,
     website,
-    spreadsheet,
-    presentation,
-    document,
+    spreadsheet, // onlyoffice
+    presentation, // onlyoffice
+    document, // onlyoffice
     file, // applications, archives, etc
 
     // learnweb types

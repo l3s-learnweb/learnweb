@@ -17,24 +17,28 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import de.l3s.util.SqlHelper;
 
+@RegisterRowMapper(AnnotationDao.AnnotationMapper.class)
 public interface AnnotationDao extends SqlObject, Serializable {
 
-    @RegisterRowMapper(AnnotationMapper.class)
     @SqlQuery("SELECT a.* FROM lw_transcript_log a JOIN lw_resource USING(resource_id) WHERE user_id IN(<userIds>) and deleted = 0 ORDER BY user_id, created_at DESC")
     List<Annotation> findLogsByUserIds(@BindList("userIds") Collection<Integer> userIds);
 
+    @SqlQuery("SELECT a.* FROM lw_resource_annotation a WHERE resource_id = ?")
+    List<Annotation> findAllByResourceId(int resourceId);
+
     default void save(Annotation annotation) {
-        if (annotation.getTimestamp() == null) {
-            annotation.setTimestamp(Instant.now());
+        if (annotation.getCreatedAt() == null) {
+            annotation.setCreatedAt(Instant.now());
         }
 
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+        params.put("annotation_id", annotation.getAnnotationId());
         params.put("resource_id", annotation.getResourceId());
         params.put("user_id", annotation.getUserId());
-        params.put("action", annotation.getAction());
+        params.put("action", SqlHelper.toNullable(annotation.getAction()));
         params.put("selection", SqlHelper.toNullable(annotation.getSelection()));
         params.put("annotation", SqlHelper.toNullable(annotation.getAnnotation()));
-        params.put("created_at", annotation.getTimestamp());
+        params.put("created_at", annotation.getCreatedAt());
 
         SqlHelper.handleSave(getHandle(), "lw_resource_annotation", params).execute();
     }
@@ -43,12 +47,13 @@ public interface AnnotationDao extends SqlObject, Serializable {
         @Override
         public Annotation map(final ResultSet rs, final StatementContext ctx) throws SQLException {
             Annotation log = new Annotation();
+            log.setAnnotationId(rs.getInt("annotation_id"));
             log.setResourceId(rs.getInt("resource_id"));
             log.setUserId(rs.getInt("user_id"));
             log.setAction(rs.getString("action"));
-            log.setSelection(rs.getString("words_selected"));
-            log.setAnnotation(rs.getString("user_annotation"));
-            log.setTimestamp(rs.getTimestamp("created_at").toInstant());
+            log.setSelection(rs.getString("selection"));
+            log.setAnnotation(rs.getString("annotation"));
+            log.setCreatedAt(rs.getTimestamp("created_at").toInstant());
             return log;
         }
     }
