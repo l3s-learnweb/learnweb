@@ -1,8 +1,11 @@
 package de.l3s.learnweb.resource;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -12,9 +15,14 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.omnifaces.util.Beans;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
 import org.primefaces.PrimeFaces;
+
+import com.google.gson.Gson;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
@@ -25,8 +33,10 @@ import de.l3s.util.NlpHelper;
 public class ResourceAnnotationBean extends ApplicationBean implements Serializable {
     @Serial
     private static final long serialVersionUID = -6100755972011969429L;
+    private static final Logger log = LogManager.getLogger(ResourceAnnotationBean.class);
 
     private static final Pattern SPACES = Pattern.compile("\\s+");
+    private Resource resource;
 
     @Inject
     private AnnotationDao annotationDao;
@@ -34,6 +44,31 @@ public class ResourceAnnotationBean extends ApplicationBean implements Serializa
     @PostConstruct
     public void onLoad() {
         BeanAssert.authorized(isLoggedIn());
+
+        resource = Beans.getInstance(ResourceDetailBean.class).getResource();
+    }
+
+    public void convert() {
+        if (resource.getType() == ResourceType.text) {
+            if (resource.getMainFile() != null) {
+                try {
+                    String lines = Files.readString(resource.getMainFile().getActualFile().toPath());
+                    lines = lines.replace("\n", "<br/>");
+                    resource.setTranscript(lines);
+                    resource.save();
+                    return;
+                } catch (IOException e) {
+                    log.error("Error reading file while extracting transcript", e);
+                }
+            }
+        }
+
+        addGrowl(FacesMessage.SEVERITY_ERROR, "Unfortunately, we could not extract the text from the file.");
+    }
+
+    public String getAnnotationsAsJson() {
+        List<Annotation> annotations = annotationDao.findAllByResourceId(resource.getId());
+        return new Gson().toJson(annotations);
     }
 
     /**
@@ -45,8 +80,6 @@ public class ResourceAnnotationBean extends ApplicationBean implements Serializa
         String annotatedText = Faces.getRequestParameter("annotatedText");
         resource.setTranscript(annotatedText);
         resource.save();
-
-        annotationDao.save(new Annotation(resource.getId(), getUser().getId(), "save transcript", null, null));
 
         getUser().clearCaches();
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
@@ -63,8 +96,6 @@ public class ResourceAnnotationBean extends ApplicationBean implements Serializa
         resource.setReadOnlyTranscript(true);
         resource.save();
 
-        annotationDao.save(new Annotation(resource.getId(), getUser().getId(), "submit transcript", null, null));
-
         getUser().clearCaches();
         addGrowl(FacesMessage.SEVERITY_INFO, "Annotation Submitted");
     }
@@ -76,7 +107,13 @@ public class ResourceAnnotationBean extends ApplicationBean implements Serializa
         BeanAssert.authorized(resource.canAnnotateResource(getUser()));
 
         Map<String, String> params = Faces.getRequestParameterMap();
-        annotationDao.save(new Annotation(resource.getId(), getUser().getId(), params.get("action"), params.get("selection"), params.get("annotation")));
+        Annotation annotation = new Annotation();
+        annotation.setResourceId(resource.getId());
+        annotation.setUserId(getUser().getId());
+        annotation.setAction(params.get("action"));
+        annotation.setSelection(params.get("selection"));
+        annotation.setAnnotation(params.get("annotation"));
+        annotationDao.save(annotation);
     }
 
     /**

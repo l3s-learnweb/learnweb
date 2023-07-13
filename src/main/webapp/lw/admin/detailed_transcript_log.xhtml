@@ -102,8 +102,8 @@
 				<h:outputText value="#{log.action}"/>
 			</p:column>
 
-			<p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
-				<h:outputText value="#{log.timestamp}"/>
+			<p:column headerText="#{msg.time_stamp}" sortBy="#{log.createdAt}">
+				<h:outputText value="#{log.createdAt}"/>
 			</p:column>
 		</p:dataTable>
 	</h:form>

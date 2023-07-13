@@ -2,10 +2,10 @@ package de.l3s.learnweb.resource.ted;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
@@ -120,7 +120,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
         });
 
         // TODO: but why do we need this (two lines below)?
-        String transcript = sb.toString().replaceAll("\n", "<br/><br/>");
+        String transcript = sb.toString().replace("\n", "<br/><br/>");
         Document doc = Jsoup.parse(transcript);
         tedResource.setTranscript(doc.getElementsByTag("body").html());
     }
@@ -172,7 +172,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable {
             if (langList.isEmpty()) {
                 languageList.add(new SelectItem("NA", "No Transcripts Available"));
             } else {
-                List<Locale> locales = new ArrayList<>();
+                ArrayList<Locale> locales = new ArrayList<>();
                 try {
                     for (String lang : langList) {
                         locales.add(LocaleUtils.toLocale(lang));

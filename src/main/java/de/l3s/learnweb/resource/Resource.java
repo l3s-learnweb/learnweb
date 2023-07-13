@@ -541,9 +541,9 @@ public class Resource extends AbstractResource implements Serializable {
             return;
         }
 
-        if (format.equals("text/html") || format.equals("application/xhtml+xml")) {
+        if (StringUtils.equalsAny(format, "text/html", "application/xhtml+xml")) {
             this.type = ResourceType.website;
-        } else if (format.startsWith("text/") || StringUtils.equalsAny(format, "application/json", "application/xml")) {
+        } else if (format.startsWith("text/") || StringUtils.equalsAny(format, "application/json", "application/xml", "application/sql")) {
             this.type = ResourceType.text;
         } else if (format.startsWith("image/")) {
             this.type = ResourceType.image;
