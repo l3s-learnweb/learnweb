@@ -107,7 +107,8 @@
             "css-overflow-overlay",
             "css-scrollbar",
             "css-selection",
-            "css-text-indent"
+            "css-text-indent",
+            "css-backdrop-filter"
           ]
         }
       ]
