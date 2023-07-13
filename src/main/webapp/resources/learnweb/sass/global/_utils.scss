@@ -42,9 +42,9 @@
 }
 
 .bg-highlight {
-  color: var(--body-bg);
-  background-color: var(--secondary-color);
-  border: 1px solid var(--secondary-color);
+  color: var(--secondary-bg);
+  background-color: var(--body-color);
+  border: 1px solid var(--body-color);
   border-radius: var(--border-radius);
   padding: 0 var(--border-radius);
 }

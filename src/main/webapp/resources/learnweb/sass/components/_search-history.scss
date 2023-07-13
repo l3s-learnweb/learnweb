@@ -103,20 +103,20 @@
 
   &.sh-session-group {
     &::before {
-      border: 1px dashed var(--secondary-color);
+      border: 1px dashed var(--body-color);
     }
 
     li {
       > span {
-        border: 1px solid var(--secondary-color);
+        border: 1px solid var(--body-color);
 
         &::before,
         &::after {
-          background: var(--secondary-color);
+          background: var(--body-color);
         }
       }
 
-      background: var(--secondary-color);
+      background: var(--body-color);
     }
   }
 }

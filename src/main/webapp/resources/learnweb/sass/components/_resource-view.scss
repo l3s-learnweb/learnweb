@@ -1,8 +1,16 @@
+.fancybox-bg {
+  background: transparent;
+  backdrop-filter: blur(4.5px);
+}
+
+.fancybox-slide--iframe .fancybox-content {
+  background: transparent;
+}
+
 body .res-view {
   height: 100%;
 
   .res-view-embedded {
-    background: var(--body-bg);
     overflow: auto;
 
     .res-embedded-tabs .ui-tabs-panel,
@@ -56,7 +64,7 @@ body .res-view {
   }
 
   .res-view-details {
-    background: var(--tertiary-bg);
+    background: var(--secondary-bg);
     max-height: 100%;
     overflow: auto;
 
@@ -65,7 +73,7 @@ body .res-view {
       margin: 1.375rem 0 0.5rem;
       padding-bottom: 0.2rem;
       font-size: $font-size-lg;
-      border-bottom: 1px solid var(--secondary-color);
+      border-bottom: 1px solid var(--body-color);
     }
 
     .res-view-panel {
@@ -78,32 +86,30 @@ body .res-view {
       }
 
       .ui-inputfield {
-        background: var(--secondary-bg);
+        background: var(--body-bg);
       }
     }
 
     .ui-selectcheckboxmenu {
       color: var(--black);
-      background: var(--secondary-bg);
+      background: var(--body-bg);
     }
 
     .comment-entry {
-      background: var(--body-bg);
+      background: var(--secondary-bg);
     }
   }
 
   .ui-button.ui-button-plain {
-    color: var(--tertiary-color);
-
     &.ui-state-hover {
-      background: var(--tertiary-color);
-      color: var(--tertiary-bg);
+      background: var(--secondary-color);
+      color: var(--secondary-bg);
     }
 
     &.ui-state-active,
     &.ui-state-down {
-      background: var(--tertiary-color);
-      color: var(--tertiary-bg);
+      background: var(--secondary-color);
+      color: var(--secondary-bg);
     }
   }
 
@@ -114,7 +120,7 @@ body .res-view {
       background: inherit;
 
       &::before {
-        border-bottom: var(--border-width) solid var(--secondary-color);
+        border-bottom: var(--border-width) solid var(--body-color);
       }
 
       li.ui-tabs-header {
@@ -124,12 +130,12 @@ body .res-view {
         border-bottom: 4px solid transparent;
 
         a {
-          color: var(--tertiary-color);
+          color: var(--body-color);
         }
 
         &.ui-state-active {
           background: inherit;
-          border-bottom-color: var(--tertiary-color);
+          border-bottom-color: var(--secondary-color);
           margin-bottom: 0;
         }
 
@@ -137,7 +143,7 @@ body .res-view {
           border-bottom-color: var(--secondary-color);
 
           a {
-            color: var(--secondary-color);
+            color: var(--body-color);
           }
         }
       }

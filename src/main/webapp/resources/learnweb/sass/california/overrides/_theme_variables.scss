@@ -1,7 +1,7 @@
 /* Add your variable customizations of theme here */
 //shades of gray
-$shade000: var(--body-bg); //surface
-$shade100: var(--secondary-bg); //header background
+$shade000: var(--secondary-bg); //surface
+$shade100: var(--body-bg); //header background
 $shade200: var(--tertiary-bg); //hover background
 $shade300: var(--border-color); //content border
 $shade400: var(--gray-400); //input border
@@ -460,7 +460,7 @@ $datatableSortableColumnBadgeSize: 1.143rem !default;
 $datatableBodyRowBg: $shade000 !default;
 $datatableBodyRowTextColor: $shade700 !default;
 $datatableBodyRowBorder: 1px solid rgba(0, 0, 0, 0.08) !default;
-$datatableBodyRowOddBg: rgba(var(--body-color-rgb), 0.05);
+$datatableBodyRowOddBg: rgba(var(--secondary-color-rgb), 0.05);
 $datatableBodyRowHoverBg: $shade200 !default;
 $datatableBodyRowTextHoverColor: $shade700 !default;
 $datatableBodyCellPadding: 0.25rem 1rem;
@@ -604,9 +604,9 @@ $breadcrumbSeparatorColor: $menuitemTextColor !default;
 
 $submenuHeaderMargin: 0 !default;
 $submenuHeaderPadding: 0.75rem 1rem !default;
-$submenuHeaderBg: var(--secondary-bg);
+$submenuHeaderBg: var(--body-bg);
 $submenuHeaderBorder: 0 none !default;
-$submenuHeaderTextColor: var(--secondary-color);
+$submenuHeaderTextColor: var(--body-color);
 $submenuHeaderFontWeight: 700 !default;
 $submenuHeaderFontSize: 1rem !default;
 

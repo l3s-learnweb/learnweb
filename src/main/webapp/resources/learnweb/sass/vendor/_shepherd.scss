@@ -1,5 +1,5 @@
 .shepherd-element {
-  background: var(--body-bg);
+  background: var(--secondary-bg);
   border-radius: var(--border-radius);
   box-shadow: $box-shadow;
   border: var(--border-width) var(--border-style) var(--border-color);
@@ -78,7 +78,7 @@
     position: absolute;
     width: 14px;
     z-index: -1;
-    background: var(--body-bg);
+    background: var(--secondary-bg);
     content: '';
     transform: rotate(45deg);
   }

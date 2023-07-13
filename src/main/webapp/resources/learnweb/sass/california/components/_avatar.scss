@@ -7,7 +7,7 @@ body {
     outline: var(--border-width) var(--border-style) var(--primary);
 
     img {
-      background: var(--body-bg);
+      background: var(--secondary-bg);
     }
 
     &.ui-avatar-fluid {

@@ -6,6 +6,7 @@
                 xmlns:o="http://omnifaces.org/ui">
 
 <ui:param name="hasAccessPermission" value="true"/>
+<ui:param name="extraBodyClass" value="layout-dark"/>
 <ui:param name="pageTitle" value="#{resourceDetailBean.resource.title}"/>
 
 <ui:define name="metadata">
@@ -25,7 +26,7 @@
     <div class="res-view ui-fluid res-t-#{resourceDetailBean.resource.type}">
         <div class="row h-100 g-0">
             <div class="col h-100 res-view-embedded d-flex flex-column">
-                <div class="res-view-navbar d-flex flex-row align-items-center w-100 p-2">
+                <div class="res-view-navbar d-flex flex-row align-items-center w-100 p-2 text-white">
                     <div class="res-buttons-left pe-3">
                         <p:linkButton icon="fas fa-arrow-left" styleClass="ui-button-flat ui-button-plain navbar-back" title="#{msg.close}" outcome="group/resources.jsf">
                             <f:param name="group_id" value="#{resourceDetailBean.resource.groupId}"/>

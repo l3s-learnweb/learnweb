@@ -259,7 +259,7 @@
   .fancybox-outer {
     margin: auto;
     overflow: visible;
-    background: var(--body-bg);
+    background: var(--secondary-bg);
     box-shadow: $box-shadow-lg;
     transition: opacity 0.3s;
   }
@@ -307,7 +307,7 @@
     left: auto;
     width: $search-lightbox-caption-width;
     padding: 0;
-    background: var(--secondary-bg);
+    background: var(--body-bg);
     color: var(--body-color);
 
     // stylelint-disable-next-line selector-class-pattern
@@ -317,13 +317,13 @@
     }
 
     a, a:link, a:visited {
-      color: var(--secondary-color);
+      color: var(--body-color);
     }
   }
 
   /* Align buttons at the right side  */
   .fancybox-toolbar {
-    background: var(--secondary-bg);
+    background: var(--body-bg);
     max-height: $search-lightbox-toolbar-height;
     width: $search-lightbox-caption-width;
     border-bottom: 1px solid var(--border-color);
@@ -359,7 +359,7 @@
 
     .fancybox-inner::before {
       content: '';
-      background: var(--secondary-bg);
+      background: var(--body-bg);
       right: 0;
       top: 0;
       width: $search-lightbox-caption-width;

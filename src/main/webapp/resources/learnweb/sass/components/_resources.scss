@@ -222,18 +222,26 @@ ul.res-filters {
       display: inline-block;
       padding: 0.25rem 0.5rem;
       line-height: 2;
-      color: var(--tertiary-color);
+      color: var(--secondary-color);
     }
 
     &.active,
     &.ui-state-expand,
     &:hover {
       background-color: var(--border-color);
+
+      .filter-title {
+        color: var(--body-color);
+      }
     }
 
     &.ui-state-expand .filter-sub-bar,
     &:hover .filter-sub-bar {
       display: block;
+
+      li a {
+        color: var(--body-color) !important;
+      }
     }
 
     &.disabled {
@@ -363,7 +371,7 @@ ul.res-filters {
     color: rgba(0, 0, 0, 0.4);
     text-align: center;
     border-radius: 50%;
-    background: var(--body-bg) content-box;
+    background: var(--secondary-bg) content-box;
     transition: transform 333ms ease, opacity 333ms ease;
     position: absolute;
     top: 0;
