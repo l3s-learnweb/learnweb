@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS `lw_submission`;
 DROP TABLE IF EXISTS `lw_submission_resource`;
 DROP TABLE IF EXISTS `lw_submission_status`;
+DROP TABLE IF EXISTS `lw_submission`;
 
 UPDATE `lw_resource` SET `policy_view` = 'DEFAULT_RIGHTS' WHERE `policy_view` = 'SUBMISSION_READABLE';
 
