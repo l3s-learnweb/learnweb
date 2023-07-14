@@ -316,8 +316,15 @@
       padding: $grid-gutter-width;
     }
 
-    a, a:link, a:visited {
-      color: var(--body-color);
+    a,
+    a:link,
+    a:visited {
+      color: inherit;
+    }
+
+    a:hover {
+      color: inherit;
+      text-decoration: inherit;
     }
   }
 
@@ -346,6 +353,7 @@
   .fancybox-button,
   .fancybox-navigation button::before {
     background: transparent;
+    color: var(--body-color);
   }
 
   @include media-breakpoint-up(md) {

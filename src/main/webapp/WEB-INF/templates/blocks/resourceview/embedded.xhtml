@@ -17,7 +17,7 @@
     </c:when>
 
     <c:when test="${res.type eq 'video' and !userBean.videoPreviewEnabled}">
-        <div class="bg-dark text-center align-self-center p-4 px-5 m-3">
+        <div class="bg-dark text-white text-center align-self-center p-4 px-5 m-3">
             <h:outputText value="#{msg['resource.no_preview']}" styleClass="fs-4 d-block mb-4"/>
         </div>
     </c:when>
@@ -78,7 +78,7 @@
     </c:when>
 
     <c:otherwise>
-        <div class="bg-dark text-center align-self-center p-4 px-5 m-3">
+        <div class="bg-dark text-white text-center align-self-center p-4 px-5 m-3">
             <h:outputText value="#{msg['resource.no_preview']}" styleClass="fs-4 d-block mb-4"/>
             <p:linkButton icon="fas fa-download" value="#{msg.download}" href="#{resourceDetailBean.resource.downloadUrl}"
                           rendered="#{resourceDetailBean.resource.downloadUrl ne null}"/>
