@@ -54,15 +54,15 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{userBean.user.organisationId == 1604}">
-		<dt class="col-sm-4">Climate change relation:</dt>
+		<dt class="col-sm-4">Beziehung zum Klimawandel:</dt>
 		<dd class="col-sm-8">
 			<h:panelGroup id="relation" layout="block">
 				<p:selectOneButton value="#{res.metadataWrapper['someclics_relation']}">
 					<p:ajax listener="#{res.save}" />
 
-					<f:selectItem itemLabel="Acceptance" itemValue="acceptance"/>
+					<f:selectItem itemLabel="Akzeptanz" itemValue="acceptance"/>
 					<f:selectItem itemLabel="Denial" itemValue="denial"/>
-					<f:selectItem itemLabel="Both" itemValue="Both"/>
+					<f:selectItem itemLabel="Beide" itemValue="both"/>
 				</p:selectOneButton>
 			</h:panelGroup>
 		</dd>
