@@ -335,6 +335,12 @@
             <artifactId>extjwnl-data-wn31</artifactId>
             <version>1.2</version>
         </dependency>
+        <!-- Markdown renderer -->
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+            <version>0.20.0</version>
+        </dependency>
 
         <!-- ################ Test dependencies ################ -->
         <dependency>

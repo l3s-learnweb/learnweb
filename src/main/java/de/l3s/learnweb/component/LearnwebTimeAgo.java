@@ -1,10 +1,11 @@
 package de.l3s.learnweb.component;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
 import jakarta.faces.component.FacesComponent;
@@ -28,7 +29,7 @@ public class LearnwebTimeAgo extends UIComponentBase {
 
     @Override
     public void encodeBegin(FacesContext context) throws IOException {
-        LocalDateTime dateTime = (LocalDateTime) getAttributes().get("date");
+        TemporalAccessor dateTime = (TemporalAccessor) getAttributes().get("date");
         ZoneId timeZone = ZoneId.of((String) getAttributes().get("timeZone"));
         String styleClass = (String) getAttributes().get("styleClass");
 
@@ -43,7 +44,7 @@ public class LearnwebTimeAgo extends UIComponentBase {
         if (styleClass != null) {
             writer.writeAttribute("class", styleClass, "styleClass");
         }
-        writer.write(prettyTime.format(dateTime));
+        writer.write(prettyTime.format(Instant.from(dateTime)));
         writer.endElement("span");
     }
 }
