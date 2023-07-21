@@ -46,8 +46,7 @@ import de.l3s.learnweb.user.User;
  * nodes and edges, then calculates every node based on their connections.</p>
  * <p>6 - Depending on user's purpose, Pkg then exports the shared objects for that purpose, e.g. top 3 entities with the
  * highest weights for the collaborative graph, or 5 for recommender system etc.</p>
- *
-* */
+ */
 public final class Pkg {
     private List<Node> nodes;
     private List<Link> links;
@@ -58,7 +57,7 @@ public final class Pkg {
 
     /**
      * The Node class. Has all values of an entity
-     * */
+     */
 
     public static class Node {
         private transient int id;
@@ -182,7 +181,7 @@ public final class Pkg {
 
     /**
      * The link class. Represents the weighted link between two entities
-     * */
+     */
     public static class Link {
         private int source;
         private int target;
@@ -225,6 +224,7 @@ public final class Pkg {
 
     /**
      * Add this node into the list of nodes.
+     *
      * @param id the new node's id from DB
      * @param uri the new node's uri
      * @param userId the user's id.
@@ -233,7 +233,7 @@ public final class Pkg {
      * @param weight the weight of the new node (can actually be excluded in future updates)
      * @param type the type of the new node.
      * @param date the created time of the node.
-     * */
+     */
     private void addNode(int id, String uri, int userId, double confidence, double weight, String sessionId, String type, LocalDateTime date) {
         //Get the Node name as uri minus domain root - dbpedia.org/resource
         String nameQuery = PATTERN.matcher(uri).replaceAll("")
@@ -245,12 +245,13 @@ public final class Pkg {
     }
 
     /**
-    * Add one RDF statement to the user's RDF graph.
+     * Add one RDF statement to the user's RDF graph.
+     *
      * @param subject the statement's subject
      * @param pre the statement's predicate
      * @param object the statement's object
      * @param mode either "literal" or "resource"
-    * */
+     */
     public void addRdfStatement(String subject, String pre, String object, String mode) {
         rdfGraph.addStatement(subject, pre, object, mode);
     }
@@ -274,10 +275,11 @@ public final class Pkg {
 
     /**
      * Calculate the weight to be connected from a node with the function values based on the algorithm.
+     *
      * @param date the date of the entity's creation
      * @param type the type of this entity
      * @return the weight of this entity, based on its group type and how many days since the input into DB
-     * */
+     */
     private double calculateWeight(LocalDateTime date, String type) {
         int days = (int) ChronoUnit.DAYS.between(LocalDateTime.now(), date);
         switch (type) {
@@ -313,7 +315,7 @@ public final class Pkg {
      * <p>The function then creates the links between each of these nodes. Based on which types they have in common,
      * the link between them will get their weight calculated based on the formula in calculateWeight(date, type).
      * The nodes that have no connections will then be connected to the DEFAULT node.</p>
-     * */
+     */
     public void removeDuplicatingNodesAndLinks() {
         //Remove duplicating nodes by merging nodes with the same uri
         for (int i = 0; i < nodes.size() - 1; i++) {
@@ -356,9 +358,10 @@ public final class Pkg {
 
     /**
      * Initializes the PKG for all users in the specific group.
+     *
      * @param user the current User
      * @param groupId the id of the group
-     * */
+     */
     public void createPkg(User user, int groupId) {
         //Get the entities from DB for this user
         this.annotationCounts = dao().getSearchHistoryDao().findAnnotationCountByUser(user.getId());
@@ -392,10 +395,11 @@ public final class Pkg {
     /**
      * Add RDF-statements to this user's RDF graph based on the parameters from the entity.
      * Calls after DBPedia-spotlight is used
+     *
      * @param annotationCount the entity
      * @param user the current user
      * @param session the user's current search session
-     * */
+     */
     public void updateRdfModel(AnnotationCount annotationCount, User user, String session) {
         //----------------------------------Rdf-insert-model--------------------------------------
         Pattern keywordPattern = Pattern.compile("<b>" + "(.*?)" + "</b>");
@@ -448,9 +452,11 @@ public final class Pkg {
         //--------------------------------RDF-Insert-Model-End----------------------------------
     }
 
-    /** Add this recognized entity into the node list as a Node.
+    /**
+     * Add this recognized entity into the node list as a Node.
+     *
      * @param annotationCount The recognized entity to be added to the PKG
-    * */
+     */
     public void updatePkg(AnnotationCount annotationCount) {
         addNode(annotationCount.getUriId(), annotationCount.getUri(), annotationCount.getUserId(), annotationCount.getConfidence(),
             Precision.round(calculateWeight(annotationCount.getCreatedAt(), annotationCount.getType()), 3), annotationCount.getSessionId(),
@@ -477,12 +483,14 @@ public final class Pkg {
         }
     }
 
-    /** Create a shared object for the single graph of the current user, which contains nodes from 3 different sources (user, group and session).
+    /**
+     * Create a shared object for the single graph of the current user, which contains nodes from 3 different sources (user, group and session).
      * Usually each sources will have a maximum of 10 nodes.
+     *
      * @param userId the current user id
      * @param groupId the group id of this user
      * @return the shared object of a single graph
-     * */
+     */
     public JsonSharedObject createSingleGraph(int userId, int groupId) {
         Optional<User> optUser = dao().getUserDao().findById(userId);
         if (optUser.isEmpty() || !dao().getUserDao().isActiveUser(userId, groupId)) {
@@ -537,13 +545,14 @@ public final class Pkg {
 
     /**
      * Create shared object based on the result of pkg graph calculation.
+     *
      * @param user the current user
      * @param groupId The group id
      * @param numberEntities how many entities per user the shared Object will show
      * @param isAscending show if the sharedObject will get the result from top or bottom
      * @param application the application of this shared object (can be "recommendation", "collabGraph" or "negative" + "positive"
      * @return the list of shared object in Json form
-     * */
+     */
     public JsonSharedObject createSharedObject(User user, int groupId, int numberEntities, boolean isAscending, String application) {
         //Initialization
         //The list to be returned
@@ -552,6 +561,7 @@ public final class Pkg {
         if (results == null) {
             return null;
         }
+
         //Sort the calculated results to get entities' ranking
         List<Map.Entry<Integer, Double>> entries = new ArrayList<>(results.entrySet());
         if (isAscending) {
@@ -559,6 +569,7 @@ public final class Pkg {
         } else {
             entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
         }
+
         int index = 0;
         //Choose only the active users to create the shared object
         if (!dao().getUserDao().isActiveUser(user.getId(), groupId)) {
@@ -610,7 +621,7 @@ public final class Pkg {
             LocalDateTime.now().format(DateTimeFormatter.ISO_DATE), "literal");
         rdfGraph.addStatement("SharedObject/" + sharedObjectId, "schema:application", sharedObject.getApplication(), "literal");
         rdfGraph.addStatement("SharedObject/" + sharedObjectId, "schema:text", gson.toJson(sharedObject), "literal");
-        for (JsonSharedObject.Entity entity: sharedObject.getEntities()) {
+        for (JsonSharedObject.Entity entity : sharedObject.getEntities()) {
             rdfGraph.addStatement("SharedObject/" + sharedObjectId, "dependsOn", "RecognizedEntities/" + entity.getId(), "resource");
             Optional<AnnotationCount> annotationObj = annotationCounts.stream().filter(s -> s.getUriId() == entity.getId()).findFirst();
             if (annotationObj.isPresent()) {

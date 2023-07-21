@@ -303,6 +303,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
 
         List<String> suggestedBing = getBingSuggestQueries(query);
         List<String> suggestedEduRec = getEduRecSuggestQueries(query);
+        log.debug("Suggested queries: bing: {}, edurec: {}", suggestedBing, suggestedEduRec);
 
         final List<SuggestedQuery> queries = new ArrayList<>();
         if (suggestedBing != null) {

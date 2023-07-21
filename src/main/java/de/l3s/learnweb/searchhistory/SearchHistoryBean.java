@@ -76,12 +76,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         if (selectedUserId == 0) {
             selectedUserId = getUser().getId();
         }
-        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe())
-            .create();
+        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe()).create();
         getPkgBean().trimPkg();
-        for (Group group : groupDao.findByUserId(selectedUserId)) {
-            calculateEntities(group.getId());
-        }
     }
 
     public SearchQuery getSelectedQuery() {
@@ -169,6 +165,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
         //log.info("selected group id: " + selectedGroupId);
         this.selectedGroupId = selectedGroupId;
+        calculateEntities();
     }
 
     public void search() {
@@ -237,14 +234,24 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     /**
     * Calculates and returns a list of top entries for each user belonging to the group.
     * Also exports a rdf turtle file for every user in the group
-    * @param selectedGroupId the id of this user's group
     * */
-    private void calculateEntities(int selectedGroupId) {
+    private void calculateEntities() {
         //For testing only
         // getPkgBean().createSharedObject(selectedGroupId, 5, true, "negative5SharedObject");
-        //getPkgBean().createSharedObject(selectedGroupId, 10, false, "positive10SharedObject");
-        getPkgBean().createSharedObject(selectedGroupId, 3, false, "collabGraph");
-        sharedObjects = searchHistoryDao.findObjectsByGroupIdAndType(selectedGroupId, "collabGraph");
+        // getPkgBean().createSharedObject(selectedGroupId, 10, false, "positive10SharedObject");
+
+        sharedObjects = new ArrayList<>();
+        for (User user : userDao.findByGroupId(selectedGroupId)) {
+            Pkg pkg = new Pkg(new ArrayList<>(), new ArrayList<>());
+            pkg.createPkg(user, selectedGroupId);
+            pkg.removeDuplicatingNodesAndLinks();
+            pkg.calculateSumWeight();
+            JsonSharedObject object = pkg.createSharedObject(user, selectedGroupId, 3, false, "collabGraph");
+
+            if (object != null) {
+                sharedObjects.add(object);
+            }
+        }
     }
 
     /**

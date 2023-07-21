@@ -11,7 +11,7 @@
     const guideGotchaBtn = '#{msg['guide.gotcha']}';
 </h:outputScript>
 
-<h:outputScript rendered="false">
+<h:outputScript rendered="#{userBean.user.organisationId != 1604}">
     const guideSteps = [
         {
             id: 1,
