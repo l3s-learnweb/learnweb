@@ -72,7 +72,15 @@ body {
         padding: $calendarCellPadding;
         text-align: center;
 
-        a {
+        > a {
+          &:hover {
+            background: $calendarCellDateHoverBg;
+            border-color: $calendarCellDateHoverBorderColor;
+          }
+        }
+
+        > a,
+        > span {
           padding: 0;
           color: $calendarCellDateTextColor;
           text-align: center;
@@ -83,11 +91,6 @@ body {
           display: inline-block;
           transition: $transition;
           border-radius: $calendarCellDateBorderRadius;
-
-          &:hover {
-            background: $calendarCellDateHoverBg;
-            border-color: $calendarCellDateHoverBorderColor;
-          }
 
           &:focus {
             @include focused();
@@ -102,7 +105,15 @@ body {
 
         &.ui-datepicker-today,
         &.ui-datepicker-current-day {
-          a {
+          > a {
+            &:hover {
+              background: $calendarCellDateHoverBg;
+              border-color: $calendarCellDateHoverBorderColor;
+            }
+          }
+
+          > a,
+          > span {
             background: $calendarCellDateTodayBg;
             color: $calendarCellDateTodayTextColor;
             font-weight: 600;

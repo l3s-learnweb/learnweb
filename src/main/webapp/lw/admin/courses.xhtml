@@ -31,7 +31,7 @@
                     <div class="me-auto">
                         #{msg.courses}
                         <p:button icon="fas fa-circle-question" onclick="return false;"/>
-                        <p:tooltip for="@previous" value="On this page you can add, delete and edit courses as well as view user submissions."/>
+                        <p:tooltip for="@previous" value="On this page you can add, delete and edit courses."/>
                     </div>
                     <div class="d-md-block d-flex flex-column">
                         <p:commandButton value="#{msg.create}" styleClass="float-end ui-button-warning" onclick="PF('createCourseWidget').show();"/>
@@ -105,11 +105,6 @@
                                  onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
                     <p:confirm message="#{of:format1(msg.courses_anonymise_question, course.title)}"/>
                 </p:commandButton>
-
-                <p:linkButton styleClass="ui-button-success rounded-button ui-button-flat" icon="fas fa-check-double"
-                              title="#{msg['Submission.view_user_submissions']}" href="admin/users_submissions.jsf">
-                    <f:param name="course_id" value="#{course.id}"/>
-                </p:linkButton>
             </p:column>
         </p:dataTable>
     </h:form>

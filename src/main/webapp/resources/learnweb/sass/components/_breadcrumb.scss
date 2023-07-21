@@ -1,6 +1,6 @@
 .breadcrumb {
   display: none;
-  background-color: var(--surface-ground);
+  background-color: var(--secondary-bg);
   border: 1px solid var(--primary);
   border-left: 0;
   border-right: 0;
@@ -92,14 +92,14 @@
         right: -1.2rem;
         transform: scale(0.707) rotate(45deg);
         z-index: 1;
-        background: var(--surface-ground);
+        background: var(--secondary-bg);
         box-shadow: 1px -1px 0 0 var(--primary);
         padding-right: 0;
 
         &:hover,
         &:focus {
-          color: var(--white);
-          background: var(--primary-dark) !important;
+          color: var(--primary-hover-color);
+          background: var(--primary-hover) !important;
         }
 
         i {
@@ -135,7 +135,7 @@
           text-decoration: none;
 
           &:hover {
-            background: var(--primary-dark);
+            background: var(--primary-hover);
           }
         }
       }

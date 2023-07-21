@@ -2,6 +2,7 @@ package de.l3s.learnweb.user;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -26,6 +27,8 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
 
     @Inject
     private TokenDao tokenDao;
+    @Inject
+    private UserDao userDao;
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
@@ -43,12 +46,18 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
             tokenDao.getUserDao().save(user);
             tokenDao.deleteByTypeAndUser(Token.TokenType.EMAIL_CONFIRMATION, user.getId());
 
-            if (user.equals(getConfirmRequiredBean().getLoggedInUser())) {
+            if (user.equals(confirmRequiredBean.getLoggedInUser())) {
                 LoginBean.loginUser(this, user);
                 return "/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
             }
             return null;
         } catch (Exception e) {
+            // try one more attempt with email, if user already used the token
+            List<User> users = userDao.findByEmail(email);
+            if (!users.isEmpty() && users.stream().anyMatch(User::isEmailConfirmed)) {
+                // redirect to welcome page (a login form is shown there, if user is not logged in)
+                return "/lw/" + users.get(0).getOrganisation().getWelcomePage() + "?faces-redirect=true";
+            }
             throw new BadRequestHttpException("confirm_token_invalid", e);
         }
     }
@@ -76,13 +85,5 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable {
     @Override
     public User getUser() {
         return user;
-    }
-
-    public ConfirmRequiredBean getConfirmRequiredBean() {
-        return confirmRequiredBean;
-    }
-
-    public void setConfirmRequiredBean(ConfirmRequiredBean confirmRequiredBean) {
-        this.confirmRequiredBean = confirmRequiredBean;
     }
 }

@@ -35,6 +35,7 @@ import de.l3s.learnweb.exceptions.ForbiddenHttpException;
 import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.i18n.MessagesBundle;
+import de.l3s.learnweb.resource.survey.SurveyResponse;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
@@ -48,6 +49,7 @@ public class UserBean implements Serializable {
 
     private int userId = 0;
     private Locale locale;
+    private ColorTheme colorTheme = ColorTheme.emerald;
     private final HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
@@ -56,6 +58,7 @@ public class UserBean implements Serializable {
     private transient List<Group> newGroups;
     private transient BaseMenuModel sidebarMenuModel;
     private transient Instant sidebarMenuModelUpdate;
+    private final HashMap<Integer, SurveyResponse> surveyResponses = new HashMap<>();
 
     @PostConstruct
     public void init() {
@@ -133,6 +136,14 @@ public class UserBean implements Serializable {
         }
     }
 
+    public Theme getTheme() {
+        return user != null ? user.getPreferredTheme() : Theme.auto;
+    }
+
+    public ColorTheme getColorTheme() {
+        return activeOrganisation != null ? activeOrganisation.getTheme() : colorTheme;
+    }
+
     public String getPreference(String key, String defaultValue) {
         String obj = getPreference(key);
         return obj == null ? defaultValue : obj;
@@ -150,6 +161,10 @@ public class UserBean implements Serializable {
         HashMap<String, String> preferences = isLoggedIn() ? getUser().getPreferences() : anonymousPreferences;
 
         preferences.put(key, value);
+    }
+
+    public HashMap<Integer, SurveyResponse> getSurveyResponses() {
+        return surveyResponses;
     }
 
     public void commandSetPreference() {
@@ -328,10 +343,6 @@ public class UserBean implements Serializable {
             .addElement(DefaultMenuItem.builder().value(msg.getString("myTags")).icon("fas fa-tags").url("myhome/tags.jsf").build())
             .addElement(DefaultMenuItem.builder().value(msg.getString("myRatedResourcesTitle")).icon("fas fa-star-half-alt").url("myhome/rated_resources.jsf").build());
 
-        if (!user.getActiveSubmissions().isEmpty()) {
-            mySubmenu.addElement(DefaultMenuItem.builder().value(msg.getString("Submission.my_submissions")).icon("fas fa-calendar-check").url("myhome/submission_overview.jsf").build());
-        }
-
         model.getElements().add(mySubmenu.build());
 
         // My groups
@@ -376,7 +387,6 @@ public class UserBean implements Serializable {
                 .addElement(DefaultMenuItem.builder().value("Requests").icon("fas fa-chart-area").url("admin/requests.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("system_tools")).icon("fas fa-tools").url("admin/systemtools.jsf").build())
                 .addElement(DefaultMenuItem.builder().value(msg.getString("announcements")).icon("fas fa-bullhorn").url("admin/announcements.jsf").build())
-                .addElement(DefaultMenuItem.builder().value(msg.getString("survey.survey_overview")).icon("fas fa-poll-h").url("survey/surveys.jsf").build())
                 .addElement(DefaultMenuItem.builder().value("Status (XML)").icon("fas fa-wave-square").url("status.jsf").build())
                 .build();
             model.getElements().add(adminSubmenu);
@@ -462,11 +472,23 @@ public class UserBean implements Serializable {
     }
 
     public boolean isStarRatingEnabled() {
-        return !getActiveOrganisation().map(o -> o.getOption(Option.Resource_Hide_Star_rating)).orElse(false);
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Hide_Star_rating)).orElse(true);
     }
 
     public boolean isThumbRatingEnabled() {
-        return !getActiveOrganisation().map(o -> o.getOption(Option.Resource_Hide_Thumb_rating)).orElse(true);
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Hide_Thumb_rating)).orElse(false);
+    }
+
+    public boolean isTagsEnabled() {
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Hide_Tags)).orElse(true);
+    }
+
+    public boolean isEditingAllowed() {
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Disallow_editing)).orElse(true);
+    }
+
+    public boolean isVideoPreviewEnabled() {
+        return getActiveOrganisation().map(o -> !o.getOption(Option.Resource_Disable_video_preview)).orElse(true);
     }
 
     public boolean isLoggingEnabled() {

@@ -49,7 +49,12 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
      * Listener to trigger modal close, when clicked on dialog overlay.
      */
     $(document).on('click', '.ui-dialog-mask', (e) => {
-      getWidgetVarById(e.currentTarget.id.replace('_modal', '')).hide();
+      const widget = getWidgetVarById(e.currentTarget.id.replace('_modal', ''));
+      if (widget) {
+        widget.hide();
+      } else {
+        e.currentTarget.remove();
+      }
     });
 
     this.menuButton.off('click').on('click', (e) => {
@@ -81,6 +86,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
   autoComplete() {
     const searchField = this.header.find('#navbar_form\\:searchfield');
+    if (!searchField.length) return;
 
     if (typeof URLSearchParams === 'function') {
       const reqQuery = new URLSearchParams(window.location.search).get('query');
@@ -306,6 +312,42 @@ function openResourceView(items, target, isEdit = false) {
   window.addEventListener('popstate', handlePopstateResView, false);
 }
 
+function setTheme(theme) {
+  if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+  }
+}
+
+function setColorTheme(theme) {
+  document.documentElement.setAttribute('data-color-theme', theme);
+}
+
+(() => {
+  const getStoredTheme = () => localStorage.getItem('theme');
+  const setStoredTheme = (theme) => localStorage.setItem('theme', theme);
+
+  const getPreferredTheme = () => {
+    const storedTheme = getStoredTheme();
+    if (storedTheme) {
+      return storedTheme;
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
+
+  setStoredTheme(document.documentElement.getAttribute('data-bs-theme'));
+  setTheme(getPreferredTheme());
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    const storedTheme = getStoredTheme();
+    if (storedTheme !== 'light' && storedTheme !== 'dark') {
+      setTheme(getPreferredTheme());
+    }
+  });
+})();
+
 /**
  * On document ready events
  */
@@ -327,40 +369,6 @@ $(() => {
   // This code is executed after all "on-page-ready" listeners
   $(() => $('.ui-loading').removeClass('ui-loading'));
 });
-
-/**
- * Reset center position of Dialog after content is modified.
- */
-PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
-  _show.call(this);
-
-  const $this = this;
-  if (!this.contentResizeObserver) {
-    this.contentResizeObserver = new ResizeObserver(() => {
-      if ($this.cfg.fitViewport) {
-        $this.fitViewport();
-      }
-
-      if ($this.isVisible()) {
-        // instant reinit position
-        $this.initPosition();
-      } else {
-        // reset, so the dialog will be positioned again when showing the dialog next time
-        $this.positionInitialized = false;
-      }
-    });
-  }
-
-  this.contentResizeObserver.observe(this.content[0]);
-})(PrimeFaces.widget.Dialog.prototype.show));
-
-PrimeFaces.widget.Dialog.prototype.hide = (((_hide) => function () {
-  _hide.call(this);
-
-  if (this.contentResizeObserver) {
-    this.contentResizeObserver.disconnect();
-  }
-})(PrimeFaces.widget.Dialog.prototype.hide));
 
 /**
  * This is a new implementation of old script which changes size of filters list.
@@ -401,37 +409,3 @@ PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
     }
   },
 });
-
-if (PrimeFaces.widget.InputSwitch) {
-  PrimeFaces.widget.InputSwitch = PrimeFaces.widget.InputSwitch.extend({
-
-    init(cfg) {
-      // eslint-disable-next-line no-underscore-dangle
-      this._super(cfg);
-
-      if (this.input.prop('checked')) {
-        this.jq.addClass('ui-inputswitch-checked');
-      }
-    },
-
-    toggle() {
-      if (this.input.prop('checked')) {
-        this.uncheck();
-        setTimeout(() => {
-          this.jq.removeClass('ui-inputswitch-checked');
-        }, 100);
-      } else {
-        this.check();
-        setTimeout(() => {
-          this.jq.addClass('ui-inputswitch-checked');
-        }, 100);
-      }
-    },
-  });
-}
-
-if (PrimeFaces.widget.Menu) {
-  PrimeFaces.widget.Menu.prototype.align = ((() => function () {
-    this.jq.css({ left: 0, top: 0, 'transform-origin': 'center top' }).position(this.cfg.pos);
-  })(PrimeFaces.widget.Menu.prototype.align));
-}

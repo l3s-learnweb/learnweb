@@ -1,5 +1,5 @@
 .shepherd-element {
-  background: var(--surface-ground);
+  background: var(--secondary-bg);
   border-radius: var(--border-radius);
   box-shadow: $box-shadow;
   border: var(--border-width) var(--border-style) var(--border-color);
@@ -63,7 +63,7 @@
   }
 
   &.shepherd-has-title[data-popper-placement^=bottom] > .shepherd-arrow::before {
-    background-color: var(--gray-300);
+    background-color: var(--tertiary-bg);
   }
 }
 
@@ -78,7 +78,7 @@
     position: absolute;
     width: 14px;
     z-index: -1;
-    background: var(--surface-ground);
+    background: var(--secondary-bg);
     content: '';
     transform: rotate(45deg);
   }
@@ -93,7 +93,7 @@
 }
 
 .shepherd-has-title .shepherd-content .shepherd-header {
-  background: var(--gray-300);
+  background: var(--tertiary-bg);
   padding: 1em;
 }
 
@@ -125,14 +125,14 @@
   background: var(--primary);
   border: 0;
   border-radius: var(--border-radius);
-  color: var(--primary-text-color);
+  color: var(--primary-color);
   cursor: pointer;
   margin-right: 0.5rem;
   padding: 0.5rem 1.5rem;
   transition: all 0.5s ease;
 
   &:not(:disabled):hover {
-    background: var(--primary-dark);
+    background: var(--primary-hover);
   }
 
   &.shepherd-button-secondary {
@@ -140,7 +140,7 @@
     color: var(--secondary);
 
     &:not(:disabled):hover {
-      background: var(--gray-200);
+      background: var(--tertiary-bg);
     }
   }
 

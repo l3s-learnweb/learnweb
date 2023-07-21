@@ -37,12 +37,12 @@
         </p:commandButton>
     </h:form>
 
-    <h:panelGroup id="search_header_panel" layout="block" styleClass="bg-light">
+    <h:panelGroup id="search_header_panel" layout="block" styleClass="bg-body">
         <ul class="res-filters">
             <li class="filter #{searchBean.searchMode =='text' ? 'active':''}">
                 <h:link outcome="search">
                     <span class="filter-title">
-                        <span class="text-truncate text-dark">#{msg.web}</span>
+                        <span class="text-truncate">#{msg.web}</span>
                     </span>
                     <f:param name="action" value="text"/>
                     <f:param name="query" value="#{searchBean.query}"/>
@@ -51,7 +51,7 @@
             <li class="filter #{searchBean.searchMode =='image' ? 'active':''}">
                 <h:link outcome="search">
                     <span class="filter-title">
-                        <span class="text-truncate text-dark">#{msg.Images}</span>
+                        <span class="text-truncate">#{msg.Images}</span>
                     </span>
                     <f:param name="action" value="image"/>
                     <f:param name="query" value="#{searchBean.query}"/>
@@ -60,7 +60,7 @@
             <li class="filter #{searchBean.searchMode =='video' ? 'active':''}">
                 <h:link outcome="search">
                      <span class="filter-title">
-                        <span class="text-truncate text-dark">#{msg.Videos}</span>
+                        <span class="text-truncate">#{msg.Videos}</span>
                     </span>
                     <f:param name="action" value="video"/>
                     <f:param name="query" value="#{searchBean.query}"/>
@@ -100,7 +100,7 @@
                                         <h:outputText value="#{res.title}" styleClass="me-1 text-primary" escape="false"/>
                                         <h:outputText value="#{res.url}" styleClass="text-info" escape="false"/>
                                         <br/>
-                                        <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-dark" escape="false"/>
+                                        <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-body-secondary" escape="false"/>
                                     </span>
                                 </ui:repeat>
                             </h:panelGroup>
@@ -118,8 +118,8 @@
         </h:form>
     </h:panelGroup>
 
-    <div class="bg-surface">
-        <h:form id="resourcesFilters" styleClass="bg-light">
+    <div class="bg-body">
+        <h:form id="resourcesFilters">
             <ul class="res-filters">
                 <ui:repeat value="#{searchBean.availableFilters}" var="filter">
                     <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
@@ -201,7 +201,8 @@
             </ui:decorate>
         </h:panelGroup>
 
-        <p:dialog header="#{msg.options}" widgetVar="copyResourceDialog" draggable="true" resizable="false" id="copy_resource_dialog" modal="true">
+        <p:dialog header="#{msg.options}" widgetVar="copyResourceDialog" id="copy_resource_dialog" modal="true"
+                  resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
             <h:form rendered="#{userBean.loggedIn and searchBean.selectedResource ne null}">
                 <div class="fields-grid">
                     <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">

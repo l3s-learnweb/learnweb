@@ -14,24 +14,41 @@ body {
       bottom: 0;
       background: $inputSwitchOffBg;
       transition: $transition;
+      border: $inputSwitchBorder;
+      border-width: $inputSwitchBorderWidth;
       border-radius: $inputSwitchBorderRadius;
+
+      &.ui-state-error {
+        @include invalid-input();
+      }
     }
 
-    .ui-toggleswitch-slider:before {
+    .ui-toggleswitch-slider:before,
+    .ui-toggleswitch-handler {
       position: absolute;
-      content: "";
       top: 50%;
       background: $inputSwitchHandleOffBg;
+      color: $inputSwitchHandleOffTextColor;
       width: 1.250rem;
       height: 1.250rem;
-      left: .25rem;
+      left: calc(.25rem - #{$inputSwitchBorderWidth});
       margin-top: divide(-1 * 1.250rem, 2);
       border-radius: $inputSwitchHandleBorderRadius;
-      transition: transform $transitionDuration;
+      transition: all $transitionDuration;
+      font-size: divide(1.250rem, 2);
+      line-height: 1.250rem;
+    }
+
+    .ui-toggleswitch-handler {
+      span {
+        font-size: divide(1.250rem, 2);
+        line-height: 1.250rem;
+      }
     }
 
     &.ui-toggleswitch-checked {
-      .ui-toggleswitch-slider:before {
+      .ui-toggleswitch-slider:before,
+      .ui-toggleswitch-handler {
         transform: translateX(1.250rem);
       }
     }
@@ -46,7 +63,8 @@ body {
       .ui-toggleswitch-slider {
         background: $inputSwitchOnBg;
 
-        &:before {
+        &:before,
+        .ui-toggleswitch-handler {
           background: $inputSwitchHandleOnBg;
         }
       }

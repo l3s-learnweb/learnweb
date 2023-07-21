@@ -127,20 +127,6 @@ class UserDaoTest {
     }
 
     @Test
-    void findBySavedSurveyResourceId() {
-        List<User> users = userDao.findBySavedSurveyResourceId(10);
-        assertFalse(users.isEmpty());
-        assertArrayEquals(new Integer[] {2}, users.stream().map(User::getId).sorted().toArray(Integer[]::new));
-    }
-
-    @Test
-    void findBySubmittedSurveyResourceId() {
-        List<User> users = userDao.findBySubmittedSurveyResourceId(10);
-        assertFalse(users.isEmpty());
-        assertArrayEquals(new Integer[] {2}, users.stream().map(User::getId).sorted().toArray(Integer[]::new));
-    }
-
-    @Test
     void findLastLoginDate() {
         Optional<LocalDateTime> loginDate = userDao.findLastLoginDate(1);
         assertTrue(loginDate.isPresent());

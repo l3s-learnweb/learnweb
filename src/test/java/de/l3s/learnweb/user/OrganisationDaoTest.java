@@ -35,6 +35,7 @@ class OrganisationDaoTest {
         assertEquals("myhome/welcome.jsf", retrieved.get().getWelcomePage());
         assertEquals("en", retrieved.get().getDefaultLanguage());
         assertEquals(3, retrieved.get().getGlossaryLanguages().size());
+        assertEquals(ColorTheme.emerald, retrieved.get().getTheme());
         assertEquals(SearchMode.text, retrieved.get().getDefaultSearchMode());
         assertEquals(ResourceService.bing, retrieved.get().getDefaultSearchServiceText());
         assertEquals(ResourceService.flickr, retrieved.get().getDefaultSearchServiceImage());
@@ -87,6 +88,7 @@ class OrganisationDaoTest {
         assertEquals("/lw/myhome/welcome.jsf", retrieved.get().getWelcomePage());
         assertEquals("en", retrieved.get().getDefaultLanguage());
 
+        assertEquals(ColorTheme.emerald, retrieved.get().getTheme());
         assertEquals(SearchMode.text, retrieved.get().getDefaultSearchMode());
         assertEquals(ResourceService.bing, retrieved.get().getDefaultSearchServiceText());
         assertEquals(ResourceService.flickr, retrieved.get().getDefaultSearchServiceImage());

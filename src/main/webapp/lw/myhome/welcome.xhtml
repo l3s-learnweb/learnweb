@@ -125,35 +125,6 @@
         </div>
 
         <div class="col-12 col-md-6">
-
-            <!--Submissions-->
-            <p:panel header="#{msg.submissions}" rendered="#{not empty welcomeBean.activeSubmissions}">
-                <h:panelGroup layout="block">
-                    <a href="#{request.contextPath}/lw/myhome/submission_overview.jsf" target="_blank">
-                        <h:outputFormat value="#{msg.ongoing_submissions}">
-                            <f:param value="#{welcomeBean.activeSubmissions.size()}"/>
-                        </h:outputFormat>
-                    </a>
-
-                    <ul class="list-unstyled ps-3">
-                        <ui:repeat var="submission" value="#{welcomeBean.activeSubmissions}" varStatus="status">
-                            <ui:fragment rendered="#{submission.isSurveySubmitted(userBean.user.id)}">
-                                <li class="#{status.last ? '' : 'border-bottom'} mt-3 d-flex flex-column">
-                                    <h:outputLink style="width: fit-content;" value="myhome/submission_resources.jsf">
-                                        <f:param name="user_id" value="${userBean.user.id}"/>
-                                        <f:param name="submission_id" value="${submission.id}"/>
-                                        <!-- TODO @kemkes: Submission_refactoring: translate, format date -->
-                                        <b>${submission.title} (Will expire on #{submission.closeDatetime})</b>
-                                    </h:outputLink>
-                                    <small class="#{status.last ? '' : 'mb-3 mt-1'}">${submission.description}</small>
-                                </li>
-                            </ui:fragment>
-                        </ui:repeat>
-                    </ul>
-                </h:panelGroup>
-            </p:panel>
-
-            <!--Activity stream-->
             <p:panel header="#{msg.activity_stream}" rendered="#{not empty welcomeBean.newsGeneral}">
                 <p>#{msg.activity_message}</p>
 

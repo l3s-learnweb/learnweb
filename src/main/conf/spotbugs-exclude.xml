@@ -27,6 +27,11 @@
         <Class name="de.l3s.learnweb.user.UserBean"/>
         <Bug pattern="DCN_NULLPOINTER_EXCEPTION"/>
     </Match>
+    <!-- We need the pseudo random with defined seed -->
+    <Match>
+        <Class name="de.l3s.learnweb.resource.survey.SurveyPage"/>
+        <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE"/>
+    </Match>
     <!-- The MenuElement is not serializable in the class, but it will in the implementation -->
     <Match>
         <Class name="de.l3s.learnweb.component.ActiveSubmenu"/>

@@ -53,14 +53,7 @@
             </p>
 
             <p:dataTable id="output" var="comment" value="#{adminTextAnalysisBean.comments}">
-                <p:column>
-                    <f:facet name="header">
-                        <div class="d-flex align-items-center">
-                            <div class="me-auto">#{msg.comments}</div>
-                            <div><p:button outcome="/lw/admin/wanderer.jsf" target="_blank" value="#{msg.comments_analyse}"/></div>
-                        </div>
-                    </f:facet>
-
+                <p:column headerText="#{msg.comments}">
                     <h:outputText value="#{comment.text}"/>
                 </p:column>
             </p:dataTable>

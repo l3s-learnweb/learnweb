@@ -5,10 +5,11 @@
       xmlns:ui="jakarta.faces.facelets"
       xmlns:c="jakarta.tags.core"
       xmlns:p="http://primefaces.org/ui"
-      lang="#{userBean.localeCode}" data-theme="emerald">
+      lang="#{userBean.localeCode}" data-bs-theme="#{userBean.theme}" data-color-theme="#{userBean.colorTheme}">
 
     <!--@elvariable id="pageTitle" type="java.lang.String"-->
     <!--@elvariable id="helpText" type="java.lang.String"-->
+    <!--@elvariable id="extraBodyClass" type="java.lang.String"-->
     <!--@elvariable id="extraPageClass" type="java.lang.String"-->
     <!--@elvariable id="hideBreadcrumbs" type="java.lang.Boolean"-->
     <!--@elvariable id="hasAccessPermission" type="java.lang.Boolean"-->
@@ -39,7 +40,7 @@
             </ui:fragment>
         </h:head>
 
-        <h:body styleClass="layout-body ui-loading">
+        <h:body styleClass="layout-body ui-loading #{extraBodyClass}">
             <f:facet name="last">
                 <h:outputStylesheet name="bundle/learnweb.main.css"/>
             </f:facet>

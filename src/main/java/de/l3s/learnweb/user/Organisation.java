@@ -50,8 +50,10 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
         Glossary_Add_Watermark,
         Glossary_Mandatory_Description,
         Glossary_Enable_Import, // enables the glossary file import
-        Unused_1,
+        Resource_Hide_Tags,
         Search_Disable_alternative_sources,
+        Resource_Disallow_editing,
+        Resource_Disable_video_preview,
         Search_Disable_recommendations,
         Search_Disable_related_searches,
     }
@@ -63,6 +65,7 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
     private String welcomeMessage;
     private String termsAndConditions;
     private String welcomePage = "myhome/welcome.jsf"; // page to show after login
+    private ColorTheme theme = ColorTheme.emerald;
     private SearchMode defaultSearchMode = SearchMode.text;
     private ResourceService defaultSearchServiceText = ResourceService.bing;
     private ResourceService defaultSearchServiceImage = ResourceService.flickr;
@@ -316,6 +319,14 @@ public class Organisation implements HasId, Serializable, Comparable<Organisatio
 
     protected void setOptions(BitSet options) {
         this.options = options;
+    }
+
+    public ColorTheme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(final ColorTheme theme) {
+        this.theme = theme;
     }
 
     public SearchMode getDefaultSearchMode() {

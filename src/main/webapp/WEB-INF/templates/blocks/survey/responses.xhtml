@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:h="jakarta.faces.html"
+				xmlns:f="jakarta.faces.core"
+				xmlns:ui="jakarta.faces.facelets"
+				xmlns:p="http://primefaces.org/ui">
+
+<!--@elvariable id="res" type="de.l3s.learnweb.resource.survey.SurveyResource"-->
+
+<div class="bg-body p-3 min-h-100">
+	<h:form rendered="#{not empty surveyResponsesBean.writeableQuestions}">
+		<p:dataTable id="survey_result" var="result" value="#{surveyResponsesBean.allResponses}" rows="20"
+					 paginator="true" paginatorPosition="bottom"
+					 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+			<f:facet name="{Exporters}">
+				<h:commandLink>
+					<i class="fas fa-fw fa-file-excel text-success" aria-hidden="true"></i>
+					<p:dataExporter type="xls" target="survey_result" fileName="survey"/>
+				</h:commandLink>
+			</f:facet>
+
+			<p:column headerText="#{msg.username}">
+				<h:outputLink id="print_user" value="survey/answer.jsf">
+					<h:outputText value="#{result.user.username} "/>
+					<f:param name="resource_id" value="#{res.id}"/>
+					<f:param name="user_id" value="#{result.userId}"/>
+				</h:outputLink>
+			</p:column>
+			<p:column headerText="#{msg.student_id}">
+				<h:outputText value="#{result.user.studentId}"/>
+			</p:column>
+			<p:column headerText="#{msg.courses}">
+				<h:outputText value="#{result.user.courses}"/>
+			</p:column>
+			<p:column headerText="#{msg.submit}?">
+				<h:outputText value="#{result.submitted}"/>
+			</p:column>
+			<p:columns var="q" value="#{surveyResponsesBean.writeableQuestions}" headerText="#{q.question}">
+				<h:outputText value="#{result.getAnswer(q.id)}"/>
+			</p:columns>
+		</p:dataTable>
+	</h:form>
+</div>
+
+</ui:composition>

@@ -131,7 +131,8 @@
 		</div>
 	</div>
 
-	<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" resizable="false" closable="false" appendTo="@(body)">
+	<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" closable="false" appendTo="@(body)"
+			  resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
 		<h:form id="userinput_form" prependId="false" styleClass="d-flex flex-column">
 			<p:outputLabel for="@next" value="#{msg.justify_selection}:"/>
 			<p:inputText id="text" />

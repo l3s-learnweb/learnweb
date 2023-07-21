@@ -277,7 +277,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         PrimeFaces.current().ajax().addCallbackParam("slideIndex", params.get("slideIndex"));
         PrimeFaces.current().ajax().addCallbackParam("resourceRank", resource.getRank());
 
-        if (resource.getEmbeddedCode() != null) {
+        if (resource.getEmbeddedCode() != null && getUserBean().isVideoPreviewEnabled()) {
             PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbeddedCode());
         } else {
             PrimeFaces.current().ajax().addCallbackParam("embeddedCode", "<img src=\"" + resource.getResource().getThumbnailLargest() + "\" />");

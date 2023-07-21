@@ -7,6 +7,18 @@ body {
       }
     }
 
+    &.ui-state-loading {
+      .ui-icon-loading {
+        right: nth($inputPadding, 2);
+      }
+
+      &.ui-autocomplete-dd {
+        .ui-icon-loading {
+          right: nth($inputPadding, 2) + $buttonIconOnlyWidth;
+        }
+      }
+    }
+
     .ui-autocomplete-dropdown {
       position: relative;
       height: auto;

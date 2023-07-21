@@ -29,8 +29,8 @@
         </h:form>
     </p:panel>
 
-    <p:dialog widgetVar="changeMailDialog" header="#{msg.change_email}"
-              modal="true" resizable="false" draggable="false" closeOnEscape="true">
+    <p:dialog widgetVar="changeMailDialog" header="#{msg.change_email}" modal="true" closeOnEscape="true"
+              resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
         <h:form>
             <div class="fields-grid">
                 <p:outputLabel for="@next" value="#{msg.email_address}:"/>
@@ -44,9 +44,8 @@
                 <div class="me-auto">
                     <h:outputText value="* #{msg.mandatory_field}"/>
                 </div>
-                <div class="d-flex flex-row-reverse">
-                    <p:commandButton action="#{confirmRequiredBean.onSubmitNewEmail}" value="#{msg.send_email}" ajax="false"/>
-                </div>
+
+                <p:commandButton action="#{confirmRequiredBean.onSubmitNewEmail}" value="#{msg.send_email}" ajax="false"/>
             </div>
         </h:form>
     </p:dialog>

@@ -41,7 +41,6 @@ import de.l3s.learnweb.resource.glossary.GlossaryEntryDao;
 import de.l3s.learnweb.resource.glossary.GlossaryTermDao;
 import de.l3s.learnweb.resource.office.ResourceHistoryDao;
 import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryDao;
-import de.l3s.learnweb.resource.submission.SubmissionDao;
 import de.l3s.learnweb.resource.survey.SurveyDao;
 import de.l3s.learnweb.resource.ted.TedTranscriptDao;
 import de.l3s.learnweb.searchhistory.SearchHistoryDao;
@@ -100,7 +99,6 @@ public class DaoProvider {
     private final ResourceHistoryDao resourceHistoryDao;
     private final SearchHistoryDao searchHistoryDao;
     private final SpeechRepositoryDao speechRepositoryDao;
-    private final SubmissionDao submissionDao;
     private final SurveyDao surveyDao;
     private final TagDao tagDao;
     private final TokenDao tokenDao;
@@ -149,7 +147,6 @@ public class DaoProvider {
         resourceHistoryDao = jdbi.onDemand(ResourceHistoryDao.class);
         searchHistoryDao = jdbi.onDemand(SearchHistoryDao.class);
         speechRepositoryDao = jdbi.onDemand(SpeechRepositoryDao.class);
-        submissionDao = jdbi.onDemand(SubmissionDao.class);
         surveyDao = jdbi.onDemand(SurveyDao.class);
         tagDao = jdbi.onDemand(TagDao.class);
         tokenDao = jdbi.onDemand(TokenDao.class);
@@ -337,11 +334,6 @@ public class DaoProvider {
     @Produces
     public SpeechRepositoryDao getSpeechRepositoryDao() {
         return speechRepositoryDao;
-    }
-
-    @Produces
-    public SubmissionDao getSubmissionDao() {
-        return submissionDao;
     }
 
     @Produces

@@ -2,29 +2,26 @@ package de.l3s.learnweb.resource.survey;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.l3s.learnweb.app.Learnweb;
-import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
-import de.l3s.learnweb.user.User;
-import de.l3s.util.Cache;
 
 public class SurveyResource extends Resource {
     @Serial
     private static final long serialVersionUID = 3431955030925189235L;
 
-    private int surveyId;
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private boolean saveable; // if true users can save their answers before finally submitting them
+    private LocalDateTime openDate;
+    private LocalDateTime closeDate;
+    private boolean quiz = false; // show only one question at once
+    private boolean singleResponse = false; // limit users to take the survey only one time
+    private boolean disableAutosave = false; // if true users will need to complete full survey before answering
 
-    private transient Survey survey;
-    private transient Cache<SurveyUserAnswers> answerCache;
+    private transient List<SurveyPage> pages;
 
     /**
      * Do nothing constructor.
@@ -38,10 +35,15 @@ public class SurveyResource extends Resource {
      */
     protected SurveyResource(SurveyResource other) {
         super(other);
-        setSurveyId(other.getSurveyId());
-        setStart(other.getStart());
-        setEnd(other.getEnd());
-        setSaveable(other.isSaveable());
+        setOpenDate(other.getOpenDate());
+        setCloseDate(other.getCloseDate());
+        setQuiz(other.isQuiz());
+        setSingleResponse(other.isSingleResponse());
+        setDisableAutosave(other.isDisableAutosave());
+
+        for (SurveyPage page : other.getPages()) {
+            pages.add(new SurveyPage(page));
+        }
     }
 
     @Override
@@ -52,102 +54,42 @@ public class SurveyResource extends Resource {
     @Override
     public void clearCaches() {
         super.clearCaches();
-        answerCache = null;
-        survey = null;
+        pages = null;
     }
 
     @Override
     protected void postConstruct() {
         super.postConstruct();
 
-        Learnweb.dao().getSurveyDao().loadSurveyResource(this);
-    }
-
-    public Survey getSurvey() {
-        if (null == survey) {
-            survey = Learnweb.dao().getSurveyDao().findById(surveyId).orElseThrow(BeanAssert.NOT_FOUND);
+        if (getMetadataValue("openDate") != null) {
+            setOpenDate(LocalDateTime.ofEpochSecond(Long.parseLong(getMetadataValue("openDate")), 0, ZoneOffset.UTC));
         }
-        return survey;
-    }
-
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-        this.surveyId = survey.getId();
-    }
-
-    public Collection<SurveyQuestion> getQuestions() {
-        return getSurvey().getQuestions();
-    }
-
-    private Cache<SurveyUserAnswers> getAnswerCache() {
-        if (null == answerCache) {
-            answerCache = new Cache<>(1000);
-        }
-        return answerCache;
-    }
-
-    /**
-     * @return true if this user has submitted this survey
-     */
-    public boolean isSubmitted(int userId) {
-        return Learnweb.dao().getSurveyDao().findSubmittedStatus(this.getId(), userId).orElse(false);
-    }
-
-    /**
-     * Returns all answers of user even when they are incomplete or not final.
-     */
-    public List<SurveyUserAnswers> getAnswersOfAllUsers() {
-        return getAnswers(false);
-    }
-
-    /**
-     * Returns only answers that were finally submitted.
-     */
-    public List<SurveyUserAnswers> getSubmittedAnswersOfAllUsers() {
-        return getAnswers(true);
-    }
-
-    private List<SurveyUserAnswers> getAnswers(boolean returnOnlySubmittedAnswers) {
-        List<SurveyUserAnswers> answers = new LinkedList<>();
-
-        List<User> users = returnOnlySubmittedAnswers ? Learnweb.dao().getUserDao().findBySubmittedSurveyResourceId(getId())
-            : Learnweb.dao().getUserDao().findBySavedSurveyResourceId(getId());
-
-        for (User user : users) {
-            answers.add(getAnswersOfUser(user.getId()));
+        if (getMetadataValue("closeDate") != null) {
+            setCloseDate(LocalDateTime.ofEpochSecond(Long.parseLong(getMetadataValue("closeDate")), 0, ZoneOffset.UTC));
         }
 
-        return answers;
-    }
-
-    public SurveyUserAnswers getAnswersOfUser(int userId) {
-        SurveyUserAnswers answers = getAnswerCache().get(userId);
-        if (null == answers) {
-            answers = Learnweb.dao().getSurveyDao().findAnswersByResourceAndUserId(this, userId);
-            getAnswerCache().put(answers);
-        }
-        return answers;
-    }
-
-    public List<User> getUsersWhoSaved() {
-        return Learnweb.dao().getUserDao().findBySavedSurveyResourceId(getId());
-    }
-
-    public List<User> getUsersWhoSubmitted() {
-        return Learnweb.dao().getUserDao().findBySubmittedSurveyResourceId(getId());
+        quiz = getMetadataValueBoolean("quiz");
+        singleResponse = getMetadataValueBoolean("singleResponse");
+        disableAutosave = getMetadataValueBoolean("disableAutosave");
     }
 
     @Override
     public Resource save() {
-        // save normal resource fields
-        super.save();
-        // save SurveyResource fields
-        if (surveyId == 0) {
-            survey.save(true);
-            surveyId = survey.getId();
+        if (openDate != null) {
+            setMetadataValue("openDate", String.valueOf(openDate.toInstant(ZoneOffset.UTC).getEpochSecond()));
+        }
+        if (closeDate != null) {
+            setMetadataValue("closeDate", String.valueOf(closeDate.toInstant(ZoneOffset.UTC).getEpochSecond()));
         }
 
-        Learnweb.dao().getSurveyDao().saveSurveyResource(this);
+        setMetadataValueBoolean("quiz", quiz);
+        setMetadataValueBoolean("singleResponse", singleResponse);
+        setMetadataValueBoolean("disableAutosave", disableAutosave);
+
+        // save normal resource fields
+        super.save();
+
+        Learnweb.dao().getSurveyDao().savePages(this);
         return this;
     }
 
@@ -156,39 +98,65 @@ public class SurveyResource extends Resource {
         return "Survey" + super.toString();
     }
 
-    public int getSurveyId() {
-        return surveyId;
+    public LocalDateTime getOpenDate() {
+        return openDate;
     }
 
-    public void setSurveyId(int surveyId) {
-        this.surveyId = surveyId;
+    public void setOpenDate(LocalDateTime openDate) {
+        this.openDate = openDate;
     }
 
-    public LocalDateTime getStart() {
-        return start;
+    public LocalDateTime getCloseDate() {
+        return closeDate;
     }
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
+    public void setCloseDate(LocalDateTime closeDate) {
+        this.closeDate = closeDate;
     }
 
-    public LocalDateTime getEnd() {
-        return end;
+    public boolean isValidDate() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        if (openDate != null && openDate.isAfter(currentDate)) {
+            return false;
+        }
+        if (closeDate != null && closeDate.isBefore(currentDate)) {
+            return false;
+        }
+        return true;
     }
 
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
+    public boolean isQuiz() {
+        return quiz;
     }
 
-    /**
-     * @return True if the form can be saved before submit
-     */
-    public boolean isSaveable() {
-        return saveable;
+    public void setQuiz(final boolean quiz) {
+        this.quiz = quiz;
     }
 
-    public void setSaveable(boolean editable) {
-        this.saveable = editable;
+    public boolean isSingleResponse() {
+        return singleResponse;
     }
 
+    public void setSingleResponse(final boolean singleResponse) {
+        this.singleResponse = singleResponse;
+    }
+
+    public boolean isDisableAutosave() {
+        return disableAutosave;
+    }
+
+    public void setDisableAutosave(final boolean disableAutosave) {
+        this.disableAutosave = disableAutosave;
+    }
+
+    public List<SurveyPage> getPages() {
+        if (null == pages) {
+            if (getId() == 0) {
+                return new ArrayList<>();
+            }
+
+            pages = Learnweb.dao().getSurveyDao().findPagesAndVariantsByResourceId(getId());
+        }
+        return pages;
+    }
 }

@@ -15,7 +15,7 @@
 	<p:commandButton icon="fas fa-pencil-alt" styleClass="ui-button-secondary" title="#{msg.edit_resource}"
 					 action="#{resourceDetailBean.editResource}" immediate="true" update=":resourceDetails" form="resourceViewForm"
 					 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"
-					 rendered="#{resourceDetailBean.resource.canEditResource(userBean.user)}"/>
+					 rendered="#{userBean.editingAllowed and resourceDetailBean.resource.canEditResource(userBean.user)}"/>
 </div>
 
 <dl class="row">
@@ -54,15 +54,15 @@
 	</ui:fragment>
 
 	<ui:fragment rendered="#{userBean.user.organisationId == 1604}">
-		<dt class="col-sm-4">Climate change relation:</dt>
+		<dt class="col-sm-4">Beziehung zum Klimawandel:</dt>
 		<dd class="col-sm-8">
 			<h:panelGroup id="relation" layout="block">
 				<p:selectOneButton value="#{res.metadataWrapper['someclics_relation']}">
 					<p:ajax listener="#{res.save}" />
 
-					<f:selectItem itemLabel="Acceptance" itemValue="acceptance"/>
+					<f:selectItem itemLabel="Akzeptanz" itemValue="acceptance"/>
 					<f:selectItem itemLabel="Denial" itemValue="denial"/>
-					<f:selectItem itemLabel="Both" itemValue="Both"/>
+					<f:selectItem itemLabel="Beide" itemValue="both"/>
 				</p:selectOneButton>
 			</h:panelGroup>
 		</dd>
@@ -250,7 +250,7 @@
 	<h:outputText value="#{lw:htmlBreak(res.description)}" escape="false"/>
 </ui:fragment>
 
-<h:panelGroup layout="block" styleClass="guide-resource-tags" rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">
+<h:panelGroup layout="block" styleClass="guide-resource-tags" rendered="#{userBean.tagsEnabled and (not empty res.tags or res.canAnnotateResource(userBean.user))}">
 	<h5 class="res-details-title">#{msg.tags}</h5>
 
 	<h:panelGroup id="tags_list" layout="block">
@@ -302,7 +302,7 @@
 	</h:panelGroup>
 	<h:panelGroup layout="block" id="comments_list">
 		<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
-			<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
+			<div class="d-flex comment-entry p-2 #{!status.last ? 'mb-2' : ''}">
 				<p:avatar label="${comment.user.initials}" styleClass="mt-1 me-3" shape="circle" dynamicColor="true" saturation="50" lightness="50">
 					<h:graphicImage value="#{comment.user.imageUrl}" alt="#{comment.user.fullName}" rendered="#{not empty comment.user.imageUrl}"/>
 				</p:avatar>

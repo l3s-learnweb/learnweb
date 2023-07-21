@@ -25,6 +25,7 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.FileDao;
+import de.l3s.learnweb.user.ColorTheme;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.OrganisationDao;
@@ -166,6 +167,10 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
     public void setOrganisationId(int organisationId) {
         this.organisationId = organisationId;
+    }
+
+    public ColorTheme[] getAvailableThemes() {
+        return ColorTheme.values();
     }
 
     // only helper classes to display the options

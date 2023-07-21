@@ -24,6 +24,16 @@
   overflow: auto;
 }
 
+.min-h-100 {
+  min-height: 100%;
+}
+
+.no-margin {
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
 // fix position of sticky-md-top, considering height of our navbar
 @include media-breakpoint-up(md) {
   .sticky-md-top {
@@ -32,9 +42,9 @@
 }
 
 .bg-highlight {
-  color: var(--white);
-  background-color: var(--gray-600);
-  border: 1px solid var(--gray-600);
+  color: var(--secondary-bg);
+  background-color: var(--body-color);
+  border: 1px solid var(--body-color);
   border-radius: var(--border-radius);
   padding: 0 var(--border-radius);
 }
@@ -85,14 +95,14 @@ section:target .highlight {
     font-size: 1.15rem;
     text-decoration: none;
     margin: 0.5rem 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0);
+    border-bottom: 1px solid rgba($black, 0);
     transition: 0.35s;
-    background: rgba(253, 253, 253, 0.6);
+    background: rgba(var(--tertiary-bg-rgb), 0.6);
     display: inline-block;
     vertical-align: middle;
 
     &:hover {
-      background: rgba(247, 247, 247, 0.7);
+      background: rgba(var(--tertiary-bg-rgb), 0.75);
 
       i {
         font-size: larger;

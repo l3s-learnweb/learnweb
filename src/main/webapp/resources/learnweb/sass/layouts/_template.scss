@@ -8,6 +8,11 @@ body {
 
 body {
   min-width: $min-width;
+  background: var(--body-bg);
+
+  &.layout-dark {
+    background: rgba(#121212, 0.90);
+  }
 }
 
 .layout-wrapper {
@@ -62,7 +67,7 @@ body {
     content: '';
     display: block;
     position: absolute;
-    background: var(--surface-ground) url('../images/blockui-spinner.svg') no-repeat center 4rem;
+    background: var(--secondary-bg) url('../images/blockui-spinner.svg') no-repeat center 4rem;
     background-size: 6rem;
     top: 0;
     left: 0;

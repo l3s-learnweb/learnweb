@@ -72,6 +72,25 @@ body {
               color: $panelContentTextColor;
             }
           }
+
+          &.ui-state-highlight {
+            background: $inputListItemHighlightBg;
+            color: $inputListItemHighlightTextColor;
+
+            .ui-tree-toggler,
+            .ui-treenode-icon {
+              color: $inputListItemHighlightTextColor;
+
+              &:hover {
+                color: $inputListItemHighlightTextColor;
+              }
+            }
+          }
+
+          &.ui-treenode-selectable:not(.ui-state-highlight):hover {
+            background: $inputListItemHoverBg;
+            color: $inputListItemTextHoverColor;
+          }
         }
       }
 

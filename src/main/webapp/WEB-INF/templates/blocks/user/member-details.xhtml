@@ -41,29 +41,29 @@
 		</ui:fragment>
 
 		<ui:fragment rendered="#{not empty user.email}">
-			<p class="text-muted small mb-0 text-truncate">
+			<p class="text-body-secondary small mb-0 text-truncate">
 				<b>#{msg.email_address}: </b>
 				<lw:encryptEmail email="#{user.email}"/>
 			</p>
 		</ui:fragment>
 
         <ui:fragment rendered="#{user.gender ne 'UNASSIGNED'}">
-    		<p class="text-muted small mb-0"><b>#{msg.gender}:</b><h:outputText value=" #{msg['user.gender.' += user.gender]}" /></p>
+    		<p class="text-body-secondary small mb-0"><b>#{msg.gender}:</b><h:outputText value=" #{msg['user.gender.' += user.gender]}" /></p>
         </ui:fragment>
 
 		<ui:fragment rendered="#{not empty user.address}">
-			<p class="text-muted small mb-0"><b>#{msg.address}:</b> #{user.address}</p>
+			<p class="text-body-secondary small mb-0"><b>#{msg.address}:</b> #{user.address}</p>
 		</ui:fragment>
 
 		<ui:fragment rendered="#{not empty user.profession}">
-			<p class="text-muted small mb-0"><b>#{msg.profession}:</b> #{user.profession}</p>
+			<p class="text-body-secondary small mb-0"><b>#{msg.profession}:</b> #{user.profession}</p>
 		</ui:fragment>
 
 		<ui:fragment rendered="#{not empty user.interest}">
-			<p class="text-muted small mb-0"><b>#{msg.interest}:</b> #{user.interest}</p>
+			<p class="text-body-secondary small mb-0"><b>#{msg.interest}:</b> #{user.interest}</p>
 		</ui:fragment>
 
-		<p class="text-muted small mb-0">
+		<p class="text-body-secondary small mb-0">
 			<b>#{msg.registered_since}: </b>
 			<h:outputText value="#{user.createdAt}">
 				<f:convertDateTime type="localDate" timeZone="#{userBean.timeZone}"/>
@@ -71,7 +71,7 @@
 		</p>
 
 		<ui:fragment rendered="#{not empty user.groups}">
-			<p class="text-muted small mb-0">
+			<p class="text-body-secondary small mb-0">
 				<b>#{msg.groupsTitle}: </b>
 				<ui:repeat var="g" value="#{user.groups}">
 					<span class="text-nowrap d-inline-block">
@@ -85,12 +85,12 @@
 		</ui:fragment>
 
 		<ui:fragment rendered="#{showMembersBeanCounts}">
-			<p class="text-muted small mb-0">
+			<p class="text-body-secondary small mb-0">
 				<b>#{msg.forum_posts}: </b>
 				<h:outputText value="#{groupMembersBean.getForumPostCounts(user.id)}"/>
 			</p>
 
-			<p class="text-muted small mb-0">
+			<p class="text-body-secondary small mb-0">
 				<b>#{msg.resources}: </b>
 				<h:outputText value="#{groupMembersBean.getResourcesCount(user.id)}"/>
 			</p>

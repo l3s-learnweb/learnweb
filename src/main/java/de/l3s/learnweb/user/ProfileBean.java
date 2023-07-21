@@ -342,6 +342,10 @@ public class ProfileBean extends ApplicationBean implements Serializable {
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
+    public Theme[] getAvailableThemes() {
+        return Theme.values();
+    }
+
     /**
      *
      * @return A list of all available time zone ids

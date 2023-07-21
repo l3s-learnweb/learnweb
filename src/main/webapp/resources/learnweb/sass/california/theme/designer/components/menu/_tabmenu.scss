@@ -8,8 +8,9 @@ body {
       padding: 0;
       background: $tabsNavBg;
       @include flex();
-      @include flex-wrap(wrap);
+      @include flex-wrap(nowrap);
       position: relative;
+      overflow-x: scroll;
 
       &:before {
         position: absolute;
@@ -35,6 +36,7 @@ body {
         @include flex();
         @include flex-align-center();
         transition: $transition;
+        flex-shrink: 0;
 
         a {
           color: $tabsHeaderTextColor;
@@ -80,18 +82,80 @@ body {
         }
       }
     }
-  }
 
-  @media screen and (max-width: $phoneBreakpoint) {
-    .ui-tabmenu {
+    &.ui-tabs-bottom {
       .ui-tabmenu-nav {
-        .ui-tabmenuitem a {
-          .ui-menuitem-icon {
-            margin-right: 0;
+        &:before {
+          border-bottom: 0 none;
+          border-top: $tabsNavBorder;
+          bottom: auto;
+          top: 0;
+        }
+
+        .ui-tabmenuitem {
+          border-bottom: 0 none;
+          border-top: $tabsNavBorder;
+
+          &.ui-state-hover {
+            border-color: $tabsHeaderHoverBorderColor;
           }
 
-          .ui-menuitem-text {
-            display: none;
+          &.ui-state-active {
+            border-color: $tabsHeaderActiveBorderColor;
+          }
+        }
+      }
+    }
+
+    &.ui-tabs-left {
+      .ui-tabmenu-nav {
+        flex-direction: column;
+
+        &:before {
+          border-bottom: 0 none;
+          border-right: $tabsNavBorder;
+          left: auto;
+          right: 0;
+          width: auto;
+          height: 100%;
+        }
+
+        .ui-tabmenuitem {
+          border-bottom: 0 none;
+          border-right: $tabsNavBorder;
+
+          &.ui-state-hover {
+            border-color: $tabsHeaderHoverBorderColor;
+          }
+
+          &.ui-state-active {
+            border-color: $tabsHeaderActiveBorderColor;
+          }
+        }
+      }
+    }
+
+    &.ui-tabs-right {
+      .ui-tabmenu-nav {
+        flex-direction: column;
+
+        &:before {
+          border-bottom: 0 none;
+          border-left: $tabsNavBorder;
+          width: auto;
+          height: 100%;
+        }
+
+        .ui-tabmenuitem {
+          border-bottom: 0 none;
+          border-left: $tabsNavBorder;
+
+          &.ui-state-hover {
+            border-color: $tabsHeaderHoverBorderColor;
+          }
+
+          &.ui-state-active {
+            border-color: $tabsHeaderActiveBorderColor;
           }
         }
       }

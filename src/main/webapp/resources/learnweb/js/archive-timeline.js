@@ -17,7 +17,7 @@ function returnToTimeline() {
 function archiveVersionsList(events) {
   let list = '<ul class=\'ps-2 mb-0\'>';
   for (let i = 0, l = events.length; i < l; i++) {
-    list += `<li><a href='${events[i].url}' class='text-white' target='_blank'>${events[i].time}</a></li>`;
+    list += `<li><a href='${events[i].url}' target='_blank'>${events[i].time}</a></li>`;
   }
   list += '</ul>';
   return list;

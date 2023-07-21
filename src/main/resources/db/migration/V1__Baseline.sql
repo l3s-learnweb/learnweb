@@ -308,34 +308,6 @@ CREATE TABLE IF NOT EXISTS `lw_resource_thumb` (
     PRIMARY KEY (`resource_id`, `user_id`)
 );
 
-CREATE TABLE IF NOT EXISTS `lw_submission` (
-    `submission_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `deleted` BOOLEAN NOT NULL DEFAULT 0,
-    `course_id` INT(10) UNSIGNED NOT NULL,
-    `title` VARCHAR(100) DEFAULT NULL,
-    `description` VARCHAR(1000) DEFAULT NULL,
-    `open_date` TIMESTAMP NULL DEFAULT NULL,
-    `close_date` TIMESTAMP NULL DEFAULT NULL,
-    `number_of_resources` INT(10) NOT NULL DEFAULT 3,
-    `survey_resource_id` INT(10) UNSIGNED DEFAULT NULL,
-    KEY `lw_submission_course_id` (`course_id`, `deleted`)
-);
-
-CREATE TABLE IF NOT EXISTS `lw_submission_resource` (
-    `submission_id` INT(10) UNSIGNED NOT NULL,
-    `user_id` INT(10) UNSIGNED NOT NULL,
-    `resource_id` INT(10) UNSIGNED NOT NULL,
-    PRIMARY KEY (`submission_id`, `user_id`, `resource_id`)
-);
-
-CREATE TABLE IF NOT EXISTS `lw_submission_status` (
-    `submission_id` INT(10) UNSIGNED NOT NULL,
-    `user_id` INT(10) UNSIGNED NOT NULL,
-    `submitted` BOOLEAN NOT NULL DEFAULT 1,
-    `survey_resource_id` INT(10) UNSIGNED DEFAULT NULL,
-    PRIMARY KEY (`submission_id`, `user_id`)
-);
-
 CREATE TABLE IF NOT EXISTS `lw_survey` (
     `survey_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `organisation_id` INT(10) UNSIGNED NOT NULL,
@@ -390,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `lw_survey_resource_user` (
     `submitted` BOOLEAN NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`resource_id`, `user_id`)
-) COMMENT = 'Contains submission status for a particular user';
+) COMMENT = 'Contains survey state for a particular user';
 
 CREATE TABLE IF NOT EXISTS `lw_tag` (
     `tag_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -491,7 +463,7 @@ ALTER TABLE `lw_comment` ADD CONSTRAINT `fk_lw_comment_lw_resource` FOREIGN KEY 
 ALTER TABLE `lw_comment` ADD CONSTRAINT `fk_lw_comment_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_forum_topic` FOREIGN KEY (`topic_id`) REFERENCES `lw_forum_topic` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 ALTER TABLE `lw_forum_post` ADD CONSTRAINT `fk_lw_forum_post_lw_user_edit` FOREIGN KEY (`edit_user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `lw_forum_topic` ADD CONSTRAINT `fk_lw_forum_topic_lw_group` FOREIGN KEY (`group_id`) REFERENCES `lw_group` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -550,17 +522,6 @@ ALTER TABLE `lw_resource_rating` ADD CONSTRAINT `fk_lw_resource_rating_lw_user` 
 ALTER TABLE `lw_resource_tag` ADD CONSTRAINT `fk_lw_resource_tag_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_resource_tag` ADD CONSTRAINT `fk_lw_resource_tag_lw_tag` FOREIGN KEY (`tag_id`) REFERENCES `lw_tag` (`tag_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_resource_tag` ADD CONSTRAINT `fk_lw_resource_tag_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `lw_submission` ADD CONSTRAINT `fk_lw_submission_lw_course` FOREIGN KEY (`course_id`) REFERENCES `lw_course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission` ADD CONSTRAINT `fk_lw_submission_lw_resource` FOREIGN KEY (`survey_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `lw_submission_resource` ADD CONSTRAINT `fk_lw_submission_resource_lw_submission` FOREIGN KEY (`submission_id`) REFERENCES `lw_submission` (`submission_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission_resource` ADD CONSTRAINT `fk_lw_submission_resource_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission_resource` ADD CONSTRAINT `fk_lw_submission_resource_lw_resource` FOREIGN KEY (`resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `lw_submission_status` ADD CONSTRAINT `fk_lw_submission_status_lw_submission` FOREIGN KEY (`submission_id`) REFERENCES `lw_submission` (`submission_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission_status` ADD CONSTRAINT `fk_lw_submission_status_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `lw_submission_status` ADD CONSTRAINT `fk_lw_submission_status_lw_resource` FOREIGN KEY (`survey_resource_id`) REFERENCES `lw_resource` (`resource_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `lw_survey` ADD CONSTRAINT `fk_lw_survey_lw_organisation` FOREIGN KEY (`organisation_id`) REFERENCES `lw_organisation` (`organisation_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `lw_survey` ADD CONSTRAINT `fk_lw_survey_lw_user` FOREIGN KEY (`user_id`) REFERENCES `lw_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;

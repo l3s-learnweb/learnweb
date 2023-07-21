@@ -42,7 +42,7 @@
                     </p:treeNode>
                 </p:tree>
 
-                <h:outputText value="${msg['group_resources.no_folders_found']}" styleClass="text-muted"
+                <h:outputText value="${msg['group_resources.no_folders_found']}" styleClass="text-body-secondary"
                               rendered="#{empty groupResourcesBean.group.subFolders}"/>
             </h:form>
         </div>
@@ -106,7 +106,7 @@
                         <p:menuitem value="#{msg['Glossary.glossary']}" icon="fas fa-book" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('glossary', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
-                        <p:menuitem value="#{msg.survey}" icon="fas fa-poll-h" ajax="true" rendered="#{userBean.admin}"
+                        <p:menuitem value="#{msg.survey}" icon="fas fa-poll-h" ajax="true"
                                     oncomplete="PF('createResourceDialog').show();" update=":createResourceDialog"
                                     actionListener="#{addResourceBean.create('survey', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                     </p:menuButton>
@@ -116,7 +116,7 @@
 
         <h:panelGroup id="resourceOverlay" layout="block" styleClass="ui-panel-content p-0 flex-grow-1 d-flex flex-column ui-loading-spin">
             <h:panelGroup id="resourcesWrapper" layout="block">
-                <h:form id="resourcesFilters" styleClass="bg-light" rendered="#{groupResourcesBean.searchQuery != null || groupResourcesBean.filtersActive || not groupResourcesBean.paginator.isEmpty()}">
+                <h:form id="resourcesFilters" rendered="#{groupResourcesBean.searchQuery != null || groupResourcesBean.filtersActive || not groupResourcesBean.paginator.isEmpty()}">
                     <ul class="res-filters">
                         <ui:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
                             <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
@@ -203,8 +203,8 @@
 <ui:decorate template="/WEB-INF/templates/blocks/modal/create_folder_dialog.xhtml"/>
 <ui:decorate template="/WEB-INF/templates/blocks/modal/edit_folder_dialog.xhtml"/>
 
-<p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource}" widgetVar="deleteConfirm" appendTo="@(body)"
-          modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true">
+<p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource}" widgetVar="deleteConfirm" appendTo="@(body)" modal="true" closeOnEscape="true" dynamic="true"
+          resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
     <h:outputText value="#{msg.delete_confirm_dialog_content}"/>
 
     <h:panelGroup layout="block" styleClass="text-end">
@@ -214,7 +214,8 @@
 </p:dialog>
 
 <p:dialog id="downloadConfirmDialog" header="#{msg.download}" widgetVar="downloadConfirm" appendTo="@(body)"
-          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true" dynamic="true">
+          modal="true" responsive="true" closeOnEscape="true" dynamic="true"
+          resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
     <h:outputText value="#{msg.download_confirm_dialog_content}"/>
 
     <h:form styleClass="text-end" prependId="false">
@@ -228,7 +229,8 @@
 </p:dialog>
 
 <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)"
-          modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true">
+          modal="true" closeOnEscape="true" dynamic="true"
+          resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
 
     <h:outputText value="#{msg.add_to}:"/>
 
@@ -253,8 +255,8 @@
     </div>
 </p:dialog>
 
-<p:dialog header="#{msg['group_resources.download_backup']}" widgetVar="dataExportedDialog" appendTo="@(body)"
-          modal="true" resizable="false" draggable="false" closeOnEscape="true" dynamic="true"
+<p:dialog header="#{msg['group_resources.download_backup']}" widgetVar="dataExportedDialog" appendTo="@(body)" modal="true" closeOnEscape="true" dynamic="true"
+          resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false"
           rendered="#{groupResourcesBean.group.canDeleteGroup(userBean.user)}">
     <h:form>
         <h:outputFormat value="#{msg.export_resources_warning}" styleClass="d-block mb-3">

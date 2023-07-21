@@ -279,7 +279,8 @@ public class SolrSearch implements Serializable {
             applyFacets(solrQuery, facetFields, facetQueries);
         }
 
-        try (Http2SolrClient server = Learnweb.getInstance().getSolrClient().getHttpSolrClient()) {
+        try {
+            Http2SolrClient server = Learnweb.getInstance().getSolrClient().getHttpSolrClient();
             // log.debug("solr query: " + solrQuery);
             return server.query(solrQuery);
         } catch (SolrServerException e) {

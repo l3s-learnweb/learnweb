@@ -21,7 +21,7 @@
 
 <ui:define name="center_layout">
     <h:form>
-        <p:dashboard id="board" model="#{adminSystemBean.model}" reordering="false">
+        <p:dashboard id="board" model="#{adminSystemBean.model}" styleClass="row" responsive="true" reordering="false">
             <p:panel id="memory" header="Memory usage">
                 <p:panelGrid columns="2" layout="flex" contentStyleClass="row" columnClasses="col-6, col-6">
                     <h:outputText value="Free memory:"/>
@@ -61,7 +61,7 @@
                 <p:commandButton actionListener="#{adminSystemBean.clearLocales()}" value="#{msg.clear_caches}" update="i18n" styleClass="ui-button-danger"/>
             </p:panel>
 
-            <p:panel id="solrIndex" header="Solr Index">
+            <p:panel id="solr_index" header="Solr Index">
                 <p:panelGrid columns="2" layout="flex" contentStyleClass="row" columnClasses="col-6, col-6">
                     <h:outputText value="Total resources:"/>
                     <h:outputText value="#{adminSystemBean.totalResources}"/>
@@ -70,7 +70,7 @@
                     <h:outputText value="#{adminSystemBean.indexedResources}"/>
                 </p:panelGrid>
 
-                <p:commandButton widgetVar="reindexBtn" actionListener="#{adminSystemBean.reindexResources()}" value="Reindex" update="solrIndex"
+                <p:commandButton widgetVar="reindexBtn" actionListener="#{adminSystemBean.reindexResources()}" value="Reindex" update="solr_index"
                                  styleClass="ui-button-danger mb-2" onclick="PF('reindexProgress').start();PF('reindexBtn').disable();$(this).next().show();"/>
 
                 <p:progressBar widgetVar="reindexProgress" value="#{adminSystemBean.reindexProgress}" ajax="true"
@@ -102,65 +102,66 @@
                                      ajax="true" process="@this" update="@this"/>
                 </p>
             </p:panel>
-        </p:dashboard>
 
-        <p:blockUI block="processTable" widgetVar="processTableOverlay">
-            <h:outputText value="#{msg.please_wait}"/>
-        </p:blockUI>
-
-        <p:dataTable id="processTable" var="process" value="#{adminSystemBean.databaseProcesses}" emptyMessage="No open connections">
-            <f:facet name="header">
-                <div class="d-flex">
-                    <div class="me-auto">#{msg.database_connections}</div>
-                    <div class="d-md-block d-flex flex-column">
-                        <p:commandButton value="Terminate all" action="#{adminSystemBean.terminateAllProcesses()}" styleClass="ui-button-warning"/>
+            <p:panel id="db_connections">
+                <f:facet name="header">
+                    <div class="d-flex">
+                        <div class="me-auto">#{msg.database_connections}</div>
+                        <div class="d-md-block d-flex flex-column">
+                            <p:commandButton value="Terminate all" action="#{adminSystemBean.terminateAllProcesses()}" styleClass="ui-button-warning"/>
+                        </div>
                     </div>
-                </div>
-            </f:facet>
+                </f:facet>
 
-            <p:column headerText="#{msg.id}" sortBy="#{process.id}">
-                <h:outputText value="#{process.id}"/>
-            </p:column>
+                <p:blockUI block="processTable" widgetVar="processTableOverlay">
+                    <h:outputText value="#{msg.please_wait}"/>
+                </p:blockUI>
 
-            <p:column headerText="#{msg.username}" sortBy="#{process.user}">
-                <h:outputText value="#{process.user}"/>
-            </p:column>
+                <p:dataTable id="processTable" var="process" value="#{adminSystemBean.databaseProcesses}" emptyMessage="No open connections">
+                    <p:column headerText="#{msg.id}" sortBy="#{process.id}">
+                        <h:outputText value="#{process.id}"/>
+                    </p:column>
 
-            <p:column headerText="Host" sortBy="#{process.host}">
-                <h:outputText value="#{process.host}"/>
-            </p:column>
+                    <p:column headerText="#{msg.username}" sortBy="#{process.user}">
+                        <h:outputText value="#{process.user}"/>
+                    </p:column>
 
-            <p:column headerText="DB" sortBy="#{process.db}">
-                <h:outputText value="#{process.db}"/>
-            </p:column>
+                    <p:column headerText="Host" sortBy="#{process.host}">
+                        <h:outputText value="#{process.host}"/>
+                    </p:column>
 
-            <p:column headerText="Command" sortBy="#{process.command}">
-                <h:outputText value="#{process.command}"/>
-            </p:column>
+                    <p:column headerText="DB" sortBy="#{process.db}">
+                        <h:outputText value="#{process.db}"/>
+                    </p:column>
 
-            <p:column headerText="#{msg.time}" sortBy="#{process.time}">
-                <h:outputText value="#{process.time}"/>
-            </p:column>
+                    <p:column headerText="Command" sortBy="#{process.command}">
+                        <h:outputText value="#{process.command}"/>
+                    </p:column>
 
-            <p:column headerText="State" sortBy="#{process.state}">
-                <h:outputText value="#{process.state}"/>
-            </p:column>
+                    <p:column headerText="#{msg.time}" sortBy="#{process.time}">
+                        <h:outputText value="#{process.time}"/>
+                    </p:column>
 
-            <p:column headerText="#{msg.info}" sortBy="#{process.info}">
-                <h:outputText value="#{process.info}"/>
-            </p:column>
+                    <p:column headerText="State" sortBy="#{process.state}">
+                        <h:outputText value="#{process.state}"/>
+                    </p:column>
 
-            <p:column headerText="Progress" sortBy="#{process.progress}">
-                <h:outputText value="#{process.progress}"/>
-            </p:column>
+                    <p:column headerText="#{msg.info}" sortBy="#{process.info}">
+                        <h:outputText value="#{process.info}"/>
+                    </p:column>
 
-            <p:column styleClass="text-end">
-                <p:commandButton title="Terminate" styleClass="ui-button-danger rounded-button ui-button-flat" actionListener="#{adminSystemBean.terminateProcess(process)}"
-                                 process="@this" update="processTable" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()" icon="fas fa-hand">
-                </p:commandButton>
-            </p:column>
-        </p:dataTable>
+                    <p:column headerText="Progress" sortBy="#{process.progress}">
+                        <h:outputText value="#{process.progress}"/>
+                    </p:column>
 
+                    <p:column styleClass="text-end">
+                        <p:commandButton title="Terminate" styleClass="ui-button-danger rounded-button ui-button-flat" actionListener="#{adminSystemBean.terminateProcess(process)}"
+                                         process="@this" update="processTable" onstart="PF('processTableOverlay').show()" oncomplete="PF('processTableOverlay').hide()" icon="fas fa-hand">
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </p:dashboard>
     </h:form>
 </ui:define>
 

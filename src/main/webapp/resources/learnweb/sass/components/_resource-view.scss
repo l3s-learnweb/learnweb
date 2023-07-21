@@ -1,8 +1,16 @@
+.fancybox-bg {
+  background: transparent;
+  backdrop-filter: blur(4.5px);
+}
+
+.fancybox-slide--iframe .fancybox-content {
+  background: transparent;
+}
+
 body .res-view {
   height: 100%;
 
   .res-view-embedded {
-    background: var(--gray-700);
     overflow: auto;
 
     .res-embedded-tabs .ui-tabs-panel,
@@ -56,17 +64,16 @@ body .res-view {
   }
 
   .res-view-details {
-    color: var(--white);
-    background: var(--gray-800);
+    background: var(--secondary-bg);
     max-height: 100%;
     overflow: auto;
 
     .res-details-title {
-      color: var(--gray-500);
+      color: var(--emphasis-color);
       margin: 1.375rem 0 0.5rem;
       padding-bottom: 0.2rem;
       font-size: $font-size-lg;
-      border-bottom: 1px solid var(--gray-600);
+      border-bottom: 1px solid var(--body-color);
     }
 
     .res-view-panel {
@@ -79,32 +86,30 @@ body .res-view {
       }
 
       .ui-inputfield {
-        background: var(--gray-500);
+        background: var(--body-bg);
       }
     }
 
     .ui-selectcheckboxmenu {
       color: var(--black);
-      background: var(--gray-500);
+      background: var(--body-bg);
     }
 
-    .bg-light {
-      background: var(--gray-700) !important;
+    .comment-entry {
+      background: var(--secondary-bg);
     }
   }
 
   .ui-button.ui-button-plain {
-    color: var(--primary-text-color);
-
     &.ui-state-hover {
-      background: var(--dark);
-      color: var(--primary-text-color);
+      background: var(--secondary-color);
+      color: var(--secondary-bg);
     }
 
     &.ui-state-active,
     &.ui-state-down {
-      background: var(--dark);
-      color: var(--primary-text-color);
+      background: var(--secondary-color);
+      color: var(--secondary-bg);
     }
   }
 
@@ -115,7 +120,7 @@ body .res-view {
       background: inherit;
 
       &::before {
-        border-bottom: var(--border-width) solid var(--gray-600);
+        border-bottom: var(--border-width) solid var(--body-color);
       }
 
       li.ui-tabs-header {
@@ -125,20 +130,20 @@ body .res-view {
         border-bottom: 4px solid transparent;
 
         a {
-          color: var(--gray-100);
+          color: var(--body-color);
         }
 
         &.ui-state-active {
           background: inherit;
-          border-bottom-color: var(--gray-600);
+          border-bottom-color: var(--secondary-color);
           margin-bottom: 0;
         }
 
         &.ui-state-hover {
-          border-bottom-color: var(--gray-500);
+          border-bottom-color: var(--secondary-color);
 
           a {
-            color: var(--gray-500);
+            color: var(--body-color);
           }
         }
       }
@@ -147,11 +152,6 @@ body .res-view {
     .ui-tabs-panels {
       color: inherit;
       background: inherit;
-
-      /* stylelint-disable-next-line selector-list-comma-newline-after */
-      h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
-        color: inherit;
-      }
     }
   }
 
@@ -202,8 +202,8 @@ body .res-view {
 
     &:hover {
       background-color: transparent;
-      border-color: var(--primary-dark);
-      color: var(--primary-dark);
+      border-color: var(--primary-hover);
+      color: var(--primary-hover);
     }
   }
 }

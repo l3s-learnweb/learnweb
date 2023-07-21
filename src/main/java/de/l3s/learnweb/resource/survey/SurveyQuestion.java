@@ -3,112 +3,106 @@ package de.l3s.learnweb.resource.survey;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.util.Deletable;
+import de.l3s.util.HasId;
 
-/**
- * @author Rishita
- */
-public class SurveyQuestion implements Deletable, Serializable {
+public class SurveyQuestion implements HasId, Deletable, Serializable {
     @Serial
     private static final long serialVersionUID = -7698089608547415349L;
 
     public enum QuestionType { // represents primefaces input types
         INPUT_TEXT(false, false), // options define the valid length (first entry = min length, second entry = max length)
         INPUT_TEXTAREA(false, false), // options define the valid length (first entry = min length, second entry = max length)
-        AUTOCOMPLETE(false, true),
-        ONE_MENU(false, true),
-        ONE_MENU_EDITABLE(false, true),
-        MULTIPLE_MENU(false, true),
-        ONE_RADIO(false, true),
-        MANY_CHECKBOX(false, true),
-        FULLWIDTH_HEADER(true, false),
-        FULLWIDTH_DESCRIPTION(true, false);
 
-        private final boolean readonly;
+        ONE_RADIO(false, true), // Multiple choice
+        ONE_MENU(false, true), // Dropdown
+        ONE_MENU_EDITABLE(false, true), // Dropdown with free text input
+        MANY_CHECKBOX(false, true, true), // Checkboxes
+        MULTIPLE_MENU(false, true, true), // Tags
+
+        FULLWIDTH_HEADER();
+
+        private final boolean readOnly;
         private final boolean options;
+        private final boolean multiple;
 
         QuestionType() {
-            this.readonly = false;
+            this.readOnly = true;
             this.options = false;
+            this.multiple = false;
         }
 
-        QuestionType(boolean readonly, boolean options) {
-            this.readonly = readonly;
+        QuestionType(boolean readOnly, boolean options) {
+            this.readOnly = readOnly;
+            this.options = options;
+            this.multiple = false;
+        }
+
+        QuestionType(boolean readOnly, boolean options, boolean multiple) {
+            this.readOnly = readOnly;
+            this.multiple = multiple;
             this.options = options;
         }
 
-        public boolean isReadonly() {
-            return readonly;
+        public boolean isReadOnly() {
+            return readOnly;
         }
 
         public boolean isOptions() {
             return options;
         }
+
+        public boolean isMultiple() {
+            return multiple;
+        }
     }
 
-    private String label; // label on the website, is replaced by a translated term if available
-    private String info; // an explanation, displayed as tooltip
-    private QuestionType type;
-    private int id; //question id
-    private int surveyId;
-    private Map<String, Object> options = new HashMap<>(); // default options for some input types like OneMenu
-    private boolean moderatorOnly = false; // only admins and moderators have write access
-    private boolean required = false;
+    private int id;
+    private int resourceId;
+    private int pageId;
     private boolean deleted = false;
     private int order;
-    private List<SurveyQuestionOption> answers = new ArrayList<>(); // predefined answers for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
+    private QuestionType type;
+    private String question; // question on the website, is replaced by a translated term if available
+    private String description; // an explanation, displayed as tooltip
+    private boolean required = false;
+    private Integer minLength;
+    private Integer maxLength;
+
+    private List<SurveyQuestionOption> options = new ArrayList<>(); // predefined options for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
 
     public SurveyQuestion(QuestionType type) {
         this.type = type;
         // set default length limits for text input fields
         if (type == QuestionType.INPUT_TEXT || type == QuestionType.INPUT_TEXTAREA) {
-            options.put("minLength", 0);
-            options.put("maxLength", 6000);
+            minLength = 0;
+            maxLength = 6000;
         }
     }
 
-    public SurveyQuestion(QuestionType type, String label) {
+    public SurveyQuestion(QuestionType type, int resourceId) {
         this(type);
-        setLabel(label);
-    }
-
-    public SurveyQuestion(QuestionType type, int surveyId) {
-        this(type);
-        setSurveyId(surveyId);
+        setResourceId(resourceId);
     }
 
     public SurveyQuestion(SurveyQuestion question) {
         setId(0);
-        setSurveyId(0);
-        setLabel(question.label);
-        setInfo(question.info);
-        setOptions(question.options);
-        setModeratorOnly(question.moderatorOnly);
+        setResourceId(0);
+        setPageId(question.pageId);
+        setQuestion(question.question);
+        setDescription(question.description);
+        setMinLength(question.minLength);
+        setMaxLength(question.maxLength);
         setRequired(question.required);
         setDeleted(question.deleted);
         setOrder(question.order);
-        for (SurveyQuestionOption answer : question.getAnswers()) {
+        for (SurveyQuestionOption answer : question.getOptions()) {
             answer.setId(0);
-            answers.add(answer);
+            options.add(answer);
         }
         setType(question.type);
-    }
-
-    public List<QuestionType> getQuestionTypes() {
-        List<QuestionType> types = new ArrayList<>();
-        Arrays.asList(QuestionType.values()).forEach(qType -> {
-            if (qType != QuestionType.AUTOCOMPLETE && qType != QuestionType.FULLWIDTH_HEADER) {
-                types.add(qType);
-            }
-        });
-        return types;
     }
 
     public QuestionType getType() {
@@ -117,46 +111,26 @@ public class SurveyQuestion implements Deletable, Serializable {
 
     public void setType(QuestionType type) {
         this.type = type;
-        if (type.options && this.getAnswers().isEmpty()) {
-            this.getAnswers().add(new SurveyQuestionOption());
-            this.getAnswers().add(new SurveyQuestionOption());
+
+        if (type.options && this.getOptions().isEmpty()) {
+            this.getOptions().add(new SurveyQuestionOption(id));
         }
     }
 
-    public Map<String, Object> getOptions() {
-        return options;
+    public String getQuestion() {
+        return question;
     }
 
-    public void setOptions(Map<String, Object> options) {
-        this.options = options;
+    public void setQuestion(String question) {
+        this.question = question;
     }
 
-    public List<String> completeText(String query) {
-        return null; // until now never used in a survey. But let's see
+    public String getDescription() {
+        return description;
     }
 
-    public boolean isModeratorOnly() {
-        return moderatorOnly;
-    }
-
-    public void setModeratorOnly(boolean moderatorOnly) {
-        this.moderatorOnly = moderatorOnly;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label.replaceAll("<p>", "").replaceAll("</p>", "");
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = StringUtils.defaultString(info);
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isRequired() {
@@ -167,20 +141,41 @@ public class SurveyQuestion implements Deletable, Serializable {
         this.required = required;
     }
 
-    public List<SurveyQuestionOption> getAnswers() {
-        return answers;
+    public List<SurveyQuestionOption> getOptions() {
+        return options;
     }
 
-    public void setAnswers(List<SurveyQuestionOption> answers) {
-        this.answers = answers;
+    public void setOptions(List<SurveyQuestionOption> options) {
+        this.options = options;
     }
 
+    public List<SurveyQuestionOption> getActualAnswers() {
+        return options.stream().filter(answer -> !answer.isDeleted()).toList();
+    }
+
+    @Override
     public int getId() {
         return id;
     }
 
     void setId(int id) {
         this.id = id;
+    }
+
+    public int getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(final int resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public int getPageId() {
+        return pageId;
+    }
+
+    public void setPageId(final int pageId) {
+        this.pageId = pageId;
     }
 
     @Override
@@ -192,14 +187,6 @@ public class SurveyQuestion implements Deletable, Serializable {
         this.deleted = deleted;
     }
 
-    public int getSurveyId() {
-        return surveyId;
-    }
-
-    public void setSurveyId(int surveyId) {
-        this.surveyId = surveyId;
-    }
-
     public int getOrder() {
         return order;
     }
@@ -208,8 +195,19 @@ public class SurveyQuestion implements Deletable, Serializable {
         this.order = order;
     }
 
-    public static String joinOptions(Map<String, Object> options) {
-        String str = options.values().toString();
-        return str.substring(1, str.length() - 1).replace(",", "|||").replaceAll("\\s", "");
+    public Integer getMinLength() {
+        return minLength;
+    }
+
+    public void setMinLength(final Integer minLength) {
+        this.minLength = minLength;
+    }
+
+    public Integer getMaxLength() {
+        return maxLength;
+    }
+
+    public void setMaxLength(final Integer maxLength) {
+        this.maxLength = maxLength;
     }
 }

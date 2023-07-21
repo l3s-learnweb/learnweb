@@ -3,13 +3,13 @@ package de.l3s.learnweb.resource.survey;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.PreparedBatch;
@@ -18,20 +18,33 @@ import org.jdbi.v3.sqlobject.CreateSqlObject;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
-import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import de.l3s.learnweb.exceptions.NotFoundHttpException;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDao;
+import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.util.Cache;
+import de.l3s.util.ICache;
 import de.l3s.util.SqlHelper;
 
-@RegisterRowMapper(SurveyDao.SurveyMapper.class)
 public interface SurveyDao extends SqlObject, Serializable {
+    ICache<SurveyResponse> responseCache = new Cache<>(500);
 
     @CreateSqlObject
     ResourceDao getResourceDao();
 
     default Optional<SurveyResource> findResourceById(int surveyResourceId) {
         return convertToSurveyResource(getResourceDao().findById(surveyResourceId).orElse(null));
+    }
+
+    default SurveyResource findResourceByIdOrElseThrow(int surveyResourceId) {
+        return convertToSurveyResource(getResourceDao().findById(surveyResourceId).orElse(null))
+            .orElseThrow(() -> new NotFoundHttpException("error_pages.not_found_object_description"));
+    }
+
+    default List<SurveyResource> findByUserId(int userId) {
+        return getResourceDao().findByOwnerIdsAndType(Collections.singleton(userId), ResourceType.survey)
+            .stream().map(this::convertToSurveyResource).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
     }
 
     default Optional<SurveyResource> convertToSurveyResource(Resource resource) {
@@ -47,131 +60,101 @@ public interface SurveyDao extends SqlObject, Serializable {
         }
     }
 
-    @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_survey_resource sr WHERE sr.survey_id = s.survey_id) as res_count FROM lw_survey s WHERE survey_id = ?")
-    Optional<Survey> findById(int surveyId);
-
-    @SqlQuery("SELECT *, (SELECT COUNT(*) FROM lw_survey_resource sr WHERE sr.survey_id = s.survey_id) as res_count FROM lw_survey s WHERE organisation_id = ? and deleted = 0 and (public_template = 1 or user_id = ?)")
-    List<Survey> findByOrganisationIdOrUserId(int organisationId, int userId);
-
-    /**
-     * @return true if the given survey was submitted by the user
-     */
-    @SqlQuery("SELECT submitted FROM lw_survey_resource_user WHERE resource_id = ? AND user_id = ?")
-    Optional<Boolean> findSubmittedStatus(int resourceId, int userId);
-
-    @SqlUpdate("INSERT INTO lw_survey_resource_user (resource_id, user_id, submitted) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE submitted = VALUES(submitted)")
-    void insertSubmittedStatus(int resourceId, int userId, boolean submitted);
-
-    default void deleteSoft(Survey survey) {
-        getHandle().execute("UPDATE lw_survey SET deleted = 1 WHERE survey_id = ?", survey);
-
-        survey.setDeleted(true);
-    }
-
-    /**
-     * Returns all answers a user has given for a particular survey resource.
-     */
-    default SurveyUserAnswers findAnswersByResourceAndUserId(final SurveyResource resource, int userId) {
-        Validate.notNull(resource);
-        Validate.isTrue(userId != 0, "The value must be greater than zero: ", userId);
-        Validate.isTrue(resource.getId() != 0, "The value must be greater than zero: ", resource.getId());
-
-        // Get survey data
-        SurveyUserAnswers surveyAnswer = getHandle().select("SELECT * FROM lw_survey_answer WHERE resource_id = ? AND user_id = ?", resource, userId)
-            .reduceResultSet(new SurveyUserAnswers(userId, resource.getId()), (previous, rs, ctx) -> {
-                previous.setSaved(true);
-
-                SurveyQuestion question = resource.getSurvey().getQuestion(rs.getInt("question_id"));
-                if (question != null) {
-                    // distinguish questions with single and multiple answers
-                    SurveyQuestion.QuestionType ansType = question.getType();
-
-                    if (ansType == SurveyQuestion.QuestionType.MULTIPLE_MENU || ansType == SurveyQuestion.QuestionType.MANY_CHECKBOX) {
-                        String[] answer = StringUtils.defaultString(rs.getString("answer")).split("\\s*\\|\\|\\|\\s*");
-
-                        previous.getMultipleAnswers().put(rs.getInt("question_id"), answer);
-                    } else {
-                        previous.getAnswers().put(rs.getInt("question_id"), rs.getString("answer"));
-                    }
-                }
-
-                return previous;
-            });
-
-        if (surveyAnswer.isSaved()) {
-            surveyAnswer.setSubmitted(findSubmittedStatus(resource.getId(), userId).orElse(false));
-        }
-
-        return surveyAnswer;
-    }
-
     @RegisterRowMapper(SurveyQuestionOptionMapper.class)
     @SqlQuery("SELECT * FROM lw_survey_question_option WHERE question_id = ? and deleted = 0")
-    List<SurveyQuestionOption> findAnswersByQuestionId(int questionId);
+    List<SurveyQuestionOption> findOptionsByQuestionId(int questionId);
+
+    @RegisterRowMapper(SurveyPageVariantMapper.class)
+    @SqlQuery("SELECT * FROM lw_survey_page_variant WHERE page_id = ?")
+    List<SurveyPageVariant> findVariantsByPageId(int pageId);
 
     @RegisterRowMapper(SurveyQuestionMapper.class)
-    @SqlQuery("SELECT * FROM lw_survey_question WHERE survey_id = ? and deleted = 0 ORDER BY `order`")
-    List<SurveyQuestion> findQuestionsBySurveyId(int surveyId);
+    @SqlQuery("SELECT * FROM lw_survey_question WHERE question_id = ? and deleted = 0")
+    Optional<SurveyQuestion> findQuestionById(int questionId);
 
-    default List<SurveyQuestion> findQuestionsAndAnswersById(int surveyId) {
-        return findQuestionsBySurveyId(surveyId).stream()
-            .peek(question -> question.getAnswers().addAll(findAnswersByQuestionId(question.getId())))
+    @RegisterRowMapper(SurveyQuestionMapper.class)
+    @SqlQuery("SELECT * FROM lw_survey_question WHERE resource_id = ? and deleted = 0 ORDER BY `order`")
+    List<SurveyQuestion> findQuestionsByResourceId(int resourceId);
+
+    @RegisterRowMapper(SurveyQuestionMapper.class)
+    @SqlQuery("SELECT * FROM lw_survey_question WHERE resource_id = ? and page_id = ? and deleted = 0 ORDER BY `order`")
+    List<SurveyQuestion> findQuestionsByResourceIdAndPageId(int resourceId, int pageId);
+
+    @RegisterRowMapper(SurveyPageMapper.class)
+    @SqlQuery("SELECT * FROM lw_survey_page WHERE resource_id = ? and deleted = 0 ORDER BY `order`")
+    List<SurveyPage> findPagesByResourceId(int resourceId);
+
+    default List<SurveyPage> findPagesAndVariantsByResourceId(int resourceId) {
+        return findPagesByResourceId(resourceId).stream()
+            .peek(page -> page.getVariants().addAll(findVariantsByPageId(page.getId())))
+            .collect(Collectors.toList());
+    }
+
+    default List<SurveyQuestion> findQuestionsAndOptionsByResourceId(int resourceId) {
+        return findQuestionsByResourceId(resourceId).stream()
+            .peek(question -> question.getOptions().addAll(findOptionsByQuestionId(question.getId())))
+            .collect(Collectors.toList());
+    }
+
+    default List<SurveyQuestion> findQuestionsAndOptionsByResourceId(int resourceId, int pageId) {
+        return findQuestionsByResourceIdAndPageId(resourceId, pageId).stream()
+            .peek(question -> question.getOptions().addAll(findOptionsByQuestionId(question.getId())))
             .collect(Collectors.toList());
     }
 
     /**
-     * Loads the survey metadata into the given SurveyResource.
+     * Persists the survey. Updates ids if not yet stored.
      */
-    default void loadSurveyResource(SurveyResource resource) {
-        getHandle().select("SELECT * FROM lw_survey_resource WHERE resource_id = ?", resource).map((rs, ctx) -> {
-            resource.setEnd(SqlHelper.getLocalDateTime(rs.getTimestamp("close_date")));
-            resource.setStart(SqlHelper.getLocalDateTime(rs.getTimestamp("open_date")));
-            resource.setSurveyId(rs.getInt("survey_id"));
-            resource.setSaveable(rs.getBoolean("editable"));
-            return resource;
-        }).one();
+    default void savePages(SurveyResource resource) {
+        for (SurveyPage page : resource.getPages()) {
+            page.setResourceId(resource.getId()); // need to update id in case survey has just been created
+            savePage(page);
+            saveQuestions(page);
+        }
     }
 
     /**
      * Persists the survey. Updates ids if not yet stored.
-     *
-     * @param updateMetadataOnly performance optimization: if true only metadata like title and description will be saved but not changes to questions
      */
-    default void save(Survey survey, boolean updateMetadataOnly) {
-        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("survey_id", SqlHelper.toNullable(survey.getId()));
-        params.put("organisation_id", SqlHelper.toNullable(survey.getOrganisationId()));
-        params.put("title", survey.getTitle());
-        params.put("description", SqlHelper.toNullable(survey.getDescription()));
-        params.put("user_id", SqlHelper.toNullable(survey.getUserId()));
-        params.put("public_template", survey.isPublicTemplate());
+    default void saveQuestions(SurveyPage page) {
+        for (SurveyQuestion question : page.getQuestions()) {
+            question.setResourceId(page.getResourceId()); // need to update id in case survey has just been created
+            question.setPageId(page.getId());
+            saveQuestion(question);
+        }
+    }
 
-        Optional<Integer> surveyId = SqlHelper.handleSave(getHandle(), "lw_survey", params)
+    default void savePage(SurveyPage page) {
+        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+        params.put("resource_id", page.getResourceId());
+        params.put("page_id", SqlHelper.toNullable(page.getId()));
+        params.put("deleted", page.isDeleted());
+        params.put("order", page.getOrder());
+        params.put("title", SqlHelper.toNullable(page.getTitle()));
+        params.put("description", SqlHelper.toNullable(page.getDescription()));
+        params.put("sampling", page.isSampling());
+
+        Optional<Integer> pageId = SqlHelper.handleSave(getHandle(), "lw_survey_page", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
 
-        if (surveyId.isPresent() && surveyId.get() != 0) {
-            survey.setId(surveyId.get());
-        }
-
-        if (!updateMetadataOnly) {
-            for (SurveyQuestion question : survey.getQuestions()) {
-                question.setSurveyId(survey.getId()); // need to update id in case survey has just been created
-                saveQuestion(question);
-            }
+        if (pageId.isPresent() && pageId.get() != 0) {
+            page.setId(pageId.get());
         }
     }
 
     default void saveQuestion(SurveyQuestion question) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+        params.put("resource_id", question.getResourceId());
         params.put("question_id", SqlHelper.toNullable(question.getId()));
-        params.put("survey_id", SqlHelper.toNullable(question.getSurveyId()));
+        params.put("page_id", SqlHelper.toNullable(question.getPageId()));
         params.put("deleted", question.isDeleted());
         params.put("order", question.getOrder());
-        params.put("question", question.getLabel());
         params.put("question_type", question.getType());
-        params.put("option", SurveyQuestion.joinOptions(question.getOptions()));
-        params.put("info", question.getInfo());
+        params.put("question", StringUtils.defaultString(question.getQuestion()));
+        params.put("description", question.getDescription());
         params.put("required", question.isRequired());
+        params.put("min_length", question.getMinLength());
+        params.put("max_length", question.getMaxLength());
 
         Optional<Integer> questionId = SqlHelper.handleSave(getHandle(), "lw_survey_question", params)
             .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
@@ -180,16 +163,16 @@ public interface SurveyDao extends SqlObject, Serializable {
             question.setId(questionId.get());
         }
 
-        for (SurveyQuestionOption answer : question.getAnswers()) {
+        for (SurveyQuestionOption answer : question.getOptions()) {
             saveQuestionOption(question.getId(), answer);
         }
     }
 
     default void saveQuestionOption(int questionId, SurveyQuestionOption option) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("answer_id", SqlHelper.toNullable(option.getId()));
+        params.put("question_id", questionId);
+        params.put("option_id", SqlHelper.toNullable(option.getId()));
         params.put("deleted", option.isDeleted());
-        params.put("question_id", SqlHelper.toNullable(questionId));
         params.put("value", option.getValue());
 
         Optional<Integer> optionId = SqlHelper.handleSave(getHandle(), "lw_survey_question_option", params)
@@ -200,76 +183,154 @@ public interface SurveyDao extends SqlObject, Serializable {
         }
     }
 
-    default void saveSurveyResource(SurveyResource surveyResource) {
-        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        params.put("resource_id", surveyResource.getId());
-        params.put("survey_id", surveyResource.getSurveyId());
-        params.put("open_date", surveyResource.getStart());
-        params.put("close_date", surveyResource.getEnd());
-        params.put("editable", surveyResource.isSaveable());
-
-        SqlHelper.handleSave(getHandle(), "lw_survey_resource", params).execute();
-    }
+    /**
+     * @return {@code true} if the given survey was submitted by the user
+     */
+    @SqlQuery("SELECT submitted FROM lw_survey_response WHERE resource_id = ? AND user_id = ?")
+    Optional<Boolean> findSubmittedStatus(int resourceId, int userId);
 
     /**
-     * @param finalSubmit true if this is the final submit
+     * Returns all answers a user has given for a particular survey resource.
      */
-    default void saveAnswers(SurveyUserAnswers surveyAnswer, final boolean finalSubmit) {
-        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_survey_answer (resource_id, user_id, question_id, answer) VALUES (?, ?, ?, ?) "
+    default SurveyResponse findResponseByResourceAndUserId(final int resourceId, final int userId) {
+        Optional<SurveyResponse> select = getHandle().select("SELECT * FROM lw_survey_response WHERE resource_id = ? AND user_id = ? LIMIT 1", resourceId, userId)
+            .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class).findOne();
+
+        return select.map(this::findAnswersByResponse).orElse(null);
+    }
+
+    default SurveyResponse findResponseById(final int responseId) {
+        SurveyResponse response = responseCache.get(responseId);
+        if (response == null) {
+            Optional<SurveyResponse> select = getHandle().select("SELECT * FROM lw_survey_response WHERE response_id = ?", responseId)
+                .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class).findOne();
+
+            if (select.isPresent()) {
+                return findAnswersByResponse(select.get());
+            }
+        }
+        return response;
+    }
+
+    default List<SurveyResponse> findResponsesByResourceId(final int resourceId) {
+        return getHandle().select("SELECT * FROM lw_survey_response WHERE resource_id = ?", resourceId)
+            .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class)
+            .map(this::findAnswersByResponse).collect(Collectors.toList());
+    }
+
+    default List<SurveyResponse> findSubmittedResponsesByResourceId(final int resourceId) {
+        return getHandle().select("SELECT * FROM lw_survey_response WHERE resource_id = ? AND submitted = 1", resourceId)
+            .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class)
+            .map(this::findAnswersByResponse).collect(Collectors.toList());
+    }
+
+    default List<SurveyResponse> findResponsesByUserId(final int resourceId) {
+        return getHandle().select("SELECT * FROM lw_survey_response WHERE user_id = ?", resourceId)
+            .registerRowMapper(new SurveyResponseMapper()).mapTo(SurveyResponse.class)
+            .map(this::findAnswersByResponse).collect(Collectors.toList());
+    }
+
+    default SurveyResponse findAnswersByResponse(final SurveyResponse response) {
+        return getHandle().select("SELECT * FROM lw_survey_response_answer WHERE response_id = ?", response.getId())
+            .reduceResultSet(response, (previous, rs, ctx) -> {
+                int questionId = rs.getInt("question_id");
+                String answer = rs.getString("answer");
+
+                Optional<SurveyQuestion> question = findQuestionById(questionId);
+                if (question.isPresent()) {
+                    if (question.get().getType().isMultiple()) {
+                        previous.getMultipleAnswers().put(questionId, SurveyResponse.splitAnswers(answer));
+                    } else {
+                        previous.getAnswers().put(questionId, answer);
+                    }
+                }
+                return previous;
+            });
+    }
+
+    default void saveResponse(SurveyResponse response) {
+        if (response.getCreatedAt() == null) {
+            response.setCreatedAt(SqlHelper.now());
+        }
+
+        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+        params.put("response_id", SqlHelper.toNullable(response.getId()));
+        params.put("resource_id", response.getResourceId());
+        params.put("user_id", SqlHelper.toNullable(response.getUserId()));
+        params.put("submitted", response.isSubmitted());
+        params.put("created_at", response.getCreatedAt());
+
+        Optional<Integer> responseId = SqlHelper.handleSave(getHandle(), "lw_survey_response", params)
+            .executeAndReturnGeneratedKeys().mapTo(Integer.class).findOne();
+
+        if (responseId.isPresent() && responseId.get() != 0) {
+            response.setId(responseId.get());
+            responseCache.put(response);
+        }
+
+        saveAnswers(response);
+    }
+
+    default void saveAnswers(SurveyResponse response) {
+        PreparedBatch batch = getHandle().prepareBatch("INSERT INTO lw_survey_response_answer (response_id, question_id, answer) VALUES (?, ?, ?) "
             + "ON DUPLICATE KEY UPDATE answer = VALUES(answer)");
 
-        surveyAnswer.getAnswers().forEach((questionId, answer) ->
-            batch.add(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), questionId, answer));
+        response.getAnswers().forEach((questionId, answer) ->
+            batch.add(response.getId(), questionId, answer));
 
-        surveyAnswer.getMultipleAnswers().forEach((questionId, answer) ->
-            batch.add(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), questionId, SurveyUserAnswers.joinMultipleAnswers(answer)));
+        response.getMultipleAnswers().forEach((questionId, answer) ->
+            batch.add(response.getId(), questionId, SurveyResponse.joinAnswers(answer)));
 
         batch.execute();
-        surveyAnswer.setSaved(true);
+    }
 
-        if (finalSubmit) {
-            insertSubmittedStatus(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), true);
-            surveyAnswer.setSubmitted(true);
+    default void saveAnswer(SurveyResponse response, int questionId, int variantId, String answer) {
+        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+        params.put("response_id", response.getId());
+        params.put("question_id", questionId);
+        params.put("variant_id", SqlHelper.toNullable(variantId));
+        params.put("answer", answer);
+
+        SqlHelper.handleSave(getHandle(), "lw_survey_response_answer", params).execute();
+    }
+
+    class SurveyPageMapper implements RowMapper<SurveyPage> {
+        @Override
+        public SurveyPage map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            SurveyPage page = new SurveyPage(rs.getInt("resource_id"));
+            page.setId(rs.getInt("page_id"));
+            page.setDeleted(rs.getBoolean("deleted"));
+            page.setOrder(rs.getInt("order"));
+            page.setTitle(rs.getString("title"));
+            page.setDescription(rs.getString("description"));
+            page.setSampling(rs.getBoolean("sampling"));
+            return page;
         }
     }
 
-    class SurveyMapper implements RowMapper<Survey> {
+    class SurveyPageVariantMapper implements RowMapper<SurveyPageVariant> {
         @Override
-        public Survey map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            Survey survey = new Survey();
-            survey.setId(rs.getInt("survey_id"));
-            survey.setTitle(rs.getString("title"));
-            survey.setDescription(rs.getString("description"));
-            survey.setOrganisationId(rs.getInt("organisation_id"));
-            survey.setUserId(rs.getInt("user_id"));
-            survey.setDeleted(rs.getBoolean("deleted"));
-            survey.setPublicTemplate(rs.getBoolean("public_template"));
-            survey.setAssociated(rs.getInt("res_count") > 0);
-            return survey;
+        public SurveyPageVariant map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            SurveyPageVariant variant = new SurveyPageVariant();
+            variant.setId(rs.getInt("variant_id"));
+            variant.setDescription(rs.getString("description"));
+            return variant;
         }
     }
 
     class SurveyQuestionMapper implements RowMapper<SurveyQuestion> {
         @Override
         public SurveyQuestion map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.valueOf(rs.getString("question_type")));
+            SurveyQuestion question = new SurveyQuestion(SurveyQuestion.QuestionType.valueOf(rs.getString("question_type")), rs.getInt("resource_id"));
             question.setId(rs.getInt("question_id"));
-            question.setSurveyId(rs.getInt("survey_id"));
-            question.setLabel(rs.getString("question"));
-            question.setInfo(rs.getString("info"));
-            question.setRequired(rs.getBoolean("required"));
+            question.setPageId(rs.getInt("page_id"));
+            question.setDeleted(rs.getBoolean("deleted"));
             question.setOrder(rs.getInt("order"));
-
-            String options = rs.getString("option");
-            if (!StringUtils.isEmpty(options)) {
-                String[] optionsArray = options.trim().split("\\s*\\|\\|\\|\\s*");
-
-                if (optionsArray.length == 2) {
-                    question.getOptions().put("minLength", optionsArray[0]);
-                    question.getOptions().put("maxLength", optionsArray[1]);
-                }
-            }
-
+            question.setQuestion(rs.getString("question"));
+            question.setDescription(rs.getString("description"));
+            question.setRequired(rs.getBoolean("required"));
+            question.setMinLength(SqlHelper.toNullable(rs.getInt("min_length")));
+            question.setMaxLength(SqlHelper.toNullable(rs.getInt("max_length")));
             return question;
         }
     }
@@ -277,11 +338,28 @@ public interface SurveyDao extends SqlObject, Serializable {
     class SurveyQuestionOptionMapper implements RowMapper<SurveyQuestionOption> {
         @Override
         public SurveyQuestionOption map(final ResultSet rs, final StatementContext ctx) throws SQLException {
-            SurveyQuestionOption answer = new SurveyQuestionOption();
-            answer.setValue(rs.getString("value"));
-            answer.setId(rs.getInt("answer_id"));
+            SurveyQuestionOption answer = new SurveyQuestionOption(rs.getInt("question_id"));
+            answer.setId(rs.getInt("option_id"));
             answer.setDeleted(rs.getBoolean("deleted"));
+            answer.setValue(rs.getString("value"));
             return answer;
+        }
+    }
+
+    class SurveyResponseMapper implements RowMapper<SurveyResponse> {
+        @Override
+        public SurveyResponse map(final ResultSet rs, final StatementContext ctx) throws SQLException {
+            SurveyResponse response = responseCache.get(rs.getInt("response_id"));
+
+            if (response == null) {
+                response = new SurveyResponse(rs.getInt("resource_id"));
+                response.setId(rs.getInt("response_id"));
+                response.setUserId(rs.getInt("user_id"));
+                response.setSubmitted(rs.getBoolean("submitted"));
+                response.setCreatedAt(SqlHelper.getLocalDateTime(rs.getTimestamp("created_at")));
+                responseCache.put(response);
+            }
+            return response;
         }
     }
 }

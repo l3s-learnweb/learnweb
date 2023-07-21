@@ -15,14 +15,11 @@
 <ui:define name="center_layout">
     <p:panel header="#{msg.admin}" styleClass="mb-3 ui-widget-content-flat">
         <div class="links-list">
-            <a href="#{request.contextPath}/lw/admin/organisations.jsf"><i class="ui-menuitem-icon fas fa-fw fa-sitemap text-dark"></i>#{msg.organisations}</a>
+            <a href="#{request.contextPath}/lw/admin/announcements.jsf"><i class="ui-menuitem-icon fas fa-fw fa-bullhorn text-info"></i>#{msg.announcements}</a>
+            <a href="#{request.contextPath}/lw/admin/organisations.jsf"><i class="ui-menuitem-icon fas fa-fw fa-sitemap text-success"></i>#{msg.organisations}</a>
+            <a href="#{request.contextPath}/lw/admin/requests.jsf"><i class="ui-menuitem-icon fas fa-fw fa-server text-warning"></i>Requests</a>
             <a href="#{request.contextPath}/lw/admin/banlist.jsf"><i class="ui-menuitem-icon fas fa-fw fa-ban text-danger"></i>#{msg.banlist}</a>
-            <a href="#{request.contextPath}/lw/admin/requests.jsf"><i class="ui-menuitem-icon fas fa-fw fa-server text-info"></i>Requests</a>
-            <a href="#{request.contextPath}/lw/admin/systemtools.jsf"><i class="ui-menuitem-icon fas fa-fw fa-desktop text-dark"></i>#{msg.system_tools}</a>
-            <a href="#{request.contextPath}/lw/admin/announcements.jsf"><i class="ui-menuitem-icon fas fa-fw fa-bullhorn text-warning"></i>#{msg.announcements}
-            </a>
-            <a href="#{request.contextPath}/lw/survey/surveys.jsf"><i
-                    class="ui-menuitem-icon fas fa-question-circle text-info"></i>#{msg['survey.survey_overview']}</a>
+            <a href="#{request.contextPath}/lw/admin/systemtools.jsf"><i class="ui-menuitem-icon fas fa-fw fa-desktop text-danger"></i>#{msg.system_tools}</a>
         </div>
     </p:panel>
 </ui:define>

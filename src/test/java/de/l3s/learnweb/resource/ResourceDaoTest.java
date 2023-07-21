@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -84,20 +83,6 @@ class ResourceDaoTest {
         List<Resource> resources = resourceDao.findByGroupIdAndFolderIdAndOwnerId(1, 4, 1, 1);
         assertFalse(resources.isEmpty());
         assertArrayEquals(new Integer[] {1}, resources.stream().map(Resource::getId).sorted().toArray(Integer[]::new));
-    }
-
-    @Disabled("Missing test data")
-    @Test
-    void findBySubmissionIdAndUserId() {
-        List<Resource> resources = resourceDao.findBySubmissionIdAndUserId(1, 1);
-        assertFalse(resources.isEmpty());
-        assertArrayEquals(new Integer[] {1, 4, 5, 6, 7, 8, 9}, resources.stream().map(Resource::getId).sorted().toArray(Integer[]::new));
-    }
-
-    @Test
-    void findSurveysByCourseId() {
-        List<Resource> resources = resourceDao.findSurveysByCourseId(1);
-        assertTrue(resources.isEmpty());
     }
 
     @Test

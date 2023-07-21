@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+
+<!--@elvariable id="question" type="de.l3s.learnweb.resource.survey.SurveyQuestion"-->
+
+<div class="field">
+    <p:outputLabel for="@next" value="#{question.type eq 'FULLWIDTH_HEADER' ? msg['survey.header_text'] : msg['survey.question_text']}:" styleClass="fw-bold"/>
+    <p:inputTextarea value="#{question.question}" required="#{question.type ne 'FULLWIDTH_HEADER'}" rows="1">
+        <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+    </p:inputTextarea>
+    <p:message for="@previous"/>
+</div>
+
+<div class="field">
+    <p:outputLabel for="@next" value="#{msg['survey.description_text']}:" styleClass="fw-bold"/>
+    <p:textEditor value="#{question.description}" allowBlocks="false">
+        <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+        <f:facet name="toolbar">
+            <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-link" />
+                <button class="ql-image" />
+                <button class="ql-video" />
+                <button class="ql-formula" />
+            </span>
+        </f:facet>
+    </p:textEditor>
+    <p:message for="@previous"/>
+</div>
+
+<div class="row field align-items-end" jsf:rendered="#{question.type ne 'FULLWIDTH_HEADER'}">
+    <p:outputPanel styleClass="col d-flex flex-column">
+        <p:outputLabel for="@next" value="#{msg['survey.question_type']}:" styleClass="fw-bold"/>
+        <p:selectOneMenu value="#{question.type}">
+            <f:selectItems value="#{surveyEditBean.questionTypes}"/>
+            <p:ajax event="change" update="options" process="@this options" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+        </p:selectOneMenu>
+    </p:outputPanel>
+
+    <p:tooltip for="@next" value="#{msg['survey.tooltip_required']}" position="bottom"/>
+    <p:outputPanel styleClass="col d-flex align-items-center">
+        <p:outputLabel for="@next" value="#{msg['survey.required']}:" styleClass="fw-bold me-2"/>
+        <p:toggleSwitch value="#{question.required}">
+            <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+        </p:toggleSwitch>
+    </p:outputPanel>
+</div>
+
+<p:outputPanel id="options" styleClass="mb-3" rendered="#{question.type ne 'FULLWIDTH_HEADER'}">
+    <ui:fragment rendered="#{fn:startsWith(question.type,'INPUT_')}">
+        <div class="row">
+            <div class="col">
+                <p:tooltip for="@next:@next" value="#{msg['survey.tooltip_min_length']}"/>
+                <p:outputLabel for="@next" value="#{msg['survey.min_length']}:" styleClass="fw-bold"/>
+                <p:inputNumber value="#{question.minLength}" decimalPlaces="0" leadingZero="deny" minValue="0" maxValue="6000" required="true">
+                    <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+                </p:inputNumber>
+                <p:message for="@previous"/>
+            </div>
+            <div class="col">
+                <p:tooltip for="@next:@next" value="#{msg['survey.tooltip_max_length']}"/>
+                <p:outputLabel for="@next" value="#{msg['survey.max_length']}:" styleClass="fw-bold"/>
+                <p:inputNumber value="#{question.maxLength}" decimalPlaces="0" leadingZero="deny" minValue="0" maxValue="6000" required="true">
+                    <p:ajax event="change" listener="#{surveyEditBean.onQuestionChange(question)}"/>
+                </p:inputNumber>
+                <p:message for="@previous"/>
+            </div>
+        </div>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{question.type eq 'ONE_MENU' or question.type eq 'ONE_MENU_EDITABLE' or question.type eq 'MULTIPLE_MENU' or question.type eq 'ONE_RADIO' or question.type eq 'MANY_CHECKBOX'}">
+        <div class="d-flex flex-column">
+            <p:outputLabel for="@next" value="#{msg['survey.options']}:" styleClass="fw-bold"/>
+            <ui:repeat value="#{question.options}" var="answer">
+                <h:panelGroup layout="block" styleClass="d-flex flex-row flex-nowrap my-1 align-items-center" rendered="#{!answer.deleted}">
+                    <ui:fragment rendered="#{question.type eq 'MULTIPLE_MENU' or question.type eq 'MANY_CHECKBOX' or question.type eq 'ONE_RADIO'}">
+                        <i class="me-2 fa-xl far #{question.type eq 'ONE_RADIO' ? 'fa-circle' : 'fa-square'}"/>
+                    </ui:fragment>
+
+                    <p:inputText value="#{answer.value}" placeholder="#{msg['survey.option']}">
+                        <p:ajax event="change" listener="#{surveyEditBean.onQuestionOptionChange(question, answer)}"/>
+                    </p:inputText>
+
+                    <p:tooltip for="@next" value="#{msg['survey.delete_answer']}"/>
+                    <p:commandButton styleClass="rounded-button ui-button-flat ui-button-secondary align-self-center" icon="fas fa-minus"
+                                     action="#{surveyEditBean.onQuestionOptionDelete(question, answer)}" update="@form:options" process="@this"/>
+                </h:panelGroup>
+            </ui:repeat>
+
+            <p:tooltip for="@next" value="#{msg['survey.add_answer']}"/>
+            <p:commandButton styleClass="rounded-button ui-button-flat ui-button-secondary align-self-center" icon="fas fa-plus"
+                             action="#{surveyEditBean.onQuestionOptionAdd(question)}" update="@form:options" process="@this"/>
+        </div>
+    </ui:fragment>
+</p:outputPanel>
+
+</ui:composition>

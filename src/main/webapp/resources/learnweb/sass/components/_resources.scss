@@ -150,7 +150,7 @@ ul.res-breadcrumbs {
   padding: 0 1rem;
   margin-bottom: 0;
   list-style: none;
-  background: var(--gray-100);
+  background: rgba(var(--tertiary-bg-rgb), 0.3);
   border: var(--border-width) var(--border-style) var(--border-color);
   border-left: 0;
   border-right: 0;
@@ -178,7 +178,7 @@ ul.res-breadcrumbs {
       padding: 0.2rem 0.5rem;
 
       &:hover {
-        background-color: var(--gray-300) !important;
+        background-color: var(--tertiary-bg) !important;
       }
     }
 
@@ -210,6 +210,7 @@ ul.res-filters {
   padding: 0 1rem;
   margin-bottom: 0;
   list-style: none;
+  background: var(--tertiary-bg);
 
   > li {
     display: inline-block;
@@ -221,17 +222,26 @@ ul.res-filters {
       display: inline-block;
       padding: 0.25rem 0.5rem;
       line-height: 2;
+      color: var(--secondary-color);
     }
 
     &.active,
     &.ui-state-expand,
     &:hover {
       background-color: var(--border-color);
+
+      .filter-title {
+        color: var(--body-color);
+      }
     }
 
     &.ui-state-expand .filter-sub-bar,
     &:hover .filter-sub-bar {
       display: block;
+
+      li a {
+        color: var(--body-color) !important;
+      }
     }
 
     &.disabled {
@@ -256,18 +266,18 @@ ul.res-filters {
     scrollbar-width: thin;
 
     li {
-      background: var(--light);
+      background: var(--border-color);
 
       a {
         display: block;
         padding: 0.5rem;
-        color: var(--black) !important;
+        color: var(--tertiary-color) !important;
         text-decoration: none;
       }
 
       &.active,
       &:hover {
-        background: var(--border-color);
+        background: var(--tertiary-bg);
       }
     }
   }
@@ -291,7 +301,7 @@ ul.res-filters {
     display: none;
 
     input {
-      border: var(--border-width) var(--border-style) var(--dark);
+      border: var(--border-width) var(--border-style) var(--tertiary-color);
       border-right: 0;
       padding: 1px;
       border-top-right-radius: 0;
@@ -299,7 +309,7 @@ ul.res-filters {
     }
 
     button {
-      border: var(--border-width) var(--border-style) var(--dark);
+      border: var(--border-width) var(--border-style) var(--tertiary-color);
       border-left: 0;
       background: none;
       border-top-left-radius: 0;
@@ -318,7 +328,7 @@ ul.res-filters {
 
       &:hover,
       &:focus {
-        background-color: var(--light) !important;
+        background-color: var(--tertiary-bg) !important;
       }
     }
   }
@@ -361,7 +371,7 @@ ul.res-filters {
     color: rgba(0, 0, 0, 0.4);
     text-align: center;
     border-radius: 50%;
-    background: var(--surface-ground) content-box;
+    background: var(--secondary-bg) content-box;
     transition: transform 333ms ease, opacity 333ms ease;
     position: absolute;
     top: 0;
@@ -392,7 +402,7 @@ ul.res-filters {
   border-bottom: var(--border-width) var(--border-style) var(--border-color);
 
   &:hover {
-    background: var(--light);
+    background: var(--tertiary-bg);
   }
 
   .res-col {
@@ -491,7 +501,7 @@ ul.res-filters {
 
       &:hover {
         background: none !important;
-        color: var(--primary-lighter) !important;
+        color: var(--primary-color) !important;
       }
 
       .ui-icon-carat-2-n-s::before {
@@ -523,7 +533,7 @@ ul.res-filters {
       }
 
       &:hover {
-        background: var(--primary-light) !important;
+        background: var(--primary-color) !important;
       }
     }
   }
@@ -560,7 +570,7 @@ ul.res-filters {
       height: 100%;
       content: '';
       z-index: 9;
-      background: var(--light);
+      background: var(--tertiary-bg);
       border: 3px dashed var(--primary);
     }
 
@@ -601,7 +611,7 @@ ul.res-filters {
   display: block;
   position: relative;
   color: var(--body-color);
-  background: var(--light);
+  background: var(--tertiary-bg);
   box-shadow: $box-shadow-sm;
 
   .res-bl-preview {
@@ -630,8 +640,8 @@ ul.res-filters {
       justify-content: center;
       align-items: center;
       font-size: 1.25rem;
-      color: var(--gray-600);
-      background: var(--gray-300);
+      color: var(--secondary-color);
+      background: rgba(var(--secondary-color-rgb), 0.1);
     }
 
     .res-bl-menu {
@@ -664,15 +674,15 @@ ul.res-filters {
       }
 
       .res-bl-author {
-        color: var(--gray-600);
+        color: var(--secondary-color);
         font-size: $font-size-sm;
       }
     }
   }
 
   &:hover {
-    color: var(--primary-text-color);
     background: var(--primary);
+    color: var(--primary-color);
 
     .res-selector {
       opacity: 1;
@@ -688,25 +698,22 @@ ul.res-filters {
       }
     }
 
-    .res-bl-icon {
-      color: var(--primary);
-    }
-
+    .res-bl-icon,
     .res-bl-author,
     .res-bl-menu {
-      color: var(--primary-text-color) !important;
+      color: var(--primary-color) !important;
     }
   }
 
   .ui-draggable-helper &, // When dragging an element which was not selected before
   .ui-selecting &, // when the lasso includes this element
   .ui-selected & { // after a successful selection
-    color: var(--primary-text-color);
-    background: var(--primary-dark);
+    color: var(--primary-hover-color);
+    background: var(--primary-hover);
 
     .res-bl-preview:empty {
       &::before {
-        background-color: var(--primary-light);
+        background-color: var(--primary-bg-subtle);
       }
     }
 
@@ -721,12 +728,12 @@ ul.res-filters {
     }
 
     .res-bl-icon {
-      color: var(--primary-dark);
+      color: var(--primary-hover);
     }
 
     .res-bl-menu,
     .res-bl-author {
-      color: var(--primary-text-color) !important;
+      color: var(--primary-color) !important;
     }
   }
 
@@ -746,7 +753,7 @@ ul.res-filters {
   }
 
   .ui-droppable-hover & { // When dragging a draggable over this droppable
-    color: var(--primary-text-color);
+    color: var(--primary-color);
     background: scale-color($warning, $lightness: -10%);
     border-color: scale-color($warning, $lightness: -10%);
 
@@ -755,12 +762,12 @@ ul.res-filters {
     }
 
     .res-bl-icon {
-      color: var(--primary-text-color);
+      color: var(--primary-color);
       background: scale-color($warning, $lightness: -10%);
     }
 
     .res-bl-author {
-      color: var(--primary-text-color) !important;
+      color: var(--primary-color) !important;
     }
   }
 
@@ -807,7 +814,7 @@ ul.res-filters {
     border: 0;
     padding: 0.1875rem 1rem;
     background: var(--primary);
-    color: var(--primary-text-color);
+    color: var(--primary-color);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 

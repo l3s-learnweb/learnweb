@@ -38,11 +38,12 @@
   }
 
   .ui-selecting {
-    background: var(--primary-dark);
+    background: var(--primary-hover);
+    color: var(--primary-hover-color);
   }
 
   .ui-selected {
-    background: var(--primary-darker);
-    color: var(--white);
+    background: var(--primary-active);
+    color: var(--primary-active-color);
   }
 }

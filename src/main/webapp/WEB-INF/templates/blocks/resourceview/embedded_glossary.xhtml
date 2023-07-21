@@ -123,8 +123,8 @@
     </p:dataTable>
 </h:form>
 
-<p:dialog widgetVar="glossaryImportDialog" header="#{msg['Glossary.import_glossary']}"
-          modal="true" resizable="false" draggable="false" closeOnEscape="true">
+<p:dialog widgetVar="glossaryImportDialog" header="#{msg['Glossary.import_glossary']}" modal="true" closeOnEscape="true"
+          resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
     <h:form id="import_form">
         <h:panelGroup layout="block" rendered="#{glossaryBean.importResponse == null}">
             <p:fileUpload mode="advanced" listener="#{glossaryBean.onImportXls}" styleClass="ui-fileupload-minimal"
@@ -153,8 +153,8 @@
     </h:form>
 </p:dialog>
 
-<p:dialog widgetVar="glossaryEditDialog" header="#{msg['Glossary.edit_glossary']}"
-          modal="true" resizable="false" draggable="false" closeOnEscape="true">
+<p:dialog widgetVar="glossaryEditDialog" header="#{msg['Glossary.edit_glossary']}" modal="true" closeOnEscape="true"
+          resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
     <h:form id="glossary_add" prependId="false" enctype="multipart/form-data">
         <div class="row mb-3">
             <p:panelGrid id="grid" layout="flex" styleClass="col-12 col-md-6" contentStyleClass="row border-0" columnClasses="col-5, col-7" columns="2">
@@ -253,7 +253,7 @@
                 <p:inputText id="acro" value="#{term.acronym}" styleClass="w-100" pt:onpaste="setPasteStatus(this, 'acronym');"/>
             </p:column>
             <p:column headerText="#{msg.source}" rendered="#{not term.deleted}">
-                <p:selectOneMenu id="ref" value="#{term.source}" autoWidth="false">
+                <p:selectOneMenu id="ref" value="#{term.source}">
                     <f:selectItem itemValue="#{null}" itemLabel="--#{msg['Glossary.select']}--"/>
                     <f:selectItem itemValue="Wikipedia" itemLabel="#{msg['Glossary.wikipedia']}"></f:selectItem>
                     <f:selectItem itemValue="encyclopaedia" itemLabel="#{msg['Glossary.encyclopaedia']}"></f:selectItem>

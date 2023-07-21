@@ -41,7 +41,7 @@
             <div class="row">
                 <div class="col-12 col-md-6">
                     <p:panel styleClass="mb-3" header="#{msg.welcome_message}">
-                        <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}">
+                        <p:textEditor height="200px" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}">
                             <f:facet name="toolbar">
                                 <span class="ql-formats">
                                     <select class="ql-font"></select>
@@ -60,7 +60,7 @@
                 </div>
                 <div class="col-12 col-md-6">
                     <p:panel styleClass="mb-3" header="Additional Terms &amp; Conditions">
-                        <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.termsAndConditions}">
+                        <p:textEditor height="200px" value="#{adminOrganisationBean.selectedOrganisation.termsAndConditions}">
                             <f:facet name="toolbar">
                                 <span class="ql-formats">
                                     <select class="ql-font"></select>
@@ -107,6 +107,21 @@
                                 <f:selectItem itemValue="myhome/resources.jsf" itemLabel="myhome/resources.jsf"/>
                                 <f:selectItem itemValue="myhome/groups.jsf" itemLabel="myhome/groups.jsf"/>
                             </p:selectOneMenu>
+                            <p:message for="@previous"/>
+                        </div>
+
+                        <div class="field">
+                            <p:outputLabel for="@next" value="#{msg.theme}:"/>
+                            <h:panelGroup styleClass="ui-inputgroup">
+                                <h:panelGroup id="icon" styleClass="ui-inputgroup-addon">
+                                    <i class="fas fa-square fa-lg text-primary" data-color-theme="#{adminOrganisationBean.selectedOrganisation.theme}"/>
+                                </h:panelGroup>
+                                <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.theme}" var="item" styleClass="text-capitalize" onchange="setColorTheme(this.value)">
+                                    <f:selectItems value="#{adminOrganisationBean.availableThemes}" var="item" itemLabel="#{item}" itemValue="#{item}" />
+                                    <p:column styleClass="text-capitalize"><i class="fas fa-square fa-lg text-primary" data-color-theme="#{item}"/> #{item} </p:column>
+                                    <p:ajax update="@parent:@parent:icon" />
+                                </p:selectOneMenu>
+                            </h:panelGroup>
                             <p:message for="@previous"/>
                         </div>
 

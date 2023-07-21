@@ -26,7 +26,7 @@
     border-radius: 10px;
 
     &.active {
-      background: var(--primary-dark);
+      background: var(--primary-active);
     }
 
     > span {
@@ -47,7 +47,7 @@
         height: 10px;
         border-radius: 50%;
         background: var(--primary);
-        border: 1px solid var(--white);
+        border: 1px solid var(--primary-color);
         position: absolute;
         left: -5px;
       }
@@ -71,9 +71,14 @@
           color: var(--white);
         }
 
-        &:hover,
+        &:hover {
+          background: var(--primary-hover);
+          color: var(--primary-hover-color);
+        }
+
         &.active {
-          background: var(--primary-dark);
+          background: var(--primary-active);
+          color: var(--primary-active-color);
         }
       }
     }
@@ -98,20 +103,20 @@
 
   &.sh-session-group {
     &::before {
-      border: 1px dashed var(--gray-600);
+      border: 1px dashed var(--body-color);
     }
 
     li {
       > span {
-        border: 1px solid var(--gray-600);
+        border: 1px solid var(--body-color);
 
         &::before,
         &::after {
-          background: var(--gray-600);
+          background: var(--body-color);
         }
       }
 
-      background: var(--gray-600);
+      background: var(--body-color);
     }
   }
 }

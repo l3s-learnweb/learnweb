@@ -53,7 +53,7 @@
                             <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fas fa-fw fa-user-cog" styleClass="guide-profile-page" value="#{msg.settings}"/>
                             <p:menuitem url="#{request.contextPath}/lw/dashboard/index.jsf" icon="fas fa-fw fa-tachometer-alt" value="#{msg.myDashboardTitle}"/>
                             <p:menuitem url="#{request.contextPath}/lw/myhome/search_history.jsf" icon="fas fa-fw fa-history" value="#{msg['search_history.title']}"/>
-                            <p:menuitem action="#{loginBean.logout}" immediate="true" process="@this" icon="fas fa-fw fa-sign-out-alt" value="#{msg.logout}"/>
+                            <p:menuitem action="#{loginBean.logout}" onclick="localStorage.clear();" immediate="true" process="@this" icon="fas fa-fw fa-sign-out-alt" value="#{msg.logout}"/>
                         </p:menu>
                     </li>
                 </ui:fragment>

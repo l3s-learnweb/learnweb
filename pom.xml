@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.20.04</version>
+    <version>3.20.12</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -19,12 +19,12 @@
         <maven.compiler.release>17</maven.compiler.release>
         <maven.dependency.myfaces.version>4.0.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.9.4</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.38.2</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.19.1</maven.dependency.flyway.version>
+        <maven.dependency.jdbi3.version>3.39.1</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>9.21.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.20.0</maven.dependency.log4j.version>
-        <maven.dependency.sentry.version>6.19.1</maven.dependency.sentry.version>
+        <maven.dependency.sentry.version>6.26.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.9.3</maven.dependency.junit.version>
-        <maven.dependency.mockito.version>5.3.1</maven.dependency.mockito.version>
+        <maven.dependency.mockito.version>5.4.0</maven.dependency.mockito.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.assembly.mainClass>de.l3s.maintenance.resources.ReindexResources</maven.assembly.mainClass>
@@ -76,13 +76,13 @@
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-core</artifactId>
-            <version>5.1.0.Final</version>
+            <version>5.1.1.SP1</version>
         </dependency>
         <!-- Jakarta Validator API & Impl -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>8.0.0.Final</version>
+            <version>8.0.1.Final</version>
         </dependency>
         <!-- Jakarta Mail API & Impl -->
         <dependency>
@@ -95,12 +95,12 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>4.1</version>
+            <version>4.2</version>
         </dependency>
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>12.0.0</version>
+            <version>13.0.0</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -147,7 +147,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.12.0</version>
+            <version>2.13.0</version>
         </dependency>
 
         <!-- ################ ImageIO (Image processing, Thumbnails) ################ -->
@@ -222,7 +222,7 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>9.1.1</version>
+            <version>9.2.1</version>
             <exclusions>
                 <!-- We use alternative binding to Log4j-->
                 <exclusion>
@@ -299,7 +299,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>31.1-jre</version>
+            <version>32.1.1-jre</version>
         </dependency>
         <!-- HTML parsed. Used in crawlers, resources, removing html from strings -->
         <dependency>
@@ -323,15 +323,19 @@
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>5.0.6.Final</version>
+            <version>5.0.7.Final</version>
         </dependency>
-        <!-- RiTa WordNet (used to retrieve Definitions for TedTranscript) -->
-        <!-- We are using an unofficial package from https://github.com/shibme/diction, the original repository
-             is https://github.com/dhowe/RiTa, but they don't provide maven repository and don't include data to JAR -->
+        <!-- Extended Java WordNet Library (used to retrieve Definitions for TedTranscript) -->
         <dependency>
-            <groupId>me.shib.java.lib</groupId>
-            <artifactId>diction</artifactId>
-            <version>0.1.1</version>
+            <groupId>net.sf.extjwnl</groupId>
+            <artifactId>extjwnl</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+        <!-- Princeton WordNet 3.1 data dependency -->
+        <dependency>
+            <groupId>net.sf.extjwnl</groupId>
+            <artifactId>extjwnl-data-wn31</artifactId>
+            <version>1.2</version>
         </dependency>
         <!-- RDF model -->
         <dependency>
@@ -368,7 +372,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.1.214</version>
+            <version>2.2.220</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -413,7 +417,7 @@
             <!-- Runs linter on Java sources to check code style -->
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>3.3.0</version>
                 <configuration>
                     <configLocation>src/main/conf/checkstyle-config.xml</configLocation>
                     <consoleOutput>false</consoleOutput>
@@ -425,7 +429,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.11.0</version>
+                        <version>10.12.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -433,7 +437,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.7.3.4</version>
+                <version>4.7.3.5</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
@@ -448,12 +452,12 @@
             <!-- Runs tests before build -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.2</version>
             </plugin>
             <!-- Specifies WebARchive configuration -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>3.4.0</version>
                 <configuration>
                     <webResources>
                         <resource>
@@ -522,7 +526,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.15.0</version>
+                <version>2.16.0</version>
                 <configuration>
                     <processUnboundPlugins>true</processUnboundPlugins>
                 </configuration>
@@ -530,13 +534,13 @@
             <!-- Provides commands to check dependency tree -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.6.0</version>
             </plugin>
             <!-- Provides commands to check for duplicate classes across dependencies -->
             <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
-                <version>2.0.0</version>
+                <version>2.0.1</version>
             </plugin>
             <!-- A maven component that enforces minimum Java and Maven versions -->
             <plugin>

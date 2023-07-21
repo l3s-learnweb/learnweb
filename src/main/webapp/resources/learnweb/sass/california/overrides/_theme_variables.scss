@@ -1,8 +1,8 @@
 /* Add your variable customizations of theme here */
 //shades of gray
-$shade000: var(--surface-ground); //surface
-$shade100: var(--gray-100); //header background
-$shade200: var(--gray-200); //hover background
+$shade000: var(--secondary-bg); //surface
+$shade100: var(--body-bg); //header background
+$shade200: var(--tertiary-bg); //hover background
 $shade300: var(--border-color); //content border
 $shade400: var(--gray-400); //input border
 $shade500: var(--gray-500); //input border
@@ -12,13 +12,13 @@ $shade800: var(--gray-800); //unused
 $shade900: var(--gray-900); //unused
 
 $primaryColor: var(--primary);
-$primaryLightColor: var(--primary-light);
-$primaryDarkColor: var(--primary-dark);
-$primaryDarkerColor: var(--primary-darker);
-$primaryTextColor: var(--primary-text-color);
+$primaryLightColor: var(--primary-text-emphasis);
+$primaryDarkColor: var(--primary-hover);
+$primaryDarkerColor: var(--primary-active);
+$primaryTextColor: var(--primary-color);
 
-$highlightBg: var(--primary-lighter);
-$highlightTextColor: var(--primary-lighter-text-color);
+$highlightBg: var(--primary-bg-subtle);
+$highlightTextColor: var(--gray-700);
 
 //general
 $fontSize: 1rem !default;
@@ -329,12 +329,16 @@ $keyboardButtonTextActiveColor: $shade000 !default;
 //switch
 $inputSwitchOffBg: $shade300 !default;
 $inputSwitchHandleOffBg: $shade000 !default;
+$inputSwitchHandleOffTextColor: $shade700 !default;
 $inputSwitchHandleOffBorder: 2px solid $shade300 !default;
 $inputSwitchOnBg: $primaryColor !default;
 $inputSwitchHandleOnBg: $shade000 !default;
+$inputSwitchHandleOnTextColor: $shade700 !default;
 $inputSwitchHandleOnBorderColor: $primaryDarkerColor !default;
 $inputSwitchHandleBorderRadius: 50% !default;
 $inputSwitchHandleShadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12) !default;
+$inputSwitchBorder: solid transparent !default;
+$inputSwitchBorderWidth: 2px !default;
 $inputSwitchBorderRadius: 30px !default;
 
 //panel common
@@ -399,7 +403,7 @@ $tabsHeaderTextHoverColor: $shade600 !default;
 
 $tabsHeaderActiveBg: $shade000 !default;
 $tabsHeaderActiveBorderColor: $primaryColor !default;
-$tabsHeaderTextActiveColor: $primaryColor !default;
+$tabsHeaderTextActiveColor: var(--link-color) !default;
 
 $tabsContentBorder: 0 none !default;
 $tabsContentBg: $shade000 !default;
@@ -456,7 +460,7 @@ $datatableSortableColumnBadgeSize: 1.143rem !default;
 $datatableBodyRowBg: $shade000 !default;
 $datatableBodyRowTextColor: $shade700 !default;
 $datatableBodyRowBorder: 1px solid rgba(0, 0, 0, 0.08) !default;
-$datatableBodyRowOddBg: $shade100 !default;
+$datatableBodyRowOddBg: rgba(var(--secondary-color-rgb), 0.05);
 $datatableBodyRowHoverBg: $shade200 !default;
 $datatableBodyRowTextHoverColor: $shade700 !default;
 $datatableBodyCellPadding: 0.25rem 1rem;
@@ -489,8 +493,8 @@ $dataViewListItemBorder: solid $shade200 !default;
 $dataViewListItemBorderWidth: 0 0 1px 0 !default;
 
 //orderlist, picklist
-$orderListDropPlaceholderBg: scale-color($primary-lighter, $lightness: -20%) !default;
-$pickListDropPlaceholderBg: scale-color($primary-lighter, $lightness: -20%) !default;
+$orderListDropPlaceholderBg: scale-color($primary, $lightness: 60%) !default;
+$pickListDropPlaceholderBg: scale-color($primary, $lightness: 60%) !default;
 
 //schedule
 $scheduleCellBorderColor: $shade300 !default;
@@ -600,9 +604,9 @@ $breadcrumbSeparatorColor: $menuitemTextColor !default;
 
 $submenuHeaderMargin: 0 !default;
 $submenuHeaderPadding: 0.75rem 1rem !default;
-$submenuHeaderBg: $white;
+$submenuHeaderBg: var(--body-bg);
 $submenuHeaderBorder: 0 none !default;
-$submenuHeaderTextColor: $shade700 !default;
+$submenuHeaderTextColor: var(--body-color);
 $submenuHeaderFontWeight: 700 !default;
 $submenuHeaderFontSize: 1rem !default;
 
@@ -633,6 +637,16 @@ $cardSubTitleColor: $shade600 !default;
 $cardContentPadding: 1rem 0 !default;
 $cardFooterPadding: 1rem 0 0 0 !default;
 $cardShadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12) !default;
+
+//editor
+$editorToolbarBg: $panelHeaderBg !default;
+$editorToolbarBorder: $panelHeaderBorder !default;
+$editorToolbarPadding: $panelHeaderPadding !default;
+$editorToolbarIconColor: $textSecondaryColor !default;
+$editorToolbarIconHoverColor: $textColor !default;
+$editorIconActiveColor: $primaryColor !default;
+$editorContentBorder: $panelContentBorder !default;
+$editorContentBg: $panelContentBg !default;
 
 //divider
 $dividerHorizontalMargin: 1rem 0 !default;

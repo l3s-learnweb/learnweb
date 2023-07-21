@@ -21,34 +21,30 @@ public final class FileUtility {
 
     private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
 
-    private static final String TEXT = "text";
-    private static final String PRESENTATION = "presentation";
-    private static final String SPREADSHEET = "spreadsheet";
+    private static final String DOCUMENT = "word";
+    private static final String PRESENTATION = "cell";
+    private static final String SPREADSHEET = "slide";
 
-    //private static final List<String> EXT_DOCUMENT = Arrays.asList("docx", "doc", "odt", "rtf", "txt", "html", "htm", "mht", "djvu", "fb2", "epub", "xps");
-    private static final List<String> EXT_SPREADSHEET = Arrays.asList("xls", "xlsx", "ods", "csv");
-    private static final List<String> EXT_PRESENTATION = Arrays.asList("pps", "ppsx", "ppt", "pptx", "odp");
-    private static final List<String> EXT_DOCUMENT_CONVERT = Arrays.asList("mht", "docm", "dot", "dotm", "dotx", "fodt");
-    private static final List<String> EXT_SPREADSHEET_CONVERT = Arrays.asList("fods", "xlsm", "xlt", "xltm", "xltx");
-    private static final List<String> EXT_PRESENTATION_CONVERT = Arrays.asList("fodp", "pot", "potm", "potx", "pps", "ppsx", "pptm", "ppsm");
+    private static final List<String> EXT_DOCUMENT = Arrays.asList("djvu", "doc", "docm", "docx", "docxf", "dot", "dotm", "dotx", "epub", "fb2", "fodt", "htm", "html", "mht", "mhtml", "odt", "oform", "ott", "oxps", "pdf", "rtf", "stw", "sxw", "txt", "wps", "wpt", "xml", "xps");
+    private static final List<String> EXT_SPREADSHEET = Arrays.asList("csv", "et", "ett", "fods", "ods", "ots", "sxc", "xls", "xlsb", "xlsm", "xlsx", "xlt", "xltm", "xltx", "xml");
+    private static final List<String> EXT_PRESENTATION = Arrays.asList("dps", "dpt", "fodp", "odp", "otp", "pot", "potm", "potx", "pps", "ppsm", "ppsx", "ppt", "pptm", "pptx", "sxi");
 
     private static final String SAMPLE_PPTX = "sample.pptx";
     private static final String SAMPLE_XLSX = "sample.xlsx";
     private static final String SAMPLE_DOCX = "sample.docx";
 
     public static boolean isSupportedFileType(String fileExt) {
-        return !(EXT_DOCUMENT_CONVERT.contains(fileExt) || EXT_SPREADSHEET_CONVERT.contains(fileExt) || EXT_PRESENTATION_CONVERT.contains(fileExt));
+        return EXT_DOCUMENT.contains(fileExt) || EXT_SPREADSHEET.contains(fileExt) || EXT_PRESENTATION.contains(fileExt);
     }
 
-    public static String getFileType(String fileName) {
-        String ext = getFileExtension(fileName);
-        if (EXT_SPREADSHEET.contains(ext)) {
+    public static String getFileType(String fileExt) {
+        if (EXT_SPREADSHEET.contains(fileExt)) {
             return SPREADSHEET;
         }
-        if (EXT_PRESENTATION.contains(ext)) {
+        if (EXT_PRESENTATION.contains(fileExt)) {
             return PRESENTATION;
         }
-        return TEXT;
+        return DOCUMENT;
     }
 
     public static String getInfoForKey(File file) {
