@@ -25,18 +25,14 @@ import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Constants;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.Prefixes;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.ResourceItem;
 
-public class SpotlightBean {
+public class SpotlightClient {
     private static final String URL = "https://api.dbpedia-spotlight.org/en/annotate";
     private final HttpClient client;
     private final HttpPost request;
 
-    public SpotlightBean() {
+    public SpotlightClient() {
         client = HttpClientBuilder.create().build();
         request = new HttpPost(URL);
-        init();
-    }
-
-    private void init() {
         request.addHeader(ACCEPT, "application/json");
     }
 
@@ -49,14 +45,14 @@ public class SpotlightBean {
     }
 
     public AnnotationUnit get(String text) throws IOException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("text", text));
         request.setEntity(new UrlEncodedFormEntity(params));
         return get();
     }
 
     public AnnotationUnit get(URL url) throws IOException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("url", url.toString()));
         request.setEntity(new UrlEncodedFormEntity(params));
         return get();
@@ -77,7 +73,7 @@ public class SpotlightBean {
 
     private void fixPrefixes(List<ResourceItem> resources) {
         if (resources != null && !resources.isEmpty()) {
-            resources.forEach(resourceItem -> fixPrefixes(resourceItem));
+            resources.forEach(this::fixPrefixes);
         }
     }
 

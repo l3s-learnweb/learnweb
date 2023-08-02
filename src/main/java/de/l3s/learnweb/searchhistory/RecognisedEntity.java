@@ -4,10 +4,10 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class AnnotationCount implements Serializable {
-
+public class RecognisedEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 5389844250794875603L;
+
     private int uriId;
     private LocalDateTime createdAt;
     private double confidence;
@@ -44,8 +44,7 @@ public class AnnotationCount implements Serializable {
     }
 
 
-    public AnnotationCount(final String id, final double confidence, final String surfaceForm, final String uri, final String type,
-        final int userId, final String sessionId) {
+    public RecognisedEntity(final double confidence, final String surfaceForm, final String uri, final String type, final int userId, final String sessionId) {
         this.confidence = confidence;
         this.surfaceForm = surfaceForm;
         this.uri = uri;
@@ -55,7 +54,7 @@ public class AnnotationCount implements Serializable {
         this.sessionId = sessionId;
     }
 
-    public AnnotationCount() {
+    public RecognisedEntity() {
 
     }
 

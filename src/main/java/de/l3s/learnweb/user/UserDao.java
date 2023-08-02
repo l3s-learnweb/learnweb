@@ -81,9 +81,8 @@ public interface UserDao extends SqlObject, Serializable {
     @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_course_user USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByCourseId(int courseId);
 
-    @SqlQuery("SELECT COUNT(1) FROM lw_group_user WHERE EXISTS (SELECT * FROM lw_group_user JOIN learnweb_large.sl_action USING(user_id) "
-        + "WHERE user_id = ? AND action = 'resource_clicked' AND group_id = ?)")
-    boolean isActiveUser(int userId, int groupId);
+    @SqlQuery("SELECT EXISTS (SELECT 1 FROM learnweb_large.sl_action WHERE user_id = ? AND `action` = 'resource_clicked')")
+    boolean isActiveUser(int userId);
 
     @SqlQuery("SELECT u.* FROM lw_user u JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username")
     List<User> findByGroupId(int groupId);

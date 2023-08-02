@@ -11,13 +11,10 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.omnifaces.util.Beans;
-
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
-import de.l3s.learnweb.searchhistory.PkgBean;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
@@ -67,8 +64,6 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
 
     private List<Course> coursesWithWelcomeMessage;
 
-    private transient PkgBean pkgBean;
-
     @Inject
     private MessageDao messageDao;
 
@@ -98,8 +93,6 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
             .filter(course -> !StringHelper.isBlankDisregardingHTML(course.getWelcomeMessage()))
             .collect(Collectors.toList());
 
-        pkgBean = getPkgBean();
-        pkgBean.doSomething();
     }
 
     private List<LogEntry> getLogs(EnumSet<Action> filter, int limit) {
@@ -136,10 +129,4 @@ public class WelcomeBean extends ApplicationBean implements Serializable {
         return hideNewsPanel;
     }
 
-    private PkgBean getPkgBean() {
-        if (null == pkgBean) {
-            pkgBean = Beans.getInstance(PkgBean.class);
-        }
-        return pkgBean;
-    }
 }

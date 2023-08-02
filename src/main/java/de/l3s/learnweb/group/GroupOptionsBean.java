@@ -14,7 +14,6 @@ import jakarta.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Beans;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -22,7 +21,8 @@ import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.FileDao;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.AnnotationBean;
+import de.l3s.learnweb.searchhistory.RecognisedEntity;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.DbpediaSpotlightService;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserDao;
@@ -49,13 +49,15 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private String editedHypothesisLink;
     private String editedHypothesisToken;
     private GroupUser groupUser;
-    private transient AnnotationBean annotationBean;
+
     @Inject
     private FileDao fileDao;
     @Inject
     private GroupDao groupDao;
     @Inject
     private UserDao userDao;
+    @Inject
+    private DbpediaSpotlightService dbpediaSpotlightService;
 
     public void onLoad() {
         User user = getUser();
@@ -85,13 +87,17 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     }
 
     public void onGroupEdit() throws Exception {
+        boolean updateGraph = false;
+
         if (!StringUtils.equals(editedGroupDescription, group.getDescription())) {
             group.setDescription(editedGroupDescription);
             log(Action.group_changing_description, group.getId(), group.getId());
+            updateGraph = true;
         }
         if (!editedGroupTitle.equals(group.getTitle())) {
             log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
             group.setTitle(editedGroupTitle);
+            updateGraph = true;
         }
         if (editedGroupLeaderId != group.getLeaderUserId()) {
             if (group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId()) {
@@ -108,10 +114,14 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         if (!StringUtils.equals(editedHypothesisToken, group.getHypothesisToken())) {
             group.setHypothesisToken(editedHypothesisToken);
         }
-        //Call dbpedia-spotlight recognition
-        //Add group resources
-        for (User user : userDao.findByGroupId(group.getId())) {
-            getAnnotationBean().processQuery(getSessionId(), getGroupId(), user.getId(), "group", editedGroupDescription + " " + editedGroupTitle);
+
+        if (updateGraph) {
+            List<RecognisedEntity> recognisedEntities = dbpediaSpotlightService.storeStreamAndExtractEntities(getUser(), "group", getGroupId(), group.getTitle() + " " + group.getDescription());
+
+            //Call dbpedia-spotlight recognition
+            for (User user : group.getMembers()) {
+                dbpediaSpotlightService.storeEntities(getSessionId(), user, recognisedEntities);
+            }
         }
 
         groupDao.save(group);
@@ -204,12 +214,5 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
 
     public GroupUser getGroupUser() {
         return groupUser;
-    }
-
-    private AnnotationBean getAnnotationBean() {
-        if (null == annotationBean) {
-            annotationBean = Beans.getInstance(AnnotationBean.class);
-        }
-        return annotationBean;
     }
 }

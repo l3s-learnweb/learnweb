@@ -43,6 +43,7 @@ import de.l3s.learnweb.resource.office.ResourceHistoryDao;
 import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryDao;
 import de.l3s.learnweb.resource.survey.SurveyDao;
 import de.l3s.learnweb.resource.ted.TedTranscriptDao;
+import de.l3s.learnweb.searchhistory.CollabGraphDao;
 import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.CourseDao;
@@ -98,6 +99,7 @@ public class DaoProvider {
     private final ResourceDao resourceDao;
     private final ResourceHistoryDao resourceHistoryDao;
     private final SearchHistoryDao searchHistoryDao;
+    private final CollabGraphDao collabGraphDao;
     private final SpeechRepositoryDao speechRepositoryDao;
     private final SurveyDao surveyDao;
     private final TagDao tagDao;
@@ -146,6 +148,7 @@ public class DaoProvider {
         resourceDao = jdbi.onDemand(ResourceDao.class);
         resourceHistoryDao = jdbi.onDemand(ResourceHistoryDao.class);
         searchHistoryDao = jdbi.onDemand(SearchHistoryDao.class);
+        collabGraphDao = jdbi.onDemand(CollabGraphDao.class);
         speechRepositoryDao = jdbi.onDemand(SpeechRepositoryDao.class);
         surveyDao = jdbi.onDemand(SurveyDao.class);
         tagDao = jdbi.onDemand(TagDao.class);
@@ -329,6 +332,11 @@ public class DaoProvider {
     @Produces
     public SearchHistoryDao getSearchHistoryDao() {
         return searchHistoryDao;
+    }
+
+    @Produces
+    public CollabGraphDao getCollabGraphDao() {
+        return collabGraphDao;
     }
 
     @Produces

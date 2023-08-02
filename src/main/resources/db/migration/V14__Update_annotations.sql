@@ -157,10 +157,11 @@ CREATE TABLE IF NOT EXISTS `learnweb_large`.`sl_rdf` (
     `rdf_value` longtext NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `learnweb_large`.`sl_input_string` (
+CREATE TABLE IF NOT EXISTS `learnweb_large`.`sl_input_stream` (
     `id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `user_id` int NOT NULL,
     `type` varchar(250) NOT NULL,
+    `object_id` INT UNSIGNED NOT NULL,
     `content` longtext NOT NULL,
     `date_created` date NOT NULL
 );

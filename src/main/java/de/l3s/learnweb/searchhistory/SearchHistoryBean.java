@@ -18,7 +18,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.omnifaces.util.Beans;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,7 +27,6 @@ import com.google.gson.stream.JsonWriter;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
-import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.searchhistory.Graph.CollabGraph;
@@ -54,10 +52,8 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
     @Inject
     private UserDao userDao;
-
     @Inject
     private GroupDao groupDao;
-
     @Inject
     private SearchHistoryDao searchHistoryDao;
 
@@ -66,7 +62,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     private static final String patternDateTime = String.format("%s %s", patternDate, patternTime);
     private transient List<JsonSharedObject> sharedObjects = new ArrayList<>();
     private transient Gson gson;
-    private transient PkgBean pkgBean;
 
     /**
      * Load the variables that needs values before the view is rendered.
@@ -77,7 +72,6 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
             selectedUserId = getUser().getId();
         }
         gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter().nullSafe()).create();
-        getPkgBean().trimPkg();
     }
 
     public SearchQuery getSelectedQuery() {
@@ -237,16 +231,13 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     * */
     private void calculateEntities() {
         //For testing only
-        // getPkgBean().createSharedObject(selectedGroupId, 5, true, "negative5SharedObject");
-        // getPkgBean().createSharedObject(selectedGroupId, 10, false, "positive10SharedObject");
+        // userPkg.createSharedObject(getUser(), selectedGroupId, 5, true, "negative5SharedObject");
+        // userPkg.createSharedObject(getUser(), selectedGroupId, 10, false, "positive10SharedObject");
 
         sharedObjects = new ArrayList<>();
         for (User user : userDao.findByGroupId(selectedGroupId)) {
-            Pkg pkg = new Pkg(new ArrayList<>(), new ArrayList<>());
-            pkg.createPkg(user, selectedGroupId);
-            pkg.removeDuplicatingNodesAndLinks();
-            pkg.calculateSumWeight();
-            JsonSharedObject object = pkg.createSharedObject(user, selectedGroupId, 3, false, "collabGraph");
+            Pkg userPkg = Pkg.createPkg(user);
+            JsonSharedObject object = userPkg.createSharedObject(user, selectedGroupId, 3, false, "collabGraph");
 
             if (object != null) {
                 sharedObjects.add(object);
@@ -269,25 +260,16 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public String getSingleQueryJson() {
-        List<Group> groups = groupDao.findByUserId(selectedUserId);
-        int groupId = 0;
-        //Assume one user is in only one group
-        if (!groups.isEmpty()) {
-            groupId = groups.get(0).getId();
+        Pkg userPkg = getUserBean().getUserPkg();
+        if (getCurrentUser() != getUser()) {
+            userPkg = Pkg.createPkg(getCurrentUser());
         }
-        JsonSharedObject obj = getPkgBean().createSingleGraph(selectedUserId, groupId);
+
+        JsonSharedObject obj = userPkg.createSingleGraph();
         if (obj == null) {
             return "";
         }
-        CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>())
-            .createSingleGraph(obj);
+        CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>()).createSingleGraph(obj);
         return gson.toJson(calculatedQuery);
-    }
-
-    private PkgBean getPkgBean() {
-        if (null == pkgBean) {
-            pkgBean = Beans.getInstance(PkgBean.class);
-        }
-        return pkgBean;
     }
 }

@@ -48,7 +48,6 @@ import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
-import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
@@ -63,10 +62,12 @@ import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.web.WebResource;
+import de.l3s.learnweb.searchhistory.CollabGraphDao;
 import de.l3s.learnweb.searchhistory.JsonSharedObject;
-import de.l3s.learnweb.searchhistory.PkgBean;
+import de.l3s.learnweb.searchhistory.Pkg;
+import de.l3s.learnweb.searchhistory.RecognisedEntity;
 import de.l3s.learnweb.searchhistory.SearchHistoryDao;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.AnnotationBean;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.DbpediaSpotlightService;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -105,8 +106,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private List<String> recommendations;
     private boolean showRecommendations;
     private boolean showRelatedQueries;
-    private transient PkgBean pkgBean;
-    private transient AnnotationBean annotationBean;
 
     private transient String edurecRequest;
     private transient String suggestedEntries;
@@ -115,6 +114,10 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private GroupDao groupDao;
     @Inject
     private SearchHistoryDao searchHistoryDao;
+    @Inject
+    private CollabGraphDao collabGraphDao;
+    @Inject
+    private DbpediaSpotlightService dbpediaSpotlightService;
 
     @PostConstruct
     public void init() {
@@ -335,7 +338,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     public void onSuggestedQuerySelected(SelectEvent<SuggestedQuery> event) {
         SuggestedQuery query = event.getObject();
         log.debug("Selected suggested query: {}", query);
-        searchHistoryDao.insertSuggestedQuery(getUser(), getQuery(), query.query(), query.source(), query.index(), suggestedEntries, edurecRequest);
+        collabGraphDao.insertSuggestedQuery(getUser(), getQuery(), query.query(), query.source(), query.index(), suggestedEntries, edurecRequest);
 
         Faces.redirect("/lw/search.jsf?action=" + queryMode + "&service=" + queryService + "&query=" + URLEncoder.encode(query.query(), StandardCharsets.UTF_8));
     }
@@ -363,30 +366,21 @@ public class SearchBean extends ApplicationBean implements Serializable {
         final String requestUrl = "https://demo3.kbs.uni-hannover.de/recommend/10/items/for/dbpedia100k/with/transE";
 
         JsonArray nodesArray = new JsonArray();
-        JsonObject nodeObject = new JsonObject();
-        nodeObject.addProperty("query", query);
-        nodeObject.addProperty("weight", 10.0);
-        nodesArray.add(nodeObject);
         JsonObject recordObject = new JsonObject();
         recordObject.add("nodes", nodesArray);
         JsonObject rootObject = new JsonObject();
         rootObject.add("record", recordObject);
 
-        JsonSharedObject request = getPkgBean().createSharedObject(
-            groupDao.findByUserId(getUser().getId()).get(0).getId(), 10, false, "recommendation");
+        Pkg pkg = getUserBean().getUserPkg();
+        pkg.calculateSumWeight();
 
-        int weight = 10;
-        double oldWeight = 0;
+        JsonSharedObject request = pkg.prepareCollabRec(10, 10);
         if (request != null) {
             for (JsonSharedObject.Entity entity : request.getEntities()) {
                 JsonObject graphNode = new JsonObject();
                 graphNode.addProperty("uri", entity.getUri());
                 graphNode.addProperty("query", entity.getQuery());
-                if (Math.abs(oldWeight - entity.getWeight()) < 0.01) {
-                    weight--;
-                    oldWeight = entity.getWeight();
-                }
-                graphNode.addProperty("weight", weight);
+                graphNode.addProperty("weight", entity.getWeight());
                 nodesArray.add(graphNode);
             }
         }
@@ -423,11 +417,12 @@ public class SearchBean extends ApplicationBean implements Serializable {
             isUserActive = true;
             if (!snippetClicked.get(search.getResources().indexOf(search.getResources().get(tempResourceId)))) {
                 Resource resource = search.getResources().get(tempResourceId).getResource();
-                int inputId = getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(), "web", resource.getUrl());
-                getPkgBean().writeRdfStatement("schema:WebPage/" + inputId, "schema:title", resource.getTitle(), "literal");
-                getPkgBean().writeRdfStatement("schema:WebPage/" + inputId, "schema:url", resource.getUrl(), "resource");
-                getPkgBean().writeRdfStatement("SearchQuery/" + search.getId(),
-                    "generatesResult", "schema:WebPage/" + inputId, "resource");
+                List<RecognisedEntity> recognisedEntities = dbpediaSpotlightService.storeStreamAndExtractEntities(getUser(), "web", search.getId(), resource.getUrl());
+                int inputId = dbpediaSpotlightService.storeEntities(getSessionId(), getUser(), recognisedEntities);
+
+                getUserBean().getUserPkg().addRdfStatement("schema:WebPage/" + inputId, "schema:title", resource.getTitle(), "literal");
+                getUserBean().getUserPkg().addRdfStatement("schema:WebPage/" + inputId, "schema:url", resource.getUrl(), "resource");
+                getUserBean().getUserPkg().addRdfStatement("SearchQuery/" + search.getId(), "generatesResult", "schema:WebPage/" + inputId, "resource");
             }
             snippetClicked.set(search.getResources().indexOf(search.getResources().get(tempResourceId)), true);
             search.logResourceClicked(tempResourceId, getUser());
@@ -443,21 +438,25 @@ public class SearchBean extends ApplicationBean implements Serializable {
     @PreDestroy
     public void destroy() throws Exception {
         if (isUserActive) {
-            getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(), "query", search.getQuery());
+            List<RecognisedEntity> queryEntities = dbpediaSpotlightService.storeStreamAndExtractEntities(getUser(), "query", search.getId(), search.getQuery());
+            dbpediaSpotlightService.storeEntities(getSessionId(), getUser(), queryEntities);
+
             for (ResourceDecorator snippet : search.getResources()) {
                 String s = snippet.getTitle().split("\\|")[0].split("-")[0];
-                int inputId = getAnnotationBean().processQuery(getSessionId(), search.getId(), getUser().getId(),
-                    snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_not_clicked",
-                    "<title>" + s + "</title> " + snippet.getDescription());
-                getPkgBean().writeRdfStatement("Snippet/" + inputId, "schema:title", s, "literal");
-                getPkgBean().writeRdfStatement("Snippet/" + inputId, "schema:url", snippet.getUrl(), "literal");
-                getPkgBean().writeRdfStatement("SearchQuery/" + search.getId(),
-                    "generatesResult", "Snippet/" + inputId, "resource");
+                String type = snippetClicked.get(search.getResources().indexOf(snippet)) ? "snippet_clicked" : "snippet_not_clicked";
+
+                List<RecognisedEntity> snippetEntities = dbpediaSpotlightService.storeStreamAndExtractEntities(getUser(), type, search.getId(), "<title>" + s + "</title> " + snippet.getDescription());
+                int inputId = dbpediaSpotlightService.storeEntities(getSessionId(), getUser(), snippetEntities);
+
+                getUserBean().getUserPkg().addRdfStatement("Snippet/" + inputId, "schema:title", s, "literal");
+                getUserBean().getUserPkg().addRdfStatement("Snippet/" + inputId, "schema:url", snippet.getUrl(), "literal");
+                getUserBean().getUserPkg().addRdfStatement("SearchQuery/" + search.getId(), "generatesResult", "Snippet/" + inputId, "resource");
             }
-            getPkgBean().trimPkg();
-            //Update one for recommendation, one for collabGraph which marks the user's active state.
-            getPkgBean().createSharedObject(groupDao.findByUserId(getUser().getId()).get(0).getId(),
-                5, false, "recommendation");
+
+            // getUserBean().getUserPkg().removeDuplicatingNodesAndLinks();
+            // Update one for recommendation, one for collabGraph which marks the user's active state.
+            // FIXME: it seems we hardcode to use only the first group
+            // getUserBean().getUserPkg().createSharedObject(getUser(), getUser().getGroups().get(0).getId(), 5, false, "recommendation");
         }
     }
 
@@ -469,16 +468,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private void createSearchRecommendation() {
         //Initialization
         recommendations = new ArrayList<>();
-        int groupId;
-        List<Group> groups = groupDao.findByUserId(getUser().getId());
-        if (!groups.isEmpty()) {
-            groupId = groups.get(0).getId();
-        } else {
-            return;
-        }
-        getPkgBean().trimPkg();
-        // TODO: all groups should be used, not only the first one
-        List<JsonSharedObject> sharedObjects =  searchHistoryDao.findObjectsByGroupIdAndType(groupId, "recommendation");
+        List<JsonSharedObject> sharedObjects =  collabGraphDao.findObjectsByUserId(getUser().getId(), "recommendation");
         if (sharedObjects == null) {
             return;
         }
@@ -519,7 +509,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         }
         entries.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
-        //Get the first 3 entities of the results, or the whole results if entries has less than 3 elements
+        //Get the first 3 entities of the results, or the whole results if entries have less than 3 elements
         recommendations = entries.stream().map(entry -> entry.getKey()).collect(Collectors.toList()).subList(0, Math.min(3, entries.size()));
     }
 
@@ -702,20 +692,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
             Collections.sort(resourcesGroupedBySource);
         }
         return resourcesGroupedBySource;
-    }
-
-    private PkgBean getPkgBean() {
-        if (null == pkgBean) {
-            pkgBean = Beans.getInstance(PkgBean.class);
-        }
-        return pkgBean;
-    }
-
-    private AnnotationBean getAnnotationBean() {
-        if (null == annotationBean) {
-            annotationBean = Beans.getInstance(AnnotationBean.class);
-        }
-        return annotationBean;
     }
 
     public boolean isShowRecommendations() {

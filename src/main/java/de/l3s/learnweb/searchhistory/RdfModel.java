@@ -22,14 +22,14 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
 public class RdfModel {
-
-    private static final Pattern COMPILE = Pattern.compile(" ");
-    private static final Pattern PATTERN = Pattern.compile("\\<[^>]*>");
-    private Model model;
     public static final String prefixBase = "https://github.com/tibonto/PKGonto/";
     private static final String prefixSchema = "https://schema.org/";
     private static final String prefixEducor = "https://github.com/tibonto/educor#";
     private static final String prefixFoaf = "http://xmlns.com/foaf/spec/";
+    private static final Pattern COMPILE = Pattern.compile(" ");
+    private static final Pattern PATTERN = Pattern.compile("\\<[^>]*>");
+
+    private Model model;
 
     public RdfModel() {
         model = ModelFactory.createDefaultModel();
@@ -92,6 +92,7 @@ public class RdfModel {
         if (Objects.equals(uri, "default")) {
             return;
         }
+
         addStatement("RecognizedEntities/" + name, "schema:identifier", uri, "resource");
         addStatement("RecognizedEntities/" + name, prefixBase + "surfaceForm", surfaceForm, "literal");
         addStatement("RecognizedEntities/" + name, prefixBase + "confidenceScore", String.valueOf(score), "literal");

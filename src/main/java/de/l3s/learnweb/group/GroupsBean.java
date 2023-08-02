@@ -16,12 +16,12 @@ import jakarta.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnifaces.util.Beans;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.searchhistory.dbpediaspotlight.AnnotationBean;
+import de.l3s.learnweb.searchhistory.RecognisedEntity;
+import de.l3s.learnweb.searchhistory.dbpediaspotlight.DbpediaSpotlightService;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
@@ -32,14 +32,18 @@ public class GroupsBean extends ApplicationBean implements Serializable {
     private static final Logger log = LogManager.getLogger(GroupsBean.class);
     @Serial
     private static final long serialVersionUID = 5364340827474357098L;
+
     private List<Group> joinAbleGroups;
     private List<Group> myGroups;
     private Group selectedGroup;
+
     private Group newGroup;
     private List<Course> editAbleCourses; // courses to which the user can add groups to
-    private transient AnnotationBean annotationBean;
+
     @Inject
     private GroupDao groupDao;
+    @Inject
+    private DbpediaSpotlightService dbpediaSpotlightService;
 
     @PostConstruct
     public void init() {
@@ -129,7 +133,10 @@ public class GroupsBean extends ApplicationBean implements Serializable {
         user.joinGroup(newGroup);
         // refresh group list
         myGroups = user.getGroups();
-        getAnnotationBean().processQuery(getSessionId(), newGroup.getId(), user.getId(), "group", newGroup.getTitle() + " " + newGroup.getDescription());
+
+        List<RecognisedEntity> recognisedEntities = dbpediaSpotlightService.storeStreamAndExtractEntities(user, "group", newGroup.getId(), newGroup.getTitle() + " " + newGroup.getDescription());
+        dbpediaSpotlightService.storeEntities(getSessionId(), user, recognisedEntities);
+
         // log and show notification
         log(Action.group_creating, newGroup.getId(), newGroup.getId());
         addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
@@ -169,12 +176,5 @@ public class GroupsBean extends ApplicationBean implements Serializable {
 
     public List<Course> getEditAbleCourses() {
         return editAbleCourses;
-    }
-
-    private AnnotationBean getAnnotationBean() {
-        if (null == annotationBean) {
-            annotationBean = Beans.getInstance(AnnotationBean.class);
-        }
-        return annotationBean;
     }
 }
