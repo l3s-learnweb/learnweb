@@ -48,7 +48,6 @@ import de.l3s.interwebj.client.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
-import de.l3s.learnweb.group.GroupDao;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -66,7 +65,6 @@ import de.l3s.learnweb.searchhistory.PKGraphDao;
 import de.l3s.learnweb.searchhistory.JsonSharedObject;
 import de.l3s.learnweb.searchhistory.PKGraph;
 import de.l3s.learnweb.searchhistory.RecognisedEntity;
-import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.DbpediaSpotlightService;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
@@ -110,10 +108,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private transient String edurecRequest;
     private transient String suggestedEntries;
 
-    @Inject
-    private GroupDao groupDao;
-    @Inject
-    private SearchHistoryDao searchHistoryDao;
     @Inject
     private PKGraphDao pkGraphDao;
     @Inject
@@ -363,7 +357,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     }
 
     private List<String> getEduRecSuggestQueries(String query) throws IOException, InterruptedException {
-        final String requestUrl = "https://demo3.kbs.uni-hannover.de/recommend/10/items/for/dbpedia100k/with/transE";
+        final String requestUrl = "https://edurec.kevinhaller.dev/recommend/5/items";
 
         JsonArray nodesArray = new JsonArray();
         JsonObject recordObject = new JsonObject();
@@ -372,8 +366,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
         rootObject.add("record", recordObject);
 
         PKGraph pkg = getUserBean().getUserPkg();
-        pkg.calculateSumWeight();
-
         JsonSharedObject request = pkg.prepareCollabRec(10, 10);
         if (request != null) {
             for (JsonSharedObject.Entity entity : request.getEntities()) {

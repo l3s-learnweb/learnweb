@@ -392,6 +392,8 @@ public final class PKGraph {
      * @return the list of shared object in Json form
      */
     public JsonSharedObject prepareCollabRec(int numberPositive, int numberNegative) {
+        calculateSumWeight();
+
         JsonSharedObject sharedObject = new JsonSharedObject("CollabRec", false);
         if (results == null || results.isEmpty()) {
             log.info("No weight calculated");
