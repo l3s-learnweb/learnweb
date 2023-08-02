@@ -36,7 +36,7 @@ import de.l3s.learnweb.exceptions.UnauthorizedHttpException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.i18n.MessagesBundle;
 import de.l3s.learnweb.resource.survey.SurveyResponse;
-import de.l3s.learnweb.searchhistory.Pkg;
+import de.l3s.learnweb.searchhistory.PKGraph;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
@@ -53,7 +53,7 @@ public class UserBean implements Serializable {
     private ColorTheme colorTheme = ColorTheme.emerald;
     private final HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
-    private transient Pkg pkg;
+    private transient PKGraph pkg;
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
     private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on another account
     private transient Organisation activeOrganisation;
@@ -76,9 +76,9 @@ public class UserBean implements Serializable {
         }
     }
 
-    public Pkg getUserPkg() {
+    public PKGraph getUserPkg() {
         if (pkg == null && isLoggedIn()) {
-            pkg = Pkg.createPkg(getUser());
+            pkg = PKGraph.createPkg(getUser());
         }
         return pkg;
     }

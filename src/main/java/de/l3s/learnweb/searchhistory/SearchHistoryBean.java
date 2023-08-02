@@ -236,7 +236,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
 
         sharedObjects = new ArrayList<>();
         for (User user : userDao.findByGroupId(selectedGroupId)) {
-            Pkg userPkg = Pkg.createPkg(user);
+            PKGraph userPkg = PKGraph.createPkg(user);
             JsonSharedObject object = userPkg.createSharedObject(user, selectedGroupId, 3, false, "collabGraph");
 
             if (object != null) {
@@ -260,9 +260,9 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
     }
 
     public String getSingleQueryJson() {
-        Pkg userPkg = getUserBean().getUserPkg();
+        PKGraph userPkg = getUserBean().getUserPkg();
         if (getCurrentUser() != getUser()) {
-            userPkg = Pkg.createPkg(getCurrentUser());
+            userPkg = PKGraph.createPkg(getCurrentUser());
         }
 
         JsonSharedObject obj = userPkg.createSingleGraph();

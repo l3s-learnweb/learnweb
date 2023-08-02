@@ -62,9 +62,9 @@ import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.resource.web.WebResource;
-import de.l3s.learnweb.searchhistory.CollabGraphDao;
+import de.l3s.learnweb.searchhistory.PKGraphDao;
 import de.l3s.learnweb.searchhistory.JsonSharedObject;
-import de.l3s.learnweb.searchhistory.Pkg;
+import de.l3s.learnweb.searchhistory.PKGraph;
 import de.l3s.learnweb.searchhistory.RecognisedEntity;
 import de.l3s.learnweb.searchhistory.SearchHistoryDao;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.DbpediaSpotlightService;
@@ -115,7 +115,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     @Inject
     private SearchHistoryDao searchHistoryDao;
     @Inject
-    private CollabGraphDao collabGraphDao;
+    private PKGraphDao pkGraphDao;
     @Inject
     private DbpediaSpotlightService dbpediaSpotlightService;
 
@@ -338,7 +338,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     public void onSuggestedQuerySelected(SelectEvent<SuggestedQuery> event) {
         SuggestedQuery query = event.getObject();
         log.debug("Selected suggested query: {}", query);
-        collabGraphDao.insertSuggestedQuery(getUser(), getQuery(), query.query(), query.source(), query.index(), suggestedEntries, edurecRequest);
+        pkGraphDao.insertSuggestedQuery(getUser(), getQuery(), query.query(), query.source(), query.index(), suggestedEntries, edurecRequest);
 
         Faces.redirect("/lw/search.jsf?action=" + queryMode + "&service=" + queryService + "&query=" + URLEncoder.encode(query.query(), StandardCharsets.UTF_8));
     }
@@ -371,7 +371,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
         JsonObject rootObject = new JsonObject();
         rootObject.add("record", recordObject);
 
-        Pkg pkg = getUserBean().getUserPkg();
+        PKGraph pkg = getUserBean().getUserPkg();
         pkg.calculateSumWeight();
 
         JsonSharedObject request = pkg.prepareCollabRec(10, 10);
@@ -468,7 +468,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private void createSearchRecommendation() {
         //Initialization
         recommendations = new ArrayList<>();
-        List<JsonSharedObject> sharedObjects =  collabGraphDao.findObjectsByUserId(getUser().getId(), "recommendation");
+        List<JsonSharedObject> sharedObjects =  pkGraphDao.findObjectsByUserId(getUser().getId(), "recommendation");
         if (sharedObjects == null) {
             return;
         }

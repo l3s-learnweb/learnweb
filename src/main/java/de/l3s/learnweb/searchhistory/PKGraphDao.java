@@ -20,7 +20,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.SqlHelper;
 
-public interface CollabGraphDao extends SqlObject, Serializable {
+public interface PKGraphDao extends SqlObject, Serializable {
 
     @RegisterRowMapper(RdfObjectMapper.class)
     @SqlQuery("SELECT * FROM learnweb_large.sl_rdf WHERE user_id = ?")

@@ -50,8 +50,8 @@ import de.l3s.learnweb.user.User;
  * <p>6 - Depending on user's purpose, Pkg then exports the shared objects for that purpose, e.g. top 3 entities with the
  * highest weights for the collaborative graph, or 5 for recommender system etc.</p>
  */
-public final class Pkg {
-    private static final Logger log = LogManager.getLogger(Pkg.class);
+public final class PKGraph {
+    private static final Logger log = LogManager.getLogger(PKGraph.class);
     private static final Pattern PATTERN = Pattern.compile("http://dbpedia.org/resource/");
 
     private int userId;
@@ -61,7 +61,7 @@ public final class Pkg {
     private transient List<RecognisedEntity> recognisedEntities;
     private transient HashMap<Integer, Double> results;
 
-    private Pkg() {
+    private PKGraph() {
     }
 
     private void setLink(int source, int target, double weight) {
@@ -206,8 +206,8 @@ public final class Pkg {
      *
      * @param user the current User
      */
-    public static Pkg createPkg(User user) {
-        Pkg pkg = new Pkg();
+    public static PKGraph createPkg(User user) {
+        PKGraph pkg = new PKGraph();
         pkg.userId = user.getId();
         // Get the entities from DB for this user
         pkg.recognisedEntities = dao().getCollabGraphDao().findEntityByUser(user.getId());

@@ -18,7 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import de.l3s.learnweb.searchhistory.CollabGraphDao;
+import de.l3s.learnweb.searchhistory.PKGraphDao;
 import de.l3s.learnweb.searchhistory.RecognisedEntity;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.AnnotationUnit;
 import de.l3s.learnweb.searchhistory.dbpediaspotlight.common.ResourceItem;
@@ -34,7 +34,7 @@ public class DbpediaSpotlightService implements Serializable {
     private transient AnnotationUnit annotationUnit;
 
     @Inject
-    private CollabGraphDao collabGraphDao;
+    private PKGraphDao pkGraphDao;
 
     @Inject
     private UserBean userBean;
@@ -102,7 +102,7 @@ public class DbpediaSpotlightService implements Serializable {
      */
     public List<RecognisedEntity> storeStreamAndExtractEntities(User user, String type, int objectId, String content) throws Exception {
         // Insert inputStream into DB
-        int inputId = collabGraphDao.insertInputStream(user.getId(), type, objectId, content);
+        int inputId = pkGraphDao.insertInputStream(user.getId(), type, objectId, content);
 
         List<RecognisedEntity> recognisedEntities = new ArrayList<>();
         SpotlightClient spotlight = new SpotlightClient();
@@ -147,10 +147,10 @@ public class DbpediaSpotlightService implements Serializable {
             //Round the confidence
             entity.setConfidence(Precision.round(entity.getConfidence(), 2));
 
-            Optional<RecognisedEntity> foundAnnotation = collabGraphDao.findEntityByUriAndType(entity.getUri(), entity.getType(), entity.getUserId());
+            Optional<RecognisedEntity> foundAnnotation = pkGraphDao.findEntityByUriAndType(entity.getUri(), entity.getType(), entity.getUserId());
             //If already an annotationCount is found in DB, update its columns
             if (foundAnnotation.isEmpty()) {
-                collabGraphDao.saveEntity(entity);
+                pkGraphDao.saveEntity(entity);
             } else {
                 //Update the sessionId
                 String session = foundAnnotation.get().getSessionId();
@@ -168,7 +168,7 @@ public class DbpediaSpotlightService implements Serializable {
                 entity.setSessionId(session);
                 entity.setInputStreams(input);
                 entity.setCreatedAt(foundAnnotation.get().getCreatedAt());
-                collabGraphDao.saveEntity(entity);
+                pkGraphDao.saveEntity(entity);
             }
 
             if (user.getId() == userBean.getUser().getId()) {
