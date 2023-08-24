@@ -207,7 +207,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         private static final long serialVersionUID = -7136479116433806735L;
     }
 
-    private static class EnumComparator implements Comparator<Option>, Serializable {
+    private static final class EnumComparator implements Comparator<Option>, Serializable {
         @Serial
         private static final long serialVersionUID = 6363944568317854215L;
 

@@ -366,7 +366,7 @@ public class DaoProvider {
         return waybackUrlDao;
     }
 
-    private static class LearnwebSqlLogger implements SqlLogger {
+    private static final class LearnwebSqlLogger implements SqlLogger {
         private static final Logger log = LogManager.getLogger(LearnwebSqlLogger.class);
 
         @Override

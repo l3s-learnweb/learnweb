@@ -5,11 +5,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.helper.Validate;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.File;
@@ -198,7 +198,7 @@ public class GlossaryEntry implements HasId, Deletable, Serializable {
     }
 
     void setTerms(List<GlossaryTerm> terms) {
-        Validate.notNull(terms);
+        Objects.requireNonNull(terms);
 
         this.terms = terms;
     }

@@ -349,7 +349,7 @@ public final class WaybackUrlManager {
         return getStatusCode(new UrlRecord(new URL(url)));
     }
 
-    private static class RecordNotFoundException extends Exception {
+    private static final class RecordNotFoundException extends Exception {
         @Serial
         private static final long serialVersionUID = -1754500933829531955L;
     }

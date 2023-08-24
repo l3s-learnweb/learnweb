@@ -197,7 +197,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable {
         }
     }
 
-    private static class EnumComparator implements Comparator<Option>, Serializable {
+    private static final class EnumComparator implements Comparator<Option>, Serializable {
         @Serial
         private static final long serialVersionUID = -6590111487348788376L;
 

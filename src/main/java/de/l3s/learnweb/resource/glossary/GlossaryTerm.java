@@ -6,12 +6,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import jakarta.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 
 import de.l3s.util.Deletable;
 import de.l3s.util.HasId;
@@ -111,7 +111,7 @@ public class GlossaryTerm implements HasId, Deletable, Serializable {
     }
 
     public void setUses(List<String> uses) {
-        Validate.notNull(uses);
+        Objects.requireNonNull(uses);
         this.uses = uses.stream().map(String::trim).collect(Collectors.toList());
     }
 
