@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import jakarta.mail.MessagingException;
 
-import org.apache.solr.common.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.i18n.MessagesBundle;
