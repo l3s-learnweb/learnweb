@@ -7,7 +7,7 @@
     <groupId>de.l3s</groupId>
     <artifactId>learnweb</artifactId>
     <!-- Because Tomcat treats version as String, we need to use zero padding to make sure v10 is newer than v9 -->
-    <version>3.20.13</version>
+    <version>3.20.14</version>
     <packaging>war</packaging>
 
     <name>Learnweb</name>
@@ -20,7 +20,7 @@
         <maven.dependency.myfaces.version>4.0.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.9.4</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.41.0</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.21.2</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>9.22.0</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.20.0</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>6.28.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.10.0</maven.dependency.junit.version>
@@ -188,7 +188,7 @@
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>3.1.4</version>
+            <version>3.2.0</version>
         </dependency>
         <!-- Connection pool -->
         <dependency>
@@ -274,7 +274,7 @@
             <!-- Remove after HikariCP updated -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.7</version>
+            <version>2.0.9</version>
         </dependency>
         <dependency>
             <groupId>io.sentry</groupId>
@@ -366,7 +366,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.2.220</version>
+            <version>2.2.222</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -423,7 +423,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>10.12.2</version>
+                        <version>10.12.3</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -490,7 +490,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.15</version>
+                <version>11.0.16</version>
                 <configuration>
                     <!-- see https://www.eclipse.org/jetty/documentation/jetty-11/programming-guide/index.html#pg-configuration-6 -->
                     <webApp>
