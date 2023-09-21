@@ -33,8 +33,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
     private static final long serialVersionUID = 4911923763255682055L;
     private static final Logger log = LogManager.getLogger(ResourceDetailBean.class);
 
-    private static final String HYPOTHESIS_PROXY = "https://via.hypothes.is/";
-
     public enum ViewAction {
         viewResource,
         editResource
@@ -392,10 +390,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable 
 
     public void onThumbDown() {
         handleThumbRating(-1);
-    }
-
-    public String getHypothesisLink() {
-        return HYPOTHESIS_PROXY + resource.getUrl();
     }
 
     public List<LogEntry> getLogs() {

@@ -83,38 +83,6 @@
                                     <p:staticMessage severity="info" detail="#{of:getRequestBaseURL()}wizard=#{groupOptionsBean.group.course.registrationWizard}/#{groupOptionsBean.group.id}"/>
                                 </div>
                             </ui:fragment>
-                            <ui:fragment rendered="#{groupOptionsBean.hypothesisEnabled}">
-                                <div class="field">
-                                    <p:outputLabel for="@next">
-                                        #{msg.hypothesis_group_link}:
-                                        <h:outputLink value="discussion_help.jsf" target="_blank">
-                                            <f:param name="type" value="admin"/>[?]
-                                        </h:outputLink>
-                                    </p:outputLabel>
-                                    <p:inputText id="set_hypothesis_link" value="#{groupOptionsBean.newHypothesisLink}"/>
-                                    <p:message for="@previous"/>
-                                </div>
-
-                                <ui:fragment rendered="#{not empty groupOptionsBean.newHypothesisLink}">
-                                    <div class="field">
-                                        <p:outputLabel for="@next">
-                                            #{msg.hypothesis_token}:
-                                            <h:outputLink value="discussion_help.jsf" target="_blank" rendered="#{empty groupOptionsBean.newHypothesisToken}">
-                                                <f:param name="type" value="admin"/>[?]
-                                            </h:outputLink>
-                                        </p:outputLabel>
-                                        <p:inputText id="set_hypothesis_token" value="#{groupOptionsBean.newHypothesisToken}"/>
-                                        <p:message for="@previous"/>
-                                    </div>
-
-                                    <div class="field">
-                                        <h:outputLink value="admin/group_discussion_activity.jsf" rendered="#{not empty groupOptionsBean.newHypothesisToken}">
-                                            <f:param name="group_id" value="#{groupOptionsBean.groupId}"/>
-                                            Discussion Activity
-                                        </h:outputLink>
-                                    </div>
-                                </ui:fragment>
-                            </ui:fragment>
 
                             <div class="d-flex justify-content-end">
                                 <p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":group_moderator_form"/>

@@ -41,18 +41,6 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{not empty res.group and res.type eq 'website' and not empty res.group.hypothesisLink}">
-		<dt class="col-sm-4">#{msg.discuss}:</dt>
-		<dd class="col-sm-8">
-			<h:outputLink value="#{resourceDetailBean.hypothesisLink}" target="_top">#{msg.link_to_discuss}</h:outputLink>
-			<h:outputLink value="#{res.group.hypothesisLink}" target="_top">(#{msg.discuss_group_invite})</h:outputLink>
-
-			<h:outputLink value="discussion_help.jsf" target="_blank">
-				<f:param name="type" value="user"/>[?]
-			</h:outputLink>
-		</dd>
-	</ui:fragment>
-
 	<ui:fragment rendered="#{userBean.user.organisationId == 1604}">
 		<dt class="col-sm-4">Beziehung zum Klimawandel:</dt>
 		<dd class="col-sm-8">

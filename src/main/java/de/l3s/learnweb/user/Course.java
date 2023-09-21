@@ -28,7 +28,7 @@ public class Course implements Serializable, Comparable<Course>, HasId {
     // if you add 64 options you have to add one options_field{x} column in lw_course
     public enum Option {
         Unused_1,
-        Groups_Hypothesis_enabled,
+        Unused_2,
         Groups_Forum_categories_enabled,
         Groups_Only_moderators_can_create_groups,
         Users_Require_mail_address,

@@ -67,7 +67,7 @@ public enum Action implements Argument {
     edit_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // was added by chloe . can be reused
     unused3(ActionTargetId.NONE, ActionCategory.OTHER),
     unused4(ActionTargetId.NONE, ActionCategory.OTHER),
-    group_changing_hypothesis_link(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = old value
+    unused11(ActionTargetId.NONE, ActionCategory.OTHER),
     changing_office_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE),
     forum_post_added(ActionTargetId.FORUM_TOPIC_ID, ActionCategory.FORUM), // param = topic title
     moderator_login(ActionTargetId.USER_ID, ActionCategory.MODERATOR), // target_id = user_id of the moderator logs into a user account
