@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -91,6 +93,16 @@ public class RegistrationBean extends ApplicationBean implements Serializable {
 
             if (StringUtils.isNotEmpty(fastLogin)) {
                 return fastLogin();
+            }
+
+            if (course.getId() == 1618) { // random course selection for SoMeCliCS Literacy
+                List<Course> randomPool = new ArrayList<>();
+                randomPool.add(course);
+                randomPool.add(courseDao.findByIdOrElseThrow(1629));
+                randomPool.add(courseDao.findByIdOrElseThrow(1630));
+
+                Collections.shuffle(randomPool);
+                course = randomPool.get(0);
             }
         } else {
             List<Course> publicCourses = courseDao.findByRegistrationType(Course.RegistrationType.PUBLIC);

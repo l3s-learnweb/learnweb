@@ -31,7 +31,7 @@ logs
 data
 
 ## Local files
-learnweb_local.properties
+.env
 **/webapp/resources/bundle
 
 ## We don't use Yarn in production

@@ -5,12 +5,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.Validate;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.util.Misc;
@@ -35,7 +34,7 @@ public final class UserView implements Serializable {
     private String coursesTitles;
 
     private UserView(User user) {
-        Validate.notNull(user);
+        Objects.requireNonNull(user);
         this.user = user;
     }
 
@@ -119,7 +118,7 @@ public final class UserView implements Serializable {
      */
     @SafeVarargs
     public static List<UserView> of(List<User> users, Function<UserView, ?>... preloadFields) {
-        Validate.notNull(users);
+        Objects.requireNonNull(users);
 
         List<UserView> userViews = users.stream().map(UserView::of).collect(Collectors.toList());
 

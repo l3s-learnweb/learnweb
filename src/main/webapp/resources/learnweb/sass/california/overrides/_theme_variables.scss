@@ -642,7 +642,7 @@ $cardShadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
 $editorToolbarBg: $panelHeaderBg !default;
 $editorToolbarBorder: $panelHeaderBorder !default;
 $editorToolbarPadding: $panelHeaderPadding !default;
-$editorToolbarIconColor: $textSecondaryColor !default;
+$editorToolbarIconColor: var(--primary-color);
 $editorToolbarIconHoverColor: $textColor !default;
 $editorIconActiveColor: $primaryColor !default;
 $editorContentBorder: $panelContentBorder !default;

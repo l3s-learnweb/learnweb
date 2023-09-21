@@ -21,7 +21,6 @@ import jakarta.validation.constraints.Size;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -524,7 +523,7 @@ public class User implements Comparable<User>, Deletable, HasId, Serializable {
     }
 
     public void setTimeZone(ZoneId timeZone) {
-        Validate.notNull(timeZone);
+        Objects.requireNonNull(timeZone);
         this.timeZone = timeZone;
     }
 

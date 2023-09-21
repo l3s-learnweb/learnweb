@@ -92,7 +92,7 @@ public class WaybackCapturesLogger {
         }
     }
 
-    private class Consumer implements Runnable {
+    private final class Consumer implements Runnable {
         @Override
         public void run() {
             try {

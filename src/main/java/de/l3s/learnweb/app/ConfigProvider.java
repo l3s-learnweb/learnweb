@@ -127,18 +127,25 @@ public class ConfigProvider implements Serializable {
     }
 
     private void loadProperties() {
-        try (InputStream defaultProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb.properties")) {
+        try (InputStream defaultProperties = getClass().getClassLoader().getResourceAsStream("application.properties")) {
             properties.load(defaultProperties);
+        } catch (IOException e) {
+            log.error("Unable to load application properties", e);
+        }
 
-            try (InputStream localProperties = getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb_local.properties")) {
-                if (localProperties != null) {
-                    properties.load(localProperties);
-                    environment = "local";
-                    log.info("Local properties loaded.");
+        try (InputStream localProperties = getClass().getClassLoader().getResourceAsStream(".env")) {
+            if (localProperties != null) {
+                Properties prop = new Properties();
+                prop.load(localProperties);
+                for (String propKey : prop.stringPropertyNames()) {
+                    setProperty(propKey.toLowerCase(Locale.ROOT), prop.getProperty(propKey));
                 }
+
+                environment = "local";
+                log.info(".env properties loaded.");
             }
         } catch (IOException e) {
-            log.error("Unable to load properties file(s)", e);
+            log.error("Unable to load .env properties", e);
         }
     }
 
@@ -151,10 +158,13 @@ public class ConfigProvider implements Serializable {
             Map<String, String> env = System.getenv();
             env.forEach((originalKey, propValue) -> {
                 String propKey = originalKey.toLowerCase(Locale.ROOT);
-                if (propKey.startsWith(PROP_KEY_PREFIX)) {
+                if (properties.containsKey(propKey)) {
+                    log.debug("Environment variable override '{}' with value: {}", propKey, propValue);
+                    setProperty(propKey, propValue);
+                } else if (propKey.startsWith(PROP_KEY_PREFIX)) {
                     propKey = propKey.substring(PROP_KEY_PREFIX.length());
                     log.debug("Found environment variable {}: {} (original name {})", propKey, propValue, originalKey);
-                    properties.setProperty(propKey, propValue);
+                    setProperty(propKey, propValue);
                 }
             });
         } catch (Exception e) {
@@ -170,13 +180,17 @@ public class ConfigProvider implements Serializable {
 
             while (list.hasMore()) {
                 NameClassPair next = list.next();
-                String namespacedKey = namespace + next.getName();
                 String propKey = next.getName().toLowerCase(Locale.ROOT);
-                if (propKey.startsWith(PROP_KEY_PREFIX)) {
+                String namespacedKey = namespace + next.getName();
+                String propValue = ctx.lookup(namespacedKey).toString();
+
+                if (properties.containsKey(propKey)) {
+                    log.debug("JNDI variable override '{}' with value: {}", propKey, propValue);
+                    setProperty(propKey, propValue);
+                } else if (propKey.startsWith(PROP_KEY_PREFIX)) {
                     propKey = propKey.substring(PROP_KEY_PREFIX.length());
-                    String propValue = ctx.lookup(namespacedKey).toString();
                     log.debug("Found JNDI variable {}: {} (original name {})", propKey, propValue, namespacedKey);
-                    properties.setProperty(propKey, propValue);
+                    setProperty(propKey, propValue);
                 }
             }
 
@@ -194,7 +208,7 @@ public class ConfigProvider implements Serializable {
                 if (propKey.startsWith(prefix)) {
                     final String newKey = propKey.substring(prefix.length());
                     log.debug("Property {} replaced by {}", newKey, propKey);
-                    properties.setProperty(newKey, properties.getProperty(propKey));
+                    setProperty(newKey, properties.getProperty(propKey));
                 }
             }
         } else {
