@@ -468,7 +468,7 @@ public class UserBean implements Serializable {
     public String getTrackerApiKey() {
         return getActiveOrganisation().map(Organisation::getTrackerApiKey)
             .filter(StringUtils::isNotEmpty)
-            .orElse(Learnweb.config().getProperty("tracker_api_key"));
+            .orElse(Learnweb.config().getProperty("integration_tracker_apikey"));
     }
 
     public boolean isStarRatingEnabled() {

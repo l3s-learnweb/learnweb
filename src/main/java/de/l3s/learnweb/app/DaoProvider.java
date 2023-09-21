@@ -121,7 +121,7 @@ public class DaoProvider {
         jdbi = Jdbi.create(dataSource)
             .installPlugin(new SqlObjectPlugin());
 
-        if (configProvider.getPropertyBoolean("mysql_log_queries")) {
+        if (configProvider.getPropertyBoolean("datasource_log_sql")) {
             jdbi.setSqlLogger(new LearnwebSqlLogger());
         }
 
@@ -213,9 +213,9 @@ public class DaoProvider {
         HikariDataSource ds = new HikariDataSource();
         // Configuration docs https://github.com/brettwooldridge/HikariCP
         ds.setDriverClassName("org.mariadb.jdbc.Driver");
-        ds.setJdbcUrl(configProvider.getProperty("mysql_url"));
-        ds.setUsername(configProvider.getProperty("mysql_user"));
-        ds.setPassword(configProvider.getProperty("mysql_password"));
+        ds.setJdbcUrl(configProvider.getProperty("datasource_url"));
+        ds.setUsername(configProvider.getProperty("datasource_username"));
+        ds.setPassword(configProvider.getProperty("datasource_password"));
         ds.setMaximumPoolSize(3);
         ds.setConnectionTimeout(60000); // 1 min
         return ds;

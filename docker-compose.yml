@@ -14,9 +14,9 @@ services:
       TZ: "Europe/Berlin"
       LEARNWEB_FILE_MANAGER_FOLDER: "/mnt/files"
       LEARNWEB_SOLR_SERVER_URL: "http://solr:8983/solr/learnweb"
-      LEARNWEB_MYSQL_URL: "jdbc:mariadb://mariadb:3306/learnweb"
-      LEARNWEB_MYSQL_USER: "learnweb"
-      LEARNWEB_MYSQL_PASSWORD: "cm&dY@FSM7sCtSxZ"
+      LEARNWEB_DATASOURCE_URL: "jdbc:mariadb://mariadb:3306/learnweb"
+      LEARNWEB_DATASOURCE_USERNAME: "learnweb"
+      LEARNWEB_DATASOURCE_PASSWORD: "cm&dY@FSM7sCtSxZ"
   mariadb:
     image: mariadb:10.11
     restart: always

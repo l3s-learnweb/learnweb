@@ -35,7 +35,7 @@ public class OfficeResourceBean extends ApplicationBean implements Serializable 
 
     @PostConstruct
     public void init() {
-        officeServerUrl = config().getProperty("onlyoffice_server_url");
+        officeServerUrl = config().getProperty("integration_onlyoffice_url");
 
         Resource resource = Beans.getInstance(ResourceDetailBean.class).getResource();
         fillInFileInfo(resource);

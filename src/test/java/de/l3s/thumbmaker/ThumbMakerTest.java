@@ -18,7 +18,7 @@ import de.l3s.test.LearnwebExtension;
 class ThumbMakerTest {
     @RegisterExtension
     static final LearnwebExtension learnwebExt = new LearnwebExtension();
-    private final ThumbMaker thumbMaker = new ThumbMaker(learnwebExt.getLearnweb().getConfigProvider().getProperty("thumbmaker_server_url"));
+    private final ThumbMaker thumbMaker = new ThumbMaker(learnwebExt.getLearnweb().getConfigProvider().getProperty("integration_thumbmaker_url"));
 
     @Test
     void makeScreenshot() throws IOException {

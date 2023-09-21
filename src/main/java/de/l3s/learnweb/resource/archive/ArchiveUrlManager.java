@@ -43,7 +43,7 @@ public final class ArchiveUrlManager {
 
     @Inject
     public ArchiveUrlManager(ConfigProvider configProvider, final ArchiveUrlDao archiveUrlDao, final WaybackUrlDao waybackUrlDao) {
-        this.archiveSaveURL = configProvider.getProperty("internet_archive_save_url");
+        this.archiveSaveURL = configProvider.getProperty("integration_archive_saveurl");
         this.archiveUrlDao = archiveUrlDao;
         this.waybackUrlDao = waybackUrlDao;
 

@@ -57,7 +57,7 @@ public class ResourcePreviewMaker implements Serializable {
     public ResourcePreviewMaker(final FileDao fileDao, final ConfigProvider configProvider) {
         this.fileDao = fileDao;
 
-        this.thumbMaker = new ThumbMaker(configProvider.getProperty("thumbmaker_server_url"));
+        this.thumbMaker = new ThumbMaker(configProvider.getProperty("integration_thumbmaker_url"));
         this.ffmpegPath = configProvider.getProperty("ffmpeg_path");
         this.ffprobePath = configProvider.getProperty("ffprobe_path");
     }
