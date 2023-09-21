@@ -332,6 +332,14 @@ public class ConfigProvider implements Serializable {
         return getProperty("app_support_email", "learnweb-support@l3s.de");
     }
 
+    public String getRecaptchaPublicKey() {
+        return getProperty("recaptcha_public_key");
+    }
+
+    public String getRecaptchaPrivateKey() {
+        return getProperty("recaptcha_private_key");
+    }
+
     /**
      * If started in development (also when no servlet context) or other test instance, do not schedule any jobs.
      */
