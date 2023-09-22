@@ -22,7 +22,7 @@ import org.omnifaces.util.Faces;
 import org.omnifaces.util.Servlets;
 import org.primefaces.PrimeFaces;
 
-import de.l3s.interwebj.client.InterWeb;
+import de.l3s.interweb.client.Interweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
@@ -60,7 +60,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private int page;
 
     private Search search;
-    private InterWeb interweb;
+    private Interweb interweb;
     private SearchFilters searchFilters;
 
     private ResourceDecorator selectedResource;

@@ -32,18 +32,17 @@
 
     <repositories>
         <repository>
-            <id>astappiev-maven</id>
-            <name>Private Maven Repository (to host our dependencies and dependencies build from sources)</name>
-            <url>https://git.l3s.uni-hannover.de/astappiev/maven-repo/-/raw/master/</url>
+            <id>github-l3s-learnweb</id>
+            <name>Learnweb GitHub Packages</name>
+            <url>https://public:&#103;hp_AbBIyE2D5lISwZ8UBzRsTXJmpg8IXK4M9PNG@maven.pkg.github.com/l3s-learnweb/learnweb</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <!-- Learnweb modules -->
         <dependency>
             <groupId>de.l3s.interweb</groupId>
-            <artifactId>interwebj-client</artifactId>
-            <version>3.5.0</version>
+            <artifactId>interweb-client</artifactId>
+            <version>4.0.2</version>
         </dependency>
 
         <!-- ################ Jakarta ################ -->
@@ -235,8 +234,7 @@
         <dependency>
             <groupId>org.tuckey</groupId>
             <artifactId>urlrewritefilter</artifactId>
-            <version>4.0.4</version>
-            <classifier>jakarta</classifier>
+            <version>5.0.0</version>
         </dependency>
         <!-- Cron tasks manager -->
         <dependency>

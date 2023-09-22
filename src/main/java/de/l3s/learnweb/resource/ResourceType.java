@@ -1,5 +1,7 @@
 package de.l3s.learnweb.resource;
 
+import de.l3s.interweb.core.search.ContentType;
+
 /**
  * List of possible resource types.
  *
@@ -26,6 +28,16 @@ public enum ResourceType {
         return switch (this) {
             case text -> "Document";
             default -> super.toString();
+        };
+    }
+
+    public static ResourceType fromContentType(final ContentType type) {
+        return switch (type) {
+            case video -> video;
+            case audio -> audio;
+            case image -> image;
+            case presentation -> presentation;
+            default -> website;
         };
     }
 }

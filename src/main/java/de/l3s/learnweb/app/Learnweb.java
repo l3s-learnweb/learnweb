@@ -9,7 +9,7 @@ import jakarta.inject.Inject;
 import org.jdbi.v3.core.Handle;
 import org.omnifaces.cdi.Eager;
 
-import de.l3s.interwebj.client.InterWeb;
+import de.l3s.interweb.client.Interweb;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
@@ -46,7 +46,7 @@ public final class Learnweb {
     private final DaoProvider daoProvider;
 
     private final SolrClient solrClient;
-    private final InterWeb interweb;
+    private final Interweb interweb;
 
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final ResourceMetadataExtractor resourceMetadataExtractor;
@@ -57,8 +57,7 @@ public final class Learnweb {
         this.daoProvider = daoProvider;
 
         solrClient = new SolrClient(configProvider.getProperty("solr_server_url"));
-        interweb = new InterWeb(configProvider.getProperty("integration_interweb_url"), configProvider.getProperty("integration_interweb_apikey"),
-            configProvider.getProperty("integration_interweb_secret"));
+        interweb = new Interweb(configProvider.getProperty("integration_interweb_url"), configProvider.getProperty("integration_interweb_apikey"));
 
         resourcePreviewMaker = new ResourcePreviewMaker(daoProvider.getFileDao(), configProvider);
         resourceMetadataExtractor = new ResourceMetadataExtractor(solrClient);
@@ -104,7 +103,7 @@ public final class Learnweb {
         return solrClient;
     }
 
-    public InterWeb getInterweb() {
+    public Interweb getInterweb() {
         return interweb;
     }
 
