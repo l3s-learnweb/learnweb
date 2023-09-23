@@ -165,7 +165,7 @@ public class ResourceMetadataExtractor {
                 int duration = 0;
                 int multiply = 0;
                 for (int i = tokens.length - 1; i >= 0; --i) {
-                    duration += Integer.parseInt(tokens[i]) * Math.pow(60, multiply++);
+                    duration += Integer.parseInt(tokens[i]) * (int) Math.pow(60, multiply++);
                 }
                 resource.setDuration(duration);
             } else if (!"Speech number".equals(key)) {
