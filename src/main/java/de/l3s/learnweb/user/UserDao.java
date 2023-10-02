@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -123,7 +123,7 @@ public interface UserDao extends SqlObject, Serializable {
         user.setPassword(null);
         user.setEmailRaw(HashHelper.sha512(user.getEmail()));
         // alter username so that it is unlikely to cause conflicts with other usernames
-        user.setUsername(user.getRealUsername() + " (Deleted) " + user.getId() + " - " + RandomUtils.nextInt(1, 100));
+        user.setUsername(user.getRealUsername() + " (Deleted) " + user.getId() + " - " + ThreadLocalRandom.current().nextInt(1, 100));
         save(user);
 
         cache.remove(user.getId());

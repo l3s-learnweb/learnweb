@@ -80,10 +80,10 @@
 				<p:message for="@previous"/>
 			</h:panelGroup>
 
-			<div class="field mw-r25 overflow-hidden" style="min-height: 78px;">
+			<h:panelGroup layout="block" styleClass="field mw-r25 overflow-hidden" style="min-height: 78px;" rendered="#{not empty config.recaptchaPublicKey}">
 				<p:captcha label="Captcha" language="#{userBean.localeCode}" requiredMessage="Captcha: #{msg['validation.please_confirm']}" />
 				<p:message for="@previous"/>
-			</div>
+			</h:panelGroup>
 
 			<div class="form-check">
 				<div class="d-flex">

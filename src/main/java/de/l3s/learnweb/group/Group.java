@@ -97,8 +97,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     private PolicyEdit policyEdit = PolicyEdit.GROUP_MEMBERS;
     private PolicyView policyView = PolicyView.COURSE_MEMBERS;
     private PolicyAnnotate policyAnnotate = PolicyAnnotate.COURSE_MEMBERS;
-    private String hypothesisLink;
-    private String hypothesisToken;
     private LocalDateTime createdAt;
 
     // caches
@@ -531,22 +529,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         } else if (maxMemberCount < 1) { // if limit true but not defined yet > set default limit = 1
             maxMemberCount = 1;
         }
-    }
-
-    public String getHypothesisLink() {
-        return hypothesisLink;
-    }
-
-    public void setHypothesisLink(String hypothesisLink) {
-        this.hypothesisLink = hypothesisLink;
-    }
-
-    public String getHypothesisToken() {
-        return hypothesisToken;
-    }
-
-    public void setHypothesisToken(String hypothesisToken) {
-        this.hypothesisToken = hypothesisToken;
     }
 
     public LocalDateTime getCreatedAt() {

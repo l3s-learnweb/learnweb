@@ -20,7 +20,7 @@ public class DynamicControl extends ResourceBundle.Control {
 
     @Override
     public Locale getFallbackLocale(String baseName, Locale locale) {
-        return new Locale("");
+        return Locale.ROOT;
     }
 
     @Override

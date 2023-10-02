@@ -188,8 +188,6 @@ public interface GroupDao extends SqlObject, Serializable {
         params.put("policy_edit", group.getPolicyEdit().name());
         params.put("policy_join", group.getPolicyJoin().name());
         params.put("policy_view", group.getPolicyView().name());
-        params.put("hypothesis_link", group.getHypothesisLink());
-        params.put("hypothesis_token", group.getHypothesisToken());
         params.put("created_at", group.getCreatedAt());
 
         Optional<Integer> groupId = SqlHelper.handleSave(getHandle(), "lw_group", params)
@@ -217,8 +215,6 @@ public interface GroupDao extends SqlObject, Serializable {
                 group.setCourseId(rs.getInt("course_id"));
                 group.setRestrictionForumCategoryRequired(rs.getBoolean("restriction_forum_category_required"));
                 group.setMaxMemberCount(rs.getInt("max_member_count"));
-                group.setHypothesisLink(rs.getString("hypothesis_link"));
-                group.setHypothesisToken(rs.getString("hypothesis_token"));
                 group.setPolicyAdd(Group.PolicyAdd.valueOf(rs.getString("policy_add")));
                 group.setPolicyAnnotate(Group.PolicyAnnotate.valueOf(rs.getString("policy_annotate")));
                 group.setPolicyEdit(Group.PolicyEdit.valueOf(rs.getString("policy_edit")));

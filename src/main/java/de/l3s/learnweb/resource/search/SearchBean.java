@@ -44,7 +44,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import de.l3s.interwebj.client.InterWeb;
+import de.l3s.interweb.client.Interweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.BeanAssert;
 import de.l3s.learnweb.exceptions.HttpException;
@@ -88,7 +88,7 @@ public class SearchBean extends ApplicationBean implements Serializable {
     private int page;
 
     private Search search;
-    private InterWeb interweb;
+    private Interweb interweb;
     private SearchFilters searchFilters;
 
     private ResourceDecorator selectedResource;
@@ -675,7 +675,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
             SearchFilters searchFilters = new SearchFilters(searchMode);
             Search metaSearch = new Search(interweb, query, searchFilters, getUser());
             metaSearch.setMode(searchMode);
-            metaSearch.setResultsPerService(32);
             metaSearch.setConfigGroupResultsByField("source");
             metaSearch.setConfigResultsPerGroup(10);
             searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());

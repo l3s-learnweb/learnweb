@@ -7,7 +7,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeMap;
 
 import jakarta.inject.Inject;
 
@@ -20,7 +19,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
-import de.l3s.interwebj.client.model.SearchResponse;
+import de.l3s.interweb.client.InterwebException;
+import de.l3s.interweb.core.search.ContentType;
+import de.l3s.interweb.core.search.SearchQuery;
+import de.l3s.interweb.core.search.SearchResults;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupDao;
@@ -122,29 +124,27 @@ public class TedManager {
         return resource;
     }
 
-    public void fetchTedX() throws IOException {
+    public void fetchTedX() throws IOException, InterwebException {
         //Group tedxGroup = learnweb.getGroupManager().getGroupById(921);
         //Group tedxTrentoGroup = learnweb.getGroupManager().getGroupById(922);
         Group tedEdGroup = groupDao.findByIdOrElseThrow(1291);
         User admin = userDao.findByIdOrElseThrow(7727);
 
-        TreeMap<String, String> params = new TreeMap<>();
-        params.put("q", "user::TEDEducation");
-        params.put("media_types", "video");
-        params.put("services", "YouTube");
-        params.put("per_page", "50");
-        params.put("timeout", "500");
+        SearchQuery query = new SearchQuery();
+        query.setQuery("user::TEDEducation");
+        query.setContentTypes(ContentType.video);
+        query.setServices("YouTube");
 
         List<ResourceDecorator> resources;
-        int page = 1; // you have to start at page one due to youtube api limitations
+        int page = 1; // you have to start at page one due to YouTube api limitations
 
         do {
-            params.put("page", Integer.toString(page));
+            query.setPage(page);
 
             //SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDx tedxtrento", params);
 
-            //To fetch youtube videos from TED-Ed user
-            SearchResponse interwebResponse = Learnweb.getInstance().getInterweb().search(params);
+            //To fetch YouTube videos from TED-Ed user
+            SearchResults interwebResponse = Learnweb.getInstance().getInterweb().search(query);
             InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(interwebResponse);
             //log.debug(interwebResponse.getResultCountAtService());
             resources = interwebResults.getResources();

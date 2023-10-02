@@ -1,11 +1,8 @@
 package de.l3s.learnweb.resource.search.solrClient;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -14,8 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
-import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
-import org.apache.solr.common.util.ContentStream;
+import org.apache.solr.client.solrj.request.RequestWriter;
+import org.apache.solr.client.solrj.request.StreamingUpdateRequest;
 import org.apache.solr.common.util.NamedList;
 
 import de.l3s.util.MimeTypes;
@@ -40,7 +37,7 @@ public class FileInspector {
         }
 
         try (inputStream) {
-            NamedList<Object> result = requestSolrExtract(new MyContentStream(fileInfo.getFileName(), fileInfo.getMimeType(), inputStream));
+            NamedList<Object> result = requestSolrExtract(fileInfo.getMimeType(), inputStream);
             saveSolrMetadata(result, fileInfo);
         } catch (SolrServerException | IOException e) {
             log.error("FileInspector: Can't extract Text from File", e);
@@ -49,14 +46,23 @@ public class FileInspector {
         return fileInfo;
     }
 
-    private NamedList<Object> requestSolrExtract(MyContentStream contentStream) throws IOException, SolrServerException {
+    private NamedList<Object> requestSolrExtract(String contentType, InputStream stream) throws IOException, SolrServerException {
         Http2SolrClient server = solrClient.getHttpSolrClient();
 
-        ContentStreamUpdateRequest up = new ContentStreamUpdateRequest("/update/extract");
-        up.addContentStream(contentStream);
+        StreamingUpdateRequest up = new StreamingUpdateRequest("/update/extract", new RequestWriter.ContentWriter() {
+            @Override
+            public void write(final OutputStream os) throws IOException {
+                stream.transferTo(os);
+            }
+
+            @Override
+            public String getContentType() {
+                return contentType;
+            }
+        });
+
         up.setParam("extractOnly", "true");
         up.setParam("extractFormat", "text"); // default : xml(with xml tags)
-
         return server.request(up);
     }
 
@@ -164,49 +170,6 @@ public class FileInspector {
                 "author=" + author + ", " +
                 "textContent:" + System.lineSeparator() + StringHelper.shortnString(textContent, 80)
                 + "]";
-        }
-    }
-
-    private static class MyContentStream implements ContentStream {
-        private final String name;
-        private final String contentType;
-        private final InputStream stream;
-
-        MyContentStream(String name, String contentType, InputStream stream) {
-            this.name = name;
-            this.contentType = contentType;
-            this.stream = stream;
-        }
-
-        @Override
-        public String getContentType() {
-            return contentType;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public Reader getReader() {
-            return new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-        }
-
-        @Override
-        public Long getSize() {
-            return null;
-        }
-
-        @Override
-        public String getSourceInfo() {
-            // I don't know what they expect it seems to be unnecessary
-            return null;
-        }
-
-        @Override
-        public InputStream getStream() {
-            return stream;
         }
     }
 }

@@ -855,7 +855,14 @@ public class Resource extends AbstractResource implements Serializable {
     }
 
     /**
-     * Get combined largest thumbnail.
+     * @return combined the smallest thumbnail.
+     */
+    public String getThumbnailSmallest() {
+        return ObjectUtils.firstNonNull(getThumbnailSmall(), getThumbnailMedium(), getThumbnailLarge());
+    }
+
+    /**
+     * @return combined the largest thumbnail.
      */
     public String getThumbnailLargest() {
         return ObjectUtils.firstNonNull(getThumbnailLarge(), getThumbnailMedium(), getThumbnailSmall());

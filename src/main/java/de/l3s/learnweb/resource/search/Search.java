@@ -3,6 +3,8 @@ package de.l3s.learnweb.resource.search;
 import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,15 +12,18 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.l3s.interwebj.client.InterWeb;
-import de.l3s.interwebj.client.model.SearchResponse;
+import de.l3s.interweb.client.Interweb;
+import de.l3s.interweb.client.InterwebException;
+import de.l3s.interweb.core.search.ContentType;
+import de.l3s.interweb.core.search.SearchExtra;
+import de.l3s.interweb.core.search.SearchQuery;
+import de.l3s.interweb.core.search.SearchResults;
 import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
@@ -52,7 +57,7 @@ public class Search implements Serializable {
     private final TreeSet<String> urlHashMap = new TreeSet<>(); // used to make sure that resources with the same url appear only once in the search results
 
     private final int userId;
-    private final InterWeb interweb;
+    private final Interweb interweb;
     private final SolrSearch solrSearch;
     private final SearchFilters searchFilters;
 
@@ -66,7 +71,7 @@ public class Search implements Serializable {
     private int searchId;
     private final User user;
 
-    public Search(InterWeb interweb, String query, SearchFilters sf, User user) {
+    public Search(Interweb interweb, String query, SearchFilters sf, User user) {
         this.interweb = interweb;
         this.query = query;
         this.searchFilters = sf;
@@ -100,7 +105,7 @@ public class Search implements Serializable {
                     newResources.addAll(getLearnwebResults(page));
                 }
 
-                // get results from InterWeb
+                // get results from Interweb
                 if (hasMoreInterwebResults) {
                     // on the first page get results from Interweb, only when Learnweb does not return results
                     if (page == 1 && hasMoreLearnwebResults) {
@@ -249,45 +254,49 @@ public class Search implements Serializable {
         return newResources;
     }
 
-    private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IllegalArgumentException {
+    private LinkedList<ResourceDecorator> getInterwebResults(int page) throws InterwebException {
         long start = System.currentTimeMillis();
 
         // Setup filters
-        TreeMap<String, String> params = new TreeMap<>();
-        params.put("q", query);
-        params.put("media_types", configMode.name());
-        params.put("page", Integer.toString(page));
-        params.put("extras", "duration");
-        params.put("timeout", "50");
+        SearchQuery params = new SearchQuery();
+        params.setQuery(query);
+        if (configMode == SearchMode.text) {
+            params.setContentTypes(ContentType.webpage);
+        } else if (configMode == SearchMode.image) {
+            params.setContentTypes(ContentType.image);
+        } else {
+            params.setContentTypes(ContentType.video);
+        }
+        params.setPage(page);
+        params.setExtras(SearchExtra.duration);
 
         if (searchFilters.isFilterActive(FilterType.service)) {
-            params.put("services", searchFilters.getFilterValue(FilterType.service));
-            params.put("per_page", String.valueOf(configResultsPerService * 4));
+            params.setServices(searchFilters.getFilterValue(FilterType.service));
         } else {
             if (configMode == SearchMode.text) {
-                params.put("services", "Bing");
+                params.setServices("Bing");
             } else if (configMode == SearchMode.image) {
-                params.put("services", "Flickr,Giphy,Bing,Ipernity");
+                params.setServices("Flickr", "Giphy", "Bing", "Ipernity");
             } else if (configMode == SearchMode.video) {
-                params.put("services", "YouTube,Vimeo");
+                params.setServices("YouTube", "Vimeo");
             }
-            params.put("per_page", configResultsPerService.toString());
+            params.setPerPage(configResultsPerService);
         }
 
         if (searchFilters.getFilterDateFrom() != null) {
-            params.put("date_from", DEFAULT_DATE_FORMAT.format(searchFilters.getFilterDateFrom()));
+            params.setDateFrom(LocalDate.ofInstant(searchFilters.getFilterDateFrom(), ZoneId.systemDefault()));
         }
 
         if (searchFilters.getFilterDateTo() != null) {
-            params.put("date_till", DEFAULT_DATE_FORMAT.format(searchFilters.getFilterDateTo()));
+            params.setDateTo(LocalDate.ofInstant(searchFilters.getFilterDateTo(), ZoneId.systemDefault()));
         }
 
         if (searchFilters.isFilterActive(FilterType.language)) {
-            params.put("language", searchFilters.getFilterValue(FilterType.language));
+            params.setLanguage(searchFilters.getFilterValue(FilterType.language));
         }
 
-        SearchResponse interwebResponse = interweb.search(params);
-        InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(interwebResponse);
+        SearchResults searchResults = interweb.search(params);
+        InterwebResultsWrapper interwebResults = new InterwebResultsWrapper(searchResults);
         log.debug("Interweb returned {} results in {} ms", interwebResults.getResources().size(), System.currentTimeMillis() - start);
 
         if (stopped) {
@@ -351,14 +360,6 @@ public class Search implements Serializable {
     public void setMode(SearchMode searchMode) {
         this.configMode = searchMode;
         searchFilters.setSearchMode(searchMode);
-    }
-
-    public Integer getResultsPerService() {
-        return this.configResultsPerService;
-    }
-
-    public void setResultsPerService(Integer configResultsPerService) {
-        this.configResultsPerService = configResultsPerService;
     }
 
     public String getConfigGroupResultsByField() {

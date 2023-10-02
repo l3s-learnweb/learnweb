@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +18,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
+import de.l3s.interweb.client.InterwebException;
+import de.l3s.interweb.core.describe.DescribeResults;
+import de.l3s.learnweb.app.Learnweb;
 import de.l3s.learnweb.resource.File.FileType;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.office.FileUtility;
@@ -38,19 +37,6 @@ import de.l3s.util.UrlHelper;
  */
 public class ResourceMetadataExtractor {
     private static final Logger log = LogManager.getLogger(ResourceMetadataExtractor.class);
-
-    private static final Pattern YOUTUBE_PATTERN = Pattern.compile("https?://(?:[0-9A-Z-]+\\.)?(?:youtu\\.be/|youtube\\.com\\S*[^\\w\\-\\s])([\\w\\-]{11})(?=[^\\w\\-]|$)(?![?=&+%\\w]*(?:['\"][^<>]*>|</a>))[?=&+%\\w]*", Pattern.CASE_INSENSITIVE);
-    private static final Pattern VIMEO_PATTERN = Pattern.compile("https?://(?:www\\.)?(?:player\\.)?vimeo\\.com/(?:[a-z]*/)*([0-9]{6,11})[?]?.*", Pattern.CASE_INSENSITIVE);
-    private static final Pattern FLICKR_PATTERN = Pattern.compile("https?://(?:www\\.)?flickr\\.com/(?:photos/[^/]+/(\\d+))", Pattern.CASE_INSENSITIVE);
-    private static final Pattern FLICKR_SHORT_PATTERN = Pattern.compile("https?://(?:www\\.)?(?:flic\\.kr/p/|flickr\\.com/photo\\.gne\\?short=)(\\w+)", Pattern.CASE_INSENSITIVE);
-    private static final Pattern IPERNITY_PATTERN = Pattern.compile("https?://(?:www\\.)?ipernity\\.com/(?:doc/[^/]+/(\\d+))", Pattern.CASE_INSENSITIVE);
-
-    private static final String YOUTUBE_API_REQUEST = "https://www.googleapis.com/youtube/v3/videos?key=***REMOVED***&part=snippet&id=";
-    private static final String VIMEO_API_REQUEST = "http://vimeo.com/api/v2/video/";
-    private static final String FLICKR_API_REQUEST = "https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=***REMOVED***&format=json&nojsoncallback=1&photo_id=";
-    private static final String IPERNITY_API_REQUEST = "http://api.ipernity.com/api/doc.get/json?api_key=***REMOVED***&extra=tags&doc_id=";
-
-    private static final String BASE58_ALPHABET = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
 
     private static final int DESCRIPTION_LIMIT = 1400;
 
@@ -74,51 +60,29 @@ public class ResourceMetadataExtractor {
         }
 
         try {
-            resource.setOnlineStatus(OnlineStatus.ONLINE);
+            DescribeResults describeResults = Learnweb.getInstance().getInterweb().describe(resource.getUrl());
 
-            Matcher youTubeMatcher = YOUTUBE_PATTERN.matcher(resource.getUrl());
-            if (youTubeMatcher.find()) {
-                resource.setType(ResourceType.video);
-                resource.setService(ResourceService.youtube);
-                resource.setIdAtService(youTubeMatcher.group(1));
-                processYoutubeResource(resource);
-                return;
-            }
+            if (describeResults.getEntity() != null) {
+                resource.setOnlineStatus(OnlineStatus.ONLINE);
+                resource.setType(ResourceType.fromContentType(describeResults.getEntity().getType()));
+                resource.setService(ResourceService.parse(describeResults.getService()));
+                resource.setIdAtService(describeResults.getEntity().getId());
 
-            Matcher vimeoMatcher = VIMEO_PATTERN.matcher(resource.getUrl());
-            if (vimeoMatcher.find()) {
-                resource.setType(ResourceType.video);
-                resource.setService(ResourceService.vimeo);
-                resource.setIdAtService(vimeoMatcher.group(1));
-                processVimeoResource(resource);
-                return;
-            }
-
-            Matcher flickrMatcher = FLICKR_PATTERN.matcher(resource.getUrl());
-            if (flickrMatcher.find()) {
-                resource.setType(ResourceType.image);
-                resource.setService(ResourceService.flickr);
-                resource.setIdAtService(flickrMatcher.group(1));
-                processFlickrResource(resource);
-                return;
-            }
-
-            Matcher flickrShortMatcher = FLICKR_SHORT_PATTERN.matcher(resource.getUrl());
-            if (flickrShortMatcher.find()) {
-                resource.setType(ResourceType.image);
-                resource.setService(ResourceService.flickr);
-                resource.setIdAtService(decodeBase58(flickrShortMatcher.group(1)));
-                processFlickrResource(resource);
-                return;
-            }
-
-            Matcher ipernityMatcher = IPERNITY_PATTERN.matcher(resource.getUrl());
-            if (ipernityMatcher.find()) {
-                resource.setType(ResourceType.image);
-                resource.setService(ResourceService.ipernity);
-                resource.setIdAtService(ipernityMatcher.group(1));
-                processIpernityResource(resource);
-                return;
+                if (StringUtils.isEmpty(resource.getTitle()) && describeResults.getEntity().getTitle() != null) {
+                    resource.setTitle(describeResults.getEntity().getTitle());
+                }
+                if (StringUtils.isEmpty(resource.getDescription()) && describeResults.getEntity().getDescription() != null) {
+                    resource.setDescription(StringHelper.shortnString(describeResults.getEntity().getDescription(), DESCRIPTION_LIMIT));
+                }
+                if (StringUtils.isEmpty(resource.getAuthor()) && describeResults.getEntity().getAuthor() != null) {
+                    resource.setAuthor(describeResults.getEntity().getAuthor());
+                }
+                if (resource.getDuration() == 0 && describeResults.getEntity().getDuration() != null) {
+                    resource.setDuration(Math.toIntExact(describeResults.getEntity().getDuration()));
+                }
+                if (StringUtils.isEmpty(resource.getMaxImageUrl()) && describeResults.getEntity().getBiggestThumbnail() != null) {
+                    resource.setMaxImageUrl(describeResults.getEntity().getBiggestThumbnail().getUrl());
+                }
             }
 
             if (resource.getUrl().startsWith("https://webgate.ec.europa.eu/")) {
@@ -159,7 +123,7 @@ public class ResourceMetadataExtractor {
                 resource.setTranscript(resource.getMachineDescription());
 
             }
-        } catch (JsonParseException | IOException e) {
+        } catch (JsonParseException | IOException | InterwebException e) {
             resource.setOnlineStatus(OnlineStatus.UNKNOWN); // most probably offline
             log.error("Can't get more details about resource (id: {}, url: {}) from {} source.", resource.getId(), resource.getUrl(), resource.getService(), e);
         }
@@ -201,7 +165,7 @@ public class ResourceMetadataExtractor {
                 int duration = 0;
                 int multiply = 0;
                 for (int i = tokens.length - 1; i >= 0; --i) {
-                    duration += Integer.parseInt(tokens[i]) * Math.pow(60, multiply++);
+                    duration += Integer.parseInt(tokens[i]) * (int) Math.pow(60, multiply++);
                 }
                 resource.setDuration(duration);
             } else if (!"Speech number".equals(key)) {
@@ -243,102 +207,6 @@ public class ResourceMetadataExtractor {
         }
     }
 
-    private void processYoutubeResource(Resource resource) throws IOException {
-        JsonObject json = readJsonObjectFromUrl(YOUTUBE_API_REQUEST + resource.getIdAtService());
-        JsonArray items = json.getAsJsonArray("items");
-        if (!items.isEmpty()) {
-            JsonObject snippet = items.get(0).getAsJsonObject().getAsJsonObject("snippet");
-            if (StringUtils.isEmpty(resource.getTitle())) {
-                resource.setTitle(snippet.get("title").getAsString());
-            }
-            if (StringUtils.isEmpty(resource.getDescription())) {
-                resource.setDescription(StringHelper.shortnString(snippet.get("description").getAsString(), DESCRIPTION_LIMIT));
-            }
-            if (StringUtils.isEmpty(resource.getAuthor())) {
-                resource.setAuthor(snippet.get("channelTitle").getAsString());
-            }
-
-            JsonObject thumbnails = snippet.getAsJsonObject("thumbnails");
-            Optional<String> size = Arrays.stream(new String[] {"maxres", "standard", "high", "medium", "default"}).filter(thumbnails::has).findFirst();
-            size.ifPresent(s -> resource.setMaxImageUrl(thumbnails.getAsJsonObject(s).get("url").getAsString()));
-        }
-    }
-
-    private void processVimeoResource(Resource resource) throws IOException {
-        JsonObject json = readJsonArrayFromUrl(VIMEO_API_REQUEST + resource.getIdAtService() + ".json").get(0).getAsJsonObject();
-        if (json != null) {
-            if (resource.getTitle() == null || resource.getTitle().isEmpty()) {
-                resource.setTitle(json.get("title").getAsString());
-            }
-            if (StringUtils.isEmpty(resource.getDescription())) {
-                resource.setDescription(StringHelper.shortnString(json.get("description").getAsString(), DESCRIPTION_LIMIT));
-            }
-            if (StringUtils.isEmpty(resource.getAuthor())) {
-                resource.setAuthor(json.get("user_name").getAsString());
-            }
-            if (resource.getDuration() == 0) {
-                resource.setDuration(json.get("duration").getAsInt());
-            }
-
-            Optional<String> size = Arrays.stream(new String[] {"thumbnail_large", "thumbnail_medium", "thumbnail_small"}).filter(json::has).findFirst();
-            size.ifPresent(s -> resource.setMaxImageUrl(json.get(s).getAsString()));
-        }
-    }
-
-    private void processFlickrResource(Resource resource) throws IOException {
-        JsonObject json = readJsonObjectFromUrl(FLICKR_API_REQUEST + resource.getIdAtService()).getAsJsonObject("photo");
-        if (json != null) {
-            if (StringUtils.isEmpty(resource.getTitle())) {
-                resource.setTitle(json.getAsJsonObject("title").get("_content").getAsString());
-            }
-            if (StringUtils.isEmpty(resource.getDescription())) {
-                resource.setDescription(StringHelper.shortnString(json.getAsJsonObject("description").get("_content").getAsString(), DESCRIPTION_LIMIT));
-            }
-            if (StringUtils.isEmpty(resource.getAuthor())) {
-                JsonObject owner = json.getAsJsonObject("owner");
-                resource.setAuthor(StringUtils.firstNonEmpty(owner.get("realname").getAsString(), owner.get("username").getAsString()));
-            }
-
-            String thumbnailUrl = "https://farm" + json.get("farm").getAsString() + ".staticflickr.com/" + json.get("server").getAsString()
-                + "/" + json.get("id").getAsString() + "_" + json.get("secret").getAsString() + ".jpg";
-            resource.setMaxImageUrl(thumbnailUrl);
-        }
-    }
-
-    private void processIpernityResource(Resource resource) throws IOException {
-        JsonObject json = readJsonObjectFromUrl(IPERNITY_API_REQUEST + resource.getIdAtService()).getAsJsonObject("doc");
-        if (json != null) {
-            if (StringUtils.isEmpty(resource.getTitle())) {
-                resource.setTitle(json.get("title").getAsString());
-            }
-            if (StringUtils.isEmpty(resource.getDescription())) {
-                resource.setDescription(StringHelper.shortnString(json.get("description").getAsString(), DESCRIPTION_LIMIT));
-            }
-            if (StringUtils.isEmpty(resource.getAuthor())) {
-                resource.setAuthor(json.getAsJsonObject("owner").get("username").getAsString());
-            }
-
-            JsonArray thumbnails = json.getAsJsonObject("thumbs").getAsJsonArray("thumb");
-            if (thumbnails != null && !thumbnails.isEmpty()) {
-                String thumbnailUrl = null;
-                int width = 0;
-                for (int i = 0, len = thumbnails.size(); i < len; i++) {
-                    JsonObject th = thumbnails.get(i).getAsJsonObject();
-                    int newWidth = Integer.parseInt(th.get("w").getAsString());
-
-                    if (newWidth > width) {
-                        width = newWidth;
-                        thumbnailUrl = th.get("url").getAsString();
-                    }
-                }
-
-                if (thumbnailUrl != null) {
-                    resource.setMaxImageUrl(thumbnailUrl);
-                }
-            }
-        }
-    }
-
     public void processFileResource(Resource resource) {
         File mainFile = resource.getFile(FileType.MAIN);
         FileInfo fileInfo = this.getFileInfo(mainFile.getInputStream(), mainFile.getName());
@@ -372,18 +240,6 @@ public class ResourceMetadataExtractor {
         if(StringUtils.isNotEmpty(fileInfo.getTextContent()) && StringUtils.isEmpty(resource.getTranscript()) && resource.getType() == ResourceType.website)
             resource.setTranscript(fileInfo.getTextContent());
             */
-    }
-
-    private String decodeBase58(String snipCode) {
-        long result = 0;
-        long multi = 1;
-        while (!snipCode.isEmpty()) {
-            String digit = snipCode.substring(snipCode.length() - 1);
-            result += multi * BASE58_ALPHABET.lastIndexOf(digit);
-            multi *= BASE58_ALPHABET.length();
-            snipCode = snipCode.substring(0, snipCode.length() - 1);
-        }
-        return Long.toString(result);
     }
 
     /**

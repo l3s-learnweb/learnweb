@@ -19,8 +19,8 @@
         <maven.compiler.release>17</maven.compiler.release>
         <maven.dependency.myfaces.version>4.0.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.9.4</maven.dependency.imageio.version>
-        <maven.dependency.jdbi3.version>3.41.1</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.22.1</maven.dependency.flyway.version>
+        <maven.dependency.jdbi3.version>3.41.2</maven.dependency.jdbi3.version>
+        <maven.dependency.flyway.version>9.22.2</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.20.0</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>6.29.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.10.0</maven.dependency.junit.version>
@@ -32,18 +32,17 @@
 
     <repositories>
         <repository>
-            <id>astappiev-maven</id>
-            <name>Private Maven Repository (to host our dependencies and dependencies build from sources)</name>
-            <url>https://git.l3s.uni-hannover.de/astappiev/maven-repo/-/raw/master/</url>
+            <id>github-l3s-learnweb</id>
+            <name>Learnweb GitHub Packages</name>
+            <url>https://public:&#103;hp_AbBIyE2D5lISwZ8UBzRsTXJmpg8IXK4M9PNG@maven.pkg.github.com/l3s-learnweb/learnweb</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <!-- Learnweb modules -->
         <dependency>
             <groupId>de.l3s.interweb</groupId>
-            <artifactId>interwebj-client</artifactId>
-            <version>3.5.0</version>
+            <artifactId>interweb-client</artifactId>
+            <version>4.0.3</version>
         </dependency>
 
         <!-- ################ Jakarta ################ -->
@@ -95,7 +94,7 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>4.2</version>
+            <version>4.3</version>
         </dependency>
         <dependency>
             <groupId>org.primefaces</groupId>
@@ -113,13 +112,13 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>5.2.3</version>
+            <version>5.2.4</version>
         </dependency>
         <!-- poi XLSX support used for Glossary exporter -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.2.3</version>
+            <version>5.2.4</version>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for TextEditor) -->
         <dependency>
@@ -147,7 +146,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.13.0</version>
+            <version>2.14.0</version>
         </dependency>
 
         <!-- ################ ImageIO (Image processing, Thumbnails) ################ -->
@@ -235,8 +234,7 @@
         <dependency>
             <groupId>org.tuckey</groupId>
             <artifactId>urlrewritefilter</artifactId>
-            <version>4.0.4</version>
-            <classifier>jakarta</classifier>
+            <version>5.0.0</version>
         </dependency>
         <!-- Cron tasks manager -->
         <dependency>
@@ -437,7 +435,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.7.3.5</version>
+                <version>4.7.3.6</version>
                 <configuration>
                     <excludeFilterFile>src/main/conf/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>

@@ -46,8 +46,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
     private String editedGroupTitle;
     @Size(max = 500)
     private String editedGroupDescription; // Group edit fields (Required for editing group)
-    private String editedHypothesisLink;
-    private String editedHypothesisToken;
     private GroupUser groupUser;
 
     @Inject
@@ -69,8 +67,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
         editedGroupDescription = group.getDescription();
         editedGroupLeaderId = group.getLeaderUserId();
         editedGroupTitle = group.getTitle();
-        editedHypothesisLink = group.getHypothesisLink();
-        editedHypothesisToken = group.getHypothesisToken();
         groupUser = groupDao.findGroupUserRelation(group, user).orElseThrow(BeanAssert.NOT_FOUND);
     }
 
@@ -106,13 +102,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
 
             group.setLeaderUserId(editedGroupLeaderId);
             log(Action.group_changing_leader, group.getId(), group.getId());
-        }
-        if (!StringUtils.equals(editedHypothesisLink, group.getHypothesisLink())) {
-            log(Action.group_changing_hypothesis_link, group.getId(), group.getId(), group.getHypothesisLink());
-            group.setHypothesisLink(editedHypothesisLink);
-        }
-        if (!StringUtils.equals(editedHypothesisToken, group.getHypothesisToken())) {
-            group.setHypothesisToken(editedHypothesisToken);
         }
 
         if (updateGraph) {
@@ -182,26 +171,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable {
 
     public void setEditedGroupLeaderId(int editedGroupLeaderId) {
         this.editedGroupLeaderId = editedGroupLeaderId;
-    }
-
-    public boolean isHypothesisEnabled() {
-        return getGroup().getCourse().getOption(Option.Groups_Hypothesis_enabled);
-    }
-
-    public String getNewHypothesisLink() {
-        return editedHypothesisLink;
-    }
-
-    public void setNewHypothesisLink(String newHypothesisLink) {
-        this.editedHypothesisLink = newHypothesisLink;
-    }
-
-    public String getNewHypothesisToken() {
-        return editedHypothesisToken;
-    }
-
-    public void setNewHypothesisToken(String newHypothesisToken) {
-        this.editedHypothesisToken = newHypothesisToken;
     }
 
     public int getSelectedResourceTargetGroupId() {

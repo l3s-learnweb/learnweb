@@ -23,7 +23,7 @@
         <p:message for="@previous"/>
     </div>
 
-    <h:panelGroup layout="block" styleClass="field overflow-hidden" rendered="#{loginBean.captchaRequired}">
+    <h:panelGroup layout="block" styleClass="field overflow-hidden" rendered="#{loginBean.captchaRequired and not empty config.recaptchaPublicKey}">
         <p:outputLabel for="@next" value="#{msg.captcha}:" styleClass="d-none"/>
         <p:captcha id="captcha" label="#{msg.captcha}" language="#{userBean.localeCode}" required="true"/>
         <p:message for="@previous"/>
