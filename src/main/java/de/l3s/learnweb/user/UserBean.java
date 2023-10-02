@@ -496,6 +496,9 @@ public class UserBean implements Serializable {
     }
 
     public boolean isTrackingEnabled() {
+        if (StringUtils.isEmpty(getTrackerApiKey())) {
+            return false;
+        }
         return !getActiveOrganisation().map(o -> o.getOption(Option.Privacy_Tracker_disabled)).orElse(true);
     }
 
