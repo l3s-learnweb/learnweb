@@ -51,7 +51,7 @@ public class InterwebResultsWrapper implements Serializable {
             for (var searchResult : connectorResults.getItems()) {
                 WebResource resource = createResource(service, searchResult);
 
-                if (resource.getType() != ResourceType.website && null == resource.getThumbnailMedium()) { // no thumbnail set
+                if (resource.getType() != ResourceType.website && null == resource.getThumbnailLargest()) { // no thumbnail set
                     log.warn("Found no thumbnail: {}", searchResult);
                     counter++;
 

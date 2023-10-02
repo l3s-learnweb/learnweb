@@ -269,11 +269,9 @@ public class Search implements Serializable {
         }
         params.setPage(page);
         params.setExtras(SearchExtra.duration);
-        params.setTimeout(30_000);
 
         if (searchFilters.isFilterActive(FilterType.service)) {
             params.setServices(searchFilters.getFilterValue(FilterType.service));
-            params.setPerPage(configResultsPerService * 4);
         } else {
             if (configMode == SearchMode.text) {
                 params.setServices("Bing");
@@ -362,14 +360,6 @@ public class Search implements Serializable {
     public void setMode(SearchMode searchMode) {
         this.configMode = searchMode;
         searchFilters.setSearchMode(searchMode);
-    }
-
-    public Integer getResultsPerService() {
-        return this.configResultsPerService;
-    }
-
-    public void setResultsPerService(Integer configResultsPerService) {
-        this.configResultsPerService = configResultsPerService;
     }
 
     public String getConfigGroupResultsByField() {

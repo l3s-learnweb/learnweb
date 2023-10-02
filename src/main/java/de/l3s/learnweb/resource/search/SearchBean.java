@@ -416,7 +416,6 @@ public class SearchBean extends ApplicationBean implements Serializable {
             SearchFilters searchFilters = new SearchFilters(searchMode);
             Search metaSearch = new Search(interweb, query, searchFilters, getUser());
             metaSearch.setMode(searchMode);
-            metaSearch.setResultsPerService(32);
             metaSearch.setConfigGroupResultsByField("source");
             metaSearch.setConfigResultsPerGroup(10);
             searchFilters.setFilter(FilterType.language, getUserBean().getLocaleCode());
