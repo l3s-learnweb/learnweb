@@ -97,9 +97,13 @@
 									document.getElementById('snippetsList').style.display = 'none';
 								</h:outputScript>
 								<p:commandButton value="Export RDF" type="button" icon="pi pi-external-link" onclick="PF('exportRdfDialog').show()"/>
-								<p:dialog id="exportRdfDialog" widgetVar="addTag" header="RDF Model" modal="true" closeOnEscape="true" dynamic="true"
+								<p:dialog widgetVar="exportRdfDialog" header="RDF Model" modal="true" closeOnEscape="true" dynamic="true"
 										  resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
-									<pre><h:outputText value="#{searchHistoryBean.rdfModel}" escape="false"/></pre>
+									<pre style="max-width: 80vw; max-height: 80vh;">
+										<code>
+											<h:outputText value="#{searchHistoryBean.rdfModel}"/>
+										</code>
+									</pre>
 								</p:dialog>
 							</ui:fragment>
 							<ui:repeat var="ss" value="#{searchHistoryBean.sessions}">
