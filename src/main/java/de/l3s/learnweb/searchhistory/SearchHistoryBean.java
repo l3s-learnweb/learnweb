@@ -272,4 +272,17 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable {
         CollabGraph calculatedQuery = new CollabGraph(new ArrayList<>(), new ArrayList<>()).createSingleGraph(obj);
         return gson.toJson(calculatedQuery);
     }
+
+    public String getRdfModel() {
+        PKGraph userPkg = getUserBean().getUserPkg();
+        if (getCurrentUser() != getUser()) {
+            userPkg = PKGraph.createPkg(getCurrentUser());
+        }
+
+        JsonSharedObject obj = userPkg.createSingleGraph();
+        if (obj == null) {
+            return "";
+        }
+        return userPkg.rdfGraph.printModel();
+    }
 }

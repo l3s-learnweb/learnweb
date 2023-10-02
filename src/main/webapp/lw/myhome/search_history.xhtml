@@ -81,19 +81,27 @@
 					<h:outputText value="#{msg['search_history.no_sessions_recorded']}" rendered="#{empty searchHistoryBean.sessions}"/>
 					<h:form>
 						<ul class="sh-sessions-list #{searchHistoryBean.showGroupHistory ? 'sh-session-group' : ''} overflow-auto vh-100">
-							<h:outputScript>
-								var query;
-								if ('#{searchHistoryBean.showGroupHistory}' == 'true') {
-                  					query = '#{searchHistoryBean.queriesJson}';
+							<ui:fragment rendered="#{searchHistoryBean.showGroupHistory}">
+								<h:outputScript>
+									var query = '#{searchHistoryBean.queriesJson}';
 									setUrl(query, 'group');
-								}
-                				else {
-                          			query = '#{searchHistoryBean.singleQueryJson}';
-                                	setUrl(query, 'single')
-								}
-								document.getElementById('graph').style.display = query ? 'block' : 'none';
-								document.getElementById('snippetsList').style.display = 'none';
-							</h:outputScript>
+									document.getElementById('graph').style.display = query ? 'block' : 'none';
+									document.getElementById('snippetsList').style.display = 'none';
+								</h:outputScript>
+							</ui:fragment>
+							<ui:fragment rendered="#{not searchHistoryBean.showGroupHistory}">
+								<h:outputScript>
+									var query = '#{searchHistoryBean.singleQueryJson}';
+									setUrl(query, 'single');
+									document.getElementById('graph').style.display = query ? 'block' : 'none';
+									document.getElementById('snippetsList').style.display = 'none';
+								</h:outputScript>
+								<p:commandButton value="Export RDF" type="button" icon="pi pi-external-link" onclick="PF('exportRdfDialog').show()"/>
+								<p:dialog id="exportRdfDialog" widgetVar="addTag" header="RDF Model" modal="true" closeOnEscape="true" dynamic="true"
+										  resizable="false" resizeObserver="true" resizeObserverCenter="true" draggable="false">
+									<pre><h:outputText value="#{searchHistoryBean.rdfModel}" escape="false"/></pre>
+								</p:dialog>
+							</ui:fragment>
 							<ui:repeat var="ss" value="#{searchHistoryBean.sessions}">
 								<li class="session-single">
 									<span></span>

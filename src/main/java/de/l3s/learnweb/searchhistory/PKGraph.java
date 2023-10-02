@@ -55,7 +55,7 @@ public final class PKGraph {
     private static final Pattern PATTERN = Pattern.compile("http://dbpedia.org/resource/");
 
     private int userId;
-    private RdfModel rdfGraph;
+    protected RdfModel rdfGraph;
     private List<Node> nodes = new ArrayList<>();
     private List<Link> links = new ArrayList<>();
     private transient List<RecognisedEntity> recognisedEntities;
