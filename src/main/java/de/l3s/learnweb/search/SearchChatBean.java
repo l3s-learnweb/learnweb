@@ -99,8 +99,9 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
     }
 
     public List<Conversation> getConversations() throws InterwebException {
-        if (conversations == null)
+        if (conversations == null) {
             conversations = interweb.chatAll(String.valueOf(getUser().getId()));
+        }
         return conversations;
     }
 
