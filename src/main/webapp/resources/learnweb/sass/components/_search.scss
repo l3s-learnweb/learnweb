@@ -432,3 +432,25 @@
     }
   }
 }
+
+.search-chat-history {
+  &:hover {
+    text-decoration: none !important;
+  }
+
+  .ui-card {
+    margin-bottom: calc(var(--spacer) * 0.5);
+
+    &:hover {
+      box-shadow: $box-shadow-sm;
+    }
+
+    .ui-card-body {
+      padding: calc(var(--spacer) * 0.5);
+    }
+
+    .ui-card-content {
+      padding: 0;
+    }
+  }
+}

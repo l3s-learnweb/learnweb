@@ -3,7 +3,7 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:lw="http://l3s.de/learnweb">
+                xmlns:lw="http://l3s.de/learnweb" xmlns:of="http://omnifaces.org/functions">
 
 <ui:param name="pageTitle" value="#{msg.searchTitle}"/>
 <ui:param name="helpText" value="#{msg.searchHelp}"/>
@@ -60,24 +60,41 @@
     </h:panelGroup>
 
     <div class="bg-body">
-        <h:form styleClass="row px-3 py-5 px-md-4 px-lg-5">
-            <div class="col col-xl-6 mx-auto">
+        <div class="row px-3 py-5 px-md-4 px-lg-5">
+            <h:form id="history" styleClass="col-6 col-md-3" style="max-width: 300px;">
+                <p:commandButton styleClass="mb-3 ui-button-info" value="Start new chat" action="#{searchChatBean.newChat}" update=":chat :history" process="@this"/>
+
+                <ui:repeat value="#{searchChatBean.conversations}" var="conv">
+                    <p:commandLink styleClass="search-chat-history" title="Select '#{conv.title}' conversation"
+                                   action="#{searchChatBean.switchConversation(conv)}" update=":chat" process="@this">
+                        <p:card>
+                            <h6 class="mb-0">#{conv.title}</h6>
+                            <lw:timeAgo date="#{conv.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"/>
+                        </p:card>
+                    </p:commandLink>
+                </ui:repeat>
+            </h:form>
+
+            <h:form id="chat" styleClass="col-6 col-md-9 col-xl-6 mx-auto" style="max-width: 800px;">
                 <h:panelGroup id="search_chat_history" styleClass="mb-2" layout="block">
 
                     <ui:repeat value="#{searchChatBean.messages}" var="message">
-                        <ui:fragment rendered="#{message.role == 'system'}">
+                        <ui:fragment rendered="#{message.role == 'system' and userBean.moderator}">
                             <div class="mb-5 d-flex align-items-start p-4 bg-warning-subtle border rounded border-warning">
                                 <i class="mt-2 fas fa-wand-magic-sparkles text-warning fs-3 me-3"></i>
-                                <div class="me-3">
+                                <div class="me-3 w-100">
                                     <div class="fw-medium fs-5 mb-2">System message</div>
-                                    <p class="m-0">#{message.content}</p>
+                                    <p:inplace editor="true" disabled="#{searchChatBean.messages.size() > 1}">
+                                        <p:inputText value="#{message.content}" required="true" label="Prompt"/>
+                                    </p:inplace>
                                 </div>
                             </div>
                         </ui:fragment>
                         <ui:fragment rendered="#{message.role == 'assistant'}">
                             <div class="mb-5 d-flex">
                                 <div class="d-flex flex-column align-items-center" style="width:2rem">
-                                <span class="bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle" style="min-width:2.5rem; min-height: 2.5rem">
+                                <span class="bg-secondary text-white d-flex align-items-center justify-content-center rounded-circle"
+                                      style="min-width:2.5rem; min-height: 2.5rem">
                                     <i class="fas fa-robot"></i>
                                 </span>
                                     <div class="h-100 bg-secondary" style="width: 2px; min-height: 4rem"></div>
@@ -85,8 +102,8 @@
                                 <div class="ms-4 bg-body-secondary shadow rounded p-3 flex-fill">
                                     <div class="mb-3">
                                         <span class="fw-medium d-inline-block me-3">Assistant</span>
-                                        <lw:timeAgo date="#{message.time}" timeZone="#{userBean.timeZone}"
-                                                    styleClas="text-secondary small" rendered="#{not empty message.time}"/>
+                                        <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}"
+                                                    styleClass="text-secondary small" rendered="#{not empty message.created}"/>
                                     </div>
                                     <lw:outputMarkdown value="#{message.content}" styleClass="mb-3"/>
                                     <!--<div class="text-secondary d-flex align-items-center">
@@ -113,8 +130,8 @@
                                 <div class="me-4 bg-body-secondary shadow rounded p-3 flex-fill">
                                     <div class="mb-3">
                                         <span class="fw-medium d-inline-block me-3">#{userBean.user.fullName}</span>
-                                        <lw:timeAgo date="#{message.time}" timeZone="#{userBean.timeZone}"
-                                                    styleClas="text-secondary small" rendered="#{not empty message.time}"/>
+                                        <lw:timeAgo date="#{message.created}" timeZone="#{userBean.timeZone}" styleClass="text-secondary small"
+                                                    rendered="#{not empty message.created}"/>
                                     </div>
                                     <div class="mb-3">#{message.content}</div>
                                 </div>
@@ -127,6 +144,13 @@
                             <p>Hi there, I’m Learnweb Assistant, your creative and helpful collaborator.<br/>
                                 I have limitations and I wont't be always right, but I'll try to do my best.</p>
                             <p>Send me a message to get started</p>
+                        </div>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{not searchChatBean.newChat and not empty searchChatBean.conversation.created}">
+                        <div class="d-flex flex-column text-center text-secondary">
+                            <p class="mb-0">You are viewing a chat history from #{of:formatDateWithTimezone(searchChatBean.conversation.created, 'yyyy-MM-dd HH:mm:ss', userBean.timeZone)}.</p>
+                            <p>You can continue the conversation any time.</p>
                         </div>
                     </ui:fragment>
                 </h:panelGroup>
@@ -144,8 +168,8 @@
                         </p:commandButton>
                     </div>
                 </h:panelGroup>
-            </div>
-        </h:form>
+            </h:form>
+        </div>
     </div>
 </ui:define>
 </ui:composition>

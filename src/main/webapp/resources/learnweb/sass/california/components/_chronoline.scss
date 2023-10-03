@@ -1,0 +1,16 @@
+body {
+  /* Never used as there is a bug in the component */
+  .ui-chronoline.ui-chronoline-left.ui-chronoline-vertical {
+    .ui-chronoline-event {
+      min-height: 2rem;
+    }
+
+    .ui-chronoline-event-opposite {
+      display: none;
+    }
+
+    .ui-chronoline-event-content {
+      padding-right: 0;
+    }
+  }
+}

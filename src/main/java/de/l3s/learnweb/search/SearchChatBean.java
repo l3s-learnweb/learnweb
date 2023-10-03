@@ -4,21 +4,20 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.l3s.interweb.client.Interweb;
+import de.l3s.interweb.client.InterwebException;
+import de.l3s.interweb.core.completion.Conversation;
+import de.l3s.interweb.core.completion.Message;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.search.chat.ChatMessage;
-import de.l3s.learnweb.search.chat.OpenAIException;
-import de.l3s.learnweb.search.chat.OpenAIService;
 
 @Named
 @ViewScoped
@@ -33,33 +32,50 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
     // input fields
     private String message;
 
-    private List<ChatMessage> messages;
+    // output fields
+    private Interweb interweb;
+    private Conversation conversation;
+    private List<Conversation> conversations;
+    private boolean newChat;
 
-    @Inject
-    private OpenAIService openAIService;
+    public void onLoad() throws InterwebException {
+        interweb = getLearnweb().getInterweb();
 
-    public void onLoad() throws OpenAIException {
-        messages = new ArrayList<>();
-        // This is the prompt that the bot will refer back to for every message.
-        messages.add(ChatMessage.system("You are Learnweb Assistant, a helpful chat bot."));
-
+        newChat();
         if (StringUtils.isNotBlank(query)) {
-            query = URLDecoder.decode(query, StandardCharsets.UTF_8);
-
             // Add the query to the conversation as first prompt
-            messages.add(ChatMessage.user(query));
-
-            ChatMessage assistantMessage = openAIService.completeChat(messages);
-            messages.add(assistantMessage);
+            message = URLDecoder.decode(query, StandardCharsets.UTF_8);
+            sendMessage();
         }
     }
 
-    public void sendMessage() throws OpenAIException {
-        messages.add(ChatMessage.user(message));
+    public void newChat() {
+        conversation = new Conversation();
+        conversation.setGenerateTitle(true);
+        conversation.setUser(String.valueOf(getUser().getId()));
+        // This is the prompt that the bot will refer back to for every message.
+        conversation.addMessage("You are Learnweb Assistant, a helpful chat bot.", Message.Role.system);
+        newChat = true;
+    }
+
+    public void sendMessage() throws InterwebException {
+        conversation.addMessage(message, Message.Role.user);
         message = null;
 
-        ChatMessage assistantMessage = openAIService.completeChat(messages);
-        messages.add(assistantMessage);
+        interweb.chatComplete(conversation);
+        if (!conversations.contains(conversation)) {
+            conversations.add(0, conversation);
+        }
+    }
+
+    public void switchConversation(Conversation conv) throws InterwebException {
+        if (conv.getMessages() == null || conv.getMessages().isEmpty()) {
+            Conversation retrieved = interweb.chatById(conv.getId().toString());
+            conv.setMessages(retrieved.getMessages());
+        }
+
+        this.conversation = conv;
+        newChat = false;
     }
 
     public String getQuery() {
@@ -78,11 +94,21 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
         this.message = message;
     }
 
-    public List<ChatMessage> getMessages() {
-        return messages;
+    public Conversation getConversation() {
+        return conversation;
     }
 
-    public void setMessages(final List<ChatMessage> messages) {
-        this.messages = messages;
+    public List<Conversation> getConversations() throws InterwebException {
+        if (conversations == null)
+            conversations = interweb.chatAll(String.valueOf(getUser().getId()));
+        return conversations;
+    }
+
+    public List<Message> getMessages() {
+        return conversation.getMessages();
+    }
+
+    public boolean isNewChat() {
+        return newChat;
     }
 }
