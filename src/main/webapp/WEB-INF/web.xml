@@ -45,11 +45,11 @@
         <param-value>false</param-value> <!-- TODO: test and enable. This is a huge improvement of the visible rendering and removes flickering between navigations. -->
     </context-param>
     <context-param>
-        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
         <param-value>#{config.recaptchaPublicKey}</param-value>
     </context-param>
     <context-param>
-        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
         <param-value>#{config.recaptchaPrivateKey}</param-value>
     </context-param>
 
