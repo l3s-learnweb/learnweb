@@ -75,7 +75,7 @@
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet-core</artifactId>
-            <version>5.1.1.SP2</version>
+            <version>5.1.2.Final</version>
         </dependency>
         <!-- Jakarta Validator API & Impl -->
         <dependency>
