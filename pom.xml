@@ -475,21 +475,6 @@
                     </webResources>
                 </configuration>
             </plugin>
-            <!-- Used to deploy application to Tomcat instance -->
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <url>http://learnweb.l3s.uni-hannover.de:8100/manager/text</url>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <username>${env.LEARNWEB_TOMCAT_USERNAME}</username>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <password>${env.LEARNWEB_TOMCAT_PASSWORD}</password>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <path>/${path}##${project.version}</path>
-                </configuration>
-            </plugin>
             <!-- Can be used to run the application without Tomcat server -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
@@ -553,7 +538,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>[3.6,)</version>
+                                    <version>[3.8,)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>[17,)</version>
@@ -584,7 +569,7 @@
                 </resources>
             </build>
         </profile>
-        <!-- Used on GitLab when creating package to deploy -->
+        <!-- Used when creating packages to deploy -->
         <profile>
             <id>prod</id>
             <properties>

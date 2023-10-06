@@ -24,7 +24,7 @@ class UrlHelperTest {
     }
 
     @Test
-    @Disabled("because it makes real connection which is prohibited by firewall on GitLab Runner")
+    @Disabled("Remote HTTP requests should be disabled on CI")
     void validateUrl() {
         assertEquals("https://en.wikipedia.org/wiki/Hamburg", UrlHelper.validateUrl("https://en.wikipedia.org/wiki/Hamburg"));
         assertEquals("https://waps.io/live/https://en.wikipedia.org/wiki/Hamburg", UrlHelper.validateUrl("https%3A%2F%2Fwaps.io%2Flive%2Fhttps%3A%2F%2Fen.wikipedia.org%2Fwiki%2FHamburg"));
