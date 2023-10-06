@@ -33,10 +33,10 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
     private String message;
 
     // output fields
-    private Interweb interweb;
-    private Conversation conversation;
-    private List<Conversation> conversations;
     private boolean newChat;
+    private Interweb interweb;
+    private transient Conversation conversation;
+    private transient List<Conversation> conversations;
 
     public void onLoad() throws InterwebException {
         interweb = getLearnweb().getInterweb();
@@ -95,6 +95,9 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
     }
 
     public Conversation getConversation() {
+        if (conversation == null) {
+            newChat();
+        }
         return conversation;
     }
 
