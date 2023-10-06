@@ -7,6 +7,7 @@ on:
 
 env:
   MVN: mvn --show-version --batch-mode --quiet
+  GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
 jobs:
   styles:
@@ -30,6 +31,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
+          server-id: github-l3s-learnweb
       - run: $MVN checkstyle:check
       - run: $MVN compile spotbugs:check
 
@@ -44,4 +46,5 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
+          server-id: github-l3s-learnweb
       - run: $MVN test
