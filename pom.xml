@@ -20,7 +20,7 @@
         <maven.dependency.myfaces.version>4.0.1</maven.dependency.myfaces.version>
         <maven.dependency.imageio.version>3.9.4</maven.dependency.imageio.version>
         <maven.dependency.jdbi3.version>3.41.3</maven.dependency.jdbi3.version>
-        <maven.dependency.flyway.version>9.22.2</maven.dependency.flyway.version>
+        <maven.dependency.flyway.version>9.22.3</maven.dependency.flyway.version>
         <maven.dependency.log4j.version>2.20.0</maven.dependency.log4j.version>
         <maven.dependency.sentry.version>6.30.0</maven.dependency.sentry.version>
         <maven.dependency.junit.version>5.10.0</maven.dependency.junit.version>
@@ -99,7 +99,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>13.0.1</version>
+            <version>13.0.2</version>
             <classifier>jakarta</classifier>
         </dependency>
         <!-- Optional dependency of PrimeFaces (required for DataExporter (PDF)) -->
@@ -221,7 +221,7 @@
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
-            <version>9.3.0</version>
+            <version>9.4.0</version>
             <exclusions>
                 <!-- We use alternative binding to Log4j-->
                 <exclusion>
@@ -297,7 +297,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>32.1.2-jre</version>
+            <version>32.1.3-jre</version>
         </dependency>
         <!-- HTML parsed. Used in crawlers, resources, removing html from strings -->
         <dependency>
@@ -443,7 +443,7 @@
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
-                        <version>4.7.3</version>
+                        <version>4.8.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -479,7 +479,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>11.0.16</version>
+                <version>11.0.17</version>
                 <configuration>
                     <!-- see https://www.eclipse.org/jetty/documentation/jetty-11/programming-guide/index.html#pg-configuration-6 -->
                     <webApp>
