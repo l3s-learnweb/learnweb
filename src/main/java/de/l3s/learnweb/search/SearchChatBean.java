@@ -18,6 +18,7 @@ import de.l3s.interweb.client.InterwebException;
 import de.l3s.interweb.core.completion.Conversation;
 import de.l3s.interweb.core.completion.Message;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.BeanAssert;
 
 @Named
 @ViewScoped
@@ -39,6 +40,7 @@ public class SearchChatBean extends ApplicationBean implements Serializable {
     private transient List<Conversation> conversations;
 
     public void onLoad() throws InterwebException {
+        BeanAssert.authorized(isLoggedIn());
         interweb = getLearnweb().getInterweb();
 
         newChat();

@@ -14,6 +14,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.core.Handle;
 import org.primefaces.model.TreeNode;
 
@@ -124,7 +125,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                         sb.append("; no description");
                     }
                     */
-                    if (!resource.getDescription().isEmpty()) {
+                    if (StringUtils.isNotEmpty(resource.getDescription())) {
                         sb.append("<div class=\"description\" style=\"display:none\"><h4>Description</h4>");
                         sb.append(resource.getDescription());
                         sb.append("</div>");

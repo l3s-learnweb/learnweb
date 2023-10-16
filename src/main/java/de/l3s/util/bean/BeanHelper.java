@@ -124,6 +124,10 @@ public final class BeanHelper {
     }
 
     public static Throwable unwrap(Throwable exception) {
+        if (exception == null) {
+            return null;
+        }
+
         return Exceptions.unwrap(exception, ServletException.class);
     }
 }
