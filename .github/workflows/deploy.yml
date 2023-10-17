@@ -20,6 +20,13 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
           server-id: github-l3s-learnweb
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
 
       - run: mvn --quiet -P prod,!local -Dmaven.test.skip=true install
         env:
