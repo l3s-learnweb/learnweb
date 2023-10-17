@@ -51,7 +51,7 @@
     </c:when>
 
     <c:when test="${res.type eq 'website'}">
-        <p:tabView styleClass="res-embedded-tabs" activeIndex="#{res.defaultTab.ordinal()}">
+        <p:tabView styleClass="ui-tabs-plaid res-embedded-tabs" activeIndex="#{res.defaultTab.ordinal()}">
             <p:tab title="${msg['resource.tab.SCREENSHOT']}">
                 <img src="#{res.thumbnailLargest}" alt="#{res.title}" class="d-block"/>
             </p:tab>

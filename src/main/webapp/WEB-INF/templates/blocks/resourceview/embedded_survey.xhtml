@@ -8,7 +8,7 @@
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.survey.SurveyResource"-->
 
 <c:if test="#{res.canModerateResource(userBean.user)}">
-    <p:tabView id="survey_tabs" styleClass="res-embedded-tabs" activeIndex="${resourceDetailBean.tab}" prependId="false"
+    <p:tabView id="survey_tabs" styleClass="ui-tabs-plaid res-embedded-tabs" activeIndex="${resourceDetailBean.tab}" prependId="false"
                dynamic="true" cache="false" effect="fade" onTabChange="updateSearchQuery('tab', index);">
         <p:tab id="questions_tab" title="Edit Questions">
             <ui:decorate template="/WEB-INF/templates/blocks/survey/questions.xhtml"/>
